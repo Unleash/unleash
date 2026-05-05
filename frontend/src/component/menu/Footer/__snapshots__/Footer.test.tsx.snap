@@ -9,7 +9,7 @@ exports[`should render DrawerMenu 1`] = `
       className="mui-1ng7pvt"
     >
       <div
-        className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-10 mui-ohkrjd-MuiGrid2-root"
+        className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-10 mui-b8jj8q-MuiGrid-root"
         style={
           {
             "marginBottom": 0,
@@ -17,7 +17,7 @@ exports[`should render DrawerMenu 1`] = `
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-md-4 MuiGrid2-grid-xs-12 mui-vyynyv-MuiGrid2-root"
+          className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-md-4 MuiGrid-grid-xs-12 mui-7aun2q-MuiGrid-root"
         >
           <section
             title="API details"
@@ -38,13 +38,13 @@ exports[`should render DrawerMenu 1`] = `
           </section>
         </div>
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 MuiGrid2-grid-md-auto mui-mgyg0d-MuiGrid2-root"
+          className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 MuiGrid-grid-md-auto mui-68vk1d-MuiGrid-root"
         >
           <div
-            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-7 mui-432a6f-MuiGrid2-root"
+            className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-7 mui-1f73nix-MuiGrid-root"
           >
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row mui-1fzlhpv-MuiGrid2-root"
+              className="MuiGrid-root MuiGrid-direction-xs-row mui-17fpwt7-MuiGrid-root"
             >
               <section
                 title="Unleash SDK"
@@ -244,7 +244,7 @@ exports[`should render DrawerMenu 1`] = `
               </section>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row mui-1fzlhpv-MuiGrid2-root"
+              className="MuiGrid-root MuiGrid-direction-xs-row mui-17fpwt7-MuiGrid-root"
             >
               <section
                 title="Unleash SDK"
@@ -401,7 +401,7 @@ exports[`should render DrawerMenu 1`] = `
               </section>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row mui-1fzlhpv-MuiGrid2-root"
+              className="MuiGrid-root MuiGrid-direction-xs-row mui-17fpwt7-MuiGrid-root"
             >
               <section>
                 <h2
@@ -539,7 +539,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
       className="mui-1ng7pvt"
     >
       <div
-        className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-10 mui-ohkrjd-MuiGrid2-root"
+        className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-10 mui-b8jj8q-MuiGrid-root"
         style={
           {
             "marginBottom": 0,
@@ -547,7 +547,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-md-4 MuiGrid2-grid-xs-12 mui-vyynyv-MuiGrid2-root"
+          className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-md-4 MuiGrid-grid-xs-12 mui-7aun2q-MuiGrid-root"
         >
           <section
             title="API details"
@@ -568,13 +568,13 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
           </section>
         </div>
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 MuiGrid2-grid-md-auto mui-mgyg0d-MuiGrid2-root"
+          className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 MuiGrid-grid-md-auto mui-68vk1d-MuiGrid-root"
         >
           <div
-            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-7 mui-432a6f-MuiGrid2-root"
+            className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-7 mui-1f73nix-MuiGrid-root"
           >
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row mui-1fzlhpv-MuiGrid2-root"
+              className="MuiGrid-root MuiGrid-direction-xs-row mui-17fpwt7-MuiGrid-root"
             >
               <section
                 title="Unleash SDK"
@@ -774,7 +774,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
               </section>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row mui-1fzlhpv-MuiGrid2-root"
+              className="MuiGrid-root MuiGrid-direction-xs-row mui-17fpwt7-MuiGrid-root"
             >
               <section
                 title="Unleash SDK"
@@ -931,7 +931,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
               </section>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row mui-1fzlhpv-MuiGrid2-root"
+              className="MuiGrid-root MuiGrid-direction-xs-row mui-17fpwt7-MuiGrid-root"
             >
               <section>
                 <h2

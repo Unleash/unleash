@@ -83,10 +83,12 @@ export const CodeRenderer: FC<ComponentProps<'code'> & ExtraProps> = ({
     children,
     className
 }) => {
-    // In react-markdown v9, block code fences have a language class; inline code does not
+    // In react-markdown v9+, block code fences have a language class; inline code does not.
+    // Children may be passed as a string or as an array (e.g. [string]) depending on the version.
     const isCodeBlock = Boolean(className);
-    if (isCodeBlock && typeof children === 'string') {
-        return <CopyBlock code={children} title='Copy code' />;
+    const code = Array.isArray(children) ? children[0] : children;
+    if (isCodeBlock && typeof code === 'string') {
+        return <CopyBlock code={code} title='Copy code' />;
     }
 
     return <code className={className}>{children}</code>;

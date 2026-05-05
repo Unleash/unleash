@@ -35,7 +35,7 @@ describe('RemoteMcpToggle', () => {
         render(<RemoteMcpToggle />);
 
         expect(await screen.findByText('Disabled')).toBeInTheDocument();
-        expect(screen.getByRole('checkbox')).not.toBeChecked();
+        expect(screen.getByRole('switch')).not.toBeChecked();
     });
 
     test('renders as enabled when settings return enabled: true', async () => {
@@ -44,7 +44,7 @@ describe('RemoteMcpToggle', () => {
         render(<RemoteMcpToggle />);
 
         expect(await screen.findByText('Enabled')).toBeInTheDocument();
-        expect(screen.getByRole('checkbox')).toBeChecked();
+        expect(screen.getByRole('switch')).toBeChecked();
     });
 
     test('sends POST with enabled: true when toggling on', async () => {
@@ -53,7 +53,7 @@ describe('RemoteMcpToggle', () => {
         render(<RemoteMcpToggle />);
 
         await screen.findByText('Disabled');
-        await userEvent.click(screen.getByRole('checkbox'));
+        await userEvent.click(screen.getByRole('switch'));
 
         expect(requests).toEqual([{ enabled: true }]);
     });
@@ -64,7 +64,7 @@ describe('RemoteMcpToggle', () => {
         render(<RemoteMcpToggle />);
 
         await screen.findByText('Enabled');
-        await userEvent.click(screen.getByRole('checkbox'));
+        await userEvent.click(screen.getByRole('switch'));
 
         expect(requests).toEqual([{ enabled: false }]);
     });
@@ -80,7 +80,7 @@ describe('RemoteMcpToggle', () => {
         );
 
         await screen.findByText('Disabled');
-        await userEvent.click(screen.getByRole('checkbox'));
+        await userEvent.click(screen.getByRole('switch'));
 
         expect(
             await screen.findByText(
@@ -100,7 +100,7 @@ describe('RemoteMcpToggle', () => {
         );
 
         await screen.findByText('Enabled');
-        await userEvent.click(screen.getByRole('checkbox'));
+        await userEvent.click(screen.getByRole('switch'));
 
         expect(
             await screen.findByText(
@@ -120,7 +120,7 @@ describe('RemoteMcpToggle', () => {
         );
 
         await screen.findByText('Disabled');
-        await userEvent.click(screen.getByRole('checkbox'));
+        await userEvent.click(screen.getByRole('switch'));
 
         expect(
             await screen.findByText('Action could not be performed'),

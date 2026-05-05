@@ -42,6 +42,8 @@ import { Box, styled, useMediaQuery, useTheme } from '@mui/material';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ConnectSdkDialog } from '../../../onboarding/dialog/ConnectSdkDialog.tsx';
 import { ProjectOnboarding } from '../../../onboarding/flow/ProjectOnboarding.tsx';
+import { OldProjectOnboarding } from '../../../onboarding/flow/OldProjectOnboarding.tsx';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { ProjectOnboarded } from 'component/onboarding/flow/ProjectOnboarded';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
@@ -179,6 +181,7 @@ export const ProjectFeatureToggles = ({
     const isOnboarding =
         project.onboardingStatus.status !== 'onboarded' &&
         onboardingFlow === 'visible';
+    const newOnboardingSteps = useUiFlag('onboardingProjectSetupNewSteps');
 
     const trackOnboardingFinish = (sdkName: string) => {
         if (!isOnboarding) {
@@ -496,12 +499,21 @@ export const ProjectFeatureToggles = ({
             <ConditionallyRender
                 condition={isOnboarding}
                 show={
-                    <ProjectOnboarding
-                        projectId={projectId}
-                        setConnectSdkOpen={setConnectSdkOpen}
-                        setOnboardingFlow={setOnboardingFlow}
-                        refetchFeatures={refetch}
-                    />
+                    newOnboardingSteps ? (
+                        <ProjectOnboarding
+                            projectId={projectId}
+                            setConnectSdkOpen={setConnectSdkOpen}
+                            setOnboardingFlow={setOnboardingFlow}
+                            refetchFeatures={refetch}
+                        />
+                    ) : (
+                        <OldProjectOnboarding
+                            projectId={projectId}
+                            setConnectSdkOpen={setConnectSdkOpen}
+                            setOnboardingFlow={setOnboardingFlow}
+                            refetchFeatures={refetch}
+                        />
+                    )
                 }
             />
             {setupCompletedState === 'show-setup' && !isOnboarding ? (

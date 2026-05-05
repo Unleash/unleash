@@ -63,7 +63,9 @@ export const TagTypeSelect = ({
                 <TextField {...params} label='Tag type' value={value} />
             )}
             onChange={onChange}
-            ListboxProps={{ style: { maxHeight: 200, overflow: 'auto' } }}
+            slotProps={{
+                listbox: { style: { maxHeight: 200, overflow: 'auto' } },
+            }}
         />
     );
 };

@@ -75,7 +75,7 @@ export const LabelFilterItem: FC<LabelFilterItemProps> = ({
                     </li>
                 );
             }}
-            renderTags={(value, getTagProps) => {
+            renderValue={(value, getItemProps) => {
                 const overflowCount = 5;
                 const displayedValues = value.slice(-overflowCount);
                 const remainingCount = value.length - overflowCount;
@@ -83,7 +83,7 @@ export const LabelFilterItem: FC<LabelFilterItemProps> = ({
                 return (
                     <>
                         {displayedValues.map((option, index) => {
-                            const { key, ...chipProps } = getTagProps({
+                            const { key, ...chipProps } = getItemProps({
                                 index,
                             });
                             return (
@@ -117,7 +117,10 @@ export const LabelFilterItem: FC<LabelFilterItemProps> = ({
                         }
                         variant='outlined'
                         size='small'
-                        inputProps={{ ...params.inputProps }}
+                        slotProps={{
+                            ...params,
+                            htmlInput: { ...params.inputProps },
+                        }}
                     />
                     {isTruncated && (
                         <Alert

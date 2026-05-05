@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, HTMLAttributes, Key } from 'react';
 import type { IAutocompleteBoxOption } from '../../../common/AutocompleteBox/AutocompleteBox.tsx';
 import type {
     AutocompleteRenderInputParams,
@@ -67,7 +67,7 @@ export const IntegrationMultiSelector: FC<IIntegrationMultiSelectorProps> = ({
     );
 
     const renderOption = (
-        props: object & { key?: string },
+        props: HTMLAttributes<HTMLLIElement> & { key?: Key },
         option: IAutocompleteBoxOption,
         { selected }: AutocompleteRenderOptionState,
     ) => {
@@ -96,7 +96,6 @@ export const IntegrationMultiSelector: FC<IIntegrationMultiSelectorProps> = ({
                 disableCloseOnSelect
                 getOptionLabel={({ label }) => label}
                 fullWidth
-                PaperComponent={CustomPaper}
                 renderOption={renderOption}
                 renderInput={renderInput}
                 value={options.filter((option) =>
@@ -105,6 +104,9 @@ export const IntegrationMultiSelector: FC<IIntegrationMultiSelectorProps> = ({
                 onChange={(_, input) => {
                     const state = input.map(({ value }) => value);
                     onChange(state);
+                }}
+                slots={{
+                    paper: CustomPaper,
                 }}
             />
         </>

@@ -152,7 +152,7 @@ export const EnvironmentProjectSelect = ({
                 renderInput={(params) => (
                     <TextField {...params} label='Projects' />
                 )}
-                renderTags={(value) => renderTags(value)}
+                renderValue={(value) => renderTags(value)}
                 groupBy={() => 'Select/Deselect all'}
                 renderGroup={renderGroup}
             />

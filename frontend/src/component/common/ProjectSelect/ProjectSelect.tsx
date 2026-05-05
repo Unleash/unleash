@@ -125,20 +125,22 @@ export const ProjectSelect: VFC<IProjectSelectProps> = forwardRef(
                 }
                 onChange={onProjectsChange}
                 data-testid={dataTestId ? dataTestId : 'PROJECT_SELECT'}
-                renderTags={(value, getTagProps) => {
+                renderValue={(value, getItemProps) => {
+                    if (!Array.isArray(value)) {
+                        return value.label;
+                    }
                     const numTags = value.length;
 
                     return (
                         <>
                             {value.slice(0, limitTags).map((option, index) => (
                                 <Chip
-                                    {...getTagProps({ index })}
+                                    {...getItemProps({ index })}
                                     size='small'
                                     key={index}
                                     label={option.label}
                                 />
                             ))}
-
                             {numTags > limitTags && ` +${numTags - limitTags}`}
                         </>
                     );

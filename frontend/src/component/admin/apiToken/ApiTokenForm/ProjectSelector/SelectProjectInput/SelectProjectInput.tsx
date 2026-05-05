@@ -1,4 +1,11 @@
-import { type FC, Fragment, useState, type ChangeEvent } from 'react';
+import {
+    type FC,
+    Fragment,
+    useState,
+    type ChangeEvent,
+    type HTMLAttributes,
+    type Key,
+} from 'react';
 import {
     Checkbox,
     FormControlLabel,
@@ -81,7 +88,7 @@ export const SelectProjectInput: FC<ISelectProjectInputProps> = ({
     };
 
     const renderOption = (
-        props: object & { key?: string },
+        props: HTMLAttributes<HTMLLIElement> & { key?: Key },
         option: IAutocompleteBoxOption,
         { selected }: AutocompleteRenderOptionState,
     ) => {
@@ -151,11 +158,10 @@ export const SelectProjectInput: FC<ISelectProjectInputProps> = ({
                 groupBy={() => 'Select/Deselect all'}
                 renderGroup={renderGroup}
                 fullWidth
-                PaperComponent={CustomPaper}
                 renderOption={renderOption}
-                renderTags={(value, getTagProps) => {
+                renderValue={(value, getItemProps) => {
                     return value.map((option, index) => {
-                        const { key, ...props } = getTagProps({ index });
+                        const { key, ...props } = getItemProps({ index });
                         return (
                             <Chip
                                 size='small'
@@ -178,6 +184,9 @@ export const SelectProjectInput: FC<ISelectProjectInputProps> = ({
                     const state = input.map(({ value }) => value);
                     setProjects(state);
                     onChange(state);
+                }}
+                slots={{
+                    paper: CustomPaper,
                 }}
             />
         </Box>

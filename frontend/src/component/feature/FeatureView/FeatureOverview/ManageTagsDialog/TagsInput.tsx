@@ -134,7 +134,6 @@ export const TagsInput = ({
             getOptionLabel={getOptionLabel}
             renderOption={renderOption}
             filterOptions={filterOptions}
-            ListboxProps={{ style: { maxHeight: 200, overflow: 'auto' } }}
             onChange={onChange}
             renderInput={(params) => (
                 <TextField
@@ -144,6 +143,9 @@ export const TagsInput = ({
                 />
             )}
             disabled={disabled}
+            slotProps={{
+                listbox: { style: { maxHeight: 200, overflow: 'auto' } },
+            }}
         />
     );
 };

@@ -105,9 +105,9 @@ export const SignupDialogInviteOthers: SignupStepContent = ({
                     onInputChange={(_, newInputValue, reason) => {
                         if (reason === 'input') setInputValue(newInputValue);
                     }}
-                    renderTags={(value, getTagProps) =>
+                    renderValue={(value, getItemProps) =>
                         value.map((email, index) => {
-                            const { key, ...props } = getTagProps({ index });
+                            const { key, ...props } = getItemProps({ index });
                             return <Chip key={key} label={email} {...props} />;
                         })
                     }

@@ -96,7 +96,7 @@ export const Truncator = ({
             <StyledTruncatorContainer
                 ref={ref}
                 lines={lines}
-                component={component}
+                as={component}
                 wordBreak={wordBreak || defaultWordBreak}
                 {...props}
             >

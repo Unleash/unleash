@@ -1,6 +1,6 @@
 import styled from '@mui/material/styles/styled';
 import Box from '@mui/system/Box';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Badge } from 'component/common/Badge/Badge';

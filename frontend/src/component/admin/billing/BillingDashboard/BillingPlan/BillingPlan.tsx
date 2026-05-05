@@ -1,5 +1,5 @@
 import { Alert, Paper, styled } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { InstancePlan, InstanceState } from 'interfaces/instance';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';

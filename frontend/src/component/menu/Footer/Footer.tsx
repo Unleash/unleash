@@ -2,7 +2,7 @@
 
 import type { VFC } from 'react';
 import { List, ListItem, ListItemText, styled } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ApiDetails } from './ApiDetails/ApiDetails.tsx';
 import { FooterTitle } from './FooterTitle.tsx';

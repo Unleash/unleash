@@ -1,6 +1,6 @@
 import { Button, FormControlLabel, Switch, styled } from '@mui/material';
 import { Alert } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ScimTokenGenerationDialog } from './ScimTokenGenerationDialog.tsx';
 import { ScimTokenDialog } from './ScimTokenDialog.tsx';

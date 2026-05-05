@@ -1,6 +1,6 @@
 import { forwardRef, type ReactNode } from 'react';
 import { Box, styled, useMediaQuery, useTheme } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import Header from 'component/menu/Header/Header';
 import Footer from 'component/menu/Footer/Footer';
 import BreadcrumbNav from 'component/common/BreadcrumbNav/BreadcrumbNav';

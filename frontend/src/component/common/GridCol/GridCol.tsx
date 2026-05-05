@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import type React from 'react';
 import type { FC } from 'react';
 

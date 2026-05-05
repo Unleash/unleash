@@ -1,7 +1,7 @@
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Box, Button, TextField, styled } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import {
     useLicense,

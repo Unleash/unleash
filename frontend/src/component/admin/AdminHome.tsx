@@ -7,7 +7,7 @@ import {
     useMediaQuery,
     useTheme,
 } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useInstanceStats } from 'hooks/api/getters/useInstanceStats/useInstanceStats';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';

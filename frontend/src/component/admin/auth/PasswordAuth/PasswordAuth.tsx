@@ -2,7 +2,7 @@ import type React from 'react';
 import { useEffect, useState } from 'react';
 import { Button, FormControlLabel, Switch } from '@mui/material';
 import { Alert } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
 import useAuthSettingsApi, {
     type ISimpleAuthSettings,

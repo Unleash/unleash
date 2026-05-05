@@ -6,7 +6,7 @@ import {
     Tooltip,
     useTheme,
 } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import Add from '@mui/icons-material/Add';
 import RadioButtonChecked from '@mui/icons-material/RadioButtonChecked';
 import { AppsLinkList } from 'component/common';

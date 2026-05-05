@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useNavigate } from 'react-router-dom';
 import { UPDATE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { PageContent } from 'component/common/PageContent/PageContent';

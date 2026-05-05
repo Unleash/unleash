@@ -6,7 +6,7 @@ import {
     FeatureMetricsHours,
 } from './FeatureMetricsHours/FeatureMetricsHours.tsx';
 import type { IFeatureMetricsRaw } from 'interfaces/featureToggle';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { FeatureMetricsContent } from './FeatureMetricsContent/FeatureMetricsContent.tsx';
 import { FeatureMetricsChips } from './FeatureMetricsChips/FeatureMetricsChips.tsx';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';

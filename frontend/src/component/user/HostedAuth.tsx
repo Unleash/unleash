@@ -1,6 +1,6 @@
 import { type FormEventHandler, useState, type VFC } from 'react';
 import { Button, styled, Typography } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { StyledAutofillTextField } from './StyledAutofillTextField.tsx';
 import { useNavigate } from 'react-router';
 import useQueryParams from 'hooks/useQueryParams';

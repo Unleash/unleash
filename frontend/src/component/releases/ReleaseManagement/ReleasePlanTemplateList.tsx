@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { ReleasePlanTemplateCard } from './ReleasePlanTemplateCard/ReleasePlanTemplateCard.tsx';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 

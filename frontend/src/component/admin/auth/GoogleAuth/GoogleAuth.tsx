@@ -7,7 +7,7 @@ import {
     Switch,
     TextField,
 } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { Alert } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';

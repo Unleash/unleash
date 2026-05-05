@@ -2,7 +2,7 @@ import type { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import type { ChartData } from 'chart.js';
 import type { ILocationSettings } from 'hooks/useLocationSettings';
 import 'chartjs-adapter-date-fns';
-import type { Theme } from '@mui/material/styles/createTheme';
+import type { Theme } from '@mui/material/styles';
 
 export interface IPoint {
     x: string;

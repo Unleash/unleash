@@ -1,7 +1,7 @@
 import { Line } from 'react-chartjs-2';
 import type { IMetricsCount } from 'hooks/api/getters/useMetricCounters/useMetricCounters';
 import type {} from 'chart.js';
-import type { Theme } from '@mui/material/styles/createTheme';
+import type { Theme } from '@mui/material/styles';
 import {
     useLocationSettings,
     type ILocationSettings,

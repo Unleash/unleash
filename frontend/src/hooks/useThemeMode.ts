@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { setLocalStorageItem } from 'utils/storage';
 import { lightTheme } from 'themes/theme';
 import { darkTheme } from 'themes/dark-theme';
-import type { Theme } from '@mui/material/styles/createTheme';
+import type { Theme } from '@mui/material/styles';
 
 interface IUseThemeModeOutput {
     resolveTheme: () => Theme;

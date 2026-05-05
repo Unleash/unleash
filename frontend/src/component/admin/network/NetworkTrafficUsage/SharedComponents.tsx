@@ -1,4 +1,4 @@
-import styled from '@mui/material/styles/styled';
+import { styled } from '@mui/material/styles';
 import Box from '@mui/system/Box';
 
 export const StyledBox = styled(Box)(({ theme }) => ({

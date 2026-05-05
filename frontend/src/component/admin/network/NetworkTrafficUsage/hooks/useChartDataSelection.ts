@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import type { ChartDataSelection } from '../chart-data-selection.js';
 import { periodsRecord, selectablePeriods } from '../selectable-periods.js';
 import { createBarChartOptions } from '../bar-chart-options.js';
-import useTheme from '@mui/material/styles/useTheme';
+import { useTheme } from '@mui/material/styles';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { parseMonthString } from '../dates.js';
 

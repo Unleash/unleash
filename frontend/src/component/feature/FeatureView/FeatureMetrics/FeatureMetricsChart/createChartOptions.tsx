@@ -3,7 +3,7 @@ import 'chartjs-adapter-date-fns';
 import { type ChartOptions, defaults } from 'chart.js';
 import type { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import { formatDateHM, formatDateYMD, formatDateYMDHM } from 'utils/formatDate';
-import type { Theme } from '@mui/material/styles/createTheme';
+import type { Theme } from '@mui/material/styles';
 import type { IPoint } from './createChartData.ts';
 import { daysOrHours } from '../daysOrHours.ts';
 

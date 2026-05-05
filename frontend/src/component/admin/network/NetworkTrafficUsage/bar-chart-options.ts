@@ -1,4 +1,4 @@
-import type { Theme } from '@mui/material/styles/createTheme';
+import type { Theme } from '@mui/material/styles';
 import type { ChartOptions } from 'chart.js';
 import { formatTickValue } from 'component/common/Chart/formatTickValue';
 

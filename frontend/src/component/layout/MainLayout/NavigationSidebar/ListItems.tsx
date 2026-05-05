@@ -14,7 +14,7 @@ import {
 import { Link } from 'react-router-dom';
 import { basePath } from 'utils/formatPath';
 import SignOutIcon from '@mui/icons-material/ExitToApp';
-import type { Theme } from '@mui/material/styles/createTheme';
+import type { Theme } from '@mui/material/styles';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import type { NavigationMode } from './NavigationMode.tsx';
 import { NewFeatureBadge } from 'component/layout/components/NewFeatureBadge/NewFeatureBadge.tsx';

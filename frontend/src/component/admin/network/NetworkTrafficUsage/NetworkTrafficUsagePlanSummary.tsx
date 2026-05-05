@@ -1,4 +1,4 @@
-import styled from '@mui/material/styles/styled';
+import { styled } from '@mui/material/styles';
 import Box from '@mui/system/Box';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';

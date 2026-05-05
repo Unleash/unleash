@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import styled from '@mui/material/styles/styled';
+import { styled } from '@mui/material/styles';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { Link as RouterLink } from 'react-router-dom';
 import { Alert } from '@mui/material';

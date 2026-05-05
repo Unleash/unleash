@@ -8,7 +8,7 @@ import {
     Typography,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
-import type { Theme } from '@mui/material/styles/createTheme';
+import type { Theme } from '@mui/material/styles';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';

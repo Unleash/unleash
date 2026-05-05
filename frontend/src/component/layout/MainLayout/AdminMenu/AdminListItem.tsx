@@ -12,7 +12,7 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useState, type FC, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import type { Theme } from '@mui/material/styles/createTheme';
+import type { Theme } from '@mui/material/styles';
 
 const listItemButtonStyle = (theme: Theme) => ({
     borderRadius: theme.spacing(1),

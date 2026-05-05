@@ -1,14 +1,14 @@
-import type { IUnleashConfig } from '../types/option.js';
-import type { IUnleashStores } from '../types/stores.js';
-import type { Logger } from '../logger.js';
-import type { ISettingStore } from '../types/stores/settings-store.js';
+import type { IUnleashConfig } from '../../types/option.js';
+import type { IUnleashStores } from '../../types/stores.js';
+import type { Logger } from '../../logger.js';
+import type { ISettingStore } from './settings-store-type.js';
 import {
     SettingCreatedEvent,
     SettingDeletedEvent,
     SettingUpdatedEvent,
-} from '../types/index.js';
-import type EventService from '../features/events/event-service.js';
-import type { IAuditUser } from '../types/index.js';
+} from '../../types/index.js';
+import type EventService from '../events/event-service.js';
+import type { IAuditUser } from '../../types/index.js';
 
 export default class SettingService {
     private config: IUnleashConfig;
@@ -25,7 +25,7 @@ export default class SettingService {
         eventService: EventService,
     ) {
         this.config = config;
-        this.logger = config.getLogger('services/setting-service.ts');
+        this.logger = config.getLogger('features/settings/setting-service.ts');
         this.settingStore = settingStore;
         this.eventService = eventService;
     }

@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { Link } from 'react-router-dom';
-import { ReactComponent as EnterpriseEdgeCloud } from 'assets/img/enterpriseEdgeCloud.svg';
+import EnterpriseEdgeCloud from 'assets/img/enterpriseEdgeCloud.svg?react';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     fontSize: theme.typography.body1.fontSize,

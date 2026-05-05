@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import type React from 'react';
 import type { FC } from 'react';
 
@@ -9,9 +9,10 @@ export const GridCol: FC<{
     return (
         <Grid
             container={vertical}
-            item
-            display='flex'
-            alignItems={vertical ? 'start' : 'center'}
+            sx={{
+                display: 'flex',
+                alignItems: vertical ? 'start' : 'center',
+            }}
             direction={vertical ? 'column' : undefined}
         >
             {children}

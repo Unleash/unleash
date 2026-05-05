@@ -13,7 +13,7 @@ import StrategyStore from './strategy-store.js';
 import ClientInstanceStore from './client-instance-store.js';
 import ClientApplicationsStore from './client-applications-store.js';
 import ContextFieldStore from '../features/context/context-field-store.js';
-import SettingStore from './setting-store.js';
+import SettingStore from '../features/settings/setting-store.js';
 import { UserStore } from '../features/users/user-store.js';
 import ProjectStore from '../features/project/project-store.js';
 import TagStore from './tag-store.js';
@@ -185,7 +185,7 @@ export const createStores = (
         projectFlagCreatorsReadModel: new ProjectFlagCreatorsReadModel(db),
         featureLifecycleStore: new FeatureLifecycleStore(db, eventBus),
         featureStrategiesReadModel: new FeatureStrategiesReadModel(db),
-        onboardingReadModel: createOnboardingReadModel(db),
+        onboardingReadModel: createOnboardingReadModel(db, config.flagResolver),
         onboardingStore: new OnboardingStore(db),
         featureLifecycleReadModel: new FeatureLifecycleReadModel(db),
         largestResourcesReadModel: new LargestResourcesReadModel(db),

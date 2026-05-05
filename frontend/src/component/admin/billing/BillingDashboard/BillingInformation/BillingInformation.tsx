@@ -1,4 +1,5 @@
-import { Alert, Divider, Grid, Paper, styled, Typography } from '@mui/material';
+import { Alert, Divider, Paper, styled, Typography } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { BillingInformationButton } from './BillingInformationButton/BillingInformationButton.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { InstanceState } from 'interfaces/instance';
@@ -39,7 +40,7 @@ export const BillingInformation = () => {
 
     if (!instanceStatus)
         return (
-            <Grid item xs={12} md={5}>
+            <Grid size={{ xs: 12, md: 5 }}>
                 <StyledInfoBox data-loading sx={{ flex: 1, height: '400px' }} />
             </Grid>
         );
@@ -49,7 +50,7 @@ export const BillingInformation = () => {
     const { isCustomBilling } = instanceStatus;
 
     return (
-        <Grid item xs={12} md={5}>
+        <Grid size={{ xs: 12, md: 5 }}>
             <StyledInfoBox>
                 <StyledTitle variant='body1'>Billing information</StyledTitle>
                 <ConditionallyRender

@@ -1,6 +1,6 @@
 import styled from '@mui/material/styles/styled';
 import Box from '@mui/system/Box';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import Link from '@mui/material/Link';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Badge } from 'component/common/Badge/Badge';
@@ -70,9 +70,9 @@ export const NetworkTrafficUsagePlanSummary = ({
     const estimateFlagEnabled = useUiFlag('estimateTrafficDataCost');
     return (
         <StyledContainerGrid container spacing={4}>
-            <StyledGrid item xs={5.5} md={5.5}>
+            <StyledGrid size={{ xs: 5.5, md: 5.5 }}>
                 <StyledContainer>
-                    <StyledColumnGrid item>
+                    <StyledColumnGrid>
                         <Box>
                             <b>Number of requests to Unleash</b>
                         </Box>
@@ -116,9 +116,9 @@ export const NetworkTrafficUsagePlanSummary = ({
                     estimateFlagEnabled && includedTraffic > 0 && overages > 0
                 }
                 show={
-                    <StyledGrid item xs={5.5} md={5.5}>
+                    <StyledGrid size={{ xs: 5.5, md: 5.5 }}>
                         <StyledContainer>
-                            <StyledColumnGrid item>
+                            <StyledColumnGrid>
                                 <Box>
                                     <b>Accrued traffic charges</b>
                                 </Box>

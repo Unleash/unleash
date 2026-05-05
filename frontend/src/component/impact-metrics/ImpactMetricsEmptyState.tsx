@@ -1,6 +1,6 @@
 import { Alert, Box, Button, styled, Typography } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { ReactComponent as ImpactMetricsIcon } from 'assets/img/impact-metrics-icon.svg';
+import ImpactMetricsIcon from 'assets/img/impact-metrics-icon.svg?react';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';

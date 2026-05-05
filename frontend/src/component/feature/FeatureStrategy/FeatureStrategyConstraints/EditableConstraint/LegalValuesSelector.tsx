@@ -5,6 +5,7 @@ import {
     Checkbox,
     type CheckboxProps,
     Radio,
+    type RadioProps,
     styled,
 } from '@mui/material';
 import {
@@ -79,7 +80,9 @@ const BaseLegalValueSelector: FC<BaseProps> = ({
             }
         }
     };
-    const Control = multiSelect ? Checkbox : Radio;
+    const Control = (multiSelect ? Checkbox : Radio) as (
+        props: CheckboxProps & RadioProps,
+    ) => JSX.Element;
 
     return (
         <LegalValuesSelectorWidget>
@@ -164,7 +167,7 @@ const MemoLabel = React.memo(function MemoLabel({
 }: {
     legal: ILegalValue;
     filter: string;
-    Control: (props: CheckboxProps) => JSX.Element;
+    Control: (props: CheckboxProps & RadioProps) => JSX.Element;
     onChange: (value: string) => void;
     checked: boolean;
     groupNameId: string;

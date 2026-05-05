@@ -1,4 +1,5 @@
-import { Grid, styled, type SxProps, type Theme } from '@mui/material';
+import { styled, type SxProps, type Theme } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import type React from 'react';
 import type { FC } from 'react';
 
@@ -14,10 +15,10 @@ export const GridRow: FC<{
     return (
         <StyledGrid
             container
-            item
-            justifyContent='space-between'
-            alignItems='center'
-            sx={sx}
+            sx={[
+                { justifyContent: 'space-between', alignItems: 'center' },
+                ...(Array.isArray(sx) ? sx : [sx]),
+            ]}
         >
             {children}
         </StyledGrid>

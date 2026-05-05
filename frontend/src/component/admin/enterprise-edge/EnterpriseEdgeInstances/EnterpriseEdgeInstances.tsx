@@ -2,8 +2,8 @@ import { ArcherContainer, ArcherElement } from 'react-archer';
 import { Typography, alpha, styled, useTheme } from '@mui/material';
 import { unknownify } from 'utils/unknownify';
 import { useMemo } from 'react';
-import { ReactComponent as LogoIcon } from 'assets/icons/logoBg.svg';
-import { ReactComponent as LogoIconWhite } from 'assets/icons/logoWhiteBg.svg';
+import LogoIcon from 'assets/icons/logoBg.svg?react';
+import LogoIconWhite from 'assets/icons/logoWhiteBg.svg?react';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import type {
     ConnectedEdge,

@@ -1,6 +1,7 @@
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { Box, Button, Grid, TextField, styled } from '@mui/material';
+import { Box, Button, TextField, styled } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import {
     useLicense,
@@ -152,8 +153,8 @@ export const LicenseForm = () => {
                         rows={6}
                         required
                     />
-                    <Grid container spacing={3} marginTop={2}>
-                        <Grid item md={5}>
+                    <Grid container spacing={3} sx={{ mt: 2 }}>
+                        <Grid size={{ md: 5 }}>
                             <Button
                                 variant='contained'
                                 color='primary'

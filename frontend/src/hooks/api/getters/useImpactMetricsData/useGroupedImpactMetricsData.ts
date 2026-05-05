@@ -106,6 +106,7 @@ export const useGroupedImpactMetricsData = (
     }));
 
     const stepTotals: MultimetricStep[] = data.map((response, i) => ({
+        id: configs[i].id,
         label: configs[i].title || configs[i].displayName,
         value: aggregateTotal(response.series, configs[i].aggregationMode),
         previousStepPercentage: null,

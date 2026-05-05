@@ -1,5 +1,5 @@
 import { Button, styled, Typography } from '@mui/material';
-import { ReactComponent as StarsIcon } from 'assets/img/stars.svg';
+import StarsIcon from 'assets/img/stars.svg?react';
 
 const StyledNotice = styled(Button)(({ theme }) => ({
     backgroundColor: theme.palette.web.main,

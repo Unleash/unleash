@@ -1,7 +1,7 @@
 import type { ISettingStore, IUnleashConfig } from '../types/index.js';
 import { createTestConfig } from '../../test/config/test-config.js';
 import { compareAndLogPostgresVersion } from './postgres-version-checker.js';
-import FakeSettingStore from '../../test/fixtures/fake-setting-store.js';
+import FakeSettingStore from '../features/settings/fake-setting-store.js';
 
 import { vi } from 'vitest';
 

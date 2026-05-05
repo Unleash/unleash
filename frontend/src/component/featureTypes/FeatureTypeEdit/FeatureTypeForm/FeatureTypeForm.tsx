@@ -30,7 +30,7 @@ const StyledButtons = styled(Box)(({ theme }) => ({
     paddingTop: theme.spacing(4),
 }));
 
-const StyledForm = styled(Box)(() => ({
+const StyledForm = styled('form')(() => ({
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
@@ -129,7 +129,7 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
             documentationLinkLabel='Feature flag types documentation'
             formatApiCode={formatApiCode}
         >
-            <StyledForm component='form' onSubmit={onSubmit}>
+            <StyledForm onSubmit={onSubmit}>
                 <Typography
                     sx={(theme) => ({
                         margin: theme.spacing(3, 0, 1),

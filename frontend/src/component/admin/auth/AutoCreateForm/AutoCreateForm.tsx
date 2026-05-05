@@ -2,10 +2,10 @@ import { type ChangeEvent, Fragment } from 'react';
 import {
     FormControl,
     FormControlLabel,
-    Grid,
     Switch,
     TextField,
 } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { RoleSelect } from 'component/common/RoleSelect/RoleSelect';
 import { useRoles } from 'hooks/api/getters/useRoles/useRoles';
 import type { IRole } from 'interfaces/role';
@@ -57,14 +57,14 @@ export const AutoCreateForm = ({
 
     return (
         <Fragment>
-            <Grid container spacing={3} mb={2}>
-                <Grid item md={5}>
+            <Grid container spacing={3} sx={{ mb: 2 }}>
+                <Grid size={{ md: 5 }}>
                     <strong>Auto-create users</strong>
                     <p>
                         Enable automatic creation of new users when signing in.
                     </p>
                 </Grid>
-                <Grid item md={6} style={{ padding: '20px' }}>
+                <Grid size={{ md: 6 }} style={{ padding: '20px' }}>
                     <FormControlLabel
                         control={
                             <Switch
@@ -78,15 +78,15 @@ export const AutoCreateForm = ({
                     />
                 </Grid>
             </Grid>
-            <Grid container spacing={3} mb={2}>
-                <Grid item md={5}>
+            <Grid container spacing={3} sx={{ mb: 2 }}>
+                <Grid size={{ md: 5 }}>
                     <strong>Default Root Role</strong>
                     <p>
                         Choose which root role the user should get when no
                         explicit role mapping exists.
                     </p>
                 </Grid>
-                <Grid item md={6}>
+                <Grid size={{ md: 6 }}>
                     <FormControl style={{ width: '400px' }}>
                         <RoleSelect
                             roles={roles}
@@ -101,15 +101,15 @@ export const AutoCreateForm = ({
                     </FormControl>
                 </Grid>
             </Grid>
-            <Grid container spacing={3} mb={2}>
-                <Grid item md={5}>
+            <Grid container spacing={3} sx={{ mb: 2 }}>
+                <Grid size={{ md: 5 }}>
                     <strong>Email domains</strong>
                     <p>
                         Comma separated list of email domains that should be
                         allowed to sign in.
                     </p>
                 </Grid>
-                <Grid item md={6}>
+                <Grid size={{ md: 6 }}>
                     <TextField
                         onChange={updateField}
                         label='Email domains'

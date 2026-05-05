@@ -31,9 +31,12 @@ test('Project can start onboarding', async () => {
             route: `/projects/${projectId}`,
         },
     );
+    await screen.findByText('Project setup');
+    await screen.findByText('Create a feature flag');
     await screen.findByText(
-        'The project currently holds no feature flags. Create one to get started.',
+        'You must create a feature flag before you can connect a SDK.',
     );
+    await screen.findByText('New feature flag');
 });
 
 test('Project can connect SDK', async () => {
@@ -62,7 +65,9 @@ test('Project can connect SDK', async () => {
             route: `/projects/${projectId}`,
         },
     );
+    await screen.findByText('Connect SDKs');
     await screen.findByText(
-        'Your project is not yet connected to any SDK. To start using your feature flag, connect an SDK to the project.',
+        'To start using your feature flag, connect an SDK to the project.',
     );
+    await screen.findByText('Connect SDK');
 });

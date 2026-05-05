@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     Button,
     FormControlLabel,
@@ -15,6 +15,10 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { useUiFlag } from 'hooks/useUiFlag';
 import NotFound from 'component/common/NotFound/NotFound';
+import { useExternalImpactMetricsSource } from 'hooks/api/getters/useExternalImpactMetricsSource/useExternalImpactMetricsSource';
+import { useExternalImpactMetricsSourceApi } from 'hooks/api/actions/useExternalImpactMetricsSourceApi/useExternalImpactMetricsSourceApi';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 const Layout = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -78,8 +82,44 @@ export const ImpactMetricsAdmin = () => {
 };
 
 const ImpactMetricsPage = () => {
-    const [enabled, setEnabled] = useState(false);
-    const [prometheusUrl, setPrometheusUrl] = useState('');
+    const { source, refetch, loading } = useExternalImpactMetricsSource();
+    const { setExternalImpactMetricsSource, loading: saving } =
+        useExternalImpactMetricsSourceApi();
+    const { setToastData, setToastApiError } = useToast();
+
+    const [enabled, setEnabled] = useState(source.enabled);
+    const [prometheusUrl, setPrometheusUrl] = useState(source.url ?? '');
+
+    useEffect(() => {
+        setEnabled(source.enabled);
+        setPrometheusUrl(source.url ?? '');
+    }, [source]);
+
+    const trimmedUrl = prometheusUrl.trim();
+    const canSave = !saving && (!enabled || trimmedUrl.length > 0);
+    const isDirty =
+        enabled !== source.enabled || trimmedUrl !== (source.url ?? '');
+
+    const handleCancel = () => {
+        setEnabled(source.enabled);
+        setPrometheusUrl(source.url ?? '');
+    };
+
+    const handleSave = async () => {
+        try {
+            await setExternalImpactMetricsSource({
+                enabled,
+                ...(trimmedUrl ? { url: trimmedUrl } : {}),
+            });
+            setToastData({
+                type: 'success',
+                text: 'External metrics source has been saved',
+            });
+            refetch();
+        } catch (error) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
 
     return (
         <PageContent header={<PageHeader titleElement='Impact Metrics' />}>
@@ -124,6 +164,7 @@ const ImpactMetricsPage = () => {
                             <Switch
                                 checked={enabled}
                                 onChange={(_, checked) => setEnabled(checked)}
+                                disabled={loading || saving}
                                 name='enabled'
                             />
                         }
@@ -154,19 +195,31 @@ const ImpactMetricsPage = () => {
                         onChange={(event) =>
                             setPrometheusUrl(event.target.value)
                         }
+                        disabled={loading || saving}
                         fullWidth
                         size='small'
                     />
                     <RightAlignedRow>
-                        <Button variant='contained' disabled={!prometheusUrl}>
+                        <Button variant='contained' disabled={!trimmedUrl}>
                             Test connection
                         </Button>
                     </RightAlignedRow>
                 </Card>
 
                 <Footer>
-                    <Button>Cancel</Button>
-                    <Button variant='contained'>Save</Button>
+                    <Button
+                        onClick={handleCancel}
+                        disabled={!isDirty || saving}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        variant='contained'
+                        onClick={handleSave}
+                        disabled={!canSave || !isDirty}
+                    >
+                        Save
+                    </Button>
                 </Footer>
             </Layout>
         </PageContent>

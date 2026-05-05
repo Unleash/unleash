@@ -1,4 +1,15 @@
-import { Box, styled } from '@mui/material';
+import { useState } from 'react';
+import {
+    Box,
+    Button,
+    FormControlLabel,
+    Link,
+    styled,
+    Switch,
+    TextField,
+    Typography,
+} from '@mui/material';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -6,12 +17,23 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { useUiFlag } from 'hooks/useUiFlag';
 import NotFound from 'component/common/NotFound/NotFound';
 
-const StyledTitleRow = styled(Box)(({ theme }) => ({
+const Card = styled('section')(({ theme }) => ({
+    padding: theme.spacing(3),
+    backgroundColor: theme.palette.background.elevation1,
+    borderRadius: `${theme.shape.borderRadiusLarge}px`,
     display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: theme.spacing(1),
+    flexDirection: 'column',
+    gap: theme.spacing(2),
 }));
+
+const Layout = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(3),
+}));
+
+const DOCS_URL =
+    'https://docs.getunleash.io/concepts/impact-metrics#enable-external-metrics';
 
 export const ImpactMetricsAdmin = () => {
     const externalImpactMetricsEnabled = useUiFlag('externalImpactMetrics');
@@ -21,24 +43,126 @@ export const ImpactMetricsAdmin = () => {
     }
 
     return (
-        <div>
-            <PermissionGuard permissions={[ADMIN]}>
-                <ImpactMetricsPage />
-            </PermissionGuard>
-        </div>
+        <PermissionGuard permissions={[ADMIN]}>
+            <ImpactMetricsPage />
+        </PermissionGuard>
     );
 };
 
 const ImpactMetricsPage = () => {
+    const [enabled, setEnabled] = useState(false);
+    const [prometheusUrl, setPrometheusUrl] = useState('');
+
     return (
-        <PageContent
-            header={
-                <PageHeader
-                    titleElement={
-                        <StyledTitleRow>Impact Metrics</StyledTitleRow>
-                    }
-                />
-            }
-        />
+        <PageContent header={<PageHeader titleElement='Impact Metrics' />}>
+            <Layout>
+                <Card>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 1,
+                        }}
+                    >
+                        <InfoOutlinedIcon fontSize='small' color='primary' />
+                        <Typography fontWeight='bold'>
+                            How does it work?
+                        </Typography>
+                    </Box>
+                    <Typography variant='body2' color='text.secondary'>
+                        This integration allows Unleash to read your
+                        organization's own metrics from any Prometheus API
+                        compatible source (e.g. Prometheus, VictoriaMetrics).
+                        Once connected, you can use those metrics to:
+                    </Typography>
+                    <Typography
+                        variant='body2'
+                        color='text.secondary'
+                        component='ul'
+                    >
+                        <li>
+                            Create <strong>safeguards</strong> — automatic rules
+                            that pause or roll back a feature when a metric
+                            (e.g. error rate, latency) crosses a threshold.
+                        </li>
+                        <li>
+                            Set up <strong>graph visualizations</strong> — embed
+                            live charts on flag pages so you can see the impact
+                            of a release without leaving Unleash.
+                        </li>
+                    </Typography>
+                </Card>
+
+                <Card
+                    sx={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Typography fontWeight='bold'>
+                        Integration status
+                    </Typography>
+                    <FormControlLabel
+                        sx={{ m: 0 }}
+                        control={
+                            <Switch
+                                checked={enabled}
+                                onChange={(_, checked) => setEnabled(checked)}
+                                name='enabled'
+                            />
+                        }
+                        label={enabled ? 'Enabled' : 'Disabled'}
+                    />
+                </Card>
+
+                <Card>
+                    <Typography fontWeight='bold'>
+                        Metrics source URL
+                    </Typography>
+                    <Typography variant='body2' color='text.secondary'>
+                        To set up this integration, add the URL to your
+                        organization's Prometheus API compatible source (e.g.
+                        Prometheus, VictoriaMetrics). Check out{' '}
+                        <Link
+                            href={DOCS_URL}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                        >
+                            our docs
+                        </Link>{' '}
+                        for further instructions.
+                    </Typography>
+                    <TextField
+                        placeholder='Metrics source URL'
+                        value={prometheusUrl}
+                        onChange={(event) =>
+                            setPrometheusUrl(event.target.value)
+                        }
+                        fullWidth
+                        size='small'
+                    />
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <Button variant='contained' disabled={!prometheusUrl}>
+                            Test integration
+                        </Button>
+                    </Box>
+                </Card>
+
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        gap: 2,
+                        pt: 2,
+                        borderTop: 1,
+                        borderColor: 'divider',
+                    }}
+                >
+                    <Button>Cancel</Button>
+                    <Button variant='contained'>Save</Button>
+                </Box>
+            </Layout>
+        </PageContent>
     );
 };

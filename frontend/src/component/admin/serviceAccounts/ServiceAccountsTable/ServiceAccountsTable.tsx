@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { TablePlaceholder } from 'component/common/Table';
-import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IRole } from 'interfaces/role';
 import useToast from 'hooks/useToast';
@@ -21,7 +21,7 @@ import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
-import { useConditionallyHiddenColumnsV8 } from 'hooks/useConditionallyHiddenColumnsV8';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { useSearch } from 'hooks/useSearch';
 import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
 import { useServiceAccountsApi } from 'hooks/api/actions/useServiceAccountsApi/useServiceAccountsApi';
@@ -201,7 +201,7 @@ export const ServiceAccountsTable = () => {
         enableMultiSort: false,
     });
 
-    useConditionallyHiddenColumnsV8(
+    useConditionallyHiddenColumns(
         [
             {
                 condition: isExtraSmallScreen,
@@ -264,7 +264,7 @@ export const ServiceAccountsTable = () => {
             }
         >
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <VirtualizedTableV8 tableInstance={table} />
+                <VirtualizedTable tableInstance={table} />
             </SearchHighlightProvider>
             <ConditionallyRender
                 condition={rowCount === 0}

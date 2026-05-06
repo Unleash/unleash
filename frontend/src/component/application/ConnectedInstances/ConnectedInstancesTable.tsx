@@ -1,6 +1,6 @@
 import { type Table as TableType, flexRender } from '@tanstack/react-table';
 import { TableCell, TablePlaceholder } from 'component/common/Table';
-import { SortableTableHeaderV8 } from 'component/common/Table/SortableTableHeader/SortableTableHeaderV8';
+import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
 import { Box, Table, TableBody, TableRow } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
@@ -18,7 +18,7 @@ export const ConnectedInstancesTable = <T,>({
         <>
             <Box sx={{ overflowX: 'auto' }}>
                 <Table>
-                    <SortableTableHeaderV8 tableInstance={table} />
+                    <SortableTableHeader tableInstance={table} />
                     <TableBody>
                         {rows.map((row) => (
                             <TableRow hover key={row.id}>

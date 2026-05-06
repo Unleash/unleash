@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { TablePlaceholder } from 'component/common/Table';
-import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -16,7 +16,7 @@ import { HighlightCell } from 'component/common/Table/cells/HighlightCell/Highli
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
-import { useConditionallyHiddenColumnsV8 } from 'hooks/useConditionallyHiddenColumnsV8';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { useSearch } from 'hooks/useSearch';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { useLoginHistory } from 'hooks/api/getters/useLoginHistory/useLoginHistory';
@@ -157,7 +157,7 @@ export const LoginHistoryTable = () => {
         enableMultiSort: false,
     });
 
-    useConditionallyHiddenColumnsV8(
+    useConditionallyHiddenColumns(
         [
             {
                 condition: isExtraSmallScreen,
@@ -255,7 +255,7 @@ export const LoginHistoryTable = () => {
             }
         >
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <VirtualizedTableV8 tableInstance={table} />
+                <VirtualizedTable tableInstance={table} />
             </SearchHighlightProvider>
             <ConditionallyRender
                 condition={rowCount === 0}

@@ -14,7 +14,7 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Search } from 'component/common/Search/Search';
 import { TablePlaceholder } from 'component/common/Table';
-import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
@@ -40,7 +40,7 @@ import { CreatePersonalAPIToken } from './CreatePersonalAPIToken/CreatePersonalA
 import { DeletePersonalAPIToken } from './DeletePersonalAPIToken/DeletePersonalAPIToken.tsx';
 import { PersonalAPITokenDialog } from './PersonalAPITokenDialog/PersonalAPITokenDialog.tsx';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
-import { useConditionallyHiddenColumnsV8 } from 'hooks/useConditionallyHiddenColumnsV8';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(3),
@@ -196,7 +196,7 @@ export const PersonalAPITokensTab = () => {
         enableMultiSort: false,
     });
 
-    useConditionallyHiddenColumnsV8(
+    useConditionallyHiddenColumns(
         [
             {
                 condition: isExtraSmallScreen,
@@ -291,7 +291,7 @@ export const PersonalAPITokensTab = () => {
                 your user.
             </StyledAlert>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <VirtualizedTableV8 tableInstance={table} />
+                <VirtualizedTable tableInstance={table} />
             </SearchHighlightProvider>
             <ConditionallyRender
                 condition={rows.length === 0}

@@ -1,6 +1,6 @@
 import { useContext, useMemo, useState } from 'react';
 import { TablePlaceholder } from 'component/common/Table';
-import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -239,7 +239,7 @@ export const UnknownFlagsTable = () => {
             </StyledAlert>
 
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <VirtualizedTableV8 tableInstance={table} />
+                <VirtualizedTable tableInstance={table} />
             </SearchHighlightProvider>
             <ConditionallyRender
                 condition={rowCount === 0}

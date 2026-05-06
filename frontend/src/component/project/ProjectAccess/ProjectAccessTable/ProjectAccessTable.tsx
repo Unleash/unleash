@@ -6,7 +6,7 @@ import {
     useReactTable,
 } from '@tanstack/react-table';
 import { TablePlaceholder } from 'component/common/Table';
-import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { styled, useMediaQuery, useTheme } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import Delete from '@mui/icons-material/Delete';
@@ -25,7 +25,7 @@ import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useSearch } from 'hooks/useSearch';
-import { useConditionallyHiddenColumnsV8 } from 'hooks/useConditionallyHiddenColumnsV8';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import {
     Link,
     Route,
@@ -307,7 +307,7 @@ export const ProjectAccessTable: FC = () => {
         enableMultiSort: false,
     });
 
-    useConditionallyHiddenColumnsV8(
+    useConditionallyHiddenColumns(
         [
             {
                 condition: isSmallScreen,
@@ -435,7 +435,7 @@ export const ProjectAccessTable: FC = () => {
             }
         >
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <VirtualizedTableV8 tableInstance={table} />
+                <VirtualizedTable tableInstance={table} />
             </SearchHighlightProvider>
             <ConditionallyRender
                 condition={rows.length === 0}

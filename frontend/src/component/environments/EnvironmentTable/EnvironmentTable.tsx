@@ -9,7 +9,7 @@ import {
     useReactTable,
 } from '@tanstack/react-table';
 import { Table, TablePlaceholder } from 'component/common/Table';
-import { SortableTableHeaderV8 } from 'component/common/Table/SortableTableHeader/SortableTableHeaderV8';
+import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
 import { useCallback, useMemo, useState } from 'react';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Alert, styled, TableBody } from '@mui/material';
@@ -190,7 +190,7 @@ export const EnvironmentTable = () => {
             </StyledAlert>
             <SearchHighlightProvider value={globalFilter}>
                 <Table rowHeight='compact'>
-                    <SortableTableHeaderV8 tableInstance={table} />
+                    <SortableTableHeader tableInstance={table} />
                     <TableBody>
                         {rows.map((row) => (
                             <EnvironmentRow

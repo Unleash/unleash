@@ -24,9 +24,9 @@ const headerText = (column?: ColumnLike): string | undefined => {
     if (typeof column?.Header === 'string') {
         return column.Header;
     }
-    const v8Header = column?.columnDef?.header;
-    if (typeof v8Header === 'string') {
-        return v8Header;
+    const header = column?.columnDef?.header;
+    if (typeof header === 'string') {
+        return header;
     }
     return undefined;
 };

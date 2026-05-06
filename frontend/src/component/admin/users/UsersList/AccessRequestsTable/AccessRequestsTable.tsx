@@ -7,7 +7,7 @@ import {
 } from '@tanstack/react-table';
 import { Button, IconButton, Typography, styled } from '@mui/material';
 import Delete from '@mui/icons-material/Delete';
-import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
@@ -206,7 +206,7 @@ export const AccessRequestsTable = () => {
     return (
         <StyledContainer>
             <StyledTitle>Access requests ({accessRequests.length})</StyledTitle>
-            <VirtualizedTableV8 tableInstance={table} />
+            <VirtualizedTable tableInstance={table} />
             <Dialogue
                 open={Boolean(requestToReject)}
                 title='Reject access request?'

@@ -5,7 +5,7 @@ import {
     TableRow,
     TablePlaceholder,
 } from 'component/common/Table';
-import { SortableTableHeaderV8 } from 'component/common/Table/SortableTableHeader/SortableTableHeaderV8';
+import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { useMemo, type FC } from 'react';
@@ -112,7 +112,7 @@ export const BillingHistory: FC<IBillingHistoryProps> = ({
         <PageContent isLoading={isLoading} disablePadding>
             <StyledTitle>Payment history</StyledTitle>
             <Table>
-                <SortableTableHeaderV8 tableInstance={table} />
+                <SortableTableHeader tableInstance={table} />
                 <TableBody>
                     {rows.map((row) => (
                         <TableRow hover key={row.id}>

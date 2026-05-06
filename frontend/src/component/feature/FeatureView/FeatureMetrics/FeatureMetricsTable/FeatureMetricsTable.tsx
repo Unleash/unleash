@@ -9,14 +9,14 @@ import {
     getSortedRowModel,
     useReactTable,
 } from '@tanstack/react-table';
-import { SortableTableHeaderV8 } from 'component/common/Table/SortableTableHeader/SortableTableHeaderV8';
+import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
 import { TableCell, Table } from 'component/common/Table';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import Assessment from '@mui/icons-material/Assessment';
 import { useMemo } from 'react';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import theme from 'themes/theme';
-import { useConditionallyHiddenColumnsV8 } from 'hooks/useConditionallyHiddenColumnsV8';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { ApplicationsCell } from './ApplicationsCell.tsx';
 
 interface IFeatureMetricsTableProps {
@@ -94,7 +94,7 @@ export const FeatureMetricsTable = ({
         enableSortingRemoval: false,
     });
 
-    useConditionallyHiddenColumnsV8(
+    useConditionallyHiddenColumns(
         [
             {
                 condition: isMediumScreen,
@@ -111,7 +111,7 @@ export const FeatureMetricsTable = ({
 
     return (
         <Table rowHeight='standard' id={tableSectionId}>
-            <SortableTableHeaderV8 tableInstance={table} />
+            <SortableTableHeader tableInstance={table} />
             <TableBody>
                 {table.getRowModel().rows.map((row) => (
                     <TableRow hover key={row.id}>

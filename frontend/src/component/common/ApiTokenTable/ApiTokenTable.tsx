@@ -1,6 +1,6 @@
 import type { Table as TableType, ColumnDef } from '@tanstack/react-table';
 import { TablePlaceholder } from 'component/common/Table';
-import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { Box, useMediaQuery, Link, styled, Typography } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { ApiTokenDocs } from 'component/admin/apiToken/ApiTokenDocs/ApiTokenDocs';
@@ -8,7 +8,7 @@ import { ApiTokenDocs } from 'component/admin/apiToken/ApiTokenDocs/ApiTokenDocs
 import theme from 'themes/theme';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
-import { useConditionallyHiddenColumnsV8 } from 'hooks/useConditionallyHiddenColumnsV8';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { ApiUrls } from 'component/admin/apiToken/ApiUrls/ApiUrls';
 import type { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
 
@@ -39,7 +39,7 @@ export const ApiTokenTable = ({
 }: IApiTokenTableProps) => {
     const isNotExtraLarge = useMediaQuery(theme.breakpoints.down('xl'));
 
-    useConditionallyHiddenColumnsV8(
+    useConditionallyHiddenColumns(
         [
             {
                 condition: isNotExtraLarge,
@@ -73,7 +73,7 @@ export const ApiTokenTable = ({
             <Box sx={{ overflowX: 'auto' }}>
                 <StyledTitle variant='h2'>API Tokens</StyledTitle>
                 <SearchHighlightProvider value={globalFilter}>
-                    <VirtualizedTableV8 tableInstance={table} />
+                    <VirtualizedTable tableInstance={table} />
                 </SearchHighlightProvider>
             </Box>
             <ConditionallyRender

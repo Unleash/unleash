@@ -1,4 +1,4 @@
-import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { useMemo, useState } from 'react';
@@ -72,5 +72,5 @@ export const RoleDeleteDialogGroups = ({
         enableMultiSort: false,
     });
 
-    return <VirtualizedTableV8 tableInstance={table} />;
+    return <VirtualizedTable tableInstance={table} />;
 };

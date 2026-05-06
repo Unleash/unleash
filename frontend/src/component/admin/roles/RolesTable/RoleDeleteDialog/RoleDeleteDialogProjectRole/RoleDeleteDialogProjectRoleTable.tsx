@@ -1,4 +1,4 @@
-import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { useMemo, useState } from 'react';
 import {
     type ColumnDef,
@@ -78,5 +78,5 @@ export const RoleDeleteDialogProjectRoleTable = ({
         enableMultiSort: false,
     });
 
-    return <VirtualizedTableV8 tableInstance={table} />;
+    return <VirtualizedTable tableInstance={table} />;
 };

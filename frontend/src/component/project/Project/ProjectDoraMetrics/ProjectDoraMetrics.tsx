@@ -17,12 +17,12 @@ import {
     TableRow,
     TablePlaceholder,
 } from 'component/common/Table';
-import { SortableTableHeaderV8 } from 'component/common/Table/SortableTableHeader/SortableTableHeaderV8';
+import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Badge } from 'component/common/Badge/Badge';
-import { useConditionallyHiddenColumnsV8 } from 'hooks/useConditionallyHiddenColumnsV8';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import theme from 'themes/theme';
 
 type DoraFeatureRow = {
@@ -189,7 +189,7 @@ export const ProjectDoraMetrics = () => {
         enableSortingRemoval: false,
     });
 
-    useConditionallyHiddenColumnsV8(
+    useConditionallyHiddenColumns(
         [
             {
                 condition: isExtraSmallScreen,
@@ -213,7 +213,7 @@ export const ProjectDoraMetrics = () => {
                 }
             >
                 <Table>
-                    <SortableTableHeaderV8 tableInstance={table} />
+                    <SortableTableHeader tableInstance={table} />
                     <TableBody>
                         {rows.map((row) => (
                             <TableRow hover key={row.id}>

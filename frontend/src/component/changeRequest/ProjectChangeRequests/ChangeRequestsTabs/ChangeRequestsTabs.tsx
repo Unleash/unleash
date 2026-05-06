@@ -9,7 +9,7 @@ import {
     TablePlaceholder,
     TableRow,
 } from 'component/common/Table';
-import { SortableTableHeaderV8 } from 'component/common/Table/SortableTableHeader/SortableTableHeaderV8';
+import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
 import {
     type ColumnDef,
     flexRender,
@@ -31,7 +31,7 @@ import { ChangeRequestStatusCell } from './ChangeRequestStatusCell.tsx';
 import { AvatarCell } from './AvatarCell.tsx';
 import { ChangeRequestTitleCell } from './ChangeRequestTitleCell.tsx';
 import { createLocalStorage } from 'utils/createLocalStorage';
-import { useConditionallyHiddenColumnsV8 } from 'hooks/useConditionallyHiddenColumnsV8';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { useStyles } from './ChangeRequestsTabs.styles';
 import { FeaturesCell } from './FeaturesCell.tsx';
 import { HighlightCell } from '../../../common/Table/cells/HighlightCell/HighlightCell.tsx';
@@ -270,7 +270,7 @@ export const ChangeRequestsTabs = ({
         enableSortingRemoval: false,
     });
 
-    useConditionallyHiddenColumnsV8(
+    useConditionallyHiddenColumns(
         [
             {
                 condition: isSmallScreen,
@@ -364,7 +364,7 @@ export const ChangeRequestsTabs = ({
             </ConfigurationLinkBox>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <StyledTable>
-                    <SortableTableHeaderV8 tableInstance={table} />
+                    <SortableTableHeader tableInstance={table} />
                     <TableBody>
                         {rows.map((row) => (
                             <TableRow hover key={row.id}>

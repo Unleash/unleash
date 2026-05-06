@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { TablePlaceholder } from 'component/common/Table';
-import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -16,7 +16,7 @@ import { sortingFns } from 'utils/sortingFns';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import theme from 'themes/theme';
-import { useConditionallyHiddenColumnsV8 } from 'hooks/useConditionallyHiddenColumnsV8';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
 import { useSignalEndpointsApi } from 'hooks/api/actions/useSignalEndpointsApi/useSignalEndpointsApi';
 import type { ISignalEndpoint } from 'interfaces/signal';
@@ -220,7 +220,7 @@ export const SignalEndpointsTable = () => {
         enableMultiSort: false,
     });
 
-    useConditionallyHiddenColumnsV8(
+    useConditionallyHiddenColumns(
         [
             {
                 condition: isSmallScreen,
@@ -322,7 +322,7 @@ export const SignalEndpointsTable = () => {
 
             <PermissionGuard permissions={ADMIN}>
                 <>
-                    <VirtualizedTableV8 tableInstance={table} />
+                    <VirtualizedTable tableInstance={table} />
                     <ConditionallyRender
                         condition={rowCount === 0}
                         show={

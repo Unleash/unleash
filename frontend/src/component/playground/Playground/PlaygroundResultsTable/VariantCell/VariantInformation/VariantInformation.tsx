@@ -11,7 +11,7 @@ import {
     useReactTable,
 } from '@tanstack/react-table';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { SortableTableHeaderV8 } from 'component/common/Table/SortableTableHeader/SortableTableHeaderV8';
+import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
 import CheckCircleOutlined from '@mui/icons-material/CheckCircleOutlined';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
@@ -124,7 +124,7 @@ export const VariantInformation: FC<IVariantInformationProps> = ({
             </StyledTypography>
 
             <Table rowHeight='dense'>
-                <SortableTableHeaderV8 tableInstance={table} />
+                <SortableTableHeader tableInstance={table} />
                 <TableBody>
                     {table.getRowModel().rows.map((row) => {
                         const styles = {} as { [key: string]: string };

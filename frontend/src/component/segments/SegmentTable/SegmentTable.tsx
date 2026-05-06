@@ -7,7 +7,7 @@ import {
     TablePlaceholder,
     TableRow,
 } from 'component/common/Table';
-import { SortableTableHeaderV8 } from 'component/common/Table/SortableTableHeader/SortableTableHeaderV8';
+import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
 import {
     type ColumnDef,
     flexRender,
@@ -31,7 +31,7 @@ import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import theme from 'themes/theme';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Search } from 'component/common/Search/Search';
-import { useConditionallyHiddenColumnsV8 } from 'hooks/useConditionallyHiddenColumnsV8';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import { UsedInCell } from 'component/context/ContextList/UsedInCell';
@@ -89,7 +89,7 @@ export const SegmentTable = () => {
         enableSortingRemoval: false,
     });
 
-    useConditionallyHiddenColumnsV8(
+    useConditionallyHiddenColumns(
         [
             {
                 condition: isSmallScreen,
@@ -136,7 +136,7 @@ export const SegmentTable = () => {
                     <>
                         <SearchHighlightProvider value={globalFilter}>
                             <Table rowHeight='standard'>
-                                <SortableTableHeaderV8 tableInstance={table} />
+                                <SortableTableHeader tableInstance={table} />
                                 <TableBody>
                                     {rows.map((row) => (
                                         <TableRow hover key={row.id}>

@@ -6,7 +6,7 @@ import { HighlightCell } from 'component/common/Table/cells/HighlightCell/Highli
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import Delete from '@mui/icons-material/Delete';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import {
     type ColumnDef,
     getCoreRowModel,
@@ -94,7 +94,7 @@ export const GroupFormUsersTable: FC<IGroupFormUsersTableProps> = ({
     return (
         <ConditionallyRender
             condition={table.getRowModel().rows.length > 0}
-            show={<VirtualizedTableV8 tableInstance={table} />}
+            show={<VirtualizedTable tableInstance={table} />}
         />
     );
 };

@@ -7,12 +7,12 @@ import {
     useReactTable,
 } from '@tanstack/react-table';
 
-import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { sortingFns } from 'utils/sortingFns';
 import type { AdvancedPlaygroundEnvironmentFeatureSchema } from 'openapi';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 import type { IFeatureVariant } from 'interfaces/featureToggle';
-import { useConditionallyHiddenColumnsV8 } from 'hooks/useConditionallyHiddenColumnsV8';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { FeatureStatusCell } from '../PlaygroundResultsTable/FeatureStatusCell/FeatureStatusCell.tsx';
 import { FeatureResultInfoPopoverCell } from '../PlaygroundResultsTable/FeatureResultInfoPopoverCell/FeatureResultInfoPopoverCell.tsx';
 import { VariantCell } from '../PlaygroundResultsTable/VariantCell/VariantCell.tsx';
@@ -114,7 +114,7 @@ export const PlaygroundEnvironmentTable = ({
         enableMultiSort: false,
     });
 
-    useConditionallyHiddenColumnsV8(
+    useConditionallyHiddenColumns(
         [
             {
                 condition: isExtraSmallScreen,
@@ -135,7 +135,7 @@ export const PlaygroundEnvironmentTable = ({
                 maxHeight: '800px',
             }}
         >
-            <VirtualizedTableV8 parentRef={parentRef} tableInstance={table} />
+            <VirtualizedTable parentRef={parentRef} tableInstance={table} />
         </Box>
     );
 };

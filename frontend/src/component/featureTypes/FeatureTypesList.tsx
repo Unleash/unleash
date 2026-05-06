@@ -13,7 +13,7 @@ import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Box } from '@mui/material';
 import { Table, TableBody, TableCell, TableRow } from 'component/common/Table';
-import { SortableTableHeaderV8 } from 'component/common/Table/SortableTableHeader/SortableTableHeaderV8';
+import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
@@ -152,7 +152,7 @@ export const FeatureTypesList = () => {
             header={<PageHeader title='Feature flag types' />}
         >
             <Table>
-                <SortableTableHeaderV8 tableInstance={table} />
+                <SortableTableHeader tableInstance={table} />
                 <TableBody>
                     {table.getRowModel().rows.map((row) => (
                         <TableRow hover key={row.id}>

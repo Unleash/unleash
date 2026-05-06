@@ -1,7 +1,7 @@
 import { TableBody, TableRow, useMediaQuery, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Table, TableCell, TablePlaceholder } from 'component/common/Table';
-import { SortableTableHeaderV8 } from 'component/common/Table/SortableTableHeader/SortableTableHeaderV8';
+import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
@@ -23,7 +23,7 @@ import {
 } from '@tanstack/react-table';
 import { PayloadCell } from './PayloadCell/PayloadCell.tsx';
 import { OverridesCell } from './OverridesCell/OverridesCell.tsx';
-import { useConditionallyHiddenColumnsV8 } from 'hooks/useConditionallyHiddenColumnsV8';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
 interface IEnvironmentVariantsTableProps {
     variants: IFeatureVariant[];
@@ -130,7 +130,7 @@ export const EnvironmentVariantsTable = ({
         enableMultiSort: false,
     });
 
-    useConditionallyHiddenColumnsV8(
+    useConditionallyHiddenColumns(
         [
             {
                 condition: isMediumScreen,
@@ -151,7 +151,7 @@ export const EnvironmentVariantsTable = ({
         <>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <Table>
-                    <SortableTableHeaderV8 tableInstance={table} />
+                    <SortableTableHeader tableInstance={table} />
                     <TableBody>
                         {rows.map((row) => (
                             <TableRow hover key={row.id}>

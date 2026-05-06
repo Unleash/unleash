@@ -7,7 +7,7 @@ import {
     useReactTable,
 } from '@tanstack/react-table';
 import { Table, TableCell } from 'component/common/Table';
-import { SortableTableHeaderV8 } from 'component/common/Table/SortableTableHeader/SortableTableHeaderV8';
+import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
 import { EnvironmentIconCell } from 'component/environments/EnvironmentTable/EnvironmentIconCell/EnvironmentIconCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -94,7 +94,7 @@ export const EnvironmentTableSingle = ({
 
     return (
         <StyledTable rowHeight='compact'>
-            <SortableTableHeaderV8 tableInstance={table} />
+            <SortableTableHeader tableInstance={table} />
             <TableBody>
                 {table.getRowModel().rows.map((row) => (
                     <TableRow hover key={row.id}>

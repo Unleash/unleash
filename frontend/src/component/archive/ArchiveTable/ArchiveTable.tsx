@@ -1,7 +1,7 @@
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { TablePlaceholder } from 'component/common/Table';
-import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import {
     type ColumnDef,
     getCoreRowModel,
@@ -26,7 +26,7 @@ import { FeatureArchivedCell } from 'component/archive/ArchiveTable/FeatureArchi
 import { useSearchParams } from 'react-router-dom';
 import { ArchivedFeatureDeleteConfirm } from 'component/archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureDeleteConfirm/ArchivedFeatureDeleteConfirm';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
-import { useConditionallyHiddenColumnsV8 } from 'hooks/useConditionallyHiddenColumnsV8';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { FeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import { ArchivedFeatureReviveConfirm } from 'component/archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureReviveConfirm/ArchivedFeatureReviveConfirm';
 
@@ -202,7 +202,7 @@ export const ArchiveTable = ({
         enableSortingRemoval: false,
     });
 
-    useConditionallyHiddenColumnsV8(
+    useConditionallyHiddenColumns(
         [
             {
                 condition: isSmallScreen,
@@ -269,7 +269,7 @@ export const ArchiveTable = ({
                     </Alert>
                 )}
                 <SearchHighlightProvider value={getSearchText(searchValue)}>
-                    <VirtualizedTableV8 tableInstance={table} />
+                    <VirtualizedTable tableInstance={table} />
                 </SearchHighlightProvider>
                 <ConditionallyRender
                     condition={rows.length === 0}

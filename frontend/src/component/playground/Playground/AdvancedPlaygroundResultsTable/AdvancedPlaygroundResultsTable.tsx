@@ -8,7 +8,7 @@ import {
 } from '@tanstack/react-table';
 
 import { TablePlaceholder } from 'component/common/Table';
-import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -19,7 +19,7 @@ import { createLocalStorage } from 'utils/createLocalStorage';
 
 import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import useLoading from 'hooks/useLoading';
-import { useConditionallyHiddenColumnsV8 } from 'hooks/useConditionallyHiddenColumnsV8';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { AdvancedPlaygroundEnvironmentCell } from './AdvancedPlaygroundEnvironmentCell/AdvancedPlaygroundEnvironmentCell.tsx';
 import type {
     AdvancedPlaygroundRequestSchema,
@@ -180,7 +180,7 @@ export const AdvancedPlaygroundResultsTable = ({
         enableMultiSort: false,
     });
 
-    useConditionallyHiddenColumnsV8(
+    useConditionallyHiddenColumns(
         [
             {
                 condition: isSmallScreen,
@@ -266,7 +266,7 @@ export const AdvancedPlaygroundResultsTable = ({
                         <SearchHighlightProvider
                             value={getSearchText(searchValue)}
                         >
-                            <VirtualizedTableV8 tableInstance={table} />
+                            <VirtualizedTable tableInstance={table} />
                         </SearchHighlightProvider>
                         <ConditionallyRender
                             condition={

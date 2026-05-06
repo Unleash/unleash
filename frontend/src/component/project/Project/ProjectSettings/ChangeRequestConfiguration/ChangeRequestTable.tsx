@@ -7,7 +7,7 @@ import {
 } from '@tanstack/react-table';
 import { Alert, Box, styled, Typography } from '@mui/material';
 import { Table, TableBody, TableCell, TableRow } from 'component/common/Table';
-import { SortableTableHeaderV8 } from 'component/common/Table/SortableTableHeader/SortableTableHeaderV8';
+import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
@@ -235,7 +235,7 @@ export const ChangeRequestTable: FC = () => {
                 applied
             </Alert>
             <Table>
-                <SortableTableHeaderV8 tableInstance={table} />
+                <SortableTableHeader tableInstance={table} />
                 <TableBody>
                     {table.getRowModel().rows.map((row) => (
                         <TableRow hover key={row.id}>

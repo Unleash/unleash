@@ -8,7 +8,7 @@ import PermissionIconButton from 'component/common/PermissionIconButton/Permissi
 import { Search } from 'component/common/Search/Search';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { TablePlaceholder } from 'component/common/Table';
-import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
@@ -25,7 +25,7 @@ import {
     getSortedRowModel,
     useReactTable,
 } from '@tanstack/react-table';
-import { useConditionallyHiddenColumnsV8 } from 'hooks/useConditionallyHiddenColumnsV8';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
 const StyledPageContent = styled(PageContent)(({ theme }) => ({
     height: '100vh',
@@ -162,7 +162,7 @@ export const ProjectGroupView: FC<IProjectGroupViewProps> = ({
         enableMultiSort: false,
     });
 
-    useConditionallyHiddenColumnsV8(
+    useConditionallyHiddenColumns(
         [
             {
                 condition: isSmallScreen,
@@ -252,7 +252,7 @@ export const ProjectGroupView: FC<IProjectGroupViewProps> = ({
                 }
             >
                 <SearchHighlightProvider value={getSearchText(searchValue)}>
-                    <VirtualizedTableV8 tableInstance={table} />
+                    <VirtualizedTable tableInstance={table} />
                 </SearchHighlightProvider>
                 <ConditionallyRender
                     condition={rows.length === 0}

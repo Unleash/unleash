@@ -24,7 +24,7 @@ import {
 } from '@tanstack/react-table';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender.tsx';
 import { TablePlaceholder } from '../../../common/Table/index.ts';
-import { VirtualizedTableV8 } from '../../../common/Table/VirtualizedTable/VirtualizedTableV8.tsx';
+import { VirtualizedTable } from '../../../common/Table/VirtualizedTable/VirtualizedTable.tsx';
 
 import { DateCell } from '../../../common/Table/cells/DateCell/DateCell.tsx';
 import { InactiveUsersActionCell } from './InactiveUsersActionCell/InactiveUsersActionCell.tsx';
@@ -217,7 +217,7 @@ export const InactiveUsersList = () => {
             <StyledUsersLinkDiv>
                 <Link to={'/admin/users'}>View all users</Link>
             </StyledUsersLinkDiv>
-            <VirtualizedTableV8 tableInstance={table} />
+            <VirtualizedTable tableInstance={table} />
             <ConditionallyRender
                 condition={rowCount === 0}
                 show={

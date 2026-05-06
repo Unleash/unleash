@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { TablePlaceholder } from 'component/common/Table';
-import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -14,7 +14,7 @@ import {
 import { sortingFns } from 'utils/sortingFns';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import theme from 'themes/theme';
-import { useConditionallyHiddenColumnsV8 } from 'hooks/useConditionallyHiddenColumnsV8';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { useActions } from 'hooks/api/getters/useActions/useActions';
 import { useActionsApi } from 'hooks/api/actions/useActionsApi/useActionsApi';
 import type { IActionSet } from 'interfaces/action';
@@ -215,7 +215,7 @@ export const ProjectActionsTable = ({
         enableMultiSort: false,
     });
 
-    useConditionallyHiddenColumnsV8(
+    useConditionallyHiddenColumns(
         [
             {
                 condition: isMediumScreen,
@@ -234,7 +234,7 @@ export const ProjectActionsTable = ({
 
     return (
         <>
-            <VirtualizedTableV8 tableInstance={table} />
+            <VirtualizedTable tableInstance={table} />
             <ConditionallyRender
                 condition={rowCount === 0}
                 show={

@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { Search } from 'component/common/Search/Search';
 import { TablePlaceholder } from 'component/common/Table';
-import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
@@ -27,7 +27,7 @@ import {
 } from '@tanstack/react-table';
 import { SignalEndpointsTokensCreateDialog } from './SignalEndpointsTokensCreateDialog.tsx';
 import { SignalEndpointsTokensDialog } from './SignalEndpointsTokensDialog.tsx';
-import { useConditionallyHiddenColumnsV8 } from 'hooks/useConditionallyHiddenColumnsV8';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import {
@@ -202,7 +202,7 @@ export const SignalEndpointsTokens = ({
         enableMultiSort: false,
     });
 
-    useConditionallyHiddenColumnsV8(
+    useConditionallyHiddenColumns(
         [
             {
                 condition: isSmallScreen,
@@ -233,7 +233,7 @@ export const SignalEndpointsTokens = ({
                 </Button>
             </StyledHeader>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <VirtualizedTableV8 tableInstance={table} />
+                <VirtualizedTable tableInstance={table} />
             </SearchHighlightProvider>
             <ConditionallyRender
                 condition={rowCount === 0}

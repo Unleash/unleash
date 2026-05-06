@@ -1,5 +1,5 @@
 import useFeedbackPosted from 'hooks/api/getters/useFeedbackPosted/useFeedbackPosted';
-import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import {
     type ColumnDef,
@@ -214,7 +214,7 @@ export const FeedbackList = () => {
             </ActiveExperiments>
             <StyledSectionHeader>All feedback ({rowCount})</StyledSectionHeader>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <VirtualizedTableV8 tableInstance={table} />
+                <VirtualizedTable tableInstance={table} />
             </SearchHighlightProvider>
         </PageContent>
     );

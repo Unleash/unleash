@@ -1,15 +1,19 @@
 import { useEffect } from 'react';
+import type { Updater, VisibilityState } from '@tanstack/react-table';
 
 interface IConditionallyHiddenColumns {
     condition: boolean;
     columns: string[];
 }
 
+/**
+ * Applies visibility to a tanstack-react-table instance by calling
+ * `setColumnVisibility` with a `Record<string, boolean>` derived from a
+ * list of `{ condition, columns }` pairs.
+ */
 export const useConditionallyHiddenColumns = (
     conditionallyHiddenColumns: IConditionallyHiddenColumns[],
-    setHiddenColumns: (
-        columns: string[] | ((columns: string[]) => string[]),
-    ) => void,
+    setColumnVisibility: (updater: Updater<VisibilityState>) => void,
     columnsDefinition: unknown[],
 ) => {
     useEffect(() => {
@@ -18,19 +22,22 @@ export const useConditionallyHiddenColumns = (
             .flatMap(({ columns }) => columns);
 
         const columnsToShow = conditionallyHiddenColumns
-            .flatMap(({ columns }) => columns)
-            .filter((column) => !columnsToHide.includes(column));
+            .filter(({ condition }) => !condition)
+            .flatMap(({ columns }) => columns);
 
-        setHiddenColumns((columns) => [
-            ...new Set(
-                [...columns, ...columnsToHide].filter(
-                    (column) => !columnsToShow.includes(column),
-                ),
-            ),
-        ]);
+        setColumnVisibility((current) => {
+            const next = { ...current };
+            for (const column of columnsToHide) {
+                next[column] = false;
+            }
+            for (const column of columnsToShow) {
+                next[column] = true;
+            }
+            return next;
+        });
     }, [
         ...conditionallyHiddenColumns.map(({ condition }) => condition),
-        setHiddenColumns,
+        setColumnVisibility,
         columnsDefinition,
     ]);
 };

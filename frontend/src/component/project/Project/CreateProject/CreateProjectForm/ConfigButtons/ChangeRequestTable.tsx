@@ -7,7 +7,7 @@ import {
 } from '@tanstack/react-table';
 import { Box, Switch, styled } from '@mui/material';
 import { Table, TableBody, TableCell, TableRow } from 'component/common/Table';
-import { SortableTableHeaderV8 } from 'component/common/Table/SortableTableHeader/SortableTableHeaderV8';
+import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
@@ -200,7 +200,7 @@ export const ChangeRequestTable = (props: TableProps) => {
 
     return (
         <StyledTable>
-            <SortableTableHeaderV8 tableInstance={table} />
+            <SortableTableHeader tableInstance={table} />
             <TableBody>
                 {table.getRowModel().rows.map((row) => (
                     <TableRow hover key={row.id}>

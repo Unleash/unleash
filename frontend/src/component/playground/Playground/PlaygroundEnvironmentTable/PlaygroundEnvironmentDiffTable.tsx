@@ -7,7 +7,7 @@ import {
     useReactTable,
 } from '@tanstack/react-table';
 
-import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { sortingFns } from 'utils/sortingFns';
 import type { AdvancedPlaygroundFeatureSchemaEnvironments } from 'openapi';
 import { Box } from '@mui/material';
@@ -117,7 +117,7 @@ export const PlaygroundEnvironmentDiffTable = ({
                 maxHeight: '800px',
             }}
         >
-            <VirtualizedTableV8 parentRef={parentRef} tableInstance={table} />
+            <VirtualizedTable parentRef={parentRef} tableInstance={table} />
         </Box>
     );
 };

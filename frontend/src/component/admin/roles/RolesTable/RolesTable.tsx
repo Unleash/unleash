@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { TablePlaceholder } from 'component/common/Table';
-import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IRole, PredefinedRoleType } from 'interfaces/role';
 import useToast from 'hooks/useToast';
@@ -15,7 +15,7 @@ import {
     useReactTable,
 } from '@tanstack/react-table';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { useConditionallyHiddenColumnsV8 } from 'hooks/useConditionallyHiddenColumnsV8';
+import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { useSearch } from 'hooks/useSearch';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import SupervisedUserCircle from '@mui/icons-material/SupervisedUserCircle';
@@ -154,7 +154,7 @@ export const RolesTable = ({
         enableMultiSort: false,
     });
 
-    useConditionallyHiddenColumnsV8(
+    useConditionallyHiddenColumns(
         [
             {
                 condition: isSmallScreen,
@@ -170,7 +170,7 @@ export const RolesTable = ({
     return (
         <PageContent isLoading={loading}>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <VirtualizedTableV8 tableInstance={table} />
+                <VirtualizedTable tableInstance={table} />
             </SearchHighlightProvider>
             <ConditionallyRender
                 condition={rowCount === 0}

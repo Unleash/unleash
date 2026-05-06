@@ -8,7 +8,7 @@ import {
     useReactTable,
 } from '@tanstack/react-table';
 import { TablePlaceholder } from 'component/common/Table';
-import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { useGroup } from 'hooks/api/getters/useGroup/useGroup';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
@@ -342,7 +342,7 @@ export const Group: FC = () => {
                         <SearchHighlightProvider
                             value={getSearchText(searchValue)}
                         >
-                            <VirtualizedTableV8 tableInstance={table} />
+                            <VirtualizedTable tableInstance={table} />
                         </SearchHighlightProvider>
                         <ConditionallyRender
                             condition={rows.length === 0}

@@ -1,4 +1,4 @@
-import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
@@ -148,5 +148,5 @@ export const ProjectsListTable = ({ projects }: ProjectsListTableProps) => {
         enableMultiSort: false,
     });
 
-    return <VirtualizedTableV8 tableInstance={table} />;
+    return <VirtualizedTable tableInstance={table} />;
 };

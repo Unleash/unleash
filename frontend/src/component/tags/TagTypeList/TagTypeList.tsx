@@ -8,7 +8,7 @@ import {
     TableRow,
     TablePlaceholder,
 } from 'component/common/Table';
-import { SortableTableHeaderV8 } from 'component/common/Table/SortableTableHeader/SortableTableHeaderV8';
+import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
 import Delete from '@mui/icons-material/Delete';
 import Edit from '@mui/icons-material/Edit';
 import Label from '@mui/icons-material/Label';
@@ -235,7 +235,7 @@ export const TagTypeList = () => {
         >
             <SearchHighlightProvider value={globalFilter}>
                 <Table>
-                    <SortableTableHeaderV8 tableInstance={table} />
+                    <SortableTableHeader tableInstance={table} />
                     <TableBody>
                         {rows.map((row) => (
                             <TableRow hover key={row.id}>

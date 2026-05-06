@@ -22,7 +22,7 @@ import {
     useReactTable,
 } from '@tanstack/react-table';
 import { Table, TableCell, TablePlaceholder } from 'component/common/Table';
-import { SortableTableHeaderV8 } from 'component/common/Table/SortableTableHeader/SortableTableHeaderV8';
+import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Search } from 'component/common/Search/Search';
 import { EnvironmentNameCell } from 'component/environments/EnvironmentTable/EnvironmentNameCell/EnvironmentNameCell';
@@ -285,7 +285,7 @@ const ProjectEnvironmentList = () => {
                 </StyledAlert>
                 <SearchHighlightProvider value={globalFilter}>
                     <Table rowHeight='compact'>
-                        <SortableTableHeaderV8 tableInstance={table} />
+                        <SortableTableHeader tableInstance={table} />
                         <TableBody>
                             {rows.map((row) => (
                                 <TableRow hover key={row.id}>

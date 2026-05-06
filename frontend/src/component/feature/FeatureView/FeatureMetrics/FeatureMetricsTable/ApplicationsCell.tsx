@@ -11,7 +11,7 @@ interface IFeatureTagCellProps {
     row: {
         original: {
             appName: string;
-            selectedApplications: string[];
+            selectedApplications?: string[];
         };
     };
 }

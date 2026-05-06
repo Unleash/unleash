@@ -427,7 +427,7 @@ export const lightTheme = createTheme({
                     '> .MuiAlert-message': {
                         padding: '3px 0 0 0',
                     },
-                    '&.MuiAlert-standardInfo': {
+                    '&.MuiAlert-standard.MuiAlert-colorInfo': {
                         backgroundColor: theme.palette.info.light,
                         color: theme.palette.info.dark,
                         border: `1px solid ${theme.palette.info.border}`,
@@ -435,7 +435,7 @@ export const lightTheme = createTheme({
                             color: theme.palette.info.main,
                         },
                     },
-                    '&.MuiAlert-standardSuccess': {
+                    '&.MuiAlert-standard.MuiAlert-colorSuccess': {
                         backgroundColor: theme.palette.success.light,
                         color: theme.palette.success.dark,
                         border: `1px solid ${theme.palette.success.border}`,
@@ -443,7 +443,7 @@ export const lightTheme = createTheme({
                             color: theme.palette.success.main,
                         },
                     },
-                    '&.MuiAlert-standardWarning': {
+                    '&.MuiAlert-standard.MuiAlert-colorWarning': {
                         backgroundColor: theme.palette.warning.light,
                         color: theme.palette.warning.dark,
                         border: `1px solid ${theme.palette.warning.border}`,
@@ -451,7 +451,7 @@ export const lightTheme = createTheme({
                             color: theme.palette.warning.main,
                         },
                     },
-                    '&.MuiAlert-standardError': {
+                    '&.MuiAlert-standard.MuiAlert-colorError': {
                         backgroundColor: theme.palette.error.light,
                         color: theme.palette.error.dark,
                         border: `1px solid ${theme.palette.error.border}`,

@@ -3,18 +3,23 @@ import { isClosed } from 'component/changeRequest/changeRequest.types';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import {
-    SortableTableHeader,
     Table,
     TableBody,
     TableCell,
     TablePlaceholder,
     TableRow,
 } from 'component/common/Table';
-import { type SortingRule, useSortBy, useTable } from 'react-table';
+import { SortableTableHeaderV8 } from 'component/common/Table/SortableTableHeader/SortableTableHeaderV8';
+import {
+    type ColumnDef,
+    flexRender,
+    getCoreRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Box, styled, Tab, Tabs, useMediaQuery } from '@mui/material';
 import { Link, useSearchParams } from 'react-router-dom';
-import { sortTypes } from 'utils/sortTypes';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Search } from 'component/common/Search/Search';
 import { featuresPlaceholder } from 'component/feature/FeatureToggleList/FeatureToggleListTable';
@@ -26,7 +31,7 @@ import { ChangeRequestStatusCell } from './ChangeRequestStatusCell.tsx';
 import { AvatarCell } from './AvatarCell.tsx';
 import { ChangeRequestTitleCell } from './ChangeRequestTitleCell.tsx';
 import { createLocalStorage } from 'utils/createLocalStorage';
-import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import { useConditionallyHiddenColumnsV8 } from 'hooks/useConditionallyHiddenColumnsV8';
 import { useStyles } from './ChangeRequestsTabs.styles';
 import { FeaturesCell } from './FeaturesCell.tsx';
 import { HighlightCell } from '../../../common/Table/cells/HighlightCell/HighlightCell.tsx';
@@ -38,7 +43,9 @@ export interface IChangeRequestTableProps {
     placeholder?: ReactNode;
 }
 
-const defaultSort: SortingRule<string> & {
+const defaultSort: {
+    id: string;
+    desc: boolean;
     columns?: string[];
     type?: 'open' | 'closed';
 } = { id: 'createdAt', desc: true };
@@ -120,87 +127,109 @@ export const ChangeRequestsTabs = ({
     const activeTab =
         tabs.find((tab) => tab.type === changeRequestType) || tabs[0];
 
-    const columns = useMemo(
+    const columns = useMemo<ColumnDef<any, unknown>[]>(
         () => [
             {
                 id: 'Title',
-                Header: 'Title',
-                canSort: true,
-                accessor: 'title',
-                searchable: true,
-                Cell: ChangeRequestTitleCell,
+                header: 'Title',
+                accessorKey: 'title',
+                cell: ({ getValue, row }) => (
+                    <ChangeRequestTitleCell
+                        value={getValue() as string}
+                        row={row}
+                    />
+                ),
+                meta: { searchable: true },
             },
             {
                 id: 'Updated feature flags',
-                Header: 'Updated feature flags',
-                canSort: false,
-                accessor: 'features',
-                searchable: true,
-                filterName: 'feature',
-                filterParsing: (values: Array<{ name: string }>) => {
-                    return values?.map(({ name }) => name).join('\n') || '';
-                },
-                filterBy: (
-                    row: { features: Array<{ name: string }> },
-                    values: Array<string>,
-                ) => {
-                    return row.features.find((feature) =>
-                        values
-                            .map((value) => value.toLowerCase())
-                            .includes(feature.name.toLowerCase()),
-                    );
-                },
-                Cell: ({
-                    value,
+                header: 'Updated feature flags',
+                accessorKey: 'features',
+                enableSorting: false,
+                cell: ({
+                    getValue,
                     row: {
                         original: { title },
                     },
-                }: any) => (
+                }) => (
                     <FeaturesCell
                         project={projectId}
-                        value={value}
+                        value={getValue()}
                         key={title}
                     />
                 ),
+                meta: {
+                    searchable: true,
+                    filterName: 'feature',
+                    filterParsing: (values: Array<{ name: string }>) => {
+                        return (
+                            values?.map(({ name }) => name).join('\n') || ''
+                        );
+                    },
+                    filterBy: (
+                        row: { features: Array<{ name: string }> },
+                        values: Array<string>,
+                    ) => {
+                        return row.features.find((feature) =>
+                            values
+                                .map((value) => value.toLowerCase())
+                                .includes(feature.name.toLowerCase()),
+                        );
+                    },
+                },
             },
             {
-                Header: 'By',
-                accessor: 'createdBy',
-                width: '10%',
-                canSort: false,
-                Cell: AvatarCell,
-                align: 'left',
-                searchable: true,
-                filterName: 'by',
-                filterParsing: (value: { username?: string }) =>
-                    value?.username || '',
+                id: 'createdBy',
+                header: 'By',
+                accessorKey: 'createdBy',
+                enableSorting: false,
+                cell: ({ getValue }) => <AvatarCell value={getValue() as any} />,
+                meta: {
+                    width: '10%',
+                    align: 'left',
+                    searchable: true,
+                    filterName: 'by',
+                    filterParsing: (value: { username?: string }) =>
+                        value?.username || '',
+                },
             },
             {
-                Header: 'Submitted',
-                accessor: 'createdAt',
-                maxWidth: 100,
-                width: '5%',
-                Cell: TimeAgoCell,
+                id: 'createdAt',
+                header: 'Submitted',
+                accessorKey: 'createdAt',
+                cell: TimeAgoCell,
+                meta: { maxWidth: 100, width: '5%' },
             },
             {
-                Header: 'Environment',
-                accessor: 'environment',
-                searchable: true,
-                width: '10%',
-                Cell: HighlightCell,
-                filterName: 'environment',
+                id: 'environment',
+                header: 'Environment',
+                accessorKey: 'environment',
+                cell: HighlightCell,
+                meta: {
+                    searchable: true,
+                    width: '10%',
+                    filterName: 'environment',
+                },
             },
             {
-                Header: 'Status',
-                accessor: 'state',
-                searchable: true,
-                maxWidth: '170px',
-                width: '10%',
-                Cell: ChangeRequestStatusCell,
-                filterName: 'status',
+                id: 'state',
+                header: 'Status',
+                accessorKey: 'state',
+                cell: ({ getValue, row }) => (
+                    <ChangeRequestStatusCell
+                        value={getValue() as string}
+                        row={row}
+                    />
+                ),
+                meta: {
+                    searchable: true,
+                    maxWidth: '170px',
+                    width: '10%',
+                    filterName: 'status',
+                },
             },
         ],
-        //eslint-disable-next-line
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [projectId],
     );
 
@@ -216,7 +245,7 @@ export const ChangeRequestsTabs = ({
     );
 
     const [initialState] = useState(() => ({
-        sortBy: [
+        sorting: [
             {
                 id: searchParams.get('sort') || storedParams.id,
                 desc: searchParams.has('order')
@@ -224,51 +253,48 @@ export const ChangeRequestsTabs = ({
                     : storedParams.desc,
             },
         ],
-        hiddenColumns: [],
     }));
 
-    const {
-        headerGroups,
-        rows,
-        state: { sortBy },
-        prepareRow,
-        setHiddenColumns,
-        getTableProps,
-        getTableBodyProps,
-    } = useTable(
-        {
-            columns: columns as any[], // TODO: fix after `react-table` v8 update
-            data,
-            initialState,
-            sortTypes,
-            autoResetHiddenColumns: false,
-            disableSortRemove: true,
-            autoResetSortBy: false,
-            defaultColumn: {
-                Cell: TextCell,
-            },
+    const table = useReactTable({
+        columns,
+        data,
+        initialState,
+        defaultColumn: {
+            cell: ({ getValue }) => (
+                <TextCell value={String(getValue() ?? '')} />
+            ),
         },
-        useSortBy,
-    );
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+    });
 
-    useConditionallyHiddenColumns(
+    useConditionallyHiddenColumnsV8(
         [
             {
                 condition: isSmallScreen,
                 columns: ['createdBy'],
             },
         ],
-        setHiddenColumns,
+        table.setColumnVisibility,
         columns,
     );
+
+    const sorting = table.getState().sorting;
+    const rows = table.getRowModel().rows;
 
     useEffect(() => {
         if (loading) {
             return;
         }
+        const sortRule = sorting[0];
+        if (!sortRule) {
+            return;
+        }
         const tableState: Record<string, string> = {};
-        tableState.sort = sortBy[0].id;
-        if (sortBy[0].desc) {
+        tableState.sort = sortRule.id;
+        if (sortRule.desc) {
             tableState.order = 'desc';
         }
         if (searchValue) {
@@ -281,12 +307,12 @@ export const ChangeRequestsTabs = ({
         });
         setStoredParams((params) => ({
             ...params,
-            id: sortBy[0].id,
-            desc: sortBy[0].desc || false,
+            id: sortRule.id,
+            desc: sortRule.desc || false,
             type: changeRequestType,
         }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [loading, sortBy, searchValue, setSearchParams, changeRequestType]);
+    }, [loading, sorting, searchValue, setSearchParams, changeRequestType]);
 
     return (
         <PageContent
@@ -337,27 +363,21 @@ export const ChangeRequestsTabs = ({
                 </Link>
             </ConfigurationLinkBox>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <StyledTable {...getTableProps()}>
-                    <SortableTableHeader headerGroups={headerGroups} />
-                    <TableBody {...getTableBodyProps()}>
-                        {rows.map((row) => {
-                            prepareRow(row);
-                            const { key, ...rowProps } = row.getRowProps();
-                            return (
-                                <TableRow hover key={key} {...rowProps}>
-                                    {row.cells.map((cell) => {
-                                        const { key, ...cellProps } =
-                                            cell.getCellProps();
-
-                                        return (
-                                            <TableCell key={key} {...cellProps}>
-                                                {cell.render('Cell')}
-                                            </TableCell>
-                                        );
-                                    })}
-                                </TableRow>
-                            );
-                        })}
+                <StyledTable>
+                    <SortableTableHeaderV8 tableInstance={table} />
+                    <TableBody>
+                        {rows.map((row) => (
+                            <TableRow hover key={row.id}>
+                                {row.getVisibleCells().map((cell) => (
+                                    <TableCell key={cell.id}>
+                                        {flexRender(
+                                            cell.column.columnDef.cell,
+                                            cell.getContext(),
+                                        )}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        ))}
                     </TableBody>
                 </StyledTable>
             </SearchHighlightProvider>

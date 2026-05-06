@@ -14,13 +14,15 @@ import type { IProjectEnvironment } from 'interfaces/environments';
 import { getEnabledEnvs } from './helpers.ts';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useGlobalFilter, useTable } from 'react-table';
 import {
-    SortableTableHeader,
-    Table,
-    TableCell,
-    TablePlaceholder,
-} from 'component/common/Table';
+    type ColumnDef,
+    flexRender,
+    getCoreRowModel,
+    getFilteredRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
+import { Table, TableCell, TablePlaceholder } from 'component/common/Table';
+import { SortableTableHeaderV8 } from 'component/common/Table/SortableTableHeader/SortableTableHeaderV8';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Search } from 'component/common/Search/Search';
 import { EnvironmentNameCell } from 'component/environments/EnvironmentTable/EnvironmentNameCell/EnvironmentNameCell';
@@ -68,6 +70,7 @@ const ProjectEnvironmentList = () => {
     const [selectedEnvironment, setSelectedEnvironment] =
         useState<IProjectEnvironment>();
     const [hideDialog, setHideDialog] = useState(false);
+    const [globalFilter, setGlobalFilter] = useState('');
     const { isOss } = useUiConfig();
 
     const projectEnvironments = useMemo<IProjectEnvironment[]>(
@@ -172,34 +175,36 @@ const ProjectEnvironmentList = () => {
             : 'Make it visible';
     };
 
-    const COLUMNS = useMemo(
+    const columns = useMemo<ColumnDef<IProjectEnvironment, unknown>[]>(
         () => [
             {
-                Header: 'Name',
-                accessor: 'name',
-                Cell: ({ row: { original } }: any) => (
+                id: 'name',
+                header: 'Name',
+                accessorKey: 'name',
+                cell: ({ row: { original } }) => (
                     <EnvironmentNameCell environment={original} />
                 ),
             },
             {
-                Header: 'Type',
-                accessor: 'type',
-                Cell: HighlightCell,
+                id: 'type',
+                header: 'Type',
+                accessorKey: 'type',
+                cell: HighlightCell,
             },
             {
-                Header: 'Project API tokens',
-                accessor: (row: IProjectEnvironment) =>
+                id: 'projectApiTokenCount',
+                header: 'Project API tokens',
+                accessorFn: (row) =>
                     row.projectApiTokenCount === 1
                         ? '1 token'
                         : `${row.projectApiTokenCount} tokens`,
-                Cell: TextCell,
+                cell: TextCell,
             },
             {
-                Header: 'Visible in project',
-                accessor: 'enabled',
-                align: 'center',
-                width: 1,
-                Cell: ({ row: { original } }: any) => (
+                id: 'enabled',
+                header: 'Visible in project',
+                accessorKey: 'enabled',
+                cell: ({ row: { original } }) => (
                     <ActionCell>
                         <PermissionSwitch
                             tooltip={buildToolTip(original)}
@@ -207,33 +212,31 @@ const ProjectEnvironmentList = () => {
                             disabled={envIsDisabled(original)}
                             projectId={projectId}
                             permission={UPDATE_PROJECT}
-                            checked={original.projectVisible}
+                            checked={Boolean(original.projectVisible)}
                             onChange={() => toggleEnv(original)}
                         />
                     </ActionCell>
                 ),
-                disableGlobalFilter: true,
+                enableGlobalFilter: false,
+                meta: { align: 'center' },
             },
         ],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [projectEnvironments],
     );
 
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        rows,
-        prepareRow,
+    const table = useReactTable({
+        columns,
+        data: projectEnvironments,
         state: { globalFilter },
-        setGlobalFilter,
-    } = useTable(
-        {
-            columns: COLUMNS as any,
-            data: projectEnvironments,
-            disableSortBy: true,
-        },
-        useGlobalFilter,
-    );
+        onGlobalFilterChange: setGlobalFilter,
+        getCoreRowModel: getCoreRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        enableSorting: false,
+        autoResetAll: false,
+    });
+
+    const rows = table.getRowModel().rows;
 
     const header = (
         <PageHeader
@@ -242,7 +245,7 @@ const ProjectEnvironmentList = () => {
                 <>
                     <Search
                         initialValue={globalFilter}
-                        onChange={setGlobalFilter}
+                        onChange={(value) => setGlobalFilter(value)}
                     />
                     {!isOss() ? (
                         <>
@@ -281,32 +284,21 @@ const ProjectEnvironmentList = () => {
                     .
                 </StyledAlert>
                 <SearchHighlightProvider value={globalFilter}>
-                    <Table {...getTableProps()} rowHeight='compact'>
-                        <SortableTableHeader
-                            headerGroups={headerGroups as any}
-                        />
-                        <TableBody {...getTableBodyProps()}>
-                            {rows.map((row) => {
-                                prepareRow(row);
-                                const { key, ...rowProps } = row.getRowProps();
-                                return (
-                                    <TableRow hover key={key} {...rowProps}>
-                                        {row.cells.map((cell) => {
-                                            const { key, ...cellProps } =
-                                                cell.getCellProps();
-
-                                            return (
-                                                <TableCell
-                                                    key={key}
-                                                    {...cellProps}
-                                                >
-                                                    {cell.render('Cell')}
-                                                </TableCell>
-                                            );
-                                        })}
-                                    </TableRow>
-                                );
-                            })}
+                    <Table rowHeight='compact'>
+                        <SortableTableHeaderV8 tableInstance={table} />
+                        <TableBody>
+                            {rows.map((row) => (
+                                <TableRow hover key={row.id}>
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell key={cell.id}>
+                                            {flexRender(
+                                                cell.column.columnDef.cell,
+                                                cell.getContext(),
+                                            )}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))}
                         </TableBody>
                     </Table>
                 </SearchHighlightProvider>

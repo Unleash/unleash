@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
+    Alert,
+    AlertTitle,
     Button,
     FormControlLabel,
     Link,
@@ -17,6 +19,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import NotFound from 'component/common/NotFound/NotFound';
 import { useExternalImpactMetricsSource } from 'hooks/api/getters/useExternalImpactMetricsSource/useExternalImpactMetricsSource';
 import { useExternalImpactMetricsSourceApi } from 'hooks/api/actions/useExternalImpactMetricsSourceApi/useExternalImpactMetricsSourceApi';
+import { useTestExternalImpactMetricsSourceApi } from 'hooks/api/actions/useTestExternalImpactMetricsSourceApi/useTestExternalImpactMetricsSourceApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
@@ -55,6 +58,13 @@ const Footer = styled('div')(({ theme }) => ({
     borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
+const MetricsList = styled('ul')(({ theme }) => ({
+    maxHeight: theme.spacing(30),
+    overflowY: 'auto',
+    paddingLeft: theme.spacing(2.5),
+    margin: 0,
+}));
+
 const DOCS_URL =
     'https://docs.getunleash.io/concepts/impact-metrics#enable-external-metrics';
 
@@ -76,12 +86,16 @@ const ImpactMetricsPage = () => {
     const { source, refetch, loading } = useExternalImpactMetricsSource();
     const { setExternalImpactMetricsSource, loading: saving } =
         useExternalImpactMetricsSourceApi();
+    const { testExternalImpactMetricsSource, loading: testing } =
+        useTestExternalImpactMetricsSourceApi();
     const { setToastData, setToastApiError } = useToast();
 
     const currentUrl = source.url ?? '';
 
     const [enabled, setEnabled] = useState(false);
     const [prometheusUrl, setPrometheusUrl] = useState('');
+    const [testResult, setTestResult] = useState<string[] | null>(null);
+    const [testError, setTestError] = useState<string | null>(null);
 
     useEffect(() => {
         setEnabled(source.enabled);
@@ -93,9 +107,26 @@ const ImpactMetricsPage = () => {
     const hasUrlWhenRequired = !enabled || trimmedUrl.length > 0;
     const canSave = isDirty && !saving && hasUrlWhenRequired;
 
+    const handleUrlChange = (value: string) => {
+        setPrometheusUrl(value);
+        setTestResult(null);
+        setTestError(null);
+    };
+
     const handleCancel = () => {
         setEnabled(source.enabled);
         setPrometheusUrl(currentUrl);
+    };
+
+    const handleTest = async () => {
+        setTestResult(null);
+        setTestError(null);
+        try {
+            const result = await testExternalImpactMetricsSource(trimmedUrl);
+            setTestResult(result.metrics);
+        } catch (error) {
+            setTestError(formatUnknownError(error));
+        }
     };
 
     const handleSave = async () => {
@@ -186,12 +217,42 @@ const ImpactMetricsPage = () => {
                         placeholder='Metrics source URL'
                         value={prometheusUrl}
                         onChange={(event) =>
-                            setPrometheusUrl(event.target.value)
+                            handleUrlChange(event.target.value)
                         }
                         disabled={loading || saving}
                         fullWidth
                         size='small'
                     />
+                    <Button
+                        variant='contained'
+                        onClick={handleTest}
+                        disabled={!trimmedUrl || testing}
+                    >
+                        Test integration
+                    </Button>
+                    {testResult !== null && (
+                        <Alert severity='success'>
+                            <AlertTitle>
+                                We received {testResult.length} metrics from
+                                your metrics source URL
+                            </AlertTitle>
+                            The imported metrics will be available wherever you
+                            use Impact Metrics in Unleash.
+                        </Alert>
+                    )}
+                    {testError !== null && (
+                        <Alert severity='error'>{testError}</Alert>
+                    )}
+                    {testResult !== null && testResult.length > 0 && (
+                        <>
+                            <Typography fontWeight='bold'>Metrics</Typography>
+                            <MetricsList>
+                                {testResult.map((metric) => (
+                                    <li key={metric}>{metric}</li>
+                                ))}
+                            </MetricsList>
+                        </>
+                    )}
                 </Card>
 
                 <Footer>

@@ -1,4 +1,4 @@
-import type { Row, SortingFn } from '@tanstack/react-table';
+import type { Row } from '@tanstack/react-table';
 
 const date = <TData,>(
     rowA: Row<TData>,
@@ -76,10 +76,7 @@ const numericZeroLast = <TData,>(
     return aVal - bVal;
 };
 
-export const sortingFns: Record<
-    'date' | 'boolean' | 'alphanumeric' | 'playgroundResultState' | 'numericZeroLast',
-    SortingFn<unknown>
-> = {
+export const sortingFns = {
     date,
     boolean,
     alphanumeric,

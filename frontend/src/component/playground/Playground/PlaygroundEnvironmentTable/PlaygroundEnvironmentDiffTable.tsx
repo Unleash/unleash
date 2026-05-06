@@ -1,13 +1,14 @@
 import { useMemo, useRef } from 'react';
 import {
-    useFlexLayout,
-    useGlobalFilter,
-    useSortBy,
-    useTable,
-} from 'react-table';
+    createColumnHelper,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
 
-import { VirtualizedTable } from 'component/common/Table';
-import { sortTypes } from 'utils/sortTypes';
+import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
+import { sortingFns } from 'utils/sortingFns';
 import type { AdvancedPlaygroundFeatureSchemaEnvironments } from 'openapi';
 import { Box } from '@mui/material';
 import { FeatureStatusCell } from '../PlaygroundResultsTable/FeatureStatusCell/FeatureStatusCell.tsx';
@@ -37,62 +38,75 @@ export const PlaygroundEnvironmentDiffTable = ({
     );
     type RowType = (typeof data)[0];
 
-    const contextFieldsHeaders = Object.keys(firstContext).map(
-        (contextField) => ({
-            Header: capitalizeFirst(contextField),
-            accessor: (
-                row: Record<string, { context: Record<string, unknown> }>,
-            ) => row[environments[0]].context[contextField],
-            minWidth: 160,
-            Cell: HighlightCell,
-        }),
-    );
+    const columnHelper = createColumnHelper<RowType>();
 
-    const environmentHeaders = environments.map((environment) => ({
-        Header: environment,
-        accessor: (row: RowType) =>
-            row[environment]?.isEnabled
-                ? 'true'
-                : row[environment]?.strategies?.result === 'unknown'
-                  ? 'unknown'
-                  : 'false',
-        Cell: ({ row }: { row: { original: RowType } }) => {
-            return (
-                <Box sx={{ display: 'flex' }}>
-                    <FeatureStatusCell feature={row.original[environment]} />
-                    <FeatureResultInfoPopoverCell
-                        feature={row.original[environment]}
-                        input={{
-                            environment: row.original[environment].environment,
-                            context: row.original[environment].context,
-                        }}
-                    />
-                </Box>
-            );
-        },
-        sortType: 'playgroundResultState',
-        maxWidth: 140,
-    }));
+    const columns = useMemo(() => {
+        const contextColumns = Object.keys(firstContext).map((contextField) =>
+            columnHelper.accessor(
+                (row) =>
+                    (
+                        row[environments[0]] as {
+                            context: Record<string, unknown>;
+                        }
+                    ).context[contextField],
+                {
+                    id: `context_${contextField}`,
+                    header: capitalizeFirst(contextField),
+                    cell: ({ getValue }) => (
+                        <HighlightCell value={String(getValue() ?? '')} />
+                    ),
+                    meta: { minWidth: 160 },
+                },
+            ),
+        );
 
-    const COLUMNS = useMemo(() => {
-        return [...contextFieldsHeaders, ...environmentHeaders];
+        const environmentColumns = environments.map((environment) =>
+            columnHelper.accessor(
+                (row) =>
+                    row[environment]?.isEnabled
+                        ? 'true'
+                        : row[environment]?.strategies?.result === 'unknown'
+                          ? 'unknown'
+                          : 'false',
+                {
+                    id: environment,
+                    header: environment,
+                    cell: ({ row }) => (
+                        <Box sx={{ display: 'flex' }}>
+                            <FeatureStatusCell
+                                feature={row.original[environment]}
+                            />
+                            <FeatureResultInfoPopoverCell
+                                feature={row.original[environment]}
+                                input={{
+                                    environment:
+                                        row.original[environment].environment,
+                                    context:
+                                        row.original[environment].context,
+                                }}
+                            />
+                        </Box>
+                    ),
+                    sortingFn: sortingFns.playgroundResultState,
+                    meta: { maxWidth: 140 },
+                },
+            ),
+        );
+
+        return [...contextColumns, ...environmentColumns];
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const { headerGroups, rows, prepareRow } = useTable(
-        {
-            columns: COLUMNS as any[],
-            data,
-            sortTypes,
-            autoResetGlobalFilter: false,
-            autoResetHiddenColumns: false,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            disableMultiSort: true,
-        },
-        useGlobalFilter,
-        useFlexLayout,
-        useSortBy,
-    );
+    const table = useReactTable({
+        columns,
+        data,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+        enableMultiSort: false,
+    });
 
     const parentRef = useRef<HTMLElement | null>(null);
 
@@ -104,12 +118,7 @@ export const PlaygroundEnvironmentDiffTable = ({
                 maxHeight: '800px',
             }}
         >
-            <VirtualizedTable
-                parentRef={parentRef}
-                rows={rows}
-                headerGroups={headerGroups}
-                prepareRow={prepareRow}
-            />
+            <VirtualizedTableV8 parentRef={parentRef} tableInstance={table} />
         </Box>
     );
 };

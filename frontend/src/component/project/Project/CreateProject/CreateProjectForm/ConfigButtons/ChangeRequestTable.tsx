@@ -1,14 +1,13 @@
 import { useMemo } from 'react';
-import { type HeaderGroup, useGlobalFilter, useTable } from 'react-table';
-import { Box, Switch, styled } from '@mui/material';
 import {
-    SortableTableHeader,
-    Table,
-    TableBody,
-    TableCell,
-    TableRow,
-} from 'component/common/Table';
-import { sortTypes } from 'utils/sortTypes';
+    type ColumnDef,
+    flexRender,
+    getCoreRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
+import { Box, Switch, styled } from '@mui/material';
+import { Table, TableBody, TableCell, TableRow } from 'component/common/Table';
+import { SortableTableHeaderV8 } from 'component/common/Table/SortableTableHeader/SortableTableHeaderV8';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
@@ -32,6 +31,14 @@ const StyledTable = styled(Table)(({ theme }) => ({
         borderBottom: 'none',
     },
 }));
+
+type EnvironmentRow = {
+    environment: string;
+    type: string;
+    changeRequestEnabled: boolean;
+    requiredApprovals: number;
+    configurable: boolean;
+};
 
 type TableProps = {
     environments: {
@@ -74,66 +81,79 @@ export const ChangeRequestTable = (props: TableProps) => {
             };
         });
 
-    function onRequiredApprovalsChange(original: any, approvals: string) {
+    function onRequiredApprovalsChange(
+        original: EnvironmentRow,
+        approvals: string,
+    ) {
         props.enableEnvironment(original.environment, Number(approvals));
     }
 
-    const columns = useMemo(
+    const data = useMemo<EnvironmentRow[]>(
+        () =>
+            props.environments.map((env) => ({
+                environment: env.name,
+                type: env.type,
+                changeRequestEnabled: env.changeRequestEnabled,
+                requiredApprovals: env.requiredApprovals ?? 1,
+                configurable: env.configurable,
+            })),
+        [props.environments],
+    );
+
+    const columns = useMemo<ColumnDef<EnvironmentRow, unknown>[]>(
         () => [
             {
-                Header: 'Environment',
-                accessor: 'environment',
-                disableSortBy: true,
+                id: 'environment',
+                header: 'Environment',
+                accessorKey: 'environment',
+                enableSorting: false,
             },
             {
-                Header: 'Type',
-                accessor: 'type',
-                disableGlobalFilter: true,
-                disableSortBy: true,
+                id: 'type',
+                header: 'Type',
+                accessorKey: 'type',
+                enableSorting: false,
             },
             {
-                Header: 'Required approvals',
-                Cell: ({ row: { original } }: any) => {
-                    return (
-                        <ConditionallyRender
-                            condition={original.changeRequestEnabled}
-                            show={
-                                <StyledBox data-loading>
-                                    <GeneralSelect
-                                        label={`Set required approvals for ${original.environment}`}
-                                        visuallyHideLabel
-                                        id={`cr-approvals-${original.environment}`}
-                                        sx={{ width: '140px' }}
-                                        options={approvalOptions}
-                                        value={original.requiredApprovals || 1}
-                                        onChange={(approvals) => {
-                                            onRequiredApprovalsChange(
-                                                original,
-                                                approvals,
-                                            );
-                                        }}
-                                        disabled={!original.configurable}
-                                        IconComponent={
-                                            KeyboardArrowDownOutlined
-                                        }
-                                        fullWidth
-                                    />
-                                </StyledBox>
-                            }
-                        />
-                    );
-                },
-                width: 100,
-                disableGlobalFilter: true,
-                disableSortBy: true,
+                id: 'requiredApprovals',
+                header: 'Required approvals',
+                cell: ({ row: { original } }) => (
+                    <ConditionallyRender
+                        condition={original.changeRequestEnabled}
+                        show={
+                            <StyledBox data-loading>
+                                <GeneralSelect
+                                    label={`Set required approvals for ${original.environment}`}
+                                    visuallyHideLabel
+                                    id={`cr-approvals-${original.environment}`}
+                                    sx={{ width: '140px' }}
+                                    options={approvalOptions}
+                                    value={String(
+                                        original.requiredApprovals || 1,
+                                    )}
+                                    onChange={(approvals) => {
+                                        onRequiredApprovalsChange(
+                                            original,
+                                            approvals,
+                                        );
+                                    }}
+                                    disabled={!original.configurable}
+                                    IconComponent={KeyboardArrowDownOutlined}
+                                    fullWidth
+                                />
+                            </StyledBox>
+                        }
+                    />
+                ),
+                enableSorting: false,
+                meta: { width: 100 },
             },
             {
-                Header: 'Status',
-                accessor: 'changeRequestEnabled',
                 id: 'changeRequestEnabled',
-                align: 'center',
-
-                Cell: ({ value, row: { original } }: any) => {
+                header: 'Status',
+                accessorKey: 'changeRequestEnabled',
+                cell: ({ getValue, row: { original } }) => {
+                    const value = Boolean(getValue());
                     return (
                         <StyledBox data-loading>
                             <Switch
@@ -155,62 +175,43 @@ export const ChangeRequestTable = (props: TableProps) => {
                         </StyledBox>
                     );
                 },
-                width: 100,
-                disableGlobalFilter: true,
-                disableSortBy: true,
+                enableSorting: false,
+                meta: { width: 100, align: 'center' },
             },
         ],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [],
     );
 
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-        useTable(
-            {
-                // @ts-expect-error
-                columns,
-                data: props.environments.map((env) => {
-                    return {
-                        environment: env.name,
-                        type: env.type,
-                        changeRequestEnabled: env.changeRequestEnabled,
-                        requiredApprovals: env.requiredApprovals ?? 1,
-                        configurable: env.configurable,
-                    };
-                }),
+    const table = useReactTable({
+        columns,
+        data,
+        defaultColumn: {
+            cell: ({ getValue }) => (
+                <TextCell value={String(getValue() ?? '')} />
+            ),
+        },
+        getCoreRowModel: getCoreRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+    });
 
-                sortTypes,
-                autoResetGlobalFilter: false,
-                disableSortRemove: true,
-                defaultColumn: {
-                    Cell: TextCell,
-                },
-            },
-            useGlobalFilter,
-        );
     return (
-        <StyledTable {...getTableProps()}>
-            <SortableTableHeader
-                headerGroups={headerGroups as HeaderGroup<object>[]}
-            />
-            <TableBody {...getTableBodyProps()}>
-                {rows.map((row) => {
-                    prepareRow(row);
-                    const { key, ...rowProps } = row.getRowProps();
-                    return (
-                        <TableRow hover key={key} {...rowProps}>
-                            {row.cells.map((cell) => {
-                                const { key, ...cellProps } =
-                                    cell.getCellProps();
-
-                                return (
-                                    <TableCell key={key} {...cellProps}>
-                                        {cell.render('Cell')}
-                                    </TableCell>
-                                );
-                            })}
-                        </TableRow>
-                    );
-                })}
+        <StyledTable>
+            <SortableTableHeaderV8 tableInstance={table} />
+            <TableBody>
+                {table.getRowModel().rows.map((row) => (
+                    <TableRow hover key={row.id}>
+                        {row.getVisibleCells().map((cell) => (
+                            <TableCell key={cell.id}>
+                                {flexRender(
+                                    cell.column.columnDef.cell,
+                                    cell.getContext(),
+                                )}
+                            </TableCell>
+                        ))}
+                    </TableRow>
+                ))}
             </TableBody>
         </StyledTable>
     );

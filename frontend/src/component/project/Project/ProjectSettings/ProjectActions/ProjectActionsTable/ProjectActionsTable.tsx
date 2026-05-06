@@ -1,14 +1,20 @@
 import { useMemo, useState } from 'react';
-import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
+import { TablePlaceholder } from 'component/common/Table';
+import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useMediaQuery } from '@mui/material';
-import { useFlexLayout, useSortBy, useTable } from 'react-table';
-import { sortTypes } from 'utils/sortTypes';
+import {
+    type ColumnDef,
+    getCoreRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
+import { sortingFns } from 'utils/sortingFns';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import theme from 'themes/theme';
-import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import { useConditionallyHiddenColumnsV8 } from 'hooks/useConditionallyHiddenColumnsV8';
 import { useActions } from 'hooks/api/getters/useActions/useActions';
 import { useActionsApi } from 'hooks/api/actions/useActionsApi/useActionsApi';
 import type { IActionSet } from 'interfaces/action';
@@ -85,17 +91,13 @@ export const ProjectActionsTable = ({
     const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
 
-    const columns = useMemo(
+    const columns = useMemo<ColumnDef<IActionSet, unknown>[]>(
         () => [
             {
-                Header: 'Name',
-                accessor: 'name',
-                minWidth: 60,
-                Cell: ({
-                    row: { original: action },
-                }: {
-                    row: { original: IActionSet };
-                }) => (
+                id: 'name',
+                header: 'Name',
+                accessorKey: 'name',
+                cell: ({ row: { original: action } }) => (
                     <LinkCell
                         title={action.name}
                         subtitle={action.description}
@@ -105,15 +107,12 @@ export const ProjectActionsTable = ({
                         }}
                     />
                 ),
+                meta: { minWidth: 60 },
             },
             {
                 id: 'source',
-                Header: 'Source',
-                Cell: ({
-                    row: { original: action },
-                }: {
-                    row: { original: IActionSet };
-                }) => (
+                header: 'Source',
+                cell: ({ row: { original: action } }) => (
                     <ProjectActionsSourceCell
                         action={action}
                         signalEndpoints={signalEndpoints}
@@ -122,37 +121,27 @@ export const ProjectActionsTable = ({
             },
             {
                 id: 'filters',
-                Header: 'Filters',
-                Cell: ({
-                    row: { original: action },
-                }: {
-                    row: { original: IActionSet };
-                }) => <ProjectActionsFiltersCell action={action} />,
-                maxWidth: 90,
+                header: 'Filters',
+                cell: ({ row: { original: action } }) => (
+                    <ProjectActionsFiltersCell action={action} />
+                ),
+                meta: { maxWidth: 90 },
             },
             {
                 id: 'actor',
-                Header: 'Service account',
-                Cell: ({
-                    row: { original: action },
-                }: {
-                    row: { original: IActionSet };
-                }) => (
+                header: 'Service account',
+                cell: ({ row: { original: action } }) => (
                     <ProjectActionsActorCell
                         action={action}
                         serviceAccounts={serviceAccounts}
                     />
                 ),
-                minWidth: 160,
+                meta: { minWidth: 160 },
             },
             {
                 id: 'actions',
-                Header: 'Actions',
-                Cell: ({
-                    row: { original: action },
-                }: {
-                    row: { original: IActionSet };
-                }) => (
+                header: 'Actions',
+                cell: ({ row: { original: action } }) => (
                     <ProjectActionsActionsCell
                         action={action}
                         onCreateAction={() => {
@@ -161,16 +150,13 @@ export const ProjectActionsTable = ({
                         }}
                     />
                 ),
-                maxWidth: 130,
+                meta: { maxWidth: 130 },
             },
             {
-                Header: 'Enabled',
-                accessor: 'enabled',
-                Cell: ({
-                    row: { original: action },
-                }: {
-                    row: { original: IActionSet };
-                }) => (
+                id: 'enabled',
+                header: 'Enabled',
+                accessorKey: 'enabled',
+                cell: ({ row: { original: action } }) => (
                     <ToggleCell
                         checked={action.enabled}
                         setChecked={(enabled) =>
@@ -178,19 +164,13 @@ export const ProjectActionsTable = ({
                         }
                     />
                 ),
-                sortType: 'boolean',
-                width: 90,
-                maxWidth: 90,
+                sortingFn: sortingFns.boolean,
+                meta: { width: 90, maxWidth: 90 },
             },
             {
                 id: 'table-actions',
-                Header: '',
-                align: 'center',
-                Cell: ({
-                    row: { original: action },
-                }: {
-                    row: { original: IActionSet };
-                }) => (
+                header: '',
+                cell: ({ row: { original: action } }) => (
                     <ProjectActionsTableActionsCell
                         actionId={action.id}
                         onOpenEvents={() => {
@@ -207,36 +187,35 @@ export const ProjectActionsTable = ({
                         }}
                     />
                 ),
-                width: 50,
-                disableSortBy: true,
+                enableSorting: false,
+                meta: { width: 50, align: 'center' },
             },
         ],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [signalEndpoints, serviceAccounts],
     );
 
     const [initialState] = useState({
-        sortBy: [{ id: 'name', desc: true }],
+        sorting: [{ id: 'name', desc: true }],
     });
 
-    const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
-        {
-            columns: columns as any,
-            data: actions,
-            initialState,
-            sortTypes,
-            autoResetHiddenColumns: false,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            disableMultiSort: true,
-            defaultColumn: {
-                Cell: TextCell,
-            },
+    const table = useReactTable({
+        columns,
+        data: actions,
+        initialState,
+        defaultColumn: {
+            cell: ({ getValue }) => (
+                <TextCell value={String(getValue() ?? '')} />
+            ),
         },
-        useSortBy,
-        useFlexLayout,
-    );
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+        enableMultiSort: false,
+    });
 
-    useConditionallyHiddenColumns(
+    useConditionallyHiddenColumnsV8(
         [
             {
                 condition: isMediumScreen,
@@ -247,19 +226,17 @@ export const ProjectActionsTable = ({
                 columns: ['filters', 'actions'],
             },
         ],
-        setHiddenColumns,
+        table.setColumnVisibility,
         columns,
     );
 
+    const rowCount = table.getRowModel().rows.length;
+
     return (
         <>
-            <VirtualizedTable
-                rows={rows}
-                headerGroups={headerGroups}
-                prepareRow={prepareRow}
-            />
+            <VirtualizedTableV8 tableInstance={table} />
             <ConditionallyRender
-                condition={rows.length === 0}
+                condition={rowCount === 0}
                 show={
                     <TablePlaceholder>
                         No actions available. Get started by adding one.

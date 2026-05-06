@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
+import { TablePlaceholder } from 'component/common/Table';
+import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IRole } from 'interfaces/role';
 import useToast from 'hooks/useToast';
@@ -8,15 +9,19 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Button, useMediaQuery } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { useFlexLayout, useSortBy, useTable } from 'react-table';
-import { sortTypes } from 'utils/sortTypes';
+import {
+    type ColumnDef,
+    getCoreRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
-import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import { useConditionallyHiddenColumnsV8 } from 'hooks/useConditionallyHiddenColumnsV8';
 import { useSearch } from 'hooks/useSearch';
 import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
 import { useServiceAccountsApi } from 'hooks/api/actions/useServiceAccountsApi/useServiceAccountsApi';
@@ -61,96 +66,88 @@ export const ServiceAccountsTable = () => {
     const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-    const columns = useMemo(
+    const columns = useMemo<ColumnDef<IServiceAccount, unknown>[]>(
         () => [
             {
-                Header: 'Avatar',
-                accessor: 'imageUrl',
-                Cell: ({ row: { original: serviceAccount } }: any) => (
+                id: 'imageUrl',
+                header: 'Avatar',
+                accessorKey: 'imageUrl',
+                cell: ({ row: { original: serviceAccount } }) => (
                     <TextCell>
                         <UserAvatar user={serviceAccount} />
                     </TextCell>
                 ),
-                disableSortBy: true,
-                maxWidth: 80,
+                enableSorting: false,
+                meta: { maxWidth: 80 },
             },
             {
                 id: 'name',
-                Header: 'Name',
-                accessor: (row: any) => row.name || '',
-                minWidth: 200,
-                Cell: ({ row: { original: serviceAccount } }: any) => (
+                header: 'Name',
+                accessorFn: (row) => row.name || '',
+                cell: ({ row: { original: serviceAccount } }) => (
                     <HighlightCell
-                        value={serviceAccount.name}
+                        value={serviceAccount.name ?? ''}
                         subtitle={serviceAccount.username}
                     />
                 ),
-                searchable: true,
+                meta: { minWidth: 200, searchable: true },
             },
             {
                 id: 'role',
-                Header: 'Role',
-                accessor: (row: any) =>
+                header: 'Role',
+                accessorFn: (row) =>
                     roles.find((role: IRole) => role.id === row.rootRole)
                         ?.name || '',
-                Cell: ({
-                    row: { original: serviceAccount },
-                    value,
-                }: {
-                    row: { original: IServiceAccount };
-                    value: string;
-                }) => <RoleCell value={value} role={serviceAccount.rootRole} />,
-                maxWidth: 120,
+                cell: ({ getValue, row: { original: serviceAccount } }) => (
+                    <RoleCell
+                        value={String(getValue() ?? '')}
+                        role={serviceAccount.rootRole}
+                    />
+                ),
+                meta: { maxWidth: 120 },
             },
             {
                 id: 'tokens',
-                Header: 'Tokens',
-                accessor: (row: IServiceAccount) =>
+                header: 'Tokens',
+                accessorFn: (row) =>
                     row.tokens
                         ?.map(({ description }) => description)
                         .join('\n') || '',
-                Cell: ({
-                    row: { original: serviceAccount },
-                    value,
-                }: {
-                    row: { original: IServiceAccount };
-                    value: string;
-                }) => (
+                cell: ({ getValue, row: { original: serviceAccount } }) => (
                     <ServiceAccountTokensCell
                         serviceAccount={serviceAccount}
-                        value={value}
+                        value={String(getValue() ?? '')}
                         onCreateToken={() => {
                             setSelectedServiceAccount(serviceAccount);
                             setModalOpen(true);
                         }}
                     />
                 ),
-                searchable: true,
+                meta: { searchable: true },
             },
             {
-                Header: 'Created',
-                accessor: 'createdAt',
-                Cell: DateCell,
-                width: 120,
-                maxWidth: 120,
+                id: 'createdAt',
+                header: 'Created',
+                accessorKey: 'createdAt',
+                cell: DateCell,
+                meta: { width: 120, maxWidth: 120 },
             },
             {
                 id: 'seenAt',
-                Header: 'Last seen',
-                accessor: (row: IServiceAccount) =>
+                header: 'Last seen',
+                accessorFn: (row) =>
                     row.tokens.sort((a, b) => {
                         const aSeenAt = new Date(a.seenAt || 0);
                         const bSeenAt = new Date(b.seenAt || 0);
                         return bSeenAt?.getTime() - aSeenAt?.getTime();
                     })[0]?.seenAt,
-                Cell: TimeAgoCell,
-                maxWidth: 150,
+                cell: TimeAgoCell,
+                meta: { maxWidth: 150 },
             },
             {
-                Header: 'Actions',
                 id: 'Actions',
-                align: 'center',
-                Cell: ({ row: { original: serviceAccount } }: any) => (
+                header: 'Actions',
+                cell: ({ row: { original: serviceAccount } }) => (
                     <ServiceAccountsActionsCell
                         onEdit={() => {
                             setSelectedServiceAccount(serviceAccount);
@@ -162,22 +159,24 @@ export const ServiceAccountsTable = () => {
                         }}
                     />
                 ),
-                width: 150,
-                disableSortBy: true,
+                enableSorting: false,
+                meta: { width: 150, align: 'center' },
             },
             // Always hidden -- for search
             {
-                accessor: 'username',
-                Header: 'Username',
-                searchable: true,
+                id: 'username',
+                header: 'Username',
+                accessorKey: 'username',
+                meta: { searchable: true },
             },
         ],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [roles],
     );
 
     const [initialState] = useState({
-        sortBy: [{ id: 'createdAt', desc: true }],
-        hiddenColumns: ['username'],
+        sorting: [{ id: 'createdAt', desc: true }],
+        columnVisibility: { username: false },
     });
 
     const { data, getSearchText } = useSearch(
@@ -186,25 +185,23 @@ export const ServiceAccountsTable = () => {
         serviceAccounts,
     );
 
-    const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
-        {
-            columns: columns as any,
-            data,
-            initialState,
-            sortTypes,
-            autoResetHiddenColumns: false,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            disableMultiSort: true,
-            defaultColumn: {
-                Cell: TextCell,
-            },
+    const table = useReactTable({
+        columns,
+        data,
+        initialState,
+        defaultColumn: {
+            cell: ({ getValue }) => (
+                <TextCell value={String(getValue() ?? '')} />
+            ),
         },
-        useSortBy,
-        useFlexLayout,
-    );
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+        enableMultiSort: false,
+    });
 
-    useConditionallyHiddenColumns(
+    useConditionallyHiddenColumnsV8(
         [
             {
                 condition: isExtraSmallScreen,
@@ -215,16 +212,18 @@ export const ServiceAccountsTable = () => {
                 columns: ['imageUrl', 'tokens', 'createdAt'],
             },
         ],
-        setHiddenColumns,
+        table.setColumnVisibility,
         columns,
     );
+
+    const rowCount = table.getRowModel().rows.length;
 
     return (
         <PageContent
             isLoading={loading}
             header={
                 <PageHeader
-                    title={`Service Accounts (${rows.length})`}
+                    title={`Service Accounts (${rowCount})`}
                     actions={
                         <>
                             <ConditionallyRender
@@ -265,14 +264,10 @@ export const ServiceAccountsTable = () => {
             }
         >
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <VirtualizedTable
-                    rows={rows}
-                    headerGroups={headerGroups}
-                    prepareRow={prepareRow}
-                />
+                <VirtualizedTableV8 tableInstance={table} />
             </SearchHighlightProvider>
             <ConditionallyRender
-                condition={rows.length === 0}
+                condition={rowCount === 0}
                 show={
                     <ConditionallyRender
                         condition={searchValue?.length > 0}

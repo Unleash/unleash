@@ -61,6 +61,7 @@ process.nextTick(async () => {
                         userTokenWithClientApiLoggingKillSwitch: false,
                         onlyFeatureTokensWithFeatureAPIs: false,
                         accessOverviewRework: true,
+                        onboardingConnectSDKNewDialog: true,
                     },
                 },
                 authentication: {

@@ -39,6 +39,7 @@ export const OnboardingProgress = ({
                     }}
                     variant='outlined'
                     component='span'
+                    size='small'
                 >
                     Dismiss
                 </Button>

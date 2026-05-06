@@ -1,16 +1,15 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
-    type SortingRule,
-    useFlexLayout,
-    useGlobalFilter,
-    useSortBy,
-    useTable,
-} from 'react-table';
+    type ColumnDef,
+    getCoreRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
 
-import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
+import { TablePlaceholder } from 'component/common/Table';
+import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { sortTypes } from 'utils/sortTypes';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Search } from 'component/common/Search/Search';
@@ -20,19 +19,18 @@ import { createLocalStorage } from 'utils/createLocalStorage';
 
 import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import useLoading from 'hooks/useLoading';
-import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import { useConditionallyHiddenColumnsV8 } from 'hooks/useConditionallyHiddenColumnsV8';
 import { AdvancedPlaygroundEnvironmentCell } from './AdvancedPlaygroundEnvironmentCell/AdvancedPlaygroundEnvironmentCell.tsx';
 import type {
     AdvancedPlaygroundRequestSchema,
     AdvancedPlaygroundFeatureSchema,
-    AdvancedPlaygroundFeatureSchemaEnvironments,
 } from 'openapi';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
 import { AdvancedPlaygroundEnvironmentDiffCell } from './AdvancedPlaygroundEnvironmentCell/AdvancedPlaygroundEnvironmentDiffCell.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { countCombinations, getBucket } from './combinationCounter.ts';
 
-const defaultSort: SortingRule<string> = { id: 'name' };
+const defaultSort = { id: 'name', desc: false };
 const { value, setValue } = createLocalStorage(
     'AdvancedPlaygroundResultsTable:v1',
     defaultSort,
@@ -71,89 +69,92 @@ export const AdvancedPlaygroundResultsTable = ({
             ? Object.keys(features[0].environments).length
             : 0;
 
-    const COLUMNS = useMemo(() => {
-        return [
+    const columns = useMemo<
+        ColumnDef<AdvancedPlaygroundFeatureSchema, unknown>[]
+    >(() => {
+        const baseColumns: ColumnDef<
+            AdvancedPlaygroundFeatureSchema,
+            unknown
+        >[] = [
             {
-                Header: 'Name',
-                accessor: 'name',
-                searchable: true,
-                minWidth: 160,
-                Cell: ({ value, row: { original } }: any) => (
+                id: 'name',
+                header: 'Name',
+                accessorKey: 'name',
+                cell: ({ getValue, row: { original } }) => (
                     <LinkCell
-                        title={value}
-                        to={`/projects/${original?.projectId}/features/${value}`}
+                        title={String(getValue() ?? '')}
+                        to={`/projects/${original?.projectId}/features/${getValue()}`}
                     />
                 ),
+                meta: { searchable: true, minWidth: 160 },
             },
             {
-                Header: 'Project ID',
-                accessor: 'projectId',
-                sortType: 'alphanumeric',
-                filterName: 'projectId',
-                searchable: true,
-                minWidth: 150,
-                Cell: ({ value }: any) => (
-                    <LinkCell title={value} to={`/projects/${value}`} />
-                ),
+                id: 'projectId',
+                header: 'Project ID',
+                accessorKey: 'projectId',
+                sortingFn: 'alphanumeric',
+                cell: ({ getValue }) => {
+                    const v = String(getValue() ?? '');
+                    return <LinkCell title={v} to={`/projects/${v}`} />;
+                },
+                meta: {
+                    filterName: 'projectId',
+                    searchable: true,
+                    minWidth: 150,
+                },
             },
-            ...(input?.environments?.map((name: string) => {
-                return {
-                    Header: loading ? () => '' : capitalizeFirst(name),
-                    maxWidth: 150,
+            ...(input?.environments?.map(
+                (
+                    name: string,
+                ): ColumnDef<AdvancedPlaygroundFeatureSchema, unknown> => ({
                     id: `environments.${name}`,
-                    align: 'flex-start',
-                    Cell: ({ row }: any) => (
+                    header: loading ? '' : capitalizeFirst(name),
+                    cell: ({ row }) => (
                         <AdvancedPlaygroundEnvironmentCell
                             value={row.original.environments[name]}
                         />
                     ),
-                };
-            }) || []),
-            ...(environmentsCount > 1
-                ? [
-                      {
-                          Header: 'Diff',
-                          minWidth: 150,
-                          id: 'diff',
-                          align: 'left',
-                          Cell: ({
-                              row,
-                          }: {
-                              row: {
-                                  original: {
-                                      environments: AdvancedPlaygroundFeatureSchemaEnvironments;
-                                  };
-                              };
-                          }) => (
-                              <AdvancedPlaygroundEnvironmentDiffCell
-                                  value={row.original.environments}
-                              />
-                          ),
-                      },
-                  ]
-                : []),
+                    meta: { maxWidth: 150, align: 'left' },
+                }),
+            ) || []),
         ];
-    }, [input]);
+
+        if (environmentsCount > 1) {
+            baseColumns.push({
+                id: 'diff',
+                header: 'Diff',
+                cell: ({ row }) => (
+                    <AdvancedPlaygroundEnvironmentDiffCell
+                        value={row.original.environments}
+                    />
+                ),
+                meta: { minWidth: 150, align: 'left' },
+            });
+        }
+
+        return baseColumns;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [input, loading]);
 
     const {
         data: searchedData,
         getSearchText,
         getSearchContext,
-    } = useSearch(COLUMNS, searchValue, features || []);
+    } = useSearch(columns, searchValue, features || []);
 
     const data = useMemo(() => {
         return loading
-            ? Array(5).fill({
+            ? (Array(5).fill({
                   name: 'Feature name',
                   projectId: 'Feature Project',
                   environments: { name: 'Feature Environments', variants: [] },
                   enabled: true,
-              })
+              }) as AdvancedPlaygroundFeatureSchema[])
             : searchedData;
     }, [searchedData, loading]);
 
     const [initialState] = useState(() => ({
-        sortBy: [
+        sorting: [
             {
                 id: searchParams.get('sort') || value.id,
                 desc: searchParams.has('order')
@@ -163,50 +164,47 @@ export const AdvancedPlaygroundResultsTable = ({
         ],
     }));
 
-    const {
-        headerGroups,
-        rows,
-        state: { sortBy },
-        prepareRow,
-        setHiddenColumns,
-    } = useTable(
-        {
-            initialState,
-            columns: COLUMNS as any,
-            data: data as any,
-            sortTypes,
-            autoResetGlobalFilter: false,
-            autoResetHiddenColumns: false,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            disableMultiSort: true,
-            defaultColumn: {
-                Cell: HighlightCell,
-            },
+    const table = useReactTable({
+        columns,
+        data,
+        initialState,
+        defaultColumn: {
+            cell: ({ getValue }) => (
+                <HighlightCell value={String(getValue() ?? '')} />
+            ),
         },
-        useGlobalFilter,
-        useFlexLayout,
-        useSortBy,
-    );
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+        enableMultiSort: false,
+    });
 
-    useConditionallyHiddenColumns(
+    useConditionallyHiddenColumnsV8(
         [
             {
                 condition: isSmallScreen,
                 columns: ['projectId'],
             },
         ],
-        setHiddenColumns,
-        COLUMNS,
+        table.setColumnVisibility,
+        columns,
     );
+
+    const sorting = table.getState().sorting;
+    const rows = table.getRowModel().rows;
 
     useEffect(() => {
         if (loading) {
             return;
         }
+        const sortRule = sorting[0];
+        if (!sortRule) {
+            return;
+        }
         const tableState = Object.fromEntries(searchParams);
-        tableState.sort = sortBy[0].id;
-        if (sortBy[0].desc) {
+        tableState.sort = sortRule.id;
+        if (sortRule.desc) {
             tableState.order = 'desc';
         } else if (tableState.order) {
             delete tableState.order;
@@ -220,10 +218,10 @@ export const AdvancedPlaygroundResultsTable = ({
         setSearchParams(tableState, {
             replace: true,
         });
-        setValue({ id: sortBy[0].id, desc: sortBy[0].desc || false });
+        setValue({ id: sortRule.id, desc: sortRule.desc || false });
 
         // eslint-disable-next-line react-hooks/exhaustive-deps -- don't re-render after search params change
-    }, [loading, sortBy, searchValue]);
+    }, [loading, sorting, searchValue]);
 
     return (
         <>
@@ -268,11 +266,7 @@ export const AdvancedPlaygroundResultsTable = ({
                         <SearchHighlightProvider
                             value={getSearchText(searchValue)}
                         >
-                            <VirtualizedTable
-                                rows={rows}
-                                headerGroups={headerGroups}
-                                prepareRow={prepareRow}
-                            />
+                            <VirtualizedTableV8 tableInstance={table} />
                         </SearchHighlightProvider>
                         <ConditionallyRender
                             condition={

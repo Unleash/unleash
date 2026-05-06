@@ -1,16 +1,22 @@
 import { useMemo, useState } from 'react';
-import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
+import { TablePlaceholder } from 'component/common/Table';
+import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { Alert, Button, styled, useMediaQuery } from '@mui/material';
 import ReviewsOutlined from '@mui/icons-material/ReviewsOutlined';
-import { useFlexLayout, useSortBy, useTable } from 'react-table';
-import { sortTypes } from 'utils/sortTypes';
+import {
+    type ColumnDef,
+    getCoreRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
+import { sortingFns } from 'utils/sortingFns';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import theme from 'themes/theme';
-import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import { useConditionallyHiddenColumnsV8 } from 'hooks/useConditionallyHiddenColumnsV8';
 import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
 import { useSignalEndpointsApi } from 'hooks/api/actions/useSignalEndpointsApi/useSignalEndpointsApi';
 import type { ISignalEndpoint } from 'interfaces/signal';
@@ -93,16 +99,13 @@ export const SignalEndpointsTable = () => {
 
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-    const columns = useMemo(
+    const columns = useMemo<ColumnDef<ISignalEndpoint, unknown>[]>(
         () => [
             {
-                Header: 'Name',
-                accessor: 'name',
-                Cell: ({
-                    row: { original: signalEndpoint },
-                }: {
-                    row: { original: ISignalEndpoint };
-                }) => (
+                id: 'name',
+                header: 'Name',
+                accessorKey: 'name',
+                cell: ({ row: { original: signalEndpoint } }) => (
                     <LinkCell
                         title={signalEndpoint.name}
                         onClick={() => {
@@ -112,53 +115,44 @@ export const SignalEndpointsTable = () => {
                         subtitle={signalEndpoint.description}
                     />
                 ),
-                width: 240,
+                meta: { width: 240 },
             },
             {
-                Header: 'URL',
-                accessor: (row: ISignalEndpoint) =>
+                id: 'url',
+                header: 'URL',
+                accessorFn: (row) =>
                     `${uiConfig.unleashUrl}/api/signal-endpoint/${row.name}`,
-                minWidth: 200,
+                meta: { minWidth: 200 },
             },
             {
                 id: 'tokens',
-                Header: 'Tokens',
-                accessor: (row: ISignalEndpoint) =>
+                header: 'Tokens',
+                accessorFn: (row) =>
                     row.tokens?.map(({ name }) => name).join('\n') || '',
-                Cell: ({
-                    row: { original: signalEndpoint },
-                    value,
-                }: {
-                    row: { original: ISignalEndpoint };
-                    value: string;
-                }) => (
+                cell: ({ getValue, row: { original: signalEndpoint } }) => (
                     <SignalEndpointsTokensCell
                         signalEndpoint={signalEndpoint}
-                        value={value}
+                        value={String(getValue() ?? '')}
                         onCreateToken={() => {
                             setSelectedSignalEndpoint(signalEndpoint);
                             setModalOpen(true);
                         }}
                     />
                 ),
-                searchable: true,
-                maxWidth: 120,
+                meta: { searchable: true, maxWidth: 120 },
             },
             {
-                Header: 'Created',
-                accessor: 'createdAt',
-                Cell: DateCell,
-                width: 120,
-                maxWidth: 120,
+                id: 'createdAt',
+                header: 'Created',
+                accessorKey: 'createdAt',
+                cell: DateCell,
+                meta: { width: 120, maxWidth: 120 },
             },
             {
-                Header: 'Enabled',
-                accessor: 'enabled',
-                Cell: ({
-                    row: { original: signalEndpoint },
-                }: {
-                    row: { original: ISignalEndpoint };
-                }) => (
+                id: 'enabled',
+                header: 'Enabled',
+                accessorKey: 'enabled',
+                cell: ({ row: { original: signalEndpoint } }) => (
                     <ToggleCell
                         checked={signalEndpoint.enabled}
                         setChecked={(enabled) =>
@@ -166,19 +160,13 @@ export const SignalEndpointsTable = () => {
                         }
                     />
                 ),
-                sortType: 'boolean',
-                width: 90,
-                maxWidth: 90,
+                sortingFn: sortingFns.boolean,
+                meta: { width: 90, maxWidth: 90 },
             },
             {
-                Header: 'Actions',
                 id: 'Actions',
-                align: 'center',
-                Cell: ({
-                    row: { original: signalEndpoint },
-                }: {
-                    row: { original: ISignalEndpoint };
-                }) => (
+                header: 'Actions',
+                cell: ({ row: { original: signalEndpoint } }) => (
                     <SignalEndpointsActionsCell
                         signalEndpointId={signalEndpoint.id}
                         onCopyToClipboard={() => {
@@ -204,45 +192,46 @@ export const SignalEndpointsTable = () => {
                         }}
                     />
                 ),
-                width: 90,
-                disableSortBy: true,
+                enableSorting: false,
+                meta: { width: 90, align: 'center' },
             },
         ],
-        [],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [uiConfig.unleashUrl],
     );
 
     const [initialState] = useState({
-        sortBy: [{ id: 'createdAt', desc: true }],
+        sorting: [{ id: 'createdAt', desc: true }],
     });
 
-    const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
-        {
-            columns: columns as any,
-            data: signalEndpoints,
-            initialState,
-            sortTypes,
-            autoResetHiddenColumns: false,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            disableMultiSort: true,
-            defaultColumn: {
-                Cell: TextCell,
-            },
+    const table = useReactTable({
+        columns,
+        data: signalEndpoints,
+        initialState,
+        defaultColumn: {
+            cell: ({ getValue }) => (
+                <TextCell value={String(getValue() ?? '')} />
+            ),
         },
-        useSortBy,
-        useFlexLayout,
-    );
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+        enableMultiSort: false,
+    });
 
-    useConditionallyHiddenColumns(
+    useConditionallyHiddenColumnsV8(
         [
             {
                 condition: isSmallScreen,
                 columns: ['createdAt'],
             },
         ],
-        setHiddenColumns,
+        table.setColumnVisibility,
         columns,
     );
+
+    const rowCount = table.getRowModel().rows.length;
 
     return (
         <PageContent
@@ -333,13 +322,9 @@ export const SignalEndpointsTable = () => {
 
             <PermissionGuard permissions={ADMIN}>
                 <>
-                    <VirtualizedTable
-                        rows={rows}
-                        headerGroups={headerGroups}
-                        prepareRow={prepareRow}
-                    />
+                    <VirtualizedTableV8 tableInstance={table} />
                     <ConditionallyRender
-                        condition={rows.length === 0}
+                        condition={rowCount === 0}
                         show={
                             <TablePlaceholder>
                                 No signal endpoints available. Get started by

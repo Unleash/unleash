@@ -496,34 +496,39 @@ export const ProjectFeatureToggles = ({
 
     return (
         <Container>
-            <ConditionallyRender
-                condition={isOnboarding}
-                show={
-                    newOnboardingSteps ? (
+            {newOnboardingSteps && (
+                <ConditionallyRender
+                    condition={onboardingFlow === 'visible'}
+                    show={() => (
                         <ProjectOnboarding
                             projectId={projectId}
                             setConnectSdkOpen={setConnectSdkOpen}
                             setOnboardingFlow={setOnboardingFlow}
                             refetchFeatures={refetch}
                         />
-                    ) : (
+                    )}
+                />
+            )}
+            {!newOnboardingSteps && (
+                <>
+                    {isOnboarding && (
                         <OldProjectOnboarding
                             projectId={projectId}
                             setConnectSdkOpen={setConnectSdkOpen}
                             setOnboardingFlow={setOnboardingFlow}
                             refetchFeatures={refetch}
                         />
-                    )
-                }
-            />
-            {setupCompletedState === 'show-setup' && !isOnboarding ? (
-                <ProjectOnboarded
-                    projectId={projectId}
-                    onClose={() => {
-                        setSetupCompletedState('hide-setup');
-                    }}
-                />
-            ) : null}
+                    )}
+                    {setupCompletedState === 'show-setup' && !isOnboarding && (
+                        <ProjectOnboarded
+                            projectId={projectId}
+                            onClose={() => {
+                                setSetupCompletedState('hide-setup');
+                            }}
+                        />
+                    )}
+                </>
+            )}
             {showCleanupReminder ? (
                 <ProjectCleanupReminder projectId={projectId} />
             ) : null}

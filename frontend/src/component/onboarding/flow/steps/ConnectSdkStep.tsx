@@ -22,13 +22,18 @@ export const ConnectSdkStep = ({
 }: IConnectSdkStepProps) => {
     const isDone = state === 'done';
 
+    const title = isDone ? 'Connect SDK' : 'Connect SDKs';
+    const body = isDone
+        ? 'You can connect as many SDKs as you need.'
+        : 'To start using your feature flag, connect an SDK to the project.';
+
     return (
         <StepLayout
             stepNumber={2}
             state={state}
             icon={<CodeBlockIcon />}
-            title='Connect an SDK'
-            body='To start using your feature flag, connect an SDK to the project.'
+            title={title}
+            body={body}
         >
             {isDone ? (
                 <Button

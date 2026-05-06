@@ -65,7 +65,7 @@ test('Project can connect SDK', async () => {
             route: `/projects/${projectId}`,
         },
     );
-    await screen.findByText('Connect an SDK');
+    await screen.findByText('Connect SDKs');
     await screen.findByText(
         'To start using your feature flag, connect an SDK to the project.',
     );

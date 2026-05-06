@@ -1,8 +1,12 @@
 import useFeedbackPosted from 'hooks/api/getters/useFeedbackPosted/useFeedbackPosted';
-import { VirtualizedTable } from 'component/common/Table';
+import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
-import { useFlexLayout, useSortBy, useTable } from 'react-table';
-import { sortTypes } from 'utils/sortTypes';
+import {
+    type ColumnDef,
+    getCoreRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -16,11 +20,6 @@ import { useState, useMemo } from 'react';
 import type { FeedbackSchema } from 'openapi';
 import { getActiveExperiments } from './activeExperiments.ts';
 import { Truncator } from 'component/common/Truncator/Truncator';
-
-interface IFeedbackSchemaCellProps {
-    value?: string | null; // FIXME: proper type
-    row: { original: FeedbackSchema };
-}
 
 const StyledSectionHeader = styled(Typography)(({ theme }) => ({
     fontWeight: theme.fontWeight.bold,
@@ -52,111 +51,107 @@ export const FeedbackList = () => {
 
     const [searchValue, setSearchValue] = useState('');
 
-    const columns = [
-        {
-            Header: 'Feature',
-            accessor: 'category',
-            minWidth: 100,
-            Cell: ({
-                row: { original: feedback },
-            }: IFeedbackSchemaCellProps) => (
-                <TextCell>{feedback.category}</TextCell>
-            ),
-            searchable: true,
-        },
-        {
-            Header: 'User Type',
-            accessor: 'userType',
-            Cell: ({
-                row: { original: feedback },
-            }: IFeedbackSchemaCellProps) => (
-                <TextCell>{feedback.userType}</TextCell>
-            ),
-            searchable: true,
-        },
-        {
-            Header: 'Score',
-            accessor: 'difficultyScore',
-            maxWidth: 90,
-            Cell: ({
-                row: { original: feedback },
-            }: IFeedbackSchemaCellProps) => (
-                <TextCell>{feedback.difficultyScore}</TextCell>
-            ),
-        },
-        {
-            Header: 'What do you like most?',
-            accessor: 'positive',
-            minWidth: 100,
-            Cell: ({
-                row: { original: feedback },
-            }: IFeedbackSchemaCellProps) => (
-                <TextCell>
-                    <Truncator lines={2} title={feedback.positive ?? ''} arrow>
-                        {feedback.positive}
-                    </Truncator>
-                </TextCell>
-            ),
-            disableSortBy: true,
-            searchable: true,
-        },
-        {
-            Header: 'What should be improved?',
-            accessor: 'areasForImprovement',
-            minWidth: 100,
-            Cell: ({
-                row: { original: feedback },
-            }: IFeedbackSchemaCellProps) => (
-                <TextCell>
-                    <Truncator
-                        lines={2}
-                        title={feedback.areasForImprovement ?? ''}
-                        arrow
-                    >
-                        {feedback.areasForImprovement}
-                    </Truncator>
-                </TextCell>
-            ),
-            disableSortBy: true,
-            searchable: true,
-        },
-        {
-            Header: 'Date',
-            accessor: 'createdAt',
-            Cell: DateCell,
-        },
-    ];
+    const columns = useMemo<ColumnDef<FeedbackSchema, unknown>[]>(
+        () => [
+            {
+                id: 'category',
+                header: 'Feature',
+                accessorKey: 'category',
+                cell: ({ row: { original } }) => (
+                    <TextCell>{original.category}</TextCell>
+                ),
+                meta: { minWidth: 100, searchable: true },
+            },
+            {
+                id: 'userType',
+                header: 'User Type',
+                accessorKey: 'userType',
+                cell: ({ row: { original } }) => (
+                    <TextCell>{original.userType}</TextCell>
+                ),
+                meta: { searchable: true },
+            },
+            {
+                id: 'difficultyScore',
+                header: 'Score',
+                accessorKey: 'difficultyScore',
+                cell: ({ row: { original } }) => (
+                    <TextCell>
+                        {original.difficultyScore?.toString() ?? ''}
+                    </TextCell>
+                ),
+                meta: { maxWidth: 90 },
+            },
+            {
+                id: 'positive',
+                header: 'What do you like most?',
+                accessorKey: 'positive',
+                cell: ({ row: { original } }) => (
+                    <TextCell>
+                        <Truncator
+                            lines={2}
+                            title={original.positive ?? ''}
+                            arrow
+                        >
+                            {original.positive}
+                        </Truncator>
+                    </TextCell>
+                ),
+                enableSorting: false,
+                meta: { minWidth: 100, searchable: true },
+            },
+            {
+                id: 'areasForImprovement',
+                header: 'What should be improved?',
+                accessorKey: 'areasForImprovement',
+                cell: ({ row: { original } }) => (
+                    <TextCell>
+                        <Truncator
+                            lines={2}
+                            title={original.areasForImprovement ?? ''}
+                            arrow
+                        >
+                            {original.areasForImprovement}
+                        </Truncator>
+                    </TextCell>
+                ),
+                enableSorting: false,
+                meta: { minWidth: 100, searchable: true },
+            },
+            {
+                id: 'createdAt',
+                header: 'Date',
+                accessorKey: 'createdAt',
+                cell: DateCell,
+            },
+        ],
+        [],
+    );
 
     const { data, getSearchText } = useSearch(columns, searchValue, feedback);
 
     const activeExperiments = useMemo(() => getActiveExperiments(data), [data]);
 
-    const { headerGroups, rows, prepareRow } = useTable(
-        {
-            columns: columns as any,
-            data: data as object[],
-            initialState: {
-                sortBy: [
-                    {
-                        id: 'createdAt',
-                        desc: true,
-                    },
-                ],
-            },
-            sortTypes,
-            autoResetHiddenColumns: false,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            disableMultiSort: true,
-            defaultColumn: {
-                Cell: TextCell,
-            },
+    const table = useReactTable({
+        columns,
+        data,
+        initialState: {
+            sorting: [{ id: 'createdAt', desc: true }],
         },
-        useSortBy,
-        useFlexLayout,
-    );
+        defaultColumn: {
+            cell: ({ getValue }) => (
+                <TextCell value={String(getValue() ?? '')} />
+            ),
+        },
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+        enableMultiSort: false,
+    });
 
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const rowCount = table.getRowModel().rows.length;
 
     return (
         <PageContent
@@ -217,15 +212,9 @@ export const FeedbackList = () => {
                     </Box>
                 )}
             </ActiveExperiments>
-            <StyledSectionHeader>
-                All feedback ({rows.length})
-            </StyledSectionHeader>
+            <StyledSectionHeader>All feedback ({rowCount})</StyledSectionHeader>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <VirtualizedTable
-                    rows={rows}
-                    headerGroups={headerGroups}
-                    prepareRow={prepareRow}
-                />
+                <VirtualizedTableV8 tableInstance={table} />
             </SearchHighlightProvider>
         </PageContent>
     );

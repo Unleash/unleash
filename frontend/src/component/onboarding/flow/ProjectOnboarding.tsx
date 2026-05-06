@@ -6,12 +6,8 @@ import {
     Typography,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Add from '@mui/icons-material/Add';
-import {
-    UPDATE_PROJECT,
-    CREATE_PROJECT_API_TOKEN,
-} from 'component/providers/AccessProvider/permissions';
-import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
+import { ConnectSdkStep } from './steps/ConnectSdkStep.tsx';
+import { ActionBox, type StepState } from './steps/StepLayout.tsx';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { SdkExample } from './SdkExample.tsx';
 import { OnboardingProgress } from './OnboardingProgress.tsx';
@@ -45,7 +41,7 @@ const TitleRow = styled('div')(({ theme }) => ({
     marginRight: theme.spacing(1),
 }));
 
-const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
+const StyledAccordionDetails = styled(AccordionDetails)(() => ({
     padding: 0,
 }));
 
@@ -58,40 +54,11 @@ const Actions = styled('div')(({ theme }) => ({
     },
 }));
 
-const ActionBox = styled('div')(({ theme }) => ({
-    flexBasis: '50%',
-    display: 'flex',
-    gap: theme.spacing(1),
-    flexDirection: 'column',
-    borderRight: `1px solid ${theme.palette.divider}`,
-    padding: theme.spacing(2, 3, 3, 3),
-    [theme.breakpoints.down('md')]: {
-        borderRight: 0,
-        borderBottom: `1px solid ${theme.palette.divider}`,
-    },
-    '&:last-child': {
-        borderWidth: 0,
-    },
-}));
-
-const TitleContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'row',
-    gap: theme.spacing(2),
-    alignItems: 'center',
-    fontSize: theme.spacing(1.75),
-    fontWeight: 'bold',
-}));
-
-const NeutralCircleContainer = styled('span')(({ theme }) => ({
-    width: '28px',
-    height: '28px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: theme.palette.neutral.border,
-    borderRadius: '50%',
-}));
+const stepState = (currentStep: number, stepNumber: number): StepState => {
+    if (currentStep >= stepNumber) return 'done';
+    if (currentStep === stepNumber - 1) return 'active';
+    return 'disabled';
+};
 
 const NUMBER_OF_STEPS = 3;
 
@@ -101,19 +68,20 @@ export const ProjectOnboarding = ({
     setOnboardingFlow,
     refetchFeatures,
 }: IProjectOnboardingProps) => {
-    const { project } = useProjectOverview(projectId);
+    const { project, refetch } = useProjectOverview(projectId);
     const isFirstFlagCreated =
         project.onboardingStatus?.status === 'first-flag-created';
     const isSDKConnected = project.onboardingStatus?.status === 'sdk-connected';
-    const isOndoarded = project.onboardingStatus?.status === 'onboarded';
+    const isOnboarded = project.onboardingStatus?.status === 'onboarded';
 
-    const step = isOndoarded
-        ? NUMBER_OF_STEPS
-        : isSDKConnected
-          ? 2
-          : isFirstFlagCreated
-            ? 1
-            : 0;
+    let step = 0;
+    if (isOnboarded) {
+        step = NUMBER_OF_STEPS;
+    } else if (isSDKConnected) {
+        step = 2;
+    } else if (isFirstFlagCreated) {
+        step = 1;
+    }
 
     const closeOnboardingFlow = () => {
         setOnboardingFlow('closed');
@@ -137,37 +105,16 @@ export const ProjectOnboarding = ({
             </StyledAccordionSummary>
             <StyledAccordionDetails>
                 <Actions>
-                    <ActionBox>
-                        <CreateFlagStep
-                            projectId={projectId}
-                            refetchFeatures={refetchFeatures}
-                        />
-                    </ActionBox>
-                    <ActionBox>
-                        <TitleContainer>
-                            <NeutralCircleContainer>2</NeutralCircleContainer>
-                            Connect SDKs
-                        </TitleContainer>
-                        <Typography>
-                            To start using your feature flag, connect an SDK to
-                            the project.
-                        </Typography>
-                        <ResponsiveButton
-                            onClick={() => {
-                                setConnectSdkOpen(true);
-                            }}
-                            maxWidth='200px'
-                            projectId={projectId}
-                            Icon={Add}
-                            disabled={!isFirstFlagCreated}
-                            permission={[
-                                UPDATE_PROJECT,
-                                CREATE_PROJECT_API_TOKEN,
-                            ]}
-                        >
-                            Connect SDK
-                        </ResponsiveButton>
-                    </ActionBox>
+                    <CreateFlagStep
+                        state={stepState(step, 1)}
+                        refetchFeatures={refetchFeatures}
+                        refetchProject={refetch}
+                    />
+                    <ConnectSdkStep
+                        projectId={projectId}
+                        setConnectSdkOpen={setConnectSdkOpen}
+                        state={stepState(step, 2)}
+                    />
                     <ActionBox>
                         <SdkExample />
                     </ActionBox>

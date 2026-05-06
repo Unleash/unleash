@@ -1,6 +1,6 @@
 import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
-import { useAsyncDebounce } from 'react-table';
+import { useDebouncedCallback } from 'hooks/useDebouncedCallback';
 import {
     Box,
     IconButton,
@@ -124,7 +124,7 @@ export const Search = ({
     const { savedQuery, setSavedQuery } = useSavedQuery(id);
 
     const [value, setValue] = useState<string>(initialValue);
-    const debouncedOnChange = useAsyncDebounce(onChange, debounceTime);
+    const debouncedOnChange = useDebouncedCallback(onChange, debounceTime);
 
     const onSearchChange = (value: string) => {
         debouncedOnChange(value);

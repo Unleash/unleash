@@ -1,30 +1,31 @@
 import { useMemo, useState } from 'react';
-import { sortTypes } from 'utils/sortTypes';
-import type { Row, SortByFn } from 'react-table';
+import { sortingFns } from 'utils/sortingFns';
+import type { Row, SortingFn } from '@tanstack/react-table';
 import { usePlausibleTracker } from './usePlausibleTracker.js';
 
 type WithFavorite = {
     favorite: boolean;
-    [key: string]: any;
+    [key: string]: unknown;
 };
 
-export const sortTypesWithFavorites: Record<
-    keyof typeof sortTypes,
-    SortByFn<object> // TODO: possible type improvement in react-table v8
+export const sortingFnsWithFavorites: Record<
+    keyof typeof sortingFns,
+    SortingFn<WithFavorite>
 > = Object.assign(
     {},
-    ...Object.entries(sortTypes).map(([key, value]) => ({
+    ...Object.entries(sortingFns).map(([key, value]) => ({
         [key]: (
-            v1: Row<WithFavorite>,
-            v2: Row<WithFavorite>,
-            id: string,
-            desc?: boolean,
+            rowA: Row<WithFavorite>,
+            rowB: Row<WithFavorite>,
+            columnId: string,
         ) => {
-            if (v1?.original?.favorite && !v2?.original?.favorite)
-                return desc ? 1 : -1;
-            if (!v1?.original?.favorite && v2?.original?.favorite)
-                return desc ? -1 : 1;
-            return value(v1, v2, id, desc);
+            if (rowA.original.favorite && !rowB.original.favorite) {
+                return -1;
+            }
+            if (!rowA.original.favorite && rowB.original.favorite) {
+                return 1;
+            }
+            return value(rowA, rowB, columnId);
         },
     })),
 );
@@ -45,13 +46,13 @@ export const usePinnedFavorites = (initialState = false) => {
         setIsFavoritesPinned(newState);
     };
 
-    const enhancedSortTypes = useMemo(() => {
-        return isFavoritesPinned ? sortTypesWithFavorites : sortTypes;
+    const enhancedSortingFns = useMemo(() => {
+        return isFavoritesPinned ? sortingFnsWithFavorites : sortingFns;
     }, [isFavoritesPinned]);
 
     return {
         isFavoritesPinned,
         onChangeIsFavoritePinned,
-        sortTypes: enhancedSortTypes,
+        sortingFns: enhancedSortingFns,
     };
 };

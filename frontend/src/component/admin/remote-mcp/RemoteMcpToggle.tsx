@@ -9,6 +9,7 @@ import useToast from 'hooks/useToast';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useRemoteMcpSettings } from 'hooks/api/getters/useRemoteMcpSettings/useRemoteMcpSettings';
 import { useRemoteMcpSettingsApi } from 'hooks/api/actions/useRemoteMcpSettingsApi/useRemoteMcpSettingsApi';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
 const StyledCard = styled('div')(({ theme }) => ({
@@ -50,11 +51,15 @@ export const RemoteMcpToggle = () => {
         uiConfig: { unleashUrl },
     } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
+    const { trackEvent } = usePlausibleTracker();
 
     const handleToggle = async () => {
         const next = !settings.enabled;
         try {
             await setRemoteMcpSettings(next);
+            trackEvent('remote-mcp', {
+                props: { eventType: next ? 'enabled' : 'disabled' },
+            });
             setToastData({
                 type: 'success',
                 text: `Remote MCP server has been successfully ${next ? 'enabled' : 'disabled'}`,

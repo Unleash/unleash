@@ -2,7 +2,10 @@ import useAPI from '../useApi/useApi.js';
 
 const ENDPOINT = 'api/admin/impact-metrics/test-source';
 
-export type TestExternalImpactMetricsSourceResult = { metrics: string[] };
+export type TestExternalImpactMetricsSourceResult = {
+    metrics: string[];
+    error?: string;
+};
 
 export const useTestExternalImpactMetricsSourceApi = () => {
     const { loading, makeRequest, createRequest, errors } = useAPI({

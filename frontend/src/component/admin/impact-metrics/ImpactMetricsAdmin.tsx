@@ -123,7 +123,11 @@ const ImpactMetricsPage = () => {
         setTestError(null);
         try {
             const result = await testExternalImpactMetricsSource(trimmedUrl);
-            setTestResult(result.metrics);
+            if (result.error) {
+                setTestError(result.error);
+            } else {
+                setTestResult(result.metrics);
+            }
         } catch (error) {
             setTestError(formatUnknownError(error));
         }

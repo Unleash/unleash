@@ -11,21 +11,6 @@ allowBuilds:
   msw: true
   ssh2: true
 
-catalog:
-  "@biomejs/biome": ^2.4.14
-  "@types/lodash.isequal": ^4.5.8
-  "@types/node": 22.19.17
-  "@types/semver": 7.7.1
-  "@vitest/coverage-v8": ^4.1.5
-  "@vitest/ui": ^4.1.5
-  date-fns: ^4.1.0
-  fast-json-patch: ^3.1.1
-  knex: 3.2.10
-  pkginfo: ^0.4.1
-  re2js: 2.3.1
-  semver: ^7.7.4
-  typescript: 5.9.3
-  vitest: ^4.1.5
 patchedDependencies:
   cypress-vite: .pnpm/patches/cypress-vite-npm-1.8.0-5384b5466c.patch
 overrides:

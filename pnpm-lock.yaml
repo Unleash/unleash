@@ -4,48 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-catalogs:
-  default:
-    '@biomejs/biome':
-      specifier: ^2.4.14
-      version: 2.4.14
-    '@types/lodash.isequal':
-      specifier: ^4.5.8
-      version: 4.5.8
-    '@types/node':
-      specifier: 22.19.17
-      version: 22.19.17
-    '@types/semver':
-      specifier: 7.7.1
-      version: 7.7.1
-    '@vitest/coverage-v8':
-      specifier: ^4.1.5
-      version: 4.1.5
-    '@vitest/ui':
-      specifier: ^4.1.5
-      version: 4.1.5
-    date-fns:
-      specifier: ^4.1.0
-      version: 4.1.0
-    fast-json-patch:
-      specifier: ^3.1.1
-      version: 3.1.1
-    knex:
-      specifier: 3.2.10
-      version: 3.2.10
-    pkginfo:
-      specifier: ^0.4.1
-      version: 0.4.1
-    re2js:
-      specifier: 2.3.1
-      version: 2.3.1
-    typescript:
-      specifier: 5.9.3
-      version: 5.9.3
-    vitest:
-      specifier: ^4.1.5
-      version: 4.1.5
-
 overrides:
   '@codemirror/state': 6.6.0
   '@types/express-session>@types/express': 4.17.25
@@ -116,7 +74,7 @@ importers:
         specifier: ^2.8.6
         version: 2.8.6
       date-fns:
-        specifier: 'catalog:'
+        specifier: ^4.1.0
         version: 4.1.0
       db-migrate:
         specifier: 0.11.14
@@ -146,7 +104,7 @@ importers:
         specifier: ^1.19.0
         version: 1.19.0
       fast-json-patch:
-        specifier: 'catalog:'
+        specifier: ^3.1.1
         version: 3.1.1
       hash-sum:
         specifier: ^2.0.0
@@ -179,7 +137,7 @@ importers:
         specifier: 3.1.1
         version: 3.1.1
       knex:
-        specifier: 'catalog:'
+        specifier: ^3.2.10
         version: 3.2.10(pg@8.20.0)
       ky:
         specifier: ^1.14.3
@@ -236,13 +194,13 @@ importers:
         specifier: ^2.12.0
         version: 2.12.0
       pkginfo:
-        specifier: 'catalog:'
+        specifier: ^0.4.1
         version: 0.4.1
       prom-client:
         specifier: ^15.1.3
         version: 15.1.3
       re2js:
-        specifier: 'catalog:'
+        specifier: 2.3.1
         version: 2.3.1
       sanitize-filename:
         specifier: ^1.6.4
@@ -279,7 +237,7 @@ importers:
         specifier: 12.1.0
         version: 12.1.0(openapi-types@12.1.3)
       '@biomejs/biome':
-        specifier: 'catalog:'
+        specifier: 2.4.14
         version: 2.4.14
       '@faker-js/faker':
         specifier: ^10.4.0
@@ -312,7 +270,7 @@ importers:
         specifier: 4.6.9
         version: 4.6.9
       '@types/lodash.isequal':
-        specifier: 'catalog:'
+        specifier: ^4.5.8
         version: 4.5.8
       '@types/memoizee':
         specifier: 0.4.12
@@ -324,7 +282,7 @@ importers:
         specifier: ^4.2.6
         version: 4.2.6
       '@types/node':
-        specifier: 'catalog:'
+        specifier: 22.19.17
         version: 22.19.17
       '@types/nodemailer':
         specifier: ^7.0.11
@@ -336,7 +294,7 @@ importers:
         specifier: 8.20.0
         version: 8.20.0
       '@types/semver':
-        specifier: 'catalog:'
+        specifier: 7.7.1
         version: 7.7.1
       '@types/slug':
         specifier: ^5.0.9
@@ -351,10 +309,10 @@ importers:
         specifier: 1.6.7
         version: 1.6.7
       '@vitest/coverage-v8':
-        specifier: 'catalog:'
+        specifier: 4.1.5
         version: 4.1.5(vitest@4.1.5)
       '@vitest/ui':
-        specifier: 'catalog:'
+        specifier: 4.1.5
         version: 4.1.5(vitest@4.1.5)
       concurrently:
         specifier: ^9.2.1
@@ -399,13 +357,13 @@ importers:
         specifier: 7.2.0
         version: 7.2.0(typescript@5.9.3)
       typescript:
-        specifier: 'catalog:'
+        specifier: 5.9.3
         version: 5.9.3
       vite-node:
         specifier: ^6.0.0
         version: 6.0.0(@types/node@22.19.17)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4)
       vitest:
-        specifier: 'catalog:'
+        specifier: 4.1.5
         version: 4.1.5(@opentelemetry/api@1.9.1)(@types/node@22.19.17)(@vitest/coverage-v8@4.1.5)(@vitest/ui@4.1.5)(jsdom@25.0.1)(msw@2.13.6(@types/node@22.19.17)(typescript@5.9.3))(vite@8.0.10(@types/node@22.19.17)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4))
       wait-on:
         specifier: ^9.0.5
@@ -423,14 +381,14 @@ importers:
         specifier: ^1.0.1
         version: 1.0.1
       re2js:
-        specifier: 'catalog:'
+        specifier: 2.3.1
         version: 2.3.1
     devDependencies:
       '@babel/core':
         specifier: ^7.29.0
         version: 7.29.0
       '@biomejs/biome':
-        specifier: 'catalog:'
+        specifier: ^2.4.14
         version: 2.4.14
       '@codemirror/lang-json':
         specifier: 6.0.2
@@ -505,7 +463,7 @@ importers:
         specifier: 4.5.9
         version: 4.5.9
       '@types/lodash.isequal':
-        specifier: 'catalog:'
+        specifier: ^4.5.8
         version: 4.5.8
       '@types/lodash.mapvalues':
         specifier: ^4.6.9
@@ -514,7 +472,7 @@ importers:
         specifier: 4.5.9
         version: 4.5.9
       '@types/node':
-        specifier: 'catalog:'
+        specifier: 22.19.17
         version: 22.19.17
       '@types/react':
         specifier: 18.3.28
@@ -535,7 +493,7 @@ importers:
         specifier: 18.3.1
         version: 18.3.1
       '@types/semver':
-        specifier: 'catalog:'
+        specifier: 7.7.1
         version: 7.7.1
       '@uiw/codemirror-theme-duotone':
         specifier: 4.25.9
@@ -595,7 +553,7 @@ importers:
         specifier: 2.0.3
         version: 2.0.3
       fast-json-patch:
-        specifier: 'catalog:'
+        specifier: ^3.1.1
         version: 3.1.1
       http-proxy-middleware:
         specifier: 3.0.5
@@ -628,7 +586,7 @@ importers:
         specifier: ^7.21.0
         version: 7.21.0(openapi-types@12.1.3)(typescript@5.9.3)
       pkginfo:
-        specifier: 'catalog:'
+        specifier: 0.4.1
         version: 0.4.1
       plausible-tracker:
         specifier: 0.3.9
@@ -709,7 +667,7 @@ importers:
         specifier: 4.9.20
         version: 4.9.20(@emotion/react@11.14.0(@types/react@18.3.28)(react@18.3.1))(@mui/material@6.5.0(@emotion/react@11.14.0(@types/react@18.3.28)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.28)(react@18.3.1))(@types/react@18.3.28)(react@18.3.1))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.28)(react@18.3.1)
       typescript:
-        specifier: 'catalog:'
+        specifier: 5.9.3
         version: 5.9.3
       unleash-proxy-client:
         specifier: 3.8.0
@@ -733,7 +691,7 @@ importers:
         specifier: ^5.1.4
         version: 5.1.4(typescript@5.9.3)(vite@8.0.10(@types/node@22.19.17)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4))
       vitest:
-        specifier: 'catalog:'
+        specifier: 4.1.5
         version: 4.1.5(@opentelemetry/api@1.9.1)(@types/node@22.19.17)(@vitest/coverage-v8@4.1.5)(@vitest/ui@4.1.5)(jsdom@25.0.1)(msw@2.13.6(@types/node@22.19.17)(typescript@5.9.3))(vite@8.0.10(@types/node@22.19.17)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4))
       whatwg-fetch:
         specifier: 3.6.20
@@ -5370,6 +5328,7 @@ packages:
 
   re2js@1.4.0:
     resolution: {integrity: sha512-KTOIcZTSOpOxbu3i0+T6mFQ6tkxXKlTxfcMFs1trQbsMnG84qNq+DjXr8Afu+FEFjvF1NNlldpC7roPyazFI8g==}
+    deprecated: Accidental publish of breaking changes. Please downgrade to 1.3.3 or upgrade to the latest version.
 
   re2js@2.3.1:
     resolution: {integrity: sha512-gU5mI8ROXhrWXElqRzTnyN/MnnTFfddOTATd34ZTsZdRZs4g1PXLfp+thVF2AQSwiGQnDtOmNYCXRCctr2MsXw==}

@@ -253,7 +253,6 @@ export const ManageTagsDialog = ({ open, setOpen }: IManageTagsProps) => {
         >
             <>
                 <Typography
-                    paragraph
                     sx={{ marginBottom: (theme) => theme.spacing(2.5) }}
                 >
                     Tags allow you to group features together

@@ -12,7 +12,7 @@ export const ConflictWarning: React.FC<{
                 sx={{
                     px: 3,
                     mb: 2,
-                    '&.MuiAlert-standardWarning': {
+                    '&.MuiAlert-standard.MuiAlert-colorWarning': {
                         borderStyle: 'none',
                     },
                     borderRadius: '0px',

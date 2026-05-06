@@ -250,10 +250,7 @@ export const ManageBulkTagsDialog: FC<IManageBulkTagsDialogProps> = ({
             onClose={onClose}
             formId={formId}
         >
-            <Typography
-                paragraph
-                sx={{ marginBottom: (theme) => theme.spacing(2.5) }}
-            >
+            <Typography sx={{ marginBottom: (theme) => theme.spacing(2.5) }}>
                 Tags allow you to group features together
             </Typography>
             <form id={formId} onSubmit={submitAndReset}>

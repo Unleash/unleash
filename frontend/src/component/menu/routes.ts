@@ -56,6 +56,7 @@ import { EditReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/
 import { ExploreCounters } from 'component/counters/ExploreCounters/ExploreCounters.js';
 import { UnknownFlagsTable } from 'component/unknownFlags/UnknownFlagsTable';
 import { ChangeRequests } from 'component/changeRequest/ChangeRequests/ChangeRequests';
+import { LazyStoriesPage } from 'component/stories/LazyStoriesPage.tsx';
 
 export const routes: IRoute[] = [
     // Splash
@@ -562,6 +563,15 @@ export const routes: IRoute[] = [
         title: 'Signed out',
         hidden: true,
         component: SignedOut,
+        type: 'unprotected',
+        menu: {},
+        isStandalone: true,
+    },
+    {
+        path: '/_stories',
+        title: 'Stories',
+        hidden: true,
+        component: LazyStoriesPage,
         type: 'unprotected',
         menu: {},
         isStandalone: true,

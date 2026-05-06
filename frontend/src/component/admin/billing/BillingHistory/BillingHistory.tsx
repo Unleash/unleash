@@ -1,16 +1,22 @@
 import {
     Table,
-    SortableTableHeader,
     TableBody,
     TableCell,
     TableRow,
     TablePlaceholder,
 } from 'component/common/Table';
+import { SortableTableHeaderV8 } from 'component/common/Table/SortableTableHeader/SortableTableHeaderV8';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { useMemo, type FC } from 'react';
-import { useGlobalFilter, useSortBy, useTable } from 'react-table';
-import { sortTypes } from 'utils/sortTypes';
+import {
+    type ColumnDef,
+    flexRender,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Box, IconButton, styled, Typography } from '@mui/material';
 import FileDownload from '@mui/icons-material/FileDownload';
@@ -21,50 +27,55 @@ const StyledTitle = styled(Typography)(({ theme }) => ({
     marginBottom: theme.spacing(2.5),
     fontSize: theme.fontSizes.mainHeader,
 }));
+
 interface IBillingHistoryProps {
     data: Record<string, any>[];
     isLoading?: boolean;
 }
 
-const columns = [
+const columns: ColumnDef<Record<string, any>, unknown>[] = [
     {
-        Header: 'Amount',
-        accessor: 'amountFormatted',
+        id: 'amountFormatted',
+        header: 'Amount',
+        accessorKey: 'amountFormatted',
     },
     {
-        Header: 'Status',
-        accessor: 'status',
-        disableGlobalFilter: true,
+        id: 'status',
+        header: 'Status',
+        accessorKey: 'status',
+        enableGlobalFilter: false,
     },
     {
-        Header: 'Created date',
-        accessor: 'created',
-        Cell: DateCell,
-        disableGlobalFilter: true,
+        id: 'created',
+        header: 'Created date',
+        accessorKey: 'created',
+        cell: DateCell,
+        enableGlobalFilter: false,
     },
     {
-        Header: 'Due date',
-        accessor: 'dueDate',
-        Cell: DateCell,
-        disableGlobalFilter: true,
+        id: 'dueDate',
+        header: 'Due date',
+        accessorKey: 'dueDate',
+        cell: DateCell,
+        enableGlobalFilter: false,
     },
     {
-        Header: 'Download',
-        accessor: 'invoicePDF',
-        align: 'center',
-        Cell: ({ value }: { value: string }) => (
+        id: 'invoicePDF',
+        header: 'Download',
+        accessorKey: 'invoicePDF',
+        cell: ({ getValue }) => (
             <Box
                 sx={{ display: 'flex', justifyContent: 'center' }}
                 data-loading
             >
-                <IconButton href={value}>
+                <IconButton href={String(getValue() ?? '')}>
                     <FileDownload />
                 </IconButton>
             </Box>
         ),
-        width: 100,
-        disableGlobalFilter: true,
-        disableSortBy: true,
+        enableSorting: false,
+        enableGlobalFilter: false,
+        meta: { width: 100, align: 'center' },
     },
 ];
 
@@ -74,52 +85,47 @@ export const BillingHistory: FC<IBillingHistoryProps> = ({
 }) => {
     const initialState = useMemo(
         () => ({
-            sortBy: [{ id: 'created', desc: true }],
+            sorting: [{ id: 'created', desc: true }],
         }),
         [],
     );
 
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-        useTable(
-            {
-                columns,
-                data,
-                initialState,
-                sortTypes,
-                autoResetGlobalFilter: false,
-                disableSortRemove: true,
-                defaultColumn: {
-                    Cell: TextCell,
-                },
-            },
-            useGlobalFilter,
-            useSortBy,
-        );
+    const table = useReactTable({
+        columns,
+        data,
+        initialState,
+        defaultColumn: {
+            cell: ({ getValue }) => (
+                <TextCell value={String(getValue() ?? '')} />
+            ),
+        },
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+    });
+
+    const rows = table.getRowModel().rows;
 
     return (
         <PageContent isLoading={isLoading} disablePadding>
             <StyledTitle>Payment history</StyledTitle>
-            <Table {...getTableProps()}>
-                <SortableTableHeader headerGroups={headerGroups} />
-                <TableBody {...getTableBodyProps()}>
-                    {rows.map((row) => {
-                        prepareRow(row);
-                        const { key, ...rowProps } = row.getRowProps();
-                        return (
-                            <TableRow hover key={key} {...rowProps}>
-                                {row.cells.map((cell) => {
-                                    const { key, ...cellProps } =
-                                        cell.getCellProps();
-
-                                    return (
-                                        <TableCell key={key} {...cellProps}>
-                                            {cell.render('Cell')}
-                                        </TableCell>
-                                    );
-                                })}
-                            </TableRow>
-                        );
-                    })}
+            <Table>
+                <SortableTableHeaderV8 tableInstance={table} />
+                <TableBody>
+                    {rows.map((row) => (
+                        <TableRow hover key={row.id}>
+                            {row.getVisibleCells().map((cell) => (
+                                <TableCell key={cell.id}>
+                                    {flexRender(
+                                        cell.column.columnDef.cell,
+                                        cell.getContext(),
+                                    )}
+                                </TableCell>
+                            ))}
+                        </TableRow>
+                    ))}
                 </TableBody>
             </Table>
             <ConditionallyRender

@@ -231,6 +231,7 @@ const ImpactMetricsPage = () => {
                         variant='contained'
                         onClick={handleTest}
                         disabled={!trimmedUrl || testing}
+                        sx={{ alignSelf: 'flex-start' }}
                     >
                         Test integration
                     </Button>

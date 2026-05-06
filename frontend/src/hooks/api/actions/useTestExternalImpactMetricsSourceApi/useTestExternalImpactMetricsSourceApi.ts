@@ -1,6 +1,6 @@
 import useAPI from '../useApi/useApi.js';
 
-const ENDPOINT = 'api/admin/impact-metrics/test-source';
+const ENDPOINT = 'api/admin/impact-metrics/external-source/validate';
 
 export type TestExternalImpactMetricsSourceResult = {
     metrics: string[];

@@ -82,6 +82,8 @@ export const ImpactMetricsAdmin = () => {
     );
 };
 
+type TestOutcome = { metrics: string[] } | { metrics: []; error: string };
+
 const ImpactMetricsPage = () => {
     const { source, refetch, loading } = useExternalImpactMetricsSource();
     const { setExternalImpactMetricsSource, loading: saving } =
@@ -94,8 +96,7 @@ const ImpactMetricsPage = () => {
 
     const [enabled, setEnabled] = useState(false);
     const [prometheusUrl, setPrometheusUrl] = useState('');
-    const [testResult, setTestResult] = useState<string[] | null>(null);
-    const [testError, setTestError] = useState<string | null>(null);
+    const [testOutcome, setTestOutcome] = useState<TestOutcome | null>(null);
 
     useEffect(() => {
         setEnabled(source.enabled);
@@ -109,8 +110,7 @@ const ImpactMetricsPage = () => {
 
     const handleUrlChange = (value: string) => {
         setPrometheusUrl(value);
-        setTestResult(null);
-        setTestError(null);
+        setTestOutcome(null);
     };
 
     const handleCancel = () => {
@@ -119,17 +119,16 @@ const ImpactMetricsPage = () => {
     };
 
     const handleTest = async () => {
-        setTestResult(null);
-        setTestError(null);
+        setTestOutcome(null);
         try {
             const result = await testExternalImpactMetricsSource(trimmedUrl);
             if (result.error) {
-                setTestError(result.error);
+                setTestOutcome({ metrics: [], error: result.error });
             } else {
-                setTestResult(result.metrics);
+                setTestOutcome({ metrics: result.metrics });
             }
         } catch (error) {
-            setTestError(formatUnknownError(error));
+            setTestOutcome({ metrics: [], error: formatUnknownError(error) });
         }
     };
 
@@ -235,29 +234,33 @@ const ImpactMetricsPage = () => {
                     >
                         Test integration
                     </Button>
-                    {testResult !== null && (
+                    {testOutcome !== null && testOutcome.metrics.length > 0 && (
                         <Alert severity='success'>
                             <AlertTitle>
-                                We received {testResult.length} metrics from
-                                your metrics source URL
+                                We received {testOutcome.metrics.length} metrics
+                                from your metrics source URL
                             </AlertTitle>
                             The imported metrics will be available wherever you
                             use Impact Metrics in Unleash.
                         </Alert>
                     )}
-                    {testError !== null && (
-                        <Alert severity='error'>{testError}</Alert>
+                    {testOutcome !== null && 'error' in testOutcome && (
+                        <Alert severity='error'>{testOutcome.error}</Alert>
                     )}
-                    {testResult !== null && testResult.length > 0 && (
-                        <>
-                            <Typography fontWeight='bold'>Metrics</Typography>
-                            <MetricsList>
-                                {testResult.map((metric) => (
-                                    <li key={metric}>{metric}</li>
-                                ))}
-                            </MetricsList>
-                        </>
-                    )}
+                    {testOutcome !== null &&
+                        'metrics' in testOutcome &&
+                        testOutcome.metrics.length > 0 && (
+                            <>
+                                <Typography fontWeight='bold'>
+                                    Metrics
+                                </Typography>
+                                <MetricsList>
+                                    {testOutcome.metrics.map((metric) => (
+                                        <li key={metric}>{metric}</li>
+                                    ))}
+                                </MetricsList>
+                            </>
+                        )}
                 </Card>
 
                 <Footer>

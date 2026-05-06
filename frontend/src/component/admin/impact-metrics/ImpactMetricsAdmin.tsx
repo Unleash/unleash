@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     Button,
     FormControlLabel,
@@ -15,6 +15,10 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { useUiFlag } from 'hooks/useUiFlag';
 import NotFound from 'component/common/NotFound/NotFound';
+import { useExternalImpactMetricsSource } from 'hooks/api/getters/useExternalImpactMetricsSource/useExternalImpactMetricsSource';
+import { useExternalImpactMetricsSourceApi } from 'hooks/api/actions/useExternalImpactMetricsSourceApi/useExternalImpactMetricsSourceApi';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 const Layout = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -43,11 +47,6 @@ const IconHeader = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-const RightAlignedRow = styled('div')({
-    display: 'flex',
-    justifyContent: 'flex-end',
-});
-
 const Footer = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'flex-end',
@@ -55,10 +54,6 @@ const Footer = styled('div')(({ theme }) => ({
     paddingTop: theme.spacing(2),
     borderTop: `1px solid ${theme.palette.divider}`,
 }));
-
-const StatusToggleLabel = styled(FormControlLabel)({
-    margin: 0,
-});
 
 const DOCS_URL =
     'https://docs.getunleash.io/concepts/impact-metrics#enable-external-metrics';
@@ -78,8 +73,46 @@ export const ImpactMetricsAdmin = () => {
 };
 
 const ImpactMetricsPage = () => {
+    const { source, refetch, loading } = useExternalImpactMetricsSource();
+    const { setExternalImpactMetricsSource, loading: saving } =
+        useExternalImpactMetricsSourceApi();
+    const { setToastData, setToastApiError } = useToast();
+
+    const currentUrl = source.url ?? '';
+
     const [enabled, setEnabled] = useState(false);
     const [prometheusUrl, setPrometheusUrl] = useState('');
+
+    useEffect(() => {
+        setEnabled(source.enabled);
+        setPrometheusUrl(currentUrl);
+    }, [source.enabled, currentUrl]);
+
+    const trimmedUrl = prometheusUrl.trim();
+    const isDirty = enabled !== source.enabled || trimmedUrl !== currentUrl;
+    const hasUrlWhenRequired = !enabled || trimmedUrl.length > 0;
+    const canSave = isDirty && !saving && hasUrlWhenRequired;
+
+    const handleCancel = () => {
+        setEnabled(source.enabled);
+        setPrometheusUrl(currentUrl);
+    };
+
+    const handleSave = async () => {
+        try {
+            await setExternalImpactMetricsSource({
+                enabled,
+                ...(trimmedUrl ? { url: trimmedUrl } : {}),
+            });
+            setToastData({
+                type: 'success',
+                text: 'External metrics source has been saved',
+            });
+            refetch();
+        } catch (error) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
 
     return (
         <PageContent header={<PageHeader titleElement='Impact Metrics' />}>
@@ -119,11 +152,12 @@ const ImpactMetricsPage = () => {
                     <Typography fontWeight='bold'>
                         External metrics status
                     </Typography>
-                    <StatusToggleLabel
+                    <FormControlLabel
                         control={
                             <Switch
                                 checked={enabled}
                                 onChange={(_, checked) => setEnabled(checked)}
+                                disabled={loading || saving}
                                 name='enabled'
                             />
                         }
@@ -154,19 +188,26 @@ const ImpactMetricsPage = () => {
                         onChange={(event) =>
                             setPrometheusUrl(event.target.value)
                         }
+                        disabled={loading || saving}
                         fullWidth
                         size='small'
                     />
-                    <RightAlignedRow>
-                        <Button variant='contained' disabled={!prometheusUrl}>
-                            Test connection
-                        </Button>
-                    </RightAlignedRow>
                 </Card>
 
                 <Footer>
-                    <Button>Cancel</Button>
-                    <Button variant='contained'>Save</Button>
+                    <Button
+                        onClick={handleCancel}
+                        disabled={!isDirty || saving}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        variant='contained'
+                        onClick={handleSave}
+                        disabled={!canSave}
+                    >
+                        Save
+                    </Button>
                 </Footer>
             </Layout>
         </PageContent>

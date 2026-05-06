@@ -20,6 +20,7 @@ import { formatAssetPath } from 'utils/formatPath.ts';
 import { SignupDialogComplete } from './SignupDialogComplete.tsx';
 import { useWelcomeDialogContext } from 'component/personalDashboard/WelcomeDialogContext.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -281,7 +282,12 @@ export const SignupDialog = () => {
             setIsSubmitting(true);
             await submitSignupData(data);
             refetch();
-            setWelcomeDialog('open');
+            const onboardingKeyConceptsNudge = useUiFlag(
+                'onboardingKeyConceptsNudge',
+            );
+            if (!onboardingKeyConceptsNudge) {
+                setWelcomeDialog('open');
+            }
         } catch (e: unknown) {
             const error = formatUnknownError(e);
             setToastApiError(error);

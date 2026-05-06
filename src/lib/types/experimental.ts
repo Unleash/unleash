@@ -79,7 +79,8 @@ export type IFlagKey =
     | 'elasticEventSync'
     | 'externalImpactMetrics'
     | 'accessOverviewRework'
-    | 'onboardingConnectSDKNewDialog';
+    | 'onboardingConnectSDKNewDialog'
+    | 'onboardingKeyConceptsNudge';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -360,6 +361,10 @@ const flags: IFlags = {
     ),
     onboardingConnectSDKNewDialog: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ONBOARDING_CONNECT_SDK_NEW_DIALOG,
+        false,
+    ),
+    onboardingKeyConceptsNudge: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ONBOARDING_KEY_CONCEPTS_NUDGE,
         false,
     ),
 };

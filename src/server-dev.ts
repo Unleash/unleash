@@ -62,6 +62,7 @@ process.nextTick(async () => {
                         onlyFeatureTokensWithFeatureAPIs: false,
                         accessOverviewRework: true,
                         onboardingConnectSDKNewDialog: true,
+                        onboardingKeyConceptsNudge: true,
                     },
                 },
                 authentication: {

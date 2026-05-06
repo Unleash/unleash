@@ -4,6 +4,7 @@ import { Box, styled, type SxProps, type Theme } from '@mui/material';
 
 interface ITextCellProps {
     value?: string | null;
+    getValue?: () => unknown;
     lineClamp?: number;
     'data-testid'?: string;
     sx?: SxProps<Theme>;
@@ -32,14 +33,18 @@ const StyledSpan = styled('span')(() => ({
 
 export const TextCell: FC<ITextCellProps> = ({
     value,
+    getValue,
     children,
     lineClamp,
     sx,
     'data-testid': testid,
-}) => (
-    <StyledWrapper lineClamp={lineClamp} sx={sx}>
-        <StyledSpan data-loading='true' data-testid={testid}>
-            {children ?? value}
-        </StyledSpan>
-    </StyledWrapper>
-);
+}) => {
+    const resolved = children ?? value ?? (getValue ? getValue() : undefined);
+    return (
+        <StyledWrapper lineClamp={lineClamp} sx={sx}>
+            <StyledSpan data-loading='true' data-testid={testid}>
+                {resolved as React.ReactNode}
+            </StyledSpan>
+        </StyledWrapper>
+    );
+};

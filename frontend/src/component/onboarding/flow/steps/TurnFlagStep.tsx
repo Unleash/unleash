@@ -24,8 +24,8 @@ export const TurnFlagStep = ({ projectId, state }: ITurnFlagStepProps) => {
             stepNumber={3}
             state={state}
             icon={<ToggleOnIcon />}
-            title='Turn flag on/off'
-            body='Check that the flag is working by turning it on and off.'
+            title='Turn flag on'
+            body='Check that the flag is working by turning it on.'
         >
             {state === 'done' ? (
                 <Button

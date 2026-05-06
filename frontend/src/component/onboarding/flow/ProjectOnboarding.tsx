@@ -68,11 +68,11 @@ export const ProjectOnboarding = ({
     setOnboardingFlow,
     refetchFeatures,
 }: IProjectOnboardingProps) => {
-    const { project, refetch } = useProjectOverview(projectId);
-    const isFirstFlagCreated =
-        project.onboardingStatus?.status === 'first-flag-created';
-    const isSDKConnected = project.onboardingStatus?.status === 'sdk-connected';
-    const isOnboarded = project.onboardingStatus?.status === 'onboarded';
+    const { project, refetch, loading } = useProjectOverview(projectId);
+    const status = loading ? undefined : project.onboardingStatus?.status;
+    const isFirstFlagCreated = status === 'first-flag-created';
+    const isSDKConnected = status === 'sdk-connected';
+    const isOnboarded = status === 'onboarded';
 
     let step = 0;
     if (isOnboarded) {

@@ -1,4 +1,4 @@
-import { vi } from 'vitest';
+import { vi, expect } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { screen, fireEvent } from '@testing-library/react';
 import { OnboardingProgress } from './OnboardingProgress.tsx';

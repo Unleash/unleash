@@ -24,15 +24,9 @@ export const ApiTokenPage = () => {
     const { tokens, loading, refetch } = useApiTokens();
     const { deleteToken } = useApiTokensApi();
 
-    const {
-        headerGroups,
-        rows,
-        prepareRow,
-        state: { globalFilter },
-        setGlobalFilter,
-        setHiddenColumns,
-        columns,
-    } = useApiTokenTable(tokens, (props) => {
+    const { table, columns, globalFilter, setGlobalFilter } = useApiTokenTable(
+        tokens,
+        (props) => {
         const READ_PERMISSION =
             props.row.original.type === 'client'
                 ? READ_CLIENT_API_TOKEN
@@ -62,7 +56,10 @@ export const ApiTokenPage = () => {
                 />
             </ActionCell>
         );
-    });
+    },
+    );
+
+    const rowCount = table.getRowModel().rows.length;
 
     return (
         <PermissionGuard
@@ -75,7 +72,7 @@ export const ApiTokenPage = () => {
             <PageContent
                 header={
                     <PageHeader
-                        title={`API access (${rows.length})`}
+                        title={`API access (${rowCount})`}
                         actions={
                             <>
                                 <Search
@@ -98,10 +95,7 @@ export const ApiTokenPage = () => {
             >
                 <ApiTokenTable
                     loading={loading}
-                    headerGroups={headerGroups}
-                    setHiddenColumns={setHiddenColumns}
-                    prepareRow={prepareRow}
-                    rows={rows}
+                    table={table}
                     columns={columns}
                     globalFilter={globalFilter}
                 />

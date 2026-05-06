@@ -39,50 +39,47 @@ export const ProjectApiAccess = () => {
 
     usePageTitle(`Project api access – ${projectName}`);
 
-    const {
-        headerGroups,
-        rows,
-        prepareRow,
-        state: { globalFilter },
-        setGlobalFilter,
-        setHiddenColumns,
-        columns,
-    } = useApiTokenTable(tokens, (props) => (
-        <ActionCell>
-            <CopyApiTokenButton
-                token={props.row.original}
-                permission={READ_PROJECT_API_TOKEN}
-                project={projectId}
-                track={() =>
-                    trackEvent('project_api_tokens', {
-                        props: { eventType: 'api_key_copied' },
-                    })
-                }
-            />
-            <RemoveApiTokenButton
-                token={props.row.original}
-                permission={DELETE_PROJECT_API_TOKEN}
-                project={projectId}
-                onRemove={async () => {
-                    await deleteProjectToken(
-                        props.row.original.secret,
-                        projectId,
-                    );
-                    trackEvent('project_api_tokens', {
-                        props: { eventType: 'api_key_deleted' },
-                    });
-                    refetchProjectTokens();
-                }}
-            />
-        </ActionCell>
-    ));
+    const { table, columns, globalFilter, setGlobalFilter } = useApiTokenTable(
+        tokens,
+        (props) => (
+            <ActionCell>
+                <CopyApiTokenButton
+                    token={props.row.original}
+                    permission={READ_PROJECT_API_TOKEN}
+                    project={projectId}
+                    track={() =>
+                        trackEvent('project_api_tokens', {
+                            props: { eventType: 'api_key_copied' },
+                        })
+                    }
+                />
+                <RemoveApiTokenButton
+                    token={props.row.original}
+                    permission={DELETE_PROJECT_API_TOKEN}
+                    project={projectId}
+                    onRemove={async () => {
+                        await deleteProjectToken(
+                            props.row.original.secret,
+                            projectId,
+                        );
+                        trackEvent('project_api_tokens', {
+                            props: { eventType: 'api_key_deleted' },
+                        });
+                        refetchProjectTokens();
+                    }}
+                />
+            </ActionCell>
+        ),
+    );
+
+    const rowCount = table.getRowModel().rows.length;
 
     return (
         <div style={{ width: '100%', overflow: 'hidden' }}>
             <PageContent
                 header={
                     <PageHeader
-                        title={`API access (${rows.length})`}
+                        title={`API access (${rowCount})`}
                         actions={
                             <>
                                 <Search
@@ -112,10 +109,7 @@ export const ProjectApiAccess = () => {
                         <ApiTokenTable
                             compact
                             loading={loading}
-                            headerGroups={headerGroups}
-                            setHiddenColumns={setHiddenColumns}
-                            prepareRow={prepareRow}
-                            rows={rows}
+                            table={table}
                             columns={columns}
                             globalFilter={globalFilter}
                         />

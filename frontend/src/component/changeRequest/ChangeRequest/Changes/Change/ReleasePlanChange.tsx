@@ -160,13 +160,13 @@ const StartMilestone: FC<{
                 </ChangeItemInfo>
                 <div>
                     <TabList>
-                        <Tab>View change</Tab>
-                        <Tab>View diff</Tab>
+                        <Tab value='change'>View change</Tab>
+                        <Tab value='diff'>View diff</Tab>
                     </TabList>
                     {actions}
                 </div>
             </ChangeItemWrapper>
-            <TabPanel>
+            <TabPanel value='change'>
                 <ReleasePlanMilestone
                     readonly
                     milestone={newMilestone}
@@ -186,7 +186,7 @@ const StartMilestone: FC<{
                     )}
                 />
             </TabPanel>
-            <TabPanel variant='diff'>
+            <TabPanel value='diff'>
                 <EventDiff
                     entry={{
                         preData: previousMilestone,
@@ -347,16 +347,16 @@ const AddReleasePlan: FC<{
                 </ChangeItemInfo>
                 <div>
                     <TabList>
-                        <Tab>View change</Tab>
-                        <Tab>View diff</Tab>
+                        <Tab value='change'>View change</Tab>
+                        <Tab value='diff'>View diff</Tab>
                     </TabList>
                     {actions}
                 </div>
             </ChangeItemWrapper>
-            <TabPanel>
+            <TabPanel value='change'>
                 <ReleasePlan plan={planPreview} readonly />
             </TabPanel>
-            <TabPanel variant='diff'>
+            <TabPanel value='diff'>
                 <EventDiff
                     entry={{
                         preData: currentReleasePlan,

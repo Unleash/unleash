@@ -192,12 +192,12 @@ export const ConsolidatedReleasePlanChanges: FC<{
                 </ChangeItemInfo>
                 <div>
                     <TabList>
-                        <Tab>View change</Tab>
-                        <Tab>View diff</Tab>
+                        <Tab value='change'>View change</Tab>
+                        <Tab value='diff'>View diff</Tab>
                     </TabList>
                 </div>
             </ChangeItemWrapper>
-            <TabPanel>
+            <TabPanel value='change'>
                 {readonly ? (
                     <ReadonlyMilestoneListRenderer
                         plan={modifiedPlan}
@@ -214,7 +214,7 @@ export const ConsolidatedReleasePlanChanges: FC<{
                     />
                 )}
             </TabPanel>
-            <TabPanel variant='diff'>
+            <TabPanel value='diff'>
                 <EventDiff
                     entry={{
                         preData: basePlan,

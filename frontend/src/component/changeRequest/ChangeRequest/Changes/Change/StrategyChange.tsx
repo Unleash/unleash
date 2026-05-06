@@ -123,12 +123,12 @@ const DeleteStrategy: FC<{
                 </ChangeItemInfo>
                 {actions}
             </ChangeItemWrapper>
-            <TabPanel>
+            <TabPanel value='change'>
                 {referenceStrategy && (
                     <StrategyExecution strategy={referenceStrategy} />
                 )}
             </TabPanel>
-            <TabPanel variant='diff'>
+            <TabPanel value='diff'>
                 <StrategyDiff
                     change={change}
                     currentStrategy={referenceStrategy}
@@ -274,13 +274,13 @@ const UpdateStrategy: FC<{
                 referenceStrategy={referenceStrategy}
                 actions={actions}
             />
-            <TabPanel>
+            <TabPanel value='change'>
                 <StrategyChangeDetails
                     change={change}
                     referenceStrategy={referenceStrategy}
                 />
             </TabPanel>
-            <TabPanel variant='diff'>
+            <TabPanel value='diff'>
                 <StrategyDiff
                     change={change}
                     currentStrategy={referenceStrategy}
@@ -309,7 +309,7 @@ const AddStrategy: FC<{
             </ChangeItemInfo>
             {actions}
         </ChangeItemWrapper>
-        <TabPanel>
+        <TabPanel value='change'>
             <StrategyExecution strategy={change.payload} />
             {change.payload.variants?.length ? (
                 <StyledBox>
@@ -322,7 +322,7 @@ const AddStrategy: FC<{
                 </StyledBox>
             ) : null}
         </TabPanel>
-        <TabPanel variant='diff'>
+        <TabPanel value='diff'>
             <StrategyDiff change={change} currentStrategy={undefined} />
         </TabPanel>
     </>
@@ -386,8 +386,8 @@ export const StrategyChange: FC<{
     const actionsWithTabs = (
         <ActionsContainer>
             <TabList>
-                <Tab>View change</Tab>
-                <Tab>View diff</Tab>
+                <Tab value='change'>View change</Tab>
+                <Tab value='diff'>View diff</Tab>
             </TabList>
             {actions}
         </ActionsContainer>

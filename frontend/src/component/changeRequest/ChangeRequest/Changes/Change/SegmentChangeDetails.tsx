@@ -58,8 +58,8 @@ export const SegmentChangeDetails: FC<{
     const actionsWithTabs = (
         <ActionsContainer>
             <TabList>
-                <Tab>View change</Tab>
-                <Tab>View diff</Tab>
+                <Tab value='change'>View change</Tab>
+                <Tab value='diff'>View diff</Tab>
             </TabList>
             {actions}
         </ActionsContainer>
@@ -81,8 +81,8 @@ export const SegmentChangeDetails: FC<{
                             {actionsWithTabs}
                         </ChangeItemWrapper>
 
-                        <TabPanel sx={{ display: 'contents' }} />
-                        <TabPanel sx={{ mt: 1 }} variant='diff'>
+                        <TabPanel value='change' sx={{ display: 'contents' }} />
+                        <TabPanel value='diff' sx={{ mt: 1 }}>
                             <SegmentDiff
                                 change={change}
                                 currentSegment={referenceSegment}
@@ -111,12 +111,12 @@ export const SegmentChangeDetails: FC<{
                             {actionsWithTabs}
                         </ChangeItemWrapper>
 
-                        <TabPanel>
+                        <TabPanel value='change'>
                             <ViewableConstraintsList
                                 constraints={change.payload.constraints}
                             />
                         </TabPanel>
-                        <TabPanel variant='diff'>
+                        <TabPanel value='diff'>
                             <SegmentDiff
                                 change={change}
                                 currentSegment={referenceSegment}

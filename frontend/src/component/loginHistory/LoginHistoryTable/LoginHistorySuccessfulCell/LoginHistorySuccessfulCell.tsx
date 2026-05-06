@@ -15,15 +15,17 @@ interface ILoginHistorySuccessfulCellProps {
     row: {
         original: ILoginEvent;
     };
-    value: boolean;
+    value?: boolean;
+    getValue?: () => unknown;
 }
 
 export const LoginHistorySuccessfulCell: VFC<
     ILoginHistorySuccessfulCellProps
-> = ({ row, value }) => {
+> = ({ row, value, getValue }) => {
     const { searchQuery } = useSearchHighlightContext();
+    const resolved = value ?? Boolean(getValue ? getValue() : false);
 
-    if (value)
+    if (resolved)
         return (
             <StyledBox>
                 <Badge color='success'>True</Badge>

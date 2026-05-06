@@ -1,22 +1,22 @@
 import { useEffect, useMemo, useState } from 'react';
-import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
+import { TablePlaceholder } from 'component/common/Table';
+import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { IconButton, Tooltip, useMediaQuery } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import {
-    type SortingRule,
-    useFlexLayout,
-    useSortBy,
-    useTable,
-} from 'react-table';
-import { sortTypes } from 'utils/sortTypes';
+    type ColumnDef,
+    getCoreRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
-import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import { useConditionallyHiddenColumnsV8 } from 'hooks/useConditionallyHiddenColumnsV8';
 import { useSearch } from 'hooks/useSearch';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { useLoginHistory } from 'hooks/api/getters/useLoginHistory/useLoginHistory';
@@ -32,7 +32,7 @@ export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search', string>
 >;
 
-const defaultSort: SortingRule<string> = { id: 'created_at', desc: true };
+const defaultSort = { id: 'created_at', desc: true };
 
 const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
     'LoginHistoryTable:v1',
@@ -53,7 +53,7 @@ export const LoginHistoryTable = () => {
 
     const [searchParams, setSearchParams] = useSearchParams();
     const [initialState] = useState(() => ({
-        sortBy: [
+        sorting: [
             {
                 id: searchParams.get('sort') || storedParams.id,
                 desc: searchParams.has('order')
@@ -61,7 +61,7 @@ export const LoginHistoryTable = () => {
                     : storedParams.desc,
             },
         ],
-        hiddenColumns: ['failure_reason'],
+        columnVisibility: { failure_reason: false },
         globalFilter: searchParams.get('search') || '',
     }));
 
@@ -70,56 +70,65 @@ export const LoginHistoryTable = () => {
     const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-    const columns = useMemo(
+    const columns = useMemo<ColumnDef<ILoginEvent, unknown>[]>(
         () => [
             {
-                Header: 'Created',
-                accessor: 'created_at',
-                Cell: ({ value, column }) => (
+                id: 'created_at',
+                header: 'Created',
+                accessorKey: 'created_at',
+                cell: ({ getValue, column }) => (
                     <TimeAgoCell
-                        value={value}
+                        value={String(getValue() ?? '')}
                         column={column}
                         dateFormat={formatDateYMDHMS}
                     />
                 ),
-                maxWidth: 150,
+                meta: { maxWidth: 150 },
             },
             {
-                Header: 'Username',
-                accessor: 'username',
-                minWidth: 100,
-                Cell: HighlightCell,
-                searchable: true,
+                id: 'username',
+                header: 'Username',
+                accessorKey: 'username',
+                cell: HighlightCell,
+                meta: { minWidth: 100, searchable: true },
             },
             {
-                Header: 'Authentication',
-                accessor: (event: ILoginEvent) =>
+                id: 'auth_type',
+                header: 'Authentication',
+                accessorFn: (event) =>
                     AUTH_TYPE_LABEL[event.auth_type] || event.auth_type,
-                width: 150,
-                maxWidth: 150,
-                Cell: HighlightCell,
-                searchable: true,
-                filterName: 'auth',
+                cell: HighlightCell,
+                meta: {
+                    width: 150,
+                    maxWidth: 150,
+                    searchable: true,
+                    filterName: 'auth',
+                },
             },
             {
-                Header: 'IP address',
-                accessor: 'ip',
-                Cell: HighlightCell,
-                searchable: true,
+                id: 'ip',
+                header: 'IP address',
+                accessorKey: 'ip',
+                cell: HighlightCell,
+                meta: { searchable: true },
             },
             {
-                Header: 'Success',
-                accessor: 'successful',
-                align: 'center',
-                Cell: LoginHistorySuccessfulCell,
-                filterName: 'success',
-                filterParsing: (value: boolean) => value.toString(),
+                id: 'successful',
+                header: 'Success',
+                accessorKey: 'successful',
+                cell: LoginHistorySuccessfulCell,
+                meta: {
+                    align: 'center',
+                    filterName: 'success',
+                    filterParsing: (value: boolean) => value.toString(),
+                },
             },
             // Always hidden -- for search
             {
-                accessor: 'failure_reason',
-                Header: 'Failure Reason',
-                searchable: true,
+                id: 'failure_reason',
+                header: 'Failure Reason',
+                accessorKey: 'failure_reason',
+                meta: { searchable: true },
             },
         ],
         [],
@@ -131,31 +140,23 @@ export const LoginHistoryTable = () => {
         events,
     );
 
-    const {
-        headerGroups,
-        rows,
-        prepareRow,
-        state: { sortBy },
-        setHiddenColumns,
-    } = useTable(
-        {
-            columns: columns as any,
-            data,
-            initialState,
-            sortTypes,
-            autoResetHiddenColumns: false,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            disableMultiSort: true,
-            defaultColumn: {
-                Cell: TextCell,
-            },
+    const table = useReactTable({
+        columns,
+        data,
+        initialState,
+        defaultColumn: {
+            cell: ({ getValue }) => (
+                <TextCell value={String(getValue() ?? '')} />
+            ),
         },
-        useSortBy,
-        useFlexLayout,
-    );
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+        enableMultiSort: false,
+    });
 
-    useConditionallyHiddenColumns(
+    useConditionallyHiddenColumnsV8(
         [
             {
                 condition: isExtraSmallScreen,
@@ -166,14 +167,20 @@ export const LoginHistoryTable = () => {
                 columns: ['imageUrl', 'tokens', 'createdAt'],
             },
         ],
-        setHiddenColumns,
+        table.setColumnVisibility,
         columns,
     );
 
+    const sorting = table.getState().sorting;
+
     useEffect(() => {
+        const sortRule = sorting[0];
+        if (!sortRule) {
+            return;
+        }
         const tableState: PageQueryType = {};
-        tableState.sort = sortBy[0].id;
-        if (sortBy[0].desc) {
+        tableState.sort = sortRule.id;
+        if (sortRule.desc) {
             tableState.order = 'desc';
         }
         if (searchValue) {
@@ -184,17 +191,19 @@ export const LoginHistoryTable = () => {
             replace: true,
         });
         setStoredParams({
-            id: sortBy[0].id,
-            desc: sortBy[0].desc || false,
+            id: sortRule.id,
+            desc: sortRule.desc || false,
         });
-    }, [sortBy, searchValue, setSearchParams]);
+    }, [sorting, searchValue, setSearchParams]);
+
+    const rowCount = table.getRowModel().rows.length;
 
     return (
         <PageContent
             isLoading={loading}
             header={
                 <PageHeader
-                    title={`Login history (${rows.length})`}
+                    title={`Login history (${rowCount})`}
                     actions={
                         <>
                             <ConditionallyRender
@@ -209,7 +218,7 @@ export const LoginHistoryTable = () => {
                                 }
                             />
                             <ConditionallyRender
-                                condition={rows.length > 0}
+                                condition={rowCount > 0}
                                 show={
                                     <>
                                         <ConditionallyRender
@@ -245,14 +254,10 @@ export const LoginHistoryTable = () => {
             }
         >
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <VirtualizedTable
-                    rows={rows}
-                    headerGroups={headerGroups}
-                    prepareRow={prepareRow}
-                />
+                <VirtualizedTableV8 tableInstance={table} />
             </SearchHighlightProvider>
             <ConditionallyRender
-                condition={rows.length === 0}
+                condition={rowCount === 0}
                 show={
                     <ConditionallyRender
                         condition={searchValue?.length > 0}

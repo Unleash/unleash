@@ -22,6 +22,7 @@ import { useExternalImpactMetricsSourceApi } from 'hooks/api/actions/useExternal
 import { useTestExternalImpactMetricsSourceApi } from 'hooks/api/actions/useTestExternalImpactMetricsSourceApi/useTestExternalImpactMetricsSourceApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const Layout = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -91,6 +92,7 @@ const ImpactMetricsPage = () => {
     const { testExternalImpactMetricsSource, loading: testing } =
         useTestExternalImpactMetricsSourceApi();
     const { setToastData, setToastApiError } = useToast();
+    const { trackEvent } = usePlausibleTracker();
 
     const currentUrl = source.url ?? '';
 
@@ -113,6 +115,16 @@ const ImpactMetricsPage = () => {
         setTestOutcome(null);
     };
 
+    const handleToggle = (_: unknown, checked: boolean) => {
+        setEnabled(checked);
+        trackEvent('external-impact-metrics', {
+            props: {
+                eventType: 'toggle',
+                enabled: checked ? 'enabled' : 'disabled',
+            },
+        });
+    };
+
     const handleCancel = () => {
         setEnabled(source.enabled);
         setPrometheusUrl(currentUrl);
@@ -120,6 +132,9 @@ const ImpactMetricsPage = () => {
 
     const handleTest = async () => {
         setTestOutcome(null);
+        trackEvent('external-impact-metrics', {
+            props: { eventType: 'test-integration' },
+        });
         try {
             const result = await testExternalImpactMetricsSource(trimmedUrl);
             if (result.error) {
@@ -138,12 +153,18 @@ const ImpactMetricsPage = () => {
                 enabled,
                 ...(trimmedUrl ? { url: trimmedUrl } : {}),
             });
+            trackEvent('external-impact-metrics', {
+                props: { eventType: 'saved', result: 'success' },
+            });
             setToastData({
                 type: 'success',
                 text: 'External metrics source has been saved',
             });
             refetch();
         } catch (error) {
+            trackEvent('external-impact-metrics', {
+                props: { eventType: 'saved', result: 'failed' },
+            });
             setToastApiError(formatUnknownError(error));
         }
     };
@@ -190,7 +211,7 @@ const ImpactMetricsPage = () => {
                         control={
                             <Switch
                                 checked={enabled}
-                                onChange={(_, checked) => setEnabled(checked)}
+                                onChange={handleToggle}
                                 disabled={loading || saving}
                                 name='enabled'
                             />

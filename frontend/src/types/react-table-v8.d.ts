@@ -9,5 +9,6 @@ declare module '@tanstack/react-table' {
         minWidth?: number | string;
         maxWidth?: number | string;
         styles?: CSSProperties;
+        isDragHandle?: boolean;
     }
 }

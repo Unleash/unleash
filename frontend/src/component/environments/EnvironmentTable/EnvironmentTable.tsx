@@ -2,13 +2,15 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { CreateEnvironmentButton } from 'component/environments/CreateEnvironmentButton/CreateEnvironmentButton';
-import { useTable, useGlobalFilter } from 'react-table';
 import {
-    SortableTableHeader,
-    Table,
-    TablePlaceholder,
-} from 'component/common/Table';
-import { useCallback, useMemo } from 'react';
+    type ColumnDef,
+    getCoreRowModel,
+    getFilteredRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
+import { Table, TablePlaceholder } from 'component/common/Table';
+import { SortableTableHeaderV8 } from 'component/common/Table/SortableTableHeader/SortableTableHeaderV8';
+import { useCallback, useMemo, useState } from 'react';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Alert, styled, TableBody } from '@mui/material';
 import type { OnMoveItem } from 'hooks/useDragItem';
@@ -34,12 +36,57 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
 }));
 
+const COLUMNS: ColumnDef<IEnvironment, unknown>[] = [
+    {
+        id: 'Icon',
+        cell: ({ row: { original } }) => (
+            <EnvironmentIconCell environment={original} />
+        ),
+        enableGlobalFilter: false,
+        meta: { width: '1%', isDragHandle: true },
+    },
+    {
+        id: 'name',
+        header: 'Name',
+        accessorKey: 'name',
+        cell: ({ row: { original } }) => (
+            <EnvironmentNameCell environment={original} />
+        ),
+        meta: { minWidth: 350 },
+    },
+    {
+        id: 'type',
+        header: 'Type',
+        accessorKey: 'type',
+        cell: HighlightCell,
+    },
+    {
+        id: 'projectCount',
+        header: 'Visible in',
+        accessorFn: (row) =>
+            row.projectCount === 1
+                ? '1 project'
+                : `${row.projectCount} projects`,
+        cell: TextCell,
+    },
+    {
+        id: 'apiTokenCount',
+        header: 'API Tokens',
+        accessorFn: (row) =>
+            row.apiTokenCount === 1
+                ? '1 token'
+                : `${row.apiTokenCount} tokens`,
+        cell: TextCell,
+    },
+];
+
 export const EnvironmentTable = () => {
     const { changeSortOrder } = useEnvironmentApi();
     const { setToastApiError } = useToast();
     const { environments, mutateEnvironments } = useEnvironments();
     const isFeatureEnabled = useUiFlag('EEA');
     const { isEnterprise } = useUiConfig();
+    const [globalFilter, setGlobalFilter] = useState('');
 
     const onMoveItem: OnMoveItem = useCallback(
         async ({ dragIndex, dropIndex, save }) => {
@@ -63,59 +110,55 @@ export const EnvironmentTable = () => {
         [changeSortOrder, environments, mutateEnvironments, setToastApiError],
     );
 
-    const columnsWithActions = useMemo(() => {
-        const baseColumns = [
+    const columnsWithActions = useMemo<ColumnDef<IEnvironment, unknown>[]>(() => {
+        const baseColumns: ColumnDef<IEnvironment, unknown>[] = [
             ...COLUMNS,
             ...(isFeatureEnabled
                 ? [
                       {
-                          Header: 'Actions',
                           id: 'Actions',
-                          align: 'center',
-                          width: '1%',
-                          Cell: ({
-                              row: { original },
-                          }: {
-                              row: { original: IEnvironment };
-                          }) => (
+                          header: 'Actions',
+                          cell: ({ row: { original } }) => (
                               <EnvironmentActionCell environment={original} />
                           ),
-                          disableGlobalFilter: true,
-                      },
+                          enableGlobalFilter: false,
+                          meta: { width: '1%', align: 'center' as const },
+                      } satisfies ColumnDef<IEnvironment, unknown>,
                   ]
                 : []),
         ];
         if (isEnterprise()) {
             baseColumns.splice(2, 0, {
-                Header: 'Change request',
-                accessor: (row: IEnvironment) =>
+                id: 'changeRequest',
+                header: 'Change request',
+                accessorFn: (row) =>
                     Number.isInteger(row.requiredApprovals) ? 'yes' : 'no',
-                Cell: TextCell,
+                cell: TextCell,
             });
         }
 
         return baseColumns;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isFeatureEnabled]);
 
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        rows,
-        prepareRow,
+    const table = useReactTable({
+        columns: columnsWithActions,
+        data: environments,
         state: { globalFilter },
-        setGlobalFilter,
-    } = useTable(
-        {
-            columns: columnsWithActions as any,
-            data: environments,
-            disableSortBy: true,
-        },
-        useGlobalFilter,
-    );
+        onGlobalFilterChange: setGlobalFilter,
+        getCoreRowModel: getCoreRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        enableSorting: false,
+        autoResetAll: false,
+    });
+
+    const rows = table.getRowModel().rows;
 
     const headerSearch = (
-        <Search initialValue={globalFilter} onChange={setGlobalFilter} />
+        <Search
+            initialValue={globalFilter}
+            onChange={(value) => setGlobalFilter(value)}
+        />
     );
 
     const headerActions = (
@@ -146,19 +189,16 @@ export const EnvironmentTable = () => {
                 inside each feature flag.
             </StyledAlert>
             <SearchHighlightProvider value={globalFilter}>
-                <Table {...getTableProps()} rowHeight='compact'>
-                    <SortableTableHeader headerGroups={headerGroups as any} />
-                    <TableBody {...getTableBodyProps()}>
-                        {rows.map((row) => {
-                            prepareRow(row);
-                            return (
-                                <EnvironmentRow
-                                    row={row as any}
-                                    onMoveItem={onMoveItem}
-                                    key={row.original.name}
-                                />
-                            );
-                        })}
+                <Table rowHeight='compact'>
+                    <SortableTableHeaderV8 tableInstance={table} />
+                    <TableBody>
+                        {rows.map((row) => (
+                            <EnvironmentRow
+                                row={row}
+                                onMoveItem={onMoveItem}
+                                key={row.original.name}
+                            />
+                        ))}
                     </TableBody>
                 </Table>
             </SearchHighlightProvider>
@@ -186,42 +226,3 @@ export const EnvironmentTable = () => {
         </PageContent>
     );
 };
-
-const COLUMNS = [
-    {
-        id: 'Icon',
-        width: '1%',
-        Cell: ({ row: { original } }: { row: { original: IEnvironment } }) => (
-            <EnvironmentIconCell environment={original} />
-        ),
-        disableGlobalFilter: true,
-        isDragHandle: true,
-    },
-    {
-        Header: 'Name',
-        accessor: 'name',
-        Cell: ({ row: { original } }: { row: { original: IEnvironment } }) => (
-            <EnvironmentNameCell environment={original} />
-        ),
-        minWidth: 350,
-    },
-    {
-        Header: 'Type',
-        accessor: 'type',
-        Cell: HighlightCell,
-    },
-    {
-        Header: 'Visible in',
-        accessor: (row: IEnvironment) =>
-            row.projectCount === 1
-                ? '1 project'
-                : `${row.projectCount} projects`,
-        Cell: TextCell,
-    },
-    {
-        Header: 'API Tokens',
-        accessor: (row: IEnvironment) =>
-            row.apiTokenCount === 1 ? '1 token' : `${row.apiTokenCount} tokens`,
-        Cell: TextCell,
-    },
-];

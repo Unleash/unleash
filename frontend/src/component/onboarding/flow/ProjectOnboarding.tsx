@@ -69,7 +69,10 @@ export const ProjectOnboarding = ({
     refetchFeatures,
 }: IProjectOnboardingProps) => {
     const { project, refetch, loading } = useProjectOverview(projectId);
-    const status = loading ? undefined : project.onboardingStatus?.status;
+
+    if (loading) return null;
+
+    const status = project.onboardingStatus?.status;
     const isFirstFlagCreated = status === 'first-flag-created';
     const isSDKConnected = status === 'sdk-connected';
     const isOnboarded = status === 'onboarded';

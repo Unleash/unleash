@@ -78,7 +78,8 @@ export type IFlagKey =
     | 'multiMetricChart'
     | 'elasticEventSync'
     | 'externalImpactMetrics'
-    | 'accessOverviewRework';
+    | 'accessOverviewRework'
+    | 'onboardingConnectSDKNewDialog';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -355,6 +356,10 @@ const flags: IFlags = {
     ),
     accessOverviewRework: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ACCESS_OVERVIEW_REWORK,
+        false,
+    ),
+    onboardingConnectSDKNewDialog: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ONBOARDING_CONNECT_SDK_NEW_DIALOG,
         false,
     ),
 };

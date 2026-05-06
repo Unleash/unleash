@@ -95,6 +95,7 @@ export type UiFlags = {
     remoteMcpServer?: boolean;
     externalImpactMetrics?: boolean;
     accessOverviewRework?: boolean;
+    onboardingConnectSDKNewDialog?: boolean;
 };
 
 export interface IVersionInfo {

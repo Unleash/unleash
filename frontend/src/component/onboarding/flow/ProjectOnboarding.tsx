@@ -7,11 +7,11 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { ConnectSdkStep } from './steps/ConnectSdkStep.tsx';
-import { ActionBox, type StepState } from './steps/StepLayout.tsx';
+import type { StepState } from './steps/StepLayout.tsx';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-import { SdkExample } from './SdkExample.tsx';
 import { OnboardingProgress } from './OnboardingProgress.tsx';
 import { CreateFlagStep } from './steps/CreateFlagStep.tsx';
+import { TurnFlagStep } from './steps/TurnFlagStep.tsx';
 
 interface IProjectOnboardingProps {
     projectId: string;
@@ -115,9 +115,10 @@ export const ProjectOnboarding = ({
                         setConnectSdkOpen={setConnectSdkOpen}
                         state={stepState(step, 2)}
                     />
-                    <ActionBox>
-                        <SdkExample />
-                    </ActionBox>
+                    <TurnFlagStep
+                        projectId={projectId}
+                        state={stepState(step, 3)}
+                    />
                 </Actions>
             </StyledAccordionDetails>
         </StyledAccordion>

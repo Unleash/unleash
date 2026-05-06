@@ -1,16 +1,15 @@
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
+import { TablePlaceholder } from 'component/common/Table';
+import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
 import {
-    type SortingRule,
-    useFlexLayout,
-    useRowSelect,
-    useSortBy,
-    useTable,
-} from 'react-table';
+    type ColumnDef,
+    getCoreRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Alert, useMediaQuery } from '@mui/material';
-import { sortTypes } from 'utils/sortTypes';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
@@ -27,21 +26,23 @@ import { FeatureArchivedCell } from 'component/archive/ArchiveTable/FeatureArchi
 import { useSearchParams } from 'react-router-dom';
 import { ArchivedFeatureDeleteConfirm } from 'component/archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureDeleteConfirm/ArchivedFeatureDeleteConfirm';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
-import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import { useConditionallyHiddenColumnsV8 } from 'hooks/useConditionallyHiddenColumnsV8';
 import { FeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import { ArchivedFeatureReviveConfirm } from 'component/archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureReviveConfirm/ArchivedFeatureReviveConfirm';
+
+type SortDescriptor = { id: string; desc?: boolean };
 
 export interface IFeaturesArchiveTableProps {
     archivedFeatures: FeatureSearchResponseSchema[];
     title: string;
     refetch: () => void;
     loading: boolean;
-    storedParams: SortingRule<string>;
+    storedParams: SortDescriptor;
     setStoredParams: (
         newValue:
-            | SortingRule<string>
-            | ((prev: SortingRule<string>) => SortingRule<string>),
-    ) => SortingRule<string>;
+            | SortDescriptor
+            | ((prev: SortDescriptor) => SortDescriptor),
+    ) => SortDescriptor;
 }
 
 export const ArchiveTable = ({
@@ -66,86 +67,97 @@ export const ArchiveTable = ({
         searchParams.get('search') || '',
     );
 
-    const columns = useMemo(
+    const columns = useMemo<ColumnDef<FeatureSearchResponseSchema, unknown>[]>(
         () => [
             {
-                Header: 'Seen',
-                accessor: 'lastSeenAt',
-                Cell: ({ row: { original: feature } }: any) => {
-                    return <FeatureEnvironmentSeenCell feature={feature} />;
-                },
-                align: 'center',
-                maxWidth: 80,
+                id: 'lastSeenAt',
+                header: 'Seen',
+                accessorKey: 'lastSeenAt',
+                cell: ({ row: { original: feature } }) => (
+                    <FeatureEnvironmentSeenCell feature={feature} />
+                ),
+                meta: { align: 'center', maxWidth: 80 },
             },
             {
-                Header: 'Type',
-                accessor: 'type',
-                width: 85,
-                canSort: true,
-                Cell: FeatureTypeCell,
-                align: 'center',
+                id: 'type',
+                header: 'Type',
+                accessorKey: 'type',
+                cell: ({ getValue }) => (
+                    <FeatureTypeCell value={getValue() as string} />
+                ),
+                meta: { width: 85, align: 'center' },
             },
             {
-                Header: 'Name',
-                accessor: 'name',
-                searchable: true,
-                minWidth: 100,
-                Cell: ({ value, row: { original } }: any) => (
+                id: 'name',
+                header: 'Name',
+                accessorKey: 'name',
+                cell: ({ getValue, row: { original } }) => (
                     <HighlightCell
-                        value={value}
-                        subtitle={original.description}
+                        value={String(getValue() ?? '')}
+                        subtitle={original.description ?? undefined}
                     />
                 ),
-                sortType: 'alphanumeric',
+                sortingFn: 'alphanumeric',
+                meta: { searchable: true, minWidth: 100 },
             },
             {
-                Header: 'Created',
-                accessor: 'createdAt',
-                width: 150,
-                Cell: DateCell,
+                id: 'createdAt',
+                header: 'Created',
+                accessorKey: 'createdAt',
+                cell: DateCell,
+                meta: { width: 150 },
             },
             {
-                Header: 'Archived',
-                accessor: 'archivedAt',
-                width: 150,
-                Cell: FeatureArchivedCell,
-            },
-            {
-                Header: 'Project ID',
-                accessor: 'project',
-                sortType: 'alphanumeric',
-                filterName: 'project',
-                searchable: true,
-                maxWidth: 170,
-                Cell: ({ value }: any) => (
-                    <LinkCell title={value} to={`/projects/${value}`} />
+                id: 'archivedAt',
+                header: 'Archived',
+                accessorKey: 'archivedAt',
+                cell: ({ getValue }) => (
+                    <FeatureArchivedCell value={getValue() as string} />
                 ),
+                meta: { width: 150 },
             },
             {
-                Header: 'Actions',
+                id: 'project',
+                header: 'Project ID',
+                accessorKey: 'project',
+                sortingFn: 'alphanumeric',
+                cell: ({ getValue }) => {
+                    const value = String(getValue() ?? '');
+                    return (
+                        <LinkCell title={value} to={`/projects/${value}`} />
+                    );
+                },
+                meta: {
+                    filterName: 'project',
+                    searchable: true,
+                    maxWidth: 170,
+                },
+            },
+            {
                 id: 'Actions',
-                align: 'center',
-                maxWidth: 120,
-                canSort: false,
-                Cell: ({ row: { original: feature } }: any) => (
+                header: 'Actions',
+                cell: ({ row: { original: feature } }) => (
                     <ArchivedFeatureActionCell
                         project={feature.project}
                         onRevive={() => {
-                            setRevivedFeature(feature);
+                            setRevivedFeature(feature as unknown as IFeatureToggle);
                             setReviveModalOpen(true);
                         }}
                         onDelete={() => {
-                            setDeletedFeature(feature);
+                            setDeletedFeature(feature as unknown as IFeatureToggle);
                             setDeleteModalOpen(true);
                         }}
                     />
                 ),
+                enableSorting: false,
+                meta: { align: 'center', maxWidth: 120 },
             },
             // Always hidden -- for search
             {
-                accessor: 'description',
+                id: 'description',
                 header: 'Description',
-                searchable: true,
+                accessorKey: 'description',
+                meta: { searchable: true },
             },
         ],
         [],
@@ -163,44 +175,34 @@ export const ArchiveTable = ({
     );
 
     const [initialState] = useState(() => ({
-        sortBy: [
+        sorting: [
             {
                 id: searchParams.get('sort') || storedParams.id,
                 desc: searchParams.has('order')
                     ? searchParams.get('order') === 'desc'
-                    : storedParams.desc,
+                    : Boolean(storedParams.desc),
             },
         ],
-        hiddenColumns: ['description'],
-        selectedRowIds: {},
+        columnVisibility: { description: false },
     }));
 
-    const getRowId = useCallback((row: any) => row.name, []);
-
-    const {
-        headerGroups,
-        rows,
-        state: { sortBy },
-        prepareRow,
-        setHiddenColumns,
-    } = useTable(
-        {
-            columns: columns as any[], // TODO: fix after `react-table` v8 update
-            data,
-            initialState,
-            sortTypes,
-            autoResetHiddenColumns: false,
-            autoResetSelectedRows: false,
-            disableSortRemove: true,
-            autoResetSortBy: false,
-            getRowId,
-        },
-        useFlexLayout,
-        useSortBy,
-        useRowSelect,
+    const getRowId = useCallback(
+        (row: FeatureSearchResponseSchema) => row.name,
+        [],
     );
 
-    useConditionallyHiddenColumns(
+    const table = useReactTable({
+        columns,
+        data: data as FeatureSearchResponseSchema[],
+        initialState,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        getRowId,
+        autoResetAll: false,
+        enableSortingRemoval: false,
+    });
+
+    useConditionallyHiddenColumnsV8(
         [
             {
                 condition: isSmallScreen,
@@ -211,17 +213,24 @@ export const ArchiveTable = ({
                 columns: ['lastSeenAt', 'stale'],
             },
         ],
-        setHiddenColumns,
+        table.setColumnVisibility,
         columns,
     );
+
+    const sorting = table.getState().sorting;
+    const rows = table.getRowModel().rows;
 
     useEffect(() => {
         if (loading) {
             return;
         }
+        const sortRule = sorting[0];
+        if (!sortRule) {
+            return;
+        }
         const tableState: Record<string, string> = {};
-        tableState.sort = sortBy[0].id;
-        if (sortBy[0].desc) {
+        tableState.sort = sortRule.id;
+        if (sortRule.desc) {
             tableState.order = 'desc';
         }
         if (searchValue) {
@@ -231,8 +240,9 @@ export const ArchiveTable = ({
         setSearchParams(tableState, {
             replace: true,
         });
-        setStoredParams({ id: sortBy[0].id, desc: sortBy[0].desc || false });
-    }, [loading, sortBy, searchValue]);
+        setStoredParams({ id: sortRule.id, desc: sortRule.desc || false });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loading, sorting, searchValue]);
 
     return (
         <>
@@ -259,11 +269,7 @@ export const ArchiveTable = ({
                     </Alert>
                 )}
                 <SearchHighlightProvider value={getSearchText(searchValue)}>
-                    <VirtualizedTable
-                        rows={rows}
-                        headerGroups={headerGroups}
-                        prepareRow={prepareRow}
-                    />
+                    <VirtualizedTableV8 tableInstance={table} />
                 </SearchHighlightProvider>
                 <ConditionallyRender
                     condition={rows.length === 0}

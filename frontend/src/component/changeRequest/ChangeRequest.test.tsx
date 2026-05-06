@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import type React from 'react';
 import type { FC } from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';

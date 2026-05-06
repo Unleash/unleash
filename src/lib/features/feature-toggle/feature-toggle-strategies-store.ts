@@ -1,4 +1,4 @@
-import { Knex } from 'knex';
+import type { Knex } from 'knex';
 import type EventEmitter from 'events';
 import metricsHelper from '../../util/metrics-helper.js';
 import { DB_TIME } from '../../metric-events.js';
@@ -27,7 +27,7 @@ import {
 import type { IFeatureProjectUserParams } from './feature-toggle-controller.js';
 import type { Db } from '../../db/db.js';
 import { isAfter } from 'date-fns';
-import Raw = Knex.Raw;
+type Raw<T = any> = Knex.Raw<T>;
 import type { ITag } from '../../tags/index.js';
 import { ulid } from 'ulidx';
 

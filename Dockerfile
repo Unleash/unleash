@@ -8,14 +8,14 @@ COPY . /unleash
 
 RUN corepack enable
 
-RUN yarn install --immutable  && yarn prepare:backend && yarn local:package
+RUN pnpm install --frozen-lockfile --ignore-scripts && pnpm prepare:backend && pnpm local:package
 
 # frontend/build should already exist (it needs to be built in the local filesystem but in case of a fresh build we'll build it here)
-RUN yarn build:frontend:if-needed
+RUN pnpm build:frontend:if-needed
 
 RUN mkdir -p /unleash/build/frontend && mv /unleash/frontend/build /unleash/build/frontend/build
 
-RUN yarn workspaces focus -A --production
+RUN CI=true pnpm prune --prod --ignore-scripts
 
 FROM node:$NODE_VERSION
 

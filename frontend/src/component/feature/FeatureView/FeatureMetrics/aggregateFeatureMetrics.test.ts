@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import type { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import { aggregateFeatureMetrics } from './aggregateFeatureMetrics.js';
 

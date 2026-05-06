@@ -17,14 +17,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v5
       - name: Use Node.js 22.x
         uses: actions/setup-node@v6
         with:
           node-version: 22.x
-      - name: Enable corepack
-        run: corepack enable
-      - run: yarn --immutable
-      - run: yarn run lint:material:icons
-      - run: yarn run lint:check
-      - run: yarn run test
-      - run: yarn run ts:check # TODO: optimize
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run lint:material:icons
+      - run: pnpm run lint:check
+      - run: pnpm run test
+      - run: pnpm run ts:check # TODO: optimize

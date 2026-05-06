@@ -1,6 +1,6 @@
-import { Knex } from 'knex';
+import type { Knex } from 'knex';
 
-import Raw = Knex.Raw;
+type Raw<T = any> = Knex.Raw<T>;
 
 import type EventEmitter from 'events';
 import {

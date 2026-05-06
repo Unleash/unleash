@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { formatLargeNumbers } from './metricsFormatters.js';
 
 describe('formatLargeNumbers', () => {

@@ -20,8 +20,8 @@ Before developing on this project you will need two things:
 
 ```sh
 corepack enable
-yarn install
-yarn dev
+pnpm install
+pnpm dev
 ```
 
 ## PostgreSQL
@@ -73,10 +73,10 @@ In order to start the application you will need Node.js v22.x or newer installed
 
 ```
 // Install dependencies
-yarn install
+pnpm install
 
 // Start Unleash in development
-yarn dev
+pnpm dev
 
 // Unleash UI
 http://localhost:3000
@@ -85,7 +85,7 @@ http://localhost:3000
 http://localhost:3000/api/
 
 // Execute tests in all packages:
-yarn test
+pnpm test
 ```
 
 ## Database changes
@@ -101,7 +101,7 @@ To run migrations, you will set the environment variable for DATABASE_URL
 Use db-migrate to create new migrations file.
 
 ```bash
-> yarn run db-migrate create YOUR-MIGRATION-NAME
+> pnpm run db-migrate create YOUR-MIGRATION-NAME
 ```
 
 All migrations require one `up` and one `down` method. There are some migrations that will maintain the database integrity, but not the data integrity and may not be safe to run on a production database.
@@ -131,13 +131,13 @@ exports.down = function(db, cb) {
 Test your migrations:
 
 ```bash
-> yarn run db-migrate up
-> yarn run db-migrate down
+> pnpm run db-migrate up
+> pnpm run db-migrate down
 ```
 
 ## Publishing / Releasing new packages
 
-Please run `yarn test` checks before publishing.
+Please run `pnpm test` checks before publishing.
 
 Run `npm run publish` to start the publishing process.
 

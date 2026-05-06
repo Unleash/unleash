@@ -126,7 +126,7 @@ export const CopyFeatureToggle = () => {
         }
     };
 
-    if (!feature || !feature.name) return <span>Toggle not found</span>;
+    if (!feature?.name) return <span>Toggle not found</span>;
 
     const displayFeatureNamingInfo = Boolean(featureNaming?.pattern);
 

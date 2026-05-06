@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { FeatureMetricsStats } from './FeatureMetricsStats.tsx';
 import { screen } from '@testing-library/react';

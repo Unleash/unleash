@@ -121,7 +121,7 @@ Instead of `!!someVariable` prefer `Boolean(someVariable)`.
 - Migrations live in `/src/migrations/`
 - Never modify a merged migration; create a new one instead
 - Each migration needs `up` and `down` methods
-- Use `yarn db-migrate create <name>` to create new migrations
+- Use `pnpm db-migrate create <name>` to create new migrations
 
 ## Testing
 
@@ -131,9 +131,9 @@ Instead of `!!someVariable` prefer `Boolean(someVariable)`.
 
 Run tests with:
 ```bash
-yarn test          # All tests
-yarn test:frontend # Frontend only
-yarn test:backend  # Backend only
+pnpm test          # All tests
+pnpm test:frontend # Frontend only
+pnpm test:backend  # Backend only
 ```
 
 ## Critical Files Reference

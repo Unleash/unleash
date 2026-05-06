@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { screen, waitFor } from '@testing-library/react';
 import { usePersistentTableState } from './usePersistentTableState.ts';

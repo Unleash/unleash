@@ -1,7 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 import { useNumericStringInput } from './useNumericStringInput.js';
 import type { ChangeEvent, KeyboardEvent } from 'react';
-import { vi } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 
 const changeEvent = (value: string) =>
     ({ target: { value } }) as ChangeEvent<HTMLInputElement>;

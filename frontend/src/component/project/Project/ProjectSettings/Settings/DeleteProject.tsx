@@ -3,7 +3,7 @@ import { DELETE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { DeleteProjectDialogue } from '../../DeleteProject/DeleteProjectDialogue.tsx';
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useActions } from 'hooks/api/getters/useActions/useActions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

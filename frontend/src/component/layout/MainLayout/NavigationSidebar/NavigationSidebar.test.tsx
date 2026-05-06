@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, test } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { NavigationSidebar } from './NavigationSidebar.tsx';
 import { screen, fireEvent, waitFor } from '@testing-library/react';

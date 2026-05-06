@@ -393,7 +393,7 @@ export default class ExportImportService
                 const feature = dto.data.features.find(
                     (feature) => feature.name === dependency.feature,
                 );
-                if (!feature || !feature.project) {
+                if (!feature?.project) {
                     return [];
                 }
 

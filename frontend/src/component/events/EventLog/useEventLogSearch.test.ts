@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { calculatePaginationInfo } from './useEventLogSearch.js';
 
 test.each([

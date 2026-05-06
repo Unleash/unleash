@@ -1,5 +1,5 @@
 import { getBrowserTimezoneInHumanReadableUTCOffset } from './utils.js';
-import { vi } from 'vitest';
+import { afterAll, describe, expect, test, vi } from 'vitest';
 
 describe('getBrowserTimezoneInHumanReadableUTCOffset', () => {
     // Test for the current timezone offset

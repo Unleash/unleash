@@ -47,7 +47,7 @@ export const App = () => {
         : routes;
 
     useEffect(() => {
-        if (hasFetchedAuth && Boolean(user?.id)) {
+        if (hasFetchedAuth && user?.id) {
             refetchUiConfig();
         }
     }, [authDetails, user]);

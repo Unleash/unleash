@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import type { Row } from 'react-table';
 import { sortTypesWithFavorites } from './usePinnedFavorites.js';
 

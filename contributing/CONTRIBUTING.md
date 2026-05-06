@@ -66,7 +66,7 @@ You'll need:
 - [Docker](https://www.docker.com/) to run the database
 - [Node.js](https://nodejs.org/en/) to run the project. You can install it directly, or use `nvm` (see the next point) to manage it for you.
 - [nvm](https://github.com/nvm-sh/nvm) (optional) to manage your Node.js installation.
-- [Yarn](https://yarnpkg.com/) (optional but recommended; the steps below assume that you have it installed) to install packages and run the project.
+- [pnpm](https://pnpm.io/) (optional but recommended; the steps below assume that you have it installed) to install packages and run the project.
 
 ### How to run Unleash with Node.js
 
@@ -79,7 +79,7 @@ You'll need:
 2. **Install packages**:
 
    ```bash
-   yarn
+   pnpm
    ```
 
 3. **Start a Postgres database** for Unleash via Docker.
@@ -108,7 +108,7 @@ You'll need:
 4. **Start Unleash.** Run the below command and Unleash will start up and try to connect to the database. On a successful connection it will also configure the database.
 
    ```bash
-   yarn dev
+   pnpm dev
    ```
 
 5. **Log into the admin UI**. Use a browser and navigate to `localhost:3000`. Log in using:

@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { vi } from 'vitest';
+import { expect, test, vi } from 'vitest';
 import { useFlagLimits } from './useFlagLimits.js';
 
 vi.mock('hooks/useUiFlag', async (importOriginal) => {

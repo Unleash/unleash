@@ -1,3 +1,4 @@
+import { beforeEach, test } from 'vitest';
 import { fireEvent, screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import FeatureOverviewMetaData from './FeatureOverviewMetaData.tsx';

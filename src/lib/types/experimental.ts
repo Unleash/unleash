@@ -77,7 +77,8 @@ export type IFlagKey =
     | 'onboardingProjectSetupNewSteps'
     | 'multiMetricChart'
     | 'elasticEventSync'
-    | 'externalImpactMetrics';
+    | 'externalImpactMetrics'
+    | 'accessOverviewRework';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -350,6 +351,10 @@ const flags: IFlags = {
     ),
     externalImpactMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EXTERNAL_IMPACT_METRICS,
+        false,
+    ),
+    accessOverviewRework: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ACCESS_OVERVIEW_REWORK,
         false,
     ),
 };

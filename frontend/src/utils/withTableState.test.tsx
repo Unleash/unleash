@@ -1,4 +1,4 @@
-import { vi } from 'vitest';
+import { vi, expect, describe, it } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { useReactTable } from '@tanstack/react-table';
 import { withTableState } from './withTableState.ts';

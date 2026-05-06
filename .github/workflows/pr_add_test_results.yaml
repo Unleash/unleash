@@ -1,7 +1,7 @@
 name: 'Attach Test report'
 on:
   workflow_run:
-    workflows: [TestReport]
+    workflows: [Test & Coverage]
     types:
       - completed
 jobs:
@@ -12,5 +12,5 @@ jobs:
         with:
           artifact: test-results # artifact name
           name: Unit Tests # Name of the check run which will be created
-          path: '*.xml' # Path to test results (inside artifact .zip)
+          path: reports/*.xml # Path to test results (inside artifact .zip)
           reporter: jest-junit

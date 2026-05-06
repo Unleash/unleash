@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { parseRedirectParam } from 'component/user/Login/parseRedirectParam';
 
 test('parseRedirectParam should parse an empty redirect param', async () => {

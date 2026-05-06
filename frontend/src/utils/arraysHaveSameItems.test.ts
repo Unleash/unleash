@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { arraysHaveSameItems } from 'utils/arraysHaveSameItems';
 
 test('arraysHaveSameItems', () => {

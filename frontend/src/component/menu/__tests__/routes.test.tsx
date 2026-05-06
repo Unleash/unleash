@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { baseRoutes, getRoute } from '../routes.ts';
 
 test('returns all baseRoutes', () => {

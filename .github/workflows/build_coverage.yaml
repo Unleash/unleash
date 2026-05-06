@@ -31,18 +31,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v5
       - name: Use Node.js 22
         uses: actions/setup-node@v6
         with:
           node-version: 22.x
-          cache: 'yarn'
-      - name: Enable corepack
-        run: corepack enable
-      - run: yarn install --immutable
-        env:
-          YARN_ENABLE_SCRIPTS: false
-      - run: yarn run build:backend
-      - run: yarn run test:coverage
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - run: pnpm run build:backend
+      - run: pnpm run test:coverage
         env:
           CI: true
           TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres

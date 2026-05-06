@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { populateCurrentStage } from './populateCurrentStage.js';
 import type { IFeatureToggle } from '../../../../../interfaces/featureToggle.js';
 

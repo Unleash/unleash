@@ -4,7 +4,7 @@ import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import ToastRenderer from 'component/common/ToastRenderer/ToastRenderer';
 import { RemoteMcpToggle } from './RemoteMcpToggle.tsx';
-
+import { describe, test, expect } from 'vitest';
 const server = testServerSetup();
 
 const setupApi = ({

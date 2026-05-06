@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { screen, waitFor } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { StrategyVariants } from './StrategyVariants.tsx';

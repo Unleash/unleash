@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { Route, Routes } from 'react-router-dom';
 import { ProjectFeatureToggles } from './ProjectFeatureToggles.tsx';

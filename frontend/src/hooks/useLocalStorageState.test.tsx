@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { useLocalStorageState } from './useLocalStorageState.ts';
 import { createLocalStorage } from '../utils/createLocalStorage.ts';
 import { render } from 'utils/testRenderer';

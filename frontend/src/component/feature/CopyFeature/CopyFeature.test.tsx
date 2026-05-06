@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { CopyFeatureToggle } from './CopyFeature.tsx';
 import { Route, Routes } from 'react-router-dom';

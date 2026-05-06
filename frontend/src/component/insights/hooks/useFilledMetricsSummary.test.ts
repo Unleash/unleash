@@ -5,7 +5,7 @@ import { useFilledMetricsSummary } from './useFilledMetricsSummary.js';
 import type { Theme } from '@mui/material/styles';
 import type { InstanceInsightsSchema } from 'openapi';
 import type { GroupedDataByProject } from './useGroupedProjectTrends.js';
-import { vi, type Mock } from 'vitest';
+import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
 
 vi.mock('@mui/material', () => ({
     useTheme: vi.fn(),

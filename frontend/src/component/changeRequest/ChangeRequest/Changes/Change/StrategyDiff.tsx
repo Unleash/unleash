@@ -13,7 +13,7 @@ import { omitIfDefined } from 'utils/omitFields';
 const sortSegments = <T extends { segments?: number[] }>(
     item?: T,
 ): T | undefined => {
-    if (!item || !item.segments) {
+    if (!item?.segments) {
         return item;
     }
     return {

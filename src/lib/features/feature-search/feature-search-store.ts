@@ -1,4 +1,4 @@
-import { Knex } from 'knex';
+import type { Knex } from 'knex';
 import type EventEmitter from 'events';
 import metricsHelper from '../../util/metrics-helper.js';
 import { DB_TIME } from '../../metric-events.js';
@@ -21,7 +21,7 @@ import {
     parseSearchOperatorValue,
 } from './search-utils.js';
 import { generateImageUrl } from '../../util/index.js';
-import Raw = Knex.Raw;
+type Raw<T = any> = Knex.Raw<T>;
 import type { ITag } from '../../tags/index.js';
 
 const sortEnvironments = (overview: IFeatureSearchOverview[]) => {

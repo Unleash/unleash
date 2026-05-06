@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { ArchiveTable } from 'component/archive/ArchiveTable/ArchiveTable';
 import { render } from 'utils/testRenderer';
 import { useState } from 'react';

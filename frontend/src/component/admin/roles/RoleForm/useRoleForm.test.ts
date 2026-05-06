@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react';
 import { useRoleForm } from './useRoleForm.js';
-import { test } from 'vitest';
+import { describe, expect, test } from 'vitest';
 import { act } from 'react';
 
 describe('trim names and description', () => {

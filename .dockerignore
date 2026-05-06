@@ -1,7 +1,8 @@
 *
 !src
 !package.json
-!yarn.lock
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
 !scripts
 !tsconfig.json
 !docs
@@ -10,8 +11,6 @@
 !README.md
 !frontend
 frontend/node_modules
-!.yarn/**
-!.yarnrc.yml
-!frontend/.yarn/**
 node_modules
 !docker/index.js
+!.pnpm

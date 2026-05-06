@@ -1,3 +1,4 @@
+import { test } from 'vitest';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';

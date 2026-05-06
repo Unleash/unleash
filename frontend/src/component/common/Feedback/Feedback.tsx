@@ -35,7 +35,7 @@ export const Feedback: VFC<IFeedbackProps> = ({
     );
     const { trackEvent } = usePlausibleTracker();
 
-    if (!uiConfig?.flags?.T || Boolean(selected)) {
+    if (!uiConfig?.flags?.T || selected) {
         return null;
     }
 

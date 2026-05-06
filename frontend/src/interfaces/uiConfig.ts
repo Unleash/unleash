@@ -94,6 +94,7 @@ export type UiFlags = {
     multiMetricChart?: boolean;
     remoteMcpServer?: boolean;
     externalImpactMetrics?: boolean;
+    accessOverviewRework?: boolean;
 };
 
 export interface IVersionInfo {

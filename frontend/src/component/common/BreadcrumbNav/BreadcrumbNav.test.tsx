@@ -1,3 +1,4 @@
+import { test } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { Route, Routes } from 'react-router-dom';
 import BreadcrumbNav from './BreadcrumbNav.tsx';

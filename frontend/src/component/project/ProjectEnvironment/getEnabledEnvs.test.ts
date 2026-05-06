@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import type { IProjectEnvironment } from 'interfaces/environments';
 import { getEnabledEnvs } from './helpers.js';
 

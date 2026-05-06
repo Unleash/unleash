@@ -1,3 +1,4 @@
+import { test } from 'vitest';
 import { PersonalDashboard } from './PersonalDashboard.tsx';
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';

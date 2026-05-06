@@ -57,64 +57,53 @@ class PrivateProjectStore implements IPrivateProjectStore {
             return ALL_PROJECT_ACCESS;
         }
 
-        const accessibleProjects: string[] = await this.db
-            .from((db) => {
-                db.distinct()
+        const accessibleProjectsQuery = this.db
+            .distinct()
+            .select('projects.id as project_id')
+            .from('projects')
+            .leftJoin(
+                'project_settings',
+                'projects.id',
+                'project_settings.project',
+            )
+            .where((builder) => {
+                builder
+                    .whereNull('project_settings.project')
+                    .orWhere('project_settings.project_mode', '!=', 'private');
+            })
+            .unionAll((queryBuilder) => {
+                queryBuilder
                     .select('projects.id as project_id')
                     .from('projects')
-                    .leftJoin(
+                    .join(
                         'project_settings',
                         'projects.id',
                         'project_settings.project',
                     )
-                    .where((builder) => {
-                        builder
-                            .whereNull('project_settings.project')
-                            .orWhere(
-                                'project_settings.project_mode',
-                                '!=',
-                                'private',
-                            );
+                    .where('project_settings.project_mode', '=', 'private')
+                    .whereIn('projects.id', (whereBuilder) => {
+                        whereBuilder
+                            .select('role_user.project')
+                            .from('role_user')
+                            .leftJoin('roles', 'role_user.role_id', 'roles.id')
+                            .where('role_user.user_id', userId);
                     })
-                    .unionAll((queryBuilder) => {
-                        queryBuilder
-                            .select('projects.id as project_id')
-                            .from('projects')
-                            .join(
-                                'project_settings',
-                                'projects.id',
-                                'project_settings.project',
+                    .orWhereIn('projects.id', (whereBuilder) => {
+                        whereBuilder
+                            .select('group_role.project')
+                            .from('group_role')
+                            .leftJoin(
+                                'group_user',
+                                'group_user.group_id',
+                                'group_role.group_id',
                             )
-                            .where(
-                                'project_settings.project_mode',
-                                '=',
-                                'private',
-                            )
-                            .whereIn('projects.id', (whereBuilder) => {
-                                whereBuilder
-                                    .select('role_user.project')
-                                    .from('role_user')
-                                    .leftJoin(
-                                        'roles',
-                                        'role_user.role_id',
-                                        'roles.id',
-                                    )
-                                    .where('role_user.user_id', userId);
-                            })
-                            .orWhereIn('projects.id', (whereBuilder) => {
-                                whereBuilder
-                                    .select('group_role.project')
-                                    .from('group_role')
-                                    .leftJoin(
-                                        'group_user',
-                                        'group_user.group_id',
-                                        'group_role.group_id',
-                                    )
-                                    .where('group_user.user_id', userId);
-                            });
-                    })
-                    .as('accessible_projects');
+                            .where('group_user.user_id', userId);
+                    });
             })
+            .as('accessible_projects');
+
+        const accessibleProjects: string[] = await this.db
+            .from(accessibleProjectsQuery)
             .select('*')
             .pluck('project_id');
 

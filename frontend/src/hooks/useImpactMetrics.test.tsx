@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { UnleashClient, InMemoryStorageProvider } from 'unleash-proxy-client';

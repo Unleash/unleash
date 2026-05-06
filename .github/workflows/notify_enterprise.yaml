@@ -13,13 +13,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
-      - name: Use Node.js 20
+      - uses: pnpm/action-setup@v5
+      - name: Use Node.js 22
         uses: actions/setup-node@v6
         with:
           node-version: 22.x
-          cache: 'yarn'
-      - name: Enable corepack
-        run: corepack enable
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
       - name: Trigger sync
         uses: actions/github-script@v8
         env:
@@ -44,8 +44,8 @@ jobs:
       - name: Build static assets
         run: |
           cd frontend
-          yarn install --immutable
-          yarn build
+          pnpm install --frozen-lockfile
+          pnpm build
       - uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}

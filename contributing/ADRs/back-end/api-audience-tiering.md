@@ -37,6 +37,10 @@ This ADR complements the stability lifecycle. Stability still answers **"how mat
 - Audience changes are generally safe when URL contracts and behavior remain unchanged.
 - For audiences requiring stronger guarantees (especially `sdk`/`integration`), we may add explicit architectural boundaries for net-new surfaces (for example dedicated routes, ownership, or stricter review gates).
 
+**OpenAPI extension naming:**
+- Operation objects use singular `x-audience` because each operation has exactly one audience.
+- The root OpenAPI document uses plural `x-audiences` because it is a registry of available audiences and their descriptions.
+
 **Audience naming convention:**
 - Audience identifiers must use lowercase kebab-case (for example `unleash-ui`).
 - New audience names should be short, purpose-oriented labels, and avoid embedding URL or ownership details.
@@ -60,7 +64,7 @@ This ADR complements the stability lifecycle. Stability still answers **"how mat
 ## Implementation outline
 
 - Add `audience?: 'public' | 'integration' | 'sdk' | 'unleash-ui' | 'internal'` to API metadata.
-- Emit `x-audience` in OpenAPI output and surface it in docs.
+- Emit operation-level `x-audience` in OpenAPI output and top-level `x-audiences` definitions for docs/rendering.
 - Default when omitted: `public`.
 - Defaulting to `public` introduces classification debt; teams should reclassify endpoints to a more specific audience (`integration`, `sdk`, or `unleash-ui`) once intent is clear.
 - Use a lightweight handover process to move endpoints between audiences as ownership/intent shifts.

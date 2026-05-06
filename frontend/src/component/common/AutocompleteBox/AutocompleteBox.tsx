@@ -71,10 +71,6 @@ export const AutocompleteBox = ({
         return (
             <TextField
                 {...params}
-                InputProps={{
-                    ...InputProps,
-                    startAdornment,
-                }}
                 variant='outlined'
                 sx={{
                     width,
@@ -98,6 +94,12 @@ export const AutocompleteBox = ({
                     },
                 }}
                 placeholder={label}
+                slotProps={{
+                    input: {
+                        ...InputProps,
+                        startAdornment,
+                    },
+                }}
             />
         );
     };

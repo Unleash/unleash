@@ -591,9 +591,6 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                             <FormControl variant='outlined' size='small'>
                                 <TextField
                                     type='number'
-                                    inputProps={{
-                                        step: 0.1,
-                                    }}
                                     value={thresholdInputValue}
                                     onChange={handleThresholdInputChange}
                                     onFocus={handleThresholdFocus}
@@ -603,6 +600,11 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                                     variant='outlined'
                                     size='small'
                                     required
+                                    slotProps={{
+                                        htmlInput: {
+                                            step: 0.1,
+                                        },
+                                    }}
                                 />
                             </FormControl>
                         </StyledTopRow>

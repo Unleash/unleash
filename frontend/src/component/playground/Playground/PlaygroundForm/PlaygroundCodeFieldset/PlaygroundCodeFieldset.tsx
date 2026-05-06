@@ -213,10 +213,12 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
                         const dateString = parsedDate?.toISOString();
                         dateString && setContextValue(dateString);
                     }}
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
                     required
+                    slotProps={{
+                        inputLabel: {
+                            shrink: true,
+                        },
+                    }}
                 />
             );
         }

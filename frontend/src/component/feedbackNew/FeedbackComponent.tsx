@@ -346,11 +346,13 @@ export const FeedbackComponent = ({
                                                 rows={3}
                                                 variant='outlined'
                                                 size='small'
-                                                InputLabelProps={{
-                                                    style: {
-                                                        fontSize:
-                                                            theme.fontSizes
-                                                                .smallBody,
+                                                slotProps={{
+                                                    inputLabel: {
+                                                        style: {
+                                                            fontSize:
+                                                                theme.fontSizes
+                                                                    .smallBody,
+                                                        },
                                                     },
                                                 }}
                                             />
@@ -364,16 +366,18 @@ export const FeedbackComponent = ({
                                                 multiline
                                                 name='areasForImprovement'
                                                 rows={3}
-                                                InputLabelProps={{
-                                                    style: {
-                                                        fontSize:
-                                                            theme.fontSizes
-                                                                .smallBody,
-                                                    },
-                                                }}
                                                 variant='outlined'
                                                 size='small'
                                                 hidden
+                                                slotProps={{
+                                                    inputLabel: {
+                                                        style: {
+                                                            fontSize:
+                                                                theme.fontSizes
+                                                                    .smallBody,
+                                                        },
+                                                    },
+                                                }}
                                             />
                                         </Box>
                                     </>
@@ -393,11 +397,13 @@ export const FeedbackComponent = ({
                                                 rows={3}
                                                 variant='outlined'
                                                 size='small'
-                                                InputLabelProps={{
-                                                    style: {
-                                                        fontSize:
-                                                            theme.fontSizes
-                                                                .smallBody,
+                                                slotProps={{
+                                                    inputLabel: {
+                                                        style: {
+                                                            fontSize:
+                                                                theme.fontSizes
+                                                                    .smallBody,
+                                                        },
                                                     },
                                                 }}
                                             />
@@ -416,15 +422,17 @@ export const FeedbackComponent = ({
                                                 multiline
                                                 name='areasForImprovement'
                                                 rows={3}
-                                                InputLabelProps={{
-                                                    style: {
-                                                        fontSize:
-                                                            theme.fontSizes
-                                                                .smallBody,
-                                                    },
-                                                }}
                                                 variant='outlined'
                                                 size='small'
+                                                slotProps={{
+                                                    inputLabel: {
+                                                        style: {
+                                                            fontSize:
+                                                                theme.fontSizes
+                                                                    .smallBody,
+                                                        },
+                                                    },
+                                                }}
                                             />
                                         </Box>
                                     </>

@@ -208,18 +208,20 @@ export const SamlAuth = () => {
                             value={data.certificate}
                             disabled={!data.enabled || samlConfiguredThroughEnv}
                             style={{ width: '100%' }}
-                            InputProps={{
-                                style: {
-                                    fontSize: '0.6em',
-                                    fontFamily: 'monospace',
-                                },
-                            }}
                             multiline
                             rows={14}
                             maxRows={14}
                             variant='outlined'
                             size='small'
                             required
+                            slotProps={{
+                                input: {
+                                    style: {
+                                        fontSize: '0.6em',
+                                        fontFamily: 'monospace',
+                                    },
+                                },
+                            }}
                         />
                     </Grid>
                 </Grid>
@@ -263,17 +265,19 @@ export const SamlAuth = () => {
                             value={data.spCertificate}
                             disabled={!data.enabled || samlConfiguredThroughEnv}
                             style={{ width: '100%' }}
-                            InputProps={{
-                                style: {
-                                    fontSize: '0.6em',
-                                    fontFamily: 'monospace',
-                                },
-                            }}
                             multiline
                             rows={14}
                             maxRows={14}
                             variant='outlined'
                             size='small'
+                            slotProps={{
+                                input: {
+                                    style: {
+                                        fontSize: '0.6em',
+                                        fontFamily: 'monospace',
+                                    },
+                                },
+                            }}
                         />
                     </Grid>
                 </Grid>

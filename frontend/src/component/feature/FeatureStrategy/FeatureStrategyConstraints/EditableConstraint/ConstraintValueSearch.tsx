@@ -34,12 +34,14 @@ export const ConstraintValueSearch = ({
                 }}
                 variant='outlined'
                 size='small'
-                InputProps={{
-                    startAdornment: (
-                        <InputAdornment position='start'>
-                            <Search />
-                        </InputAdornment>
-                    ),
+                slotProps={{
+                    input: {
+                        startAdornment: (
+                            <InputAdornment position='start'>
+                                <Search />
+                            </InputAdornment>
+                        ),
+                    },
                 }}
             />
         </div>

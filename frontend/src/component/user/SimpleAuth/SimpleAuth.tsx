@@ -64,7 +64,6 @@ const SimpleAuth: VFC<ISimpleAuthProps> = ({ authDetails, redirect }) => {
                 <TextField
                     value={email}
                     onChange={handleChange}
-                    inputProps={{ 'data-testid': 'email-input-field' }}
                     size='small'
                     variant='outlined'
                     label='Email'
@@ -74,6 +73,9 @@ const SimpleAuth: VFC<ISimpleAuthProps> = ({ authDetails, redirect }) => {
                     type='email'
                     data-testid={LOGIN_EMAIL_ID}
                     autoFocus
+                    slotProps={{
+                        htmlInput: { 'data-testid': 'email-input-field' },
+                    }}
                 />
                 <br />
 

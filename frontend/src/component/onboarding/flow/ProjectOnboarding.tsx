@@ -11,21 +11,16 @@ import {
     UPDATE_PROJECT,
     CREATE_PROJECT_API_TOKEN,
 } from 'component/providers/AccessProvider/permissions';
-import { FlagCreationButton } from '../../project/Project/PaginatedProjectFeatureToggles/ProjectFeatureTogglesHeader/FlagCreationButton/FlagCreationButton.tsx';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { SdkExample } from './SdkExample.tsx';
 import { OnboardingProgress } from './OnboardingProgress.tsx';
+import { CreateFlagStep } from './steps/CreateFlagStep.tsx';
 
 interface IProjectOnboardingProps {
     projectId: string;
     setConnectSdkOpen: (open: boolean) => void;
     setOnboardingFlow: (status: 'visible' | 'closed') => void;
-    refetchFeatures: () => void;
-}
-
-interface ICreateFlagProps {
-    projectId: string;
     refetchFeatures: () => void;
 }
 
@@ -66,10 +61,10 @@ const Actions = styled('div')(({ theme }) => ({
 const ActionBox = styled('div')(({ theme }) => ({
     flexBasis: '50%',
     display: 'flex',
-    gap: theme.spacing(3),
+    gap: theme.spacing(1),
     flexDirection: 'column',
     borderRight: `1px solid ${theme.palette.divider}`,
-    padding: theme.spacing(4),
+    padding: theme.spacing(2, 3, 3, 3),
     [theme.breakpoints.down('md')]: {
         borderRight: 0,
         borderBottom: `1px solid ${theme.palette.divider}`,
@@ -96,29 +91,6 @@ const NeutralCircleContainer = styled('span')(({ theme }) => ({
     justifyContent: 'center',
     backgroundColor: theme.palette.neutral.border,
     borderRadius: '50%',
-}));
-
-const MainCircleContainer = styled(NeutralCircleContainer)(({ theme }) => ({
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.background.paper,
-}));
-
-const ExistingFlagContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(3),
-    height: '100%',
-}));
-
-const SuccessContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-
-    fontSize: theme.spacing(1.75),
-    fontWeight: 'bold',
-    backgroundColor: theme.palette.success.light,
-    borderRadius: theme.shape.borderRadiusLarge,
-    padding: theme.spacing(2, 2, 2, 2),
 }));
 
 const NUMBER_OF_STEPS = 3;
@@ -166,15 +138,10 @@ export const ProjectOnboarding = ({
             <StyledAccordionDetails>
                 <Actions>
                     <ActionBox>
-                        {project.onboardingStatus?.status ===
-                        'first-flag-created' ? (
-                            <ExistingFlag />
-                        ) : (
-                            <CreateFlag
-                                projectId={projectId}
-                                refetchFeatures={refetchFeatures}
-                            />
-                        )}
+                        <CreateFlagStep
+                            projectId={projectId}
+                            refetchFeatures={refetchFeatures}
+                        />
                     </ActionBox>
                     <ActionBox>
                         <TitleContainer>
@@ -207,47 +174,5 @@ export const ProjectOnboarding = ({
                 </Actions>
             </StyledAccordionDetails>
         </StyledAccordion>
-    );
-};
-
-const CreateFlag = ({ projectId, refetchFeatures }: ICreateFlagProps) => {
-    const { refetch } = useProjectOverview(projectId);
-    return (
-        <>
-            <TitleContainer>
-                <NeutralCircleContainer>1</NeutralCircleContainer>
-                Create a feature flag
-            </TitleContainer>
-            <Typography>
-                You must create a feature flag before you can connect a SDK.
-            </Typography>
-            <FlagCreationButton
-                text='New feature flag'
-                skipNavigationOnComplete={true}
-                onSuccess={() => {
-                    refetch();
-                    refetchFeatures();
-                }}
-            />
-        </>
-    );
-};
-
-const ExistingFlag = () => {
-    return (
-        <ExistingFlagContainer>
-            <TitleContainer>
-                <MainCircleContainer>✓</MainCircleContainer>
-                Create a feature flag
-            </TitleContainer>
-            <SuccessContainer>
-                <Typography fontWeight='bold' variant='body2'>
-                    Congratulations, your first flag is ready!
-                </Typography>
-                <Typography variant='body2'>
-                    You can open it to customize further.
-                </Typography>
-            </SuccessContainer>
-        </ExistingFlagContainer>
     );
 };

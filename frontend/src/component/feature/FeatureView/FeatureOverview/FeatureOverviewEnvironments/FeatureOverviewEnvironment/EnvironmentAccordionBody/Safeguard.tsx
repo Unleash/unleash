@@ -57,6 +57,34 @@ const StyledAddSafeguardContent = styled('div')(({ theme }) => ({
     paddingRight: theme.spacing(2),
 }));
 
+const StyledSafeguardMenu = styled(Menu)(({ theme }) => ({
+    '& .MuiPaper-root': {
+        maxWidth: theme.spacing(45),
+    },
+}));
+
+const StyledMenuHeader = styled(Typography)(({ theme }) => ({
+    display: 'block',
+    padding: theme.spacing(1, 2, 0.5, 2),
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    fontWeight: theme.typography.fontWeightBold,
+    color: theme.palette.text.secondary,
+}));
+
+const StyledSafeguardOptionItem = styled(MenuItem)(({ theme }) => ({
+    whiteSpace: 'normal',
+    alignItems: 'flex-start',
+    paddingTop: theme.spacing(1.25),
+    paddingBottom: theme.spacing(1.25),
+}));
+
+const StyledOptionDescription = styled(Typography)(({ theme }) => ({
+    display: 'block',
+    marginTop: theme.spacing(0.25),
+    color: theme.palette.text.secondary,
+}));
+
 export const AddSafeguard = ({
     onSelect,
     releasePlan,
@@ -86,28 +114,15 @@ export const AddSafeguard = ({
                     Add safeguard
                 </StyledActionButton>
             </StyledAddSafeguardContent>
-            <Menu
+            <StyledSafeguardMenu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={() => setAnchorEl(null)}
-                slotProps={{ paper: { sx: { maxWidth: 360 } } }}
             >
-                <Typography
-                    variant='caption'
-                    color='text.secondary'
-                    sx={{
-                        display: 'block',
-                        px: 2,
-                        pt: 1,
-                        pb: 0.5,
-                        textTransform: 'uppercase',
-                        letterSpacing: 0.5,
-                        fontWeight: 600,
-                    }}
-                >
+                <StyledMenuHeader variant='caption'>
                     Select safeguard action
-                </Typography>
-                <MenuItem
+                </StyledMenuHeader>
+                <StyledSafeguardOptionItem
                     onClick={() => {
                         trackEvent('safeguards', {
                             props: {
@@ -118,27 +133,18 @@ export const AddSafeguard = ({
                         onSelect('featureEnvironment');
                         setAnchorEl(null);
                     }}
-                    sx={{
-                        whiteSpace: 'normal',
-                        alignItems: 'flex-start',
-                        py: 1.25,
-                    }}
                 >
                     <Box>
                         <Typography variant='body2'>
                             Disable environment
                         </Typography>
-                        <Typography
-                            variant='caption'
-                            color='text.secondary'
-                            sx={{ display: 'block', mt: 0.25 }}
-                        >
+                        <StyledOptionDescription variant='caption'>
                             If your chosen metric crosses its threshold, this
                             flag is turned off in this environment. Existing
                             users stop seeing the flag immediately.
-                        </Typography>
+                        </StyledOptionDescription>
                     </Box>
-                </MenuItem>
+                </StyledSafeguardOptionItem>
                 <Tooltip
                     title={
                         releasePlan
@@ -149,7 +155,7 @@ export const AddSafeguard = ({
                     arrow
                 >
                     <span>
-                        <MenuItem
+                        <StyledSafeguardOptionItem
                             disabled={!releasePlan}
                             onClick={() => {
                                 trackEvent('safeguards', {
@@ -161,30 +167,21 @@ export const AddSafeguard = ({
                                 onSelect('releasePlan');
                                 setAnchorEl(null);
                             }}
-                            sx={{
-                                whiteSpace: 'normal',
-                                alignItems: 'flex-start',
-                                py: 1.25,
-                            }}
                         >
                             <Box>
                                 <Typography variant='body2'>
                                     Pause release plan
                                 </Typography>
-                                <Typography
-                                    variant='caption'
-                                    color='text.secondary'
-                                    sx={{ display: 'block', mt: 0.25 }}
-                                >
+                                <StyledOptionDescription variant='caption'>
                                     If your chosen metric crosses its threshold,
                                     automatic milestone progression stops. The
                                     current milestone keeps serving traffic.
-                                </Typography>
+                                </StyledOptionDescription>
                             </Box>
-                        </MenuItem>
+                        </StyledSafeguardOptionItem>
                     </span>
                 </Tooltip>
-            </Menu>
+            </StyledSafeguardMenu>
         </StyledSafeguardContainer>
     );
 };

@@ -170,7 +170,7 @@ export const AddSafeguard = ({
                         >
                             <Box>
                                 <Typography variant='body2'>
-                                    Pause release plan
+                                    Pause release plan automation
                                 </Typography>
                                 <StyledOptionDescription variant='caption'>
                                     If your chosen metric crosses its threshold,

@@ -76,12 +76,17 @@ const StyledMenuHeader = styled(ListSubheader)(({ theme }) => ({
     backgroundColor: 'transparent',
 }));
 
-const StyledSafeguardOptionItem = styled(MenuItem)(({ theme }) => ({
+const optionItemSx = {
     whiteSpace: 'normal',
     alignItems: 'flex-start',
-    paddingTop: theme.spacing(1.25),
-    paddingBottom: theme.spacing(1.25),
-}));
+    py: 1.25,
+} as const;
+
+const DisabledItemWrapper = styled('li')({
+    listStyle: 'none',
+    padding: 0,
+    margin: 0,
+});
 
 const StyledOptionDescription = styled(Typography)(({ theme }) => ({
     display: 'block',
@@ -126,7 +131,8 @@ export const AddSafeguard = ({
                 <StyledMenuHeader disableSticky>
                     Select safeguard action
                 </StyledMenuHeader>
-                <StyledSafeguardOptionItem
+                <MenuItem
+                    sx={optionItemSx}
                     onClick={() => {
                         trackEvent('safeguards', {
                             props: {
@@ -148,7 +154,7 @@ export const AddSafeguard = ({
                             users stop seeing the flag immediately.
                         </StyledOptionDescription>
                     </Box>
-                </StyledSafeguardOptionItem>
+                </MenuItem>
                 <Tooltip
                     title={
                         releasePlan
@@ -158,8 +164,10 @@ export const AddSafeguard = ({
                     placement='right'
                     arrow
                 >
-                    <span>
-                        <StyledSafeguardOptionItem
+                    <DisabledItemWrapper>
+                        <MenuItem
+                            component='div'
+                            sx={optionItemSx}
                             disabled={!releasePlan}
                             onClick={() => {
                                 trackEvent('safeguards', {
@@ -182,8 +190,8 @@ export const AddSafeguard = ({
                                     current milestone keeps serving traffic.
                                 </StyledOptionDescription>
                             </Box>
-                        </StyledSafeguardOptionItem>
-                    </span>
+                        </MenuItem>
+                    </DisabledItemWrapper>
                 </Tooltip>
             </StyledSafeguardMenu>
         </StyledSafeguardContainer>

@@ -260,7 +260,7 @@ describe('AddSafeguard', () => {
         const pauseItem = await screen.findByText(
             'Pause release plan automation',
         );
-        expect(pauseItem.closest('li')).toHaveAttribute(
+        expect(pauseItem.closest('[role="menuitem"]')).toHaveAttribute(
             'aria-disabled',
             'true',
         );

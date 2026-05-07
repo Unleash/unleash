@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
+import { TablePlaceholder } from 'component/common/Table';
+import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -7,13 +8,18 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Button, useMediaQuery } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { useFlexLayout, useSortBy, useTable } from 'react-table';
-import { sortTypes } from 'utils/sortTypes';
+import {
+    type ColumnDef,
+    getCoreRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
+import { sortingFns } from 'utils/sortingFns';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
-import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import { useConditionallyHiddenColumnsV8 } from 'hooks/useConditionallyHiddenColumnsV8';
 import { useSearch } from 'hooks/useSearch';
 import { useBanners } from 'hooks/api/getters/useBanners/useBanners';
 import { useBannersApi } from 'hooks/api/actions/useBannersApi/useBannersApi';
@@ -69,37 +75,34 @@ export const BannersTable = () => {
 
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-    const columns = useMemo(
+    const columns = useMemo<ColumnDef<IInternalBanner, unknown>[]>(
         () => [
             {
-                Header: 'Banner',
-                accessor: 'message',
-                Cell: ({ row: { original: banner } }: any) => (
+                id: 'message',
+                header: 'Banner',
+                accessorKey: 'message',
+                cell: ({ row: { original: banner } }) => (
                     <Banner
                         banner={{ ...banner, sticky: false }}
                         inline
                         maxHeight={42}
                     />
                 ),
-                disableSortBy: true,
-                minWidth: 200,
-                searchable: true,
+                enableSorting: false,
+                meta: { minWidth: 200, searchable: true },
             },
             {
-                Header: 'Created',
-                accessor: 'createdAt',
-                Cell: DateCell,
-                width: 120,
-                maxWidth: 120,
+                id: 'createdAt',
+                header: 'Created',
+                accessorKey: 'createdAt',
+                cell: DateCell,
+                meta: { width: 120, maxWidth: 120 },
             },
             {
-                Header: 'Enabled',
-                accessor: 'enabled',
-                Cell: ({
-                    row: { original: banner },
-                }: {
-                    row: { original: IInternalBanner };
-                }) => (
+                id: 'enabled',
+                header: 'Enabled',
+                accessorKey: 'enabled',
+                cell: ({ row: { original: banner } }) => (
                     <ToggleCell
                         checked={banner.enabled}
                         setChecked={(enabled) =>
@@ -107,15 +110,13 @@ export const BannersTable = () => {
                         }
                     />
                 ),
-                sortType: 'boolean',
-                width: 90,
-                maxWidth: 90,
+                sortingFn: sortingFns.boolean,
+                meta: { width: 90, maxWidth: 90 },
             },
             {
-                Header: 'Actions',
                 id: 'Actions',
-                align: 'center',
-                Cell: ({ row: { original: banner } }: any) => (
+                header: 'Actions',
+                cell: ({ row: { original: banner } }) => (
                     <BannersActionsCell
                         onEdit={() => {
                             setSelectedBanner(banner);
@@ -127,54 +128,55 @@ export const BannersTable = () => {
                         }}
                     />
                 ),
-                width: 100,
-                disableSortBy: true,
+                enableSorting: false,
+                meta: { width: 100, align: 'center' },
             },
         ],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [],
     );
 
     const [initialState] = useState({
-        sortBy: [{ id: 'createdAt', desc: true }],
+        sorting: [{ id: 'createdAt', desc: true }],
     });
 
     const { data, getSearchText } = useSearch(columns, searchValue, banners);
 
-    const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
-        {
-            columns: columns as any,
-            data,
-            initialState,
-            sortTypes,
-            autoResetHiddenColumns: false,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            disableMultiSort: true,
-            defaultColumn: {
-                Cell: TextCell,
-            },
+    const table = useReactTable({
+        columns,
+        data,
+        initialState,
+        defaultColumn: {
+            cell: ({ getValue }) => (
+                <TextCell value={String(getValue() ?? '')} />
+            ),
         },
-        useSortBy,
-        useFlexLayout,
-    );
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+        enableMultiSort: false,
+    });
 
-    useConditionallyHiddenColumns(
+    useConditionallyHiddenColumnsV8(
         [
             {
                 condition: isSmallScreen,
                 columns: ['createdAt'],
             },
         ],
-        setHiddenColumns,
+        table.setColumnVisibility,
         columns,
     );
+
+    const rowCount = table.getRowModel().rows.length;
 
     return (
         <PageContent
             isLoading={loading}
             header={
                 <PageHeader
-                    title={`Banners (${rows.length})`}
+                    title={`Banners (${rowCount})`}
                     actions={
                         <>
                             <ConditionallyRender
@@ -215,14 +217,10 @@ export const BannersTable = () => {
             }
         >
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <VirtualizedTable
-                    rows={rows}
-                    headerGroups={headerGroups}
-                    prepareRow={prepareRow}
-                />
+                <VirtualizedTableV8 tableInstance={table} />
             </SearchHighlightProvider>
             <ConditionallyRender
-                condition={rows.length === 0}
+                condition={rowCount === 0}
                 show={
                     <ConditionallyRender
                         condition={searchValue?.length > 0}

@@ -1,16 +1,16 @@
 import { useEffect, useMemo, useState, type VFC } from 'react';
 import {
-    type SortingRule,
-    useFlexLayout,
-    useSortBy,
-    useTable,
-} from 'react-table';
-import { VirtualizedTable, TablePlaceholder } from 'component/common/Table';
+    type ColumnDef,
+    getCoreRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
+import { TablePlaceholder } from 'component/common/Table';
+import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
 import { styled, useMediaQuery, useTheme } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import Delete from '@mui/icons-material/Delete';
 import Edit from '@mui/icons-material/Edit';
-import { sortTypes } from 'utils/sortTypes';
 import useProjectAccess, {
     ENTITY_TYPE,
     type IProjectAccess,
@@ -25,7 +25,7 @@ import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useSearch } from 'hooks/useSearch';
-import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import { useConditionallyHiddenColumnsV8 } from 'hooks/useConditionallyHiddenColumnsV8';
 import {
     Link,
     Route,
@@ -64,7 +64,7 @@ export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search', string>
 >;
 
-const defaultSort: SortingRule<string> = { id: 'added', desc: true };
+const defaultSort = { id: 'added', desc: true };
 
 const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
     'ProjectAccess:v1',
@@ -113,30 +113,30 @@ export const ProjectAccessTable: VFC = () => {
             ? `${roles.length} roles`
             : access?.roles.find(({ id }) => id === roles[0])?.name || '';
 
-    const columns = useMemo(
+    const columns = useMemo<ColumnDef<IProjectAccess, unknown>[]>(
         () => [
             {
-                Header: 'Avatar',
-                accessor: 'imageUrl',
-                Cell: ({ row: { original: row } }: any) => (
+                id: 'imageUrl',
+                header: 'Avatar',
+                cell: ({ row: { original: row } }) => (
                     <StyledUserAvatars>
                         <ConditionallyRender
                             condition={row.type === ENTITY_TYPE.GROUP}
                             show={<StyledEmptyAvatar />}
                         />
                         <StyledGroupAvatar user={row.entity}>
-                            {row.entity.users?.length}
+                            {(row.entity as IGroup).users?.length}
                         </StyledGroupAvatar>
                     </StyledUserAvatars>
                 ),
-                maxWidth: 85,
-                disableSortBy: true,
+                enableSorting: false,
+                meta: { maxWidth: 85 },
             },
             {
                 id: 'name',
-                Header: 'Name',
-                accessor: (row: IProjectAccess) => row.entity.name || '',
-                Cell: ({ value, row: { original: row } }: any) => (
+                header: 'Name',
+                accessorFn: (row) => row.entity.name || '',
+                cell: ({ getValue, row: { original: row } }) => (
                     <ConditionallyRender
                         condition={row.type === ENTITY_TYPE.GROUP}
                         show={
@@ -145,48 +145,47 @@ export const ProjectAccessTable: VFC = () => {
                                     setSelectedRow(row);
                                     setGroupOpen(true);
                                 }}
-                                title={value}
-                                subtitle={`${row.entity.users?.length} users`}
+                                title={String(getValue() ?? '')}
+                                subtitle={`${(row.entity as IGroup).users?.length} users`}
                             />
                         }
                         elseShow={
                             <HighlightCell
-                                value={value}
+                                value={String(getValue() ?? '')}
                                 subtitle={
-                                    row.entity?.email || row.entity?.username
+                                    (row.entity as IUser)?.email ||
+                                    (row.entity as IUser)?.username
                                 }
                             />
                         }
                     />
                 ),
-                minWidth: 100,
-                searchable: true,
+                meta: { minWidth: 100, searchable: true },
             },
             {
                 id: 'role',
-                Header: 'Role',
-                accessor: (row: IProjectAccess) => roleText(row.entity.roles),
-                Cell: ({
-                    value,
-                    row: { original: row },
-                }: {
-                    row: { original: IProjectAccess };
-                    value: string;
-                }) => <RoleCell value={value} roles={row.entity.roles} />,
-                maxWidth: 175,
-                filterName: 'role',
+                header: 'Role',
+                accessorFn: (row) => roleText(row.entity.roles),
+                cell: ({ getValue, row: { original: row } }) => (
+                    <RoleCell
+                        value={String(getValue() ?? '')}
+                        roles={row.entity.roles}
+                    />
+                ),
+                meta: { maxWidth: 175, filterName: 'role' },
             },
             {
                 id: 'added',
-                Header: 'Added',
-                accessor: 'entity.addedAt',
-                Cell: TimeAgoCell,
-                maxWidth: 130,
+                header: 'Added',
+                accessorFn: (row) =>
+                    (row.entity as { addedAt?: string | null }).addedAt,
+                cell: TimeAgoCell,
+                meta: { maxWidth: 130 },
             },
             {
                 id: 'lastLogin',
-                Header: 'Last login',
-                accessor: (row: IProjectAccess) => {
+                header: 'Last login',
+                accessorFn: (row) => {
                     if (row.type !== ENTITY_TYPE.GROUP) {
                         const userRow = row.entity as IUser;
                         return userRow.seenAt || '';
@@ -197,20 +196,14 @@ export const ProjectAccessTable: VFC = () => {
                         .sort()
                         .reverse()[0];
                 },
-                Cell: TimeAgoCell,
-                maxWidth: 130,
+                cell: TimeAgoCell,
+                meta: { maxWidth: 130 },
             },
             {
                 id: 'actions',
-                Header: 'Actions',
-                disableSortBy: true,
-                align: 'center',
-                maxWidth: 150,
-                Cell: ({
-                    row: { original: row },
-                }: {
-                    row: { original: IProjectAccess };
-                }) => (
+                header: 'Actions',
+                enableSorting: false,
+                cell: ({ row: { original: row } }) => (
                     <ActionCell>
                         <PermissionIconButton
                             data-testid={PA_EDIT_BUTTON_ID}
@@ -250,32 +243,35 @@ export const ProjectAccessTable: VFC = () => {
                         </PermissionIconButton>
                     </ActionCell>
                 ),
+                meta: { maxWidth: 150, align: 'center' },
             },
             // Always hidden -- for search
             {
-                accessor: (row: IProjectAccess) =>
+                id: 'username',
+                header: 'Username',
+                accessorFn: (row) =>
                     row.type !== ENTITY_TYPE.GROUP
                         ? (row.entity as IUser)?.username || ''
                         : '',
-                Header: 'Username',
-                searchable: true,
+                meta: { searchable: true },
             },
-            // Always hidden -- for search
             {
-                accessor: (row: IProjectAccess) =>
+                id: 'email',
+                header: 'Email',
+                accessorFn: (row) =>
                     row.type !== ENTITY_TYPE.GROUP
                         ? (row.entity as IUser)?.email || ''
                         : '',
-                Header: 'Email',
-                searchable: true,
+                meta: { searchable: true },
             },
         ],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [access, projectId],
     );
 
     const [searchParams, setSearchParams] = useSearchParams();
     const [initialState] = useState(() => ({
-        sortBy: [
+        sorting: [
             {
                 id: searchParams.get('sort') || storedParams.id,
                 desc: searchParams.has('order')
@@ -283,7 +279,7 @@ export const ProjectAccessTable: VFC = () => {
                     : storedParams.desc,
             },
         ],
-        hiddenColumns: ['Username', 'Email'],
+        columnVisibility: { username: false, email: false },
         globalFilter: searchParams.get('search') || '',
     }));
     const [searchValue, setSearchValue] = useState(initialState.globalFilter);
@@ -294,31 +290,23 @@ export const ProjectAccessTable: VFC = () => {
         access?.rows ?? [],
     );
 
-    const {
-        headerGroups,
-        rows,
-        prepareRow,
-        setHiddenColumns,
-        state: { sortBy },
-    } = useTable(
-        {
-            columns: columns as any[],
-            data,
-            initialState,
-            sortTypes,
-            autoResetHiddenColumns: false,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            disableMultiSort: true,
-            defaultColumn: {
-                Cell: TextCell,
-            },
+    const table = useReactTable({
+        columns,
+        data,
+        initialState,
+        defaultColumn: {
+            cell: ({ getValue }) => (
+                <TextCell value={String(getValue() ?? '')} />
+            ),
         },
-        useSortBy,
-        useFlexLayout,
-    );
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+        enableMultiSort: false,
+    });
 
-    useConditionallyHiddenColumns(
+    useConditionallyHiddenColumnsV8(
         [
             {
                 condition: isSmallScreen,
@@ -329,14 +317,21 @@ export const ProjectAccessTable: VFC = () => {
                 columns: hiddenColumnsMedium,
             },
         ],
-        setHiddenColumns,
+        table.setColumnVisibility,
         columns,
     );
 
+    const sorting = table.getState().sorting;
+    const rows = table.getRowModel().rows;
+
     useEffect(() => {
+        const sortRule = sorting[0];
+        if (!sortRule) {
+            return;
+        }
         const tableState: PageQueryType = {};
-        tableState.sort = sortBy[0].id;
-        if (sortBy[0].desc) {
+        tableState.sort = sortRule.id;
+        if (sortRule.desc) {
             tableState.order = 'desc';
         }
         if (searchValue) {
@@ -346,8 +341,8 @@ export const ProjectAccessTable: VFC = () => {
         setSearchParams(tableState, {
             replace: true,
         });
-        setStoredParams({ id: sortBy[0].id, desc: sortBy[0].desc || false });
-    }, [sortBy, searchValue, setSearchParams]);
+        setStoredParams({ id: sortRule.id, desc: sortRule.desc || false });
+    }, [sorting, searchValue, setSearchParams]);
 
     const removeAccess = async (userOrGroup?: IProjectAccess) => {
         if (!userOrGroup) return;
@@ -439,11 +434,7 @@ export const ProjectAccessTable: VFC = () => {
             }
         >
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <VirtualizedTable
-                    rows={rows}
-                    headerGroups={headerGroups}
-                    prepareRow={prepareRow}
-                />
+                <VirtualizedTableV8 tableInstance={table} />
             </SearchHighlightProvider>
             <ConditionallyRender
                 condition={rows.length === 0}

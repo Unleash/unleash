@@ -1,13 +1,20 @@
 import { type FC, useMemo, useState } from 'react';
-import { useGlobalFilter, useSortBy, useTable } from 'react-table';
+import {
+    type ColumnDef,
+    flexRender,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
 import {
     Table,
-    SortableTableHeader,
     TableBody,
     TableCell,
     TableRow,
     TablePlaceholder,
 } from 'component/common/Table';
+import { SortableTableHeaderV8 } from 'component/common/Table/SortableTableHeader/SortableTableHeaderV8';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -18,7 +25,6 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { AddContextButton } from '../AddContextButton.tsx';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { sortTypes } from 'utils/sortTypes';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { ContextActionsCell } from '../ContextActionsCell.tsx';
 import Adjust from '@mui/icons-material/Adjust';
@@ -27,20 +33,30 @@ import { Search } from 'component/common/Search/Search';
 import { UsedInCell } from '../UsedInCell.tsx';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
 
+type ContextRow = {
+    name: string;
+    description: string;
+    sortOrder: number;
+    usedInProjects?: number;
+    usedInFeatures?: number;
+};
+
 const ContextList: FC = () => {
     const projectId = useOptionalPathParam('projectId');
     const [showDelDialogue, setShowDelDialogue] = useState(false);
     const [contextFieldToDelete, setContextFieldToDelete] = useState<string>();
+    const [globalFilter, setGlobalFilter] = useState('');
     const { context, refetchUnleashContext, loading } =
         useScopedUnleashContext();
     const { removeContext } = useContextsApi(projectId);
     const { setToastData, setToastApiError } = useToast();
 
-    const data = useMemo(() => {
+    const data = useMemo<ContextRow[]>(() => {
         if (loading) {
             return Array(5).fill({
                 name: 'Context name',
                 description: 'Context description when loading',
+                sortOrder: 0,
             });
         }
 
@@ -54,8 +70,8 @@ const ContextList: FC = () => {
                     usedInFeatures,
                 }) => ({
                     name,
-                    description,
-                    sortOrder,
+                    description: description ?? '',
+                    sortOrder: sortOrder ?? 0,
                     usedInProjects,
                     usedInFeatures,
                 }),
@@ -63,22 +79,22 @@ const ContextList: FC = () => {
             .sort((a, b) => a.sortOrder - b.sortOrder);
     }, [context, loading]);
 
-    const columns = useMemo(
+    const columns = useMemo<ColumnDef<ContextRow, unknown>[]>(
         () => [
             {
                 id: 'Icon',
-                Cell: () => <IconCell icon={<Adjust color='disabled' />} />,
-                disableGlobalFilter: true,
+                cell: () => <IconCell icon={<Adjust color='disabled' />} />,
+                enableGlobalFilter: false,
             },
             {
-                Header: 'Name',
-                accessor: 'name',
-                width: '70%',
-                Cell: ({
+                id: 'name',
+                header: 'Name',
+                accessorKey: 'name',
+                cell: ({
                     row: {
                         original: { name, description },
                     },
-                }: any) => {
+                }) => {
                     const editUrl = projectId
                         ? `/projects/${projectId}/settings/context/edit/${name}`
                         : `/context/edit/${name}`;
@@ -91,24 +107,28 @@ const ContextList: FC = () => {
                         />
                     );
                 },
-                sortType: 'alphanumeric',
+                sortingFn: 'alphanumeric',
+                meta: { width: '70%' },
             },
             {
-                Header: 'Used in',
-                width: '60%',
-                Cell: ({ row: { original } }: any) => (
-                    <UsedInCell original={original} />
+                id: 'usedIn',
+                header: 'Used in',
+                cell: ({ row: { original } }) => (
+                    // UsedInCell types its prop against
+                    // IUnleashContextDefinition; runtime only reads
+                    // usedInProjects/usedInFeatures, present on ContextRow.
+                    <UsedInCell original={original as never} />
                 ),
+                meta: { width: '60%' },
             },
             {
-                Header: 'Actions',
                 id: 'Actions',
-                align: 'center',
-                Cell: ({
+                header: 'Actions',
+                cell: ({
                     row: {
                         original: { name, usedInFeatures },
                     },
-                }: any) => (
+                }) => (
                     <ContextActionsCell
                         name={name}
                         onDelete={() => {
@@ -118,27 +138,28 @@ const ContextList: FC = () => {
                         allowDelete={usedInFeatures === 0}
                     />
                 ),
-                width: 150,
-                disableGlobalFilter: true,
-                disableSortBy: true,
+                enableSorting: false,
+                enableGlobalFilter: false,
+                meta: { width: 150, align: 'center' },
             },
             {
-                accessor: 'description',
-                disableSortBy: true,
+                id: 'description',
+                accessorKey: 'description',
+                enableSorting: false,
             },
             {
-                accessor: 'sortOrder',
-                disableGlobalFilter: true,
-                sortType: 'number',
+                id: 'sortOrder',
+                accessorKey: 'sortOrder',
+                enableGlobalFilter: false,
             },
         ],
-        [],
+        [projectId],
     );
 
     const initialState = useMemo(
         () => ({
-            sortBy: [{ id: 'name', desc: false }],
-            hiddenColumns: ['description', 'sortOrder'],
+            sorting: [{ id: 'name', desc: false }],
+            columnVisibility: { description: false, sortOrder: false },
         }),
         [],
     );
@@ -161,27 +182,20 @@ const ContextList: FC = () => {
         setShowDelDialogue(false);
     };
 
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        rows,
-        prepareRow,
+    const table = useReactTable({
+        columns,
+        data,
+        initialState,
         state: { globalFilter },
-        setGlobalFilter,
-    } = useTable(
-        {
-            columns: columns as any[], // TODO: fix after `react-table` v8 update
-            data,
-            initialState,
-            sortTypes,
-            autoResetGlobalFilter: false,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-        },
-        useGlobalFilter,
-        useSortBy,
-    );
+        onGlobalFilterChange: setGlobalFilter,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+    });
+
+    const rows = table.getRowModel().rows;
 
     return (
         <PageContent
@@ -193,7 +207,7 @@ const ContextList: FC = () => {
                         <>
                             <Search
                                 initialValue={globalFilter}
-                                onChange={setGlobalFilter}
+                                onChange={(value) => setGlobalFilter(value)}
                             />
                             <PageHeader.Divider />
                             <AddContextButton />
@@ -203,27 +217,21 @@ const ContextList: FC = () => {
             }
         >
             <SearchHighlightProvider value={globalFilter}>
-                <Table {...getTableProps()}>
-                    <SortableTableHeader headerGroups={headerGroups} />
-                    <TableBody {...getTableBodyProps()}>
-                        {rows.map((row) => {
-                            prepareRow(row);
-                            const { key, ...rowProps } = row.getRowProps();
-                            return (
-                                <TableRow hover key={key} {...rowProps}>
-                                    {row.cells.map((cell) => {
-                                        const { key, ...cellProps } =
-                                            cell.getCellProps();
-
-                                        return (
-                                            <TableCell key={key} {...cellProps}>
-                                                {cell.render('Cell')}
-                                            </TableCell>
-                                        );
-                                    })}
-                                </TableRow>
-                            );
-                        })}
+                <Table>
+                    <SortableTableHeaderV8 tableInstance={table} />
+                    <TableBody>
+                        {rows.map((row) => (
+                            <TableRow hover key={row.id}>
+                                {row.getVisibleCells().map((cell) => (
+                                    <TableCell key={cell.id}>
+                                        {flexRender(
+                                            cell.column.columnDef.cell,
+                                            cell.getContext(),
+                                        )}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        ))}
                     </TableBody>
                 </Table>
             </SearchHighlightProvider>

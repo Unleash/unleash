@@ -1,62 +1,37 @@
-import type {
-    Row,
-    TablePropGetter,
-    TableProps,
-    TableBodyPropGetter,
-    TableBodyProps,
-    HeaderGroup,
-} from 'react-table';
-import {
-    SortableTableHeader,
-    TableCell,
-    TablePlaceholder,
-} from 'component/common/Table';
+import { type Table as TableType, flexRender } from '@tanstack/react-table';
+import { TableCell, TablePlaceholder } from 'component/common/Table';
+import { SortableTableHeaderV8 } from 'component/common/Table/SortableTableHeader/SortableTableHeaderV8';
 import { Box, Table, TableBody, TableRow } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
-type ConnectedInstancesTableProps = {
+type ConnectedInstancesTableProps<T> = {
     loading: boolean;
-    rows: Row<object>[];
-    prepareRow: (row: Row<object>) => void;
-    getTableProps: (
-        propGetter?: TablePropGetter<object> | undefined,
-    ) => TableProps;
-    getTableBodyProps: (
-        propGetter?: TableBodyPropGetter<object> | undefined,
-    ) => TableBodyProps;
-    headerGroups: HeaderGroup<object>[];
+    table: TableType<T>;
 };
-export const ConnectedInstancesTable = ({
+
+export const ConnectedInstancesTable = <T,>({
     loading,
-    rows,
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    prepareRow,
-}: ConnectedInstancesTableProps) => {
+    table,
+}: ConnectedInstancesTableProps<T>) => {
+    const rows = table.getRowModel().rows;
     return (
         <>
             <Box sx={{ overflowX: 'auto' }}>
-                <Table {...getTableProps()}>
-                    <SortableTableHeader headerGroups={headerGroups as any} />
-                    <TableBody {...getTableBodyProps()}>
-                        {rows.map((row) => {
-                            prepareRow(row);
-                            const { key, ...rowProps } = row.getRowProps();
-                            return (
-                                <TableRow hover key={key} {...rowProps}>
-                                    {row.cells.map((cell) => {
-                                        const { key, ...cellProps } =
-                                            cell.getCellProps();
-                                        return (
-                                            <TableCell key={key} {...cellProps}>
-                                                {cell.render('Cell')}
-                                            </TableCell>
-                                        );
-                                    })}
-                                </TableRow>
-                            );
-                        })}
+                <Table>
+                    <SortableTableHeaderV8 tableInstance={table} />
+                    <TableBody>
+                        {rows.map((row) => (
+                            <TableRow hover key={row.id}>
+                                {row.getVisibleCells().map((cell) => (
+                                    <TableCell key={cell.id}>
+                                        {flexRender(
+                                            cell.column.columnDef.cell,
+                                            cell.getContext(),
+                                        )}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        ))}
                     </TableBody>
                 </Table>
             </Box>

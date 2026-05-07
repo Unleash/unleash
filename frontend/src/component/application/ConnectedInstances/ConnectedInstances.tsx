@@ -82,8 +82,7 @@ export const ConnectedInstances: FC = () => {
         return connectedInstances.instances.map(map);
     }, [JSON.stringify(connectedInstances), currentEnvironment]);
 
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-        useConnectedInstancesTable(tableData);
+    const { table } = useConnectedInstancesTable(tableData);
 
     return (
         <Box>
@@ -118,14 +117,7 @@ export const ConnectedInstances: FC = () => {
                     }
                 />
             </Box>
-            <ConnectedInstancesTable
-                loading={loading}
-                headerGroups={headerGroups}
-                prepareRow={prepareRow}
-                getTableBodyProps={getTableBodyProps}
-                getTableProps={getTableProps}
-                rows={rows}
-            />
+            <ConnectedInstancesTable loading={loading} table={table} />
         </Box>
     );
 };

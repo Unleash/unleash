@@ -1,4 +1,4 @@
-import { useMemo, useState, type VFC } from 'react';
+import { useMemo, type VFC } from 'react';
 import { IconButton, Tooltip } from '@mui/material';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import type { IGroupUser } from 'interfaces/group';
@@ -6,9 +6,13 @@ import { HighlightCell } from 'component/common/Table/cells/HighlightCell/Highli
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import Delete from '@mui/icons-material/Delete';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { VirtualizedTable } from 'component/common/Table';
-import { useFlexLayout, useSortBy, useTable } from 'react-table';
-import { sortTypes } from 'utils/sortTypes';
+import { VirtualizedTableV8 } from 'component/common/Table/VirtualizedTable/VirtualizedTableV8';
+import {
+    type ColumnDef,
+    getCoreRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 
 interface IGroupFormUsersTableProps {
@@ -20,37 +24,36 @@ export const GroupFormUsersTable: VFC<IGroupFormUsersTableProps> = ({
     users,
     setUsers,
 }) => {
-    const columns = useMemo(
+    const columns = useMemo<ColumnDef<IGroupUser, unknown>[]>(
         () => [
             {
-                Header: 'Avatar',
-                accessor: 'imageUrl',
-                Cell: ({ row: { original: user } }: any) => (
+                id: 'imageUrl',
+                header: 'Avatar',
+                accessorKey: 'imageUrl',
+                cell: ({ row: { original: user } }) => (
                     <TextCell>
                         <UserAvatar user={user} />
                     </TextCell>
                 ),
-                maxWidth: 85,
-                disableSortBy: true,
+                enableSorting: false,
+                meta: { maxWidth: 85 },
             },
             {
                 id: 'name',
-                Header: 'Name',
-                accessor: (row: IGroupUser) => row.name || '',
-                Cell: ({ value, row: { original: row } }: any) => (
+                header: 'Name',
+                accessorFn: (row) => row.name || '',
+                cell: ({ getValue, row: { original: row } }) => (
                     <HighlightCell
-                        value={value}
+                        value={String(getValue() ?? '')}
                         subtitle={row.email || row.username}
                     />
                 ),
-                minWidth: 100,
-                searchable: true,
+                meta: { minWidth: 100 },
             },
             {
-                Header: 'Action',
                 id: 'Action',
-                align: 'center',
-                Cell: ({ row: { original: rowUser } }: any) => (
+                header: 'Action',
+                cell: ({ row: { original: rowUser } }) => (
                     <ActionCell>
                         <Tooltip
                             title='Remove user from group'
@@ -71,54 +74,27 @@ export const GroupFormUsersTable: VFC<IGroupFormUsersTableProps> = ({
                         </Tooltip>
                     </ActionCell>
                 ),
-                maxWidth: 100,
-                disableSortBy: true,
-            },
-            // Always hidden -- for search
-            {
-                accessor: (row: IGroupUser) => row.username || '',
-                Header: 'Username',
-                searchable: true,
-            },
-            // Always hidden -- for search
-            {
-                accessor: (row: IGroupUser) => row.email || '',
-                Header: 'Email',
-                searchable: true,
+                enableSorting: false,
+                meta: { maxWidth: 100, align: 'center' },
             },
         ],
         [setUsers],
     );
 
-    const [initialState] = useState(() => ({
-        hiddenColumns: ['Username', 'Email'],
-    }));
-
-    const { headerGroups, rows, prepareRow } = useTable(
-        {
-            columns: columns as any[],
-            data: users as any[],
-            initialState,
-            sortTypes,
-            autoResetHiddenColumns: false,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            disableMultiSort: true,
-        },
-        useSortBy,
-        useFlexLayout,
-    );
+    const table = useReactTable({
+        columns,
+        data: users,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+        enableMultiSort: false,
+    });
 
     return (
         <ConditionallyRender
-            condition={rows.length > 0}
-            show={
-                <VirtualizedTable
-                    rows={rows}
-                    headerGroups={headerGroups}
-                    prepareRow={prepareRow}
-                />
-            }
+            condition={table.getRowModel().rows.length > 0}
+            show={<VirtualizedTableV8 tableInstance={table} />}
         />
     );
 };

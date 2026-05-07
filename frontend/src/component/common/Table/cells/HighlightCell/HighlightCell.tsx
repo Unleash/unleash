@@ -8,7 +8,8 @@ import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { Truncator } from 'component/common/Truncator/Truncator';
 
 interface IHighlightCellProps {
-    value: string;
+    value?: string;
+    getValue?: () => unknown;
     subtitle?: string;
     afterTitle?: React.ReactNode;
     subtitleTooltip?: boolean;
@@ -38,12 +39,14 @@ const StyledSubtitle = styled('span')(({ theme }) => ({
 
 export const HighlightCell: FC<IHighlightCellProps> = ({
     value,
+    getValue,
     subtitle,
     afterTitle,
     subtitleTooltip,
     maxTitleLines,
 }) => {
     const { searchQuery } = useSearchHighlightContext();
+    const resolvedValue = value ?? (getValue ? String(getValue() ?? '') : '');
 
     const renderSubtitle = (
         <ConditionallyRender
@@ -71,12 +74,14 @@ export const HighlightCell: FC<IHighlightCellProps> = ({
         <StyledContainer>
             <Truncator
                 lines={maxTitleLines ?? (subtitle ? 1 : 2)}
-                title={value}
+                title={resolvedValue}
                 arrow
                 data-loading
             >
                 <StyledTitle>
-                    <Highlighter search={searchQuery}>{value}</Highlighter>
+                    <Highlighter search={searchQuery}>
+                        {resolvedValue}
+                    </Highlighter>
                     {afterTitle}
                 </StyledTitle>
             </Truncator>

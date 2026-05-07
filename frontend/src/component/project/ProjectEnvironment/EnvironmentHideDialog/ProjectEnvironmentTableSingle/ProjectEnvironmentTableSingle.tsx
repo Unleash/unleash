@@ -1,7 +1,13 @@
 import { styled, TableBody, TableRow } from '@mui/material';
 import type { IProjectEnvironment } from 'interfaces/environments';
-import { useTable } from 'react-table';
-import { SortableTableHeader, Table, TableCell } from 'component/common/Table';
+import {
+    type ColumnDef,
+    flexRender,
+    getCoreRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
+import { Table, TableCell } from 'component/common/Table';
+import { SortableTableHeaderV8 } from 'component/common/Table/SortableTableHeader/SortableTableHeaderV8';
 import { EnvironmentIconCell } from 'component/environments/EnvironmentTable/EnvironmentIconCell/EnvironmentIconCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useMemo } from 'react';
@@ -26,72 +32,71 @@ export const ProjectEnvironmentTableSingle = ({
     environment,
     warnEnabledToggles,
 }: IProjectEnvironmentTableSingleProps) => {
-    const COLUMNS = useMemo(
+    const columns = useMemo<ColumnDef<IProjectEnvironment, unknown>[]>(
         () => [
             {
                 id: 'Icon',
-                width: '1%',
-                Cell: ({
-                    row: { original },
-                }: {
-                    row: { original: IProjectEnvironment };
-                }) => <EnvironmentIconCell environment={original} />,
-            },
-            {
-                Header: 'Name',
-                accessor: 'name',
-                Cell: TextCell,
-            },
-            {
-                Header: 'Type',
-                accessor: 'type',
-                Cell: TextCell,
-            },
-            {
-                Header: 'Toggles enabled',
-                accessor: 'projectEnabledToggleCount',
-                Cell: ({ value }: { value: number }) => (
-                    <TextCell>
-                        <StyledToggleWarning warning={value > 0}>
-                            {value === 1 ? '1 toggle' : `${value} toggles`}
-                        </StyledToggleWarning>
-                    </TextCell>
+                cell: ({ row: { original } }) => (
+                    <EnvironmentIconCell environment={original} />
                 ),
-                align: 'center',
+                meta: { width: '1%' },
+            },
+            {
+                id: 'name',
+                header: 'Name',
+                accessorKey: 'name',
+                cell: TextCell,
+            },
+            {
+                id: 'type',
+                header: 'Type',
+                accessorKey: 'type',
+                cell: TextCell,
+            },
+            {
+                id: 'projectEnabledToggleCount',
+                header: 'Toggles enabled',
+                accessorKey: 'projectEnabledToggleCount',
+                cell: ({ getValue }) => {
+                    const value = (getValue() as number | undefined) ?? 0;
+                    return (
+                        <TextCell>
+                            <StyledToggleWarning warning={value > 0}>
+                                {value === 1 ? '1 toggle' : `${value} toggles`}
+                            </StyledToggleWarning>
+                        </TextCell>
+                    );
+                },
+                meta: { align: 'center' },
             },
         ],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [warnEnabledToggles],
     );
 
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-        useTable({
-            columns: COLUMNS as any,
-            data: [environment],
-            disableSortBy: true,
-        });
+    const table = useReactTable({
+        columns,
+        data: [environment],
+        getCoreRowModel: getCoreRowModel(),
+        enableSorting: false,
+    });
 
     return (
-        <StyledTable {...getTableProps()} rowHeight='compact'>
-            <SortableTableHeader headerGroups={headerGroups as any} />
-            <TableBody {...getTableBodyProps()}>
-                {rows.map((row) => {
-                    prepareRow(row);
-                    const { key, ...rowProps } = row.getRowProps();
-                    return (
-                        <TableRow hover key={key} {...rowProps}>
-                            {row.cells.map((cell) => {
-                                const { key, ...cellProps } =
-                                    cell.getCellProps();
-
-                                return (
-                                    <TableCell key={key} {...cellProps}>
-                                        {cell.render('Cell')}
-                                    </TableCell>
-                                );
-                            })}
-                        </TableRow>
-                    );
-                })}
+        <StyledTable rowHeight='compact'>
+            <SortableTableHeaderV8 tableInstance={table} />
+            <TableBody>
+                {table.getRowModel().rows.map((row) => (
+                    <TableRow hover key={row.id}>
+                        {row.getVisibleCells().map((cell) => (
+                            <TableCell key={cell.id}>
+                                {flexRender(
+                                    cell.column.columnDef.cell,
+                                    cell.getContext(),
+                                )}
+                            </TableCell>
+                        ))}
+                    </TableRow>
+                ))}
             </TableBody>
         </StyledTable>
     );

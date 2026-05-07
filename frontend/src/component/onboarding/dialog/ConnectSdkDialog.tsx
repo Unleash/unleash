@@ -19,7 +19,7 @@ import { ConnectionInformation } from './ConnectionInformation.tsx';
 import { SdkConnection } from './SdkConnection.tsx';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
-import { ConnectSdkDialog as NewConnectSdkDialog } from './NewConnectSdkDialog.tsx';
+import { ConnectSdkDialog as NewConnectSdkDialog } from './NewConnectSdkDialog/NewConnectSdkDialog.tsx';
 
 interface IConnectSDKDialogProps {
     open: boolean;

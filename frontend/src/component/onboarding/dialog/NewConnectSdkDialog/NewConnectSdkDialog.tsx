@@ -1,6 +1,7 @@
 import { Box, Dialog, DialogContent, IconButton, styled } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { Truncator } from 'component/common/Truncator/Truncator.tsx';
+import { NewConnectSdkDialogAside } from './NewConnectSdkDialogAside';
 
 interface IConnectSDKDialogProps {
     open: boolean;
@@ -46,13 +47,13 @@ const StyledDialogHeaderMain = styled(Box)(({ theme }) => ({
 
 const StyledDialogHeaderTitle = styled('h2')(({ theme }) => ({
     padding: theme.spacing(1.5, 3),
-    fontWeight: theme.fontWeight.bold,
-    fontSize: theme.fontSizes.bodySize,
+    fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.typography.body1.fontSize,
     lineHeight: theme.spacing(2.75),
 }));
 
 const StyledDialogHeaderAside = styled(Box)(({ theme }) => ({
-    width: theme.spacing(26),
+    width: theme.spacing(40),
     flexShrink: 0,
     backgroundColor: theme.palette.background.sidebar,
     color: theme.palette.primary.contrastText,
@@ -84,7 +85,7 @@ const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
 }));
 
 const StyledDialogAside = styled('aside')(({ theme }) => ({
-    width: theme.spacing(26),
+    width: theme.spacing(40),
     flexShrink: 0,
     backgroundColor: theme.palette.background.sidebar,
     color: theme.palette.primary.contrastText,
@@ -125,7 +126,9 @@ const InnerDialog = ({ onClose }: Omit<IConnectSDKDialogProps, 'open'>) => {
             <DialogHeader onClose={onClose} />
             <StyledDialogBody>
                 <StyledDialogContent>Main content</StyledDialogContent>
-                <StyledDialogAside>Aside content</StyledDialogAside>
+                <StyledDialogAside>
+                    <NewConnectSdkDialogAside />
+                </StyledDialogAside>
             </StyledDialogBody>
         </StyledDialog>
     );

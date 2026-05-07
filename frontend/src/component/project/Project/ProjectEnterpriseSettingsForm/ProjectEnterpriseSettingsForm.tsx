@@ -294,17 +294,19 @@ const ProjectEnterpriseSettingsForm: React.FC<
                         name='feature flag naming pattern'
                         aria-describedby='pattern-naming-description'
                         placeholder='[A-Za-z]+.[A-Za-z]+.[A-Za-z0-9-]+'
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position='start'>
-                                    ^
-                                </InputAdornment>
-                            ),
-                            endAdornment: (
-                                <InputAdornment position='end'>
-                                    $
-                                </InputAdornment>
-                            ),
+                        slotProps={{
+                            input: {
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                        ^
+                                    </InputAdornment>
+                                ),
+                                endAdornment: (
+                                    <InputAdornment position='end'>
+                                        $
+                                    </InputAdornment>
+                                ),
+                            },
                         }}
                         type={'text'}
                         value={featureNamingPattern || ''}

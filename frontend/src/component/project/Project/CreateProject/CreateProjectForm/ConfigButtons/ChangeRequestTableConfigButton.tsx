@@ -115,12 +115,14 @@ export const ChangeRequestTableConfigButton: FC<
                 label={search.label}
                 placeholder={search.placeholder}
                 autoFocus
-                InputProps={{
-                    startAdornment: (
-                        <InputAdornment position='start'>
-                            <Search fontSize='small' />
-                        </InputAdornment>
-                    ),
+                slotProps={{
+                    input: {
+                        startAdornment: (
+                            <InputAdornment position='start'>
+                                <Search fontSize='small' />
+                            </InputAdornment>
+                        ),
+                    },
                 }}
                 onKeyDown={toggleTopItem}
             />

@@ -44,7 +44,7 @@ export const StrategySwitch: VFC<IStrategySwitchProps> = ({
                     permission={UPDATE_STRATEGY}
                     onClick={onClick}
                     disabled={disabled}
-                    inputProps={{ 'aria-labelledby': id }}
+                    slotProps={{ input: { 'aria-labelledby': id } }}
                 />
             </div>
         </Tooltip>

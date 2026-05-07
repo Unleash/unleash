@@ -186,7 +186,9 @@ export const ChangeRequestTable: FC = () => {
                                 UPDATE_PROJECT,
                                 PROJECT_CHANGE_REQUEST_WRITE,
                             ]}
-                            inputProps={{ 'aria-label': original.environment }}
+                            slotProps={{
+                                input: { 'aria-label': original.environment },
+                            }}
                             onClick={onRowChange(
                                 original.environment,
                                 original.changeRequestEnabled,

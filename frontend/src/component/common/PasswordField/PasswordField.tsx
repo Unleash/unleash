@@ -26,21 +26,23 @@ const PasswordField: VFC<TextFieldProps> = ({ ...rest }) => {
             variant='outlined'
             size='small'
             type={showPassword ? 'text' : 'password'}
-            InputProps={{
-                style: {
-                    paddingRight: '0px',
+            slotProps={{
+                input: {
+                    style: {
+                        paddingRight: '0px',
+                    },
+                    endAdornment: (
+                        <InputAdornment position='end'>
+                            <IconButton
+                                onClick={handleClickShowPassword}
+                                onMouseDown={handleMouseDownPassword}
+                                size='large'
+                            >
+                                <IconComponent titleAccess={iconTitle} />
+                            </IconButton>
+                        </InputAdornment>
+                    ),
                 },
-                endAdornment: (
-                    <InputAdornment position='end'>
-                        <IconButton
-                            onClick={handleClickShowPassword}
-                            onMouseDown={handleMouseDownPassword}
-                            size='large'
-                        >
-                            <IconComponent titleAccess={iconTitle} />
-                        </IconButton>
-                    </InputAdornment>
-                ),
             }}
             {...rest}
         />

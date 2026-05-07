@@ -110,8 +110,10 @@ export const ColumnsMenu: FC<IColumnsMenuProps> = ({ columns, onToggle }) => {
                                         edge='start'
                                         checked={column.isVisible}
                                         disableRipple
-                                        inputProps={{
-                                            'aria-labelledby': column.id,
+                                        slotProps={{
+                                            input: {
+                                                'aria-labelledby': column.id,
+                                            },
                                         }}
                                         size='medium'
                                     />

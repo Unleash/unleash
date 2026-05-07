@@ -56,8 +56,10 @@ export const IntegrationParameterTextField = ({
             }
             name={definition.name}
             placeholder={definition.placeholder || ''}
-            InputLabelProps={{
-                shrink: true,
+            slotProps={{
+                inputLabel: {
+                    shrink: true,
+                },
             }}
             value={value}
             error={Boolean(error)}

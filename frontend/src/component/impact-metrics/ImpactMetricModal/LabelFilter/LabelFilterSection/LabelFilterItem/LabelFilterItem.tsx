@@ -117,10 +117,6 @@ export const LabelFilterItem: FC<LabelFilterItemProps> = ({
                         }
                         variant='outlined'
                         size='small'
-                        slotProps={{
-                            ...params,
-                            htmlInput: { ...params.inputProps },
-                        }}
                     />
                     {isTruncated && (
                         <Alert

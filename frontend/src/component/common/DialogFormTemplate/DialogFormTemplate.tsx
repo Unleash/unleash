@@ -76,11 +76,17 @@ export const DialogFormTemplate: React.FC<FormProps> = ({
                             delete errors.name;
                         }}
                         autoFocus
-                        InputProps={{
-                            style: { fontSize: theme.typography.h1.fontSize },
-                        }}
-                        InputLabelProps={{
-                            style: { fontSize: theme.typography.h1.fontSize },
+                        slotProps={{
+                            input: {
+                                style: {
+                                    fontSize: theme.typography.h1.fontSize,
+                                },
+                            },
+                            inputLabel: {
+                                style: {
+                                    fontSize: theme.typography.h1.fontSize,
+                                },
+                            },
                         }}
                         data-testid='FORM_NAME_INPUT'
                         size='medium'
@@ -99,11 +105,17 @@ export const DialogFormTemplate: React.FC<FormProps> = ({
                         maxRows={3}
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        InputProps={{
-                            style: { fontSize: theme.typography.h2.fontSize },
-                        }}
-                        InputLabelProps={{
-                            style: { fontSize: theme.typography.h2.fontSize },
+                        slotProps={{
+                            input: {
+                                style: {
+                                    fontSize: theme.typography.h2.fontSize,
+                                },
+                            },
+                            inputLabel: {
+                                style: {
+                                    fontSize: theme.typography.h2.fontSize,
+                                },
+                            },
                         }}
                         data-testid='FORM_DESCRIPTION_INPUT'
                     />

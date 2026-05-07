@@ -314,8 +314,10 @@ export const CommandBar = () => {
                     id='command-bar-input'
                     inputRef={searchInputRef}
                     placeholder={placeholder}
-                    inputProps={{
-                        'data-testid': SEARCH_INPUT,
+                    slotProps={{
+                        input: {
+                            'data-testid': SEARCH_INPUT,
+                        } as React.InputHTMLAttributes<HTMLInputElement>,
                     }}
                     autoComplete='off'
                     value={value}

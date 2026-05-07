@@ -234,8 +234,10 @@ export const FilterItem: FC<IFilterItemProps> = ({
                                             ) ?? false
                                         }
                                         tabIndex={-1}
-                                        inputProps={{
-                                            'aria-labelledby': labelId,
+                                        slotProps={{
+                                            input: {
+                                                'aria-labelledby': labelId,
+                                            },
                                         }}
                                         size='small'
                                         disableRipple

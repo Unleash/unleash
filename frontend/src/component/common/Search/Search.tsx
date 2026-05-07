@@ -201,9 +201,11 @@ export const Search = ({
                 <StyledInputBase
                     inputRef={searchInputRef}
                     placeholder={placeholder}
-                    inputProps={{
-                        'aria-label': placeholder,
-                        'data-testid': SEARCH_INPUT,
+                    slotProps={{
+                        input: {
+                            'aria-label': placeholder,
+                            'data-testid': SEARCH_INPUT,
+                        } as React.InputHTMLAttributes<HTMLInputElement>,
                     }}
                     value={value}
                     onChange={(e) => onSearchChange(e.target.value)}

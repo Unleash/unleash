@@ -4,6 +4,8 @@ import {
     AlertTitle,
     Button,
     FormControlLabel,
+    IconButton,
+    InputAdornment,
     Link,
     styled,
     Switch,
@@ -11,6 +13,8 @@ import {
     Typography,
 } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -96,6 +100,7 @@ const ImpactMetricsPage = () => {
 
     const [enabled, setEnabled] = useState(false);
     const [prometheusUrl, setPrometheusUrl] = useState('');
+    const [showUrl, setShowUrl] = useState(false);
     const [testOutcome, setTestOutcome] = useState<TestOutcome | null>(null);
 
     useEffect(() => {
@@ -225,6 +230,31 @@ const ImpactMetricsPage = () => {
                         disabled={loading || saving}
                         fullWidth
                         size='small'
+                        type={showUrl ? 'text' : 'password'}
+                        slotProps={{
+                            input: {
+                                endAdornment: (
+                                    <InputAdornment position='end'>
+                                        <IconButton
+                                            onClick={() =>
+                                                setShowUrl((v) => !v)
+                                            }
+                                            onMouseDown={(e) =>
+                                                e.preventDefault()
+                                            }
+                                            size='small'
+                                            edge='end'
+                                        >
+                                            {showUrl ? (
+                                                <VisibilityOff titleAccess='Hide URL' />
+                                            ) : (
+                                                <Visibility titleAccess='Show URL' />
+                                            )}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            },
+                        }}
                     />
                     <Button
                         variant='contained'

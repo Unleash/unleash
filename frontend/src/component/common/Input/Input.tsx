@@ -30,6 +30,7 @@ const Input = ({
     value,
     onChange,
     size = 'small',
+    slotProps,
     ...rest
 }: IInputProps) => {
     const { classes: styles } = useStyles();
@@ -55,6 +56,7 @@ const Input = ({
                             root: styles.helperText,
                         },
                     },
+                    ...slotProps,
                 }}
             />
         </StyledDiv>

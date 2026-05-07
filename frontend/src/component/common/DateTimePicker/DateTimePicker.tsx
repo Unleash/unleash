@@ -33,6 +33,7 @@ export const DateTimePicker = ({
     max,
     value,
     onChange,
+    slotProps,
     ...rest
 }: IDateTimePickerProps) => {
     const getDate = type === 'datetime' ? formatDateTime : formatDate;
@@ -61,6 +62,7 @@ export const DateTimePicker = ({
                 formHelperText: {
                     'data-testid': INPUT_ERROR_TEXT,
                 },
+                ...slotProps,
             }}
         />
     );

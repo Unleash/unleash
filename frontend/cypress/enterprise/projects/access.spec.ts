@@ -67,9 +67,6 @@ describe('project-access', () => {
         cy.loginUI();
 
         cy.visit(`/projects/${groupAndProjectName}/settings/access`);
-        if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
-            cy.get("[data-testid='CLOSE_SPLASH']").click();
-        }
     });
 
     it('can assign permissions to user', () => {

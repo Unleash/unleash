@@ -295,6 +295,7 @@ const defaultServerOption: IServerOption = {
     cdnPrefix: process.env.CDN_PREFIX,
     edgeUrl: process.env.EDGE_URL,
     unleashUrl: process.env.UNLEASH_URL || 'http://localhost:4242',
+    logRocketAppId: process.env.LOGROCKET_APP_ID,
     serverMetrics: true,
     enableHeapSnapshotEnpoint: parseEnvVarBoolean(
         process.env.ENABLE_HEAP_SNAPSHOT_ENPOINT,

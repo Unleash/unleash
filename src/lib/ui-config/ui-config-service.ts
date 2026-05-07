@@ -115,6 +115,7 @@ export class UiConfigService {
             emailEnabled: this.emailService.isEnabled(),
             edgeUrl: this.config.server.edgeUrl,
             unleashUrl: this.config.server.unleashUrl,
+            logRocketAppId: this.config.server.logRocketAppId,
             baseUriPath: this.config.server.baseUriPath,
             authenticationType: this.config.authentication?.type,
             frontendApiOrigins: frontendSettings.frontendApiOrigins,

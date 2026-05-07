@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import {
     Box,
+    menuClasses,
     styled,
     Menu,
     MenuItem,
@@ -58,7 +59,7 @@ const StyledAddSafeguardContent = styled('div')(({ theme }) => ({
 }));
 
 const StyledSafeguardMenu = styled(Menu)(({ theme }) => ({
-    '& .MuiPaper-root': {
+    [`& .${menuClasses.paper}`]: {
         maxWidth: theme.spacing(45),
     },
 }));

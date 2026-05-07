@@ -11,14 +11,17 @@ export const LogRocketProvider: FC<{ children?: React.ReactNode }> = ({
     const { uiConfig } = useUiConfig();
     const { user } = useAuthUser();
     const isEnabled = useUiFlag('logRocketEnabled');
+    const appId = uiConfig?.logRocketAppId;
+    const instanceId = uiConfig?.versionInfo?.instanceId;
+    const userId = user?.id;
+
     const initialized = useRef(false);
     const identified = useRef(false);
 
-    const appId = uiConfig?.logRocketAppId;
-    const instanceId = uiConfig?.versionInfo?.instanceId;
-
     useEffect(() => {
-        if (!isEnabled || !appId || initialized.current) return;
+        if (initialized.current) return;
+        if (!isEnabled || !appId) return;
+
         try {
             LogRocket.init(appId);
             initialized.current = true;
@@ -28,24 +31,20 @@ export const LogRocketProvider: FC<{ children?: React.ReactNode }> = ({
     }, [isEnabled, appId]);
 
     useEffect(() => {
-        if (
-            !initialized.current ||
-            identified.current ||
-            !user?.id ||
-            !instanceId
-        ) {
-            return;
-        }
+        if (identified.current) return;
+        if (!initialized.current) return;
+        if (!userId || !instanceId) return;
+
         try {
-            LogRocket.identify(`${instanceId}:${user.id}`, {
+            LogRocket.identify(`${instanceId}:${userId}`, {
                 instanceId,
-                userId: String(user.id),
+                userId: String(userId),
             });
             identified.current = true;
         } catch (error) {
             console.warn(error);
         }
-    }, [user?.id, instanceId]);
+    }, [userId, instanceId]);
 
     return <>{children}</>;
 };

@@ -96,7 +96,6 @@ export type UiFlags = {
     externalImpactMetrics?: boolean;
     accessOverviewRework?: boolean;
     onboardingConnectSDKNewDialog?: boolean;
-    onboardingKeyConceptsNudge?: boolean;
 };
 
 export interface IVersionInfo {

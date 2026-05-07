@@ -18,9 +18,7 @@ import textureImage from 'assets/img/texture-signup.png';
 import Heart from 'assets/icons/heart.svg?react';
 import { formatAssetPath } from 'utils/formatPath.ts';
 import { SignupDialogComplete } from './SignupDialogComplete.tsx';
-import { useWelcomeDialogContext } from 'component/personalDashboard/WelcomeDialogContext.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -219,7 +217,6 @@ const SIGNUP_STEPS: SignupStep[] = [
 export const SignupDialog = () => {
     const { trackEvent } = usePlausibleTracker();
     const { setToastApiError } = useToast();
-    const { setWelcomeDialog } = useWelcomeDialogContext();
     const { signupData, signupRequired, refetch } = useSignup();
     const { submitSignupData } = useSignupApi();
 
@@ -282,12 +279,6 @@ export const SignupDialog = () => {
             setIsSubmitting(true);
             await submitSignupData(data);
             refetch();
-            const onboardingKeyConceptsNudge = useUiFlag(
-                'onboardingKeyConceptsNudge',
-            );
-            if (!onboardingKeyConceptsNudge) {
-                setWelcomeDialog('open');
-            }
         } catch (e: unknown) {
             const error = formatUnknownError(e);
             setToastApiError(error);

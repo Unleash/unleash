@@ -41,6 +41,7 @@ jobs:
   e2e:
     needs: e2e-build
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     strategy:
       matrix:
         test:

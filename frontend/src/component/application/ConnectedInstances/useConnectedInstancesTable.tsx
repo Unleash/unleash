@@ -23,9 +23,7 @@ export const useConnectedInstancesTable = (
         [],
     );
 
-    const columns = useMemo<
-        ColumnDef<ConnectedInstancesTableData, unknown>[]
-    >(
+    const columns = useMemo<ColumnDef<ConnectedInstancesTableData, unknown>[]>(
         () => [
             {
                 id: 'instanceId',

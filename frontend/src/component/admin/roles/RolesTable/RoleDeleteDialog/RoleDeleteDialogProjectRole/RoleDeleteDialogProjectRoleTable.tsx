@@ -39,9 +39,7 @@ export const RoleDeleteDialogProjectRoleTable = ({
                 id: 'users',
                 header: 'Assigned users',
                 accessorFn: (row) =>
-                    row.userCount === 1
-                        ? '1 user'
-                        : `${row.userCount} users`,
+                    row.userCount === 1 ? '1 user' : `${row.userCount} users`,
                 cell: TextCell,
                 meta: { maxWidth: 150 },
             },

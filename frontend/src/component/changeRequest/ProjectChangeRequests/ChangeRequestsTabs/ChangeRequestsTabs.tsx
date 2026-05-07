@@ -162,9 +162,7 @@ export const ChangeRequestsTabs = ({
                     searchable: true,
                     filterName: 'feature',
                     filterParsing: (values: Array<{ name: string }>) => {
-                        return (
-                            values?.map(({ name }) => name).join('\n') || ''
-                        );
+                        return values?.map(({ name }) => name).join('\n') || '';
                     },
                     filterBy: (
                         row: { features: Array<{ name: string }> },
@@ -183,7 +181,9 @@ export const ChangeRequestsTabs = ({
                 header: 'By',
                 accessorKey: 'createdBy',
                 enableSorting: false,
-                cell: ({ getValue }) => <AvatarCell value={getValue() as any} />,
+                cell: ({ getValue }) => (
+                    <AvatarCell value={getValue() as any} />
+                ),
                 meta: {
                     width: '10%',
                     align: 'left',

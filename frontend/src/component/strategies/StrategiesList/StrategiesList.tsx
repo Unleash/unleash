@@ -128,11 +128,7 @@ const RecommendationAlert = () => (
     </Alert>
 );
 
-const StrategyTable = ({
-    table,
-}: {
-    table: TableType<StrategyRow>;
-}) => (
+const StrategyTable = ({ table }: { table: TableType<StrategyRow> }) => (
     <Table>
         <SortableTableHeaderV8 tableInstance={table} />
         <TableBody>

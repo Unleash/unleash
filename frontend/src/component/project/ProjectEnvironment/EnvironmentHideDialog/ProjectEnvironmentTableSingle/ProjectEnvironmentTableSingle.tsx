@@ -62,9 +62,7 @@ export const ProjectEnvironmentTableSingle = ({
                     return (
                         <TextCell>
                             <StyledToggleWarning warning={value > 0}>
-                                {value === 1
-                                    ? '1 toggle'
-                                    : `${value} toggles`}
+                                {value === 1 ? '1 toggle' : `${value} toggles`}
                             </StyledToggleWarning>
                         </TextCell>
                     );

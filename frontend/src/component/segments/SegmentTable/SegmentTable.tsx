@@ -136,9 +136,7 @@ export const SegmentTable = () => {
                     <>
                         <SearchHighlightProvider value={globalFilter}>
                             <Table rowHeight='standard'>
-                                <SortableTableHeaderV8
-                                    tableInstance={table}
-                                />
+                                <SortableTableHeaderV8 tableInstance={table} />
                                 <TableBody>
                                     {rows.map((row) => (
                                         <TableRow hover key={row.id}>

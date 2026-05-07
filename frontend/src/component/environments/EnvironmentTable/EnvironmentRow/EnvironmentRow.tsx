@@ -63,7 +63,9 @@ export const EnvironmentRow = ({ row, onMoveItem }: IEnvironmentRowProps) => {
 
     return (
         <StyledTableRow hover ref={draggable ? dragItemRef : undefined}>
-            {row.getVisibleCells().map((cell) => renderCell(cell, dragHandleRef))}
+            {row
+                .getVisibleCells()
+                .map((cell) => renderCell(cell, dragHandleRef))}
         </StyledTableRow>
     );
 };

@@ -73,7 +73,11 @@ export const ProjectDoraMetrics = () => {
                 id: 'name',
                 header: 'Name',
                 accessorKey: 'name',
-                cell: ({ row: { original: { name } } }) => (
+                cell: ({
+                    row: {
+                        original: { name },
+                    },
+                }) => (
                     <Box
                         data-loading
                         sx={{

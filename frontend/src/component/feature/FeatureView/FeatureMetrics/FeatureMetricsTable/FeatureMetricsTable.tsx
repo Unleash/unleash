@@ -39,9 +39,7 @@ const COLUMNS: ColumnDef<IFeatureMetricsRaw, any>[] = [
             <DateTimeCell
                 value={row.original.timestamp}
                 timeZone={
-                    row.original.timestamp.includes('23:59')
-                        ? 'UTC'
-                        : undefined
+                    row.original.timestamp.includes('23:59') ? 'UTC' : undefined
                 }
             />
         ),

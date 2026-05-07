@@ -1,7 +1,4 @@
-import {
-    type Table as TableType,
-    flexRender,
-} from '@tanstack/react-table';
+import { type Table as TableType, flexRender } from '@tanstack/react-table';
 import { TableCell, TablePlaceholder } from 'component/common/Table';
 import { SortableTableHeaderV8 } from 'component/common/Table/SortableTableHeader/SortableTableHeaderV8';
 import { Box, Table, TableBody, TableRow } from '@mui/material';

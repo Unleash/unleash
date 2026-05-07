@@ -35,17 +35,14 @@ export const PlaygroundEnvironmentTable = ({
     const columns = useMemo(() => {
         const dynamicHeaders = Object.keys(features[0].context).map(
             (contextField) =>
-                columnHelper.accessor(
-                    (row) => row.context?.[contextField],
-                    {
-                        id: `context_${contextField}`,
-                        header: capitalizeFirst(contextField),
-                        cell: ({ getValue }) => (
-                            <HighlightCell value={String(getValue() ?? '')} />
-                        ),
-                        meta: { minWidth: 160 },
-                    },
-                ),
+                columnHelper.accessor((row) => row.context?.[contextField], {
+                    id: `context_${contextField}`,
+                    header: capitalizeFirst(contextField),
+                    cell: ({ getValue }) => (
+                        <HighlightCell value={String(getValue() ?? '')} />
+                    ),
+                    meta: { minWidth: 160 },
+                }),
         );
 
         return [

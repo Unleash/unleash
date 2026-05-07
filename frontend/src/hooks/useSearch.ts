@@ -31,9 +31,13 @@ const getSearchable = (column: any): boolean | undefined =>
     column.meta?.searchable ?? column.searchable;
 const getFilterName = (column: any): string | undefined =>
     column.meta?.filterName ?? column.filterName;
-const getFilterBy = (column: any): ((row: any, values: string[]) => boolean) | undefined =>
+const getFilterBy = (
+    column: any,
+): ((row: any, values: string[]) => boolean) | undefined =>
     column.meta?.filterBy ?? column.filterBy;
-const getSearchBy = (column: any): ((row: any, value: string) => boolean) | undefined =>
+const getSearchBy = (
+    column: any,
+): ((row: any, value: string) => boolean) | undefined =>
     column.meta?.searchBy ?? column.searchBy;
 const getFilterParsing = (column: any): ((value: any) => string) | undefined =>
     column.meta?.filterParsing ?? column.filterParsing;
@@ -151,9 +155,7 @@ export const isValidFilter = (input: string, match: string) =>
     new RegExp(`${match}:(?:\\w+|["'][^"']+["'])`).test(input);
 
 export const getFilterableColumns = (columns: any[]) =>
-    columns.filter(
-        (column) => getFilterName(column) && getAccessor(column),
-    );
+    columns.filter((column) => getFilterName(column) && getAccessor(column));
 
 export const getColumnValues = (column: any, row: any) => {
     const accessor = getAccessor(column);
@@ -163,10 +165,7 @@ export const getColumnValues = (column: any, row: any) => {
             : typeof accessor === 'string' && accessor.includes('.')
               ? accessor
                     .split('.')
-                    .reduce(
-                        (object: any, key: string) => object?.[key],
-                        row,
-                    )
+                    .reduce((object: any, key: string) => object?.[key], row)
               : typeof accessor === 'string'
                 ? row[accessor]
                 : undefined;

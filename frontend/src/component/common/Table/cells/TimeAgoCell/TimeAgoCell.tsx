@@ -45,7 +45,9 @@ export const TimeAgoCell: FC<ITimeAgoCellProps> = ({
     const input =
         raw == null
             ? null
-            : raw instanceof Date || typeof raw === 'string' || typeof raw === 'number'
+            : raw instanceof Date ||
+                typeof raw === 'string' ||
+                typeof raw === 'number'
               ? raw
               : null;
 

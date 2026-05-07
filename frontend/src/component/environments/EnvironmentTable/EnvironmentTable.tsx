@@ -73,9 +73,7 @@ const COLUMNS: ColumnDef<IEnvironment, unknown>[] = [
         id: 'apiTokenCount',
         header: 'API Tokens',
         accessorFn: (row) =>
-            row.apiTokenCount === 1
-                ? '1 token'
-                : `${row.apiTokenCount} tokens`,
+            row.apiTokenCount === 1 ? '1 token' : `${row.apiTokenCount} tokens`,
         cell: TextCell,
     },
 ];
@@ -110,7 +108,9 @@ export const EnvironmentTable = () => {
         [changeSortOrder, environments, mutateEnvironments, setToastApiError],
     );
 
-    const columnsWithActions = useMemo<ColumnDef<IEnvironment, unknown>[]>(() => {
+    const columnsWithActions = useMemo<
+        ColumnDef<IEnvironment, unknown>[]
+    >(() => {
         const baseColumns: ColumnDef<IEnvironment, unknown>[] = [
             ...COLUMNS,
             ...(isFeatureEnabled

@@ -46,8 +46,7 @@ export const HighlightCell: FC<IHighlightCellProps> = ({
     maxTitleLines,
 }) => {
     const { searchQuery } = useSearchHighlightContext();
-    const resolvedValue =
-        value ?? (getValue ? String(getValue() ?? '') : '');
+    const resolvedValue = value ?? (getValue ? String(getValue() ?? '') : '');
 
     const renderSubtitle = (
         <ConditionallyRender

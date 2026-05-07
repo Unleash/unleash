@@ -81,8 +81,7 @@ export const PlaygroundEnvironmentDiffTable = ({
                                 input={{
                                     environment:
                                         row.original[environment].environment,
-                                    context:
-                                        row.original[environment].context,
+                                    context: row.original[environment].context,
                                 }}
                             />
                         </Box>

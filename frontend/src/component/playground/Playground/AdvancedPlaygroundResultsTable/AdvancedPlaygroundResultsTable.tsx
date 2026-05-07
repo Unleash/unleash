@@ -69,8 +69,13 @@ export const AdvancedPlaygroundResultsTable = ({
             ? Object.keys(features[0].environments).length
             : 0;
 
-    const columns = useMemo<ColumnDef<AdvancedPlaygroundFeatureSchema, unknown>[]>(() => {
-        const baseColumns: ColumnDef<AdvancedPlaygroundFeatureSchema, unknown>[] = [
+    const columns = useMemo<
+        ColumnDef<AdvancedPlaygroundFeatureSchema, unknown>[]
+    >(() => {
+        const baseColumns: ColumnDef<
+            AdvancedPlaygroundFeatureSchema,
+            unknown
+        >[] = [
             {
                 id: 'name',
                 header: 'Name',
@@ -99,7 +104,9 @@ export const AdvancedPlaygroundResultsTable = ({
                 },
             },
             ...(input?.environments?.map(
-                (name: string): ColumnDef<AdvancedPlaygroundFeatureSchema, unknown> => ({
+                (
+                    name: string,
+                ): ColumnDef<AdvancedPlaygroundFeatureSchema, unknown> => ({
                     id: `environments.${name}`,
                     header: loading ? '' : capitalizeFirst(name),
                     cell: ({ row }) => (

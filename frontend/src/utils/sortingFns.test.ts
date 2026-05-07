@@ -26,9 +26,7 @@ test('sortingFns', () => {
 
     expect(
         rows
-            .sort((rowA, rowB) =>
-                sortingFns.alphanumeric(rowA, rowB, 'age'),
-            )
+            .sort((rowA, rowB) => sortingFns.alphanumeric(rowA, rowB, 'age'))
             .map((row) => row.original.age),
     ).toEqual([18, 25, 32, 35, 42]);
 

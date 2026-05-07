@@ -195,9 +195,7 @@ export const FeedbackList = () => {
                     </Box>
                 )}
             </ActiveExperiments>
-            <StyledSectionHeader>
-                All feedback ({rowCount})
-            </StyledSectionHeader>
+            <StyledSectionHeader>All feedback ({rowCount})</StyledSectionHeader>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <VirtualizedTableV8 tableInstance={table} />
             </SearchHighlightProvider>

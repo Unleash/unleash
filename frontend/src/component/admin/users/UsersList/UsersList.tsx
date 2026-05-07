@@ -160,9 +160,7 @@ const UsersList = () => {
                           header: ' ',
                           accessorFn: (row: IUser) => row.name || '',
                           cell: ({ row: { original: user } }) => (
-                              <UserSessionsCell
-                                  count={user.activeSessions}
-                              />
+                              <UserSessionsCell count={user.activeSessions} />
                           ),
                           enableSorting: false,
                           meta: { maxWidth: 40 },

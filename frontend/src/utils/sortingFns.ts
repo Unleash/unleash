@@ -1,10 +1,6 @@
 import type { Row } from '@tanstack/react-table';
 
-const date = <TData,>(
-    rowA: Row<TData>,
-    rowB: Row<TData>,
-    columnId: string,
-) => {
+const date = <TData>(rowA: Row<TData>, rowB: Row<TData>, columnId: string) => {
     const a = new Date(
         (rowA.getValue(columnId) ?? 0) as string | number | Date,
     );
@@ -14,7 +10,7 @@ const date = <TData,>(
     return b.getTime() - a.getTime();
 };
 
-const boolean = <TData,>(
+const boolean = <TData>(
     rowA: Row<TData>,
     rowB: Row<TData>,
     columnId: string,
@@ -27,7 +23,7 @@ const boolean = <TData,>(
     return a ? 1 : -1;
 };
 
-const alphanumeric = <TData,>(
+const alphanumeric = <TData>(
     rowA: Row<TData>,
     rowB: Row<TData>,
     columnId: string,
@@ -37,7 +33,7 @@ const alphanumeric = <TData,>(
     return aVal.localeCompare(bVal);
 };
 
-const playgroundResultState = <TData,>(
+const playgroundResultState = <TData>(
     rowA: Row<TData>,
     rowB: Row<TData>,
     columnId: string,
@@ -62,7 +58,7 @@ const playgroundResultState = <TData,>(
     return 0;
 };
 
-const numericZeroLast = <TData,>(
+const numericZeroLast = <TData>(
     rowA: Row<TData>,
     rowB: Row<TData>,
     columnId: string,

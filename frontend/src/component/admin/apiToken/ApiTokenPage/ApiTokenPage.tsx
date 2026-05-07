@@ -27,36 +27,36 @@ export const ApiTokenPage = () => {
     const { table, columns, globalFilter, setGlobalFilter } = useApiTokenTable(
         tokens,
         (props) => {
-        const READ_PERMISSION =
-            props.row.original.type === 'client'
-                ? READ_CLIENT_API_TOKEN
-                : props.row.original.type === 'frontend'
-                  ? READ_FRONTEND_API_TOKEN
-                  : ADMIN;
-        const DELETE_PERMISSION =
-            props.row.original.type === 'client'
-                ? DELETE_CLIENT_API_TOKEN
-                : props.row.original.type === 'frontend'
-                  ? DELETE_FRONTEND_API_TOKEN
-                  : ADMIN;
+            const READ_PERMISSION =
+                props.row.original.type === 'client'
+                    ? READ_CLIENT_API_TOKEN
+                    : props.row.original.type === 'frontend'
+                      ? READ_FRONTEND_API_TOKEN
+                      : ADMIN;
+            const DELETE_PERMISSION =
+                props.row.original.type === 'client'
+                    ? DELETE_CLIENT_API_TOKEN
+                    : props.row.original.type === 'frontend'
+                      ? DELETE_FRONTEND_API_TOKEN
+                      : ADMIN;
 
-        return (
-            <ActionCell>
-                <CopyApiTokenButton
-                    token={props.row.original}
-                    permission={READ_PERMISSION}
-                />
-                <RemoveApiTokenButton
-                    token={props.row.original}
-                    permission={DELETE_PERMISSION}
-                    onRemove={async () => {
-                        await deleteToken(props.row.original.secret);
-                        refetch();
-                    }}
-                />
-            </ActionCell>
-        );
-    },
+            return (
+                <ActionCell>
+                    <CopyApiTokenButton
+                        token={props.row.original}
+                        permission={READ_PERMISSION}
+                    />
+                    <RemoveApiTokenButton
+                        token={props.row.original}
+                        permission={DELETE_PERMISSION}
+                        onRemove={async () => {
+                            await deleteToken(props.row.original.secret);
+                            refetch();
+                        }}
+                    />
+                </ActionCell>
+            );
+        },
     );
 
     const rowCount = table.getRowModel().rows.length;

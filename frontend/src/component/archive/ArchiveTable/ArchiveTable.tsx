@@ -39,9 +39,7 @@ export interface IFeaturesArchiveTableProps {
     loading: boolean;
     storedParams: SortDescriptor;
     setStoredParams: (
-        newValue:
-            | SortDescriptor
-            | ((prev: SortDescriptor) => SortDescriptor),
+        newValue: SortDescriptor | ((prev: SortDescriptor) => SortDescriptor),
     ) => SortDescriptor;
 }
 
@@ -123,9 +121,7 @@ export const ArchiveTable = ({
                 sortingFn: 'alphanumeric',
                 cell: ({ getValue }) => {
                     const value = String(getValue() ?? '');
-                    return (
-                        <LinkCell title={value} to={`/projects/${value}`} />
-                    );
+                    return <LinkCell title={value} to={`/projects/${value}`} />;
                 },
                 meta: {
                     filterName: 'project',
@@ -140,11 +136,15 @@ export const ArchiveTable = ({
                     <ArchivedFeatureActionCell
                         project={feature.project}
                         onRevive={() => {
-                            setRevivedFeature(feature as unknown as IFeatureToggle);
+                            setRevivedFeature(
+                                feature as unknown as IFeatureToggle,
+                            );
                             setReviveModalOpen(true);
                         }}
                         onDelete={() => {
-                            setDeletedFeature(feature as unknown as IFeatureToggle);
+                            setDeletedFeature(
+                                feature as unknown as IFeatureToggle,
+                            );
                             setDeleteModalOpen(true);
                         }}
                     />

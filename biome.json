@@ -270,8 +270,7 @@
         "frontend/src/hooks/useLastViewedFlags.ts",
         "frontend/src/hooks/usePagination.ts",
         "frontend/src/hooks/usePersistentTableState.ts",
-        "frontend/src/hooks/useRecentlyVisited.ts",
-        "frontend/src/hooks/useUsersPlan.ts"
+        "frontend/src/hooks/useRecentlyVisited.ts"
       ],
       "linter": {
         "rules": {

@@ -7,6 +7,8 @@ import {
 } from './client-feature-toggle-delta.js';
 import { DeltaCache } from './delta-cache.js';
 import {
+    FEATURE_ARCHIVED,
+    FEATURE_DELETED,
     FEATURE_PROJECT_CHANGE,
     SEGMENT_DELETED,
 } from '../../../events/index.js';
@@ -1285,6 +1287,107 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
                 },
             ],
         });
+    });
+
+    test('feature deleted after archive emits an idempotent feature removal', async () => {
+        let currentRevisionId = 1;
+        const logger = {
+            error: vi.fn(),
+            info: () => undefined,
+            warn: () => undefined,
+        };
+        const delta = new ClientFeatureToggleDelta(
+            {
+                getAll: async ({
+                    environment,
+                    toggleNames = [],
+                }: {
+                    environment: string;
+                    toggleNames?: string[];
+                }) => {
+                    const feature = {
+                        name: 'archived-feature',
+                        project: 'default',
+                        enabled: true,
+                    };
+
+                    if (environment !== 'development') return [];
+                    if (toggleNames.length === 0) return [feature];
+                    return toggleNames.includes('archived-feature')
+                        ? [feature]
+                        : [];
+                },
+            } as any,
+            {
+                getAllForClientIds: async () => [],
+            } as any,
+            {
+                getDeltaRevisionState: async () => ({
+                    projectRevisions: new Map([['default', 1]]),
+                    maxReferencedSegmentRevision: 0,
+                    segmentRevisions: new Map(),
+                }),
+                getRevisionRange: async () => [
+                    {
+                        id: 2,
+                        type: FEATURE_ARCHIVED,
+                        featureName: 'archived-feature',
+                        project: 'default',
+                    },
+                    {
+                        id: 3,
+                        type: FEATURE_DELETED,
+                        preData: {
+                            name: 'archived-feature',
+                            project: 'default',
+                            archived: true,
+                        },
+                    },
+                ],
+                getMaxRevisionId: async () => currentRevisionId,
+            } as any,
+            {
+                on: () => undefined,
+            } as any,
+            {
+                isEnabled: (name: string) => name === 'deltaApi',
+            } as any,
+            {
+                eventBus: new EventEmitter(),
+                getLogger: () => logger,
+            } as any,
+        );
+
+        await delta.getDelta(undefined, {
+            environment: 'development',
+            project: ['default'],
+        } as any);
+
+        currentRevisionId = 3;
+        await delta.onUpdateRevisionEvent();
+
+        const result = await delta.getDelta(1, {
+            environment: 'development',
+            project: ['default'],
+        } as any);
+
+        expect(result).toEqual({
+            events: [
+                {
+                    eventId: 2,
+                    type: 'feature-removed',
+                    featureName: 'archived-feature',
+                    project: 'default',
+                },
+                {
+                    eventId: 3,
+                    type: 'feature-removed',
+                    featureName: 'archived-feature',
+                    project: 'default',
+                },
+            ],
+        });
+        expect(logger.error).not.toHaveBeenCalled();
     });
 
     test('bulk events pick the max revision id for the envelope', async () => {

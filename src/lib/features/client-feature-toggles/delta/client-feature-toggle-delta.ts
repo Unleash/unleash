@@ -394,7 +394,21 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                     );
                 }
                 setMaxRevision(segmentsRemoved, segmentId, event.id);
-            } else if (event.featureName && event.type !== FEATURE_DELETED) {
+            } else if (event.type === FEATURE_DELETED) {
+                const featureName = event.featureName ?? event.preData?.name;
+                const project = event.project ?? event.preData?.project;
+                if (featureName && project) {
+                    featuresRemoved.push({
+                        featureName,
+                        project,
+                        revisionId: event.id,
+                    });
+                } else {
+                    this.logger.error(
+                        `[delta] Skipping event ${event.type} ${event.id}. It was considered interesting but wasn't processed: ${JSON.stringify({ data: event.data, preData: event.preData })}.`,
+                    );
+                }
+            } else if (event.featureName) {
                 if (event.environment == null) {
                     setMaxRevision(
                         globallyUpdatedFeatures,

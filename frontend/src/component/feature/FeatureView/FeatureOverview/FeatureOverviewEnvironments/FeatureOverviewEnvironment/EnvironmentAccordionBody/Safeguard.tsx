@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import {
     Box,
+    ListSubheader,
     menuClasses,
     styled,
     Menu,
@@ -64,13 +65,15 @@ const StyledSafeguardMenu = styled(Menu)(({ theme }) => ({
     },
 }));
 
-const StyledMenuHeader = styled(Typography)(({ theme }) => ({
-    display: 'block',
+const StyledMenuHeader = styled(ListSubheader)(({ theme }) => ({
     padding: theme.spacing(1, 2, 0.5, 2),
+    lineHeight: 1.6,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
+    fontSize: theme.typography.caption.fontSize,
     fontWeight: theme.typography.fontWeightBold,
     color: theme.palette.text.secondary,
+    backgroundColor: 'transparent',
 }));
 
 const StyledSafeguardOptionItem = styled(MenuItem)(({ theme }) => ({
@@ -120,7 +123,7 @@ export const AddSafeguard = ({
                 open={Boolean(anchorEl)}
                 onClose={() => setAnchorEl(null)}
             >
-                <StyledMenuHeader variant='caption'>
+                <StyledMenuHeader disableSticky>
                     Select safeguard action
                 </StyledMenuHeader>
                 <StyledSafeguardOptionItem

@@ -334,6 +334,53 @@ test('hides new onboarding when project is onboarded and setup state is hide-set
     expect(screen.queryByText('Project setup')).not.toBeInTheDocument();
 }, 10000);
 
+test('shows setup completed banner if user did not dismiss the old flow', async () => {
+    const projectId = 'default';
+    setupApi();
+    testServerRoute(server, '/api/admin/projects/default/overview', {
+        onboardingStatus: { status: 'onboarded' },
+    });
+    setLocalStorageItem(
+        ':onboarding-state:v1-default:localStorage:v2',
+        'show-setup',
+    );
+    render(
+        <Routes>
+            <Route
+                path={'/projects/:projectId'}
+                element={<ProjectFeatureToggles environments={[]} />}
+            />
+        </Routes>,
+        { route: `/projects/${projectId}` },
+    );
+    await screen.findByText('Setup completed');
+}, 10000);
+
+test('keeps new onboarding visible right after SDK connection before user dismisses', async () => {
+    const projectId = 'default';
+    setupApi();
+    testServerRoute(server, '/api/admin/ui-config', {
+        flags: { flagCreator: true, onboardingProjectSetupNewSteps: true },
+    });
+    testServerRoute(server, '/api/admin/projects/default/overview', {
+        onboardingStatus: { status: 'onboarded' },
+    });
+    setLocalStorageItem(
+        ':onboarding-state:v1-default:localStorage:v2',
+        'show-setup',
+    );
+    render(
+        <Routes>
+            <Route
+                path={'/projects/:projectId'}
+                element={<ProjectFeatureToggles environments={[]} />}
+            />
+        </Routes>,
+        { route: `/projects/${projectId}` },
+    );
+    await screen.findByText('Project setup');
+}, 10000);
+
 test('clears lifecycle filter when switching to archived view', async () => {
     setupApi();
     testServerRoute(server, '/api/admin/ui-config', {

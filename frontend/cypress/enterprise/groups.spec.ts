@@ -29,13 +29,6 @@ describe('groups', () => {
         cy.disableActiveSplashScreens();
         cy.loginUI();
         cy.visit('/admin/groups');
-        cy.get('body').then(($body) => {
-            if ($body.find("[data-testid='CLOSE_SPLASH']").length > 0) {
-                cy.get("[data-testid='CLOSE_SPLASH']")
-                    .should('be.visible')
-                    .click();
-            }
-        });
     });
 
     it('can create a group', () => {

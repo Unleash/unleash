@@ -78,7 +78,6 @@
     "@wesleytodd/openapi": "^1.1.0",
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1",
-    "async": "^3.2.6",
     "bcryptjs": "^3.0.3",
     "compression": "^1.8.1",
     "connect-session-knex": "^5.0.0",

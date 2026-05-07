@@ -11,7 +11,6 @@ import { usePersonalDashboard } from 'hooks/api/getters/usePersonalDashboard/use
 import { usePersonalDashboardProjectDetails } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboardProjectDetails';
 import { MyProjects } from './MyProjects.tsx';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import { NudgeLightbulb } from 'component/common/NudgeLightbulb/NudgeLightbulb';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useDashboardState } from './useDashboardState.ts';
 import { MyFlags } from './MyFlags.tsx';
@@ -272,13 +271,11 @@ const ProjectPanel = () => {
 export const PersonalDashboard = () => {
     const { user } = useAuthUser();
     const { trackEvent } = usePlausibleTracker();
-    const { setWelcomeDialog, hasSeenKeyConcepts } = useWelcomeDialogContext();
+    const { setWelcomeDialog } = useWelcomeDialogContext();
     const { isOss, isEnterprise } = useUiConfig();
     const gtmReleaseManagementEnabled = useUiFlag('gtmReleaseManagement');
-    const onboardingKeyConceptsNudge = useUiFlag('onboardingKeyConceptsNudge');
     const { personalDashboard } = usePersonalDashboard();
     const isNewUser = personalDashboard?.flags.length === 0;
-    const showNudge = onboardingKeyConceptsNudge && !hasSeenKeyConcepts;
 
     const name = user?.name || '';
 
@@ -320,7 +317,6 @@ export const PersonalDashboard = () => {
                     }}
                 >
                     View key concepts
-                    {showNudge && <NudgeLightbulb />}
                 </ViewKeyConceptsButton>
             </WelcomeSection>
 

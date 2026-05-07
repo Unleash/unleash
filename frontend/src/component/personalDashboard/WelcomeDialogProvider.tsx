@@ -17,7 +17,6 @@ export interface IWelcomeDialogContext {
     setWelcomeDialog: Dispatch<SetStateAction<DialogState>>;
     onClose: () => void;
     isLoggedIn: boolean;
-    hasSeenKeyConcepts: boolean;
 }
 
 interface IWelcomeDialogProviderProps {
@@ -60,7 +59,6 @@ export const WelcomeDialogProvider = ({
         setWelcomeDialog,
         onClose,
         isLoggedIn: Boolean(splash),
-        hasSeenKeyConcepts: Boolean(splash?.personalDashboardKeyConcepts),
     };
 
     return (

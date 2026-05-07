@@ -103,6 +103,8 @@ const ImpactMetricsPage = () => {
     const [showUrl, setShowUrl] = useState(false);
     const [testOutcome, setTestOutcome] = useState<TestOutcome | null>(null);
 
+    const hasCredentials = /\/\/[^/@]+:[^/@]+@/.test(prometheusUrl);
+
     useEffect(() => {
         setEnabled(source.enabled);
         setPrometheusUrl(currentUrl);
@@ -230,10 +232,10 @@ const ImpactMetricsPage = () => {
                         disabled={loading || saving}
                         fullWidth
                         size='small'
-                        type={showUrl ? 'text' : 'password'}
+                        type={hasCredentials && !showUrl ? 'password' : 'text'}
                         slotProps={{
                             input: {
-                                endAdornment: (
+                                endAdornment: hasCredentials ? (
                                     <InputAdornment position='end'>
                                         <IconButton
                                             onClick={() =>
@@ -252,7 +254,7 @@ const ImpactMetricsPage = () => {
                                             )}
                                         </IconButton>
                                     </InputAdornment>
-                                ),
+                                ) : null,
                             },
                         }}
                     />

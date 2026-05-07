@@ -1,5 +1,12 @@
 import { useMemo, useState } from 'react';
-import { styled, Menu, MenuItem, Tooltip } from '@mui/material';
+import {
+    Box,
+    styled,
+    Menu,
+    MenuItem,
+    Tooltip,
+    Typography,
+} from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
@@ -83,7 +90,23 @@ export const AddSafeguard = ({
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={() => setAnchorEl(null)}
+                slotProps={{ paper: { sx: { maxWidth: 360 } } }}
             >
+                <Typography
+                    variant='caption'
+                    color='text.secondary'
+                    sx={{
+                        display: 'block',
+                        px: 2,
+                        pt: 1,
+                        pb: 0.5,
+                        textTransform: 'uppercase',
+                        letterSpacing: 0.5,
+                        fontWeight: 600,
+                    }}
+                >
+                    Select safeguard action
+                </Typography>
                 <MenuItem
                     onClick={() => {
                         trackEvent('safeguards', {
@@ -95,8 +118,26 @@ export const AddSafeguard = ({
                         onSelect('featureEnvironment');
                         setAnchorEl(null);
                     }}
+                    sx={{
+                        whiteSpace: 'normal',
+                        alignItems: 'flex-start',
+                        py: 1.25,
+                    }}
                 >
-                    Disable environment
+                    <Box>
+                        <Typography variant='body2'>
+                            Disable environment
+                        </Typography>
+                        <Typography
+                            variant='caption'
+                            color='text.secondary'
+                            sx={{ display: 'block', mt: 0.25 }}
+                        >
+                            If your chosen metric crosses its threshold, this
+                            flag is turned off in this environment. Existing
+                            users stop seeing the flag immediately.
+                        </Typography>
+                    </Box>
                 </MenuItem>
                 <Tooltip
                     title={
@@ -120,8 +161,26 @@ export const AddSafeguard = ({
                                 onSelect('releasePlan');
                                 setAnchorEl(null);
                             }}
+                            sx={{
+                                whiteSpace: 'normal',
+                                alignItems: 'flex-start',
+                                py: 1.25,
+                            }}
                         >
-                            Pause automation
+                            <Box>
+                                <Typography variant='body2'>
+                                    Pause release plan
+                                </Typography>
+                                <Typography
+                                    variant='caption'
+                                    color='text.secondary'
+                                    sx={{ display: 'block', mt: 0.25 }}
+                                >
+                                    If your chosen metric crosses its threshold,
+                                    automatic milestone progression stops. The
+                                    current milestone keeps serving traffic.
+                                </Typography>
+                            </Box>
                         </MenuItem>
                     </span>
                 </Tooltip>

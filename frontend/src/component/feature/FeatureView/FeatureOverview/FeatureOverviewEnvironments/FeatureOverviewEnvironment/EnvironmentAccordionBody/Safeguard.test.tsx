@@ -224,7 +224,7 @@ describe('AddSafeguard', () => {
         await user.click(addButton);
 
         await screen.findByText('Disable environment');
-        await screen.findByText('Pause automation');
+        await screen.findByText('Pause release plan');
     });
 
     test('should call onSelect with chosen type', async () => {
@@ -257,7 +257,7 @@ describe('AddSafeguard', () => {
         const addButton = await screen.findByText('Add safeguard');
         await user.click(addButton);
 
-        const pauseItem = await screen.findByText('Pause automation');
+        const pauseItem = await screen.findByText('Pause release plan');
         expect(pauseItem.closest('li')).toHaveAttribute(
             'aria-disabled',
             'true',
@@ -580,7 +580,7 @@ describe('Safeguard', () => {
 
         const { onSafeguardChange } = renderSection();
 
-        await selectSafeguardType(user, 'Pause automation');
+        await selectSafeguardType(user, 'Pause release plan');
         await screen.findByText('Pause automation when');
 
         const saveButton = await screen.findByText('Save');
@@ -671,7 +671,7 @@ describe('Safeguard', () => {
 
         const { onSafeguardChange } = renderSection();
 
-        await selectSafeguardType(user, 'Pause automation');
+        await selectSafeguardType(user, 'Pause release plan');
         await screen.findByText('Pause automation when');
 
         const saveButton = await screen.findByText('Save');

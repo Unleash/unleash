@@ -15,6 +15,7 @@ import theme from 'themes/theme';
 import { useState, useMemo } from 'react';
 import type { FeedbackSchema } from 'openapi';
 import { getActiveExperiments } from './activeExperiments.ts';
+import { Truncator } from 'component/common/Truncator/Truncator';
 
 interface IFeedbackSchemaCellProps {
     value?: string | null; // FIXME: proper type
@@ -90,7 +91,11 @@ export const FeedbackList = () => {
             Cell: ({
                 row: { original: feedback },
             }: IFeedbackSchemaCellProps) => (
-                <TextCell>{feedback.positive}</TextCell>
+                <TextCell>
+                    <Truncator lines={2} title={feedback.positive ?? ''} arrow>
+                        {feedback.positive}
+                    </Truncator>
+                </TextCell>
             ),
             disableSortBy: true,
             searchable: true,
@@ -102,7 +107,15 @@ export const FeedbackList = () => {
             Cell: ({
                 row: { original: feedback },
             }: IFeedbackSchemaCellProps) => (
-                <TextCell>{feedback.areasForImprovement}</TextCell>
+                <TextCell>
+                    <Truncator
+                        lines={2}
+                        title={feedback.areasForImprovement ?? ''}
+                        arrow
+                    >
+                        {feedback.areasForImprovement}
+                    </Truncator>
+                </TextCell>
             ),
             disableSortBy: true,
             searchable: true,

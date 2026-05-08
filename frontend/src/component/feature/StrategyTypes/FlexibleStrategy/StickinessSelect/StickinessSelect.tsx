@@ -97,9 +97,11 @@ export const StickinessSelect = ({
                         vertical: 'top',
                         horizontal: 'left',
                     },
-                    PaperProps: {
-                        style: {
-                            width: '18%',
+                    slotProps: {
+                        paper: {
+                            style: {
+                                width: '18%',
+                            },
                         },
                     },
                 }}

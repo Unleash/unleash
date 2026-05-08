@@ -389,11 +389,11 @@ export const ProjectAccessAssign = ({
                                     renderOption(props, option, selected)
                                 }
                                 getOptionLabel={getOptionLabel}
-                                renderTags={(tagValue, getTagProps) =>
-                                    tagValue.map((option, index) => {
+                                renderValue={(value, getItemProps) =>
+                                    value.map((option, index) => {
                                         return (
                                             <Chip
-                                                {...getTagProps({ index })}
+                                                {...getItemProps({ index })}
                                                 size={autocompleteSize}
                                                 key={`${option.type}:${option.id}`}
                                                 label={getOptionLabel(option)}

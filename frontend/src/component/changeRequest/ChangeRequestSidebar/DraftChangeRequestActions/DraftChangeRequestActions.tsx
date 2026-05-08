@@ -71,7 +71,7 @@ const renderOption = (
     </StrechedLi>
 );
 
-const renderTags = (value: AvailableReviewerSchema[]) => (
+const renderValue = (value: AvailableReviewerSchema[]) => (
     <StyledTags>
         {value.length > 1
             ? `${value.length} reviewers`
@@ -164,7 +164,7 @@ export const DraftChangeRequestActions: FC<{
                         label={`Reviewers (${reviewers.length})`}
                     />
                 )}
-                renderTags={(value) => renderTags(value)}
+                renderValue={(value) => renderValue(value)}
                 noOptionsText={isLoading ? 'Loading…' : 'No options'}
             />
             <SubmitChangeRequestButton

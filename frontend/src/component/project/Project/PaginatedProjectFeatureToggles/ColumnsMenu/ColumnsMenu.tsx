@@ -75,11 +75,13 @@ export const ColumnsMenu: FC<IColumnsMenuProps> = ({ columns, onToggle }) => {
                     horizontal: 'right',
                 }}
                 disableScrollLock={true}
-                PaperProps={{
-                    sx: (theme) => ({
-                        borderRadius: theme.shape.borderRadius,
-                        paddingBottom: theme.spacing(2),
-                    }),
+                slotProps={{
+                    paper: {
+                        sx: (theme) => ({
+                            borderRadius: theme.shape.borderRadius,
+                            paddingBottom: theme.spacing(2),
+                        }),
+                    },
                 }}
             >
                 <StyledBoxMenuHeader>

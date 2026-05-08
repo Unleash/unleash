@@ -52,16 +52,18 @@ export const VariantCell: VFC<IVariantCellProps> = ({
                         <Popover
                             open={open}
                             id={`${feature}-result-variants`}
-                            PaperProps={{
-                                sx: {
-                                    borderRadius: `${theme.shape.borderRadiusLarge}px`,
-                                },
-                            }}
                             onClose={onClose}
                             anchorEl={anchor}
                             anchorOrigin={{
                                 vertical: 'bottom',
                                 horizontal: -320,
+                            }}
+                            slotProps={{
+                                paper: {
+                                    sx: {
+                                        borderRadius: `${theme.shape.borderRadiusLarge}px`,
+                                    },
+                                },
                             }}
                         >
                             <VariantInformation

@@ -129,11 +129,13 @@ export const FeatureStrategyMenu = ({
                 open={isStrategyMenuDialogOpen}
                 onClose={onClose}
                 maxWidth='md'
-                PaperProps={{
-                    sx: {
-                        borderRadius: '12px',
-                        height: '100%',
-                        width: '100%',
+                slotProps={{
+                    paper: {
+                        sx: {
+                            borderRadius: '12px',
+                            height: '100%',
+                            width: '100%',
+                        },
                     },
                 }}
             >

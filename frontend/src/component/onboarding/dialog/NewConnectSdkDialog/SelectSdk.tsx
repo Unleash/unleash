@@ -4,7 +4,6 @@ import { formatAssetPath } from 'utils/formatPath';
 import { clientSdks, type Sdk, serverSdks } from '../sharedTypes.ts';
 
 const SpacedContainer = styled('div')(({ theme }) => ({
-    padding: 0,
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(3),
@@ -23,7 +22,6 @@ const SecondarySectionHeader = styled('div')(({ theme }) => ({
 }));
 
 const SdkListSection = styled('div')(({ theme }) => ({
-    padding: 0,
     display: 'flex',
     columnGap: theme.spacing(1.5),
     rowGap: theme.spacing(1.5),
@@ -71,7 +69,7 @@ export const SelectSdk: FC<ISelectSdkProps> = ({ onSelect }) => {
             <Box>
                 <SectionHeader>Server side SDKs</SectionHeader>
                 <SecondarySectionHeader>
-                    Server side SDK's need a backend API key.
+                    Server side SDKs need a backend API key.
                 </SecondarySectionHeader>
                 <SdkListSection>
                     {serverSdks.map((sdk) => (
@@ -80,9 +78,12 @@ export const SelectSdk: FC<ISelectSdkProps> = ({ onSelect }) => {
                             onClick={() =>
                                 onSelect({ name: sdk.name, type: 'client' })
                             }
-                            variant='outlined'
+                            variant='text'
                         >
-                            <StyledAvatar src={formatAssetPath(sdk.icon)} />
+                            <StyledAvatar
+                                src={formatAssetPath(sdk.icon)}
+                                alt=''
+                            />
                             <SdkTileContent>
                                 <b>{sdk.name}</b>
                                 <SelectLabel>Select</SelectLabel>
@@ -94,7 +95,7 @@ export const SelectSdk: FC<ISelectSdkProps> = ({ onSelect }) => {
             <Box>
                 <SectionHeader>Frontend SDKs</SectionHeader>
                 <SecondarySectionHeader>
-                    Frontend SDK's need a frontend API key.
+                    Frontend SDKs need a frontend API key.
                 </SecondarySectionHeader>
                 <SdkListSection>
                     {clientSdks.map((sdk) => (
@@ -103,9 +104,12 @@ export const SelectSdk: FC<ISelectSdkProps> = ({ onSelect }) => {
                             onClick={() =>
                                 onSelect({ name: sdk.name, type: 'frontend' })
                             }
-                            variant='outlined'
+                            variant='text'
                         >
-                            <StyledAvatar src={formatAssetPath(sdk.icon)} />
+                            <StyledAvatar
+                                src={formatAssetPath(sdk.icon)}
+                                alt=''
+                            />
                             <SdkTileContent>
                                 <b>{sdk.name}</b>
                                 <SelectLabel>Select</SelectLabel>

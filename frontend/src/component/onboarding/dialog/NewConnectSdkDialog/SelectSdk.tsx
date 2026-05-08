@@ -1,0 +1,119 @@
+import { Avatar, Box, Button, styled } from '@mui/material';
+import type { FC } from 'react';
+import { formatAssetPath } from 'utils/formatPath';
+import { clientSdks, type Sdk, serverSdks } from '../sharedTypes.ts';
+
+const SpacedContainer = styled('div')(({ theme }) => ({
+    padding: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(3),
+    backgroundColor: theme.palette.background.paper,
+}));
+
+export const SectionHeader = styled('div')(({ theme }) => ({
+    fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.typography.body1.fontSize,
+}));
+
+const SecondarySectionHeader = styled('div')(({ theme }) => ({
+    marginTop: theme.spacing(0.5),
+    marginBottom: theme.spacing(2),
+    fontSize: theme.typography.body1.fontSize,
+}));
+
+const SdkListSection = styled('div')(({ theme }) => ({
+    padding: 0,
+    display: 'flex',
+    columnGap: theme.spacing(1.5),
+    rowGap: theme.spacing(1.5),
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    flexWrap: 'wrap',
+}));
+
+const SdkButton = styled(Button)(({ theme }) => ({
+    fontSize: theme.typography.body2.fontSize,
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadius,
+    padding: theme.spacing(1, 1.5),
+    minWidth: '240px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+}));
+
+const SdkTileContent = styled('div')(({ theme }) => ({
+    color: theme.palette.text.primary,
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+}));
+
+const SelectLabel = styled('span')(({ theme }) => ({
+    color: theme.palette.primary.main,
+    fontSize: theme.typography.body2.fontSize,
+    fontWeight: 700,
+}));
+
+const StyledAvatar = styled(Avatar)(({ theme }) => ({
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+}));
+
+interface ISelectSdkProps {
+    onSelect: (sdk: Sdk) => void;
+}
+export const SelectSdk: FC<ISelectSdkProps> = ({ onSelect }) => {
+    return (
+        <SpacedContainer>
+            <Box>
+                <SectionHeader>Server side SDKs</SectionHeader>
+                <SecondarySectionHeader>
+                    Server side SDK's need a backend API key.
+                </SecondarySectionHeader>
+                <SdkListSection>
+                    {serverSdks.map((sdk) => (
+                        <SdkButton
+                            key={sdk.name}
+                            onClick={() =>
+                                onSelect({ name: sdk.name, type: 'client' })
+                            }
+                            variant='outlined'
+                        >
+                            <StyledAvatar src={formatAssetPath(sdk.icon)} />
+                            <SdkTileContent>
+                                <b>{sdk.name}</b>
+                                <SelectLabel>Select</SelectLabel>
+                            </SdkTileContent>
+                        </SdkButton>
+                    ))}
+                </SdkListSection>
+            </Box>
+            <Box>
+                <SectionHeader>Frontend SDKs</SectionHeader>
+                <SecondarySectionHeader>
+                    Frontend SDK's need a frontend API key.
+                </SecondarySectionHeader>
+                <SdkListSection>
+                    {clientSdks.map((sdk) => (
+                        <SdkButton
+                            key={sdk.name}
+                            onClick={() =>
+                                onSelect({ name: sdk.name, type: 'frontend' })
+                            }
+                            variant='outlined'
+                        >
+                            <StyledAvatar src={formatAssetPath(sdk.icon)} />
+                            <SdkTileContent>
+                                <b>{sdk.name}</b>
+                                <SelectLabel>Select</SelectLabel>
+                            </SdkTileContent>
+                        </SdkButton>
+                    ))}
+                </SdkListSection>
+            </Box>
+        </SpacedContainer>
+    );
+};

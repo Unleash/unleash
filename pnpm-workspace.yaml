@@ -23,6 +23,7 @@ overrides:
   async: "^3.2.4"
   es5-ext: "0.10.64"
   glob: "^10.5.0"
+  ip-address: "10.2.0"
   ip: "^2.0.1"
   json-schema: "^0.4.0"
   json5: "^2.2.2"

@@ -100,7 +100,7 @@
     "helmet": "^8.1.0",
     "http-errors": "^2.0.1",
     "hyperloglog-lite": "^1.0.2",
-    "ip-address": "^10.2.0",
+    "ip-address": "10.2.0",
     "joi": "^18.1.2",
     "js-sha256": "^0.11.1",
     "js-yaml": "^4.1.1",

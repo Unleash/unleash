@@ -39,6 +39,12 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
         const includeUnsafeInline = !config.flagResolver.isEnabled(
             'removeUnsafeInlineStyleSrc',
         );
+        const logRocketEnabled = Boolean(config.server.logRocketAppId);
+        const logRocketScriptSrc = logRocketEnabled ? LOGROCKET_SCRIPT_SRC : [];
+        const logRocketConnectSrc = logRocketEnabled
+            ? LOGROCKET_CONNECT_SRC
+            : [];
+        const workerSrc = logRocketEnabled ? ["'self'", 'blob:'] : ["'self'"];
         const styleSrc = ["'self'"];
         if (includeUnsafeInline) {
             styleSrc.push("'unsafe-inline'");
@@ -75,7 +81,7 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
                     scriptSrc: [
                         "'self'",
                         'cdn.getunleash.io',
-                        ...LOGROCKET_SCRIPT_SRC,
+                        ...logRocketScriptSrc,
                         ...config.additionalCspAllowedDomains.scriptSrc,
                     ],
                     imgSrc: [
@@ -93,11 +99,11 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
                         'europe-west3-metrics-304612.cloudfunctions.net',
                         'app.unleash-hosted.com',
                         'hosted.edge.getunleash.io',
-                        ...LOGROCKET_CONNECT_SRC,
+                        ...logRocketConnectSrc,
                         ...config.additionalCspAllowedDomains.connectSrc,
                     ],
-                    workerSrc: ["'self'", 'blob:'],
-                    childSrc: ["'self'", 'blob:'],
+                    workerSrc,
+                    childSrc: workerSrc,
                     mediaSrc: [
                         "'self'",
                         'cdn.getunleash.io',

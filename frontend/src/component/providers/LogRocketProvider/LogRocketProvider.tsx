@@ -25,7 +25,12 @@ export const LogRocketProvider: FC<{ children?: React.ReactNode }> = ({
         if (!isEnabled || !appId || !isEnterprisePayg) return;
 
         try {
-            LogRocket.init(appId);
+            LogRocket.init(appId, {
+                dom: {
+                    textSanitizer: true,
+                    inputSanitizer: 'lipsum',
+                },
+            });
             initialized.current = true;
         } catch (error) {
             console.warn(error);

@@ -15,6 +15,7 @@ type Color =
     | 'success'
     | 'warning'
     | 'error'
+    | 'primary'
     | 'secondary'
     | 'neutral'
     | 'disabled'; // TODO: refactor theme
@@ -30,6 +31,7 @@ interface IBadgeProps {
     title?: string;
     onClick?: (event: React.SyntheticEvent) => void;
     tabIndex?: number;
+    round?: boolean;
 }
 
 interface IBadgeIconProps {
@@ -38,7 +40,7 @@ interface IBadgeIconProps {
 }
 
 const StyledBadge = styled('span')<IBadgeProps>(
-    ({ theme, color = 'neutral', icon }) => ({
+    ({ theme, color = 'neutral', icon, round }) => ({
         display: 'inline-flex',
         alignItems: 'center',
         gap: theme.spacing(0.5),
@@ -56,8 +58,14 @@ const StyledBadge = styled('span')<IBadgeProps>(
             : {
                   backgroundColor: theme.palette[color].light,
                   color: theme.palette[color].contrastText,
-                  border: `1px solid ${theme.palette[color].border}`,
+                  border: `1px solid ${theme.palette[color].border ?? 'transparent'}`,
               }),
+        ...(round && {
+            justifyContent: 'center',
+            borderRadius: '50%',
+            width: theme.spacing(3),
+            height: theme.spacing(3),
+        }),
     }),
 );
 

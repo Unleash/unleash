@@ -381,6 +381,9 @@ importers:
       json-diff-react:
         specifier: ^1.0.1
         version: 1.0.1
+      logrocket:
+        specifier: ^12.1.1
+        version: 12.1.1
       re2js:
         specifier: 2.3.1
         version: 2.3.1
@@ -4529,6 +4532,9 @@ packages:
   loglevel@1.9.2:
     resolution: {integrity: sha512-HgMmCqIJSAKqo68l0rS2AanEWfkxaZ5wNiEFb5ggm08lDs9Xl2KxBlX3PTcaD2chBM1gXAYf491/M2Rv8Jwayg==}
     engines: {node: '>= 0.6.0'}
+
+  logrocket@12.1.1:
+    resolution: {integrity: sha512-l7z9ii5nNV6NZ3nzEqbB3xJAqFJC6QdRYDK8DeCC6JKwzuI8nyUezUJAotgMyClrqB6eV/Bo0i/KihQlXSRDKw==}
 
   loose-envify@1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
@@ -10788,6 +10794,8 @@ snapshots:
   loglevel-plugin-prefix@0.8.4: {}
 
   loglevel@1.9.2: {}
+
+  logrocket@12.1.1: {}
 
   loose-envify@1.4.0:
     dependencies:

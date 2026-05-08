@@ -47,13 +47,13 @@
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
+    "@base-ui/react": "^1.4.1",
     "@biomejs/biome": "^2.4.14",
     "@codemirror/lang-json": "6.0.2",
     "@emotion/babel-plugin": "^11.13.5",
     "@emotion/cache": "11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "11.14.1",
-    "@base-ui/react": "^1.4.1",
     "@mui/icons-material": "7.3.10",
     "@mui/lab": "7.0.1-beta.24",
     "@mui/material": "7.3.10",
@@ -172,6 +172,7 @@
     "chartjs-plugin-datalabels": "^2.2.0",
     "json-2-csv": "^5.5.10",
     "json-diff-react": "^1.0.1",
+    "logrocket": "^12.1.1",
     "re2js": "2.3.1"
   },
   "packageManager": "pnpm@11.0.5"

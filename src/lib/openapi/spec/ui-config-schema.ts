@@ -49,6 +49,12 @@ export const uiConfigSchema = {
             description: 'The URL of the Unleash instance.',
             example: 'https://unleash.mycompany.com/enterprise',
         },
+        logRocketAppId: {
+            type: 'string',
+            description:
+                'The LogRocket app ID used to initialize session replay in the admin UI. Only used when the `logRocketEnabled` flag is on.',
+            example: '1knhci/unleash-sandbox',
+        },
         baseUriPath: {
             type: 'string',
             description:

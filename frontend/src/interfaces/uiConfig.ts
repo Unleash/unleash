@@ -21,6 +21,7 @@ export interface IUiConfig {
     billing?: 'subscription' | 'pay-as-you-go' | 'enterprise-consumption';
     unleashUrl?: string;
     edgeUrl?: string;
+    logRocketAppId?: string;
     version: string;
     versionInfo?: IVersionInfo;
     links: ILinks[];
@@ -96,6 +97,7 @@ export type UiFlags = {
     externalImpactMetrics?: boolean;
     accessOverviewRework?: boolean;
     onboardingConnectSDKNewDialog?: boolean;
+    logRocketEnabled?: boolean;
 };
 
 export interface IVersionInfo {

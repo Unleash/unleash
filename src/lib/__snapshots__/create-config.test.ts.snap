@@ -151,6 +151,7 @@ exports[`should create default config 1`] = `
     "headersTimeout": 61000,
     "host": undefined,
     "keepAliveTimeout": 15000,
+    "logRocketAppId": undefined,
     "pipe": undefined,
     "port": 4242,
     "secret": "super-secret",

@@ -123,6 +123,7 @@ const ImpactMetricsPage = () => {
     const handleCancel = () => {
         setEnabled(source.enabled);
         setPrometheusUrl(currentUrl);
+        setTestOutcome(null);
     };
 
     const handleTest = async () => {

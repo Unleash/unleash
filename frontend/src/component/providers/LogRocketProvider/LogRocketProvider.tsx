@@ -8,19 +8,21 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 export const LogRocketProvider: FC<{ children?: React.ReactNode }> = ({
     children,
 }) => {
-    const { uiConfig } = useUiConfig();
+    const { uiConfig, isEnterprise } = useUiConfig();
     const { user } = useAuthUser();
     const isEnabled = useUiFlag('logRocketEnabled');
     const appId = uiConfig?.logRocketAppId;
     const clientId = uiConfig?.unleashContext?.properties?.clientId;
     const userId = user?.id;
+    const isEnterprisePayg =
+        isEnterprise() && uiConfig?.billing === 'pay-as-you-go';
 
     const initialized = useRef(false);
     const identified = useRef(false);
 
     useEffect(() => {
         if (initialized.current) return;
-        if (!isEnabled || !appId) return;
+        if (!isEnabled || !appId || !isEnterprisePayg) return;
 
         try {
             LogRocket.init(appId);
@@ -28,7 +30,7 @@ export const LogRocketProvider: FC<{ children?: React.ReactNode }> = ({
         } catch (error) {
             console.warn(error);
         }
-    }, [isEnabled, appId]);
+    }, [isEnabled, appId, isEnterprisePayg]);
 
     useEffect(() => {
         if (identified.current) return;

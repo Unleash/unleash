@@ -12,7 +12,7 @@ export const LogRocketProvider: FC<{ children?: React.ReactNode }> = ({
     const { user } = useAuthUser();
     const isEnabled = useUiFlag('logRocketEnabled');
     const appId = uiConfig?.logRocketAppId;
-    const instanceId = uiConfig?.versionInfo?.instanceId;
+    const clientId = uiConfig?.unleashContext?.properties?.clientId;
     const userId = user?.id;
 
     const initialized = useRef(false);
@@ -33,18 +33,18 @@ export const LogRocketProvider: FC<{ children?: React.ReactNode }> = ({
     useEffect(() => {
         if (identified.current) return;
         if (!initialized.current) return;
-        if (!userId || !instanceId) return;
+        if (!userId || !clientId) return;
 
         try {
-            LogRocket.identify(`${instanceId}:${userId}`, {
-                instanceId,
+            LogRocket.identify(`${clientId}:${userId}`, {
+                clientId,
                 userId: String(userId),
             });
             identified.current = true;
         } catch (error) {
             console.warn(error);
         }
-    }, [userId, instanceId]);
+    }, [userId, clientId]);
 
     return <>{children}</>;
 };

@@ -131,9 +131,7 @@ export const AddValuesPopover: FC<AddValuesProps> = ({
                             helperText={error}
                             aria-describedby={helpTextId}
                             slotProps={{
-                                htmlInput: {
-                                    ...htmlInputProps,
-                                },
+                                htmlInput: htmlInputProps,
                             }}
                             data-testid='CONSTRAINT_VALUES_INPUT'
                         />

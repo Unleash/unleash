@@ -154,9 +154,7 @@ const InnerDialog = ({
                             stepNumber={index + 1}
                             title={title}
                             isExpanded={expandedStep === index}
-                            isCompleted={
-                                index < currentStep && expandedStep !== index
-                            }
+                            isCompleted={index < currentStep}
                             isDisabled={index > currentStep}
                             onExpand={() => setExpandedStep(index)}
                             summary={summary}
@@ -168,7 +166,7 @@ const InnerDialog = ({
                         <Button
                             variant='contained'
                             disabled={currentStep < steps.length}
-                            onClick={() => onFinish('')}
+                            onClick={() => onFinish('TODO: sdk from state')}
                         >
                             Finish setup
                         </Button>

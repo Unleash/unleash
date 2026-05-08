@@ -184,8 +184,10 @@ const RegexTestInputItem: FC<RegexTestInputItemProps> = memo(
                         fullWidth
                         value={input.testString}
                         id={`test-input-${input.id}`}
-                        inputProps={{
-                            'aria-describedby': 'test-strings-description',
+                        slotProps={{
+                            htmlInput: {
+                                'aria-describedby': 'test-strings-description',
+                            },
                         }}
                         inputRef={setInputRef}
                         onChange={handleChange}

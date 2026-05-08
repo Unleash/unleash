@@ -246,21 +246,23 @@ export const PlaygroundConnectionFieldset: FC<
                         errorText={tokenError}
                         placeholder={'Enter your API token'}
                         data-testid={'PLAYGROUND_TOKEN_INPUT'}
-                        InputProps={{
-                            endAdornment: token ? (
-                                <InputAdornment
-                                    position='end'
-                                    data-testid='TOKEN_INPUT_CLEAR_BTN'
-                                >
-                                    <IconButton
-                                        aria-label='clear API token'
-                                        onClick={clearToken}
-                                        edge='end'
+                        slotProps={{
+                            input: {
+                                endAdornment: token ? (
+                                    <InputAdornment
+                                        position='end'
+                                        data-testid='TOKEN_INPUT_CLEAR_BTN'
                                     >
-                                        <SmallClear />
-                                    </IconButton>
-                                </InputAdornment>
-                            ) : null,
+                                        <IconButton
+                                            aria-label='clear API token'
+                                            onClick={clearToken}
+                                            edge='end'
+                                        >
+                                            <SmallClear />
+                                        </IconButton>
+                                    </InputAdornment>
+                                ) : null,
+                            },
                         }}
                         disabled={Boolean(changeRequest)}
                     />
@@ -280,20 +282,22 @@ export const PlaygroundConnectionFieldset: FC<
                                     onChange={() => {}}
                                     type={'text'}
                                     disabled
-                                    InputProps={{
-                                        endAdornment: (
-                                            <InputAdornment position='end'>
-                                                <IconButton
-                                                    aria-label='clear Change request results'
-                                                    onClick={
-                                                        onClearChangeRequest
-                                                    }
-                                                    edge='end'
-                                                >
-                                                    <SmallClear />
-                                                </IconButton>
-                                            </InputAdornment>
-                                        ),
+                                    slotProps={{
+                                        input: {
+                                            endAdornment: (
+                                                <InputAdornment position='end'>
+                                                    <IconButton
+                                                        aria-label='clear Change request results'
+                                                        onClick={
+                                                            onClearChangeRequest
+                                                        }
+                                                        edge='end'
+                                                    >
+                                                        <SmallClear />
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            ),
+                                        },
                                     }}
                                 />
                             </Box>

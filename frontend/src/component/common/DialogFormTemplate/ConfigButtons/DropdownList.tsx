@@ -86,12 +86,14 @@ export function DropdownList<T = string>({
                 hideLabel
                 placeholder={search.placeholder}
                 autoFocus
-                InputProps={{
-                    startAdornment: (
-                        <InputAdornment position='start'>
-                            <Search fontSize='small' />
-                        </InputAdornment>
-                    ),
+                slotProps={{
+                    input: {
+                        startAdornment: (
+                            <InputAdornment position='start'>
+                                <Search fontSize='small' />
+                            </InputAdornment>
+                        ),
+                    },
                 }}
                 inputRef={(el) => {
                     listRefs.current[0] = el;
@@ -132,8 +134,10 @@ export function DropdownList<T = string>({
                                         option.value,
                                     )}
                                     tabIndex={-1}
-                                    inputProps={{
-                                        'aria-labelledby': labelId,
+                                    slotProps={{
+                                        input: {
+                                            'aria-labelledby': labelId,
+                                        },
                                     }}
                                     size='small'
                                     disableRipple

@@ -135,7 +135,9 @@ export const NewInUnleashToast = ({ item }: { item: NewInUnleashItem }) => {
                         markAsSeen(item);
                     }
                 }}
-                TransitionComponent={Slide}
+                slots={{
+                    transition: Slide,
+                }}
             >
                 <NewInUnleashBody>
                     <TextContainer>

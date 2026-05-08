@@ -173,12 +173,14 @@ const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
                         <ListItemText
                             primary={link.title}
                             secondary={link.url}
-                            secondaryTypographyProps={{
-                                sx: {
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    whiteSpace: 'nowrap',
-                                    display: 'block',
+                            slotProps={{
+                                secondary: {
+                                    sx: {
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap',
+                                        display: 'block',
+                                    },
                                 },
                             }}
                         />

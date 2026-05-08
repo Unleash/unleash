@@ -20,11 +20,17 @@ export const FeatureMetricsContent = ({
     if (metrics.length === 0) {
         return (
             <Box mt={6}>
-                <Typography variant='body1' paragraph>
+                <Typography
+                    variant='body1'
+                    sx={(theme) => ({ marginBottom: theme.spacing(2) })}
+                >
                     We have yet to receive any metrics for this feature flag in
                     the selected time period.
                 </Typography>
-                <Typography variant='body1' paragraph>
+                <Typography
+                    variant='body1'
+                    sx={(theme) => ({ marginBottom: theme.spacing(2) })}
+                >
                     Please note that, since the SDKs send metrics on an
                     interval, it might take some time before metrics appear.
                 </Typography>

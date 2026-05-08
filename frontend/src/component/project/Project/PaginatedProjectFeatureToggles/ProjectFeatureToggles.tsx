@@ -181,6 +181,11 @@ export const ProjectFeatureToggles = ({
     const isOnboarding =
         project.onboardingStatus.status !== 'onboarded' &&
         onboardingFlow === 'visible';
+    const isOnboarded = project.onboardingStatus.status === 'onboarded';
+    const userCompletedOldOnboardingFlow =
+        isOnboarded && setupCompletedState === 'hide-setup';
+    const showNewOnboarding =
+        onboardingFlow === 'visible' && !userCompletedOldOnboardingFlow;
     const newOnboardingSteps = useUiFlag('onboardingProjectSetupNewSteps');
 
     const trackOnboardingFinish = (sdkName: string) => {
@@ -498,7 +503,7 @@ export const ProjectFeatureToggles = ({
         <Container>
             {newOnboardingSteps && (
                 <ConditionallyRender
-                    condition={onboardingFlow === 'visible'}
+                    condition={showNewOnboarding}
                     show={() => (
                         <ProjectOnboarding
                             projectId={projectId}

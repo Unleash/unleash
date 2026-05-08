@@ -1,5 +1,14 @@
 import { useMemo, useState } from 'react';
-import { styled, Menu, MenuItem, Tooltip } from '@mui/material';
+import {
+    Box,
+    ListSubheader,
+    menuClasses,
+    styled,
+    Menu,
+    MenuItem,
+    Tooltip,
+    Typography,
+} from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
@@ -50,6 +59,41 @@ const StyledAddSafeguardContent = styled('div')(({ theme }) => ({
     paddingRight: theme.spacing(2),
 }));
 
+const StyledSafeguardMenu = styled(Menu)(({ theme }) => ({
+    [`& .${menuClasses.paper}`]: {
+        maxWidth: theme.spacing(45),
+    },
+}));
+
+const StyledMenuHeader = styled(ListSubheader)(({ theme }) => ({
+    padding: theme.spacing(1, 2, 0.5, 2),
+    lineHeight: 1.6,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    fontSize: theme.typography.caption.fontSize,
+    fontWeight: theme.typography.fontWeightBold,
+    color: theme.palette.text.secondary,
+    backgroundColor: 'transparent',
+}));
+
+const optionItemSx = {
+    whiteSpace: 'normal',
+    alignItems: 'flex-start',
+    py: 1.25,
+} as const;
+
+const DisabledItemWrapper = styled('li')({
+    listStyle: 'none',
+    padding: 0,
+    margin: 0,
+});
+
+const StyledOptionDescription = styled(Typography)(({ theme }) => ({
+    display: 'block',
+    marginTop: theme.spacing(0.25),
+    color: theme.palette.text.secondary,
+}));
+
 export const AddSafeguard = ({
     onSelect,
     releasePlan,
@@ -79,12 +123,16 @@ export const AddSafeguard = ({
                     Add safeguard
                 </StyledActionButton>
             </StyledAddSafeguardContent>
-            <Menu
+            <StyledSafeguardMenu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={() => setAnchorEl(null)}
             >
+                <StyledMenuHeader disableSticky>
+                    Select safeguard action
+                </StyledMenuHeader>
                 <MenuItem
+                    sx={optionItemSx}
                     onClick={() => {
                         trackEvent('safeguards', {
                             props: {
@@ -96,7 +144,16 @@ export const AddSafeguard = ({
                         setAnchorEl(null);
                     }}
                 >
-                    Disable environment
+                    <Box>
+                        <Typography variant='body2'>
+                            Disable environment
+                        </Typography>
+                        <StyledOptionDescription variant='caption'>
+                            If your chosen metric crosses its threshold, this
+                            flag is turned off in this environment. Existing
+                            users stop seeing the flag immediately.
+                        </StyledOptionDescription>
+                    </Box>
                 </MenuItem>
                 <Tooltip
                     title={
@@ -107,8 +164,10 @@ export const AddSafeguard = ({
                     placement='right'
                     arrow
                 >
-                    <span>
+                    <DisabledItemWrapper>
                         <MenuItem
+                            component='div'
+                            sx={optionItemSx}
                             disabled={!releasePlan}
                             onClick={() => {
                                 trackEvent('safeguards', {
@@ -121,11 +180,20 @@ export const AddSafeguard = ({
                                 setAnchorEl(null);
                             }}
                         >
-                            Pause automation
+                            <Box>
+                                <Typography variant='body2'>
+                                    Pause release plan automation
+                                </Typography>
+                                <StyledOptionDescription variant='caption'>
+                                    If your chosen metric crosses its threshold,
+                                    automatic milestone progression stops. The
+                                    current milestone keeps serving traffic.
+                                </StyledOptionDescription>
+                            </Box>
                         </MenuItem>
-                    </span>
+                    </DisabledItemWrapper>
                 </Tooltip>
-            </Menu>
+            </StyledSafeguardMenu>
         </StyledSafeguardContainer>
     );
 };

@@ -138,19 +138,21 @@ export const ChangeRequestTable = (props: TableProps) => {
                         <StyledBox data-loading>
                             <Switch
                                 checked={value}
-                                inputProps={{
-                                    'aria-label': `${
-                                        value ? 'Disable' : 'Enable'
-                                    } change requests for ${
-                                        original.environment
-                                    }`,
-                                }}
                                 disabled={!original.configurable}
                                 onClick={onToggleEnvironment(
                                     original.environment,
                                     original.changeRequestEnabled,
                                     original.requiredApprovals,
                                 )}
+                                slotProps={{
+                                    input: {
+                                        'aria-label': `${
+                                            value ? 'Disable' : 'Enable'
+                                        } change requests for ${
+                                            original.environment
+                                        }`,
+                                    },
+                                }}
                             />
                         </StyledBox>
                     );

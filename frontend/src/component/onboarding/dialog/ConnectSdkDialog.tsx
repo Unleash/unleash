@@ -18,6 +18,8 @@ import type { Sdk } from './sharedTypes.ts';
 import { ConnectionInformation } from './ConnectionInformation.tsx';
 import { SdkConnection } from './SdkConnection.tsx';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { ConnectSdkDialog as NewConnectSdkDialog } from './NewConnectSdkDialog/NewConnectSdkDialog.tsx';
 
 interface IConnectSDKDialogProps {
     open: boolean;
@@ -206,5 +208,13 @@ export const ConnectSdkDialog = ({
     open,
     ...props
 }: IConnectSDKDialogProps) => {
+    const onboardingConnectSDKNewDialogEnabled = useUiFlag(
+        'onboardingConnectSDKNewDialog',
+    );
+
+    if (onboardingConnectSDKNewDialogEnabled) {
+        return open ? <NewConnectSdkDialog open={open} {...props} /> : null;
+    }
+
     return open ? <InnerDialog {...props} /> : null;
 };

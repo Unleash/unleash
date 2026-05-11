@@ -52,6 +52,9 @@ cypress/downloads/*
 cypress/videos/*
 cypress/downloads/*
 cypress/screenshots/*
+playwright/.auth/
+playwright-report/
+test-results/
 .env.local
 
 # Yarn (https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored)

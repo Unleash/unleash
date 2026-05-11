@@ -2,7 +2,8 @@
   "compilerOptions": {
     "composite": true,
     "module": "esnext",
-    "moduleResolution": "nodenext"
+    "moduleResolution": "nodenext",
+    "types": ["node"]
   },
-  "include": ["vite.config.mts"]
+  "include": ["vite.config.mts", "playwright.config.ts"]
 }

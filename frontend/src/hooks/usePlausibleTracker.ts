@@ -90,7 +90,8 @@ export type CustomEvents =
     | 'signup-dialog'
     | 'signup-dialog-error'
     | 'safeguards'
-    | 'remote-mcp';
+    | 'remote-mcp'
+    | 'external-impact-metrics';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

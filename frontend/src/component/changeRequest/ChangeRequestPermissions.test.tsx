@@ -18,7 +18,10 @@ import { HighlightProvider } from 'component/common/Highlight/HighlightProvider'
 const server = testServerSetup();
 
 const projectWithCollaborationMode = (mode: ProjectMode) =>
-    testServerRoute(server, '/api/admin/projects/default/overview', { mode });
+    testServerRoute(server, '/api/admin/projects/default/overview', {
+        mode,
+        onboardingStatus: { status: 'onboarded' },
+    });
 
 const changeRequestsEnabledIn = (
     env: 'development' | 'production' | 'custom',

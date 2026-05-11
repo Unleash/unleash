@@ -1,5 +1,4 @@
 import { Avatar, Box, Button, styled } from '@mui/material';
-import type { FC } from 'react';
 import { formatAssetPath } from 'utils/formatPath';
 import { clientSdks, type Sdk, serverSdks } from '../sharedTypes.ts';
 
@@ -35,7 +34,7 @@ const SdkButton = styled(Button)(({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadius,
     padding: theme.spacing(1, 1.5),
-    minWidth: '240px',
+    minWidth: theme.spacing(30),
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
@@ -63,13 +62,13 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
 interface ISelectSdkProps {
     onSelect: (sdk: Sdk) => void;
 }
-export const SelectSdk: FC<ISelectSdkProps> = ({ onSelect }) => {
+export const SelectSdk = ({ onSelect }: ISelectSdkProps) => {
     return (
         <SpacedContainer>
             <Box>
-                <SectionHeader>Server side SDKs</SectionHeader>
+                <SectionHeader>Backend SDKs</SectionHeader>
                 <SecondarySectionHeader>
-                    Server side SDKs need a backend API key.
+                    Backend SDKs need a backend API key.
                 </SecondarySectionHeader>
                 <SdkListSection>
                     {serverSdks.map((sdk) => (

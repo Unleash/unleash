@@ -11,6 +11,8 @@ import { Truncator } from 'component/common/Truncator/Truncator.tsx';
 import { NewConnectSdkDialogAside } from './NewConnectSdkDialogAside';
 import { useState } from 'react';
 import { ConnectSdkDialogStep } from './ConnectSdkDialogStep';
+import type { Sdk } from '../sharedTypes';
+import { SelectSdk, SelectSdkSummary } from './SelectSdk';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -127,6 +129,7 @@ const DialogHeader = ({ onClose }: Pick<IConnectSDKDialogProps, 'onClose'>) => {
 
 type Step = {
     title: string;
+    content: React.ReactNode;
     summary?: React.ReactNode;
 };
 
@@ -134,21 +137,35 @@ const InnerDialog = ({
     onClose,
     onFinish,
 }: Omit<IConnectSDKDialogProps, 'open'>) => {
-    const [currentStep] = useState(0);
+    const [currentStep, setCurrentStep] = useState(0);
     const [expandedStep, setExpandedStep] = useState(0);
 
+    const [sdk, setSdk] = useState<Sdk>();
+
+    const onSelectSdk = (selectedSdk: Sdk) => {
+        setSdk(selectedSdk);
+        setCurrentStep(1);
+        setExpandedStep(1);
+    };
+
     const steps: Step[] = [
-        { title: 'Select SDK' },
-        { title: 'Generate API key' },
-        { title: 'Configure the SDK' },
+        {
+            title: 'Select SDK',
+            content: <SelectSdk onSelect={onSelectSdk} />,
+            summary: <SelectSdkSummary sdk={sdk} />,
+        },
+        { title: 'Generate API key', content: 'TODO: Generate API key' },
+        { title: 'Configure the SDK', content: 'TODO: Configure the SDK' },
     ];
+
+    const complete = currentStep >= steps.length && sdk;
 
     return (
         <StyledDialog open onClose={onClose}>
             <DialogHeader onClose={onClose} />
             <StyledDialogBody>
                 <StyledDialogContent>
-                    {steps.map(({ title, summary }, index) => (
+                    {steps.map(({ title, content, summary }, index) => (
                         <ConnectSdkDialogStep
                             key={title}
                             stepNumber={index + 1}
@@ -159,14 +176,16 @@ const InnerDialog = ({
                             onExpand={() => setExpandedStep(index)}
                             summary={summary}
                         >
-                            {title} content
+                            {content}
                         </ConnectSdkDialogStep>
                     ))}
                     <StyledDialogFooter>
                         <Button
                             variant='contained'
-                            disabled={currentStep < steps.length}
-                            onClick={() => onFinish('TODO: sdk from state')}
+                            disabled={!complete}
+                            onClick={
+                                complete ? () => onFinish(sdk.name) : undefined
+                            }
                         >
                             Finish setup
                         </Button>

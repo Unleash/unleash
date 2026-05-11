@@ -1,7 +1,7 @@
 import { Avatar, Box, Button, styled } from '@mui/material';
 import type { FC } from 'react';
 import { formatAssetPath } from 'utils/formatPath';
-import { clientSdks, type Sdk, serverSdks } from '../sharedTypes.ts';
+import { allSdks, clientSdks, type Sdk, serverSdks } from '../sharedTypes.ts';
 
 const SpacedContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -58,6 +58,12 @@ const SelectLabel = styled('span')(({ theme }) => ({
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
     width: theme.spacing(3),
     height: theme.spacing(3),
+}));
+
+const StyledSummary = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
 }));
 
 interface ISelectSdkProps {
@@ -119,5 +125,21 @@ export const SelectSdk: FC<ISelectSdkProps> = ({ onSelect }) => {
                 </SdkListSection>
             </Box>
         </SpacedContainer>
+    );
+};
+
+interface ISelectSdkSummaryProps {
+    sdk?: Sdk;
+}
+export const SelectSdkSummary = ({ sdk }: ISelectSdkSummaryProps) => {
+    if (!sdk) return null;
+
+    const sdkIcon = allSdks.find((item) => item.name === sdk.name)?.icon;
+
+    return (
+        <StyledSummary>
+            {sdkIcon && <StyledAvatar src={formatAssetPath(sdkIcon)} alt='' />}
+            {sdk.name}
+        </StyledSummary>
     );
 };

@@ -9,39 +9,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  e2e-build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-      - uses: pnpm/action-setup@v5
-      - name: Use Node.js 22.x
-        uses: actions/setup-node@v6
-        with:
-          node-version: 22.x
-          cache: 'pnpm'
-          cache-dependency-path: pnpm-lock.yaml
-      - name: Cache Cypress binary
-        id: cache-cypress
-        uses: actions/cache@v5
-        with:
-          path: ~/.cache/Cypress
-          key: cypress-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-      - name: Build static frontend
-        run: pnpm --dir frontend build
-      - name: Upload frontend build
-        uses: actions/upload-artifact@v7
-        with:
-          name: frontend-build
-          path: frontend/build
-          retention-days: 1
-
   e2e:
-    needs: e2e-build
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     strategy:
       matrix:
         test:
@@ -53,6 +23,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+      - name: Start backend services
+        run: docker compose -f .github/docker-compose.test.yml up -d db unleash
+        env:
+          FRONTEND_TEST_LICENSE: ${{ secrets.FRONTEND_TEST_LICENSE }}
       - uses: pnpm/action-setup@v5
       - name: Use Node.js 22.x
         uses: actions/setup-node@v6
@@ -60,21 +34,24 @@ jobs:
           node-version: 22.x
           cache: 'pnpm'
           cache-dependency-path: pnpm-lock.yaml
-      - name: Download frontend build
-        uses: actions/download-artifact@v8
-        with:
-          name: frontend-build
-          path: frontend/build
-      - name: Restore Cypress binary
-        uses: actions/cache/restore@v5
+      - name: Cache Cypress binary
+        uses: actions/cache@v5
         with:
           path: ~/.cache/Cypress
           key: cypress-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+      - name: Cache frontend build
+        id: cache-frontend-build
+        uses: actions/cache@v5
+        with:
+          path: frontend/build
+          key: frontend-build-${{ runner.os }}-${{ hashFiles('frontend/src/**', 'frontend/public/**', 'frontend/index.html', 'frontend/vite.config.ts', 'frontend/tsconfig.json', 'pnpm-lock.yaml') }}
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Start Unleash test instance
-        run: |
-          docker compose -f .github/docker-compose.test.yml up -d --wait -t 90
+      - name: Build static frontend
+        if: steps.cache-frontend-build.outputs.cache-hit != 'true'
+        run: pnpm --dir frontend build
+      - name: Start frontend service and wait for all services
+        run: docker compose -f .github/docker-compose.test.yml up -d --wait -t 90 frontend
         env:
           FRONTEND_TEST_LICENSE: ${{ secrets.FRONTEND_TEST_LICENSE }}
       - name: Run Cypress

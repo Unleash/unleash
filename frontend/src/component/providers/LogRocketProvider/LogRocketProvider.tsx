@@ -30,6 +30,10 @@ export const LogRocketProvider: FC<{ children?: React.ReactNode }> = ({
                     textSanitizer: true,
                     inputSanitizer: 'lipsum',
                 },
+                shouldCaptureIP: false,
+                network: {
+                    requestSanitizer: () => null,
+                },
             });
             initialized.current = true;
         } catch (error) {

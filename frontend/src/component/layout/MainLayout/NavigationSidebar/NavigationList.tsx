@@ -78,7 +78,7 @@ export const PrimaryNavigationList: FC<{
     const showChangeRequestList = isEnterprise();
 
     return (
-        <StyledNavigationList>
+        <StyledNavigationList data-public>
             <PrimaryListItem href='/personal' text='Dashboard' />
             <PrimaryListItem href='/projects' text='Projects' />
             <PrimaryListItem href='/search' text='Flags overview' />

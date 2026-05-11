@@ -22,8 +22,6 @@ jobs:
           cache-dependency-path: pnpm-lock.yaml
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Build static frontend
-        run: pnpm --dir frontend build
       - name: Cache Playwright browsers
         uses: actions/cache@v5
         with:
@@ -31,8 +29,21 @@ jobs:
           key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
       - name: Install Playwright browsers
         run: pnpm --dir frontend exec playwright install --with-deps chromium
-      - name: Start Unleash test instance
-        run: docker compose -f .github/docker-compose.test.yml up -d --wait -t 90
+      - name: Start backend services
+        run: docker compose -f .github/docker-compose.test.yml up -d db unleash
+        env:
+          FRONTEND_TEST_LICENSE: ${{ secrets.FRONTEND_TEST_LICENSE }}
+      - name: Cache frontend build
+        id: cache-frontend-build
+        uses: actions/cache@v5
+        with:
+          path: frontend/build
+          key: frontend-build-${{ runner.os }}-${{ hashFiles('frontend/src/**', 'frontend/public/**', 'frontend/index.html', 'frontend/vite.config.ts', 'frontend/tsconfig.json', 'pnpm-lock.yaml') }}
+      - name: Build static frontend
+        if: steps.cache-frontend-build.outputs.cache-hit != 'true'
+        run: pnpm --dir frontend build
+      - name: Start frontend server
+        run: docker compose -f .github/docker-compose.test.yml up -d --wait -t 90 frontend
         env:
           FRONTEND_TEST_LICENSE: ${{ secrets.FRONTEND_TEST_LICENSE }}
       - name: Run Playwright

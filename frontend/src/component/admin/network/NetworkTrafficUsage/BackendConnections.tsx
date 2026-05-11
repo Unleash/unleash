@@ -25,7 +25,7 @@ import {
 } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { useChartDataSelection } from './hooks/useChartDataSelection.ts';
-import HelpOutline from '@mui/icons-material/HelpOutline';
+import HelpOutline from '@mui/icons-material/HelpOutlineOutlined';
 import { networkTrafficUsageHighlightPlugin } from './networkTrafficUsageHighlightPlugin.ts';
 
 const ConnectionExplanationBox = styled(Box)(({ theme }) => ({

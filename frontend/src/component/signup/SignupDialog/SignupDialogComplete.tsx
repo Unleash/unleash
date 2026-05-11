@@ -1,6 +1,6 @@
 import { Box, Button, styled, Typography } from '@mui/material';
 import type { SignupStepContent } from './SignupDialog';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 
 const StyledContent = styled(Box)({
     display: 'flex',

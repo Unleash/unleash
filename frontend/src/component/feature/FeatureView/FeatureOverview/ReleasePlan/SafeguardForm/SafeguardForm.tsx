@@ -7,7 +7,7 @@ import {
     MenuItem,
 } from '@mui/material';
 import ShieldIcon from '@mui/icons-material/ShieldOutlined';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import type { FormEvent, ReactNode } from 'react';
 import { useEffect, useMemo, useState, type FC } from 'react';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';

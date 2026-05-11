@@ -1,5 +1,5 @@
 import BoltIcon from '@mui/icons-material/Bolt';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { Button, styled } from '@mui/material';
 import type { MilestoneStatus } from './ReleasePlanMilestoneStatus.tsx';
 import { MilestoneProgressionTimeInput } from '../MilestoneProgressionForm/MilestoneProgressionTimeInput.tsx';

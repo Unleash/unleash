@@ -37,10 +37,6 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     },
 }));
 
-const StyledSummary = styled(Box)({
-    marginLeft: 'auto',
-});
-
 const StyledCompletedBadge = styled(Badge)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -52,6 +48,16 @@ const StyledCompletedBadge = styled(Badge)(({ theme }) => ({
         width: theme.spacing(2.5),
         height: theme.spacing(2.5),
     },
+}));
+
+const StyledSummary = styled(Box)({
+    marginLeft: 'auto',
+});
+
+const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
+    borderTop: `1px solid ${theme.palette.divider}`,
+    padding: theme.spacing(2),
+    paddingLeft: theme.spacing(6.5),
 }));
 
 interface ConnectSdkDialogStepProps {
@@ -94,7 +100,7 @@ export const ConnectSdkDialogStep = ({
                 {title}
                 {summary && <StyledSummary>{summary}</StyledSummary>}
             </StyledAccordionSummary>
-            <AccordionDetails>{children}</AccordionDetails>
+            <StyledAccordionDetails>{children}</StyledAccordionDetails>
         </StyledAccordion>
     );
 };

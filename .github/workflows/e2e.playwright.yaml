@@ -7,8 +7,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  e2e-build:
+  e2e:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -23,34 +24,6 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Build static frontend
         run: pnpm --dir frontend build
-      - name: Upload frontend build
-        uses: actions/upload-artifact@v7
-        with:
-          name: frontend-build
-          path: frontend/build
-          retention-days: 1
-
-  e2e:
-    needs: e2e-build
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-      - uses: pnpm/action-setup@v5
-      - name: Use Node.js 22.x
-        uses: actions/setup-node@v6
-        with:
-          node-version: 22.x
-          cache: 'pnpm'
-          cache-dependency-path: pnpm-lock.yaml
-      - name: Download frontend build
-        uses: actions/download-artifact@v8
-        with:
-          name: frontend-build
-          path: frontend/build
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
       - name: Cache Playwright browsers
         uses: actions/cache@v5
         with:

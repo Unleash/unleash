@@ -192,7 +192,7 @@ const ImpactMetricsPage = () => {
 
                 <StatusCard>
                     <Typography fontWeight='bold'>
-                        External metrics status
+                        Enable external metrics
                     </Typography>
                     <FormControlLabel
                         control={

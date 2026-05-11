@@ -20,7 +20,6 @@ import { CleanupReminder } from '../CleanupReminder/CleanupReminder.tsx';
 import { useFeature } from '../../../../hooks/api/getters/useFeature/useFeature.ts';
 import { FeatureConnectSdkBanner } from './FeatureConnectSdkBanner.tsx';
 import { FeatureImplementFlagBanner } from './FeatureImplementFlagBanner.tsx';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -50,7 +49,6 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
     const navigate = useNavigate();
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
-    const onboardingFlagSetup = useUiFlag('onboardingFlagSetup');
     const featurePath = formatFeaturePath(projectId, featureId);
     const { hiddenEnvironments, onEnvironmentVisibilityChange } =
         useEnvironmentVisibility();
@@ -97,7 +95,7 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
                     ) : null}
                 </div>
                 <StyledMainContent>
-                    {!loading && onboardingFlagSetup && (
+                    {!loading && (
                         <>
                             <FeatureConnectSdkBanner
                                 projectId={projectId}

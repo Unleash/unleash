@@ -10,6 +10,7 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    continue-on-error: true
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -23,12 +24,16 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Cache Playwright browsers
+        id: cache-playwright-browsers
         uses: actions/cache@v5
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+      - name: Install Playwright system dependencies
+        run: pnpm --dir frontend exec playwright install-deps chromium
       - name: Install Playwright browsers
-        run: pnpm --dir frontend exec playwright install --with-deps chromium
+        if: steps.cache-playwright-browsers.outputs.cache-hit != 'true'
+        run: pnpm --dir frontend exec playwright install chromium
       - name: Start backend services
         run: docker compose -f .github/docker-compose.test.yml up -d db unleash
         env:

@@ -8,6 +8,7 @@ import {
     deleteUserAPI,
 } from '../../support/api';
 import { runBefore } from '../../support/helpers';
+import { AUTH_FILE } from '../../support/constants';
 
 // Tests are ordered: assign-user → assign-group → edit-role → multi-role → remove
 test.describe.configure({ mode: 'serial' });
@@ -15,7 +16,6 @@ test.describe.configure({ mode: 'serial' });
 const randomId = String(Math.random()).split('.')[1];
 const groupAndProjectName = `group-e2e-${randomId}`;
 const userName = `user-e2e-${randomId}`;
-const AUTH_FILE = 'playwright/.auth/user.json';
 
 const userIds: number[] = [];
 const groupIds: number[] = [];
@@ -179,11 +179,6 @@ test('can edit role to multiple roles', async ({ page }) => {
 });
 
 test('can remove access', async ({ page }) => {
-    await page
-        .locator('[data-testid="PA_REMOVE_BUTTON_ID"]:not([disabled])')
-        .first()
-        .click();
-
     const responsePromise = page.waitForResponse(
         (resp) =>
             resp
@@ -192,6 +187,11 @@ test('can remove access', async ({ page }) => {
                     `/api/admin/projects/${groupAndProjectName}/groups/${groupIds[0]}/roles`,
                 ) && resp.request().method() === 'DELETE',
     );
+
+    await page
+        .locator('[data-testid="PA_REMOVE_BUTTON_ID"]:not([disabled])')
+        .first()
+        .click();
     await page.getByText("Yes, I'm sure").click();
     await responsePromise;
     await expect(

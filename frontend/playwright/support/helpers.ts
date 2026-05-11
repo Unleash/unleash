@@ -1,25 +1,5 @@
 import type { Page } from '@playwright/test';
 
-const AUTH_USER = process.env.AUTH_USER || 'admin';
-const AUTH_PASSWORD = process.env.AUTH_PASSWORD || 'unleash4all';
-
-/**
- * Log in via the UI. Prefer storageState (set in playwright.config.ts) for
- * most tests — this function is useful when a test needs to log in explicitly
- * (e.g. as a different user, or to exercise the login flow itself).
- */
-export async function loginUI(
-    page: Page,
-    user = AUTH_USER,
-    password = AUTH_PASSWORD,
-): Promise<void> {
-    await page.goto('/');
-    await page.getByTestId('LOGIN_EMAIL_ID').locator('input').fill(user);
-    await page.getByTestId('LOGIN_PASSWORD_ID').locator('input').fill(password);
-    await page.getByTestId('LOGIN_BUTTON').click();
-    await page.getByTestId('HEADER_USER_AVATAR').waitFor();
-}
-
 /**
  * Suppress UI noise that would otherwise interfere with tests:
  * - sets localStorage to hide the "production guard" modal

@@ -93,3 +93,17 @@ export async function deleteGroupAPI(
 ): Promise<void> {
     await request.delete(`${BASE_URL}/api/admin/groups/${id}`);
 }
+
+export async function deleteSegmentByNameAPI(
+    request: APIRequestContext,
+    name: string,
+): Promise<void> {
+    const response = await request.get(`${BASE_URL}/api/admin/segments`);
+    const body = await response.json();
+    const segment = body.segments?.find(
+        (s: { name: string }) => s.name === name,
+    );
+    if (segment) {
+        await request.delete(`${BASE_URL}/api/admin/segments/${segment.id}`);
+    }
+}

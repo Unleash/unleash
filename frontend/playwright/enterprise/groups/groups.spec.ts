@@ -1,13 +1,13 @@
 import { expect, test } from '@playwright/test';
 import { createUserAPI, deleteUserAPI } from '../../support/api';
 import { runBefore } from '../../support/helpers';
+import { AUTH_FILE } from '../../support/constants';
 
 // Tests are ordered: create → duplicate-error → edit → add-user → remove-user → delete
 test.describe.configure({ mode: 'serial' });
 
 const randomId = String(Math.random()).split('.')[1];
 const groupName = `unleash-e2e-${randomId}`;
-const AUTH_FILE = 'playwright/.auth/user.json';
 
 const userIds: number[] = [];
 
@@ -135,22 +135,20 @@ test('can remove user from a group', async ({ page }) => {
     ).toBeVisible();
     await expect(
         page.getByTestId(`UG_REMOVE_USER_BTN_ID-${userIds[1]}`),
-    ).not.toBeVisible();
+    ).not.toBeAttached();
 });
 
 test('can delete a group', async ({ page }) => {
     await page.getByText(groupName, { exact: true }).click();
-    await page.getByTestId('UG_DELETE_BTN_ID').click();
 
     const responsePromise = page.waitForResponse(
         (resp) =>
             resp.url().includes('/api/admin/groups/') &&
             resp.request().method() === 'DELETE',
     );
+    await page.getByTestId('UG_DELETE_BTN_ID').click();
     await page.getByTestId('DIALOGUE_CONFIRM_ID').click();
     await responsePromise;
 
-    await expect(
-        page.locator('h1').filter({ hasText: groupName }),
-    ).not.toBeVisible();
+    await expect(page.getByText(groupName, { exact: true })).not.toBeAttached();
 });

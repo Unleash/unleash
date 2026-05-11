@@ -6,14 +6,14 @@ import {
     deleteProjectAPI,
 } from '../../support/api';
 import { runBefore } from '../../support/helpers';
+import { AUTH_FILE } from '../../support/constants';
 
-// Tests are ordered: create → duplicate-error
+// Tests are ordered: create → duplicate-error → (skipped) strategy
 test.describe.configure({ mode: 'serial' });
 
 const randomId = String(Math.random()).split('.')[1];
 const featureToggleName = `unleash-e2e-${randomId}`;
 const projectName = `unleash-e2e-project-${randomId}`;
-const AUTH_FILE = 'playwright/.auth/user.json';
 
 test.beforeAll(async ({ browser }) => {
     const context = await browser.newContext({ storageState: AUTH_FILE });

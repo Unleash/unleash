@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { deleteFeatureAPI } from '../../support/api';
 import { runBefore } from '../../support/helpers';
+import { AUTH_FILE } from '../../support/constants';
 import type { Page } from '@playwright/test';
 
 const randomId = String(Math.random()).split('.')[1];
@@ -11,9 +12,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.afterAll(async ({ browser }) => {
-    const context = await browser.newContext({
-        storageState: 'playwright/.auth/user.json',
-    });
+    const context = await browser.newContext({ storageState: AUTH_FILE });
     try {
         await deleteFeatureAPI(context.request, featureToggleName);
     } finally {

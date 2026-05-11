@@ -1,9 +1,5 @@
 import { expect, test as setup } from '@playwright/test';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-export const AUTH_FILE = path.join(__dirname, '../.auth/user.json');
+import { AUTH_FILE } from '../support/constants';
 
 const AUTH_USER = process.env.AUTH_USER || 'admin';
 const AUTH_PASSWORD = process.env.AUTH_PASSWORD || 'unleash4all';

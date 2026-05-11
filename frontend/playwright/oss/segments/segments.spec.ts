@@ -1,12 +1,23 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
+import { deleteSegmentByNameAPI } from '../../support/api';
 import { runBefore } from '../../support/helpers';
+import { AUTH_FILE } from '../../support/constants';
 
 // Tests are ordered: create → duplicate-error → delete
 test.describe.configure({ mode: 'serial' });
 
 const randomId = String(Math.random()).split('.')[1];
 const segmentName = `unleash-e2e-${randomId}`;
+
+test.afterAll(async ({ browser }) => {
+    const context = await browser.newContext({ storageState: AUTH_FILE });
+    try {
+        await deleteSegmentByNameAPI(context.request, segmentName);
+    } finally {
+        await context.close();
+    }
+});
 
 test.beforeEach(async ({ page }) => {
     await runBefore(page);
@@ -37,7 +48,7 @@ test('can delete a segment', async ({ page }) => {
     await deleteSegmentUI(page, segmentName);
     await expect(
         page.getByRole('link', { name: segmentName }),
-    ).not.toBeVisible();
+    ).not.toBeAttached();
 });
 
 async function createSegmentUI(page: Page, name: string): Promise<void> {
@@ -57,8 +68,7 @@ async function createSegmentUI(page: Page, name: string): Promise<void> {
     await page.getByTestId('SEGMENT_NEXT_BTN_ID').click();
     await page.getByTestId('SEGMENT_CREATE_BTN_ID').click();
     await responsePromise;
-    await page.waitForURL(/\/segments\/?$/);
-    await page.waitForLoadState('networkidle');
+    await expect(page.getByRole('link', { name })).toBeVisible();
 }
 
 async function deleteSegmentUI(page: Page, name: string): Promise<void> {

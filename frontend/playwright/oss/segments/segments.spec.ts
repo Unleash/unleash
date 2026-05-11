@@ -57,6 +57,7 @@ async function createSegmentUI(page: Page, name: string): Promise<void> {
     await page.getByTestId('SEGMENT_NEXT_BTN_ID').click();
     await page.getByTestId('SEGMENT_CREATE_BTN_ID').click();
     await responsePromise;
+    await page.waitForURL(/\/segments\/?$/);
 }
 
 async function deleteSegmentUI(page: Page, name: string): Promise<void> {

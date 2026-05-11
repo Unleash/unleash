@@ -43,15 +43,10 @@ test('can delete a segment', async ({ page }) => {
 async function createSegmentUI(page: Page, name: string): Promise<void> {
     await page.getByTestId('NAVIGATE_TO_CREATE_SEGMENT').click();
 
-    const postResponsePromise = page.waitForResponse(
+    const responsePromise = page.waitForResponse(
         (resp) =>
             resp.url().includes('/api/admin/segments') &&
             resp.request().method() === 'POST',
-    );
-    const getResponsePromise = page.waitForResponse(
-        (resp) =>
-            resp.url().includes('/api/admin/segments') &&
-            resp.request().method() === 'GET',
     );
 
     await page.getByTestId('SEGMENT_NAME_ID').locator('input').fill(name);
@@ -61,9 +56,9 @@ async function createSegmentUI(page: Page, name: string): Promise<void> {
         .fill('hello-world');
     await page.getByTestId('SEGMENT_NEXT_BTN_ID').click();
     await page.getByTestId('SEGMENT_CREATE_BTN_ID').click();
-    await postResponsePromise;
+    await responsePromise;
     await page.waitForURL(/\/segments\/?$/);
-    await getResponsePromise;
+    await page.waitForLoadState('networkidle');
 }
 
 async function deleteSegmentUI(page: Page, name: string): Promise<void> {

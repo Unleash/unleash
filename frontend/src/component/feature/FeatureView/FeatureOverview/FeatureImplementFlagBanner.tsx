@@ -20,7 +20,9 @@ export const FeatureImplementFlagBanner = ({
     const [dialogOpen, setDialogOpen] = useState(false);
 
     const isOnboarded = project.onboardingStatus.status === 'onboarded';
-    const isInitialStage = !loading && feature.lifecycle?.stage === 'initial';
+    const isInitialStage =
+        !loading &&
+        (!feature.lifecycle || feature.lifecycle.stage === 'initial');
     const showBanner = isOnboarded && isInitialStage;
 
     if (!showBanner && !dialogOpen) {

@@ -1,16 +1,16 @@
-import { Box, Dialog, DialogContent, IconButton, styled } from '@mui/material';
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogContent,
+    IconButton,
+    styled,
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { Truncator } from 'component/common/Truncator/Truncator.tsx';
 import { NewConnectSdkDialogAside } from './NewConnectSdkDialogAside';
-
-interface IConnectSDKDialogProps {
-    open: boolean;
-    onClose: () => void;
-    onFinish: (sdkName: string) => void;
-    project: string;
-    environments: string[];
-    feature?: string;
-}
+import { useState } from 'react';
+import { ConnectSdkDialogStep } from './ConnectSdkDialogStep';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -82,6 +82,12 @@ const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
     flexDirection: 'column',
     overflowY: 'auto',
     backgroundColor: theme.palette.background.paper,
+    gap: theme.spacing(2),
+}));
+
+const StyledDialogFooter = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'flex-end',
 }));
 
 const StyledDialogAside = styled('aside')(({ theme }) => ({
@@ -119,13 +125,53 @@ const DialogHeader = ({ onClose }: Pick<IConnectSDKDialogProps, 'onClose'>) => {
     );
 };
 
-const InnerDialog = ({ onClose }: Omit<IConnectSDKDialogProps, 'open'>) => {
-    // TODO: Implement
+type Step = {
+    title: string;
+    summary?: React.ReactNode;
+};
+
+const InnerDialog = ({
+    onClose,
+    onFinish,
+}: Omit<IConnectSDKDialogProps, 'open'>) => {
+    const [currentStep] = useState(0);
+    const [expandedStep, setExpandedStep] = useState(0);
+
+    const steps: Step[] = [
+        { title: 'Select SDK' },
+        { title: 'Generate API key' },
+        { title: 'Configure the SDK' },
+    ];
+
     return (
         <StyledDialog open onClose={onClose}>
             <DialogHeader onClose={onClose} />
             <StyledDialogBody>
-                <StyledDialogContent>Main content</StyledDialogContent>
+                <StyledDialogContent>
+                    {steps.map(({ title, summary }, index) => (
+                        <ConnectSdkDialogStep
+                            key={title}
+                            stepNumber={index + 1}
+                            title={title}
+                            isExpanded={expandedStep === index}
+                            isCompleted={index < currentStep}
+                            isDisabled={index > currentStep}
+                            onExpand={() => setExpandedStep(index)}
+                            summary={summary}
+                        >
+                            {title} content
+                        </ConnectSdkDialogStep>
+                    ))}
+                    <StyledDialogFooter>
+                        <Button
+                            variant='contained'
+                            disabled={currentStep < steps.length}
+                            onClick={() => onFinish('TODO: sdk from state')}
+                        >
+                            Finish setup
+                        </Button>
+                    </StyledDialogFooter>
+                </StyledDialogContent>
                 <StyledDialogAside>
                     <NewConnectSdkDialogAside />
                 </StyledDialogAside>
@@ -133,6 +179,15 @@ const InnerDialog = ({ onClose }: Omit<IConnectSDKDialogProps, 'open'>) => {
         </StyledDialog>
     );
 };
+
+interface IConnectSDKDialogProps {
+    open: boolean;
+    onClose: () => void;
+    onFinish: (sdkName: string) => void;
+    project: string;
+    environments: string[];
+    feature?: string;
+}
 
 export const ConnectSdkDialog = ({
     open,

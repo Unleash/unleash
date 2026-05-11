@@ -37,7 +37,6 @@ export const CreateFlagStep = ({
             ) : (
                 <FlagCreationButton
                     text='New feature flag'
-                    skipNavigationOnComplete
                     onSuccess={() => {
                         refetchProject();
                         refetchFeatures();

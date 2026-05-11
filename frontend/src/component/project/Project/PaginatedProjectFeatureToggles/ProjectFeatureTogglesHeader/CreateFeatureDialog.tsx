@@ -37,7 +37,6 @@ import { useLocalStorageState } from 'hooks/useLocalStorageState.ts';
 interface ICreateFeatureDialogProps {
     open: boolean;
     onClose: () => void;
-    skipNavigationOnComplete?: boolean;
     onSuccess?: () => void;
 }
 
@@ -78,7 +77,6 @@ export const CreateFeatureDialog = ({
     open,
     onClose,
     onSuccess,
-    skipNavigationOnComplete,
 }: ICreateFeatureDialogProps) => {
     if (open) {
         // wrap the inner component so that we only fetch data etc
@@ -87,7 +85,6 @@ export const CreateFeatureDialog = ({
             <CreateFeatureDialogContent
                 open={open}
                 onClose={onClose}
-                skipNavigationOnComplete={skipNavigationOnComplete}
                 onSuccess={onSuccess}
             />
         );
@@ -97,7 +94,6 @@ export const CreateFeatureDialog = ({
 const CreateFeatureDialogContent = ({
     open,
     onClose,
-    skipNavigationOnComplete,
     onSuccess,
 }: ICreateFeatureDialogProps) => {
     const { setToastData, setToastApiError } = useToast();
@@ -172,9 +168,7 @@ const CreateFeatureDialogContent = ({
             const payload = getTogglePayload();
             try {
                 await createFeatureToggle(project, payload);
-                if (!skipNavigationOnComplete) {
-                    navigate(`/projects/${project}/features/${name}`);
-                }
+                navigate(`/projects/${project}/features/${name}`);
                 setToastData({
                     text: 'Flag created successfully',
                     type: 'success',

@@ -199,7 +199,6 @@ const CreateFlag = ({ projectId, refetchFeatures }: ICreateFlagProps) => {
             </Typography>
             <FlagCreationButton
                 text='Create flag'
-                skipNavigationOnComplete={true}
                 onSuccess={() => {
                     refetch();
                     refetchFeatures();

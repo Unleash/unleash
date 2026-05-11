@@ -27,7 +27,7 @@ const LogRocketRunner = ({ appId, clientId, userId }: Props) => {
         } catch (error) {
             console.warn(error);
         }
-    }, []);
+    }, [appId, clientId, userId]);
 
     return null;
 };

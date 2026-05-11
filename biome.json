@@ -285,6 +285,7 @@
     "includes": [
       "**",
       "!**/node_modules",
+      "!**/playwright-report",
       "!**/docker",
       "!**/bundle.js",
       "!**/website",

@@ -12,6 +12,7 @@ import UnleashLogo from 'assets/img/logoDarkWithText.svg?react';
 import UnleashLogoWhite from 'assets/img/logoWithWhiteText.svg?react';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { useImpactMetricsCounter } from 'hooks/useImpactMetrics';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const DOCS_URL = 'https://docs.getunleash.io/reference/impact-metrics';
 const TRACKING_HELP =
@@ -264,6 +265,7 @@ interface ImpactMetricsSafeguardsSplashProps {
 export const ImpactMetricsSafeguardsSplash = ({
     onClose,
 }: ImpactMetricsSafeguardsSplashProps) => {
+    const { trackEvent } = usePlausibleTracker();
     const { increment: trackDisplayed } = useImpactMetricsCounter(
         'impactMetricsSafeguardsSplash_displayed',
         TRACKING_HELP,
@@ -279,16 +281,25 @@ export const ImpactMetricsSafeguardsSplash = ({
 
     useEffect(() => {
         trackDisplayed();
-    }, [trackDisplayed]);
+        trackEvent('impact-metrics-safeguards-splash', {
+            props: { eventType: 'displayed' },
+        });
+    }, [trackDisplayed, trackEvent]);
 
     const handleDocsClick = () => {
         trackDocsClicked();
+        trackEvent('impact-metrics-safeguards-splash', {
+            props: { eventType: 'docs-click' },
+        });
         window.open(DOCS_URL, '_blank', 'noopener,noreferrer');
         onClose();
     };
 
     const handleDismiss = () => {
         trackDismissed();
+        trackEvent('impact-metrics-safeguards-splash', {
+            props: { eventType: 'dismissed' },
+        });
         onClose();
     };
 

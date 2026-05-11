@@ -23,6 +23,7 @@ const StyledContainer = styled('span')<{ size: string | undefined }>(
             fontSize: size || theme.fontSizes.mainHeader,
             color: theme.palette.action.active,
             marginLeft: theme.spacing(0.5),
+            marginRight: theme.spacing(0.5),
         },
     }),
 );

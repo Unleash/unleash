@@ -64,6 +64,8 @@ jobs:
           FRONTEND_TEST_LICENSE: ${{ secrets.FRONTEND_TEST_LICENSE }}
       - name: Run Playwright
         run: pnpm --dir frontend exec playwright test --project enterprise
+        env:
+          BASE_URL: http://localhost:3000
       - name: Upload Playwright artifacts
         uses: actions/upload-artifact@v7
         if: failure()

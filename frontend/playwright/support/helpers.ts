@@ -38,13 +38,17 @@ export async function runBefore(page: Page): Promise<void> {
 
     await page.route('**/api/admin/user', async (route) => {
         const response = await route.fetch();
-        const json = await response.json();
-        json.splash = {
-            ...json.splash,
-            personalDashboardKeyConcepts: true,
-            'strategy-drag-tooltip': true,
-        };
-        await route.fulfill({ response, json });
+        try {
+            const json = await response.json();
+            json.splash = {
+                ...json.splash,
+                personalDashboardKeyConcepts: true,
+                'strategy-drag-tooltip': true,
+            };
+            await route.fulfill({ response, json });
+        } catch {
+            await route.fulfill({ response });
+        }
     });
 
     await page.route('**/api/admin/user/splash/**', (route) =>

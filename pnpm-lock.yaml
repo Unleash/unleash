@@ -366,7 +366,7 @@ importers:
         version: 6.0.0(@types/node@22.19.17)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4)
       vitest:
         specifier: 4.1.5
-        version: 4.1.5(@opentelemetry/api@1.9.1)(@types/node@22.19.17)(@vitest/coverage-v8@4.1.5)(@vitest/ui@4.1.5)(jsdom@25.0.1)(msw@2.13.6(@types/node@22.19.17)(typescript@5.9.3))(vite@8.0.10(@types/node@22.19.17)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4))
+        version: 4.1.5(@opentelemetry/api@1.9.1)(@types/node@22.19.17)(@vitest/coverage-v8@4.1.5)(@vitest/ui@4.1.5)(jsdom@25.0.1)(msw@2.14.3(@types/node@22.19.17)(typescript@5.9.3))(vite@8.0.10(@types/node@22.19.17)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4))
       wait-on:
         specifier: ^9.0.5
         version: 9.0.5
@@ -585,8 +585,8 @@ importers:
         specifier: ^6.1.0
         version: 6.1.0
       msw:
-        specifier: 2.13.6
-        version: 2.13.6(@types/node@22.19.17)(typescript@5.9.3)
+        specifier: 2.14.3
+        version: 2.14.3(@types/node@22.19.17)(typescript@5.9.3)
       orval:
         specifier: ^7.21.0
         version: 7.21.0(openapi-types@12.1.3)(typescript@5.9.3)
@@ -697,7 +697,7 @@ importers:
         version: 5.1.4(typescript@5.9.3)(vite@8.0.10(@types/node@22.19.17)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4))
       vitest:
         specifier: 4.1.5
-        version: 4.1.5(@opentelemetry/api@1.9.1)(@types/node@22.19.17)(@vitest/coverage-v8@4.1.5)(@vitest/ui@4.1.5)(jsdom@25.0.1)(msw@2.13.6(@types/node@22.19.17)(typescript@5.9.3))(vite@8.0.10(@types/node@22.19.17)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4))
+        version: 4.1.5(@opentelemetry/api@1.9.1)(@types/node@22.19.17)(@vitest/coverage-v8@4.1.5)(@vitest/ui@4.1.5)(jsdom@25.0.1)(msw@2.14.3(@types/node@22.19.17)(typescript@5.9.3))(vite@8.0.10(@types/node@22.19.17)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4))
       whatwg-fetch:
         specifier: 3.6.20
         version: 3.6.20
@@ -4795,8 +4795,8 @@ packages:
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
-  msw@2.13.6:
-    resolution: {integrity: sha512-GAJbQy8Ra/Ydjt0Hb2MGT2qhzd83J3+QZMHdH85uW7r/XkKc846+Ma2PLif5hGvTm5Yqa+wkcstpim0WeLZU9g==}
+  msw@2.14.3:
+    resolution: {integrity: sha512-kk8G5cocVlJ4wsKMGZegn2H6XLOEKjbA+nSJE2354e/SRp4mDicCHUYnMXpymzVcVDCs+GUAsmNqSn+yHv4T2A==}
     engines: {node: '>=18'}
     hasBin: true
     peerDependencies:
@@ -7153,7 +7153,7 @@ snapshots:
   '@fast-check/vitest@0.4.1(vitest@4.1.5)':
     dependencies:
       fast-check: 4.7.0
-      vitest: 4.1.5(@opentelemetry/api@1.9.1)(@types/node@22.19.17)(@vitest/coverage-v8@4.1.5)(@vitest/ui@4.1.5)(jsdom@25.0.1)(msw@2.13.6(@types/node@22.19.17)(typescript@5.9.3))(vite@8.0.10(@types/node@22.19.17)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4))
+      vitest: 4.1.5(@opentelemetry/api@1.9.1)(@types/node@22.19.17)(@vitest/coverage-v8@4.1.5)(@vitest/ui@4.1.5)(jsdom@25.0.1)(msw@2.14.3(@types/node@22.19.17)(typescript@5.9.3))(vite@8.0.10(@types/node@22.19.17)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4))
 
   '@floating-ui/core@1.7.5':
     dependencies:
@@ -8496,7 +8496,7 @@ snapshots:
       obug: 2.1.1
       std-env: 4.1.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.5(@opentelemetry/api@1.9.1)(@types/node@22.19.17)(@vitest/coverage-v8@4.1.5)(@vitest/ui@4.1.5)(jsdom@25.0.1)(msw@2.13.6(@types/node@22.19.17)(typescript@5.9.3))(vite@8.0.10(@types/node@22.19.17)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4))
+      vitest: 4.1.5(@opentelemetry/api@1.9.1)(@types/node@22.19.17)(@vitest/coverage-v8@4.1.5)(@vitest/ui@4.1.5)(jsdom@25.0.1)(msw@2.14.3(@types/node@22.19.17)(typescript@5.9.3))(vite@8.0.10(@types/node@22.19.17)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4))
 
   '@vitest/expect@4.1.5':
     dependencies:
@@ -8507,13 +8507,13 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.0
 
-  '@vitest/mocker@4.1.5(msw@2.13.6(@types/node@22.19.17)(typescript@5.9.3))(vite@8.0.10(@types/node@22.19.17)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4))':
+  '@vitest/mocker@4.1.5(msw@2.14.3(@types/node@22.19.17)(typescript@5.9.3))(vite@8.0.10(@types/node@22.19.17)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4))':
     dependencies:
       '@vitest/spy': 4.1.5
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      msw: 2.13.6(@types/node@22.19.17)(typescript@5.9.3)
+      msw: 2.14.3(@types/node@22.19.17)(typescript@5.9.3)
       vite: 8.0.10(@types/node@22.19.17)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4)
 
   '@vitest/pretty-format@4.1.5':
@@ -8543,7 +8543,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.16
       tinyrainbow: 3.1.0
-      vitest: 4.1.5(@opentelemetry/api@1.9.1)(@types/node@22.19.17)(@vitest/coverage-v8@4.1.5)(@vitest/ui@4.1.5)(jsdom@25.0.1)(msw@2.13.6(@types/node@22.19.17)(typescript@5.9.3))(vite@8.0.10(@types/node@22.19.17)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4))
+      vitest: 4.1.5(@opentelemetry/api@1.9.1)(@types/node@22.19.17)(@vitest/coverage-v8@4.1.5)(@vitest/ui@4.1.5)(jsdom@25.0.1)(msw@2.14.3(@types/node@22.19.17)(typescript@5.9.3))(vite@8.0.10(@types/node@22.19.17)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4))
 
   '@vitest/utils@4.1.5':
     dependencies:
@@ -11070,7 +11070,7 @@ snapshots:
 
   ms@2.1.3: {}
 
-  msw@2.13.6(@types/node@22.19.17)(typescript@5.9.3):
+  msw@2.14.3(@types/node@22.19.17)(typescript@5.9.3):
     dependencies:
       '@inquirer/confirm': 6.0.12(@types/node@22.19.17)
       '@mswjs/interceptors': 0.41.8
@@ -12853,10 +12853,10 @@ snapshots:
       sass: 1.99.0
       yaml: 2.8.4
 
-  vitest@4.1.5(@opentelemetry/api@1.9.1)(@types/node@22.19.17)(@vitest/coverage-v8@4.1.5)(@vitest/ui@4.1.5)(jsdom@25.0.1)(msw@2.13.6(@types/node@22.19.17)(typescript@5.9.3))(vite@8.0.10(@types/node@22.19.17)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4)):
+  vitest@4.1.5(@opentelemetry/api@1.9.1)(@types/node@22.19.17)(@vitest/coverage-v8@4.1.5)(@vitest/ui@4.1.5)(jsdom@25.0.1)(msw@2.14.3(@types/node@22.19.17)(typescript@5.9.3))(vite@8.0.10(@types/node@22.19.17)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4)):
     dependencies:
       '@vitest/expect': 4.1.5
-      '@vitest/mocker': 4.1.5(msw@2.13.6(@types/node@22.19.17)(typescript@5.9.3))(vite@8.0.10(@types/node@22.19.17)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4))
+      '@vitest/mocker': 4.1.5(msw@2.14.3(@types/node@22.19.17)(typescript@5.9.3))(vite@8.0.10(@types/node@22.19.17)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4))
       '@vitest/pretty-format': 4.1.5
       '@vitest/runner': 4.1.5
       '@vitest/snapshot': 4.1.5

@@ -11,7 +11,7 @@
   },
   "type": "module",
   "scripts": {
-    "ci": "pnpm run lint:check && pnpm run ts:check && pnpm run build --logLevel=error && pnpm run test --reporter=dot",
+    "ci": "pnpm run lint && pnpm run ts:check && pnpm run build --logLevel=error && pnpm run test --reporter=dot",
     "build": "pnpm run lint:material:icons && vite build",
     "dev": "vite",
     "start": "vite",

@@ -12,7 +12,6 @@ import { NAVIGATE_TO_CREATE_FEATURE } from 'utils/testIds';
 interface IFlagCreationButtonProps {
     text?: string;
     variant?: ButtonProps['variant'];
-    skipNavigationOnComplete?: boolean;
     isLoading?: boolean;
     onSuccess?: () => void;
 }
@@ -24,7 +23,6 @@ const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
 export const FlagCreationButton = ({
     variant,
     text = 'New feature flag',
-    skipNavigationOnComplete,
     isLoading,
     onSuccess,
 }: IFlagCreationButtonProps) => {
@@ -53,7 +51,6 @@ export const FlagCreationButton = ({
             <CreateFeatureDialog
                 open={openCreateDialog}
                 onClose={() => setOpenCreateDialog(false)}
-                skipNavigationOnComplete={skipNavigationOnComplete}
                 onSuccess={onSuccess}
             />
         </>

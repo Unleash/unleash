@@ -37,10 +37,10 @@ const SdkListSection = styled('div')(({ theme }) => ({
 }));
 
 const SdkButton = styled(Button, {
-    shouldForwardProp: (prop) => prop !== '$selected',
-})<{ $selected?: boolean }>(({ theme, $selected }) => ({
+    shouldForwardProp: (prop) => prop !== 'isSelected',
+})<{ isSelected?: boolean }>(({ theme, isSelected }) => ({
     fontSize: theme.typography.body2.fontSize,
-    border: `1px solid ${$selected ? theme.palette.primary.main : theme.palette.divider}`,
+    border: `1px solid ${isSelected ? theme.palette.primary.main : theme.palette.divider}`,
     borderRadius: theme.shape.borderRadius,
     padding: theme.spacing(1, 1.5),
     minWidth: theme.spacing(30),
@@ -90,7 +90,7 @@ const SdkList = ({ sdks, type, selectedSdkName, onSelect }: ISdkListProps) => (
                     key={sdk.name}
                     onClick={() => onSelect({ name: sdk.name, type })}
                     variant='text'
-                    $selected={isSelected}
+                    isSelected={isSelected}
                 >
                     <StyledAvatar src={formatAssetPath(sdk.icon)} alt='' />
                     <SdkTileContent>

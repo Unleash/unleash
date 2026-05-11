@@ -151,7 +151,7 @@ const InnerDialog = ({
     const steps: Step[] = [
         {
             title: 'Select SDK',
-            content: <SelectSdk onSelect={onSelectSdk} />,
+            content: <SelectSdk sdk={sdk} onSelect={onSelectSdk} />,
             summary: <SelectSdkSummary sdk={sdk} />,
         },
         { title: 'Generate API key', content: 'TODO: Generate API key' },

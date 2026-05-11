@@ -22,7 +22,11 @@ const vitestConfig = vitestDefineConfig({
         globals: true,
         setupFiles: 'src/setupTests.ts',
         environment: 'jsdom',
-        exclude: [...configDefaults.exclude, '**/cypress/**'],
+        exclude: [
+            ...configDefaults.exclude,
+            '**/cypress/**',
+            '**/playwright/**',
+        ],
         server: {
             deps: {
                 inline: ['chartjs-adapter-date-fns'],

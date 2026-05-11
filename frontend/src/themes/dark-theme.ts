@@ -399,6 +399,9 @@ export const darkTheme = createTheme({
 
         // Horizontal menu tabs
         MuiTabs: {
+            defaultProps: {
+                'data-public': true,
+            } as any,
             styleOverrides: {
                 root: ({ theme }) => ({
                     '& .MuiTabs-indicator': {

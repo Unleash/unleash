@@ -121,7 +121,11 @@ export const UpgradeTrialDialog = ({
                     Contact your account admin to request an upgrade.
                 </Alert>
             )}
-            <Typography color='text.secondary'>
+            <Typography
+                sx={{
+                    color: 'text.secondary',
+                }}
+            >
                 Trusted by enterprises like
             </Typography>
             <StyledLogoList>

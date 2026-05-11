@@ -46,8 +46,11 @@ export const SignupDialogComplete: SignupStepContent = ({
                 <StyledTitle>You're all set</StyledTitle>
                 <Typography
                     variant='body2'
-                    color='text.secondary'
-                    sx={{ whiteSpace: 'pre-line', textAlign: 'center' }}
+                    sx={{
+                        color: 'text.secondary',
+                        whiteSpace: 'pre-line',
+                        textAlign: 'center',
+                    }}
                 >
                     {description}
                 </Typography>

@@ -31,7 +31,12 @@ export const EmptyTemplatesListMessage = () => {
             <Typography component='h2' variant='h3'>
                 Get started with release templates
             </Typography>
-            <Typography component='p' color='text.secondary'>
+            <Typography
+                component='p'
+                sx={{
+                    color: 'text.secondary',
+                }}
+            >
                 Control your releases with milestones that can be reused by the
                 entire team.
             </Typography>

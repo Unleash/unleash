@@ -19,7 +19,11 @@ export const FeatureMetricsContent = ({
 
     if (metrics.length === 0) {
         return (
-            <Box mt={6}>
+            <Box
+                sx={{
+                    mt: 6,
+                }}
+            >
                 <Typography
                     variant='body1'
                     sx={(theme) => ({ marginBottom: theme.spacing(2) })}
@@ -40,14 +44,25 @@ export const FeatureMetricsContent = ({
 
     return (
         <Suspense fallback={null}>
-            <Box borderTop={1} pt={2} mt={3} borderColor='divider'>
+            <Box
+                sx={{
+                    borderTop: 1,
+                    pt: 2,
+                    mt: 3,
+                    borderColor: 'divider',
+                }}
+            >
                 <LazyFeatureMetricsChart
                     metrics={metrics}
                     hoursBack={hoursBack}
                     statsSectionId={statsSectionId}
                 />
             </Box>
-            <Box mt={4}>
+            <Box
+                sx={{
+                    mt: 4,
+                }}
+            >
                 <FeatureMetricsStatsRaw
                     metrics={metrics}
                     hoursBack={hoursBack}
@@ -55,7 +70,11 @@ export const FeatureMetricsContent = ({
                     tableSectionId={tableSectionId}
                 />
             </Box>
-            <Box mt={4}>
+            <Box
+                sx={{
+                    mt: 4,
+                }}
+            >
                 <FeatureMetricsTable
                     metrics={metrics}
                     tableSectionId={tableSectionId}

@@ -96,7 +96,13 @@ const ProjectLinkTemplates = ({
 
     return (
         <StyledLinkTemplatesContainer>
-            <Box display='flex' alignItems='center' gap={1}>
+            <Box
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1,
+                }}
+            >
                 <Typography variant='h4'>Project Link Templates</Typography>
                 <Tooltip
                     title={
@@ -126,7 +132,6 @@ const ProjectLinkTemplates = ({
                     feature flags in this project.
                 </p>
             </StyledSubtitle>
-
             {linkTemplates.length > 0 ? (
                 <StyledLinkTemplatesList>
                     {linkTemplates.map((template, index) => {
@@ -178,7 +183,6 @@ const ProjectLinkTemplates = ({
                     })}
                 </StyledLinkTemplatesList>
             ) : null}
-
             <ProjectLinkTemplateDialog
                 open={dialogOpen}
                 onSave={handleSaveTemplate}
@@ -190,8 +194,12 @@ const ProjectLinkTemplates = ({
                         : undefined
                 }
             />
-
-            <Box display='flex' justifyContent='flex-start'>
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-start',
+                }}
+            >
                 <Button
                     startIcon={<AddIcon />}
                     variant='outlined'

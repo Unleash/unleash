@@ -168,7 +168,13 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
                     show={<IntegrationCardMenu addon={addon as AddonSchema} />}
                 />
             </StyledHeader>
-            <Typography variant='body2' color='text.secondary' data-loading>
+            <Typography
+                variant='body2'
+                data-loading
+                sx={{
+                    color: 'text.secondary',
+                }}
+            >
                 {description}
             </Typography>
             <StyledAction data-loading>

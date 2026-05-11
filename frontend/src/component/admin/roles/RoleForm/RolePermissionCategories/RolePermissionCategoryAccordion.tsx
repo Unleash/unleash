@@ -111,7 +111,12 @@ export const RolePermissionCategoryAccordion = ({
                             maxWidth='120'
                             maxLength={25}
                         />{' '}
-                        <Typography variant='body2' color='text.secondary'>
+                        <Typography
+                            variant='body2'
+                            sx={{
+                                color: 'text.secondary',
+                            }}
+                        >
                             ({permissionCount} / {permissions?.length}{' '}
                             permissions)
                         </Typography>

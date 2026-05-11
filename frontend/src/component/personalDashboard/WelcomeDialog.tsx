@@ -63,7 +63,9 @@ export const WelcomeDialog = () => {
                     <Typography
                         component='span'
                         color='primary'
-                        fontWeight='bold'
+                        sx={{
+                            fontWeight: 'bold',
+                        }}
                     >
                         key concepts
                     </Typography>{' '}

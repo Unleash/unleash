@@ -64,7 +64,12 @@ export const NewInUnleashSideBarItem = ({
             {icon}
             <LabelWithSummary>
                 <StyledItemTitle>
-                    <Typography fontWeight='bold' fontSize='small'>
+                    <Typography
+                        sx={{
+                            fontWeight: 'bold',
+                            fontSize: 'small',
+                        }}
+                    >
                         <Truncator title={label} arrow>
                             {label}
                         </Truncator>
@@ -74,7 +79,13 @@ export const NewInUnleashSideBarItem = ({
                         show={<Badge color='secondary'>Beta</Badge>}
                     />
                 </StyledItemTitle>
-                <Typography fontSize='small'>{summary}</Typography>
+                <Typography
+                    sx={{
+                        fontSize: 'small',
+                    }}
+                >
+                    {summary}
+                </Typography>
             </LabelWithSummary>
             <Tooltip title='Dismiss' arrow sx={{ marginLeft: 'auto' }}>
                 <StyledItemButtonClose

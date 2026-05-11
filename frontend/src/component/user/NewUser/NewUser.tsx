@@ -114,9 +114,18 @@ export const NewUser = () => {
                     </Typography>
                 }
             />
-            <Typography color='text.secondary'>
+            <Typography
+                sx={{
+                    color: 'text.secondary',
+                }}
+            >
                 We suggest using{' '}
-                <Typography component='strong' fontWeight='bold'>
+                <Typography
+                    component='strong'
+                    sx={{
+                        fontWeight: 'bold',
+                    }}
+                >
                     the email you use for work
                 </Typography>
                 .

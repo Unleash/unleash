@@ -16,8 +16,8 @@ export const WidgetFooterLink: FC<IWidgetFooterLinkProps> = ({
         <Typography
             data-loading
             variant='body2'
-            textAlign='center'
             sx={{
+                textAlign: 'center',
                 paddingTop: (theme) => theme.spacing(2.5),
                 marginTop: 'auto',
                 justifySelf: 'flex-end',

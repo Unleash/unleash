@@ -123,7 +123,11 @@ export const DemoStepTooltip = ({
                         <CloseIcon />
                     </StyledCloseButton>
                     <StyledTooltipTitle>
-                        <Typography fontWeight='bold'>
+                        <Typography
+                            sx={{
+                                fontWeight: 'bold',
+                            }}
+                        >
                             {step.title || topics[topic].title}
                         </Typography>
                     </StyledTooltipTitle>
@@ -175,7 +179,11 @@ export const DemoStepTooltip = ({
                 <CloseIcon />
             </StyledCloseButton>
             <StyledTooltipTitle>
-                <Typography fontWeight='bold'>
+                <Typography
+                    sx={{
+                        fontWeight: 'bold',
+                    }}
+                >
                     {step.title || topics[topic].title}
                 </Typography>
             </StyledTooltipTitle>

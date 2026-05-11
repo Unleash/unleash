@@ -67,7 +67,12 @@ export const ExistingFlag: FC<{ project: string }> = ({ project }) => {
             }
         >
             <SuccessContainer>
-                <Typography fontWeight='bold' variant='body2'>
+                <Typography
+                    variant='body2'
+                    sx={{
+                        fontWeight: 'bold',
+                    }}
+                >
                     You have created your first flag
                 </Typography>
                 <Typography variant='body2'>

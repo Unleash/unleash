@@ -123,7 +123,11 @@ export const ReleaseTemplatesBanner: FC = () => {
                     <StyledTitle variant='h2'>
                         Get started with release templates
                     </StyledTitle>
-                    <Typography color='text.secondary'>
+                    <Typography
+                        sx={{
+                            color: 'text.secondary',
+                        }}
+                    >
                         Control your releases with milestones that can be
                         automatically enabled or paused.
                     </Typography>

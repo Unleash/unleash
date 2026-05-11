@@ -85,7 +85,12 @@ export const EnterpriseEdgeDismissibleAlert = ({
                         <Typography variant='h3'>
                             Instant flag updates worldwide
                         </Typography>
-                        <Typography variant='body2' color='text.secondary'>
+                        <Typography
+                            variant='body2'
+                            sx={{
+                                color: 'text.secondary',
+                            }}
+                        >
                             Enterprise Edge is a high-performance proxy between
                             your SDKs and Unleash, giving you global reach,
                             minimal latency, and making flag changes instantly

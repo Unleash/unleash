@@ -59,7 +59,13 @@ export const ImplementFlagInformation = ({
         <CloseButton onClick={onClose} size='small'>
             <CloseIcon />
         </CloseButton>
-        <Typography variant='body2' fontWeight='bold' sx={{ mt: 4 }}>
+        <Typography
+            variant='body2'
+            sx={{
+                fontWeight: 'bold',
+                mt: 4,
+            }}
+        >
             Define a safe default value
         </Typography>
         <Typography variant='body2'>
@@ -79,7 +85,13 @@ export const ImplementFlagInformation = ({
                 Managing feature flags in code.
             </InlineLink>
         </Typography>
-        <Typography variant='body1' fontWeight='bold' sx={{ mt: 3 }}>
+        <Typography
+            variant='body1'
+            sx={{
+                fontWeight: 'bold',
+                mt: 3,
+            }}
+        >
             Other resources
         </Typography>
         <ResourceList>

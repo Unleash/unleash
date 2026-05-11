@@ -183,11 +183,20 @@ const ImpactMetricsPage = () => {
                 <Card>
                     <IconHeader>
                         <InfoOutlinedIcon fontSize='small' color='primary' />
-                        <Typography fontWeight='bold'>
+                        <Typography
+                            sx={{
+                                fontWeight: 'bold',
+                            }}
+                        >
                             How does it work?
                         </Typography>
                     </IconHeader>
-                    <Typography variant='body2' color='text.secondary'>
+                    <Typography
+                        variant='body2'
+                        sx={{
+                            color: 'text.secondary',
+                        }}
+                    >
                         Unleash can read your organization's own metrics from
                         any Prometheus API compatible source (e.g. Prometheus,
                         VictoriaMetrics). Once connected, you can use those
@@ -195,8 +204,10 @@ const ImpactMetricsPage = () => {
                     </Typography>
                     <Typography
                         variant='body2'
-                        color='text.secondary'
                         component='ul'
+                        sx={{
+                            color: 'text.secondary',
+                        }}
                     >
                         <li>
                             Create <strong>safeguards</strong> — automatic rules
@@ -212,7 +223,11 @@ const ImpactMetricsPage = () => {
                 </Card>
 
                 <StatusCard>
-                    <Typography fontWeight='bold'>
+                    <Typography
+                        sx={{
+                            fontWeight: 'bold',
+                        }}
+                    >
                         Enable external metrics
                     </Typography>
                     <FormControlLabel
@@ -229,10 +244,19 @@ const ImpactMetricsPage = () => {
                 </StatusCard>
 
                 <Card>
-                    <Typography fontWeight='bold'>
+                    <Typography
+                        sx={{
+                            fontWeight: 'bold',
+                        }}
+                    >
                         Metrics source URL
                     </Typography>
-                    <Typography variant='body2' color='text.secondary'>
+                    <Typography
+                        variant='body2'
+                        sx={{
+                            color: 'text.secondary',
+                        }}
+                    >
                         Add the URL to your organization's Prometheus API
                         compatible source (e.g. Prometheus, VictoriaMetrics).
                         Check out{' '}
@@ -305,7 +329,11 @@ const ImpactMetricsPage = () => {
                         'metrics' in testOutcome &&
                         testOutcome.metrics.length > 0 && (
                             <>
-                                <Typography fontWeight='bold'>
+                                <Typography
+                                    sx={{
+                                        fontWeight: 'bold',
+                                    }}
+                                >
                                     Metrics
                                 </Typography>
                                 <MetricsList>

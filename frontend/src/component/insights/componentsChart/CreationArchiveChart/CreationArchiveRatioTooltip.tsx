@@ -67,7 +67,13 @@ export const CreationArchiveRatioTooltip: FC<
     return (
         <ChartTooltipContainer tooltip={tooltip}>
             <StyledTooltipItemContainer elevation={3}>
-                <Typography variant='body2' component='span' fontWeight='bold'>
+                <Typography
+                    variant='body2'
+                    component='span'
+                    sx={{
+                        fontWeight: 'bold',
+                    }}
+                >
                     Ratio {ratio}
                 </Typography>
 

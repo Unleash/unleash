@@ -169,7 +169,11 @@ export const FeatureOverviewEnvironment = ({
                     </StyledEnvironmentAccordionContainer>
                     <StyledAccordionFooter>
                         <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                            <Box ml='auto'>
+                            <Box
+                                sx={{
+                                    ml: 'auto',
+                                }}
+                            >
                                 <FeatureStrategyMenuButton
                                     label='Add strategy'
                                     dialogId={dialogId}

@@ -411,12 +411,14 @@ export const VariantForm = ({
                                 disabled={!customPercentage}
                                 aria-valuemin={0}
                                 aria-valuemax={100}
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment position='end'>
-                                            %
-                                        </InputAdornment>
-                                    ),
+                                slotProps={{
+                                    input: {
+                                        endAdornment: (
+                                            <InputAdornment position='end'>
+                                                %
+                                            </InputAdornment>
+                                        ),
+                                    },
                                 }}
                             />
                         </StyledPercentageContainer>

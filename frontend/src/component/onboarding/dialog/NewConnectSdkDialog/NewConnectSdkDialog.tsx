@@ -13,6 +13,8 @@ import { useState } from 'react';
 import { ConnectSdkDialogStep } from './ConnectSdkDialogStep';
 import type { Sdk } from '../sharedTypes';
 import { SelectSdk, SelectSdkSummary } from './SelectSdk';
+import { GenerateApiKeyStep } from './GenerateApiKeyStep/GenerateApiKeyStep';
+import { GenerateApiKeyStepSummary } from './GenerateApiKeyStep/GenerateApiKeyStepSummary';
 import { ConfigureSdk } from './ConfigureSdk';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
@@ -88,10 +90,10 @@ const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-const StyledDialogFooter = styled(Box)(({ theme }) => ({
+const StyledDialogFooter = styled(Box)({
     display: 'flex',
     justifyContent: 'flex-end',
-}));
+});
 
 const StyledDialogAside = styled('aside')(({ theme }) => ({
     width: theme.spacing(40),
@@ -145,6 +147,8 @@ const InnerDialog = ({
     const [expandedStep, setExpandedStep] = useState(0);
 
     const [sdk, setSdk] = useState<Sdk>();
+    const [apiKey, setApiKey] = useState<string | null>(null);
+    const [environment, setEnvironment] = useState(environments[0] ?? '');
 
     const onSelectSdk = (selectedSdk: Sdk) => {
         setSdk(selectedSdk);
@@ -154,25 +158,46 @@ const InnerDialog = ({
 
     const onSdkConnected = () => setCurrentStep(3);
 
+    const onApiKeyDone = () => {
+        setCurrentStep(2);
+        setExpandedStep(2);
+    };
+
     const steps: Step[] = [
         {
             title: 'Select SDK',
             content: <SelectSdk sdk={sdk} onSelect={onSelectSdk} />,
             summary: <SelectSdkSummary sdk={sdk} />,
         },
-        { title: 'Generate API key', content: 'TODO: Generate API key' },
+        {
+            title: 'Generate API key',
+            content: sdk ? (
+                <GenerateApiKeyStep
+                    projectId={projectId}
+                    environments={environments}
+                    environment={environment}
+                    onEnvSelect={setEnvironment}
+                    sdkType={sdk.type}
+                    onKeyGenerated={setApiKey}
+                    onDone={onApiKeyDone}
+                />
+            ) : null,
+            summary: apiKey ? (
+                <GenerateApiKeyStepSummary apiKey={apiKey} />
+            ) : undefined,
+        },
         {
             title: 'Configure the SDK',
-            content: (
+            content: apiKey ? (
                 <ConfigureSdk
                     projectId={projectId}
                     sdk={sdk}
-                    apiKey='TODO: API key from state'
+                    apiKey={apiKey}
                     feature={feature}
                     expanded={expandedStep === 2}
                     onSdkConnected={onSdkConnected}
                 />
-            ),
+            ) : null, // TODO: what if there is no api key for any reason?
         },
     ];
 

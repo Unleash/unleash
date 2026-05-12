@@ -182,9 +182,7 @@ const InnerDialog = ({
                     onDone={onApiKeyDone}
                 />
             ) : null,
-            summary: apiKey ? (
-                <GenerateApiKeyStepSummary apiKey={apiKey} />
-            ) : undefined,
+            summary: <GenerateApiKeyStepSummary apiKey={apiKey} />,
         },
         {
             title: 'Configure the SDK',
@@ -197,7 +195,7 @@ const InnerDialog = ({
                     expanded={expandedStep === 2}
                     onSdkConnected={onSdkConnected}
                 />
-            ) : null, // TODO: what if there is no api key for any reason?
+            ) : null,
         },
     ];
 

@@ -49,7 +49,7 @@ export const AutocompleteBox = ({
     const theme = useTheme();
 
     const renderCustomInput = (params: AutocompleteRenderInputParams) => {
-        const { InputProps } = params;
+        const { input: inputSlotProps } = params.slotProps;
 
         let startAdornment: undefined | JSX.Element;
         if (icon !== null) {
@@ -96,7 +96,7 @@ export const AutocompleteBox = ({
                 placeholder={label}
                 slotProps={{
                     input: {
-                        ...InputProps,
+                        ...inputSlotProps,
                         startAdornment,
                     },
                 }}

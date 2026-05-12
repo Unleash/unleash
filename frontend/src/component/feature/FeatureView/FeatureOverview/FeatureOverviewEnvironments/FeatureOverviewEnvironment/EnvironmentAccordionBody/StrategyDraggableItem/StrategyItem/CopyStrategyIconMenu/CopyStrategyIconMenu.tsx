@@ -141,8 +141,10 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
                 anchorEl={anchorEl}
                 open={open}
                 onClose={onClose}
-                MenuListProps={{
-                    'aria-labelledby': `copy-strategy-icon-menu-${strategy.id}`,
+                slotProps={{
+                    list: {
+                        'aria-labelledby': `copy-strategy-icon-menu-${strategy.id}`,
+                    },
                 }}
             >
                 {[...environments, environmentId].map((environment) => {

@@ -129,7 +129,7 @@ export const GenerateApiKeyContent = ({
     </SpacedContainer>
 );
 
-export interface GenerateApiKeyProps {
+export interface IGenerateApiKeyProps {
     projectId: string;
     environments: string[];
     environment: string;
@@ -147,7 +147,7 @@ export const GenerateApiKey = ({
     sdkType,
     onKeyGenerated,
     onDone,
-}: GenerateApiKeyProps) => {
+}: IGenerateApiKeyProps) => {
     const { trackEvent } = usePlausibleTracker();
     const {
         tokens,

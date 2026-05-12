@@ -86,7 +86,7 @@ const descriptions = {
     secret: 'The API key secret',
 } as const;
 
-export interface TokenExplanationProps {
+export interface ITokenExplanationProps {
     project: string;
     environment: string;
     secret: string;
@@ -96,7 +96,7 @@ export const TokenExplanation = ({
     project,
     environment,
     secret,
-}: TokenExplanationProps) => {
+}: ITokenExplanationProps) => {
     const theme = useTheme();
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
 

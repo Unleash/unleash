@@ -106,7 +106,7 @@ const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
         background: 'none',
     },
     ':focus-within fieldset': { borderBottomStyle: 'solid' },
-    'label + &': {
+    'label + &, .MuiInputLabel-root + &': {
         // mui adds a margin top to 'standard' selects with labels
         margin: 0,
     },

@@ -1,6 +1,5 @@
-import { styled, useTheme } from '@mui/material';
+import { styled, useMediaQuery, useTheme } from '@mui/material';
 import { ArcherContainer, ArcherElement } from 'react-archer';
-import { useIsElementWiderThan } from 'hooks/useIsElementWiderThan';
 
 const SecretExplanation = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.elevation1,
@@ -99,11 +98,10 @@ export const TokenExplanation = ({
     secret,
 }: TokenExplanationProps) => {
     const theme = useTheme();
-    const { ref, isWide: isLargeScreen } =
-        useIsElementWiderThan<HTMLDivElement>(700);
+    const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
 
     return (
-        <FullWidth ref={ref}>
+        <FullWidth>
             <ArcherContainer
                 strokeColor={theme.palette.secondary.border}
                 endMarker={false}

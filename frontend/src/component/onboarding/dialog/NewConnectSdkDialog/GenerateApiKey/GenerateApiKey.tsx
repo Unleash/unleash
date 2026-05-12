@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { Button, styled } from '@mui/material';
 import { useProjectApiTokens } from 'hooks/api/getters/useProjectApiTokens/useProjectApiTokens';
 import useProjectApiTokensApi from 'hooks/api/actions/useProjectApiTokensApi/useProjectApiTokensApi';
@@ -162,11 +162,9 @@ export const GenerateApiKey = ({
     );
     const parsedToken = parseToken(currentToken?.secret);
 
-    const onKeyGeneratedRef = useRef(onKeyGenerated);
-    onKeyGeneratedRef.current = onKeyGenerated;
     useEffect(() => {
-        onKeyGeneratedRef.current(currentToken?.secret ?? null);
-    }, [currentToken?.secret]);
+        onKeyGenerated(currentToken?.secret ?? null);
+    }, [currentToken?.secret, onKeyGenerated]);
 
     const generateAPIKey = async () => {
         try {

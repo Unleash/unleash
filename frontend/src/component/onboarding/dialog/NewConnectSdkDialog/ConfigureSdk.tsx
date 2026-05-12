@@ -98,19 +98,19 @@ export const ConfigureSdk = ({
     const { project } = useProjectOverview(projectId, {
         refreshInterval: 1000,
     });
-    const onboarded = project.onboardingStatus.status === 'onboarded';
+    const sdkConnected = project.onboardingStatus.status === 'sdk-connected';
 
     useEffect(() => {
-        if (onboarded) {
+        if (sdkConnected) {
             onSdkConnected();
         }
-    }, [onboarded, onSdkConnected]);
+    }, [sdkConnected, onSdkConnected]);
 
     useEffect(() => {
-        if (onboarded || !expanded) return;
+        if (sdkConnected || !expanded) return;
         const timer = setTimeout(() => setShowTroubleshooting(true), 30_000);
         return () => clearTimeout(timer);
-    }, [onboarded, expanded]);
+    }, [sdkConnected, expanded]);
 
     if (!sdk || !apiKey) return null;
 
@@ -129,7 +129,7 @@ export const ConfigureSdk = ({
                     {connectSnippet}
                 </Markdown>
             </div>
-            {onboarded ? (
+            {sdkConnected ? (
                 <StyledSdkConnectedAlert>
                     <div>
                         <StyledConnectedIcon />

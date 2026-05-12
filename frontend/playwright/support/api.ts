@@ -99,8 +99,12 @@ export async function deleteSegmentByNameAPI(
     name: string,
 ): Promise<void> {
     const response = await request.get(`${BASE_URL}/api/admin/segments`);
-    if (!response.ok()) return;
-    const body = await response.json();
+    let body: { segments?: { name: string; id: number }[] };
+    try {
+        body = await response.json();
+    } catch {
+        return;
+    }
     const segment = body.segments?.find(
         (s: { name: string }) => s.name === name,
     );

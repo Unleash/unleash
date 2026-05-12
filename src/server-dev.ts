@@ -54,7 +54,6 @@ process.nextTick(async () => {
                         registerImpactMetrics: true,
                         milestoneProgression: true,
                         safeguards: true,
-                        gtmReleaseManagement: true,
                         regexConstraintOperator: true,
                         onboardingProjectSetupNewSteps: true,
                         enterpriseEdgeTokensList: true,

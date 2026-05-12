@@ -18,12 +18,10 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import { fromPersonalDashboardProjectDetailsOutput } from './RemoteData.ts';
 import { useEffect } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { InfoSection } from './InfoSection.tsx';
 import { EventTimeline } from 'component/events/EventTimeline/EventTimeline';
 import { AccordionContent } from './SharedComponents.tsx';
 import { Link } from 'react-router-dom';
-import { ReleaseTemplatesBanner } from 'component/common/ReleaseTemplatesBanner/ReleaseTemplatesBanner';
 import { useWelcomeDialogContext } from './WelcomeDialogContext.tsx';
 
 const WelcomeSection = styled('div')(({ theme }) => ({
@@ -272,8 +270,7 @@ export const PersonalDashboard = () => {
     const { user } = useAuthUser();
     const { trackEvent } = usePlausibleTracker();
     const { setWelcomeDialog } = useWelcomeDialogContext();
-    const { isOss, isEnterprise } = useUiConfig();
-    const gtmReleaseManagementEnabled = useUiFlag('gtmReleaseManagement');
+    const { isOss } = useUiConfig();
     const { personalDashboard } = usePersonalDashboard();
     const isNewUser = personalDashboard?.flags.length === 0;
 
@@ -291,9 +288,6 @@ export const PersonalDashboard = () => {
 
     return (
         <MainContent>
-            {isEnterprise() && gtmReleaseManagementEnabled && !isNewUser && (
-                <ReleaseTemplatesBanner />
-            )}
             {isOss() && <InfoSection />}
 
             <WelcomeSection>

@@ -9,7 +9,6 @@ import {
     AdminSettingsNavigation,
 } from './NavigationList.tsx';
 import { useInitialPathname } from './useInitialPathname.ts';
-import type { LegacyNewInUnleash } from './NewInUnleash/LegacyNewInUnleash.tsx';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { flexRow, focusable } from 'themes/themeStyles';
@@ -111,9 +110,7 @@ const StyledUnleashLogoOnlyWhite = styled(LogoOnlyWhite)(({ theme }) => ({
     margin: '0 auto',
 }));
 
-export const NavigationSidebar: FC<{
-    NewInUnleash?: typeof LegacyNewInUnleash;
-}> = ({ NewInUnleash }) => {
+export const NavigationSidebar: FC = () => {
     const { routes } = useRoutes();
     const celebrateUnleashFrontend = useFlag('celebrateUnleashFrontend');
     const { showOnlyAdminMenu } = useNewAdminMenu();
@@ -210,12 +207,6 @@ export const NavigationSidebar: FC<{
             </MidContainer>
 
             <BottomContainer admin={showOnlyAdminMenu}>
-                {NewInUnleash ? (
-                    <NewInUnleash
-                        mode={mode}
-                        onMiniModeClick={() => setMode('full')}
-                    />
-                ) : null}
                 <ShowHide
                     mode={mode}
                     onChange={() => {

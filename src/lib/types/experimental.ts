@@ -66,7 +66,6 @@ export type IFlagKey =
     | 'safeguards'
     | 'newInUnleash'
     | 'oidcPkceSupport'
-    | 'gtmReleaseManagement'
     | 'remoteMcpServer'
     | 'regexConstraintOperator'
     | 'enterpriseEdgeTokensList'
@@ -303,10 +302,6 @@ const flags: IFlags = {
     ),
     newInUnleash: parseEnvVarBooleanOrStringVariant(
         process.env.UNLEASH_EXPERIMENTAL_NEW_IN_UNLEASH,
-        false,
-    ),
-    gtmReleaseManagement: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_GTM_RELEASE_MANAGEMENT,
         false,
     ),
     remoteMcpServer: parseEnvVarBoolean(

@@ -7,7 +7,6 @@ import styles from './DrawerMenu.module.scss'; // FIXME: useStyle - theme
 import theme from 'themes/theme';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { MobileNavigationSidebar } from 'component/layout/MainLayout/NavigationSidebar/MobileNavigationSidebar';
-import { LegacyNewInUnleash } from 'component/layout/MainLayout/NavigationSidebar/NewInUnleash/LegacyNewInUnleash.tsx';
 import { AdminMobileNavigation } from 'component/layout/MainLayout/AdminMenu/AdminNavigationItems';
 import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
 
@@ -67,10 +66,7 @@ export const DrawerMenu: FC<IDrawerMenuProps> = ({
                 {showOnlyAdminMenu ? (
                     <AdminMobileNavigation onClick={onClick} />
                 ) : (
-                    <MobileNavigationSidebar
-                        onClick={toggleDrawer}
-                        NewInUnleash={LegacyNewInUnleash}
-                    />
+                    <MobileNavigationSidebar onClick={toggleDrawer} />
                 )}
             </nav>
         </Drawer>

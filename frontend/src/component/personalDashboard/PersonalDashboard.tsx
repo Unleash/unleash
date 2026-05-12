@@ -271,8 +271,6 @@ export const PersonalDashboard = () => {
     const { trackEvent } = usePlausibleTracker();
     const { setWelcomeDialog } = useWelcomeDialogContext();
     const { isOss } = useUiConfig();
-    const { personalDashboard } = usePersonalDashboard();
-    const isNewUser = personalDashboard?.flags.length === 0;
 
     const name = user?.name || '';
 

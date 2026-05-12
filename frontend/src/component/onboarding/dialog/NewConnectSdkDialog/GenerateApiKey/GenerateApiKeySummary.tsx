@@ -1,11 +1,13 @@
 import { Badge } from 'component/common/Badge/Badge';
 import { Truncator } from 'component/common/Truncator/Truncator';
 
+interface IGenerateApiKeySummaryProps {
+    apiKey?: string | null;
+}
+
 export const GenerateApiKeySummary = ({
     apiKey,
-}: {
-    apiKey?: string | null;
-}) => {
+}: IGenerateApiKeySummaryProps) => {
     if (!apiKey) return null;
     return (
         <Badge color='neutral'>

@@ -70,7 +70,7 @@ const StyledTroubleshootingAlert = styled(Alert)(({ theme }) => ({
 
 interface IConfigureSdkProps {
     projectId: string;
-    sdk?: Sdk;
+    sdk?: Pick<Sdk, 'name'>;
     apiKey?: string;
     feature?: string;
     expanded?: boolean;

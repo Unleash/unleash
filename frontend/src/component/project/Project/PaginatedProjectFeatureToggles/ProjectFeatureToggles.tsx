@@ -188,6 +188,7 @@ export const ProjectFeatureToggles = ({
         onboardingFlow === 'visible' && !userCompletedOldOnboardingFlow;
     const newOnboardingSteps = useUiFlag('onboardingProjectSetupNewSteps');
 
+    // TODO: Potential cleanup when removing `onboardingConnectSDKNewDialog`. Why are we tracking this here and not in the dialog?
     const trackOnboardingFinish = (sdkName: string) => {
         if (!isOnboarding) {
             trackEvent('onboarding', {

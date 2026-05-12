@@ -147,8 +147,7 @@ const InnerDialog = ({
     const [expandedStep, setExpandedStep] = useState(0);
 
     const [sdk, setSdk] = useState<Sdk>();
-    const [apiKey, setApiKey] = useState<string | null>(null);
-    const [environment, setEnvironment] = useState(environments[0] ?? '');
+    const [apiKey, setApiKey] = useState<string>();
 
     const onSelectSdk = (selectedSdk: Sdk) => {
         setSdk(selectedSdk);
@@ -156,12 +155,13 @@ const InnerDialog = ({
         setExpandedStep(1);
     };
 
-    const onSdkConnected = () => setCurrentStep(3);
-
-    const onApiKeyDone = () => {
+    const onApiKeyGenerated = (apiKey: string) => {
+        setApiKey(apiKey);
         setCurrentStep(2);
         setExpandedStep(2);
     };
+
+    const onSdkConnected = () => setCurrentStep(3);
 
     const steps: Step[] = [
         {
@@ -171,22 +171,19 @@ const InnerDialog = ({
         },
         {
             title: 'Generate API key',
-            content: sdk ? (
+            content: (
                 <GenerateApiKey
                     projectId={projectId}
+                    sdk={sdk}
                     environments={environments}
-                    environment={environment}
-                    onEnvSelect={setEnvironment}
-                    sdkType={sdk.type}
-                    onKeyGenerated={setApiKey}
-                    onDone={onApiKeyDone}
+                    onApiKeyGenerated={onApiKeyGenerated}
                 />
-            ) : null,
+            ),
             summary: <GenerateApiKeySummary apiKey={apiKey} />,
         },
         {
             title: 'Configure the SDK',
-            content: apiKey ? (
+            content: (
                 <ConfigureSdk
                     projectId={projectId}
                     sdk={sdk}
@@ -195,7 +192,7 @@ const InnerDialog = ({
                     expanded={expandedStep === 2}
                     onSdkConnected={onSdkConnected}
                 />
-            ) : null,
+            ),
         },
     ];
 

@@ -96,7 +96,7 @@ export const TokenExplanation = ({
 }: TokenExplanationProps) => {
     const theme = useTheme();
     const { ref, isWide: isLargeScreen } =
-        useIsElementWiderThan<HTMLDivElement>(700);
+        useIsElementWiderThan<HTMLDivElement>(650);
 
     return (
         <div ref={ref}>

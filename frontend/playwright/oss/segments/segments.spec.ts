@@ -68,6 +68,7 @@ async function createSegmentUI(page: Page, name: string): Promise<void> {
     await page.getByTestId('SEGMENT_NEXT_BTN_ID').click();
     await page.getByTestId('SEGMENT_CREATE_BTN_ID').click();
     await responsePromise;
+    await page.goto('/segments');
     await expect(page.getByRole('link', { name })).toBeVisible();
 }
 
@@ -84,4 +85,5 @@ async function deleteSegmentUI(page: Page, name: string): Promise<void> {
         .fill(name);
     await page.getByTestId('DIALOGUE_CONFIRM_ID').click();
     await responsePromise;
+    await page.goto('/segments');
 }

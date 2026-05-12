@@ -23,18 +23,6 @@ export const featureTagSchema = {
             example: 'my-tag',
             description: 'The value of the tag',
         },
-        type: {
-            deprecated: true,
-            type: 'string',
-            description:
-                'The [type](https://docs.getunleash.io/concepts/feature-flags#tags) of the tag. This property is deprecated and will be removed in a future version of Unleash. Superseded by the `tagType` property.',
-        },
-        value: {
-            deprecated: true,
-            type: 'string',
-            description:
-                'The value of the tag. This property is deprecated and will be removed in a future version of Unleash. Superseded by the `tagValue` property.',
-        },
         createdByUserId: {
             type: 'number',
             nullable: true,

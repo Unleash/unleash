@@ -82,6 +82,7 @@ export type CustomEvents =
     | 'project-cleanup'
     | 'project-list-view-toggle'
     | 'impact-metrics'
+    | 'impact-metrics-safeguards-splash'
     | 'release-management-splash'
     | 'upgrade_trial_dialog'
     | 'upgrade_trial_billing_page'

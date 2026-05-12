@@ -9,7 +9,6 @@ export interface ChooseEnvironmentProps {
     environments: string[];
     currentEnvironment: string;
     onSelect: (env: string) => void;
-    disabled?: boolean;
 }
 
 const StyledSelect = styled(Select<string>)(({ theme }) => ({
@@ -28,7 +27,6 @@ export const ChooseEnvironment = ({
     environments,
     onSelect,
     currentEnvironment,
-    disabled,
 }: ChooseEnvironmentProps) => {
     const longestEnv =
         environments.length > 0
@@ -43,7 +41,6 @@ export const ChooseEnvironment = ({
             value={currentEnvironment}
             onChange={handleChange}
             size='small'
-            disabled={disabled}
             inputProps={{ 'aria-label': 'Select environment' }}
             sx={{ minWidth: `${longestEnv + 5}ch` }}
         >

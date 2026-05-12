@@ -28,12 +28,3 @@ export const LongName: Story = () => {
         />
     );
 };
-
-export const Disabled: Story = () => (
-    <ChooseEnvironment
-        environments={['production', 'development', 'staging']}
-        currentEnvironment='production'
-        onSelect={() => {}}
-        disabled
-    />
-);

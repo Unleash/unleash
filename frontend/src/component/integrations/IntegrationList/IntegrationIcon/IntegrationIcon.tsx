@@ -57,7 +57,6 @@ const integrations: Record<
     'jira-comment': { title: 'Jira', icon: jiraCommentIcon },
     signals: { title: 'Signals', icon: signals },
     terraform: { title: 'Terraform', icon: terraformIcon },
-    slack: { title: 'Slack', icon: slackIcon },
     'slack-app': { title: 'Slack', icon: slackIcon },
     teams: { title: 'Teams', icon: teamsIcon },
     webhook: { title: 'Webhook', icon: webhooksIcon },

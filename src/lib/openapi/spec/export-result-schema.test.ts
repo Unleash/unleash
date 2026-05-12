@@ -126,7 +126,7 @@ test('exportResultSchema rejects feature tag aliases', () => {
     );
 
     expect(result).toBeDefined();
-    expect(JSON.stringify(result)).toContain('tagType');
+    expect(JSON.stringify(result)).toContain('tagValue');
 });
 
 test('exportResultSchema rejects extra feature tag type alias property', () => {
@@ -177,7 +177,7 @@ test('exportResultSchema rejects extra feature tag value alias property', () => 
     expect(JSON.stringify(result)).toContain('value');
 });
 
-test('exportResultSchema requires feature tag type', () => {
+test('exportResultSchema supports omitted feature tag type', () => {
     const data = {
         features: [],
         featureStrategies: [],
@@ -190,11 +190,7 @@ test('exportResultSchema requires feature tag type', () => {
         tagTypes: [],
     };
 
-    const result = validateSchema(
-        '#/components/schemas/exportResultSchema',
-        data,
-    );
-
-    expect(result).toBeDefined();
-    expect(JSON.stringify(result)).toContain('tagType');
+    expect(
+        validateSchema('#/components/schemas/exportResultSchema', data),
+    ).toBeUndefined();
 });

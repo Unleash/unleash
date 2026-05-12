@@ -165,7 +165,7 @@ export const querySchema = joi
 
 export const featureTagSchema = joi.object().keys({
     featureName: nameType,
-    tagType: nameType.required(),
+    tagType: nameType.optional(),
     tagValue: joi.string().required(),
     createdByUserId: joi.number().optional(),
 });

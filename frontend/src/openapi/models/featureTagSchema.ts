@@ -16,7 +16,7 @@ export interface FeatureTagSchema {
     /** The name of the feature this tag is applied to */
     featureName: string;
     /** The [type](https://docs.getunleash.io/concepts/feature-flags#tags) of the tag */
-    tagType: string;
+    tagType?: string;
     /** The value of the tag */
     tagValue: string;
 }

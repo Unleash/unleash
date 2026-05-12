@@ -5,7 +5,7 @@ export const featureTagSchema = {
     type: 'object',
     description: 'Describes a tag applied to a feature',
     additionalProperties: false,
-    required: ['featureName', 'tagType', 'tagValue'],
+    required: ['featureName', 'tagValue'],
     properties: {
         featureName: {
             type: 'string',

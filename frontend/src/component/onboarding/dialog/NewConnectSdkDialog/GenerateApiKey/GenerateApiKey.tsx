@@ -51,7 +51,7 @@ const ActionRow = styled('div')({
     justifyContent: 'flex-end',
 });
 
-export interface GenerateApiKeyStepContentProps {
+export interface IGenerateApiKeyContentProps {
     environments: string[];
     environment: string;
     onEnvSelect: (env: string) => void;
@@ -62,7 +62,7 @@ export interface GenerateApiKeyStepContentProps {
     onDone: () => void;
 }
 
-export const GenerateApiKeyStepContent = ({
+export const GenerateApiKeyContent = ({
     environments,
     environment,
     onEnvSelect,
@@ -71,7 +71,7 @@ export const GenerateApiKeyStepContent = ({
     creatingToken,
     generateAPIKey,
     onDone,
-}: GenerateApiKeyStepContentProps) => (
+}: IGenerateApiKeyContentProps) => (
     <SpacedContainer>
         <SectionBox>
             <SectionText>
@@ -127,7 +127,7 @@ export const GenerateApiKeyStepContent = ({
     </SpacedContainer>
 );
 
-export interface GenerateApiKeyStepProps {
+export interface GenerateApiKeyProps {
     projectId: string;
     environments: string[];
     environment: string;
@@ -137,7 +137,7 @@ export interface GenerateApiKeyStepProps {
     onDone: () => void;
 }
 
-export const GenerateApiKeyStep = ({
+export const GenerateApiKey = ({
     projectId,
     environments,
     environment,
@@ -145,7 +145,7 @@ export const GenerateApiKeyStep = ({
     sdkType,
     onKeyGenerated,
     onDone,
-}: GenerateApiKeyStepProps) => {
+}: GenerateApiKeyProps) => {
     const { trackEvent } = usePlausibleTracker();
     const {
         tokens,
@@ -187,7 +187,7 @@ export const GenerateApiKeyStep = ({
     };
 
     return (
-        <GenerateApiKeyStepContent
+        <GenerateApiKeyContent
             environments={environments}
             environment={environment}
             onEnvSelect={onEnvSelect}

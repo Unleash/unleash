@@ -2,7 +2,7 @@ import { expect, test, vi } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { waitFor } from '@testing-library/react';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { GenerateApiKeyStep } from './GenerateApiKeyStep';
+import { GenerateApiKey } from './GenerateApiKey';
 
 const server = testServerSetup();
 
@@ -11,7 +11,7 @@ const renderStep = (
     onKeyGenerated: (apiKey: string | null) => void,
 ) =>
     render(
-        <GenerateApiKeyStep
+        <GenerateApiKey
             projectId='my-project'
             environments={['development', 'production']}
             environment={environment}
@@ -45,7 +45,7 @@ test('calls onKeyGenerated with null when switching to an environment with no to
     onKeyGenerated.mockClear();
 
     rerender(
-        <GenerateApiKeyStep
+        <GenerateApiKey
             projectId='my-project'
             environments={['development', 'production']}
             environment='development'

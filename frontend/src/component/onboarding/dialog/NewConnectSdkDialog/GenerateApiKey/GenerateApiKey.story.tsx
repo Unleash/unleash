@@ -1,15 +1,15 @@
 import type { Story, StoryMeta } from 'component/stories/types';
-import { GenerateApiKeyStepContent } from './GenerateApiKeyStep';
+import { GenerateApiKeyContent } from './GenerateApiKey';
 
 export const meta: StoryMeta = {
-    title: 'Onboarding / GenerateApiKeyStep',
+    title: 'Onboarding / GenerateApiKey',
     background: 'paper',
 };
 
 const environments = ['production', 'development', 'staging'];
 
 export const NoToken: Story = () => (
-    <GenerateApiKeyStepContent
+    <GenerateApiKeyContent
         environments={environments}
         environment='production'
         onEnvSelect={(env) => console.log('Env selected:', env)}
@@ -21,7 +21,7 @@ export const NoToken: Story = () => (
 );
 
 export const FetchingTokens: Story = () => (
-    <GenerateApiKeyStepContent
+    <GenerateApiKeyContent
         environments={environments}
         environment='production'
         onEnvSelect={(env) => console.log('Env selected:', env)}
@@ -34,7 +34,7 @@ export const FetchingTokens: Story = () => (
 );
 
 export const GeneratingToken: Story = () => (
-    <GenerateApiKeyStepContent
+    <GenerateApiKeyContent
         environments={environments}
         environment='production'
         onEnvSelect={(env) => console.log('Env selected:', env)}
@@ -46,7 +46,7 @@ export const GeneratingToken: Story = () => (
 );
 
 export const WithToken: Story = () => (
-    <GenerateApiKeyStepContent
+    <GenerateApiKeyContent
         environments={environments}
         environment='production'
         onEnvSelect={(env) => console.log('Env selected:', env)}

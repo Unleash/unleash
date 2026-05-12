@@ -13,8 +13,8 @@ import { useState } from 'react';
 import { ConnectSdkDialogStep } from './ConnectSdkDialogStep';
 import type { Sdk } from '../sharedTypes';
 import { SelectSdk, SelectSdkSummary } from './SelectSdk';
-import { GenerateApiKeyStep } from './GenerateApiKeyStep/GenerateApiKeyStep';
-import { GenerateApiKeyStepSummary } from './GenerateApiKeyStep/GenerateApiKeyStepSummary';
+import { GenerateApiKey } from './GenerateApiKey/GenerateApiKey';
+import { GenerateApiKeySummary } from './GenerateApiKey/GenerateApiKeySummary';
 import { ConfigureSdk } from './ConfigureSdk';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
@@ -172,7 +172,7 @@ const InnerDialog = ({
         {
             title: 'Generate API key',
             content: sdk ? (
-                <GenerateApiKeyStep
+                <GenerateApiKey
                     projectId={projectId}
                     environments={environments}
                     environment={environment}
@@ -182,7 +182,7 @@ const InnerDialog = ({
                     onDone={onApiKeyDone}
                 />
             ) : null,
-            summary: <GenerateApiKeyStepSummary apiKey={apiKey} />,
+            summary: <GenerateApiKeySummary apiKey={apiKey} />,
         },
         {
             title: 'Configure the SDK',

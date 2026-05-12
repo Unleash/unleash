@@ -1,7 +1,7 @@
 import { Badge } from 'component/common/Badge/Badge';
 import { Truncator } from 'component/common/Truncator/Truncator';
 
-export const GenerateApiKeyStepSummary = ({
+export const GenerateApiKeySummary = ({
     apiKey,
 }: {
     apiKey?: string | null;

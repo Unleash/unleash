@@ -96,10 +96,10 @@ export const TokenExplanation = ({
 }: TokenExplanationProps) => {
     const theme = useTheme();
     const { ref, isWide: isLargeScreen } =
-        useIsElementWiderThan<HTMLDivElement>(650);
+        useIsElementWiderThan<HTMLDivElement>(700);
 
     return (
-        <div ref={ref}>
+        <div ref={ref} style={{ width: '100%' }}>
             <ArcherContainer
                 strokeColor={theme.palette.secondary.border}
                 endMarker={false}

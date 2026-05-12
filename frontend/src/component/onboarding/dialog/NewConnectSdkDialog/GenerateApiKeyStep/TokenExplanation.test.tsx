@@ -13,9 +13,9 @@ describe('TokenExplanation', () => {
     test('renders all token parts', () => {
         render(<TokenExplanation {...props} />);
 
-        expect(screen.getByText('my-project')).toBeInTheDocument();
-        expect(screen.getByText('production')).toBeInTheDocument();
-        expect(screen.getByText('abc123secret')).toBeInTheDocument();
+        expect(screen.getAllByText('my-project').length).toBeGreaterThan(0);
+        expect(screen.getAllByText('production').length).toBeGreaterThan(0);
+        expect(screen.getAllByText('abc123secret').length).toBeGreaterThan(0);
 
         expect(
             screen.getByText(

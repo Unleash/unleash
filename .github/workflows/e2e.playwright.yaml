@@ -9,7 +9,7 @@ concurrency:
 jobs:
   e2e:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 5
     continue-on-error: true
     steps:
       - name: Checkout

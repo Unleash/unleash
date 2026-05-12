@@ -44,6 +44,10 @@ const TokenExplanationBox = styled('div')(({ theme }) => ({
     flexWrap: 'wrap',
 }));
 
+const FullWidth = styled('div')({
+    width: '100%',
+});
+
 const SmallScreenLayout = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -99,7 +103,7 @@ export const TokenExplanation = ({
         useIsElementWiderThan<HTMLDivElement>(700);
 
     return (
-        <div ref={ref} style={{ width: '100%' }}>
+        <FullWidth ref={ref}>
             <ArcherContainer
                 strokeColor={theme.palette.secondary.border}
                 endMarker={false}
@@ -202,6 +206,6 @@ export const TokenExplanation = ({
                     )}
                 </SecretExplanation>
             </ArcherContainer>
-        </div>
+        </FullWidth>
     );
 };

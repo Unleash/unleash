@@ -105,3 +105,96 @@ test('exportResultSchema', () => {
         validateSchema('#/components/schemas/exportResultSchema', data),
     ).toBeUndefined();
 });
+
+test('exportResultSchema rejects feature tag aliases', () => {
+    const data = {
+        features: [],
+        featureStrategies: [],
+        featureTags: [
+            {
+                featureName: 'some-toggle',
+                type: 'simple',
+                value: 'best-tag',
+            },
+        ],
+        tagTypes: [],
+    };
+
+    const result = validateSchema(
+        '#/components/schemas/exportResultSchema',
+        data,
+    );
+
+    expect(result).toBeDefined();
+    expect(JSON.stringify(result)).toContain('tagType');
+});
+
+test('exportResultSchema rejects extra feature tag type alias property', () => {
+    const data = {
+        features: [],
+        featureStrategies: [],
+        featureTags: [
+            {
+                featureName: 'some-toggle',
+                tagType: 'simple',
+                tagValue: 'best-tag',
+                type: 'simple',
+            },
+        ],
+        tagTypes: [],
+    };
+
+    const result = validateSchema(
+        '#/components/schemas/exportResultSchema',
+        data,
+    );
+
+    expect(result).toBeDefined();
+    expect(JSON.stringify(result)).toContain('type');
+});
+
+test('exportResultSchema rejects extra feature tag value alias property', () => {
+    const data = {
+        features: [],
+        featureStrategies: [],
+        featureTags: [
+            {
+                featureName: 'some-toggle',
+                tagType: 'simple',
+                tagValue: 'best-tag',
+                value: 'best-tag',
+            },
+        ],
+        tagTypes: [],
+    };
+
+    const result = validateSchema(
+        '#/components/schemas/exportResultSchema',
+        data,
+    );
+
+    expect(result).toBeDefined();
+    expect(JSON.stringify(result)).toContain('value');
+});
+
+test('exportResultSchema requires feature tag type', () => {
+    const data = {
+        features: [],
+        featureStrategies: [],
+        featureTags: [
+            {
+                featureName: 'some-toggle',
+                tagValue: 'best-tag',
+            },
+        ],
+        tagTypes: [],
+    };
+
+    const result = validateSchema(
+        '#/components/schemas/exportResultSchema',
+        data,
+    );
+
+    expect(result).toBeDefined();
+    expect(JSON.stringify(result)).toContain('tagType');
+});

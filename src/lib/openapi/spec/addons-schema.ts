@@ -107,9 +107,9 @@ export const addonsSchema = {
                     ],
                 },
                 {
-                    name: 'slack',
-                    displayName: 'Slack',
-                    description: 'Allows Unleash to post updates to Slack.',
+                    name: 'slack-app',
+                    displayName: 'Slack App',
+                    description: 'Allows Unleash to post updates to Slack app.',
                     documentationUrl:
                         'https://docs.getunleash.io/integrate/slack-app',
                     parameters: [
@@ -167,14 +167,7 @@ export const addonsSchema = {
                         'feature-variants-updated',
                         'feature-project-change',
                     ],
-                    tagTypes: [
-                        {
-                            name: 'slack',
-                            description:
-                                'Slack tag used by the slack-addon to specify the slack channel.',
-                            icon: 'S',
-                        },
-                    ],
+                    tagTypes: [{}],
                 },
                 {
                     name: 'teams',

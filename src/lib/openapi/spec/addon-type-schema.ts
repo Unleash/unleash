@@ -14,7 +14,7 @@ export const addonTypeSchema = {
             type: 'string',
             description:
                 "The name of the addon type. When creating new addons, this goes in the payload's `type` field.",
-            example: 'slack',
+            example: 'slack-app',
         },
         displayName: {
             type: 'string',
@@ -43,14 +43,7 @@ export const addonTypeSchema = {
         tagTypes: {
             type: 'array',
             description: `A list of [Unleash tag types](https://docs.getunleash.io/concepts/feature-flags#tags) that this addon uses. These tags will be added to the Unleash instance when an addon of this type is created.`,
-            example: [
-                {
-                    name: 'slack',
-                    description:
-                        'Slack tag used by the slack-addon to specify the slack channel.',
-                    icon: 'S',
-                },
-            ],
+            example: [],
             items: {
                 $ref: '#/components/schemas/tagTypeSchema',
             },

@@ -1,5 +1,4 @@
 import Webhook from './webhook.js';
-import SlackAddon from './slack.js';
 import TeamsAddon from './teams.js';
 import DatadogAddon from './datadog.js';
 import NewRelicAddon from './new-relic.js';
@@ -14,7 +13,6 @@ export interface IAddonProviders {
 export const getAddons: (args: IAddonConfig) => IAddonProviders = (args) => {
     const addons: Addon[] = [
         new Webhook(args),
-        new SlackAddon(args),
         new SlackAppAddon(args),
         new TeamsAddon(args),
         new DatadogAddon(args),

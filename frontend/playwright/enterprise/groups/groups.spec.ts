@@ -1,12 +1,12 @@
 import { expect, test } from '@playwright/test';
 import { createUserAPI, deleteUserAPI } from '../../support/api';
-import { runBefore } from '../../support/helpers';
+import { randomId as generateId, runBefore } from '../../support/helpers';
 import { AUTH_FILE } from '../../support/constants';
 
 // Tests are ordered: create → duplicate-error → edit → add-user → remove-user → delete
 test.describe.configure({ mode: 'serial' });
 
-const randomId = String(Math.random()).split('.')[1];
+const randomId = generateId();
 const groupName = `unleash-e2e-${randomId}`;
 
 const userIds: number[] = [];

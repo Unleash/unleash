@@ -1,13 +1,13 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import { deleteSegmentByNameAPI } from '../../support/api';
-import { runBefore } from '../../support/helpers';
+import { randomId as generateId, runBefore } from '../../support/helpers';
 import { AUTH_FILE } from '../../support/constants';
 
 // Tests are ordered: create → duplicate-error → delete
 test.describe.configure({ mode: 'serial' });
 
-const randomId = String(Math.random()).split('.')[1];
+const randomId = generateId();
 const segmentName = `unleash-e2e-${randomId}`;
 
 test.afterAll(async ({ browser }) => {

@@ -5,13 +5,13 @@ import {
     deleteFeatureAPI,
     deleteProjectAPI,
 } from '../../support/api';
-import { runBefore } from '../../support/helpers';
+import { randomId as generateId, runBefore } from '../../support/helpers';
 import { AUTH_FILE } from '../../support/constants';
 
 // Tests are ordered: create → duplicate-error → (skipped) strategy
 test.describe.configure({ mode: 'serial' });
 
-const randomId = String(Math.random()).split('.')[1];
+const randomId = generateId();
 const featureToggleName = `unleash-e2e-${randomId}`;
 const projectName = `unleash-e2e-project-${randomId}`;
 

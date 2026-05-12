@@ -1,5 +1,7 @@
 import type { Page } from '@playwright/test';
 
+export const randomId = () => crypto.randomUUID().replace(/-/g, '').slice(0, 8);
+
 /**
  * Suppress UI noise that would otherwise interfere with tests:
  * - sets localStorage to hide the "production guard" modal

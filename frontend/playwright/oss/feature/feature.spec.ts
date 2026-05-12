@@ -1,10 +1,10 @@
 import { expect, test } from '@playwright/test';
 import { deleteFeatureAPI } from '../../support/api';
-import { runBefore } from '../../support/helpers';
+import { randomId as generateId, runBefore } from '../../support/helpers';
 import { AUTH_FILE } from '../../support/constants';
 import type { Page } from '@playwright/test';
 
-const randomId = String(Math.random()).split('.')[1];
+const randomId = generateId();
 const featureToggleName = `unleash-e2e-${randomId}`;
 
 test.beforeEach(async ({ page }) => {

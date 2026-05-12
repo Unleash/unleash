@@ -7,13 +7,13 @@ import {
     deleteProjectAPI,
     deleteUserAPI,
 } from '../../support/api';
-import { runBefore } from '../../support/helpers';
+import { randomId as generateId, runBefore } from '../../support/helpers';
 import { AUTH_FILE } from '../../support/constants';
 
 // Tests are ordered: assign-user → assign-group → edit-role → multi-role → remove
 test.describe.configure({ mode: 'serial' });
 
-const randomId = String(Math.random()).split('.')[1];
+const randomId = generateId();
 const groupAndProjectName = `group-e2e-${randomId}`;
 const userName = `user-e2e-${randomId}`;
 

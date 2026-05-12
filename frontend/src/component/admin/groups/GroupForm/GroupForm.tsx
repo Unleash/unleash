@@ -21,7 +21,7 @@ const StyledForm = styled('form')(() => ({
     height: '100%',
 }));
 
-const StyledInputDescription = styled('p')(({ theme }) => ({
+const StyledInputDescription = styled('div')(({ theme }) => ({
     color: theme.palette.text.secondary,
     marginBottom: theme.spacing(1),
 }));

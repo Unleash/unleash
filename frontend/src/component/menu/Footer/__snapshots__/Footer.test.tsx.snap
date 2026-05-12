@@ -9,7 +9,7 @@ exports[`should render DrawerMenu 1`] = `
       className="mui-1ng7pvt"
     >
       <div
-        className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-10 mui-b8jj8q-MuiGrid-root"
+        className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-10 mui-qxsr1b-MuiGrid-root"
         style={
           {
             "marginBottom": 0,
@@ -539,7 +539,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
       className="mui-1ng7pvt"
     >
       <div
-        className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-10 mui-b8jj8q-MuiGrid-root"
+        className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-10 mui-qxsr1b-MuiGrid-root"
         style={
           {
             "marginBottom": 0,

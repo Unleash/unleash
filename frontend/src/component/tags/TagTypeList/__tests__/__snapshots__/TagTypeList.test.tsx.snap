@@ -60,7 +60,7 @@ exports[`renders an empty list correctly 1`] = `
                   >
                     <input
                       aria-label="Search (Ctrl+Shift+K)"
-                      className="MuiInputBase-input mui-1w4z3w0-MuiInputBase-input"
+                      className="MuiInputBase-input mui-10xnd0u-MuiInputBase-input"
                       data-testid="SEARCH_INPUT"
                       onAnimationStart={[Function]}
                       onBlur={[Function]}
@@ -83,7 +83,7 @@ exports[`renders an empty list correctly 1`] = `
               />
               <button
                 aria-labelledby="useId-0"
-                className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary mui-m33rfl-MuiButtonBase-root-MuiButton-root"
+                className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary mui-ezlkoi-MuiButtonBase-root-MuiButton-root"
                 disabled={null}
                 onBlur={[Function]}
                 onClick={[Function]}

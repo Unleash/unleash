@@ -1,62 +1,59 @@
 import { expect, test, vi } from 'vitest';
 import { render } from 'utils/testRenderer';
-import { waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { GenerateApiKey } from './GenerateApiKey';
 
 const server = testServerSetup();
 
-const renderStep = (
-    environment: string,
-    onKeyGenerated: (apiKey: string | null) => void,
-) =>
+const renderComponent = (onApiKeyGenerated = vi.fn()) =>
     render(
         <GenerateApiKey
             projectId='my-project'
             environments={['development', 'production']}
-            environment={environment}
-            onEnvSelect={vi.fn()}
-            sdkType='client'
-            onKeyGenerated={onKeyGenerated}
-            onDone={vi.fn()}
+            sdk={{ type: 'client' }}
+            onApiKeyGenerated={onApiKeyGenerated}
         />,
     );
 
-test('calls onKeyGenerated with null when switching to an environment with no token', async () => {
+test('shows Generate API Key button when no token exists for the environment', async () => {
+    testServerRoute(server, '/api/admin/projects/my-project/api-tokens', {
+        tokens: [],
+    });
+
+    renderComponent();
+
+    await waitFor(() => {
+        expect(
+            screen.getByRole('button', { name: /generate api key/i }),
+        ).toBeInTheDocument();
+    });
+});
+
+test('calls onApiKeyGenerated with token secret when clicking Next', async () => {
     testServerRoute(server, '/api/admin/projects/my-project/api-tokens', {
         tokens: [
             {
-                environment: 'production',
+                environment: 'development',
                 type: 'client',
-                secret: 'my-project:production.secretxyz',
+                secret: 'my-project:development.secretxyz',
             },
         ],
     });
 
-    const onKeyGenerated = vi.fn();
-    const { rerender } = renderStep('production', onKeyGenerated);
+    const onApiKeyGenerated = vi.fn();
+    renderComponent(onApiKeyGenerated);
 
     await waitFor(() => {
-        expect(onKeyGenerated).toHaveBeenCalledWith(
-            'my-project:production.secretxyz',
-        );
+        expect(
+            screen.getByRole('button', { name: /next/i }),
+        ).toBeInTheDocument();
     });
 
-    onKeyGenerated.mockClear();
+    await userEvent.click(screen.getByRole('button', { name: /next/i }));
 
-    rerender(
-        <GenerateApiKey
-            projectId='my-project'
-            environments={['development', 'production']}
-            environment='development'
-            onEnvSelect={vi.fn()}
-            sdkType='client'
-            onKeyGenerated={onKeyGenerated}
-            onDone={vi.fn()}
-        />,
+    expect(onApiKeyGenerated).toHaveBeenCalledWith(
+        'my-project:development.secretxyz',
     );
-
-    await waitFor(() => {
-        expect(onKeyGenerated).toHaveBeenCalledWith(null);
-    });
 });

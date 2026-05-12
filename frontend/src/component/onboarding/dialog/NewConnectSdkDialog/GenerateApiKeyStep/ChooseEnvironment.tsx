@@ -5,9 +5,9 @@ import {
     type SelectChangeEvent,
 } from '@mui/material';
 
-export interface ChooseEnvironmentProps {
+export interface IChooseEnvironmentProps {
     environments: string[];
-    currentEnvironment: string;
+    environment: string;
     onSelect: (env: string) => void;
 }
 
@@ -26,8 +26,8 @@ const StyledSelect = styled(Select<string>)(({ theme }) => ({
 export const ChooseEnvironment = ({
     environments,
     onSelect,
-    currentEnvironment,
-}: ChooseEnvironmentProps) => {
+    environment,
+}: IChooseEnvironmentProps) => {
     const longestEnv =
         environments.length > 0
             ? Math.max(...environments.map((env) => env.length))
@@ -38,7 +38,7 @@ export const ChooseEnvironment = ({
 
     return (
         <StyledSelect
-            value={currentEnvironment}
+            value={environment}
             onChange={handleChange}
             size='small'
             inputProps={{ 'aria-label': 'Select environment' }}

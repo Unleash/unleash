@@ -9,7 +9,7 @@ test('calls onSelect with chosen environment', async () => {
     render(
         <ChooseEnvironment
             environments={['production', 'development', 'staging']}
-            currentEnvironment='production'
+            environment='production'
             onSelect={onSelect}
         />,
     );

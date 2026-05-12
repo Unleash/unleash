@@ -12,7 +12,7 @@ export const Default: Story = () => {
     return (
         <ChooseEnvironment
             environments={['production', 'development', 'staging']}
-            currentEnvironment={env}
+            environment={env}
             onSelect={setEnv}
         />
     );
@@ -23,7 +23,7 @@ export const LongName: Story = () => {
     return (
         <ChooseEnvironment
             environments={['prod', 'really-long-environment-name', 'staging']}
-            currentEnvironment={env}
+            environment={env}
             onSelect={setEnv}
         />
     );

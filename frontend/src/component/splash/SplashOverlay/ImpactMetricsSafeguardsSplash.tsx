@@ -66,18 +66,14 @@ const StyledTitle = styled(Typography)(({ theme }) => ({
     marginBottom: theme.spacing(1),
 }));
 
-const StyledDescription = styled(Typography)(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    marginBottom: theme.spacing(3),
-}));
-
 const DiagramContainer = styled(Box)(({ theme }) => ({
     width: '100%',
     backgroundColor: theme.palette.background.elevation1,
     borderRadius: theme.shape.borderRadiusMedium,
-    padding: theme.spacing(3, 2),
+    padding: theme.spacing(8, 2),
     marginBottom: theme.spacing(3),
     display: 'flex',
+    alignItems: 'center',
     justifyContent: 'center',
 }));
 
@@ -85,7 +81,7 @@ const CYCLE_MS = 6000;
 
 const StyledDiagram = styled('svg')(({ theme }) => ({
     width: '100%',
-    maxWidth: 560,
+    maxWidth: 620,
     height: 'auto',
     display: 'block',
 
@@ -157,15 +153,24 @@ const StyledDiagram = styled('svg')(({ theme }) => ({
     '& .safeguard-pulse > *': {
         transformOrigin: 'center',
         transformBox: 'fill-box',
-        animation: `safeguardTrigger ${CYCLE_MS}ms ease-in-out infinite`,
     },
     '& .safeguard-shield': {
         stroke: theme.palette.primary.main,
         fill: theme.palette.primary.main,
         fillOpacity: 0.08,
+        strokeWidth: 2,
+        animation: `safeguardTrigger ${CYCLE_MS}ms ease-in-out infinite, safeguardShieldFill ${CYCLE_MS}ms ease-in-out infinite`,
     },
     '& .safeguard-check': {
         stroke: theme.palette.primary.main,
+        animation: `safeguardTrigger ${CYCLE_MS}ms ease-in-out infinite, safeguardCheckFlash ${CYCLE_MS}ms ease-in-out infinite`,
+    },
+    '& .safeguard-glow': {
+        fill: theme.palette.error.main,
+        opacity: 0,
+        animation: `safeguardGlow ${CYCLE_MS}ms ease-in-out infinite`,
+        transformOrigin: 'center',
+        transformBox: 'fill-box',
     },
     '& .toggle-track': {
         fill: theme.palette.primary.main,
@@ -185,33 +190,73 @@ const StyledDiagram = styled('svg')(({ theme }) => ({
         '55%, 100%': { clipPath: 'inset(0 0 0 0)' },
     },
     '@keyframes breachPulse': {
-        '0%, 55%': { opacity: 0, r: 3 },
-        '60%': { opacity: 1, r: 6 },
-        '70%': { opacity: 1, r: 4 },
-        '85%, 100%': { opacity: 1, r: 4 },
+        '0%, 53%': { opacity: 0, r: 3 },
+        '57%': { opacity: 1, r: 7 },
+        '63%': { opacity: 1, r: 4 },
+        '100%': { opacity: 1, r: 4 },
     },
     '@keyframes arrowFlash': {
-        '0%, 60%': { opacity: 0.6 },
-        '65%, 75%': { opacity: 1 },
-        '85%, 100%': { opacity: 0.6 },
+        '0%, 57%': { opacity: 0.45 },
+        '62%, 68%': { opacity: 1 },
+        '74%, 100%': { opacity: 0.45 },
     },
     '@keyframes arrowFlash2': {
-        '0%, 70%': { opacity: 0.6 },
-        '75%, 85%': { opacity: 1 },
-        '95%, 100%': { opacity: 0.6 },
+        '0%, 78%': { opacity: 0.45 },
+        '82%, 88%': { opacity: 1 },
+        '94%, 100%': { opacity: 0.45 },
     },
     '@keyframes safeguardTrigger': {
-        '0%, 60%': { transform: 'scale(1)' },
-        '70%': { transform: 'scale(1.08)' },
-        '80%, 100%': { transform: 'scale(1)' },
+        '0%, 67%': { transform: 'scale(1)' },
+        '72%': { transform: 'scale(1.25)' },
+        '78%': { transform: 'scale(0.95)' },
+        '84%, 100%': { transform: 'scale(1.05)' },
+    },
+    '@keyframes safeguardShieldFill': {
+        '0%, 67%': {
+            fill: theme.palette.primary.main,
+            stroke: theme.palette.primary.main,
+            fillOpacity: 0.08,
+            strokeWidth: 2,
+        },
+        '72%': {
+            fill: theme.palette.error.main,
+            stroke: theme.palette.error.main,
+            fillOpacity: 0.95,
+            strokeWidth: 3,
+        },
+        '84%, 100%': {
+            fill: theme.palette.error.main,
+            stroke: theme.palette.error.main,
+            fillOpacity: 0.85,
+            strokeWidth: 2.5,
+        },
+    },
+    '@keyframes safeguardCheckFlash': {
+        '0%, 67%': {
+            stroke: theme.palette.primary.main,
+            strokeWidth: 2.5,
+        },
+        '72%, 84%': {
+            stroke: theme.palette.common.white,
+            strokeWidth: 3.5,
+        },
+        '100%': {
+            stroke: theme.palette.common.white,
+            strokeWidth: 3,
+        },
+    },
+    '@keyframes safeguardGlow': {
+        '0%, 67%': { opacity: 0, transform: 'scale(0.8)' },
+        '72%': { opacity: 0.45, transform: 'scale(1.6)' },
+        '84%, 100%': { opacity: 0, transform: 'scale(2)' },
     },
     '@keyframes toggleTrackFlip': {
-        '0%, 75%': { fill: theme.palette.primary.main },
-        '85%, 100%': { fill: theme.palette.action.disabled },
+        '0%, 88%': { fill: theme.palette.primary.main },
+        '92%, 100%': { fill: theme.palette.action.disabled },
     },
     '@keyframes toggleKnobSlide': {
-        '0%, 75%': { transform: 'translateX(0)' },
-        '85%, 100%': { transform: 'translateX(-32px)' },
+        '0%, 88%': { transform: 'translateX(0)' },
+        '92%, 100%': { transform: 'translateX(-32px)' },
     },
 }));
 
@@ -250,6 +295,18 @@ const StyledStep = styled('li')(({ theme }) => ({
 const StepText = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.primary,
     paddingTop: theme.spacing(0.25),
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(0.5),
+}));
+
+const StepTitle = styled('span')(({ theme }) => ({
+    fontWeight: theme.typography.fontWeightBold,
+    color: theme.palette.text.primary,
+}));
+
+const StepBody = styled('span')(({ theme }) => ({
+    color: theme.palette.text.secondary,
 }));
 
 const ActionsRow = styled(Box)(({ theme }) => ({
@@ -326,16 +383,9 @@ export const ImpactMetricsSafeguardsSplash = ({
                     Your safety net for every release
                 </StyledTitle>
 
-                <StyledDescription>
-                    Connect your application metrics to your flags. If a release
-                    moves the wrong number the wrong way, Unleash turns the flag
-                    off in that environment automatically. No alerts to triage,
-                    no manual rollback.
-                </StyledDescription>
-
                 <DiagramContainer>
                     <StyledDiagram
-                        viewBox='0 0 600 200'
+                        viewBox='0 0 660 200'
                         role='img'
                         aria-label='Animated diagram: an impact metric line crosses a threshold, triggers a safeguard, and turns the flag off in that environment.'
                     >
@@ -349,48 +399,48 @@ export const ImpactMetricsSafeguardsSplash = ({
                                 height='160'
                                 rx='10'
                             />
-                            <text className='node-label' x='90' y='26'>
+                            <text className='node-label' x='90' y='24'>
                                 Your impact metric
+                            </text>
+                            <text className='node-sub' x='90' y='42'>
+                                checkout error rate
                             </text>
                             <line
                                 className='axis-line'
-                                x1='20'
-                                y1='116'
-                                x2='160'
-                                y2='116'
+                                x1='18'
+                                y1='140'
+                                x2='162'
+                                y2='140'
                             />
                             <line
                                 className='threshold-line'
-                                x1='20'
-                                y1='76'
-                                x2='160'
-                                y2='76'
+                                x1='18'
+                                y1='96'
+                                x2='162'
+                                y2='96'
                             />
                             <text
                                 className='threshold-label'
-                                x='160'
-                                y='72'
+                                x='162'
+                                y='92'
                                 textAnchor='end'
                             >
                                 threshold
                             </text>
                             <path
                                 className='metric-area'
-                                d='M20,110 L42,106 L66,102 L90,94 L112,86 L130,78 L144,62 L160,54 L160,116 L20,116 Z'
+                                d='M18,134 L42,130 L66,124 L90,116 L114,108 L132,100 L146,84 L162,76 L162,140 L18,140 Z'
                             />
                             <path
                                 className='metric-line'
-                                d='M20,110 L42,106 L66,102 L90,94 L112,86 L130,78 L144,62 L160,54'
+                                d='M18,134 L42,130 L66,124 L90,116 L114,108 L132,100 L146,84 L162,76'
                             />
                             <circle
                                 className='breach-dot'
-                                cx='130'
-                                cy='78'
+                                cx='132'
+                                cy='100'
                                 r='4'
                             />
-                            <text className='node-sub' x='90' y='148'>
-                                checkout error rate
-                            </text>
                         </g>
 
                         {/* Arrow 1 */}
@@ -414,41 +464,45 @@ export const ImpactMetricsSafeguardsSplash = ({
                                 className='node-rect'
                                 x='0'
                                 y='0'
-                                width='140'
+                                width='180'
                                 height='160'
                                 rx='10'
                             />
-                            <text className='node-label' x='70' y='26'>
+                            <text className='node-label' x='90' y='24'>
                                 Safeguard
                             </text>
+                            <text className='node-sub' x='90' y='42'>
+                                threshold crossed
+                            </text>
+                            <circle
+                                className='safeguard-glow'
+                                cx='90'
+                                cy='108'
+                                r='30'
+                            />
                             <g
                                 className='safeguard-pulse'
-                                transform='translate(70, 86)'
+                                transform='translate(90, 108)'
                             >
                                 <path
                                     className='safeguard-shield'
-                                    d='M0,-22 C-6,-22 -13,-19 -18,-16 L-18,-1 C-18,10 -11,18 0,22 C11,18 18,10 18,-1 L18,-16 C13,-19 6,-22 0,-22 Z'
-                                    strokeWidth='2'
+                                    d='M0,-26 C-7,-26 -15,-22 -22,-19 L-22,-1 C-22,12 -13,21 0,26 C13,21 22,12 22,-1 L22,-19 C15,-22 7,-26 0,-26 Z'
                                     strokeLinejoin='round'
                                 />
                                 <path
                                     className='safeguard-check'
-                                    d='M-7,-1 L-2,4 L8,-7'
+                                    d='M-9,-1 L-3,5 L10,-8'
                                     fill='none'
-                                    strokeWidth='2.5'
                                     strokeLinecap='round'
                                     strokeLinejoin='round'
                                 />
                             </g>
-                            <text className='node-sub' x='70' y='148'>
-                                threshold crossed
-                            </text>
                         </g>
 
                         {/* Arrow 2 */}
                         <g
                             className='arrow arrow-active-2'
-                            transform='translate(384, 100)'
+                            transform='translate(424, 100)'
                         >
                             <line
                                 x1='0'
@@ -461,19 +515,22 @@ export const ImpactMetricsSafeguardsSplash = ({
                         </g>
 
                         {/* Node 3: Flag */}
-                        <g transform='translate(426, 20)'>
+                        <g transform='translate(466, 20)'>
                             <rect
                                 className='node-rect'
                                 x='0'
                                 y='0'
-                                width='164'
+                                width='180'
                                 height='160'
                                 rx='10'
                             />
-                            <text className='node-label' x='82' y='26'>
+                            <text className='node-label' x='90' y='24'>
                                 Flag in production
                             </text>
-                            <g transform='translate(52, 78)'>
+                            <text className='node-sub' x='90' y='42'>
+                                automatically disabled
+                            </text>
+                            <g transform='translate(60, 96)'>
                                 <rect
                                     className='toggle-track'
                                     x='0'
@@ -489,9 +546,6 @@ export const ImpactMetricsSafeguardsSplash = ({
                                     r='10'
                                 />
                             </g>
-                            <text className='node-sub' x='82' y='148'>
-                                automatically disabled
-                            </text>
                         </g>
                     </StyledDiagram>
                 </DiagramContainer>
@@ -499,22 +553,31 @@ export const ImpactMetricsSafeguardsSplash = ({
                 <StyledStepList>
                     <StyledStep>
                         <StepText variant='body1'>
-                            <strong>Catch issues fast.</strong> Safeguards react
-                            the moment a metric crosses your threshold.
+                            <StepTitle>Catch issues fast</StepTitle>
+                            <StepBody>
+                                Safeguards react the moment a metric crosses
+                                your threshold.
+                            </StepBody>
                         </StepText>
                     </StyledStep>
                     <StyledStep>
                         <StepText variant='body1'>
-                            <strong>Use metrics that matter to you.</strong>{' '}
-                            Define them in your code: error rate, latency,
-                            conversion, anything.
+                            <StepTitle>
+                                Use metrics that matter to you
+                            </StepTitle>
+                            <StepBody>
+                                Define them in your code: error rate, latency,
+                                conversion, anything.
+                            </StepBody>
                         </StepText>
                     </StyledStep>
                     <StyledStep>
                         <StepText variant='body1'>
-                            <strong>Roll back automatically.</strong> The bad
-                            environment turns off on its own so you can
-                            investigate calmly.
+                            <StepTitle>Roll back automatically</StepTitle>
+                            <StepBody>
+                                The bad environment turns off on its own so you
+                                can investigate calmly.
+                            </StepBody>
                         </StepText>
                     </StyledStep>
                 </StyledStepList>

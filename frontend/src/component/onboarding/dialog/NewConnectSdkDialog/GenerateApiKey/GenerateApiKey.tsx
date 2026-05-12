@@ -62,6 +62,8 @@ export interface IGenerateApiKeyContentProps {
     onDone: () => void;
 }
 
+const generateApiKeyLabel = 'Then generate an API Key';
+
 export const GenerateApiKeyContent = ({
     environments,
     environment,
@@ -93,7 +95,7 @@ export const GenerateApiKeyContent = ({
             <>
                 <SectionBox>
                     <SectionText>
-                        <SectionHeader>Then generate an API Key</SectionHeader>
+                        <SectionHeader>{generateApiKeyLabel}</SectionHeader>
                         <SectionDescription>
                             Here is your generated API key. We will use it to
                             connect to the <b>{parsedToken.project}</b> project
@@ -114,7 +116,7 @@ export const GenerateApiKeyContent = ({
             </>
         ) : (
             <SectionBox>
-                <SectionHeader>Then generate an API Key</SectionHeader>
+                <SectionHeader>{generateApiKeyLabel}</SectionHeader>
                 <Button
                     variant='contained'
                     disabled={fetchingTokens || creatingToken}

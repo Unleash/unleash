@@ -6,6 +6,7 @@ import type { FC } from 'react';
 const StyledGrid = styled(Grid)(({ theme }) => ({
     flexWrap: 'nowrap',
     gap: theme.spacing(1),
+    width: '100%',
 }));
 
 export const GridRow: FC<{

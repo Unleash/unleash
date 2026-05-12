@@ -13,6 +13,7 @@ import { useState } from 'react';
 import { ConnectSdkDialogStep } from './ConnectSdkDialogStep';
 import type { Sdk } from '../sharedTypes';
 import { SelectSdk, SelectSdkSummary } from './SelectSdk';
+import { ConfigureSdk } from './ConfigureSdk';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -136,6 +137,9 @@ type Step = {
 const InnerDialog = ({
     onClose,
     onFinish,
+    project: projectId, // TODO: Cleanup prop names once we remove `onboardingConnectSDKNewDialog`
+    environments,
+    feature,
 }: Omit<IConnectSDKDialogProps, 'open'>) => {
     const [currentStep, setCurrentStep] = useState(0);
     const [expandedStep, setExpandedStep] = useState(0);
@@ -148,14 +152,28 @@ const InnerDialog = ({
         setExpandedStep(1);
     };
 
+    const onSdkConnected = () => setCurrentStep(3);
+
     const steps: Step[] = [
         {
             title: 'Select SDK',
-            content: <SelectSdk onSelect={onSelectSdk} />,
+            content: <SelectSdk sdk={sdk} onSelect={onSelectSdk} />,
             summary: <SelectSdkSummary sdk={sdk} />,
         },
         { title: 'Generate API key', content: 'TODO: Generate API key' },
-        { title: 'Configure the SDK', content: 'TODO: Configure the SDK' },
+        {
+            title: 'Configure the SDK',
+            content: (
+                <ConfigureSdk
+                    projectId={projectId}
+                    sdk={sdk}
+                    apiKey='TODO: API key from state'
+                    feature={feature}
+                    expanded={expandedStep === 2}
+                    onSdkConnected={onSdkConnected}
+                />
+            ),
+        },
     ];
 
     const complete = currentStep >= steps.length && sdk;

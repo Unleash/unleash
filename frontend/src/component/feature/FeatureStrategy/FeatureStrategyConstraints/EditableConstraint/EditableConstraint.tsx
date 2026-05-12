@@ -142,7 +142,7 @@ const TopRowInput: FC<{
     clearValues: () => void;
     localConstraint: EditableConstraintType;
     validator: (value: string) => ConstraintValidationResult;
-    addValuesButtonRef: React.RefObject<HTMLButtonElement | null>;
+    addValuesButtonRef: React.RefObject<HTMLDivElement | null>;
     editingOpen: boolean;
     setEditingOpen: (open: boolean) => void;
 }> = ({
@@ -351,7 +351,7 @@ export const EditableConstraint: FC<Props> = ({
     const showCaseSensitiveButton =
         isStringOperator(operator) || isRegexOperator(operator);
     const deleteButtonRef = useRef<HTMLButtonElement>(null);
-    const addValuesButtonRef = useRef<HTMLButtonElement>(null);
+    const addValuesButtonRef = useRef<HTMLDivElement>(null);
 
     if (!context) {
         return null;

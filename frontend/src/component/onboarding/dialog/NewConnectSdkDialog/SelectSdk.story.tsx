@@ -6,6 +6,13 @@ export const meta: StoryMeta = {
     background: 'paper',
 };
 
-export const WithSelection: Story = () => (
+export const Default: Story = () => (
     <SelectSdk onSelect={(sdk) => console.log('Selected SDK:', sdk)} />
+);
+
+export const WithSelection: Story = () => (
+    <SelectSdk
+        sdk={{ name: 'Node.js', type: 'client' }}
+        onSelect={(sdk) => console.log('Selected SDK:', sdk)}
+    />
 );

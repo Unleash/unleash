@@ -6,6 +6,7 @@ import { NewInUnleashToast } from './NewInUnleashToast.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
 import { useDelayedUiFlagEvaluation } from 'hooks/useUiFlag.ts';
 import { shouldBeDisplayed } from './shouldBeDisplayed.ts';
+import { useIsNewUser } from './useIsNewUser.ts';
 
 export const useNewInUnleashItemToShow = (
     items: NewInUnleashItem[],
@@ -22,9 +23,10 @@ export const useNewInUnleashItemToShow = (
 };
 
 export const NewInUnleash = () => {
+    const isNewUser = useIsNewUser();
     const item = useNewInUnleashItemToShow(newInUnleashItems);
 
-    if (!item) {
+    if (isNewUser || !item) {
         return null;
     }
 

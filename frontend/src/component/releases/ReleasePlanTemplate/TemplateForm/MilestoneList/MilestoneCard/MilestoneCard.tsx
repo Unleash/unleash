@@ -362,10 +362,12 @@ export const MilestoneCard = ({
                                 anchorEl={anchor}
                                 onClose={onClose}
                                 onClick={onClose}
-                                PaperProps={{
-                                    sx: (theme) => ({
-                                        paddingBottom: theme.spacing(1),
-                                    }),
+                                slotProps={{
+                                    paper: {
+                                        sx: (theme) => ({
+                                            paddingBottom: theme.spacing(1),
+                                        }),
+                                    },
                                 }}
                             >
                                 <MilestoneStrategyMenuCards
@@ -499,10 +501,12 @@ export const MilestoneCard = ({
                                 anchorEl={anchor}
                                 onClose={onClose}
                                 onClick={onClose}
-                                PaperProps={{
-                                    sx: (theme) => ({
-                                        paddingBottom: theme.spacing(1),
-                                    }),
+                                slotProps={{
+                                    paper: {
+                                        sx: (theme) => ({
+                                            paddingBottom: theme.spacing(1),
+                                        }),
+                                    },
                                 }}
                             >
                                 <MilestoneStrategyMenuCards
@@ -518,11 +522,9 @@ export const MilestoneCard = ({
                     </StyledAccordionDetails>
                 </StyledAccordion>
             </DraggableCardContainer>
-
             <FormHelperText error={Boolean(errors?.[milestone.id])}>
                 {errors?.[milestone.id]}
             </FormHelperText>
-
             <SidebarModal
                 label='Add strategy to template milestone'
                 onClose={() => {

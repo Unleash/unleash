@@ -29,7 +29,7 @@ const setupApi = ({
 };
 
 describe('RemoteMcpToggle', () => {
-    test('renders as disabled when settings return enabled: false', async () => {
+    test('renders initial toggle state from settings', async () => {
         setupApi({ enabled: false });
 
         render(<RemoteMcpToggle />);
@@ -38,39 +38,25 @@ describe('RemoteMcpToggle', () => {
         expect(screen.getByRole('switch')).not.toBeChecked();
     });
 
-    test('renders as enabled when settings return enabled: true', async () => {
-        setupApi({ enabled: true });
-
-        render(<RemoteMcpToggle />);
-
-        expect(await screen.findByText('Enabled')).toBeInTheDocument();
-        expect(screen.getByRole('switch')).toBeChecked();
-    });
-
-    test('sends POST with enabled: true when toggling on', async () => {
+    test('toggling updates the switch without calling the API, save/cancel become active', async () => {
         const { requests } = setupApi({ enabled: false });
 
         render(<RemoteMcpToggle />);
 
         await screen.findByText('Disabled');
+        expect(screen.getByRole('button', { name: 'Save' })).toBeDisabled();
+        expect(screen.getByRole('button', { name: 'Cancel' })).toBeDisabled();
+
         await userEvent.click(screen.getByRole('switch'));
 
-        expect(requests).toEqual([{ enabled: true }]);
+        expect(screen.getByRole('switch')).toBeChecked();
+        expect(screen.getByRole('button', { name: 'Save' })).toBeEnabled();
+        expect(screen.getByRole('button', { name: 'Cancel' })).toBeEnabled();
+        expect(requests).toEqual([]);
     });
 
-    test('sends POST with enabled: false when toggling off', async () => {
-        const { requests } = setupApi({ enabled: true });
-
-        render(<RemoteMcpToggle />);
-
-        await screen.findByText('Enabled');
-        await userEvent.click(screen.getByRole('switch'));
-
-        expect(requests).toEqual([{ enabled: false }]);
-    });
-
-    test('shows success toast after toggling on', async () => {
-        setupApi({ enabled: false });
+    test('save sends correct POST and shows success toast', async () => {
+        const { requests } = setupApi({ enabled: false });
 
         render(
             <>
@@ -81,7 +67,9 @@ describe('RemoteMcpToggle', () => {
 
         await screen.findByText('Disabled');
         await userEvent.click(screen.getByRole('switch'));
+        await userEvent.click(screen.getByRole('button', { name: 'Save' }));
 
+        expect(requests).toEqual([{ enabled: true }]);
         expect(
             await screen.findByText(
                 'Remote MCP server has been successfully enabled',
@@ -89,27 +77,20 @@ describe('RemoteMcpToggle', () => {
         ).toBeInTheDocument();
     });
 
-    test('shows success toast after toggling off', async () => {
-        setupApi({ enabled: true });
+    test('cancel resets the toggle to the server value', async () => {
+        setupApi({ enabled: false });
 
-        render(
-            <>
-                <ToastRenderer />
-                <RemoteMcpToggle />
-            </>,
-        );
+        render(<RemoteMcpToggle />);
 
-        await screen.findByText('Enabled');
+        await screen.findByText('Disabled');
         await userEvent.click(screen.getByRole('switch'));
+        expect(screen.getByRole('switch')).toBeChecked();
 
-        expect(
-            await screen.findByText(
-                'Remote MCP server has been successfully disabled',
-            ),
-        ).toBeInTheDocument();
+        await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+        expect(screen.getByRole('switch')).not.toBeChecked();
     });
 
-    test('shows error toast when the API call fails', async () => {
+    test('shows error toast when save fails', async () => {
         setupApi({ enabled: false, postStatus: 500 });
 
         render(
@@ -121,6 +102,7 @@ describe('RemoteMcpToggle', () => {
 
         await screen.findByText('Disabled');
         await userEvent.click(screen.getByRole('switch'));
+        await userEvent.click(screen.getByRole('button', { name: 'Save' }));
 
         expect(
             await screen.findByText('Action could not be performed'),

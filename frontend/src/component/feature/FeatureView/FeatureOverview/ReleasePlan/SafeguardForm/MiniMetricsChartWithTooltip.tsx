@@ -3,10 +3,25 @@ import type { MetricSource } from 'component/impact-metrics/types';
 import { useChartData } from 'component/impact-metrics/hooks/useChartData';
 import { useMemo } from 'react';
 import type { FC } from 'react';
+import { Box, styled } from '@mui/material';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 import type { MetricQuerySchemaTimeRange } from 'openapi/models/metricQuerySchemaTimeRange';
 import type { MetricQuerySchemaAggregationMode } from 'openapi/models/metricQuerySchemaAggregationMode';
 import { MiniChartWithData } from './MiniChartWithData.tsx';
 import { MiniChartNoData } from './MiniChartNoData.tsx';
+
+const StyledErrorWrapper = styled(Box)(({ theme }) => ({
+    width: 60,
+    marginRight: theme.spacing(1),
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadius,
+    padding: theme.spacing(0.75),
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: theme.palette.error.main,
+}));
 
 interface MiniMetricsChartWithTooltipProps {
     metricName: string;
@@ -36,6 +51,7 @@ export const MiniMetricsChartWithTooltip: FC<
     const {
         data: { series: timeSeriesData },
         loading: dataLoading,
+        error: dataError,
     } = useImpactMetricsData(
         metricName
             ? {
@@ -66,6 +82,20 @@ export const MiniMetricsChartWithTooltip: FC<
                 !data.datasets.some((d) => d.data.length > 1)),
         [data, dataLoading, timeSeriesData],
     );
+
+    if (dataError) {
+        return (
+            <TooltipResolver
+                title='Failed to load impact metrics'
+                placement='top'
+                arrow
+            >
+                <StyledErrorWrapper>
+                    <ErrorOutlineIcon fontSize='small' />
+                </StyledErrorWrapper>
+            </TooltipResolver>
+        );
+    }
 
     if (notEnoughData) {
         return (

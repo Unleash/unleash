@@ -76,11 +76,13 @@ export const ProjectActionsTableActionsCell = ({
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 disableScrollLock={true}
-                PaperProps={{
-                    sx: (theme) => ({
-                        borderRadius: `${theme.shape.borderRadius}px`,
-                        padding: theme.spacing(1, 1.5),
-                    }),
+                slotProps={{
+                    paper: {
+                        sx: (theme) => ({
+                            borderRadius: `${theme.shape.borderRadius}px`,
+                            padding: theme.spacing(1, 1.5),
+                        }),
+                    },
                 }}
             >
                 <MenuList aria-labelledby={id}>

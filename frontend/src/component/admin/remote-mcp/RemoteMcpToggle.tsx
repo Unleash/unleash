@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react';
 import {
     Box,
+    Button,
     FormControlLabel,
     styled,
     Switch,
@@ -44,6 +46,14 @@ const StyledDescription = styled(Typography)(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
 }));
 
+const Footer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'flex-end',
+    gap: theme.spacing(2),
+    paddingTop: theme.spacing(2),
+    borderTop: `1px solid ${theme.palette.divider}`,
+}));
+
 export const RemoteMcpToggle = () => {
     const { settings, loading, refetch } = useRemoteMcpSettings();
     const { setRemoteMcpSettings, loading: saving } = useRemoteMcpSettingsApi();
@@ -53,16 +63,27 @@ export const RemoteMcpToggle = () => {
     const { setToastData, setToastApiError } = useToast();
     const { trackEvent } = usePlausibleTracker();
 
-    const handleToggle = async () => {
-        const next = !settings.enabled;
+    const [enabled, setEnabled] = useState(settings.enabled);
+
+    useEffect(() => {
+        setEnabled(settings.enabled);
+    }, [settings.enabled]);
+
+    const isDirty = enabled !== settings.enabled;
+
+    const handleCancel = () => {
+        setEnabled(settings.enabled);
+    };
+
+    const handleSave = async () => {
         try {
-            await setRemoteMcpSettings(next);
+            await setRemoteMcpSettings(enabled);
             trackEvent('remote-mcp', {
-                props: { eventType: next ? 'enabled' : 'disabled' },
+                props: { eventType: enabled ? 'enabled' : 'disabled' },
             });
             setToastData({
                 type: 'success',
-                text: `Remote MCP server has been successfully ${next ? 'enabled' : 'disabled'}`,
+                text: `Remote MCP server has been successfully ${enabled ? 'enabled' : 'disabled'}`,
             });
         } catch (error) {
             setToastApiError(formatUnknownError(error));
@@ -72,35 +93,49 @@ export const RemoteMcpToggle = () => {
     };
 
     return (
-        <StyledCard>
-            <StyledCardLeft>
-                <StyledTitle variant='body1'>
-                    Enable Remote MCP Server for this instance
-                </StyledTitle>
-                <StyledDescription>
-                    When enabled, Unleash exposes a Streamable HTTP MCP server
-                    at <code>{unleashUrl}/api/admin/mcp</code>
-                </StyledDescription>
-                <StyledDescription>
-                    Authentication uses standard Unleash PAT tokens — once
-                    enabled, users will be able to exchange their current login
-                    session for a PAT token, valid for 24h.
-                </StyledDescription>
-            </StyledCardLeft>
-            <StyledCardRight>
-                <FormControlLabel
-                    sx={{ margin: 0 }}
-                    control={
-                        <Switch
-                            onChange={handleToggle}
-                            checked={settings.enabled}
-                            disabled={loading || saving}
-                            name='enabled'
-                        />
-                    }
-                    label={settings.enabled ? 'Enabled' : 'Disabled'}
-                />
-            </StyledCardRight>
-        </StyledCard>
+        <>
+            <StyledCard>
+                <StyledCardLeft>
+                    <StyledTitle variant='body1'>
+                        Enable Remote MCP Server for this instance
+                    </StyledTitle>
+                    <StyledDescription>
+                        When enabled, Unleash exposes a Streamable HTTP MCP
+                        server at <code>{unleashUrl}/api/admin/mcp</code>
+                    </StyledDescription>
+                    <StyledDescription>
+                        Authentication uses standard Unleash PAT tokens — once
+                        enabled, users will be able to exchange their current
+                        login session for a PAT token, valid for 24h.
+                    </StyledDescription>
+                </StyledCardLeft>
+                <StyledCardRight>
+                    <FormControlLabel
+                        sx={{ margin: 0 }}
+                        control={
+                            <Switch
+                                onChange={(_, checked) => setEnabled(checked)}
+                                checked={enabled}
+                                disabled={loading || saving}
+                                name='enabled'
+                            />
+                        }
+                        label={enabled ? 'Enabled' : 'Disabled'}
+                    />
+                </StyledCardRight>
+            </StyledCard>
+            <Footer>
+                <Button onClick={handleCancel} disabled={!isDirty || saving}>
+                    Cancel
+                </Button>
+                <Button
+                    variant='contained'
+                    onClick={handleSave}
+                    disabled={!isDirty || saving}
+                >
+                    Save
+                </Button>
+            </Footer>
+        </>
     );
 };

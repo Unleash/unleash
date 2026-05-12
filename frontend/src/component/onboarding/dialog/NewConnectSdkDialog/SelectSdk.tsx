@@ -1,6 +1,13 @@
 import { Avatar, Box, Button, styled } from '@mui/material';
 import { formatAssetPath } from 'utils/formatPath';
-import { allSdks, clientSdks, type Sdk, serverSdks } from '../sharedTypes.ts';
+import {
+    allSdks,
+    clientSdks,
+    type Sdk,
+    type SdkName,
+    type SdkType,
+    serverSdks,
+} from '../sharedTypes.ts';
 
 const SpacedContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -29,9 +36,11 @@ const SdkListSection = styled('div')(({ theme }) => ({
     flexWrap: 'wrap',
 }));
 
-const SdkButton = styled(Button)(({ theme }) => ({
+const SdkButton = styled(Button, {
+    shouldForwardProp: (prop) => prop !== 'isSelected',
+})<{ isSelected?: boolean }>(({ theme, isSelected }) => ({
     fontSize: theme.typography.body2.fontSize,
-    border: `1px solid ${theme.palette.divider}`,
+    border: `1px solid ${isSelected ? theme.palette.primary.main : theme.palette.divider}`,
     borderRadius: theme.shape.borderRadius,
     padding: theme.spacing(1, 1.5),
     minWidth: theme.spacing(30),
@@ -65,10 +74,43 @@ const StyledSummary = styled(Box)(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-interface ISelectSdkProps {
+interface ISdkListProps {
+    sdks: { name: SdkName; icon: string }[];
+    type: SdkType;
+    selectedSdkName: string | undefined;
     onSelect: (sdk: Sdk) => void;
 }
-export const SelectSdk = ({ onSelect }: ISelectSdkProps) => {
+
+const SdkList = ({ sdks, type, selectedSdkName, onSelect }: ISdkListProps) => (
+    <SdkListSection>
+        {sdks.map((sdk) => {
+            const isSelected = selectedSdkName === sdk.name;
+            return (
+                <SdkButton
+                    key={sdk.name}
+                    onClick={() => onSelect({ name: sdk.name, type })}
+                    variant='text'
+                    isSelected={isSelected}
+                >
+                    <StyledAvatar src={formatAssetPath(sdk.icon)} alt='' />
+                    <SdkTileContent>
+                        <b>{sdk.name}</b>
+                        <SelectLabel>
+                            {isSelected ? 'Selected' : 'Select'}
+                        </SelectLabel>
+                    </SdkTileContent>
+                </SdkButton>
+            );
+        })}
+    </SdkListSection>
+);
+
+interface ISelectSdkProps {
+    onSelect: (sdk: Sdk) => void;
+    sdk?: Sdk;
+}
+export const SelectSdk = ({ onSelect, sdk }: ISelectSdkProps) => {
+    const selectedSdkName = sdk?.name;
     return (
         <SpacedContainer>
             <Box>
@@ -76,52 +118,24 @@ export const SelectSdk = ({ onSelect }: ISelectSdkProps) => {
                 <SecondarySectionHeader>
                     Backend SDKs need a backend API key.
                 </SecondarySectionHeader>
-                <SdkListSection>
-                    {serverSdks.map((sdk) => (
-                        <SdkButton
-                            key={sdk.name}
-                            onClick={() =>
-                                onSelect({ name: sdk.name, type: 'client' })
-                            }
-                            variant='text'
-                        >
-                            <StyledAvatar
-                                src={formatAssetPath(sdk.icon)}
-                                alt=''
-                            />
-                            <SdkTileContent>
-                                <b>{sdk.name}</b>
-                                <SelectLabel>Select</SelectLabel>
-                            </SdkTileContent>
-                        </SdkButton>
-                    ))}
-                </SdkListSection>
+                <SdkList
+                    sdks={serverSdks}
+                    type='client'
+                    selectedSdkName={selectedSdkName}
+                    onSelect={onSelect}
+                />
             </Box>
             <Box>
                 <SectionHeader>Frontend SDKs</SectionHeader>
                 <SecondarySectionHeader>
                     Frontend SDKs need a frontend API key.
                 </SecondarySectionHeader>
-                <SdkListSection>
-                    {clientSdks.map((sdk) => (
-                        <SdkButton
-                            key={sdk.name}
-                            onClick={() =>
-                                onSelect({ name: sdk.name, type: 'frontend' })
-                            }
-                            variant='text'
-                        >
-                            <StyledAvatar
-                                src={formatAssetPath(sdk.icon)}
-                                alt=''
-                            />
-                            <SdkTileContent>
-                                <b>{sdk.name}</b>
-                                <SelectLabel>Select</SelectLabel>
-                            </SdkTileContent>
-                        </SdkButton>
-                    ))}
-                </SdkListSection>
+                <SdkList
+                    sdks={clientSdks}
+                    type='frontend'
+                    selectedSdkName={selectedSdkName}
+                    onSelect={onSelect}
+                />
             </Box>
         </SpacedContainer>
     );

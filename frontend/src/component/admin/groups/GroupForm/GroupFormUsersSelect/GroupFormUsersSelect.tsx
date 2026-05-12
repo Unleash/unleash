@@ -58,7 +58,7 @@ const renderOption = (
     </StrechedLi>
 );
 
-const renderTags = (value: IGroupUser[]) => (
+const renderValue = (value: IGroupUser[]) => (
     <StyledTags>
         {value.length > 1
             ? `${value.length} users selected`
@@ -146,7 +146,7 @@ export const GroupFormUsersSelect: FC<IGroupFormUsersSelectProps> = ({
                 renderInput={(params) => (
                     <TextField {...params} label='Select users' />
                 )}
-                renderTags={(value) => renderTags(value)}
+                renderValue={(value) => renderValue(value)}
                 noOptionsText={isLoading ? 'Loading…' : 'No options'}
             />
         </StyledGroupFormUsersSelect>

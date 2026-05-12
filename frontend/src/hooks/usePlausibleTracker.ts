@@ -82,6 +82,7 @@ export type CustomEvents =
     | 'project-cleanup'
     | 'project-list-view-toggle'
     | 'impact-metrics'
+    | 'impact-metrics-safeguards-splash'
     | 'release-management-splash'
     | 'upgrade_trial_dialog'
     | 'upgrade_trial_billing_page'
@@ -90,7 +91,8 @@ export type CustomEvents =
     | 'signup-dialog'
     | 'signup-dialog-error'
     | 'safeguards'
-    | 'remote-mcp';
+    | 'remote-mcp'
+    | 'external-impact-metrics';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

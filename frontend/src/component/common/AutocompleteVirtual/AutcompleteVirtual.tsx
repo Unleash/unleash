@@ -4,7 +4,6 @@ import {
     Children,
     type ComponentPropsWithRef,
     type HTMLAttributes,
-    type ReactElement,
     cloneElement,
     forwardRef,
     isValidElement,

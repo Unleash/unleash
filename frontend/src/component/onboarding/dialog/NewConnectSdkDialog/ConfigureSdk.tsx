@@ -112,13 +112,13 @@ export const ConfigureSdk = ({
         return () => clearTimeout(timer);
     }, [sdkConnected, isActive]);
 
-    if (!sdk || !apiKey) return null;
+    if (!sdk) return null;
 
     const apiUrl = buildSdkApiUrl(uiConfig.unleashUrl, sdk.name);
 
     const snippet = (codeRenderSnippets[sdk.name] || '')
-        .replace('<YOUR_API_TOKEN>', apiKey)
         .replace('<YOUR_API_URL>', apiUrl)
+        .replace('<YOUR_API_TOKEN>', apiKey || '<YOUR_API_TOKEN>')
         .replaceAll('<YOUR_FLAG>', flagName || '<YOUR_FLAG>');
     const [connectSnippet] = snippet.split('---\n');
 

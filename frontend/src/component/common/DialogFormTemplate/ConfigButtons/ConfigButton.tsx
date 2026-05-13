@@ -1,3 +1,4 @@
+import { createUuid } from 'utils/createUuid';
 import { type FC, type ReactNode, useRef, type PropsWithChildren } from 'react';
 import { Box, Button } from '@mui/material';
 import { ButtonLabel, StyledTooltipContent } from './ConfigButton.styles';
@@ -36,7 +37,7 @@ export const ConfigButton: FC<PropsWithChildren<ConfigButtonProps>> = ({
     tooltip,
 }) => {
     const ref = useRef<HTMLDivElement>(null);
-    const descriptionId = crypto.randomUUID();
+    const descriptionId = createUuid();
 
     const open = () => {
         setAnchorEl(ref.current);

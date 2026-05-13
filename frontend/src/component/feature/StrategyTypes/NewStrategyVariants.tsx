@@ -1,3 +1,4 @@
+import { createUuid } from 'utils/createUuid';
 import { VariantForm } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantForm.tsx';
 import { updateWeightEdit } from 'component/common/util';
 import type React from 'react';
@@ -47,7 +48,7 @@ export const NewStrategyVariants = <T extends StrategyFormState>({
         ...variant,
         new: canRenamePreexistingVariants || false,
         isValid: true,
-        id: crypto.randomUUID(),
+        id: createUuid(),
         overrides: [],
     }));
     const [variantsEdit, setVariantsEdit] =
@@ -95,7 +96,7 @@ export const NewStrategyVariants = <T extends StrategyFormState>({
     };
 
     const addVariant = () => {
-        const id = crypto.randomUUID();
+        const id = createUuid();
         setVariantsEdit((variantsEdit) => [
             ...variantsEdit,
             {

@@ -166,6 +166,7 @@ export const AdminListItem: FC<{
             <ListItemButton
                 dense={true}
                 component={Link}
+                nativeButton={false}
                 to={href}
                 sx={listItemButtonStyle}
                 selected={selected}
@@ -194,6 +195,7 @@ export const AdminSubListItem: FC<{
             <ListItemButton
                 dense={true}
                 component={Link}
+                nativeButton={false}
                 to={href}
                 sx={subListItemButtonStyle}
                 selected={selected}

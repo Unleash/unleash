@@ -98,6 +98,7 @@ export const EnterpriseEdgeDismissibleAlert = ({
                         </Typography>
                         <StyledButton
                             component={Link}
+                            nativeButton={false}
                             to='/admin/enterprise-edge'
                             variant='contained'
                         >

@@ -110,6 +110,7 @@ export const ReleaseManagement = () => {
                     </Typography>
                     <StyledAlertButton
                         component={Link}
+                        nativeButton={false}
                         variant='outlined'
                         target='_blank'
                         rel='noopener noreferrer'

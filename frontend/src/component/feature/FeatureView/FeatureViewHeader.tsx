@@ -166,6 +166,7 @@ const HeaderActionsComponent = ({
             projectId={feature.project}
             data-loading
             component={Link}
+            nativeButton={false}
             to={`/projects/${feature.project}/features/${feature.name}/copy`}
             tooltipProps={{
                 title: 'Clone',

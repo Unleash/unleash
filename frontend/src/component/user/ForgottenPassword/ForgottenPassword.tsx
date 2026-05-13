@@ -175,6 +175,7 @@ const ForgottenPassword = () => {
                     <Button
                         variant='outlined'
                         component={Link}
+                        nativeButton={false}
                         to='/login'
                         fullWidth
                     >

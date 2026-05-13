@@ -113,6 +113,7 @@ export const ReleasePlanTemplateCardActions = ({
                     <MenuItem
                         onClick={handleClose}
                         component={Link}
+                        nativeButton={false}
                         to={`/release-templates/edit/${template.id}`}
                     >
                         <ListItemIcon>

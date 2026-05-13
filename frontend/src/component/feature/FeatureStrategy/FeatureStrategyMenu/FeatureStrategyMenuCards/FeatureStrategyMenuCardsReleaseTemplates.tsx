@@ -148,6 +148,7 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
                     {canCreateTemplate ? (
                         <Button
                             component={RouterLink}
+                            nativeButton={false}
                             to='/release-templates/create-template'
                             startIcon={<AddIcon />}
                             onClick={handleLinkClick}

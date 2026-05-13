@@ -106,6 +106,7 @@ export const DashboardLink = ({ onClick }: { onClick: () => void }) => {
                 <ListItemButton
                     dense={true}
                     component={Link}
+                    nativeButton={false}
                     to='/personal'
                     sx={listItemButtonStyle}
                     selected={false}

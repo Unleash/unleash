@@ -49,9 +49,11 @@ const UsageWarning = ({
                 sx={{ m: (theme) => theme.spacing(2, 0) }}
             >
                 <Typography
-                    fontWeight={'bold'}
                     variant={'body2'}
-                    display='inline'
+                    sx={{
+                        fontWeight: 'bold',
+                        display: 'inline',
+                    }}
                 >
                     {`${ids.length} feature flags `}
                 </Typography>
@@ -90,9 +92,11 @@ const ArchiveParentError = ({
                 sx={{ m: (theme) => theme.spacing(2, 0) }}
             >
                 <Typography
-                    fontWeight={'bold'}
                     variant={'body2'}
-                    display='inline'
+                    sx={{
+                        fontWeight: 'bold',
+                        display: 'inline',
+                    }}
                 >
                     {`${ids.length} feature flags `}
                 </Typography>

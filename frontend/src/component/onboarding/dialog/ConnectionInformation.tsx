@@ -74,13 +74,23 @@ export const ConnectionInformation = ({
             <Title>Connection information</Title>
             <SdkInfo>
                 <Info>
-                    <Typography fontWeight='bold' variant='body2'>
+                    <Typography
+                        variant='body2'
+                        sx={{
+                            fontWeight: 'bold',
+                        }}
+                    >
                         Environment
                     </Typography>
                     <Typography variant='body2'>{environment}</Typography>
                 </Info>
                 <Info>
-                    <Typography fontWeight='bold' variant='body2'>
+                    <Typography
+                        variant='body2'
+                        sx={{
+                            fontWeight: 'bold',
+                        }}
+                    >
                         SDK
                     </Typography>
                     <Typography variant='body2'>{sdk}</Typography>
@@ -88,7 +98,12 @@ export const ConnectionInformation = ({
             </SdkInfo>
             {onboarded ? (
                 <ConnectionStatus>
-                    <Typography fontWeight='bold' variant='body2'>
+                    <Typography
+                        variant='body2'
+                        sx={{
+                            fontWeight: 'bold',
+                        }}
+                    >
                         Connection status
                     </Typography>
                     <Typography sx={{ mb: theme.spacing(4) }} variant='body2'>
@@ -101,7 +116,12 @@ export const ConnectionInformation = ({
                 </ConnectionStatus>
             ) : (
                 <ConnectionStatus>
-                    <Typography fontWeight='bold' variant='body2'>
+                    <Typography
+                        variant='body2'
+                        sx={{
+                            fontWeight: 'bold',
+                        }}
+                    >
                         Connection status
                     </Typography>
                     <Typography sx={{ mb: theme.spacing(4) }} variant='body2'>

@@ -48,7 +48,13 @@ export const DemoNotice = ({ onClick }: IDemoNoticeProps) => {
         <StyledNotice onClick={onClick}>
             <StyledStars />
             <StyledTitle>
-                <Typography fontWeight='bold'>Unleash demo</Typography>
+                <Typography
+                    sx={{
+                        fontWeight: 'bold',
+                    }}
+                >
+                    Unleash demo
+                </Typography>
             </StyledTitle>
             <StyledStarsRight />
         </StyledNotice>

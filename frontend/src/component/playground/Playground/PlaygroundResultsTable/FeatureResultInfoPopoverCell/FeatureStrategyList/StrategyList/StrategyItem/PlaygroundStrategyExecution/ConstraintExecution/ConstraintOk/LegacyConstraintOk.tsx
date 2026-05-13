@@ -1,4 +1,4 @@
-import CheckCircleOutline from '@mui/icons-material/CheckCircleOutline';
+import CheckCircleOutline from '@mui/icons-material/CheckCircleOutlineOutlined';
 import { styled, Typography } from '@mui/material';
 
 const StyledCheckOutline = styled(CheckCircleOutline)(({ theme }) => ({

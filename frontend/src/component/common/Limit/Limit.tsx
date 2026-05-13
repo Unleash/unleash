@@ -149,7 +149,13 @@ export const Limit: FC<{
                     >
                         Read more about limits
                     </Link>
-                    <Typography fontWeight='bold'>Limit: {limit}</Typography>
+                    <Typography
+                        sx={{
+                            fontWeight: 'bold',
+                        }}
+                    >
+                        Limit: {limit}
+                    </Typography>
                 </LimitExplanation>
             </Main>
             <Footer>{footerContent}</Footer>

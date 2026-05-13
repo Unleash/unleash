@@ -32,7 +32,16 @@ export interface ITutorialTopic {
 }
 
 const Description = (props: TypographyProps) => (
-    <Typography variant='body2' color='text.secondary' {...props} />
+    <Typography
+        variant='body2'
+        {...props}
+        sx={[
+            {
+                color: 'text.secondary',
+            },
+            ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
+        ]}
+    />
 );
 
 const StyledImg = styled('img')(({ theme }) => ({

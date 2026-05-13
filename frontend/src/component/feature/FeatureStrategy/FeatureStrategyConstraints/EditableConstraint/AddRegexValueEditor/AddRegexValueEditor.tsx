@@ -7,8 +7,8 @@ import {
     Typography,
 } from '@mui/material';
 import Add from '@mui/icons-material/Add';
-import ErrorOutline from '@mui/icons-material/ErrorOutline';
-import CheckCircleOutline from '@mui/icons-material/CheckCircleOutline';
+import ErrorOutline from '@mui/icons-material/ErrorOutlineOutlined';
+import CheckCircleOutline from '@mui/icons-material/CheckCircleOutlineOutlined';
 import Delete from '@mui/icons-material/Delete';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';

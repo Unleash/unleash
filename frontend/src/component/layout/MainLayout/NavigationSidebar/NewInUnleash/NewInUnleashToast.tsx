@@ -152,7 +152,9 @@ export const NewInUnleashToast = ({ item }: { item: NewInUnleashItem }) => {
                             component={StyledButton}
                             onClick={handleClick}
                             variant='body2'
-                            fontWeight='bold'
+                            sx={{
+                                fontWeight: 'bold',
+                            }}
                         >
                             {item.summary}
                         </Typography>
@@ -168,7 +170,6 @@ export const NewInUnleashToast = ({ item }: { item: NewInUnleashItem }) => {
                     </TextContainer>
                 </NewInUnleashBody>
             </Snackbar>
-
             <NewInUnleashDialog
                 open={modalOpen}
                 onClose={() => {

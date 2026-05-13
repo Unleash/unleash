@@ -61,10 +61,12 @@ export const ChangeRequestHeader: FC<{ changeRequest: ChangeRequestType }> = ({
                         <Typography variant='body2' sx={{ lineHeight: 1 }}>
                             Environment:{' '}
                             <Typography
-                                display='inline'
-                                fontWeight='bold'
                                 variant='body2'
                                 component='span'
+                                sx={{
+                                    display: 'inline',
+                                    fontWeight: 'bold',
+                                }}
                             >
                                 {changeRequest?.environment}
                             </Typography>{' '}

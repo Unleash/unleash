@@ -61,7 +61,13 @@ export const ItemList = ({
                     Add
                 </Button>
             </StyledItemListAdd>
-            <Stack flexDirection='row' flexWrap={'wrap'} gap={1}>
+            <Stack
+                sx={{
+                    flexDirection: 'row',
+                    flexWrap: 'wrap',
+                    gap: 1,
+                }}
+            >
                 {value?.map((item, index) => (
                     <Chip
                         key={index}

@@ -54,7 +54,7 @@ exports[`renders an empty list correctly 1`] = `
                   >
                     <input
                       aria-label="Search (Ctrl+Shift+K)"
-                      class="MuiInputBase-input mui-1w4z3w0-MuiInputBase-input"
+                      class="MuiInputBase-input mui-10xnd0u-MuiInputBase-input"
                       data-testid="SEARCH_INPUT"
                       placeholder="Search (Ctrl+Shift+K)"
                       type="text"
@@ -73,7 +73,7 @@ exports[`renders an empty list correctly 1`] = `
               />
               <button
                 aria-labelledby="useId-0"
-                class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary mui-m33rfl-MuiButtonBase-root-MuiButton-root"
+                class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary mui-ezlkoi-MuiButtonBase-root-MuiButton-root"
                 tabindex="0"
                 type="button"
               >

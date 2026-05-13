@@ -11,7 +11,12 @@ export const ChangeRequestRejections: FC<ChangeRequestRejectionProps> = ({
     rejections = [],
 }) => (
     <>
-        <Typography variant='body1' color='text.secondary'>
+        <Typography
+            variant='body1'
+            sx={{
+                color: 'text.secondary',
+            }}
+        >
             Rejected by
         </Typography>
         {rejections.map((rejector) => (

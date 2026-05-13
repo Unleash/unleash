@@ -163,7 +163,13 @@ const ListeningStatus = ({ evaluated }: { evaluated: boolean }) => (
             )}
         </ListeningIcon>
         <ListeningText>
-            <Typography variant='body2' fontWeight='bold' color='primary'>
+            <Typography
+                variant='body2'
+                color='primary'
+                sx={{
+                    fontWeight: 'bold',
+                }}
+            >
                 {evaluated
                     ? 'Got the first evaluation!'
                     : 'Listening for the first evaluation…'}
@@ -230,7 +236,12 @@ const DialogBody = ({ projectId, feature, onClose }: DialogBodyProps) => {
         <Container>
             <Content>
                 <Header>
-                    <Typography variant='body1' fontWeight='bold'>
+                    <Typography
+                        variant='body1'
+                        sx={{
+                            fontWeight: 'bold',
+                        }}
+                    >
                         Use the flag in your code
                     </Typography>
                 </Header>
@@ -253,8 +264,10 @@ const DialogBody = ({ projectId, feature, onClose }: DialogBodyProps) => {
                     <Box>
                         <Typography
                             variant='body2'
-                            fontWeight='bold'
-                            sx={{ mb: 1 }}
+                            sx={{
+                                fontWeight: 'bold',
+                                mb: 1,
+                            }}
                         >
                             Code example
                         </Typography>
@@ -268,8 +281,10 @@ const DialogBody = ({ projectId, feature, onClose }: DialogBodyProps) => {
                     <Box>
                         <Typography
                             variant='body1'
-                            fontWeight='bold'
-                            sx={{ mb: 1 }}
+                            sx={{
+                                fontWeight: 'bold',
+                                mb: 1,
+                            }}
                         >
                             Test flag
                         </Typography>

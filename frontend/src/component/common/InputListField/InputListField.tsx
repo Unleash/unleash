@@ -10,7 +10,6 @@ interface IInputListFieldProps {
     updateValues: (values: string[]) => void;
     onBlur?: TextFieldProps['onBlur'];
     helperText?: TextFieldProps['helperText'];
-    FormHelperTextProps?: TextFieldProps['FormHelperTextProps'];
 }
 
 export const InputListField: FC<IInputListFieldProps> = ({

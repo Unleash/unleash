@@ -374,7 +374,6 @@ const StoriesPage = () => {
                     ))}
                 </SidebarScroll>
             </Sidebar>
-
             <Main>
                 {activeEntry ? (
                     <>
@@ -455,7 +454,11 @@ const StoriesPage = () => {
                     </>
                 ) : (
                     <Box sx={{ p: 4 }}>
-                        <Typography color='text.secondary'>
+                        <Typography
+                            sx={{
+                                color: 'text.secondary',
+                            }}
+                        >
                             No stories found. Create a{' '}
                             <Box
                                 component='code'

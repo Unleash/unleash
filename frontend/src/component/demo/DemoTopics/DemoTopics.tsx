@@ -178,7 +178,13 @@ export const DemoTopics = ({
             <StyledAccordionSummary>
                 <StyledStars />
                 <StyledTitle>
-                    <Typography fontWeight='bold'>Unleash demo</Typography>
+                    <Typography
+                        sx={{
+                            fontWeight: 'bold',
+                        }}
+                    >
+                        Unleash demo
+                    </Typography>
                     <StyledExpandMoreIcon className='expand-icon' />
                 </StyledTitle>
                 <StyledSubtitle>
@@ -195,7 +201,12 @@ export const DemoTopics = ({
                 </StyledProgress>
             </StyledAccordionSummary>
             <AccordionDetails>
-                <Typography variant='body2' paddingTop={1}>
+                <Typography
+                    variant='body2'
+                    sx={{
+                        paddingTop: 1,
+                    }}
+                >
                     The steps will guide you
                 </Typography>
                 {topics.map((topic, index) => {

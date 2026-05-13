@@ -1,6 +1,6 @@
 import { Box, Button, styled, Typography } from '@mui/material';
 import type { SignupStepContent } from './SignupDialog';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 
 const StyledContent = styled(Box)({
     display: 'flex',
@@ -46,8 +46,11 @@ export const SignupDialogComplete: SignupStepContent = ({
                 <StyledTitle>You're all set</StyledTitle>
                 <Typography
                     variant='body2'
-                    color='text.secondary'
-                    sx={{ whiteSpace: 'pre-line', textAlign: 'center' }}
+                    sx={{
+                        color: 'text.secondary',
+                        whiteSpace: 'pre-line',
+                        textAlign: 'center',
+                    }}
                 >
                     {description}
                 </Typography>

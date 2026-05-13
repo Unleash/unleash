@@ -175,10 +175,20 @@ export const InviteLink: FC<IInviteLinkProps> = () => {
                                 theme.palette.background.elevation2,
                         }}
                     >
-                        <Typography variant='body2' fontWeight='bold'>
+                        <Typography
+                            variant='body2'
+                            sx={{
+                                fontWeight: 'bold',
+                            }}
+                        >
                             Viewer
                         </Typography>
-                        <Typography variant='body2' color='text.secondary'>
+                        <Typography
+                            variant='body2'
+                            sx={{
+                                color: 'text.secondary',
+                            }}
+                        >
                             Users with this role can only read root resources in
                             Unleash. The viewer can be added to specific
                             projects as project member. Viewers may not view API

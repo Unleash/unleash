@@ -60,9 +60,11 @@ const ChangeRequestsLabel = () => (
     <Typography
         component='span'
         variant='body2'
-        color='text.secondary'
-        lineHeight={1}
         data-loading={LOADING_LABEL}
+        sx={{
+            color: 'text.secondary',
+            lineHeight: 1,
+        }}
     >
         change requests
     </Typography>

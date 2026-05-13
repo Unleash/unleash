@@ -130,7 +130,11 @@ export const OldProjectOnboarding = ({
         <Container>
             <TitleBox>
                 <TitleRow>
-                    <Typography fontWeight='bold'>
+                    <Typography
+                        sx={{
+                            fontWeight: 'bold',
+                        }}
+                    >
                         Welcome to your project
                     </Typography>
                     <Tooltip title='Close' arrow>
@@ -216,7 +220,12 @@ const ExistingFlag = () => {
                 Create a feature flag
             </TitleContainer>
             <SuccessContainer>
-                <Typography fontWeight='bold' variant='body2'>
+                <Typography
+                    variant='body2'
+                    sx={{
+                        fontWeight: 'bold',
+                    }}
+                >
                     Congratulations, your first flag is ready!
                 </Typography>
                 <Typography variant='body2'>

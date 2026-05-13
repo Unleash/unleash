@@ -33,10 +33,22 @@ export const RequestIntegrationCard: FC = () => (
         target='_blank'
         rel='noopener noreferrer'
     >
-        <Typography variant='body2' color='text.secondary' data-loading>
+        <Typography
+            variant='body2'
+            data-loading
+            sx={{
+                color: 'text.secondary',
+            }}
+        >
             Are we missing an integration that you need?
         </Typography>
-        <Typography variant='body2' color='text.secondary' data-loading>
+        <Typography
+            variant='body2'
+            data-loading
+            sx={{
+                color: 'text.secondary',
+            }}
+        >
             Go ahead and request it!
         </Typography>
         <StyledAction data-loading>

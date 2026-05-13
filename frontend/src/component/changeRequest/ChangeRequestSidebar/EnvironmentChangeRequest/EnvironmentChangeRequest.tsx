@@ -113,7 +113,9 @@ export const EnvironmentChangeRequest: FC<{
                         <Typography
                             component='span'
                             variant='body2'
-                            color='text.secondary'
+                            sx={{
+                                color: 'text.secondary',
+                            }}
                         >
                             Updates:
                         </Typography>

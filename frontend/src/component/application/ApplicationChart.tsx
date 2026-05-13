@@ -224,9 +224,9 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                         <StyledApplicationBox mode={mode.applicationMode}>
                             <Typography
                                 sx={(theme) => ({
-                                        fontSize: theme.fontSizes.smallerBody,
-                                        color: theme.palette.text.secondary,
-                                    })}
+                                    fontSize: theme.fontSizes.smallerBody,
+                                    color: theme.palette.text.secondary,
+                                })}
                             >
                                 Application
                             </Typography>

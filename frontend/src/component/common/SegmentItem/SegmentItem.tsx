@@ -112,7 +112,9 @@ export const SegmentItem: FC<SegmentItemProps> = ({
             <StyledAccordion
                 expanded={isOpen}
                 disableGutters
-                TransitionProps={{ mountOnEnter: true, unmountOnExit: true }}
+                slotProps={{
+                    transition: { mountOnEnter: true, unmountOnExit: true },
+                }}
             >
                 <StyledAccordionSummary
                     id={`segment-accordion-${segment.id}`}

@@ -98,7 +98,13 @@ export const ProjectOnboarding = ({
                 id='panel1-header'
             >
                 <TitleRow>
-                    <Typography fontWeight='bold'>Project setup</Typography>
+                    <Typography
+                        sx={{
+                            fontWeight: 'bold',
+                        }}
+                    >
+                        Project setup
+                    </Typography>
                     <OnboardingProgress
                         step={step}
                         maxSteps={NUMBER_OF_STEPS}

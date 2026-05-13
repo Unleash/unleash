@@ -41,7 +41,12 @@ export const InfoSummary = ({
 }: {
     data: { key: string; value: string | number }[];
 }) => (
-    <Box display={'flex'} flexDirection={'row'}>
+    <Box
+        sx={{
+            display: 'flex',
+            flexDirection: 'row',
+        }}
+    >
         {data.map(({ key, value }) => (
             <div style={{ flex: 1, flexDirection: 'column' }} key={key}>
                 <div

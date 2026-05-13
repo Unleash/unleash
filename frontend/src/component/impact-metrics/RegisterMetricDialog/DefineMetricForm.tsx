@@ -70,9 +70,11 @@ const RadioCard = ({ value, description, examples }) => {
                 <Typography id={descriptionId}>{description}</Typography>
                 <Typography
                     variant='body2'
-                    color='text.secondary'
-                    sx={{ mt: 1 }}
                     id={exampleId}
+                    sx={{
+                        color: 'text.secondary',
+                        mt: 1,
+                    }}
                 >
                     Examples: {examples}
                 </Typography>

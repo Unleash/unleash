@@ -101,7 +101,9 @@ export const FeatureOverviewEnvironment = ({
     return (
         <StyledFeatureOverviewEnvironment>
             <StyledAccordion
-                TransitionProps={{ mountOnEnter: true, unmountOnExit: true }}
+                slotProps={{
+                    transition: { mountOnEnter: true, unmountOnExit: true },
+                }}
                 data-testid={`${FEATURE_ENVIRONMENT_ACCORDION}_${environment.name}`}
                 expanded={isOpen && hasActivations}
                 onChange={() => {
@@ -169,7 +171,11 @@ export const FeatureOverviewEnvironment = ({
                     </StyledEnvironmentAccordionContainer>
                     <StyledAccordionFooter>
                         <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                            <Box ml='auto'>
+                            <Box
+                                sx={{
+                                    ml: 'auto',
+                                }}
+                            >
                                 <FeatureStrategyMenuButton
                                     label='Add strategy'
                                     dialogId={dialogId}

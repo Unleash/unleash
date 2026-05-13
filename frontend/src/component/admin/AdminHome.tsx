@@ -11,7 +11,7 @@ import Grid from '@mui/material/Grid';
 import { useInstanceStats } from 'hooks/api/getters/useInstanceStats/useInstanceStats';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutlineOutlined';
 import { formatAssetPath } from 'utils/formatPath';
 import easyToDeploy from 'assets/img/easyToDeploy.png';
 import { Link, useNavigate } from 'react-router-dom';

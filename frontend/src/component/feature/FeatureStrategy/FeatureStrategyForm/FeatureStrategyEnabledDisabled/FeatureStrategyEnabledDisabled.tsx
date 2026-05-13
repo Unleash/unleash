@@ -30,7 +30,12 @@ export const FeatureStrategyEnabledDisabled: VFC<
 > = ({ enabled, onToggleEnabled }) => {
     return (
         <StyledBox>
-            <Typography variant='body2' fontWeight='bold'>
+            <Typography
+                variant='body2'
+                sx={{
+                    fontWeight: 'bold',
+                }}
+            >
                 Strategy Status
             </Typography>
             <StyledCheckboxRow>
@@ -44,7 +49,12 @@ export const FeatureStrategyEnabledDisabled: VFC<
                     }
                     label={<Typography variant='body2'>Active</Typography>}
                 />
-                <Typography variant='body2' color='text.secondary'>
+                <Typography
+                    variant='body2'
+                    sx={{
+                        color: 'text.secondary',
+                    }}
+                >
                     Strategy will be exposed when environment is enabled
                 </Typography>
             </StyledCheckboxRow>

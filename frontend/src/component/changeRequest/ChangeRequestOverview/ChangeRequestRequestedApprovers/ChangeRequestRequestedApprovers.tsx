@@ -120,8 +120,10 @@ export const ChangeRequestReviewersHeader: FC<{
                     Reviewers
                     <Typography
                         component='span'
-                        color='text.secondary'
-                        sx={{ ml: 1 }}
+                        sx={{
+                            color: 'text.secondary',
+                            ml: 1,
+                        }}
                     >
                         ({actualApprovals}/{minApprovals} required)
                     </Typography>

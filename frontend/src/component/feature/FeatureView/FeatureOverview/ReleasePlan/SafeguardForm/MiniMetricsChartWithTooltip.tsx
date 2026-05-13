@@ -4,7 +4,7 @@ import { useChartData } from 'component/impact-metrics/hooks/useChartData';
 import { useMemo } from 'react';
 import type { FC } from 'react';
 import { Box, styled } from '@mui/material';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 import type { MetricQuerySchemaTimeRange } from 'openapi/models/metricQuerySchemaTimeRange';
 import type { MetricQuerySchemaAggregationMode } from 'openapi/models/metricQuerySchemaAggregationMode';

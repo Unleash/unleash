@@ -15,10 +15,13 @@ export const RolePermissionEnvironment = ({
 }: IEnvironmentPermissionAccordionProps) => {
     return (
         <Box
-            display='grid'
-            gridTemplateColumns={{
-                sm: '1fr 1fr',
-                xs: '1fr',
+            sx={{
+                display: 'grid',
+
+                gridTemplateColumns: {
+                    sm: '1fr 1fr',
+                    xs: '1fr',
+                },
             }}
         >
             {permissions?.map((permission: IPermission) => (

@@ -69,7 +69,12 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                     <Typography component='h3' variant='h2'>
                         Unleash crafted
                     </Typography>
-                    <Typography variant='body2' color='text.secondary'>
+                    <Typography
+                        variant='body2'
+                        sx={{
+                            color: 'text.secondary',
+                        }}
+                    >
                         Unleash is built to be extended. We have crafted
                         integrations to make it easier for you to get started.
                     </Typography>
@@ -138,7 +143,12 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                     <Typography component='h3' variant='h2'>
                         Performance and security
                     </Typography>
-                    <Typography variant='body2' color='text.secondary'>
+                    <Typography
+                        variant='body2'
+                        sx={{
+                            color: 'text.secondary',
+                        }}
+                    >
                         Connect Unleash to private, scalable, and distributed
                         relays.
                     </Typography>
@@ -158,7 +168,12 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                     <Typography component='h3' variant='h2'>
                         Official SDKs
                     </Typography>
-                    <Typography variant='body2' color='text.secondary'>
+                    <Typography
+                        variant='body2'
+                        sx={{
+                            color: 'text.secondary',
+                        }}
+                    >
                         In order to connect your application to Unleash you will
                         need a client SDK (software developer kit) for your
                         programming language and an{' '}
@@ -177,7 +192,12 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                             <Typography component='h4' variant='h4'>
                                 Backend SDKs
                             </Typography>
-                            <Typography variant='body2' color='text.secondary'>
+                            <Typography
+                                variant='body2'
+                                sx={{
+                                    color: 'text.secondary',
+                                }}
+                            >
                                 Backend clients run on your server and
                                 communicate directly with your Unleash instance.
                             </Typography>
@@ -210,7 +230,12 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                             <Typography component='h4' variant='h4'>
                                 Frontend SDKs
                             </Typography>
-                            <Typography variant='body2' color='text.secondary'>
+                            <Typography
+                                variant='body2'
+                                sx={{
+                                    color: 'text.secondary',
+                                }}
+                            >
                                 Frontend SDKs can connect to the{' '}
                                 <a
                                     href='https://docs.getunleash.io/unleash-edge'

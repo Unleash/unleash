@@ -533,12 +533,14 @@ export const darkTheme = createTheme({
                     borderRadius: theme.shape.borderRadius,
                     textTransform: 'none',
                     fontWeight: theme.typography.fontWeightBold,
-                    '&:not(.Mui-disabled).MuiButton-containedPrimary': {
-                        backgroundColor: theme.palette.background.alternative,
-                        '&:hover': {
-                            backgroundColor: theme.palette.secondary.light,
+                    '&:not(.Mui-disabled).MuiButton-contained.MuiButton-colorPrimary':
+                        {
+                            backgroundColor:
+                                theme.palette.background.alternative,
+                            '&:hover': {
+                                backgroundColor: theme.palette.secondary.light,
+                            },
                         },
-                    },
                 }),
             },
         },

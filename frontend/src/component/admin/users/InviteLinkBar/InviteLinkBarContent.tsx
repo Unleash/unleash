@@ -49,7 +49,9 @@ export const InviteLinkBarContent = ({
             component='span'
             variant='body2'
             color={willExpireSoon ? 'warning.dark' : 'inherit'}
-            fontWeight='bold'
+            sx={{
+                fontWeight: 'bold',
+            }}
         >
             {expiresIn}
         </Typography>

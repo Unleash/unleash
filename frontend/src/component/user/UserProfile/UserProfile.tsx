@@ -57,7 +57,12 @@ const UserProfile = ({ profile }: IUserProfileProps) => {
                         data-testid={HEADER_USER_AVATAR}
                     />
                     <Box sx={{ mr: 0.5 }}>
-                        <Typography variant='body2' fontWeight='medium'>
+                        <Typography
+                            variant='body2'
+                            sx={{
+                                fontWeight: 'medium',
+                            }}
+                        >
                             {profile.name || profile.username}
                         </Typography>
                         <StyledSubtitle variant='body2' title={profile.email}>

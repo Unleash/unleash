@@ -107,7 +107,12 @@ const InnerDialog = ({ onClose }: Omit<RegisterMetricDialogProps, 'open'>) => {
                         <Typography variant='h1' component='h3'>
                             Create an impact metric
                         </Typography>
-                        <Typography variant='body2' color='text.secondary'>
+                        <Typography
+                            variant='body2'
+                            sx={{
+                                color: 'text.secondary',
+                            }}
+                        >
                             Follow this setup guide to implement and verify your
                             impact metric.{' '}
                             <Link
@@ -129,7 +134,9 @@ const InnerDialog = ({ onClose }: Omit<RegisterMetricDialogProps, 'open'>) => {
                                 </Typography>
                                 <Typography
                                     variant='body2'
-                                    color='text.secondary'
+                                    sx={{
+                                        color: 'text.secondary',
+                                    }}
                                 >
                                     Start by choosing a name and type for your
                                     metric. This will help you track the right

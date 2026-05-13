@@ -12,8 +12,8 @@ export const GridCol: FC<{
             sx={{
                 display: 'flex',
                 alignItems: vertical ? 'start' : 'center',
+                flexDirection: vertical ? 'column' : 'row',
             }}
-            direction={vertical ? 'column' : undefined}
         >
             {children}
         </Grid>

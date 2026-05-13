@@ -2,7 +2,10 @@ import { expect, test } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { screen, waitFor } from '@testing-library/react';
 import { ProjectFeaturesBatchActions } from './ProjectFeaturesBatchActions.tsx';
-import { DELETE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import {
+    DELETE_FEATURE,
+    UPDATE_FEATURE,
+} from 'component/providers/AccessProvider/permissions';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 
 const server = testServerSetup();
@@ -57,6 +60,7 @@ test('batch mark as stale', async () => {
                 { name: 'featureB', stale: false },
             ]}
         />,
+        { permissions: [{ permission: UPDATE_FEATURE }] },
     );
 
     const moreActions = screen.getByTitle('More bulk actions');

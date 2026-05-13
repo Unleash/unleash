@@ -39,7 +39,12 @@ export const ConfiguredIntegrations: VFC<ConfiguredIntegrationsProps> = ({
                 <Typography component='h3' variant='h2'>
                     Configured integrations
                 </Typography>
-                <Typography variant='body2' color='text.secondary'>
+                <Typography
+                    variant='body2'
+                    sx={{
+                        color: 'text.secondary',
+                    }}
+                >
                     These are the integrations that are currently configured for
                     your Unleash instance.
                 </Typography>

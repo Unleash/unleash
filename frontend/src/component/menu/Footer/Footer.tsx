@@ -77,8 +77,8 @@ export const Footer: VFC = () => {
             <FooterContentWrapper>
                 <FooterGridContainer
                     container
-                    justifyContent='space-between'
                     spacing={10}
+                    sx={{ justifyContent: 'space-between' }}
                     style={{ marginBottom: 0 }}
                 >
                     <Grid size={{ md: 4, xs: 12 }}>

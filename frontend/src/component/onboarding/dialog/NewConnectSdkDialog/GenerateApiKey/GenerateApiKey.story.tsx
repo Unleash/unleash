@@ -14,5 +14,6 @@ export const Default: Story = () => (
         onApiKeyGenerated={(apiKey) =>
             console.log('API key generated:', apiKey)
         }
+        onNext={() => console.log('Next clicked')}
     />
 );

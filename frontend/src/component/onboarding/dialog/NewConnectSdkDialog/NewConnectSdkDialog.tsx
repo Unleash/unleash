@@ -155,8 +155,9 @@ const InnerDialog = ({
         setExpandedStep(1);
     };
 
-    const onApiKeyGenerated = (apiKey: string) => {
-        setApiKey(apiKey);
+    const onApiKeyGenerated = (apiKey: string) => setApiKey(apiKey);
+
+    const onApiKeyNext = () => {
         setCurrentStep(2);
         setExpandedStep(2);
     };
@@ -177,6 +178,7 @@ const InnerDialog = ({
                     sdk={sdk}
                     environments={environments}
                     onApiKeyGenerated={onApiKeyGenerated}
+                    onNext={onApiKeyNext}
                 />
             ),
             summary: <GenerateApiKeySummary apiKey={apiKey} />,

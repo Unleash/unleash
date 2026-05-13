@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, MenuItem, Select, styled } from '@mui/material';
 import { useProjectApiTokens } from 'hooks/api/getters/useProjectApiTokens/useProjectApiTokens';
 import useProjectApiTokensApi from 'hooks/api/actions/useProjectApiTokensApi/useProjectApiTokensApi';
@@ -63,6 +63,7 @@ export interface IGenerateApiKeyProps {
     environments: string[];
     sdk?: Pick<Sdk, 'type'>;
     onApiKeyGenerated: (apiKey: string) => void;
+    onNext: () => void;
 }
 
 export const GenerateApiKey = ({
@@ -70,6 +71,7 @@ export const GenerateApiKey = ({
     environments,
     sdk,
     onApiKeyGenerated,
+    onNext,
 }: IGenerateApiKeyProps) => {
     const { trackEvent } = usePlausibleTracker();
     const {
@@ -81,12 +83,19 @@ export const GenerateApiKey = ({
     const { setToastApiError } = useToast();
     const [environment, setEnvironment] = useState(environments[0] || '');
 
-    if (!sdk) return null;
-
     const currentToken = tokens.find(
-        (token) => token.environment === environment && token.type === sdk.type,
+        (token) =>
+            token.environment === environment && token.type === sdk?.type,
     );
     const parsedToken = parseToken(currentToken?.secret);
+
+    useEffect(() => {
+        if (currentToken?.secret) {
+            onApiKeyGenerated(currentToken.secret);
+        }
+    }, [currentToken?.secret, onApiKeyGenerated]);
+
+    if (!sdk) return null;
 
     const generateAPIKey = async () => {
         try {
@@ -169,10 +178,7 @@ export const GenerateApiKey = ({
             </SectionBox>
             {parsedToken && (
                 <ActionRow>
-                    <Button
-                        variant='contained'
-                        onClick={() => onApiKeyGenerated(currentToken!.secret)}
-                    >
+                    <Button variant='contained' onClick={onNext}>
                         Next
                     </Button>
                 </ActionRow>

@@ -7,13 +7,14 @@ import { GenerateApiKey } from './GenerateApiKey';
 
 const server = testServerSetup();
 
-const renderComponent = (onApiKeyGenerated = vi.fn()) =>
+const renderComponent = (onApiKeyGenerated = vi.fn(), onNext = vi.fn()) =>
     render(
         <GenerateApiKey
             projectId='my-project'
             environments={['development', 'production']}
             sdk={{ type: 'client' }}
             onApiKeyGenerated={onApiKeyGenerated}
+            onNext={onNext}
         />,
     );
 
@@ -31,7 +32,7 @@ test('shows Generate API Key button when no token exists for the environment', a
     });
 });
 
-test('calls onApiKeyGenerated with token secret when clicking Next', async () => {
+test('calls onApiKeyGenerated with token secret when a token becomes available', async () => {
     testServerRoute(server, '/api/admin/projects/my-project/api-tokens', {
         tokens: [
             {
@@ -46,6 +47,27 @@ test('calls onApiKeyGenerated with token secret when clicking Next', async () =>
     renderComponent(onApiKeyGenerated);
 
     await waitFor(() => {
+        expect(onApiKeyGenerated).toHaveBeenCalledWith(
+            'my-project:development.secretxyz',
+        );
+    });
+});
+
+test('calls onNext when clicking Next', async () => {
+    testServerRoute(server, '/api/admin/projects/my-project/api-tokens', {
+        tokens: [
+            {
+                environment: 'development',
+                type: 'client',
+                secret: 'my-project:development.secretxyz',
+            },
+        ],
+    });
+
+    const onNext = vi.fn();
+    renderComponent(vi.fn(), onNext);
+
+    await waitFor(() => {
         expect(
             screen.getByRole('button', { name: /next/i }),
         ).toBeInTheDocument();
@@ -53,7 +75,5 @@ test('calls onApiKeyGenerated with token secret when clicking Next', async () =>
 
     await userEvent.click(screen.getByRole('button', { name: /next/i }));
 
-    expect(onApiKeyGenerated).toHaveBeenCalledWith(
-        'my-project:development.secretxyz',
-    );
+    expect(onNext).toHaveBeenCalled();
 });

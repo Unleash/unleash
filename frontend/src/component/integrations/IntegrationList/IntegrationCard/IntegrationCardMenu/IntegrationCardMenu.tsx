@@ -31,6 +31,7 @@ import { IntegrationEventsModal } from 'component/integrations/IntegrationEvents
 
 interface IIntegrationCardMenuProps {
     addon: AddonSchema;
+    providerExists?: boolean;
 }
 
 const StyledMenu = styled('div')(({ theme }) => ({
@@ -44,6 +45,7 @@ const StyledMenu = styled('div')(({ theme }) => ({
 
 export const IntegrationCardMenu: FC<IIntegrationCardMenuProps> = ({
     addon,
+    providerExists,
 }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -172,24 +174,26 @@ export const IntegrationCardMenu: FC<IIntegrationCardMenuProps> = ({
                 open={eventsModalOpen}
                 setOpen={setEventsModalOpen}
             />
-            <Dialogue
-                open={isToggleOpen}
-                onClick={toggleIntegration}
-                onClose={() => setIsToggleOpen(false)}
-                title={
-                    addon.enabled
-                        ? `Disable integration?`
-                        : `Enable integration?`
-                }
-            >
-                <div>
-                    {addon.enabled ? 'Disabling' : 'Enabling'} this integration
-                    will{' '}
-                    {addon.enabled
-                        ? 'prevent it from sending updates'
-                        : 'allow it to send updates'}
-                </div>
-            </Dialogue>
+            {providerExists && ( // hide the `Edit` if addon.provider is not in the providers list (deprecated)
+                <Dialogue
+                    open={isToggleOpen}
+                    onClick={toggleIntegration}
+                    onClose={() => setIsToggleOpen(false)}
+                    title={
+                        addon.enabled
+                            ? `Disable integration?`
+                            : `Enable integration?`
+                    }
+                >
+                    <div>
+                        {addon.enabled ? 'Disabling' : 'Enabling'} this
+                        integration will{' '}
+                        {addon.enabled
+                            ? 'prevent it from sending updates'
+                            : 'allow it to send updates'}
+                    </div>
+                </Dialogue>
+            )}
             <Dialogue
                 open={isDeleteOpen}
                 onClick={deleteIntegration}

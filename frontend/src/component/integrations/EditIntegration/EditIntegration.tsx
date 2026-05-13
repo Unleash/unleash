@@ -3,7 +3,12 @@ import { IntegrationForm } from '../IntegrationForm/IntegrationForm.tsx';
 import cloneDeep from 'lodash.clonedeep';
 import { DEFAULT_DATA } from '../CreateIntegration/CreateIntegration.tsx';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import type { AddonSchema } from 'openapi';
+import type { AddonSchema, AddonTypeSchema } from 'openapi';
+
+const findProvider = (
+    addon: AddonSchema | Omit<AddonSchema, 'id'>,
+    providers: AddonTypeSchema[],
+) => providers.find((provider) => provider.name === addon?.provider);
 
 export const EditIntegration = () => {
     const addonId = useRequiredPathParam('addonId');
@@ -13,9 +18,11 @@ export const EditIntegration = () => {
     const addon = addons.find(
         (addon: AddonSchema) => addon.id === Number(addonId),
     ) || { ...cloneDeep(DEFAULT_DATA) };
-    const provider = addon
-        ? providers.find((provider) => provider.name === addon.provider)
-        : undefined;
+
+    const provider = findProvider(addon, providers);
+
+    // TODO: should we really mount when provider=undefined?
+    // or show error banner with "go del the config to remove it" msg ?
 
     return (
         <IntegrationForm

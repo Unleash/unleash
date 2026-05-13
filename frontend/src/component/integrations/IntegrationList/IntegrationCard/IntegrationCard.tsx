@@ -23,6 +23,7 @@ interface IIntegrationCardBaseProps {
     configureActionText?: string;
     addon?: AddonSchema;
     deprecated?: string;
+    providerExists?: boolean | undefined;
 }
 
 interface IIntegrationCardWithLinkProps extends IIntegrationCardBaseProps {
@@ -165,7 +166,12 @@ export const IntegrationCard: FC<IIntegrationCardProps> = ({
                 />
                 <ConditionallyRender
                     condition={isConfigured}
-                    show={<IntegrationCardMenu addon={addon as AddonSchema} />}
+                    show={
+                        <IntegrationCardMenu
+                            addon={addon as AddonSchema}
+                            providerExists={deprecated !== undefined}
+                        />
+                    }
                 />
             </StyledHeader>
             <Typography

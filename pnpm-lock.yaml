@@ -204,8 +204,8 @@ importers:
         specifier: ^15.1.3
         version: 15.1.3
       re2js:
-        specifier: 2.3.1
-        version: 2.3.1
+        specifier: 2.3.2
+        version: 2.3.2
       sanitize-filename:
         specifier: ^1.6.4
         version: 1.6.4
@@ -388,8 +388,8 @@ importers:
         specifier: ^12.1.1
         version: 12.1.1
       re2js:
-        specifier: 2.3.1
-        version: 2.3.1
+        specifier: 2.3.2
+        version: 2.3.2
     devDependencies:
       '@babel/core':
         specifier: ^7.29.0
@@ -5335,8 +5335,8 @@ packages:
     resolution: {integrity: sha512-KTOIcZTSOpOxbu3i0+T6mFQ6tkxXKlTxfcMFs1trQbsMnG84qNq+DjXr8Afu+FEFjvF1NNlldpC7roPyazFI8g==}
     deprecated: Accidental publish of breaking changes. Please downgrade to 1.3.3 or upgrade to the latest version.
 
-  re2js@2.3.1:
-    resolution: {integrity: sha512-gU5mI8ROXhrWXElqRzTnyN/MnnTFfddOTATd34ZTsZdRZs4g1PXLfp+thVF2AQSwiGQnDtOmNYCXRCctr2MsXw==}
+  re2js@2.3.2:
+    resolution: {integrity: sha512-Y7oXKIPeei9mNLgi0kCbFrE3w+3sybHFh8UD3hE1EKU3/eY1ODjb4EBHUnZGL2TG3rnmqCex81Cevoy3wf8wEg==}
 
   react-activity-calendar@2.7.15:
     resolution: {integrity: sha512-sPO4tDJp+sRbV8F/LhUZ/woHmi4dg0Phd+Kt1Jw0orSfGfEqGCm7fFXiTIAvuuAwpwxqPEYEnfNzOLEfUrdg1A==}
@@ -11691,7 +11691,7 @@ snapshots:
 
   re2js@1.4.0: {}
 
-  re2js@2.3.1: {}
+  re2js@2.3.2: {}
 
   react-activity-calendar@2.7.15(react@19.2.6):
     dependencies:

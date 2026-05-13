@@ -7,6 +7,7 @@ import {
     type ReactElement,
     cloneElement,
     forwardRef,
+    isValidElement,
     useRef,
 } from 'react';
 import { Autocomplete, type AutocompleteProps } from '@mui/material';
@@ -41,11 +42,9 @@ const ListboxComponent = forwardRef<
                     }}
                 >
                     {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-                        const element = items[
-                            virtualRow.index
-                        ] as ReactElement<VirtualizedRowProps>;
+                        const element = items[virtualRow.index];
 
-                        if (!element) {
+                        if (!isValidElement<VirtualizedRowProps>(element)) {
                             return null;
                         }
 

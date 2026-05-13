@@ -17,7 +17,10 @@ export const FeatureConnectSdkBanner = ({
     const { trackEvent } = usePlausibleTracker();
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
 
-    if (project.onboardingStatus.status === 'onboarded') {
+    if (
+        project.onboardingStatus.status === 'onboarded' ||
+        project.onboardingStatus.status === 'sdk-connected'
+    ) {
         return null;
     }
 

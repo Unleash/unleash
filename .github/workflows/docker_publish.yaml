@@ -97,7 +97,7 @@ jobs:
         name: docker-meta-bake-files
         path: ${{ runner.temp }}/docker-meta
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
+      uses: aws-actions/configure-aws-credentials@v6
       with:
         role-to-assume: arn:aws:iam::726824350591:role/unleash-github-ecr-public-publish-role
         role-session-name: unleash-actions-push-to-ecr-public
@@ -148,7 +148,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
+      uses: aws-actions/configure-aws-credentials@v6
       with:
         role-to-assume: arn:aws:iam::726824350591:role/unleash-github-ecr-public-publish-role
         role-session-name: unleash-actions-push-to-ecr-public

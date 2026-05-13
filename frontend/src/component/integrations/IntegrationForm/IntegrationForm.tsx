@@ -217,6 +217,7 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
     const onSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
         event.preventDefault();
         if (!provider) {
+            // TODO: should we show error banner with "go del the config to remove it" msg ?
             return;
         }
 

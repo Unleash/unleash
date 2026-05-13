@@ -149,6 +149,7 @@ export const Application = () => {
                                     show={
                                         <IconButton
                                             component={Link}
+                                            nativeButton={false}
                                             href={url}
                                             size='large'
                                         >

@@ -26,6 +26,7 @@ interface IPermissionIconButtonProps {
     tooltipProps?: Omit<ITooltipResolverProps, 'children'>;
     sx?: IconButtonProps['sx'];
     size?: 'small' | 'medium' | 'large';
+    nativeButton?: boolean;
 }
 
 interface IButtonProps extends IPermissionIconButtonProps {

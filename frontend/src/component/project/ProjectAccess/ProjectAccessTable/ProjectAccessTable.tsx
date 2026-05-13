@@ -215,6 +215,7 @@ export const ProjectAccessTable: FC = () => {
                         <PermissionIconButton
                             data-testid={PA_EDIT_BUTTON_ID}
                             component={Link}
+                            nativeButton={false}
                             permission={[
                                 UPDATE_PROJECT,
                                 PROJECT_USER_ACCESS_WRITE,

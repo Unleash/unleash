@@ -248,6 +248,7 @@ export const Group: FC = () => {
                                     data-testid={UG_EDIT_BTN_ID}
                                     to={`/admin/groups/${groupId}/edit`}
                                     component={Link}
+                                    nativeButton={false}
                                     data-loading
                                     permission={ADMIN}
                                     tooltipProps={{

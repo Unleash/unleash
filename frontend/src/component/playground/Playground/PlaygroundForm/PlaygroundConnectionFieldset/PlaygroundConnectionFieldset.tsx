@@ -306,6 +306,7 @@ export const PlaygroundConnectionFieldset: FC<
                                 size='small'
                                 to={`/projects/${projects[0]}/change-requests/${changeRequest}`}
                                 component={Link}
+                                nativeButton={false}
                             >
                                 View change request
                             </Button>

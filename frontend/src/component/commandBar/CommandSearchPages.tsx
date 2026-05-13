@@ -43,6 +43,7 @@ export const CommandSearchPages = ({
                     key={`command-result-group-pages-${index}`}
                     dense={true}
                     component={Link}
+                    nativeButton={false}
                     to={item.link}
                     onClick={() => {
                         onItemClick(item);

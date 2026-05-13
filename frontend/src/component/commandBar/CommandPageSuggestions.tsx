@@ -68,6 +68,7 @@ export const CommandPageSuggestions = ({
                     key={`recently-visited-${index}`}
                     dense={true}
                     component={Link}
+                    nativeButton={false}
                     to={item.path}
                     onClick={() => {
                         onItemClick(item);

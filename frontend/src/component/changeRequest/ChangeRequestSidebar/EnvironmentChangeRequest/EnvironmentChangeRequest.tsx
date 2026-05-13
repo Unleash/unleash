@@ -198,6 +198,7 @@ export const EnvironmentChangeRequest: FC<{
                                         sx={{ marginLeft: 2 }}
                                         variant='outlined'
                                         component={Link}
+                                        nativeButton={false}
                                         to={`/projects/${environmentChangeRequest.project}/change-requests/${environmentChangeRequest.id}`}
                                         onClick={() => {
                                             onClose();

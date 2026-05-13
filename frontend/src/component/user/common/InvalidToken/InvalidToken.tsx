@@ -38,6 +38,7 @@ const InvalidToken: FC = () => {
                             variant='contained'
                             color='primary'
                             component={Link}
+                            nativeButton={false}
                             to='/login'
                         >
                             Login
@@ -66,6 +67,7 @@ const InvalidToken: FC = () => {
                                     variant='contained'
                                     color='primary'
                                     component={Link}
+                                    nativeButton={false}
                                     to='/forgotten-password'
                                     data-testid={INVALID_TOKEN_BUTTON}
                                 >

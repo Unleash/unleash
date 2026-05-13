@@ -25,6 +25,7 @@ export const GroupEmpty = () => {
             <Button
                 to='/admin/groups/create-group'
                 component={Link}
+                nativeButton={false}
                 variant='outlined'
                 color='primary'
             >

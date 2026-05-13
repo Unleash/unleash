@@ -41,6 +41,7 @@ export const TurnFlagStep = ({ projectId, state }: ITurnFlagStepProps) => {
                     variant='contained'
                     color='primary'
                     component={Link}
+                    nativeButton={false}
                     to={goToFlagHref}
                 >
                     Go to flag

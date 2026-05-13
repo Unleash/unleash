@@ -62,7 +62,7 @@ export interface IGenerateApiKeyProps {
     projectId: string;
     environments: string[];
     sdk?: Pick<Sdk, 'type'>;
-    onApiKeyGenerated: (apiKey: string) => void;
+    onApiKeyChange: (apiKey: string | undefined) => void;
     onNext: () => void;
 }
 
@@ -70,7 +70,7 @@ export const GenerateApiKey = ({
     projectId,
     environments,
     sdk,
-    onApiKeyGenerated,
+    onApiKeyChange,
     onNext,
 }: IGenerateApiKeyProps) => {
     const { trackEvent } = usePlausibleTracker();
@@ -90,10 +90,8 @@ export const GenerateApiKey = ({
     const parsedToken = parseToken(currentToken?.secret);
 
     useEffect(() => {
-        if (currentToken?.secret) {
-            onApiKeyGenerated(currentToken.secret);
-        }
-    }, [currentToken?.secret, onApiKeyGenerated]);
+        onApiKeyChange(currentToken?.secret);
+    }, [currentToken?.secret, onApiKeyChange]);
 
     if (!sdk) return null;
 

@@ -191,7 +191,7 @@ const InnerDialog = ({
                     sdk={sdk}
                     apiKey={apiKey}
                     feature={feature}
-                    expanded={expandedStep === 2}
+                    isActive={currentStep >= 2}
                     onSdkConnected={onSdkConnected}
                 />
             ),
@@ -205,20 +205,25 @@ const InnerDialog = ({
             <DialogHeader onClose={onClose} />
             <StyledDialogBody>
                 <StyledDialogContent>
-                    {steps.map(({ title, content, summary }, index) => (
-                        <ConnectSdkDialogStep
-                            key={title}
-                            stepNumber={index + 1}
-                            title={title}
-                            isExpanded={expandedStep === index}
-                            isCompleted={index < currentStep}
-                            isDisabled={index > currentStep}
-                            onExpand={() => setExpandedStep(index)}
-                            summary={summary}
-                        >
-                            {content}
-                        </ConnectSdkDialogStep>
-                    ))}
+                    {steps.map(({ title, content, summary }, index) => {
+                        const isCompleted = index < currentStep;
+                        const isDisabled = index > currentStep;
+
+                        return (
+                            <ConnectSdkDialogStep
+                                key={title}
+                                stepNumber={index + 1}
+                                title={title}
+                                isExpanded={expandedStep === index}
+                                isCompleted={isCompleted}
+                                isDisabled={isDisabled}
+                                onExpand={() => setExpandedStep(index)}
+                                summary={isCompleted && summary}
+                            >
+                                {content}
+                            </ConnectSdkDialogStep>
+                        );
+                    })}
                     <StyledDialogFooter>
                         <Button
                             variant='contained'

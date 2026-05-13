@@ -73,7 +73,7 @@ interface IConfigureSdkProps {
     sdk?: Pick<Sdk, 'name'>;
     apiKey?: string;
     feature?: string;
-    expanded?: boolean;
+    isActive: boolean;
     onSdkConnected: () => void;
 }
 
@@ -82,7 +82,7 @@ export const ConfigureSdk = ({
     sdk,
     apiKey,
     feature,
-    expanded,
+    isActive,
     onSdkConnected,
 }: IConfigureSdkProps) => {
     const { uiConfig } = useUiConfig();
@@ -107,10 +107,10 @@ export const ConfigureSdk = ({
     }, [sdkConnected, onSdkConnected]);
 
     useEffect(() => {
-        if (sdkConnected || !expanded) return;
+        if (sdkConnected || !isActive) return;
         const timer = setTimeout(() => setShowTroubleshooting(true), 30_000);
         return () => clearTimeout(timer);
-    }, [sdkConnected, expanded]);
+    }, [sdkConnected, isActive]);
 
     if (!sdk || !apiKey) return null;
 

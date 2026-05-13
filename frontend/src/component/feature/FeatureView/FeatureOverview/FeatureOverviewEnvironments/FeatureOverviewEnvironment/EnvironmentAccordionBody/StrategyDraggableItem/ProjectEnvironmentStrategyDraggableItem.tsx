@@ -89,11 +89,11 @@ type ProjectEnvironmentStrategyDraggableItemProps = {
     otherEnvironments?: IFeatureEnvironment['name'][];
     isDragging?: boolean;
     onDragStartRef?: (
-        ref: RefObject<HTMLDivElement>,
+        ref: RefObject<HTMLDivElement | null>,
         index: number,
     ) => DragEventHandler<HTMLButtonElement>;
     onDragOver?: (
-        ref: RefObject<HTMLDivElement>,
+        ref: RefObject<HTMLDivElement | null>,
         index: number,
     ) => DragEventHandler<HTMLDivElement>;
     onDragEnd?: () => void;

@@ -1,4 +1,9 @@
-import { styled, type SxProps, type Theme } from '@mui/material';
+import {
+    styled,
+    type SvgIconProps,
+    type SxProps,
+    type Theme,
+} from '@mui/material';
 import type React from 'react';
 import {
     cloneElement,
@@ -23,7 +28,7 @@ type Color =
 interface IBadgeProps {
     as?: React.ElementType;
     color?: Color;
-    icon?: ReactElement;
+    icon?: ReactElement<SvgIconProps>;
     iconRight?: boolean;
     className?: string;
     sx?: SxProps<Theme>;
@@ -79,7 +84,7 @@ const StyledBadgeIcon = styled('span')<
             : theme.palette[color].main,
 }));
 
-const BadgeIcon = (color: Color, icon?: ReactElement) => (
+const BadgeIcon = (color: Color, icon?: ReactElement<SvgIconProps>) => (
     <StyledBadgeIcon color={color}>
         <ConditionallyRender
             condition={Boolean(icon?.props.sx)}

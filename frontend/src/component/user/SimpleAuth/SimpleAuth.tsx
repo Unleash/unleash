@@ -2,7 +2,7 @@ import {
     type ChangeEventHandler,
     type FormEventHandler,
     useState,
-    type VFC,
+    type FC,
 } from 'react';
 import { Button, TextField } from '@mui/material';
 import styles from './SimpleAuth.module.scss';
@@ -19,7 +19,7 @@ interface ISimpleAuthProps {
     redirect: string;
 }
 
-const SimpleAuth: VFC<ISimpleAuthProps> = ({ authDetails, redirect }) => {
+const SimpleAuth: FC<ISimpleAuthProps> = ({ authDetails, redirect }) => {
     const [email, setEmail] = useState('');
     const [isPending, setIsPending] = useState(false);
     const { refetchUser } = useAuthUser();

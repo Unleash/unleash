@@ -16,8 +16,8 @@ let globalDraggedElement: HTMLElement | null;
 export const useDragItem = <T extends HTMLElement>(
     listItemIndex: number,
     onMoveItem: OnMoveItem,
-    handle?: RefObject<HTMLElement>,
-): RefObject<T> => {
+    handle?: RefObject<HTMLElement | null>,
+): RefObject<T | null> => {
     const ref = useRef<T>(null);
 
     useEffect(() => {

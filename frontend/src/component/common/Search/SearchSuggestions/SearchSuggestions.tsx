@@ -8,7 +8,7 @@ import {
     getFilterValues,
     type IGetSearchContextOutput,
 } from 'hooks/useSearch';
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { SearchDescription } from './SearchDescription/SearchDescription.tsx';
 import {
     SearchInstructions,
@@ -45,7 +45,7 @@ interface SearchSuggestionsProps {
 
 const quote = (item: string) => (item.includes(' ') ? `"${item}"` : item);
 
-export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
+export const SearchSuggestions: FC<SearchSuggestionsProps> = ({
     getSearchContext,
     onSuggestion,
     savedQuery,

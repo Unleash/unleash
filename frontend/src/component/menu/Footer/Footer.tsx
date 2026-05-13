@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-target-blank */
 
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { List, ListItem, ListItemText, styled } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -69,7 +69,7 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
     },
 }));
 
-export const Footer: VFC = () => {
+export const Footer: FC = () => {
     const { uiConfig } = useUiConfig();
 
     return (

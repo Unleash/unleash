@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Alert, Link } from '@mui/material';
 import { useUsersPlan } from 'hooks/useUsersPlan';
@@ -6,7 +6,7 @@ import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 
 const userLimit = 20;
 
-export const UserLimitWarning: VFC = () => {
+export const UserLimitWarning: FC = () => {
     const { users } = useUsers();
     const { isBillingUsers, planUsers } = useUsersPlan(users);
 

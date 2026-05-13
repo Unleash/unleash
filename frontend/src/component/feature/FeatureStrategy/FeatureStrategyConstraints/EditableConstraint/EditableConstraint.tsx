@@ -142,7 +142,7 @@ const TopRowInput: FC<{
     clearValues: () => void;
     localConstraint: EditableConstraintType;
     validator: (value: string) => ConstraintValidationResult;
-    addValuesButtonRef: React.RefObject<HTMLDivElement>;
+    addValuesButtonRef: React.RefObject<HTMLDivElement | null>;
     editingOpen: boolean;
     setEditingOpen: (open: boolean) => void;
 }> = ({

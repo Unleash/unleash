@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type JSX } from 'react';
 import { DemoTopics } from './DemoTopics/DemoTopics.tsx';
 import { DemoSteps } from './DemoSteps/DemoSteps.tsx';
 import { createLocalStorage } from 'utils/createLocalStorage';

@@ -1,4 +1,4 @@
-import { type MouseEvent, useState, type VFC } from 'react';
+import { type MouseEvent, useState, type FC } from 'react';
 import {
     IconButton,
     ListItemIcon,
@@ -32,7 +32,7 @@ interface ICopyStrategyIconMenuProps {
     strategy: IFeatureStrategyPayload;
 }
 
-export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
+export const CopyStrategyIconMenu: FC<ICopyStrategyIconMenuProps> = ({
     environmentId,
     environments,
     strategy,

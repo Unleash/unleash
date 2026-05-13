@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMDHM } from 'utils/formatDate';
 import { parseISO } from 'date-fns';
@@ -9,7 +9,7 @@ interface IDateTimeCellProps {
     timeZone?: string;
 }
 
-export const DateTimeCell: VFC<IDateTimeCellProps> = ({ value, timeZone }) => {
+export const DateTimeCell: FC<IDateTimeCellProps> = ({ value, timeZone }) => {
     const { locationSettings } = useLocationSettings();
 
     const date = value

@@ -1,5 +1,5 @@
 import { useInstanceMetrics } from 'hooks/api/getters/useInstanceMetrics/useInstanceMetrics';
-import { useMemo, type VFC } from 'react';
+import { useMemo, type FC } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
     CategoryScale,
@@ -76,11 +76,11 @@ const createInstanceChartOptions = (
             callbacks: {
                 title: (items) =>
                     formatDateHM(
-                        1000 * items[0].parsed.x,
+                        1000 * (items[0].parsed.x ?? 0),
                         locationSettings.locale,
                     ),
             },
-            itemSort: (a, b) => b.parsed.y - a.parsed.y,
+            itemSort: (a, b) => (b.parsed.y ?? 0) - (a.parsed.y ?? 0),
         },
         legend: {
             position: 'bottom',
@@ -99,7 +99,7 @@ const createInstanceChartOptions = (
             display: true,
             font: {
                 size: 16,
-                weight: '400',
+                weight: 400,
             },
             color: theme.palette.text.primary,
             padding: {
@@ -120,7 +120,9 @@ const createInstanceChartOptions = (
             ticks: { precision: 0, color: theme.palette.text.secondary },
             grid: {
                 color: theme.palette.divider,
-                borderColor: theme.palette.divider,
+            },
+            border: {
+                color: theme.palette.divider,
             },
         },
         x: {
@@ -129,7 +131,9 @@ const createInstanceChartOptions = (
             grid: {
                 display: true,
                 color: theme.palette.divider,
-                borderColor: theme.palette.divider,
+            },
+            border: {
+                color: theme.palette.divider,
             },
             ticks: {
                 callback: (_, i, data) =>
@@ -190,7 +194,7 @@ const toChartData = (
     return [];
 };
 
-export const NetworkTraffic: VFC = () => {
+export const NetworkTraffic: FC = () => {
     const { locationSettings } = useLocationSettings();
     const { metrics } = useInstanceMetrics();
     const theme = useTheme();

@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { styled, Typography } from '@mui/material';
 import { formatStrategyName } from 'utils/strategyNames';
 import type { IFeatureStrategyPayload } from 'interfaces/strategy';
@@ -15,7 +15,7 @@ const MsgContainer = styled('div')(({ theme }) => ({
     },
 }));
 
-export const CopyStrategiesMessage: VFC<ICopyStrategiesMessageProps> = ({
+export const CopyStrategiesMessage: FC<ICopyStrategiesMessageProps> = ({
     payload,
     fromEnvironment,
     environment,

@@ -1,4 +1,4 @@
-import { useId, useMemo, useState, type FC } from 'react';
+import { useId, useMemo, useState, type FC, type JSX } from 'react';
 import { Link } from 'react-router-dom';
 import type { ISegment } from 'interfaces/segment';
 import {

@@ -3,7 +3,7 @@ import {
     type ComponentProps,
     type Dispatch,
     type SetStateAction,
-    type VFC,
+    type FC,
 } from 'react';
 import { Autocomplete, Chip, type SxProps, TextField } from '@mui/material';
 import { renderOption } from 'component/playground/Playground/PlaygroundForm/renderOption';
@@ -37,7 +37,7 @@ function findAllIndexes(arr: string[], name: string): number[] {
     return indexes;
 }
 
-export const ProjectSelect: VFC<IProjectSelectProps> = forwardRef(
+export const ProjectSelect: FC<IProjectSelectProps> = forwardRef(
     (
         {
             limitTags,

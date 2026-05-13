@@ -31,7 +31,6 @@ export const createPlaceholderBarChartOptions = (
                 pointStyle: 'none',
                 boxHeight: 0,
                 padding: 15,
-                boxPadding: 5,
             },
         },
 
@@ -58,8 +57,10 @@ export const createPlaceholderBarChartOptions = (
                 display: false,
             },
             grid: {
-                drawBorder: false,
                 color: theme.palette.divider,
+            },
+            border: {
+                display: false,
             },
         },
     },
@@ -91,7 +92,6 @@ export const createBarChartOptions = (
                     usePointStyle: true,
                     boxHeight: 6,
                     padding: 15,
-                    boxPadding: 5,
                 },
             },
 

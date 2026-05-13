@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import type { InstanceInsightsSchemaMetricsSummaryTrendsItem } from 'openapi';
 import { Box, Divider, Paper, styled, Typography } from '@mui/material';
 import type { TooltipState } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
@@ -66,7 +66,7 @@ export const InfoSummary = ({
     </Box>
 );
 
-export const MetricsSummaryTooltip: VFC<{ tooltip: TooltipState | null }> = ({
+export const MetricsSummaryTooltip: FC<{ tooltip: TooltipState | null }> = ({
     tooltip,
 }) => {
     const data = tooltip?.dataPoints.map((point) => {

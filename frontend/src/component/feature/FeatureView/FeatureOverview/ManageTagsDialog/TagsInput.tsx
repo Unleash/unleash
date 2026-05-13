@@ -15,6 +15,8 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import Add from '@mui/icons-material/Add';
 import type { TagSchema } from 'openapi';
 
+import type { JSX } from 'react';
+
 export type TagOption = {
     title: string;
     inputValue?: string;

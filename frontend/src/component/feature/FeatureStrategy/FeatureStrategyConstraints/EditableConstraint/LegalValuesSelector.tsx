@@ -1,4 +1,4 @@
-import { type FC, useId, useState } from 'react';
+import { type FC, useId, useState, type JSX } from 'react';
 import {
     Alert,
     Button,

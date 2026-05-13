@@ -1,5 +1,5 @@
 import type { AddonTypeSchema } from 'openapi';
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { StyledRaisedSection } from '../IntegrationForm/IntegrationForm.styles';
 import { Typography, styled } from '@mui/material';
 import { IntegrationIcon } from '../IntegrationList/IntegrationIcon/IntegrationIcon.tsx';
@@ -15,7 +15,7 @@ interface IIntegrationHowToSectionProps {
     title?: string;
 }
 
-export const IntegrationHowToSection: VFC<IIntegrationHowToSectionProps> = ({
+export const IntegrationHowToSection: FC<IIntegrationHowToSectionProps> = ({
     provider,
     title = 'How does it work?',
 }) => {

@@ -2,7 +2,12 @@ import { expect, test } from 'vitest';
 import { baseRoutes, getRoute } from '../routes.ts';
 
 test('returns all baseRoutes', () => {
-    expect(baseRoutes).toMatchSnapshot();
+    // Omit the component field to avoid snapshotting React lazy internals
+    // (_debugInfo, _ioInfo, etc.) that churn on React patch upgrades.
+    const stableRoutes = baseRoutes.map(
+        ({ component: _component, ...rest }) => rest,
+    );
+    expect(stableRoutes).toMatchSnapshot();
 });
 
 test('getRoute() returns named route', () => {

@@ -2,7 +2,7 @@ import {
     type ChangeEventHandler,
     type FormEventHandler,
     useState,
-    type VFC,
+    type FC,
 } from 'react';
 import { Button, styled, TextField } from '@mui/material';
 import styles from './DemoAuth.module.scss';
@@ -26,7 +26,7 @@ interface IDemoAuthProps {
     redirect: string;
 }
 
-const DemoAuth: VFC<IDemoAuthProps> = ({ authDetails, redirect }) => {
+const DemoAuth: FC<IDemoAuthProps> = ({ authDetails, redirect }) => {
     const [email, setEmail] = useState('');
     const navigate = useNavigate();
     const { refetchUser } = useAuthUser();

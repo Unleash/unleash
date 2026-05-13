@@ -5,7 +5,7 @@ import {
     Checkbox,
     Typography,
 } from '@mui/material';
-import type { VFC } from 'react';
+import type { FC } from 'react';
 
 interface IFeatureStrategyEnabledDisabledProps {
     enabled: boolean;
@@ -25,7 +25,7 @@ const StyledCheckboxRow = styled(Box)(({ theme }) => ({
     marginTop: theme.spacing(1),
 }));
 
-export const FeatureStrategyEnabledDisabled: VFC<
+export const FeatureStrategyEnabledDisabled: FC<
     IFeatureStrategyEnabledDisabledProps
 > = ({ enabled, onToggleEnabled }) => {
     return (

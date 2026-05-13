@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { Box, styled } from '@mui/material';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
@@ -18,7 +18,7 @@ interface ILoginHistorySuccessfulCellProps {
     value: boolean;
 }
 
-export const LoginHistorySuccessfulCell: VFC<
+export const LoginHistorySuccessfulCell: FC<
     ILoginHistorySuccessfulCellProps
 > = ({ row, value }) => {
     const { searchQuery } = useSearchHighlightContext();

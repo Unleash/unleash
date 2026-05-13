@@ -1,27 +1,15 @@
-import { useEffect } from 'react';
-import { Button, styled } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { Button, MenuItem, Select, styled } from '@mui/material';
 import { useProjectApiTokens } from 'hooks/api/getters/useProjectApiTokens/useProjectApiTokens';
 import useProjectApiTokensApi from 'hooks/api/actions/useProjectApiTokensApi/useProjectApiTokensApi';
 import useToast from 'hooks/useToast';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { parseToken } from '../../parseToken';
-import { ChooseEnvironment } from './ChooseEnvironment';
 import { TokenExplanation } from './TokenExplanation';
-
-const SectionHeader = styled('div')(({ theme }) => ({
-    fontWeight: theme.typography.fontWeightBold,
-    fontSize: theme.typography.body1.fontSize,
-}));
-
-const SectionDescription = styled('p')(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    fontSize: theme.typography.body2.fontSize,
-    margin: 0,
-}));
+import type { Sdk } from '../../sharedTypes';
 
 const SpacedContainer = styled('div')(({ theme }) => ({
-    padding: theme.spacing(3, 0),
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(3),
@@ -33,16 +21,24 @@ const SectionBox = styled('div')(({ theme }) => ({
     alignItems: 'flex-start',
     gap: theme.spacing(2),
     padding: theme.spacing(2),
-    alignSelf: 'stretch',
-    borderRadius: theme.shape.borderRadius,
+    borderRadius: theme.shape.borderRadiusMedium,
     border: `1px solid ${theme.palette.divider}`,
     backgroundColor: theme.palette.background.elevation1,
 }));
 
-const SectionText = styled('div')(({ theme }) => ({
+const SectionHeader = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(0.5),
+}));
+
+const SectionTitle = styled('div')(({ theme }) => ({
+    fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.typography.body1.fontSize,
+}));
+
+const SectionSubtitle = styled('p')(({ theme }) => ({
+    fontSize: theme.typography.body2.fontSize,
 }));
 
 const ActionRow = styled('div')({
@@ -62,91 +58,20 @@ export interface IGenerateApiKeyContentProps {
     onDone: () => void;
 }
 
-const generateApiKeyLabel = 'Then generate an API Key';
-
-export const GenerateApiKeyContent = ({
-    environments,
-    environment,
-    onEnvSelect,
-    parsedToken,
-    fetchingTokens = false,
-    creatingToken,
-    generateAPIKey,
-    onDone,
-}: IGenerateApiKeyContentProps) => (
-    <SpacedContainer>
-        <SectionBox>
-            <SectionText>
-                <SectionHeader>First select environment</SectionHeader>
-                <SectionDescription>
-                    The environment connects to an SDK to retrieve information.
-                </SectionDescription>
-            </SectionText>
-            {environments.length > 0 ? (
-                <ChooseEnvironment
-                    environments={environments}
-                    environment={environment}
-                    onSelect={onEnvSelect}
-                />
-            ) : null}
-        </SectionBox>
-
-        {parsedToken ? (
-            <>
-                <SectionBox>
-                    <SectionText>
-                        <SectionHeader>{generateApiKeyLabel}</SectionHeader>
-                        <SectionDescription>
-                            Here is your generated API key. We will use it to
-                            connect to the <b>{parsedToken.project}</b> project
-                            in the <b>{parsedToken.environment}</b> environment.
-                        </SectionDescription>
-                    </SectionText>
-                    <TokenExplanation
-                        project={parsedToken.project}
-                        environment={parsedToken.environment}
-                        secret={parsedToken.secret}
-                    />
-                </SectionBox>
-                <ActionRow>
-                    <Button variant='contained' onClick={onDone}>
-                        Next
-                    </Button>
-                </ActionRow>
-            </>
-        ) : (
-            <SectionBox>
-                <SectionHeader>{generateApiKeyLabel}</SectionHeader>
-                <Button
-                    variant='contained'
-                    disabled={fetchingTokens || creatingToken}
-                    onClick={generateAPIKey}
-                >
-                    Generate API Key
-                </Button>
-            </SectionBox>
-        )}
-    </SpacedContainer>
-);
-
 export interface IGenerateApiKeyProps {
     projectId: string;
     environments: string[];
-    environment: string;
-    onEnvSelect: (env: string) => void;
-    sdkType: 'client' | 'frontend';
-    onKeyGenerated: (apiKey: string | null) => void;
-    onDone: () => void;
+    sdk?: Pick<Sdk, 'type'>;
+    onApiKeyGenerated: (apiKey: string) => void;
+    onNext: () => void;
 }
 
 export const GenerateApiKey = ({
     projectId,
     environments,
-    environment,
-    onEnvSelect,
-    sdkType,
-    onKeyGenerated,
-    onDone,
+    sdk,
+    onApiKeyGenerated,
+    onNext,
 }: IGenerateApiKeyProps) => {
     const { trackEvent } = usePlausibleTracker();
     const {
@@ -156,22 +81,28 @@ export const GenerateApiKey = ({
     } = useProjectApiTokens(projectId);
     const { createToken, loading: creatingToken } = useProjectApiTokensApi();
     const { setToastApiError } = useToast();
+    const [environment, setEnvironment] = useState(environments[0] || '');
 
     const currentToken = tokens.find(
-        (token) => token.environment === environment && token.type === sdkType,
+        (token) =>
+            token.environment === environment && token.type === sdk?.type,
     );
     const parsedToken = parseToken(currentToken?.secret);
 
     useEffect(() => {
-        onKeyGenerated(currentToken?.secret ?? null);
-    }, [currentToken?.secret, onKeyGenerated]);
+        if (currentToken?.secret) {
+            onApiKeyGenerated(currentToken.secret);
+        }
+    }, [currentToken?.secret, onApiKeyGenerated]);
+
+    if (!sdk) return null;
 
     const generateAPIKey = async () => {
         try {
             await createToken(
                 {
                     environment,
-                    type: sdkType,
+                    type: sdk.type,
                     projects: [projectId],
                     tokenName: `api-key-${projectId}-${environment}`,
                 },
@@ -186,16 +117,72 @@ export const GenerateApiKey = ({
         }
     };
 
+    const longestEnv =
+        environments.length > 0
+            ? Math.max(...environments.map((env) => env.length))
+            : 0;
+
+    const loading = fetchingTokens || creatingToken;
+
     return (
-        <GenerateApiKeyContent
-            environments={environments}
-            environment={environment}
-            onEnvSelect={onEnvSelect}
-            parsedToken={parsedToken}
-            fetchingTokens={fetchingTokens}
-            creatingToken={creatingToken}
-            generateAPIKey={generateAPIKey}
-            onDone={onDone}
-        />
+        <SpacedContainer>
+            <SectionBox>
+                <SectionHeader>
+                    <SectionTitle>First select environment</SectionTitle>
+                    <SectionSubtitle>
+                        The environment connects to an SDK to retrieve
+                        information.
+                    </SectionSubtitle>
+                </SectionHeader>
+                <Select
+                    value={environment}
+                    onChange={(e) => setEnvironment(e.target.value)}
+                    size='small'
+                    inputProps={{ 'aria-label': 'Select environment' }}
+                    sx={{ minWidth: `${longestEnv + 5}ch` }}
+                >
+                    {environments.map((env) => (
+                        <MenuItem key={env} value={env}>
+                            {env}
+                        </MenuItem>
+                    ))}
+                </Select>
+            </SectionBox>
+
+            <SectionBox>
+                <SectionHeader>
+                    <SectionTitle>Then generate an API Key</SectionTitle>
+                    {parsedToken && (
+                        <SectionSubtitle>
+                            Here is your generated API key. We will use it to
+                            connect to the <b>{parsedToken.project}</b> project
+                            in the <b>{parsedToken.environment}</b> environment.
+                        </SectionSubtitle>
+                    )}
+                </SectionHeader>
+                {parsedToken ? (
+                    <TokenExplanation
+                        project={parsedToken.project}
+                        environment={parsedToken.environment}
+                        secret={parsedToken.secret}
+                    />
+                ) : (
+                    <Button
+                        variant='contained'
+                        disabled={loading}
+                        onClick={generateAPIKey}
+                    >
+                        Generate API Key
+                    </Button>
+                )}
+            </SectionBox>
+            {parsedToken && (
+                <ActionRow>
+                    <Button variant='contained' onClick={onNext}>
+                        Next
+                    </Button>
+                </ActionRow>
+            )}
+        </SpacedContainer>
     );
 };

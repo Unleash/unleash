@@ -147,8 +147,7 @@ const InnerDialog = ({
     const [expandedStep, setExpandedStep] = useState(0);
 
     const [sdk, setSdk] = useState<Sdk>();
-    const [apiKey, setApiKey] = useState<string | null>(null);
-    const [environment, setEnvironment] = useState(environments[0] ?? '');
+    const [apiKey, setApiKey] = useState<string>();
 
     const onSelectSdk = (selectedSdk: Sdk) => {
         setSdk(selectedSdk);
@@ -156,12 +155,14 @@ const InnerDialog = ({
         setExpandedStep(1);
     };
 
-    const onSdkConnected = () => setCurrentStep(3);
+    const onApiKeyGenerated = (apiKey: string) => setApiKey(apiKey);
 
-    const onApiKeyDone = () => {
+    const onApiKeyNext = () => {
         setCurrentStep(2);
         setExpandedStep(2);
     };
+
+    const onSdkConnected = () => setCurrentStep(3);
 
     const steps: Step[] = [
         {
@@ -171,31 +172,29 @@ const InnerDialog = ({
         },
         {
             title: 'Generate API key',
-            content: sdk ? (
+            content: (
                 <GenerateApiKey
                     projectId={projectId}
+                    sdk={sdk}
                     environments={environments}
-                    environment={environment}
-                    onEnvSelect={setEnvironment}
-                    sdkType={sdk.type}
-                    onKeyGenerated={setApiKey}
-                    onDone={onApiKeyDone}
+                    onApiKeyGenerated={onApiKeyGenerated}
+                    onNext={onApiKeyNext}
                 />
-            ) : null,
+            ),
             summary: <GenerateApiKeySummary apiKey={apiKey} />,
         },
         {
             title: 'Configure the SDK',
-            content: apiKey ? (
+            content: (
                 <ConfigureSdk
                     projectId={projectId}
                     sdk={sdk}
                     apiKey={apiKey}
                     feature={feature}
-                    expanded={expandedStep === 2}
+                    isActive={currentStep >= 2}
                     onSdkConnected={onSdkConnected}
                 />
-            ) : null,
+            ),
         },
     ];
 
@@ -206,20 +205,25 @@ const InnerDialog = ({
             <DialogHeader onClose={onClose} />
             <StyledDialogBody>
                 <StyledDialogContent>
-                    {steps.map(({ title, content, summary }, index) => (
-                        <ConnectSdkDialogStep
-                            key={title}
-                            stepNumber={index + 1}
-                            title={title}
-                            isExpanded={expandedStep === index}
-                            isCompleted={index < currentStep}
-                            isDisabled={index > currentStep}
-                            onExpand={() => setExpandedStep(index)}
-                            summary={summary}
-                        >
-                            {content}
-                        </ConnectSdkDialogStep>
-                    ))}
+                    {steps.map(({ title, content, summary }, index) => {
+                        const isCompleted = index < currentStep;
+                        const isDisabled = index > currentStep;
+
+                        return (
+                            <ConnectSdkDialogStep
+                                key={title}
+                                stepNumber={index + 1}
+                                title={title}
+                                isExpanded={expandedStep === index}
+                                isCompleted={isCompleted}
+                                isDisabled={isDisabled}
+                                onExpand={() => setExpandedStep(index)}
+                                summary={isCompleted && summary}
+                            >
+                                {content}
+                            </ConnectSdkDialogStep>
+                        );
+                    })}
                     <StyledDialogFooter>
                         <Button
                             variant='contained'

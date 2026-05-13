@@ -24,7 +24,8 @@ export const SectionHeader = styled('div')(({ theme }) => ({
 const SecondarySectionHeader = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(0.5),
     marginBottom: theme.spacing(2),
-    fontSize: theme.typography.body1.fontSize,
+    fontSize: theme.typography.body2.fontSize,
+    color: theme.palette.text.secondary,
 }));
 
 const SdkListSection = styled('div')(({ theme }) => ({

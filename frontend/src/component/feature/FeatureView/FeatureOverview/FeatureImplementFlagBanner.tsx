@@ -19,7 +19,9 @@ export const FeatureImplementFlagBanner = ({
     const { trackEvent } = usePlausibleTracker();
     const [dialogOpen, setDialogOpen] = useState(false);
 
-    const isOnboarded = project.onboardingStatus.status === 'onboarded';
+    const isOnboarded =
+        project.onboardingStatus.status === 'onboarded' ||
+        project.onboardingStatus.status === 'sdk-connected';
     const isInitialStage =
         !loading &&
         (!feature.lifecycle || feature.lifecycle.stage === 'initial');

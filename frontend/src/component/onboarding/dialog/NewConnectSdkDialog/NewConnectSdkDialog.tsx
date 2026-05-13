@@ -13,6 +13,8 @@ import { useState } from 'react';
 import { ConnectSdkDialogStep } from './ConnectSdkDialogStep';
 import type { Sdk } from '../sharedTypes';
 import { SelectSdk, SelectSdkSummary } from './SelectSdk';
+import { GenerateApiKey } from './GenerateApiKey/GenerateApiKey';
+import { GenerateApiKeySummary } from './GenerateApiKey/GenerateApiKeySummary';
 import { ConfigureSdk } from './ConfigureSdk';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
@@ -88,10 +90,10 @@ const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-const StyledDialogFooter = styled(Box)(({ theme }) => ({
+const StyledDialogFooter = styled(Box)({
     display: 'flex',
     justifyContent: 'flex-end',
-}));
+});
 
 const StyledDialogAside = styled('aside')(({ theme }) => ({
     width: theme.spacing(40),
@@ -145,11 +147,19 @@ const InnerDialog = ({
     const [expandedStep, setExpandedStep] = useState(0);
 
     const [sdk, setSdk] = useState<Sdk>();
+    const [apiKey, setApiKey] = useState<string>();
 
     const onSelectSdk = (selectedSdk: Sdk) => {
         setSdk(selectedSdk);
         setCurrentStep(1);
         setExpandedStep(1);
+    };
+
+    const onApiKeyGenerated = (apiKey: string) => setApiKey(apiKey);
+
+    const onApiKeyNext = () => {
+        setCurrentStep(2);
+        setExpandedStep(2);
     };
 
     const onSdkConnected = () => setCurrentStep(3);
@@ -160,16 +170,28 @@ const InnerDialog = ({
             content: <SelectSdk sdk={sdk} onSelect={onSelectSdk} />,
             summary: <SelectSdkSummary sdk={sdk} />,
         },
-        { title: 'Generate API key', content: 'TODO: Generate API key' },
+        {
+            title: 'Generate API key',
+            content: (
+                <GenerateApiKey
+                    projectId={projectId}
+                    sdk={sdk}
+                    environments={environments}
+                    onApiKeyGenerated={onApiKeyGenerated}
+                    onNext={onApiKeyNext}
+                />
+            ),
+            summary: <GenerateApiKeySummary apiKey={apiKey} />,
+        },
         {
             title: 'Configure the SDK',
             content: (
                 <ConfigureSdk
                     projectId={projectId}
                     sdk={sdk}
-                    apiKey='TODO: API key from state'
+                    apiKey={apiKey}
                     feature={feature}
-                    expanded={expandedStep === 2}
+                    isActive={currentStep >= 2}
                     onSdkConnected={onSdkConnected}
                 />
             ),
@@ -183,20 +205,25 @@ const InnerDialog = ({
             <DialogHeader onClose={onClose} />
             <StyledDialogBody>
                 <StyledDialogContent>
-                    {steps.map(({ title, content, summary }, index) => (
-                        <ConnectSdkDialogStep
-                            key={title}
-                            stepNumber={index + 1}
-                            title={title}
-                            isExpanded={expandedStep === index}
-                            isCompleted={index < currentStep}
-                            isDisabled={index > currentStep}
-                            onExpand={() => setExpandedStep(index)}
-                            summary={summary}
-                        >
-                            {content}
-                        </ConnectSdkDialogStep>
-                    ))}
+                    {steps.map(({ title, content, summary }, index) => {
+                        const isCompleted = index < currentStep;
+                        const isDisabled = index > currentStep;
+
+                        return (
+                            <ConnectSdkDialogStep
+                                key={title}
+                                stepNumber={index + 1}
+                                title={title}
+                                isExpanded={expandedStep === index}
+                                isCompleted={isCompleted}
+                                isDisabled={isDisabled}
+                                onExpand={() => setExpandedStep(index)}
+                                summary={isCompleted && summary}
+                            >
+                                {content}
+                            </ConnectSdkDialogStep>
+                        );
+                    })}
                     <StyledDialogFooter>
                         <Button
                             variant='contained'

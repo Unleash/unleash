@@ -23,6 +23,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
         borderRadius: theme.shape.borderRadiusLarge,
         maxWidth: theme.spacing(170),
         width: '100%',
+        height: '100%',
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',

@@ -7,13 +7,13 @@ import { GenerateApiKey } from './GenerateApiKey';
 
 const server = testServerSetup();
 
-const renderComponent = (onApiKeyGenerated = vi.fn(), onNext = vi.fn()) =>
+const renderComponent = (onApiKeyChange = vi.fn(), onNext = vi.fn()) =>
     render(
         <GenerateApiKey
             projectId='my-project'
             environments={['development', 'production']}
             sdk={{ type: 'client' }}
-            onApiKeyGenerated={onApiKeyGenerated}
+            onApiKeyChange={onApiKeyChange}
             onNext={onNext}
         />,
     );
@@ -32,7 +32,7 @@ test('shows Generate API Key button when no token exists for the environment', a
     });
 });
 
-test('calls onApiKeyGenerated with token secret when a token becomes available', async () => {
+test('calls onApiKeyChange with token secret when a token becomes available', async () => {
     testServerRoute(server, '/api/admin/projects/my-project/api-tokens', {
         tokens: [
             {
@@ -43,13 +43,41 @@ test('calls onApiKeyGenerated with token secret when a token becomes available',
         ],
     });
 
-    const onApiKeyGenerated = vi.fn();
-    renderComponent(onApiKeyGenerated);
+    const onApiKeyChange = vi.fn();
+    renderComponent(onApiKeyChange);
 
     await waitFor(() => {
-        expect(onApiKeyGenerated).toHaveBeenCalledWith(
+        expect(onApiKeyChange).toHaveBeenCalledWith(
             'my-project:development.secretxyz',
         );
+    });
+});
+
+test('calls onApiKeyChange with undefined when user switches to environment without a token', async () => {
+    testServerRoute(server, '/api/admin/projects/my-project/api-tokens', {
+        tokens: [
+            {
+                environment: 'development',
+                type: 'client',
+                secret: 'my-project:development.secretxyz',
+            },
+        ],
+    });
+
+    const onApiKeyChange = vi.fn();
+    renderComponent(onApiKeyChange);
+
+    await waitFor(() => {
+        expect(onApiKeyChange).toHaveBeenCalledWith(
+            'my-project:development.secretxyz',
+        );
+    });
+
+    await userEvent.click(screen.getByRole('combobox'));
+    await userEvent.click(screen.getByRole('option', { name: 'production' }));
+
+    await waitFor(() => {
+        expect(onApiKeyChange).toHaveBeenCalledWith(undefined);
     });
 });
 

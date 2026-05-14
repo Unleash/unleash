@@ -11,9 +11,7 @@ export const Default: Story = () => (
         projectId='my-project'
         environments={['production', 'development', 'staging']}
         sdk={{ type: 'client' }}
-        onApiKeyGenerated={(apiKey) =>
-            console.log('API key generated:', apiKey)
-        }
+        onApiKeyChange={(apiKey) => console.log('API key changed:', apiKey)}
         onNext={() => console.log('Next clicked')}
     />
 );

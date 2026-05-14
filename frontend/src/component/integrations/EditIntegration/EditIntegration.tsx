@@ -20,9 +20,7 @@ export const EditIntegration = () => {
     ) || { ...cloneDeep(DEFAULT_DATA) };
 
     const provider = findProvider(addon, providers);
-
-    // TODO: should we really mount when provider=undefined?
-    // or show error banner with "go del the config to remove it" msg ?
+    const deprecated = !provider || Boolean(provider.deprecated);
 
     return (
         <IntegrationForm
@@ -30,6 +28,7 @@ export const EditIntegration = () => {
             provider={provider}
             fetch={refetchAddons}
             addon={addon}
+            deprecated={deprecated}
         />
     );
 };

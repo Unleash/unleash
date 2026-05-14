@@ -72,6 +72,7 @@ type IntegrationFormProps = {
     fetch: () => void;
     editMode: boolean;
     addon: AddonSchema | Omit<AddonSchema, 'id'>;
+    deprecated?: boolean;
 };
 
 export const IntegrationForm: FC<IntegrationFormProps> = ({
@@ -79,6 +80,7 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
     provider,
     addon: initialValues,
     fetch,
+    deprecated,
 }) => {
     const { createAddon, updateAddon } = useAddonsApi();
     const { setToastData, setToastApiError } = useToast();
@@ -217,7 +219,6 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
     const onSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
         event.preventDefault();
         if (!provider) {
-            // TODO: should we show error banner with "go del the config to remove it" msg ?
             return;
         }
 
@@ -299,6 +300,7 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                             variant='contained'
                             permission={editMode ? UPDATE_ADDON : CREATE_ADDON}
                             onClick={onSubmit}
+                            disabled={deprecated}
                         >
                             {submitText}
                         </PermissionButton>

@@ -164,6 +164,7 @@ const EdgeVersionCard = ({
         <StyledLinkContainer>
             <Button
                 component={Link}
+                nativeButton={false}
                 to={docsUrl}
                 size='small'
                 sx={{ fontSize: '14px' }}

@@ -103,7 +103,7 @@ importers:
         version: 4.22.1
       express-rate-limit:
         specifier: ^8.4.1
-        version: 8.5.0(express@4.22.1)
+        version: 8.5.1(express@4.22.1)
       express-session:
         specifier: ^1.19.0
         version: 1.19.0
@@ -204,8 +204,8 @@ importers:
         specifier: ^15.1.3
         version: 15.1.3
       re2js:
-        specifier: 2.3.1
-        version: 2.3.1
+        specifier: 2.3.2
+        version: 2.3.2
       sanitize-filename:
         specifier: ^1.6.4
         version: 1.6.4
@@ -388,8 +388,8 @@ importers:
         specifier: ^12.1.1
         version: 12.1.1
       re2js:
-        specifier: 2.3.1
-        version: 2.3.1
+        specifier: 2.3.2
+        version: 2.3.2
       uuid:
         specifier: ^14.0.0
         version: 14.0.0
@@ -3470,8 +3470,8 @@ packages:
     resolution: {integrity: sha512-BhC+hbc5lIVjygr840n5DEkW3MQq7H9o+mc1/N7Z5uIiCFVyESLL5DIE7LNq4CYUNxy+XjA+3jRrL/h0Kt2xcg==}
     engines: {node: '>=16.9.0'}
 
-  express-rate-limit@8.5.0:
-    resolution: {integrity: sha512-XKhFohWaSBdVJNTi5TaHziqnPkv04I9UQV6q1Wy7Ui6GGQZVW12ojDFwqer14EvCXxjvPG0CyWXx7cAXpALB4Q==}
+  express-rate-limit@8.5.1:
+    resolution: {integrity: sha512-5O6KYmyJEpuPJV5hNTXKbAHWRqrzyu+OI3vUnSd2kXFubIVpG7ezpgxQy76Zo5GQZtrQBg86hF+CM/NX+cioiQ==}
     engines: {node: '>= 16'}
     peerDependencies:
       express: '>= 4.11'
@@ -5338,8 +5338,8 @@ packages:
     resolution: {integrity: sha512-KTOIcZTSOpOxbu3i0+T6mFQ6tkxXKlTxfcMFs1trQbsMnG84qNq+DjXr8Afu+FEFjvF1NNlldpC7roPyazFI8g==}
     deprecated: Accidental publish of breaking changes. Please downgrade to 1.3.3 or upgrade to the latest version.
 
-  re2js@2.3.1:
-    resolution: {integrity: sha512-gU5mI8ROXhrWXElqRzTnyN/MnnTFfddOTATd34ZTsZdRZs4g1PXLfp+thVF2AQSwiGQnDtOmNYCXRCctr2MsXw==}
+  re2js@2.3.2:
+    resolution: {integrity: sha512-Y7oXKIPeei9mNLgi0kCbFrE3w+3sybHFh8UD3hE1EKU3/eY1ODjb4EBHUnZGL2TG3rnmqCex81Cevoy3wf8wEg==}
 
   react-activity-calendar@2.7.15:
     resolution: {integrity: sha512-sPO4tDJp+sRbV8F/LhUZ/woHmi4dg0Phd+Kt1Jw0orSfGfEqGCm7fFXiTIAvuuAwpwxqPEYEnfNzOLEfUrdg1A==}
@@ -9704,7 +9704,7 @@ snapshots:
 
   expr-eval-fork@3.0.3: {}
 
-  express-rate-limit@8.5.0(express@4.22.1):
+  express-rate-limit@8.5.1(express@4.22.1):
     dependencies:
       express: 4.22.1
       ip-address: 10.2.0
@@ -11698,7 +11698,7 @@ snapshots:
 
   re2js@1.4.0: {}
 
-  re2js@2.3.1: {}
+  re2js@2.3.2: {}
 
   react-activity-calendar@2.7.15(react@19.2.6):
     dependencies:

@@ -47,6 +47,7 @@ const EditControls = ({
                 environmentId={environmentName}
                 projectId={projectId}
                 component={Link}
+                nativeButton={false}
                 onClick={() => {
                     if (scope === 'milestone') {
                         trackEvent('edit-milestone-strategy', {

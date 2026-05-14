@@ -156,6 +156,7 @@ export const SplashPageOperators = () => {
                             })}
                             variant='contained'
                             component={Link}
+                            nativeButton={false}
                             to='/'
                         >
                             Fine, whatever, I have work to do!

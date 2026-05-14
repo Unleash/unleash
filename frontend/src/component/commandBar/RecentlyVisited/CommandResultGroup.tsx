@@ -76,6 +76,7 @@ export const RecentlyVisitedPathButton = ({
             key={keyName}
             dense={true}
             component={Link}
+            nativeButton={false}
             to={path}
             sx={listItemButtonStyle}
             onClick={onItemClick}
@@ -122,6 +123,7 @@ export const RecentlyVisitedProjectButton = ({
             key={keyName}
             dense={true}
             component={Link}
+            nativeButton={false}
             to={`/projects/${projectId}`}
             sx={listItemButtonStyle}
             onClick={onItemClick}
@@ -165,6 +167,7 @@ export const RecentlyVisitedFeatureButton = ({
             key={keyName}
             dense={true}
             component={Link}
+            nativeButton={false}
             to={`/projects/${projectId}/features/${featureId}`}
             sx={listItemButtonStyle}
             onClick={onItemClick}
@@ -230,6 +233,7 @@ export const CommandResultGroup = ({
                         key={`command-result-group-${groupName}-${index}`}
                         dense={true}
                         component={Link}
+                        nativeButton={false}
                         onClick={(e) => {
                             e.stopPropagation();
                             onItemClick(item);

@@ -98,6 +98,7 @@ export const SdkExample = () => {
                         to={`${repositoryUrl}/${selectedSdk}`}
                         target='_blank'
                         component={Link}
+                        nativeButton={false}
                         variant='text'
                         color='primary'
                         onClick={trackClick}

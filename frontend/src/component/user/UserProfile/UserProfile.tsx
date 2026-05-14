@@ -51,6 +51,7 @@ const UserProfile = ({ profile }: IUserProfileProps) => {
                     aria-controls={showProfile ? modalId : undefined}
                     aria-expanded={showProfile}
                     onClick={() => setShowProfile((prev) => !prev)}
+                    nativeButton={false}
                 >
                     <StyledUserAvatar
                         user={profile}

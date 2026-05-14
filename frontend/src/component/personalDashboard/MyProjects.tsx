@@ -112,6 +112,7 @@ const ProjectListItem: FC<{
                     <StyledCardTitle>{project.name}</StyledCardTitle>
                     <IconButton
                         component={Link}
+                        nativeButton={false}
                         to={`/projects/${project.id}`}
                         size='small'
                         sx={{ ml: 'auto' }}

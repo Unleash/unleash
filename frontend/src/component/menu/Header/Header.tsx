@@ -148,6 +148,7 @@ const Header = () => {
                         <Tooltip title='Documentation' arrow>
                             <StyledIconButton
                                 component='a'
+                                nativeButton={false}
                                 href='https://docs.getunleash.io/'
                                 target='_blank'
                                 rel='noopener noreferrer'

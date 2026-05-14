@@ -114,6 +114,7 @@ export const SuccessView = ({ metricName }: SuccessViewProps) => {
             </TextContent>
             <Button
                 component={Link}
+                nativeButton={false}
                 target='_blank'
                 rel='noopener noreferrer'
                 variant='contained'

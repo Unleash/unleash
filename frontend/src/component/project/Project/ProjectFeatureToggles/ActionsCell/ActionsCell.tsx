@@ -146,6 +146,7 @@ export const ActionsCell: FC<IActionsCellProps> = ({
                                 onClick={handleClose}
                                 disabled={!hasAccess}
                                 component={RouterLink}
+                                nativeButton={false}
                                 to={`/projects/${projectId}/features/${featureId}/copy`}
                             >
                                 <ListItemIcon>

@@ -98,6 +98,7 @@ export const FeatureToggleListActions: FC<IFeatureFlagListActions> = ({
                         {({ hasAccess }) => (
                             <MenuItem
                                 component={Link}
+                                nativeButton={false}
                                 disabled={!hasAccess}
                                 to={createFeature!.path}
                                 onClick={() => {

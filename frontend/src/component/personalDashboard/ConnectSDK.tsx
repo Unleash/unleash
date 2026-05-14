@@ -82,6 +82,7 @@ export const ExistingFlag: FC<{ project: string }> = ({ project }) => {
             <div>
                 <Button
                     component={Link}
+                    nativeButton={false}
                     to={`/projects/${project}`}
                     variant='contained'
                 >
@@ -113,6 +114,7 @@ export const ConnectSDK: FC<{ project: string }> = ({ project }) => {
             <div>
                 <Button
                     component={Link}
+                    nativeButton={false}
                     to={`/projects/${project}`}
                     variant='contained'
                 >

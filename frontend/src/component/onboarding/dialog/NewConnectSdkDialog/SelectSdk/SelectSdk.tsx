@@ -1,13 +1,13 @@
-import { Avatar, Box, Button, styled } from '@mui/material';
+import { Box, Button, styled } from '@mui/material';
+import { SdkLogo } from './SdkLogo';
 import { formatAssetPath } from 'utils/formatPath';
 import {
-    allSdks,
     clientSdks,
     type Sdk,
     type SdkName,
     type SdkType,
     serverSdks,
-} from '../sharedTypes.ts';
+} from '../../sharedTypes.ts';
 
 const SpacedContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -64,17 +64,6 @@ const SelectLabel = styled('span')(({ theme }) => ({
     fontWeight: 700,
 }));
 
-const StyledAvatar = styled(Avatar)(({ theme }) => ({
-    width: theme.spacing(3),
-    height: theme.spacing(3),
-}));
-
-const StyledSummary = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-}));
-
 interface ISdkListProps {
     sdks: { name: SdkName; icon: string }[];
     type: SdkType;
@@ -93,7 +82,7 @@ const SdkList = ({ sdks, type, selectedSdkName, onSelect }: ISdkListProps) => (
                     variant='text'
                     isSelected={isSelected}
                 >
-                    <StyledAvatar src={formatAssetPath(sdk.icon)} alt='' />
+                    <SdkLogo src={formatAssetPath(sdk.icon)} alt='' />
                     <SdkTileContent>
                         <b>{sdk.name}</b>
                         <SelectLabel>
@@ -139,21 +128,5 @@ export const SelectSdk = ({ onSelect, sdk }: ISelectSdkProps) => {
                 />
             </Box>
         </SpacedContainer>
-    );
-};
-
-interface ISelectSdkSummaryProps {
-    sdk?: Sdk;
-}
-export const SelectSdkSummary = ({ sdk }: ISelectSdkSummaryProps) => {
-    if (!sdk) return null;
-
-    const sdkIcon = allSdks.find((item) => item.name === sdk.name)?.icon;
-
-    return (
-        <StyledSummary>
-            {sdkIcon && <StyledAvatar src={formatAssetPath(sdkIcon)} alt='' />}
-            {sdk.name}
-        </StyledSummary>
     );
 };

@@ -25,7 +25,16 @@ import {
 } from '@mui/material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
-import { useEffect, useState, type ReactNode } from 'react';
+import {
+    useEffect,
+    useState,
+    type ReactNode,
+    type HTMLAttributes,
+} from 'react';
+
+const FragmentWithClassName = ({ children }: HTMLAttributes<never>) => (
+    <>{children}</>
+);
 import ProjectFlags from './ProjectFlags.tsx';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -337,7 +346,7 @@ export const Project = () => {
                                         tab.isEnterprise ? 'end' : undefined
                                     }
                                     icon={
-                                        <>
+                                        <FragmentWithClassName>
                                             <ConditionallyRender
                                                 condition={Boolean(tab.new)}
                                                 show={
@@ -353,7 +362,7 @@ export const Project = () => {
                                                 isPro() &&
                                                 enterpriseIcon) ||
                                                 undefined}
-                                        </>
+                                        </FragmentWithClassName>
                                     }
                                 />
                             );

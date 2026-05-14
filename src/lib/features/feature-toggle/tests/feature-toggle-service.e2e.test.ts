@@ -15,6 +15,7 @@ import {
     SYSTEM_USER_AUDIT,
     TEST_AUDIT_USER,
     ADMIN_TOKEN_USER,
+    ADMIN,
 } from '../../../types/index.js';
 import EnvironmentService from '../../project-environments/environment-service.js';
 import {
@@ -363,7 +364,7 @@ test('cloning a feature flag copies variant environments correctly', async () =>
         clonedFlagName,
         SYSTEM_USER_AUDIT,
         true,
-        ADMIN_TOKEN_USER,
+        { ...ADMIN_TOKEN_USER, permissions: [ADMIN], isAPI: true },
     );
 
     const clonedFlag =
@@ -454,7 +455,7 @@ test('Cloning a feature flag also clones segments correctly', async () => {
         clonedFeatureName,
         TEST_AUDIT_USER,
         true,
-        ADMIN_TOKEN_USER,
+        { ...ADMIN_TOKEN_USER, permissions: [ADMIN], isAPI: true },
     );
 
     const feature = await service.getFeature({

@@ -327,7 +327,7 @@ exports[`should render DrawerMenu 1`] = `
                         class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
-                          href="https://docs.getunleash.io/sdks/ios-proxy"
+                          href="https://docs.getunleash.io/sdks/ios"
                           rel="noreferrer"
                           target="_blank"
                         >
@@ -346,7 +346,7 @@ exports[`should render DrawerMenu 1`] = `
                         class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
-                          href="https://docs.getunleash.io/sdks/android-proxy"
+                          href="https://docs.getunleash.io/sdks/android"
                           rel="noreferrer"
                           target="_blank"
                         >
@@ -829,7 +829,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                         class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
-                          href="https://docs.getunleash.io/sdks/ios-proxy"
+                          href="https://docs.getunleash.io/sdks/ios"
                           rel="noreferrer"
                           target="_blank"
                         >
@@ -848,7 +848,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                         class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
-                          href="https://docs.getunleash.io/sdks/android-proxy"
+                          href="https://docs.getunleash.io/sdks/android"
                           rel="noreferrer"
                           target="_blank"
                         >

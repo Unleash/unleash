@@ -31,7 +31,7 @@ class TelemetryController extends Controller {
                     tags: ['Telemetry'],
                     summary: 'Get telemetry settings',
                     description:
-                        'Provides the configured settings for [telemetry information collection](https://docs.getunleash.io/topics/data-collection)',
+                        'Provides the configured settings for [telemetry information collection](https://docs.getunleash.io/privacy-and-compliance/data-privacy)',
                     operationId: 'getTelemetrySettings',
                     responses: {
                         200: createResponseSchema('telemetrySettingsSchema'),

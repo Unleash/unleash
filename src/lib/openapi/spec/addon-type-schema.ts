@@ -26,7 +26,7 @@ export const addonTypeSchema = {
             type: 'string',
             description:
                 'A URL to where you can find more information about using this addon type.',
-            example: 'https://docs.getunleash.io/docs/addons/slack',
+            example: 'https://docs.getunleash.io/integrate/slack-app',
         },
         description: {
             type: 'string',

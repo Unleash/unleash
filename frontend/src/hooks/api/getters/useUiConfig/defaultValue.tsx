@@ -17,7 +17,7 @@ export const defaultValue: IUiConfig = {
         {
             value: 'Documentation',
             icon: 'library_books',
-            href: 'https://docs.getunleash.io/docs?source=oss',
+            href: 'https://docs.getunleash.io/?source=oss',
             title: 'User documentation',
         },
         {

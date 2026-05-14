@@ -3,6 +3,11 @@ import { ConnectSdkDialog } from 'component/onboarding/dialog/ConnectSdkDialog';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { FeatureFlagSetupBannerCard } from './FeatureFlagSetupBannerCard.tsx';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import {
+    UPDATE_PROJECT,
+    CREATE_PROJECT_API_TOKEN,
+} from 'component/providers/AccessProvider/permissions';
 
 interface FeatureConnectSdkBannerProps {
     projectId: string;
@@ -39,9 +44,17 @@ export const FeatureConnectSdkBanner = ({
             <FeatureFlagSetupBannerCard
                 title='Connect SDK'
                 description='You must connect an SDK to the project before you can implement this flag in your code.'
-                buttonLabel='Connect SDK'
-                onButtonClick={onConnectSdkClick}
-            />
+            >
+                <PermissionButton
+                    variant='contained'
+                    onClick={onConnectSdkClick}
+                    permission={[UPDATE_PROJECT, CREATE_PROJECT_API_TOKEN]}
+                    projectId={projectId}
+                    sx={{ alignSelf: 'auto' }}
+                >
+                    Connect SDK
+                </PermissionButton>
+            </FeatureFlagSetupBannerCard>
             <ConnectSdkDialog
                 open={connectSdkOpen}
                 onClose={() => setConnectSdkOpen(false)}

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Button } from '@mui/material';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
@@ -44,9 +45,11 @@ export const FeatureImplementFlagBanner = ({
                 <FeatureFlagSetupBannerCard
                     title='Implement your flag'
                     description='Waiting for flag evaluations. Wrap your feature logic in a flag evaluation to get set up.'
-                    buttonLabel='Wrap your code'
-                    onButtonClick={onImplementClick}
-                />
+                >
+                    <Button variant='contained' onClick={onImplementClick}>
+                        Wrap your code
+                    </Button>
+                </FeatureFlagSetupBannerCard>
             )}
             <ImplementFlagDialog
                 open={dialogOpen}

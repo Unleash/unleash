@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Button, styled, Typography } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 import CodeIcon from '@mui/icons-material/Code';
 
 const BannerCard = styled('div')(({ theme }) => ({
@@ -61,15 +61,13 @@ const PendingDot = styled('span')(({ theme }) => ({
 interface FeatureFlagSetupBannerCardProps {
     title: string;
     description: ReactNode;
-    buttonLabel: string;
-    onButtonClick: () => void;
+    children: ReactNode;
 }
 
 export const FeatureFlagSetupBannerCard = ({
     title,
     description,
-    buttonLabel,
-    onButtonClick,
+    children,
 }: FeatureFlagSetupBannerCardProps) => (
     <BannerCard>
         <IconBox>
@@ -108,9 +106,7 @@ export const FeatureFlagSetupBannerCard = ({
                     {description}
                 </Typography>
             </TextContainer>
-            <Button variant='contained' onClick={onButtonClick}>
-                {buttonLabel}
-            </Button>
+            {children}
         </ContentRow>
     </BannerCard>
 );

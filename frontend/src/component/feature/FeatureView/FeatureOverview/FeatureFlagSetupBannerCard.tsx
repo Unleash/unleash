@@ -1,11 +1,6 @@
 import type { ReactNode } from 'react';
 import { styled, Typography } from '@mui/material';
 import CodeIcon from '@mui/icons-material/Code';
-import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import {
-    UPDATE_PROJECT,
-    CREATE_PROJECT_API_TOKEN,
-} from 'component/providers/AccessProvider/permissions';
 
 const BannerCard = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -66,17 +61,13 @@ const PendingDot = styled('span')(({ theme }) => ({
 interface FeatureFlagSetupBannerCardProps {
     title: string;
     description: ReactNode;
-    buttonLabel: string;
-    onButtonClick: () => void;
-    projectId: string;
+    children: ReactNode;
 }
 
 export const FeatureFlagSetupBannerCard = ({
     title,
     description,
-    buttonLabel,
-    onButtonClick,
-    projectId,
+    children,
 }: FeatureFlagSetupBannerCardProps) => (
     <BannerCard>
         <IconBox>
@@ -115,15 +106,7 @@ export const FeatureFlagSetupBannerCard = ({
                     {description}
                 </Typography>
             </TextContainer>
-            <PermissionButton
-                variant='contained'
-                onClick={onButtonClick}
-                permission={[UPDATE_PROJECT, CREATE_PROJECT_API_TOKEN]}
-                projectId={projectId}
-                sx={{ alignSelf: 'auto' }}
-            >
-                {buttonLabel}
-            </PermissionButton>
+            {children}
         </ContentRow>
     </BannerCard>
 );

@@ -223,7 +223,18 @@ const InnerDialog = ({
                                 isExpanded={expandedStep === index}
                                 isCompleted={isCompleted}
                                 isDisabled={isDisabled}
-                                onExpand={() => setExpandedStep(index)}
+                                onExpand={() => {
+                                    const nextStep = index + 1;
+                                    if (
+                                        expandedStep === index &&
+                                        nextStep < steps.length &&
+                                        nextStep <= currentStep
+                                    ) {
+                                        setExpandedStep(nextStep);
+                                    } else {
+                                        setExpandedStep(index);
+                                    }
+                                }}
                                 summary={isCompleted && summary}
                             >
                                 {content}

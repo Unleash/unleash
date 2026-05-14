@@ -62,7 +62,7 @@ export interface IGenerateApiKeyProps {
     projectId: string;
     environments: string[];
     sdk?: Pick<Sdk, 'type'>;
-    onApiKeyChange: (apiKey: string | undefined) => void;
+    onApiKeyChange: (apiKey?: string) => void;
     onNext: () => void;
 }
 

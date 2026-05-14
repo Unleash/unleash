@@ -156,7 +156,7 @@ const InnerDialog = ({
         setExpandedStep(1);
     };
 
-    const onApiKeyChange = (apiKey: string | undefined) => setApiKey(apiKey);
+    const onApiKeyChange = (apiKey?: string) => setApiKey(apiKey);
 
     const onApiKeyNext = () => {
         setCurrentStep(2);

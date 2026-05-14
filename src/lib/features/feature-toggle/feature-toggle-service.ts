@@ -1377,7 +1377,7 @@ export class FeatureToggleService {
         newFeatureName: string,
         auditUser: IAuditUser,
         replaceGroupId: boolean = true,
-        user?: IUser,
+        user: IUser,
     ): Promise<FeatureToggle> {
         const changeRequestEnabled =
             await this.changeRequestAccessReadModel.isChangeRequestsEnabledForProject(
@@ -1459,12 +1459,8 @@ export class FeatureToggleService {
     private async validateCloneFeaturePermissions(
         projectId: string,
         environments: FeatureToggleWithEnvironment['environments'],
-        user?: IUser,
+        user: IUser,
     ): Promise<void> {
-        if (!user) {
-            return;
-        }
-
         for (const environment of environments) {
             if (
                 environment.strategies.length > 0 &&

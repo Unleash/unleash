@@ -14,6 +14,7 @@ import {
     SKIP_CHANGE_REQUEST,
     SYSTEM_USER_AUDIT,
     TEST_AUDIT_USER,
+    ADMIN_TOKEN_USER,
 } from '../../../types/index.js';
 import EnvironmentService from '../../project-environments/environment-service.js';
 import {
@@ -362,6 +363,7 @@ test('cloning a feature flag copies variant environments correctly', async () =>
         clonedFlagName,
         SYSTEM_USER_AUDIT,
         true,
+        ADMIN_TOKEN_USER,
     );
 
     const clonedFlag =
@@ -390,6 +392,7 @@ test('cloning a feature flag not allowed for change requests enabled', async () 
             'clonedFlagName',
             SYSTEM_USER_AUDIT,
             true,
+            ADMIN_TOKEN_USER,
         ),
     ).rejects.errorWithMessage(
         new ForbiddenError(
@@ -451,6 +454,7 @@ test('Cloning a feature flag also clones segments correctly', async () => {
         clonedFeatureName,
         TEST_AUDIT_USER,
         true,
+        ADMIN_TOKEN_USER,
     );
 
     const feature = await service.getFeature({

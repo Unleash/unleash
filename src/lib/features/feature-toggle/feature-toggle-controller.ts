@@ -660,6 +660,7 @@ export default class ProjectFeaturesController extends Controller {
                         name,
                         req.audit,
                         replaceGroupId,
+                        req.user,
                     ),
             );
 

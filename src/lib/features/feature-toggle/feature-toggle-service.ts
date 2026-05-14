@@ -47,6 +47,7 @@ import {
     type StrategyIds,
     SYSTEM_USER_AUDIT,
     type Unsaved,
+    UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
     WeightType,
 } from '../../types/index.js';
 import type { Logger } from '../../logger.js';
@@ -1376,6 +1377,7 @@ export class FeatureToggleService {
         newFeatureName: string,
         auditUser: IAuditUser,
         replaceGroupId: boolean = true,
+        user?: IUser,
     ): Promise<FeatureToggle> {
         const changeRequestEnabled =
             await this.changeRequestAccessReadModel.isChangeRequestsEnabledForProject(
@@ -1395,6 +1397,11 @@ export class FeatureToggleService {
             await this.featureStrategiesStore.getFeatureToggleWithVariantEnvs(
                 featureName,
             );
+        await this.validateCloneFeaturePermissions(
+            projectId,
+            cToggle.environments,
+            user,
+        );
 
         const newToggle = {
             ...cToggle,
@@ -1447,6 +1454,48 @@ export class FeatureToggleService {
         ]);
 
         return created;
+    }
+
+    private async validateCloneFeaturePermissions(
+        projectId: string,
+        environments: FeatureToggleWithEnvironment['environments'],
+        user?: IUser,
+    ): Promise<void> {
+        if (!user) {
+            return;
+        }
+
+        for (const environment of environments) {
+            if (
+                environment.strategies.length > 0 &&
+                !(await this.accessService.hasPermission(
+                    user,
+                    CREATE_FEATURE_STRATEGY,
+                    projectId,
+                    environment.name,
+                ))
+            ) {
+                throw new PermissionError(
+                    CREATE_FEATURE_STRATEGY,
+                    environment.name,
+                );
+            }
+
+            if (
+                environment.variants.length > 0 &&
+                !(await this.accessService.hasPermission(
+                    user,
+                    UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
+                    projectId,
+                    environment.name,
+                ))
+            ) {
+                throw new PermissionError(
+                    UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
+                    environment.name,
+                );
+            }
+        }
     }
 
     async updateFeatureToggle(

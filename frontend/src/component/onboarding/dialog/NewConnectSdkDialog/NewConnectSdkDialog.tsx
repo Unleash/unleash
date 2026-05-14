@@ -206,6 +206,19 @@ const InnerDialog = ({
 
     const complete = currentStep >= steps.length && sdk;
 
+    const handleStepExpand = (stepIndex: number) => {
+        const nextStep = stepIndex + 1;
+        if (
+            expandedStep === stepIndex &&
+            nextStep < steps.length &&
+            nextStep <= currentStep
+        ) {
+            setExpandedStep(nextStep);
+        } else if (expandedStep !== stepIndex) {
+            setExpandedStep(stepIndex);
+        }
+    };
+
     return (
         <StyledDialog open onClose={onClose}>
             <DialogHeader onClose={onClose} />
@@ -223,7 +236,7 @@ const InnerDialog = ({
                                 isExpanded={expandedStep === index}
                                 isCompleted={isCompleted}
                                 isDisabled={isDisabled}
-                                onExpand={() => setExpandedStep(index)}
+                                onExpand={() => handleStepExpand(index)}
                                 summary={isCompleted && summary}
                             >
                                 {content}

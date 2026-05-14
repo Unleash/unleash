@@ -20,7 +20,7 @@ export const addonTypeSchema = {
             type: 'string',
             description:
                 "The addon type's name as it should be displayed in the admin UI.",
-            example: 'Slack',
+            example: 'App for Slack',
         },
         documentationUrl: {
             type: 'string',
@@ -31,7 +31,8 @@ export const addonTypeSchema = {
         description: {
             type: 'string',
             description: 'A description of the addon type.',
-            example: 'Allows Unleash to post updates to Slack.',
+            example:
+                'The Unleash App for Slack posts messages to the selected channels in your Slack workspace.',
         },
         howTo: {
             type: 'string',
@@ -43,7 +44,14 @@ export const addonTypeSchema = {
         tagTypes: {
             type: 'array',
             description: `A list of [Unleash tag types](https://docs.getunleash.io/concepts/feature-flags#tags) that this addon uses. These tags will be added to the Unleash instance when an addon of this type is created.`,
-            example: [],
+            example: [
+                {
+                    name: 'slack',
+                    description:
+                        'Slack tag used by the slack-addon to specify the slack channel.',
+                    icon: 'S',
+                },
+            ],
             items: {
                 $ref: '#/components/schemas/tagTypeSchema',
             },
@@ -58,7 +66,7 @@ export const addonTypeSchema = {
             example: [
                 {
                     name: 'url',
-                    displayName: 'Slack webhook URL',
+                    displayName: 'Slack App URL',
                     description: '(Required)',
                     type: 'url',
                     required: true,

@@ -50,6 +50,7 @@ export const FeatureConnectSdkBanner = ({
                     onClick={onConnectSdkClick}
                     permission={[UPDATE_PROJECT, CREATE_PROJECT_API_TOKEN]}
                     projectId={projectId}
+                    sx={{ alignSelf: 'auto' }}
                 >
                     Connect SDK
                 </PermissionButton>

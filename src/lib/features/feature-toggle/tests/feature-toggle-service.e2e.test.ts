@@ -363,8 +363,8 @@ test('cloning a feature flag copies variant environments correctly', async () =>
         'default',
         clonedFlagName,
         SYSTEM_USER_AUDIT,
-        true,
         { ...ADMIN_TOKEN_USER, permissions: [ADMIN], isAPI: true },
+        true,
     );
 
     const clonedFlag =
@@ -392,8 +392,8 @@ test('cloning a feature flag not allowed for change requests enabled', async () 
             'default',
             'clonedFlagName',
             SYSTEM_USER_AUDIT,
+            { ...ADMIN_TOKEN_USER, permissions: [ADMIN], isAPI: true },
             true,
-            ADMIN_TOKEN_USER,
         ),
     ).rejects.errorWithMessage(
         new ForbiddenError(
@@ -454,8 +454,8 @@ test('Cloning a feature flag also clones segments correctly', async () => {
         'default',
         clonedFeatureName,
         TEST_AUDIT_USER,
-        true,
         { ...ADMIN_TOKEN_USER, permissions: [ADMIN], isAPI: true },
+        true,
     );
 
     const feature = await service.getFeature({

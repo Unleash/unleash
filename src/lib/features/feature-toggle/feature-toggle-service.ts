@@ -1376,8 +1376,8 @@ export class FeatureToggleService {
         projectId: string,
         newFeatureName: string,
         auditUser: IAuditUser,
-        replaceGroupId: boolean = true,
         user: IUser,
+        replaceGroupId: boolean = true,
     ): Promise<FeatureToggle> {
         const changeRequestEnabled =
             await this.changeRequestAccessReadModel.isChangeRequestsEnabledForProject(

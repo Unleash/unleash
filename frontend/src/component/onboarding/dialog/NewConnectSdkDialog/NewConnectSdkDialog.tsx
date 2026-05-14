@@ -156,7 +156,12 @@ const InnerDialog = ({
         setExpandedStep(1);
     };
 
-    const onApiKeyGenerated = (apiKey: string) => setApiKey(apiKey);
+    const onApiKeyChange = (apiKey?: string) => {
+        if (!apiKey) {
+            setCurrentStep(1);
+        }
+        setApiKey(apiKey);
+    };
 
     const onApiKeyNext = () => {
         setCurrentStep(2);
@@ -178,7 +183,7 @@ const InnerDialog = ({
                     projectId={projectId}
                     sdk={sdk}
                     environments={environments}
-                    onApiKeyGenerated={onApiKeyGenerated}
+                    onApiKeyChange={onApiKeyChange}
                     onNext={onApiKeyNext}
                 />
             ),

@@ -2,6 +2,137 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.6.4] - 2026-05-14
+
+### Bug Fixes
+
+- Compact impact metrics chart formatting ([#11830](https://github.com/Unleash/unleash/issues/11830))
+
+- Update copilot assigner
+
+- Move to copolot for flag cleanup PRs
+
+- Ai-cleanup trgger on issue created
+
+- Consolidated release plan changes don't leave empty boxes (plus border fixing) ([#11857](https://github.com/Unleash/unleash/issues/11857))
+
+- Internal imports ([#11887](https://github.com/Unleash/unleash/issues/11887))
+
+- Address long usernames on `Flag details view` ([#11885](https://github.com/Unleash/unleash/issues/11885))
+
+- Set the width of the 'Name' column to max on the Flags overview ([#11884](https://github.com/Unleash/unleash/issues/11884))
+
+- Revision id calculation for segments ([#11861](https://github.com/Unleash/unleash/issues/11861))
+
+- Address React warnings surfaced by frontend test run ([#11897](https://github.com/Unleash/unleash/issues/11897))
+
+- Restore vite-tsconfig-paths for baseUrl resolution ([#11917](https://github.com/Unleash/unleash/issues/11917))
+
+- Update dependency normalize-url to v9 ([#11876](https://github.com/Unleash/unleash/issues/11876))
+
+- Set `userWithId` to deprecated strategies ([#11896](https://github.com/Unleash/unleash/issues/11896))
+
+- Demo auth center alignment ([#11931](https://github.com/Unleash/unleash/issues/11931))
+
+
+### Features
+
+- Sidebar content ([#11828](https://github.com/Unleash/unleash/issues/11828))
+
+- Add implement flag banner on feature flag overview ([#11833](https://github.com/Unleash/unleash/issues/11833))
+
+- Automatically infer multi chart setup ([#11839](https://github.com/Unleash/unleash/issues/11839))
+
+- Check newly created metric is available in `SuccessView` ([#11856](https://github.com/Unleash/unleash/issues/11856))
+
+- Wire implement flag dialog to live metrics ([#11865](https://github.com/Unleash/unleash/issues/11865))
+
+- Add remote MCP menu in the admin section ([#11869](https://github.com/Unleash/unleash/issues/11869))
+
+- Track flag setup banner clicks with plausible ([#11871](https://github.com/Unleash/unleash/issues/11871))
+
+- Gate implement flag banner on lifecycle stage ([#11886](https://github.com/Unleash/unleash/issues/11886))
+
+- Add remote MCP server settings updated event ([#11889](https://github.com/Unleash/unleash/issues/11889))
+
+- Add external impact metrics source schemas and remote mcp setting schemas ([#11929](https://github.com/Unleash/unleash/issues/11929))
+
+- Implement Remote MCP settings toggle calling actual backend api ([#11909](https://github.com/Unleash/unleash/issues/11909))
+
+- Gate project onboarding behind onboardingProjectSetupNewSteps flag ([#11932](https://github.com/Unleash/unleash/issues/11932))
+
+- Impact metrics admin ui stub ([#11934](https://github.com/Unleash/unleash/issues/11934))
+
+
+### Miscellaneous Tasks
+
+- Update success screen and tracking for impact metric registration ([#11829](https://github.com/Unleash/unleash/issues/11829))
+
+- Small success view fixes ([#11835](https://github.com/Unleash/unleash/issues/11835))
+
+- Remove the success sidebar ([#11836](https://github.com/Unleash/unleash/issues/11836))
+
+- Show toast on submit error ([#11840](https://github.com/Unleash/unleash/issues/11840))
+
+- Let radio focus-visible indicator bloom ([#11842](https://github.com/Unleash/unleash/issues/11842))
+
+- Make impossible states impossible ~ `RegisterMetricDialog` edition ~ ([#11843](https://github.com/Unleash/unleash/issues/11843))
+
+- Don't highlight the radio label on use ([#11841](https://github.com/Unleash/unleash/issues/11841))
+
+- Add action to assign copilot issues
+
+- Add tracking to register impact metric flow ([#11834](https://github.com/Unleash/unleash/issues/11834))
+
+- Add new success screen ([#11845](https://github.com/Unleash/unleash/issues/11845))
+
+- Remove pendingUserAccessRequest flag ([#11844](https://github.com/Unleash/unleash/issues/11844))
+
+- Add entry point to registerImpactMetric form_opened counter ([#11858](https://github.com/Unleash/unleash/issues/11858))
+
+- Add register impact metric dialog tests ([#11859](https://github.com/Unleash/unleash/issues/11859))
+
+- Clean up completed `filterFavorites` feature flag ([#11852](https://github.com/Unleash/unleash/issues/11852))
+
+- Enforce naming conventions for metrics ([#11864](https://github.com/Unleash/unleash/issues/11864))
+
+- Remove signupDialog feature flag ([#11866](https://github.com/Unleash/unleash/issues/11866))
+
+- Add `elasticEventSync` feature flag ([#11870](https://github.com/Unleash/unleash/issues/11870))
+
+- Add setting service composition root to exports ([#11895](https://github.com/Unleash/unleash/issues/11895))
+
+- Update front end to vite 8 and related upgrades ([#11766](https://github.com/Unleash/unleash/issues/11766))
+
+- Fix typo ([#11915](https://github.com/Unleash/unleash/issues/11915))
+
+- Self service external impact metrics flag ([#11918](https://github.com/Unleash/unleash/issues/11918))
+
+- New feature flag onboardingProjectSetupNewSteps ([#11919](https://github.com/Unleash/unleash/issues/11919))
+
+- GetOnboardingStatusForProject add new onboarding status ([#11921](https://github.com/Unleash/unleash/issues/11921))
+
+- Bump MUI to v6 + migrate to Grid v2 ([#11899](https://github.com/Unleash/unleash/issues/11899))
+
+- Lint new files by default with useExhaustiveDependencies ([#11933](https://github.com/Unleash/unleash/issues/11933))
+
+- Update vite-node and vitest to bump vite version ([#11930](https://github.com/Unleash/unleash/issues/11930))
+
+
+### Refactor
+
+- Extract shared Card and ExternalLink styles for register metric dialog ([#11837](https://github.com/Unleash/unleash/issues/11837))
+
+- Move settings to feature oriented structure ([#11893](https://github.com/Unleash/unleash/issues/11893))
+
+- Setting service composition root ([#11894](https://github.com/Unleash/unleash/issues/11894))
+
+
+### Testing
+
+- Cover implement flag banner happy-path render ([#11888](https://github.com/Unleash/unleash/issues/11888))
+
+
 ## [7.6.3] - 2026-04-15
 
 ### Features

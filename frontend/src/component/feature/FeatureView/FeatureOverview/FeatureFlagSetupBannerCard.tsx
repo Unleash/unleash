@@ -1,6 +1,11 @@
 import type { ReactNode } from 'react';
-import { Button, styled, Typography } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 import CodeIcon from '@mui/icons-material/Code';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import {
+    UPDATE_PROJECT,
+    CREATE_PROJECT_API_TOKEN,
+} from 'component/providers/AccessProvider/permissions';
 
 const BannerCard = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -63,6 +68,7 @@ interface FeatureFlagSetupBannerCardProps {
     description: ReactNode;
     buttonLabel: string;
     onButtonClick: () => void;
+    projectId: string;
 }
 
 export const FeatureFlagSetupBannerCard = ({
@@ -70,6 +76,7 @@ export const FeatureFlagSetupBannerCard = ({
     description,
     buttonLabel,
     onButtonClick,
+    projectId,
 }: FeatureFlagSetupBannerCardProps) => (
     <BannerCard>
         <IconBox>
@@ -108,9 +115,15 @@ export const FeatureFlagSetupBannerCard = ({
                     {description}
                 </Typography>
             </TextContainer>
-            <Button variant='contained' onClick={onButtonClick}>
+            <PermissionButton
+                variant='contained'
+                onClick={onButtonClick}
+                permission={[UPDATE_PROJECT, CREATE_PROJECT_API_TOKEN]}
+                projectId={projectId}
+                sx={{ alignSelf: 'auto' }}
+            >
                 {buttonLabel}
-            </Button>
+            </PermissionButton>
         </ContentRow>
     </BannerCard>
 );

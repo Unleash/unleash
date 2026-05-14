@@ -41,6 +41,7 @@ export const FeatureConnectSdkBanner = ({
                 description='You must connect an SDK to the project before you can implement this flag in your code.'
                 buttonLabel='Connect SDK'
                 onButtonClick={onConnectSdkClick}
+                projectId={projectId}
             />
             <ConnectSdkDialog
                 open={connectSdkOpen}

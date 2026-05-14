@@ -37,16 +37,14 @@ const renderNoResults = (query: string | null | undefined) => {
     }
     return (
         <InfoMessage>
-            You don't have have any connected applications. To connect your
+            You don't have any connected applications. To connect your
             application to Unleash you will require a{' '}
             <Link href='https://docs.getunleash.io/sdks/'>Client SDK</Link>
             .
             <br />
             You can read more about how to use Unleash in your application in
             the{' '}
-            <Link href='https://docs.getunleash.io/sdks/'>
-                documentation.
-            </Link>
+            <Link href='https://docs.getunleash.io/sdks/'>documentation.</Link>
         </InfoMessage>
     );
 };

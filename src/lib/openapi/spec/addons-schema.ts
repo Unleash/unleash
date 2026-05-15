@@ -31,7 +31,7 @@ export const addonsSchema = {
                     description:
                         'A Webhook is a generic way to post messages from Unleash to third party services.',
                     documentationUrl:
-                        'https://docs.getunleash.io/docs/addons/webhook',
+                        'https://docs.getunleash.io/integrate/webhook',
                     parameters: [
                         {
                             name: 'url',
@@ -72,7 +72,7 @@ export const addonsSchema = {
   "timestamp": "{{event.data.createdAt}}"
 }`,
                             description:
-                                "(Optional) You may format the body using a mustache template. If you don't specify anything, the format will similar to the events format (https://docs.getunleash.io/api/events)",
+                                "(Optional) You may format the body using a mustache template. If you don't specify anything, the format will be similar to the events format (https://docs.getunleash.io/concepts/events)",
                             type: 'textfield',
                             required: false,
                             sensitive: false,
@@ -111,7 +111,7 @@ export const addonsSchema = {
                     displayName: 'Slack',
                     description: 'Allows Unleash to post updates to Slack.',
                     documentationUrl:
-                        'https://docs.getunleash.io/docs/addons/slack',
+                        'https://docs.getunleash.io/integrate/slack-app',
                     parameters: [
                         {
                             name: 'url',
@@ -182,7 +182,7 @@ export const addonsSchema = {
                     description:
                         'Allows Unleash to post updates to Microsoft Teams.',
                     documentationUrl:
-                        'https://docs.getunleash.io/docs/addons/teams',
+                        'https://docs.getunleash.io/integrate/teams',
                     parameters: [
                         {
                             name: 'url',
@@ -215,7 +215,7 @@ export const addonsSchema = {
                     displayName: 'Datadog',
                     description: 'Allows Unleash to post updates to Datadog.',
                     documentationUrl:
-                        'https://docs.getunleash.io/docs/addons/datadog',
+                        'https://docs.getunleash.io/integrate/datadog',
                     parameters: [
                         {
                             name: 'url',

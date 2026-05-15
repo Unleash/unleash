@@ -13,7 +13,7 @@ import ArticleIcon from '@mui/icons-material/Article';
 import UnleashLogo from 'assets/img/logoDarkWithText.svg?react';
 
 const YOUTUBE_VIDEO_ID = 'PLACEHOLDER_VIDEO_ID';
-const DOCS_URL = 'https://docs.getunleash.io/reference/release-plans';
+const DOCS_URL = 'https://docs.getunleash.io/concepts/release-templates';
 const RELEASE_NOTES_URL = 'https://docs.getunleash.io/release-notes';
 
 const StyledBackdrop = styled('div')(({ theme }) => ({

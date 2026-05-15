@@ -270,7 +270,7 @@ export const Footer: FC = () => {
                                             <ListItemText
                                                 primary={
                                                     <a
-                                                        href='https://docs.getunleash.io/sdks/ios-proxy'
+                                                        href='https://docs.getunleash.io/sdks/ios'
                                                         target='_blank'
                                                         rel='noreferrer'
                                                     >
@@ -283,7 +283,7 @@ export const Footer: FC = () => {
                                             <ListItemText
                                                 primary={
                                                     <a
-                                                        href='https://docs.getunleash.io/sdks/android-proxy'
+                                                        href='https://docs.getunleash.io/sdks/android'
                                                         target='_blank'
                                                         rel='noreferrer'
                                                     >

@@ -130,7 +130,7 @@ We know that learning a new tool can be hard and time-consuming. We have a growi
 
 Unleash is the largest [open-source feature flag solution](https://www.getunleash.io/) on GitHub. Building Unleash is a collaborative effort, and we owe a lot of gratitude to many smart and talented individuals. Building it together with the community ensures that we build a product that solves real problems for real people. We'd love to have your help too: Please feel free to open issues or provide pull requests.
 
-Check out [the CONTRIBUTING.md file](./contributing/CONTRIBUTING.md) for contribution guidelines and the [Unleash developer guide](https://docs.getunleash.io/contributing) for tips on environment setup, running the tests, and running Unleash from source.
+Check out [the CONTRIBUTING.md file](./contributing/CONTRIBUTING.md) for contribution guidelines and the [Unleash developer guide](https://docs.getunleash.io/contribute) for tips on environment setup, running the tests, and running Unleash from source.
 
 ### Contributors
 
@@ -158,7 +158,7 @@ You can visit the Unleash documentation at https://docs.getunleash.io. As of 2 F
 - [A/B testing](https://docs.getunleash.io/feature-flag-tutorials/use-cases/a-b-testing)
 - 2 [environments](https://docs.getunleash.io/concepts/environments)
 - Organize feature flags using [tags](https://docs.getunleash.io/concepts/feature-flags#tags)
-- Out-of-the-box integrations with popular tools ([Slack](https://docs.getunleash.io/addons/slack), [Microsoft Teams](https://docs.getunleash.io/addons/teams), [Datadog](https://docs.getunleash.io/addons/datadog)) + integrate with anything with [webhooks](https://docs.getunleash.io/addons/webhook)
+- Out-of-the-box integrations with popular tools ([Slack](https://docs.getunleash.io/integrate/slack-app), [Microsoft Teams](https://docs.getunleash.io/integrate/teams), [Datadog](https://docs.getunleash.io/integrate/datadog)) + integrate with anything with [webhooks](https://docs.getunleash.io/integrate/webhook)
 - [Insights for managing technical debt](https://docs.getunleash.io/concepts/technical-debt) and [stale flags](https://docs.getunleash.io/concepts/technical-debt#stale-and-potentially-stale-flags)
 - API-first: _everything_ can be automated. No exceptions.
 - [12 official SDKs](https://docs.getunleash.io/sdks#official-sdks), and 10 [community-contributed SDKs](https://docs.getunleash.io/sdks#community-sdks)
@@ -167,7 +167,7 @@ You can visit the Unleash documentation at https://docs.getunleash.io. As of 2 F
 ### Security and performance
 
 - Privacy by design (GDPR and Schrems II). End-user data never leaves your application.
-- [Audit logs](https://docs.getunleash.io/advanced/audit_log)
+- [Audit logs](https://docs.getunleash.io/concepts/events)
 - Enforce [OWASP's secure headers](https://owasp.org/www-project-secure-headers/) via the strict HTTPS-only mode
 - Flexible hosting options: host it on premise or in the cloud (_any_ cloud)
 - Scale with [Unleash Edge](https://docs.getunleash.io/unleash-edge) independently of the Unleash server to support any number of frontend clients without overloading your Unleash instance
@@ -212,13 +212,13 @@ To connect your application to Unleash you'll need to use a client SDK for your 
 
 **Official frontend SDKs:**
 
-- [Android Proxy SDK](https://docs.getunleash.io/sdks/android-proxy)
-- [Flutter Proxy SDK](https://docs.getunleash.io/sdks/flutter)
-- [iOS Proxy SDK](https://docs.getunleash.io/sdks/ios-proxy)
-- [JavaScript Proxy SDK](https://docs.getunleash.io/sdks/javascript-browser)
-- [React Proxy SDK](https://docs.getunleash.io/sdks/react)
-- [Svelte Proxy SDK](https://docs.getunleash.io/sdks/svelte)
-- [Vue Proxy SDK](https://docs.getunleash.io/sdks/vue)
+- [Android SDK](https://docs.getunleash.io/sdks/android)
+- [Flutter SDK](https://docs.getunleash.io/sdks/flutter)
+- [iOS SDK](https://docs.getunleash.io/sdks/ios)
+- [JavaScript SDK](https://docs.getunleash.io/sdks/javascript-browser)
+- [React SDK](https://docs.getunleash.io/sdks/react)
+- [Svelte SDK](https://docs.getunleash.io/sdks/svelte)
+- [Vue SDK](https://docs.getunleash.io/sdks/vue)
 
 **Community SDKs:**
 
@@ -238,7 +238,7 @@ If none of the official SDKs fit your need, there's also a number of [community-
 
 ## Migration guides
 
-Unleash has evolved significantly over the past few years, and we know how hard it can be to keep software up to date. If you're using the current major version, upgrading shouldn't be an issue. If you're on a previous major version, check out the [Unleash migration guide](https://docs.getunleash.io/deploy/migration_guide)!
+Unleash has evolved significantly over the past few years, and we know how hard it can be to keep software up to date. If you're using the current major version, upgrading shouldn't be an issue. If you're on a previous major version, check out the [Unleash migration guide](https://docs.getunleash.io/deploy/upgrading-unleash)!
 
 <br/>
 

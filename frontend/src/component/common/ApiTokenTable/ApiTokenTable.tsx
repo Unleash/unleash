@@ -99,7 +99,7 @@ export const ApiTokenTable = ({
                                 <span>
                                     {'No tokens available. Read '}
                                     <Link
-                                        href='https://docs.getunleash.io/api-overview'
+                                        href='https://docs.getunleash.io/api'
                                         target='_blank'
                                         rel='noreferrer'
                                     >

@@ -209,7 +209,7 @@ const InstanceWidget = ({
             </StyledParagraph>
             <StyledHelpContainer>
                 <StyledHelpLink
-                    to='https://docs.getunleash.io/availability#versioning'
+                    to='https://docs.getunleash.io/support/availability#versioning'
                     target='_blank'
                     rel='noopener noreferrer'
                 >

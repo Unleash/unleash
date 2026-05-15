@@ -131,7 +131,7 @@ export const AvailableIntegrations: FC<IAvailableIntegrationsProps> = ({
                         icon='terraform'
                         title='Terraform'
                         description={`Manage Unleash with HashiCorp’s Terraform using infrastructure as code (IaC).`}
-                        link='https://docs.getunleash.io/concepts/terraform'
+                        link='https://docs.getunleash.io/integrate/terraform'
                         configureActionText='View documentation'
                         isExternal
                     />

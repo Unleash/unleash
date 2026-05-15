@@ -1,16 +1,10 @@
 import type { FC, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { styled, Typography } from '@mui/material';
-import {
-    MultimetricTotals,
-    type MultimetricStep,
-} from 'component/impact-metrics/MultimetricChart/MultimetricTotals';
-import { MultimetricChart } from 'component/impact-metrics/MultimetricChart/MultimetricChart';
-import type { ChartTimeRange } from 'component/impact-metrics/MultimetricChart/chartConfig';
-import type {
-    MultimetricStepSeries,
-    MultimetricFeatureEvent,
-} from 'component/impact-metrics/MultimetricChart/types';
+import { MultimetricTotals, type MultimetricStep } from './MultimetricTotals';
+import { MultimetricChart } from './MultimetricChart';
+import type { ChartTimeRange } from './chartConfig';
+import type { MultimetricStepSeries, MultimetricFeatureEvent } from './types';
 
 export interface MultimetricChartCardProps {
     title: string;

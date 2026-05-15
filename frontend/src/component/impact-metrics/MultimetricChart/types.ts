@@ -13,4 +13,7 @@ export type MultimetricFeatureEvent = {
     type: 'feature-environment-enabled' | 'feature-environment-disabled';
     label: string;
     createdBy: string;
+    // Present when events come from a multi-feature view; lets the overlay
+    // disambiguate which flag a toggle event belongs to.
+    featureName?: string;
 };

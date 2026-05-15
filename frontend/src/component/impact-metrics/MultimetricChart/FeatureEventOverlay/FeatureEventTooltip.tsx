@@ -95,7 +95,9 @@ export const FeatureEventTooltip: FC<{ group: EventGroup }> = ({ group }) => {
                         </StyledEventIconBadge>
                         <StyledEventMeta>
                             <StyledEventLabel>
-                                {EVENT_TYPE_LABEL[event.type]}
+                                {event.featureName
+                                    ? `${event.featureName} · ${EVENT_TYPE_LABEL[event.type]}`
+                                    : EVENT_TYPE_LABEL[event.type]}
                             </StyledEventLabel>
                             <StyledEventSubtext>
                                 {format(

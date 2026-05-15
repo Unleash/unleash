@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { styled } from '@mui/material';
-import { MultimetricChartCard } from './MultimetricChartCard';
+import { MultimetricChartCard } from 'component/impact-metrics/MultimetricChart/MultimetricChartCard';
 import { useGroupedImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useGroupedImpactMetricsData';
 import { useFeatureEnvironmentEvents } from 'hooks/api/getters/useFeatureEnvironmentEvents/useFeatureEnvironmentEvents';
 import type { ConfigGroup } from './groupImpactConfigs';

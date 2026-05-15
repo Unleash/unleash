@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { styled } from '@mui/material';
-import { ImpactMetrics } from './ImpactMetrics.tsx';
+import { ImpactMetricViews } from './views/ImpactMetricViews.tsx';
 
 const StyledWrapper = styled('div')(({ theme }) => ({
     paddingTop: theme.spacing(2),
@@ -16,7 +16,7 @@ const StyledContainer = styled('div')(({ theme }) => ({
 export const ImpactMetricsPage: FC = () => (
     <StyledWrapper>
         <StyledContainer>
-            <ImpactMetrics />
+            <ImpactMetricViews />
         </StyledContainer>
     </StyledWrapper>
 );

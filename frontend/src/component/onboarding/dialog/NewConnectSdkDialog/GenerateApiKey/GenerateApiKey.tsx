@@ -160,8 +160,9 @@ export const GenerateApiKey = ({
                         <>
                             <SectionTitle>{sdkTypeName} API Key</SectionTitle>
                             <SectionSubtitle>
-                                Here is your generated {sdkTypeName} API key. We
-                                will use it to connect to the{' '}
+                                Here is your generated{' '}
+                                {sdkTypeName.toLowerCase()} API key. We will use
+                                it to connect to the{' '}
                                 <b>{parsedToken.project}</b> project in the{' '}
                                 <b>{parsedToken.environment}</b> environment.
                             </SectionSubtitle>

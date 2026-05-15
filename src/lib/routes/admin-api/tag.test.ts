@@ -101,7 +101,7 @@ test('should get empty tags of type', () => {
 
 test('should be able to filter by type', () => {
     tagStore.createTag({ type: 'simple', value: 'TeamRed' });
-    tagStore.createTag({ type: 'greenMe', value: 'TeamGreen' });
+    tagStore.createTag({ type: 'slack', value: 'TeamGreen' });
     return request
         .get(`${base}/api/admin/tags/simple`)
         .expect(200)

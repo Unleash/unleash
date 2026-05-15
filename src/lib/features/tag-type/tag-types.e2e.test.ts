@@ -79,19 +79,19 @@ test('Can create a new tag type', async () => {
     await app.request
         .post('/api/admin/tag-types')
         .send({
-            name: 'release-notes',
+            name: 'slack',
             description:
-                'Tag your feature flags with new channel to post updates for flag to',
-            icon: 'http://icons.iconarchive.com/icons/papirus-team/papirus-apps/32/random-icon.png',
+                'Tag your feature flags with slack channel to post updates for flag to',
+            icon: 'http://icons.iconarchive.com/icons/papirus-team/papirus-apps/32/slack-icon.png',
         })
         .expect(201);
     return app.request
-        .get('/api/admin/tag-types/release-notes')
+        .get('/api/admin/tag-types/slack')
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
             expect(res.body.tagType.icon).toBe(
-                'http://icons.iconarchive.com/icons/papirus-team/papirus-apps/32/random-icon.png',
+                'http://icons.iconarchive.com/icons/papirus-team/papirus-apps/32/slack-icon.png',
             );
         });
 });

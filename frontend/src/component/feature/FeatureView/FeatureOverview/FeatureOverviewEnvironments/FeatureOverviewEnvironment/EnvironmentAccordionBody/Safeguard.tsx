@@ -56,8 +56,6 @@ const StyledSafeguardContainer = styled('div')(({ theme }) => ({
 const StyledAddSafeguardContent = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    gap: theme.spacing(1),
-    justifyContent: 'space-between',
     width: '100%',
     paddingRight: theme.spacing(2),
 }));
@@ -153,7 +151,7 @@ export const AddSafeguard = ({
                     }}
                     color='primary'
                     startIcon={<Add />}
-                    sx={{ m: 2 }}
+                    sx={{ mt: 2, mb: 2, ml: 2, mr: 0.5 }}
                 >
                     Add safeguard
                 </StyledActionButton>

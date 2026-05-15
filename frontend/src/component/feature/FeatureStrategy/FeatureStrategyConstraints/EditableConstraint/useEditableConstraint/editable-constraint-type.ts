@@ -1,3 +1,4 @@
+import { createUuid } from 'utils/createUuid';
 import { constraintId } from 'constants/constraintId';
 import {
     type DateOperator,
@@ -90,7 +91,7 @@ export const fromIConstraint = (
     const { value, values, operator, ...rest } = constraint;
     if (isSingleValueOperator(operator)) {
         return {
-            [constraintId]: crypto.randomUUID(),
+            [constraintId]: createUuid(),
             ...rest,
             operator,
             value: value ?? '',
@@ -98,7 +99,7 @@ export const fromIConstraint = (
         };
     } else {
         return {
-            [constraintId]: crypto.randomUUID(),
+            [constraintId]: createUuid(),
             ...rest,
             operator,
             values: new Set(values),

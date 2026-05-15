@@ -1,3 +1,4 @@
+import { createUuid } from 'utils/createUuid';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import {
     UPDATE_PROJECT_SEGMENT,
@@ -36,7 +37,7 @@ const addIdSymbolToConstraints = (segment?: ISegment): ISegment | undefined => {
     if (!segment) return;
 
     const constraints = segment.constraints.map((constraint) => {
-        return { ...constraint, [constraintId]: crypto.randomUUID() };
+        return { ...constraint, [constraintId]: createUuid() };
     });
 
     return { ...segment, constraints };

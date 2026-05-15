@@ -1,3 +1,4 @@
+import { createUuid } from 'utils/createUuid';
 import type { IReleasePlanMilestonePayload } from 'interfaces/releasePlans';
 import { styled, Button } from '@mui/material';
 import Add from '@mui/icons-material/Add';
@@ -102,14 +103,14 @@ export const MilestoneList = ({
                     setMilestones((prev) => [
                         ...prev,
                         {
-                            id: crypto.randomUUID(),
+                            id: createUuid(),
                             name: `Milestone ${prev.length + 1}`,
                             sortOrder: prev.length,
                             strategies: prev[prev.length - 1].strategies?.map(
                                 (strat) => {
                                     return {
                                         ...strat,
-                                        id: crypto.randomUUID(),
+                                        id: createUuid(),
                                     };
                                 },
                             ),

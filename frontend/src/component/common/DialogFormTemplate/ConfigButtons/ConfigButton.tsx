@@ -4,6 +4,7 @@ import { ButtonLabel, StyledTooltipContent } from './ConfigButton.styles';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { StyledPopover } from './shared.styles';
+import { useId } from 'hooks/useId';
 
 export type ConfigButtonProps = {
     button: {
@@ -36,7 +37,7 @@ export const ConfigButton: FC<PropsWithChildren<ConfigButtonProps>> = ({
     tooltip,
 }) => {
     const ref = useRef<HTMLDivElement>(null);
-    const descriptionId = crypto.randomUUID();
+    const descriptionId = useId('config-button-description');
 
     const open = () => {
         setAnchorEl(ref.current);

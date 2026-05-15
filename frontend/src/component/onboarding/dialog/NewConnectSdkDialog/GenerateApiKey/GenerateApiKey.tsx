@@ -7,7 +7,12 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { parseToken } from '../../parseToken';
 import { TokenExplanation } from './TokenExplanation';
-import type { Sdk } from '../../sharedTypes';
+import type { Sdk, SdkType } from '../../sharedTypes';
+
+const SDK_TYPE_LABEL: Record<SdkType, string> = {
+    client: 'Backend',
+    frontend: 'Frontend',
+};
 
 const SpacedContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -122,6 +127,8 @@ export const GenerateApiKey = ({
 
     const loading = fetchingTokens || creatingToken;
 
+    const sdkTypeName = SDK_TYPE_LABEL[sdk.type];
+
     return (
         <SpacedContainer>
             <SectionBox>
@@ -149,13 +156,21 @@ export const GenerateApiKey = ({
 
             <SectionBox>
                 <SectionHeader>
-                    <SectionTitle>Then generate an API Key</SectionTitle>
-                    {parsedToken && (
-                        <SectionSubtitle>
-                            Here is your generated API key. We will use it to
-                            connect to the <b>{parsedToken.project}</b> project
-                            in the <b>{parsedToken.environment}</b> environment.
-                        </SectionSubtitle>
+                    {parsedToken ? (
+                        <>
+                            <SectionTitle>{sdkTypeName} API Key</SectionTitle>
+                            <SectionSubtitle>
+                                Here is your generated{' '}
+                                {sdkTypeName.toLowerCase()} API key. We will use
+                                it to connect to the{' '}
+                                <b>{parsedToken.project}</b> project in the{' '}
+                                <b>{parsedToken.environment}</b> environment.
+                            </SectionSubtitle>
+                        </>
+                    ) : (
+                        <SectionTitle>
+                            Then generate a {sdkTypeName} API Key
+                        </SectionTitle>
                     )}
                 </SectionHeader>
                 {parsedToken ? (
@@ -170,7 +185,7 @@ export const GenerateApiKey = ({
                         disabled={loading}
                         onClick={generateAPIKey}
                     >
-                        Generate API Key
+                        Generate {sdkTypeName} API Key
                     </Button>
                 )}
             </SectionBox>

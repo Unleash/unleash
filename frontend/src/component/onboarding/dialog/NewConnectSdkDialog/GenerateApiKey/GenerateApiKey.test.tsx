@@ -27,7 +27,7 @@ test('shows Generate API Key button when no token exists for the environment', a
 
     await waitFor(() => {
         expect(
-            screen.getByRole('button', { name: /generate api key/i }),
+            screen.getByRole('button', { name: /generate backend api key/i }),
         ).toBeInTheDocument();
     });
 });

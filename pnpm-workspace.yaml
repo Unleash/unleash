@@ -12,6 +12,8 @@ allowBuilds:
   ssh2: true
 
 trustPolicy: no-downgrade
+# Ignore trust issues older than 14 days
+trustPolicyIgnoreAfter: 20160
 
 # The minimum age of a release to be considered for dependency installation.
 # The value is in minutes (1440 minutes = 1 day).

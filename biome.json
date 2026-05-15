@@ -226,7 +226,7 @@
         "frontend/src/component/project/ProjectEnvironment/EnvironmentHideDialog/EnvironmentHideDialog.tsx",
         "frontend/src/component/project/ProjectEnvironment/EnvironmentHideDialog/ProjectEnvironmentTableSingle/ProjectEnvironmentTableSingle.tsx",
         "frontend/src/component/project/ProjectEnvironment/ProjectEnvironment.tsx",
-        "frontend/src/component/project/ProjectList/ProjectList.tsx",
+        "frontend/src/component/project/ProjectList/LegacyProjectList.tsx",
         "frontend/src/component/project/ProjectList/ProjectsListTable/ProjectsListTable.tsx",
         "frontend/src/component/providers/UnleashFlagProvider/UnleashFlagProvider.tsx",
         "frontend/src/component/releases/ReleaseManagement/ReleasePlanTemplateCard/ReleasePlanTemplateCardActions.tsx",

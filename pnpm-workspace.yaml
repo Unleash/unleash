@@ -11,6 +11,14 @@ allowBuilds:
   msw: true
   ssh2: true
 
+trustPolicy: no-downgrade
+
+# The minimum age of a release to be considered for dependency installation.
+# The value is in minutes (1440 minutes = 1 day).
+# 10 080 minutes = 7 days
+minimumReleaseAge: 10080
+minimumReleaseAgeIgnoreMissingTime: false
+
 patchedDependencies:
   cypress-vite: .pnpm/patches/cypress-vite-npm-1.8.0-5384b5466c.patch
 overrides:

@@ -1,6 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import {
     Box,
+    IconButton,
     ListSubheader,
     menuClasses,
     styled,
@@ -10,6 +11,8 @@ import {
     Typography,
 } from '@mui/material';
 import Add from '@mui/icons-material/Add';
+import HelpOutlineOutlined from '@mui/icons-material/HelpOutlineOutlined';
+import { useSearchParams } from 'react-router-dom';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -94,6 +97,38 @@ const StyledOptionDescription = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
+const StyledSplashTriggerButton = styled(IconButton)(({ theme }) => ({
+    color: theme.palette.action.active,
+    padding: theme.spacing(0.5),
+}));
+
+const SafeguardSplashTrigger = () => {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const { trackEvent } = usePlausibleTracker();
+
+    const openSplash = () => {
+        trackEvent('safeguards', {
+            props: {
+                eventType: 'splash opened from feature page',
+            },
+        });
+        searchParams.set('splash', 'impact-metrics-safeguards');
+        setSearchParams(searchParams);
+    };
+
+    return (
+        <Tooltip title='Learn how safeguards work' arrow>
+            <StyledSplashTriggerButton
+                onClick={openSplash}
+                size='small'
+                aria-label='Learn how safeguards work'
+            >
+                <HelpOutlineOutlined fontSize='small' />
+            </StyledSplashTriggerButton>
+        </Tooltip>
+    );
+};
+
 export const AddSafeguard = ({
     onSelect,
     releasePlan,
@@ -122,6 +157,7 @@ export const AddSafeguard = ({
                 >
                     Add safeguard
                 </StyledActionButton>
+                <SafeguardSplashTrigger />
             </StyledAddSafeguardContent>
             <StyledSafeguardMenu
                 anchorEl={anchorEl}
@@ -492,6 +528,7 @@ const SafeguardForm = ({
     featureId,
     onSafeguardChange,
     onCancel,
+    headerAction,
 }: {
     safeguardType: SafeguardType;
     releasePlan?: { id: string; name: string };
@@ -500,6 +537,7 @@ const SafeguardForm = ({
     featureId: string;
     onSafeguardChange: () => void;
     onCancel: () => void;
+    headerAction?: ReactNode;
 }) => {
     const projectId = useRequiredPathParam('projectId');
     const {
@@ -543,6 +581,7 @@ const SafeguardForm = ({
                 featureId={featureId}
                 badge={safeguardBadge}
                 safeguardType={safeguardType}
+                headerAction={headerAction}
             />
             {submitChangeRequestDialog.data && (
                 <SafeguardChangeRequestDialog
@@ -629,6 +668,7 @@ export const Safeguard = ({
                             featureId={featureId}
                             onSafeguardChange={handleExistingChange}
                             onCancel={() => {}}
+                            headerAction={<SafeguardSplashTrigger />}
                         />
                     </StyledSafeguardContainer>
                 )}
@@ -642,6 +682,7 @@ export const Safeguard = ({
                             featureId={featureId}
                             onSafeguardChange={handleExistingChange}
                             onCancel={() => {}}
+                            headerAction={<SafeguardSplashTrigger />}
                         />
                     </StyledSafeguardContainer>
                 )}

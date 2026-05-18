@@ -26,7 +26,6 @@ import {
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
 import { useEffect, useState, type ReactNode } from 'react';
-
 import ProjectFlags from './ProjectFlags.tsx';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';

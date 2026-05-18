@@ -19,6 +19,8 @@ import {
 } from '../events/index.js';
 import type { IAddonDefinition } from '../types/model.js';
 
+// TODO: delete this as soon as all clients (now 12) have migrated to Slack App.
+
 const slackDefinition: IAddonDefinition = {
     name: 'slack',
     displayName: 'Slack',

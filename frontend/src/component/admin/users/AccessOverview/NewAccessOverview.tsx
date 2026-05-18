@@ -12,7 +12,7 @@ import {
     styled,
     useMediaQuery,
 } from '@mui/material';
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import theme from 'themes/theme';
@@ -125,7 +125,6 @@ const EnvironmentSection = ({
     searchValue: string;
 }) => {
     const { overview } = useUserAccessOverview(id, project, environment);
-
     const environmentCategories = useMemo(() => {
         const categories = getCategorizedProjectPermissions(
             overview?.environment ?? [],
@@ -214,6 +213,41 @@ const ProjectAccess = ({
     );
 };
 
+const ProjectMenuItem = ({
+    id,
+    project,
+    selected,
+    onAccessResolved,
+    ...props
+}: {
+    id: string;
+    project: ProjectSchema;
+    selected: boolean;
+    onAccessResolved: (projectId: string, isMember: boolean) => void;
+    [key: string]: unknown;
+}) => {
+    const { projectRoles } = useUserAccessOverview(id, project.id);
+    const isMember = Boolean(projectRoles?.length);
+
+    useEffect(() => {
+        if (projectRoles !== undefined) {
+            onAccessResolved(project.id, isMember);
+        }
+    }, [project.id, projectRoles, isMember, onAccessResolved]);
+
+    return (
+        <MenuItem {...props} value={project.id}>
+            <Checkbox checked={selected} size='small' />
+            <ListItemText
+                primary={project.name}
+                slotProps={
+                    isMember ? { primary: { fontWeight: 'bold' } } : undefined
+                }
+            />
+        </MenuItem>
+    );
+};
+
 const ProjectAccessSection = ({
     id,
     projects,
@@ -228,6 +262,32 @@ const ProjectAccessSection = ({
     const [selectedProjectIds, setSelectedProjectIds] = useState<string[]>([]);
     const [selectedEnvironments, setSelectedEnvironments] = useState<string[]>(
         [],
+    );
+    const [memberProjectIds, setMemberProjectIds] = useState<Set<string>>(
+        new Set(),
+    );
+
+    const handleAccessResolved = useCallback(
+        (projectId: string, isMember: boolean) => {
+            setMemberProjectIds((prev) => {
+                if (isMember === prev.has(projectId)) return prev;
+                const next = new Set(prev);
+                isMember ? next.add(projectId) : next.delete(projectId);
+                return next;
+            });
+        },
+        [],
+    );
+
+    const sortedProjects = useMemo(
+        () =>
+            [...projects].sort((a, b) => {
+                const aIsMember = memberProjectIds.has(a.id);
+                const bIsMember = memberProjectIds.has(b.id);
+                if (aIsMember !== bIsMember) return aIsMember ? -1 : 1;
+                return a.name.localeCompare(b.name);
+            }),
+        [projects, memberProjectIds],
     );
 
     const visibleProjects = projects.filter((p) =>
@@ -275,16 +335,17 @@ const ProjectAccessSection = ({
                         sx={{ minWidth: 150, flexShrink: 0 }}
                         displayEmpty
                     >
-                        {projects.map((project) => (
-                            <MenuItem key={project.id} value={project.id}>
-                                <Checkbox
-                                    checked={selectedProjectIds.includes(
-                                        project.id,
-                                    )}
-                                    size='small'
-                                />
-                                <ListItemText primary={project.name} />
-                            </MenuItem>
+                        {sortedProjects.map((project) => (
+                            <ProjectMenuItem
+                                key={project.id}
+                                id={id}
+                                project={project}
+                                value={project.id}
+                                selected={selectedProjectIds.includes(
+                                    project.id,
+                                )}
+                                onAccessResolved={handleAccessResolved}
+                            />
                         ))}
                     </Select>
                 </StyledSelectorCard>

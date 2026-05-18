@@ -64,12 +64,9 @@ export const NewAccessOverviewAccordion = ({
     title,
     children,
 }: IAccessAccordionProps) => {
-    const permissions = categories
-        .flatMap(({ permissions }) => permissions)
-        .filter(({ hasPermission }) => hasPermission);
-    if (permissions.length === 0) {
-        return <></>;
-    }
+    const permissions = categories.flatMap(({ permissions }) => permissions);
+    const hasAccess = permissions.filter((p) => p.hasPermission);
+
     return (
         <StyledAccordion>
             <StyledAccordionSummary expandIcon={<ExpandMore />}>
@@ -77,7 +74,7 @@ export const NewAccessOverviewAccordion = ({
                     <StyledTitle>{title}</StyledTitle>
                 </StyledTitleContainer>
                 <StyledSecondaryLabel>
-                    {permissions.length} permissions
+                    {hasAccess.length} / {permissions.length} permissions
                 </StyledSecondaryLabel>
             </StyledAccordionSummary>
             <StyledAccordionDetails>

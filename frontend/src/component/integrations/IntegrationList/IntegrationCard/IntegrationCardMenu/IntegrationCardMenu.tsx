@@ -31,6 +31,7 @@ import { IntegrationEventsModal } from 'component/integrations/IntegrationEvents
 
 interface IIntegrationCardMenuProps {
     addon: AddonSchema;
+    deprecated?: string;
 }
 
 const StyledMenu = styled('div')(({ theme }) => ({
@@ -44,6 +45,7 @@ const StyledMenu = styled('div')(({ theme }) => ({
 
 export const IntegrationCardMenu: FC<IIntegrationCardMenuProps> = ({
     addon,
+    deprecated,
 }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -144,7 +146,7 @@ export const IntegrationCardMenu: FC<IIntegrationCardMenuProps> = ({
                         setIsToggleOpen(true);
                         closeMenu();
                     }}
-                    disabled={!updateAccess}
+                    disabled={!updateAccess || deprecated !== undefined}
                 >
                     <ListItemIcon>
                         <PowerSettingsNew />

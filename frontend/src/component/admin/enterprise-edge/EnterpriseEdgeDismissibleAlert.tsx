@@ -23,7 +23,7 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
         width: '100%',
         gap: theme.spacing(1),
     },
-    '&.MuiAlert-standard.MuiAlert-colorSuccess': {
+    '&.MuiAlert-standard.MuiAlert-colorInfo': {
         backgroundColor: theme.palette.secondary.light,
         color: theme.palette.text.primary,
         border: `1px solid ${theme.palette.secondary.border}`,
@@ -76,6 +76,7 @@ export const EnterpriseEdgeDismissibleAlert = ({
     return (
         <Collapse in={alertState === 'open'}>
             <StyledAlert
+                severity='info'
                 onClose={() => setAlertState('closed')}
                 icon={false}
                 {...props}

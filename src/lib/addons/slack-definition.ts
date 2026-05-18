@@ -19,6 +19,8 @@ import {
 } from '../events/index.js';
 import type { IAddonDefinition } from '../types/model.js';
 
+// TODO: delete this as soon as all clients (now 12) have migrated to Slack App.
+
 const slackDefinition: IAddonDefinition = {
     name: 'slack',
     displayName: 'Slack',
@@ -30,6 +32,7 @@ const slackDefinition: IAddonDefinition = {
         {
             type: 'warning',
             text: `This integration is deprecated. Please try the new App for Slack integration instead.`,
+            link: 'https://docs.getunleash.io/integrate/slack-app',
         },
     ],
     parameters: [

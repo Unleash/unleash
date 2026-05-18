@@ -42,37 +42,42 @@ type IIntegrationCardProps =
     | IIntegrationCardWithOnClickProps;
 
 const StyledCard = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'variant',
-})<{ variant?: CardVariant }>(({ theme, variant = 'default' }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    padding: theme.spacing(3),
-    height: '100%',
-    borderRadius: `${theme.shape.borderRadiusMedium}px`,
-    border: `1px solid ${theme.palette.divider}`,
-    boxShadow: theme.boxShadows.card,
-    ':hover': {
-        backgroundColor: theme.palette.action.hover,
-    },
-    ...(variant === 'stacked' && {
-        position: 'relative',
-        zIndex: 0,
-        '&:after': {
-            content: '""',
-            width: 'auto',
-            height: theme.spacing(1),
-            position: 'absolute',
-            zIndex: -1,
-            bottom: theme.spacing(-1),
-            left: theme.spacing(1),
-            right: theme.spacing(1),
-            borderBottomLeftRadius: `${theme.shape.borderRadiusMedium}px`,
-            borderBottomRightRadius: `${theme.shape.borderRadiusMedium}px`,
-            border: `1px solid ${theme.palette.divider}`,
-            boxShadow: theme.boxShadows.card,
+    shouldForwardProp: (prop) => prop !== 'variant' && prop !== 'deprecated',
+})<{ variant?: CardVariant; deprecated?: boolean }>(
+    ({ theme, variant = 'default', deprecated }) => ({
+        display: 'flex',
+        flexDirection: 'column',
+        padding: theme.spacing(3),
+        height: '100%',
+        borderRadius: `${theme.shape.borderRadiusMedium}px`,
+        border: `1px solid ${theme.palette.divider}`,
+        boxShadow: theme.boxShadows.card,
+        ...(deprecated && {
+            backgroundColor: theme.palette.warning.light,
+        }),
+        ':hover': {
+            backgroundColor: theme.palette.action.hover,
         },
+        ...(variant === 'stacked' && {
+            position: 'relative',
+            zIndex: 0,
+            '&:after': {
+                content: '""',
+                width: 'auto',
+                height: theme.spacing(1),
+                position: 'absolute',
+                zIndex: -1,
+                bottom: theme.spacing(-1),
+                left: theme.spacing(1),
+                right: theme.spacing(1),
+                borderBottomLeftRadius: `${theme.shape.borderRadiusMedium}px`,
+                borderBottomRightRadius: `${theme.shape.borderRadiusMedium}px`,
+                border: `1px solid ${theme.palette.divider}`,
+                boxShadow: theme.boxShadows.card,
+            },
+        }),
     }),
-}));
+);
 
 const StyledLink = styled(Link)({
     textDecoration: 'none',
@@ -138,7 +143,7 @@ export const IntegrationCard: FC<IIntegrationCardProps> = ({
     };
 
     const content = (
-        <StyledCard variant={variant}>
+        <StyledCard variant={variant} deprecated={deprecated !== undefined}>
             <StyledHeader>
                 <StyledTitle variant='h3' data-loading>
                     <IntegrationIcon name={icon as string} /> {title}
@@ -152,7 +157,7 @@ export const IntegrationCard: FC<IIntegrationCardProps> = ({
                     }
                 />
                 <ConditionallyRender
-                    condition={isEnabled === true}
+                    condition={isEnabled === true && deprecated === undefined}
                     show={
                         <Badge color='success' data-loading>
                             Enabled
@@ -160,12 +165,17 @@ export const IntegrationCard: FC<IIntegrationCardProps> = ({
                     }
                 />
                 <ConditionallyRender
-                    condition={isEnabled === false}
+                    condition={isEnabled === false && deprecated === undefined}
                     show={<Badge data-loading>Disabled</Badge>}
                 />
                 <ConditionallyRender
                     condition={isConfigured}
-                    show={<IntegrationCardMenu addon={addon as AddonSchema} />}
+                    show={
+                        <IntegrationCardMenu
+                            addon={addon as AddonSchema}
+                            deprecated={deprecated}
+                        />
+                    }
                 />
             </StyledHeader>
             <Typography

@@ -465,6 +465,7 @@ export interface IAddonInstallation {
 export interface IAddonAlert {
     type: 'success' | 'info' | 'warning' | 'error';
     text: string;
+    link?: string;
 }
 
 export interface IAddonConfig {

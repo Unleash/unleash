@@ -14,13 +14,13 @@ export const addonTypeSchema = {
             type: 'string',
             description:
                 "The name of the addon type. When creating new addons, this goes in the payload's `type` field.",
-            example: 'slack',
+            example: 'slack-app',
         },
         displayName: {
             type: 'string',
             description:
                 "The addon type's name as it should be displayed in the admin UI.",
-            example: 'Slack',
+            example: 'App for Slack',
         },
         documentationUrl: {
             type: 'string',
@@ -31,7 +31,8 @@ export const addonTypeSchema = {
         description: {
             type: 'string',
             description: 'A description of the addon type.',
-            example: 'Allows Unleash to post updates to Slack.',
+            example:
+                'The Unleash App for Slack posts messages to the selected channels in your Slack workspace.',
         },
         howTo: {
             type: 'string',
@@ -65,7 +66,7 @@ export const addonTypeSchema = {
             example: [
                 {
                     name: 'url',
-                    displayName: 'Slack webhook URL',
+                    displayName: 'Slack App URL',
                     description: '(Required)',
                     type: 'url',
                     required: true,
@@ -175,6 +176,12 @@ export const addonTypeSchema = {
                             'The text of the alert. This is what will be displayed to the user.',
                         example:
                             "Please ensure you have the Unleash App for Slack installed in your Slack workspace if you haven't installed it already. If you want the Unleash App for Slack bot to post messages to private channels, you'll need to invite it to those channels.",
+                    },
+                    link: {
+                        type: 'string',
+                        description:
+                            'An optional URL to display as a link at the end of the alert text.',
+                        example: '/integrations/create/slack-app',
                     },
                 },
             },

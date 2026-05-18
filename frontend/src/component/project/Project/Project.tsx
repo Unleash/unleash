@@ -337,7 +337,7 @@ export const Project = () => {
                                         tab.isEnterprise ? 'end' : undefined
                                     }
                                     icon={
-                                        <>
+                                        <div>
                                             <ConditionallyRender
                                                 condition={Boolean(tab.new)}
                                                 show={
@@ -353,7 +353,7 @@ export const Project = () => {
                                                 isPro() &&
                                                 enterpriseIcon) ||
                                                 undefined}
-                                        </>
+                                        </div>
                                     }
                                 />
                             );

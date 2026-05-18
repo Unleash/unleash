@@ -10,4 +10,6 @@ export type AddonTypeSchemaAlertsItem = {
     text: string;
     /** The type of alert. This determines the color of the alert. */
     type: AddonTypeSchemaAlertsItemType;
+    /** An optional URL to display as a link at the end of the alert text. */
+    link?: string;
 };

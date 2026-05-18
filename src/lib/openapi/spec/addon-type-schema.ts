@@ -177,6 +177,12 @@ export const addonTypeSchema = {
                         example:
                             "Please ensure you have the Unleash App for Slack installed in your Slack workspace if you haven't installed it already. If you want the Unleash App for Slack bot to post messages to private channels, you'll need to invite it to those channels.",
                     },
+                    link: {
+                        type: 'string',
+                        description:
+                            'An optional URL to display as a link at the end of the alert text.',
+                        example: '/integrations/create/slack-app',
+                    },
                 },
             },
         },

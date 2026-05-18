@@ -59,7 +59,7 @@
     "@mui/material": "9.0.1",
     "@mui/system": "9.0.1",
     "@mui/utils": "9.0.1",
-    "@mui/x-date-pickers": "^7.0.0",
+    "@mui/x-date-pickers": "^9.0.0",
     "@rolldown/plugin-babel": "^0.2.2",
     "@tanstack/react-table": "^8.10.7",
     "@tanstack/react-virtual": "^3.11.3",

@@ -29,7 +29,12 @@ export const FeatureImplementFlagBanner = ({
     const isInitialStage =
         !loading &&
         (!feature.lifecycle || feature.lifecycle.stage === 'initial');
-    const showBanner = isOnboarded && isInitialStage;
+
+    const onDialogClose = () => {
+        setDialogOpen(false);
+        refetch();
+        refetchFeature();
+    };
 
     const onImplementClick = () => {
         trackEvent('onboarding', {
@@ -38,11 +43,7 @@ export const FeatureImplementFlagBanner = ({
         setDialogOpen(true);
     };
 
-    const onDialogClose = () => {
-        setDialogOpen(false);
-        refetch();
-        refetchFeature();
-    };
+    const showBanner = isOnboarded && isInitialStage;
 
     return (
         <>

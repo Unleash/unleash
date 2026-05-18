@@ -32,14 +32,14 @@ export const FeatureConnectSdkBanner = ({
         setConnectSdkOpen(true);
     };
 
-    const shouldShowBanner =
-        project.onboardingStatus.status !== 'onboarded' &&
-        project.onboardingStatus.status !== 'sdk-connected';
-
     const onDialogClose = () => {
         setConnectSdkOpen(false);
         refetch();
     };
+
+    const shouldShowBanner =
+        project.onboardingStatus.status !== 'onboarded' &&
+        project.onboardingStatus.status !== 'sdk-connected';
 
     return (
         <>

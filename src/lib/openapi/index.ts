@@ -2,7 +2,7 @@ import type { OpenAPIV3 } from 'openapi-types';
 
 import type { IServerOption } from '../types/index.js';
 import { mapValues, omitKeys } from '../util/index.js';
-import { openApiTags } from './util/index.js';
+import { apiAudiences, openApiTags } from './util/index.js';
 import { URL } from 'node:url';
 import apiVersion from '../util/version.js';
 
@@ -30,8 +30,10 @@ interface UnleashSchemas {
     [name: string]: SchemaWithMandatoryFields;
 }
 
-interface OpenAPIV3DocumentWithServers extends OpenAPIV3.Document {
+interface UnleashOpenAPIV3DocumentSpec
+    extends Omit<OpenAPIV3.Document, 'paths'> {
     servers: OpenAPIV3.ServerObject[];
+    'x-audiences': typeof apiAudiences;
 }
 
 /*
@@ -76,10 +78,10 @@ const findRootUrl: (unleashUrl: string, baseUriPath: string) => string = (
 export const createOpenApiSchema = ({
     unleashUrl,
     baseUriPath,
-}: Pick<IServerOption, 'unleashUrl' | 'baseUriPath'>): Omit<
-    OpenAPIV3DocumentWithServers,
-    'paths'
-> => {
+}: Pick<
+    IServerOption,
+    'unleashUrl' | 'baseUriPath'
+>): UnleashOpenAPIV3DocumentSpec => {
     const url = findRootUrl(unleashUrl, baseUriPath);
 
     return {
@@ -110,6 +112,7 @@ export const createOpenApiSchema = ({
             schemas: mapValues(schemas, removeJsonSchemaProps),
         },
         tags: openApiTags,
+        'x-audiences': apiAudiences,
     };
 };
 export * from './util/index.js';

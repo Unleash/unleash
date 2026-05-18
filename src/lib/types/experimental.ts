@@ -78,7 +78,8 @@ export type IFlagKey =
     | 'externalImpactMetrics'
     | 'accessOverviewRework'
     | 'onboardingConnectSDKNewDialog'
-    | 'logRocketEnabled';
+    | 'logRocketEnabled'
+    | 'newProjectList';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -355,6 +356,10 @@ const flags: IFlags = {
     ),
     logRocketEnabled: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_LOGROCKET_ENABLED,
+        false,
+    ),
+    newProjectList: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_NEW_PROJECT_LIST,
         false,
     ),
 };

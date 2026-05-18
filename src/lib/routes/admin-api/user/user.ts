@@ -3,7 +3,10 @@ import type { IAuthRequest } from '../../unleash-types.js';
 import Controller from '../../controller.js';
 import type { AccessService } from '../../../services/access-service.js';
 import { IAuthType, type IUnleashConfig } from '../../../types/option.js';
-import type { IUnleashServices } from '../../../services/index.js';
+import type {
+    GroupService,
+    IUnleashServices,
+} from '../../../services/index.js';
 import type UserService from '../../../services/user-service.js';
 import type UserFeedbackService from '../../../services/user-feedback-service.js';
 import type UserSplashService from '../../../services/user-splash-service.js';
@@ -45,6 +48,8 @@ class UserController extends Controller {
 
     private userSplashService: UserSplashService;
 
+    private groupService: GroupService;
+
     private openApiService: OpenApiService;
 
     private projectService: ProjectService;
@@ -62,6 +67,7 @@ class UserController extends Controller {
             userService,
             userFeedbackService,
             userSplashService,
+            groupService,
             openApiService,
             projectService,
             transactionalUserSubscriptionsService,
@@ -71,6 +77,7 @@ class UserController extends Controller {
             | 'userService'
             | 'userFeedbackService'
             | 'userSplashService'
+            | 'groupService'
             | 'openApiService'
             | 'projectService'
             | 'transactionalUserSubscriptionsService'
@@ -81,6 +88,7 @@ class UserController extends Controller {
         this.userService = userService;
         this.userFeedbackService = userFeedbackService;
         this.userSplashService = userSplashService;
+        this.groupService = groupService;
         this.openApiService = openApiService;
         this.projectService = projectService;
         this.userSubscriptionsService = transactionalUserSubscriptionsService;
@@ -261,9 +269,10 @@ class UserController extends Controller {
             throw new BadDataError('User id is missing in request user object');
         }
 
-        const [projects, rootRole, subscriptions] = await Promise.all([
+        const [projects, rootRole, groups, subscriptions] = await Promise.all([
             this.projectService.getProjectsByUser(user.id),
             this.accessService.getRootRoleForUser(user.id),
+            this.groupService.getGroupsForUser(user.id),
             this.userSubscriptionsService.getUserSubscriptions(user.id),
         ]);
 

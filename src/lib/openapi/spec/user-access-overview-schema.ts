@@ -1,6 +1,7 @@
 import type { FromSchema } from 'json-schema-to-ts';
 import { userSchema } from './user-schema.js';
 import { roleSchema } from './role-schema.js';
+import { groupItemSchema } from './group-item-schema.js';
 
 const permission = {
     type: 'object',
@@ -59,7 +60,7 @@ export const userAccessOverviewSchema = {
     properties: {
         overview: {
             type: 'object',
-            required: ['root', 'project', 'environment'],
+            required: ['root', 'project', 'environment', 'groups'],
             additionalProperties: false,
             description:
                 'The access overview (list of permissions) for the user',
@@ -68,6 +69,12 @@ export const userAccessOverviewSchema = {
                     type: 'array',
                     description: 'The list of root permissions',
                     items: permissionWithHasPermission,
+                },
+                groups: {
+                    type: 'array',
+                    description:
+                        'Experimental: The list of groups the user is in',
+                    items: groupItemSchema,
                 },
                 project: {
                     type: 'array',
@@ -112,6 +119,7 @@ export const userAccessOverviewSchema = {
         schemas: {
             userSchema,
             roleSchema,
+            groupItemSchema,
         },
     },
 } as const;

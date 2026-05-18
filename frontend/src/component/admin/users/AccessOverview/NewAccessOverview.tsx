@@ -94,22 +94,53 @@ const filterCategory = (
     }
 };
 
-const ProjectAccess = ({
+const EnvironmentAccess = ({
     id,
     project,
     environment,
+    roleIds,
     searchValue,
 }: {
     id: string;
     project: string;
-    environment?: string;
+    environment: string;
+    roleIds?: number[];
     searchValue: string;
 }) => {
-    const { overview, projectRoles } = useUserAccessOverview(
-        id,
-        project,
-        environment,
+    const { overview } = useUserAccessOverview(id, project, environment);
+
+    const environmentCategories = useMemo(() => {
+        const categories = getCategorizedProjectPermissions(
+            overview?.environment ?? [],
+        ) as IAccessOverviewPermissionCategory[];
+
+        return categories
+            .map((category) => filterCategory(category, searchValue))
+            .filter(Boolean) as IAccessOverviewPermissionCategory[];
+    }, [overview?.environment, searchValue]);
+
+    return (
+        <NewAccessOverviewAccordion
+            roles={roleIds}
+            categories={environmentCategories}
+        >
+            {project} · {environment}
+        </NewAccessOverviewAccordion>
     );
+};
+
+const ProjectAccess = ({
+    id,
+    project,
+    environments,
+    searchValue,
+}: {
+    id: string;
+    project: string;
+    environments: string[];
+    searchValue: string;
+}) => {
+    const { overview, projectRoles } = useUserAccessOverview(id, project);
 
     const projectCategories = useMemo(() => {
         const categories = createProjectPermissionsStructure(
@@ -124,17 +155,6 @@ const ProjectAccess = ({
             .filter(Boolean) as IAccessOverviewPermissionCategory[];
     }, [overview?.project, searchValue]);
 
-    const environmentCategories = useMemo(() => {
-        if (!environment) return [];
-        const categories = getCategorizedProjectPermissions(
-            overview?.environment ?? [],
-        ) as IAccessOverviewPermissionCategory[];
-
-        return categories
-            .map((category) => filterCategory(category, searchValue))
-            .filter(Boolean) as IAccessOverviewPermissionCategory[];
-    }, [overview?.environment, environment, searchValue]);
-
     const roleIds = projectRoles?.map((rp) => rp.id);
     const roleNames = projectRoles?.map((r: any) => r.name).join(', ');
 
@@ -147,14 +167,16 @@ const ProjectAccess = ({
                 {project}
                 {roleNames ? ` · ${roleNames}` : ''}
             </NewAccessOverviewAccordion>
-            {environment && (
-                <NewAccessOverviewAccordion
-                    roles={roleIds}
-                    categories={environmentCategories}
-                >
-                    {project} · {environment}
-                </NewAccessOverviewAccordion>
-            )}
+            {environments.map((environment) => (
+                <EnvironmentAccess
+                    key={environment}
+                    id={id}
+                    project={project}
+                    environment={environment}
+                    roleIds={roleIds}
+                    searchValue={searchValue}
+                />
+            ))}
         </>
     );
 };
@@ -171,7 +193,9 @@ const ProjectAccessSection = ({
     searchValue: string;
 }) => {
     const [selectedProjectIds, setSelectedProjectIds] = useState<string[]>([]);
-    const [selectedEnvironment, setSelectedEnvironment] = useState('');
+    const [selectedEnvironments, setSelectedEnvironments] = useState<string[]>(
+        [],
+    );
 
     const visibleProjects = projects.filter((p) =>
         selectedProjectIds.includes(p.id),
@@ -184,6 +208,13 @@ const ProjectAccessSection = ({
               ? (projects.find((p) => p.id === selectedProjectIds[0])?.name ??
                 '1 selected')
               : `${selectedProjectIds.length} selected`;
+
+    const environmentSelectorLabel =
+        selectedEnvironments.length === 0
+            ? 'All environments'
+            : selectedEnvironments.length === 1
+              ? selectedEnvironments[0]
+              : `${selectedEnvironments.length} selected`;
 
     return (
         <Box>
@@ -227,7 +258,7 @@ const ProjectAccessSection = ({
                 <StyledSelectorCard>
                     <StyledSelectorCardText>
                         <Typography variant='body2' fontWeight='bold'>
-                            Select an environment to see what is allowed
+                            Select environments to see what is allowed
                         </Typography>
                         <Typography variant='caption' color='text.secondary'>
                             {environments.length} environment
@@ -235,15 +266,25 @@ const ProjectAccessSection = ({
                         </Typography>
                     </StyledSelectorCardText>
                     <Select
-                        value={selectedEnvironment}
-                        onChange={(e) => setSelectedEnvironment(e.target.value)}
+                        multiple
+                        value={selectedEnvironments}
+                        onChange={(e) =>
+                            setSelectedEnvironments(e.target.value as string[])
+                        }
+                        renderValue={() => environmentSelectorLabel}
                         size='small'
                         sx={{ minWidth: 150, flexShrink: 0 }}
+                        displayEmpty
                     >
-                        <MenuItem value=''>View all</MenuItem>
                         {environments.map((env) => (
                             <MenuItem key={env.name} value={env.name}>
-                                {env.name}
+                                <Checkbox
+                                    checked={selectedEnvironments.includes(
+                                        env.name,
+                                    )}
+                                    size='small'
+                                />
+                                <ListItemText primary={env.name} />
                             </MenuItem>
                         ))}
                     </Select>
@@ -255,7 +296,7 @@ const ProjectAccessSection = ({
                     project={project.id}
                     id={id}
                     searchValue={searchValue}
-                    environment={selectedEnvironment || undefined}
+                    environments={selectedEnvironments}
                 />
             ))}
         </Box>

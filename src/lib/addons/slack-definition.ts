@@ -32,6 +32,7 @@ const slackDefinition: IAddonDefinition = {
         {
             type: 'warning',
             text: `This integration is deprecated. Please try the new App for Slack integration instead.`,
+            link: 'https://docs.getunleash.io/integrate/slack-app',
         },
     ],
     parameters: [

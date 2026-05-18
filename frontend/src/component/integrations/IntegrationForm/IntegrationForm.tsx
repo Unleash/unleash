@@ -332,9 +332,19 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                         condition={Boolean(alerts)}
                         show={() => (
                             <StyledAlerts>
-                                {alerts?.map(({ type, text }) => (
+                                {alerts?.map(({ type, text, link }) => (
                                     <Alert severity={type} key={text}>
-                                        {text}
+                                        {text}{' '}
+                                        {link && (
+                                            <Link
+                                                href={link}
+                                                target='_blank'
+                                                rel='noreferrer'
+                                            >
+                                                See new integration page for
+                                                smoother migration.
+                                            </Link>
+                                        )}
                                     </Alert>
                                 ))}
                             </StyledAlerts>

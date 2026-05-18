@@ -18,7 +18,7 @@ export const FeatureConnectSdkBanner = ({
     projectId,
     featureId,
 }: FeatureConnectSdkBannerProps) => {
-    const { project } = useProjectOverview(projectId);
+    const { project, refetch } = useProjectOverview(projectId);
     const { trackEvent } = usePlausibleTracker();
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
 
@@ -35,6 +35,11 @@ export const FeatureConnectSdkBanner = ({
     const shouldShowBanner =
         project.onboardingStatus.status !== 'onboarded' &&
         project.onboardingStatus.status !== 'sdk-connected';
+
+    const onDialogClose = () => {
+        setConnectSdkOpen(false);
+        refetch();
+    };
 
     return (
         <>
@@ -56,8 +61,8 @@ export const FeatureConnectSdkBanner = ({
             )}
             <ConnectSdkDialog
                 open={connectSdkOpen}
-                onClose={() => setConnectSdkOpen(false)}
-                onFinish={() => setConnectSdkOpen(false)}
+                onClose={onDialogClose}
+                onFinish={onDialogClose}
                 project={projectId}
                 environments={environments}
                 feature={featureId}

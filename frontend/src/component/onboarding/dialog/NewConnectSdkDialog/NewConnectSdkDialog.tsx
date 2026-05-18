@@ -158,7 +158,7 @@ const InnerDialog = ({
     };
 
     const onApiKeyChange = (apiKey?: string) => {
-        if (!apiKey) {
+        if (!apiKey && sdk) {
             setCurrentStep(1);
         }
         setApiKey(apiKey);

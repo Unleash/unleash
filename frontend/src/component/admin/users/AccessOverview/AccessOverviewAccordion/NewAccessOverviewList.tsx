@@ -102,41 +102,44 @@ const StyledPermissionStatus = styled('div', {
 export const NewAccessOverviewList = ({
     categories,
     roles,
+    noScroll,
 }: {
     categories: IAccessOverviewPermissionCategory[];
     roles: number[] | undefined;
+    noScroll?: boolean;
 }) => {
     const { searchQuery } = useSearchHighlightContext();
 
-    return (
-        <Box sx={{ maxHeight: 500, overflow: 'auto' }}>
-            <StyledList>
-                {categories.map((category) => (
-                    <>
-                        <li key={category.label}>
-                            <strong>{category.label}</strong>
-                        </li>
-                        <StyledList>
-                            {category.permissions.map((permission) => (
-                                <li key={permission.name}>
-                                    <div>
-                                        <Highlighter search={searchQuery}>
-                                            {permission.displayName}
-                                        </Highlighter>
-                                    </div>
-                                    <PermissionStatus
-                                        hasPermission={permission.hasPermission}
-                                        permission={permission.name}
-                                        roles={roles}
-                                    />
-                                </li>
-                            ))}
-                        </StyledList>
-                    </>
-                ))}
-            </StyledList>
-        </Box>
+    const list = (
+        <StyledList>
+            {categories.map((category) => (
+                <>
+                    <li key={category.label}>
+                        <strong>{category.label}</strong>
+                    </li>
+                    <StyledList>
+                        {category.permissions.map((permission) => (
+                            <li key={permission.name}>
+                                <div>
+                                    <Highlighter search={searchQuery}>
+                                        {permission.displayName}
+                                    </Highlighter>
+                                </div>
+                                <PermissionStatus
+                                    hasPermission={permission.hasPermission}
+                                    permission={permission.name}
+                                    roles={roles}
+                                />
+                            </li>
+                        ))}
+                    </StyledList>
+                </>
+            ))}
+        </StyledList>
     );
+
+    if (noScroll) return list;
+    return <Box sx={{ maxHeight: 500, overflow: 'auto' }}>{list}</Box>;
 };
 
 const RoleDescription = ({

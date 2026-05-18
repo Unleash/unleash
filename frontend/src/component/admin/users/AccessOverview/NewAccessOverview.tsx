@@ -19,6 +19,7 @@ import theme from 'themes/theme';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useUserAccessOverview } from 'hooks/api/getters/useUserAccessOverview/useUserAccessOverview';
 import { NewAccessOverviewAccordion } from './AccessOverviewAccordion/NewAccessOverviewAccordion.tsx';
+import { NewAccessOverviewList } from './AccessOverviewAccordion/NewAccessOverviewList.tsx';
 import {
     getCategorizedProjectPermissions,
     getCategorizedRootPermissions,
@@ -94,7 +95,23 @@ const filterCategory = (
     }
 };
 
-const EnvironmentAccess = ({
+const StyledEnvAccessHeader = styled('div')(({ theme }) => ({
+    padding: theme.spacing(2),
+    fontWeight: 'bold',
+    fontSize: theme.typography.body2.fontSize,
+    borderTop: `1px solid ${theme.palette.divider}`,
+    borderBottom: `1px solid ${theme.palette.divider}`,
+}));
+
+const StyledEnvNameHeader = styled('div')(({ theme }) => ({
+    padding: theme.spacing(1.5, 2, 1.5, 4),
+    fontWeight: 'bold',
+    fontSize: theme.typography.body2.fontSize,
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    backgroundColor: theme.palette.background.default,
+}));
+
+const EnvironmentSection = ({
     id,
     project,
     environment,
@@ -119,13 +136,17 @@ const EnvironmentAccess = ({
             .filter(Boolean) as IAccessOverviewPermissionCategory[];
     }, [overview?.environment, searchValue]);
 
+    if (!environmentCategories.length) return null;
+
     return (
-        <NewAccessOverviewAccordion
-            roles={roleIds}
-            categories={environmentCategories}
-        >
-            {project} · {environment}
-        </NewAccessOverviewAccordion>
+        <>
+            <StyledEnvNameHeader>{environment}</StyledEnvNameHeader>
+            <NewAccessOverviewList
+                categories={environmentCategories}
+                roles={roleIds}
+                noScroll
+            />
+        </>
     );
 };
 
@@ -158,26 +179,38 @@ const ProjectAccess = ({
     const roleIds = projectRoles?.map((rp) => rp.id);
     const roleNames = projectRoles?.map((r: any) => r.name).join(', ');
 
+    const envContent =
+        environments.length > 0 ? (
+            <>
+                <StyledEnvAccessHeader>
+                    Environment access
+                </StyledEnvAccessHeader>
+                {environments.map((environment) => (
+                    <EnvironmentSection
+                        key={environment}
+                        id={id}
+                        project={project}
+                        environment={environment}
+                        roleIds={roleIds}
+                        searchValue={searchValue}
+                    />
+                ))}
+            </>
+        ) : undefined;
+
     return (
-        <>
-            <NewAccessOverviewAccordion
-                roles={roleIds}
-                categories={projectCategories}
-            >
-                {project}
-                {roleNames ? ` · ${roleNames}` : ''}
-            </NewAccessOverviewAccordion>
-            {environments.map((environment) => (
-                <EnvironmentAccess
-                    key={environment}
-                    id={id}
-                    project={project}
-                    environment={environment}
-                    roleIds={roleIds}
-                    searchValue={searchValue}
-                />
-            ))}
-        </>
+        <NewAccessOverviewAccordion
+            title={
+                <>
+                    {project}
+                    {roleNames ? ` · ${roleNames}` : ''}
+                </>
+            }
+            roles={roleIds}
+            categories={projectCategories}
+        >
+            {envContent}
+        </NewAccessOverviewAccordion>
     );
 };
 

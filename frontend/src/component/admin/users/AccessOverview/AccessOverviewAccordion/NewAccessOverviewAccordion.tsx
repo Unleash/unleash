@@ -54,12 +54,14 @@ const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
 interface IAccessAccordionProps {
     categories: IAccessOverviewPermissionCategory[];
     roles: number[] | undefined;
-    children: React.ReactNode;
+    title: React.ReactNode;
+    children?: React.ReactNode;
 }
 
 export const NewAccessOverviewAccordion = ({
     categories,
     roles,
+    title,
     children,
 }: IAccessAccordionProps) => {
     const permissions = categories
@@ -72,14 +74,21 @@ export const NewAccessOverviewAccordion = ({
         <StyledAccordion>
             <StyledAccordionSummary expandIcon={<ExpandMore />}>
                 <StyledTitleContainer>
-                    <StyledTitle>{children}</StyledTitle>
+                    <StyledTitle>{title}</StyledTitle>
                 </StyledTitleContainer>
                 <StyledSecondaryLabel>
                     {permissions.length} permissions
                 </StyledSecondaryLabel>
             </StyledAccordionSummary>
             <StyledAccordionDetails>
-                <NewAccessOverviewList categories={categories} roles={roles} />
+                {permissions.length > 0 && (
+                    <NewAccessOverviewList
+                        categories={categories}
+                        roles={roles}
+                        noScroll
+                    />
+                )}
+                {children}
             </StyledAccordionDetails>
         </StyledAccordion>
     );

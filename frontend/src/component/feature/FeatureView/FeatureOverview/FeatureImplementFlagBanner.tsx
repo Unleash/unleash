@@ -15,8 +15,11 @@ export const FeatureImplementFlagBanner = ({
     projectId,
     featureId,
 }: FeatureImplementFlagBannerProps) => {
-    const { project } = useProjectOverview(projectId);
-    const { feature, loading } = useFeature(projectId, featureId);
+    const { project, refetch } = useProjectOverview(projectId);
+    const { feature, loading, refetchFeature } = useFeature(
+        projectId,
+        featureId,
+    );
     const { trackEvent } = usePlausibleTracker();
     const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -26,11 +29,12 @@ export const FeatureImplementFlagBanner = ({
     const isInitialStage =
         !loading &&
         (!feature.lifecycle || feature.lifecycle.stage === 'initial');
-    const showBanner = isOnboarded && isInitialStage;
 
-    if (!showBanner && !dialogOpen) {
-        return null;
-    }
+    const onDialogClose = () => {
+        setDialogOpen(false);
+        refetch();
+        refetchFeature();
+    };
 
     const onImplementClick = () => {
         trackEvent('onboarding', {
@@ -38,6 +42,8 @@ export const FeatureImplementFlagBanner = ({
         });
         setDialogOpen(true);
     };
+
+    const showBanner = isOnboarded && isInitialStage;
 
     return (
         <>
@@ -53,7 +59,7 @@ export const FeatureImplementFlagBanner = ({
             )}
             <ImplementFlagDialog
                 open={dialogOpen}
-                onClose={() => setDialogOpen(false)}
+                onClose={onDialogClose}
                 projectId={projectId}
                 feature={featureId}
             />

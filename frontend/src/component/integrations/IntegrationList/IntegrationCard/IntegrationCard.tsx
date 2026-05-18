@@ -152,7 +152,7 @@ export const IntegrationCard: FC<IIntegrationCardProps> = ({
                     }
                 />
                 <ConditionallyRender
-                    condition={isEnabled === true}
+                    condition={isEnabled === true && deprecated === undefined}
                     show={
                         <Badge color='success' data-loading>
                             Enabled
@@ -160,7 +160,7 @@ export const IntegrationCard: FC<IIntegrationCardProps> = ({
                     }
                 />
                 <ConditionallyRender
-                    condition={isEnabled === false}
+                    condition={isEnabled === false && deprecated === undefined}
                     show={<Badge data-loading>Disabled</Badge>}
                 />
                 <ConditionallyRender

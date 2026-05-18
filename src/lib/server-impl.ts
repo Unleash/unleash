@@ -91,6 +91,10 @@ import {
     type EnvironmentVisibleRevisionState,
     UPDATE_DELTA,
 } from './features/client-feature-toggles/delta/client-feature-toggle-delta.js';
+import {
+    getReferencedSegmentIds,
+    getVisibleRevision,
+} from './features/client-feature-toggles/delta/visible-revision.js';
 import type { IQueryParam } from './features/feature-toggle/types/feature-toggle-strategies-store-type.js';
 import {
     applyGenericQueryParams,
@@ -482,6 +486,8 @@ export {
     getVariantValue,
     UPDATE_DELTA,
     UPDATE_REVISION,
+    getReferencedSegmentIds,
+    getVisibleRevision,
     applyGenericQueryParams,
     normalizeQueryParams,
     parseSearchOperatorValue,

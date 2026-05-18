@@ -163,7 +163,7 @@
     "@types/semver": "7.7.1",
     "@types/slug": "^5.0.9",
     "@types/stoppable": "1.1.3",
-    "@types/supertest": "6.0.3",
+    "@types/supertest": "7.2.0",
     "@types/type-is": "1.6.7",
     "@vitest/coverage-v8": "4.1.5",
     "@vitest/ui": "4.1.5",

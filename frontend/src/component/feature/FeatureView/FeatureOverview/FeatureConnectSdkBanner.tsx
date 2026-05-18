@@ -23,8 +23,9 @@ export const FeatureConnectSdkBanner = ({
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
 
     if (
-        project.onboardingStatus.status === 'onboarded' ||
-        project.onboardingStatus.status === 'sdk-connected'
+        !connectSdkOpen &&
+        (project.onboardingStatus.status === 'onboarded' ||
+            project.onboardingStatus.status === 'sdk-connected')
     ) {
         return null;
     }

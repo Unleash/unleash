@@ -3,15 +3,13 @@ import {
     StyledProjectCard,
     StyledProjectCardBody,
     StyledProjectCardHeader,
-    StyledProjectCardContent,
     StyledProjectCardTitleContainer,
+    StyledProjectCardContent,
 } from './ProjectCard.styles';
-import { ProjectCardFooter } from './ProjectCardFooter/ProjectCardFooter.tsx';
+import { NewProjectCardFooter } from './NewProjectCardFooter.tsx';
 import { ProjectModeBadge } from './ProjectModeBadge/ProjectModeBadge.tsx';
 import { FavoriteAction } from './FavoriteAction/FavoriteAction.tsx';
 import { styled } from '@mui/material';
-import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
-import { ProjectLastSeen } from './ProjectLastSeen/ProjectLastSeen.tsx';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { ProjectMembers } from './ProjectCardFooter/ProjectMembers/ProjectMembers.tsx';
@@ -19,16 +17,20 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
 import type { ProjectSchema } from 'openapi';
 import { Truncator } from 'component/common/Truncator/Truncator.tsx';
+import { ProjectLastSeen } from './ProjectLastSeen/ProjectLastSeen.tsx';
 
 const StyledSubtitle = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
     fontSize: theme.fontSizes.smallerBody,
 }));
 
+const StyledNewProjectCard = styled(StyledProjectCard)(({ theme }) => ({
+    minHeight: theme.spacing(23),
+}));
+
 export const NewProjectCard = ({
     name,
     featureCount,
-    technicalDebt,
     memberCount = 0,
     id,
     mode,
@@ -41,7 +43,7 @@ export const NewProjectCard = ({
     const { searchQuery } = useSearchHighlightContext();
 
     return (
-        <StyledProjectCard>
+        <StyledNewProjectCard>
             <StyledProjectCardBody>
                 <StyledProjectCardHeader>
                     <StyledProjectCardTitleContainer data-loading>
@@ -54,37 +56,31 @@ export const NewProjectCard = ({
                                 {name}
                             </Highlighter>
                         </Truncator>
-                        <StyledSubtitle>
-                            Updated{' '}
-                            <TimeAgo date={lastUpdatedAt || createdAt} />
+                        <StyledSubtitle data-loading>
+                            {featureCount === 1
+                                ? `${featureCount} flag`
+                                : `${featureCount} flags`}
                         </StyledSubtitle>
                     </StyledProjectCardTitleContainer>
                     <ProjectModeBadge mode={mode} />
                     <FavoriteAction id={id} isFavorite={favorite} />
                 </StyledProjectCardHeader>
-                <div>
-                    <StyledProjectCardContent>
-                        <div data-loading>
-                            <strong>{featureCount}</strong> flag
-                            {featureCount === 1 ? '' : 's'}
-                        </div>
-                    </StyledProjectCardContent>
-                    <StyledProjectCardContent>
-                        <div data-loading>
-                            <strong>{technicalDebt}%</strong> technical debt
-                        </div>
-                        <div data-loading>
-                            <ProjectLastSeen date={lastReportedFlagUsage} />
-                        </div>
-                    </StyledProjectCardContent>
-                </div>
+                <StyledProjectCardContent>
+                    <div data-loading>
+                        <ProjectLastSeen date={lastReportedFlagUsage} />
+                    </div>
+                </StyledProjectCardContent>
             </StyledProjectCardBody>
-            <ProjectCardFooter id={id} owners={owners}>
+            <NewProjectCardFooter
+                owners={owners}
+                lastUpdatedAt={lastUpdatedAt}
+                createdAt={createdAt}
+            >
                 <ConditionallyRender
                     condition={id !== DEFAULT_PROJECT_ID}
                     show={<ProjectMembers count={memberCount} members={[]} />}
                 />
-            </ProjectCardFooter>
-        </StyledProjectCard>
+            </NewProjectCardFooter>
+        </StyledNewProjectCard>
     );
 };

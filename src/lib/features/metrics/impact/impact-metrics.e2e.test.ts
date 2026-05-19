@@ -20,11 +20,6 @@ const sendImpactMetrics = async (
         .send({
             appName: 'impact-metrics-app',
             instanceId: 'instance-id',
-            bucket: {
-                start: Date.now(),
-                stop: Date.now(),
-                toggles: {},
-            },
             impactMetrics,
         })
         .expect(status);

@@ -56,7 +56,9 @@ const StyledCard = styled('div', {
             backgroundColor: theme.palette.warning.light,
         }),
         ':hover': {
-            backgroundColor: theme.palette.action.hover,
+            backgroundColor: deprecated
+                ? theme.palette.warning.light
+                : theme.palette.action.hover,
         },
         ...(variant === 'stacked' && {
             position: 'relative',

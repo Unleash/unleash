@@ -50,7 +50,7 @@ export const NewProjectCardFooter = ({
         <StyledFooter>
             {lastUpdatedAt ? (
                 <StyledSubtitle>
-                    Last updated <TimeAgo date={lastUpdatedAt} />
+                    Updated <TimeAgo date={lastUpdatedAt} />
                 </StyledSubtitle>
             ) : createdAt ? (
                 <StyledSubtitle>

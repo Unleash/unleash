@@ -1,4 +1,4 @@
-// Distributive over unions: Date|undefined → string|undefined, object → any, primitive → itself
+// Date|undefined → string|undefined, object → any, primitive → itself
 type SerializeDateValue<V> = V extends Date
     ? string
     : V extends object

@@ -34,7 +34,13 @@ export const addonDefinitionSchema = joi.object().keys({
             joi.object().keys({
                 type: joi.string().valid('success', 'info', 'warning', 'error'),
                 text: joi.string().required(),
-                link: joi.string().uri().optional(),
+                link: joi
+                    .object()
+                    .keys({
+                        url: joi.string().uri().required(),
+                        title: joi.string().allow(null).optional(),
+                    })
+                    .optional(),
             }),
         ),
 });

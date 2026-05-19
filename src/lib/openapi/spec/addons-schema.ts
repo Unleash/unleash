@@ -108,12 +108,11 @@ export const addonsSchema = {
                     ],
                 },
                 {
-                    name: 'slack-app',
-                    displayName: 'Slack App',
+                    name: 'new-app',
+                    displayName: 'Addon Name',
                     description:
-                        'The Unleash App for Slack posts messages to the selected channels in your Slack workspace.',
-                    documentationUrl:
-                        'https://docs.getunleash.io/integrate/slack-app',
+                        'The App for X that can be combined with Unleash.',
+                    documentationUrl: 'https://docs.getunleash.io/integrate/',
                     parameters: [
                         {
                             name: 'accessToken',
@@ -127,7 +126,7 @@ export const addonsSchema = {
                             name: 'defaultChannels',
                             displayName: 'Channels',
                             description:
-                                'A comma-separated list of channels to post the configured events to. These channels are always notified, regardless of the event type or the presence of a slack tag.',
+                                'A comma-separated list of channels to post the configured events to. These channels are always notified, regardless of the event type or the presence of a addon tag.',
                             type: 'text',
                             required: false,
                             sensitive: false,
@@ -136,9 +135,9 @@ export const addonsSchema = {
                     events: [ADDON_CONFIG_CREATED, FEATURE_CREATED],
                     tagTypes: [
                         {
-                            name: 'slack',
+                            name: 'tag-name',
                             description:
-                                'Slack tag used by the slack-addon to specify the slack channel.',
+                                'A tag used by the X-addon to specify a configuration.',
                             icon: 'S',
                         },
                     ],

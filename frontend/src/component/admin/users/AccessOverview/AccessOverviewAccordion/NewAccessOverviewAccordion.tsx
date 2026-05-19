@@ -30,15 +30,19 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     },
 }));
 
-const StyledTitleContainer = styled('div')(({ theme }) => ({
+const StyledTitleContainer = styled('div')({
     display: 'flex',
-    alignItems: 'start',
-    flexDirection: 'column',
-    gap: theme.spacing(0.5),
-}));
+    alignItems: 'center',
+    minWidth: 0,
+    flex: 1,
+});
 
 const StyledTitle = styled('span')(({ theme }) => ({
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
     fontWeight: theme.fontWeight.bold,
+    minWidth: 0,
 }));
 
 const StyledSecondaryLabel = styled('span')(({ theme }) => ({

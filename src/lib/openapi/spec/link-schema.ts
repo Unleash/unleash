@@ -1,7 +1,7 @@
 import type { FromSchema } from 'json-schema-to-ts';
 
-export const featureLinkSchema = {
-    $id: '#/components/schemas/featureLinkSchema',
+export const linkSchema = {
+    $id: '#/components/schemas/linkSchema',
     type: 'object',
     required: ['url'],
     properties: {
@@ -23,4 +23,4 @@ export const featureLinkSchema = {
     },
 } as const;
 
-export type FeatureLinkSchema = FromSchema<typeof featureLinkSchema>;
+export type LinkSchema = FromSchema<typeof linkSchema>;

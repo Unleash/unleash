@@ -7,7 +7,7 @@ import dbInit, {
 } from '../../../test/e2e/helpers/database-init.js';
 import type { IEventStore, IFeatureLinkStore } from '../../types/index.js';
 import getLogger from '../../../test/fixtures/no-logger.js';
-import type { FeatureLinkSchema } from '../../openapi/spec/feature-link-schema.js';
+import type { LinkSchema } from '../../openapi/spec/link-schema.js';
 import type { IFeatureLinksReadModel } from './feature-links-read-model-type.js';
 import { FeatureLinksReadModel } from './feature-links-read-model.js';
 
@@ -46,7 +46,7 @@ beforeEach(async () => {
 
 const addLink = async (
     featureName: string,
-    link: FeatureLinkSchema,
+    link: LinkSchema,
     expectedCode = 204,
 ) => {
     return app.request
@@ -58,7 +58,7 @@ const addLink = async (
 const updateLink = async (
     featureName: string,
     linkId: string,
-    link: FeatureLinkSchema,
+    link: LinkSchema,
     expectedCode = 204,
 ) => {
     return app.request

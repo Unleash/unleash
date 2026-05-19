@@ -337,11 +337,11 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                                         {text}{' '}
                                         {link && (
                                             <Link
-                                                href={link}
+                                                href={link.url}
                                                 target='_blank'
                                                 rel='noreferrer'
                                             >
-                                                Read more here.
+                                                {link.title}
                                             </Link>
                                         )}
                                     </Alert>

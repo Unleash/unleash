@@ -24,11 +24,9 @@ const StyledSubtitle = styled('span')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
 }));
 
-const StyledNewProjectCardContent = styled(StyledProjectCardContent)(
-    ({ theme }) => ({
-        marginTop: theme.spacing(2),
-    }),
-);
+const StyledNewProjectCard = styled(StyledProjectCard)(({ theme }) => ({
+    minHeight: theme.spacing(23),
+}));
 
 export const NewProjectCard = ({
     name,
@@ -45,7 +43,7 @@ export const NewProjectCard = ({
     const { searchQuery } = useSearchHighlightContext();
 
     return (
-        <StyledProjectCard>
+        <StyledNewProjectCard>
             <StyledProjectCardBody>
                 <StyledProjectCardHeader>
                     <StyledProjectCardTitleContainer data-loading>
@@ -67,11 +65,11 @@ export const NewProjectCard = ({
                     <ProjectModeBadge mode={mode} />
                     <FavoriteAction id={id} isFavorite={favorite} />
                 </StyledProjectCardHeader>
-                <StyledNewProjectCardContent>
+                <StyledProjectCardContent>
                     <div data-loading>
                         <ProjectLastSeen date={lastReportedFlagUsage} />
                     </div>
-                </StyledNewProjectCardContent>
+                </StyledProjectCardContent>
             </StyledProjectCardBody>
             <NewProjectCardFooter
                 owners={owners}
@@ -83,6 +81,6 @@ export const NewProjectCard = ({
                     show={<ProjectMembers count={memberCount} members={[]} />}
                 />
             </NewProjectCardFooter>
-        </StyledProjectCard>
+        </StyledNewProjectCard>
     );
 };

@@ -60,6 +60,9 @@ export const IntegrationParameterTextField = ({
                 inputLabel: {
                     shrink: true,
                 },
+                formHelperText: {
+                    component: 'div',
+                },
             }}
             value={value}
             error={Boolean(error)}

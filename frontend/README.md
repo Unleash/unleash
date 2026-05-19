@@ -22,13 +22,13 @@ pnpm install
 pnpm run start:sandbox
 ```
 
-## Running end-to-end tests against localhost 
+## Running end-to-end tests against localhost
 
 If you need to test against a local server instance,
 you'll need to run in the root directory:
 
 * `pnpm build:frontend`
-* `pnpm dev:start` 
+* `pnpm dev:start`
 
 Then run the e2e tests using:
 
@@ -45,17 +45,16 @@ pnpm run e2e:enterprise
 
 ### Debugging end-to-end tests
 
-Run backend and frontend in develoment build. In the root of the project run e.g.: `pnpm dev`. 
+Run backend and frontend in development build. In the root of the project run e.g.: `pnpm dev`.
 
 Please keep in mind that running tests against dev frontend will be **really** slow (even x5 slower).
-It's best to open cypress UI and pick only the test that you need to work on. 
+It's best to open cypress UI and pick only the test that you need to work on.
 
 In frontend project run:
 
 ```
 pnpm e2e:dev:open
 ```
-
 
 ## Generating the OpenAPI client
 

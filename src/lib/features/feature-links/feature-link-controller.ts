@@ -55,7 +55,7 @@ export default class FeatureLinkController extends Controller {
                         204: emptyResponse,
                         ...getStandardResponses(400, 401, 403, 415),
                     },
-                    requestBody: createRequestSchema('featureLinkSchema'),
+                    requestBody: createRequestSchema('linkSchema'),
                 }),
             ],
         });
@@ -76,7 +76,7 @@ export default class FeatureLinkController extends Controller {
                         204: emptyResponse,
                         ...getStandardResponses(400, 401, 403, 404, 415),
                     },
-                    requestBody: createRequestSchema('featureLinkSchema'),
+                    requestBody: createRequestSchema('linkSchema'),
                 }),
             ],
         });

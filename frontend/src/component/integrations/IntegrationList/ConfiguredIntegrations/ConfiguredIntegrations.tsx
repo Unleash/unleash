@@ -53,14 +53,7 @@ export const ConfiguredIntegrations: FC<ConfiguredIntegrationsProps> = ({
                 {addons
                     ?.sort(({ id: a }, { id: b }) => a - b)
                     .map((addon) => {
-                        const {
-                            id,
-                            enabled,
-                            provider,
-                            description,
-                            // events,
-                            // projects,
-                        } = addon;
+                        const { id, enabled, provider, description } = addon;
                         const providerConfig = providers.find(
                             (item) => item.name === provider,
                         );

@@ -20,6 +20,7 @@ const sendImpactMetrics = async (
         .send({
             appName: 'impact-metrics-app',
             instanceId: 'instance-id',
+            bucket: null,
             impactMetrics,
         })
         .expect(status);

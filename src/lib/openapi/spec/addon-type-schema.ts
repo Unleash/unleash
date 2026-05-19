@@ -176,10 +176,26 @@ export const addonTypeSchema = {
                             'Please ensure you have the Unleash App for X installed.',
                     },
                     link: {
-                        type: 'string',
+                        type: 'object',
+                        additionalProperties: false,
+                        required: ['url'],
                         description:
-                            'An optional URL to display as a link at the end of the alert text.',
-                        example: '/integrations/create/new-app',
+                            'An optional link to display at the end of the alert text.',
+                        properties: {
+                            url: {
+                                type: 'string',
+                                description: 'The URL of the link.',
+                                example:
+                                    'https://docs.getunleash.io/integrate/slack-app',
+                            },
+                            title: {
+                                type: 'string',
+                                nullable: true,
+                                description: 'The display title of the link.',
+                                example:
+                                    'Read these instructions to migrate to new Slack App smoothly.',
+                            },
+                        },
                     },
                 },
             },

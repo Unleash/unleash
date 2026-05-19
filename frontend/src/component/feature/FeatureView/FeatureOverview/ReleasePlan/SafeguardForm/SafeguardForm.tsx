@@ -91,6 +91,7 @@ interface IBaseSafeguardFormProps {
     featureId: string;
     badge?: ReactNode;
     safeguardType?: SafeguardType;
+    headerAction?: ReactNode;
 }
 
 const getInitialValues = (safeguard?: ISafeguard) => ({
@@ -398,6 +399,7 @@ interface SafeguardFormBaseProps {
     badge?: ReactNode;
     children?: React.ReactNode;
     safeguardType?: SafeguardType;
+    headerAction?: ReactNode;
 }
 
 const safeguardTypeLabel: Record<SafeguardType, string> = {
@@ -414,6 +416,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
     badge,
     children,
     safeguardType = 'releasePlan',
+    headerAction,
 }) => {
     const {
         metric,
@@ -488,6 +491,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                     {safeguardTypeLabel[safeguardType]}
                 </StyledLabel>
                 {mode === 'display' && badge}
+                {headerAction}
                 {metric.metricName && (
                     <MiniMetricsChartWithTooltip
                         metricName={metric.metricName}
@@ -664,6 +668,7 @@ export const SafeguardForm: FC<IBaseSafeguardFormProps> = ({
     featureId,
     badge,
     safeguardType,
+    headerAction,
 }) => {
     const formState = useSafeguardFormState(
         safeguard,
@@ -681,6 +686,7 @@ export const SafeguardForm: FC<IBaseSafeguardFormProps> = ({
             environment={environment}
             badge={badge}
             safeguardType={safeguardType}
+            headerAction={headerAction}
         />
     );
 };

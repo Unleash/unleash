@@ -285,16 +285,22 @@ export default class ClientMetricsServiceV2 {
             this.config.eventBus.emit(CLIENT_REGISTER, heartbeatEvent);
         }
 
+        const { bucket } = value;
+        // requests carrying only impact metrics may omit the bucket
+        if (!bucket) {
+            return;
+        }
+
         const clientMetrics: IClientMetricsEnv[] = Object.keys(
-            value.bucket.toggles,
+            bucket.toggles,
         ).map((name) => ({
             featureName: name,
             appName: value.appName,
             environment: value.environment ?? 'default',
-            timestamp: value.bucket.stop, //we might need to approximate between start/stop...
-            yes: value.bucket.toggles[name].yes ?? 0,
-            no: value.bucket.toggles[name].no ?? 0,
-            variants: value.bucket.toggles[name].variants,
+            timestamp: bucket.stop, //we might need to approximate between start/stop...
+            yes: bucket.toggles[name].yes ?? 0,
+            no: bucket.toggles[name].no ?? 0,
+            variants: bucket.toggles[name].variants,
         }));
 
         if (clientMetrics.length) {

@@ -66,7 +66,7 @@ export const addonTypeSchema = {
             example: [
                 {
                     name: 'url',
-                    displayName: 'Slack App URL',
+                    displayName: 'Slack webhook URL',
                     description: '(Required)',
                     type: 'url',
                     required: true,

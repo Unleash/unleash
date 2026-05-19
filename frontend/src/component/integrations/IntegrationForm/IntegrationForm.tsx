@@ -341,8 +341,7 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                                                 target='_blank'
                                                 rel='noreferrer'
                                             >
-                                                See new integration page for
-                                                smoother migration.
+                                                Read more here.
                                             </Link>
                                         )}
                                     </Alert>

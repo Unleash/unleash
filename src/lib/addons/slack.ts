@@ -15,7 +15,7 @@ import {
 import type { IEvent } from '../events/index.js';
 import type { IntegrationEventState } from '../features/integration-events/integration-events-store.js';
 
-// TODO: delete this as soon as all clients (now 12) have migrated to Slack App.
+// TODO: delete this as soon as all clients have migrated to Slack App.
 
 interface ISlackAddonParameters {
     url: string;

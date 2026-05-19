@@ -34,7 +34,9 @@ export const SortableTableHeader = <T,>({
                             ariaTitle={
                                 typeof headerDef === 'string'
                                     ? headerDef
-                                    : undefined
+                                    : typeof content === 'string'
+                                      ? content
+                                      : column.id
                             }
                             isSortable={column.getCanSort()}
                             isSorted={sortDirection !== false}

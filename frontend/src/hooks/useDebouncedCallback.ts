@@ -15,11 +15,19 @@ export const useDebouncedCallback = <Args extends unknown[]>(
         fnRef.current = fn;
     }, [fn]);
 
-    return useMemo(
+    const debounced = useMemo(
         () =>
             debounce((...args: Args) => {
                 fnRef.current(...args);
             }, delay),
         [delay],
     );
+
+    useEffect(() => {
+        return () => {
+            debounced.clear();
+        };
+    }, [debounced]);
+
+    return debounced;
 };

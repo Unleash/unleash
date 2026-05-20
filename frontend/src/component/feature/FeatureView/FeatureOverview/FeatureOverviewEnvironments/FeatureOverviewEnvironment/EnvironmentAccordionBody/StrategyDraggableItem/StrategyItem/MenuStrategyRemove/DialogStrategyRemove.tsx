@@ -157,11 +157,22 @@ export const SuggestFeatureStrategyRemoveDialogue: FC<
                 }
             />
             <MsgContainer>
-                <Typography variant='body2' color='text.secondary'>
+                <Typography
+                    variant='body2'
+                    sx={{
+                        color: 'text.secondary',
+                    }}
+                >
                     Your suggestion:
                 </Typography>
             </MsgContainer>
-            <Typography fontWeight='bold'>Remove strategy</Typography>
+            <Typography
+                sx={{
+                    fontWeight: 'bold',
+                }}
+            >
+                Remove strategy
+            </Typography>
         </Dialogue>
     );
 };

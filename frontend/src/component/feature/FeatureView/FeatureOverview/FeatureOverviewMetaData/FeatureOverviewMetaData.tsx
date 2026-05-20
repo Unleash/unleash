@@ -162,6 +162,7 @@ const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
                 >
                     <ListItemButton
                         component='a'
+                        nativeButton={false}
                         href={link.url}
                         target='_blank'
                         rel='noopener noreferrer'

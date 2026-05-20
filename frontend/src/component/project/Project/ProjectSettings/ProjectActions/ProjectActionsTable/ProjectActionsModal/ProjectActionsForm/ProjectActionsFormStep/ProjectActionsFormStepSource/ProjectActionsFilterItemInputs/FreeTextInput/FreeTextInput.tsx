@@ -3,7 +3,7 @@ import { makeStyles } from 'tss-react/mui';
 import Input from 'component/common/Input/Input';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import type React from 'react';
-import { useState } from 'react';
+import { useState, type JSX } from 'react';
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader.tsx';
 import { parseParameterStrings } from 'utils/parseParameter';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';

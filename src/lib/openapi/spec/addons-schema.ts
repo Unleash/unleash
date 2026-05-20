@@ -3,6 +3,7 @@ import { addonSchema } from './addon-schema.js';
 import { addonTypeSchema } from './addon-type-schema.js';
 import { addonParameterSchema } from './addon-parameter-schema.js';
 import { tagTypeSchema } from './tag-type-schema.js';
+import { ADDON_CONFIG_CREATED, FEATURE_CREATED } from '../../events/index.js';
 
 export const addonsSchema = {
     $id: '#/components/schemas/addonsSchema',
@@ -31,7 +32,7 @@ export const addonsSchema = {
                     description:
                         'A Webhook is a generic way to post messages from Unleash to third party services.',
                     documentationUrl:
-                        'https://docs.getunleash.io/docs/addons/webhook',
+                        'https://docs.getunleash.io/integrate/webhook',
                     parameters: [
                         {
                             name: 'url',
@@ -72,7 +73,7 @@ export const addonsSchema = {
   "timestamp": "{{event.data.createdAt}}"
 }`,
                             description:
-                                "(Optional) You may format the body using a mustache template. If you don't specify anything, the format will similar to the events format (https://docs.getunleash.io/api/events)",
+                                "(Optional) You may format the body using a mustache template. If you don't specify anything, the format will be similar to the events format (https://docs.getunleash.io/concepts/events)",
                             type: 'textfield',
                             required: false,
                             sensitive: false,
@@ -107,71 +108,36 @@ export const addonsSchema = {
                     ],
                 },
                 {
-                    name: 'slack',
-                    displayName: 'Slack',
-                    description: 'Allows Unleash to post updates to Slack.',
-                    documentationUrl:
-                        'https://docs.getunleash.io/docs/addons/slack',
+                    name: 'new-app',
+                    displayName: 'Addon Name',
+                    description:
+                        'The App for X that can be combined with Unleash.',
+                    documentationUrl: 'https://docs.getunleash.io/integrate/',
                     parameters: [
                         {
-                            name: 'url',
-                            displayName: 'Slack webhook URL',
+                            name: 'accessToken',
+                            displayName: 'Access token',
                             description: '(Required)',
-                            type: 'url',
+                            type: 'text',
                             required: true,
                             sensitive: true,
                         },
                         {
-                            name: 'username',
-                            displayName: 'Username',
-                            placeholder: 'Unleash',
+                            name: 'defaultChannels',
+                            displayName: 'Channels',
                             description:
-                                'The username to use when posting messages to slack. Defaults to "Unleash".',
+                                'A comma-separated list of channels to post the configured events to. These channels are always notified, regardless of the event type or the presence of a addon tag.',
                             type: 'text',
                             required: false,
                             sensitive: false,
                         },
-                        {
-                            name: 'emojiIcon',
-                            displayName: 'Emoji Icon',
-                            placeholder: ':unleash:',
-                            description:
-                                'The emoji_icon to use when posting messages to slack. Defaults to ":unleash:".',
-                            type: 'text',
-                            required: false,
-                            sensitive: false,
-                        },
-                        {
-                            name: 'defaultChannel',
-                            displayName: 'Default channel',
-                            description:
-                                '(Required) Default channel to post updates to if not specified in the slack-tag',
-                            type: 'text',
-                            required: true,
-                            sensitive: false,
-                        },
                     ],
-                    events: [
-                        'feature-created',
-                        'feature-updated',
-                        'feature-archived',
-                        'feature-revived',
-                        'feature-stale-on',
-                        'feature-stale-off',
-                        'feature-environment-enabled',
-                        'feature-environment-disabled',
-                        'feature-strategy-remove',
-                        'feature-strategy-update',
-                        'feature-strategy-add',
-                        'feature-metadata-updated',
-                        'feature-variants-updated',
-                        'feature-project-change',
-                    ],
+                    events: [ADDON_CONFIG_CREATED, FEATURE_CREATED],
                     tagTypes: [
                         {
-                            name: 'slack',
+                            name: 'tag-name',
                             description:
-                                'Slack tag used by the slack-addon to specify the slack channel.',
+                                'A tag used by the X-addon to specify a configuration.',
                             icon: 'S',
                         },
                     ],
@@ -182,7 +148,7 @@ export const addonsSchema = {
                     description:
                         'Allows Unleash to post updates to Microsoft Teams.',
                     documentationUrl:
-                        'https://docs.getunleash.io/docs/addons/teams',
+                        'https://docs.getunleash.io/integrate/teams',
                     parameters: [
                         {
                             name: 'url',
@@ -215,7 +181,7 @@ export const addonsSchema = {
                     displayName: 'Datadog',
                     description: 'Allows Unleash to post updates to Datadog.',
                     documentationUrl:
-                        'https://docs.getunleash.io/docs/addons/datadog',
+                        'https://docs.getunleash.io/integrate/datadog',
                     parameters: [
                         {
                             name: 'url',

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type VFC } from 'react';
+import { useEffect, useMemo, useState, type FC } from 'react';
 import { IconButton, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import { useSearchParams, Link } from 'react-router-dom';
 import {
@@ -60,7 +60,7 @@ const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
     defaultSort,
 );
 
-export const Group: VFC = () => {
+export const Group: FC = () => {
     const groupId = Number(useRequiredPathParam('groupId'));
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -248,6 +248,7 @@ export const Group: VFC = () => {
                                     data-testid={UG_EDIT_BTN_ID}
                                     to={`/admin/groups/${groupId}/edit`}
                                     component={Link}
+                                    nativeButton={false}
                                     data-loading
                                     permission={ADMIN}
                                     tooltipProps={{

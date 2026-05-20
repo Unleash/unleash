@@ -50,7 +50,12 @@ const ActiveProjectDetails: FC<{
                 <Typography variant='subtitle2' color='primary'>
                     {project.featureCount}
                 </Typography>
-                <Typography variant='caption' color='text.secondary'>
+                <Typography
+                    variant='caption'
+                    sx={{
+                        color: 'text.secondary',
+                    }}
+                >
                     flags
                 </Typography>
             </Box>
@@ -58,7 +63,12 @@ const ActiveProjectDetails: FC<{
                 <Typography variant='subtitle2' color='primary'>
                     {project.memberCount}
                 </Typography>
-                <Typography variant='caption' color='text.secondary'>
+                <Typography
+                    variant='caption'
+                    sx={{
+                        color: 'text.secondary',
+                    }}
+                >
                     members
                 </Typography>
             </Box>
@@ -66,7 +76,12 @@ const ActiveProjectDetails: FC<{
                 <Typography variant='subtitle2' color='primary'>
                     {techicalDebt}%
                 </Typography>
-                <Typography variant='caption' color='text.secondary'>
+                <Typography
+                    variant='caption'
+                    sx={{
+                        color: 'text.secondary',
+                    }}
+                >
                     technical debt
                 </Typography>
             </Box>
@@ -97,6 +112,7 @@ const ProjectListItem: FC<{
                     <StyledCardTitle>{project.name}</StyledCardTitle>
                     <IconButton
                         component={Link}
+                        nativeButton={false}
                         to={`/projects/${project.id}`}
                         size='small'
                         sx={{ ml: 'auto' }}

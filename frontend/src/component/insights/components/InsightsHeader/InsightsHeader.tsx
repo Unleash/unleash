@@ -1,4 +1,4 @@
-import type { ReactNode, VFC } from 'react';
+import type { ReactNode, FC } from 'react';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
 import ReviewsOutlined from '@mui/icons-material/ReviewsOutlined';
@@ -47,7 +47,7 @@ const StyledActionsSmallScreen = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(2),
 }));
 
-export const InsightsHeader: VFC<DashboardHeaderProps> = ({ actions }) => {
+export const InsightsHeader: FC<DashboardHeaderProps> = ({ actions }) => {
     const showInactiveUsers = useUiFlag('showInactiveUsers');
     const pageName = 'Analytics';
     const theme = useTheme();

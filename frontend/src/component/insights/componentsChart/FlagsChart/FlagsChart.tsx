@@ -1,4 +1,4 @@
-import { useMemo, type VFC } from 'react';
+import { useMemo, type FC } from 'react';
 import 'chartjs-adapter-date-fns';
 import { useTheme } from '@mui/material';
 import type { InstanceInsightsSchema } from 'openapi';
@@ -13,10 +13,7 @@ interface IFlagsChartProps {
     isLoading?: boolean;
 }
 
-export const FlagsChart: VFC<IFlagsChartProps> = ({
-    flagTrends,
-    isLoading,
-}) => {
+export const FlagsChart: FC<IFlagsChartProps> = ({ flagTrends, isLoading }) => {
     const theme = useTheme();
     const notEnoughData = !isLoading && flagTrends.length < 2;
     const placeholderData = usePlaceholderData({ fill: true, type: 'double' });

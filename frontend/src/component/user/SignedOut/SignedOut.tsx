@@ -44,6 +44,7 @@ const SignedOut = () => {
                     variant='contained'
                     color='primary'
                     component={Link}
+                    nativeButton={false}
                     to='/login'
                     fullWidth
                 >

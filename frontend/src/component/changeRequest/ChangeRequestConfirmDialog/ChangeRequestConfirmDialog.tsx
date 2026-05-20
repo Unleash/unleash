@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, JSX } from 'react';
 import { Alert, Typography } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
@@ -63,8 +63,12 @@ export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
                     </Alert>
                 }
             />
-
-            <Typography variant='body2' color='text.secondary'>
+            <Typography
+                variant='body2'
+                sx={{
+                    color: 'text.secondary',
+                }}
+            >
                 Your suggestion:
             </Typography>
             {messageComponent}

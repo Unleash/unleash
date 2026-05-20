@@ -1,3 +1,4 @@
+import { createUuid } from 'utils/createUuid';
 import { useEffect, useRef, useState } from 'react';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -92,7 +93,7 @@ const addIdSymbolToConstraints = (strategy?: IFeatureStrategy) => {
     if (!strategy) return;
 
     return strategy?.constraints.map((constraint) => {
-        return { ...constraint, [constraintId]: crypto.randomUUID() };
+        return { ...constraint, [constraintId]: createUuid() };
     });
 };
 

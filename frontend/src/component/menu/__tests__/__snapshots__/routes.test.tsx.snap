@@ -3,7 +3,6 @@
 exports[`returns all baseRoutes 1`] = `
 [
   {
-    "component": [Function],
     "isStandalone": true,
     "menu": {},
     "path": "/splash/:splashId",
@@ -11,7 +10,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {
       "primary": true,
     },
@@ -20,14 +18,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": {
-      "$$typeof": Symbol(react.lazy),
-      "_init": [Function],
-      "_payload": {
-        "_result": [Function],
-        "_status": -1,
-      },
-    },
     "enterprise": true,
     "menu": {},
     "parent": "/projects",
@@ -36,7 +26,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {},
     "parent": "/projects/:projectId/features/:featureId/",
     "path": "/projects/:projectId/features/:featureId/copy",
@@ -44,7 +33,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {},
     "parent": "/projects",
     "path": "/projects/:projectId/features/:featureId/edit",
@@ -52,14 +40,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": {
-      "$$typeof": Symbol(react.lazy),
-      "_init": [Function],
-      "_payload": {
-        "_result": [Function],
-        "_status": -1,
-      },
-    },
     "menu": {},
     "parent": "/projects",
     "path": "/projects/:projectId/features/:featureId/*",
@@ -67,14 +47,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": {
-      "$$typeof": Symbol(react.lazy),
-      "_init": [Function],
-      "_payload": {
-        "_result": [Function],
-        "_status": -1,
-      },
-    },
     "flag": "P",
     "menu": {},
     "parent": "/projects",
@@ -83,7 +55,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {
       "primary": true,
     },
@@ -92,7 +63,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "enterprise": true,
     "menu": {},
     "path": "/projects-archive",
@@ -100,7 +70,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {
       "primary": true,
     },
@@ -109,7 +78,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "enterprise": true,
     "menu": {
       "primary": true,
@@ -119,14 +87,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": {
-      "$$typeof": Symbol(react.lazy),
-      "_init": [Function],
-      "_payload": {
-        "_result": [Function],
-        "_status": -1,
-      },
-    },
     "hidden": false,
     "menu": {
       "primary": true,
@@ -136,7 +96,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "enterprise": true,
     "menu": {
       "primary": true,
@@ -146,14 +105,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": {
-      "$$typeof": Symbol(react.lazy),
-      "_init": [Function],
-      "_payload": {
-        "_result": [Function],
-        "_status": -1,
-      },
-    },
     "enterprise": true,
     "flag": "impactMetrics",
     "menu": {
@@ -164,7 +115,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {},
     "parent": "/applications",
     "path": "/applications/:name/*",
@@ -172,7 +122,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {
       "main": true,
     },
@@ -181,7 +130,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "flag": "customMetrics",
     "menu": {
       "main": true,
@@ -191,7 +139,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {},
     "parent": "/context",
     "path": "/context/create",
@@ -199,7 +146,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {},
     "parent": "/context",
     "path": "/context/edit/:name",
@@ -207,7 +153,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {
       "main": true,
     },
@@ -216,7 +161,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {
       "main": true,
     },
@@ -225,7 +169,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {},
     "parent": "/strategies",
     "path": "/strategies/create",
@@ -233,7 +176,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {},
     "parent": "/strategies",
     "path": "/strategies/:name/edit",
@@ -241,7 +183,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {},
     "parent": "/strategies",
     "path": "/strategies/:name",
@@ -249,7 +190,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {
       "main": true,
     },
@@ -258,7 +198,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {},
     "parent": "/environments",
     "path": "/environments/create",
@@ -266,14 +205,12 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {},
     "path": "/environments/:id",
     "title": "Edit",
     "type": "protected",
   },
   {
-    "component": [Function],
     "enterprise": true,
     "menu": {
       "main": true,
@@ -283,7 +220,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "flag": "feedbackPosting",
     "menu": {},
     "path": "/feedback",
@@ -291,7 +227,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {
       "main": true,
       "mode": [
@@ -303,7 +238,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "enterprise": true,
     "menu": {
       "mode": [
@@ -316,7 +250,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "enterprise": true,
     "menu": {
       "mode": [
@@ -329,7 +262,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {},
     "parent": "/tag-types",
     "path": "/tag-types/create",
@@ -337,7 +269,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {},
     "parent": "/tag-types",
     "path": "/tag-types/edit/:name",
@@ -345,7 +276,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {
       "main": true,
     },
@@ -354,7 +284,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {},
     "parent": "/addons",
     "path": "/addons/create/:providerId",
@@ -362,7 +291,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {},
     "parent": "/addons",
     "path": "/addons/edit/:addonId",
@@ -370,7 +298,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "hidden": false,
     "menu": {},
     "path": "/addons",
@@ -378,7 +305,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {},
     "parent": "/integrations",
     "path": "/integrations/create/:providerId",
@@ -386,7 +312,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {},
     "parent": "/integrations",
     "path": "/integrations/view/:providerId",
@@ -394,7 +319,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {},
     "parent": "/integrations",
     "path": "/integrations/edit/:addonId",
@@ -402,7 +326,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "hidden": false,
     "menu": {
       "main": true,
@@ -412,7 +335,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "hidden": false,
     "layout": "main",
     "menu": {},
@@ -421,7 +343,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "hidden": false,
     "layout": "main",
     "menu": {},
@@ -430,7 +351,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "hidden": false,
     "menu": {
       "main": true,
@@ -440,7 +360,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {
       "adminSettings": true,
     },
@@ -449,7 +368,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {
       "adminSettings": true,
     },
@@ -458,28 +376,18 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {},
     "path": "/archive",
     "title": "Archived flags",
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {},
     "path": "/unknown-flags",
     "title": "Unknown flags",
     "type": "protected",
   },
   {
-    "component": {
-      "$$typeof": Symbol(react.lazy),
-      "_init": [Function],
-      "_payload": {
-        "_result": [Function],
-        "_status": -1,
-      },
-    },
     "hidden": false,
     "menu": {},
     "path": "/admin/*",
@@ -487,7 +395,6 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "component": [Function],
     "menu": {},
     "path": "/profile/*",
     "title": "Profile",

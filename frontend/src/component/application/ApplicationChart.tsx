@@ -225,8 +225,8 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                             <Typography
                                 sx={(theme) => ({
                                     fontSize: theme.fontSizes.smallerBody,
+                                    color: theme.palette.text.secondary,
                                 })}
-                                color='text.secondary'
                             >
                                 Application
                             </Typography>

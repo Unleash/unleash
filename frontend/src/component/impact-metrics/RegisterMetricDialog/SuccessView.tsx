@@ -74,7 +74,6 @@ export const SuccessView = ({ metricName }: SuccessViewProps) => {
             <StyledIconWrapper>
                 <StyledIcon />
             </StyledIconWrapper>
-
             <TextContent>
                 <Typography variant='h2' component='h4'>
                     Implement the impact metric
@@ -85,7 +84,12 @@ export const SuccessView = ({ metricName }: SuccessViewProps) => {
                     start receiving actual metric data.
                 </Typography>
                 <StyledMetricName>
-                    <Typography component='span' fontWeight='bold'>
+                    <Typography
+                        component='span'
+                        sx={{
+                            fontWeight: 'bold',
+                        }}
+                    >
                         Metric name:&nbsp;
                     </Typography>
                     {metricName}
@@ -108,9 +112,9 @@ export const SuccessView = ({ metricName }: SuccessViewProps) => {
                     </StyledLoading>
                 )}
             </TextContent>
-
             <Button
                 component={Link}
+                nativeButton={false}
                 target='_blank'
                 rel='noopener noreferrer'
                 variant='contained'

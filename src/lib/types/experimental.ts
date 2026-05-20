@@ -66,7 +66,6 @@ export type IFlagKey =
     | 'safeguards'
     | 'newInUnleash'
     | 'oidcPkceSupport'
-    | 'gtmReleaseManagement'
     | 'remoteMcpServer'
     | 'regexConstraintOperator'
     | 'enterpriseEdgeTokensList'
@@ -79,7 +78,8 @@ export type IFlagKey =
     | 'externalImpactMetrics'
     | 'accessOverviewRework'
     | 'onboardingConnectSDKNewDialog'
-    | 'logRocketEnabled';
+    | 'logRocketEnabled'
+    | 'newProjectList';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -305,10 +305,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_NEW_IN_UNLEASH,
         false,
     ),
-    gtmReleaseManagement: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_GTM_RELEASE_MANAGEMENT,
-        false,
-    ),
     remoteMcpServer: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_REMOTE_MCP_SERVER,
         false,
@@ -360,6 +356,10 @@ const flags: IFlags = {
     ),
     logRocketEnabled: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_LOGROCKET_ENABLED,
+        false,
+    ),
+    newProjectList: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_NEW_PROJECT_LIST,
         false,
     ),
 };

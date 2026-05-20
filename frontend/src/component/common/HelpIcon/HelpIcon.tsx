@@ -1,5 +1,5 @@
 import { styled, Tooltip, type TooltipProps } from '@mui/material';
-import HelpOutline from '@mui/icons-material/HelpOutline';
+import HelpOutline from '@mui/icons-material/HelpOutlineOutlined';
 import {
     HtmlTooltip,
     type IHtmlTooltipProps,

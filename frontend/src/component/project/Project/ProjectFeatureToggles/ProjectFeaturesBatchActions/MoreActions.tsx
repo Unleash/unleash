@@ -1,4 +1,4 @@
-import { useState, type VFC } from 'react';
+import { useState, type FC } from 'react';
 import {
     IconButton,
     ListItemIcon,
@@ -29,7 +29,7 @@ interface IMoreActionsProps {
 
 const menuId = 'selection-actions-menu';
 
-export const MoreActions: VFC<IMoreActionsProps> = ({
+export const MoreActions: FC<IMoreActionsProps> = ({
     projectId,
     data,
     onChange,

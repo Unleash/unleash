@@ -1,3 +1,4 @@
+import { createUuid } from 'utils/createUuid';
 import { useMemo } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Button, Divider, styled } from '@mui/material';
@@ -52,7 +53,7 @@ export const ProjectActionsFormStepSource = ({
     const { signalEndpointSignals } = useSignalEndpointSignals(sourceId, 1);
 
     const addFilter = () => {
-        const id = crypto.randomUUID();
+        const id = createUuid();
         setFilters((filters) => [
             ...filters,
             {

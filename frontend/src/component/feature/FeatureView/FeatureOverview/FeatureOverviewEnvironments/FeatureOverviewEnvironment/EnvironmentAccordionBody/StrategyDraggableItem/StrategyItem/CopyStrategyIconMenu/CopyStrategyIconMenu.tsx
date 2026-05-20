@@ -1,4 +1,4 @@
-import { type MouseEvent, useState, type VFC } from 'react';
+import { type MouseEvent, useState, type FC } from 'react';
 import {
     IconButton,
     ListItemIcon,
@@ -32,7 +32,7 @@ interface ICopyStrategyIconMenuProps {
     strategy: IFeatureStrategyPayload;
 }
 
-export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
+export const CopyStrategyIconMenu: FC<ICopyStrategyIconMenuProps> = ({
     environmentId,
     environments,
     strategy,
@@ -141,8 +141,10 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
                 anchorEl={anchorEl}
                 open={open}
                 onClose={onClose}
-                MenuListProps={{
-                    'aria-labelledby': `copy-strategy-icon-menu-${strategy.id}`,
+                slotProps={{
+                    list: {
+                        'aria-labelledby': `copy-strategy-icon-menu-${strategy.id}`,
+                    },
                 }}
             >
                 {[...environments, environmentId].map((environment) => {

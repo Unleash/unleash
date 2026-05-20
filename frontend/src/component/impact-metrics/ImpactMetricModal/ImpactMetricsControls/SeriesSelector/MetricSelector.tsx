@@ -80,10 +80,20 @@ const NoOptionsMessage = ({
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-            <Typography variant='body2' fontWeight='bold'>
+            <Typography
+                variant='body2'
+                sx={{
+                    fontWeight: 'bold',
+                }}
+            >
                 No impact metrics found
             </Typography>
-            <Typography variant='body2' color='text.secondary'>
+            <Typography
+                variant='body2'
+                sx={{
+                    color: 'text.secondary',
+                }}
+            >
                 Impact metrics need to be implemented in your code before they
                 can be used in safeguards.
             </Typography>
@@ -171,7 +181,9 @@ export const MetricSelector = ({
                             </Typography>
                             <Typography
                                 variant='caption'
-                                color='text.secondary'
+                                sx={{
+                                    color: 'text.secondary',
+                                }}
                             >
                                 <Highlighter search={inputValue}>
                                     {option.help}

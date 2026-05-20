@@ -74,6 +74,7 @@ export const ProjectEnvironmentDefaultStrategy = ({
                         environmentId={environmentId}
                         projectId={projectId}
                         component={Link}
+                        nativeButton={false}
                         to={editStrategyPath}
                         tooltipProps={{
                             title: `Edit default strategy for "${environmentId}"`,

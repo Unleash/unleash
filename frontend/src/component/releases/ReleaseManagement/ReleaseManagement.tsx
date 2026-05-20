@@ -88,11 +88,18 @@ export const ReleaseManagement = () => {
                     severity='info'
                     onClose={() => setInfoAlertState('closed')}
                 >
-                    <Typography component='p' display='inline'>
+                    <Typography
+                        component='p'
+                        sx={{
+                            display: 'inline',
+                        }}
+                    >
                         <Typography
-                            fontWeight={'bold'}
-                            display='block'
                             component='span'
+                            sx={{
+                                fontWeight: 'bold',
+                                display: 'block',
+                            }}
                         >
                             Standardize your rollouts with Release templates.
                         </Typography>
@@ -103,6 +110,7 @@ export const ReleaseManagement = () => {
                     </Typography>
                     <StyledAlertButton
                         component={Link}
+                        nativeButton={false}
                         variant='outlined'
                         target='_blank'
                         rel='noopener noreferrer'
@@ -145,7 +153,6 @@ export const ReleaseManagement = () => {
                     </div>
                 )}
             </PageContent>
-
             <StyledLink
                 to='https://docs.getunleash.io/concepts/release-templates'
                 rel='noopener noreferrer'

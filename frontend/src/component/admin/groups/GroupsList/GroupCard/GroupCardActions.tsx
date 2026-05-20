@@ -95,6 +95,7 @@ export const GroupCardActions: FC<IGroupCardActions> = ({
                     <MenuItem
                         onClick={handleClose}
                         component={Link}
+                        nativeButton={false}
                         to={`/admin/groups/${groupId}/edit`}
                     >
                         <ListItemIcon>

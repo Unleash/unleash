@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState, type VFC as FC } from 'react';
+import { type FC, useContext, useMemo, useState } from 'react';
 import { type HeaderGroup, useGlobalFilter, useTable } from 'react-table';
 import { Alert, Box, styled, Typography } from '@mui/material';
 import {
@@ -235,7 +235,6 @@ export const ChangeRequestTable: FC = () => {
                 in that environment needs to be approved before it will be
                 applied
             </Alert>
-
             <Table {...getTableProps()}>
                 <SortableTableHeader
                     headerGroups={headerGroups as HeaderGroup<object>[]}
@@ -260,7 +259,6 @@ export const ChangeRequestTable: FC = () => {
                     })}
                 </TableBody>
             </Table>
-
             <Dialogue
                 onClick={() => {
                     trackEvent('change_request', {
@@ -302,7 +300,12 @@ export const ChangeRequestTable: FC = () => {
                 <ConditionallyRender
                     condition={!dialogState.isEnabled}
                     show={
-                        <Typography variant='body2' color='text.secondary'>
+                        <Typography
+                            variant='body2'
+                            sx={{
+                                color: 'text.secondary',
+                            }}
+                        >
                             To enable change requests for an environment, you
                             need to ensure that your Unleash Admin has created
                             the necessary custom project roles in your Unleash

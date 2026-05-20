@@ -1,3 +1,4 @@
+import { createUuid } from 'utils/createUuid';
 import {
     formatStrategyName,
     getFeatureStrategyIcon,
@@ -73,7 +74,7 @@ export const MilestoneStrategyMenuCard = ({
                     };
                 }
                 onClick({
-                    id: crypto.randomUUID(),
+                    id: createUuid(),
                     name: strat.name,
                     title: '',
                     constraints: strat.constraints,

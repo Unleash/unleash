@@ -16,7 +16,7 @@ export type PlotArea = { leftPx: number; widthPx: number };
 // Re-runs on container resize and whenever any value in `invalidateKeys`
 // changes — typically the dataset and any state that affects layout.
 export const useChartPlotArea = (
-    wrapperRef: RefObject<HTMLElement>,
+    wrapperRef: RefObject<HTMLElement | null>,
     chartRef: MutableRefObject<ChartInstance<'line'> | null>,
     invalidateKeys: unknown[],
 ): PlotArea | null => {

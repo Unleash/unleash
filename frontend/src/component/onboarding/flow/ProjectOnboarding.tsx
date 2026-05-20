@@ -23,11 +23,12 @@ interface IProjectOnboardingProps {
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
     background: theme.palette.background.paper,
     borderRadius: theme.shape.borderRadiusLarge,
+    boxShadow: 'none',
+    overflow: 'hidden',
 }));
 
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     padding: theme.spacing(0.5, 3),
-    borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
 const TitleRow = styled('div')(({ theme }) => ({
@@ -41,7 +42,8 @@ const TitleRow = styled('div')(({ theme }) => ({
     marginRight: theme.spacing(1),
 }));
 
-const StyledAccordionDetails = styled(AccordionDetails)(() => ({
+const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
+    borderTop: `1px solid ${theme.palette.divider}`,
     padding: 0,
 }));
 
@@ -98,7 +100,13 @@ export const ProjectOnboarding = ({
                 id='panel1-header'
             >
                 <TitleRow>
-                    <Typography fontWeight='bold'>Project setup</Typography>
+                    <Typography
+                        sx={{
+                            fontWeight: 'bold',
+                        }}
+                    >
+                        Project setup
+                    </Typography>
                     <OnboardingProgress
                         step={step}
                         maxSteps={NUMBER_OF_STEPS}

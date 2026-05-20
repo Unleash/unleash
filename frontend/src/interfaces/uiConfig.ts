@@ -85,7 +85,6 @@ export type UiFlags = {
     oidcPkceSupport?: boolean;
     extendedUsageMetrics?: boolean;
     newInUnleash?: boolean | Variant;
-    gtmReleaseManagement?: boolean;
     regexConstraintOperator?: boolean;
     signupDialog?: boolean;
     enterpriseEdgeTokensList?: boolean;
@@ -97,6 +96,7 @@ export type UiFlags = {
     accessOverviewRework?: boolean;
     onboardingConnectSDKNewDialog?: boolean;
     logRocketEnabled?: boolean;
+    newProjectList?: boolean;
 };
 
 export interface IVersionInfo {

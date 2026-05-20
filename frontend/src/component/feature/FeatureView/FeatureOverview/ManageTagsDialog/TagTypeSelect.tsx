@@ -7,7 +7,7 @@ import {
     useTheme,
 } from '@mui/material';
 import type { ITagType } from 'interfaces/tags';
-import type { HTMLAttributes } from 'react';
+import type { HTMLAttributes, JSX } from 'react';
 
 interface ITagSelect {
     options: ITagType[];

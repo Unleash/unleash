@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Link, styled, Tooltip, Typography } from '@mui/material';
 import { IntegrationIcon } from '../IntegrationIcon/IntegrationIcon.tsx';
@@ -42,37 +42,44 @@ type IIntegrationCardProps =
     | IIntegrationCardWithOnClickProps;
 
 const StyledCard = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'variant',
-})<{ variant?: CardVariant }>(({ theme, variant = 'default' }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    padding: theme.spacing(3),
-    height: '100%',
-    borderRadius: `${theme.shape.borderRadiusMedium}px`,
-    border: `1px solid ${theme.palette.divider}`,
-    boxShadow: theme.boxShadows.card,
-    ':hover': {
-        backgroundColor: theme.palette.action.hover,
-    },
-    ...(variant === 'stacked' && {
-        position: 'relative',
-        zIndex: 0,
-        '&:after': {
-            content: '""',
-            width: 'auto',
-            height: theme.spacing(1),
-            position: 'absolute',
-            zIndex: -1,
-            bottom: theme.spacing(-1),
-            left: theme.spacing(1),
-            right: theme.spacing(1),
-            borderBottomLeftRadius: `${theme.shape.borderRadiusMedium}px`,
-            borderBottomRightRadius: `${theme.shape.borderRadiusMedium}px`,
-            border: `1px solid ${theme.palette.divider}`,
-            boxShadow: theme.boxShadows.card,
+    shouldForwardProp: (prop) => prop !== 'variant' && prop !== 'deprecated',
+})<{ variant?: CardVariant; deprecated?: boolean }>(
+    ({ theme, variant = 'default', deprecated }) => ({
+        display: 'flex',
+        flexDirection: 'column',
+        padding: theme.spacing(3),
+        height: '100%',
+        borderRadius: `${theme.shape.borderRadiusMedium}px`,
+        border: `1px solid ${theme.palette.divider}`,
+        boxShadow: theme.boxShadows.card,
+        ...(deprecated && {
+            backgroundColor: theme.palette.warning.light,
+        }),
+        ':hover': {
+            backgroundColor: deprecated
+                ? theme.palette.warning.light
+                : theme.palette.action.hover,
         },
+        ...(variant === 'stacked' && {
+            position: 'relative',
+            zIndex: 0,
+            '&:after': {
+                content: '""',
+                width: 'auto',
+                height: theme.spacing(1),
+                position: 'absolute',
+                zIndex: -1,
+                bottom: theme.spacing(-1),
+                left: theme.spacing(1),
+                right: theme.spacing(1),
+                borderBottomLeftRadius: `${theme.shape.borderRadiusMedium}px`,
+                borderBottomRightRadius: `${theme.shape.borderRadiusMedium}px`,
+                border: `1px solid ${theme.palette.divider}`,
+                boxShadow: theme.boxShadows.card,
+            },
+        }),
     }),
-}));
+);
 
 const StyledLink = styled(Link)({
     textDecoration: 'none',
@@ -112,7 +119,7 @@ const StyledOpenInNewIcon = styled(OpenInNewIcon)(({ theme }) => ({
     fontSize: theme.fontSizes.bodySize,
 }));
 
-export const IntegrationCard: VFC<IIntegrationCardProps> = ({
+export const IntegrationCard: FC<IIntegrationCardProps> = ({
     variant = 'default',
     icon,
     title,
@@ -138,7 +145,7 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
     };
 
     const content = (
-        <StyledCard variant={variant}>
+        <StyledCard variant={variant} deprecated={deprecated !== undefined}>
             <StyledHeader>
                 <StyledTitle variant='h3' data-loading>
                     <IntegrationIcon name={icon as string} /> {title}
@@ -152,7 +159,7 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
                     }
                 />
                 <ConditionallyRender
-                    condition={isEnabled === true}
+                    condition={isEnabled === true && deprecated === undefined}
                     show={
                         <Badge color='success' data-loading>
                             Enabled
@@ -160,15 +167,26 @@ export const IntegrationCard: VFC<IIntegrationCardProps> = ({
                     }
                 />
                 <ConditionallyRender
-                    condition={isEnabled === false}
+                    condition={isEnabled === false && deprecated === undefined}
                     show={<Badge data-loading>Disabled</Badge>}
                 />
                 <ConditionallyRender
                     condition={isConfigured}
-                    show={<IntegrationCardMenu addon={addon as AddonSchema} />}
+                    show={
+                        <IntegrationCardMenu
+                            addon={addon as AddonSchema}
+                            deprecated={deprecated}
+                        />
+                    }
                 />
             </StyledHeader>
-            <Typography variant='body2' color='text.secondary' data-loading>
+            <Typography
+                variant='body2'
+                data-loading
+                sx={{
+                    color: 'text.secondary',
+                }}
+            >
                 {description}
             </Typography>
             <StyledAction data-loading>

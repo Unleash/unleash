@@ -52,8 +52,8 @@ export const BaseModal: FC<ISidebarModalProps> = ({
             onClick={onClick}
             closeAfterTransition
             aria-label={label}
-            BackdropComponent={Backdrop}
-            BackdropProps={{ timeout: TRANSITION_DURATION }}
+            slots={{ backdrop: Backdrop }}
+            slotProps={{ backdrop: { timeout: TRANSITION_DURATION } }}
             data-testid={SIDEBAR_MODAL_ID}
             sx={{ minHeight: '100vh' }}
         >

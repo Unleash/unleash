@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import Delete from '@mui/icons-material/Delete';
 import Undo from '@mui/icons-material/Undo';
@@ -14,7 +14,7 @@ interface IReviveArchivedFeatureCell {
     project: string;
 }
 
-export const ArchivedFeatureActionCell: VFC<IReviveArchivedFeatureCell> = ({
+export const ArchivedFeatureActionCell: FC<IReviveArchivedFeatureCell> = ({
     onRevive,
     onDelete,
     project,

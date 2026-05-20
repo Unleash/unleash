@@ -31,13 +31,19 @@ export const EmptyTemplatesListMessage = () => {
             <Typography component='h2' variant='h3'>
                 Get started with release templates
             </Typography>
-            <Typography component='p' color='text.secondary'>
+            <Typography
+                component='p'
+                sx={{
+                    color: 'text.secondary',
+                }}
+            >
                 Control your releases with milestones that can be reused by the
                 entire team.
             </Typography>
             <Buttons>
                 <Button
                     component={Link}
+                    nativeButton={false}
                     sx={{ whiteSpace: 'nowrap' }}
                     to='https://docs.getunleash.io/reference/release-templates'
                     variant='text'

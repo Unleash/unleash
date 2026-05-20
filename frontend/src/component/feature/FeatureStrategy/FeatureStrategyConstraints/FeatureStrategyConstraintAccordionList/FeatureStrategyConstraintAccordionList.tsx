@@ -54,7 +54,7 @@ interface IConstraintAccordionListItemState {
 
 const useConstraintAccordionList = (
     setConstraints: React.Dispatch<React.SetStateAction<IConstraint[]>>,
-    ref: React.RefObject<IConstraintAccordionListRef>,
+    ref: React.RefObject<IConstraintAccordionListRef | null>,
 ) => {
     const state = useWeakMap<IConstraint, IConstraintAccordionListItemState>();
     const { context } = useAssignableUnleashContext();
@@ -84,7 +84,7 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
 >(({ constraints, setConstraints }, ref) => {
     const { onAdd, context } = useConstraintAccordionList(
         setConstraints,
-        ref as RefObject<IConstraintAccordionListRef>,
+        ref as RefObject<IConstraintAccordionListRef | null>,
     );
     const { limit, limitReached } = useConstraintLimit(constraints.length);
 

@@ -14,9 +14,7 @@ import { DraftBanner } from './DraftBanner/DraftBanner.tsx';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar.tsx';
 import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
-import { LegacyNewInUnleash } from './NavigationSidebar/NewInUnleash/LegacyNewInUnleash.tsx';
 import { NewInUnleash } from './NavigationSidebar/NewInUnleash/NewInUnleash.tsx';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -126,7 +124,6 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
         );
         const theme = useTheme();
         const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
-        const useNewNewInUnleash = useUiFlag('gtmReleaseManagement');
 
         return (
             <EventTimelineProvider>
@@ -135,15 +132,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                         <LayoutFlexContainer>
                             <ConditionallyRender
                                 condition={!isSmallScreen}
-                                show={
-                                    <NavigationSidebar
-                                        NewInUnleash={
-                                            useNewNewInUnleash
-                                                ? undefined
-                                                : LegacyNewInUnleash
-                                        }
-                                    />
-                                }
+                                show={<NavigationSidebar />}
                             />
 
                             <MainContentWrapper>
@@ -195,7 +184,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                         />
                     </MainLayoutContentWrapper>
                 </MainLayoutContainer>
-                {useNewNewInUnleash && <NewInUnleash />}
+                <NewInUnleash />
             </EventTimelineProvider>
         );
     },

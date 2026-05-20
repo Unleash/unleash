@@ -56,8 +56,9 @@ export const createOptions = (theme: Theme): ChartOptions<'bar'> => {
                 beginAtZero: true,
                 grid: {
                     color: theme.palette.divider,
-                    borderColor: theme.palette.divider,
-                    drawBorder: false,
+                },
+                border: {
+                    display: false,
                 },
                 ticks: {
                     stepSize: 1,

@@ -1,5 +1,4 @@
-import type { CodeComponent } from 'react-markdown/lib/ast-to-react';
-import type { FC } from 'react';
+import type { FC, ComponentProps } from 'react';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
 import { IconButton, styled, Tooltip } from '@mui/material';
@@ -20,6 +19,7 @@ import php from './snippets/php.md?raw';
 import react from './snippets/react.md?raw';
 import rust from './snippets/rust.md?raw';
 import swift from './snippets/swift.md?raw';
+import type { ExtraProps } from 'react-markdown';
 
 export const codeRenderSnippets: Record<SdkName, string> = {
     Android: android,
@@ -79,10 +79,17 @@ const CopyBlock: FC<{ title: string; code: string }> = ({ title, code }) => {
     );
 };
 
-export const CodeRenderer: CodeComponent = ({ inline = false, children }) => {
-    if (!inline && typeof children?.[0] === 'string') {
-        return <CopyBlock code={children[0]} title='Copy code' />;
+export const CodeRenderer: FC<ComponentProps<'code'> & ExtraProps> = ({
+    children,
+    className,
+}) => {
+    // In react-markdown v9+, block code fences have a language class; inline code does not.
+    // Children may be passed as a string or as an array (e.g. [string]) depending on the version.
+    const isCodeBlock = Boolean(className);
+    const code = Array.isArray(children) ? children[0] : children;
+    if (isCodeBlock && typeof code === 'string') {
+        return <CopyBlock code={code} title='Copy code' />;
     }
 
-    return <code>{children}</code>;
+    return <code className={className}>{children}</code>;
 };

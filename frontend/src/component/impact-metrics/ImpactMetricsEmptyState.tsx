@@ -75,7 +75,11 @@ export const ImpactMetricsEmptyState = ({
                     <Typography variant='h3' component='h2' sx={{ mb: 1.5 }}>
                         No impact metrics yet
                     </Typography>
-                    <Typography color='text.secondary'>
+                    <Typography
+                        sx={{
+                            color: 'text.secondary',
+                        }}
+                    >
                         Impact metrics help you measure how feature flags affect
                         your application's performance. Get started by sending
                         your first metrics from your code.

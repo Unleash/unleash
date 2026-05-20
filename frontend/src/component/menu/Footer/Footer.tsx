@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-target-blank */
 
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { List, ListItem, ListItemText, styled } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -69,7 +69,7 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
     },
 }));
 
-export const Footer: VFC = () => {
+export const Footer: FC = () => {
     const { uiConfig } = useUiConfig();
 
     return (
@@ -77,8 +77,8 @@ export const Footer: VFC = () => {
             <FooterContentWrapper>
                 <FooterGridContainer
                     container
-                    justifyContent='space-between'
                     spacing={10}
+                    sx={{ justifyContent: 'space-between' }}
                     style={{ marginBottom: 0 }}
                 >
                     <Grid size={{ md: 4, xs: 12 }}>
@@ -270,7 +270,7 @@ export const Footer: VFC = () => {
                                             <ListItemText
                                                 primary={
                                                     <a
-                                                        href='https://docs.getunleash.io/sdks/ios-proxy'
+                                                        href='https://docs.getunleash.io/sdks/ios'
                                                         target='_blank'
                                                         rel='noreferrer'
                                                     >
@@ -283,7 +283,7 @@ export const Footer: VFC = () => {
                                             <ListItemText
                                                 primary={
                                                     <a
-                                                        href='https://docs.getunleash.io/sdks/android-proxy'
+                                                        href='https://docs.getunleash.io/sdks/android'
                                                         target='_blank'
                                                         rel='noreferrer'
                                                     >

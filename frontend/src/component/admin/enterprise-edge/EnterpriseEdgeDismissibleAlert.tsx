@@ -23,7 +23,7 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
         width: '100%',
         gap: theme.spacing(1),
     },
-    '&.MuiPaper-root': {
+    '&.MuiAlert-standard.MuiAlert-colorInfo': {
         backgroundColor: theme.palette.secondary.light,
         color: theme.palette.text.primary,
         border: `1px solid ${theme.palette.secondary.border}`,
@@ -76,6 +76,7 @@ export const EnterpriseEdgeDismissibleAlert = ({
     return (
         <Collapse in={alertState === 'open'}>
             <StyledAlert
+                severity='info'
                 onClose={() => setAlertState('closed')}
                 icon={false}
                 {...props}
@@ -85,7 +86,12 @@ export const EnterpriseEdgeDismissibleAlert = ({
                         <Typography variant='h3'>
                             Instant flag updates worldwide
                         </Typography>
-                        <Typography variant='body2' color='text.secondary'>
+                        <Typography
+                            variant='body2'
+                            sx={{
+                                color: 'text.secondary',
+                            }}
+                        >
                             Enterprise Edge is a high-performance proxy between
                             your SDKs and Unleash, giving you global reach,
                             minimal latency, and making flag changes instantly
@@ -93,6 +99,7 @@ export const EnterpriseEdgeDismissibleAlert = ({
                         </Typography>
                         <StyledButton
                             component={Link}
+                            nativeButton={false}
                             to='/admin/enterprise-edge'
                             variant='contained'
                         >

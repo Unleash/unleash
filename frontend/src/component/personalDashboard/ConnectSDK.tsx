@@ -67,7 +67,12 @@ export const ExistingFlag: FC<{ project: string }> = ({ project }) => {
             }
         >
             <SuccessContainer>
-                <Typography fontWeight='bold' variant='body2'>
+                <Typography
+                    variant='body2'
+                    sx={{
+                        fontWeight: 'bold',
+                    }}
+                >
                     You have created your first flag
                 </Typography>
                 <Typography variant='body2'>
@@ -77,6 +82,7 @@ export const ExistingFlag: FC<{ project: string }> = ({ project }) => {
             <div>
                 <Button
                     component={Link}
+                    nativeButton={false}
                     to={`/projects/${project}`}
                     variant='contained'
                 >
@@ -108,6 +114,7 @@ export const ConnectSDK: FC<{ project: string }> = ({ project }) => {
             <div>
                 <Button
                     component={Link}
+                    nativeButton={false}
                     to={`/projects/${project}`}
                     variant='contained'
                 >

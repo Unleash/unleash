@@ -104,7 +104,7 @@ const RecommendationAlert = () => (
         </Link>{' '}
         and{' '}
         <Link
-            href='https://docs.getunleash.io/concepts/activation-strategies#variants'
+            href='https://docs.getunleash.io/concepts/strategy-variants'
             target='_blank'
             rel='noopener noreferrer'
         >

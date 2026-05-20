@@ -88,7 +88,13 @@ export const ProjectOnboarded = ({
             <TitleRow>
                 <StyledCheck />
                 <Title>
-                    <Typography fontWeight='bold'>Setup completed</Typography>
+                    <Typography
+                        sx={{
+                            fontWeight: 'bold',
+                        }}
+                    >
+                        Setup completed
+                    </Typography>
                     <Typography variant='body2'>Next steps</Typography>
                 </Title>
 

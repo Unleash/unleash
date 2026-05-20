@@ -17,7 +17,7 @@ import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import { useSearch } from 'hooks/useSearch';
 import type { IGroup, IGroupUser } from 'interfaces/group';
-import { type VFC, useState } from 'react';
+import { type FC, useState } from 'react';
 import {
     type SortingRule,
     useFlexLayout,
@@ -118,7 +118,7 @@ interface IProjectGroupViewProps {
     onRemove: () => void;
 }
 
-export const ProjectGroupView: VFC<IProjectGroupViewProps> = ({
+export const ProjectGroupView: FC<IProjectGroupViewProps> = ({
     open,
     setOpen,
     group,

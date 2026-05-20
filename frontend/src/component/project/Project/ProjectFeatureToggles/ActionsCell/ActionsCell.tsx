@@ -1,4 +1,4 @@
-import { useState, type VFC } from 'react';
+import { useState, type FC } from 'react';
 import {
     Box,
     IconButton,
@@ -46,7 +46,7 @@ interface IActionsCellProps {
     onOpenStaleDialog: (props: { featureId: string; stale: boolean }) => void;
 }
 
-export const ActionsCell: VFC<IActionsCellProps> = ({
+export const ActionsCell: FC<IActionsCellProps> = ({
     projectId,
     row,
     onOpenArchiveDialog,
@@ -146,6 +146,7 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
                                 onClick={handleClose}
                                 disabled={!hasAccess}
                                 component={RouterLink}
+                                nativeButton={false}
                                 to={`/projects/${projectId}/features/${featureId}/copy`}
                             >
                                 <ListItemIcon>

@@ -1,4 +1,4 @@
-import { useRef, useState, type VFC } from 'react';
+import { useRef, useState, type FC } from 'react';
 import {
     useTheme,
     IconButton,
@@ -8,12 +8,12 @@ import {
     Box,
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import HelpOutline from '@mui/icons-material/HelpOutline';
+import HelpOutline from '@mui/icons-material/HelpOutlineOutlined';
 import ChangeRequestProcessWithScheduleImage from 'assets/img/changeRequestProcessWithSchedule.svg?react';
 
 type IChangeRequestProcessHelpProps = {};
 
-export const ChangeRequestProcessHelp: VFC<
+export const ChangeRequestProcessHelp: FC<
     IChangeRequestProcessHelpProps
 > = () => {
     const ref = useRef<HTMLButtonElement>(null);

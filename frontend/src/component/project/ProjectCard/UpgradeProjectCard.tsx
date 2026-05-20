@@ -67,12 +67,19 @@ export const UpgradeProjectCard = () => {
                     href='https://www.getunleash.io/upgrade-unleash?utm_source=oss&utm_medium=feature&utm_content=projects'
                     target='_blank'
                 >
-                    <Typography component='span' fontWeight='bold'>
+                    <Typography
+                        component='span'
+                        sx={{
+                            fontWeight: 'bold',
+                        }}
+                    >
                         More{' '}
                         <Typography
                             component='span'
                             color='secondary'
-                            fontWeight='bold'
+                            sx={{
+                                fontWeight: 'bold',
+                            }}
                         >
                             projects
                         </Typography>{' '}
@@ -90,8 +97,10 @@ export const UpgradeProjectCard = () => {
                 <StyledFooter>
                     <Typography
                         variant='body2'
-                        color='text.secondary'
-                        lineHeight={1.2}
+                        sx={{
+                            color: 'text.secondary',
+                            lineHeight: 1.2,
+                        }}
                     >
                         Get unlimited projects, and scale Unleash in your
                         organization

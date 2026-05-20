@@ -1,3 +1,4 @@
+import { createUuid } from 'utils/createUuid';
 import { useMemo } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Button, Divider, styled } from '@mui/material';
@@ -47,7 +48,7 @@ export const ProjectActionsFormStepActions = ({
     const { actionConfigurations } = useActionConfigurations(projectId);
 
     const addAction = (projectId: string) => {
-        const id = crypto.randomUUID();
+        const id = createUuid();
         const action: ActionsActionState = {
             id,
             action: '',

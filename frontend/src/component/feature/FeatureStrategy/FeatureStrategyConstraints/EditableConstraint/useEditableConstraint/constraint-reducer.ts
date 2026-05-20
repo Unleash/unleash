@@ -20,7 +20,7 @@ import {
 } from './editable-constraint-type.js';
 import { difference, union } from './set-functions.js';
 
-type EditableConstraintWithDeletedLegalValues = EditableConstraint & {
+export type EditableConstraintWithDeletedLegalValues = EditableConstraint & {
     deletedLegalValues?: Set<string>;
 };
 

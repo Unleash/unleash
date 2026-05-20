@@ -19,17 +19,23 @@ import {
 } from '../events/index.js';
 import type { IAddonDefinition } from '../types/model.js';
 
+// TODO: delete this as soon as all clients (now 12) have migrated to Slack App.
+
 const slackDefinition: IAddonDefinition = {
     name: 'slack',
     displayName: 'Slack',
     description: 'Allows Unleash to post updates to Slack.',
-    documentationUrl: 'https://docs.getunleash.io/docs/addons/slack',
+    documentationUrl: 'https://docs.getunleash.io/integrate/slack-app',
     deprecated:
         'This integration is deprecated. Please try the new App for Slack integration instead.',
     alerts: [
         {
             type: 'warning',
             text: `This integration is deprecated. Please try the new App for Slack integration instead.`,
+            link: {
+                url: 'https://docs.getunleash.io/integrate/slack-app',
+                title: 'Read these instructions to migrate to new Slack App smoothly.',
+            },
         },
     ],
     parameters: [

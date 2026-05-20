@@ -49,6 +49,7 @@ const FlagListItem: FC<{
                     <StyledCardTitle>{flag.name}</StyledCardTitle>
                     <IconButton
                         component={Link}
+                        nativeButton={false}
                         href={flagLink}
                         onClick={() => {
                             trackEvent('personal-dashboard', {

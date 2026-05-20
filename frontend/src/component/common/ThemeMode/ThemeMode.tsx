@@ -1,5 +1,5 @@
 import UIContext from 'contexts/UIContext';
-import { useContext } from 'react';
+import { useContext, type JSX } from 'react';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender.tsx';
 
 interface IThemeModeProps {

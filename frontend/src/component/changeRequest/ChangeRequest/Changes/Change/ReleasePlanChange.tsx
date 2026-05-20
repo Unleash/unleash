@@ -269,7 +269,7 @@ const AddReleasePlan: FC<{
     actions,
 }) => {
     const [currentTooltipOpen, setCurrentTooltipOpen] = useState(false);
-    const currentTooltipCloseTimeoutRef = useRef<NodeJS.Timeout>();
+    const currentTooltipCloseTimeoutRef = useRef<NodeJS.Timeout>(undefined);
     const openCurrentTooltip = () => {
         if (currentTooltipCloseTimeoutRef.current) {
             clearTimeout(currentTooltipCloseTimeoutRef.current);

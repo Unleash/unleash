@@ -1,4 +1,4 @@
-import { type FormEventHandler, useState, type VFC } from 'react';
+import { type FormEventHandler, useState, type FC } from 'react';
 import { Button, styled } from '@mui/material';
 import { StyledAutofillTextField } from './StyledAutofillTextField.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -39,7 +39,7 @@ const StyledButton = styled(Button)({
     width: '100%',
 });
 
-const PasswordAuth: VFC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
+const PasswordAuth: FC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
     const navigate = useNavigate();
     const { refetchUser } = useAuthUser();
     const params = useQueryParams();

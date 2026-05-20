@@ -93,7 +93,9 @@ const InnerDialog = ({
     const isTestConnectionStage =
         stage === 'test-connection' && sdk && environment && apiKey;
 
-    const onboarded = project.onboardingStatus.status === 'onboarded';
+    const onboarded =
+        project.onboardingStatus.status === 'onboarded' ||
+        project.onboardingStatus.status === 'sdk-connected';
 
     useEffect(() => {
         if (environments.length > 0) {

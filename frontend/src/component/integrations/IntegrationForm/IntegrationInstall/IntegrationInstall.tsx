@@ -31,6 +31,7 @@ export const IntegrationInstall = ({
                         type='button'
                         variant='contained'
                         component={Link}
+                        nativeButton={false}
                         target='_blank'
                         rel='noopener noreferrer'
                         to={url}

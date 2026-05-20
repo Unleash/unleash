@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Button } from '@mui/material';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
@@ -14,20 +15,26 @@ export const FeatureImplementFlagBanner = ({
     projectId,
     featureId,
 }: FeatureImplementFlagBannerProps) => {
-    const { project } = useProjectOverview(projectId);
-    const { feature, loading } = useFeature(projectId, featureId);
+    const { project, refetch } = useProjectOverview(projectId);
+    const { feature, loading, refetchFeature } = useFeature(
+        projectId,
+        featureId,
+    );
     const { trackEvent } = usePlausibleTracker();
     const [dialogOpen, setDialogOpen] = useState(false);
 
-    const isOnboarded = project.onboardingStatus.status === 'onboarded';
+    const isOnboarded =
+        project.onboardingStatus.status === 'onboarded' ||
+        project.onboardingStatus.status === 'sdk-connected';
     const isInitialStage =
         !loading &&
         (!feature.lifecycle || feature.lifecycle.stage === 'initial');
-    const showBanner = isOnboarded && isInitialStage;
 
-    if (!showBanner && !dialogOpen) {
-        return null;
-    }
+    const onDialogClose = () => {
+        setDialogOpen(false);
+        refetch();
+        refetchFeature();
+    };
 
     const onImplementClick = () => {
         trackEvent('onboarding', {
@@ -36,19 +43,23 @@ export const FeatureImplementFlagBanner = ({
         setDialogOpen(true);
     };
 
+    const showBanner = isOnboarded && isInitialStage;
+
     return (
         <>
             {showBanner && (
                 <FeatureFlagSetupBannerCard
                     title='Implement your flag'
                     description='Waiting for flag evaluations. Wrap your feature logic in a flag evaluation to get set up.'
-                    buttonLabel='Wrap your code'
-                    onButtonClick={onImplementClick}
-                />
+                >
+                    <Button variant='contained' onClick={onImplementClick}>
+                        Wrap your code
+                    </Button>
+                </FeatureFlagSetupBannerCard>
             )}
             <ImplementFlagDialog
                 open={dialogOpen}
-                onClose={() => setDialogOpen(false)}
+                onClose={onDialogClose}
                 projectId={projectId}
                 feature={featureId}
             />

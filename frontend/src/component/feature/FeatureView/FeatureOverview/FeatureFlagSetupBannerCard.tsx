@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Button, styled, Typography } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 import CodeIcon from '@mui/icons-material/Code';
 
 const BannerCard = styled('div')(({ theme }) => ({
@@ -61,15 +61,13 @@ const PendingDot = styled('span')(({ theme }) => ({
 interface FeatureFlagSetupBannerCardProps {
     title: string;
     description: ReactNode;
-    buttonLabel: string;
-    onButtonClick: () => void;
+    children: ReactNode;
 }
 
 export const FeatureFlagSetupBannerCard = ({
     title,
     description,
-    buttonLabel,
-    onButtonClick,
+    children,
 }: FeatureFlagSetupBannerCardProps) => (
     <BannerCard>
         <IconBox>
@@ -80,25 +78,35 @@ export const FeatureFlagSetupBannerCard = ({
                 <TitleRow>
                     <Typography
                         variant='body1'
-                        fontWeight='bold'
-                        color='text.primary'
+                        sx={{
+                            fontWeight: 'bold',
+                            color: 'text.primary',
+                        }}
                     >
                         {title}
                     </Typography>
                     <PendingBadge>
                         <PendingDot />
-                        <Typography variant='caption' color='warning.main'>
+                        <Typography
+                            variant='caption'
+                            sx={{
+                                color: 'warning.main',
+                            }}
+                        >
                             Pending
                         </Typography>
                     </PendingBadge>
                 </TitleRow>
-                <Typography variant='body2' color='text.secondary'>
+                <Typography
+                    variant='body2'
+                    sx={{
+                        color: 'text.secondary',
+                    }}
+                >
                     {description}
                 </Typography>
             </TextContainer>
-            <Button variant='contained' onClick={onButtonClick}>
-                {buttonLabel}
-            </Button>
+            {children}
         </ContentRow>
     </BannerCard>
 );

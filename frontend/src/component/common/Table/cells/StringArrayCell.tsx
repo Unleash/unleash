@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { styled, Typography } from '@mui/material';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
@@ -16,7 +16,7 @@ interface IArrayFieldCellProps<T> {
     pluralLabel?: string;
 }
 
-export const StringArrayCell: VFC<IArrayFieldCellProps<any>> = ({
+export const StringArrayCell: FC<IArrayFieldCellProps<any>> = ({
     row,
     field,
     singularLabel,

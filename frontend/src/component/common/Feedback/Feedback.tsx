@@ -1,4 +1,4 @@
-import { useState, type VFC } from 'react';
+import { useState, type FC } from 'react';
 import { Box, Paper, Button, styled } from '@mui/material';
 import {
     type CustomEvents,
@@ -19,7 +19,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
     marginTop: theme.spacing(0.5),
 }));
 
-export const Feedback: VFC<IFeedbackProps> = ({
+export const Feedback: FC<IFeedbackProps> = ({
     id,
     localStorageKey,
     eventName,

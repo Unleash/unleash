@@ -321,8 +321,10 @@ export const SignupDialog = () => {
                         <StyledTitle>{currentStep.title}</StyledTitle>
                         <Typography
                             variant='body2'
-                            color='text.secondary'
-                            sx={{ whiteSpace: 'pre-line' }}
+                            sx={{
+                                color: 'text.secondary',
+                                whiteSpace: 'pre-line',
+                            }}
                         >
                             {currentStep.description}
                         </Typography>

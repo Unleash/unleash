@@ -14,6 +14,8 @@ import {
     SKIP_CHANGE_REQUEST,
     SYSTEM_USER_AUDIT,
     TEST_AUDIT_USER,
+    ADMIN_TOKEN_USER,
+    ADMIN,
 } from '../../../types/index.js';
 import EnvironmentService from '../../project-environments/environment-service.js';
 import {
@@ -361,6 +363,7 @@ test('cloning a feature flag copies variant environments correctly', async () =>
         'default',
         clonedFlagName,
         SYSTEM_USER_AUDIT,
+        { ...ADMIN_TOKEN_USER, permissions: [ADMIN], isAPI: true },
         true,
     );
 
@@ -389,6 +392,7 @@ test('cloning a feature flag not allowed for change requests enabled', async () 
             'default',
             'clonedFlagName',
             SYSTEM_USER_AUDIT,
+            { ...ADMIN_TOKEN_USER, permissions: [ADMIN], isAPI: true },
             true,
         ),
     ).rejects.errorWithMessage(
@@ -450,6 +454,7 @@ test('Cloning a feature flag also clones segments correctly', async () => {
         'default',
         clonedFeatureName,
         TEST_AUDIT_USER,
+        { ...ADMIN_TOKEN_USER, permissions: [ADMIN], isAPI: true },
         true,
     );
 

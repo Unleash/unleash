@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { styled } from '@mui/material';
 import { Box, IconButton } from '@mui/material';
 import CloudCircle from '@mui/icons-material/CloudCircle';
@@ -33,7 +33,7 @@ interface IEnvironmentIconCellProps {
     environment: IEnvironment;
 }
 
-export const EnvironmentIconCell: VFC<IEnvironmentIconCellProps> = ({
+export const EnvironmentIconCell: FC<IEnvironmentIconCellProps> = ({
     environment,
 }) => (
     <StyledCell>

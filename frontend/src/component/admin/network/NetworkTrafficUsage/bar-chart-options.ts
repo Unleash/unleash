@@ -44,7 +44,6 @@ export const createBarChartOptions = (
                 usePointStyle: true,
                 boxHeight: 6,
                 padding: 15,
-                boxPadding: 5,
             },
         },
         tooltip: {
@@ -86,8 +85,8 @@ export const createBarChartOptions = (
                 maxTicksLimit: 5,
                 callback: formatTickValue,
             },
-            grid: {
-                drawBorder: false,
+            border: {
+                display: false,
             },
         },
     },

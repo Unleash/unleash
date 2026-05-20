@@ -1,4 +1,4 @@
-import { useId, useMemo, useState, type FC } from 'react';
+import { useId, useMemo, useState, type FC, type JSX } from 'react';
 import { Link } from 'react-router-dom';
 import type { ISegment } from 'interfaces/segment';
 import {
@@ -112,7 +112,9 @@ export const SegmentItem: FC<SegmentItemProps> = ({
             <StyledAccordion
                 expanded={isOpen}
                 disableGutters
-                TransitionProps={{ mountOnEnter: true, unmountOnExit: true }}
+                slotProps={{
+                    transition: { mountOnEnter: true, unmountOnExit: true },
+                }}
             >
                 <StyledAccordionSummary
                     id={`segment-accordion-${segment.id}`}

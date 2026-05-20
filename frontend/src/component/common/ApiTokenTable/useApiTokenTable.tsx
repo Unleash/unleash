@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, type JSX } from 'react';
 import type { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';

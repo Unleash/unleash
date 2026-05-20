@@ -1,34 +1,27 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`should render DrawerMenu 1`] = `
-[
+<DocumentFragment>
   <footer
-    className="mui-1voxpwn"
+    class="mui-1voxpwn"
   >
     <div
-      className="mui-1ng7pvt"
+      class="mui-1ng7pvt"
     >
       <div
-        className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-10 mui-b8jj8q-MuiGrid-root"
-        style={
-          {
-            "marginBottom": 0,
-          }
-        }
+        class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-10 mui-qxsr1b-MuiGrid-root"
+        style="margin-bottom: 0px;"
       >
         <div
-          className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-md-4 MuiGrid-grid-xs-12 mui-7aun2q-MuiGrid-root"
+          class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-md-4 MuiGrid-grid-xs-12 mui-7aun2q-MuiGrid-root"
         >
           <section
             title="API details"
           >
             <h2
-              className="mui-wc53hr"
+              class="mui-wc53hr"
             >
-              Unleash
-               
-               
-              7.3.0
+              Unleash  7.3.0
             </h2>
             <br />
             <small>
@@ -38,34 +31,33 @@ exports[`should render DrawerMenu 1`] = `
           </section>
         </div>
         <div
-          className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 MuiGrid-grid-md-auto mui-68vk1d-MuiGrid-root"
+          class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 MuiGrid-grid-md-auto mui-68vk1d-MuiGrid-root"
         >
           <div
-            className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-7 mui-1f73nix-MuiGrid-root"
+            class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-7 mui-1f73nix-MuiGrid-root"
           >
             <div
-              className="MuiGrid-root MuiGrid-direction-xs-row mui-17fpwt7-MuiGrid-root"
+              class="MuiGrid-root MuiGrid-direction-xs-row mui-17fpwt7-MuiGrid-root"
             >
               <section
                 title="Unleash SDK"
               >
                 <h2
-                  className="mui-wc53hr"
+                  class="mui-wc53hr"
                 >
                   Server SDKs
                 </h2>
                 <ul
-                  className="MuiList-root MuiList-padding MuiList-dense mui-1xif82l-MuiList-root"
+                  class="MuiList-root MuiList-padding MuiList-dense mui-1xif82l-MuiList-root"
                 >
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://docs.getunleash.io/sdks/node"
@@ -78,14 +70,13 @@ exports[`should render DrawerMenu 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://docs.getunleash.io/sdks/java"
@@ -98,14 +89,13 @@ exports[`should render DrawerMenu 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://docs.getunleash.io/sdks/go"
@@ -119,14 +109,13 @@ exports[`should render DrawerMenu 1`] = `
                   </li>
                    
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://docs.getunleash.io/sdks/rust"
@@ -140,14 +129,13 @@ exports[`should render DrawerMenu 1`] = `
                   </li>
                    
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://docs.getunleash.io/sdks/ruby"
@@ -161,14 +149,13 @@ exports[`should render DrawerMenu 1`] = `
                   </li>
                    
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://docs.getunleash.io/sdks/python"
@@ -181,14 +168,13 @@ exports[`should render DrawerMenu 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://docs.getunleash.io/sdks/dotnet"
@@ -201,14 +187,13 @@ exports[`should render DrawerMenu 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://docs.getunleash.io/sdks/php"
@@ -221,14 +206,13 @@ exports[`should render DrawerMenu 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://docs.getunleash.io/sdks"
@@ -244,28 +228,27 @@ exports[`should render DrawerMenu 1`] = `
               </section>
             </div>
             <div
-              className="MuiGrid-root MuiGrid-direction-xs-row mui-17fpwt7-MuiGrid-root"
+              class="MuiGrid-root MuiGrid-direction-xs-row mui-17fpwt7-MuiGrid-root"
             >
               <section
                 title="Unleash SDK"
               >
                 <h2
-                  className="mui-wc53hr"
+                  class="mui-wc53hr"
                 >
                   Frontend SDKs
                 </h2>
                 <ul
-                  className="MuiList-root MuiList-padding MuiList-dense mui-1xif82l-MuiList-root"
+                  class="MuiList-root MuiList-padding MuiList-dense mui-1xif82l-MuiList-root"
                 >
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://docs.getunleash.io/sdks/javascript-browser"
@@ -278,14 +261,13 @@ exports[`should render DrawerMenu 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://docs.getunleash.io/sdks/react"
@@ -298,14 +280,13 @@ exports[`should render DrawerMenu 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://docs.getunleash.io/sdks/next-js"
@@ -318,14 +299,13 @@ exports[`should render DrawerMenu 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://docs.getunleash.io/sdks/vue"
@@ -338,17 +318,16 @@ exports[`should render DrawerMenu 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
-                          href="https://docs.getunleash.io/sdks/ios-proxy"
+                          href="https://docs.getunleash.io/sdks/ios"
                           rel="noreferrer"
                           target="_blank"
                         >
@@ -358,17 +337,16 @@ exports[`should render DrawerMenu 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
-                          href="https://docs.getunleash.io/sdks/android-proxy"
+                          href="https://docs.getunleash.io/sdks/android"
                           rel="noreferrer"
                           target="_blank"
                         >
@@ -378,14 +356,13 @@ exports[`should render DrawerMenu 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://docs.getunleash.io/sdks/flutter"
@@ -401,26 +378,25 @@ exports[`should render DrawerMenu 1`] = `
               </section>
             </div>
             <div
-              className="MuiGrid-root MuiGrid-direction-xs-row mui-17fpwt7-MuiGrid-root"
+              class="MuiGrid-root MuiGrid-direction-xs-row mui-17fpwt7-MuiGrid-root"
             >
               <section>
                 <h2
-                  className="mui-wc53hr"
+                  class="mui-wc53hr"
                 >
                   About
                 </h2>
                 <ul
-                  className="MuiList-root MuiList-padding MuiList-dense mui-1xif82l-MuiList-root"
+                  class="MuiList-root MuiList-padding MuiList-dense mui-1xif82l-MuiList-root"
                 >
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://www.getunleash.io/"
@@ -433,14 +409,13 @@ exports[`should render DrawerMenu 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://twitter.com/getunleash"
@@ -453,14 +428,13 @@ exports[`should render DrawerMenu 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://www.linkedin.com/company/getunleash"
@@ -473,14 +447,13 @@ exports[`should render DrawerMenu 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://github.com/Unleash/unleash"
@@ -493,14 +466,13 @@ exports[`should render DrawerMenu 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://slack.unleash.run"
@@ -519,46 +491,39 @@ exports[`should render DrawerMenu 1`] = `
         </div>
       </div>
     </div>
-  </footer>,
+  </footer>
   <div
-    aria-atomic={true}
+    aria-atomic="true"
     aria-live="polite"
-    className="mui-17ts3s9"
+    class="mui-17ts3s9"
     data-testid="ANNOUNCER_ELEMENT_TEST_ID"
     role="status"
-  />,
-]
+  />
+</DocumentFragment>
 `;
 
 exports[`should render DrawerMenu with "features" selected 1`] = `
-[
+<DocumentFragment>
   <footer
-    className="mui-1voxpwn"
+    class="mui-1voxpwn"
   >
     <div
-      className="mui-1ng7pvt"
+      class="mui-1ng7pvt"
     >
       <div
-        className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-10 mui-b8jj8q-MuiGrid-root"
-        style={
-          {
-            "marginBottom": 0,
-          }
-        }
+        class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-10 mui-qxsr1b-MuiGrid-root"
+        style="margin-bottom: 0px;"
       >
         <div
-          className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-md-4 MuiGrid-grid-xs-12 mui-7aun2q-MuiGrid-root"
+          class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-md-4 MuiGrid-grid-xs-12 mui-7aun2q-MuiGrid-root"
         >
           <section
             title="API details"
           >
             <h2
-              className="mui-wc53hr"
+              class="mui-wc53hr"
             >
-              Unleash
-               
-               
-              7.3.0
+              Unleash  7.3.0
             </h2>
             <br />
             <small>
@@ -568,34 +533,33 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
           </section>
         </div>
         <div
-          className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 MuiGrid-grid-md-auto mui-68vk1d-MuiGrid-root"
+          class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 MuiGrid-grid-md-auto mui-68vk1d-MuiGrid-root"
         >
           <div
-            className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-7 mui-1f73nix-MuiGrid-root"
+            class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-7 mui-1f73nix-MuiGrid-root"
           >
             <div
-              className="MuiGrid-root MuiGrid-direction-xs-row mui-17fpwt7-MuiGrid-root"
+              class="MuiGrid-root MuiGrid-direction-xs-row mui-17fpwt7-MuiGrid-root"
             >
               <section
                 title="Unleash SDK"
               >
                 <h2
-                  className="mui-wc53hr"
+                  class="mui-wc53hr"
                 >
                   Server SDKs
                 </h2>
                 <ul
-                  className="MuiList-root MuiList-padding MuiList-dense mui-1xif82l-MuiList-root"
+                  class="MuiList-root MuiList-padding MuiList-dense mui-1xif82l-MuiList-root"
                 >
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://docs.getunleash.io/sdks/node"
@@ -608,14 +572,13 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://docs.getunleash.io/sdks/java"
@@ -628,14 +591,13 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://docs.getunleash.io/sdks/go"
@@ -649,14 +611,13 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                   </li>
                    
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://docs.getunleash.io/sdks/rust"
@@ -670,14 +631,13 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                   </li>
                    
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://docs.getunleash.io/sdks/ruby"
@@ -691,14 +651,13 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                   </li>
                    
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://docs.getunleash.io/sdks/python"
@@ -711,14 +670,13 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://docs.getunleash.io/sdks/dotnet"
@@ -731,14 +689,13 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://docs.getunleash.io/sdks/php"
@@ -751,14 +708,13 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://docs.getunleash.io/sdks"
@@ -774,28 +730,27 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
               </section>
             </div>
             <div
-              className="MuiGrid-root MuiGrid-direction-xs-row mui-17fpwt7-MuiGrid-root"
+              class="MuiGrid-root MuiGrid-direction-xs-row mui-17fpwt7-MuiGrid-root"
             >
               <section
                 title="Unleash SDK"
               >
                 <h2
-                  className="mui-wc53hr"
+                  class="mui-wc53hr"
                 >
                   Frontend SDKs
                 </h2>
                 <ul
-                  className="MuiList-root MuiList-padding MuiList-dense mui-1xif82l-MuiList-root"
+                  class="MuiList-root MuiList-padding MuiList-dense mui-1xif82l-MuiList-root"
                 >
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://docs.getunleash.io/sdks/javascript-browser"
@@ -808,14 +763,13 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://docs.getunleash.io/sdks/react"
@@ -828,14 +782,13 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://docs.getunleash.io/sdks/next-js"
@@ -848,14 +801,13 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://docs.getunleash.io/sdks/vue"
@@ -868,17 +820,16 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
-                          href="https://docs.getunleash.io/sdks/ios-proxy"
+                          href="https://docs.getunleash.io/sdks/ios"
                           rel="noreferrer"
                           target="_blank"
                         >
@@ -888,17 +839,16 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
-                          href="https://docs.getunleash.io/sdks/android-proxy"
+                          href="https://docs.getunleash.io/sdks/android"
                           rel="noreferrer"
                           target="_blank"
                         >
@@ -908,14 +858,13 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://docs.getunleash.io/sdks/flutter"
@@ -931,26 +880,25 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
               </section>
             </div>
             <div
-              className="MuiGrid-root MuiGrid-direction-xs-row mui-17fpwt7-MuiGrid-root"
+              class="MuiGrid-root MuiGrid-direction-xs-row mui-17fpwt7-MuiGrid-root"
             >
               <section>
                 <h2
-                  className="mui-wc53hr"
+                  class="mui-wc53hr"
                 >
                   About
                 </h2>
                 <ul
-                  className="MuiList-root MuiList-padding MuiList-dense mui-1xif82l-MuiList-root"
+                  class="MuiList-root MuiList-padding MuiList-dense mui-1xif82l-MuiList-root"
                 >
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://www.getunleash.io/"
@@ -963,14 +911,13 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://twitter.com/getunleash"
@@ -983,14 +930,13 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://www.linkedin.com/company/getunleash"
@@ -1003,14 +949,13 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://github.com/Unleash/unleash"
@@ -1023,14 +968,13 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     </div>
                   </li>
                   <li
-                    className="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
+                    class="MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-padding mui-1ppafkw-MuiListItem-root"
                   >
                     <div
-                      className="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
+                      class="MuiListItemText-root MuiListItemText-dense mui-cfq8qh-MuiListItemText-root"
                     >
                       <span
-                        className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
-                        style={{}}
+                        class="MuiTypography-root MuiTypography-body2 MuiListItemText-primary mui-5g6ame-MuiTypography-root"
                       >
                         <a
                           href="https://slack.unleash.run"
@@ -1049,13 +993,13 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
         </div>
       </div>
     </div>
-  </footer>,
+  </footer>
   <div
-    aria-atomic={true}
+    aria-atomic="true"
     aria-live="polite"
-    className="mui-17ts3s9"
+    class="mui-17ts3s9"
     data-testid="ANNOUNCER_ELEMENT_TEST_ID"
     role="status"
-  />,
-]
+  />
+</DocumentFragment>
 `;

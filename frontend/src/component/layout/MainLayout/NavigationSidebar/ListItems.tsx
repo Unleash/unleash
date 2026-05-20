@@ -68,6 +68,7 @@ export const ExternalFullListItem: FC<{
             <ListItemButton
                 dense={true}
                 component={Link}
+                nativeButton={false}
                 to={href}
                 sx={listItemButtonStyle}
                 rel='noopener noreferrer'
@@ -130,6 +131,7 @@ export const MenuListItem: FC<{
             <ListItemButton
                 dense
                 component={Link}
+                nativeButton={false}
                 to={href}
                 sx={(theme) => ({
                     ...listItemButtonStyle(theme),

@@ -98,7 +98,7 @@ const uiConfigForEnterprise = () =>
             {
                 value: 'Documentation',
                 icon: 'library_books',
-                href: 'https://docs.getunleash.io/docs',
+                href: 'https://docs.getunleash.io',
                 title: 'User documentation',
             },
             {

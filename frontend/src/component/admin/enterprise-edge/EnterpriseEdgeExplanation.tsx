@@ -69,7 +69,12 @@ const StyledLinkContainer = styled('div')(({ theme }) => ({
 export const EnterpriseEdgeExplanation = () => (
     <StyledContainer>
         <Typography variant='h3'>Which version is right for you?</Typography>
-        <Typography variant='body2' color='text.secondary'>
+        <Typography
+            variant='body2'
+            sx={{
+                color: 'text.secondary',
+            }}
+        >
             Unleash Enterprise Edge is a high-performance proxy engineered for
             scalability, resilience, and privacy. It acts as a shield between
             your SDKs and the Unleash API, allowing you to handle thousands of
@@ -123,20 +128,35 @@ const EdgeVersionCard = ({
     <StyledCard>
         <StyledImageContainer>{image}</StyledImageContainer>
         <Typography variant='h3'>{title}</Typography>
-        <Typography variant='body2' color='text.secondary'>
+        <Typography
+            variant='body2'
+            sx={{
+                color: 'text.secondary',
+            }}
+        >
             {description}
         </Typography>
         <StyledBulletList>
             {bullets.map((bullet) => (
                 <StyledBulletItem key={bullet}>
                     <StyledCheck />{' '}
-                    <Typography variant='body2' color='text.secondary'>
+                    <Typography
+                        variant='body2'
+                        sx={{
+                            color: 'text.secondary',
+                        }}
+                    >
                         {bullet}
                     </Typography>
                 </StyledBulletItem>
             ))}
         </StyledBulletList>
-        <Typography variant='body2' color='text.secondary'>
+        <Typography
+            variant='body2'
+            sx={{
+                color: 'text.secondary',
+            }}
+        >
             Contact{' '}
             <a href='mailto:license@getunleash.io'>license@getunleash.io</a> to
             get started.
@@ -144,6 +164,7 @@ const EdgeVersionCard = ({
         <StyledLinkContainer>
             <Button
                 component={Link}
+                nativeButton={false}
                 to={docsUrl}
                 size='small'
                 sx={{ fontSize: '14px' }}

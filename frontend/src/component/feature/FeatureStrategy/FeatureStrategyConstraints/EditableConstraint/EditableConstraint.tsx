@@ -106,7 +106,7 @@ const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
         background: 'none',
     },
     ':focus-within fieldset': { borderBottomStyle: 'solid' },
-    'label + &': {
+    '.MuiInputLabel-root + &': {
         // mui adds a margin top to 'standard' selects with labels
         margin: 0,
     },
@@ -142,7 +142,7 @@ const TopRowInput: FC<{
     clearValues: () => void;
     localConstraint: EditableConstraintType;
     validator: (value: string) => ConstraintValidationResult;
-    addValuesButtonRef: React.RefObject<HTMLDivElement>;
+    addValuesButtonRef: React.RefObject<HTMLDivElement | null>;
     editingOpen: boolean;
     setEditingOpen: (open: boolean) => void;
 }> = ({

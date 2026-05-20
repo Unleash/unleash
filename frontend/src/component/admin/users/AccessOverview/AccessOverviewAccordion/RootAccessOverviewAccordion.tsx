@@ -1,5 +1,5 @@
 import type { IGroup } from 'interfaces/group';
-import { type IRole, IRoleWithPermissions } from 'interfaces/role';
+import type { IRole } from 'interfaces/role';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import { Badge as MuiBadge } from 'component/common/Badge/Badge';
@@ -14,8 +14,6 @@ import {
     styled,
 } from '@mui/material';
 import { NewAccessOverviewList } from './NewAccessOverviewList';
-import { FC } from 'react';
-import { useRole } from 'hooks/api/getters/useRole/useRole';
 
 const Badge = styled(MuiBadge)({
     whiteSpace: 'nowrap',

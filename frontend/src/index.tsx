@@ -49,7 +49,12 @@ const ApplicationRoot = () => {
     return (
         <UIProviderContainer>
             <AccessProvider>
-                <BrowserRouter basename={basePath}>
+                <BrowserRouter
+                    future={{
+                        v7_relativeSplatPath: true,
+                    }}
+                    basename={basePath}
+                >
                     <QueryParamProvider adapter={ReactRouter6Adapter}>
                         <ThemeProvider>
                             <AnnouncerProvider>

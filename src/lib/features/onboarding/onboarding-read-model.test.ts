@@ -266,7 +266,6 @@ test('bulk method returns a status per project', async () => {
         'does-not-exist',
     ]);
 
-    expect(result.size).toBe(3);
     expect(result).toEqual(
         new Map([
             ['project-a', { status: 'onboarding-started' }],

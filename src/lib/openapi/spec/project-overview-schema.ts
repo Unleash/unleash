@@ -23,6 +23,7 @@ import { releasePlanSafeguardSchema } from './release-plan-safeguard-schema.js';
 import { featureEnvironmentSafeguardSchema } from './feature-environment-safeguard-schema.js';
 import { metricQuerySchema } from './metric-query-schema.js';
 import { safeguardTriggerConditionSchema } from './safeguard-trigger-condition-schema.js';
+import { onboardingStatusSchema } from './onboarding-status-schema.js';
 
 export const projectOverviewSchema = {
     $id: '#/components/schemas/projectOverviewSchema',
@@ -161,42 +162,7 @@ export const projectOverviewSchema = {
                 '`true` if the project was favorited, otherwise `false`.',
         },
         onboardingStatus: {
-            type: 'object',
-            oneOf: [
-                {
-                    type: 'object',
-                    properties: {
-                        status: {
-                            type: 'string',
-                            enum: [
-                                'onboarding-started',
-                                'sdk-connected',
-                                'onboarded',
-                            ],
-                            example: 'onboarding-started',
-                        },
-                    },
-                    required: ['status'],
-                    additionalProperties: false,
-                },
-                {
-                    type: 'object',
-                    properties: {
-                        status: {
-                            type: 'string',
-                            enum: ['first-flag-created'],
-                            example: 'first-flag-created',
-                        },
-                        feature: {
-                            type: 'string',
-                            description: 'The name of the feature flag',
-                            example: 'my-feature-flag',
-                        },
-                    },
-                    required: ['status', 'feature'],
-                    additionalProperties: false,
-                },
-            ],
+            $ref: '#/components/schemas/onboardingStatusSchema',
             description: 'The current onboarding status of the project.',
         },
     },
@@ -226,6 +192,7 @@ export const projectOverviewSchema = {
             createFeatureNamingPatternSchema,
             featureTypeCountSchema,
             projectLinkTemplateSchema,
+            onboardingStatusSchema,
         },
     },
 } as const;

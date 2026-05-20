@@ -130,6 +130,7 @@ export * from './maintenance-schema.js';
 export * from './me-schema.js';
 export * from './metric-query-schema.js';
 export * from './name-schema.js';
+export * from './onboarding-status-schema.js';
 export * from './outdated-sdks-schema.js';
 export * from './override-schema.js';
 export * from './parameters-schema.js';

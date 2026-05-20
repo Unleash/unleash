@@ -1,6 +1,6 @@
 import type { FromSchema } from 'json-schema-to-ts';
 import { projectSchema } from './project-schema.js';
-import { projectOverviewSchema } from './project-overview-schema.js';
+import { onboardingStatusSchema } from './onboarding-status-schema.js';
 
 export const personalDashboardProjectDetailsSchema = {
     $id: '#/components/schemas/personalDashboardProjectDetailsSchema',
@@ -91,7 +91,9 @@ export const personalDashboardProjectDetailsSchema = {
                 },
             },
         },
-        onboardingStatus: projectOverviewSchema.properties.onboardingStatus,
+        onboardingStatus: {
+            $ref: '#/components/schemas/onboardingStatusSchema',
+        },
         latestEvents: {
             type: 'array',
             description: 'The latest events for the project.',
@@ -168,7 +170,9 @@ export const personalDashboardProjectDetailsSchema = {
         },
     },
     components: {
-        schemas: {},
+        schemas: {
+            onboardingStatusSchema,
+        },
     },
 } as const;
 

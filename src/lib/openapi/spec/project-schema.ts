@@ -1,4 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
+import { onboardingStatusSchema } from './onboarding-status-schema.js';
 
 export const projectSchema = {
     $id: '#/components/schemas/projectSchema',
@@ -193,8 +194,17 @@ export const projectSchema = {
                 },
             ],
         },
+        onboardingStatus: {
+            $ref: '#/components/schemas/onboardingStatusSchema',
+            description:
+                'Experimental. The current onboarding status of the project.',
+        },
     },
-    components: {},
+    components: {
+        schemas: {
+            onboardingStatusSchema,
+        },
+    },
 } as const;
 
 export type ProjectSchema = FromSchema<typeof projectSchema>;

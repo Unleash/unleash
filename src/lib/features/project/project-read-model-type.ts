@@ -1,4 +1,5 @@
 import type { ProjectMode } from '../../types/index.js';
+import type { OnboardingStatus } from '../onboarding/onboarding-read-model-type.js';
 import type { IProjectQuery, IProjectsQuery } from './project-store-type.js';
 
 export type ProjectForUi = {
@@ -15,6 +16,7 @@ export type ProjectForUi = {
     featureCount: number;
     lastReportedFlagUsage: Date | null;
     lastUpdatedAt: Date | null;
+    onboardingStatus?: OnboardingStatus;
 };
 
 export type ProjectForInsights = {

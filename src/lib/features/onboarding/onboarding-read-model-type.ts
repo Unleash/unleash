@@ -1,6 +1,6 @@
-import type { ProjectOverviewSchema } from '../../openapi/index.js';
+import type { OnboardingStatusSchema } from '../../openapi/index.js';
 
-export type OnboardingStatus = ProjectOverviewSchema['onboardingStatus'];
+export type OnboardingStatus = OnboardingStatusSchema;
 
 /**
  * All the values are in seconds

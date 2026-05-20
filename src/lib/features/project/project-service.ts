@@ -238,6 +238,17 @@ export default class ProjectService {
             userId,
         );
 
+        if (this.flagResolver.isEnabled('newProjectList')) {
+            const projectIds = projects.map((p) => p.id);
+            const onboardingStatuses =
+                await this.onboardingReadModel.getOnboardingStatusesForProjects(
+                    projectIds,
+                );
+            for (const project of projects) {
+                project.onboardingStatus = onboardingStatuses.get(project.id);
+            }
+        }
+
         if (userId) {
             const projectAccess =
                 await this.privateProjectChecker.getUserAccessibleProjects(

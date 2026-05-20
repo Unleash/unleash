@@ -116,7 +116,9 @@ export const RootAccessOverviewAccordion = ({
                 <StyledAccordionDetails>
                     <NewAccessOverviewList
                         categories={categories}
+                        rootRole={rootRole}
                         roles={roles ?? []}
+                        groups={groups}
                     />
                 </StyledAccordionDetails>
             </StyledAccordion>

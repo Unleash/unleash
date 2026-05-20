@@ -34,7 +34,10 @@ export const ProjectAccess = ({
     environments: string[];
     searchValue: string;
 }) => {
-    const { overview, projectRoles } = useUserAccessOverview(id, project);
+    const { overview, projectRoles, rootRole } = useUserAccessOverview(
+        id,
+        project,
+    );
 
     const projectCategories = useMemo(() => {
         const categories = createProjectPermissionsStructure(
@@ -77,6 +80,8 @@ export const ProjectAccess = ({
                     ))}
                 </>
             }
+            rootRole={rootRole}
+            groups={overview?.groups}
             roles={roleIds}
             categories={projectCategories}
         >

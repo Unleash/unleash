@@ -10,6 +10,9 @@ import type {
     IAccessOverviewPermission,
     IPermissionCategory,
 } from 'interfaces/permissions';
+import type { IRole } from 'interfaces/role';
+import type { IGroup } from 'interfaces/group';
+import { useGroup } from 'hooks/api/getters/useGroup/useGroup';
 
 export type IAccessOverviewPermissionCategory = Omit<
     IPermissionCategory,
@@ -101,11 +104,15 @@ const StyledPermissionStatus = styled('div', {
 
 export const NewAccessOverviewList = ({
     categories,
+    rootRole,
     roles,
+    groups,
     noScroll,
 }: {
     categories: IAccessOverviewPermissionCategory[];
+    rootRole: IRole | undefined;
     roles: number[] | undefined;
+    groups: IGroup[] | undefined;
     noScroll?: boolean;
 }) => {
     const { searchQuery } = useSearchHighlightContext();
@@ -128,7 +135,9 @@ export const NewAccessOverviewList = ({
                                 <PermissionStatus
                                     hasPermission={permission.hasPermission}
                                     permission={permission.name}
+                                    rootRole={rootRole}
                                     roles={roles}
+                                    groups={groups}
                                 />
                             </li>
                         ))}
@@ -145,11 +154,14 @@ export const NewAccessOverviewList = ({
 const RoleDescription = ({
     roleId,
     permission,
+    groupId,
 }: {
     roleId: number;
     permission: string;
+    groupId?: number;
 }) => {
     const { role } = useRole(roleId.toString());
+    const { group } = groupId ? useGroup(groupId) : { group: undefined };
     if (!role) return null;
     const { name, permissions } = role;
     if (
@@ -164,6 +176,7 @@ const RoleDescription = ({
             <StyledRoleHeader>
                 <StyledSupervisedUserCircle color='disabled' />
                 {name}
+                {group && `-${group.name}`}
             </StyledRoleHeader>
         </StyledDescription>
     );
@@ -172,11 +185,15 @@ const RoleDescription = ({
 const PermissionStatus = ({
     hasPermission,
     permission,
+    rootRole,
     roles,
+    groups,
 }: {
     hasPermission: boolean;
     permission: string;
+    rootRole: IRole | undefined;
     roles: number[] | undefined;
+    groups: IGroup[] | undefined;
 }) => (
     <>
         {hasPermission && (
@@ -184,6 +201,13 @@ const PermissionStatus = ({
                 tooltip={
                     <StyledRoleDescriptions>
                         <StyledInfo>Due to these roles and groups</StyledInfo>
+                        {rootRole && (
+                            <RoleDescription
+                                key={rootRole?.id}
+                                permission={permission}
+                                roleId={rootRole?.id}
+                            />
+                        )}
                         {roles?.map((roleId) => (
                             <RoleDescription
                                 key={roleId}
@@ -191,6 +215,16 @@ const PermissionStatus = ({
                                 roleId={roleId}
                             />
                         ))}
+                        {groups
+                            ?.filter((group) => group.rootRole)
+                            .map((group) => (
+                                <RoleDescription
+                                    key={group.id}
+                                    permission={permission}
+                                    roleId={group.rootRole!}
+                                    groupId={group.id}
+                                />
+                            ))}
                     </StyledRoleDescriptions>
                 }
             >

@@ -9,6 +9,8 @@ import {
     NewAccessOverviewList,
     type IAccessOverviewPermissionCategory,
 } from './NewAccessOverviewList.tsx';
+import type { IGroup } from 'interfaces/group.ts';
+import type { IRole } from 'interfaces/role.ts';
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,
@@ -57,14 +59,18 @@ const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
 
 interface IAccessAccordionProps {
     categories: IAccessOverviewPermissionCategory[];
+    rootRole: IRole | undefined;
     roles: number[] | undefined;
+    groups: IGroup[] | undefined;
     title: React.ReactNode;
     children?: React.ReactNode;
 }
 
 export const NewAccessOverviewAccordion = ({
     categories,
+    rootRole,
     roles,
+    groups,
     title,
     children,
 }: IAccessAccordionProps) => {
@@ -85,7 +91,9 @@ export const NewAccessOverviewAccordion = ({
                 {permissions.length > 0 && (
                     <NewAccessOverviewList
                         categories={categories}
+                        rootRole={rootRole}
                         roles={roles}
+                        groups={groups}
                         noScroll
                     />
                 )}

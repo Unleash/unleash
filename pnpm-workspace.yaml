@@ -20,6 +20,7 @@ minimumReleaseAge: 10080
 minimumReleaseAgeIgnoreMissingTime: false
 
 patchedDependencies:
+  '@tanstack/table-core@8.21.3': patches/@tanstack__table-core@8.21.3.patch
   cypress-vite: .pnpm/patches/cypress-vite-npm-1.8.0-5384b5466c.patch
 overrides:
   "@codemirror/state": "6.6.0"

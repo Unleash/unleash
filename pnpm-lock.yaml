@@ -35,6 +35,7 @@ overrides:
   ws: ^8.18.0
 
 patchedDependencies:
+  '@tanstack/table-core@8.21.3': 31217d7772d704a6140e9df36366b7450543a18a32d90c300c2966d9be6a9299
   cypress-vite: fe7c69c6cba105fcf60aadaee434c81cd38010f5686c4defe50137142e7aece0
 
 importers:
@@ -8123,7 +8124,7 @@ snapshots:
 
   '@tanstack/react-table@8.21.3(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
     dependencies:
-      '@tanstack/table-core': 8.21.3
+      '@tanstack/table-core': 8.21.3(patch_hash=31217d7772d704a6140e9df36366b7450543a18a32d90c300c2966d9be6a9299)
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
 
@@ -8133,7 +8134,7 @@ snapshots:
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
 
-  '@tanstack/table-core@8.21.3': {}
+  '@tanstack/table-core@8.21.3(patch_hash=31217d7772d704a6140e9df36366b7450543a18a32d90c300c2966d9be6a9299)': {}
 
   '@tanstack/virtual-core@3.14.0': {}
 

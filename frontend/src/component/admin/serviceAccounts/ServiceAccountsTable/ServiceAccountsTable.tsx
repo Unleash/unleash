@@ -123,7 +123,7 @@ export const ServiceAccountsTable = () => {
                         }}
                     />
                 ),
-                meta: { searchable: true },
+                meta: { width: 150, searchable: true },
             },
             {
                 id: 'createdAt',

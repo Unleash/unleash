@@ -40,7 +40,7 @@ export const SignupDialogComplete: SignupStepContent = ({
             : `Bring the team now, explore together.\nWe'll invite your teammates by email so you can experience the full power of working together.`;
 
     return (
-        <StyledContent>
+        <StyledContent data-public>
             <StyledCheck />
             <StyledHeader>
                 <StyledTitle>You're all set</StyledTitle>

@@ -82,6 +82,10 @@ export class FrontendApiService {
         return this.globalFrontendApiCache.isReady();
     }
 
+    async waitForCacheReady(): Promise<void> {
+        return this.globalFrontendApiCache.readyPromise;
+    }
+
     async getFrontendApiFeatures(
         token: IApiUser,
         context: Context,

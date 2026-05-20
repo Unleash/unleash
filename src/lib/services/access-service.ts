@@ -69,6 +69,7 @@ type AccessOverviewPermission = IPermission & {
 type AccessOverview = {
     root: AccessOverviewPermission[];
     project: AccessOverviewPermission[];
+    groups: IGroup[];
     environment: AccessOverviewPermission[];
 };
 
@@ -251,6 +252,7 @@ export class AccessService {
     ): Promise<AccessOverview> {
         const permissions = await this.getPermissions();
         const userP = await this.getPermissionsForUser(user);
+        const groups = await this.groupService.getGroupsForUser(user.id);
         const overview: AccessOverview = {
             root: permissions.root.map((p) => ({
                 ...p,
@@ -264,6 +266,7 @@ export class AccessService {
                     projectId,
                 ),
             })),
+            groups,
             environment:
                 permissions.environments
                     .find((ep) => ep.name === environment)

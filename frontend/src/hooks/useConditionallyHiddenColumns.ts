@@ -17,21 +17,21 @@ export const useConditionallyHiddenColumns = (
     columnsDefinition: unknown[],
 ) => {
     useEffect(() => {
-        const columnsToHide = conditionallyHiddenColumns
-            .filter(({ condition }) => condition)
-            .flatMap(({ columns }) => columns);
+        const { hidden, shown } = Object.groupBy(
+            conditionallyHiddenColumns,
+            ({ condition }) => (condition ? 'hidden' : 'shown'),
+        );
 
-        const columnsToShow = conditionallyHiddenColumns
-            .filter(({ condition }) => !condition)
-            .flatMap(({ columns }) => columns);
+        const columnsToHide = hidden?.flatMap(({ columns }) => columns) ?? [];
+        const columnsToShow = shown?.flatMap(({ columns }) => columns) ?? [];
 
         setColumnVisibility((current) => {
             const next = { ...current };
-            for (const column of columnsToHide) {
-                next[column] = false;
-            }
             for (const column of columnsToShow) {
                 next[column] = true;
+            }
+            for (const column of columnsToHide) {
+                next[column] = false;
             }
             return next;
         });

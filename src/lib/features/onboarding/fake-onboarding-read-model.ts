@@ -24,4 +24,8 @@ export class FakeOnboardingReadModel implements IOnboardingReadModel {
     > {
         return new Map();
     }
+
+    async getOnboardingStatusForProject(): Promise<OnboardingStatus | null> {
+        return null;
+    }
 }

@@ -1333,9 +1333,7 @@ export default class ProjectService {
                   })
                 : Promise.resolve(false),
             this.projectStatsStore.getProjectStats(projectId),
-            this.onboardingReadModel
-                .getOnboardingStatusesForProjects([projectId])
-                .then((result) => result.get(projectId) ?? null),
+            this.onboardingReadModel.getOnboardingStatusForProject(projectId),
         ]);
 
         if (project === undefined) {

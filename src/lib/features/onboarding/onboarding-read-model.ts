@@ -85,6 +85,15 @@ export class OnboardingReadModel implements IOnboardingReadModel {
         return projects;
     }
 
+    async getOnboardingStatusForProject(
+        projectId: string,
+    ): Promise<OnboardingStatus | null> {
+        const statuses = await this.getOnboardingStatusesForProjects([
+            projectId,
+        ]);
+        return statuses.get(projectId) ?? null;
+    }
+
     async getOnboardingStatusesForProjects(
         projectIds: string[],
     ): Promise<Map<string, OnboardingStatus>> {

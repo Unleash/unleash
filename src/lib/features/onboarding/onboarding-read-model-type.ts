@@ -29,4 +29,7 @@ export interface IOnboardingReadModel {
     getOnboardingStatusesForProjects(
         projectIds: string[],
     ): Promise<Map<string, OnboardingStatus>>;
+    getOnboardingStatusForProject(
+        projectId: string,
+    ): Promise<OnboardingStatus | null>;
 }

@@ -120,9 +120,10 @@ export class PersonalDashboardService {
         userId: number,
         projectId: string,
     ): Promise<PersonalDashboardProjectDetailsUnserialized> {
-        const onboardingStatus = await this.onboardingReadModel
-            .getOnboardingStatusesForProjects([projectId])
-            .then((result) => result.get(projectId) ?? null);
+        const onboardingStatus =
+            await this.onboardingReadModel.getOnboardingStatusForProject(
+                projectId,
+            );
 
         if (!onboardingStatus) {
             throw new NotFoundError(

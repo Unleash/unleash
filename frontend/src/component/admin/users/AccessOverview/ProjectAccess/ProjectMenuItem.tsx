@@ -28,12 +28,7 @@ export const ProjectMenuItem = ({
     return (
         <MenuItem {...props} value={project.id}>
             <Checkbox checked={selected} size='small' />
-            <ListItemText
-                primary={project.name}
-                slotProps={
-                    isMember ? { primary: { fontWeight: 'bold' } } : undefined
-                }
-            />
+            <ListItemText primary={project.name} />
         </MenuItem>
     );
 };

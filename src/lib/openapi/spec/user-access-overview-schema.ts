@@ -74,7 +74,9 @@ export const userAccessOverviewSchema = {
                     type: 'array',
                     description:
                         'Experimental: The list of groups the user is in',
-                    items: groupItemSchema,
+                    items: {
+                        $ref: '#/components/schemas/groupItemSchema',
+                    },
                 },
                 project: {
                     type: 'array',

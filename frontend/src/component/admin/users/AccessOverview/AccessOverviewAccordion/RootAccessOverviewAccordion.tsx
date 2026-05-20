@@ -88,14 +88,13 @@ export const RootAccessOverviewAccordion = ({
 }: IAccessAccordionProps) => {
     const permissions = categories.flatMap(({ permissions }) => permissions);
     const hasAccess = permissions.filter((p) => p.hasPermission);
-    const roles = [
-        rootRole?.id,
-        ...(groups?.map((g) => g.rootRole) ?? []),
-    ].filter((id): id is number => id !== undefined);
+    const roles = [...(groups?.map((g) => g.rootRole) ?? [])].filter(
+        (id): id is number => id !== undefined,
+    );
 
     return (
         <Box>
-            <Typography variant='body1' fontWeight='bold'>
+            <Typography variant='body1' sx={{ fontWeight: 'bold' }}>
                 Instance access
             </Typography>
             <StyledAccordion>

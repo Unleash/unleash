@@ -104,17 +104,17 @@ export const ProjectAccessSection = ({
 
     return (
         <Box>
-            <Typography variant='body1' fontWeight='bold'>
+            <Typography variant='body1' sx={{ fontWeight: 'bold' }}>
                 Project access ({projects.length})
             </Typography>
             <StyledSelectorCardsContainer>
                 <StyledSelectorCard>
                     <StyledSelectorCardText>
-                        <Typography variant='body2' fontWeight='bold'>
+                        <Typography variant='body2' sx={{ fontWeight: 'bold' }}>
                             Select projects to see permissions
                         </Typography>
                         <Typography variant='caption' color='text.secondary'>
-                            Choose the project you want to look closer at
+                            Choose the projects you want to look closer at
                         </Typography>
                     </StyledSelectorCardText>
                     <Select
@@ -144,7 +144,7 @@ export const ProjectAccessSection = ({
                 </StyledSelectorCard>
                 <StyledSelectorCard>
                     <StyledSelectorCardText>
-                        <Typography variant='body2' fontWeight='bold'>
+                        <Typography variant='body2' sx={{ fontWeight: 'bold' }}>
                             Select environments to see what is allowed
                         </Typography>
                         <Typography variant='caption' color='text.secondary'>

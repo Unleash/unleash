@@ -59,6 +59,7 @@ export const EnvironmentVariantsTable = ({
                 ),
                 enableSorting: false,
                 meta: {
+                    width: 150,
                     searchable: true,
                     filterParsing: (value: IPayload) => value?.value,
                 },
@@ -72,6 +73,7 @@ export const EnvironmentVariantsTable = ({
                 ),
                 enableSorting: false,
                 meta: {
+                    width: 150,
                     searchable: true,
                     filterParsing: (value: IOverride[]) =>
                         value
@@ -96,6 +98,7 @@ export const EnvironmentVariantsTable = ({
                     </TextCell>
                 ),
                 sortingFn: 'basic',
+                meta: { width: 150 },
             },
             {
                 id: 'weightType',
@@ -104,6 +107,7 @@ export const EnvironmentVariantsTable = ({
                     row.weightType === 'fix' ? 'Fixed' : 'Variable',
                 cell: TextCell,
                 sortingFn: 'alphanumeric',
+                meta: { width: 150 },
             },
         ],
         // eslint-disable-next-line react-hooks/exhaustive-deps

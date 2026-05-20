@@ -43,27 +43,32 @@ const COLUMNS: ColumnDef<IFeatureMetricsRaw, any>[] = [
                 }
             />
         ),
+        meta: { width: 150 },
     },
     {
         id: 'appName',
         header: 'Application',
         accessorKey: 'appName',
         cell: ({ row }) => <ApplicationsCell row={row} />,
+        meta: { width: 150 },
     },
     {
         id: 'environment',
         header: 'Environment',
         accessorKey: 'environment',
+        meta: { width: 150 },
     },
     {
         id: 'requested',
         header: 'Requested',
         accessorFn: (original) => original.yes + original.no,
+        meta: { width: 150 },
     },
     {
         id: 'yes',
         header: 'Enabled',
         accessorKey: 'yes',
+        meta: { width: 150 },
     },
 ];
 

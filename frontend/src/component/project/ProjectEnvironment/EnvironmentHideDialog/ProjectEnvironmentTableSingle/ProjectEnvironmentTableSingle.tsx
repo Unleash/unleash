@@ -46,12 +46,14 @@ export const ProjectEnvironmentTableSingle = ({
                 header: 'Name',
                 accessorKey: 'name',
                 cell: TextCell,
+                meta: { width: 150 },
             },
             {
                 id: 'type',
                 header: 'Type',
                 accessorKey: 'type',
                 cell: TextCell,
+                meta: { width: 150 },
             },
             {
                 id: 'projectEnabledToggleCount',
@@ -67,7 +69,7 @@ export const ProjectEnvironmentTableSingle = ({
                         </TextCell>
                     );
                 },
-                meta: { align: 'center' },
+                meta: { width: 150, align: 'center' },
             },
         ],
         // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -46,12 +46,14 @@ export const EnvironmentTableSingle = ({
                 header: 'Name',
                 accessorKey: 'name',
                 cell: TextCell,
+                meta: { width: 150 },
             },
             {
                 id: 'type',
                 header: 'Type',
                 accessorKey: 'type',
                 cell: TextCell,
+                meta: { width: 150 },
             },
             {
                 id: 'projectCount',
@@ -80,6 +82,7 @@ export const EnvironmentTableSingle = ({
                         />
                     </TextCell>
                 ),
+                meta: { width: 150 },
             },
         ],
         [warnEnabledToggles],

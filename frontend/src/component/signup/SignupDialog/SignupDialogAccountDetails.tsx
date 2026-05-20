@@ -36,7 +36,7 @@ export const SignupDialogAccountDetails: SignupStepContent = ({
     return (
         <>
             <StyledSignupDialogField>
-                <StyledSignupDialogLabel>
+                <StyledSignupDialogLabel data-public>
                     What's your name?
                 </StyledSignupDialogLabel>
                 <StyledSignupDialogTextField
@@ -54,7 +54,7 @@ export const SignupDialogAccountDetails: SignupStepContent = ({
                 />
             </StyledSignupDialogField>
             <StyledSignupDialogField>
-                <StyledSignupDialogLabel>
+                <StyledSignupDialogLabel data-public>
                     What's your role?
                 </StyledSignupDialogLabel>
                 <Autocomplete
@@ -87,7 +87,7 @@ export const SignupDialogAccountDetails: SignupStepContent = ({
             </StyledSignupDialogField>
             {requestCompanyData && (
                 <StyledSignupDialogField>
-                    <StyledSignupDialogLabel>
+                    <StyledSignupDialogLabel data-public>
                         Company name
                     </StyledSignupDialogLabel>
                     <StyledSignupDialogTextField
@@ -105,7 +105,7 @@ export const SignupDialogAccountDetails: SignupStepContent = ({
                     />
                 </StyledSignupDialogField>
             )}
-            <StyledCheckboxContainer>
+            <StyledCheckboxContainer data-public>
                 {requestCompanyData && (
                     <FormControlLabel
                         control={
@@ -144,6 +144,7 @@ export const SignupDialogAccountDetails: SignupStepContent = ({
                 variant='contained'
                 onClick={() => onNext()}
                 disabled={!isValidForm}
+                data-public
             >
                 Next
             </StyledSignupDialogButton>

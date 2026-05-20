@@ -53,7 +53,7 @@ export const RootRoleGroupAccess = ({ groups }: { groups: IGroup[] }) => {
 
     return (
         <Box>
-            <Typography variant='body1' fontWeight='bold'>
+            <Typography variant='body1' sx={{ fontWeight: 'bold' }}>
                 Groups
             </Typography>
             <Typography variant='body2' color='text.secondary'>

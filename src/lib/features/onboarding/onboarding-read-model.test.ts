@@ -146,9 +146,8 @@ test('can get instance onboarding durations', async () => {
 });
 
 test('can get project onboarding status', async () => {
-    const onboardingStartedResult = await onboardingReadModel
-        .getOnboardingStatusesForProjects(['default'])
-        .then((result) => result.get('default'));
+    const onboardingStartedResult =
+        await onboardingReadModel.getOnboardingStatusForProject('default');
 
     expect(onboardingStartedResult).toMatchObject({
         status: 'onboarding-started',
@@ -159,9 +158,8 @@ test('can get project onboarding status', async () => {
         createdByUserId: SYSTEM_USER.id,
     });
 
-    const firstFlagResult = await onboardingReadModel
-        .getOnboardingStatusesForProjects(['default'])
-        .then((result) => result.get('default'));
+    const firstFlagResult =
+        await onboardingReadModel.getOnboardingStatusForProject('default');
 
     expect(firstFlagResult).toMatchObject({
         status: 'first-flag-created',
@@ -175,9 +173,8 @@ test('can get project onboarding status', async () => {
         },
     ]);
 
-    const onboardedResult = await onboardingReadModel
-        .getOnboardingStatusesForProjects(['default'])
-        .then((result) => result.get('default'));
+    const onboardedResult =
+        await onboardingReadModel.getOnboardingStatusForProject('default');
 
     expect(onboardedResult).toMatchObject({
         status: 'onboarded',
@@ -199,9 +196,8 @@ test('archived feature counts as onboarded', async () => {
 
     await featureToggleStore.archive('my-flag');
 
-    const onboardedResult = await onboardingReadModel
-        .getOnboardingStatusesForProjects(['default'])
-        .then((result) => result.get('default'));
+    const onboardedResult =
+        await onboardingReadModel.getOnboardingStatusForProject('default');
 
     expect(onboardedResult).toMatchObject({
         status: 'onboarded',
@@ -235,9 +231,8 @@ test('sdk register also onboards a project', async () => {
 
     await instanceService.bulkAdd();
 
-    const onboardedResult = await onboardingReadModel
-        .getOnboardingStatusesForProjects(['default'])
-        .then((result) => result.get('default'));
+    const onboardedResult =
+        await onboardingReadModel.getOnboardingStatusForProject('default');
 
     expect(onboardedResult).toMatchObject({
         status: 'onboarded',
@@ -272,13 +267,18 @@ test('bulk method returns a status per project', async () => {
     ]);
 
     expect(result.size).toBe(3);
-    expect(result.get('project-a')).toStrictEqual({
-        status: 'onboarding-started',
-    });
-    expect(result.get('project-b')).toStrictEqual({
-        status: 'first-flag-created',
-        feature: 'project-b-flag',
-    });
-    expect(result.get('project-c')).toStrictEqual({ status: 'onboarded' });
+    expect(result).toMatchObject(
+        new Map([
+            ['project-a', { status: 'onboarding-started' }],
+            [
+                'project-b',
+                {
+                    status: 'first-flag-created',
+                    feature: 'project-b-flag',
+                },
+            ],
+            ['project-c', { status: 'onboarded' }],
+        ]),
+    );
     expect(result.has('does-not-exist')).toBe(false);
 });

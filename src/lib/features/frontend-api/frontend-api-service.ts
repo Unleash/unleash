@@ -78,6 +78,10 @@ export class FrontendApiService {
         this.globalFrontendApiCache = globalFrontendApiCache;
     }
 
+    isCacheReady(): boolean {
+        return this.globalFrontendApiCache.getStatus() !== 'starting';
+    }
+
     async getFrontendApiFeatures(
         token: IApiUser,
         context: Context,

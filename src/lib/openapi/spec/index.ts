@@ -201,6 +201,7 @@ export * from './signup-data-schema.js';
 export * from './sort-order-schema.js';
 export * from './splash-request-schema.js';
 export * from './splash-response-schema.js';
+export * from './started-check-schema.js';
 export * from './strategies-schema.js';
 export * from './strategy-schema.js';
 export * from './strategy-variant-schema.js';

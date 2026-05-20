@@ -37,6 +37,10 @@ export class GlobalFrontendApiCache extends EventEmitter {
 
     private status: GlobalFrontendApiCacheState = 'starting';
 
+    getStatus(): GlobalFrontendApiCacheState {
+        return this.status;
+    }
+
     constructor(
         config: Config,
         segmentReadModel: ISegmentReadModel,

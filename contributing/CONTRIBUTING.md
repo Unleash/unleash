@@ -105,7 +105,13 @@ You'll need:
    docker start postgres
    ```
 
-4. **Start Unleash.** Run the below command and Unleash will start up and try to connect to the database. On a successful connection it will also configure the database.
+4. **Configure your environment.** Copy `.env.example` to `.env` and adjust any values for your setup:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+5. **Start Unleash.** Run the below command and Unleash will start up and try to connect to the database. On a successful connection it will also configure the database.
 
    ```bash
    pnpm dev

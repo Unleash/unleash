@@ -139,12 +139,12 @@ describe('should list all projects', () => {
         );
     });
 
-    test('includes onboarding status when flag is enabled', async () => {
+    test("includes onboarding status with 'newProjectList' flag enabled", async () => {
         const flagEnabledConfig = createTestConfig({
             getLogger,
             experimental: { flags: { newProjectList: true } },
         });
-        const flagEnabledProjectService = createProjectService(
+        const projectServiceWithFlag = createProjectService(
             db.rawDatabase,
             flagEnabledConfig,
         );
@@ -157,11 +157,14 @@ describe('should list all projects', () => {
             defaultStickiness: 'default',
         };
 
-        await flagEnabledProjectService.createProject(project, user, auditUser);
-        const projects = await flagEnabledProjectService.getProjects();
+        await projectServiceWithFlag.createProject(project, user, auditUser);
+        const projects = await projectServiceWithFlag.getProjects();
+        const projectOnboardingStatus = projects.find(
+            (p) => p.id === project.id,
+        )?.onboardingStatus;
 
-        expect(projects.find((p) => p.id === project.id)).toMatchObject({
-            onboardingStatus: { status: 'onboarding-started' },
+        expect(projectOnboardingStatus).toMatchObject({
+            status: 'onboarding-started',
         });
     });
 });

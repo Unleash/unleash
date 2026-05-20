@@ -47,6 +47,7 @@ export const groupItemSchema = {
             example: '01HTMEXAMPLESCIMID7SWWGHN7',
         },
     },
+    components: {},
 } as const;
 
 export type GroupItemSchema = FromSchema<typeof groupItemSchema>;

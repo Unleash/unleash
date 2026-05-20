@@ -38,12 +38,14 @@ const columns: ColumnDef<Record<string, any>, unknown>[] = [
         id: 'amountFormatted',
         header: 'Amount',
         accessorKey: 'amountFormatted',
+        meta: { width: 150 },
     },
     {
         id: 'status',
         header: 'Status',
         accessorKey: 'status',
         enableGlobalFilter: false,
+        meta: { width: 150 },
     },
     {
         id: 'created',
@@ -51,6 +53,7 @@ const columns: ColumnDef<Record<string, any>, unknown>[] = [
         accessorKey: 'created',
         cell: DateCell,
         enableGlobalFilter: false,
+        meta: { width: 150 },
     },
     {
         id: 'dueDate',
@@ -58,6 +61,7 @@ const columns: ColumnDef<Record<string, any>, unknown>[] = [
         accessorKey: 'dueDate',
         cell: DateCell,
         enableGlobalFilter: false,
+        meta: { width: 150 },
     },
     {
         id: 'invoicePDF',

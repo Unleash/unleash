@@ -106,6 +106,7 @@ export * from './frontend-api-client-schema.js';
 export * from './frontend-api-feature-schema.js';
 export * from './frontend-api-features-post-schema.js';
 export * from './frontend-api-features-schema.js';
+export * from './group-item-schema.js';
 export * from './group-schema.js';
 export * from './group-user-model-schema.js';
 export * from './groups-schema.js';

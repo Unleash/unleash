@@ -19,7 +19,7 @@ export type ValidatedClientMetrics = {
     environment?: string;
     appName: string;
     instanceId: string;
-    bucket: IMetricsBucket;
+    bucket?: IMetricsBucket;
 };
 
 export const clientMetricsSchema = joi
@@ -29,9 +29,12 @@ export const clientMetricsSchema = joi
         environment: joi.string().optional(),
         appName: joi.string().required(),
         instanceId: joi.string().empty(['', null]).default('default'),
+        // bucket is optional: requests carrying only impact metrics may omit it
+        // or send it as null
         bucket: joi
             .object()
-            .required()
+            .empty(null)
+            .optional()
             .keys({
                 start: joi.date().required(),
                 stop: joi.date().required(),

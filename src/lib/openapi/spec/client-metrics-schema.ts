@@ -4,7 +4,7 @@ import { dateSchema } from './date-schema.js';
 export const clientMetricsSchema = {
     $id: '#/components/schemas/clientMetricsSchema',
     type: 'object',
-    required: ['appName', 'bucket'],
+    required: ['appName'],
     description:
         'Client usage metrics, accumulated in buckets of hour by hour by default',
     properties: {
@@ -59,9 +59,10 @@ export const clientMetricsSchema = {
         },
         bucket: {
             type: 'object',
+            nullable: true,
             required: ['start', 'stop', 'toggles'],
             description:
-                'Holds all metrics gathered over a window of time. Typically 1 hour wide',
+                'Holds all metrics gathered over a window of time. Typically 1 hour wide. May be omitted or null when the request only carries impact metrics.',
             properties: {
                 start: {
                     $ref: '#/components/schemas/dateSchema',

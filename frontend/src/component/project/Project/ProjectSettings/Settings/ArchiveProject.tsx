@@ -43,7 +43,7 @@ export const ArchiveProject = ({
                 condition={featureCount > 0}
                 show={
                     <p>
-                        Currently there {featureCount <= 1 ? 'is' : 'are'}{' '}
+                        Currently there {featureCount === 1 ? 'is' : 'are'}{' '}
                         <Link component={RouterLink} to='../..'>
                             <strong>
                                 {featureCount} active feature{' '}

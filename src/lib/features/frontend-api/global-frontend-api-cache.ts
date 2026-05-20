@@ -56,6 +56,10 @@ export class GlobalFrontendApiCache extends EventEmitter {
         );
     }
 
+    isReady(): boolean {
+        return this.status === 'ready' || this.status === 'updated';
+    }
+
     getSegment(id: number): Segment | undefined {
         return this.segments.find((segment) => segment.id === id);
     }

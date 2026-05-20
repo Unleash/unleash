@@ -59,6 +59,7 @@ const COLUMNS: ColumnDef<IEnvironment, unknown>[] = [
         header: 'Type',
         accessorKey: 'type',
         cell: HighlightCell,
+        meta: { width: 150 },
     },
     {
         id: 'projectCount',
@@ -68,6 +69,7 @@ const COLUMNS: ColumnDef<IEnvironment, unknown>[] = [
                 ? '1 project'
                 : `${row.projectCount} projects`,
         cell: TextCell,
+        meta: { width: 150 },
     },
     {
         id: 'apiTokenCount',
@@ -75,6 +77,7 @@ const COLUMNS: ColumnDef<IEnvironment, unknown>[] = [
         accessorFn: (row) =>
             row.apiTokenCount === 1 ? '1 token' : `${row.apiTokenCount} tokens`,
         cell: TextCell,
+        meta: { width: 150 },
     },
 ];
 
@@ -134,6 +137,7 @@ export const EnvironmentTable = () => {
                 accessorFn: (row) =>
                     Number.isInteger(row.requiredApprovals) ? 'yes' : 'no',
                 cell: TextCell,
+                meta: { width: 150 },
             });
         }
 

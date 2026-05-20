@@ -44,7 +44,7 @@ export const SignupDialogSetPassword: SignupStepContent = ({
         <>
             {emailOrUsername && (
                 <StyledSignupDialogField>
-                    <StyledSignupDialogLabel data-public>
+                    <StyledSignupDialogLabel>
                         {user.email ? 'Verified email' : 'Username'}
                     </StyledSignupDialogLabel>
                     <StyledBadge color='success' icon={<CheckCircle />}>
@@ -61,9 +61,7 @@ export const SignupDialogSetPassword: SignupStepContent = ({
                 </StyledSignupDialogField>
             )}
             <StyledSignupDialogField>
-                <StyledSignupDialogLabel data-public>
-                    Password
-                </StyledSignupDialogLabel>
+                <StyledSignupDialogLabel>Password</StyledSignupDialogLabel>
                 <PasswordField
                     id='password'
                     placeholder='Your password'
@@ -86,7 +84,6 @@ export const SignupDialogSetPassword: SignupStepContent = ({
                 variant='contained'
                 onClick={() => onNext()}
                 disabled={!isValidPassword}
-                data-public
             >
                 Next
             </StyledSignupDialogButton>

@@ -88,7 +88,7 @@ export const SignupDialogInviteOthers: SignupStepContent = ({
         <>
             {isFirstSignup && <AutoCreateDomainUsersToggle />}
             <StyledSignupDialogField>
-                <StyledSignupDialogLabel data-public>
+                <StyledSignupDialogLabel>
                     Invite team members
                 </StyledSignupDialogLabel>
                 <Autocomplete
@@ -148,7 +148,7 @@ export const SignupDialogInviteOthers: SignupStepContent = ({
                     )}
                 />
             </StyledSignupDialogField>
-            <StyledButtonRow data-public>
+            <StyledButtonRow>
                 <div>
                     <Button variant='outlined' onClick={onBack}>
                         Back

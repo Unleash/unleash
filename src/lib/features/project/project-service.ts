@@ -253,6 +253,7 @@ export default class ProjectService {
         }
 
         if (this.flagResolver.isEnabled('newProjectList')) {
+            //TODO: update project-schema when removing this flag
             const projectIds = projects.map((p) => p.id);
             const onboardingStatuses =
                 await this.onboardingReadModel.getOnboardingStatusesForProjects(

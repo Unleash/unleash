@@ -122,7 +122,7 @@ test('should have default project', async () => {
 });
 
 describe('should list all projects', () => {
-    test('returns all projects with member counts', async () => {
+    test('includes member count in the project payload', async () => {
         const project = {
             id: 'test-list',
             name: 'New project',

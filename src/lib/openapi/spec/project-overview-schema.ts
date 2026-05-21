@@ -163,7 +163,6 @@ export const projectOverviewSchema = {
         },
         onboardingStatus: {
             $ref: '#/components/schemas/onboardingStatusSchema',
-            description: 'The current onboarding status of the project.',
         },
     },
     components: {

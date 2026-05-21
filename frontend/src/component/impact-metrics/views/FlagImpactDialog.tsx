@@ -86,10 +86,10 @@ const StyledSubline = styled(Typography)(({ theme }) => ({
 }));
 
 const StyledBody = styled(Box)(({ theme }) => ({
-    padding: theme.spacing(2, 3, 3, 3),
+    padding: theme.spacing(1.5, 3, 3, 3),
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(2.5),
+    gap: theme.spacing(2),
 }));
 
 // Δ panel — stacked top-to-bottom: a quiet BEFORE → AFTER row up top, the
@@ -99,8 +99,8 @@ const StyledDeltaPanel = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: theme.spacing(2),
-    padding: theme.spacing(3),
+    gap: theme.spacing(1.5),
+    padding: theme.spacing(2.5, 3),
     borderRadius: theme.shape.borderRadiusMedium,
     backgroundColor: theme.palette.background.elevation1,
 }));
@@ -171,23 +171,9 @@ const StyledDeltaSecondary = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const StyledChartSection = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(1),
-}));
-
-const StyledChartSectionTitle = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.smallerBody,
-    fontWeight: 700,
-    color: theme.palette.text.secondary,
-    textTransform: 'uppercase',
-    letterSpacing: '0.06em',
-}));
-
 const StyledChartBox = styled(Box)({
     position: 'relative',
-    height: 220,
+    width: '100%',
 });
 
 const StyledFootnote = styled(Typography)(({ theme }) => ({
@@ -258,7 +244,9 @@ const buildMiniChartOptions = (
     const eventMs = impact.event.timestamp;
     const halfWindowMs = impact.halfWindowMs;
     return {
-        maintainAspectRatio: false,
+        // Let `LineChart`'s aspectRatio drive height — overriding
+        // maintainAspectRatio fights with the shared component's sizing model
+        // and the dialog ends up taller than its content.
         responsive: true,
         interaction: { mode: 'index' as const, intersect: false },
         layout: { padding: { top: 12, right: 8, left: 8, bottom: 4 } },
@@ -472,22 +460,17 @@ export const FlagImpactDialog: FC<FlagImpactDialogProps> = ({
                         </StyledDeltaSecondary>
                     </StyledDeltaBlock>
                 </StyledDeltaPanel>
-                <StyledChartSection>
-                    <StyledChartSectionTitle>
-                        Goal around the flip
-                    </StyledChartSectionTitle>
-                    <StyledChartBox>
-                        {chartData && chartOptions ? (
-                            <Suspense fallback={null}>
-                                <LineChart
-                                    data={chartData}
-                                    overrideOptions={chartOptions}
-                                    aspectRatio={2.5}
-                                />
-                            </Suspense>
-                        ) : null}
-                    </StyledChartBox>
-                </StyledChartSection>
+                <StyledChartBox>
+                    {chartData && chartOptions ? (
+                        <Suspense fallback={null}>
+                            <LineChart
+                                data={chartData}
+                                overrideOptions={chartOptions}
+                                aspectRatio={3}
+                            />
+                        </Suspense>
+                    ) : null}
+                </StyledChartBox>
                 {measurable ? null : (
                     <StyledFootnote>{footnote}</StyledFootnote>
                 )}

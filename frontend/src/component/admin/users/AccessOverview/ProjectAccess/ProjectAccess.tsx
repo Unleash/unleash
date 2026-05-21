@@ -1,0 +1,91 @@
+import { Badge } from '@mui/material';
+import { NewAccessOverviewAccordion } from '../AccessOverviewAccordion/NewAccessOverviewAccordion.tsx';
+import FolderOutlined from '@mui/icons-material/FolderOutlined';
+import { useMemo } from 'react';
+import { useUserAccessOverview } from 'hooks/api/getters/useUserAccessOverview/useUserAccessOverview';
+import { createProjectPermissionsStructure } from 'component/admin/roles/RoleForm/RolePermissionCategories/createProjectPermissionsStructure';
+import type { IAccessOverviewPermissionCategory } from '../AccessOverviewAccordion/AccessOverviewList.tsx';
+import { EnvironmentAccessTable } from './EnvironmentAccessTable.tsx';
+
+export const filterCategory = (
+    category: IAccessOverviewPermissionCategory,
+    search: string,
+): IAccessOverviewPermissionCategory | undefined => {
+    const searchLower = search.toLowerCase();
+    const filteredPermissions = category.permissions.filter(({ displayName }) =>
+        displayName.toLowerCase().includes(searchLower),
+    );
+
+    if (filteredPermissions.length) {
+        return { ...category, permissions: filteredPermissions };
+    }
+};
+
+export const ProjectAccess = ({
+    id,
+    project,
+    projectName,
+    environments,
+    searchValue,
+}: {
+    id: string;
+    project: string;
+    projectName: string;
+    environments: string[];
+    searchValue: string;
+}) => {
+    const { overview, projectRoles, rootRole } = useUserAccessOverview(
+        id,
+        project,
+    );
+
+    const projectCategories = useMemo(() => {
+        const categories = createProjectPermissionsStructure(
+            overview?.project ?? [],
+        ).map(({ label, permissions }) => ({
+            label,
+            permissions: permissions.map(([permission]) => permission),
+        })) as IAccessOverviewPermissionCategory[];
+
+        return categories
+            .map((category) => filterCategory(category, searchValue))
+            .filter(Boolean) as IAccessOverviewPermissionCategory[];
+    }, [overview?.project, searchValue]);
+
+    const roleIds = projectRoles?.map((rp) => rp.id);
+
+    const envContent =
+        environments.length > 0 ? (
+            <EnvironmentAccessTable
+                id={id}
+                project={project}
+                environments={environments}
+                searchValue={searchValue}
+            />
+        ) : undefined;
+
+    return (
+        <NewAccessOverviewAccordion
+            title={
+                <>
+                    <FolderOutlined
+                        fontSize='small'
+                        sx={{ flexShrink: 0, color: 'text.secondary' }}
+                    />
+                    <span>{projectName}</span>
+                    {projectRoles?.map((role) => (
+                        <Badge key={role.id} color='secondary'>
+                            {role.name}
+                        </Badge>
+                    ))}
+                </>
+            }
+            rootRole={rootRole}
+            groups={overview?.groups}
+            roles={roleIds}
+            categories={projectCategories}
+        >
+            {envContent}
+        </NewAccessOverviewAccordion>
+    );
+};

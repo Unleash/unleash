@@ -9,9 +9,12 @@ import { AccessOverview } from './AccessOverview/AccessOverview.tsx';
 import { PremiumFeature } from '../../common/PremiumFeature/PremiumFeature.tsx';
 import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { NewAccessOverview } from './AccessOverview/NewAccessOverview.tsx';
 
 export const UsersAdmin = () => {
     const { isEnterprise } = useUiConfig();
+    const accessOverviewReworkEnabled = useUiFlag('accessOverviewRework');
     return (
         <div>
             <PermissionGuard permissions={ADMIN}>
@@ -25,7 +28,16 @@ export const UsersAdmin = () => {
                         }
                     />
                     <Route path=':id/edit' element={<EditUser />} />
-                    <Route path=':id/access' element={<AccessOverview />} />
+                    <Route
+                        path=':id/access'
+                        element={
+                            <ConditionallyRender
+                                condition={Boolean(accessOverviewReworkEnabled)}
+                                show={<NewAccessOverview />}
+                                elseShow={<AccessOverview />}
+                            />
+                        }
+                    />
                     <Route
                         path='inactive'
                         element={

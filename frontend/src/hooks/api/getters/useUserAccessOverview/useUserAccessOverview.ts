@@ -5,11 +5,13 @@ import useSWR from 'swr';
 import type { IRole } from 'interfaces/role';
 import type { IUser } from 'interfaces/user';
 import type { IAccessOverviewPermission } from 'interfaces/permissions';
+import type { IGroup } from 'interfaces/group.js';
 
 interface IUserAccessOverview {
     root: IAccessOverviewPermission[];
     project: IAccessOverviewPermission[];
     environment: IAccessOverviewPermission[];
+    groups: IGroup[];
 }
 
 interface IUserAccessOverviewResponse {

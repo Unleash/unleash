@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import LogRocket from 'logrocket';
+import { scrubUrl } from './scrubUrl';
 
 type Props = {
     appId: string;
@@ -17,7 +18,20 @@ const LogRocketRunner = ({ appId, clientId, userId }: Props) => {
                 },
                 shouldCaptureIP: false,
                 network: {
-                    requestSanitizer: () => null,
+                    requestSanitizer: ({ reqId, method, url }) => ({
+                        reqId,
+                        method,
+                        url: scrubUrl(url),
+                        headers: {},
+                        body: undefined,
+                    }),
+                    responseSanitizer: ({ reqId, method, status }) => ({
+                        reqId,
+                        method,
+                        status,
+                        headers: {},
+                        body: undefined,
+                    }),
                 },
             });
             LogRocket.identify(`${clientId}:${userId}`, {

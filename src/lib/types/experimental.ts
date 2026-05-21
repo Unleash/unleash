@@ -75,7 +75,6 @@ export type IFlagKey =
     | 'onboardingProjectSetupNewSteps'
     | 'multiMetricChart'
     | 'elasticEventSync'
-    | 'externalImpactMetrics'
     | 'accessOverviewRework'
     | 'onboardingConnectSDKNewDialog'
     | 'logRocketEnabled'
@@ -340,10 +339,6 @@ const flags: IFlags = {
     ),
     elasticEventSync: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ELASTIC_EVENT_SYNC,
-        false,
-    ),
-    externalImpactMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_EXTERNAL_IMPACT_METRICS,
         false,
     ),
     accessOverviewRework: parseEnvVarBoolean(

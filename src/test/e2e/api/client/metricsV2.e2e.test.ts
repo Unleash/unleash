@@ -49,7 +49,7 @@ test('should require valid send metrics', async () => {
         .post('/api/client/metrics')
         .set('Authorization', defaultToken.secret)
         .send({
-            appName: 'test',
+            instanceId: 'test',
         })
         .expect(400);
 });

@@ -238,3 +238,45 @@ test('sdk register also onboards a project', async () => {
         status: 'onboarded',
     });
 });
+
+test('bulk method returns a status per project', async () => {
+    const { projectStore } = db.stores;
+    await projectStore.create({ id: 'project-a', name: 'A' });
+    await projectStore.create({ id: 'project-b', name: 'B' });
+    await projectStore.create({ id: 'project-c', name: 'C' });
+
+    await featureToggleStore.create('project-b', {
+        name: 'project-b-flag',
+        createdByUserId: SYSTEM_USER.id,
+    });
+
+    await featureToggleStore.create('project-c', {
+        name: 'project-c-flag',
+        createdByUserId: SYSTEM_USER.id,
+    });
+
+    await lastSeenStore.setLastSeen([
+        { environment: DEFAULT_ENV, featureName: 'project-c-flag' },
+    ]);
+
+    const result = await onboardingReadModel.getOnboardingStatusesForProjects([
+        'project-a',
+        'project-b',
+        'project-c',
+        'does-not-exist',
+    ]);
+
+    expect(result).toEqual(
+        new Map([
+            ['project-a', { status: 'onboarding-started' }],
+            [
+                'project-b',
+                {
+                    status: 'first-flag-created',
+                    feature: 'project-b-flag',
+                },
+            ],
+            ['project-c', { status: 'onboarded' }],
+        ]),
+    );
+});

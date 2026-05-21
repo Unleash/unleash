@@ -88,59 +88,88 @@ export class OnboardingReadModel implements IOnboardingReadModel {
     async getOnboardingStatusForProject(
         projectId: string,
     ): Promise<OnboardingStatus | null> {
+        const statuses = await this.getOnboardingStatusesForProjects([
+            projectId,
+        ]);
+        return statuses.get(projectId) ?? null;
+    }
+
+    async getOnboardingStatusesForProjects(
+        projectIds: string[],
+    ): Promise<Map<string, OnboardingStatus>> {
         const useNewSteps = this.flagResolver.isEnabled(
             'onboardingProjectSetupNewSteps',
         );
-        const projectExists = await this.db('projects')
-            .select(1)
-            .where('id', projectId)
-            .first();
 
-        if (!projectExists) {
-            return null;
+        const result = new Map<string, OnboardingStatus>();
+
+        if (projectIds.length === 0) {
+            return result;
         }
+
+        const existingProjectRows = await this.db('projects')
+            .select('id')
+            .whereIn('id', projectIds);
+
+        if (existingProjectRows.length === 0) {
+            return result;
+        }
+        const existingIds = existingProjectRows.map((r) => r.id);
 
         const db = this.db;
-        const lastSeen = await db
-            .select(db.raw('1'))
-            .from('last_seen_at_metrics as lsm')
+        const sdkUsageRows = await db('last_seen_at_metrics as lsm')
             .innerJoin('features as f', 'f.name', 'lsm.feature_name')
-            .innerJoin('projects as p', 'p.id', 'f.project')
-            .where('p.id', projectId)
+            .distinct('f.project as project')
+            .whereIn('f.project', existingIds)
             .union((qb) => {
-                qb.select(db.raw('1'))
-                    .from('client_applications_usage as cau')
-                    .where('cau.project', projectId);
-            })
-            .first();
+                qb.from('client_applications_usage')
+                    .distinct('project')
+                    .whereIn('project', existingIds);
+            });
+        const projectsWithSdkUsage = new Set<string>(
+            sdkUsageRows.map((r) => r.project),
+        );
 
-        if (lastSeen) {
-            if (!useNewSteps) {
-                return { status: 'onboarded' };
+        const enabledFeatureEventRows = await db('events')
+            .distinct('project')
+            .where('type', FEATURE_ENVIRONMENT_ENABLED)
+            .whereIn('project', existingIds);
+        const projectsWithEnabledFlagEvent = new Set<string>(
+            enabledFeatureEventRows.map((r) => r.project),
+        );
+
+        const featureRows = await db('features')
+            .distinctOn('project')
+            .select('project', 'name')
+            .whereNull('archived_at')
+            .whereIn('project', existingIds);
+        const firstFeatureByProject = new Map<string, string>(
+            featureRows.map((r) => [r.project, r.name]),
+        );
+
+        const determineStatus = (projectId: string): OnboardingStatus => {
+            if (projectsWithSdkUsage.has(projectId)) {
+                if (!useNewSteps) {
+                    return { status: 'onboarded' };
+                }
+
+                if (projectsWithEnabledFlagEvent.has(projectId)) {
+                    return { status: 'onboarded' };
+                }
+                return { status: 'sdk-connected' };
             }
 
-            const toggleExists = await db('events')
-                .where('type', FEATURE_ENVIRONMENT_ENABLED)
-                .where('project', projectId)
-                .select(db.raw('1'))
-                .limit(1)
-                .first();
-
-            if (toggleExists) {
-                return { status: 'onboarded' };
+            const feature = firstFeatureByProject.get(projectId);
+            if (!feature) {
+                return { status: 'onboarding-started' };
             }
-            return { status: 'sdk-connected' };
+            return { status: 'first-flag-created', feature };
+        };
+
+        for (const projectId of existingIds) {
+            result.set(projectId, determineStatus(projectId));
         }
 
-        const feature = await this.db('features')
-            .select('name')
-            .where('project', projectId)
-            .where('archived_at', null)
-            .first();
-
-        if (!feature) {
-            return { status: 'onboarding-started' };
-        }
-        return { status: 'first-flag-created', feature: feature.name };
+        return result;
     }
 }

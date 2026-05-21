@@ -19,6 +19,12 @@ export class FakeOnboardingReadModel implements IOnboardingReadModel {
         return Promise.resolve([]);
     }
 
+    async getOnboardingStatusesForProjects(): Promise<
+        Map<string, OnboardingStatus>
+    > {
+        return new Map();
+    }
+
     async getOnboardingStatusForProject(): Promise<OnboardingStatus | null> {
         return null;
     }

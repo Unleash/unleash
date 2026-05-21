@@ -117,6 +117,8 @@ export const FeatureOverviewEnvironment = ({
                         strategyCount: environment.strategies?.length ?? 0,
                         releasePlanCount: environment.releasePlans?.length ?? 0,
                     }}
+                    component={hasActivations ? undefined : 'div'}
+                    role={hasActivations ? undefined : 'none'}
                     environmentId={environment.name}
                     projectId={projectId}
                     featureId={featureId}

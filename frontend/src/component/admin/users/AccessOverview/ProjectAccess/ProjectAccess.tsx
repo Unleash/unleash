@@ -1,4 +1,4 @@
-import { Badge } from '@mui/material';
+import { Badge } from 'component/common/Badge/Badge';
 import { NewAccessOverviewAccordion } from '../AccessOverviewAccordion/NewAccessOverviewAccordion.tsx';
 import FolderOutlined from '@mui/icons-material/FolderOutlined';
 import { useMemo } from 'react';
@@ -73,11 +73,21 @@ export const ProjectAccess = ({
                         sx={{ flexShrink: 0, color: 'text.secondary' }}
                     />
                     <span>{projectName}</span>
-                    {projectRoles?.map((role) => (
-                        <Badge key={role.id} color='secondary'>
-                            {role.name}
-                        </Badge>
-                    ))}
+                    {projectRoles?.map((role) => {
+                        const isCustom = ![
+                            'Reader',
+                            'Member',
+                            'Owner',
+                        ].includes(role.name);
+                        return (
+                            <Badge
+                                key={role.id}
+                                color={isCustom ? 'success' : 'secondary'}
+                            >
+                                {role.name}
+                            </Badge>
+                        );
+                    })}
                 </>
             }
             rootRole={rootRole}

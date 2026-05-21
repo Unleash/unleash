@@ -38,6 +38,10 @@ const StyledAccessOverviewContainer = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
+const StyledProjectAccessWrapper = styled('div')(({ theme }) => ({
+    marginTop: theme.spacing(4),
+}));
+
 export const NewAccessOverview = () => {
     const id = useRequiredPathParam('id');
     const { projects } = useProjects();
@@ -98,12 +102,14 @@ export const NewAccessOverview = () => {
                         categories={rootCategories}
                     />
                     <RootRoleGroupAccess groups={rootRoleGroups ?? []} />
-                    <ProjectAccessSection
-                        id={id}
-                        projects={projects}
-                        environments={environments}
-                        searchValue={searchValue}
-                    />
+                    <StyledProjectAccessWrapper>
+                        <ProjectAccessSection
+                            id={id}
+                            projects={projects}
+                            environments={environments}
+                            searchValue={searchValue}
+                        />
+                    </StyledProjectAccessWrapper>
                 </SearchHighlightProvider>
             </StyledAccessOverviewContainer>
         </PageContent>

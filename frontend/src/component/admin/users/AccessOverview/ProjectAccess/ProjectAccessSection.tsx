@@ -125,8 +125,11 @@ export const ProjectAccessSection = ({
                         }
                         renderValue={() => projectSelectorLabel}
                         size='small'
-                        sx={{ minWidth: 150, flexShrink: 0 }}
+                        sx={{ minWidth: 150, maxWidth: 200, flexShrink: 0 }}
                         displayEmpty
+                        MenuProps={{
+                            sx: { '& .MuiPaper-root': { maxWidth: 200 } },
+                        }}
                     >
                         {sortedProjects.map((project) => (
                             <ProjectMenuItem
@@ -155,25 +158,48 @@ export const ProjectAccessSection = ({
                     <Select
                         multiple
                         value={selectedEnvironments}
-                        onChange={(e) =>
-                            setSelectedEnvironments(e.target.value as string[])
-                        }
+                        onChange={(e) => {
+                            const value = e.target.value as string[];
+                            if (value.length <= 3) {
+                                setSelectedEnvironments(value);
+                            }
+                        }}
                         renderValue={() => environmentSelectorLabel}
                         size='small'
-                        sx={{ minWidth: 150, flexShrink: 0 }}
+                        sx={{ minWidth: 150, maxWidth: 200, flexShrink: 0 }}
                         displayEmpty
+                        MenuProps={{
+                            sx: { '& .MuiPaper-root': { maxWidth: 200 } },
+                        }}
                     >
-                        {environments.map((env) => (
-                            <MenuItem key={env.name} value={env.name}>
-                                <Checkbox
-                                    checked={selectedEnvironments.includes(
-                                        env.name,
-                                    )}
-                                    size='small'
-                                />
-                                <ListItemText primary={env.name} />
-                            </MenuItem>
-                        ))}
+                        {environments.map((env) => {
+                            const isSelected = selectedEnvironments.includes(
+                                env.name,
+                            );
+                            const atLimit = selectedEnvironments.length >= 3;
+                            return (
+                                <MenuItem
+                                    key={env.name}
+                                    value={env.name}
+                                    disabled={atLimit && !isSelected}
+                                >
+                                    <Checkbox
+                                        checked={isSelected}
+                                        size='small'
+                                    />
+                                    <ListItemText
+                                        primary={env.name}
+                                        sx={{
+                                            '& .MuiListItemText-primary': {
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                whiteSpace: 'nowrap',
+                                            },
+                                        }}
+                                    />
+                                </MenuItem>
+                            );
+                        })}
                     </Select>
                 </StyledSelectorCard>
             </StyledSelectorCardsContainer>

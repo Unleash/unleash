@@ -1,5 +1,5 @@
 import { type OnMoveItem, useDragItem } from 'hooks/useDragItem';
-import { flexRender, type Row } from '@tanstack/react-table';
+import { flexRender, type Cell, type Row } from '@tanstack/react-table';
 import { styled, TableRow } from '@mui/material';
 import { TableCell } from 'component/common/Table';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
@@ -35,11 +35,7 @@ export const EnvironmentRow = ({ row, onMoveItem }: IEnvironmentRowProps) => {
     );
 
     const renderCell = (
-        cell: Row<IEnvironment>['_getAllVisibleCells'] extends () => infer T
-            ? T extends Array<infer U>
-                ? U
-                : never
-            : never,
+        cell: Cell<IEnvironment, unknown>,
         ref: ForwardedRef<HTMLElement>,
     ) => {
         const isDragHandle = cell.column.columnDef.meta?.isDragHandle;

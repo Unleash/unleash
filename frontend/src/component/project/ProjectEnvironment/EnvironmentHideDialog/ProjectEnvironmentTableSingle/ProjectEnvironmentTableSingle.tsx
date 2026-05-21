@@ -81,6 +81,7 @@ export const ProjectEnvironmentTableSingle = ({
         data: [environment],
         getCoreRowModel: getCoreRowModel(),
         enableSorting: false,
+        autoResetAll: false,
     });
 
     return (

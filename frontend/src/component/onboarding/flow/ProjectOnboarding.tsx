@@ -12,7 +12,7 @@ import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectO
 import { OnboardingProgress } from './OnboardingProgress.tsx';
 import { CreateFlagStep } from './steps/CreateFlagStep.tsx';
 import { TurnFlagStep } from './steps/TurnFlagStep.tsx';
-import { getOnboardingStep } from '../../../utils/getOnboardingStep.ts';
+import { getProjectOnboardingStep } from '../../../utils/getProjectOnboardingStep.ts';
 
 interface IProjectOnboardingProps {
     projectId: string;
@@ -73,7 +73,7 @@ export const ProjectOnboarding = ({
 
     if (loading) return null;
 
-    const { current: step, total: numberOfSteps } = getOnboardingStep(
+    const { current: step, total: numberOfSteps } = getProjectOnboardingStep(
         project.onboardingStatus,
     );
 

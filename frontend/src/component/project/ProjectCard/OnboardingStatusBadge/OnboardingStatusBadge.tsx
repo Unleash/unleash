@@ -1,6 +1,6 @@
 import { Badge } from 'component/common/Badge/Badge';
 import type { OnboardingStatusSchema } from 'openapi';
-import { getOnboardingStep } from 'utils/getOnboardingStep';
+import { getProjectOnboardingStep } from 'utils/getProjectOnboardingStep';
 
 type IOnboardingStatusBadgeProps = {
     onboardingStatus: OnboardingStatusSchema;
@@ -9,7 +9,7 @@ type IOnboardingStatusBadgeProps = {
 export const OnboardingStatusBadge = ({
     onboardingStatus,
 }: IOnboardingStatusBadgeProps) => {
-    const { current, total } = getOnboardingStep(onboardingStatus);
+    const { current, total } = getProjectOnboardingStep(onboardingStatus);
     return (
         <Badge color='secondary' sx={{ fontWeight: 'normal' }}>
             Setup {current}/{total}

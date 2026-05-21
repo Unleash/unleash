@@ -1,18 +1,24 @@
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import {
-    SortableTableHeader,
     Table,
     TableBody,
     TableCell,
     TablePlaceholder,
     TableRow,
 } from 'component/common/Table';
-import { useGlobalFilter, useSortBy, useTable } from 'react-table';
+import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
+import {
+    type ColumnDef,
+    flexRender,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
 import { CreateSegmentButton } from 'component/segments/CreateSegmentButton/CreateSegmentButton';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { useMediaQuery } from '@mui/material';
-import { sortTypes } from 'utils/sortTypes';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useMemo, useState } from 'react';
 import { SegmentEmpty } from 'component/segments/SegmentEmpty';
@@ -29,17 +35,19 @@ import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColum
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import { UsedInCell } from 'component/context/ContextList/UsedInCell';
+import type { ISegment } from 'interfaces/segment';
 
 export const SegmentTable = () => {
     const projectId = useOptionalPathParam('projectId');
     const { segments, loading: loadingSegments } = useSegments();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const [globalFilter, setGlobalFilter] = useState('');
     const [initialState] = useState({
-        sortBy: [{ id: 'createdAt' }],
-        hiddenColumns: ['description'],
+        sorting: [{ id: 'createdAt', desc: false }],
+        columnVisibility: { description: false },
     });
 
-    const data = useMemo(() => {
+    const data = useMemo<ISegment[]>(() => {
         if (!segments) {
             return Array(5).fill({
                 name: 'Segment name',
@@ -57,34 +65,29 @@ export const SegmentTable = () => {
         return segments;
     }, [segments, projectId]);
 
-    const columns = useMemo(() => getColumns(projectId), [projectId]);
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        rows,
-        prepareRow,
-        state: { globalFilter },
-        setGlobalFilter,
-        setHiddenColumns,
-    } = useTable(
-        {
-            initialState,
-            columns: columns as any,
-            data: data as any,
-            sortTypes,
-            autoResetGlobalFilter: false,
-            autoResetHiddenColumns: false,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            defaultColumn: {
-                Cell: HighlightCell,
-            },
-            getRowId: (row: any) => row.id,
-        },
-        useGlobalFilter,
-        useSortBy,
+    const columns = useMemo<ColumnDef<ISegment, unknown>[]>(
+        () => getColumns(projectId),
+        [projectId],
     );
+
+    const table = useReactTable({
+        columns,
+        data,
+        initialState,
+        state: { globalFilter },
+        onGlobalFilterChange: setGlobalFilter,
+        defaultColumn: {
+            cell: ({ getValue }) => (
+                <HighlightCell value={String(getValue() ?? '')} />
+            ),
+        },
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        getRowId: (row) => String(row.id),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+    });
 
     useConditionallyHiddenColumns(
         [
@@ -97,9 +100,11 @@ export const SegmentTable = () => {
                 columns: ['project'],
             },
         ],
-        setHiddenColumns,
+        table.setColumnVisibility,
         columns,
     );
+
+    const rows = table.getRowModel().rows;
 
     return (
         <PageContent
@@ -110,7 +115,7 @@ export const SegmentTable = () => {
                         <>
                             <Search
                                 initialValue={globalFilter}
-                                onChange={setGlobalFilter}
+                                onChange={(value) => setGlobalFilter(value)}
                             />
                             <PageHeader.Divider />
                             <CreateSegmentButton />
@@ -130,40 +135,24 @@ export const SegmentTable = () => {
                 elseShow={() => (
                     <>
                         <SearchHighlightProvider value={globalFilter}>
-                            <Table {...getTableProps()} rowHeight='standard'>
-                                <SortableTableHeader
-                                    headerGroups={headerGroups as any}
-                                />
-                                <TableBody {...getTableBodyProps()}>
-                                    {rows.map((row) => {
-                                        prepareRow(row);
-                                        const { key, ...rowProps } =
-                                            row.getRowProps();
-                                        return (
-                                            <TableRow
-                                                hover
-                                                key={key}
-                                                {...rowProps}
-                                            >
-                                                {row.cells.map((cell) => {
-                                                    const {
-                                                        key,
-                                                        ...cellProps
-                                                    } = cell.getCellProps();
-                                                    return (
-                                                        <TableCell
-                                                            key={key}
-                                                            {...cellProps}
-                                                        >
-                                                            {cell.render(
-                                                                'Cell',
-                                                            )}
-                                                        </TableCell>
-                                                    );
-                                                })}
-                                            </TableRow>
-                                        );
-                                    })}
+                            <Table rowHeight='standard'>
+                                <SortableTableHeader tableInstance={table} />
+                                <TableBody>
+                                    {rows.map((row) => (
+                                        <TableRow hover key={row.id}>
+                                            {row
+                                                .getVisibleCells()
+                                                .map((cell) => (
+                                                    <TableCell key={cell.id}>
+                                                        {flexRender(
+                                                            cell.column
+                                                                .columnDef.cell,
+                                                            cell.getContext(),
+                                                        )}
+                                                    </TableCell>
+                                                ))}
+                                        </TableRow>
+                                    ))}
                                 </TableBody>
                             </Table>
                         </SearchHighlightProvider>
@@ -185,23 +174,23 @@ export const SegmentTable = () => {
     );
 };
 
-const getColumns = (projectId?: string) => [
+const getColumns = (projectId?: string): ColumnDef<ISegment, unknown>[] => [
     {
         id: 'Icon',
-        width: '1%',
-        disableGlobalFilter: true,
-        disableSortBy: true,
-        Cell: () => <IconCell icon={<DonutLarge color='disabled' />} />,
+        enableGlobalFilter: false,
+        enableSorting: false,
+        cell: () => <IconCell icon={<DonutLarge color='disabled' />} />,
+        meta: { width: '1%' },
     },
     {
-        Header: 'Name',
-        accessor: 'name',
-        width: '60%',
-        Cell: ({
+        id: 'name',
+        header: 'Name',
+        accessorKey: 'name',
+        cell: ({
             row: {
                 original: { name, description, id },
             },
-        }: any) => (
+        }) => (
             <LinkCell
                 title={name}
                 to={
@@ -212,53 +201,59 @@ const getColumns = (projectId?: string) => [
                 subtitle={description}
             />
         ),
+        meta: { width: '60%' },
     },
     {
-        Header: 'Used in',
-        width: '60%',
-        Cell: ({ row: { original } }: any) => (
-            <UsedInCell original={original} />
+        id: 'usedIn',
+        header: 'Used in',
+        cell: ({ row: { original } }) => (
+            <UsedInCell original={original as never} />
         ),
+        meta: { width: '60%' },
     },
     {
-        Header: 'Project',
-        accessor: 'project',
-        Cell: ({ value }: { value: string }) => (
-            <ConditionallyRender
-                condition={Boolean(value)}
-                show={<LinkCell title={value} to={`/projects/${value}`} />}
-                elseShow={<TextCell>Global</TextCell>}
-            />
-        ),
-        sortType: 'alphanumeric',
-        maxWidth: 150,
-        filterName: 'project',
-        searchable: true,
+        id: 'project',
+        header: 'Project',
+        accessorKey: 'project',
+        cell: ({ getValue }) => {
+            const value = String(getValue() ?? '');
+            return (
+                <ConditionallyRender
+                    condition={Boolean(value)}
+                    show={<LinkCell title={value} to={`/projects/${value}`} />}
+                    elseShow={<TextCell>Global</TextCell>}
+                />
+            );
+        },
+        sortingFn: 'alphanumeric',
+        meta: { maxWidth: 150, filterName: 'project', searchable: true },
     },
     {
-        Header: 'Created at',
-        accessor: 'createdAt',
-        minWidth: 150,
-        Cell: DateCell,
-        disableGlobalFilter: true,
+        id: 'createdAt',
+        header: 'Created at',
+        accessorKey: 'createdAt',
+        cell: DateCell,
+        enableGlobalFilter: false,
+        meta: { minWidth: 150 },
     },
     {
-        Header: 'Created by',
-        accessor: 'createdBy',
-        width: '25%',
+        id: 'createdBy',
+        header: 'Created by',
+        accessorKey: 'createdBy',
+        meta: { width: '25%' },
     },
     {
-        Header: 'Actions',
         id: 'Actions',
-        align: 'center',
-        width: '1%',
-        disableSortBy: true,
-        disableGlobalFilter: true,
-        Cell: ({ row: { original } }: any) => (
+        header: 'Actions',
+        cell: ({ row: { original } }) => (
             <SegmentActionCell segment={original} />
         ),
+        enableSorting: false,
+        enableGlobalFilter: false,
+        meta: { width: '1%', align: 'center' },
     },
     {
-        accessor: 'description',
+        id: 'description',
+        accessorKey: 'description',
     },
 ];

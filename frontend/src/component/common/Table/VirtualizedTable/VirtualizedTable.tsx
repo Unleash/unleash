@@ -1,32 +1,27 @@
-import { type RefObject, useMemo } from 'react';
+import { type CSSProperties, type RefObject, useMemo } from 'react';
 import { useTheme, TableBody, TableRow } from '@mui/material';
 import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
 import { TableCell } from 'component/common/Table/TableCell/TableCell';
 import { Table } from 'component/common/Table/Table/Table';
 import { useVirtualizedRange } from 'hooks/useVirtualizedRange';
-import type { HeaderGroup, Row } from 'react-table';
+import { flexRender, type Table as TableType } from '@tanstack/react-table';
 
 /**
  * READ BEFORE USE
  *
- * Virtualized tables require some setup.
- * With this component all but one columns are fixed width, and one fills remaining space.
- * Add `maxWidth` to columns that will be static in width, and `minWidth` to the one that should grow.
- *
- * Remember to add `useFlexLayout` to `useTable`
- * (more at: https://react-table-v7.tanstack.com/docs/api/useFlexLayout)
+ * Virtualized tables require some setup. With this component all but one
+ * column are fixed width, and one fills remaining space. Set
+ * `meta: { maxWidth }` for static columns and `meta: { minWidth }` on the
+ * one that should grow. Layout fields live on the column's `meta`
+ * (see `frontend/src/types/react-table.d.ts`).
  */
-export const VirtualizedTable = <T extends object>({
+export const VirtualizedTable = <T,>({
     rowHeight: rowHeightOverride,
-    headerGroups,
-    rows,
-    prepareRow,
+    tableInstance,
     parentRef,
 }: {
     rowHeight?: number;
-    headerGroups: HeaderGroup<T>[];
-    rows: Row<T>[];
-    prepareRow: (row: Row<T>) => void;
+    tableInstance: TableType<T>;
     parentRef?: RefObject<HTMLElement | null>;
 }) => {
     const theme = useTheme();
@@ -34,6 +29,8 @@ export const VirtualizedTable = <T extends object>({
         () => rowHeightOverride || theme.shape.tableRowHeight,
         [rowHeightOverride, theme.shape.tableRowHeight],
     );
+
+    const rows = tableInstance.getRowModel().rows;
 
     const [firstRenderedIndex, lastRenderedIndex] = useVirtualizedRange(
         rowHeight,
@@ -53,7 +50,7 @@ export const VirtualizedTable = <T extends object>({
             rowHeight={rowHeight}
             style={{ height: tableHeight }}
         >
-            <SortableTableHeader headerGroups={headerGroups} flex />
+            <SortableTableHeader tableInstance={tableInstance} flex />
             <TableBody
                 role='rowgroup'
                 sx={{
@@ -87,26 +84,32 @@ export const VirtualizedTable = <T extends object>({
                         return null;
                     }
 
-                    prepareRow(row);
-
-                    const { key, ...props } = row.getRowProps({
-                        style: { display: 'flex', top },
-                    });
-
                     return (
-                        <TableRow {...props} hover key={key || row.id}>
-                            {row.cells.map((cell) => {
-                                const { key, ...props } = cell.getCellProps({
-                                    style: {
-                                        flex: cell.column.minWidth
-                                            ? '1 0 auto'
-                                            : undefined,
-                                    },
-                                });
-
+                        <TableRow
+                            hover
+                            key={row.id}
+                            style={{ display: 'flex', top }}
+                        >
+                            {row.getVisibleCells().map((cell) => {
+                                const meta = cell.column.columnDef.meta;
+                                const cellStyle: CSSProperties = {
+                                    boxSizing: 'border-box',
+                                    flex: meta?.minWidth
+                                        ? '1 0 auto'
+                                        : undefined,
+                                    minWidth: meta?.minWidth,
+                                    maxWidth: meta?.maxWidth,
+                                    width:
+                                        meta?.width ??
+                                        meta?.maxWidth ??
+                                        meta?.minWidth,
+                                };
                                 return (
-                                    <TableCell key={key} {...props}>
-                                        {cell.render('Cell')}
+                                    <TableCell key={cell.id} style={cellStyle}>
+                                        {flexRender(
+                                            cell.column.columnDef.cell,
+                                            cell.getContext(),
+                                        )}
                                     </TableCell>
                                 );
                             })}

@@ -13,7 +13,8 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Search } from 'component/common/Search/Search';
-import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
+import { TablePlaceholder } from 'component/common/Table';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
@@ -29,14 +30,12 @@ import type {
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
-    useTable,
-    type SortingRule,
-    useSortBy,
-    useFlexLayout,
-    type Column,
-} from 'react-table';
+    type ColumnDef,
+    getCoreRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
 import { createLocalStorage } from 'utils/createLocalStorage';
-import { sortTypes } from 'utils/sortTypes';
 import { CreatePersonalAPIToken } from './CreatePersonalAPIToken/CreatePersonalAPIToken.tsx';
 import { DeletePersonalAPIToken } from './DeletePersonalAPIToken/DeletePersonalAPIToken.tsx';
 import { PersonalAPITokenDialog } from './PersonalAPITokenDialog/PersonalAPITokenDialog.tsx';
@@ -75,7 +74,7 @@ export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search', string>
 >;
 
-const defaultSort: SortingRule<string> = { id: 'createdAt', desc: true };
+const defaultSort = { id: 'createdAt', desc: true };
 
 const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
     'PersonalAPITokensTable:v1',
@@ -91,7 +90,7 @@ export const PersonalAPITokensTab = () => {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const [initialState] = useState(() => ({
-        sortBy: [
+        sorting: [
             {
                 id: searchParams.get('sort') || storedParams.id,
                 desc: searchParams.has('order')
@@ -109,68 +108,67 @@ export const PersonalAPITokensTab = () => {
     const [newToken, setNewToken] = useState<INewPersonalAPIToken>();
     const [selectedToken, setSelectedToken] = useState<IPersonalAPIToken>();
 
-    const columns = useMemo(
-        () =>
-            [
-                {
-                    Header: 'Description',
-                    accessor: 'description',
-                    Cell: HighlightCell,
-                    minWidth: 100,
-                    searchable: true,
+    const columns = useMemo<ColumnDef<IPersonalAPIToken, unknown>[]>(
+        () => [
+            {
+                id: 'description',
+                header: 'Description',
+                accessorKey: 'description',
+                cell: HighlightCell,
+                meta: { minWidth: 100, searchable: true },
+            },
+            {
+                id: 'expiresAt',
+                header: 'Expires',
+                accessorKey: 'expiresAt',
+                cell: ({ getValue }) => {
+                    const value = String(getValue() ?? '');
+                    const date = new Date(value);
+                    if (date.getFullYear() > new Date().getFullYear() + 100) {
+                        return <TextCell>Never</TextCell>;
+                    }
+                    return <DateCell value={value} />;
                 },
-                {
-                    Header: 'Expires',
-                    accessor: 'expiresAt',
-                    Cell: ({ value }: { value: string }) => {
-                        const date = new Date(value);
-                        if (
-                            date.getFullYear() >
-                            new Date().getFullYear() + 100
-                        ) {
-                            return <TextCell>Never</TextCell>;
-                        }
-                        return <DateCell value={value} />;
-                    },
-                    maxWidth: 150,
-                },
-                {
-                    Header: 'Created',
-                    accessor: 'createdAt',
-                    Cell: DateCell,
-                    maxWidth: 150,
-                },
-                {
-                    Header: 'Last seen',
-                    accessor: 'seenAt',
-                    Cell: TimeAgoCell,
-                    maxWidth: 150,
-                },
-                {
-                    Header: 'Actions',
-                    id: 'Actions',
-                    align: 'center',
-                    Cell: ({ row: { original: rowToken } }: any) => (
-                        <ActionCell>
-                            <Tooltip title='Delete token' arrow describeChild>
-                                <span>
-                                    <IconButton
-                                        onClick={() => {
-                                            setSelectedToken(rowToken);
-                                            setDeleteOpen(true);
-                                        }}
-                                    >
-                                        <Delete />
-                                    </IconButton>
-                                </span>
-                            </Tooltip>
-                        </ActionCell>
-                    ),
-                    maxWidth: 100,
-                    disableSortBy: true,
-                },
-            ] as Column<IPersonalAPIToken>[],
-        [setSelectedToken, setDeleteOpen],
+                meta: { maxWidth: 150 },
+            },
+            {
+                id: 'createdAt',
+                header: 'Created',
+                accessorKey: 'createdAt',
+                cell: DateCell,
+                meta: { maxWidth: 150 },
+            },
+            {
+                id: 'seenAt',
+                header: 'Last seen',
+                accessorKey: 'seenAt',
+                cell: TimeAgoCell,
+                meta: { maxWidth: 150 },
+            },
+            {
+                id: 'Actions',
+                header: 'Actions',
+                cell: ({ row: { original: rowToken } }) => (
+                    <ActionCell>
+                        <Tooltip title='Delete token' arrow describeChild>
+                            <span>
+                                <IconButton
+                                    onClick={() => {
+                                        setSelectedToken(rowToken);
+                                        setDeleteOpen(true);
+                                    }}
+                                >
+                                    <Delete />
+                                </IconButton>
+                            </span>
+                        </Tooltip>
+                    </ActionCell>
+                ),
+                enableSorting: false,
+                meta: { maxWidth: 100, align: 'center' },
+            },
+        ],
+        [],
     );
 
     const {
@@ -187,26 +185,16 @@ export const PersonalAPITokensTab = () => {
         [searchedData, loading],
     );
 
-    const {
-        headerGroups,
-        rows,
-        prepareRow,
-        state: { sortBy },
-        setHiddenColumns,
-    } = useTable<IPersonalAPIToken>(
-        {
-            columns,
-            data,
-            initialState,
-            sortTypes,
-            autoResetHiddenColumns: false,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            disableMultiSort: true,
-        },
-        useSortBy,
-        useFlexLayout,
-    );
+    const table = useReactTable({
+        columns,
+        data,
+        initialState,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+        enableMultiSort: false,
+    });
 
     useConditionallyHiddenColumns(
         [
@@ -219,14 +207,20 @@ export const PersonalAPITokensTab = () => {
                 columns: ['createdAt'],
             },
         ],
-        setHiddenColumns,
+        table.setColumnVisibility,
         columns,
     );
 
+    const sorting = table.getState().sorting;
+
     useEffect(() => {
+        const sortRule = sorting[0];
+        if (!sortRule) {
+            return;
+        }
         const tableState: PageQueryType = {};
-        tableState.sort = sortBy[0].id;
-        if (sortBy[0].desc) {
+        tableState.sort = sortRule.id;
+        if (sortRule.desc) {
             tableState.order = 'desc';
         }
         if (searchValue) {
@@ -236,8 +230,10 @@ export const PersonalAPITokensTab = () => {
         setSearchParams(tableState, {
             replace: true,
         });
-        setStoredParams({ id: sortBy[0].id, desc: sortBy[0].desc || false });
-    }, [sortBy, searchValue, setSearchParams]);
+        setStoredParams({ id: sortRule.id, desc: sortRule.desc || false });
+    }, [sorting, searchValue, setSearchParams]);
+
+    const rows = table.getRowModel().rows;
 
     return (
         <PageContent
@@ -295,11 +291,7 @@ export const PersonalAPITokensTab = () => {
                 your user.
             </StyledAlert>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <VirtualizedTable
-                    rows={rows}
-                    headerGroups={headerGroups}
-                    prepareRow={prepareRow}
-                />
+                <VirtualizedTable tableInstance={table} />
             </SearchHighlightProvider>
             <ConditionallyRender
                 condition={rows.length === 0}

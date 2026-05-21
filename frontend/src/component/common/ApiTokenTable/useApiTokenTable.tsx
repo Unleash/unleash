@@ -1,141 +1,140 @@
-import { useMemo, type JSX } from 'react';
+import { useMemo, useState, type JSX } from 'react';
 import type { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import {
-    useTable,
-    useGlobalFilter,
-    useSortBy,
-    useFlexLayout,
-} from 'react-table';
-import { sortTypes } from 'utils/sortTypes';
+    type CellContext,
+    type ColumnDef,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
 import { ProjectsList } from 'component/admin/apiToken/ProjectsList/ProjectsList';
 import { ApiTokenIcon } from 'component/admin/apiToken/ApiTokenIcon/ApiTokenIcon';
 
+type ActionCellProps = {
+    row: { original: IApiToken };
+};
+
 export const useApiTokenTable = (
     tokens: IApiToken[],
-    getActionCell: (props: any) => JSX.Element,
+    getActionCell: (props: ActionCellProps) => JSX.Element,
 ) => {
+    const [globalFilter, setGlobalFilter] = useState('');
+
     const initialState = useMemo(
-        () => ({ sortBy: [{ id: 'createdAt', desc: true }] }),
+        () => ({ sorting: [{ id: 'createdAt', desc: true }] }),
         [],
     );
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: getActionCell is intentionally omitted — callers pass inline functions; including it would defeat memoization
-    const COLUMNS = useMemo(() => {
-        return [
+    // biome-ignore lint/correctness/useExhaustiveDependencies: getActionCell is intentionally omitted -- callers pass inline functions; including it would defeat memoization
+    const columns = useMemo<ColumnDef<IApiToken, unknown>[]>(
+        () => [
             {
                 id: 'Icon',
-                Cell: (props: any) => (
+                cell: ({ row }) => (
                     <ApiTokenIcon
-                        secret={props.row.original.secret}
-                        project={props.row.original.project}
-                        projects={props.row.original.projects}
+                        secret={row.original.secret}
+                        project={row.original.project}
+                        projects={row.original.projects}
                     />
                 ),
-                disableSortBy: true,
-                disableGlobalFilter: true,
-                width: 50,
+                enableSorting: false,
+                enableGlobalFilter: false,
+                meta: { width: 50 },
             },
             {
-                Header: 'Token name',
-                accessor: 'tokenName',
-                Cell: HighlightCell,
-                minWidth: 35,
+                id: 'tokenName',
+                header: 'Token name',
+                accessorKey: 'tokenName',
+                cell: HighlightCell,
+                meta: { minWidth: 35 },
             },
             {
-                Header: 'Type',
-                accessor: 'type',
-                Cell: ({
-                    value,
-                }: {
-                    value: 'client' | 'backend' | 'admin' | 'frontend';
-                }) => (
-                    <HighlightCell
-                        value={tokenDescriptions[value.toLowerCase()].label}
-                        subtitle={tokenDescriptions[value.toLowerCase()].title}
-                        subtitleTooltip
-                    />
-                ),
-                width: 180,
+                id: 'type',
+                header: 'Type',
+                accessorKey: 'type',
+                cell: ({ getValue }) => {
+                    const value = String(getValue() ?? '').toLowerCase();
+                    const description = tokenDescriptions[value];
+                    return (
+                        <HighlightCell
+                            value={description?.label ?? ''}
+                            subtitle={description?.title}
+                            subtitleTooltip
+                        />
+                    );
+                },
+                meta: { width: 180 },
             },
             {
-                Header: 'Project',
-                accessor: 'project',
-                Cell: (props: any) => (
+                id: 'project',
+                header: 'Project',
+                accessorKey: 'project',
+                cell: ({ row }) => (
                     <ProjectsList
-                        project={props.row.original.project}
-                        projects={props.row.original.projects}
+                        project={row.original.project}
+                        projects={row.original.projects}
                     />
                 ),
-                width: 160,
+                meta: { width: 160 },
             },
             {
-                Header: 'Environment',
-                accessor: 'environment',
-                Cell: HighlightCell,
-                width: 120,
+                id: 'environment',
+                header: 'Environment',
+                accessorKey: 'environment',
+                cell: HighlightCell,
+                meta: { width: 120 },
             },
             {
-                Header: 'Created',
-                accessor: 'createdAt',
-                Cell: DateCell,
-                width: 150,
-                disableGlobalFilter: true,
+                id: 'createdAt',
+                header: 'Created',
+                accessorKey: 'createdAt',
+                cell: DateCell,
+                enableGlobalFilter: false,
+                meta: { width: 150 },
             },
             {
-                Header: 'Last seen',
-                accessor: 'seenAt',
-                Cell: TimeAgoCell,
-                width: 140,
-                disableGlobalFilter: true,
+                id: 'seenAt',
+                header: 'Last seen',
+                accessorKey: 'seenAt',
+                cell: TimeAgoCell,
+                enableGlobalFilter: false,
+                meta: { width: 140 },
             },
             {
-                Header: 'Actions',
-                width: 120,
                 id: 'Actions',
-                align: 'center',
-                disableSortBy: true,
-                disableGlobalFilter: true,
-                Cell: getActionCell,
+                header: 'Actions',
+                cell: (info: CellContext<IApiToken, unknown>) =>
+                    getActionCell({ row: info.row }),
+                enableSorting: false,
+                enableGlobalFilter: false,
+                meta: { width: 120, align: 'center' },
             },
-        ];
-    }, []);
-
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        rows,
-        prepareRow,
-        state,
-        setGlobalFilter,
-        setHiddenColumns,
-    } = useTable(
-        {
-            columns: COLUMNS as any,
-            data: tokens as any,
-            initialState,
-            sortTypes,
-            autoResetHiddenColumns: false,
-            disableSortRemove: true,
-        },
-        useGlobalFilter,
-        useSortBy,
-        useFlexLayout,
+        ],
+        [],
     );
 
+    const table = useReactTable({
+        columns,
+        data: tokens,
+        initialState,
+        state: { globalFilter },
+        onGlobalFilterChange: setGlobalFilter,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+    });
+
     return {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        rows,
-        prepareRow,
-        state,
+        table,
+        columns,
+        globalFilter,
         setGlobalFilter,
-        setHiddenColumns,
-        columns: COLUMNS,
     };
 };
 

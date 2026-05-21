@@ -88,7 +88,6 @@ exports[`renders an empty list correctly 1`] = `
       >
         <table
           class="MuiTable-root mui-xfo33b-MuiTable-root"
-          role="table"
         >
           <thead
             class="MuiTableHead-root mui-5x8cdn-MuiTableHead-root"
@@ -96,22 +95,18 @@ exports[`renders an empty list correctly 1`] = `
             <tr
               class="MuiTableRow-root MuiTableRow-head mui-11ykd7w-MuiTableRow-root skeleton"
               data-loading="true"
-              role="row"
             >
               <th
                 class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium mui-v5ykp5-MuiTableCell-root"
                 scope="col"
-                style="width: 150px; min-width: 0; max-width: 9007199254740991px;"
               >
-                <div>
-                   
-                </div>
+                <div />
               </th>
               <th
                 aria-sort="ascending"
                 class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium mui-aoexvr-MuiTableCell-root"
                 scope="col"
-                style="width: 90%; min-width: 0; max-width: 9007199254740991px;"
+                style="width: 90%;"
               >
                 <button
                   aria-label=""
@@ -169,7 +164,7 @@ exports[`renders an empty list correctly 1`] = `
               <th
                 class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium mui-v5ykp5-MuiTableCell-root"
                 scope="col"
-                style="width: 150px; min-width: 0; max-width: 9007199254740991px;"
+                style="width: 150px;"
               >
                 <div
                   style="justify-content: center; text-align: center;"
@@ -181,15 +176,12 @@ exports[`renders an empty list correctly 1`] = `
           </thead>
           <tbody
             class="MuiTableBody-root mui-gmh7jj-MuiTableBody-root"
-            role="rowgroup"
           >
             <tr
               class="MuiTableRow-root MuiTableRow-hover mui-11ykd7w-MuiTableRow-root"
-              role="row"
             >
               <td
                 class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-fdtqkd-MuiTableCell-root"
-                role="cell"
               >
                 <div
                   class="MuiBox-root mui-7n01ps skeleton"
@@ -210,7 +202,6 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-fdtqkd-MuiTableCell-root"
-                role="cell"
               >
                 <div
                   class="MuiBox-root mui-70qvj9"
@@ -245,7 +236,6 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-fdtqkd-MuiTableCell-root"
-                role="cell"
               >
                 <div
                   class="MuiBox-root mui-1bvc4cc skeleton"
@@ -306,11 +296,9 @@ exports[`renders an empty list correctly 1`] = `
             </tr>
             <tr
               class="MuiTableRow-root MuiTableRow-hover mui-11ykd7w-MuiTableRow-root"
-              role="row"
             >
               <td
                 class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-fdtqkd-MuiTableCell-root"
-                role="cell"
               >
                 <div
                   class="MuiBox-root mui-7n01ps skeleton"
@@ -331,7 +319,6 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-fdtqkd-MuiTableCell-root"
-                role="cell"
               >
                 <div
                   class="MuiBox-root mui-70qvj9"
@@ -366,7 +353,6 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-fdtqkd-MuiTableCell-root"
-                role="cell"
               >
                 <div
                   class="MuiBox-root mui-1bvc4cc skeleton"
@@ -427,11 +413,9 @@ exports[`renders an empty list correctly 1`] = `
             </tr>
             <tr
               class="MuiTableRow-root MuiTableRow-hover mui-11ykd7w-MuiTableRow-root"
-              role="row"
             >
               <td
                 class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-fdtqkd-MuiTableCell-root"
-                role="cell"
               >
                 <div
                   class="MuiBox-root mui-7n01ps skeleton"
@@ -452,7 +436,6 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-fdtqkd-MuiTableCell-root"
-                role="cell"
               >
                 <div
                   class="MuiBox-root mui-70qvj9"
@@ -487,7 +470,6 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-fdtqkd-MuiTableCell-root"
-                role="cell"
               >
                 <div
                   class="MuiBox-root mui-1bvc4cc skeleton"
@@ -548,11 +530,9 @@ exports[`renders an empty list correctly 1`] = `
             </tr>
             <tr
               class="MuiTableRow-root MuiTableRow-hover mui-11ykd7w-MuiTableRow-root"
-              role="row"
             >
               <td
                 class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-fdtqkd-MuiTableCell-root"
-                role="cell"
               >
                 <div
                   class="MuiBox-root mui-7n01ps skeleton"
@@ -573,7 +553,6 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-fdtqkd-MuiTableCell-root"
-                role="cell"
               >
                 <div
                   class="MuiBox-root mui-70qvj9"
@@ -608,7 +587,6 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-fdtqkd-MuiTableCell-root"
-                role="cell"
               >
                 <div
                   class="MuiBox-root mui-1bvc4cc skeleton"
@@ -669,11 +647,9 @@ exports[`renders an empty list correctly 1`] = `
             </tr>
             <tr
               class="MuiTableRow-root MuiTableRow-hover mui-11ykd7w-MuiTableRow-root"
-              role="row"
             >
               <td
                 class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-fdtqkd-MuiTableCell-root"
-                role="cell"
               >
                 <div
                   class="MuiBox-root mui-7n01ps skeleton"
@@ -694,7 +670,6 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-fdtqkd-MuiTableCell-root"
-                role="cell"
               >
                 <div
                   class="MuiBox-root mui-70qvj9"
@@ -729,7 +704,6 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-fdtqkd-MuiTableCell-root"
-                role="cell"
               >
                 <div
                   class="MuiBox-root mui-1bvc4cc skeleton"

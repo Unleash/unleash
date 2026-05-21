@@ -7,7 +7,8 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { Search } from 'component/common/Search/Search';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
-import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
+import { TablePlaceholder } from 'component/common/Table';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
@@ -19,12 +20,11 @@ import { useSearch } from 'hooks/useSearch';
 import type { IGroup, IGroupUser } from 'interfaces/group';
 import { type FC, useState } from 'react';
 import {
-    type SortingRule,
-    useFlexLayout,
-    useSortBy,
-    useTable,
-} from 'react-table';
-import { sortTypes } from 'utils/sortTypes';
+    type ColumnDef,
+    getCoreRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
 const StyledPageContent = styled(PageContent)(({ theme }) => ({
@@ -54,55 +54,59 @@ const StyledTitle = styled('div')(({ theme }) => ({
     },
 }));
 
-const defaultSort: SortingRule<string> = { id: 'joinedAt', desc: true };
+const defaultSort = { id: 'joinedAt', desc: true };
 
-const columns = [
+const columns: ColumnDef<IGroupUser, unknown>[] = [
     {
-        Header: 'Avatar',
-        accessor: 'imageUrl',
-        Cell: ({ row: { original: user } }: any) => (
+        id: 'imageUrl',
+        header: 'Avatar',
+        accessorKey: 'imageUrl',
+        cell: ({ row: { original: user } }) => (
             <TextCell>
                 <UserAvatar user={user} />
             </TextCell>
         ),
-        maxWidth: 85,
-        disableSortBy: true,
+        enableSorting: false,
+        meta: { maxWidth: 85 },
     },
     {
         id: 'name',
-        Header: 'Name',
-        accessor: (row: IGroupUser) => row.name || '',
-        Cell: ({ value, row: { original: row } }: any) => (
-            <HighlightCell value={value} subtitle={row.email || row.username} />
+        header: 'Name',
+        accessorFn: (row) => row.name || '',
+        cell: ({ getValue, row: { original: row } }) => (
+            <HighlightCell
+                value={String(getValue() ?? '')}
+                subtitle={row.email || row.username}
+            />
         ),
-        minWidth: 100,
-        searchable: true,
+        meta: { minWidth: 100, searchable: true },
     },
     {
         id: 'joined',
-        Header: 'Joined',
-        accessor: 'joinedAt',
-        Cell: DateCell,
-        maxWidth: 150,
+        header: 'Joined',
+        accessorKey: 'joinedAt',
+        cell: DateCell,
+        meta: { maxWidth: 150 },
     },
     {
         id: 'lastLogin',
-        Header: 'Last login',
-        accessor: 'seenAt',
-        Cell: TimeAgoCell,
-        maxWidth: 150,
+        header: 'Last login',
+        accessorKey: 'seenAt',
+        cell: TimeAgoCell,
+        meta: { maxWidth: 150 },
     },
     // Always hidden -- for search
     {
-        accessor: (row: IGroupUser) => row.username || '',
-        Header: 'Username',
-        searchable: true,
+        id: 'username',
+        accessorFn: (row) => row.username || '',
+        header: 'Username',
+        meta: { searchable: true },
     },
-    // Always hidden -- for search
     {
-        accessor: (row: IGroupUser) => row.email || '',
-        Header: 'Email',
-        searchable: true,
+        id: 'email',
+        accessorFn: (row) => row.email || '',
+        header: 'Email',
+        meta: { searchable: true },
     },
 ];
 
@@ -131,13 +135,13 @@ export const ProjectGroupView: FC<IProjectGroupViewProps> = ({
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     const [initialState] = useState(() => ({
-        sortBy: [
+        sorting: [
             {
                 id: defaultSort.id,
                 desc: defaultSort.desc,
             },
         ],
-        hiddenColumns: ['Username', 'Email'],
+        columnVisibility: { username: false, email: false },
     }));
     const [searchValue, setSearchValue] = useState('');
 
@@ -147,20 +151,16 @@ export const ProjectGroupView: FC<IProjectGroupViewProps> = ({
         group?.users ?? [],
     );
 
-    const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
-        {
-            columns: columns as any[],
-            data,
-            initialState,
-            sortTypes,
-            autoResetHiddenColumns: false,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            disableMultiSort: true,
-        },
-        useSortBy,
-        useFlexLayout,
-    );
+    const table = useReactTable({
+        columns,
+        data,
+        initialState,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+        enableMultiSort: false,
+    });
 
     useConditionallyHiddenColumns(
         [
@@ -169,9 +169,11 @@ export const ProjectGroupView: FC<IProjectGroupViewProps> = ({
                 columns: hiddenColumnsSmall,
             },
         ],
-        setHiddenColumns,
+        table.setColumnVisibility,
         columns,
     );
+
+    const rows = table.getRowModel().rows;
 
     return (
         <SidebarModal
@@ -250,11 +252,7 @@ export const ProjectGroupView: FC<IProjectGroupViewProps> = ({
                 }
             >
                 <SearchHighlightProvider value={getSearchText(searchValue)}>
-                    <VirtualizedTable
-                        rows={rows}
-                        headerGroups={headerGroups}
-                        prepareRow={prepareRow}
-                    />
+                    <VirtualizedTable tableInstance={table} />
                 </SearchHighlightProvider>
                 <ConditionallyRender
                     condition={rows.length === 0}

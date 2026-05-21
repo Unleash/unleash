@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { Box, styled } from '@mui/material';
 import {
     Table,
-    SortableTableHeader,
     TableBody,
     TableCell,
     TableRow,
     TablePlaceholder,
 } from 'component/common/Table';
+import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
 import Delete from '@mui/icons-material/Delete';
 import Edit from '@mui/icons-material/Edit';
 import Label from '@mui/icons-material/Label';
@@ -25,12 +25,24 @@ import useTagTypes from 'hooks/api/getters/useTagTypes/useTagTypes';
 import useToast from 'hooks/useToast';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useTable, useGlobalFilter, useSortBy } from 'react-table';
+import {
+    type ColumnDef,
+    flexRender,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
-import { sortTypes } from 'utils/sortTypes';
 import { AddTagTypeButton } from './AddTagTypeButton/AddTagTypeButton.tsx';
 import { Search } from 'component/common/Search/Search';
+
+type TagTypeRow = {
+    name: string;
+    description: string;
+    color?: string;
+};
 
 const StyledColorDot = styled('div')<{ $color: string }>(
     ({ theme, $color }) => ({
@@ -52,12 +64,13 @@ export const TagTypeList = () => {
         open: boolean;
         name?: string;
     }>({ open: false });
+    const [globalFilter, setGlobalFilter] = useState('');
     const navigate = useNavigate();
     const { deleteTagType } = useTagTypesApi();
     const { tagTypes, refetch, loading } = useTagTypes();
     const { setToastData, setToastApiError } = useToast();
 
-    const data = useMemo(() => {
+    const data = useMemo<TagTypeRow[]>(() => {
         if (loading) {
             return Array(5).fill({
                 name: 'Tag type name',
@@ -67,16 +80,16 @@ export const TagTypeList = () => {
 
         return tagTypes.map(({ name, description, color }) => ({
             name,
-            description,
-            color,
+            description: description ?? '',
+            color: color ?? undefined,
         }));
     }, [tagTypes, loading]);
 
-    const columns = useMemo(
+    const columns = useMemo<ColumnDef<TagTypeRow, unknown>[]>(
         () => [
             {
                 id: 'Icon',
-                Cell: () => (
+                cell: () => (
                     <Box
                         data-loading
                         sx={{
@@ -89,38 +102,38 @@ export const TagTypeList = () => {
                         <Label color='disabled' />
                     </Box>
                 ),
-                disableGlobalFilter: true,
+                enableGlobalFilter: false,
             },
             {
-                Header: 'Name',
-                accessor: 'name',
-                width: '90%',
-                Cell: ({
+                id: 'name',
+                header: 'Name',
+                accessorKey: 'name',
+                cell: ({
                     row: {
                         original: { name, description, color },
                     },
-                }: any) => {
-                    return (
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            <ConditionallyRender
-                                condition={Boolean(color)}
-                                show={<StyledColorDot $color={color} />}
-                            />
-                            <LinkCell
-                                data-loading
-                                title={name}
-                                subtitle={description}
-                            />
-                        </Box>
-                    );
-                },
-                sortType: 'alphanumeric',
+                }) => (
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <ConditionallyRender
+                            condition={Boolean(color)}
+                            show={
+                                <StyledColorDot $color={color ?? '#FFFFFF'} />
+                            }
+                        />
+                        <LinkCell
+                            data-loading
+                            title={name}
+                            subtitle={description}
+                        />
+                    </Box>
+                ),
+                sortingFn: 'alphanumeric',
+                meta: { width: '90%' },
             },
             {
-                Header: 'Actions',
                 id: 'Actions',
-                align: 'center',
-                Cell: ({ row: { original } }: any) => (
+                header: 'Actions',
+                cell: ({ row: { original } }) => (
                     <Box
                         sx={{ display: 'flex', justifyContent: 'flex-end' }}
                         data-loading
@@ -134,7 +147,6 @@ export const TagTypeList = () => {
                         >
                             <Edit />
                         </PermissionIconButton>
-
                         <PermissionIconButton
                             permission={DELETE_TAG_TYPE}
                             tooltipProps={{ title: 'Delete tag type' }}
@@ -149,13 +161,14 @@ export const TagTypeList = () => {
                         </PermissionIconButton>
                     </Box>
                 ),
-                width: 150,
-                disableGlobalFilter: true,
-                disableSortBy: true,
+                enableSorting: false,
+                enableGlobalFilter: false,
+                meta: { width: 150, align: 'center' },
             },
             {
-                accessor: 'description',
-                disableSortBy: true,
+                id: 'description',
+                accessorKey: 'description',
+                enableSorting: false,
             },
         ],
         [navigate],
@@ -163,33 +176,24 @@ export const TagTypeList = () => {
 
     const initialState = useMemo(
         () => ({
-            sortBy: [{ id: 'name', desc: false }],
-            hiddenColumns: ['description'],
+            sorting: [{ id: 'name', desc: false }],
+            columnVisibility: { description: false },
         }),
         [],
     );
 
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        rows,
-        prepareRow,
+    const table = useReactTable({
+        columns,
+        data,
+        initialState,
         state: { globalFilter },
-        setGlobalFilter,
-    } = useTable(
-        {
-            columns: columns as any[], // TODO: fix after `react-table` v8 update
-            data,
-            initialState,
-            sortTypes,
-            autoResetGlobalFilter: false,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-        },
-        useGlobalFilter,
-        useSortBy,
-    );
+        onGlobalFilterChange: setGlobalFilter,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+    });
 
     const deleteTag = async () => {
         try {
@@ -207,6 +211,9 @@ export const TagTypeList = () => {
             setToastApiError(formatUnknownError(error));
         }
     };
+
+    const rows = table.getRowModel().rows;
+
     return (
         <PageContent
             isLoading={loading}
@@ -217,7 +224,7 @@ export const TagTypeList = () => {
                         <>
                             <Search
                                 initialValue={globalFilter}
-                                onChange={setGlobalFilter}
+                                onChange={(value) => setGlobalFilter(value)}
                             />
                             <PageHeader.Divider />
                             <AddTagTypeButton />
@@ -227,26 +234,21 @@ export const TagTypeList = () => {
             }
         >
             <SearchHighlightProvider value={globalFilter}>
-                <Table {...getTableProps()}>
-                    <SortableTableHeader headerGroups={headerGroups} />
-                    <TableBody {...getTableBodyProps()}>
-                        {rows.map((row) => {
-                            prepareRow(row);
-                            const { key, ...rowProps } = row.getRowProps();
-                            return (
-                                <TableRow hover key={key} {...rowProps}>
-                                    {row.cells.map((cell) => {
-                                        const { key, ...cellProps } =
-                                            cell.getCellProps();
-                                        return (
-                                            <TableCell key={key} {...cellProps}>
-                                                {cell.render('Cell')}
-                                            </TableCell>
-                                        );
-                                    })}
-                                </TableRow>
-                            );
-                        })}
+                <Table>
+                    <SortableTableHeader tableInstance={table} />
+                    <TableBody>
+                        {rows.map((row) => (
+                            <TableRow hover key={row.id}>
+                                {row.getVisibleCells().map((cell) => (
+                                    <TableCell key={cell.id}>
+                                        {flexRender(
+                                            cell.column.columnDef.cell,
+                                            cell.getContext(),
+                                        )}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        ))}
                     </TableBody>
                 </Table>
             </SearchHighlightProvider>

@@ -1,7 +1,13 @@
 import { styled, TableBody, TableRow } from '@mui/material';
 import type { IEnvironment } from 'interfaces/environments';
-import { useTable } from 'react-table';
-import { SortableTableHeader, Table, TableCell } from 'component/common/Table';
+import {
+    type ColumnDef,
+    flexRender,
+    getCoreRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
+import { Table, TableCell } from 'component/common/Table';
+import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
 import { EnvironmentIconCell } from 'component/environments/EnvironmentTable/EnvironmentIconCell/EnvironmentIconCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -26,42 +32,39 @@ export const EnvironmentTableSingle = ({
     environment,
     warnEnabledToggles,
 }: IEnvironmentTableSingleProps) => {
-    const COLUMNS = useMemo(
+    const columns = useMemo<ColumnDef<IEnvironment, unknown>[]>(
         () => [
             {
                 id: 'Icon',
-                width: '1%',
-                Cell: ({
-                    row: { original },
-                }: {
-                    row: { original: IEnvironment };
-                }) => <EnvironmentIconCell environment={original} />,
+                cell: ({ row: { original } }) => (
+                    <EnvironmentIconCell environment={original} />
+                ),
+                meta: { width: '1%' },
             },
             {
-                Header: 'Name',
-                accessor: 'name',
-                Cell: TextCell,
+                id: 'name',
+                header: 'Name',
+                accessorKey: 'name',
+                cell: TextCell,
+                meta: { width: 150 },
             },
             {
-                Header: 'Type',
-                accessor: 'type',
-                Cell: TextCell,
+                id: 'type',
+                header: 'Type',
+                accessorKey: 'type',
+                cell: TextCell,
+                meta: { width: 150 },
             },
             {
-                Header: 'Visible in',
-                accessor: (row: IEnvironment) =>
+                id: 'projectCount',
+                header: 'Visible in',
+                accessorFn: (row) =>
                     row.projectCount === 1
                         ? '1 project'
                         : `${row.projectCount} projects`,
-                Cell: ({
-                    row: { original },
-                    value,
-                }: {
-                    row: { original: IEnvironment };
-                    value: string;
-                }) => (
+                cell: ({ getValue, row: { original } }) => (
                     <TextCell>
-                        {value}
+                        {String(getValue() ?? '')}
                         <ConditionallyRender
                             condition={Boolean(warnEnabledToggles)}
                             show={
@@ -79,40 +82,36 @@ export const EnvironmentTableSingle = ({
                         />
                     </TextCell>
                 ),
+                meta: { width: 150 },
             },
         ],
         [warnEnabledToggles],
     );
 
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-        useTable({
-            columns: COLUMNS as any,
-            data: [environment],
-            disableSortBy: true,
-        });
+    const table = useReactTable({
+        columns,
+        data: [environment],
+        getCoreRowModel: getCoreRowModel(),
+        enableSorting: false,
+        autoResetAll: false,
+    });
 
     return (
-        <StyledTable {...getTableProps()} rowHeight='compact'>
-            <SortableTableHeader headerGroups={headerGroups as any} />
-            <TableBody {...getTableBodyProps()}>
-                {rows.map((row) => {
-                    prepareRow(row);
-                    const { key, ...rowProps } = row.getRowProps();
-                    return (
-                        <TableRow hover key={key} {...rowProps}>
-                            {row.cells.map((cell) => {
-                                const { key, ...cellProps } =
-                                    cell.getCellProps();
-
-                                return (
-                                    <TableCell key={key} {...cellProps}>
-                                        {cell.render('Cell')}
-                                    </TableCell>
-                                );
-                            })}
-                        </TableRow>
-                    );
-                })}
+        <StyledTable rowHeight='compact'>
+            <SortableTableHeader tableInstance={table} />
+            <TableBody>
+                {table.getRowModel().rows.map((row) => (
+                    <TableRow hover key={row.id}>
+                        {row.getVisibleCells().map((cell) => (
+                            <TableCell key={cell.id}>
+                                {flexRender(
+                                    cell.column.columnDef.cell,
+                                    cell.getContext(),
+                                )}
+                            </TableCell>
+                        ))}
+                    </TableRow>
+                ))}
             </TableBody>
         </StyledTable>
     );

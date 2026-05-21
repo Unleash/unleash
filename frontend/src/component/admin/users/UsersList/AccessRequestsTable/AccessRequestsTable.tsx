@@ -1,13 +1,17 @@
 import { useMemo, useState } from 'react';
-import { useFlexLayout, useSortBy, useTable } from 'react-table';
+import {
+    type ColumnDef,
+    getCoreRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
 import { Button, IconButton, Typography, styled } from '@mui/material';
 import Delete from '@mui/icons-material/Delete';
-import { VirtualizedTable } from 'component/common/Table';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { sortTypes } from 'utils/sortTypes';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import { useUserAccessRequests } from 'hooks/api/getters/useUserAccessRequests/useUserAccessRequests';
 import { useUserAccessRequestsApi } from 'hooks/api/actions/useUserAccessRequestsApi/useUserAccessRequestsApi';
@@ -92,40 +96,39 @@ export const AccessRequestsTable = () => {
         }
     };
 
-    const columns = useMemo(
+    const columns = useMemo<ColumnDef<UserAccessRequestSchema, unknown>[]>(
         () => [
             {
-                Header: 'Avatar',
                 id: 'avatar',
-                accessor: 'email',
-                Cell: ({ row: { original } }: any) => (
+                header: 'Avatar',
+                accessorKey: 'email',
+                cell: ({ row: { original } }) => (
                     <TextCell>
-                        <UserAvatar user={original} />
+                        <UserAvatar
+                            user={{
+                                ...original,
+                                id: Number(original.id),
+                            }}
+                        />
                     </TextCell>
                 ),
-                disableSortBy: true,
-                maxWidth: 80,
+                enableSorting: false,
+                meta: { maxWidth: 80 },
             },
             {
                 id: 'email',
-                Header: 'Email',
-                accessor: (row: any) => row.email || '',
-                minWidth: 180,
-                Cell: ({
-                    row: { original },
-                }: {
-                    row: { original: UserAccessRequestSchema };
-                }) => <TextCell>{original.email}</TextCell>,
+                header: 'Email',
+                accessorFn: (row) => row.email || '',
+                cell: ({ row: { original } }) => (
+                    <TextCell>{original.email}</TextCell>
+                ),
+                meta: { minWidth: 180 },
             },
             {
                 id: 'role',
-                Header: 'Role',
-                accessor: () => '',
-                Cell: ({
-                    row: { original },
-                }: {
-                    row: { original: UserAccessRequestSchema };
-                }) => (
+                header: 'Role',
+                accessorFn: () => '',
+                cell: ({ row: { original } }) => (
                     <RoleSelectCell
                         roles={roles}
                         selectedRoleId={getRoleId(original.id)}
@@ -134,25 +137,20 @@ export const AccessRequestsTable = () => {
                         }
                     />
                 ),
-                maxWidth: 120,
-                disableSortBy: true,
+                enableSorting: false,
+                meta: { maxWidth: 120 },
             },
             {
-                Header: 'Requested',
-                accessor: 'requestedAt',
-                Cell: DateCell,
-                width: 200,
-                maxWidth: 200,
+                id: 'requestedAt',
+                header: 'Requested',
+                accessorKey: 'requestedAt',
+                cell: DateCell,
+                meta: { width: 200, maxWidth: 200 },
             },
             {
-                Header: 'Actions',
                 id: 'actions',
-                align: 'center',
-                Cell: ({
-                    row: { original },
-                }: {
-                    row: { original: UserAccessRequestSchema };
-                }) => (
+                header: 'Actions',
+                cell: ({ row: { original } }) => (
                     <StyledActions>
                         <Button
                             variant='outlined'
@@ -170,37 +168,36 @@ export const AccessRequestsTable = () => {
                         </IconButton>
                     </StyledActions>
                 ),
-                width: 250,
-                maxWidth: 250,
-                disableSortBy: true,
+                enableSorting: false,
+                meta: { width: 250, maxWidth: 250, align: 'center' },
             },
         ],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [roles, selectedRoles, defaultRoleId],
     );
 
     const initialState = useMemo(
         () => ({
-            sortBy: [{ id: 'requestedAt', desc: true }],
+            sorting: [{ id: 'requestedAt', desc: true }],
         }),
         [],
     );
 
-    const { headerGroups, rows, prepareRow } = useTable(
-        {
-            columns: columns as any,
-            data: accessRequests,
-            initialState,
-            sortTypes,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            disableMultiSort: true,
-            defaultColumn: {
-                Cell: TextCell,
-            },
+    const table = useReactTable({
+        columns,
+        data: accessRequests,
+        initialState,
+        defaultColumn: {
+            cell: ({ getValue }) => (
+                <TextCell value={String(getValue() ?? '')} />
+            ),
         },
-        useSortBy,
-        useFlexLayout,
-    );
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+        enableMultiSort: false,
+    });
 
     if (accessRequests.length === 0) {
         return null;
@@ -209,11 +206,7 @@ export const AccessRequestsTable = () => {
     return (
         <StyledContainer>
             <StyledTitle>Access requests ({accessRequests.length})</StyledTitle>
-            <VirtualizedTable
-                rows={rows}
-                headerGroups={headerGroups}
-                prepareRow={prepareRow}
-            />
+            <VirtualizedTable tableInstance={table} />
             <Dialogue
                 open={Boolean(requestToReject)}
                 title='Reject access request?'

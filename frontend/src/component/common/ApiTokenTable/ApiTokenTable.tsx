@@ -1,5 +1,6 @@
-import type { Row, HeaderGroup } from 'react-table';
-import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
+import type { Table as TableType, ColumnDef } from '@tanstack/react-table';
+import { TablePlaceholder } from 'component/common/Table';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { Box, useMediaQuery, Link, styled, Typography } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { ApiTokenDocs } from 'component/admin/apiToken/ApiTokenDocs/ApiTokenDocs';
@@ -9,6 +10,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { ApiUrls } from 'component/admin/apiToken/ApiUrls/ApiUrls';
+import type { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
 
 const hiddenColumnsNotExtraLarge = ['Icon', 'createdAt', 'seenAt'];
 const hiddenColumnsCompact = ['Icon', 'project', 'seenAt'];
@@ -16,12 +18,9 @@ const hiddenColumnsCompact = ['Icon', 'project', 'seenAt'];
 interface IApiTokenTableProps {
     compact?: boolean;
     loading: boolean;
-    setHiddenColumns: (param: any) => void;
-    columns: any[];
-    rows: Row<object>[];
-    prepareRow: (row: Row<object>) => void;
-    headerGroups: HeaderGroup<object>[];
-    globalFilter: any;
+    table: TableType<IApiToken>;
+    columns: ColumnDef<IApiToken, unknown>[];
+    globalFilter: string;
 }
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
@@ -33,13 +32,10 @@ const StyledTitle = styled(Typography)(({ theme }) => ({
 
 export const ApiTokenTable = ({
     compact = false,
-    setHiddenColumns,
+    table,
     columns,
     loading,
-    rows,
-    headerGroups,
     globalFilter,
-    prepareRow,
 }: IApiTokenTableProps) => {
     const isNotExtraLarge = useMediaQuery(theme.breakpoints.down('xl'));
 
@@ -54,14 +50,16 @@ export const ApiTokenTable = ({
                 columns: hiddenColumnsCompact,
             },
         ],
-        setHiddenColumns,
+        table.setColumnVisibility,
         columns,
     );
+
+    const rowCount = table.getRowModel().rows.length;
 
     return (
         <>
             <ConditionallyRender
-                condition={rows.length > 0}
+                condition={rowCount > 0}
                 show={
                     <Box sx={{ mb: 4 }}>
                         <ApiTokenDocs />
@@ -75,15 +73,11 @@ export const ApiTokenTable = ({
             <Box sx={{ overflowX: 'auto' }}>
                 <StyledTitle variant='h2'>API Tokens</StyledTitle>
                 <SearchHighlightProvider value={globalFilter}>
-                    <VirtualizedTable
-                        rows={rows}
-                        headerGroups={headerGroups}
-                        prepareRow={prepareRow}
-                    />
+                    <VirtualizedTable tableInstance={table} />
                 </SearchHighlightProvider>
             </Box>
             <ConditionallyRender
-                condition={rows.length === 0 && !loading}
+                condition={rowCount === 0 && !loading}
                 show={
                     <ConditionallyRender
                         condition={globalFilter?.length > 0}

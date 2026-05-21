@@ -4,12 +4,12 @@ import { Alert, Box, Link, Typography, styled } from '@mui/material';
 import Extension from '@mui/icons-material/Extension';
 import {
     Table,
-    SortableTableHeader,
     TableBody,
     TableCell,
     TableRow,
     TablePlaceholder,
 } from 'component/common/Table';
+import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -22,8 +22,14 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import type { IStrategy } from 'interfaces/strategy';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
-import { sortTypes } from 'utils/sortTypes';
-import { useTable, useSortBy } from 'react-table';
+import {
+    type ColumnDef,
+    flexRender,
+    getCoreRowModel,
+    getSortedRowModel,
+    useReactTable,
+    type Table as TableType,
+} from '@tanstack/react-table';
 import { StrategySwitch } from './StrategySwitch/StrategySwitch.tsx';
 import { StrategyEditButton } from './StrategyEditButton/StrategyEditButton.tsx';
 import { StrategyDeleteButton } from './StrategyDeleteButton/StrategyDeleteButton.tsx';
@@ -38,6 +44,14 @@ interface IDialogueMetaData {
     title: string;
     onConfirm: () => void;
 }
+
+type StrategyRow = {
+    name: string;
+    description: string;
+    editable: boolean;
+    deprecated: boolean;
+    advanced?: boolean;
+};
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     marginLeft: theme.spacing(1),
@@ -114,6 +128,26 @@ const RecommendationAlert = () => (
     </Alert>
 );
 
+const StrategyTable = ({ table }: { table: TableType<StrategyRow> }) => (
+    <Table>
+        <SortableTableHeader tableInstance={table} />
+        <TableBody>
+            {table.getRowModel().rows.map((row) => (
+                <TableRow hover key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id}>
+                            {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext(),
+                            )}
+                        </TableCell>
+                    ))}
+                </TableRow>
+            ))}
+        </TableBody>
+    </Table>
+);
+
 export const StrategiesList = () => {
     const navigate = useNavigate();
     const [dialogueMetaData, setDialogueMetaData] = useState<IDialogueMetaData>(
@@ -131,11 +165,18 @@ export const StrategiesList = () => {
 
     usePageTitle('Strategy types');
 
-    const data = useMemo(() => {
+    const data = useMemo<{
+        all: StrategyRow[];
+        standard: StrategyRow[];
+        advanced: StrategyRow[];
+        custom: StrategyRow[];
+    }>(() => {
         if (loading) {
-            const mock = Array(5).fill({
+            const mock: StrategyRow[] = Array(5).fill({
                 name: 'Context name',
                 description: 'Context description when loading',
+                editable: false,
+                deprecated: false,
             });
             return {
                 all: mock,
@@ -145,10 +186,10 @@ export const StrategiesList = () => {
             };
         }
 
-        const all = strategies.map(
+        const all: StrategyRow[] = strategies.map(
             ({ name, description, editable, deprecated, advanced }) => ({
                 name,
-                description,
+                description: description ?? '',
                 editable,
                 deprecated,
                 advanced,
@@ -241,11 +282,11 @@ export const StrategiesList = () => {
         [navigate],
     );
 
-    const columns = useMemo(
+    const columns = useMemo<ColumnDef<StrategyRow, unknown>[]>(
         () => [
             {
                 id: 'Icon',
-                Cell: () => (
+                cell: () => (
                     <Box
                         data-loading
                         sx={{
@@ -261,43 +302,40 @@ export const StrategiesList = () => {
             },
             {
                 id: 'Name',
-                Header: 'Name',
-                accessor: (row: any) => formatStrategyName(row.name),
-                width: '90%',
-                Cell: ({
+                header: 'Name',
+                accessorFn: (row) => formatStrategyName(row.name),
+                cell: ({
                     row: {
                         original: { name, description, deprecated },
                     },
-                }: any) => {
-                    return (
-                        <LinkCell
-                            data-loading
-                            title={formatStrategyName(name)}
-                            subtitle={description}
-                            to={`/strategies/${name}`}
-                        >
-                            <ConditionallyRender
-                                condition={deprecated}
-                                show={() => (
-                                    <StyledBadge color='disabled'>
-                                        Disabled
-                                    </StyledBadge>
-                                )}
-                            />
-                        </LinkCell>
-                    );
-                },
-                sortType: 'alphanumeric',
+                }) => (
+                    <LinkCell
+                        data-loading
+                        title={formatStrategyName(name)}
+                        subtitle={description}
+                        to={`/strategies/${name}`}
+                    >
+                        <ConditionallyRender
+                            condition={deprecated}
+                            show={() => (
+                                <StyledBadge color='disabled'>
+                                    Disabled
+                                </StyledBadge>
+                            )}
+                        />
+                    </LinkCell>
+                ),
+                sortingFn: 'alphanumeric',
+                meta: { width: '90%' },
             },
             {
-                Header: 'Actions',
                 id: 'Actions',
-                align: 'center',
-                Cell: ({ row: { original } }: any) => (
+                header: 'Actions',
+                cell: ({ row: { original } }) => (
                     <ActionCell>
                         <StrategySwitch
                             deprecated={original.deprecated}
-                            onToggle={onToggle(original)}
+                            onToggle={onToggle(original as IStrategy)}
                         />
                         <ConditionallyRender
                             condition={original.editable}
@@ -305,13 +343,19 @@ export const StrategiesList = () => {
                                 <>
                                     <ActionCell.Divider />
                                     <StrategyEditButton
-                                        strategy={original}
-                                        onClick={() => onEditStrategy(original)}
+                                        strategy={original as IStrategy}
+                                        onClick={() =>
+                                            onEditStrategy(
+                                                original as IStrategy,
+                                            )
+                                        }
                                     />
                                     <StrategyDeleteButton
-                                        strategy={original}
+                                        strategy={original as IStrategy}
                                         onClick={() =>
-                                            onDeleteStrategy(original)
+                                            onDeleteStrategy(
+                                                original as IStrategy,
+                                            )
                                         }
                                     />
                                 </>
@@ -319,17 +363,13 @@ export const StrategiesList = () => {
                         />
                     </ActionCell>
                 ),
-                width: 150,
-                minWidth: 120,
-                disableSortBy: true,
+                enableSorting: false,
+                meta: { width: 150, minWidth: 120, align: 'center' },
             },
             {
-                accessor: 'description',
-                disableSortBy: true,
-            },
-            {
-                accessor: 'sortOrder',
-                sortType: 'number',
+                id: 'description',
+                accessorKey: 'description',
+                enableSorting: false,
             },
         ],
         [onToggle, onEditStrategy, onDeleteStrategy],
@@ -337,68 +377,41 @@ export const StrategiesList = () => {
 
     const initialState = useMemo(
         () => ({
-            sortBy: [{ id: 'Name', desc: false }],
-            hiddenColumns: ['description', 'sortOrder'],
+            sorting: [{ id: 'Name', desc: false }],
+            columnVisibility: { description: false },
         }),
         [],
     );
 
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        rows: standardRows,
-        prepareRow,
-    } = useTable(
-        {
-            columns: columns as any[], // TODO: fix after `react-table` v8 update
-            data: data.standard,
-            initialState,
-            sortTypes,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            autoResetHiddenColumns: false,
-        },
-        useSortBy,
-    );
+    const standardTable = useReactTable({
+        columns,
+        data: data.standard,
+        initialState,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+    });
 
-    const {
-        getTableProps: advancedGetTableProps,
-        getTableBodyProps: advancedGetTableBodyProps,
-        headerGroups: advancedHeaderGroups,
-        rows: advancedRows,
-        prepareRow: advancedPrepareRow,
-    } = useTable(
-        {
-            columns: columns as any[], // TODO: fix after `react-table` v8 update
-            data: data.advanced,
-            initialState,
-            sortTypes,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            autoResetHiddenColumns: false,
-        },
-        useSortBy,
-    );
+    const advancedTable = useReactTable({
+        columns,
+        data: data.advanced,
+        initialState,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+    });
 
-    const {
-        getTableProps: customGetTableProps,
-        getTableBodyProps: customGetTableBodyProps,
-        headerGroups: customHeaderGroups,
-        rows: customRows,
-        prepareRow: customPrepareRow,
-    } = useTable(
-        {
-            columns: columns as any[], // TODO: fix after `react-table` v8 update
-            data: data.custom,
-            initialState,
-            sortTypes,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            autoResetHiddenColumns: false,
-        },
-        useSortBy,
-    );
+    const customTable = useReactTable({
+        columns,
+        data: data.custom,
+        initialState,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+    });
 
     const onDialogConfirm = () => {
         dialogueMetaData?.onConfirm();
@@ -426,34 +439,11 @@ export const StrategiesList = () => {
             >
                 <Box>
                     <RecommendationAlert />
-                    <Table {...getTableProps()}>
-                        <SortableTableHeader headerGroups={headerGroups} />
-                        <TableBody {...getTableBodyProps()}>
-                            {standardRows.map((row) => {
-                                prepareRow(row);
-                                const { key, ...rowProps } = row.getRowProps();
-                                return (
-                                    <TableRow hover key={key} {...rowProps}>
-                                        {row.cells.map((cell) => {
-                                            const { key, ...cellProps } =
-                                                cell.getCellProps();
-
-                                            return (
-                                                <TableCell
-                                                    key={key}
-                                                    {...cellProps}
-                                                >
-                                                    {cell.render('Cell')}
-                                                </TableCell>
-                                            );
-                                        })}
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
+                    <StrategyTable table={standardTable} />
                     <ConditionallyRender
-                        condition={standardRows.length === 0}
+                        condition={
+                            standardTable.getRowModel().rows.length === 0
+                        }
                         show={
                             <TablePlaceholder>
                                 No strategies available.
@@ -493,36 +483,11 @@ export const StrategiesList = () => {
                     <StyledSubtitle>
                         <span>Advanced strategies</span>
                     </StyledSubtitle>
-                    <Table {...advancedGetTableProps()}>
-                        <SortableTableHeader
-                            headerGroups={advancedHeaderGroups}
-                        />
-                        <TableBody {...advancedGetTableBodyProps()}>
-                            {advancedRows.map((row) => {
-                                advancedPrepareRow(row);
-                                const { key, ...rowProps } = row.getRowProps();
-                                return (
-                                    <TableRow hover key={key} {...rowProps}>
-                                        {row.cells.map((cell) => {
-                                            const { key, ...cellProps } =
-                                                cell.getCellProps();
-
-                                            return (
-                                                <TableCell
-                                                    key={key}
-                                                    {...cellProps}
-                                                >
-                                                    {cell.render('Cell')}
-                                                </TableCell>
-                                            );
-                                        })}
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
+                    <StrategyTable table={advancedTable} />
                     <ConditionallyRender
-                        condition={advancedRows.length === 0}
+                        condition={
+                            advancedTable.getRowModel().rows.length === 0
+                        }
                         show={
                             <TablePlaceholder>
                                 No advanced strategies available.
@@ -535,36 +500,9 @@ export const StrategiesList = () => {
                         <span>Custom strategies</span>
                         <AddStrategyButton />
                     </StyledSubtitle>
-                    <Table {...customGetTableProps()}>
-                        <SortableTableHeader
-                            headerGroups={customHeaderGroups}
-                        />
-                        <TableBody {...customGetTableBodyProps()}>
-                            {customRows.map((row) => {
-                                customPrepareRow(row);
-                                const { key, ...rowProps } = row.getRowProps();
-                                return (
-                                    <TableRow hover key={key} {...rowProps}>
-                                        {row.cells.map((cell) => {
-                                            const { key, ...cellProps } =
-                                                cell.getCellProps();
-
-                                            return (
-                                                <TableCell
-                                                    key={key}
-                                                    {...cellProps}
-                                                >
-                                                    {cell.render('Cell')}
-                                                </TableCell>
-                                            );
-                                        })}
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
+                    <StrategyTable table={customTable} />
                     <ConditionallyRender
-                        condition={customRows.length === 0}
+                        condition={customTable.getRowModel().rows.length === 0}
                         show={<CustomStrategyInfo />}
                     />
                 </Box>

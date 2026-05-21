@@ -18,7 +18,7 @@ import {
     type CommandResultGroupItem,
 } from './RecentlyVisited/CommandResultGroup.tsx';
 import { CommandPageSuggestions } from './CommandPageSuggestions.tsx';
-import { useAsyncDebounce } from 'react-table';
+import { useDebouncedCallback } from 'hooks/useDebouncedCallback';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import {
     type CommandQueryCounter,
@@ -107,7 +107,9 @@ export const CommandBar = () => {
     const searchContainerRef = useRef<HTMLInputElement>(null);
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [searchLoading, setSearchLoading] = useState(false);
-    const [searchString, setSearchString] = useState(undefined);
+    const [searchString, setSearchString] = useState<string | undefined>(
+        undefined,
+    );
     const [searchedProjects, setSearchedProjects] = useState<
         CommandResultGroupItem[]
     >([]);
@@ -126,7 +128,7 @@ export const CommandBar = () => {
 
     const { projects } = useProjects();
 
-    const debouncedSetSearchState = useAsyncDebounce((query) => {
+    const debouncedSetSearchState = useDebouncedCallback((query: string) => {
         setSearchString(query);
 
         const filteredProjects = projects.filter((project) =>

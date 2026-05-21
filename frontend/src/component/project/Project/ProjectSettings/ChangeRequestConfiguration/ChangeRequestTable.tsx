@@ -1,14 +1,13 @@
 import { type FC, useContext, useMemo, useState } from 'react';
-import { type HeaderGroup, useGlobalFilter, useTable } from 'react-table';
-import { Alert, Box, styled, Typography } from '@mui/material';
 import {
-    SortableTableHeader,
-    Table,
-    TableBody,
-    TableCell,
-    TableRow,
-} from 'component/common/Table';
-import { sortTypes } from 'utils/sortTypes';
+    type ColumnDef,
+    flexRender,
+    getCoreRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
+import { Alert, Box, styled, Typography } from '@mui/material';
+import { Table, TableBody, TableCell, TableRow } from 'component/common/Table';
+import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
@@ -31,6 +30,7 @@ import { useTheme } from '@mui/material/styles';
 import AccessContext from 'contexts/AccessContext';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { PROJECT_CHANGE_REQUEST_WRITE } from '../../../../providers/AccessProvider/permissions.ts';
+import type { IChangeRequestEnvironmentConfig as IChangeRequestRow } from 'component/changeRequest/changeRequest.types';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(1),
@@ -116,7 +116,10 @@ export const ChangeRequestTable: FC = () => {
             };
         });
 
-    function onRequiredApprovalsChange(original: any, approvals: string) {
+    function onRequiredApprovalsChange(
+        original: IChangeRequestRow,
+        approvals: string,
+    ) {
         updateConfiguration({
             project: projectId,
             environment: original.environment,
@@ -125,28 +128,30 @@ export const ChangeRequestTable: FC = () => {
         });
     }
 
-    const columns = useMemo(
+    const columns = useMemo<ColumnDef<IChangeRequestRow, unknown>[]>(
         () => [
             {
-                Header: 'Environment',
-                accessor: 'environment',
-                disableSortBy: true,
+                id: 'environment',
+                header: 'Environment',
+                accessorKey: 'environment',
+                enableSorting: false,
             },
             {
-                Header: 'Type',
-                accessor: 'type',
-                disableGlobalFilter: true,
-                disableSortBy: true,
+                id: 'type',
+                header: 'Type',
+                accessorKey: 'type',
+                enableSorting: false,
             },
             {
-                Header: 'Required approvals',
-                Cell: ({ row: { original } }: any) =>
+                id: 'requiredApprovals',
+                header: 'Required approvals',
+                cell: ({ row: { original } }) =>
                     original.changeRequestEnabled ? (
                         <StyledBox data-loading>
                             <GeneralSelect
                                 sx={{ width: '140px', marginLeft: 1 }}
                                 options={approvalOptions}
-                                value={original.requiredApprovals || 1}
+                                value={String(original.requiredApprovals || 1)}
                                 onChange={(approvals) => {
                                     onRequiredApprovalsChange(
                                         original,
@@ -167,20 +172,16 @@ export const ChangeRequestTable: FC = () => {
                             />
                         </StyledBox>
                     ) : null,
-                width: 100,
-                disableGlobalFilter: true,
-                disableSortBy: true,
+                enableSorting: false,
             },
             {
-                Header: 'Status',
-                accessor: 'changeRequestEnabled',
                 id: 'changeRequestEnabled',
-                align: 'center',
-
-                Cell: ({ value, row: { original } }: any) => (
+                header: 'Status',
+                accessorKey: 'changeRequestEnabled',
+                cell: ({ getValue, row: { original } }) => (
                     <StyledBox data-loading>
                         <PermissionSwitch
-                            checked={value}
+                            checked={Boolean(getValue())}
                             projectId={projectId}
                             permission={[
                                 UPDATE_PROJECT,
@@ -197,29 +198,27 @@ export const ChangeRequestTable: FC = () => {
                         />
                     </StyledBox>
                 ),
-                width: 100,
-                disableGlobalFilter: true,
-                disableSortBy: true,
+                enableSorting: false,
+                meta: { align: 'center' },
             },
         ],
-        [],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [projectId],
     );
 
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-        useTable(
-            {
-                // @ts-expect-error
-                columns,
-                data,
-                sortTypes,
-                autoResetGlobalFilter: false,
-                disableSortRemove: true,
-                defaultColumn: {
-                    Cell: TextCell,
-                },
-            },
-            useGlobalFilter,
-        );
+    const table = useReactTable({
+        columns,
+        data,
+        defaultColumn: {
+            cell: ({ getValue }) => (
+                <TextCell value={String(getValue() ?? '')} />
+            ),
+        },
+        getCoreRowModel: getCoreRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+    });
+
     return (
         <PageContent
             header={
@@ -235,28 +234,21 @@ export const ChangeRequestTable: FC = () => {
                 in that environment needs to be approved before it will be
                 applied
             </Alert>
-            <Table {...getTableProps()}>
-                <SortableTableHeader
-                    headerGroups={headerGroups as HeaderGroup<object>[]}
-                />
-                <TableBody {...getTableBodyProps()}>
-                    {rows.map((row) => {
-                        prepareRow(row);
-                        const { key, ...rowProps } = row.getRowProps();
-                        return (
-                            <TableRow hover key={key} {...rowProps}>
-                                {row.cells.map((cell) => {
-                                    const { key, ...cellProps } =
-                                        cell.getCellProps();
-                                    return (
-                                        <TableCell key={key} {...cellProps}>
-                                            {cell.render('Cell')}
-                                        </TableCell>
-                                    );
-                                })}
-                            </TableRow>
-                        );
-                    })}
+            <Table>
+                <SortableTableHeader tableInstance={table} />
+                <TableBody>
+                    {table.getRowModel().rows.map((row) => (
+                        <TableRow hover key={row.id}>
+                            {row.getVisibleCells().map((cell) => (
+                                <TableCell key={cell.id}>
+                                    {flexRender(
+                                        cell.column.columnDef.cell,
+                                        cell.getContext(),
+                                    )}
+                                </TableCell>
+                            ))}
+                        </TableRow>
+                    ))}
                 </TableBody>
             </Table>
             <Dialogue

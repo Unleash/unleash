@@ -7,7 +7,6 @@ import useAdminUsersApi from '../../../../hooks/api/actions/useAdminUsersApi/use
 import { useInactiveUsersApi } from '../../../../hooks/api/actions/useInactiveUsersApi/useInactiveUsersApi.ts';
 import useToast from '../../../../hooks/useToast.tsx';
 import { formatUnknownError } from '../../../../utils/formatUnknownError.ts';
-import type { IUser } from '../../../../interfaces/user.ts';
 import type React from 'react';
 import { useMemo, useState } from 'react';
 import { TimeAgoCell } from '../../../common/Table/cells/TimeAgoCell/TimeAgoCell.tsx';
@@ -17,12 +16,15 @@ import { HighlightCell } from '../../../common/Table/cells/HighlightCell/Highlig
 import { PageContent } from '../../../common/PageContent/PageContent.tsx';
 import { PageHeader } from '../../../common/PageHeader/PageHeader.tsx';
 import { Button } from '@mui/material';
-import { useFlexLayout, useSortBy, useTable } from 'react-table';
-import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender.tsx';
 import {
-    TablePlaceholder,
-    VirtualizedTable,
-} from '../../../common/Table/index.ts';
+    type ColumnDef,
+    getCoreRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
+import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender.tsx';
+import { TablePlaceholder } from '../../../common/Table/index.ts';
+import { VirtualizedTable } from '../../../common/Table/VirtualizedTable/VirtualizedTable.tsx';
 
 import { DateCell } from '../../../common/Table/cells/DateCell/DateCell.tsx';
 import { InactiveUsersActionCell } from './InactiveUsersActionCell/InactiveUsersActionCell.tsx';
@@ -31,6 +33,8 @@ import DeleteUser from './DeleteUser/DeleteUser.tsx';
 import { DeleteInactiveUsers } from './DeleteInactiveUsers/DeleteInactiveUsers.tsx';
 import { Link } from 'react-router-dom';
 import { StyledUsersLinkDiv } from '../Users.styles';
+
+type InactiveUserRow = IInactiveUser & { rootRole?: number };
 
 export const InactiveUsersList = () => {
     const { removeUser, userApiErrors } = useAdminUsersApi();
@@ -89,7 +93,7 @@ export const InactiveUsersList = () => {
             setToastApiError(formatUnknownError(error));
         }
     };
-    const massagedData = useMemo(
+    const massagedData = useMemo<InactiveUserRow[]>(
         () =>
             inactiveUsers.map((inactiveUser) => {
                 const u = users.find((u) => u.id === inactiveUser.id);
@@ -100,100 +104,101 @@ export const InactiveUsersList = () => {
             }),
         [inactiveUsers, users],
     );
-    const columns = useMemo(
+
+    const columns = useMemo<ColumnDef<InactiveUserRow, unknown>[]>(
         () => [
             {
                 id: 'name',
-                Header: 'Name',
-                accessor: (row: any) => row.name || '',
-                minWidth: 200,
-                Cell: ({ row: { original: user } }: any) => (
+                header: 'Name',
+                accessorFn: (row) => row.name || '',
+                cell: ({ getValue, row: { original: user } }) => (
                     <HighlightCell
-                        value={user.name}
+                        value={String(getValue() ?? '')}
                         subtitle={user.email || user.username}
                     />
                 ),
-                searchable: true,
+                meta: { minWidth: 200 },
             },
             {
                 id: 'role',
-                Header: 'Role',
-                accessor: (row: any) =>
+                header: 'Role',
+                accessorFn: (row) =>
                     roles.find((role: IRole) => role.id === row.rootRole)
                         ?.name || '',
-                Cell: ({
-                    row: { original: user },
-                    value,
-                }: {
-                    row: { original: IUser };
-                    value: string;
-                }) => <RoleCell value={value} role={user.rootRole} />,
-                maxWidth: 120,
+                cell: ({ getValue, row: { original: user } }) => (
+                    <RoleCell
+                        value={String(getValue() ?? '')}
+                        role={user.rootRole ?? 0}
+                    />
+                ),
+                meta: { maxWidth: 120 },
             },
             {
-                Header: 'Created',
-                accessor: 'createdAt',
-                Cell: DateCell,
-                width: 120,
-                maxWidth: 120,
+                id: 'createdAt',
+                header: 'Created',
+                accessorKey: 'createdAt',
+                cell: DateCell,
+                meta: { width: 120, maxWidth: 120 },
             },
             {
                 id: 'last-login',
-                Header: 'Last login',
-                accessor: 'seenAt',
-                Cell: TimeAgoCell,
-                maxWidth: 150,
+                header: 'Last login',
+                accessorKey: 'seenAt',
+                cell: TimeAgoCell,
+                meta: { maxWidth: 150 },
             },
             {
                 id: 'pat-last-login',
-                Header: 'PAT last used',
-                accessor: 'patSeenAt',
-                Cell: TimeAgoCell,
-                maxWidth: 150,
+                header: 'PAT last used',
+                accessorKey: 'patSeenAt',
+                cell: TimeAgoCell,
+                meta: { maxWidth: 150 },
             },
             {
                 id: 'Actions',
-                Header: 'Actions',
-                align: 'center',
-                Cell: ({ row: { original: user } }: any) => (
+                header: 'Actions',
+                cell: ({ row: { original: user } }) => (
                     <InactiveUsersActionCell onDelete={openDelDialog(user)} />
                 ),
-                width: 200,
-                disableSortBy: true,
+                enableSorting: false,
+                meta: { width: 200, align: 'center' },
             },
         ],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [roles],
     );
-    const initialState = useMemo(() => {
-        return {
-            sortBy: [{ id: 'createdAt', desc: true }],
-            hiddenColumns: ['username', 'email'],
-        };
-    }, []);
 
-    const { headerGroups, rows, prepareRow } = useTable(
-        {
-            columns: columns as any,
-            data: massagedData,
-            initialState,
-            autoResetHiddenColumns: false,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            disableMultiSort: true,
-            defaultColumn: {
-                Cell: TextCell,
-            },
-        },
-        useSortBy,
-        useFlexLayout,
+    const initialState = useMemo(
+        () => ({
+            sorting: [{ id: 'createdAt', desc: true }],
+        }),
+        [],
     );
+
+    const table = useReactTable({
+        columns,
+        data: massagedData,
+        initialState,
+        defaultColumn: {
+            cell: ({ getValue }) => (
+                <TextCell value={String(getValue() ?? '')} />
+            ),
+        },
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+        enableMultiSort: false,
+    });
+
+    const rowCount = table.getRowModel().rows.length;
 
     return (
         <PageContent
             isLoading={loading}
             header={
                 <PageHeader
-                    title={`Inactive users (${rows.length})`}
+                    title={`Inactive users (${rowCount})`}
                     actions={
                         <>
                             <Button
@@ -212,13 +217,9 @@ export const InactiveUsersList = () => {
             <StyledUsersLinkDiv>
                 <Link to={'/admin/users'}>View all users</Link>
             </StyledUsersLinkDiv>
-            <VirtualizedTable
-                rows={rows}
-                headerGroups={headerGroups}
-                prepareRow={prepareRow}
-            />
+            <VirtualizedTable tableInstance={table} />
             <ConditionallyRender
-                condition={rows.length === 0}
+                condition={rowCount === 0}
                 show={
                     <TablePlaceholder>
                         No inactive users found.

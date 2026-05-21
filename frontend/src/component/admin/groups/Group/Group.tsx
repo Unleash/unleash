@@ -2,19 +2,19 @@ import { useEffect, useMemo, useState, type FC } from 'react';
 import { IconButton, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import { useSearchParams, Link } from 'react-router-dom';
 import {
-    type SortingRule,
-    useFlexLayout,
-    useSortBy,
-    useTable,
-} from 'react-table';
-import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
+    type ColumnDef,
+    getCoreRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
+import { TablePlaceholder } from 'component/common/Table';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { useGroup } from 'hooks/api/getters/useGroup/useGroup';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { sortTypes } from 'utils/sortTypes';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import type { IGroupUser } from 'interfaces/group';
 import { useSearch } from 'hooks/useSearch';
@@ -53,7 +53,7 @@ export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search', string>
 >;
 
-const defaultSort: SortingRule<string> = { id: 'joinedAt', desc: true };
+const defaultSort = { id: 'joinedAt', desc: true };
 
 const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
     'Group:v1',
@@ -75,57 +75,57 @@ export const Group: FC = () => {
     } = useScimSettings();
     const isScimGroup = scimEnabled && Boolean(group?.scimId);
 
-    const columns = useMemo(
+    const columns = useMemo<ColumnDef<IGroupUser, unknown>[]>(
         () => [
             {
-                Header: 'Avatar',
-                accessor: 'imageUrl',
-                Cell: ({ row: { original: user } }: any) => (
+                id: 'imageUrl',
+                header: 'Avatar',
+                accessorKey: 'imageUrl',
+                cell: ({ row: { original: user } }) => (
                     <TextCell>
                         <UserAvatar user={user} />
                     </TextCell>
                 ),
-                maxWidth: 85,
-                disableSortBy: true,
+                enableSorting: false,
+                meta: { maxWidth: 85 },
             },
             {
                 id: 'name',
-                Header: 'Name',
-                accessor: (row: IGroupUser) => row.name || '',
-                Cell: ({ value, row: { original: row } }: any) => (
+                header: 'Name',
+                accessorFn: (row) => row.name || '',
+                cell: ({ getValue, row: { original: row } }) => (
                     <HighlightCell
-                        value={value}
+                        value={String(getValue() ?? '')}
                         subtitle={row.email || row.username}
                     />
                 ),
-                minWidth: 100,
-                searchable: true,
+                meta: { minWidth: 100, searchable: true },
             },
             {
-                Header: 'Joined',
-                accessor: 'joinedAt',
-                Cell: DateCell,
-                maxWidth: 150,
+                id: 'joinedAt',
+                header: 'Joined',
+                accessorKey: 'joinedAt',
+                cell: DateCell,
+                meta: { maxWidth: 150 },
             },
             {
                 id: 'createdBy',
-                Header: 'Added by',
-                accessor: 'createdBy',
-                Cell: HighlightCell,
-                minWidth: 90,
-                searchable: true,
+                header: 'Added by',
+                accessorKey: 'createdBy',
+                cell: HighlightCell,
+                meta: { minWidth: 90, searchable: true },
             },
             {
-                Header: 'Last login',
-                accessor: 'seenAt',
-                Cell: TimeAgoCell,
-                maxWidth: 150,
+                id: 'seenAt',
+                header: 'Last login',
+                accessorKey: 'seenAt',
+                cell: TimeAgoCell,
+                meta: { maxWidth: 150 },
             },
             {
-                Header: 'Actions',
                 id: 'Actions',
-                align: 'center',
-                Cell: ({ row: { original: rowUser } }: any) => (
+                header: 'Actions',
+                cell: ({ row: { original: rowUser } }) => (
                     <ActionCell>
                         <Tooltip
                             title={
@@ -151,28 +151,29 @@ export const Group: FC = () => {
                         </Tooltip>
                     </ActionCell>
                 ),
-                maxWidth: 100,
-                disableSortBy: true,
+                enableSorting: false,
+                meta: { maxWidth: 100, align: 'center' },
             },
             // Always hidden -- for search
             {
-                accessor: (row: IGroupUser) => row.username || '',
-                Header: 'Username',
-                searchable: true,
+                id: 'username',
+                header: 'Username',
+                accessorFn: (row) => row.username || '',
+                meta: { searchable: true },
             },
-            // Always hidden -- for search
             {
-                accessor: (row: IGroupUser) => row.email || '',
-                Header: 'Email',
-                searchable: true,
+                id: 'email',
+                header: 'Email',
+                accessorFn: (row) => row.email || '',
+                meta: { searchable: true },
             },
         ],
-        [setSelectedUser, setRemoveUserOpen],
+        [isScimGroup],
     );
 
     const [searchParams, setSearchParams] = useSearchParams();
     const [initialState] = useState(() => ({
-        sortBy: [
+        sorting: [
             {
                 id: searchParams.get('sort') || storedParams.id,
                 desc: searchParams.has('order')
@@ -180,7 +181,7 @@ export const Group: FC = () => {
                     : storedParams.desc,
             },
         ],
-        hiddenColumns: ['Username', 'Email'],
+        columnVisibility: { username: false, email: false },
         globalFilter: searchParams.get('search') || '',
     }));
     const [searchValue, setSearchValue] = useState(initialState.globalFilter);
@@ -199,29 +200,28 @@ export const Group: FC = () => {
         [searchedData, loading],
     );
 
-    const {
-        headerGroups,
-        rows,
-        prepareRow,
-        state: { sortBy },
-    } = useTable(
-        {
-            columns: columns as any[],
-            data,
-            initialState,
-            sortTypes,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            disableMultiSort: true,
-        },
-        useSortBy,
-        useFlexLayout,
-    );
+    const table = useReactTable({
+        columns,
+        data,
+        initialState,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+        enableMultiSort: false,
+    });
+
+    const sorting = table.getState().sorting;
+    const rows = table.getRowModel().rows;
 
     useEffect(() => {
+        const sortRule = sorting[0];
+        if (!sortRule) {
+            return;
+        }
         const tableState: PageQueryType = {};
-        tableState.sort = sortBy[0].id;
-        if (sortBy[0].desc) {
+        tableState.sort = sortRule.id;
+        if (sortRule.desc) {
             tableState.order = 'desc';
         }
         if (searchValue) {
@@ -231,8 +231,8 @@ export const Group: FC = () => {
         setSearchParams(tableState, {
             replace: true,
         });
-        setStoredParams({ id: sortBy[0].id, desc: sortBy[0].desc || false });
-    }, [sortBy, searchValue, setSearchParams]);
+        setStoredParams({ id: sortRule.id, desc: sortRule.desc || false });
+    }, [sorting, searchValue, setSearchParams]);
 
     return (
         <ConditionallyRender
@@ -342,11 +342,7 @@ export const Group: FC = () => {
                         <SearchHighlightProvider
                             value={getSearchText(searchValue)}
                         >
-                            <VirtualizedTable
-                                rows={rows}
-                                headerGroups={headerGroups}
-                                prepareRow={prepareRow}
-                            />
+                            <VirtualizedTable tableInstance={table} />
                         </SearchHighlightProvider>
                         <ConditionallyRender
                             condition={rows.length === 0}

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
+import { TablePlaceholder } from 'component/common/Table';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IRole, PredefinedRoleType } from 'interfaces/role';
 import useToast from 'hooks/useToast';
@@ -7,8 +8,12 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { useTheme, useMediaQuery } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { useFlexLayout, useSortBy, useTable } from 'react-table';
-import { sortTypes } from 'utils/sortTypes';
+import {
+    type ColumnDef,
+    getCoreRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { useSearch } from 'hooks/useSearch';
@@ -64,38 +69,37 @@ export const RolesTable = ({
 
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-    const columns = useMemo(
+    const columns = useMemo<ColumnDef<IRole, unknown>[]>(
         () => [
             {
                 id: 'Icon',
-                Cell: () => (
+                cell: () => (
                     <IconCell
                         icon={<SupervisedUserCircle color='disabled' />}
                     />
                 ),
-                disableGlobalFilter: true,
-                maxWidth: 50,
+                enableGlobalFilter: false,
+                meta: { maxWidth: 50 },
             },
             {
-                Header: 'Role',
-                accessor: 'name',
-                Cell: ({ row: { original: role } }: any) => (
+                id: 'name',
+                header: 'Role',
+                accessorKey: 'name',
+                cell: ({ row: { original: role } }) => (
                     <RolesCell role={role} />
                 ),
-                searchable: true,
-                minWidth: 100,
+                meta: { searchable: true, minWidth: 100 },
             },
             {
                 id: 'permissions',
-                Header: 'Permissions',
-                Cell: RolePermissionsCell,
-                maxWidth: 140,
+                header: 'Permissions',
+                cell: RolePermissionsCell,
+                meta: { maxWidth: 140 },
             },
             {
-                Header: 'Actions',
                 id: 'Actions',
-                align: 'center',
-                Cell: ({ row: { original: role } }: any) => (
+                header: 'Actions',
+                cell: ({ row: { original: role } }) => (
                     <RolesActionsCell
                         role={role}
                         onEdit={() => {
@@ -108,22 +112,24 @@ export const RolesTable = ({
                         }}
                     />
                 ),
-                width: 150,
-                disableSortBy: true,
+                enableSorting: false,
+                meta: { width: 150, align: 'center' },
             },
             // Always hidden -- for search
             {
-                accessor: 'description',
-                Header: 'Description',
-                searchable: true,
+                id: 'description',
+                header: 'Description',
+                accessorKey: 'description',
+                meta: { searchable: true },
             },
         ],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [],
     );
 
     const [initialState] = useState({
-        sortBy: [{ id: 'name' }],
-        hiddenColumns: ['description'],
+        sorting: [{ id: 'name', desc: false }],
+        columnVisibility: { description: false },
     });
 
     const { data, getSearchText } = useSearch(
@@ -132,23 +138,21 @@ export const RolesTable = ({
         type === ROOT_ROLE_TYPE ? roles : projectRoles,
     );
 
-    const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
-        {
-            columns: columns as any,
-            data,
-            initialState,
-            sortTypes,
-            autoResetHiddenColumns: false,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            disableMultiSort: true,
-            defaultColumn: {
-                Cell: TextCell,
-            },
+    const table = useReactTable({
+        columns,
+        data,
+        initialState,
+        defaultColumn: {
+            cell: ({ getValue }) => (
+                <TextCell value={String(getValue() ?? '')} />
+            ),
         },
-        useSortBy,
-        useFlexLayout,
-    );
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+        enableMultiSort: false,
+    });
 
     useConditionallyHiddenColumns(
         [
@@ -157,21 +161,19 @@ export const RolesTable = ({
                 columns: ['Icon'],
             },
         ],
-        setHiddenColumns,
+        table.setColumnVisibility,
         columns,
     );
+
+    const rowCount = table.getRowModel().rows.length;
 
     return (
         <PageContent isLoading={loading}>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <VirtualizedTable
-                    rows={rows}
-                    headerGroups={headerGroups}
-                    prepareRow={prepareRow}
-                />
+                <VirtualizedTable tableInstance={table} />
             </SearchHighlightProvider>
             <ConditionallyRender
-                condition={rows.length === 0}
+                condition={rowCount === 0}
                 show={
                     <ConditionallyRender
                         condition={searchValue?.length > 0}

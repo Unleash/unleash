@@ -20,6 +20,12 @@ minimumReleaseAge: 10080
 minimumReleaseAgeIgnoreMissingTime: false
 
 patchedDependencies:
+  # Fixes a bug in getAutoSortingFn where `.slice(10)` skips the first 10 rows
+  # instead of sampling them, causing tables with fewer than 11 rows to pick the
+  # wrong sort algorithm (e.g. case-sensitive string sort instead of alphanumeric).
+  # Fixed upstream in TanStack Table v9 — remove this patch when upgrading to v9.
+  # See: https://github.com/TanStack/table/issues/4908
+  '@tanstack/table-core@8.21.3': patches/@tanstack__table-core@8.21.3.patch
   cypress-vite: .pnpm/patches/cypress-vite-npm-1.8.0-5384b5466c.patch
 overrides:
   "@codemirror/state": "6.6.0"

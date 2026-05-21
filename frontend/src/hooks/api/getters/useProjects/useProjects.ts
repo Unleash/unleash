@@ -3,7 +3,16 @@ import { useState, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 
 import handleErrorResponses from '../httpErrorResponseHandler.js';
-import type { GetProjectsParams, ProjectsSchema } from 'openapi';
+import type { GetProjectsParams, ProjectSchema, ProjectsSchema } from 'openapi';
+import type { OnboardingStatusSchema } from 'openapi';
+
+// TODO: `onboardingStatus` is currently flag-gated and not included on
+// `projectSchema` (see openapi/spec/project-schema.ts). When the flag is
+// removed and the field is declared on the schema, drop this alias and let
+// the generated `ProjectSchema` type carry the field.
+export type ProjectListItem = ProjectSchema & {
+    onboardingStatus?: OnboardingStatusSchema;
+};
 
 const useProjects = (options: SWRConfiguration & GetProjectsParams = {}) => {
     const KEY = `api/admin/projects${options.archived ? '?archived=true' : ''}`;

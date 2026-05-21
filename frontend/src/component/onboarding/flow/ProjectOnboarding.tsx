@@ -12,6 +12,7 @@ import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectO
 import { OnboardingProgress } from './OnboardingProgress.tsx';
 import { CreateFlagStep } from './steps/CreateFlagStep.tsx';
 import { TurnFlagStep } from './steps/TurnFlagStep.tsx';
+import { getOnboardingStep } from '../../../utils/getOnboardingStep.ts';
 
 interface IProjectOnboardingProps {
     projectId: string;
@@ -62,8 +63,6 @@ const stepState = (currentStep: number, stepNumber: number): StepState => {
     return 'disabled';
 };
 
-const NUMBER_OF_STEPS = 3;
-
 export const ProjectOnboarding = ({
     projectId,
     setConnectSdkOpen,
@@ -74,19 +73,9 @@ export const ProjectOnboarding = ({
 
     if (loading) return null;
 
-    const status = project.onboardingStatus?.status;
-    const isFirstFlagCreated = status === 'first-flag-created';
-    const isSDKConnected = status === 'sdk-connected';
-    const isOnboarded = status === 'onboarded';
-
-    let step = 0;
-    if (isOnboarded) {
-        step = NUMBER_OF_STEPS;
-    } else if (isSDKConnected) {
-        step = 2;
-    } else if (isFirstFlagCreated) {
-        step = 1;
-    }
+    const { current: step, total: numberOfSteps } = getOnboardingStep(
+        project.onboardingStatus,
+    );
 
     const closeOnboardingFlow = () => {
         setOnboardingFlow('closed');
@@ -109,7 +98,7 @@ export const ProjectOnboarding = ({
                     </Typography>
                     <OnboardingProgress
                         step={step}
-                        maxSteps={NUMBER_OF_STEPS}
+                        maxSteps={numberOfSteps}
                         onDismiss={closeOnboardingFlow}
                     />
                 </TitleRow>

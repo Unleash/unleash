@@ -43,7 +43,7 @@ export const SortableTableHeader = <T,>({
                             isDescending={sortDirection === 'desc'}
                             onClick={
                                 column.getCanSort()
-                                    ? () => column.toggleSorting()
+                                    ? column.getToggleSortingHandler()
                                     : undefined
                             }
                             maxWidth={meta?.maxWidth}

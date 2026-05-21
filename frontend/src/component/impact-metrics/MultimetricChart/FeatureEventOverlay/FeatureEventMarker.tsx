@@ -41,9 +41,26 @@ const StyledMarkerCount = styled(Typography)({
     letterSpacing: '0.02em',
 });
 
+type FeatureEventMarkerProps = {
+    group: EventGroup;
+    highlighted?: boolean;
+    eventImpactById?: Record<
+        number,
+        {
+            deltaPct: number | null;
+            deltaAbs: number | null;
+            halfWindowMs: number;
+        }
+    >;
+};
+
 // One pill on the overlay strip. Wraps the marker in an MUI Tooltip that
 // renders the detailed event breakdown on hover.
-export const FeatureEventMarker: FC<{ group: EventGroup }> = ({ group }) => {
+export const FeatureEventMarker: FC<FeatureEventMarkerProps> = ({
+    group,
+    highlighted = false,
+    eventImpactById,
+}) => {
     const theme = useTheme();
     const clampedPct = Math.max(0, Math.min(100, group.pct));
     const primary = group.events[group.events.length - 1];
@@ -54,7 +71,12 @@ export const FeatureEventMarker: FC<{ group: EventGroup }> = ({ group }) => {
         <Tooltip
             arrow
             placement='top'
-            title={<FeatureEventTooltip group={group} />}
+            title={
+                <FeatureEventTooltip
+                    group={group}
+                    eventImpactById={eventImpactById}
+                />
+            }
             slotProps={{
                 tooltip: {
                     sx: {
@@ -81,8 +103,14 @@ export const FeatureEventMarker: FC<{ group: EventGroup }> = ({ group }) => {
                 <StyledMarker
                     sx={{
                         border: `1.5px solid ${primaryColor}`,
-                        backgroundColor: withAlpha(primaryColor, 0.12),
+                        backgroundColor: highlighted
+                            ? withAlpha(primaryColor, 0.28)
+                            : withAlpha(primaryColor, 0.12),
                         color: primaryColor,
+                        boxShadow: highlighted
+                            ? theme.shadows[4]
+                            : theme.shadows[1],
+                        transform: highlighted ? 'scale(1.08)' : 'none',
                     }}
                 >
                     <PowerSettingsNewIcon

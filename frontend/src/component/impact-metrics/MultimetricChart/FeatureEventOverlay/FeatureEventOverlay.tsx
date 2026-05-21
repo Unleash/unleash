@@ -19,6 +19,15 @@ const StyledEventStrip = styled(Box)({
 type FeatureEventOverlayProps = {
     groups: EventGroup[];
     plotArea: PlotArea;
+    highlightedEventId?: number | null;
+    eventImpactById?: Record<
+        number,
+        {
+            deltaPct: number | null;
+            deltaAbs: number | null;
+            halfWindowMs: number;
+        }
+    >;
 };
 
 // Absolutely-positioned strip across the top of the plot area that hosts all
@@ -27,6 +36,8 @@ type FeatureEventOverlayProps = {
 export const FeatureEventOverlay: FC<FeatureEventOverlayProps> = ({
     groups,
     plotArea,
+    highlightedEventId = null,
+    eventImpactById,
 }) => (
     <StyledEventStrip
         sx={{
@@ -35,8 +46,18 @@ export const FeatureEventOverlay: FC<FeatureEventOverlayProps> = ({
             right: 'auto',
         }}
     >
-        {groups.map((group) => (
-            <FeatureEventMarker key={group.events[0].id} group={group} />
-        ))}
+        {groups.map((group) => {
+            const isHighlighted =
+                highlightedEventId !== null &&
+                group.events.some((event) => event.id === highlightedEventId);
+            return (
+                <FeatureEventMarker
+                    key={group.events[0].id}
+                    group={group}
+                    highlighted={isHighlighted}
+                    eventImpactById={eventImpactById}
+                />
+            );
+        })}
     </StyledEventStrip>
 );

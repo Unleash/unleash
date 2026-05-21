@@ -58,6 +58,19 @@ type MultimetricChartProps = {
     end: string;
     loading?: boolean;
     featureEvents?: MultimetricFeatureEvent[];
+    // Optional: highlight one event line + pill on the chart. Used by the
+    // goal-tracking template so hovering a chip in the top-movers strip
+    // emphasizes the matching flip in the chart.
+    highlightedEventId?: number | null;
+    // Optional per-event impact summary surfaced inside the pill tooltip.
+    eventImpactById?: Record<
+        number,
+        {
+            deltaPct: number | null;
+            deltaAbs: number | null;
+            halfWindowMs: number;
+        }
+    >;
 };
 
 // Wires together the Chart.js line chart, the feature-event overlay (pills +
@@ -69,6 +82,8 @@ export const MultimetricChart: FC<MultimetricChartProps> = ({
     end,
     loading,
     featureEvents = [],
+    highlightedEventId = null,
+    eventImpactById,
 }) => {
     const theme = useTheme();
     const colors = theme.palette.charts.series;
@@ -117,7 +132,11 @@ export const MultimetricChart: FC<MultimetricChartProps> = ({
           )
         : [];
 
-    const eventAnnotations = buildEventAnnotations(eventGroups, theme);
+    const eventAnnotations = buildEventAnnotations(
+        eventGroups,
+        theme,
+        highlightedEventId,
+    );
     const showPlaceholder = hasNoData || loading;
 
     const chartOptions = showPlaceholder
@@ -151,6 +170,8 @@ export const MultimetricChart: FC<MultimetricChartProps> = ({
                     <FeatureEventOverlay
                         groups={eventGroups}
                         plotArea={plotArea}
+                        highlightedEventId={highlightedEventId}
+                        eventImpactById={eventImpactById}
                     />
                 )}
             </StyledChartArea>

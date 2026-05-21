@@ -31,20 +31,27 @@ export const groupEventsByProximity = (
 
 // Builds the Chart.js annotation config that draws one dashed vertical line
 // per event group, lined up exactly with the pills on the overlay strip.
+// When `highlightedEventId` matches any event in a group, that group's line
+// renders solid + thicker so it visually responds to row hover in the
+// contributing-flag-changes panel.
 export const buildEventAnnotations = (
     groups: EventGroup[],
     theme: Theme,
+    highlightedEventId: number | null = null,
 ): Record<string, object> =>
     groups.reduce<Record<string, object>>((acc, group, index) => {
         const primary = group.events[group.events.length - 1];
         const color = getEventColor(theme, primary.type);
+        const isHighlighted =
+            highlightedEventId !== null &&
+            group.events.some((event) => event.id === highlightedEventId);
         acc[`event-line-${index}`] = {
             type: 'line',
             xMin: primary.timestamp,
             xMax: primary.timestamp,
-            borderColor: color,
-            borderWidth: 1.5,
-            borderDash: [4, 3],
+            borderColor: isHighlighted ? theme.palette.primary.main : color,
+            borderWidth: isHighlighted ? 3 : 1.5,
+            borderDash: isHighlighted ? [] : [4, 3],
         };
         return acc;
     }, {});

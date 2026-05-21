@@ -8,26 +8,86 @@ import { formatLargeNumbers } from 'component/impact-metrics/metricsFormatters';
 import type { MultimetricStepSeries } from 'component/impact-metrics/MultimetricChart/types';
 import type { GoalSummary } from './computeGoalSummary';
 
-const SPARKLINE_WIDTH = 180;
-const SPARKLINE_HEIGHT = 44;
+// SVG viewBox dimensions — the actual rendered size is driven by the parent
+// container (the right column of the two-column body). Keeping the viewBox
+// aspect close to the rendered aspect avoids visible stretching of the line.
+const SPARKLINE_WIDTH = 320;
+const SPARKLINE_HEIGHT = 64;
 
 const StyledRoot = styled(Box)(({ theme }) => ({
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(0.75),
+    // Fill the slot's full height so the goal section matches the height of
+    // the other rail sections (Top Movers, Signals) when the chart stretches
+    // the card. The body's `justify-content: center` then re-centers the
+    // content within that taller area instead of leaving empty space below.
+    flex: 1,
+    justifyContent: 'center',
+    // Tight gap between the "GOAL" label and the metric name below it — they
+    // read as a single header block rather than two stacked elements.
+    gap: theme.spacing(0.5),
     // Bleed into the wrapping slot's padding so the purple background covers
     // the entire goal section, including the surrounding padding.
     margin: theme.spacing(-3, -3, -3, -3),
-    padding: theme.spacing(3, 3, 3, 3),
+    padding: theme.spacing(4, 3, 4, 3),
     borderTopRightRadius: theme.shape.borderRadiusMedium,
-    background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+    // In light mode the gradient uses the brand primary. In dark mode the
+    // primary palette collapses to a single washed-out periwinkle that reads
+    // as flat and low-contrast against the rail. The Unleash theme exposes
+    // its current mode at `theme.mode` (top-level, not `palette.mode`), so
+    // we branch on that to swap in deep saturated purple slots
+    // (`background.alternative` → `action.alternative`) for dark mode.
+    background:
+        theme.mode === 'dark'
+            ? `linear-gradient(135deg, ${theme.palette.background.alternative} 0%, ${theme.palette.action.alternative} 100%)`
+            : `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
     color: theme.palette.common.white,
     overflow: 'hidden',
     [theme.breakpoints.down('lg')]: {
         margin: theme.spacing(-2.5, -2, -2.5, -2),
-        padding: theme.spacing(2.5, 2, 2.5, 2),
+        padding: theme.spacing(3.5, 2, 3.5, 2),
         borderTopRightRadius: 0,
+    },
+}));
+
+// Two-column body: text summary on the left, a wide sparkline on the right.
+// `alignItems: stretch` lets the sparkline match the left column's height —
+// without it, the chart sits centered in a sea of purple while the text
+// stack defines a much taller block. Stacks vertically on narrower viewports
+// so the sparkline never crushes the summary text.
+const StyledBody = styled(Box)(({ theme }) => ({
+    display: 'grid',
+    // Left column claims most of the room so long metric identifiers stay on
+    // one line. The sparkline keeps a generous floor (140px) and gives up
+    // extra width when the name needs it.
+    gridTemplateColumns: 'minmax(0, 1fr) minmax(140px, 0.6fr)',
+    gap: theme.spacing(2.5),
+    alignItems: 'stretch',
+    [theme.breakpoints.down('md')]: {
+        gridTemplateColumns: '1fr',
+        gap: theme.spacing(1.5),
+        alignItems: 'center',
+    },
+}));
+
+const StyledSummary = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(0.5),
+    minWidth: 0,
+}));
+
+const StyledSparklineBox = styled(Box)(({ theme }) => ({
+    width: '100%',
+    // Inherits height from the grid row when stretched; falls back to a
+    // sensible floor when the row's intrinsic height is small.
+    minHeight: SPARKLINE_HEIGHT,
+    display: 'flex',
+    alignItems: 'stretch',
+    [theme.breakpoints.down('md')]: {
+        height: SPARKLINE_HEIGHT * 0.7,
+        minHeight: 'unset',
     },
 }));
 
@@ -48,17 +108,26 @@ const StyledLabel = styled(Typography)(({ theme }) => ({
 
 const StyledMetricName = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
-    color: 'rgba(255, 255, 255, 0.8)',
+    fontWeight: theme.typography.fontWeightBold,
+    color: theme.palette.common.white,
+    lineHeight: 1.3,
+    // Prefer one line, but allow a second line as a fallback for very long
+    // Prometheus identifiers rather than truncating with an ellipsis. Only
+    // truncates if the name needs a third line, which is extremely rare.
+    display: '-webkit-box',
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: 'vertical',
     overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
+    overflowWrap: 'anywhere',
 }));
 
 const StyledValueRow = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'baseline',
     gap: theme.spacing(1),
-    marginTop: theme.spacing(0.25),
+    // Extra top spacing so the metric name reads as the field label for the
+    // value below it, with clear visual separation between the two.
+    marginTop: theme.spacing(1.5),
 }));
 
 const StyledValue = styled(Typography)(({ theme }) => ({
@@ -80,13 +149,11 @@ const StyledCaption = styled(Typography)(() => ({
     fontSize: '0.75rem',
 }));
 
-const StyledSparkline = styled('svg')(({ theme }) => ({
+const StyledSparkline = styled('svg')({
     width: '100%',
-    maxWidth: SPARKLINE_WIDTH,
-    height: SPARKLINE_HEIGHT,
-    marginTop: theme.spacing(1),
+    height: '100%',
     display: 'block',
-}));
+});
 
 type Trend = 'up' | 'down' | 'flat';
 
@@ -206,72 +273,84 @@ export const GoalSummaryPanel: FC<GoalSummaryPanelProps> = ({
                 <FlagOutlinedIcon sx={{ fontSize: 16 }} />
                 <StyledLabel>Goal</StyledLabel>
             </StyledLabelRow>
-            <StyledMetricName title={goalMetricLabel}>
-                {goalMetricLabel}
-            </StyledMetricName>
-            <StyledValueRow>
-                <StyledValue>{formatLargeNumbers(summary.current)}</StyledValue>
-                {showDelta && summary.deltaAbs !== null ? (
-                    <StyledDeltaRow sx={{ color: trendColor }}>
-                        <TrendIcon sx={{ fontSize: 16 }} />
-                        <Typography
-                            component='span'
-                            sx={{
-                                fontSize: 'inherit',
-                                fontWeight: 600,
-                                color: 'inherit',
-                            }}
+            <StyledBody>
+                <StyledSummary>
+                    <StyledMetricName title={goalMetricLabel}>
+                        {goalMetricLabel}
+                    </StyledMetricName>
+                    <StyledValueRow>
+                        <StyledValue>
+                            {formatLargeNumbers(summary.current)}
+                        </StyledValue>
+                        {showDelta && summary.deltaAbs !== null ? (
+                            <StyledDeltaRow sx={{ color: trendColor }}>
+                                <TrendIcon sx={{ fontSize: 16 }} />
+                                <Typography
+                                    component='span'
+                                    sx={{
+                                        fontSize: 'inherit',
+                                        fontWeight: 600,
+                                        color: 'inherit',
+                                    }}
+                                >
+                                    {summary.deltaPct === null
+                                        ? formatAbsoluteDelta(summary.deltaAbs)
+                                        : `${formatPct(summary.deltaPct)} (${formatAbsoluteDelta(summary.deltaAbs)})`}
+                                </Typography>
+                            </StyledDeltaRow>
+                        ) : null}
+                    </StyledValueRow>
+                    <StyledCaption variant='caption'>{caption}</StyledCaption>
+                </StyledSummary>
+                {sparklinePaths ? (
+                    <StyledSparklineBox>
+                        <StyledSparkline
+                            viewBox={`0 0 ${SPARKLINE_WIDTH} ${SPARKLINE_HEIGHT}`}
+                            preserveAspectRatio='none'
+                            role='img'
+                            aria-label={`${goalMetricLabel} trend sparkline`}
                         >
-                            {summary.deltaPct === null
-                                ? formatAbsoluteDelta(summary.deltaAbs)
-                                : `${formatPct(summary.deltaPct)} (${formatAbsoluteDelta(summary.deltaAbs)})`}
-                        </Typography>
-                    </StyledDeltaRow>
+                            <defs>
+                                <linearGradient
+                                    id={gradientId}
+                                    x1='0'
+                                    y1='0'
+                                    x2='0'
+                                    y2='1'
+                                >
+                                    <stop
+                                        offset='0%'
+                                        stopColor={sparklineColor}
+                                        stopOpacity={0.35}
+                                    />
+                                    <stop
+                                        offset='100%'
+                                        stopColor={sparklineColor}
+                                        stopOpacity={0}
+                                    />
+                                </linearGradient>
+                            </defs>
+                            <path
+                                d={sparklinePaths.area}
+                                fill={`url(#${gradientId})`}
+                                stroke='none'
+                            />
+                            {/* Non-scaling-stroke keeps the line at a
+                                consistent visual weight regardless of the
+                                viewBox-to-pixel stretch. */}
+                            <path
+                                d={sparklinePaths.line}
+                                fill='none'
+                                stroke={sparklineColor}
+                                strokeWidth={1.5}
+                                strokeLinejoin='round'
+                                strokeLinecap='round'
+                                vectorEffect='non-scaling-stroke'
+                            />
+                        </StyledSparkline>
+                    </StyledSparklineBox>
                 ) : null}
-            </StyledValueRow>
-            <StyledCaption variant='caption'>{caption}</StyledCaption>
-            {sparklinePaths ? (
-                <StyledSparkline
-                    viewBox={`0 0 ${SPARKLINE_WIDTH} ${SPARKLINE_HEIGHT}`}
-                    preserveAspectRatio='none'
-                    role='img'
-                    aria-label={`${goalMetricLabel} trend sparkline`}
-                >
-                    <defs>
-                        <linearGradient
-                            id={gradientId}
-                            x1='0'
-                            y1='0'
-                            x2='0'
-                            y2='1'
-                        >
-                            <stop
-                                offset='0%'
-                                stopColor={sparklineColor}
-                                stopOpacity={0.55}
-                            />
-                            <stop
-                                offset='100%'
-                                stopColor={sparklineColor}
-                                stopOpacity={0}
-                            />
-                        </linearGradient>
-                    </defs>
-                    <path
-                        d={sparklinePaths.area}
-                        fill={`url(#${gradientId})`}
-                        stroke='none'
-                    />
-                    <path
-                        d={sparklinePaths.line}
-                        fill='none'
-                        stroke={sparklineColor}
-                        strokeWidth={1.75}
-                        strokeLinejoin='round'
-                        strokeLinecap='round'
-                    />
-                </StyledSparkline>
-            ) : null}
+            </StyledBody>
         </StyledRoot>
     );
 };

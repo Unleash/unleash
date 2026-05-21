@@ -190,13 +190,18 @@ const StyledTotalsPane = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    padding: theme.spacing(1.5, 3),
+    // Bottom padding matches the goal panel's bleed edge above so the Signals
+    // legend doesn't sit cramped against the card's bottom border.
+    padding: theme.spacing(1.5, 3, 3, 3),
     [theme.breakpoints.down('lg')]: {
-        padding: theme.spacing(1.5, 2),
+        padding: theme.spacing(1.5, 2, 2.5, 2),
     },
 }));
 
 const StyledTotalsSlot = styled('div')(({ theme }) => ({
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
     padding: theme.spacing(3, 3, 3, 3),
     borderBottom: `1px solid ${theme.palette.divider}`,
     [theme.breakpoints.down('lg')]: {
@@ -205,10 +210,15 @@ const StyledTotalsSlot = styled('div')(({ theme }) => ({
 }));
 
 const StyledTotalsMiddleSlot = styled('div')(({ theme }) => ({
-    padding: theme.spacing(2, 2.5, 2, 2.5),
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    // Bottom padding is tighter than top because the panel's own `+N more`
+    // line already adds vertical mass below the last row.
+    padding: theme.spacing(2, 2.5, 1.25, 2.5),
     borderBottom: `1px solid ${theme.palette.divider}`,
     [theme.breakpoints.down('lg')]: {
-        padding: theme.spacing(1.5, 2, 1.5, 2),
+        padding: theme.spacing(1.5, 2, 1, 2),
     },
 }));
 

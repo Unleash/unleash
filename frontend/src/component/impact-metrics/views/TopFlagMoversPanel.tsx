@@ -9,7 +9,6 @@ import {
 } from '@mui/material';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
-import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import { withAlpha } from 'component/impact-metrics/MultimetricChart/chartConfig';
 import { getEventColor } from 'component/impact-metrics/MultimetricChart/FeatureEventOverlay/eventTheme';
 import { useTheme } from '@mui/material/styles';
@@ -31,6 +30,9 @@ const StyledRoot = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(0.75),
+    // Fill the slot vertically so all three rail sections (goal, top movers,
+    // signals) divide the available height proportionally and look balanced.
+    flex: 1,
 }));
 
 const StyledHeader = styled(Box)(({ theme }) => ({
@@ -48,11 +50,35 @@ const StyledLabel = styled(Typography)(({ theme }) => ({
     letterSpacing: '0.06em',
 }));
 
+// `standard` variant — underline-only, no border box. Matches the borderless
+// rhythm of the surrounding rail (uppercase header, dotted Signals legend)
+// so the picker reads as part of the section rather than a heavy form input.
 const StyledBaselineSelect = styled(Select)(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
+    color: theme.palette.text.primary,
+    fontWeight: 600,
+    // Pull the underline tight against the text so it doesn't add height.
+    '&::before, &::after': {
+        borderBottom: 'none',
+    },
+    '&:hover:not(.Mui-disabled)::before': {
+        borderBottom: 'none',
+    },
     '& .MuiSelect-select': {
-        padding: theme.spacing(0.25, 1.5, 0.25, 0.75),
+        padding: theme.spacing(0.25, 2.5, 0.25, 0.5),
         minHeight: 'auto',
+        borderRadius: theme.shape.borderRadius,
+        '&:hover': {
+            backgroundColor: theme.palette.action.hover,
+        },
+        '&:focus': {
+            backgroundColor: theme.palette.action.hover,
+            borderRadius: theme.shape.borderRadius,
+        },
+    },
+    '& .MuiSelect-icon': {
+        color: theme.palette.text.secondary,
+        right: theme.spacing(0.5),
     },
 }));
 
@@ -62,17 +88,21 @@ const StyledList = styled(Box)(({ theme }) => ({
     gap: theme.spacing(0.25),
 }));
 
+// Row rhythm matches the Signals legend below the panel: small color dot, the
+// name, a right-aligned figure. The chunky icon badge it replaces was visually
+// fighting the goal panel's purple background.
 const StyledRow = styled('button', {
     shouldForwardProp: (prop) => prop !== 'highlighted',
 })<{ highlighted: boolean }>(({ theme, highlighted }) => ({
     appearance: 'none',
+    position: 'relative',
     display: 'grid',
     gridTemplateColumns: 'auto 1fr auto',
     alignItems: 'center',
-    gap: theme.spacing(0.75),
-    padding: theme.spacing(0.25, 0.75),
+    gap: theme.spacing(1),
+    padding: theme.spacing(0.5, 0.75, 0.5, 1.25),
     borderRadius: theme.shape.borderRadius,
-    border: `1px solid ${highlighted ? theme.palette.primary.main : 'transparent'}`,
+    border: 'none',
     background: highlighted
         ? withAlpha(theme.palette.primary.main, 0.08)
         : 'transparent',
@@ -80,9 +110,28 @@ const StyledRow = styled('button', {
     cursor: 'pointer',
     fontFamily: 'inherit',
     textAlign: 'left',
-    transition: 'background 120ms ease, border-color 120ms ease',
+    transition: 'background 120ms ease',
+    // Left-edge accent stripe — appears on hover/highlight so the eye links
+    // the row to its event pill on the chart. Pinned absolutely to keep the
+    // grid columns stable when toggling.
+    '&::before': {
+        content: '""',
+        position: 'absolute',
+        left: 0,
+        top: theme.spacing(0.5),
+        bottom: theme.spacing(0.5),
+        width: 3,
+        borderRadius: 2,
+        backgroundColor: highlighted
+            ? theme.palette.primary.main
+            : 'transparent',
+        transition: 'background-color 120ms ease',
+    },
     '&:hover': {
-        background: theme.palette.action.hover,
+        background: withAlpha(theme.palette.primary.main, 0.04),
+        '&::before': {
+            backgroundColor: theme.palette.primary.main,
+        },
     },
     '&:focus-visible': {
         outline: `2px solid ${theme.palette.primary.main}`,
@@ -91,17 +140,15 @@ const StyledRow = styled('button', {
 }));
 
 const StyledDot = styled(Box)({
-    width: 18,
-    height: 18,
-    borderRadius: 4,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: 8,
+    height: 8,
+    borderRadius: '50%',
     flexShrink: 0,
 });
 
 const StyledFlagName = styled(Box)(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
+    fontWeight: 500,
     color: theme.palette.text.primary,
     whiteSpace: 'nowrap',
     overflow: 'hidden',
@@ -117,6 +164,7 @@ const StyledDelta = styled('span', {
     gap: 2,
     fontSize: theme.typography.body2.fontSize,
     fontWeight: 700,
+    fontVariantNumeric: 'tabular-nums',
     whiteSpace: 'nowrap',
     color:
         tone === 'up'
@@ -129,13 +177,23 @@ const StyledDelta = styled('span', {
 const StyledOverflow = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.text.secondary,
-    paddingLeft: theme.spacing(0.75),
+    textAlign: 'right',
+    paddingRight: theme.spacing(0.75),
 }));
 
 const StyledEmpty = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.text.secondary,
     fontStyle: 'italic',
+    // Centers the empty-state line vertically within the slot so the section
+    // doesn't visually collapse to the top — keeps the rail's three sections
+    // balanced even when there's no data to fill the middle.
+    flex: 1,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+    minHeight: theme.spacing(8),
 }));
 
 export type TopFlagMoversPanelProps = {
@@ -182,7 +240,8 @@ export const TopFlagMoversPanel: FC<TopFlagMoversPanelProps> = ({
                 >
                     <StyledBaselineSelect
                         size='small'
-                        variant='outlined'
+                        variant='standard'
+                        disableUnderline
                         value={baselineId}
                         onChange={(event) =>
                             onBaselineChange(
@@ -239,11 +298,9 @@ export const TopFlagMoversPanel: FC<TopFlagMoversPanelProps> = ({
                                 }
                                 aria-pressed={isHighlighted}
                             >
-                                <StyledDot sx={{ backgroundColor: eventColor }}>
-                                    <PowerSettingsNewIcon
-                                        sx={{ fontSize: 11, color: '#fff' }}
-                                    />
-                                </StyledDot>
+                                <StyledDot
+                                    sx={{ backgroundColor: eventColor }}
+                                />
                                 <StyledFlagName title={featureLabel}>
                                     {featureLabel}
                                 </StyledFlagName>

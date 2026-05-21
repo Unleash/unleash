@@ -144,6 +144,7 @@ const buildSignalSeries = (
     maxMs: number,
     bucketMs: number,
     seed: number,
+    baseline: number,
     amplitude: number,
 ): MultimetricStepSeries => {
     const random = seededRandom(seed);
@@ -151,7 +152,10 @@ const buildSignalSeries = (
     for (let tMs = minMs; tMs <= maxMs; tMs += bucketMs) {
         const noise = (random() - 0.5) * amplitude;
         const trend = ((tMs - minMs) / (maxMs - minMs)) * amplitude * 0.3;
-        data.push([Math.floor(tMs / 1000), Math.max(0, 40 + trend + noise)]);
+        data.push([
+            Math.floor(tMs / 1000),
+            Math.max(0, baseline + trend + noise),
+        ]);
     }
     return { label, data };
 };
@@ -197,13 +201,20 @@ export const simulateFlagContributionScenario = (
         })),
     );
 
+    // Baselines chosen to read as plausible counter values for each signal:
+    // page_views_total in the hundreds of thousands, error_rate in the low
+    // thousands (per-bucket errors), avg_session_duration as a typical
+    // duration scale. The totals stack in the rail sums these as-is, so the
+    // numbers in that legend look like real product metrics instead of
+    // ~6K demo artefacts.
     const signalA = buildSignalSeries(
         'page_views_total',
         minMs,
         maxMs,
         bucketMs,
         7,
-        80,
+        4000, // per-bucket page views — yields ~480K across 120 buckets
+        1500,
     );
     const signalB = buildSignalSeries(
         'error_rate',
@@ -211,7 +222,8 @@ export const simulateFlagContributionScenario = (
         maxMs,
         bucketMs,
         13,
-        25,
+        80, // per-bucket error count — yields ~10K across the window
+        40,
     );
     const signalC = buildSignalSeries(
         'avg_session_duration',
@@ -219,7 +231,8 @@ export const simulateFlagContributionScenario = (
         maxMs,
         bucketMs,
         21,
-        40,
+        180, // per-bucket session-duration sum — ~22K across the window
+        70,
     );
 
     const stepSeries = [goalSeries, signalA, signalB, signalC];

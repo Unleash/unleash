@@ -14,3 +14,4 @@ frontend/node_modules
 node_modules
 !docker/index.js
 !.pnpm
+!patches

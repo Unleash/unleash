@@ -18,6 +18,7 @@ import textureImage from 'assets/img/texture-signup.png';
 import Heart from 'assets/icons/heart.svg?react';
 import { formatAssetPath } from 'utils/formatPath.ts';
 import { SignupDialogComplete } from './SignupDialogComplete.tsx';
+import { useLogRocketTracker } from 'hooks/useLogRocketTracker.ts';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
@@ -216,6 +217,7 @@ const SIGNUP_STEPS: SignupStep[] = [
 
 export const SignupDialog = () => {
     const { trackEvent } = usePlausibleTracker();
+    const { track: trackLogRocketEvent } = useLogRocketTracker();
     const { setToastApiError } = useToast();
     const { signupData, signupRequired, refetch } = useSignup();
     const { submitSignupData } = useSignupApi();
@@ -253,6 +255,10 @@ export const SignupDialog = () => {
                 step: currentStep.title,
             },
         });
+        trackLogRocketEvent('signup-dialog', {
+            eventType: 'back',
+            step: currentStep.title,
+        });
 
         setStep(safeStep - 1);
     };
@@ -268,6 +274,13 @@ export const SignupDialog = () => {
                     totalInvitedEmails: data.inviteEmails.length,
                 }),
             },
+        });
+        trackLogRocketEvent('signup-dialog', {
+            eventType,
+            step: currentStep.title,
+            ...(eventType === 'invite' && {
+                totalInvitedEmails: data.inviteEmails.length,
+            }),
         });
 
         if (safeStep < steps.length - 1) {
@@ -289,6 +302,7 @@ export const SignupDialog = () => {
                     error,
                 },
             });
+            trackLogRocketEvent('signup-dialog-error', { error });
         } finally {
             setIsSubmitting(false);
         }

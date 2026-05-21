@@ -99,9 +99,9 @@ export const TemplatePickerDialog: FC<TemplatePickerDialogProps> = ({
                     </StyledOptionHeader>
                     <StyledOptionDescription>
                         One goal metric with leading-indicator signals on a
-                        single chart. Defaults to a 30-day window with
-                        normalized series so small and large numbers stay
-                        readable together.
+                        single chart. Defaults to a 30-day window. Series can be
+                        normalized to a shared baseline from the editor when
+                        metrics span very different magnitudes.
                     </StyledOptionDescription>
                 </StyledOption>
                 <StyledOption

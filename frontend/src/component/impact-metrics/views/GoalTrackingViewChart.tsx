@@ -6,7 +6,6 @@ import { parseVisibleWindow } from 'component/impact-metrics/MultimetricChart/ch
 import type { ImpactMetricsConfigSchema } from 'openapi';
 import { useMergedFeatureEvents } from './useMergedFeatureEvents';
 import { FollowedFeaturesList } from './FollowedFeaturesList';
-import { normalizeSeriesToBaseline } from './normalizeSeriesToBaseline';
 import { computeGoalSummary } from './computeGoalSummary';
 import {
     BASELINE_OPTIONS,
@@ -118,11 +117,11 @@ export const GoalTrackingViewChart: FC<GoalTrackingViewChartProps> = ({
     const end = simulatedScenario?.end ?? realEnd;
     const featureEvents = simulatedScenario?.featureEvents ?? realFeatureEvents;
 
-    const renderedSeries = useMemo(
-        () =>
-            view.normalize ? normalizeSeriesToBaseline(stepSeries) : stepSeries,
-        [view.normalize, stepSeries],
-    );
+    // Normalization is no longer used — the rebased values were misleading
+    // next to the raw totals in the right rail. Charts now show raw series
+    // unconditionally. The `view.normalize` field is preserved on existing
+    // persisted views but ignored at render time.
+    const renderedSeries = stepSeries;
 
     const realGoalMetric = orderedMetrics.find((metric) => metric.goal);
     // While simulating, treat the synthesized first series as the goal even

@@ -48,7 +48,11 @@ export const TEMPLATE_DEFAULTS: Record<
 > = {
     'goal-tracking': {
         timeRange: 'month',
-        normalize: true,
+        // Default off — normalization rebases each series to start at 100 so
+        // they share an axis, but it makes the Y-axis ticks (which still read
+        // like raw values) misleading next to the raw totals in the right
+        // rail. Users who want the rebased view can opt in via the editor.
+        normalize: false,
         autoFollowFlags: false,
     },
     'system-health': {

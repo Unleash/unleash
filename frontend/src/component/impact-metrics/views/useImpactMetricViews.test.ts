@@ -1,11 +1,16 @@
 import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { useImpactMetricViews } from './useImpactMetricViews';
-import { DEFAULT_VIEW_ENVIRONMENT, DEFAULT_VIEW_TIME_RANGE } from './types';
+import {
+    DEFAULT_VIEW_ENVIRONMENT,
+    DEFAULT_VIEW_TEMPLATE,
+    DEFAULT_VIEW_TIME_RANGE,
+} from './types';
 import type { MetricView } from './types';
 
 const baseInput = () => ({
     title: 'My view',
+    template: DEFAULT_VIEW_TEMPLATE,
     featureNames: ['flag-a'],
     metrics: [
         {
@@ -88,6 +93,27 @@ describe('useImpactMetricViews', () => {
         });
         expect(result.current.views).toHaveLength(1);
         expect(result.current.activeViewId).toBe(firstId);
+    });
+
+    it('migrates legacy views without a template to goal-tracking', () => {
+        const legacyView = {
+            id: 'legacy-id',
+            title: 'Pre-template view',
+            featureNames: [],
+            metrics: [],
+            timeRange: DEFAULT_VIEW_TIME_RANGE,
+            environment: DEFAULT_VIEW_ENVIRONMENT,
+            createdAt: 1,
+            updatedAt: 1,
+        };
+        window.localStorage.setItem(
+            ':impact-metric-views:list:localStorage:v2',
+            JSON.stringify({ value: [legacyView], expiry: null }),
+        );
+
+        const { result } = renderHook(() => useImpactMetricViews());
+        expect(result.current.views).toHaveLength(1);
+        expect(result.current.views[0].template).toBe('goal-tracking');
     });
 
     it('duplicates a view with a (copy) suffix', () => {

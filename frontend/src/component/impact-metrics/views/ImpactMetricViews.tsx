@@ -6,8 +6,13 @@ import { ViewSwitcher } from './ViewSwitcher';
 import { ViewEditorDialog } from './ViewEditorDialog';
 import { ViewChart } from './ViewChart';
 import { ImpactMetricViewsEmptyState } from './ImpactMetricViewsEmptyState';
+import { TemplatePickerDialog } from './TemplatePickerDialog';
 import { useImpactMetricViews } from './useImpactMetricViews';
-import type { MetricView } from './types';
+import {
+    DEFAULT_VIEW_TEMPLATE,
+    type MetricView,
+    type ViewTemplate,
+} from './types';
 
 const StyledHeaderRow = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -40,14 +45,25 @@ export const ImpactMetricViews: FC = () => {
 
     const [editorOpen, setEditorOpen] = useState(false);
     const [editingView, setEditingView] = useState<MetricView | null>(null);
+    const [pickerOpen, setPickerOpen] = useState(false);
+    const [pendingTemplate, setPendingTemplate] = useState<ViewTemplate>(
+        DEFAULT_VIEW_TEMPLATE,
+    );
 
     const openCreate = () => {
         setEditingView(null);
+        setPickerOpen(true);
+    };
+
+    const handleTemplateSelected = (template: ViewTemplate) => {
+        setPendingTemplate(template);
+        setPickerOpen(false);
         setEditorOpen(true);
     };
 
     const openEdit = (view: MetricView) => {
         setEditingView(view);
+        setPendingTemplate(view.template);
         setEditorOpen(true);
     };
 
@@ -96,9 +112,15 @@ export const ImpactMetricViews: FC = () => {
         return (
             <>
                 <ImpactMetricViewsEmptyState onCreate={openCreate} />
+                <TemplatePickerDialog
+                    open={pickerOpen}
+                    onSelect={handleTemplateSelected}
+                    onClose={() => setPickerOpen(false)}
+                />
                 <ViewEditorDialog
                     open={editorOpen}
                     initialView={editingView}
+                    template={pendingTemplate}
                     onClose={() => setEditorOpen(false)}
                     onSave={handleSave}
                 />
@@ -143,9 +165,15 @@ export const ImpactMetricViews: FC = () => {
                 )}
             </StyledChartArea>
 
+            <TemplatePickerDialog
+                open={pickerOpen}
+                onSelect={handleTemplateSelected}
+                onClose={() => setPickerOpen(false)}
+            />
             <ViewEditorDialog
                 open={editorOpen}
                 initialView={editingView}
+                template={pendingTemplate}
                 onClose={() => setEditorOpen(false)}
                 onSave={handleSave}
             />

@@ -4,9 +4,11 @@ import { createUuid } from 'utils/createUuid';
 import {
     ACTIVE_VIEW_STORAGE_KEY,
     DEFAULT_VIEW_ENVIRONMENT,
-    DEFAULT_VIEW_TIME_RANGE,
+    DEFAULT_VIEW_TEMPLATE,
+    TEMPLATE_DEFAULTS,
     VIEW_LIST_STORAGE_KEY,
     type MetricView,
+    type ViewTemplate,
 } from './types';
 
 type ViewInput = Omit<MetricView, 'id' | 'createdAt' | 'updatedAt'>;
@@ -25,22 +27,46 @@ export type UseImpactMetricViews = {
     renameView: (id: string, title: string) => void;
 };
 
-export const buildEmptyViewInput = (): ViewInput => ({
-    title: 'Untitled view',
-    featureNames: [],
-    metrics: [],
-    timeRange: DEFAULT_VIEW_TIME_RANGE,
-    environment: DEFAULT_VIEW_ENVIRONMENT,
-});
+export const buildEmptyViewInput = (
+    template: ViewTemplate = DEFAULT_VIEW_TEMPLATE,
+): ViewInput => {
+    const defaults = TEMPLATE_DEFAULTS[template];
+    return {
+        title: 'Untitled view',
+        template,
+        featureNames: [],
+        metrics: [],
+        timeRange: defaults.timeRange,
+        environment: DEFAULT_VIEW_ENVIRONMENT,
+        normalize: defaults.normalize,
+        autoFollowFlags: defaults.autoFollowFlags,
+    };
+};
+
+const migrateStoredView = (view: MetricView): MetricView => {
+    if (view.template) return view;
+    const defaults = TEMPLATE_DEFAULTS[DEFAULT_VIEW_TEMPLATE];
+    return {
+        ...view,
+        template: DEFAULT_VIEW_TEMPLATE,
+        normalize: view.normalize ?? defaults.normalize,
+        autoFollowFlags: view.autoFollowFlags ?? defaults.autoFollowFlags,
+    };
+};
 
 export const useImpactMetricViews = (): UseImpactMetricViews => {
-    const [views, setViews] = useLocalStorageState<MetricView[]>(
+    const [storedViews, setViews] = useLocalStorageState<MetricView[]>(
         VIEW_LIST_STORAGE_KEY,
         EMPTY_VIEWS,
     );
     const [storedActiveId, setStoredActiveId] = useLocalStorageState<string>(
         ACTIVE_VIEW_STORAGE_KEY,
         '',
+    );
+
+    const views = useMemo(
+        () => storedViews.map(migrateStoredView),
+        [storedViews],
     );
 
     const activeViewId = useMemo(() => {

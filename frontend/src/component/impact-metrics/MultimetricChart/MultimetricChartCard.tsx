@@ -18,7 +18,21 @@ export interface MultimetricChartCardProps {
     end: string;
     loading?: boolean;
     href?: string;
+    // Optional override for the chart pane height in theme spacing units.
+    // Defaults to the flag-page accordion sizing.
+    chartHeightSpacing?: { base: number; lg: number; sm: number };
+    // Optional override for the subtitle shown under the chart title.
+    // Defaults to `{stepCount} metrics · {timeLabel}`.
+    subtitle?: string;
+    // Optional content rendered at the top of the totals column. Used by
+    // template renderers (e.g. goal-tracking) to inject a summary panel
+    // above the standard totals stack.
+    totalsHeaderSlot?: ReactNode;
+    // Optional override for the totals-column label.
+    totalsLabel?: string;
 }
+
+const DEFAULT_CHART_HEIGHT_SPACING = { base: 34, lg: 28, sm: 24 } as const;
 
 const cardBaseStyles = (theme: {
     shape: { borderRadiusMedium: number };
@@ -83,10 +97,10 @@ const StyledChartHeader = styled('div')(({ theme }) => ({
 const StyledTotalsHeader = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'flex-end',
-    padding: theme.spacing(1.5, 3, 0, 3),
+    padding: theme.spacing(3, 3, 0, 3),
     minWidth: 0,
     [theme.breakpoints.down('lg')]: {
-        padding: theme.spacing(1, 2, 0.5, 2),
+        padding: theme.spacing(2.5, 2, 0, 2),
     },
 }));
 
@@ -109,25 +123,29 @@ const StyledTotalsLabel = styled(Typography)(({ theme }) => ({
     letterSpacing: '0.06em',
 }));
 
-const StyledChartPane = styled('div')(({ theme }) => ({
-    display: 'flex',
-    minWidth: 0,
-    height: theme.spacing(34),
-    padding: theme.spacing(1.5, 3),
-    // Allow the chart canvas and its absolutely-positioned event overlay to
-    // shrink with the container instead of forcing the parent card wider.
-    '& > *': {
+const StyledChartPane = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'heightSpacing',
+})<{ heightSpacing: { base: number; lg: number; sm: number } }>(
+    ({ theme, heightSpacing }) => ({
+        display: 'flex',
         minWidth: 0,
-        flex: 1,
-    },
-    [theme.breakpoints.down('lg')]: {
-        height: theme.spacing(28),
-        padding: theme.spacing(1.5, 2),
-    },
-    [theme.breakpoints.down('sm')]: {
-        height: theme.spacing(24),
-    },
-}));
+        height: theme.spacing(heightSpacing.base),
+        padding: theme.spacing(1.5, 3),
+        // Allow the chart canvas and its absolutely-positioned event overlay to
+        // shrink with the container instead of forcing the parent card wider.
+        '& > *': {
+            minWidth: 0,
+            flex: 1,
+        },
+        [theme.breakpoints.down('lg')]: {
+            height: theme.spacing(heightSpacing.lg),
+            padding: theme.spacing(1.5, 2),
+        },
+        [theme.breakpoints.down('sm')]: {
+            height: theme.spacing(heightSpacing.sm),
+        },
+    }),
+);
 
 const StyledTotalsPane = styled('div')(({ theme }) => ({
     flex: 1,
@@ -138,6 +156,14 @@ const StyledTotalsPane = styled('div')(({ theme }) => ({
     padding: theme.spacing(1.5, 3),
     [theme.breakpoints.down('lg')]: {
         padding: theme.spacing(1.5, 2),
+    },
+}));
+
+const StyledTotalsSlot = styled('div')(({ theme }) => ({
+    padding: theme.spacing(3, 3, 3, 3),
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    [theme.breakpoints.down('lg')]: {
+        padding: theme.spacing(2.5, 2, 2.5, 2),
     },
 }));
 
@@ -162,23 +188,28 @@ export const MultimetricChartCard: FC<MultimetricChartCardProps> = ({
     end,
     loading,
     href,
+    chartHeightSpacing = DEFAULT_CHART_HEIGHT_SPACING,
+    subtitle,
+    totalsHeaderSlot,
+    totalsLabel: totalsLabelOverride,
 }) => {
     const timeLabel = timeRangeLabels[timeRange];
-    const totalsLabel =
+    const resolvedSubtitle =
+        subtitle ?? `${stepCount} metrics \u00B7 ${timeLabel}`;
+    const defaultTotalsLabel =
         aggregationMode && !SUM_MODES.has(aggregationMode)
             ? 'Last recorded value'
             : 'Totals';
+    const totalsLabel = totalsLabelOverride ?? defaultTotalsLabel;
 
     const content: ReactNode = (
         <StyledRoot>
             <StyledChartColumn>
                 <StyledChartHeader>
                     <StyledTitle>{title}</StyledTitle>
-                    <StyledSubtitle>
-                        {stepCount} metrics &middot; {timeLabel}
-                    </StyledSubtitle>
+                    <StyledSubtitle>{resolvedSubtitle}</StyledSubtitle>
                 </StyledChartHeader>
-                <StyledChartPane>
+                <StyledChartPane heightSpacing={chartHeightSpacing}>
                     <MultimetricChart
                         stepSeries={stepSeries}
                         timeRange={timeRange}
@@ -190,6 +221,9 @@ export const MultimetricChartCard: FC<MultimetricChartCardProps> = ({
                 </StyledChartPane>
             </StyledChartColumn>
             <StyledTotalsColumn>
+                {totalsHeaderSlot ? (
+                    <StyledTotalsSlot>{totalsHeaderSlot}</StyledTotalsSlot>
+                ) : null}
                 <StyledTotalsHeader>
                     <StyledTotalsLabel>{totalsLabel}</StyledTotalsLabel>
                 </StyledTotalsHeader>

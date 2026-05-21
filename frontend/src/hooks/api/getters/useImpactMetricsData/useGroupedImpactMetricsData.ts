@@ -4,19 +4,19 @@ import type { ImpactMetricsConfigSchema } from 'openapi';
 import type { MultimetricStepSeries } from 'component/impact-metrics/MultimetricChart/types';
 import type { MultimetricStep } from 'component/impact-metrics/MultimetricChart/MultimetricTotals';
 import type { ImpactMetricsResponse } from './useImpactMetricsData';
+import { sumSeriesByTimestamp } from './sumSeriesByTimestamp';
 
 const SUM_MODES = new Set(['count', 'sum']);
 
 function aggregateTotal(
-    series: ImpactMetricsResponse['series'],
+    points: ReadonlyArray<[number, number]>,
     aggregationMode: string,
 ): number {
-    if (!series.length || !series[0].data.length) return 0;
-    const data = series[0].data;
+    if (points.length === 0) return 0;
     if (SUM_MODES.has(aggregationMode)) {
-        return data.reduce((sum, [, v]) => sum + Number(v), 0);
+        return points.reduce((sum, [, value]) => sum + value, 0);
     }
-    return Number(data[data.length - 1][1]);
+    return points[points.length - 1][1];
 }
 
 function buildPath(config: ImpactMetricsConfigSchema): string {
@@ -97,18 +97,21 @@ export const useGroupedImpactMetricsData = (
         };
     }
 
-    const stepSeries: MultimetricStepSeries[] = data.map((response, i) => ({
+    // Merge label-keyed series once per response so chart line and total
+    // see identical data — both reflect sum-across-labels semantics.
+    const mergedByConfig = data.map((response) =>
+        sumSeriesByTimestamp(response.series),
+    );
+
+    const stepSeries: MultimetricStepSeries[] = data.map((_, i) => ({
         label: configs[i].title || configs[i].displayName,
-        data: (response.series[0]?.data ?? []).map(([ts, val]) => [
-            ts,
-            Number(val),
-        ]),
+        data: mergedByConfig[i],
     }));
 
-    const stepTotals: MultimetricStep[] = data.map((response, i) => ({
+    const stepTotals: MultimetricStep[] = data.map((_, i) => ({
         id: configs[i].id,
         label: configs[i].title || configs[i].displayName,
-        value: aggregateTotal(response.series, configs[i].aggregationMode),
+        value: aggregateTotal(mergedByConfig[i], configs[i].aggregationMode),
         previousStepPercentage: null,
     }));
 

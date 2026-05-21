@@ -8,9 +8,12 @@ import {
     DialogContent,
     DialogTitle,
     FormControl,
+    FormControlLabel,
     InputLabel,
     MenuItem,
+    Radio,
     Select,
+    Switch,
     TextField,
     Typography,
     styled,
@@ -23,12 +26,14 @@ import {
 } from 'component/impact-metrics/metricsFormatters';
 import { createUuid } from 'utils/createUuid';
 import type { ChartTimeRange } from 'component/impact-metrics/MultimetricChart/chartConfig';
+import type { AggregationMode } from 'component/impact-metrics/types';
 import { FeaturePicker } from './FeaturePicker';
 import {
     DEFAULT_VIEW_ENVIRONMENT,
-    DEFAULT_VIEW_TIME_RANGE,
+    TEMPLATE_DEFAULTS,
     type MetricView,
     type ViewMetricConfig,
+    type ViewTemplate,
 } from './types';
 
 type ViewInput = Omit<MetricView, 'id' | 'createdAt' | 'updatedAt'>;
@@ -65,6 +70,63 @@ const StyledHelper = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
+const StyledMetricRows = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1),
+    marginTop: theme.spacing(0.5),
+}));
+
+const StyledMetricRow = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1.5),
+    padding: theme.spacing(1, 1.5),
+    borderRadius: theme.shape.borderRadius,
+    border: `1px solid ${theme.palette.divider}`,
+    backgroundColor: theme.palette.background.elevation1,
+}));
+
+const StyledMetricName = styled('div')(({ theme }) => ({
+    flex: 1,
+    minWidth: 0,
+    display: 'flex',
+    flexDirection: 'column',
+}));
+
+const StyledMetricLabel = styled(Typography)(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
+    fontWeight: theme.typography.fontWeightMedium,
+    color: theme.palette.text.primary,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+}));
+
+const StyledMetricHint = styled(Typography)(({ theme }) => ({
+    fontSize: theme.fontSizes.smallerBody,
+    color: theme.palette.text.secondary,
+}));
+
+const AGGREGATION_OPTIONS: Array<{ value: AggregationMode; label: string }> = [
+    { value: 'count', label: 'Count' },
+    { value: 'rps', label: 'Rate per second' },
+    { value: 'sum', label: 'Sum' },
+    { value: 'avg', label: 'Average' },
+    { value: 'p50', label: '50th percentile' },
+    { value: 'p95', label: '95th percentile' },
+    { value: 'p99', label: '99th percentile' },
+];
+
+const AGGREGATION_LABEL: Record<AggregationMode, string> =
+    AGGREGATION_OPTIONS.reduce(
+        (acc, option) => {
+            acc[option.value] = option.label;
+            return acc;
+        },
+        {} as Record<AggregationMode, string>,
+    );
+
 type MetricOption = {
     name: string;
     displayName: string;
@@ -93,6 +155,7 @@ const metricConfigFor = (
 export type ViewEditorDialogProps = {
     open: boolean;
     initialView?: MetricView | null;
+    template: ViewTemplate;
     onClose: () => void;
     onSave: (input: ViewInput) => void;
 };
@@ -100,6 +163,7 @@ export type ViewEditorDialogProps = {
 export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
     open,
     initialView,
+    template,
     onClose,
     onSave,
 }) => {
@@ -107,14 +171,24 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
         useImpactMetricsOptions();
     const { environments, loading: envLoading } = useEnvironments();
 
+    const templateDefaults = TEMPLATE_DEFAULTS[template];
+    const isGoalTracking = template === 'goal-tracking';
+    const isSystemHealth = template === 'system-health';
+
     const [title, setTitle] = useState('');
     const [featureNames, setFeatureNames] = useState<string[]>([]);
     const [metrics, setMetrics] = useState<ViewMetricConfig[]>([]);
     const [timeRange, setTimeRange] = useState<ChartTimeRange>(
-        DEFAULT_VIEW_TIME_RANGE,
+        templateDefaults.timeRange,
     );
     const [environment, setEnvironment] = useState<string>(
         DEFAULT_VIEW_ENVIRONMENT,
+    );
+    const [normalize, setNormalize] = useState<boolean>(
+        templateDefaults.normalize,
+    );
+    const [autoFollowFlags, setAutoFollowFlags] = useState<boolean>(
+        templateDefaults.autoFollowFlags,
     );
 
     useEffect(() => {
@@ -125,14 +199,20 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
             setMetrics(initialView.metrics);
             setTimeRange(initialView.timeRange);
             setEnvironment(initialView.environment);
+            setNormalize(initialView.normalize ?? templateDefaults.normalize);
+            setAutoFollowFlags(
+                initialView.autoFollowFlags ?? templateDefaults.autoFollowFlags,
+            );
         } else {
             setTitle('');
             setFeatureNames([]);
             setMetrics([]);
-            setTimeRange(DEFAULT_VIEW_TIME_RANGE);
+            setTimeRange(templateDefaults.timeRange);
             setEnvironment(DEFAULT_VIEW_ENVIRONMENT);
+            setNormalize(templateDefaults.normalize);
+            setAutoFollowFlags(templateDefaults.autoFollowFlags);
         }
-    }, [open, initialView]);
+    }, [open, initialView, templateDefaults]);
 
     const metricOptionsTyped = metricOptions as MetricOption[];
 
@@ -167,6 +247,28 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
         });
     };
 
+    const handleAggregationChange = (
+        metricName: string,
+        aggregationMode: AggregationMode,
+    ) => {
+        setMetrics((current) =>
+            current.map((metric) =>
+                metric.metricName === metricName
+                    ? { ...metric, aggregationMode }
+                    : metric,
+            ),
+        );
+    };
+
+    const handleGoalChange = (metricName: string) => {
+        setMetrics((current) =>
+            current.map((metric) => ({
+                ...metric,
+                goal: metric.metricName === metricName,
+            })),
+        );
+    };
+
     useEffect(() => {
         setMetrics((current) =>
             current.map((metric) => ({ ...metric, timeRange })),
@@ -179,10 +281,13 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
         if (!isValid) return;
         onSave({
             title: title.trim(),
+            template,
             featureNames,
             metrics: metrics.map((metric) => ({ ...metric, timeRange })),
             timeRange,
             environment,
+            normalize: isGoalTracking ? normalize : undefined,
+            autoFollowFlags: isSystemHealth ? autoFollowFlags : undefined,
         });
     };
 
@@ -268,7 +373,173 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
                             All selected metrics are drawn together on a single
                             chart.
                         </StyledHelper>
+                        {metrics.length > 0 ? (
+                            <StyledMetricRows>
+                                {metrics.map((metric) => {
+                                    const inferredType = getMetricType(
+                                        metric.metricName,
+                                    );
+                                    const inferred = inferredType === 'unknown';
+                                    return (
+                                        <StyledMetricRow
+                                            key={metric.metricName}
+                                        >
+                                            {isGoalTracking ? (
+                                                <FormControlLabel
+                                                    sx={{ mr: 0 }}
+                                                    aria-label={`Mark ${metric.displayName || metric.metricName} as the goal`}
+                                                    control={
+                                                        <Radio
+                                                            size='small'
+                                                            checked={Boolean(
+                                                                metric.goal,
+                                                            )}
+                                                            onChange={() =>
+                                                                handleGoalChange(
+                                                                    metric.metricName,
+                                                                )
+                                                            }
+                                                        />
+                                                    }
+                                                    label={
+                                                        <Typography
+                                                            variant='caption'
+                                                            sx={{
+                                                                color: 'text.secondary',
+                                                            }}
+                                                        >
+                                                            Goal
+                                                        </Typography>
+                                                    }
+                                                    labelPlacement='bottom'
+                                                />
+                                            ) : null}
+                                            <StyledMetricName>
+                                                <StyledMetricLabel
+                                                    title={metric.metricName}
+                                                >
+                                                    {metric.displayName ||
+                                                        metric.metricName}
+                                                </StyledMetricLabel>
+                                                <StyledMetricHint>
+                                                    {inferred
+                                                        ? 'Aggregation could not be inferred — pick one.'
+                                                        : `${inferredType.charAt(0).toUpperCase()}${inferredType.slice(1)} metric · default ${AGGREGATION_LABEL[metric.aggregationMode] ?? metric.aggregationMode}`}
+                                                </StyledMetricHint>
+                                            </StyledMetricName>
+                                            <FormControl
+                                                size='small'
+                                                variant='outlined'
+                                                sx={{ minWidth: 180 }}
+                                            >
+                                                <InputLabel
+                                                    id={`agg-${metric.metricName}`}
+                                                >
+                                                    Aggregation
+                                                </InputLabel>
+                                                <Select
+                                                    labelId={`agg-${metric.metricName}`}
+                                                    value={
+                                                        metric.aggregationMode
+                                                    }
+                                                    label='Aggregation'
+                                                    onChange={(event) =>
+                                                        handleAggregationChange(
+                                                            metric.metricName,
+                                                            event.target
+                                                                .value as AggregationMode,
+                                                        )
+                                                    }
+                                                >
+                                                    {AGGREGATION_OPTIONS.map(
+                                                        (option) => (
+                                                            <MenuItem
+                                                                key={
+                                                                    option.value
+                                                                }
+                                                                value={
+                                                                    option.value
+                                                                }
+                                                            >
+                                                                {option.label}
+                                                            </MenuItem>
+                                                        ),
+                                                    )}
+                                                </Select>
+                                            </FormControl>
+                                        </StyledMetricRow>
+                                    );
+                                })}
+                            </StyledMetricRows>
+                        ) : null}
                     </StyledFieldGroup>
+
+                    {isGoalTracking ? (
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={normalize}
+                                    onChange={(event) =>
+                                        setNormalize(event.target.checked)
+                                    }
+                                />
+                            }
+                            label={
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                    }}
+                                >
+                                    <Typography variant='body2'>
+                                        Normalize to baseline
+                                    </Typography>
+                                    <Typography
+                                        variant='caption'
+                                        sx={{ color: 'text.secondary' }}
+                                    >
+                                        Rebase each series so its first value is
+                                        100, so signals and goal are readable on
+                                        one axis. Totals stay raw.
+                                    </Typography>
+                                </Box>
+                            }
+                        />
+                    ) : null}
+
+                    {isSystemHealth ? (
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={autoFollowFlags}
+                                    onChange={(event) =>
+                                        setAutoFollowFlags(event.target.checked)
+                                    }
+                                />
+                            }
+                            label={
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                    }}
+                                >
+                                    <Typography variant='body2'>
+                                        Auto-follow recently changed flags
+                                    </Typography>
+                                    <Typography
+                                        variant='caption'
+                                        sx={{ color: 'text.secondary' }}
+                                    >
+                                        Pull flags with state changes in the
+                                        selected environment + time window.
+                                        Manually pinned flags are always
+                                        included.
+                                    </Typography>
+                                </Box>
+                            }
+                        />
+                    ) : null}
 
                     <FeaturePicker
                         value={featureNames}

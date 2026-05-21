@@ -93,8 +93,11 @@ export const ProjectSettings = () => {
         });
     }
 
+    const settings = '/settings';
+    const [basePath] = location.pathname.split(settings);
+    const toTabPath = (id: string) => `${basePath}${settings}/${id}`;
     const onChange = (tab: ITab) => {
-        navigate(tab.id);
+        navigate(toTabPath(tab.id));
     };
 
     return (
@@ -103,7 +106,7 @@ export const ProjectSettings = () => {
             value={
                 tabs.find(
                     ({ id }) =>
-                        id && location.pathname?.includes(`/settings/${id}`),
+                        id && location.pathname?.includes(`${settings}/${id}`),
                 )?.id || tabs[0].id
             }
             onChange={onChange}
@@ -129,7 +132,7 @@ export const ProjectSettings = () => {
                 <Route path='actions/*' element={<ProjectActions />} />
                 <Route
                     path='*'
-                    element={<Navigate replace to={tabs[0].id} />}
+                    element={<Navigate replace to={toTabPath(tabs[0].id)} />}
                 />
             </Routes>
         </VerticalTabs>

@@ -37,6 +37,8 @@ export class GlobalFrontendApiCache extends EventEmitter {
 
     private status: GlobalFrontendApiCacheState = 'starting';
 
+    public readyPromise: Promise<void>;
+
     constructor(
         config: Config,
         segmentReadModel: ISegmentReadModel,
@@ -49,11 +51,15 @@ export class GlobalFrontendApiCache extends EventEmitter {
         this.configurationRevisionService = configurationRevisionService;
         this.segmentReadModel = segmentReadModel;
         this.onUpdateRevisionEvent = this.onUpdateRevisionEvent.bind(this);
-        this.refreshData();
+        this.readyPromise = this.refreshData();
         this.configurationRevisionService.on(
             UPDATE_REVISION,
             this.onUpdateRevisionEvent,
         );
+    }
+
+    isReady(): boolean {
+        return this.status === 'ready' || this.status === 'updated';
     }
 
     getSegment(id: number): Segment | undefined {

@@ -10,20 +10,27 @@ import { NONE } from '../types/permissions.js';
 import { createResponseSchema } from '../openapi/util/create-response-schema.js';
 import type { ReadyCheckSchema } from '../openapi/spec/ready-check-schema.js';
 import { emptyResponse, parseEnvVarNumber } from '../server-impl.js';
+import type { FrontendApiService } from '../features/frontend-api/frontend-api-service.js';
 
 export class ReadyCheckController extends Controller {
     private logger: Logger;
 
     private db?: Db;
 
+    private frontendApiService: FrontendApiService;
+
     constructor(
         config: IUnleashConfig,
-        { openApiService }: Pick<IUnleashServices, 'openApiService'>,
+        {
+            openApiService,
+            frontendApiService,
+        }: Pick<IUnleashServices, 'openApiService' | 'frontendApiService'>,
         db?: Db,
     ) {
         super(config);
         this.logger = config.getLogger('ready-check.js');
         this.db = db;
+        this.frontendApiService = frontendApiService;
 
         this.route({
             method: 'get',
@@ -47,6 +54,11 @@ export class ReadyCheckController extends Controller {
     }
 
     async getReady(_: Request, res: Response<ReadyCheckSchema>): Promise<void> {
+        if (!this.frontendApiService.isCacheReady()) {
+            res.status(503).end();
+            return;
+        }
+
         if (this.config.checkDbOnReady && this.db) {
             try {
                 const timeoutMs = parseEnvVarNumber(

@@ -30,7 +30,7 @@
   "engines": {
     "node": ">=22"
   },
-  "license": "Apache-2.0",
+  "license": "AGPL-3.0-or-later",
   "exports": "./dist/lib/server-impl.js",
   "scripts": {
     "ci": "pnpm run lint:fix && pnpm run build:backend && pnpm run test --reporter=dot",

@@ -233,25 +233,37 @@ export default class ProjectService {
         query?: IProjectQuery & IProjectsQuery,
         userId?: number,
     ): Promise<ProjectForUi[]> {
-        const projects = await this.projectReadModel.getProjectsForAdminUi(
+        const allProjects = await this.projectReadModel.getProjectsForAdminUi(
             query,
             userId,
         );
 
+        let projects = allProjects;
         if (userId) {
             const projectAccess =
                 await this.privateProjectChecker.getUserAccessibleProjects(
                     userId,
                 );
 
-            if (projectAccess.mode === 'all') {
-                return projects;
-            } else {
-                return projects.filter((project) =>
+            if (projectAccess.mode !== 'all') {
+                projects = allProjects.filter((project) =>
                     projectAccess.projects.includes(project.id),
                 );
             }
         }
+
+        if (this.flagResolver.isEnabled('newProjectList')) {
+            //TODO: update project-schema when removing this flag
+            const projectIds = projects.map((p) => p.id);
+            const onboardingStatuses =
+                await this.onboardingReadModel.getOnboardingStatusesForProjects(
+                    projectIds,
+                );
+            for (const project of projects) {
+                project.onboardingStatus = onboardingStatuses.get(project.id);
+            }
+        }
+
         return projects;
     }
 

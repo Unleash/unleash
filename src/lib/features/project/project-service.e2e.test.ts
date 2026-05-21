@@ -121,19 +121,52 @@ test('should have default project', async () => {
     expect(project.id).toBe('default');
 });
 
-test('should list all projects', async () => {
-    const project = {
-        id: 'test-list',
-        name: 'New project',
-        description: 'Blah',
-        mode: 'open' as const,
-        defaultStickiness: 'default',
-    };
+describe('should list all projects', () => {
+    test('includes member count in the project payload', async () => {
+        const project = {
+            id: 'test-list',
+            name: 'New project',
+            description: 'Blah',
+            mode: 'open' as const,
+            defaultStickiness: 'default',
+        };
 
-    await projectService.createProject(project, user, auditUser);
-    const projects = await projectService.getProjects();
-    expect(projects).toHaveLength(2);
-    expect(projects.find((p) => p.name === project.name)?.memberCount).toBe(1);
+        await projectService.createProject(project, user, auditUser);
+        const projects = await projectService.getProjects();
+        expect(projects).toHaveLength(2);
+        expect(projects.find((p) => p.name === project.name)?.memberCount).toBe(
+            1,
+        );
+    });
+
+    test("includes onboarding status with 'newProjectList' flag enabled", async () => {
+        const flagEnabledConfig = createTestConfig({
+            getLogger,
+            experimental: { flags: { newProjectList: true } },
+        });
+        const projectServiceWithFlag = createProjectService(
+            db.rawDatabase,
+            flagEnabledConfig,
+        );
+
+        const project = {
+            id: 'onboarding-status',
+            name: 'Onboarding status project',
+            description: 'Blah',
+            mode: 'open' as const,
+            defaultStickiness: 'default',
+        };
+
+        await projectServiceWithFlag.createProject(project, user, auditUser);
+        const projects = await projectServiceWithFlag.getProjects();
+        const projectOnboardingStatus = projects.find(
+            (p) => p.id === project.id,
+        )?.onboardingStatus;
+
+        expect(projectOnboardingStatus).toMatchObject({
+            status: 'onboarding-started',
+        });
+    });
 });
 
 test('should create new project', async () => {

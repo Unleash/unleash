@@ -19,7 +19,6 @@ import Heart from 'assets/icons/heart.svg?react';
 import { formatAssetPath } from 'utils/formatPath.ts';
 import { SignupDialogComplete } from './SignupDialogComplete.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
-import { SIGNUP_DIALOG_ID } from 'utils/publicIds.ts';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -296,7 +295,7 @@ export const SignupDialog = () => {
     };
 
     return (
-        <StyledDialog open fullScreen id={SIGNUP_DIALOG_ID}>
+        <StyledDialog open fullScreen>
             <StyledAside>
                 <StyledBackgroundTexture
                     src={formatAssetPath(textureImage)}

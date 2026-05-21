@@ -15,9 +15,10 @@ import { useSearchHighlightContext } from 'component/common/Table/SearchHighligh
 import { ProjectMembers } from './ProjectCardFooter/ProjectMembers/ProjectMembers.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
-import type { ProjectSchema } from 'openapi';
 import { Truncator } from 'component/common/Truncator/Truncator.tsx';
 import { ProjectLastSeen } from './ProjectLastSeen/ProjectLastSeen.tsx';
+import { OnboardingStatusBadge } from './OnboardingStatusBadge/OnboardingStatusBadge.tsx';
+import type { ProjectListItem } from 'hooks/api/getters/useProjects/useProjects.ts';
 
 const StyledSubtitle = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
@@ -39,8 +40,11 @@ export const NewProjectCard = ({
     createdAt,
     lastUpdatedAt,
     lastReportedFlagUsage,
-}: ProjectSchema) => {
+    onboardingStatus,
+}: ProjectListItem) => {
     const { searchQuery } = useSearchHighlightContext();
+    const isOnboardingInProgress =
+        onboardingStatus && onboardingStatus?.status !== 'onboarded';
 
     return (
         <StyledNewProjectCard>
@@ -66,9 +70,15 @@ export const NewProjectCard = ({
                     <FavoriteAction id={id} isFavorite={favorite} />
                 </StyledProjectCardHeader>
                 <StyledProjectCardContent>
-                    <div data-loading>
-                        <ProjectLastSeen date={lastReportedFlagUsage} />
-                    </div>
+                    {isOnboardingInProgress ? (
+                        <OnboardingStatusBadge
+                            onboardingStatus={onboardingStatus}
+                        />
+                    ) : (
+                        <div data-loading>
+                            <ProjectLastSeen date={lastReportedFlagUsage} />
+                        </div>
+                    )}
                 </StyledProjectCardContent>
             </StyledProjectCardBody>
             <NewProjectCardFooter

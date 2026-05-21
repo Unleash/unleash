@@ -19,6 +19,7 @@ import { StickyProvider } from 'component/common/Sticky/StickyProvider';
 import { FeedbackProvider } from 'component/feedbackNew/FeedbackProvider';
 import { PlausibleProvider } from 'component/providers/PlausibleProvider/PlausibleProvider';
 import { LogRocketProvider } from 'component/providers/LogRocketProvider/LogRocketProvider';
+import { EventTrackerProvider } from 'component/providers/TrackerProvider/EventTrackerProvider';
 import { LayoutError } from './component/layout/Error/LayoutError.tsx';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useRecordUIErrorApi } from 'hooks/api/actions/useRecordUIErrorApi/useRecordUiErrorApi';
@@ -54,27 +55,31 @@ const ApplicationRoot = () => {
                             <AnnouncerProvider>
                                 <PlausibleProvider>
                                     <LogRocketProvider>
-                                        <UnleashFlagProvider>
-                                            <ErrorBoundary
-                                                FallbackComponent={LayoutError}
-                                                onError={sendErrorToApi}
-                                            >
-                                                <FeedbackProvider>
-                                                    <FeedbackCESProvider>
-                                                        <StickyProvider>
-                                                            <HighlightProvider>
-                                                                <WelcomeDialogProvider>
-                                                                    <InstanceStatus>
-                                                                        <ScrollTop />
-                                                                        <App />
-                                                                    </InstanceStatus>
-                                                                </WelcomeDialogProvider>
-                                                            </HighlightProvider>
-                                                        </StickyProvider>
-                                                    </FeedbackCESProvider>
-                                                </FeedbackProvider>
-                                            </ErrorBoundary>
-                                        </UnleashFlagProvider>
+                                        <EventTrackerProvider>
+                                            <UnleashFlagProvider>
+                                                <ErrorBoundary
+                                                    FallbackComponent={
+                                                        LayoutError
+                                                    }
+                                                    onError={sendErrorToApi}
+                                                >
+                                                    <FeedbackProvider>
+                                                        <FeedbackCESProvider>
+                                                            <StickyProvider>
+                                                                <HighlightProvider>
+                                                                    <WelcomeDialogProvider>
+                                                                        <InstanceStatus>
+                                                                            <ScrollTop />
+                                                                            <App />
+                                                                        </InstanceStatus>
+                                                                    </WelcomeDialogProvider>
+                                                                </HighlightProvider>
+                                                            </StickyProvider>
+                                                        </FeedbackCESProvider>
+                                                    </FeedbackProvider>
+                                                </ErrorBoundary>
+                                            </UnleashFlagProvider>
+                                        </EventTrackerProvider>
                                     </LogRocketProvider>
                                 </PlausibleProvider>
                             </AnnouncerProvider>

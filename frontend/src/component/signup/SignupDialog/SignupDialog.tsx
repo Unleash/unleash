@@ -18,7 +18,7 @@ import textureImage from 'assets/img/texture-signup.png';
 import Heart from 'assets/icons/heart.svg?react';
 import { formatAssetPath } from 'utils/formatPath.ts';
 import { SignupDialogComplete } from './SignupDialogComplete.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
+import { useEventTracker } from 'hooks/useEventTracker.ts';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -215,7 +215,7 @@ const SIGNUP_STEPS: SignupStep[] = [
 ];
 
 export const SignupDialog = () => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { setToastApiError } = useToast();
     const { signupData, signupRequired, refetch } = useSignup();
     const { submitSignupData } = useSignupApi();
@@ -284,11 +284,7 @@ export const SignupDialog = () => {
             setToastApiError(error);
             setError(error);
 
-            trackEvent('signup-dialog-error', {
-                props: {
-                    error,
-                },
-            });
+            trackEvent('signup-dialog-error', { props: { error } });
         } finally {
             setIsSubmitting(false);
         }

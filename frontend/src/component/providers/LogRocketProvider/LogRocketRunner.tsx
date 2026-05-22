@@ -17,6 +17,9 @@ const LogRocketRunner = ({ appId, clientId, userId }: Props) => {
                     inputSanitizer: 'lipsum',
                 },
                 shouldCaptureIP: false,
+                browser: {
+                    urlSanitizer: (url) => scrubUrl(url),
+                },
                 network: {
                     requestSanitizer: ({ reqId, method, url }) => ({
                         reqId,

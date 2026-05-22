@@ -12,7 +12,6 @@ import type {
 } from 'interfaces/permissions';
 import type { IRole } from 'interfaces/role';
 import type { IGroup } from 'interfaces/group';
-import { useGroup } from 'hooks/api/getters/useGroup/useGroup';
 
 export type IAccessOverviewPermissionCategory = Omit<
     IPermissionCategory,
@@ -20,20 +19,6 @@ export type IAccessOverviewPermissionCategory = Omit<
 > & {
     permissions: IAccessOverviewPermission[];
 };
-
-const StyledDescription = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'tooltip',
-})<{ tooltip?: boolean }>(({ theme, tooltip }) => ({
-    width: '100%',
-    maxWidth: theme.spacing(50),
-    padding: tooltip ? theme.spacing(1) : theme.spacing(3),
-    backgroundColor: tooltip
-        ? theme.palette.background.paper
-        : theme.palette.neutral.light,
-    color: theme.palette.text.secondary,
-    fontSize: theme.fontSizes.smallBody,
-    borderRadius: tooltip ? 0 : theme.shape.borderRadiusMedium,
-}));
 
 const StyledSupervisedUserCircle = styled(SupervisedUserCircle)(
     ({ theme }) => ({
@@ -48,12 +33,26 @@ const StyledRoleHeader = styled('p')(({ theme }) => ({
     color: theme.palette.text.primary,
     fontSize: theme.fontSizes.bodySize,
     fontWeight: theme.fontWeight.bold,
+    margin: 0,
+}));
+
+const StyledRoleSource = styled('span')(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
+    color: theme.palette.text.secondary,
+    paddingLeft: theme.spacing(3),
+}));
+
+const StyledRoleItem = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(0.25),
+    padding: theme.spacing(0.5, 0),
 }));
 
 const StyledRoleDescriptions = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(0.5),
+    gap: theme.spacing(1),
     '& > *:not(:last-child)': {
         borderBottom: `1px solid ${theme.palette.divider}`,
         paddingBottom: theme.spacing(1),
@@ -154,14 +153,13 @@ export const NewAccessOverviewList = ({
 const RoleDescription = ({
     roleId,
     permission,
-    groupId,
+    sourceLabel,
 }: {
     roleId: number;
     permission: string;
-    groupId?: number;
+    sourceLabel: string;
 }) => {
     const { role } = useRole(roleId.toString());
-    const { group } = groupId ? useGroup(groupId) : { group: undefined };
     if (!role) return null;
     const { name, permissions } = role;
     if (
@@ -172,13 +170,13 @@ const RoleDescription = ({
         return null;
 
     return (
-        <StyledDescription>
+        <StyledRoleItem>
             <StyledRoleHeader>
                 <StyledSupervisedUserCircle color='disabled' />
                 {name}
-                {group && `-${group.name}`}
             </StyledRoleHeader>
-        </StyledDescription>
+            <StyledRoleSource>{sourceLabel}</StyledRoleSource>
+        </StyledRoleItem>
     );
 };
 
@@ -206,6 +204,7 @@ const PermissionStatus = ({
                                 key={rootRole?.id}
                                 permission={permission}
                                 roleId={rootRole?.id}
+                                sourceLabel='Via instance role'
                             />
                         )}
                         {roles?.map((roleId) => (
@@ -213,6 +212,7 @@ const PermissionStatus = ({
                                 key={roleId}
                                 permission={permission}
                                 roleId={roleId}
+                                sourceLabel='Directly assigned to user on the project'
                             />
                         ))}
                         {groups
@@ -222,7 +222,7 @@ const PermissionStatus = ({
                                     key={group.id}
                                     permission={permission}
                                     roleId={group.rootRole!}
-                                    groupId={group.id}
+                                    sourceLabel={`As a member of group "${group.name}"`}
                                 />
                             ))}
                     </StyledRoleDescriptions>

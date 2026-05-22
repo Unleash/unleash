@@ -10,6 +10,7 @@ const StyledEnvAccessHeader = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
     fontWeight: 'bold',
     fontSize: theme.typography.body2.fontSize,
+    backgroundColor: theme.palette.background.elevation1,
     borderTop: `1px solid ${theme.palette.divider}`,
     borderBottom: `1px solid ${theme.palette.divider}`,
 }));
@@ -31,6 +32,9 @@ const StyledEnvTable = styled('table')(({ theme }) => ({
     '& th:not(:first-of-type)': {
         textAlign: 'center',
         minWidth: theme.spacing(12),
+    },
+    '& td:first-of-type': {
+        paddingLeft: theme.spacing(4),
     },
     '& td:not(:first-of-type)': {
         textAlign: 'center',

@@ -28,7 +28,16 @@ export const ProjectMenuItem = ({
     return (
         <MenuItem {...props} value={project.id}>
             <Checkbox checked={selected} size='small' />
-            <ListItemText primary={project.name} />
+            <ListItemText
+                primary={project.name}
+                sx={{
+                    '& .MuiListItemText-primary': {
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                    },
+                }}
+            />
         </MenuItem>
     );
 };

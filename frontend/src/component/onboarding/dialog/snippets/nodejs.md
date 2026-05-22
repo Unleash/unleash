@@ -16,7 +16,11 @@ const unleash = initialize({
 });
 
 setInterval(() => {
-  console.log('Is enabled', unleash.isEnabled('<YOUR_FLAG>'));
+  if (unleash.isEnabled('<YOUR_FLAG>')) {
+    console.log('Toggle enabled');
+  } else {
+    console.log('Toggle disabled');
+  }
 }, 1000);
 ```
 
@@ -25,10 +29,20 @@ setInterval(() => {
 const { initialize } = require('unleash-client');
 
 const unleash = initialize({
-    url: '<YOUR_API_URL>',
-    appName: 'unleash-onboarding-node',
-    customHeaders: { Authorization: process.env.UNLEASH_API_KEY  },
+  url: '<YOUR_API_URL>',
+  appName: 'unleash-onboarding-node',
+  customHeaders: { Authorization: process.env.UNLEASH_API_KEY },
 });
+
+unleash.on('synchronized', () => {
+  if (unleash.isEnabled('<YOUR_FLAG>')) {
+    console.log('Toggle enabled');
+  } else {
+    console.log('Toggle disabled');
+  }
+});
+unleash.on('error', console.error);
+unleash.on('warn', console.warn);
 ```
 
 ---

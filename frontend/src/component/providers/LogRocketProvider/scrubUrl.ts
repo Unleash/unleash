@@ -15,19 +15,24 @@ export const scrubUrl = (url: string): string => {
     const cached = cache.get(url);
     if (cached !== undefined) return cached;
 
-    const { pathname, search } = new URL(url, 'http://x');
+    // Collapse double slashes in path (e.g. /projects//features//copy) to avoid
+    // a browser URL constructor warning. Use a lookbehind to preserve :// in absolute URLs.
+    const parsed = new URL(url.replace(/(?<!:)\/\//g, '/'), 'http://x');
 
-    const segments = pathname.split('/').filter(Boolean);
+    const isAbsolute = /^https?:\/\//i.test(url);
+    const origin = isAbsolute ? `${parsed.protocol}//${parsed.host}` : '';
+
+    const segments = parsed.pathname.split('/').filter(Boolean);
     const scrubbedPath = segments.map((segment, i) =>
         i < 3 ? segment : mask(segment),
     );
     const path = scrubbedPath.length > 0 ? `/${scrubbedPath.join('/')}` : '/';
 
-    if (!search) return setCached(url, path);
+    if (!parsed.search) return setCached(url, `${origin}${path}`);
 
-    const params = new URLSearchParams(search);
+    const params = new URLSearchParams(parsed.search);
     const scrubbed = new URLSearchParams(
         [...params].map(([k, v]) => [k, mask(v)]),
     );
-    return setCached(url, `${path}?${scrubbed.toString()}`);
+    return setCached(url, `${origin}${path}?${scrubbed.toString()}`);
 };

@@ -33,12 +33,6 @@ describe('scrubUrl', () => {
         expect(scrubUrl('/api/admin/features')).toBe('/api/admin/features');
     });
 
-    it('normalizes embedded double slashes without emitting a browser warning', () => {
-        expect(scrubUrl('/projects//features//copy')).toBe(
-            '/projects/features/copy',
-        );
-    });
-
     it('respects custom depth parameter', () => {
         // depth=2: keep 'api' and 'admin', mask everything after
         expect(

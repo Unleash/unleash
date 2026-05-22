@@ -1,7 +1,5 @@
 const mask = (s: string) => '*'.repeat(s.length);
 
-const DOUBLE_SLASH_RE = /(?<!:)\/\//g;
-
 const MAX_CACHE = 300;
 const cache = new Map<string, string>();
 
@@ -13,16 +11,16 @@ const setCached = (key: string, result: string): string => {
     return result;
 };
 
+const ABSOLUTE_URL_RE = /^https?:\/\//i;
+
 export const scrubUrl = (url: string, depth = 3): string => {
     const cacheKey = `${depth}:${url}`;
     const cached = cache.get(cacheKey);
     if (cached !== undefined) return cached;
 
-    // Collapse double slashes in path (e.g. /projects//features//copy) to avoid
-    // a browser URL constructor warning. Use a lookbehind to preserve :// in absolute URLs.
-    const parsed = new URL(url.replace(DOUBLE_SLASH_RE, '/'), 'http://x');
+    const parsed = new URL(url, 'http://x');
 
-    const isAbsolute = /^https?:\/\//i.test(url);
+    const isAbsolute = ABSOLUTE_URL_RE.test(url);
     const origin = isAbsolute ? `${parsed.protocol}//${parsed.host}` : '';
 
     const segments = parsed.pathname.split('/').filter(Boolean);
@@ -34,10 +32,10 @@ export const scrubUrl = (url: string, depth = 3): string => {
     if (!parsed.search) return setCached(cacheKey, `${origin}${path}`);
 
     const params = new URLSearchParams(parsed.search);
-    const scrubbed = new URLSearchParams(
+    const scrubbedParams = new URLSearchParams(
         [...params].map(([k, v]) => [k, mask(v)]),
     );
-    return setCached(cacheKey, `${origin}${path}?${scrubbed.toString()}`);
+    return setCached(cacheKey, `${origin}${path}?${scrubbedParams.toString()}`);
 };
 
 const STATIC_ASSET_EXT_RE =
@@ -52,7 +50,7 @@ const FONT_SERVICE_DOMAINS = new Set([
 
 export const isStaticAsset = (url: string): boolean => {
     if (STATIC_ASSET_EXT_RE.test(url)) return true;
-    const parsed = new URL(url.replace(DOUBLE_SLASH_RE, '/'), 'http://x');
+    const parsed = new URL(url, 'http://x');
     return (
         FONT_SERVICE_DOMAINS.has(parsed.hostname) ||
         STATIC_PATH_RE.test(parsed.pathname)

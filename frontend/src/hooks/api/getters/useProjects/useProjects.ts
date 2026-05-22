@@ -12,6 +12,7 @@ import type { OnboardingStatusSchema } from 'openapi';
 // and let the generated `ProjectSchema` type carry the field.
 export type ProjectListItem = ProjectSchema & {
     onboardingStatus?: OnboardingStatusSchema;
+    cleanupCount?: number;
 };
 
 const useProjects = (options: SWRConfiguration & GetProjectsParams = {}) => {

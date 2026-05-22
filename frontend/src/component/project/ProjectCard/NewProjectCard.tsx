@@ -32,6 +32,7 @@ const StyledNewProjectCard = styled(StyledProjectCard)(({ theme }) => ({
 export const NewProjectCard = ({
     name,
     featureCount,
+    cleanupCount,
     memberCount = 0,
     id,
     mode,
@@ -61,9 +62,14 @@ export const NewProjectCard = ({
                             </Highlighter>
                         </Truncator>
                         <StyledSubtitle data-loading>
-                            {featureCount === 1
-                                ? `${featureCount} flag`
-                                : `${featureCount} flags`}
+                            <span>
+                                {featureCount === 1
+                                    ? `${featureCount} flag`
+                                    : `${featureCount} flags`}
+                            </span>
+                            {cleanupCount !== undefined && cleanupCount > 0 && (
+                                <span> &middot; {cleanupCount} in cleanup</span>
+                            )}
                         </StyledSubtitle>
                     </StyledProjectCardTitleContainer>
                     <ProjectModeBadge mode={mode} />

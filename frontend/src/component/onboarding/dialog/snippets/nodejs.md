@@ -41,6 +41,8 @@ unleash.on('synchronized', () => {
     console.log('Toggle disabled');
   }
 });
+unleash.on('error', console.error);
+unleash.on('warn', console.warn);
 ```
 
 ---

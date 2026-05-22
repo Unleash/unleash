@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import LogRocket from 'logrocket';
-import { scrubUrl } from './scrubUrl';
+import { scrubUrl, scrubBrowserUrl, isStaticAsset } from './scrubUrl';
 
 type Props = {
     appId: string;
@@ -18,13 +18,13 @@ const LogRocketRunner = ({ appId, clientId, userId }: Props) => {
                 },
                 shouldCaptureIP: false,
                 browser: {
-                    urlSanitizer: (url) => scrubUrl(url),
+                    urlSanitizer: (url) => scrubBrowserUrl(url),
                 },
                 network: {
                     requestSanitizer: ({ reqId, method, url }) => ({
                         reqId,
                         method,
-                        url: scrubUrl(url),
+                        url: isStaticAsset(url) ? url : scrubUrl(url),
                         headers: {},
                         body: undefined,
                     }),

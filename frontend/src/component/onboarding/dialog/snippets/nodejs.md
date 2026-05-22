@@ -8,19 +8,19 @@ npm install unleash-client
 const { initialize } = require('unleash-client');
 
 const unleash = initialize({
-  url: '<YOUR_API_URL>',
-  appName: 'unleash-onboarding-node',
-  customHeaders: {
-    Authorization: '<YOUR_API_TOKEN>' // in production use environment variable
-  },
+    url: '<YOUR_API_URL>',
+    appName: 'unleash-onboarding-node',
+    customHeaders: {
+        Authorization: '<YOUR_API_TOKEN>' // in production use environment variable
+    },
 });
 
 setInterval(() => {
-  if (unleash.isEnabled('<YOUR_FLAG>')) {
-    console.log('Toggle enabled');
-  } else {
-    console.log('Toggle disabled');
-  }
+    if (unleash.isEnabled('<YOUR_FLAG>')) {
+        console.log('<YOUR_FLAG> is enabled');
+    } else {
+        console.log('<YOUR_FLAG> is disabled');
+    }
 }, 1000);
 ```
 
@@ -29,17 +29,17 @@ setInterval(() => {
 const { initialize } = require('unleash-client');
 
 const unleash = initialize({
-  url: '<YOUR_API_URL>',
-  appName: 'unleash-onboarding-node',
-  customHeaders: { Authorization: process.env.UNLEASH_API_KEY },
+    url: '<YOUR_API_URL>',
+    appName: 'unleash-onboarding-node',
+    customHeaders: { Authorization: process.env.UNLEASH_API_KEY },
 });
 
 unleash.on('synchronized', () => {
-  if (unleash.isEnabled('<YOUR_FLAG>')) {
-    console.log('Toggle enabled');
-  } else {
-    console.log('Toggle disabled');
-  }
+    if (unleash.isEnabled('<YOUR_FLAG>')) {
+        console.log('<YOUR_FLAG> is enabled');
+    } else {
+        console.log('<YOUR_FLAG> is disabled');
+    }
 });
 unleash.on('error', console.error);
 unleash.on('warn', console.warn);

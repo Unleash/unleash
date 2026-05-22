@@ -36,7 +36,11 @@ export const useFeature = (
     }, [mutate]);
 
     return {
-        feature: data?.body || emptyFeature,
+        feature: data?.body || {
+            ...emptyFeature,
+            project: projectId,
+            name: featureId,
+        },
         refetchFeature,
         loading: !error && !data,
         status: data?.status,

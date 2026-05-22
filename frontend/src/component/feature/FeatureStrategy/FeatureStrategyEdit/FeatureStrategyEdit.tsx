@@ -127,9 +127,13 @@ export const FeatureStrategyEdit = () => {
     const featureName = useOptionalPathParam('featureId');
     const { setPreviousTitle } = useTitleTracking();
 
-    const { feature, refetchFeature } = useFeature(projectId, featureId);
+    const {
+        feature,
+        refetchFeature,
+        loading: featureLoading,
+    } = useFeature(projectId, featureId);
 
-    const ref = useRef<IFeatureToggle>(feature);
+    const cacheInitialized = useRef(false);
 
     const { data, staleDataNotification, forceRefreshCache } =
         useCollaborateData<IFeatureToggle>(
@@ -148,11 +152,11 @@ export const FeatureStrategyEdit = () => {
         );
 
     useEffect(() => {
-        if (ref.current.name === '' && feature.name) {
+        if (!featureLoading && !cacheInitialized.current) {
+            cacheInitialized.current = true;
             forceRefreshCache(feature);
-            ref.current = feature;
         }
-    }, [feature]);
+    }, [featureLoading]);
 
     const { trackEvent } = usePlausibleTracker();
     const { changeRequests: scheduledChangeRequestThatUseStrategy } =

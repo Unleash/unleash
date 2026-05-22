@@ -74,13 +74,17 @@ export const FeatureStrategyCreate = () => {
     const { unleashUrl } = uiConfig;
     const navigate = useNavigate();
 
-    const { feature, refetchFeature } = useFeature(projectId, featureId);
+    const {
+        feature,
+        refetchFeature,
+        loading: featureLoading,
+    } = useFeature(projectId, featureId);
     const featureEnvironment = feature?.environments.find(
         (featureEnvironment) => featureEnvironment.name === environmentId,
     );
     const strategyCount = featureEnvironment?.strategies.length || 0;
     const { limit, limitReached } = useStrategyLimit(strategyCount);
-    const ref = useRef<IFeatureToggle>(feature);
+    const cacheInitialized = useRef(false);
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
@@ -103,11 +107,11 @@ export const FeatureStrategyCreate = () => {
         );
 
     useEffect(() => {
-        if (ref.current.name === '' && feature.name) {
+        if (!featureLoading && !cacheInitialized.current) {
+            cacheInitialized.current = true;
             forceRefreshCache(feature);
-            ref.current = feature;
         }
-    }, [feature.name]);
+    }, [featureLoading]);
 
     useEffect(() => {
         if (shouldUseDefaultStrategy) {

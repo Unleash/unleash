@@ -285,4 +285,14 @@ describe('NewFeatureStrategyCreate', () => {
         expect(seconAddConstraintEl).toBeInTheDocument();
         expect(screen.queryByText('appName')).not.toBeInTheDocument();
     });
+
+    test('should not show stale data notification when feature loads', async () => {
+        setupComponent();
+
+        await screen.findByText('Save strategy');
+
+        expect(
+            screen.queryByText('Your data is stale'),
+        ).not.toBeInTheDocument();
+    });
 });

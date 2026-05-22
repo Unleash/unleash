@@ -221,7 +221,7 @@ export const AdminNavigationItems = ({
 
     const items = Object.values(menuStructure);
     return (
-        <List>
+        <List data-public>
             {items.map((item) => {
                 if (item.items) {
                     const isActiveMenu = item.items.find((itm) =>

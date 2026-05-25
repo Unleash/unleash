@@ -41,10 +41,10 @@ unleash.on('error', console.error);
 unleash.on('warn', console.warn);
 
 setInterval(() => {
-    if (unleash.isEnabled(flag)) {
-        console.log(`${flag} is enabled`);
+    if (unleash.isEnabled('<YOUR_FLAG>')) {
+        console.log('<YOUR_FLAG> is enabled');
     } else {
-        console.log(`${flag} is disabled`);
+        console.log('<YOUR_FLAG> is disabled');
     }
 }, 1000);
 ```

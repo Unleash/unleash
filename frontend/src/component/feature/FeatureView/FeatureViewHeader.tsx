@@ -152,53 +152,57 @@ const HeaderActionsComponent = ({
     onFavorite,
     openStaleDialog,
     openDeleteDialog,
-}: HeaderActionsProps) => (
-    <HeaderActions showOnNarrowScreens={showOnNarrowScreens}>
-        <IconButtonWithTooltip
-            label='Favorite this feature flag'
-            onClick={onFavorite}
-            data-loading
-        >
-            {feature.favorite ? <Star /> : <StarBorder />}
-        </IconButtonWithTooltip>
-        <PermissionIconButton
-            permission={CREATE_FEATURE}
-            projectId={feature.project}
-            data-loading
-            component={Link}
-            nativeButton={false}
-            to={`/projects/${feature.project}/features/${feature.name}/copy`}
-            tooltipProps={{
-                title: 'Clone',
-            }}
-        >
-            <LibraryAddOutlined />
-        </PermissionIconButton>
+}: HeaderActionsProps) => {
+    const projectId = useRequiredPathParam('projectId');
+    const featureId = useRequiredPathParam('featureId');
+    return (
+        <HeaderActions showOnNarrowScreens={showOnNarrowScreens}>
+            <IconButtonWithTooltip
+                label='Favorite this feature flag'
+                onClick={onFavorite}
+                data-loading
+            >
+                {feature.favorite ? <Star /> : <StarBorder />}
+            </IconButtonWithTooltip>
+            <PermissionIconButton
+                permission={CREATE_FEATURE}
+                projectId={projectId}
+                data-loading
+                component={Link}
+                nativeButton={false}
+                to={`/projects/${projectId}/features/${featureId}/copy`}
+                tooltipProps={{
+                    title: 'Clone',
+                }}
+            >
+                <LibraryAddOutlined />
+            </PermissionIconButton>
 
-        <PermissionIconButton
-            permission={DELETE_FEATURE}
-            projectId={feature.project}
-            tooltipProps={{
-                title: 'Archive feature flag',
-            }}
-            data-loading
-            onClick={openDeleteDialog}
-        >
-            <ArchiveOutlined />
-        </PermissionIconButton>
-        <PermissionIconButton
-            onClick={openStaleDialog}
-            permission={UPDATE_FEATURE}
-            projectId={feature.project}
-            tooltipProps={{
-                title: 'Toggle stale state',
-            }}
-            data-loading
-        >
-            <WatchLaterOutlined />
-        </PermissionIconButton>
-    </HeaderActions>
-);
+            <PermissionIconButton
+                permission={DELETE_FEATURE}
+                projectId={projectId}
+                tooltipProps={{
+                    title: 'Archive feature flag',
+                }}
+                data-loading
+                onClick={openDeleteDialog}
+            >
+                <ArchiveOutlined />
+            </PermissionIconButton>
+            <PermissionIconButton
+                onClick={openStaleDialog}
+                permission={UPDATE_FEATURE}
+                projectId={projectId}
+                tooltipProps={{
+                    title: 'Toggle stale state',
+                }}
+                data-loading
+            >
+                <WatchLaterOutlined />
+            </PermissionIconButton>
+        </HeaderActions>
+    );
+};
 
 type Props = {
     feature: IFeatureToggle;

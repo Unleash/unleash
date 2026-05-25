@@ -35,14 +35,18 @@ const unleash = initialize({
 });
 
 unleash.on('synchronized', () => {
-    if (unleash.isEnabled('<YOUR_FLAG>')) {
-        console.log('<YOUR_FLAG> is enabled');
-    } else {
-        console.log('<YOUR_FLAG> is disabled');
-    }
+    console.log('Unleash synchronized');
 });
 unleash.on('error', console.error);
 unleash.on('warn', console.warn);
+
+setInterval(() => {
+    if (unleash.isEnabled(flag)) {
+        console.log(`${flag} is enabled`);
+    } else {
+        console.log(`${flag} is disabled`);
+    }
+}, 1000);
 ```
 
 ---

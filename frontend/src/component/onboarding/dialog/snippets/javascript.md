@@ -15,13 +15,13 @@ const unleash = new UnleashClient({
 
 unleash.start();
 
-unleash.on('update', () => {
+setInterval(() => {
     if (unleash.isEnabled('<YOUR_FLAG>')) {
         console.log('<YOUR_FLAG> is enabled');
     } else {
         console.log('<YOUR_FLAG> is disabled');
     }
-});
+}, 1000);
 ```
 ---
 ```js
@@ -31,13 +31,13 @@ const unleash = new UnleashClient({
     appName: 'unleash-onboarding-javascript',
 });
 
-unleash.on('update', () => {
+setInterval(() => {
     if (unleash.isEnabled('<YOUR_FLAG>')) {
         console.log('<YOUR_FLAG> is enabled');
     } else {
         console.log('<YOUR_FLAG> is disabled');
     }
-});
+}, 1000);
 
 unleash.start();
 ```

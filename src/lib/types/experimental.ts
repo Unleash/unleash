@@ -10,27 +10,27 @@ import type { Context } from '../features/playground/feature-evaluator/index.js'
 export type IFlagKey =
     | 'accessLogs'
     | 'anonymiseEventLog'
-    | 'encryptEmails'
+    | 'encryptEmails' // should be moved to enterprise
     | 'enableLicense'
     | 'responseTimeWithAppNameKillSwitch'
     | 'maintenanceMode'
     | 'messageBanner'
     | 'strictSchemaValidation'
-    | 'personalAccessTokensKillSwitch'
+    | 'personalAccessTokensKillSwitch' // should be completed
     | 'migrationLock'
     | 'demo'
     | 'interactiveDemoKillSwitch'
     | 'advancedPlayground'
     | 'filterInvalidClientMetrics'
     | 'disableMetrics'
-    | 'signals'
-    | 'automatedActions'
+    | 'signals' // should be moved to enterprise
+    | 'automatedActions' // should be moved to enterprise
     | 'celebrateUnleash'
     | 'feedbackPosting'
     | 'extendedUsageMetrics'
     | 'feedbackComments'
-    | 'killScheduledChangeRequestCache'
-    | 'estimateTrafficDataCost'
+    | 'killScheduledChangeRequestCache' // should be moved to enterprise
+    | 'estimateTrafficDataCost' // should be moved to enterprise
     | 'useMemoizedActiveTokens'
     | 'queryMissingTokens'
     | 'disableUpdateMaxRevisionId'
@@ -48,33 +48,32 @@ export type IFlagKey =
     | 'productivityReportUnsubscribers'
     | 'showUserDeviceCount'
     | 'memorizeStats'
-    | 'streaming'
-    | 'denyStreamingForNonEdge'
-    | 'deltaApi'
-    | 'deltaDiff'
+    | 'denyStreamingForNonEdge' // should be moved to enterprise
+    | 'deltaApi' // should be moved to enterprise
+    | 'deltaDiff' // should be moved to enterprise
     | 'uniqueSdkTracking'
-    | 'consumptionModel'
-    | 'consumptionModelUI'
+    | 'consumptionModel' // should be moved to enterprise
+    | 'consumptionModelUI' // should be moved to enterprise
     | 'customMetrics'
-    | 'impactMetrics'
-    | 'registerImpactMetrics'
+    | 'impactMetrics' // should be moved to enterprise
+    | 'registerImpactMetrics' // should be moved to enterprise
     | 'etagByEnv'
-    | 'fetchMode'
+    | 'fetchMode' // should be moved to enterprise
     | 'optimizeLifecycle'
-    | 'milestoneProgression'
+    | 'milestoneProgression' // should be moved to enterprise
     | 'plausibleMetrics'
-    | 'safeguards'
+    | 'safeguards' // should be moved to enterprise
     | 'newInUnleash'
-    | 'oidcPkceSupport'
-    | 'remoteMcpServer'
+    | 'oidcPkceSupport' // should be moved to enterprise
+    | 'remoteMcpServer' // should be moved to enterprise
     | 'regexConstraintOperator'
-    | 'enterpriseEdgeTokensList'
-    | 'impactMetricsFlagPage'
+    | 'enterpriseEdgeTokensList' // should be moved to enterprise
+    | 'impactMetricsFlagPage' // should be moved to enterprise
     | 'userTokenWithClientApiLoggingKillSwitch'
     | 'onlyFeatureTokensWithFeatureAPIs'
     | 'onboardingProjectSetupNewSteps'
     | 'multiMetricChart'
-    | 'elasticEventSync'
+    | 'elasticEventSync' // should be moved to enterprise
     | 'accessOverviewRework'
     | 'onboardingConnectSDKNewDialog'
     | 'logRocketEnabled'
@@ -265,13 +264,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_REGISTER_IMPACT_METRICS,
         false,
     ),
-    streaming: {
-        name: 'disabled',
-        enabled: parseEnvVarBoolean(
-            process.env.UNLEASH_EXPERIMENTAL_STREAMING,
-            false,
-        ),
-    },
     denyStreamingForNonEdge: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_STREAMING_DENY_STREAMING_FOR_NON_EDGE,
         false,

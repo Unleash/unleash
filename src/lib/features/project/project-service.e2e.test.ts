@@ -214,6 +214,55 @@ describe('should list all projects', () => {
             expect(projectCleanupCount).toBe(1);
         });
     });
+
+    test("includes membersPreview with 'newProjectList' flag enabled", async () => {
+        const flagEnabledConfig = createTestConfig({
+            getLogger,
+            experimental: { flags: { newProjectList: true } },
+        });
+        const projectServiceWithFlag = createProjectService(
+            db.rawDatabase,
+            flagEnabledConfig,
+        );
+
+        const project = {
+            id: 'members-preview',
+            name: 'Members preview project',
+            description: 'Blah',
+            mode: 'open' as const,
+            defaultStickiness: 'default',
+        };
+
+        await projectServiceWithFlag.createProject(project, user, auditUser);
+
+        const memberUser = await stores.userStore.insert({
+            name: 'Member User',
+            username: 'preview-member',
+            email: 'preview-member@example.com',
+        });
+        const memberRoleId = (
+            await stores.roleStore.getRoleByName(RoleName.MEMBER)
+        ).id;
+        await stores.accessStore.addUserToRole(
+            memberUser.id,
+            memberRoleId,
+            project.id,
+        );
+
+        const projects = await projectServiceWithFlag.getProjects();
+        const projectMembersPreview = projects.find(
+            (p) => p.id === project.id,
+        )?.membersPreview;
+
+        expect(projectMembersPreview).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    name: 'Member User',
+                    email: 'preview-member@example.com',
+                }),
+            ]),
+        );
+    });
 });
 
 test('should create new project', async () => {

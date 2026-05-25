@@ -48,6 +48,7 @@ import { FakeInactiveUsersStore } from '../../lib/users/inactive/fakes/fake-inac
 import { FakeTrafficDataUsageStore } from '../../lib/features/traffic-data-usage/fake-traffic-data-usage-store.js';
 import { FakeSegmentReadModel } from '../../lib/features/segment/fake-segment-read-model.js';
 import { FakeProjectOwnersReadModel } from '../../lib/features/project/fake-project-owners-read-model.js';
+import { FakeProjectMembersReadModel } from '../../lib/features/project/fake-project-members-read-model.js';
 import { FakeFeatureLifecycleStore } from '../../lib/features/feature-lifecycle/fake-feature-lifecycle-store.js';
 import { FakeProjectFlagCreatorsReadModel } from '../../lib/features/project/fake-project-flag-creators-read-model.js';
 import { FakeFeatureStrategiesReadModel } from '../../lib/features/feature-toggle/fake-feature-strategies-read-model.js';
@@ -124,6 +125,7 @@ const createStores: () => IUnleashStores = () => {
         trafficDataUsageStore: new FakeTrafficDataUsageStore(),
         segmentReadModel: new FakeSegmentReadModel(),
         projectOwnersReadModel: new FakeProjectOwnersReadModel(),
+        projectMembersReadModel: new FakeProjectMembersReadModel(),
         projectFlagCreatorsReadModel: new FakeProjectFlagCreatorsReadModel(),
         featureLifecycleStore: new FakeFeatureLifecycleStore(),
         featureStrategiesReadModel: new FakeFeatureStrategiesReadModel(),

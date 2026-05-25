@@ -10,6 +10,7 @@ import type { IProjectQuery, IProjectsQuery } from './project-store-type.js';
 import metricsHelper from '../../util/metrics-helper.js';
 import type EventEmitter from 'events';
 import type { IProjectMembersCount } from './project-store.js';
+import { ProjectMembersReadModel } from './project-members-read-model.js';
 type Raw<T = any> = Knex.Raw<T>;
 
 const TABLE = 'projects';
@@ -234,22 +235,7 @@ export class ProjectReadModel implements IProjectReadModel {
 
     private async getMembersCount(): Promise<IProjectMembersCount[]> {
         const memberTimer = this.timer('getMembersCount');
-        const membersQuery = this.db
-            .select('user_id', 'project')
-            .from('role_user')
-            .leftJoin('roles', 'role_user.role_id', 'roles.id')
-            .where((builder) => builder.whereNot('type', 'root'))
-            .union((queryBuilder) => {
-                queryBuilder
-                    .select('user_id', 'project')
-                    .from('group_role')
-                    .leftJoin(
-                        'group_user',
-                        'group_user.group_id',
-                        'group_role.group_id',
-                    );
-            })
-            .as('query');
+        const membersQuery = ProjectMembersReadModel.membersUnion(this.db);
 
         const members = await this.db
             .select('project')

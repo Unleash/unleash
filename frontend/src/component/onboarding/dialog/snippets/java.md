@@ -39,3 +39,13 @@ UnleashConfig config = UnleashConfig.builder()
 - [SDK repository with documentation](https://github.com/Unleash/unleash-client-java)
 - [Java SDK example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/Java)
 - [How to Implement Feature Flags in Java](https://docs.getunleash.io/feature-flag-tutorials/java)
+
+---
+
+```java
+if (unleash.isEnabled("<YOUR_FLAG>")) {
+    System.out.println("<YOUR_FLAG> is enabled");
+} else {
+    System.out.println("<YOUR_FLAG> is disabled");
+}
+```

@@ -38,3 +38,13 @@ end
 - [SDK repository with documentation](https://github.com/Unleash/unleash-client-ruby)
 - [Ruby example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/Ruby)
 - [How to Implement Feature Flags in Ruby](https://docs.getunleash.io/feature-flag-tutorials/ruby)
+
+---
+
+```rb
+if @unleash.is_enabled?("<YOUR_FLAG>")
+    puts "<YOUR_FLAG> is enabled"
+else
+    puts "<YOUR_FLAG> is disabled"
+end
+```

@@ -51,3 +51,13 @@ var settings = new UnleashSettings()
 ---
 - [SDK repository with documentation](https://github.com/Unleash/unleash-client-dotnet)
 - [.NET/C# SDK example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/Csharp)
+
+---
+
+```csharp
+if (unleash.IsEnabled("<YOUR_FLAG>")) {
+    Console.WriteLine("<YOUR_FLAG> is enabled");
+} else {
+    Console.WriteLine("<YOUR_FLAG> is disabled");
+}
+```

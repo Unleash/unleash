@@ -45,3 +45,13 @@ unleash.start();
 ---
 - [SDK repository with documentation](https://github.com/Unleash/unleash-proxy-client-js)
 - [JavaScript SDK example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/JavaScript)
+
+---
+
+```js
+if (unleash.isEnabled('<YOUR_FLAG>')) {
+    console.log('<YOUR_FLAG> is enabled');
+} else {
+    console.log('<YOUR_FLAG> is disabled');
+}
+```

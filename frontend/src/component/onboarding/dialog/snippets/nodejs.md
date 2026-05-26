@@ -53,3 +53,13 @@ setInterval(() => {
 - [SDK repository with documentation](https://github.com/Unleash/unleash-client-node)
 - [Node.js SDK example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/Node.js)
 - [Node.js SDK tutorial](https://dev.to/reeshee/how-to-implement-feature-flags-in-nodejs-using-unleash-3907)
+
+---
+
+```js
+if (unleash.isEnabled('<YOUR_FLAG>')) {
+    console.log('<YOUR_FLAG> is enabled');
+} else {
+    console.log('<YOUR_FLAG> is disabled');
+}
+```

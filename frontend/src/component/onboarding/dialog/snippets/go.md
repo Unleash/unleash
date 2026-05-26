@@ -47,3 +47,13 @@ func init() {
 ---
 - [SDK repository with documentation](https://github.com/Unleash/unleash-client-go)
 - [Go SDK example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/Go)
+
+---
+
+```go
+if unleash.IsEnabled("<YOUR_FLAG>") {
+    fmt.Println("<YOUR_FLAG> is enabled")
+} else {
+    fmt.Println("<YOUR_FLAG> is disabled")
+}
+```

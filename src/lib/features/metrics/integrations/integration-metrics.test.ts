@@ -3,10 +3,10 @@ import noLogger from '../../../../test/fixtures/no-logger.js';
 import type { IAddonProviders } from '../../../addons/index.js';
 import type { IAddon } from '../../../types/stores/addon-store.js';
 import {
-    AUTH_PROVIDERS_CATALOG,
     collectConfiguredSamples,
     registerIntegrationMetrics,
 } from './integration-metrics.js';
+import { AUTH_PROVIDERS_CATALOG } from '../../../types/settings/auth-settings.js';
 
 beforeEach(() => {
     register.clear();

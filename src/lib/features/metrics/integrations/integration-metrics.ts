@@ -2,21 +2,7 @@ import { Counter, Gauge } from 'prom-client';
 import type { Logger, LogProvider } from '../../../logger.js';
 import type { IUnleashStores } from '../../../types/stores.js';
 import type { IAddonProviders } from '../../../addons/index.js';
-
-export const AUTH_PROVIDERS_CATALOG: ReadonlyArray<{
-    name: string;
-    configId: string;
-    deprecatedRemovalTarget?: string; // if set, the value is the planned removal release
-}> = [
-    { name: 'simple', configId: 'unleash.auth.simple' },
-    { name: 'oidc', configId: 'unleash.enterprise.auth.oidc' },
-    { name: 'saml', configId: 'unleash.enterprise.auth.saml' },
-    {
-        name: 'google',
-        configId: 'unleash.enterprise.auth.google',
-        deprecatedRemovalTarget: 'v8.0.0',
-    },
-];
+import { AUTH_PROVIDERS_CATALOG } from '../../../types/settings/auth-settings.js';
 
 export interface IntegrationMetricsOptions {
     /**

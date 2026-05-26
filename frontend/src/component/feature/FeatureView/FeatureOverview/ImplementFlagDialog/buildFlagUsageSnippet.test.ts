@@ -3,7 +3,7 @@ import { buildFlagUsageSnippet } from './buildFlagUsageSnippet.ts';
 import { codeRenderSnippets } from 'component/onboarding/dialog/CodeRenderer';
 
 describe('buildFlagUsageSnippet', () => {
-    it('extracts the code block from the last section of the snippet', () => {
+    it('extracts the code block from the third section of the snippet', () => {
         const raw = [
             '```sh',
             'npm install foo',
@@ -29,7 +29,7 @@ describe('buildFlagUsageSnippet', () => {
         );
     });
 
-    it('returns null when there are no code blocks', () => {
+    it('returns null when there is text in the snippet', () => {
         expect(buildFlagUsageSnippet('just prose, no fences', 'x')).toBeNull();
         expect(buildFlagUsageSnippet('', 'x')).toBeNull();
     });

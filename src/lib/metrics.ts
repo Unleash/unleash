@@ -43,6 +43,8 @@ import type { IClientMetricsEnv } from './features/metrics/client-metrics/client
 import { DbMetricsMonitor } from './metrics-gauge.js';
 import * as impactMetrics from './features/metrics/impact/define-impact-metrics.js';
 import HyperLogLog from 'hyperloglog-lite';
+import { getAddons } from './addons/index.js';
+import { registerIntegrationMetrics } from './features/metrics/integrations/integration-metrics.js';
 
 const DISTINCT_HLL_REGISTERS_EXPONENT = 14;
 
@@ -1220,6 +1222,32 @@ export function registerPrometheusMetrics(
     eventBus.on(events.ADDON_EVENTS_HANDLED, ({ result, destination }) => {
         addonEventsHandledCounter.increment({ result, destination });
     });
+
+    const addonProvidersForMetrics = getAddons({
+        getLogger: config.getLogger,
+        unleashUrl: config.server.unleashUrl,
+        flagResolver: config.flagResolver,
+        eventBus,
+    } as Parameters<typeof getAddons>[0]);
+
+    const integrationHandles = registerIntegrationMetrics({
+        addonProviders: addonProvidersForMetrics,
+        stores,
+        getLogger: config.getLogger,
+    });
+
+    eventBus.on(
+        events.AUTH_LOGIN_COMPLETED,
+        ({
+            provider,
+            outcome,
+        }: {
+            provider: string;
+            outcome: 'success' | 'failure';
+        }) => {
+            integrationHandles.authLoginTotal.inc({ provider, outcome });
+        },
+    );
 
     return {
         collectAggDbMetrics: dbMetrics.refreshMetrics,

@@ -10,6 +10,7 @@ type Props = {
     avatarLimit?: number;
     AvatarComponent?: AvatarComponentType;
     className?: string;
+    total?: number;
 };
 export const AvatarGroupFromOwners: React.FC<Props> = ({ users, ...props }) => {
     const { uiConfig } = useUiConfig();

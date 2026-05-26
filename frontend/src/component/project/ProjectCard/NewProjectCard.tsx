@@ -5,6 +5,7 @@ import {
     StyledProjectCardHeader,
     StyledProjectCardTitleContainer,
     StyledProjectCardContent,
+    StyledSubtitle,
 } from './ProjectCard.styles';
 import { NewProjectCardFooter } from './NewProjectCardFooter.tsx';
 import { ProjectModeBadge } from './ProjectModeBadge/ProjectModeBadge.tsx';
@@ -12,18 +13,12 @@ import { FavoriteAction } from './FavoriteAction/FavoriteAction.tsx';
 import { styled } from '@mui/material';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { ProjectMembers } from './ProjectCardFooter/ProjectMembers/ProjectMembers.tsx';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
 import { Truncator } from 'component/common/Truncator/Truncator.tsx';
 import { ProjectLastSeen } from './ProjectLastSeen/ProjectLastSeen.tsx';
 import { OnboardingStatusBadge } from './OnboardingStatusBadge/OnboardingStatusBadge.tsx';
 import type { ProjectListItem } from 'hooks/api/getters/useProjects/useProjects.ts';
-
-const StyledSubtitle = styled('span')(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    fontSize: theme.fontSizes.smallerBody,
-}));
+import { ProjectPeople } from './ProjectCardFooter/ProjectPeople/ProjectPeople.tsx';
+import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
 
 const StyledNewProjectCard = styled(StyledProjectCard)(({ theme }) => ({
     minHeight: theme.spacing(23),
@@ -88,14 +83,12 @@ export const NewProjectCard = ({
                 </StyledProjectCardContent>
             </StyledProjectCardBody>
             <NewProjectCardFooter
-                owners={owners}
                 lastUpdatedAt={lastUpdatedAt}
                 createdAt={createdAt}
             >
-                <ConditionallyRender
-                    condition={id !== DEFAULT_PROJECT_ID}
-                    show={<ProjectMembers count={memberCount} members={[]} />}
-                />
+                {id !== DEFAULT_PROJECT_ID && (
+                    <ProjectPeople owners={owners} total={memberCount} />
+                )}
             </NewProjectCardFooter>
         </StyledNewProjectCard>
     );

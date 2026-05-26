@@ -11,6 +11,7 @@ import {
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import FileCopy from '@mui/icons-material/FileCopy';
 import Info from '@mui/icons-material/Info';
+import CloseIcon from '@mui/icons-material/Close';
 import Loader from '../Loader/Loader.tsx';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
@@ -42,6 +43,7 @@ interface ICreateProps {
     showGuidance?: boolean;
     useFixedSidebar?: boolean;
     sidebarWidth?: string;
+    onClose?: () => void;
     children?: React.ReactNode;
 }
 
@@ -195,6 +197,7 @@ const StyledSidebar = styled('aside', {
         padding: theme.spacing(4),
         flexGrow: 0,
         flexShrink: 0,
+        position: 'relative',
         width: sidebarWidth || formTemplateSidebarWidth,
         [theme.breakpoints.down(1100)]: {
             width: '100%',
@@ -247,6 +250,28 @@ const StyledDocumentationLink = styled('a')(({ theme }) => ({
     },
 }));
 
+const StyledSidebarCloseButton = styled(IconButton)(({ theme }) => ({
+    color: theme.palette.common.white,
+}));
+
+const StyledSidebarHeader = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    height: theme.spacing(8),
+    margin: theme.spacing(-4, -4, 0, -4),
+    padding: theme.spacing(0, 2),
+    borderBottom: `1px solid rgba(255,255,255,0.15)`,
+    boxSizing: 'border-box',
+    [theme.breakpoints.down(500)]: {
+        margin: theme.spacing(-4, -2, 0, -2),
+    },
+}));
+
+const StyledSidebarBody = styled('div')(({ theme }) => ({
+    paddingTop: theme.spacing(3),
+}));
+
 const FormTemplate: React.FC<ICreateProps> = ({
     title,
     description,
@@ -266,6 +291,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
     showGuidance = true,
     useFixedSidebar,
     sidebarWidth,
+    onClose,
 }) => {
     const { setToastData } = useToast();
     const smallScreen = useMediaQuery(`(max-width:${1099}px)`);
@@ -370,10 +396,11 @@ const FormTemplate: React.FC<ICreateProps> = ({
                         showDescription={showDescription}
                         showLink={showLink}
                         sidebarWidth={sidebarWidth}
+                        onClose={onClose}
                     >
                         {renderApiInfo(
                             formatApiCode === undefined,
-                            !(showDescription || showLink),
+                            !showDescription,
                         )}
                     </SidebarComponent>
                 }
@@ -502,27 +529,68 @@ const GuidanceContent: React.FC<
     );
 };
 
-const Guidance: React.FC<IGuidanceProps & { sidebarWidth?: string }> = ({
-    sidebarWidth,
-    ...props
-}) => {
+const Guidance: React.FC<
+    IGuidanceProps & { sidebarWidth?: string; onClose?: () => void }
+> = ({ sidebarWidth, onClose, ...props }) => {
     return (
         <StyledSidebar sidebarWidth={sidebarWidth}>
-            <GuidanceContent {...props} />
+            {onClose ? (
+                <StyledSidebarHeader>
+                    <StyledSidebarCloseButton
+                        onClick={onClose}
+                        size='small'
+                        aria-label='Close'
+                    >
+                        <CloseIcon />
+                    </StyledSidebarCloseButton>
+                </StyledSidebarHeader>
+            ) : null}
+            {onClose ? (
+                <StyledSidebarBody>
+                    <GuidanceContent {...props} />
+                </StyledSidebarBody>
+            ) : (
+                <GuidanceContent {...props} />
+            )}
         </StyledSidebar>
     );
 };
 
-const FixedGuidance: React.FC<IGuidanceProps & { sidebarWidth?: string }> = ({
-    sidebarWidth: _,
-    ...props
-}) => {
+const FixedGuidance: React.FC<
+    IGuidanceProps & { sidebarWidth?: string; onClose?: () => void }
+> = ({ sidebarWidth: _, onClose, showDescription = true, ...props }) => {
+    const minimal = !showDescription;
     return (
         <StyledSidebar
             sidebarWidth={formTemplateFixedSidebarWidth}
-            fixedCodeHeight='300px'
+            fixedCodeHeight={minimal ? undefined : '300px'}
         >
-            <GuidanceContent {...props} fixedDocumentationHeight='170px' />
+            {onClose ? (
+                <StyledSidebarHeader>
+                    <StyledSidebarCloseButton
+                        onClick={onClose}
+                        size='small'
+                        aria-label='Close'
+                    >
+                        <CloseIcon />
+                    </StyledSidebarCloseButton>
+                </StyledSidebarHeader>
+            ) : null}
+            {onClose ? (
+                <StyledSidebarBody>
+                    <GuidanceContent
+                        {...props}
+                        showDescription={showDescription}
+                        fixedDocumentationHeight={minimal ? undefined : '170px'}
+                    />
+                </StyledSidebarBody>
+            ) : (
+                <GuidanceContent
+                    {...props}
+                    showDescription={showDescription}
+                    fixedDocumentationHeight={minimal ? undefined : '170px'}
+                />
+            )}
         </StyledSidebar>
     );
 };

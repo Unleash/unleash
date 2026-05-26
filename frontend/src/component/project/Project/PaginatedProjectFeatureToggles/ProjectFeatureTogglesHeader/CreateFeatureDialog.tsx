@@ -4,6 +4,7 @@ import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { type ReactNode, useState, type FormEvent, useMemo } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, styled } from '@mui/material';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
@@ -23,6 +24,7 @@ import type { FeatureTypeSchema } from 'openapi';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { DialogFormTemplate } from 'component/common/DialogFormTemplate/DialogFormTemplate';
+import { NewDialogFormTemplate } from 'component/common/DialogFormTemplate/NewDialogFormTemplate';
 import { SingleSelectConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/SingleSelectConfigButton';
 import useAllTags from 'hooks/api/getters/useAllTags/useAllTags';
 import Label from '@mui/icons-material/Label';
@@ -78,17 +80,23 @@ export const CreateFeatureDialog = ({
     onClose,
     onSuccess,
 }: ICreateFeatureDialogProps) => {
-    if (open) {
-        // wrap the inner component so that we only fetch data etc
-        // when the dialog is actually open.
-        return (
-            <CreateFeatureDialogContent
-                open={open}
-                onClose={onClose}
-                onSuccess={onSuccess}
-            />
-        );
-    }
+    const useNewDesign = true;
+    if (!open) return null;
+    // wrap the inner component so that we only fetch data etc
+    // when the dialog is actually open.
+    return useNewDesign ? (
+        <NewCreateFeatureDialogContent
+            open={open}
+            onClose={onClose}
+            onSuccess={onSuccess}
+        />
+    ) : (
+        <CreateFeatureDialogContent
+            open={open}
+            onClose={onClose}
+            onSuccess={onSuccess}
+        />
+    );
 };
 
 const CreateFeatureDialogContent = ({
@@ -396,6 +404,233 @@ const CreateFeatureDialogContent = ({
                                 label={`Impression data ${impressionData ? 'on' : 'off'}`}
                                 icon={<ImpressionDataIcon />}
                                 labelWidth={`${'impression data off'.length}ch`}
+                            />
+                        </>
+                    }
+                />
+            </FormTemplate>
+        </StyledDialog>
+    );
+};
+
+const NewCreateFeatureDialogContent = ({
+    open,
+    onClose,
+    onSuccess,
+}: ICreateFeatureDialogProps) => {
+    const { setToastData, setToastApiError } = useToast();
+    const { uiConfig, isOss } = useUiConfig();
+    const navigate = useNavigate();
+    const openFeatureCreatedFeedback = useFeatureCreatedFeedback();
+
+    const [storedFlagConfig, setStoredFlagConfig] =
+        useLocalStorageState<FeatureFormInitialData>(
+            'flag-creation-dialog',
+            {},
+            60 * 60 * 1000,
+        );
+
+    const {
+        type,
+        setType,
+        tags,
+        setTags,
+        name,
+        setName,
+        project,
+        setProject,
+        description,
+        setDescription,
+        validateToggleName,
+        impressionData,
+        setImpressionData,
+        getTogglePayload,
+        clearErrors,
+        errors,
+    } = useFeatureForm(storedFlagConfig);
+    const { createFeatureToggle, loading } = useFeatureApi();
+
+    const flagPayload = getTogglePayload();
+
+    const formatApiCode = () =>
+        `curl --location --request POST '${
+            uiConfig.unleashUrl
+        }/api/admin/projects/${project}/features' \\
+    --header 'Authorization: INSERT_API_KEY' \\
+    --header 'Content-Type: application/json' \\
+    --data-raw '${JSON.stringify(flagPayload, undefined, 2)}'`;
+
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        clearErrors();
+        const validToggleName = await validateToggleName();
+        if (!validToggleName) return;
+        try {
+            await createFeatureToggle(project, getTogglePayload());
+            navigate(`/projects/${project}/features/${name}`);
+            setToastData({
+                text: 'Flag created successfully',
+                type: 'success',
+            });
+            onClose();
+            onSuccess?.();
+            setStoredFlagConfig({});
+            openFeatureCreatedFeedback();
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
+    const { total: totalFlags, loading: loadingTotalFlagCount } =
+        useGlobalFeatureSearch(1);
+    const { project: projectInfo } = useProjectOverview(project);
+    const { tags: allTags } = useAllTags();
+    const { projects } = useProjects();
+    const { featureTypes } = useFeatureTypes();
+
+    const { globalFlagLimitReached, projectFlagLimitReached, limitMessage } =
+        useFlagLimits({
+            global: {
+                limit: uiConfig.resourceLimits.featureFlags,
+                count: totalFlags ?? 0,
+            },
+            project: {
+                limit: projectInfo.featureLimit || undefined,
+                count: featuresCount(projectInfo) ?? 0,
+            },
+        });
+
+    const currentProjectName = useMemo(() => {
+        const projectObject = projects.find((p) => p.id === project);
+        return projectObject?.name;
+    }, [project, projects]);
+
+    const onDialogClose = () => {
+        setStoredFlagConfig({
+            name,
+            tags,
+            impressionData,
+            type,
+            description,
+        });
+        onClose();
+    };
+
+    const FeatureTypeIcon = getFeatureTypeIcons(type);
+
+    return (
+        <StyledDialog open={open} onClose={onDialogClose}>
+            <FormTemplate
+                compact
+                disablePadding
+                showDescription={false}
+                documentationLink='https://docs.getunleash.io/concepts/feature-flags'
+                documentationLinkLabel='Feature flags documentation'
+                formatApiCode={formatApiCode}
+                useFixedSidebar
+                onClose={onDialogClose}
+                description=''
+            >
+                <NewDialogFormTemplate
+                    title='New feature flag'
+                    resource='feature flag'
+                    projects={projects.map((p) => ({
+                        label: p.name,
+                        value: p.id,
+                    }))}
+                    project={project}
+                    currentProjectName={currentProjectName}
+                    onProjectChange={setProject}
+                    hideProjectSelector={isOss()}
+                    name={name}
+                    setName={setName}
+                    description={description}
+                    setDescription={setDescription}
+                    errors={errors}
+                    validateName={validateToggleName}
+                    namingPattern={projectInfo.featureNaming}
+                    impressionData={impressionData}
+                    setImpressionData={setImpressionData}
+                    impressionDataHelp={configButtonData.impressionData.text}
+                    handleSubmit={handleSubmit}
+                    onClose={onDialogClose}
+                    createButtonProps={{
+                        projectId: project,
+                        disabled:
+                            loading ||
+                            loadingTotalFlagCount ||
+                            globalFlagLimitReached ||
+                            projectFlagLimitReached,
+                        permission: CREATE_FEATURE,
+                        tooltipProps: { title: limitMessage, arrow: true },
+                    }}
+                    Limit={
+                        <Limit
+                            name='feature flags'
+                            limit={uiConfig.resourceLimits.featureFlags}
+                            currentValue={totalFlags ?? 0}
+                        />
+                    }
+                    configButtons={
+                        <>
+                            <SingleSelectConfigButton
+                                variant='pill'
+                                tooltip={{ header: 'Select a flag type' }}
+                                description={configButtonData.type.text}
+                                options={featureTypes.map(
+                                    (t: FeatureTypeSchema) => ({
+                                        label: t.name,
+                                        value: t.id,
+                                    }),
+                                )}
+                                onChange={(value: any) => setType(value)}
+                                button={{
+                                    label:
+                                        featureTypes.find((t) => t.id === type)
+                                            ?.name || 'Select flag type',
+                                    icon: <FeatureTypeIcon />,
+                                }}
+                                search={{
+                                    label: 'Filter flag types',
+                                    placeholder: 'Select flag type',
+                                }}
+                            />
+                            <MultiSelectConfigButton
+                                variant='pill'
+                                tooltip={{ header: 'Select tags' }}
+                                description={configButtonData.tags.text}
+                                selectedOptions={
+                                    new Set(
+                                        Array.from(tags).map(
+                                            (tag) => `${tag.type}:${tag.value}`,
+                                        ),
+                                    )
+                                }
+                                options={allTags.map((tag) => ({
+                                    label: formatTag(tag),
+                                    value: `${tag.type}:${tag.value}`,
+                                }))}
+                                onChange={(strings) => {
+                                    const normalized = Array.from(strings).map(
+                                        (s) => {
+                                            const [tagType, value] =
+                                                s.split(':');
+                                            return { type: tagType, value };
+                                        },
+                                    );
+                                    setTags(new Set(normalized));
+                                }}
+                                button={{
+                                    label:
+                                        tags.size > 0
+                                            ? `${tags.size} selected`
+                                            : 'Add tags',
+                                    icon: <Label />,
+                                }}
+                                search={{
+                                    label: 'Filter tags',
+                                    placeholder: 'Select tags',
+                                }}
                             />
                         </>
                     }

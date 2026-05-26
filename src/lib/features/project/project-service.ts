@@ -91,7 +91,7 @@ import metricsHelper from '../../util/metrics-helper.js';
 import { FUNCTION_TIME } from '../../metric-events.js';
 import type { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
 import type { OnboardingStatus } from '../onboarding/onboarding-read-model-type.js';
-import { ProjectMember } from './project-members-read-model.type.js';
+import type { ProjectMember } from './project-members-read-model.type.js';
 
 type Days = number;
 type Count = number;
@@ -269,7 +269,11 @@ export default class ProjectService {
         if (this.flagResolver.isEnabled('newProjectList')) {
             //TODO: update project-schema when removing this flag
             const projectIds = projects.map((p) => p.id);
-            const [onboardingStatuses, cleanupByProject, membersPreviewByProject] = await Promise.all([
+            const [
+                onboardingStatuses,
+                cleanupByProject,
+                membersPreviewByProject,
+            ] = await Promise.all([
                 this.onboardingReadModel
                     .getOnboardingStatusesForProjects(projectIds)
                     .catch(() => new Map<string, OnboardingStatus>()),
@@ -285,8 +289,9 @@ export default class ProjectService {
                         return map;
                     })
                     .catch(() => new Map<string, number>()),
-                 this.projectMembersReadModel.getMembersPreviewByProject()
-                 .catch(() => ({} as Record<string, ProjectMember[]>)),
+                this.projectMembersReadModel
+                    .getMembersPreviewByProject()
+                    .catch(() => ({}) as Record<string, ProjectMember[]>),
             ]);
 
             for (const project of projects) {

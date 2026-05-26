@@ -1,5 +1,5 @@
 import type { Story, StoryMeta } from 'component/stories/types';
-import { FlagUsageSnippet } from './FlagUsageSnippet';
+import { FlagUsageSnippet, FlagUsageSnippetError } from './FlagUsageSnippet';
 
 export const meta: StoryMeta = {
     title: 'Feature/ImplementFlagDialog/FlagUsageSnippet',
@@ -67,3 +67,5 @@ export const Android: Story = () => (
 export const Flutter: Story = () => (
     <FlagUsageSnippet sdkName='Flutter' feature={feature} />
 );
+
+export const MissingSnippet: Story = () => <FlagUsageSnippetError />;

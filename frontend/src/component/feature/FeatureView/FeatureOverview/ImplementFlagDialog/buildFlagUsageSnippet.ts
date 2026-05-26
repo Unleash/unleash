@@ -21,10 +21,10 @@
 export const buildFlagUsageSnippet = (
     rawSnippet: string,
     feature: string,
-): string => {
+): string | null => {
     const sections = rawSnippet.split('---\n');
     const lastSection = sections[3];
-    if (!lastSection) return '';
+    if (!lastSection) return null;
 
     return lastSection.replaceAll('<YOUR_FLAG>', feature);
 };

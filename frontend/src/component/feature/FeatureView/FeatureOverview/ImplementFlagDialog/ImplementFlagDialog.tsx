@@ -3,6 +3,8 @@ import {
     Box,
     Button,
     Dialog,
+    Divider,
+    ListSubheader,
     MenuItem,
     Select,
     styled,
@@ -13,6 +15,7 @@ import {
 import CheckIcon from '@mui/icons-material/Check';
 import { allSdks, type SdkName } from 'component/onboarding/dialog/sharedTypes';
 import useFeatureMetrics from 'hooks/api/getters/useFeatureMetrics/useFeatureMetrics';
+import { useProjectSdkNames } from 'hooks/api/getters/useProjectSdkNames/useProjectSdkNames';
 import { ImplementFlagInformation } from './ImplementFlagInformation.tsx';
 import { FlagUsageSnippet } from './FlagUsageSnippet.tsx';
 
@@ -203,7 +206,11 @@ interface DialogBodyProps {
 const DialogBody = ({ projectId, feature, onClose }: DialogBodyProps) => {
     const theme = useTheme();
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
-    const [sdkName, setSdkName] = useState<SdkName>(allSdks[0].name);
+    const projectSdkNames = useProjectSdkNames(projectId);
+    const [manualSdkName, setManualSdkName] = useState<SdkName | undefined>(
+        undefined,
+    );
+    const sdkName = manualSdkName ?? projectSdkNames[0] ?? allSdks[0].name;
 
     const { metrics } = useFeatureMetrics(projectId, feature, {
         refreshInterval: 1000,
@@ -227,16 +234,46 @@ const DialogBody = ({ projectId, feature, onClose }: DialogBodyProps) => {
                     <Select
                         value={sdkName}
                         onChange={(event) =>
-                            setSdkName(event.target.value as SdkName)
+                            setManualSdkName(event.target.value as SdkName)
                         }
                         size='small'
                         sx={{ maxWidth: 240 }}
                     >
-                        {allSdks.map((sdk) => (
-                            <MenuItem key={sdk.name} value={sdk.name}>
-                                {sdk.name}
-                            </MenuItem>
-                        ))}
+                        {projectSdkNames.length > 0
+                            ? [
+                                  <ListSubheader key='project-header'>
+                                      Project SDKs
+                                  </ListSubheader>,
+                                  ...projectSdkNames.map((name) => (
+                                      <MenuItem key={name} value={name}>
+                                          {name}
+                                      </MenuItem>
+                                  )),
+                                  <Divider key='divider' />,
+                                  <ListSubheader key='other-header'>
+                                      Other SDKs
+                                  </ListSubheader>,
+                                  ...allSdks
+                                      .filter(
+                                          (sdk) =>
+                                              !projectSdkNames.includes(
+                                                  sdk.name,
+                                              ),
+                                      )
+                                      .map((sdk) => (
+                                          <MenuItem
+                                              key={sdk.name}
+                                              value={sdk.name}
+                                          >
+                                              {sdk.name}
+                                          </MenuItem>
+                                      )),
+                              ]
+                            : allSdks.map((sdk) => (
+                                  <MenuItem key={sdk.name} value={sdk.name}>
+                                      {sdk.name}
+                                  </MenuItem>
+                              ))}
                     </Select>
 
                     <Box>

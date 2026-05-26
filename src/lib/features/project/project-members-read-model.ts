@@ -14,7 +14,7 @@ export class ProjectMembersReadModel implements IProjectMembersReadModel {
         this.db = db;
     }
 
-    static membersUnion(db: Db) {
+    static usersWithProjectRoles(db: Db) {
         return db
             .select('user_id', 'project')
             .from('role_user')
@@ -35,7 +35,9 @@ export class ProjectMembersReadModel implements IProjectMembersReadModel {
     async getMembersPreviewByProject(): Promise<
         Record<string, ProjectMember[]>
     > {
-        const membersUnion = ProjectMembersReadModel.membersUnion(this.db);
+        const membersUnion = ProjectMembersReadModel.usersWithProjectRoles(
+            this.db,
+        );
 
         // Take the first N members of each project, ordered by user id.
         const selectedMembers = this.db

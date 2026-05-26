@@ -235,7 +235,9 @@ export class ProjectReadModel implements IProjectReadModel {
 
     private async getMembersCount(): Promise<IProjectMembersCount[]> {
         const memberTimer = this.timer('getMembersCount');
-        const membersQuery = ProjectMembersReadModel.membersUnion(this.db);
+        const membersQuery = ProjectMembersReadModel.usersWithProjectRoles(
+            this.db,
+        );
 
         const members = await this.db
             .select('project')

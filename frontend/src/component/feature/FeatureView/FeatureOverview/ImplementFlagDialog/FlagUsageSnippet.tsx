@@ -12,7 +12,7 @@ interface FlagUsageSnippetProps {
     feature: string;
 }
 
-export const FlagUsageSnippetError = () => (
+const FlagUsageSnippetError = () => (
     <Alert severity='error'>
         This SDK is missing a flag usage example. Please let us know so we can
         add one!
@@ -23,7 +23,10 @@ export const FlagUsageSnippet = ({
     sdkName,
     feature,
 }: FlagUsageSnippetProps) => {
-    const snippet = buildFlagUsageSnippet(codeRenderSnippets[sdkName], feature);
+    const rawSnippet = codeRenderSnippets[sdkName];
+    const snippet = rawSnippet
+        ? buildFlagUsageSnippet(rawSnippet, feature)
+        : null;
 
     if (snippet === null) return <FlagUsageSnippetError />;
 

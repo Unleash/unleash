@@ -1,5 +1,6 @@
 import type { Story, StoryMeta } from 'component/stories/types';
-import { FlagUsageSnippet, FlagUsageSnippetError } from './FlagUsageSnippet';
+import type { SdkName } from 'component/onboarding/dialog/sharedTypes';
+import { FlagUsageSnippet } from './FlagUsageSnippet';
 
 export const meta: StoryMeta = {
     title: 'Feature/ImplementFlagDialog/FlagUsageSnippet',
@@ -68,4 +69,10 @@ export const Flutter: Story = () => (
     <FlagUsageSnippet sdkName='Flutter' feature={feature} />
 );
 
-export const MissingSnippet: Story = () => <FlagUsageSnippetError />;
+export const MissingSnippet: Story = () => (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    <FlagUsageSnippet
+        sdkName={'Unknown' as SdkName}
+        feature='my-feature-flag'
+    />
+);

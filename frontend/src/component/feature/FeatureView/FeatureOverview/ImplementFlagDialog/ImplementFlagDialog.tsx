@@ -205,10 +205,11 @@ const DialogBody = ({ projectId, feature, onClose }: DialogBodyProps) => {
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
     const projectSdkNames =
         useProjectSdkNamesFromFirstApplicationsPage(projectId);
-    const [manualSdkName, setManualSdkName] = useState<SdkName | undefined>(
+    const defaultSdkName = projectSdkNames[0] ?? allSdks[0].name;
+    const [selectedSdkName, setSelectedSdkName] = useState<SdkName | undefined>(
         undefined,
     );
-    const sdkName = manualSdkName ?? projectSdkNames[0] ?? allSdks[0].name;
+    const sdkName = selectedSdkName ?? defaultSdkName;
 
     const { metrics } = useFeatureMetrics(projectId, feature, {
         refreshInterval: 1000,
@@ -232,7 +233,7 @@ const DialogBody = ({ projectId, feature, onClose }: DialogBodyProps) => {
                     <SelectSdk
                         projectSdks={projectSdkNames}
                         value={sdkName}
-                        onChange={setManualSdkName}
+                        onChange={setSelectedSdkName}
                     />
 
                     <Box>

@@ -370,3 +370,36 @@ test('should collect read_only_users metrics', async () => {
         await prometheusRegister.getSingleMetricAsString('read_only_users');
     expect(recordedMetric).toMatch(/read_only_users 0/);
 });
+
+test('registerPrometheusMetrics exposes integration_available for every registered addon', async () => {
+    const output = await register.metrics();
+
+    expect(output).toMatch(
+        /integration_available\{[^}]*name="webhook"[^}]*kind="addon"/,
+    );
+    expect(output).toMatch(
+        /integration_available\{[^}]*name="oidc"[^}]*kind="auth"/,
+    );
+    expect(output).toMatch(
+        /integration_available\{[^}]*name="google"[^}]*kind="auth"[^}]*deprecated="true"/,
+    );
+});
+
+test('AUTH_LOGIN_COMPLETED event increments auth_login_total', async () => {
+    eventBus.emit('auth-login-completed', {
+        provider: 'google',
+        outcome: 'success',
+    });
+    eventBus.emit('auth-login-completed', {
+        provider: 'google',
+        outcome: 'failure',
+    });
+
+    const output = await register.metrics();
+    expect(output).toMatch(
+        /auth_login_total\{[^}]*provider="google"[^}]*outcome="success"[^}]*\} 1/,
+    );
+    expect(output).toMatch(
+        /auth_login_total\{[^}]*provider="google"[^}]*outcome="failure"[^}]*\} 1/,
+    );
+});

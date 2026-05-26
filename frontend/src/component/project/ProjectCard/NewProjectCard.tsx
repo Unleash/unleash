@@ -67,7 +67,7 @@ export const NewProjectCard = ({
                                     ? `${featureCount} flag`
                                     : `${featureCount} flags`}
                             </span>
-                            {cleanupCount !== undefined && cleanupCount > 0 && (
+                            {Boolean(cleanupCount) && (
                                 <span> &middot; {cleanupCount} in cleanup</span>
                             )}
                         </StyledSubtitle>

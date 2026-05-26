@@ -12,7 +12,10 @@ import { randomId } from '../../util/index.js';
 import EnvironmentService from '../project-environments/environment-service.js';
 import IncompatibleProjectError from '../../error/incompatible-project-error.js';
 import type { ApiTokenService, EventService } from '../../services/index.js';
-import { FeatureEnvironmentEvent } from '../../types/index.js';
+import {
+    FeatureEnvironmentEvent,
+    type IUnleashConfig,
+} from '../../types/index.js';
 import { addDays, subDays } from 'date-fns';
 import {
     createAccessService,
@@ -139,32 +142,76 @@ describe('should list all projects', () => {
         );
     });
 
-    test("includes onboarding status with 'newProjectList' flag enabled", async () => {
-        const flagEnabledConfig = createTestConfig({
-            getLogger,
-            experimental: { flags: { newProjectList: true } },
+    describe("with 'newProjectList' flag enabled", () => {
+        let flagEnabledConfig: IUnleashConfig;
+        let projectServiceWithFlag: ProjectService;
+        beforeAll(() => {
+            flagEnabledConfig = createTestConfig({
+                getLogger,
+                experimental: { flags: { newProjectList: true } },
+            });
+
+            projectServiceWithFlag = createProjectService(
+                db.rawDatabase,
+                flagEnabledConfig,
+            );
         });
-        const projectServiceWithFlag = createProjectService(
-            db.rawDatabase,
-            flagEnabledConfig,
-        );
 
-        const project = {
-            id: 'onboarding-status',
-            name: 'Onboarding status project',
-            description: 'Blah',
-            mode: 'open' as const,
-            defaultStickiness: 'default',
-        };
+        test('includes onboarding status', async () => {
+            const project = {
+                id: 'onboarding-status',
+                name: 'Onboarding status project',
+                description: 'Blah',
+                mode: 'open' as const,
+                defaultStickiness: 'default',
+            };
 
-        await projectServiceWithFlag.createProject(project, user, auditUser);
-        const projects = await projectServiceWithFlag.getProjects();
-        const projectOnboardingStatus = projects.find(
-            (p) => p.id === project.id,
-        )?.onboardingStatus;
+            await projectServiceWithFlag.createProject(
+                project,
+                user,
+                auditUser,
+            );
+            const projects = await projectServiceWithFlag.getProjects();
+            const projectOnboardingStatus = projects.find(
+                (p) => p.id === project.id,
+            )?.onboardingStatus;
 
-        expect(projectOnboardingStatus).toMatchObject({
-            status: 'onboarding-started',
+            expect(projectOnboardingStatus).toMatchObject({
+                status: 'onboarding-started',
+            });
+        });
+
+        test('includes cleanupCount', async () => {
+            const project = {
+                id: 'cleanup-count',
+                name: 'Cleanup count project',
+                description: 'Blah',
+                mode: 'open' as const,
+                defaultStickiness: 'default',
+            };
+
+            await projectServiceWithFlag.createProject(
+                project,
+                user,
+                auditUser,
+            );
+
+            await stores.featureToggleStore.create(project.id, {
+                name: 'cleanup-feature',
+                createdByUserId: user.id,
+            });
+
+            await stores.featureLifecycleStore.insert([
+                { feature: 'cleanup-feature', stage: 'initial' },
+                { feature: 'cleanup-feature', stage: 'completed' },
+            ]);
+
+            const projects = await projectServiceWithFlag.getProjects();
+            const projectCleanupCount = projects.find(
+                (p) => p.id === project.id,
+            )?.cleanupCount;
+
+            expect(projectCleanupCount).toBe(1);
         });
     });
 });

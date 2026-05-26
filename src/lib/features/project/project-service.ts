@@ -53,6 +53,7 @@ import {
     SYSTEM_USER_ID,
     type IProjectReadModel,
     type IOnboardingReadModel,
+    type IFeatureLifecycleReadModel,
     type IEdgeTokenStore,
 } from '../../types/index.js';
 import type {
@@ -88,6 +89,7 @@ import { batchExecute } from '../../util/index.js';
 import metricsHelper from '../../util/metrics-helper.js';
 import { FUNCTION_TIME } from '../../metric-events.js';
 import type { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
+import type { OnboardingStatus } from '../onboarding/onboarding-read-model-type.js';
 
 type Days = number;
 type Count = number;
@@ -155,6 +157,8 @@ export default class ProjectService {
 
     private onboardingReadModel: IOnboardingReadModel;
 
+    private featureLifecycleReadModel: IFeatureLifecycleReadModel;
+
     private edgeTokenStore: IEdgeTokenStore;
 
     private timer: Function;
@@ -172,6 +176,7 @@ export default class ProjectService {
             projectStatsStore,
             projectReadModel,
             onboardingReadModel,
+            featureLifecycleReadModel,
             edgeTokenStore,
         }: Pick<
             IUnleashStores,
@@ -186,6 +191,7 @@ export default class ProjectService {
             | 'projectStatsStore'
             | 'projectReadModel'
             | 'onboardingReadModel'
+            | 'featureLifecycleReadModel'
             | 'edgeTokenStore'
         >,
         config: IUnleashConfig,
@@ -221,6 +227,7 @@ export default class ProjectService {
         this.eventBus = config.eventBus;
         this.projectReadModel = projectReadModel;
         this.onboardingReadModel = onboardingReadModel;
+        this.featureLifecycleReadModel = featureLifecycleReadModel;
         this.edgeTokenStore = edgeTokenStore;
         this.timer = (functionName: string) =>
             metricsHelper.wrapTimer(config.eventBus, FUNCTION_TIME, {
@@ -255,12 +262,27 @@ export default class ProjectService {
         if (this.flagResolver.isEnabled('newProjectList')) {
             //TODO: update project-schema when removing this flag
             const projectIds = projects.map((p) => p.id);
-            const onboardingStatuses =
-                await this.onboardingReadModel.getOnboardingStatusesForProjects(
-                    projectIds,
-                );
+            const [onboardingStatuses, cleanupByProject] = await Promise.all([
+                this.onboardingReadModel
+                    .getOnboardingStatusesForProjects(projectIds)
+                    .catch(() => new Map<string, OnboardingStatus>()),
+                this.featureLifecycleReadModel
+                    .getStageCountByProject()
+                    .then((rows) => {
+                        const map = new Map<string, number>();
+                        for (const row of rows) {
+                            if (row.stage === 'completed') {
+                                map.set(row.project, row.count);
+                            }
+                        }
+                        return map;
+                    })
+                    .catch(() => new Map<string, number>()),
+            ]);
+
             for (const project of projects) {
                 project.onboardingStatus = onboardingStatuses.get(project.id);
+                project.cleanupCount = cleanupByProject.get(project.id);
             }
         }
 

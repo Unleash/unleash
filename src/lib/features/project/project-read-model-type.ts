@@ -17,6 +17,7 @@ export type ProjectForUi = {
     lastReportedFlagUsage: Date | null;
     lastUpdatedAt: Date | null;
     onboardingStatus?: OnboardingStatus;
+    cleanupCount?: number;
 };
 
 export type ProjectForInsights = {

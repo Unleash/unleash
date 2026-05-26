@@ -34,7 +34,7 @@ import type { IFeatureUsageInfo } from '../../services/version-service.js';
 import type { ReleasePlanTemplateStore } from '../release-plans/release-plan-template-store.js';
 import type { ReleasePlanStore } from '../release-plans/release-plan-store.js';
 import type { GetEdgeInstances } from './getEdgeInstances.js';
-import { AUTH_PROVIDERS_CATALOG } from '../../types/settings/auth-settings.js';
+import { getAuthConfigId } from '../../types/settings/auth-settings.js';
 
 export type TimeRange = 'allTime' | '30d' | '7d';
 
@@ -277,7 +277,7 @@ export class InstanceStatsService {
     async hasOIDC(): Promise<boolean> {
         return this.memorize('hasOIDC', async () => {
             const settings = await this.settingStore.get<{ enabled: boolean }>(
-                AUTH_PROVIDERS_CATALOG['oidc'].configId,
+                getAuthConfigId('oidc'),
             );
 
             return settings?.enabled || false;
@@ -287,7 +287,7 @@ export class InstanceStatsService {
     async hasSAML(): Promise<boolean> {
         return this.memorize('hasSAML', async () => {
             const settings = await this.settingStore.get<{ enabled: boolean }>(
-                AUTH_PROVIDERS_CATALOG['saml'].configId,
+                getAuthConfigId('saml'),
             );
 
             return settings?.enabled || false;
@@ -297,7 +297,7 @@ export class InstanceStatsService {
     async hasPasswordAuth(): Promise<boolean> {
         return this.memorize('hasPasswordAuth', async () => {
             const settings = await this.settingStore.get<{ disabled: boolean }>(
-                'unleash.auth.simple',
+                getAuthConfigId('simple'),
             );
 
             return (

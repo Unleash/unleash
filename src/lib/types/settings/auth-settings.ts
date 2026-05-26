@@ -12,3 +12,10 @@ export const AUTH_PROVIDERS_CATALOG: ReadonlyArray<{
         deprecatedRemovalTarget: 'v8.0.0',
     },
 ];
+
+export function getAuthConfigId(providerName: string): string {
+    const provider = AUTH_PROVIDERS_CATALOG.find(
+        (p) => p.name === providerName,
+    );
+    return provider?.configId ?? '';
+}

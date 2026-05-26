@@ -6,10 +6,10 @@ import handleErrorResponses from '../httpErrorResponseHandler.js';
 import type { GetProjectsParams, ProjectSchema, ProjectsSchema } from 'openapi';
 import type { OnboardingStatusSchema } from 'openapi';
 
-// TODO: `onboardingStatus` is currently gated behind the 'newProjectList' flag
+// TODO: `onboardingStatus` and `cleanupCount` are currently gated behind the 'newProjectList' flag
 // and not included on `projectSchema` (see openapi/spec/project-schema.ts).
-// When the flag is removed and the field is declared on the schema, drop this alias
-// and let the generated `ProjectSchema` type carry the field.
+// When the flag is removed and the fields are declared on the schema, drop this alias
+// and let the generated `ProjectSchema` type carry the fields.
 export type ProjectListItem = ProjectSchema & {
     onboardingStatus?: OnboardingStatusSchema;
     cleanupCount?: number;

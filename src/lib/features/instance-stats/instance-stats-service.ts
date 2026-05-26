@@ -34,6 +34,7 @@ import type { IFeatureUsageInfo } from '../../services/version-service.js';
 import type { ReleasePlanTemplateStore } from '../release-plans/release-plan-template-store.js';
 import type { ReleasePlanStore } from '../release-plans/release-plan-store.js';
 import type { GetEdgeInstances } from './getEdgeInstances.js';
+import { AUTH_PROVIDERS_CATALOG } from '../../types/settings/auth-settings.js';
 
 export type TimeRange = 'allTime' | '30d' | '7d';
 
@@ -276,7 +277,7 @@ export class InstanceStatsService {
     async hasOIDC(): Promise<boolean> {
         return this.memorize('hasOIDC', async () => {
             const settings = await this.settingStore.get<{ enabled: boolean }>(
-                'unleash.enterprise.auth.oidc',
+                AUTH_PROVIDERS_CATALOG['oidc'].configId,
             );
 
             return settings?.enabled || false;
@@ -286,7 +287,7 @@ export class InstanceStatsService {
     async hasSAML(): Promise<boolean> {
         return this.memorize('hasSAML', async () => {
             const settings = await this.settingStore.get<{ enabled: boolean }>(
-                'unleash.enterprise.auth.saml',
+                AUTH_PROVIDERS_CATALOG['saml'].configId,
             );
 
             return settings?.enabled || false;

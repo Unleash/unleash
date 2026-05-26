@@ -11,7 +11,7 @@ import {
 import CheckIcon from '@mui/icons-material/Check';
 import { allSdks, type SdkName } from 'component/onboarding/dialog/sharedTypes';
 import useFeatureMetrics from 'hooks/api/getters/useFeatureMetrics/useFeatureMetrics';
-import { useProjectSdkNames } from 'hooks/api/getters/useProjectSdkNames/useProjectSdkNames';
+import { useProjectSdkNamesFromFirstApplicationsPage } from 'hooks/api/getters/useProjectSdkNames/useProjectSdkNamesFromFirstApplicationsPage';
 import { ImplementFlagInformation } from './ImplementFlagInformation.tsx';
 import { FlagUsageSnippet } from './FlagUsageSnippet.tsx';
 import { SelectSdk } from './SelectSdk.tsx';
@@ -203,7 +203,8 @@ interface DialogBodyProps {
 const DialogBody = ({ projectId, feature, onClose }: DialogBodyProps) => {
     const theme = useTheme();
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
-    const projectSdkNames = useProjectSdkNames(projectId);
+    const projectSdkNames =
+        useProjectSdkNamesFromFirstApplicationsPage(projectId);
     const [manualSdkName, setManualSdkName] = useState<SdkName | undefined>(
         undefined,
     );

@@ -31,26 +31,31 @@ const sdkPackageToName: Record<string, SdkName> = {
     unleash_proxy_client_flutter: 'Flutter',
 };
 
-export const useProjectSdkNames = (projectId: string): SdkName[] => {
-    const PATH = `api/admin/projects/${projectId}/applications?limit=50`;
+export const extractSdkNames = (
+    applications: ProjectApplicationsSchema['applications'],
+): SdkName[] => {
+    const seen = new Set<SdkName>();
+    const result: SdkName[] = [];
+    for (const app of applications) {
+        for (const sdk of app.sdks) {
+            const sdkName = sdkPackageToName[sdk.name];
+            if (sdkName && !seen.has(sdkName)) {
+                seen.add(sdkName);
+                result.push(sdkName);
+            }
+        }
+    }
+    return result;
+};
+
+export const useProjectSdkNamesFromFirstApplicationsPage = (
+    projectId: string,
+): SdkName[] => {
+    const PATH = `api/admin/projects/${projectId}/applications?limit=25`;
     const { data } = useApiGetter<ProjectApplicationsSchema>(
         formatApiPath(PATH),
         () => fetcher(formatApiPath(PATH), 'Project Applications'),
     );
 
-    return useMemo(() => {
-        if (!data?.applications) return [];
-        const seen = new Set<SdkName>();
-        const result: SdkName[] = [];
-        for (const app of data.applications) {
-            for (const sdk of app.sdks) {
-                const sdkName = sdkPackageToName[sdk.name];
-                if (sdkName && !seen.has(sdkName)) {
-                    seen.add(sdkName);
-                    result.push(sdkName);
-                }
-            }
-        }
-        return result;
-    }, [data]);
+    return useMemo(() => extractSdkNames(data?.applications ?? []), [data]);
 };

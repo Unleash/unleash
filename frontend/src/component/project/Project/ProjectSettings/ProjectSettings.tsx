@@ -94,7 +94,11 @@ export const ProjectSettings = () => {
     }
 
     const settings = '/settings';
-    const [basePath] = location.pathname.split(settings);
+    const settingsIndex = location.pathname.lastIndexOf(settings);
+    const basePath =
+        settingsIndex >= 0
+            ? location.pathname.slice(0, settingsIndex)
+            : location.pathname;
     const toTabPath = (id: string) => `${basePath}${settings}/${id}`;
     const onChange = (tab: ITab) => {
         navigate(toTabPath(tab.id));

@@ -49,3 +49,17 @@ const config = {
 - [React SDK example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/React)
 - [https://docs.getunleash.io/feature-flag-tutorials/react](https://docs.getunleash.io/feature-flag-tutorials/react)
 
+---
+
+```jsx
+const TestComponent = () => {
+  const enabled = useFlag('<YOUR_FLAG>');
+
+  if (enabled) {
+    return (<div>{'<YOUR_FLAG> is enabled'}</div>);
+  } else {
+    return (<div>{'<YOUR_FLAG> is disabled'}</div>);
+  }
+};
+```
+

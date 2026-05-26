@@ -22,3 +22,16 @@ Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
 }
 ```
 ℹ️ **Info:** The Swift SDK takes at least 60 seconds to post metrics to Unleash.
+---
+---
+---
+
+```swift
+if unleash.isEnabled(name: "<YOUR_FLAG>") {
+    print("<YOUR_FLAG> is enabled")
+} else {
+    print("<YOUR_FLAG> is disabled")
+}
+```
+
+ℹ️ **Info:** The Swift SDK takes at least 60 seconds to post metrics to Unleash.

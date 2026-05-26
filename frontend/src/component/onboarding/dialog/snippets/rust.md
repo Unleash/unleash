@@ -67,3 +67,18 @@ client.register().await?;
 - [SDK repository with documentation](https://github.com/Unleash/unleash-client-rust)
 - [Rust example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/Rust)
 - [How to Implement Feature Flags in Rust](https://docs.getunleash.io/feature-flag-tutorials/rust)
+
+---
+
+```rust
+enum Flags {
+    #[serde(rename = "<YOUR_FLAG>")]
+    TestFlag,
+}
+
+if client.is_enabled(Flags::TestFlag, None, true) {
+    println!("<YOUR_FLAG> is enabled");
+} else {
+    println!("<YOUR_FLAG> is disabled");
+}
+```

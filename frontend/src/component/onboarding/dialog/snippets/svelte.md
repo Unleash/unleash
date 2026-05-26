@@ -50,3 +50,20 @@ const config = {
 - [SDK repository with documentation](https://github.com/Unleash/proxy-client-svelte)
 - [Svelte example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/Svelte)
 - [How to Implement Feature Flags in SvelteKit](https://docs.getunleash.io/feature-flag-tutorials/sveltekit)
+
+---
+
+```svelte
+<script lang="ts">
+	import { useFlag } from '@unleash/proxy-client-svelte';
+	const enabled = useFlag('<YOUR_FLAG>');
+</script>
+
+<section>
+	{#if $enabled}
+		<p><YOUR_FLAG> is enabled!</p>
+	{:else}
+		<p><YOUR_FLAG> is disabled!</p>
+	{/if}
+</section>
+```

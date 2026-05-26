@@ -64,3 +64,15 @@ class MainActivity : ComponentActivity() {
 ---
 - [SDK repository with documentation and example](https://github.com/Unleash/unleash-android)
 - [Android SDK basic example](hhttps://github.com/Unleash/unleash-sdk-examples/tree/main/Android)
+
+---
+
+```kotlin
+if (unleash.isEnabled("<YOUR_FLAG>")) {
+    println("<YOUR_FLAG> is enabled")
+} else {
+    println("<YOUR_FLAG> is disabled")
+}
+```
+
+ℹ️ **Info:** The Android SDK takes at least 60 seconds to post metrics to Unleash.

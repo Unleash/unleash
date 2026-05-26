@@ -36,3 +36,13 @@ $unleash = UnleashBuilder::create()
 ---
 - [SDK repository with documentation](https://github.com/Unleash/unleash-client-php)
 - [PHP SDK example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/PHP)
+
+---
+
+```php
+if ($unleash->isEnabled('<YOUR_FLAG>')) {
+    echo '<YOUR_FLAG> is enabled' . PHP_EOL;
+} else {
+    echo '<YOUR_FLAG> is disabled' . PHP_EOL;
+}
+```

@@ -11,17 +11,10 @@ import {
     useTheme,
 } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
-import { Markdown } from 'component/common/Markdown/Markdown';
-import {
-    CodeRenderer,
-    codeRenderSnippets,
-} from 'component/onboarding/dialog/CodeRenderer';
 import { allSdks, type SdkName } from 'component/onboarding/dialog/sharedTypes';
-import { buildSdkApiUrl } from 'component/onboarding/dialog/buildSdkApiUrl';
 import useFeatureMetrics from 'hooks/api/getters/useFeatureMetrics/useFeatureMetrics';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ImplementFlagInformation } from './ImplementFlagInformation.tsx';
-import { buildFlagUsageSnippet } from './buildFlagUsageSnippet.ts';
+import { FlagUsageSnippet } from './FlagUsageSnippet.tsx';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -217,15 +210,6 @@ const DialogBody = ({ projectId, feature, onClose }: DialogBodyProps) => {
     });
     const evaluated = metrics.seenApplications.length > 0;
 
-    const { uiConfig } = useUiConfig();
-    const apiUrl = buildSdkApiUrl(uiConfig.unleashUrl, sdkName);
-
-    const wrappedSnippet = buildFlagUsageSnippet(
-        codeRenderSnippets[sdkName] || '',
-        feature,
-        apiUrl,
-    );
-
     return (
         <Container>
             <Content>
@@ -265,9 +249,7 @@ const DialogBody = ({ projectId, feature, onClose }: DialogBodyProps) => {
                         >
                             Code example
                         </Typography>
-                        <Markdown components={{ code: CodeRenderer }}>
-                            {wrappedSnippet}
-                        </Markdown>
+                        <FlagUsageSnippet sdkName={sdkName} feature={feature} />
                     </Box>
 
                     <Box>

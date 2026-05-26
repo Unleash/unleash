@@ -47,3 +47,22 @@ const config = {
 ---
 - [SDK repository with documentation](https://github.com/Unleash/proxy-client-vue)
 - [Vue example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/Vue)
+
+---
+
+```vue
+<script setup lang="ts">
+import { useFlag, useFlagsStatus } from '@unleash/proxy-client-vue'
+
+const enabled = useFlag('<YOUR_FLAG>')
+const { flagsReady } = useFlagsStatus()
+</script>
+
+<template>
+  <div>
+    <div v-if="!flagsReady">Loading...</div>
+    <div v-else-if="enabled"><YOUR_FLAG> is enabled</div>
+    <div v-else><YOUR_FLAG> is disabled</div>
+  </div>
+</template>
+```

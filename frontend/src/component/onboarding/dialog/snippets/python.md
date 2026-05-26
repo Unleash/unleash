@@ -35,3 +35,12 @@ client = UnleashClient(
 - [SDK repository with documentation](https://github.com/Unleash/unleash-client-python)
 - [Python SDK example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/Python)
 - [How to Implement Feature Flags in Python](https://docs.getunleash.io/feature-flag-tutorials/python)
+
+---
+
+```python
+if client.is_enabled("<YOUR_FLAG>"):
+    print("<YOUR_FLAG> is enabled")
+else:
+    print("<YOUR_FLAG> is disabled")
+```

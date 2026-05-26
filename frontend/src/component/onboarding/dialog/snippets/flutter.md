@@ -38,3 +38,13 @@ unleash.start();
 - [SDK repository with documentation](https://github.com/Unleash/unleash_proxy_client_flutter)
 - [Flutter example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/Flutter)
 - [A/B Testing in Flutter using Unleash and Mixpanel](https://docs.getunleash.io/guides/implement-ab-test-in-flutter)
+
+---
+
+```dart
+if (unleash.isEnabled("<YOUR_FLAG>")) {
+    print("<YOUR_FLAG> is enabled");
+} else {
+    print("<YOUR_FLAG> is disabled");
+}
+```

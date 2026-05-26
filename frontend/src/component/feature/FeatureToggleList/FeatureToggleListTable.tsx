@@ -34,26 +34,29 @@ import { createFeatureOverviewCell } from 'component/common/Table/cells/FeatureO
 import { AvatarCell } from 'component/project/Project/PaginatedProjectFeatureToggles/AvatarCell';
 import { StatusCell } from './StatusCell/StatusCell.tsx';
 
-export const featuresPlaceholder = Array(15).fill({
-    name: 'Name of the feature',
-    description: 'Short description of the feature',
-    type: '-',
-    createdAt: new Date(2022, 1, 1).toISOString(),
-    project: 'projectID',
-    createdBy: {
-        id: 0,
-        name: 'admin',
-        imageUrl: '',
-    },
-    archivedAt: null,
-    favorite: false,
-    stale: false,
-    dependencyType: null,
-    tags: [],
-    environments: [],
-    impressionData: false,
-    segments: [],
-} as FeatureSearchResponseSchema);
+export const featuresPlaceholder: FeatureSearchResponseSchema[] = Array.from(
+    { length: 15 },
+    (_, index) => ({
+        name: `Name of feature #${index + 1}`,
+        description: 'Short description of the feature',
+        type: '-',
+        createdAt: new Date(2022, 1, 1).toISOString(),
+        project: 'projectID',
+        createdBy: {
+            id: 0,
+            name: 'admin',
+            imageUrl: '',
+        },
+        archivedAt: null,
+        favorite: false,
+        stale: false,
+        dependencyType: null,
+        tags: [],
+        environments: [],
+        impressionData: false,
+        segments: [],
+    }),
+);
 
 const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
 

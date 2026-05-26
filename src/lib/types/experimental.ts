@@ -78,6 +78,7 @@ export type IFlagKey =
     | 'accessOverviewRework'
     | 'onboardingConnectSDKNewDialog'
     | 'logRocketEnabled'
+    | 'reactRouter_v7_relativeSplatPath'
     | 'newProjectList';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -355,6 +356,10 @@ const flags: IFlags = {
     ),
     newProjectList: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NEW_PROJECT_LIST,
+        false,
+    ),
+    reactRouter_v7_relativeSplatPath: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_REACT_ROUTER_V7_RELATIVE_SPLAT_PATH,
         false,
     ),
 };

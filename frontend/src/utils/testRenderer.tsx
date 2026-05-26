@@ -48,11 +48,7 @@ export const render = (
             <UIProviderContainer>
                 <FeedbackProvider>
                     <AccessProviderMock permissions={permissions}>
-                        <BrowserRouter
-                            future={{
-                                v7_relativeSplatPath: true,
-                            }}
-                        >
+                        <BrowserRouter future={{ v7_relativeSplatPath: true }}>
                             <QueryParamProvider adapter={ReactRouter6Adapter}>
                                 <ThemeProvider>
                                     <AnnouncerProvider>

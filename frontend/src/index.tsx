@@ -26,11 +26,13 @@ import { useRecordUIErrorApi } from 'hooks/api/actions/useRecordUIErrorApi/useRe
 import { HighlightProvider } from 'component/common/Highlight/HighlightProvider';
 import { UnleashFlagProvider } from 'component/providers/UnleashFlagProvider/UnleashFlagProvider';
 import { WelcomeDialogProvider } from 'component/personalDashboard/WelcomeDialogProvider.tsx';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 window.global ||= window;
 
 const ApplicationRoot = () => {
     const { recordUiError } = useRecordUIErrorApi();
+    const useRelativeSplatPath = useUiFlag('reactRouter_v7_relativeSplatPath');
 
     const sendErrorToApi = async (
         error: Error,
@@ -50,9 +52,7 @@ const ApplicationRoot = () => {
         <UIProviderContainer>
             <AccessProvider>
                 <BrowserRouter
-                    future={{
-                        v7_relativeSplatPath: true,
-                    }}
+                    future={{ v7_relativeSplatPath: useRelativeSplatPath }}
                     basename={basePath}
                 >
                     <QueryParamProvider adapter={ReactRouter6Adapter}>

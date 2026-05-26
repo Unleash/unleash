@@ -61,6 +61,7 @@ process.nextTick(async () => {
                         onlyFeatureTokensWithFeatureAPIs: false,
                         accessOverviewRework: true,
                         onboardingConnectSDKNewDialog: true,
+                        reactRouter_v7_relativeSplatPath: true,
                     },
                 },
                 authentication: {

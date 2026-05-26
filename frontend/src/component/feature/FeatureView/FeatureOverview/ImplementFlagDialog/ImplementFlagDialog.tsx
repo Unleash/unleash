@@ -3,10 +3,6 @@ import {
     Box,
     Button,
     Dialog,
-    Divider,
-    ListSubheader,
-    MenuItem,
-    Select,
     styled,
     Typography,
     useMediaQuery,
@@ -18,6 +14,7 @@ import useFeatureMetrics from 'hooks/api/getters/useFeatureMetrics/useFeatureMet
 import { useProjectSdkNames } from 'hooks/api/getters/useProjectSdkNames/useProjectSdkNames';
 import { ImplementFlagInformation } from './ImplementFlagInformation.tsx';
 import { FlagUsageSnippet } from './FlagUsageSnippet.tsx';
+import { SelectSdk } from './SelectSdk.tsx';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -231,50 +228,11 @@ const DialogBody = ({ projectId, feature, onClose }: DialogBodyProps) => {
                     </Typography>
                 </Header>
                 <Body>
-                    <Select
+                    <SelectSdk
+                        projectSdks={projectSdkNames}
                         value={sdkName}
-                        onChange={(event) =>
-                            setManualSdkName(event.target.value as SdkName)
-                        }
-                        size='small'
-                        sx={{ maxWidth: 240 }}
-                    >
-                        {projectSdkNames.length > 0
-                            ? [
-                                  <ListSubheader key='project-header'>
-                                      Project SDKs
-                                  </ListSubheader>,
-                                  ...projectSdkNames.map((name) => (
-                                      <MenuItem key={name} value={name}>
-                                          {name}
-                                      </MenuItem>
-                                  )),
-                                  <Divider key='divider' />,
-                                  <ListSubheader key='other-header'>
-                                      Other SDKs
-                                  </ListSubheader>,
-                                  ...allSdks
-                                      .filter(
-                                          (sdk) =>
-                                              !projectSdkNames.includes(
-                                                  sdk.name,
-                                              ),
-                                      )
-                                      .map((sdk) => (
-                                          <MenuItem
-                                              key={sdk.name}
-                                              value={sdk.name}
-                                          >
-                                              {sdk.name}
-                                          </MenuItem>
-                                      )),
-                              ]
-                            : allSdks.map((sdk) => (
-                                  <MenuItem key={sdk.name} value={sdk.name}>
-                                      {sdk.name}
-                                  </MenuItem>
-                              ))}
-                    </Select>
+                        onChange={setManualSdkName}
+                    />
 
                     <Box>
                         <Typography

@@ -3,7 +3,7 @@ import type { SdkName } from 'component/onboarding/dialog/sharedTypes';
 import { FlagUsageSnippet } from './FlagUsageSnippet';
 
 export const meta: StoryMeta = {
-    title: 'Feature/ImplementFlagDialog/FlagUsageSnippet',
+    title: 'Onboarding/ImplementFlagDialog/FlagUsageSnippet',
     background: 'paper',
 };
 

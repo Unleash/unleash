@@ -50,12 +50,17 @@ export const extractSdkNames = (
 
 export const useProjectSdkNamesFromFirstApplicationsPage = (
     projectId: string,
-): SdkName[] => {
+): { sdkNames: SdkName[]; loading: boolean } => {
     const PATH = `api/admin/projects/${projectId}/applications?limit=25`;
-    const { data } = useApiGetter<ProjectApplicationsSchema>(
+    const { data, loading } = useApiGetter<ProjectApplicationsSchema>(
         formatApiPath(PATH),
         () => fetcher(formatApiPath(PATH), 'Project Applications'),
     );
 
-    return useMemo(() => extractSdkNames(data?.applications ?? []), [data]);
+    const sdkNames = useMemo(
+        () => extractSdkNames(data?.applications ?? []),
+        [data],
+    );
+
+    return { sdkNames, loading };
 };

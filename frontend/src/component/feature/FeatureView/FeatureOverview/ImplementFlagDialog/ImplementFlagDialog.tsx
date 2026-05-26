@@ -2,6 +2,7 @@ import { useState } from 'react';
 import {
     Box,
     Button,
+    CircularProgress,
     Dialog,
     styled,
     Typography,
@@ -49,6 +50,14 @@ const Header = styled('div')(({ theme }) => ({
     padding: theme.spacing(1, 3),
     borderBottom: `1px solid ${theme.palette.divider}`,
     minHeight: theme.spacing(5),
+}));
+
+const LoadingContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: theme.spacing(8),
+    flex: 1,
 }));
 
 const Body = styled('div')(({ theme }) => ({
@@ -203,7 +212,7 @@ interface DialogBodyProps {
 const DialogBody = ({ projectId, feature, onClose }: DialogBodyProps) => {
     const theme = useTheme();
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
-    const projectSdkNames =
+    const { sdkNames: projectSdkNames, loading: loadingProjectSdks } =
         useProjectSdkNamesFromFirstApplicationsPage(projectId);
     const defaultSdkName = projectSdkNames[0] ?? allSdks[0].name;
     const [selectedSdkName, setSelectedSdkName] = useState<SdkName | undefined>(
@@ -230,37 +239,48 @@ const DialogBody = ({ projectId, feature, onClose }: DialogBodyProps) => {
                     </Typography>
                 </Header>
                 <Body>
-                    <SelectSdk
-                        projectSdks={projectSdkNames}
-                        value={sdkName}
-                        onChange={setSelectedSdkName}
-                    />
+                    {loadingProjectSdks ? (
+                        <LoadingContainer>
+                            <CircularProgress />
+                        </LoadingContainer>
+                    ) : (
+                        <>
+                            <SelectSdk
+                                projectSdks={projectSdkNames}
+                                value={sdkName}
+                                onChange={setSelectedSdkName}
+                            />
 
-                    <Box>
-                        <Typography
-                            variant='body2'
-                            sx={{
-                                fontWeight: 'bold',
-                                mb: 1,
-                            }}
-                        >
-                            Code example
-                        </Typography>
-                        <FlagUsageSnippet sdkName={sdkName} feature={feature} />
-                    </Box>
+                            <Box>
+                                <Typography
+                                    variant='body2'
+                                    sx={{
+                                        fontWeight: 'bold',
+                                        mb: 1,
+                                    }}
+                                >
+                                    Code example
+                                </Typography>
+                                <FlagUsageSnippet
+                                    sdkName={sdkName}
+                                    feature={feature}
+                                />
+                            </Box>
 
-                    <Box>
-                        <Typography
-                            variant='body1'
-                            sx={{
-                                fontWeight: 'bold',
-                                mb: 1,
-                            }}
-                        >
-                            Test flag
-                        </Typography>
-                        <ListeningStatus evaluated={evaluated} />
-                    </Box>
+                            <Box>
+                                <Typography
+                                    variant='body1'
+                                    sx={{
+                                        fontWeight: 'bold',
+                                        mb: 1,
+                                    }}
+                                >
+                                    Test flag
+                                </Typography>
+                                <ListeningStatus evaluated={evaluated} />
+                            </Box>
+                        </>
+                    )}
                 </Body>
                 <Footer>
                     <StatusIndicator>

@@ -23,5 +23,18 @@ describe('SelectSdk', () => {
         fireEvent.mouseDown(screen.getByRole('combobox'));
 
         expect(screen.queryByText('Project SDKs')).not.toBeInTheDocument();
+        expect(screen.queryByText('Other SDKs')).not.toBeInTheDocument();
+    });
+
+    it('calls onChange with the selected sdk name', async () => {
+        const onChange = vi.fn();
+        render(
+            <SelectSdk projectSdks={[]} value='Node.js' onChange={onChange} />,
+        );
+
+        fireEvent.mouseDown(screen.getByRole('combobox'));
+        fireEvent.click(screen.getByText('Go'));
+
+        expect(onChange).toHaveBeenCalledWith('Go');
     });
 });

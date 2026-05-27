@@ -6,7 +6,7 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
-import { type ComponentType, useState } from 'react';
+import { type ComponentType, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SignupDialogSetPassword } from './SignupDialogSetPassword/SignupDialogSetPassword.tsx';
 import { SignupDialogAccountDetails } from './SignupDialogAccountDetails.tsx';
@@ -220,12 +220,42 @@ const SIGNUP_STEPS: SignupStep[] = [
 ];
 
 export const SignupDialog = () => {
+    const { signupData, signupRequired, refetch } = useSignup();
+
+    const steps = SIGNUP_STEPS.filter(({ show }) => !show || show(signupData));
+
+    if (!signupRequired || steps.length === 0) return null;
+
+    return (
+        <VisibleSignupDialog
+            signupData={signupData}
+            steps={steps}
+            refetch={refetch}
+        />
+    );
+};
+
+type VisibleSignupDialogProps = {
+    signupData?: SignupData;
+    steps: SignupStep[];
+    refetch: () => void;
+};
+
+const VisibleSignupDialog = ({
+    signupData,
+    steps,
+    refetch,
+}: VisibleSignupDialogProps) => {
     const { trackEvent } = useEventTracker();
     const { setToastApiError } = useToast();
-    const { signupData, signupRequired, refetch } = useSignup();
     const { submitSignupData } = useSignupApi();
     const navigate = useNavigate();
     const defaultProjectId = useDefaultProjectId();
+
+    useEffect(() => {
+        navigate(`/projects/${defaultProjectId ?? DEFAULT_PROJECT_ID}`);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const [data, setData] = useState<SubmitSignupData>({
         password: '',
@@ -240,13 +270,10 @@ export const SignupDialog = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState('');
 
-    const steps = SIGNUP_STEPS.filter(({ show }) => !show || show(signupData));
     const safeStep = Math.min(step, steps.length - 1);
     const currentStep = steps[safeStep];
 
-    const isVisible = signupRequired && steps.length > 0 && currentStep;
-
-    if (!isVisible) return null;
+    if (!currentStep) return null;
 
     const StepContent = currentStep.content;
 
@@ -286,7 +313,6 @@ export const SignupDialog = () => {
             setIsSubmitting(true);
             await submitSignupData(data);
             refetch();
-            navigate(`/projects/${defaultProjectId ?? DEFAULT_PROJECT_ID}`);
         } catch (e: unknown) {
             const error = formatUnknownError(e);
             setToastApiError(error);

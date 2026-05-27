@@ -1,5 +1,13 @@
 import { type FormEventHandler, type ReactNode, useRef, useState } from 'react';
-import { Box, Button, FormControlLabel, Switch, styled } from '@mui/material';
+import {
+    Box,
+    Button,
+    FormControlLabel,
+    Switch,
+    styled,
+    useTheme,
+    type Theme,
+} from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import type { IPermissionButtonProps } from 'component/common/PermissionButton/PermissionButton';
@@ -17,14 +25,12 @@ export type ProjectOption = { label: string; value: string };
 
 type Props = {
     createButtonProps: IPermissionButtonProps;
-
     title: string;
     projects: ProjectOption[];
     project: string;
     currentProjectName?: string;
     onProjectChange: (next: string) => void;
     hideProjectSelector?: boolean;
-
     name: string;
     setName: (next: string) => void;
     description: string;
@@ -32,14 +38,11 @@ type Props = {
     errors: { [key: string]: string };
     validateName?: () => void;
     namingPattern?: CreateFeatureNamingPatternSchema;
-
     configButtons: ReactNode;
     impressionData: boolean;
     setImpressionData: (next: boolean) => void;
     impressionDataHelp?: ReactNode;
-
     Limit?: ReactNode;
-
     handleSubmit: FormEventHandler<HTMLFormElement>;
     onClose: () => void;
     resource: string;
@@ -56,43 +59,43 @@ const Section = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 4),
 }));
 
-const InlineInput = styled(Input)({
-    width: '100%',
-    fieldset: { border: 'none' },
-    '& .MuiOutlinedInput-root': { padding: 0 },
-    '& .MuiInputBase-input': { padding: 0 },
+// Slot-prop builder for inline inputs (no outlined border, no padding around the field).
+// Uses MUI's public `slotProps` API so we avoid reaching into internal MUI classes.
+// The single `fieldset` rule is unavoidable: MUI's OutlinedInput renders a fieldset
+// for the notch and does not expose it as a slot.
+const inlineFieldSlotProps = (htmlInputSx: Record<string, unknown>) => ({
+    inputLabel: { shrink: true, sx: { display: 'none' } },
+    input: { sx: { padding: 0, '& fieldset': { border: 'none' } } },
+    htmlInput: { sx: { padding: 0, width: '100%', ...htmlInputSx } },
 });
 
-const NameInput = styled(InlineInput)(({ theme }) => ({
-    '& .MuiInputBase-input': {
+const nameInputSlotProps = (theme: Theme) =>
+    inlineFieldSlotProps({
         fontSize: theme.typography.body1.fontSize,
         fontWeight: theme.fontWeight.bold,
         lineHeight: 1.4,
-    },
-    '& .MuiInputBase-input::placeholder': {
-        color: theme.palette.text.primary,
-        opacity: 0.55,
-        fontWeight: theme.fontWeight.bold,
-    },
-}));
+        '&::placeholder': {
+            color: theme.palette.text.primary,
+            opacity: 0.55,
+            fontWeight: theme.fontWeight.bold,
+        },
+    });
 
-const DescriptionInput = styled(InlineInput)(({ theme }) => ({
-    '& .MuiInputBase-input': {
+const descriptionInputSlotProps = (theme: Theme) =>
+    inlineFieldSlotProps({
         fontSize: theme.typography.body1.fontSize,
         color: theme.palette.text.secondary,
-    },
-    '& .MuiInputBase-input::placeholder': {
-        color: theme.palette.text.secondary,
-        opacity: 0.8,
-    },
-}));
+        '&::placeholder': {
+            color: theme.palette.text.secondary,
+            opacity: 0.8,
+        },
+    });
 
 const ToggleWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(0.5),
     marginLeft: theme.spacing(-1.5),
-    '& .MuiFormControlLabel-root': { margin: 0 },
 }));
 
 const PillButton = styled(Button)(({ theme }) => ({
@@ -104,12 +107,14 @@ const PillButton = styled(Button)(({ theme }) => ({
     borderRadius: '4px',
     padding: theme.spacing(1, 2),
     minWidth: theme.spacing(18),
+    display: 'flex',
+    alignItems: 'center',
     justifyContent: 'space-between',
+    gap: theme.spacing(1),
     '&:hover': {
         borderColor: theme.palette.text.secondary,
         backgroundColor: theme.palette.background.paper,
     },
-    '& .MuiButton-endIcon': { marginLeft: 'auto' },
 }));
 
 type DropdownOption<T> = { label: string; value: T };
@@ -140,10 +145,10 @@ const PillTrigger = ({
             ref={buttonRef}
             variant='outlined'
             color='inherit'
-            endIcon={<ArrowDropDownIcon />}
             onClick={onClick}
         >
-            {label}
+            <span>{label}</span>
+            <ArrowDropDownIcon />
         </PillButton>
     </TooltipResolver>
 );
@@ -278,9 +283,7 @@ export const NewDialogFormTemplate: React.FC<Props> = ({
     onClose,
     resource,
 }) => {
-    const hiddenLabel = {
-        inputLabel: { shrink: true, sx: { display: 'none' } },
-    };
+    const theme = useTheme();
 
     return (
         <StyledForm onSubmit={handleSubmit}>
@@ -292,8 +295,8 @@ export const NewDialogFormTemplate: React.FC<Props> = ({
                 title={title}
             />
 
-            <Section sx={{ pt: 4, pb: 1 }}>
-                <NameInput
+            <Section sx={{ pt: 4, pb: 1, width: '100%' }}>
+                <Input
                     label={`${resource} name`}
                     placeholder='Feature-flag-name'
                     aria-required
@@ -313,26 +316,28 @@ export const NewDialogFormTemplate: React.FC<Props> = ({
                         delete errors.name;
                     }}
                     autoFocus
-                    slotProps={hiddenLabel}
+                    slotProps={nameInputSlotProps(theme)}
                     data-testid='FORM_NAME_INPUT'
                     size='medium'
+                    fullWidth
                 />
                 {namingPattern?.pattern ? (
                     <NamingPatternInfo naming={namingPattern} />
                 ) : null}
             </Section>
 
-            <Section sx={{ pb: 4 }}>
-                <DescriptionInput
+            <Section sx={{ pb: 4, width: '100%' }}>
+                <Input
                     label='Description (optional)'
                     placeholder='Description (optional)'
                     multiline
                     maxRows={3}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    slotProps={hiddenLabel}
+                    slotProps={descriptionInputSlotProps(theme)}
                     data-testid='FORM_DESCRIPTION_INPUT'
                     size='medium'
+                    fullWidth
                 />
             </Section>
 
@@ -345,6 +350,7 @@ export const NewDialogFormTemplate: React.FC<Props> = ({
             <Section sx={{ pb: 4 }}>
                 <ToggleWrapper>
                     <FormControlLabel
+                        sx={{ m: 0 }}
                         control={
                             <Switch
                                 checked={impressionData}

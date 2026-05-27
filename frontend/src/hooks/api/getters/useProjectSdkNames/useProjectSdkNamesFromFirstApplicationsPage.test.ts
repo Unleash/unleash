@@ -9,10 +9,12 @@ const app = (sdkNames: string[]) => ({
 });
 
 describe('extractSdkNames', () => {
-    it('maps known package names to SdkNames', () => {
-        expect(extractSdkNames([app(['unleash-client-node'])])).toEqual([
-            'Node.js',
-        ]);
+    it('returns [] for empty applications', () => {
+        expect(extractSdkNames([])).toEqual([]);
+    });
+
+    it('ignores unknown package names', () => {
+        expect(extractSdkNames([app(['some-unknown-sdk'])])).toEqual([]);
     });
 
     it('deduplicates sdk names across apps and packages', () => {
@@ -23,11 +25,117 @@ describe('extractSdkNames', () => {
         expect(extractSdkNames(apps)).toEqual(['Node.js', 'Go']);
     });
 
-    it('ignores unknown package names', () => {
-        expect(extractSdkNames([app(['some-unknown-sdk'])])).toEqual([]);
+    describe('ordering: java vs javascript', () => {
+        it('matches javascript packages to JavaScript, not Java', () => {
+            expect(
+                extractSdkNames([app(['unleash-client-javascript'])]),
+            ).toEqual(['JavaScript']);
+        });
+
+        it('still matches java packages to Java', () => {
+            expect(extractSdkNames([app(['unleash-client-java'])])).toEqual([
+                'Java',
+            ]);
+            expect(extractSdkNames([app(['unleash-java-sdk'])])).toEqual([
+                'Java',
+            ]);
+        });
     });
 
-    it('returns [] for empty applications', () => {
-        expect(extractSdkNames([])).toEqual([]);
+    describe('ordering: nextjs vs node', () => {
+        it('matches nextjs packages to Node.js', () => {
+            expect(extractSdkNames([app(['unleash-client-nextjs'])])).toEqual([
+                'Node.js',
+            ]);
+            expect(extractSdkNames([app(['unleash-nextjs-sdk'])])).toEqual([
+                'Node.js',
+            ]);
+        });
+
+        it('still matches node packages to Node.js', () => {
+            expect(extractSdkNames([app(['unleash-client-node'])])).toEqual([
+                'Node.js',
+            ]);
+        });
+    });
+
+    describe('ordering: react/vue/svelte before proxy-client', () => {
+        it('matches @unleash/proxy-client-react to React', () => {
+            expect(
+                extractSdkNames([app(['@unleash/proxy-client-react'])]),
+            ).toEqual(['React']);
+        });
+
+        it('matches @unleash/proxy-client-vue to Vue', () => {
+            expect(
+                extractSdkNames([app(['@unleash/proxy-client-vue'])]),
+            ).toEqual(['Vue']);
+        });
+
+        it('matches @unleash/proxy-client-svelte to Svelte', () => {
+            expect(
+                extractSdkNames([app(['@unleash/proxy-client-svelte'])]),
+            ).toEqual(['Svelte']);
+        });
+
+        it('matches unleash-proxy-client to JavaScript', () => {
+            expect(extractSdkNames([app(['unleash-proxy-client'])])).toEqual([
+                'JavaScript',
+            ]);
+        });
+    });
+
+    describe('swift / ios', () => {
+        it('matches unleash-ios-sdk to Swift', () => {
+            expect(extractSdkNames([app(['unleash-ios-sdk'])])).toEqual([
+                'Swift',
+            ]);
+        });
+
+        it('matches UnleashProxyClientSwift to Swift (case-insensitive)', () => {
+            expect(extractSdkNames([app(['UnleashProxyClientSwift'])])).toEqual(
+                ['Swift'],
+            );
+        });
+
+        it('matches unleash-client-swift to Swift', () => {
+            expect(extractSdkNames([app(['unleash-client-swift'])])).toEqual([
+                'Swift',
+            ]);
+        });
+    });
+
+    describe('mobile sdks', () => {
+        it('matches android packages to Android', () => {
+            expect(extractSdkNames([app(['unleash-android'])])).toEqual([
+                'Android',
+            ]);
+            expect(extractSdkNames([app(['unleash-android-sdk'])])).toEqual([
+                'Android',
+            ]);
+        });
+
+        it('matches flutter packages to Flutter', () => {
+            expect(
+                extractSdkNames([app(['unleash_proxy_client_flutter'])]),
+            ).toEqual(['Flutter']);
+            expect(extractSdkNames([app(['unleash-flutter-sdk'])])).toEqual([
+                'Flutter',
+            ]);
+        });
+    });
+
+    describe('rust / api-client', () => {
+        it('matches unleash-api-client to Rust', () => {
+            expect(extractSdkNames([app(['unleash-api-client'])])).toEqual([
+                'Rust',
+            ]);
+        });
+
+        it('matches unleash-client-rust to Rust', () => {
+            expect(extractSdkNames([app(['unleash-client-rust'])])).toEqual([
+                'Rust',
+            ]);
+        });
     });
 });

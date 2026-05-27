@@ -31,22 +31,6 @@ const ProjectButton = styled(Button)(({ theme }) => ({
     minWidth: 0,
 }));
 
-const Separator = styled('span')(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    margin: theme.spacing(0, 0.5),
-}));
-
-const Title = styled('span')(({ theme }) => ({
-    fontWeight: theme.typography.body1.fontWeight,
-    color: theme.palette.text.primary,
-}));
-
-const StaticTitle = styled('span')(({ theme }) => ({
-    fontWeight: theme.typography.body1.fontWeight,
-    color: theme.palette.text.primary,
-    padding: theme.spacing(0.5, 1),
-}));
-
 export const HeaderBreadcrumb: React.FC<Props> = ({
     options,
     value,
@@ -56,51 +40,46 @@ export const HeaderBreadcrumb: React.FC<Props> = ({
 }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
-
-    const handleChange = (next: string) => {
-        onChange(next);
-        setAnchorEl(null);
-    };
-
     const showSelector = options.length > 1;
-
-    if (!showSelector) {
-        return (
-            <Bar>
-                <StaticTitle>{title}</StaticTitle>
-            </Bar>
-        );
-    }
 
     return (
         <Bar>
-            <div ref={ref}>
-                <ProjectButton
-                    endIcon={<ArrowDropDownIcon />}
-                    onClick={() => setAnchorEl(ref.current)}
-                    aria-label='Select project'
+            {showSelector ? (
+                <>
+                    <div ref={ref}>
+                        <ProjectButton
+                            endIcon={<ArrowDropDownIcon />}
+                            onClick={() => setAnchorEl(ref.current)}
+                            aria-label='Select project'
+                        >
+                            {valueLabel ?? value}
+                        </ProjectButton>
+                    </div>
+                    <span style={{ margin: '0 4px' }}>/</span>
+                </>
+            ) : null}
+            <span>{title}</span>
+            {showSelector ? (
+                <StyledPopover
+                    open={Boolean(anchorEl)}
+                    anchorEl={anchorEl}
+                    onClose={() => setAnchorEl(null)}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                    transformOrigin={{ vertical: 'top', horizontal: 'left' }}
                 >
-                    {valueLabel ?? value}
-                </ProjectButton>
-            </div>
-            <Separator>/</Separator>
-            <Title>{title}</Title>
-            <StyledPopover
-                open={Boolean(anchorEl)}
-                anchorEl={anchorEl}
-                onClose={() => setAnchorEl(null)}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-            >
-                <DropdownList<string>
-                    options={options}
-                    onChange={handleChange}
-                    search={{
-                        label: 'Filter projects',
-                        placeholder: 'Select project',
-                    }}
-                />
-            </StyledPopover>
+                    <DropdownList<string>
+                        options={options}
+                        onChange={(next) => {
+                            onChange(next);
+                            setAnchorEl(null);
+                        }}
+                        search={{
+                            label: 'Filter projects',
+                            placeholder: 'Select project',
+                        }}
+                    />
+                </StyledPopover>
+            ) : null}
         </Bar>
     );
 };

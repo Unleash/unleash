@@ -1,7 +1,11 @@
 import { type FC, type ReactNode, useRef, type PropsWithChildren } from 'react';
 import { Box, Button } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { ButtonLabel, StyledTooltipContent } from './ConfigButton.styles';
+import {
+    ButtonLabel,
+    PillButton,
+    StyledTooltipContent,
+} from './ConfigButton.styles';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { StyledPopover } from './shared.styles';
@@ -67,51 +71,33 @@ export const ConfigButton: FC<PropsWithChildren<ConfigButtonProps>> = ({
                     }
                     variant='custom'
                 >
-                    <Button
-                        variant='outlined'
-                        color={variant === 'pill' ? 'inherit' : 'primary'}
-                        startIcon={variant === 'pill' ? undefined : button.icon}
-                        endIcon={
-                            variant === 'pill' ? (
-                                <ArrowDropDownIcon />
-                            ) : undefined
-                        }
-                        onClick={() => {
-                            if (!preventOpen) {
-                                open();
-                            }
-                        }}
-                        sx={
-                            variant === 'pill'
-                                ? (theme) => ({
-                                      borderColor: theme.palette.divider,
-                                      backgroundColor:
-                                          theme.palette.background.paper,
-                                      color: theme.palette.text.primary,
-                                      textTransform: 'none',
-                                      fontWeight:
-                                          theme.typography.body1.fontWeight,
-                                      borderRadius: '4px',
-                                      padding: theme.spacing(1, 2),
-                                      minWidth: theme.spacing(18),
-                                      justifyContent: 'space-between',
-                                      '&:hover': {
-                                          borderColor:
-                                              theme.palette.text.secondary,
-                                          backgroundColor:
-                                              theme.palette.background.paper,
-                                      },
-                                      '& .MuiButton-endIcon': {
-                                          marginLeft: 'auto',
-                                      },
-                                  })
-                                : undefined
-                        }
-                    >
-                        <ButtonLabel labelWidth={button.labelWidth}>
-                            {button.label}
-                        </ButtonLabel>
-                    </Button>
+                    {variant === 'pill' ? (
+                        <PillButton
+                            variant='outlined'
+                            color='inherit'
+                            endIcon={<ArrowDropDownIcon />}
+                            onClick={() => {
+                                if (!preventOpen) open();
+                            }}
+                        >
+                            <ButtonLabel labelWidth={button.labelWidth}>
+                                {button.label}
+                            </ButtonLabel>
+                        </PillButton>
+                    ) : (
+                        <Button
+                            variant='outlined'
+                            color='primary'
+                            startIcon={button.icon}
+                            onClick={() => {
+                                if (!preventOpen) open();
+                            }}
+                        >
+                            <ButtonLabel labelWidth={button.labelWidth}>
+                                {button.label}
+                            </ButtonLabel>
+                        </Button>
+                    )}
                 </TooltipResolver>
             </Box>
             <StyledPopover

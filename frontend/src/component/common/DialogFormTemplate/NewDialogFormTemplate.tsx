@@ -1,23 +1,12 @@
 import type { FormEventHandler, ReactNode } from 'react';
-import { Button } from '@mui/material';
+import { Box, Button, FormControlLabel, Switch, styled } from '@mui/material';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import type { IPermissionButtonProps } from 'component/common/PermissionButton/PermissionButton';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+import Input from 'component/common/Input/Input';
 import { NamingPatternInfo } from './NamingPatternInfo.tsx';
 import type { CreateFeatureNamingPatternSchema } from 'openapi';
 import { HeaderBreadcrumb } from './HeaderBreadcrumb.tsx';
-import { InlineToggleField } from './InlineToggleField.tsx';
-import {
-    ConfigRow,
-    DescriptionInput,
-    DescriptionRow,
-    FormActions,
-    LimitContainer,
-    NameInput,
-    NameRow,
-    Spacer,
-    StyledForm,
-    ToggleRow,
-} from './NewDialogFormTemplate.styles.tsx';
 
 export type ProjectOption = { label: string; value: string };
 
@@ -42,7 +31,7 @@ type Props = {
     configButtons: ReactNode;
     impressionData: boolean;
     setImpressionData: (next: boolean) => void;
-    impressionDataHelp?: string;
+    impressionDataHelp?: ReactNode;
 
     Limit?: ReactNode;
 
@@ -50,6 +39,56 @@ type Props = {
     onClose: () => void;
     resource: string;
 };
+
+const StyledForm = styled('form')(({ theme }) => ({
+    background: theme.palette.background.default,
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1,
+}));
+
+const Section = styled('div')(({ theme }) => ({
+    padding: theme.spacing(0, 4),
+}));
+
+const InlineInput = styled(Input)({
+    width: '100%',
+    fieldset: { border: 'none' },
+    '& .MuiOutlinedInput-root': { padding: 0 },
+    '& .MuiInputBase-input': { padding: 0 },
+});
+
+const NameInput = styled(InlineInput)(({ theme }) => ({
+    '& .MuiInputBase-input': {
+        fontSize: theme.typography.body1.fontSize,
+        fontWeight: theme.fontWeight.bold,
+        lineHeight: 1.4,
+    },
+    '& .MuiInputBase-input::placeholder': {
+        color: theme.palette.text.primary,
+        opacity: 0.55,
+        fontWeight: theme.fontWeight.bold,
+    },
+}));
+
+const DescriptionInput = styled(InlineInput)(({ theme }) => ({
+    '& .MuiInputBase-input': {
+        fontSize: theme.typography.body1.fontSize,
+        color: theme.palette.text.secondary,
+    },
+    '& .MuiInputBase-input::placeholder': {
+        color: theme.palette.text.secondary,
+        opacity: 0.8,
+    },
+}));
+
+const ToggleWrapper = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.5),
+    marginLeft: theme.spacing(-1.5),
+    '& .MuiFormControlLabel-root': { margin: 0 },
+}));
 
 export const NewDialogFormTemplate: React.FC<Props> = ({
     createButtonProps,
@@ -75,6 +114,10 @@ export const NewDialogFormTemplate: React.FC<Props> = ({
     onClose,
     resource,
 }) => {
+    const hiddenLabel = {
+        inputLabel: { shrink: true, sx: { display: 'none' } },
+    };
+
     return (
         <StyledForm onSubmit={handleSubmit}>
             <HeaderBreadcrumb
@@ -85,7 +128,7 @@ export const NewDialogFormTemplate: React.FC<Props> = ({
                 title={title}
             />
 
-            <NameRow>
+            <Section sx={{ pt: 4, pb: 1 }}>
                 <NameInput
                     label={`${resource} name`}
                     placeholder='Feature-flag-name'
@@ -106,21 +149,16 @@ export const NewDialogFormTemplate: React.FC<Props> = ({
                         delete errors.name;
                     }}
                     autoFocus
-                    slotProps={{
-                        inputLabel: {
-                            shrink: true,
-                            sx: { display: 'none' },
-                        },
-                    }}
+                    slotProps={hiddenLabel}
                     data-testid='FORM_NAME_INPUT'
                     size='medium'
                 />
                 {namingPattern?.pattern ? (
                     <NamingPatternInfo naming={namingPattern} />
                 ) : null}
-            </NameRow>
+            </Section>
 
-            <DescriptionRow>
+            <Section sx={{ pb: 4 }}>
                 <DescriptionInput
                     label='Description (optional)'
                     placeholder='Description (optional)'
@@ -128,41 +166,62 @@ export const NewDialogFormTemplate: React.FC<Props> = ({
                     maxRows={3}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    slotProps={{
-                        inputLabel: {
-                            shrink: true,
-                            sx: { display: 'none' },
-                        },
-                    }}
+                    slotProps={hiddenLabel}
                     data-testid='FORM_DESCRIPTION_INPUT'
                     size='medium'
                 />
-            </DescriptionRow>
+            </Section>
 
-            <ConfigRow>{configButtons}</ConfigRow>
+            <Section
+                sx={{ display: 'flex', gap: 2, flexFlow: 'row wrap', pb: 3 }}
+            >
+                {configButtons}
+            </Section>
 
-            <ToggleRow>
-                <InlineToggleField
-                    checked={impressionData}
-                    onChange={setImpressionData}
-                    labelOn='Impression data enabled'
-                    labelOff='Impression data not enabled'
-                    help={impressionDataHelp}
-                />
-            </ToggleRow>
+            <Section sx={{ pb: 4 }}>
+                <ToggleWrapper>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={impressionData}
+                                onChange={(e) =>
+                                    setImpressionData(e.target.checked)
+                                }
+                            />
+                        }
+                        label={
+                            impressionData
+                                ? 'Impression data enabled'
+                                : 'Impression data not enabled'
+                        }
+                    />
+                    {impressionDataHelp ? (
+                        <HelpIcon tooltip={impressionDataHelp} htmlTooltip />
+                    ) : null}
+                </ToggleWrapper>
+            </Section>
 
-            <Spacer />
+            <Box sx={{ flex: 1 }} />
 
-            <LimitContainer>{Limit}</LimitContainer>
+            {Limit ? <Section sx={{ pb: 2 }}>{Limit}</Section> : null}
 
-            <FormActions>
+            <Section
+                sx={{
+                    display: 'flex',
+                    gap: 2,
+                    justifyContent: 'flex-end',
+                    alignItems: 'center',
+                    pt: 2,
+                    pb: 3,
+                }}
+            >
                 <Button onClick={onClose}>Cancel</Button>
                 <CreateButton
                     data-testid='FORM_CREATE_BUTTON'
                     name='flag'
                     {...createButtonProps}
                 />
-            </FormActions>
+            </Section>
         </StyledForm>
     );
 };

@@ -268,8 +268,10 @@ const StyledSidebarHeader = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledSidebarBody = styled('div')(({ theme }) => ({
-    paddingTop: theme.spacing(3),
+const StyledSidebarBody = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'hasHeader',
+})<{ hasHeader?: boolean }>(({ theme, hasHeader }) => ({
+    paddingTop: hasHeader ? theme.spacing(3) : 0,
 }));
 
 const FormTemplate: React.FC<ICreateProps> = ({
@@ -529,29 +531,13 @@ const GuidanceContent: React.FC<
     );
 };
 
-const Guidance: React.FC<
-    IGuidanceProps & { sidebarWidth?: string; onClose?: () => void }
-> = ({ sidebarWidth, onClose, ...props }) => {
+const Guidance: React.FC<IGuidanceProps & { sidebarWidth?: string }> = ({
+    sidebarWidth,
+    ...props
+}) => {
     return (
         <StyledSidebar sidebarWidth={sidebarWidth}>
-            {onClose ? (
-                <StyledSidebarHeader>
-                    <StyledSidebarCloseButton
-                        onClick={onClose}
-                        size='small'
-                        aria-label='Close'
-                    >
-                        <CloseIcon />
-                    </StyledSidebarCloseButton>
-                </StyledSidebarHeader>
-            ) : null}
-            {onClose ? (
-                <StyledSidebarBody>
-                    <GuidanceContent {...props} />
-                </StyledSidebarBody>
-            ) : (
-                <GuidanceContent {...props} />
-            )}
+            <GuidanceContent {...props} />
         </StyledSidebar>
     );
 };
@@ -576,21 +562,13 @@ const FixedGuidance: React.FC<
                     </StyledSidebarCloseButton>
                 </StyledSidebarHeader>
             ) : null}
-            {onClose ? (
-                <StyledSidebarBody>
-                    <GuidanceContent
-                        {...props}
-                        showDescription={showDescription}
-                        fixedDocumentationHeight={minimal ? undefined : '170px'}
-                    />
-                </StyledSidebarBody>
-            ) : (
+            <StyledSidebarBody hasHeader={Boolean(onClose)}>
                 <GuidanceContent
                     {...props}
                     showDescription={showDescription}
                     fixedDocumentationHeight={minimal ? undefined : '170px'}
                 />
-            )}
+            </StyledSidebarBody>
         </StyledSidebar>
     );
 };

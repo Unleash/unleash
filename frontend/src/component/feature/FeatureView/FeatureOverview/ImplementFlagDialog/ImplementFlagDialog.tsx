@@ -2,9 +2,8 @@ import { useState } from 'react';
 import {
     Box,
     Button,
+    CircularProgress,
     Dialog,
-    MenuItem,
-    Select,
     styled,
     Typography,
     useMediaQuery,
@@ -13,8 +12,10 @@ import {
 import CheckIcon from '@mui/icons-material/Check';
 import { allSdks, type SdkName } from 'component/onboarding/dialog/sharedTypes';
 import useFeatureMetrics from 'hooks/api/getters/useFeatureMetrics/useFeatureMetrics';
+import { useProjectSdkNamesFromFirstApplicationsPage } from 'hooks/api/getters/useProjectSdkNames/useProjectSdkNamesFromFirstApplicationsPage';
 import { ImplementFlagInformation } from './ImplementFlagInformation.tsx';
 import { FlagUsageSnippet } from './FlagUsageSnippet.tsx';
+import { SelectSdk } from './SelectSdk.tsx';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -49,6 +50,14 @@ const Header = styled('div')(({ theme }) => ({
     padding: theme.spacing(1, 3),
     borderBottom: `1px solid ${theme.palette.divider}`,
     minHeight: theme.spacing(5),
+}));
+
+const LoadingContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: theme.spacing(8),
+    flex: 1,
 }));
 
 const Body = styled('div')(({ theme }) => ({
@@ -203,7 +212,13 @@ interface DialogBodyProps {
 const DialogBody = ({ projectId, feature, onClose }: DialogBodyProps) => {
     const theme = useTheme();
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
-    const [sdkName, setSdkName] = useState<SdkName>(allSdks[0].name);
+    const { sdkNames: projectSdkNames, loading: loadingProjectSdks } =
+        useProjectSdkNamesFromFirstApplicationsPage(projectId);
+    const defaultSdkName = projectSdkNames[0] ?? allSdks[0].name;
+    const [selectedSdkName, setSelectedSdkName] = useState<SdkName | undefined>(
+        undefined,
+    );
+    const sdkName = selectedSdkName ?? defaultSdkName;
 
     const { metrics } = useFeatureMetrics(projectId, feature, {
         refreshInterval: 1000,
@@ -224,46 +239,48 @@ const DialogBody = ({ projectId, feature, onClose }: DialogBodyProps) => {
                     </Typography>
                 </Header>
                 <Body>
-                    <Select
-                        value={sdkName}
-                        onChange={(event) =>
-                            setSdkName(event.target.value as SdkName)
-                        }
-                        size='small'
-                        sx={{ maxWidth: 240 }}
-                    >
-                        {allSdks.map((sdk) => (
-                            <MenuItem key={sdk.name} value={sdk.name}>
-                                {sdk.name}
-                            </MenuItem>
-                        ))}
-                    </Select>
+                    {loadingProjectSdks ? (
+                        <LoadingContainer>
+                            <CircularProgress />
+                        </LoadingContainer>
+                    ) : (
+                        <>
+                            <SelectSdk
+                                projectSdks={projectSdkNames}
+                                value={sdkName}
+                                onChange={setSelectedSdkName}
+                            />
 
-                    <Box>
-                        <Typography
-                            variant='body2'
-                            sx={{
-                                fontWeight: 'bold',
-                                mb: 1,
-                            }}
-                        >
-                            Code example
-                        </Typography>
-                        <FlagUsageSnippet sdkName={sdkName} feature={feature} />
-                    </Box>
+                            <Box>
+                                <Typography
+                                    variant='body2'
+                                    sx={{
+                                        fontWeight: 'bold',
+                                        mb: 1,
+                                    }}
+                                >
+                                    Code example
+                                </Typography>
+                                <FlagUsageSnippet
+                                    sdkName={sdkName}
+                                    feature={feature}
+                                />
+                            </Box>
 
-                    <Box>
-                        <Typography
-                            variant='body1'
-                            sx={{
-                                fontWeight: 'bold',
-                                mb: 1,
-                            }}
-                        >
-                            Test flag
-                        </Typography>
-                        <ListeningStatus evaluated={evaluated} />
-                    </Box>
+                            <Box>
+                                <Typography
+                                    variant='body1'
+                                    sx={{
+                                        fontWeight: 'bold',
+                                        mb: 1,
+                                    }}
+                                >
+                                    Test flag
+                                </Typography>
+                                <ListeningStatus evaluated={evaluated} />
+                            </Box>
+                        </>
+                    )}
                 </Body>
                 <Footer>
                     <StatusIndicator>

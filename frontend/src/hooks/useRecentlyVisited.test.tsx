@@ -30,7 +30,10 @@ beforeEach(() => {
 
 test('checks that routes that exist in routes.ts gets added to lastVisited', async () => {
     render(
-        <Router initialEntries={['/']}>
+        <Router
+            initialEntries={['/']}
+            future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+        >
             <RouteNameRender />
             <Routes>
                 <Route path='/' element={<Navigate to={'/search'} />} />
@@ -66,12 +69,28 @@ test('checks that routes that exist in routes.ts gets added to lastVisited', asy
 });
 
 test('visiting gets added to the list', async () => {
-    const router = createMemoryRouter([
-        { path: '/search', element: <RouteNameRender /> },
-        { path: '/projects', element: <RouteNameRender /> },
-        { path: '/', element: <RouteNameRender /> },
-    ]);
-    render(<RouterProvider router={router} />);
+    const router = createMemoryRouter(
+        [
+            { path: '/search', element: <RouteNameRender /> },
+            { path: '/projects', element: <RouteNameRender /> },
+            { path: '/', element: <RouteNameRender /> },
+        ],
+        {
+            future: {
+                v7_relativeSplatPath: true,
+                v7_fetcherPersist: true,
+                v7_normalizeFormMethod: true,
+                v7_partialHydration: true,
+                v7_skipActionErrorRevalidation: true,
+            },
+        },
+    );
+    render(
+        <RouterProvider
+            router={router}
+            future={{ v7_startTransition: true }}
+        />,
+    );
     router.navigate('/search');
     await screen.findByText('/search');
     router.navigate('/projects');

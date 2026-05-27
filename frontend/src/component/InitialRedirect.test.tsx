@@ -41,7 +41,13 @@ const setupLoggedOut = () => {
 const renderInitialRedirect = () =>
     render(
         <SWRConfig value={{ provider: () => new Map(), dedupingInterval: 0 }}>
-            <MemoryRouter initialEntries={['/']}>
+            <MemoryRouter
+                initialEntries={['/']}
+                future={{
+                    v7_startTransition: true,
+                    v7_relativeSplatPath: true,
+                }}
+            >
                 <Routes>
                     <Route path='/' element={<InitialRedirect />} />
                     <Route path='*' element={<LocationDisplay />} />

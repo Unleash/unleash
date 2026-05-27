@@ -16,7 +16,13 @@ const LocationDisplay = () => {
 const renderNotFound = (initialPath = '/not-exists') =>
     render(
         <ThemeProvider>
-            <MemoryRouter initialEntries={[initialPath]}>
+            <MemoryRouter
+                initialEntries={[initialPath]}
+                future={{
+                    v7_startTransition: true,
+                    v7_relativeSplatPath: true,
+                }}
+            >
                 <Routes>
                     <Route path='*' element={<NotFound />} />
                     <Route path='/' element={<LocationDisplay />} />

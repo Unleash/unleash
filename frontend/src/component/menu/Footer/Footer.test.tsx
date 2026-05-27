@@ -9,7 +9,12 @@ test('should render DrawerMenu', () => {
     const { asFragment } = render(
         <ThemeProvider>
             <AnnouncerProvider>
-                <MemoryRouter>
+                <MemoryRouter
+                    future={{
+                        v7_startTransition: true,
+                        v7_relativeSplatPath: true,
+                    }}
+                >
                     <Footer />
                 </MemoryRouter>
             </AnnouncerProvider>
@@ -23,7 +28,13 @@ test('should render DrawerMenu with "features" selected', () => {
     const { asFragment } = render(
         <ThemeProvider>
             <AnnouncerProvider>
-                <MemoryRouter initialEntries={['/features']}>
+                <MemoryRouter
+                    initialEntries={['/features']}
+                    future={{
+                        v7_startTransition: true,
+                        v7_relativeSplatPath: true,
+                    }}
+                >
                     <Footer />
                 </MemoryRouter>
             </AnnouncerProvider>

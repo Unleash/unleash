@@ -10,7 +10,9 @@ import { AnnouncerProvider } from 'component/common/Announcer/AnnouncerProvider/
 
 test('renders an empty list correctly', () => {
     const { asFragment } = render(
-        <MemoryRouter>
+        <MemoryRouter
+            future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+        >
             <ThemeProvider>
                 <AnnouncerProvider>
                     <UIProvider>

@@ -78,8 +78,8 @@ export type IFlagKey =
     | 'accessOverviewRework'
     | 'onboardingConnectSDKNewDialog'
     | 'logRocketEnabled'
-    | 'reactRouter_v7_relativeSplatPath'
     | 'newProjectList'
+    | 'reactRouter_v7_relativeSplatPath'
     | 'reactRouter_v7_startTransition';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;

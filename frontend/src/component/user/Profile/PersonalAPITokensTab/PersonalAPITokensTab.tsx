@@ -63,12 +63,16 @@ const StyledPlaceholderSubtitle = styled(Typography)(({ theme }) => ({
     marginBottom: theme.spacing(4.5),
 }));
 
-export const tokensPlaceholder: IPersonalAPIToken[] = Array(15).fill({
-    description: 'Short description of the feature',
-    type: '-',
-    createdAt: new Date(2022, 1, 1),
-    project: 'projectID',
-});
+export const tokensPlaceholder: IPersonalAPIToken[] = Array.from(
+    { length: 15 },
+    (_, index) => ({
+        id: `placeholder-${index}`,
+        description: 'Short description of the feature',
+        expiresAt: '',
+        createdAt: new Date(2022, 1, 1).toISOString(),
+        seenAt: '',
+    }),
+);
 
 export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search', string>

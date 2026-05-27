@@ -4,17 +4,13 @@ import type { IUnleashStores } from '../../../types/stores.js';
 import type { IAddonProviders } from '../../../addons/index.js';
 import { AUTH_PROVIDERS_CATALOG } from '../../../types/settings/auth-settings.js';
 
+const DEFAULT_TTL_MS = 60_000; // 1 minute
+
 export interface IntegrationMetricsOptions {
-    /**
-     * How long to cache the result of the configured-integrations DB read.
-     * prom-client invokes `collect()` on every scrape; a short cache prevents
-     * a fleet of Prometheus replicas from hammering the database.
-     */
     cacheTtlMs?: number;
 }
 
 export interface IntegrationMetricsHandles {
-    /** Counter for auth-login attempts. Increment from the enterprise auth provider. */
     authLoginTotal: Counter<'provider' | 'outcome'>;
 }
 
@@ -25,8 +21,6 @@ export interface IntegrationMetricsDeps {
     options?: IntegrationMetricsOptions;
 }
 
-const DEFAULT_TTL_MS = 60_000; // 1 minute
-
 /**
  *  metrics show up on `/internal-backstage/prometheus`.
  */
@@ -34,11 +28,12 @@ export function registerIntegrationMetrics(
     deps: IntegrationMetricsDeps,
 ): IntegrationMetricsHandles {
     const { addonProviders, stores, getLogger } = deps;
-    const ttlMs = deps.options?.cacheTtlMs ?? DEFAULT_TTL_MS;
     const logger = getLogger('metrics/integrations');
 
-    // expose integrations this Unleash server knows about,
-    // how it is configured today, and whether each is deprecated.
+    // prom-client invokes `collect()` on every call; this short cache prevents
+    // lots of Prometheus replicas from hitting the database
+    const ttlMs = deps.options?.cacheTtlMs ?? DEFAULT_TTL_MS;
+
     registerAvailableGauge(addonProviders);
     registerDeprecatedInfoGauge(addonProviders);
     registerConfiguredGauge({ stores, ttlMs, logger });
@@ -55,12 +50,12 @@ export function registerIntegrationMetrics(
 
 /**
  *  `integration_available{name, kind, deprecated}`
- *  catalog of available integrations into this server. value=1: registered entry.
+ *  all available integrations of this server. value=1: registered entry.
  */
 function registerAvailableGauge(addonProviders: IAddonProviders): void {
     const gauge = new Gauge({
         name: 'integration_available',
-        help: 'Integrations registered with this Unleash server. value=1 means the integration is compiled in and selectable.',
+        help: 'Available integrations  with this Unleash server. value=1: available.',
         labelNames: ['name', 'kind', 'deprecated'] as const,
     });
 
@@ -87,15 +82,15 @@ function registerAvailableGauge(addonProviders: IAddonProviders): void {
 
 /**
  * `integration_deprecated_info{name, kind, removal_target}`
- *  catalog of gauge marking deprecated integrations. value=1: entry.
- *  It can be used for alerts like
- *  `integration_configured{state="enabled"} * on(name, kind)
+ *  list of gauges with deprecated integrations.
+ *
+ *  e.g. `integration_configured{state="enabled"} * on(name, kind)
  *      group_left integration_deprecated_info > 0`.
  */
 function registerDeprecatedInfoGauge(addonProviders: IAddonProviders): void {
     const gauge = new Gauge({
         name: 'integration_deprecated_info',
-        help: 'Marks integrations as deprecated. value=1 always; absence of a series means not deprecated. Use as a join target in alert rules.',
+        help: 'Deprecated integrations on this server. value=1 always. Use it as a join target in alert rules.',
         labelNames: ['name', 'kind', 'removal_target'] as const,
     });
 
@@ -134,9 +129,8 @@ interface ConfiguredSample {
 
 /**
  * `integration_configured{name, kind, state}`
- *  current configured instance count per integration and state (`enabled`/`disabled` for
- *  addons; plus `not_configured` for auth providers that have never been saved).
- *  Lazily evaluated via prom-client `collect()`, TTL-cached.
+ *  lists configured instances per integration and state (`enabled`/`disabled`)
+ *  plus `not_configured` for auth providers that have never been saved.
  */
 function registerConfiguredGauge(args: {
     stores: Pick<IUnleashStores, 'addonStore' | 'settingStore'>;
@@ -151,10 +145,12 @@ function registerConfiguredGauge(args: {
 
     new Gauge({
         name: 'integration_configured',
-        help: 'Integration configurations on this Unleash server, broken out by state. Sampled lazily on scrape with a short TTL cache.',
+        help: 'Configured integrations on this Unleash server, per state. They benefit a short TTL cache. value=1: integration is compiled in and selectable',
         labelNames: ['name', 'kind', 'state'] as const,
         async collect() {
             const now = Date.now();
+
+            // Lazily evaluated via prom-client `collect()`, TTL-cached.
             const fresh = now - cache.ts < ttlMs && cache.samples.length > 0;
 
             if (!fresh) {

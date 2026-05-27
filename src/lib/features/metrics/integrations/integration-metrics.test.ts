@@ -74,12 +74,12 @@ describe('Integration Metrics', () => {
                 /integration_available\{[^}]*name="slack-app"[^}]*kind="addon"[^}]*deprecated="false"[^}]*\} 1/,
             );
 
-            // The deprecated addon is still "available" (still selectable); the
-            // deprecated flag is the discriminator, not the absence of a series.
+            // Still available, but 'deprecated' flag is on
             expect(output).toMatch(
                 /integration_available\{[^}]*name="slack"[^}]*kind="addon"[^}]*deprecated="true"[^}]*\} 1/,
             );
-            // All known auth providers are present too.
+
+            // All auth providers are present too.
             for (const provider of AUTH_PROVIDERS_CATALOG) {
                 const expectedDeprecated = provider.deprecatedRemovalTarget
                     ? 'true'
@@ -111,15 +111,17 @@ describe('Integration Metrics', () => {
 
             const output = await register.metrics();
 
-            // Non-deprecated addon: must NOT appear in the deprecated gauge.
+            // Non-deprecated addon
             expect(output).not.toMatch(
                 /integration_deprecated_info\{[^}]*name="webhook"/,
             );
-            // Deprecated addon: must appear with the deprecation string.
+
+            // Deprecated addon
             expect(output).toMatch(
                 /integration_deprecated_info\{[^}]*name="legacy-foo"[^}]*kind="addon"[^}]*removal_target="will be removed in v9"[^}]*\} 1/,
             );
-            // Deprecated auth providers from the catalog appear too.
+
+            // Deprecated auth providers
             const deprecatedAuth = AUTH_PROVIDERS_CATALOG.filter(
                 (p) => p.deprecatedRemovalTarget,
             );
@@ -134,7 +136,7 @@ describe('Integration Metrics', () => {
     });
 
     describe('integration_configured', () => {
-        test('aggregates addons by provider × state', async () => {
+        test('aggregates addons by provider per state', async () => {
             const addonRows: Partial<IAddon>[] = [
                 { provider: 'webhook', enabled: true },
                 { provider: 'webhook', enabled: true },
@@ -159,21 +161,20 @@ describe('Integration Metrics', () => {
             expect(output).toMatch(
                 /integration_configured\{[^}]*name="datadog"[^}]*state="disabled"[^}]*\} 1/,
             );
-            // Datadog has no enabled rows — confirm the zero side is also emitted
-            // so dashboards have explicit zero, not absent series.
+
+            // Datadog has no enabled rows
             expect(output).toMatch(
                 /integration_configured\{[^}]*name="datadog"[^}]*state="enabled"[^}]*\} 0/,
             );
         });
 
-        test('reports auth providers as not_configured / enabled / disabled based on settings rows', async () => {
+        test('reports auth providers as not_configured / enabled / disabled based on settings', async () => {
             registerIntegrationMetrics({
                 addonProviders: {},
                 stores: stores([], {
                     'unleash.enterprise.auth.oidc': { enabled: true },
                     'unleash.enterprise.auth.saml': { enabled: false },
-                    // google has a row but enabled is undefined-ish
-                    'unleash.enterprise.auth.google': {},
+                    'unleash.enterprise.auth.google': {}, // google has a row but enabled is undefined-ish
                     // simple is missing entirely
                 }),
                 getLogger: noLogger,
@@ -181,23 +182,28 @@ describe('Integration Metrics', () => {
 
             const output = await register.metrics();
 
+            // enabled auth provider
             expect(output).toMatch(
                 /integration_configured\{[^}]*name="oidc"[^}]*kind="auth"[^}]*state="enabled"[^}]*\} 1/,
             );
+
+            // disabled auth provider
             expect(output).toMatch(
                 /integration_configured\{[^}]*name="saml"[^}]*kind="auth"[^}]*state="disabled"[^}]*\} 1/,
             );
-            // Row exists but enabled is falsy → disabled
+
+            // google configured but disabled
             expect(output).toMatch(
                 /integration_configured\{[^}]*name="google"[^}]*kind="auth"[^}]*state="disabled"[^}]*\} 1/,
             );
-            // Missing row → not_configured
+
+            // not_configured
             expect(output).toMatch(
                 /integration_configured\{[^}]*name="simple"[^}]*kind="auth"[^}]*state="not_configured"[^}]*\} 1/,
             );
         });
 
-        test('caches the DB read across scrapes within the TTL window', async () => {
+        test('caches the DB read across calls within the TTL window', async () => {
             let calls = 0;
             const countingStores = {
                 addonStore: {
@@ -222,8 +228,8 @@ describe('Integration Metrics', () => {
             await register.metrics();
             await register.metrics();
 
-            // Each scrape only reads on the first call (cache miss). Two
-            // consecutive scrapes within 60s must not double-query.
+            // Each scrape only reads on the 1st call (cache miss).
+            // Two consecutive calls within 60s must not double-query.
             expect(calls).toBe(1);
         });
 
@@ -249,25 +255,27 @@ describe('Integration Metrics', () => {
                 options: { cacheTtlMs: 0 }, // force a refetch on every collect
             });
 
-            // First scrape: warms the cache.
+            // 1st call
             const first = await register.metrics();
+
             expect(first).toMatch(
                 /integration_configured\{[^}]*name="webhook"[^}]*state="enabled"[^}]*\} 1/,
             );
 
-            // Second scrape: store throws — must not throw, must serve stale.
+            // 2nd call: store throws — must not throw, must serve stale
             await expect(register.metrics()).resolves.toEqual(
                 expect.any(String),
             );
             const second = await register.metrics();
+
             expect(second).toMatch(
                 /integration_configured\{[^}]*name="webhook"[^}]*state="enabled"[^}]*\} 1/,
             );
         });
     });
 
-    describe('collectConfiguredSamples (helper)', () => {
-        test('skips auth providers whose store read throws (instead of corrupting state)', async () => {
+    describe('collectConfiguredSamples', () => {
+        test('skips auth providers whose store read throws - no corrupting state)', async () => {
             const throwingStores = {
                 addonStore: { getAll: async () => [] },
                 settingStore: {
@@ -278,7 +286,9 @@ describe('Integration Metrics', () => {
             } as any;
 
             const samples = await collectConfiguredSamples(throwingStores);
-            expect(samples).toEqual([]); // no auth samples produced; no exception
+
+            // empty auth samples produced
+            expect(samples).toEqual([]);
         });
     });
 
@@ -293,7 +303,6 @@ describe('Integration Metrics', () => {
             authLoginTotal.inc({ provider: 'google', outcome: 'failure' });
             authLoginTotal.inc({ provider: 'google', outcome: 'success' });
 
-            // Use the prom-client `get()` for typed assertions
             const series = authLoginTotal as any;
             const sample =
                 series.hashMap[
@@ -303,6 +312,7 @@ describe('Integration Metrics', () => {
                             k.includes('outcome:success'),
                     )!
                 ];
+
             expect(sample.value).toBe(2);
         });
     });

@@ -18,7 +18,6 @@ import { ProjectLastSeen } from './ProjectLastSeen/ProjectLastSeen.tsx';
 import { OnboardingStatusBadge } from './OnboardingStatusBadge/OnboardingStatusBadge.tsx';
 import type { ProjectListItem } from 'hooks/api/getters/useProjects/useProjects.ts';
 import { ProjectPeople } from './ProjectCardFooter/ProjectPeople/ProjectPeople.tsx';
-import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
 
 const StyledNewProjectCard = styled(StyledProjectCard)(({ theme }) => ({
     minHeight: theme.spacing(23),
@@ -86,9 +85,7 @@ export const NewProjectCard = ({
                 lastUpdatedAt={lastUpdatedAt}
                 createdAt={createdAt}
             >
-                {id !== DEFAULT_PROJECT_ID && (
-                    <ProjectPeople owners={owners} total={memberCount} />
-                )}
+                <ProjectPeople owners={owners} total={memberCount} />
             </NewProjectCardFooter>
         </StyledNewProjectCard>
     );

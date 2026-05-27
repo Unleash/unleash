@@ -46,7 +46,6 @@ type User = {
 type AvatarGroupProps = {
     users: User[];
     avatarLimit?: number;
-    total?: number;
     AvatarComponent?: AvatarComponentType;
     className?: string;
 };
@@ -67,7 +66,6 @@ const MAX_OVERFLOW_DISPLAY_NUMBER = 99;
 const AvatarGroupInner = ({
     users = [],
     avatarLimit = 9,
-    total,
     AvatarComponent,
     className,
 }: AvatarGroupInnerProps) => {
@@ -90,8 +88,7 @@ const AvatarGroupInner = ({
         [users, avatarLimit],
     );
 
-    const totalUsers = total ?? users.length;
-    const overflow = totalUsers - shownUsers.length;
+    const overflow = users.length - avatarLimit;
 
     return (
         <StyledAvatars className={className}>
@@ -103,7 +100,7 @@ const AvatarGroupInner = ({
                 show={
                     <AvatarComponent
                         user={{
-                            username: `Total: ${millify(totalUsers)}`,
+                            username: `Total: ${millify(users.length)}`,
                         }}
                     >
                         +{Math.min(overflow, MAX_OVERFLOW_DISPLAY_NUMBER)}

@@ -24,7 +24,11 @@ import type { FeatureTypeSchema } from 'openapi';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { DialogFormTemplate } from 'component/common/DialogFormTemplate/DialogFormTemplate';
-import { NewDialogFormTemplate } from 'component/common/DialogFormTemplate/NewDialogFormTemplate';
+import {
+    MultiPillDropdown,
+    NewDialogFormTemplate,
+    SinglePillDropdown,
+} from 'component/common/DialogFormTemplate/NewDialogFormTemplate';
 import { SingleSelectConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/SingleSelectConfigButton';
 import useAllTags from 'hooks/api/getters/useAllTags/useAllTags';
 import Label from '@mui/icons-material/Label';
@@ -293,33 +297,41 @@ const CreateFeatureDialogContent = ({
                         Limit={limitNode}
                         configButtons={
                             <>
-                                <SingleSelectConfigButton
-                                    variant='pill'
-                                    tooltip={{ header: 'Select a flag type' }}
-                                    description={configButtonData.type.text}
+                                <SinglePillDropdown<string>
+                                    label={
+                                        featureTypes.find((t) => t.id === type)
+                                            ?.name || 'Select flag type'
+                                    }
+                                    tooltip={{
+                                        header: 'Select a flag type',
+                                        description: configButtonData.type.text,
+                                    }}
                                     options={featureTypes.map(
                                         (t: FeatureTypeSchema) => ({
                                             label: t.name,
                                             value: t.id,
                                         }),
                                     )}
-                                    onChange={(value: any) => setType(value)}
-                                    button={{
-                                        label:
-                                            featureTypes.find(
-                                                (t) => t.id === type,
-                                            )?.name || 'Select flag type',
-                                        icon: <FeatureTypeIcon />,
-                                    }}
-                                    search={{
-                                        label: 'Filter flag types',
-                                        placeholder: 'Select flag type',
-                                    }}
+                                    onChange={(value) =>
+                                        setType(value as typeof type)
+                                    }
+                                    searchLabel='Filter flag types'
+                                    searchPlaceholder='Select flag type'
                                 />
-                                <MultiSelectConfigButton
-                                    variant='pill'
-                                    tooltip={{ header: 'Select tags' }}
-                                    description={configButtonData.tags.text}
+                                <MultiPillDropdown<string>
+                                    label={
+                                        tags.size > 0
+                                            ? `${tags.size} selected`
+                                            : 'Add tags'
+                                    }
+                                    tooltip={{
+                                        header: 'Select tags',
+                                        description: configButtonData.tags.text,
+                                    }}
+                                    options={allTags.map((tag) => ({
+                                        label: formatTag(tag),
+                                        value: `${tag.type}:${tag.value}`,
+                                    }))}
                                     selectedOptions={
                                         new Set(
                                             Array.from(tags).map(
@@ -328,10 +340,6 @@ const CreateFeatureDialogContent = ({
                                             ),
                                         )
                                     }
-                                    options={allTags.map((tag) => ({
-                                        label: formatTag(tag),
-                                        value: `${tag.type}:${tag.value}`,
-                                    }))}
                                     onChange={(strings) => {
                                         const normalized = Array.from(
                                             strings,
@@ -342,17 +350,8 @@ const CreateFeatureDialogContent = ({
                                         });
                                         setTags(new Set(normalized));
                                     }}
-                                    button={{
-                                        label:
-                                            tags.size > 0
-                                                ? `${tags.size} selected`
-                                                : 'Add tags',
-                                        icon: <Label />,
-                                    }}
-                                    search={{
-                                        label: 'Filter tags',
-                                        placeholder: 'Select tags',
-                                    }}
+                                    searchLabel='Filter tags'
+                                    searchPlaceholder='Select tags'
                                 />
                             </>
                         }

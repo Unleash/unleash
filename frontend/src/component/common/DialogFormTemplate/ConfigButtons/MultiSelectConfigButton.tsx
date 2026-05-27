@@ -4,7 +4,7 @@ import { DropdownList, type DropdownListProps } from './DropdownList.tsx';
 
 type MultiSelectConfigButtonProps<T> = Pick<
     ConfigButtonProps,
-    'button' | 'onOpen' | 'onClose' | 'description' | 'tooltip' | 'variant'
+    'button' | 'onOpen' | 'onClose' | 'description' | 'tooltip'
 > &
     Pick<DropdownListProps<T>, 'search' | 'options'> & {
         selectedOptions: Set<T>;

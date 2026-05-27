@@ -1,5 +1,6 @@
-import type { FormEventHandler, ReactNode } from 'react';
+import { type FormEventHandler, type ReactNode, useRef, useState } from 'react';
 import { Box, Button, FormControlLabel, Switch, styled } from '@mui/material';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import type { IPermissionButtonProps } from 'component/common/PermissionButton/PermissionButton';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
@@ -7,6 +8,10 @@ import Input from 'component/common/Input/Input';
 import { NamingPatternInfo } from './NamingPatternInfo.tsx';
 import type { CreateFeatureNamingPatternSchema } from 'openapi';
 import { HeaderBreadcrumb } from './HeaderBreadcrumb.tsx';
+import { DropdownList } from './ConfigButtons/DropdownList.tsx';
+import { StyledPopover } from './ConfigButtons/shared.styles';
+import { StyledTooltipContent } from './ConfigButtons/ConfigButton.styles';
+import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 
 export type ProjectOption = { label: string; value: string };
 
@@ -89,6 +94,165 @@ const ToggleWrapper = styled('div')(({ theme }) => ({
     marginLeft: theme.spacing(-1.5),
     '& .MuiFormControlLabel-root': { margin: 0 },
 }));
+
+const PillButton = styled(Button)(({ theme }) => ({
+    borderColor: theme.palette.divider,
+    backgroundColor: theme.palette.background.paper,
+    color: theme.palette.text.primary,
+    textTransform: 'none',
+    fontWeight: theme.typography.body1.fontWeight,
+    borderRadius: '4px',
+    padding: theme.spacing(1, 2),
+    minWidth: theme.spacing(18),
+    justifyContent: 'space-between',
+    '&:hover': {
+        borderColor: theme.palette.text.secondary,
+        backgroundColor: theme.palette.background.paper,
+    },
+    '& .MuiButton-endIcon': { marginLeft: 'auto' },
+}));
+
+type DropdownOption<T> = { label: string; value: T };
+
+type Tooltip = { header: string; description: string };
+
+const PillTrigger = ({
+    label,
+    tooltip,
+    onClick,
+    buttonRef,
+}: {
+    label: string;
+    tooltip: Tooltip;
+    onClick: () => void;
+    buttonRef: React.RefObject<HTMLButtonElement | null>;
+}) => (
+    <TooltipResolver
+        titleComponent={
+            <StyledTooltipContent>
+                <h3>{tooltip.header}</h3>
+                <p>{tooltip.description}</p>
+            </StyledTooltipContent>
+        }
+        variant='custom'
+    >
+        <PillButton
+            ref={buttonRef}
+            variant='outlined'
+            color='inherit'
+            endIcon={<ArrowDropDownIcon />}
+            onClick={onClick}
+        >
+            {label}
+        </PillButton>
+    </TooltipResolver>
+);
+
+type SinglePillProps<T> = {
+    label: string;
+    tooltip: Tooltip;
+    options: DropdownOption<T>[];
+    onChange: (value: T) => void;
+    searchLabel: string;
+    searchPlaceholder: string;
+};
+
+export function SinglePillDropdown<T = string>({
+    label,
+    tooltip,
+    options,
+    onChange,
+    searchLabel,
+    searchPlaceholder,
+}: SinglePillProps<T>) {
+    const ref = useRef<HTMLButtonElement>(null);
+    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+    return (
+        <>
+            <PillTrigger
+                label={label}
+                tooltip={tooltip}
+                buttonRef={ref}
+                onClick={() => setAnchorEl(ref.current)}
+            />
+            <StyledPopover
+                open={Boolean(anchorEl)}
+                anchorEl={anchorEl}
+                onClose={() => setAnchorEl(null)}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+            >
+                <DropdownList<T>
+                    options={options}
+                    onChange={(value) => {
+                        onChange(value);
+                        setAnchorEl(null);
+                    }}
+                    search={{
+                        label: searchLabel,
+                        placeholder: searchPlaceholder,
+                    }}
+                />
+            </StyledPopover>
+        </>
+    );
+}
+
+type MultiPillProps<T> = {
+    label: string;
+    tooltip: Tooltip;
+    options: DropdownOption<T>[];
+    selectedOptions: Set<T>;
+    onChange: (values: Set<T>) => void;
+    searchLabel: string;
+    searchPlaceholder: string;
+};
+
+export function MultiPillDropdown<T = string>({
+    label,
+    tooltip,
+    options,
+    selectedOptions,
+    onChange,
+    searchLabel,
+    searchPlaceholder,
+}: MultiPillProps<T>) {
+    const ref = useRef<HTMLButtonElement>(null);
+    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+    const toggle = (value: T) => {
+        const next = new Set(selectedOptions);
+        if (next.has(value)) next.delete(value);
+        else next.add(value);
+        onChange(next);
+    };
+    return (
+        <>
+            <PillTrigger
+                label={label}
+                tooltip={tooltip}
+                buttonRef={ref}
+                onClick={() => setAnchorEl(ref.current)}
+            />
+            <StyledPopover
+                open={Boolean(anchorEl)}
+                anchorEl={anchorEl}
+                onClose={() => setAnchorEl(null)}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+            >
+                <DropdownList<T>
+                    options={options}
+                    multiselect={{ selectedOptions }}
+                    onChange={toggle}
+                    search={{
+                        label: searchLabel,
+                        placeholder: searchPlaceholder,
+                    }}
+                />
+            </StyledPopover>
+        </>
+    );
+}
 
 export const NewDialogFormTemplate: React.FC<Props> = ({
     createButtonProps,

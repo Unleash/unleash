@@ -1,17 +1,10 @@
 import { type FC, type ReactNode, useRef, type PropsWithChildren } from 'react';
 import { Box, Button } from '@mui/material';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import {
-    ButtonLabel,
-    PillButton,
-    StyledTooltipContent,
-} from './ConfigButton.styles';
+import { ButtonLabel, StyledTooltipContent } from './ConfigButton.styles';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { StyledPopover } from './shared.styles';
 import { useId } from 'hooks/useId';
-
-export type ConfigButtonVariant = 'default' | 'pill';
 
 export type ConfigButtonProps = {
     button: {
@@ -30,7 +23,6 @@ export type ConfigButtonProps = {
         header: string;
         additionalContent?: ReactNode;
     };
-    variant?: ConfigButtonVariant;
 };
 
 export const ConfigButton: FC<PropsWithChildren<ConfigButtonProps>> = ({
@@ -43,7 +35,6 @@ export const ConfigButton: FC<PropsWithChildren<ConfigButtonProps>> = ({
     anchorEl,
     setAnchorEl,
     tooltip,
-    variant = 'default',
 }) => {
     const ref = useRef<HTMLDivElement>(null);
     const descriptionId = useId('config-button-description');
@@ -71,33 +62,20 @@ export const ConfigButton: FC<PropsWithChildren<ConfigButtonProps>> = ({
                     }
                     variant='custom'
                 >
-                    {variant === 'pill' ? (
-                        <PillButton
-                            variant='outlined'
-                            color='inherit'
-                            endIcon={<ArrowDropDownIcon />}
-                            onClick={() => {
-                                if (!preventOpen) open();
-                            }}
-                        >
-                            <ButtonLabel labelWidth={button.labelWidth}>
-                                {button.label}
-                            </ButtonLabel>
-                        </PillButton>
-                    ) : (
-                        <Button
-                            variant='outlined'
-                            color='primary'
-                            startIcon={button.icon}
-                            onClick={() => {
-                                if (!preventOpen) open();
-                            }}
-                        >
-                            <ButtonLabel labelWidth={button.labelWidth}>
-                                {button.label}
-                            </ButtonLabel>
-                        </Button>
-                    )}
+                    <Button
+                        variant='outlined'
+                        color='primary'
+                        startIcon={button.icon}
+                        onClick={() => {
+                            if (!preventOpen) {
+                                open();
+                            }
+                        }}
+                    >
+                        <ButtonLabel labelWidth={button.labelWidth}>
+                            {button.label}
+                        </ButtonLabel>
+                    </Button>
                 </TooltipResolver>
             </Box>
             <StyledPopover

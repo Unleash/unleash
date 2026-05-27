@@ -32,6 +32,7 @@ window.global ||= window;
 
 const ApplicationRoot = () => {
     const { recordUiError } = useRecordUIErrorApi();
+    const useStartTransition = useUiFlag('reactRouter_v7_startTransition');
     const useRelativeSplatPath = useUiFlag('reactRouter_v7_relativeSplatPath');
 
     const sendErrorToApi = async (
@@ -52,7 +53,10 @@ const ApplicationRoot = () => {
         <UIProviderContainer>
             <AccessProvider>
                 <BrowserRouter
-                    future={{ v7_relativeSplatPath: useRelativeSplatPath }}
+                    future={{
+                        v7_startTransition: useStartTransition,
+                        v7_relativeSplatPath: useRelativeSplatPath,
+                    }}
                     basename={basePath}
                 >
                     <QueryParamProvider adapter={ReactRouter6Adapter}>

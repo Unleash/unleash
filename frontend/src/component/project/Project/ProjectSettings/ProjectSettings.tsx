@@ -22,6 +22,7 @@ import { Box, styled } from '@mui/material';
 import { ProjectActions } from './ProjectActions/ProjectActions.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ProjectContextFields } from './ProjectContextFields.tsx';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam.ts';
 
 const StyledBadgeContainer = styled(Box)({
     marginLeft: 'auto',
@@ -33,6 +34,7 @@ export const ProjectSettings = () => {
     const location = useLocation();
     const { isPro, isEnterprise } = useUiConfig();
     const navigate = useNavigate();
+    const projectId = useRequiredPathParam('projectId');
 
     const actionsEnabled = useUiFlag('automatedActions');
 
@@ -93,13 +95,7 @@ export const ProjectSettings = () => {
         });
     }
 
-    const settings = '/settings';
-    const settingsIndex = location.pathname.lastIndexOf(settings);
-    const basePath =
-        settingsIndex >= 0
-            ? location.pathname.slice(0, settingsIndex)
-            : location.pathname;
-    const toTabPath = (id: string) => `${basePath}${settings}/${id}`;
+    const toTabPath = (id: string) => `/projects/${projectId}/settings/${id}`;
     const onChange = (tab: ITab) => {
         navigate(toTabPath(tab.id));
     };
@@ -110,7 +106,7 @@ export const ProjectSettings = () => {
             value={
                 tabs.find(
                     ({ id }) =>
-                        id && location.pathname?.includes(`${settings}/${id}`),
+                        id && location.pathname?.includes(`/settings/${id}`),
                 )?.id || tabs[0].id
             }
             onChange={onChange}

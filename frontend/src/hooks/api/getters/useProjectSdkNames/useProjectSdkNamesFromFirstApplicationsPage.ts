@@ -8,7 +8,6 @@ import type { SdkName } from 'component/onboarding/dialog/sharedTypes';
 // e.g.: 'react'/'vue'/'svelte' before 'proxy-client',
 // e.g.: 'javascript' before 'java'.
 const sdkPatterns: [string, SdkName][] = [
-    ['nextjs', 'Node.js'],
     ['react', 'React'],
     ['svelte', 'Svelte'],
     ['vue', 'Vue'],

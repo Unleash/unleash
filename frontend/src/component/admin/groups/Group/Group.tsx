@@ -44,10 +44,23 @@ import {
 import { useScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettings';
 import { scimGroupTooltip } from '../group-constants.ts';
 
-export const groupUsersPlaceholder: IGroupUser[] = Array(15).fill({
-    name: 'Name of the user',
-    username: 'Username of the user',
-});
+export const groupUsersPlaceholder: IGroupUser[] = Array.from(
+    { length: 15 },
+    (_, index) => ({
+        id: -(index + 1),
+        name: 'Name of the user',
+        username: 'Username of the user',
+        email: '',
+        createdAt: '',
+        imageUrl: '',
+        loginAttempts: 0,
+        permissions: null,
+        inviteLink: '',
+        rootRole: 0,
+        seenAt: null,
+        isAPI: false,
+    }),
+);
 
 export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search', string>

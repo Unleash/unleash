@@ -78,8 +78,7 @@ export type IFlagKey =
     | 'accessOverviewRework'
     | 'onboardingConnectSDKNewDialog'
     | 'logRocketEnabled'
-    | 'newProjectList'
-    | 'newFeatureFlag';
+    | 'newProjectList';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -356,10 +355,6 @@ const flags: IFlags = {
     ),
     newProjectList: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NEW_PROJECT_LIST,
-        false,
-    ),
-    newFeatureFlag: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_FEATURE_FLAG,
         false,
     ),
 };

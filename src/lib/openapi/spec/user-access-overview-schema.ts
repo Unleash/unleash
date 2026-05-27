@@ -5,7 +5,7 @@ import { groupItemSchema } from './group-item-schema.js';
 
 const permission = {
     type: 'object',
-    required: ['id', 'name', 'displayName', 'type', 'projectIds'],
+    required: ['id', 'name', 'displayName', 'type'],
     additionalProperties: false,
     properties: {
         id: {
@@ -53,7 +53,7 @@ const permissionWithHasPermission = {
 export const userAccessOverviewSchema = {
     $id: '#/components/schemas/userAccessOverviewSchema',
     type: 'object',
-    required: ['overview', 'user', 'rootRole', 'projectRoles'],
+    required: ['overview', 'user', 'rootRole', 'projectRoles', 'projectIds'],
     additionalProperties: false,
     description:
         'Describes the access overview (list of permissions and metadata) for a user.',

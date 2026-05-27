@@ -10,7 +10,13 @@ allFilterKeys.sort();
 const renderWithRouter = (callback: () => any, initialEntries = ['/']) => {
     return renderHook(callback, {
         wrapper: ({ children }) => (
-            <MemoryRouter initialEntries={initialEntries}>
+            <MemoryRouter
+                initialEntries={initialEntries}
+                future={{
+                    v7_startTransition: true,
+                    v7_relativeSplatPath: true,
+                }}
+            >
                 {children}
             </MemoryRouter>
         ),

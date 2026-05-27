@@ -200,7 +200,13 @@ const UnleashUiSetup: FC<{
     >
         <UIProviderContainer>
             <AccessProvider>
-                <MemoryRouter initialEntries={[path]}>
+                <MemoryRouter
+                    initialEntries={[path]}
+                    future={{
+                        v7_startTransition: true,
+                        v7_relativeSplatPath: true,
+                    }}
+                >
                     <ThemeProvider>
                         <AnnouncerProvider>
                             <StickyProvider>

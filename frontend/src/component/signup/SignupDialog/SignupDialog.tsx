@@ -7,6 +7,7 @@ import {
     Typography,
 } from '@mui/material';
 import { type ComponentType, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { SignupDialogSetPassword } from './SignupDialogSetPassword/SignupDialogSetPassword.tsx';
 import { SignupDialogAccountDetails } from './SignupDialogAccountDetails.tsx';
 import { SignupDialogInviteOthers } from './SignupDialogInviteOthers.tsx';
@@ -19,6 +20,10 @@ import Heart from 'assets/icons/heart.svg?react';
 import { formatAssetPath } from 'utils/formatPath.ts';
 import { SignupDialogComplete } from './SignupDialogComplete.tsx';
 import { useEventTracker } from 'hooks/useEventTracker.ts';
+import {
+    DEFAULT_PROJECT_ID,
+    useDefaultProjectId,
+} from 'hooks/api/getters/useDefaultProject/useDefaultProjectId.ts';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -219,6 +224,8 @@ export const SignupDialog = () => {
     const { setToastApiError } = useToast();
     const { signupData, signupRequired, refetch } = useSignup();
     const { submitSignupData } = useSignupApi();
+    const navigate = useNavigate();
+    const defaultProjectId = useDefaultProjectId();
 
     const [data, setData] = useState<SubmitSignupData>({
         password: '',
@@ -279,6 +286,7 @@ export const SignupDialog = () => {
             setIsSubmitting(true);
             await submitSignupData(data);
             refetch();
+            navigate(`/projects/${defaultProjectId ?? DEFAULT_PROJECT_ID}`);
         } catch (e: unknown) {
             const error = formatUnknownError(e);
             setToastApiError(error);

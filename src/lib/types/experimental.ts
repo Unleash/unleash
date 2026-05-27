@@ -78,6 +78,7 @@ export type IFlagKey =
     | 'accessOverviewRework'
     | 'onboardingConnectSDKNewDialog'
     | 'logRocketEnabled'
+    | 'reactRouter_v7_relativeSplatPath'
     | 'newProjectList'
     | 'reactRouter_v7_startTransition';
 
@@ -360,6 +361,10 @@ const flags: IFlags = {
     ),
     reactRouter_v7_startTransition: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_REACT_ROUTER_V7_START_TRANSITION,
+        false,
+    ),
+    reactRouter_v7_relativeSplatPath: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_REACT_ROUTER_V7_RELATIVE_SPLAT_PATH,
         false,
     ),
 };

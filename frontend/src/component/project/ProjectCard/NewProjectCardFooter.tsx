@@ -1,18 +1,13 @@
 import type { ReactNode } from 'react';
 import { Box, styled } from '@mui/material';
-import {
-    ProjectOwners,
-    type IProjectOwnersProps,
-} from './ProjectCardFooter/ProjectOwners/ProjectOwners.tsx';
-import type { ProjectSchemaOwners } from 'openapi';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo.tsx';
+import { StyledSubtitle } from './ProjectCard.styles';
 
-interface INewProjectCardFooterProps {
+type NewProjectCardFooterProps = {
     children?: ReactNode;
-    owners?: IProjectOwnersProps['owners'];
     lastUpdatedAt?: string | null;
     createdAt?: string;
-}
+};
 
 const StyledFooter = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -32,20 +27,11 @@ const StyledRightGroup = styled('div')(({ theme }) => ({
     marginLeft: 'auto',
 }));
 
-const StyledSubtitle = styled('span')(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    fontSize: theme.fontSizes.smallerBody,
-}));
-
 export const NewProjectCardFooter = ({
     children,
-    owners,
     lastUpdatedAt,
     createdAt,
-}: INewProjectCardFooterProps) => {
-    const ownersWithoutSystem = owners?.filter(
-        (owner) => owner.ownerType !== 'system',
-    );
+}: NewProjectCardFooterProps) => {
     return (
         <StyledFooter>
             {lastUpdatedAt ? (
@@ -57,14 +43,7 @@ export const NewProjectCardFooter = ({
                     Created <TimeAgo date={createdAt} />
                 </StyledSubtitle>
             ) : null}
-            <StyledRightGroup>
-                {ownersWithoutSystem ? (
-                    <ProjectOwners
-                        owners={ownersWithoutSystem as ProjectSchemaOwners}
-                    />
-                ) : null}
-                {children}
-            </StyledRightGroup>
+            <StyledRightGroup>{children}</StyledRightGroup>
         </StyledFooter>
     );
 };

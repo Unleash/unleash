@@ -97,6 +97,7 @@ export type UiFlags = {
     logRocketEnabled?: boolean;
     newProjectList?: boolean;
     reactRouter_v7_startTransition?: boolean;
+    reactRouter_v7_relativeSplatPath?: boolean;
 };
 
 export interface IVersionInfo {

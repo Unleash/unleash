@@ -1,27 +1,12 @@
-import {
-    Navigate,
-    Route,
-    Routes,
-    useLocation,
-    useNavigate,
-} from 'react-router-dom';
+import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
     type ITab,
     VerticalTabs,
 } from 'component/common/VerticalTabs/VerticalTabs';
-import { ProjectAccess } from 'component/project/ProjectAccess/ProjectAccess';
-import ProjectEnvironmentList from 'component/project/ProjectEnvironment/ProjectEnvironment';
-import { ChangeRequestConfiguration } from './ChangeRequestConfiguration/ChangeRequestConfiguration.tsx';
-import { ProjectApiAccess } from 'component/project/Project/ProjectSettings/ProjectApiAccess/ProjectApiAccess';
-import { ProjectSegments } from './ProjectSegments/ProjectSegments.tsx';
-import { ProjectDefaultStrategySettings } from './ProjectDefaultStrategySettings/ProjectDefaultStrategySettings.tsx';
-import { Settings } from './Settings/Settings.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
 import { Box, styled } from '@mui/material';
-import { ProjectActions } from './ProjectActions/ProjectActions.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { ProjectContextFields } from './ProjectContextFields.tsx';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam.ts';
 
 const StyledBadgeContainer = styled(Box)({
@@ -34,7 +19,6 @@ export const ProjectSettings = () => {
     const location = useLocation();
     const { isPro, isEnterprise } = useUiConfig();
     const navigate = useNavigate();
-    const projectId = useRequiredPathParam('projectId');
 
     const actionsEnabled = useUiFlag('automatedActions');
 
@@ -95,9 +79,8 @@ export const ProjectSettings = () => {
         });
     }
 
-    const toTabPath = (id: string) => `/projects/${projectId}/settings/${id}`;
     const onChange = (tab: ITab) => {
-        navigate(toTabPath(tab.id));
+        navigate(tab.id);
     };
 
     return (
@@ -111,30 +94,19 @@ export const ProjectSettings = () => {
             }
             onChange={onChange}
         >
-            <Routes>
-                <Route path='/*' element={<Settings />} />
-                <Route
-                    path='environments/*'
-                    element={<ProjectEnvironmentList />}
-                />
-                <Route path='access/*' element={<ProjectAccess />} />
-                <Route path='context/*' element={<ProjectContextFields />} />
-                <Route path='segments/*' element={<ProjectSegments />} />
-                <Route
-                    path='change-requests/*'
-                    element={<ChangeRequestConfiguration />}
-                />
-                <Route path='api-access/*' element={<ProjectApiAccess />} />
-                <Route
-                    path='default-strategy/*'
-                    element={<ProjectDefaultStrategySettings />}
-                />
-                <Route path='actions/*' element={<ProjectActions />} />
-                <Route
-                    path='*'
-                    element={<Navigate replace to={toTabPath(tabs[0].id)} />}
-                />
-            </Routes>
+            <Outlet />
         </VerticalTabs>
+    );
+};
+
+export const ProjectSettingsDefaultRedirect = () => {
+    const { isPro, isEnterprise } = useUiConfig();
+    const projectId = useRequiredPathParam('projectId');
+    const defaultTab = isPro() || isEnterprise() ? '' : 'api-access';
+    return (
+        <Navigate
+            replace
+            to={`/projects/${projectId}/settings/${defaultTab}`}
+        />
     );
 };

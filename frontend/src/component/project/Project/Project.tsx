@@ -40,7 +40,19 @@ import { DeleteProjectDialogue } from './DeleteProject/DeleteProjectDialogue.tsx
 import { ProjectLog } from './ProjectLog/ProjectLog.tsx';
 import { ChangeRequestOverview } from 'component/changeRequest/ChangeRequestOverview/ChangeRequestOverview';
 import { ProjectChangeRequests } from '../../changeRequest/ProjectChangeRequests/ProjectChangeRequests.tsx';
-import { ProjectSettings } from './ProjectSettings/ProjectSettings.tsx';
+import {
+    ProjectSettings,
+    ProjectSettingsDefaultRedirect,
+} from './ProjectSettings/ProjectSettings.tsx';
+import { Settings } from './ProjectSettings/Settings/Settings.tsx';
+import ProjectEnvironmentList from 'component/project/ProjectEnvironment/ProjectEnvironment';
+import { ProjectAccess } from 'component/project/ProjectAccess/ProjectAccess';
+import { ProjectContextFields } from './ProjectSettings/ProjectContextFields.tsx';
+import { ProjectSegments } from './ProjectSettings/ProjectSegments/ProjectSegments.tsx';
+import { ChangeRequestConfiguration } from './ProjectSettings/ChangeRequestConfiguration/ChangeRequestConfiguration.tsx';
+import { ProjectApiAccess } from './ProjectSettings/ProjectApiAccess/ProjectApiAccess';
+import { ProjectDefaultStrategySettings } from './ProjectSettings/ProjectDefaultStrategySettings/ProjectDefaultStrategySettings.tsx';
+import { ProjectActions } from './ProjectSettings/ProjectActions/ProjectActions.tsx';
 import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
 import { ImportModal } from './Import/ImportModal.tsx';
 import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
@@ -401,7 +413,36 @@ export const Project = () => {
                         </ChangeRequestPlausibleProvider>
                     }
                 />
-                <Route path='settings/*' element={<ProjectSettings />} />
+                <Route path='settings' element={<ProjectSettings />}>
+                    <Route index element={<Settings />} />
+                    <Route
+                        path='environments/*'
+                        element={<ProjectEnvironmentList />}
+                    />
+                    <Route path='access/*' element={<ProjectAccess />} />
+                    <Route
+                        path='context/*'
+                        element={<ProjectContextFields />}
+                    />
+                    <Route path='segments/*' element={<ProjectSegments />} />
+                    <Route
+                        path='change-requests/*'
+                        element={<ChangeRequestConfiguration />}
+                    />
+                    <Route
+                        path='api-access/*'
+                        element={<ProjectApiAccess />}
+                    />
+                    <Route
+                        path='default-strategy/*'
+                        element={<ProjectDefaultStrategySettings />}
+                    />
+                    <Route path='actions/*' element={<ProjectActions />} />
+                    <Route
+                        path='*'
+                        element={<ProjectSettingsDefaultRedirect />}
+                    />
+                </Route>
                 <Route path='applications' element={<ProjectApplications />} />
                 <Route path='*' element={<ProjectFlags />} />
             </Routes>

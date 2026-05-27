@@ -11,7 +11,7 @@ describe('SelectSdk', () => {
 
         fireEvent.mouseDown(screen.getByRole('combobox'));
 
-        expect(screen.getByText('Project SDKs')).toBeInTheDocument();
+        expect(screen.getByText('Suggested SDKs')).toBeInTheDocument();
         expect(screen.getByText('Other SDKs')).toBeInTheDocument();
     });
 
@@ -22,7 +22,7 @@ describe('SelectSdk', () => {
 
         fireEvent.mouseDown(screen.getByRole('combobox'));
 
-        expect(screen.queryByText('Project SDKs')).not.toBeInTheDocument();
+        expect(screen.queryByText('Suggested SDKs')).not.toBeInTheDocument();
         expect(screen.queryByText('Other SDKs')).not.toBeInTheDocument();
     });
 

@@ -27,7 +27,7 @@ export const SelectSdk = ({ projectSdks, value, onChange }: SelectSdkProps) => {
             {projectSdks.length > 0
                 ? [
                       <ListSubheader key='project-header'>
-                          Project SDKs
+                          Suggested SDKs
                       </ListSubheader>,
                       ...projectSdks.map((name) => (
                           <MenuItem key={name} value={name}>

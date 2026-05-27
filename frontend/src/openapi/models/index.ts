@@ -1075,6 +1075,7 @@ export * from './getUsers403';
 export * from './getValidTokens400';
 export * from './getValidTokens413';
 export * from './getValidTokens415';
+export * from './groupItemSchema';
 export * from './groupSchema';
 export * from './groupUserModelSchema';
 export * from './groupWithProjectRoleSchema';

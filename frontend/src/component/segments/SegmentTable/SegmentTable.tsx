@@ -49,13 +49,15 @@ export const SegmentTable = () => {
 
     const data = useMemo<ISegment[]>(() => {
         if (!segments) {
-            return Array(5).fill({
+            return Array.from({ length: 5 }, (_, index) => ({
+                id: -(index + 1),
                 name: 'Segment name',
-                description: 'Segment descripton',
+                description: 'Segment description',
                 createdAt: new Date().toISOString(),
                 createdBy: 'user',
-                projectId: 'Project',
-            });
+                project: 'Project',
+                constraints: [],
+            }));
         }
 
         if (projectId) {

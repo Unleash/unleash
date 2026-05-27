@@ -96,6 +96,7 @@ export type UiFlags = {
     onboardingConnectSDKNewDialog?: boolean;
     logRocketEnabled?: boolean;
     newProjectList?: boolean;
+    archivedInLifecycleFilter?: boolean;
 };
 
 export interface IVersionInfo {

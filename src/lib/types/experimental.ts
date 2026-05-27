@@ -78,7 +78,8 @@ export type IFlagKey =
     | 'accessOverviewRework'
     | 'onboardingConnectSDKNewDialog'
     | 'logRocketEnabled'
-    | 'newProjectList';
+    | 'newProjectList'
+    | 'archivedInLifecycleFilter';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -331,6 +332,10 @@ const flags: IFlags = {
     ),
     onboardingProjectSetupNewSteps: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ONBOARDING_PROJECT_SETUP_NEW_STEPS,
+        false,
+    ),
+    archivedInLifecycleFilter: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ARCHIVED_IN_LIFECYCLE_FILTER,
         false,
     ),
     multiMetricChart: parseEnvVarBoolean(

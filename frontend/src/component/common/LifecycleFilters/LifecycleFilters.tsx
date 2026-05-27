@@ -8,6 +8,7 @@ import { DropdownMenu } from '../DropdownMenu/DropdownMenu.tsx';
 import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { LifecycleChip } from './LifecycleChip.tsx';
 import { FlagsCountBadge } from './FlagsCountBadge.tsx';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface ILifecycleFiltersBaseProps {
     state: FilterItemParamHolder;
@@ -38,15 +39,22 @@ const StyledMinimalChipContainer = styled(Box)(({ theme }) => ({
     width: '100%',
 }));
 
-const lifecycleOptions: {
+type LifecycleOption = {
     label: string;
     value: LifecycleStage['name'] | null;
-}[] = [
+};
+
+const baseLifecycleOptions: LifecycleOption[] = [
     { label: 'All lifecycles', value: null },
     { label: 'Develop', value: 'pre-live' },
     { label: 'Rollout production', value: 'live' },
     { label: 'Cleanup', value: 'completed' },
 ];
+
+const archivedLifecycleOption: LifecycleOption = {
+    label: 'Archived',
+    value: 'archived',
+};
 
 const MinimalChip = ({
     label,
@@ -81,6 +89,10 @@ export const LifecycleFilters = ({
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const selectedLifecycle = state.lifecycle?.values?.[0] ?? null;
+    const archivedInLifecycleFilter = useUiFlag('archivedInLifecycleFilter');
+    const lifecycleOptions = archivedInLifecycleFilter
+        ? [...baseLifecycleOptions, archivedLifecycleOption]
+        : baseLifecycleOptions;
 
     const isActive = (value: LifecycleStage['name'] | null) => {
         return value === selectedLifecycle;

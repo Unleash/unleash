@@ -183,8 +183,24 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         }
                     });
                 }
+                const parsedLifecycleForArchived = lifecycle
+                    ? parseSearchOperatorValue(
+                          'lifecycle.latest_stage',
+                          lifecycle,
+                      )
+                    : null;
+                const lifecycleSelectsArchived =
+                    parsedLifecycleForArchived !== null &&
+                    (parsedLifecycleForArchived.operator === 'IS' ||
+                        parsedLifecycleForArchived.operator === 'IS_ANY_OF') &&
+                    parsedLifecycleForArchived.values.includes('archived');
+                const effectiveArchived = archived || lifecycleSelectsArchived;
+
                 query
-                    .modify(FeatureToggleStore.filterByArchived, archived)
+                    .modify(
+                        FeatureToggleStore.filterByArchived,
+                        effectiveArchived,
+                    )
                     .leftJoin(
                         'feature_environments',
                         'feature_environments.feature_name',
@@ -269,7 +285,14 @@ class FeatureSearchStore implements IFeatureSearchStore {
                       )
                     : null;
                 if (parsedLifecycle) {
-                    applyGenericQueryParams(query, [parsedLifecycle]);
+                    const filteredValues = parsedLifecycle.values.filter(
+                        (value) => value !== 'archived',
+                    );
+                    if (filteredValues.length > 0) {
+                        applyGenericQueryParams(query, [
+                            { ...parsedLifecycle, values: filteredValues },
+                        ]);
+                    }
                 }
 
                 const rankingSql = this.buildRankingSql(

@@ -40,6 +40,7 @@ import {
 import { AvatarCell } from './AvatarCell.tsx';
 import { Box, styled, useMediaQuery, useTheme } from '@mui/material';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
 import { ConnectSdkDialog } from '../../../onboarding/dialog/ConnectSdkDialog.tsx';
 import { ProjectOnboarding } from '../../../onboarding/flow/ProjectOnboarding.tsx';
 import { OldProjectOnboarding } from '../../../onboarding/flow/OldProjectOnboarding.tsx';
@@ -116,12 +117,17 @@ export const ProjectFeatureToggles = ({
     const {
         features,
         total,
-        refetch,
+        refetch: refetchSearch,
         loading,
         initialLoad,
         tableState,
         setTableState,
     } = useProjectFeatureSearch(projectId);
+    const { refetch: refetchProjectStatus } = useProjectStatus(projectId);
+    const refetch = useCallback(() => {
+        refetchSearch();
+        refetchProjectStatus();
+    }, [refetchSearch, refetchProjectStatus]);
 
     const { onFlagTypeClick, onTagClick, onAvatarClick } =
         useProjectFeatureSearchActions(tableState, setTableState);
@@ -200,8 +206,13 @@ export const ProjectFeatureToggles = ({
         }
     };
 
+    const archivedInLifecycleFilter = useUiFlag('archivedInLifecycleFilter');
+    const lifecycleIsArchived =
+        tableState.lifecycle?.values?.includes('archived') === true;
     const showCleanupReminder = !tableState.lastSeenAt && !tableState.lifecycle;
-    const showArchived = Boolean(tableState.archived);
+    const showArchived = archivedInLifecycleFilter
+        ? lifecycleIsArchived
+        : Boolean(tableState.archived);
     const toggleArchived = () => {
         if (showArchived) {
             setTableState({ archived: undefined });
@@ -372,7 +383,7 @@ export const ProjectFeatureToggles = ({
                 id: 'actions',
                 header: '',
                 cell: ({ row }) =>
-                    tableState.archived ? (
+                    showArchived ? (
                         <ArchivedFeatureActionCell
                             project={projectId}
                             onRevive={() => {
@@ -546,14 +557,19 @@ export const ProjectFeatureToggles = ({
                         totalItems={total}
                         environmentsToExport={environments}
                         actions={
-                            <LinkToggle type='button' onClick={toggleArchived}>
-                                {showArchived
-                                    ? 'View active flags'
-                                    : 'View archived flags'}
-                            </LinkToggle>
+                            archivedInLifecycleFilter ? undefined : (
+                                <LinkToggle
+                                    type='button'
+                                    onClick={toggleArchived}
+                                >
+                                    {showArchived
+                                        ? 'View active flags'
+                                        : 'View archived flags'}
+                                </LinkToggle>
+                            )
                         }
                         title={
-                            showArchived
+                            !archivedInLifecycleFilter && showArchived
                                 ? 'Archived feature flags'
                                 : 'Feature flags'
                         }
@@ -569,7 +585,7 @@ export const ProjectFeatureToggles = ({
                 >
                     <FiltersContainer>
                         <FilterRow>
-                            {showArchived ? (
+                            {showArchived && !archivedInLifecycleFilter ? (
                                 <Box sx={{ marginRight: 'auto' }}>
                                     <ProjectOverviewFilters
                                         project={projectId}
@@ -600,7 +616,7 @@ export const ProjectFeatureToggles = ({
                                 onToggle={onToggleColumnVisibility}
                             />
                         </FilterRow>
-                        {showArchived ? null : (
+                        {showArchived && !archivedInLifecycleFilter ? null : (
                             <Box
                                 sx={{
                                     display: 'flex',
@@ -670,7 +686,7 @@ export const ProjectFeatureToggles = ({
                 }
             />
             <BatchSelectionActionsBar count={selectedData.length}>
-                {tableState.archived ? (
+                {showArchived ? (
                     <ArchiveBatchActions
                         selectedIds={Object.keys(rowSelection)}
                         projectId={projectId}

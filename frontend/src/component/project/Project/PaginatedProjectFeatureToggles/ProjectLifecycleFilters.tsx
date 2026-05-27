@@ -4,6 +4,7 @@ import type { FilterItemParamHolder } from '../../../filter/Filters/Filters.tsx'
 import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
 import { LifecycleFilters } from 'component/common/LifecycleFilters/LifecycleFilters.tsx';
 import { Box } from '@mui/material';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 type ProjectLifecycleFiltersProps = {
     projectId: string;
@@ -20,6 +21,7 @@ export const ProjectLifecycleFilters: FC<ProjectLifecycleFiltersProps> = ({
     children,
 }) => {
     const { data } = useProjectStatus(projectId);
+    const archivedInLifecycleFilter = useUiFlag('archivedInLifecycleFilter');
     const lifecycleSummary = Object.entries(
         data?.lifecycleSummary || {},
     ).reduce(
@@ -32,12 +34,16 @@ export const ProjectLifecycleFilters: FC<ProjectLifecycleFiltersProps> = ({
 
     const isArchivedFilterActive = state.archived?.values?.includes('true');
     useEffect(() => {
-        if (isArchivedFilterActive && state.lifecycle) {
+        if (
+            !archivedInLifecycleFilter &&
+            isArchivedFilterActive &&
+            state.lifecycle
+        ) {
             onChange({ ...state, lifecycle: null });
         }
-    }, [isArchivedFilterActive, state, onChange]);
+    }, [archivedInLifecycleFilter, isArchivedFilterActive, state, onChange]);
 
-    if (isArchivedFilterActive) {
+    if (!archivedInLifecycleFilter && isArchivedFilterActive) {
         return null;
     }
 

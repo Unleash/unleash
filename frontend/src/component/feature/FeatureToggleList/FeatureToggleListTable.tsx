@@ -33,6 +33,10 @@ import { ExportFlags } from './ExportFlags.tsx';
 import { createFeatureOverviewCell } from 'component/common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
 import { AvatarCell } from 'component/project/Project/PaginatedProjectFeatureToggles/AvatarCell';
 import { StatusCell } from './StatusCell/StatusCell.tsx';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ArchivedFeatureActionCell } from 'component/archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureActionCell.tsx';
+import { ArchivedFeatureReviveConfirm } from 'component/archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureReviveConfirm/ArchivedFeatureReviveConfirm.tsx';
+import { ArchivedFeatureDeleteConfirm } from 'component/archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureDeleteConfirm/ArchivedFeatureDeleteConfirm.tsx';
 
 export const featuresPlaceholder: FeatureSearchResponseSchema[] = Array.from(
     { length: 15 },
@@ -72,6 +76,17 @@ export const FeatureToggleListTable: FC = () => {
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const isLargeScreen = useMediaQuery(theme.breakpoints.down('xl'));
     const [showExportDialog, setShowExportDialog] = useState(false);
+    const archivedInLifecycleFilter = useUiFlag('archivedInLifecycleFilter');
+    const [reviveDialog, setReviveDialog] = useState<{
+        featureName: string;
+        projectId: string;
+        open: boolean;
+    }>({ featureName: '', projectId: '', open: false });
+    const [deleteDialog, setDeleteDialog] = useState<{
+        featureName: string;
+        projectId: string;
+        open: boolean;
+    }>({ featureName: '', projectId: '', open: false });
 
     const { setToastApiError } = useToast();
 
@@ -188,8 +203,42 @@ export const FeatureToggleListTable: FC = () => {
                     );
                 },
             }),
+            ...(archivedInLifecycleFilter
+                ? [
+                      columnHelper.display({
+                          id: 'actions',
+                          header: '',
+                          cell: ({ row: { original } }) =>
+                              original.archivedAt ? (
+                                  <ArchivedFeatureActionCell
+                                      project={original.project || ''}
+                                      onRevive={() =>
+                                          setReviveDialog({
+                                              featureName: original.name,
+                                              projectId: original.project || '',
+                                              open: true,
+                                          })
+                                      }
+                                      onDelete={() =>
+                                          setDeleteDialog({
+                                              featureName: original.name,
+                                              projectId: original.project || '',
+                                              open: true,
+                                          })
+                                      }
+                                  />
+                              ) : null,
+                          enableSorting: false,
+                          meta: { width: '1%', align: 'right' },
+                      }),
+                  ]
+                : []),
         ],
-        [tableState.favoritesFirst, showStatusColumn],
+        [
+            tableState.favoritesFirst,
+            showStatusColumn,
+            archivedInLifecycleFilter,
+        ],
     );
     const data = useMemo<FeatureSearchResponseSchema[]>(
         () =>
@@ -259,25 +308,28 @@ export const FeatureToggleListTable: FC = () => {
                             >
                                 Unknown flags
                             </Link>
-                            <Link
-                                component={RouterLink}
-                                to='/archive'
-                                underline='always'
-                                sx={{
-                                    marginRight: 2,
-                                    fontSize: theme.typography.body2.fontSize,
-                                    ...focusable(theme),
-                                }}
-                                onClick={() => {
-                                    trackEvent('search-feature-buttons', {
-                                        props: {
-                                            action: 'archive',
-                                        },
-                                    });
-                                }}
-                            >
-                                Archived flags
-                            </Link>
+                            {archivedInLifecycleFilter ? null : (
+                                <Link
+                                    component={RouterLink}
+                                    to='/archive'
+                                    underline='always'
+                                    sx={{
+                                        marginRight: 2,
+                                        fontSize:
+                                            theme.typography.body2.fontSize,
+                                        ...focusable(theme),
+                                    }}
+                                    onClick={() => {
+                                        trackEvent('search-feature-buttons', {
+                                            props: {
+                                                action: 'archive',
+                                            },
+                                        });
+                                    }}
+                                >
+                                    Archived flags
+                                </Link>
+                            )}
                             <ExportFlags
                                 onClick={() => setShowExportDialog(true)}
                             />
@@ -363,6 +415,34 @@ export const FeatureToggleListTable: FC = () => {
                 onClose={() => setShowExportDialog(false)}
                 environments={enabledEnvironments}
             />
+            {archivedInLifecycleFilter ? (
+                <>
+                    <ArchivedFeatureReviveConfirm
+                        revivedFeatures={[reviveDialog.featureName]}
+                        projectId={reviveDialog.projectId}
+                        open={reviveDialog.open}
+                        setOpen={(open) =>
+                            setReviveDialog((prev) => ({ ...prev, open }))
+                        }
+                        refetch={() => {
+                            setReviveDialog((prev) => ({
+                                ...prev,
+                                open: false,
+                            }));
+                            refetchFeatures();
+                        }}
+                    />
+                    <ArchivedFeatureDeleteConfirm
+                        deletedFeatures={[deleteDialog.featureName]}
+                        projectId={deleteDialog.projectId}
+                        open={deleteDialog.open}
+                        setOpen={(open) =>
+                            setDeleteDialog((prev) => ({ ...prev, open }))
+                        }
+                        refetch={refetchFeatures}
+                    />
+                </>
+            ) : null}
         </PageContent>
     );
 };

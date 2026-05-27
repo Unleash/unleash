@@ -59,3 +59,8 @@ export const StyledProjectCardContent = styled('div')(({ theme }) => ({
     justifyContent: 'space-between',
     fontSize: theme.fontSizes.smallerBody,
 }));
+
+export const StyledSubtitle = styled('span')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: theme.fontSizes.smallerBody,
+}));

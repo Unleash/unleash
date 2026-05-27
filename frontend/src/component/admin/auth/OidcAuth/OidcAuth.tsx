@@ -37,6 +37,7 @@ const initialState = {
     acrValues: '',
     idTokenSigningAlgorithm: 'RS256',
     enablePkce: false,
+    extraScopes: '',
 };
 
 type State = typeof initialState & {
@@ -315,6 +316,30 @@ export const OidcAuth = () => {
                             style={{ width: '400px' }}
                             variant='outlined'
                             size='small'
+                        />
+                    </Grid>
+                </Grid>
+                <Grid container spacing={3} sx={{ mb: 2 }}>
+                    <Grid size={{ md: 5 }}>
+                        <strong>Extra Scopes</strong>
+                        <p>
+                            Space-separated list of additional scopes to request
+                            during login, beyond the default{' '}
+                            <code>openid email profile</code> (and{' '}
+                            <code>groups</code> if group syncing is enabled).
+                        </p>
+                    </Grid>
+                    <Grid size={{ md: 6 }}>
+                        <TextField
+                            onChange={updateField}
+                            label='Extra Scopes'
+                            name='extraScopes'
+                            value={data.extraScopes}
+                            disabled={!data.enabled}
+                            style={{ width: '400px' }}
+                            variant='outlined'
+                            size='small'
+                            placeholder='custom_scope1 custom_scope2'
                         />
                     </Grid>
                 </Grid>

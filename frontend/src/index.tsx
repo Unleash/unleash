@@ -26,11 +26,13 @@ import { useRecordUIErrorApi } from 'hooks/api/actions/useRecordUIErrorApi/useRe
 import { HighlightProvider } from 'component/common/Highlight/HighlightProvider';
 import { UnleashFlagProvider } from 'component/providers/UnleashFlagProvider/UnleashFlagProvider';
 import { WelcomeDialogProvider } from 'component/personalDashboard/WelcomeDialogProvider.tsx';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 window.global ||= window;
 
 const ApplicationRoot = () => {
     const { recordUiError } = useRecordUIErrorApi();
+    const useStartTransition = useUiFlag('reactRouter_v7_startTransition');
 
     const sendErrorToApi = async (
         error: Error,
@@ -49,7 +51,10 @@ const ApplicationRoot = () => {
     return (
         <UIProviderContainer>
             <AccessProvider>
-                <BrowserRouter basename={basePath}>
+                <BrowserRouter
+                    basename={basePath}
+                    future={{ v7_startTransition: useStartTransition }}
+                >
                     <QueryParamProvider adapter={ReactRouter6Adapter}>
                         <ThemeProvider>
                             <AnnouncerProvider>

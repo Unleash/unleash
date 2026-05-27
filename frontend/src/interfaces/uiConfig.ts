@@ -96,6 +96,7 @@ export type UiFlags = {
     onboardingConnectSDKNewDialog?: boolean;
     logRocketEnabled?: boolean;
     newProjectList?: boolean;
+    reactRouter_v7_startTransition?: boolean;
 };
 
 export interface IVersionInfo {

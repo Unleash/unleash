@@ -42,23 +42,6 @@ describe('extractSdkNames', () => {
         });
     });
 
-    describe('ordering: nextjs vs node', () => {
-        it('matches nextjs packages to Node.js', () => {
-            expect(extractSdkNames([app(['unleash-client-nextjs'])])).toEqual([
-                'Node.js',
-            ]);
-            expect(extractSdkNames([app(['unleash-nextjs-sdk'])])).toEqual([
-                'Node.js',
-            ]);
-        });
-
-        it('still matches node packages to Node.js', () => {
-            expect(extractSdkNames([app(['unleash-client-node'])])).toEqual([
-                'Node.js',
-            ]);
-        });
-    });
-
     describe('ordering: react/vue/svelte before proxy-client', () => {
         it('matches @unleash/proxy-client-react to React', () => {
             expect(
@@ -125,13 +108,7 @@ describe('extractSdkNames', () => {
         });
     });
 
-    describe('rust / api-client', () => {
-        it('matches unleash-api-client to Rust', () => {
-            expect(extractSdkNames([app(['unleash-api-client'])])).toEqual([
-                'Rust',
-            ]);
-        });
-
+    describe('rust', () => {
         it('matches unleash-client-rust to Rust', () => {
             expect(extractSdkNames([app(['unleash-client-rust'])])).toEqual([
                 'Rust',

@@ -5,8 +5,8 @@ import { formatApiPath } from 'utils/formatPath';
 import type { SdkName } from 'component/onboarding/dialog/sharedTypes';
 
 // Order matters: more specific patterns must come before broader ones.
-// e.g. 'nextjs' before 'node', 'react'/'vue'/'svelte' before 'proxy-client',
-// 'javascript' before 'java'.
+// e.g.: 'react'/'vue'/'svelte' before 'proxy-client',
+// e.g.: 'javascript' before 'java'.
 const sdkPatterns: [string, SdkName][] = [
     ['nextjs', 'Node.js'],
     ['react', 'React'],
@@ -23,7 +23,6 @@ const sdkPatterns: [string, SdkName][] = [
     ['dotnet', '.NET'],
     ['php', 'PHP'],
     ['rust', 'Rust'],
-    ['api-client', 'Rust'],
     ['ios', 'Swift'],
     ['swift', 'Swift'],
     ['android', 'Android'],

@@ -3,7 +3,7 @@ import type { ProjectSchema, ProjectSchemaOwners } from 'openapi';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { millify } from 'millify';
 
-type ProjectPeopleProps = {
+type ProjectUsersProps = {
     owners?: ProjectSchema['owners'];
     total: number;
 };
@@ -38,7 +38,7 @@ const mapOwner = (owner: ProjectSchemaOwners[number]) => {
 const AVATAR_LIMIT = 4;
 const MAX_OVERFLOW_DISPLAY_NUMBER = 99;
 
-export const ProjectPeople = ({ owners = [], total }: ProjectPeopleProps) => {
+export const ProjectUsers = ({ owners = [], total }: ProjectUsersProps) => {
     const nonSystemOwners = owners.filter((o) => o.ownerType !== 'system');
     const shownOwners = nonSystemOwners.slice(0, AVATAR_LIMIT).map(mapOwner);
     const overflow = total - shownOwners.length;

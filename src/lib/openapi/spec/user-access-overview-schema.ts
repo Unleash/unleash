@@ -5,7 +5,7 @@ import { groupItemSchema } from './group-item-schema.js';
 
 const permission = {
     type: 'object',
-    required: ['id', 'name', 'displayName', 'type'],
+    required: ['id', 'name', 'displayName', 'type', 'projectIds'],
     additionalProperties: false,
     properties: {
         id: {
@@ -115,6 +115,17 @@ export const userAccessOverviewSchema = {
                     },
                 },
             },
+        },
+        projectIds: {
+            type: 'array',
+            description:
+                'The list ids of projects the user has been granted explicit access to',
+            items: {
+                type: 'string',
+                description: 'Project id',
+                example: 'project-1',
+            },
+            example: ['project-1', 'project-2'],
         },
     },
     components: {

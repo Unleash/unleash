@@ -1,13 +1,14 @@
 import type { FromSchema } from 'json-schema-to-ts';
 import { featureSchema } from './feature-schema.js';
 import { roleSchema } from './role-schema.js';
+import { groupItemSchema } from './group-item-schema.js';
 
 export const profileSchema = {
     $id: '#/components/schemas/profileSchema',
     type: 'object',
     additionalProperties: false,
     description: 'User profile overview',
-    required: ['rootRole', 'projects', 'features', 'subscriptions'],
+    required: ['rootRole', 'projects', 'groups', 'features', 'subscriptions'],
     properties: {
         rootRole: {
             $ref: '#/components/schemas/roleSchema',
@@ -19,6 +20,14 @@ export const profileSchema = {
                 type: 'string',
             },
             example: ['my-projectA', 'my-projectB'],
+        },
+        groups: {
+            description: 'Experimental: Which groups this user is a member of',
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/groupItemSchema',
+            },
+            example: [],
         },
         subscriptions: {
             description: 'Which email subscriptions this user is subscribed to',
@@ -39,6 +48,7 @@ export const profileSchema = {
     },
     components: {
         schemas: {
+            groupItemSchema,
             featureSchema,
             roleSchema,
         },

@@ -1,21 +1,28 @@
-export const AUTH_PROVIDERS_CATALOG: ReadonlyArray<{
-    name: string;
-    configId: string;
-    deprecatedRemovalTarget?: string; // if set, the value is the planned removal release
-}> = [
-    { name: 'simple', configId: 'unleash.auth.simple' },
-    { name: 'oidc', configId: 'unleash.enterprise.auth.oidc' },
-    { name: 'saml', configId: 'unleash.enterprise.auth.saml' },
-    {
+interface AuthProvider {
+    readonly name: string;
+    readonly configId: string;
+    readonly deprecatedRemovalTarget?: string;
+}
+
+export const AUTH_PROVIDERS_CATALOG = {
+    Simple: {
+        name: 'simple',
+        configId: 'unleash.auth.simple',
+    } as AuthProvider,
+
+    OIDC: {
+        name: 'oidc',
+        configId: 'unleash.enterprise.auth.oidc',
+    } as AuthProvider,
+
+    SAML: {
+        name: 'saml',
+        configId: 'unleash.enterprise.auth.saml',
+    } as AuthProvider,
+
+    Google: {
         name: 'google',
         configId: 'unleash.enterprise.auth.google',
         deprecatedRemovalTarget: 'v8.0.0',
-    },
-];
-
-export function getAuthConfigId(providerName: string): string {
-    const provider = AUTH_PROVIDERS_CATALOG.find(
-        (p) => p.name === providerName,
-    );
-    return provider?.configId ?? '';
-}
+    } as AuthProvider,
+} as const;

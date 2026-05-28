@@ -79,11 +79,12 @@ describe('Integration Metrics', () => {
                 /integration_available\{[^}]*name="slack"[^}]*kind="addon"[^}]*deprecated="true"[^}]*\} 1/,
             );
 
-            // All auth providers are present too.
-            for (const provider of AUTH_PROVIDERS_CATALOG) {
+            // All auth providers are present too
+            for (const provider of Object.values(AUTH_PROVIDERS_CATALOG)) {
                 const expectedDeprecated = provider.deprecatedRemovalTarget
                     ? 'true'
                     : 'false';
+
                 expect(output).toMatch(
                     new RegExp(
                         `integration_available\\{[^}]*name="${provider.name}"[^}]*kind="auth"[^}]*deprecated="${expectedDeprecated}"[^}]*\\} 1`,
@@ -122,7 +123,7 @@ describe('Integration Metrics', () => {
             );
 
             // Deprecated auth providers
-            const deprecatedAuth = AUTH_PROVIDERS_CATALOG.filter(
+            const deprecatedAuth = Object.values(AUTH_PROVIDERS_CATALOG).filter(
                 (p) => p.deprecatedRemovalTarget,
             );
             for (const provider of deprecatedAuth) {

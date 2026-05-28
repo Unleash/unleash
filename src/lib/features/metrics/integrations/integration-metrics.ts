@@ -69,7 +69,7 @@ function registerAvailableGauge(addonProviders: IAddonProviders): void {
             .set(1);
     }
 
-    for (const provider of AUTH_PROVIDERS_CATALOG) {
+    for (const provider of Object.values(AUTH_PROVIDERS_CATALOG)) {
         gauge
             .labels({
                 name: provider.name,
@@ -107,7 +107,7 @@ function registerDeprecatedInfoGauge(addonProviders: IAddonProviders): void {
         }
     }
 
-    for (const provider of AUTH_PROVIDERS_CATALOG) {
+    for (const provider of Object.values(AUTH_PROVIDERS_CATALOG)) {
         if (provider.deprecatedRemovalTarget) {
             gauge
                 .labels({
@@ -155,7 +155,10 @@ function registerConfiguredGauge(args: {
 
             if (!fresh) {
                 try {
-                    cache.samples = await collectConfiguredSamples(stores);
+                    cache.samples = await collectConfiguredSamples(
+                        stores,
+                        logger,
+                    );
                     cache.ts = now;
                 } catch (err) {
                     logger.warn(
@@ -178,72 +181,89 @@ function registerConfiguredGauge(args: {
         },
     });
 }
-
 export async function collectConfiguredSamples(
     stores: Pick<IUnleashStores, 'addonStore' | 'settingStore'>,
+    logger?: Logger,
 ): Promise<ConfiguredSample[]> {
     const samples: ConfiguredSample[] = [];
 
+    // Addons
     const addons = await stores.addonStore.getAll();
     const addonBuckets = new Map<
         string,
         { enabled: number; disabled: number }
     >();
 
-    for (const a of addons) {
-        const bucket = addonBuckets.get(a.provider) ?? {
-            // so dashboards have a "no enabled instances" mark
+    for (const addon of addons) {
+        const bucket = addonBuckets.get(addon.provider) ?? {
             enabled: 0,
             disabled: 0,
         };
-        if (a.enabled) bucket.enabled++;
-        else {
+
+        if (addon.enabled) {
+            bucket.enabled++;
+        } else {
             bucket.disabled++;
         }
-        addonBuckets.set(a.provider, bucket);
+
+        addonBuckets.set(addon.provider, bucket);
     }
 
+    // Only push if count > 0 to avoid empty entries
     for (const [provider, bucket] of addonBuckets) {
-        samples.push({
-            name: provider,
-            kind: 'addon',
-            state: 'enabled',
-            count: bucket.enabled,
-        });
-        samples.push({
-            name: provider,
-            kind: 'addon',
-            state: 'disabled',
-            count: bucket.disabled,
-        });
-    }
-
-    for (const provider of AUTH_PROVIDERS_CATALOG) {
-        let row: { enabled?: boolean } | undefined;
-        try {
-            row = await stores.settingStore.get<{ enabled?: boolean }>(
-                provider.configId,
-            );
-        } catch {
-            continue; // skip - connection issues, not emit misleading state
-        }
-
-        if (row === undefined) {
+        if (bucket.enabled > 0) {
             samples.push({
-                name: provider.name,
-                kind: 'auth',
-                state: 'not_configured', // so it can show "this integration hasn't been configured"
-                count: 1,
+                name: provider,
+                kind: 'addon',
+                state: 'enabled',
+                count: bucket.enabled,
             });
-        } else {
+        }
+        if (bucket.disabled > 0) {
             samples.push({
-                name: provider.name,
-                kind: 'auth',
-                state: row.enabled ? 'enabled' : 'disabled', // so it can show "configured but disabled"
-                count: 1,
+                name: provider,
+                kind: 'addon',
+                state: 'disabled',
+                count: bucket.disabled,
             });
         }
     }
+
+    // Auth providers
+    const authResults = await Promise.all(
+        Object.values(AUTH_PROVIDERS_CATALOG).map(async (provider) => {
+            try {
+                const config = await stores.settingStore.get<{
+                    enabled?: boolean;
+                }>(provider.configId);
+
+                const state = config
+                    ? config.enabled
+                        ? 'enabled'
+                        : 'disabled'
+                    : 'not_configured';
+
+                return {
+                    name: provider.name,
+                    kind: 'auth',
+                    state,
+                    count: 1,
+                };
+            } catch (error) {
+                logger?.warn(
+                    `Failed to fetch auth config for ${provider.name}`,
+                    { error },
+                );
+                return null;
+            }
+        }),
+    );
+
+    const validAuthSamples = authResults.filter(
+        (result): result is ConfiguredSample => result !== null,
+    );
+
+    samples.push(...validAuthSamples);
 
     return samples;
 }

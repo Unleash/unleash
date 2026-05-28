@@ -1,3 +1,4 @@
+import EventEmitter from 'events';
 import { register } from 'prom-client';
 import noLogger from '../../../../test/fixtures/no-logger.js';
 import type { IAddonProviders } from '../../../addons/index.js';
@@ -11,6 +12,29 @@ import { AUTH_PROVIDERS_CATALOG } from '../../../types/settings/auth-settings.js
 beforeEach(() => {
     register.clear();
 });
+
+const testConfig = {
+    getLogger: noLogger,
+    server: { unleashUrl: 'http://localhost:4242' },
+    flagResolver: { isEnabled: () => false } as any,
+} as any;
+
+const setupMetrics = (overrides: {
+    addonProviders?: IAddonProviders;
+    stores: any;
+    options?: { cacheTtlMs?: number };
+}) => {
+    const eventBus = new EventEmitter();
+
+    registerIntegrationMetrics({
+        config: testConfig,
+        eventBus,
+        addonProviders: overrides.addonProviders ?? {},
+        stores: overrides.stores,
+        options: overrides.options,
+    });
+    return { eventBus };
+};
 
 const makeAddonProvider = (
     name: string,
@@ -58,10 +82,9 @@ describe('Integration Metrics', () => {
                 ),
             };
 
-            registerIntegrationMetrics({
+            setupMetrics({
                 addonProviders,
                 stores: stores([], {}),
-                getLogger: noLogger,
             });
 
             const output = await register.metrics();
@@ -100,10 +123,9 @@ describe('Integration Metrics', () => {
                 'old-addon': makeAddonProvider('old-addon', 'v7.0.0'),
             };
 
-            registerIntegrationMetrics({
+            setupMetrics({
                 addonProviders,
                 stores: stores([], {}),
-                getLogger: noLogger,
             });
 
             const output = await register.metrics();
@@ -124,10 +146,9 @@ describe('Integration Metrics', () => {
                 webhook: makeAddonProvider('webhook'),
             };
 
-            registerIntegrationMetrics({
+            setupMetrics({
                 addonProviders,
                 stores: stores([], {}),
-                getLogger: noLogger,
             });
 
             const output = await register.metrics();
@@ -157,10 +178,9 @@ describe('Integration Metrics', () => {
                 { provider: 'datadog', enabled: false },
             ];
 
-            registerIntegrationMetrics({
+            setupMetrics({
                 addonProviders: {},
                 stores: stores(addonRows, {}),
-                getLogger: noLogger,
             });
 
             const output = await register.metrics();
@@ -182,7 +202,7 @@ describe('Integration Metrics', () => {
         });
 
         test('reports auth providers as not_configured / enabled / disabled based on settings', async () => {
-            registerIntegrationMetrics({
+            setupMetrics({
                 addonProviders: {},
                 stores: stores([], {
                     'unleash.enterprise.auth.oidc': { enabled: true },
@@ -190,7 +210,6 @@ describe('Integration Metrics', () => {
                     'unleash.enterprise.auth.google': {}, // google has a row but enabled is undefined-ish
                     // simple is missing entirely
                 }),
-                getLogger: noLogger,
             });
 
             const output = await register.metrics();
@@ -230,10 +249,9 @@ describe('Integration Metrics', () => {
                 },
             } as any;
 
-            registerIntegrationMetrics({
+            setupMetrics({
                 addonProviders: {},
                 stores: countingStores,
-                getLogger: noLogger,
                 options: { cacheTtlMs: 60_000 },
             });
 
@@ -261,10 +279,9 @@ describe('Integration Metrics', () => {
                 settingStore: { get: async () => undefined },
             } as any;
 
-            registerIntegrationMetrics({
+            setupMetrics({
                 addonProviders: {},
                 stores: flakyStores,
-                getLogger: noLogger,
                 options: { cacheTtlMs: 0 }, // force a refetch on every collect
             });
 
@@ -306,23 +323,23 @@ describe('Integration Metrics', () => {
     });
 
     describe('auth_login_total', () => {
-        test('auth_login_total increments when the eventBus fires AUTH_LOGIN_COMPLETED', async () => {
-            const { authLoginTotal } = registerIntegrationMetrics({
+        test('increments when AUTH_LOGIN_COMPLETED is emitted on the eventBus', async () => {
+            const { eventBus } = setupMetrics({
                 addonProviders: {},
                 stores: stores([], {}),
-                getLogger: noLogger,
             });
-            authLoginTotal.increment({
+
+            eventBus.emit('auth-login-completed', {
                 provider: 'google',
                 outcome: 'success',
             });
-            authLoginTotal.increment({
+            eventBus.emit('auth-login-completed', {
+                provider: 'google',
+                outcome: 'success',
+            });
+            eventBus.emit('auth-login-completed', {
                 provider: 'google',
                 outcome: 'failure',
-            });
-            authLoginTotal.increment({
-                provider: 'google',
-                outcome: 'success',
             });
 
             const output = await register.metrics();

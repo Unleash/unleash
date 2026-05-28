@@ -1,12 +1,14 @@
-import type { Logger, LogProvider } from '../../../logger.js';
+import type EventEmitter from 'events';
+import type { Logger } from '../../../logger.js';
+import type { IUnleashConfig } from '../../../types/option.js';
 import type { IUnleashStores } from '../../../types/stores.js';
-import type { IAddonProviders } from '../../../addons/index.js';
+import { getAddons, type IAddonProviders } from '../../../addons/index.js';
 import { AUTH_PROVIDERS_CATALOG } from '../../../types/settings/auth-settings.js';
 import type { IAddon } from '../../../types/stores/addon-store.js';
+import { AUTH_LOGIN_COMPLETED } from '../../../metric-events.js';
 import {
     createCounter,
     createGauge,
-    type Counter,
     type GaugeSample,
 } from '../../../util/metrics/index.js';
 
@@ -16,15 +18,12 @@ interface IntegrationMetricsOptions {
     cacheTtlMs?: number;
 }
 
-interface IntegrationMetricsHandles {
-    authLoginTotal: Counter<'provider' | 'outcome'>;
-}
-
 interface IntegrationMetricsDeps {
-    addonProviders: IAddonProviders;
+    addonProviders?: IAddonProviders;
     stores: Pick<IUnleashStores, 'addonStore' | 'settingStore'>;
-    getLogger: LogProvider;
+    config: Pick<IUnleashConfig, 'getLogger' | 'server' | 'flagResolver'>;
     options?: IntegrationMetricsOptions;
+    eventBus: EventEmitter;
 }
 
 type ConfiguredLabels = 'name' | 'kind' | 'state';
@@ -40,26 +39,42 @@ interface ConfiguredSample {
 /**
  *  metrics show up on `/internal-backstage/prometheus`.
  */
-export function registerIntegrationMetrics(
-    deps: IntegrationMetricsDeps,
-): IntegrationMetricsHandles {
-    const { addonProviders, stores, getLogger } = deps;
-    const logger = getLogger('metrics/integrations');
+export function registerIntegrationMetrics(deps: IntegrationMetricsDeps): void {
+    const { config, stores, eventBus } = deps;
+    const logger = config.getLogger('metrics/integrations');
 
     // prom-client invokes `collect()` on every call; this short cache prevents
     // lots of Prometheus replicas from hitting the database
     const ttlMs = deps.options?.cacheTtlMs ?? DEFAULT_TTL_MS;
 
+    // Get the Addon catalog. Used for tests - production always derives it.
+    const addonProviders =
+        deps.addonProviders ??
+        getAddons({
+            getLogger: config.getLogger,
+            unleashUrl: config.server.unleashUrl,
+            flagResolver: config.flagResolver,
+            eventBus,
+        } as Parameters<typeof getAddons>[0]);
+
     registerAvailableGauge(addonProviders);
     registerConfiguredGauge({ stores, ttlMs, logger });
 
-    return {
-        authLoginTotal: createCounter({
-            name: 'auth_login_total',
-            help: 'Authentication attempts by provider per outcome.',
-            labelNames: ['provider', 'outcome'] as const,
-        }),
-    };
+    const authLoginTotal = createCounter({
+        name: 'auth_login_total',
+        help: 'Authentication attempts by provider per outcome.',
+        labelNames: ['provider', 'outcome'] as const,
+    });
+
+    eventBus.on(
+        AUTH_LOGIN_COMPLETED,
+        (payload: { provider: string; outcome: 'success' | 'failure' }) => {
+            authLoginTotal.increment({
+                provider: payload.provider,
+                outcome: payload.outcome,
+            });
+        },
+    );
 }
 
 function registerAddons(

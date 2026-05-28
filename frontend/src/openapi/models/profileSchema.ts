@@ -4,6 +4,7 @@
  * See `gen:api` script in package.json
  */
 import type { FeatureSchema } from './featureSchema';
+import type { GroupItemSchema } from './groupItemSchema';
 import type { RoleSchema } from './roleSchema';
 
 /**
@@ -12,6 +13,8 @@ import type { RoleSchema } from './roleSchema';
 export interface ProfileSchema {
     /** Deprecated, always returns empty array */
     features: FeatureSchema[];
+    /** Experimental: Which groups this user is a member of */
+    groups: GroupItemSchema[];
     /** Which projects this user is a member of */
     projects: string[];
     rootRole: RoleSchema;

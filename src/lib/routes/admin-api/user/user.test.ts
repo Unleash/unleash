@@ -64,6 +64,7 @@ test('should return current profile', async () => {
         .expect((res) => {
             expect(res.body).toMatchObject({
                 projects: [],
+                groups: [],
                 rootRole: { id: -1, name: 'Viewer', type: 'root' },
                 subscriptions: ['productivity-report'],
                 features: [],

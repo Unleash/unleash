@@ -3,7 +3,10 @@ import type { IAuthRequest } from '../../unleash-types.js';
 import Controller from '../../controller.js';
 import type { AccessService } from '../../../services/access-service.js';
 import { IAuthType, type IUnleashConfig } from '../../../types/option.js';
-import type { IUnleashServices } from '../../../services/index.js';
+import type {
+    GroupService,
+    IUnleashServices,
+} from '../../../services/index.js';
 import type UserService from '../../../services/user-service.js';
 import type UserFeedbackService from '../../../services/user-feedback-service.js';
 import type UserSplashService from '../../../services/user-splash-service.js';
@@ -41,6 +44,8 @@ class UserController extends Controller {
 
     private userService: UserService;
 
+    private groupService: GroupService;
+
     private userFeedbackService: UserFeedbackService;
 
     private userSplashService: UserSplashService;
@@ -60,6 +65,7 @@ class UserController extends Controller {
         {
             accessService,
             userService,
+            groupService,
             userFeedbackService,
             userSplashService,
             openApiService,
@@ -69,6 +75,7 @@ class UserController extends Controller {
             IUnleashServices,
             | 'accessService'
             | 'userService'
+            | 'groupService'
             | 'userFeedbackService'
             | 'userSplashService'
             | 'openApiService'
@@ -79,6 +86,7 @@ class UserController extends Controller {
         super(config);
         this.accessService = accessService;
         this.userService = userService;
+        this.groupService = groupService;
         this.userFeedbackService = userFeedbackService;
         this.userSplashService = userSplashService;
         this.openApiService = openApiService;
@@ -261,14 +269,16 @@ class UserController extends Controller {
             throw new BadDataError('User id is missing in request user object');
         }
 
-        const [projects, rootRole, subscriptions] = await Promise.all([
+        const [projects, groups, rootRole, subscriptions] = await Promise.all([
             this.projectService.getProjectsByUser(user.id),
+            this.groupService.getGroupsForUser(user.id),
             this.accessService.getRootRoleForUser(user.id),
             this.userSubscriptionsService.getUserSubscriptions(user.id),
         ]);
 
         const responseData: ProfileSchema = {
             projects,
+            groups,
             rootRole,
             subscriptions,
             features: [],

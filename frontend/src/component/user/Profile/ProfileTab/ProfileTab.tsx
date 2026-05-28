@@ -12,9 +12,11 @@ import {
 import { Badge } from 'component/common/Badge/Badge';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
+import { useRoles } from 'hooks/api/getters/useRoles/useRoles';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import type { IUser } from 'interfaces/user';
 import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
+import GroupsIcon from '@mui/icons-material/Groups';
 import { Link } from 'react-router-dom';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -73,6 +75,18 @@ const StyledBadgeLink = styled(Link)(({ theme }) => ({
     },
 }));
 
+const StyledGroupLink = styled(Link)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.75),
+    color: 'inherit',
+    textDecoration: 'none',
+    '&:hover, &:focus-visible': {
+        outline: 'none',
+        color: theme.palette.primary.main,
+    },
+}));
+
 const StyledDivider = styled('div')(({ theme }) => ({
     width: '100%',
     height: '1px',
@@ -91,6 +105,22 @@ const StyledInputLabel = styled(InputLabel)(({ theme }) => ({
 interface IProfileTabProps {
     user: IUser;
 }
+
+const StyledGroupBox = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1.5),
+    padding: theme.spacing(1, 1.5),
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: theme.palette.background.paper,
+}));
+
+const StyledGroupDivider = styled('div')(({ theme }) => ({
+    width: '1px',
+    alignSelf: 'stretch',
+    backgroundColor: theme.palette.divider,
+}));
 
 const ProjectList = styled('ul')(({ theme }) => ({
     listStyle: 'none',
@@ -113,6 +143,8 @@ const LocaleSelector = styled('div')(({ theme }) => ({
 
 export const ProfileTab = ({ user }: IProfileTabProps) => {
     const { profile, refetchProfile } = useProfile();
+    const { roles } = useRoles();
+    const roleNamesById = Object.fromEntries(roles.map((r) => [r.id, r.name]));
     const { locationSettings, setLocationSettings } = useLocationSettings();
     const [currentLocale, setCurrentLocale] = useState<string>();
     const exampleDateId = useId();
@@ -210,6 +242,63 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
                         />
                     </Box>
                 </StyledAccess>
+                <StyledAccess>
+                    <Box sx={{ mt: 2 }}>
+                        <Typography variant='body2'>Groups</Typography>
+                        <ConditionallyRender
+                            condition={Boolean(profile?.groups?.length)}
+                            show={
+                                <ProjectList sx={{ gap: 2 }}>
+                                    {profile?.groups?.map((group) => (
+                                        <li key={group.id}>
+                                            <StyledGroupBox>
+                                                <Tooltip
+                                                    title='View group'
+                                                    arrow
+                                                    placement='bottom-end'
+                                                    describeChild
+                                                >
+                                                    <StyledGroupLink
+                                                        to={`/admin/groups/${group.id}`}
+                                                    >
+                                                        <GroupsIcon />
+                                                        {group.name}
+                                                    </StyledGroupLink>
+                                                </Tooltip>
+                                                {group.rootRole &&
+                                                    roleNamesById[
+                                                        group.rootRole
+                                                    ] && (
+                                                        <>
+                                                            <StyledGroupDivider />
+                                                            <Badge color='success'>
+                                                                {
+                                                                    roleNamesById[
+                                                                        group
+                                                                            .rootRole
+                                                                    ]
+                                                                }
+                                                            </Badge>
+                                                        </>
+                                                    )}
+                                            </StyledGroupBox>
+                                        </li>
+                                    ))}
+                                </ProjectList>
+                            }
+                            elseShow={
+                                <Tooltip
+                                    title='You are not a member of any groups'
+                                    arrow
+                                    describeChild
+                                >
+                                    <Badge tabIndex={0}>No groups</Badge>
+                                </Tooltip>
+                            }
+                        />
+                    </Box>
+                </StyledAccess>
+
                 <StyledDivider />
                 <StyledSectionLabel>Date/Time Settings</StyledSectionLabel>
                 <Typography variant='body2'>

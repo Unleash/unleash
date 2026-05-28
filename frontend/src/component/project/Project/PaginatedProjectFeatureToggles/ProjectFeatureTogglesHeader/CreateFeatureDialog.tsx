@@ -208,8 +208,8 @@ const CreateFeatureDialogContent = ({
     --data-raw '${JSON.stringify(flagPayload, undefined, 2)}'`;
     };
 
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
         clearErrors();
         const validToggleName = await validateToggleName();
 
@@ -261,7 +261,9 @@ const CreateFeatureDialogContent = ({
     );
 
     const currentProjectName = useMemo(() => {
-        const projectObject = projects.find((p) => p.id === project);
+        const projectObject = projects.find(
+            (projectOption) => projectOption.id === project,
+        );
         return projectObject?.name;
     }, [project, projects]);
 
@@ -349,9 +351,9 @@ const CreateFeatureDialogContent = ({
                     <NewDialogFormTemplate
                         title='New feature flag'
                         resource='feature flag'
-                        projects={projects.map((p) => ({
-                            label: p.name,
-                            value: p.id,
+                        projects={projects.map((projectOption) => ({
+                            label: projectOption.name,
+                            value: projectOption.id,
                         }))}
                         project={project}
                         currentProjectName={currentProjectName}
@@ -377,17 +379,19 @@ const CreateFeatureDialogContent = ({
                             <>
                                 <SinglePillDropdown<string>
                                     label={
-                                        featureTypes.find((t) => t.id === type)
-                                            ?.name || 'Select flag type'
+                                        featureTypes.find(
+                                            (featureType) =>
+                                                featureType.id === type,
+                                        )?.name || 'Select flag type'
                                     }
                                     tooltip={{
                                         header: 'Select a flag type',
                                         description: configButtonData.type.text,
                                     }}
                                     options={featureTypes.map(
-                                        (t: FeatureTypeSchema) => ({
-                                            label: t.name,
-                                            value: t.id,
+                                        (featureType: FeatureTypeSchema) => ({
+                                            label: featureType.name,
+                                            value: featureType.id,
                                         }),
                                     )}
                                     onChange={(value) =>
@@ -418,12 +422,12 @@ const CreateFeatureDialogContent = ({
                                             ),
                                         )
                                     }
-                                    onChange={(strings) => {
+                                    onChange={(tagStrings) => {
                                         const normalized = Array.from(
-                                            strings,
-                                        ).map((s) => {
+                                            tagStrings,
+                                        ).map((tagString) => {
                                             const [tagType, value] =
-                                                s.split(':');
+                                                tagString.split(':');
                                             return { type: tagType, value };
                                         });
                                         setTags(new Set(normalized));
@@ -552,7 +556,8 @@ const CreateFeatureDialogContent = ({
                                     button={{
                                         label:
                                             featureTypes.find(
-                                                (t) => t.id === type,
+                                                (featureType) =>
+                                                    featureType.id === type,
                                             )?.name || 'Select flag type',
                                         icon: <FeatureTypeIcon />,
                                         labelWidth: `${longestFeatureTypeName}ch`,

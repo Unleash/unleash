@@ -35,7 +35,6 @@ export function registerIntegrationMetrics(
     const ttlMs = deps.options?.cacheTtlMs ?? DEFAULT_TTL_MS;
 
     registerAvailableGauge(addonProviders);
-    registerDeprecatedInfoGauge(addonProviders);
     registerConfiguredGauge({ stores, ttlMs, logger });
 
     return {
@@ -49,14 +48,15 @@ export function registerIntegrationMetrics(
 }
 
 /**
- *  `integration_available{name, kind, deprecated}`
+ *  `integration_available{name, kind, deprecated, removal_target}`
  *  all available integrations of this server. value=1: registered entry.
+ *  removal_target: set only if deprecated, empty string otherwise.
  */
 function registerAvailableGauge(addonProviders: IAddonProviders): void {
     const gauge = new Gauge({
         name: 'integration_available',
-        help: 'Available integrations  with this Unleash server. value=1: available.',
-        labelNames: ['name', 'kind', 'deprecated'] as const,
+        help: 'Available integrations with this Unleash server. removal_target set if deprecated.',
+        labelNames: ['name', 'kind', 'deprecated', 'removal_target'] as const,
     });
 
     for (const addon of Object.values(addonProviders)) {
@@ -65,6 +65,7 @@ function registerAvailableGauge(addonProviders: IAddonProviders): void {
                 name: addon.definition.name,
                 kind: 'addon',
                 deprecated: String(Boolean(addon.definition.deprecated)),
+                removal_target: addon.definition.deprecated ?? '',
             })
             .set(1);
     }
@@ -75,48 +76,9 @@ function registerAvailableGauge(addonProviders: IAddonProviders): void {
                 name: provider.name,
                 kind: 'auth',
                 deprecated: String(Boolean(provider.deprecatedRemovalTarget)),
+                removal_target: provider.deprecatedRemovalTarget ?? '',
             })
             .set(1);
-    }
-}
-
-/**
- * `integration_deprecated_info{name, kind, removal_target}`
- *  list of gauges with deprecated integrations.
- *
- *  e.g. `integration_configured{state="enabled"} * on(name, kind)
- *      group_left integration_deprecated_info > 0`.
- */
-function registerDeprecatedInfoGauge(addonProviders: IAddonProviders): void {
-    const gauge = new Gauge({
-        name: 'integration_deprecated_info',
-        help: 'Deprecated integrations on this server. value=1 always. Use it as a join target in alert rules.',
-        labelNames: ['name', 'kind', 'removal_target'] as const,
-    });
-
-    for (const addon of Object.values(addonProviders)) {
-        const deprecated = addon.definition.deprecated;
-        if (deprecated) {
-            gauge
-                .labels({
-                    name: addon.definition.name,
-                    kind: 'addon',
-                    removal_target: deprecated,
-                })
-                .set(1);
-        }
-    }
-
-    for (const provider of Object.values(AUTH_PROVIDERS_CATALOG)) {
-        if (provider.deprecatedRemovalTarget) {
-            gauge
-                .labels({
-                    name: provider.name,
-                    kind: 'auth',
-                    removal_target: provider.deprecatedRemovalTarget,
-                })
-                .set(1);
-        }
     }
 }
 

@@ -48,7 +48,7 @@ const stores = (
 
 describe('Integration Metrics', () => {
     describe('integration_available', () => {
-        test('emits one sample per registered addon and per known auth provider', async () => {
+        test('emits one sample per registered addon and per known auth provider with removal_target', async () => {
             const addonProviders: IAddonProviders = {
                 webhook: makeAddonProvider('webhook'),
                 'slack-app': makeAddonProvider('slack-app'),
@@ -66,42 +66,38 @@ describe('Integration Metrics', () => {
 
             const output = await register.metrics();
 
-            // One series per addon
+            // Non-deprecated addons: deprecated="false", removal_target=""
             expect(output).toMatch(
-                /integration_available\{[^}]*name="webhook"[^}]*kind="addon"[^}]*deprecated="false"[^}]*\} 1/,
+                /integration_available\{[^}]*name="webhook"[^}]*kind="addon"[^}]*deprecated="false"[^}]*removal_target=""[^}]*\} 1/,
             );
             expect(output).toMatch(
-                /integration_available\{[^}]*name="slack-app"[^}]*kind="addon"[^}]*deprecated="false"[^}]*\} 1/,
-            );
-
-            // Still available, but 'deprecated' flag is on
-            expect(output).toMatch(
-                /integration_available\{[^}]*name="slack"[^}]*kind="addon"[^}]*deprecated="true"[^}]*\} 1/,
+                /integration_available\{[^}]*name="slack-app"[^}]*kind="addon"[^}]*deprecated="false"[^}]*removal_target=""[^}]*\} 1/,
             );
 
-            // All auth providers are present too
+            // Deprecated addon: deprecated="true", removal_target="<message>"
+            expect(output).toMatch(
+                /integration_available\{[^}]*name="slack"[^}]*kind="addon"[^}]*deprecated="true"[^}]*removal_target="Use slack-app instead\. Removed in v8\."[^}]*\} 1/,
+            );
+
+            // All auth providers are present
             for (const provider of Object.values(AUTH_PROVIDERS_CATALOG)) {
                 const expectedDeprecated = provider.deprecatedRemovalTarget
                     ? 'true'
                     : 'false';
+                const expectedRemovalTarget =
+                    provider.deprecatedRemovalTarget ?? '';
 
                 expect(output).toMatch(
                     new RegExp(
-                        `integration_available\\{[^}]*name="${provider.name}"[^}]*kind="auth"[^}]*deprecated="${expectedDeprecated}"[^}]*\\} 1`,
+                        `integration_available\\{[^}]*name="${provider.name}"[^}]*kind="auth"[^}]*deprecated="${expectedDeprecated}"[^}]*removal_target="${expectedRemovalTarget}"[^}]*\\} 1`,
                     ),
                 );
             }
         });
-    });
 
-    describe('integration_deprecated_info', () => {
-        test('emits a series only for deprecated integrations', async () => {
+        test('removal_target label is populated only for deprecated integrations', async () => {
             const addonProviders: IAddonProviders = {
-                webhook: makeAddonProvider('webhook'),
-                'legacy-foo': makeAddonProvider(
-                    'legacy-foo',
-                    'will be removed in v9',
-                ),
+                'old-addon': makeAddonProvider('old-addon', 'v7.0.0'),
             };
 
             registerIntegrationMetrics({
@@ -112,24 +108,40 @@ describe('Integration Metrics', () => {
 
             const output = await register.metrics();
 
-            // Non-deprecated addon
-            expect(output).not.toMatch(
-                /integration_deprecated_info\{[^}]*name="webhook"/,
-            );
-
-            // Deprecated addon
+            // Verify deprecated addon has removal_target set
             expect(output).toMatch(
-                /integration_deprecated_info\{[^}]*name="legacy-foo"[^}]*kind="addon"[^}]*removal_target="will be removed in v9"[^}]*\} 1/,
+                /integration_available\{[^}]*name="old-addon"[^}]*deprecated="true"[^}]*removal_target="v7\.0\.0"[^}]*\} 1/,
             );
 
-            // Deprecated auth providers
-            const deprecatedAuth = Object.values(AUTH_PROVIDERS_CATALOG).filter(
-                (p) => p.deprecatedRemovalTarget,
+            // Verify Google auth provider (deprecated) has removal_target
+            expect(output).toMatch(
+                /integration_available\{[^}]*name="google"[^}]*kind="auth"[^}]*deprecated="true"[^}]*removal_target="v8\.0\.0"[^}]*\} 1/,
             );
-            for (const provider of deprecatedAuth) {
+        });
+
+        test('non-deprecated integrations have empty removal_target', async () => {
+            const addonProviders: IAddonProviders = {
+                webhook: makeAddonProvider('webhook'),
+            };
+
+            registerIntegrationMetrics({
+                addonProviders,
+                stores: stores([], {}),
+                getLogger: noLogger,
+            });
+
+            const output = await register.metrics();
+
+            // Non-deprecated addon should have empty removal_target
+            expect(output).toMatch(
+                /integration_available\{[^}]*name="webhook"[^}]*kind="addon"[^}]*deprecated="false"[^}]*removal_target=""[^}]*\} 1/,
+            );
+
+            // Non-deprecated auth providers (simple, oidc, saml) have empty removal_target
+            for (const providerName of ['simple', 'oidc', 'saml']) {
                 expect(output).toMatch(
                     new RegExp(
-                        `integration_deprecated_info\\{[^}]*name="${provider.name}"[^}]*kind="auth"[^}]*removal_target="${provider.deprecatedRemovalTarget}"[^}]*\\} 1`,
+                        `integration_available\\{[^}]*name="${providerName}"[^}]*kind="auth"[^}]*deprecated="false"[^}]*removal_target=""[^}]*\\} 1`,
                     ),
                 );
             }
@@ -163,8 +175,8 @@ describe('Integration Metrics', () => {
                 /integration_configured\{[^}]*name="datadog"[^}]*state="disabled"[^}]*\} 1/,
             );
 
-            // Datadog has no enabled rows
-            expect(output).toMatch(
+            // Datadog has no enabled rows - even if counter is 0
+            expect(output).not.toMatch(
                 /integration_configured\{[^}]*name="datadog"[^}]*state="enabled"[^}]*\} 0/,
             );
         });

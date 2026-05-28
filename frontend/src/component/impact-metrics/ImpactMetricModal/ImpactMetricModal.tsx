@@ -137,7 +137,7 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
             outcomes like error rates, latency, and adoption — directly inside
             Unleash.
             <StyledSidebarLink
-                href='https://docs.getunleash.io/reference/impact-metrics'
+                href='https://docs.getunleash.io/concepts/impact-metrics'
                 target='_blank'
                 rel='noopener noreferrer'
                 onClick={() => {

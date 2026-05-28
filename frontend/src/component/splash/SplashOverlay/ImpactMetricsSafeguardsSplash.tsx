@@ -14,7 +14,7 @@ import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { useImpactMetricsCounter } from 'hooks/useImpactMetrics';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
-const DOCS_URL = 'https://docs.getunleash.io/reference/impact-metrics';
+const DOCS_URL = 'https://docs.getunleash.io/concepts/impact-metrics';
 const TRACKING_HELP =
     'Tracks engagement with the impact metrics + safeguards announcement splash.';
 

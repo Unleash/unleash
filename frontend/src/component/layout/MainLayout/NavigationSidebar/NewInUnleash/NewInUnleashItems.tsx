@@ -35,7 +35,7 @@ export const newInUnleashItems: NewInUnleashItem[] = [
             />
         ),
         appLink: '?splash=release-management-v3',
-        docsLink: 'https://docs.getunleash.io/reference/release-templates',
+        docsLink: 'https://docs.getunleash.io/concepts/release-templates',
         filter: {
             enterpriseOnly: true,
             versionLowerThan: '7.5.0',
@@ -53,7 +53,7 @@ export const newInUnleashItems: NewInUnleashItem[] = [
             />
         ),
         appLink: '?splash=impact-metrics-safeguards',
-        docsLink: 'https://docs.getunleash.io/reference/impact-metrics',
+        docsLink: 'https://docs.getunleash.io/concepts/impact-metrics',
         filter: {
             enterpriseOnly: true,
             versionLowerThan: '7.7.0',

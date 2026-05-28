@@ -45,7 +45,7 @@ export const EmptyTemplatesListMessage = () => {
                     component={Link}
                     nativeButton={false}
                     sx={{ whiteSpace: 'nowrap' }}
-                    to='https://docs.getunleash.io/reference/release-templates'
+                    to='https://docs.getunleash.io/concepts/release-templates'
                     variant='text'
                     rel='noopener noreferrer'
                     target='_blank'

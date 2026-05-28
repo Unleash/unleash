@@ -37,7 +37,7 @@ end
 ---
 - [SDK repository with documentation](https://github.com/Unleash/unleash-client-ruby)
 - [Ruby example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/Ruby)
-- [How to Implement Feature Flags in Ruby](https://docs.getunleash.io/feature-flag-tutorials/ruby)
+- [How to Implement Feature Flags in Ruby](https://docs.getunleash.io/guides/implement-feature-flags-in-ruby)
 
 ---
 

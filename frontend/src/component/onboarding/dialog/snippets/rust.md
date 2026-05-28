@@ -66,7 +66,7 @@ client.register().await?;
 ---
 - [SDK repository with documentation](https://github.com/Unleash/unleash-client-rust)
 - [Rust example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/Rust)
-- [How to Implement Feature Flags in Rust](https://docs.getunleash.io/feature-flag-tutorials/rust)
+- [How to Implement Feature Flags in Rust](https://docs.getunleash.io/guides/implement-feature-flags-in-rust)
 
 ---
 

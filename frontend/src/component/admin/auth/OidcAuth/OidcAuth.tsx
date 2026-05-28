@@ -119,7 +119,7 @@ export const OidcAuth = () => {
                                 OIDC is currently configured via environment
                                 variables. Please refer to the{' '}
                                 <a
-                                    href='https://www.unleash-hosted.com/docs/enterprise-authentication'
+                                    href='https://docs.getunleash.io/single-sign-on/how-to-add-sso-open-id-connect'
                                     target='_blank'
                                     rel='noreferrer'
                                 >
@@ -133,7 +133,7 @@ export const OidcAuth = () => {
                     <Alert severity='info'>
                         Please read the{' '}
                         <a
-                            href='https://www.unleash-hosted.com/docs/enterprise-authentication'
+                            href='https://docs.getunleash.io/single-sign-on/how-to-add-sso-open-id-connect'
                             target='_blank'
                             rel='noreferrer'
                         >

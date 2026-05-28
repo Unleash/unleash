@@ -65,7 +65,7 @@ const NoOptionsMessage = ({
               },
           }
         : {
-              href: 'https://docs.getunleash.io/reference/impact-metrics',
+              href: 'https://docs.getunleash.io/concepts/impact-metrics',
               target: '_blank',
               rel: 'noopener noreferrer',
               onClick: () => {

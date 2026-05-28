@@ -116,7 +116,7 @@ const InnerDialog = ({ onClose }: Omit<RegisterMetricDialogProps, 'open'>) => {
                             Follow this setup guide to implement and verify your
                             impact metric.{' '}
                             <Link
-                                href='https://docs.getunleash.io/reference/impact-metrics'
+                                href='https://docs.getunleash.io/concepts/impact-metrics'
                                 target='_blank'
                                 rel='noopener noreferrer'
                             >

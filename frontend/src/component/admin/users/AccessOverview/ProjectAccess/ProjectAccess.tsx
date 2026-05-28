@@ -1,11 +1,12 @@
 import { Badge } from 'component/common/Badge/Badge';
 import { NewAccessOverviewAccordion } from '../AccessOverviewAccordion/NewAccessOverviewAccordion.tsx';
-import FolderOutlined from '@mui/icons-material/FolderOutlined';
+import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
 import { useMemo } from 'react';
 import { useUserAccessOverview } from 'hooks/api/getters/useUserAccessOverview/useUserAccessOverview';
 import { createProjectPermissionsStructure } from 'component/admin/roles/RoleForm/RolePermissionCategories/createProjectPermissionsStructure';
 import type { IAccessOverviewPermissionCategory } from '../AccessOverviewAccordion/AccessOverviewList.tsx';
 import { EnvironmentAccessTable } from './EnvironmentAccessTable.tsx';
+import { styled } from '@mui/material';
 
 export const filterCategory = (
     category: IAccessOverviewPermissionCategory,
@@ -20,6 +21,11 @@ export const filterCategory = (
         return { ...category, permissions: filteredPermissions };
     }
 };
+
+const StyledTopicOutlined = styled(TopicOutlinedIcon)(({ theme }) => ({
+    flexShrink: 0,
+    color: theme.palette.primary.main,
+}));
 
 export const ProjectAccess = ({
     id,
@@ -68,10 +74,7 @@ export const ProjectAccess = ({
         <NewAccessOverviewAccordion
             title={
                 <>
-                    <FolderOutlined
-                        fontSize='small'
-                        sx={{ flexShrink: 0, color: 'text.secondary' }}
-                    />
+                    <StyledTopicOutlined fontSize='small' />
                     <span>{projectName}</span>
                     {projectRoles?.map((role) => {
                         const isCustom = ![

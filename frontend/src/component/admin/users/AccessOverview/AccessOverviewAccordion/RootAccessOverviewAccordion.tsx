@@ -44,7 +44,6 @@ const StyledPersonIconWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: theme.palette.info.light,
     borderRadius: theme.shape.borderRadius,
     padding: theme.spacing(0.25),
     color: theme.palette.info.main,

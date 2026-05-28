@@ -14,7 +14,7 @@ const StyledGroupRow = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     gap: theme.spacing(2),
     padding: theme.spacing(1, 2),
-    border: `2px solid ${theme.palette.divider}`,
+    border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusLarge,
 }));
 
@@ -53,9 +53,7 @@ export const RootRoleGroupAccess = ({ groups }: { groups: IGroup[] }) => {
 
     return (
         <Box>
-            <Typography variant='body1' sx={{ fontWeight: 'bold' }}>
-                Groups
-            </Typography>
+            <Typography variant='body1'>Groups</Typography>
             <Typography variant='body2' color='text.secondary'>
                 The group an user is a part of might affect the root access
             </Typography>

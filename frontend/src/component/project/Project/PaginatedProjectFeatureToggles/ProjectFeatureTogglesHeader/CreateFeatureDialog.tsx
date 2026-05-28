@@ -102,7 +102,7 @@ const CreateFeatureDialogContent = ({
     onClose,
     onSuccess,
 }: ICreateFeatureDialogProps) => {
-    const useNewDesign = true; //useUiFlag('newFeatureFlag');
+    const useNewDesign = useUiFlag('newFeatureFlag');
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig, isOss } = useUiConfig();
     const navigate = useNavigate();

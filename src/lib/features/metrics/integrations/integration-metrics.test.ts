@@ -306,27 +306,33 @@ describe('Integration Metrics', () => {
     });
 
     describe('auth_login_total', () => {
-        test('auth_login_total increments when the eventBus fires AUTH_LOGIN_COMPLETED', () => {
+        test('auth_login_total increments when the eventBus fires AUTH_LOGIN_COMPLETED', async () => {
             const { authLoginTotal } = registerIntegrationMetrics({
                 addonProviders: {},
                 stores: stores([], {}),
                 getLogger: noLogger,
             });
-            authLoginTotal.inc({ provider: 'google', outcome: 'success' });
-            authLoginTotal.inc({ provider: 'google', outcome: 'failure' });
-            authLoginTotal.inc({ provider: 'google', outcome: 'success' });
+            authLoginTotal.increment({
+                provider: 'google',
+                outcome: 'success',
+            });
+            authLoginTotal.increment({
+                provider: 'google',
+                outcome: 'failure',
+            });
+            authLoginTotal.increment({
+                provider: 'google',
+                outcome: 'success',
+            });
 
-            const series = authLoginTotal as any;
-            const sample =
-                series.hashMap[
-                    Object.keys(series.hashMap).find(
-                        (k) =>
-                            k.includes('provider:google') &&
-                            k.includes('outcome:success'),
-                    )!
-                ];
+            const output = await register.metrics();
 
-            expect(sample.value).toBe(2);
+            expect(output).toMatch(
+                /auth_login_total\{[^}]*provider="google"[^}]*outcome="success"[^}]*\} 2/,
+            );
+            expect(output).toMatch(
+                /auth_login_total\{[^}]*provider="google"[^}]*outcome="failure"[^}]*\} 1/,
+            );
         });
     });
 });

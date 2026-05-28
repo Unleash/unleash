@@ -1,26 +1,34 @@
-import { Counter, Gauge } from 'prom-client';
 import type { Logger, LogProvider } from '../../../logger.js';
 import type { IUnleashStores } from '../../../types/stores.js';
 import type { IAddonProviders } from '../../../addons/index.js';
 import { AUTH_PROVIDERS_CATALOG } from '../../../types/settings/auth-settings.js';
 import type { IAddon } from '../../../types/stores/addon-store.js';
+import {
+    createCounter,
+    createGauge,
+    type Counter,
+    type GaugeSample,
+} from '../../../util/metrics/index.js';
 
 const DEFAULT_TTL_MS = 60_000; // 1 minute
 
-export interface IntegrationMetricsOptions {
+interface IntegrationMetricsOptions {
     cacheTtlMs?: number;
 }
 
-export interface IntegrationMetricsHandles {
+interface IntegrationMetricsHandles {
     authLoginTotal: Counter<'provider' | 'outcome'>;
 }
 
-export interface IntegrationMetricsDeps {
+interface IntegrationMetricsDeps {
     addonProviders: IAddonProviders;
     stores: Pick<IUnleashStores, 'addonStore' | 'settingStore'>;
     getLogger: LogProvider;
     options?: IntegrationMetricsOptions;
 }
+
+type ConfiguredLabels = 'name' | 'kind' | 'state';
+type AvailableLabels = 'name' | 'kind' | 'deprecated' | 'removal_target';
 
 interface ConfiguredSample {
     name: string;
@@ -28,6 +36,7 @@ interface ConfiguredSample {
     state: 'enabled' | 'disabled' | 'not_configured';
     count: number;
 }
+
 /**
  *  metrics show up on `/internal-backstage/prometheus`.
  */
@@ -45,8 +54,7 @@ export function registerIntegrationMetrics(
     registerConfiguredGauge({ stores, ttlMs, logger });
 
     return {
-        // counter incremented from the enterprise auth providers on every login
-        authLoginTotal: new Counter({
+        authLoginTotal: createCounter({
             name: 'auth_login_total',
             help: 'Authentication attempts by provider per outcome.',
             labelNames: ['provider', 'outcome'] as const,
@@ -54,54 +62,65 @@ export function registerIntegrationMetrics(
     };
 }
 
-function registerAddons(gauge: Gauge, addonProviders: IAddonProviders): void {
+function registerAddons(
+    setLabels: (labels: Record<AvailableLabels, string | number>) => void,
+    addonProviders: IAddonProviders,
+): void {
     for (const addon of Object.values(addonProviders)) {
         const { name, deprecated } = addon.definition;
-        gauge
-            .labels({
-                name,
-                kind: 'addon',
-                deprecated: String(Boolean(deprecated)),
-                removal_target: deprecated ?? '',
-            })
-            .set(1);
+        setLabels({
+            name,
+            kind: 'addon',
+            deprecated: String(Boolean(deprecated)),
+            removal_target: deprecated ?? '',
+        });
     }
 }
 
-function registerAuthProviders(gauge: Gauge): void {
+function registerAuthProviders(
+    setLabels: (labels: Record<AvailableLabels, string | number>) => void,
+): void {
     for (const provider of Object.values(AUTH_PROVIDERS_CATALOG)) {
         const { name, deprecatedRemovalTarget } = provider;
-        gauge
-            .labels({
-                name,
-                kind: 'auth',
-                deprecated: String(Boolean(deprecatedRemovalTarget)),
-                removal_target: deprecatedRemovalTarget ?? '',
-            })
-            .set(1);
+        setLabels({
+            name,
+            kind: 'auth',
+            deprecated: String(Boolean(deprecatedRemovalTarget)),
+            removal_target: deprecatedRemovalTarget ?? '',
+        });
     }
 }
 
 /**
  *  `integration_available{name, kind, deprecated, removal_target}`
+ *
  *  all available integrations of this server. value=1: registered entry.
  *  removal_target: set only if deprecated, empty string otherwise.
  */
 function registerAvailableGauge(addonProviders: IAddonProviders): void {
-    const gauge = new Gauge({
+    const gauge = createGauge<AvailableLabels>({
         name: 'integration_available',
         help: 'Available integrations with this Unleash server. removal_target set if deprecated.',
         labelNames: ['name', 'kind', 'deprecated', 'removal_target'] as const,
     });
 
-    registerAddons(gauge, addonProviders);
-    registerAuthProviders(gauge);
+    const setLabels = (labels: Record<AvailableLabels, string | number>) => {
+        gauge.labels(labels).set(1);
+    };
+
+    registerAddons(setLabels, addonProviders);
+    registerAuthProviders(setLabels);
 }
 
 /**
  * `integration_configured{name, kind, state}`
+ *
  *  lists configured instances per integration and state (`enabled`/`disabled`)
  *  plus `not_configured` for auth providers that have never been saved.
+ *
+ *  Uses createGauge's `fetchSamples` mode — the wrapper owns the TTL cache,
+ *  the stale-on-error fallback, and the per-scrape reset. The fetcher here
+ *  is a pure function from store reads → labelled samples.
  */
 function registerConfiguredGauge(args: {
     stores: Pick<IUnleashStores, 'addonStore' | 'settingStore'>;
@@ -109,46 +128,18 @@ function registerConfiguredGauge(args: {
     logger: Logger;
 }): void {
     const { stores, ttlMs, logger } = args;
-    const cache: { ts: number; samples: ConfiguredSample[] } = {
-        ts: 0,
-        samples: [],
-    };
 
-    new Gauge({
+    createGauge<ConfiguredLabels>({
         name: 'integration_configured',
-        help: 'Configured integrations on this Unleash server, per state. They benefit a short TTL cache. value=1: integration is compiled in and selectable',
+        help: 'Configured integrations on this Unleash server, per state.',
         labelNames: ['name', 'kind', 'state'] as const,
-        async collect() {
-            const now = Date.now();
-
-            // Lazily evaluated via prom-client `collect()`, TTL-cached.
-            const fresh = now - cache.ts < ttlMs && cache.samples.length > 0;
-
-            if (!fresh) {
-                try {
-                    cache.samples = await collectConfiguredSamples(
-                        stores,
-                        logger,
-                    );
-                    cache.ts = now;
-                } catch (err) {
-                    logger.warn(
-                        `Failed to collect integration_configured: ${
-                            (err as Error).message
-                        }`,
-                    );
-                    if (cache.samples.length === 0) return; // prefer no gaps
-                }
-            }
-
-            this.reset();
-            for (const s of cache.samples) {
-                this.labels({
-                    name: s.name,
-                    kind: s.kind,
-                    state: s.state,
-                }).set(s.count);
-            }
+        ttlMs,
+        fetchSamples: async (): Promise<GaugeSample<ConfiguredLabels>[]> => {
+            const samples = await collectConfiguredSamples(stores, logger);
+            return samples.map((s) => ({
+                labels: { name: s.name, kind: s.kind, state: s.state },
+                value: s.count,
+            }));
         },
     });
 }

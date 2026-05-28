@@ -14,17 +14,36 @@ export type Gauge<T extends string = string> = {
  * Additional options for createGauge that allow registering a lazy collect function
  * which caches values for a given TTL.
  */
+
+/**
+ * One labelled sample produced by a `fetchSamples` collector.
+ */
+export type GaugeSample<T extends string> = {
+    labels: Record<T, string | number>;
+    value: number;
+};
+
 export type CreateGaugeOptions<T extends string> = GaugeConfiguration<T> & {
     /**
-     * Time to live for cached values in milliseconds. Used together with `fetchValue`.
+     * Time to live for cached values in milliseconds. Used together with `fetchValue` or `fetchSamples`.
      */
     ttlMs?: number;
     /**
      * Optional fetcher used to populate the gauge value lazily on scrape.
      * If provided together with `ttlMs`, a `collect` function will be installed that
      * caches the value for the TTL. Return null to indicate unknown (we'll set NaN).
+     *
+     * Use this for single-value gauges. For labelled aggregates, use `fetchSamples`.
      */
     fetchValue?: () => Promise<number | null>;
+    /**
+     * Optional fetcher used to populate a full set of labelled samples on each scrape.
+     * Cached for `ttlMs`; the previous sample set is served if the fetch throws. It `.reset()` before each refresh.
+     *
+     * Use this for multiple series per scrape (e.g. one sample per integration × state combination).
+     * It's either this or `fetchValue`, they cannot be combined.
+     */
+    fetchSamples?: () => Promise<GaugeSample<T>[]>;
 };
 
 /**
@@ -37,8 +56,14 @@ export type CreateGaugeOptions<T extends string> = GaugeConfiguration<T> & {
 export const createGauge = <T extends string>(
     options: CreateGaugeOptions<T>,
 ): Gauge<T> => {
-    const { ttlMs, fetchValue, ...gaugeOptions } =
+    const { ttlMs, fetchValue, fetchSamples, ...gaugeOptions } =
         options as CreateGaugeOptions<T>;
+
+    if (fetchValue && fetchSamples) {
+        throw new Error(
+            'createGauge: pass either fetchValue (single value) or fetchSamples (labelled), not both',
+        );
+    }
 
     // If fetchValue is provided, attach a TTL-cached collect. We preserve any existing collect
     // by calling it afterwards.
@@ -80,6 +105,49 @@ export const createGauge = <T extends string>(
             }
 
             // Call any original collect afterwards, allowing additional instrumentation if present
+            if (typeof originalCollect === 'function') {
+                try {
+                    await originalCollect.call(this);
+                } catch {
+                    // ignore errors from original collect to avoid breaking the scrape
+                }
+            }
+        } as unknown as GaugeConfiguration<T>['collect'];
+    }
+
+    // Same as fetchValue but supports multiple series per Gauge.
+    if (fetchSamples && typeof fetchSamples === 'function') {
+        // If fetchSamples is provided, attach a TTL-cached collects
+        const ttl =
+            typeof ttlMs === 'number' && Number.isFinite(ttlMs) ? ttlMs : 0;
+        const last: { ts: number; samples: GaugeSample<T>[] } = {
+            ts: 0,
+            samples: [],
+        };
+        const originalCollect = (gaugeOptions as GaugeConfiguration<T>).collect;
+
+        (gaugeOptions as GaugeConfiguration<T>).collect = async function (
+            this: PromGauge<T>,
+        ) {
+            const now = Date.now();
+            const fresh =
+                ttl > 0 && now - last.ts < ttl && last.samples.length > 0;
+
+            if (!fresh) {
+                try {
+                    last.samples = await fetchSamples();
+                    last.ts = now;
+                } catch {
+                    // If nothing cached yet, skip this scrape silently.
+                    if (last.samples.length === 0) return;
+                }
+            }
+
+            this.reset();
+            for (const s of last.samples) {
+                this.labels(s.labels).set(s.value);
+            }
+
             if (typeof originalCollect === 'function') {
                 try {
                     await originalCollect.call(this);

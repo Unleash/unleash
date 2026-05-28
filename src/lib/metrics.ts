@@ -1245,7 +1245,7 @@ export function registerPrometheusMetrics(
             provider: string;
             outcome: 'success' | 'failure';
         }) => {
-            integrationHandles.authLoginTotal.inc({ provider, outcome });
+            integrationHandles.authLoginTotal.increment({ provider, outcome });
         },
     );
 

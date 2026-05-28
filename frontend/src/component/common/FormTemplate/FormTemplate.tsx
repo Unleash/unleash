@@ -1,5 +1,4 @@
 import MenuBookIcon from '@mui/icons-material/MenuBook';
-import Codebox from '../Codebox/Codebox.tsx';
 import {
     Collapse,
     IconButton,
@@ -9,9 +8,7 @@ import {
     styled,
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import FileCopy from '@mui/icons-material/FileCopy';
 import Info from '@mui/icons-material/Info';
-import CloseIcon from '@mui/icons-material/Close';
 import Loader from '../Loader/Loader.tsx';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
@@ -24,6 +21,14 @@ import {
     formTemplateSidebarWidth,
 } from './FormTemplate.styles';
 import { relative } from 'themes/themeStyles';
+import { ApiCommandBlock } from './ApiCommandBlock.tsx';
+
+export type SidebarContext = {
+    copyApiCommand: () => void;
+    apiCommand: string | undefined;
+};
+
+export type SidebarRender = ReactNode | ((ctx: SidebarContext) => ReactNode);
 
 interface ICreateProps {
     title?: ReactNode;
@@ -43,7 +48,13 @@ interface ICreateProps {
     showGuidance?: boolean;
     useFixedSidebar?: boolean;
     sidebarWidth?: string;
-    onClose?: () => void;
+    /**
+     * Override the entire sidebar contents. The sidebar `<aside>` wrapper
+     * (background, width, responsive behavior) is kept; only the contents
+     * are replaced. When omitted, the default sidebar (description + docs
+     * link + API command) is rendered.
+     */
+    sidebar?: SidebarRender;
     children?: React.ReactNode;
 }
 
@@ -147,25 +158,6 @@ const StyledTitle = styled('h1')(({ theme }) => ({
     fontWeight: 'normal',
 }));
 
-const StyledSidebarDivider = styled(Divider)(({ theme }) => ({
-    opacity: 0.3,
-    marginBottom: theme.spacing(0.5),
-}));
-
-const StyledSubtitle = styled('h2')(({ theme }) => ({
-    color: theme.palette.common.white,
-    marginBottom: theme.spacing(2),
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    fontWeight: theme.fontWeight.bold,
-    fontSize: theme.fontSizes.bodySize,
-}));
-
-const StyledIcon = styled(FileCopy)(({ theme }) => ({
-    fill: theme.palette.primary.contrastText,
-}));
-
 const StyledMobileGuidanceContainer = styled('div')(() => ({
     zIndex: 1,
     position: 'absolute',
@@ -249,24 +241,6 @@ const StyledDocumentationLink = styled('a')(({ theme }) => ({
     },
 }));
 
-const StyledSidebarHeader = styled('div')(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    height: theme.spacing(8),
-    margin: theme.spacing(-4, -4, 0, -4),
-    padding: theme.spacing(0, 2),
-    borderBottom: `1px solid rgba(255,255,255,0.15)`,
-    boxSizing: 'border-box',
-    [theme.breakpoints.down(500)]: {
-        margin: theme.spacing(-4, -2, 0, -2),
-    },
-}));
-
-const StyledSidebarCloseButton = styled(IconButton)(({ theme }) => ({
-    color: theme.palette.common.white,
-}));
-
 const FormTemplate: React.FC<ICreateProps> = ({
     title,
     description,
@@ -286,7 +260,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
     showGuidance = true,
     useFixedSidebar,
     sidebarWidth,
-    onClose,
+    sidebar,
 }) => {
     const { setToastData } = useToast();
     const smallScreen = useMediaQuery(`(max-width:${1099}px)`);
@@ -310,27 +284,14 @@ const FormTemplate: React.FC<ICreateProps> = ({
         }
     };
 
-    const renderApiInfo = (apiDisabled: boolean, dividerDisabled = false) => {
-        if (!apiDisabled) {
-            return (
-                <>
-                    <ConditionallyRender
-                        condition={!dividerDisabled}
-                        show={<StyledSidebarDivider />}
-                    />
-                    <StyledSubtitle>
-                        API Command{' '}
-                        <Tooltip title='Copy command' arrow>
-                            <IconButton onClick={copyCommand} size='large'>
-                                <StyledIcon />
-                            </IconButton>
-                        </Tooltip>
-                    </StyledSubtitle>
-                    <Codebox text={formatApiCode!()} />{' '}
-                </>
-            );
-        }
-    };
+    const renderApiInfo = (apiDisabled: boolean, dividerDisabled = false) =>
+        apiDisabled ? null : (
+            <ApiCommandBlock
+                command={formatApiCode!()}
+                onCopy={copyCommand}
+                hideDivider={dividerDisabled}
+            />
+        );
 
     const SidebarComponent = useFixedSidebar ? FixedGuidance : Guidance;
 
@@ -383,21 +344,37 @@ const FormTemplate: React.FC<ICreateProps> = ({
             <ConditionallyRender
                 condition={showGuidance && !smallScreen}
                 show={
-                    <SidebarComponent
-                        documentationIcon={documentationIcon}
-                        description={description}
-                        documentationLink={documentationLink}
-                        documentationLinkLabel={documentationLinkLabel}
-                        showDescription={showDescription}
-                        showLink={showLink}
-                        sidebarWidth={sidebarWidth}
-                        onClose={useFixedSidebar ? onClose : undefined}
-                    >
-                        {renderApiInfo(
-                            formatApiCode === undefined,
-                            !showDescription,
-                        )}
-                    </SidebarComponent>
+                    sidebar !== undefined ? (
+                        <StyledSidebar
+                            sidebarWidth={
+                                useFixedSidebar
+                                    ? formTemplateFixedSidebarWidth
+                                    : sidebarWidth
+                            }
+                        >
+                            {typeof sidebar === 'function'
+                                ? sidebar({
+                                      copyApiCommand: copyCommand,
+                                      apiCommand: formatApiCode?.(),
+                                  })
+                                : sidebar}
+                        </StyledSidebar>
+                    ) : (
+                        <SidebarComponent
+                            documentationIcon={documentationIcon}
+                            description={description}
+                            documentationLink={documentationLink}
+                            documentationLinkLabel={documentationLinkLabel}
+                            showDescription={showDescription}
+                            showLink={showLink}
+                            sidebarWidth={sidebarWidth}
+                        >
+                            {renderApiInfo(
+                                formatApiCode === undefined,
+                                !(showDescription || showLink),
+                            )}
+                        </SidebarComponent>
+                    )
                 }
             />
         </StyledContainer>
@@ -524,11 +501,8 @@ const GuidanceContent: React.FC<
     );
 };
 
-type SidebarExtras = { sidebarWidth?: string; onClose?: () => void };
-
-const Guidance: React.FC<IGuidanceProps & SidebarExtras> = ({
+const Guidance: React.FC<IGuidanceProps & { sidebarWidth?: string }> = ({
     sidebarWidth,
-    onClose: _onClose,
     ...props
 }) => {
     return (
@@ -538,34 +512,16 @@ const Guidance: React.FC<IGuidanceProps & SidebarExtras> = ({
     );
 };
 
-const FixedGuidance: React.FC<IGuidanceProps & SidebarExtras> = ({
+const FixedGuidance: React.FC<IGuidanceProps & { sidebarWidth?: string }> = ({
     sidebarWidth: _,
-    onClose,
-    showDescription = true,
     ...props
 }) => {
-    const minimal = !showDescription;
     return (
         <StyledSidebar
             sidebarWidth={formTemplateFixedSidebarWidth}
-            fixedCodeHeight={minimal ? undefined : '300px'}
+            fixedCodeHeight='300px'
         >
-            {onClose ? (
-                <StyledSidebarHeader>
-                    <StyledSidebarCloseButton
-                        onClick={onClose}
-                        size='small'
-                        aria-label='Close'
-                    >
-                        <CloseIcon />
-                    </StyledSidebarCloseButton>
-                </StyledSidebarHeader>
-            ) : null}
-            <GuidanceContent
-                {...props}
-                showDescription={showDescription}
-                fixedDocumentationHeight={minimal ? undefined : '170px'}
-            />
+            <GuidanceContent {...props} fixedDocumentationHeight='170px' />
         </StyledSidebar>
     );
 };

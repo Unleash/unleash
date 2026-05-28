@@ -6,7 +6,10 @@ import { type ReactNode, useState, type FormEvent, useMemo } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useNavigate } from 'react-router-dom';
-import { Dialog, styled } from '@mui/material';
+import { Dialog, IconButton, styled } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import { ApiCommandBlock } from 'component/common/FormTemplate/ApiCommandBlock';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { Limit } from 'component/common/Limit/Limit';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -56,6 +59,44 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     padding: 0,
     '& .MuiPaper-root > section': {
         overflowX: 'hidden',
+    },
+}));
+
+const StyledNewSidebarHeader = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    height: theme.spacing(8),
+    margin: theme.spacing(-4, -4, 0, -4),
+    padding: theme.spacing(0, 2),
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    boxSizing: 'border-box',
+    [theme.breakpoints.down(500)]: {
+        margin: theme.spacing(-4, -2, 0, -2),
+    },
+}));
+
+const StyledNewSidebarCloseButton = styled(IconButton)(({ theme }) => ({
+    color: theme.palette.common.white,
+}));
+
+const StyledNewSidebarLinkContainer = styled('div')(({ theme }) => ({
+    margin: theme.spacing(3, 0),
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+}));
+
+const StyledNewSidebarLinkIcon = styled(MenuBookIcon)(({ theme }) => ({
+    marginRight: theme.spacing(1),
+    color: theme.palette.primary.contrastText,
+}));
+
+const StyledNewSidebarLink = styled('a')(({ theme }) => ({
+    color: theme.palette.primary.contrastText,
+    display: 'block',
+    '&:hover': {
+        textDecoration: 'none',
     },
 }));
 
@@ -253,29 +294,55 @@ const CreateFeatureDialogContent = ({
         />
     );
 
+    const newDesignSidebar = ({
+        apiCommand,
+        copyApiCommand,
+    }: {
+        apiCommand: string | undefined;
+        copyApiCommand: () => void;
+    }) => (
+        <>
+            <StyledNewSidebarHeader>
+                <StyledNewSidebarCloseButton
+                    onClick={onDialogClose}
+                    size='small'
+                    aria-label='Close'
+                >
+                    <CloseIcon />
+                </StyledNewSidebarCloseButton>
+            </StyledNewSidebarHeader>
+            <StyledNewSidebarLinkContainer>
+                <StyledNewSidebarLinkIcon />
+                <StyledNewSidebarLink
+                    href='https://docs.getunleash.io/concepts/feature-flags'
+                    rel='noopener noreferrer'
+                    target='_blank'
+                >
+                    Feature flags documentation
+                </StyledNewSidebarLink>
+            </StyledNewSidebarLinkContainer>
+            {apiCommand !== undefined ? (
+                <ApiCommandBlock
+                    command={apiCommand}
+                    onCopy={copyApiCommand}
+                    hideDivider
+                />
+            ) : null}
+        </>
+    );
+
     return (
         <StyledDialog open={open} onClose={onDialogClose}>
             <FormTemplate
                 compact
                 disablePadding
-                showDescription={!useNewDesign}
-                description={useNewDesign ? '' : documentation.text}
-                documentationIcon={
-                    useNewDesign ? undefined : documentation.icon
-                }
-                documentationLink={
-                    useNewDesign
-                        ? 'https://docs.getunleash.io/concepts/feature-flags'
-                        : documentation.link?.url
-                }
-                documentationLinkLabel={
-                    useNewDesign
-                        ? 'Feature flags documentation'
-                        : documentation.link?.label
-                }
+                description={documentation.text}
+                documentationIcon={documentation.icon}
+                documentationLink={documentation.link?.url}
+                documentationLinkLabel={documentation.link?.label}
                 formatApiCode={formatApiCode}
                 useFixedSidebar
-                onClose={useNewDesign ? onDialogClose : undefined}
+                sidebar={useNewDesign ? newDesignSidebar : undefined}
             >
                 {useNewDesign ? (
                     <NewDialogFormTemplate

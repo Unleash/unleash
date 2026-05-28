@@ -22,7 +22,7 @@ const Controlled = ({
         <SelectSdk
             projectSdks={projectSdks}
             value={value}
-            onChange={setValue}
+            onChange={(sdk) => sdk && setValue(sdk)}
         />
     );
 };

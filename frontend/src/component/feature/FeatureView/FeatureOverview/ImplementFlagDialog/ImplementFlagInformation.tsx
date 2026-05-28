@@ -1,26 +1,12 @@
-import { IconButton, Link, styled, Typography } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { Link, styled, Typography } from '@mui/material';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import GitHubIcon from '@mui/icons-material/GitHub';
 
-const Container = styled('aside')(({ theme }) => ({
-    backgroundColor: theme.palette.background.sidebar,
-    color: theme.palette.primary.contrastText,
+const Container = styled('div')(({ theme }) => ({
     padding: theme.spacing(3, 4),
-    width: 320,
-    flexGrow: 0,
-    flexShrink: 0,
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(2),
-    position: 'relative',
-}));
-
-const CloseButton = styled(IconButton)(({ theme }) => ({
-    position: 'absolute',
-    top: theme.spacing(1),
-    right: theme.spacing(1),
-    color: theme.palette.primary.contrastText,
 }));
 
 const InlineLink = styled(Link)(({ theme }) => ({
@@ -48,24 +34,9 @@ const ResourceLink = styled(Link)(({ theme }) => ({
     },
 }));
 
-interface ImplementFlagInformationProps {
-    onClose: () => void;
-}
-
-export const ImplementFlagInformation = ({
-    onClose,
-}: ImplementFlagInformationProps) => (
+export const ImplementFlagInformation = () => (
     <Container>
-        <CloseButton onClick={onClose} size='small'>
-            <CloseIcon />
-        </CloseButton>
-        <Typography
-            variant='body2'
-            sx={{
-                fontWeight: 'bold',
-                mt: 4,
-            }}
-        >
+        <Typography variant='body2' sx={{ fontWeight: 'bold' }}>
             Define a safe default value
         </Typography>
         <Typography variant='body2'>

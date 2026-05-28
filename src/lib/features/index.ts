@@ -9,6 +9,7 @@ export * from './dependent-features/createDependentFeaturesService.js';
 export * from './tag-type/createTagTypeService.js';
 export * from './project-environments/createEnvironmentService.js';
 export * from './events/createEventsService.js';
+export * from './users/createUserService.js';
 export * from './instance-stats/createInstanceStatsService.js';
 export * from './feature-lifecycle/createFeatureLifecycle.js';
 export * from './playground/createPlaygroundService.js';

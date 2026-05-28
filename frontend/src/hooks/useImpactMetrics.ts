@@ -17,3 +17,24 @@ export const useImpactMetricsCounter = (name: string, help: string) => {
 
     return { increment };
 };
+
+export const useImpactMetricsHistogram = (
+    name: string,
+    help: string,
+    buckets?: number[],
+) => {
+    const client = useUnleashClient();
+
+    useEffect(() => {
+        client?.impactMetrics?.defineHistogram(name, help, buckets);
+    }, [client, name, help, buckets]);
+
+    const observe = useCallback(
+        (value: number) => {
+            client?.impactMetrics?.observeHistogram(name, value);
+        },
+        [client, name],
+    );
+
+    return { observe };
+};

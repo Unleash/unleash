@@ -1,3 +1,4 @@
+import copy from 'copy-to-clipboard';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
@@ -294,13 +295,15 @@ const CreateFeatureDialogContent = ({
         />
     );
 
-    const newDesignSidebar = ({
-        apiCommand,
-        copyApiCommand,
-    }: {
-        apiCommand: string | undefined;
-        copyApiCommand: () => void;
-    }) => (
+    const copyApiCommand = () => {
+        if (copy(formatApiCode())) {
+            setToastData({ text: 'Command copied', type: 'success' });
+        } else {
+            setToastData({ text: 'Could not copy the command', type: 'error' });
+        }
+    };
+
+    const newDesignSidebar = (
         <>
             <StyledNewSidebarHeader>
                 <StyledNewSidebarCloseButton
@@ -321,13 +324,11 @@ const CreateFeatureDialogContent = ({
                     Feature flags documentation
                 </StyledNewSidebarLink>
             </StyledNewSidebarLinkContainer>
-            {apiCommand !== undefined ? (
-                <ApiCommandBlock
-                    command={apiCommand}
-                    onCopy={copyApiCommand}
-                    hideDivider
-                />
-            ) : null}
+            <ApiCommandBlock
+                command={formatApiCode()}
+                onCopy={copyApiCommand}
+                hideDivider
+            />
         </>
     );
 

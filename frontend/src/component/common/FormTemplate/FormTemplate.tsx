@@ -23,13 +23,6 @@ import {
 import { relative } from 'themes/themeStyles';
 import { ApiCommandBlock } from './ApiCommandBlock.tsx';
 
-export type SidebarContext = {
-    copyApiCommand: () => void;
-    apiCommand: string | undefined;
-};
-
-export type SidebarRender = ReactNode | ((ctx: SidebarContext) => ReactNode);
-
 interface ICreateProps {
     title?: ReactNode;
     description: ReactNode;
@@ -54,7 +47,7 @@ interface ICreateProps {
      * are replaced. When omitted, the default sidebar (description + docs
      * link + API command) is rendered.
      */
-    sidebar?: SidebarRender;
+    sidebar?: ReactNode;
     children?: React.ReactNode;
 }
 
@@ -352,12 +345,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
                                     : sidebarWidth
                             }
                         >
-                            {typeof sidebar === 'function'
-                                ? sidebar({
-                                      copyApiCommand: copyCommand,
-                                      apiCommand: formatApiCode?.(),
-                                  })
-                                : sidebar}
+                            {sidebar}
                         </StyledSidebar>
                     ) : (
                         <SidebarComponent

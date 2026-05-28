@@ -3,6 +3,7 @@ import type { Logger, LogProvider } from '../../../logger.js';
 import type { IUnleashStores } from '../../../types/stores.js';
 import type { IAddonProviders } from '../../../addons/index.js';
 import { AUTH_PROVIDERS_CATALOG } from '../../../types/settings/auth-settings.js';
+import type { IAddon } from '../../../types/stores/addon-store.js';
 
 const DEFAULT_TTL_MS = 60_000; // 1 minute
 
@@ -21,6 +22,12 @@ export interface IntegrationMetricsDeps {
     options?: IntegrationMetricsOptions;
 }
 
+interface ConfiguredSample {
+    name: string;
+    kind: 'addon' | 'auth';
+    state: 'enabled' | 'disabled' | 'not_configured';
+    count: number;
+}
 /**
  *  metrics show up on `/internal-backstage/prometheus`.
  */
@@ -47,6 +54,34 @@ export function registerIntegrationMetrics(
     };
 }
 
+function registerAddons(gauge: Gauge, addonProviders: IAddonProviders): void {
+    for (const addon of Object.values(addonProviders)) {
+        const { name, deprecated } = addon.definition;
+        gauge
+            .labels({
+                name,
+                kind: 'addon',
+                deprecated: String(Boolean(deprecated)),
+                removal_target: deprecated ?? '',
+            })
+            .set(1);
+    }
+}
+
+function registerAuthProviders(gauge: Gauge): void {
+    for (const provider of Object.values(AUTH_PROVIDERS_CATALOG)) {
+        const { name, deprecatedRemovalTarget } = provider;
+        gauge
+            .labels({
+                name,
+                kind: 'auth',
+                deprecated: String(Boolean(deprecatedRemovalTarget)),
+                removal_target: deprecatedRemovalTarget ?? '',
+            })
+            .set(1);
+    }
+}
+
 /**
  *  `integration_available{name, kind, deprecated, removal_target}`
  *  all available integrations of this server. value=1: registered entry.
@@ -59,34 +94,8 @@ function registerAvailableGauge(addonProviders: IAddonProviders): void {
         labelNames: ['name', 'kind', 'deprecated', 'removal_target'] as const,
     });
 
-    for (const addon of Object.values(addonProviders)) {
-        gauge
-            .labels({
-                name: addon.definition.name,
-                kind: 'addon',
-                deprecated: String(Boolean(addon.definition.deprecated)),
-                removal_target: addon.definition.deprecated ?? '',
-            })
-            .set(1);
-    }
-
-    for (const provider of Object.values(AUTH_PROVIDERS_CATALOG)) {
-        gauge
-            .labels({
-                name: provider.name,
-                kind: 'auth',
-                deprecated: String(Boolean(provider.deprecatedRemovalTarget)),
-                removal_target: provider.deprecatedRemovalTarget ?? '',
-            })
-            .set(1);
-    }
-}
-
-interface ConfiguredSample {
-    name: string;
-    kind: 'addon' | 'auth';
-    state: 'enabled' | 'disabled' | 'not_configured';
-    count: number;
+    registerAddons(gauge, addonProviders);
+    registerAuthProviders(gauge);
 }
 
 /**
@@ -124,7 +133,7 @@ function registerConfiguredGauge(args: {
                     cache.ts = now;
                 } catch (err) {
                     logger.warn(
-                        `failed to collect integration_configured: ${
+                        `Failed to collect integration_configured: ${
                             (err as Error).message
                         }`,
                     );
@@ -143,6 +152,7 @@ function registerConfiguredGauge(args: {
         },
     });
 }
+
 export async function collectConfiguredSamples(
     stores: Pick<IUnleashStores, 'addonStore' | 'settingStore'>,
     logger?: Logger,
@@ -156,42 +166,23 @@ export async function collectConfiguredSamples(
         { enabled: number; disabled: number }
     >();
 
-    for (const addon of addons) {
-        const bucket = addonBuckets.get(addon.provider) ?? {
-            enabled: 0,
-            disabled: 0,
-        };
-
-        if (addon.enabled) {
-            bucket.enabled++;
-        } else {
-            bucket.disabled++;
-        }
-
-        addonBuckets.set(addon.provider, bucket);
-    }
+    collectAddonSamples(addons, addonBuckets);
 
     // Only push if count > 0 to avoid empty entries
-    for (const [provider, bucket] of addonBuckets) {
-        if (bucket.enabled > 0) {
-            samples.push({
-                name: provider,
-                kind: 'addon',
-                state: 'enabled',
-                count: bucket.enabled,
-            });
-        }
-        if (bucket.disabled > 0) {
-            samples.push({
-                name: provider,
-                kind: 'addon',
-                state: 'disabled',
-                count: bucket.disabled,
-            });
-        }
-    }
+    bucketAddonsByState(addonBuckets, samples);
 
     // Auth providers
+    const authResults = await collectAuthSamples(stores, logger);
+
+    samples.push(...authResults);
+
+    return samples;
+}
+
+async function collectAuthSamples(
+    stores: Pick<IUnleashStores, 'addonStore' | 'settingStore'>,
+    logger: Logger | undefined,
+) {
     const authResults = await Promise.all(
         Object.values(AUTH_PROVIDERS_CATALOG).map(async (provider) => {
             try {
@@ -220,12 +211,52 @@ export async function collectConfiguredSamples(
             }
         }),
     );
-
     const validAuthSamples = authResults.filter(
         (result): result is ConfiguredSample => result !== null,
     );
+    return validAuthSamples;
+}
 
-    samples.push(...validAuthSamples);
+function bucketAddonsByState(
+    addonBuckets: Map<string, { enabled: number; disabled: number }>,
+    samples: ConfiguredSample[],
+) {
+    for (const [provider, bucket] of addonBuckets) {
+        if (bucket.enabled > 0) {
+            samples.push({
+                name: provider,
+                kind: 'addon',
+                state: 'enabled',
+                count: bucket.enabled,
+            });
+        }
+        if (bucket.disabled > 0) {
+            samples.push({
+                name: provider,
+                kind: 'addon',
+                state: 'disabled',
+                count: bucket.disabled,
+            });
+        }
+    }
+}
 
-    return samples;
+function collectAddonSamples(
+    addons: IAddon[],
+    addonBuckets: Map<string, { enabled: number; disabled: number }>,
+) {
+    for (const addon of addons) {
+        const bucket = addonBuckets.get(addon.provider) ?? {
+            enabled: 0,
+            disabled: 0,
+        };
+
+        if (addon.enabled) {
+            bucket.enabled++;
+        } else {
+            bucket.disabled++;
+        }
+
+        addonBuckets.set(addon.provider, bucket);
+    }
 }

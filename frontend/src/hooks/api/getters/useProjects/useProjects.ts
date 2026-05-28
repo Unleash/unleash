@@ -32,10 +32,9 @@ const useProjects = (options: SWRConfiguration & GetProjectsParams = {}) => {
             method: 'GET',
         })
             .then(handleErrorResponses('Projects'))
-            .then((res) => res.json())
-            .then((data) => {
+            .then((res) => {
                 observe(performance.now() - start);
-                return data;
+                return res.json();
             });
     };
 

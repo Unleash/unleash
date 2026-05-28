@@ -94,7 +94,6 @@ export const NewAccessOverviewAccordion = ({
                         rootRole={rootRole}
                         roles={roles}
                         groups={groups}
-                        noScroll
                     />
                 )}
                 {children}

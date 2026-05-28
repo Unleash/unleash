@@ -106,13 +106,11 @@ export const NewAccessOverviewList = ({
     rootRole,
     roles,
     groups,
-    noScroll,
 }: {
     categories: IAccessOverviewPermissionCategory[];
     rootRole: IRole | undefined;
     roles: number[] | undefined;
     groups: IGroup[] | undefined;
-    noScroll?: boolean;
 }) => {
     const { searchQuery } = useSearchHighlightContext();
 
@@ -146,7 +144,6 @@ export const NewAccessOverviewList = ({
         </StyledList>
     );
 
-    if (noScroll) return list;
     return <Box sx={{ maxHeight: 500, overflow: 'auto' }}>{list}</Box>;
 };
 

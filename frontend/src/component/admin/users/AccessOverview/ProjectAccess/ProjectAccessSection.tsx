@@ -9,7 +9,7 @@ import {
     Typography,
     styled,
 } from '@mui/material';
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { ProjectMenuItem } from './ProjectMenuItem';
 import { ProjectAccess } from './ProjectAccess';
 
@@ -55,32 +55,6 @@ export const ProjectAccessSection = ({
     const [selectedProjectIds, setSelectedProjectIds] = useState<string[]>([]);
     const [selectedEnvironments, setSelectedEnvironments] = useState<string[]>(
         [],
-    );
-    const [memberProjectIds, setMemberProjectIds] = useState<Set<string>>(
-        new Set(),
-    );
-
-    const handleAccessResolved = useCallback(
-        (projectId: string, isMember: boolean) => {
-            setMemberProjectIds((prev) => {
-                if (isMember === prev.has(projectId)) return prev;
-                const next = new Set(prev);
-                isMember ? next.add(projectId) : next.delete(projectId);
-                return next;
-            });
-        },
-        [],
-    );
-
-    const sortedProjects = useMemo(
-        () =>
-            [...projects].sort((a, b) => {
-                const aIsMember = memberProjectIds.has(a.id);
-                const bIsMember = memberProjectIds.has(b.id);
-                if (aIsMember !== bIsMember) return aIsMember ? -1 : 1;
-                return a.name.localeCompare(b.name);
-            }),
-        [projects, memberProjectIds],
     );
 
     const visibleProjects = projects.filter((p) =>
@@ -131,7 +105,7 @@ export const ProjectAccessSection = ({
                             sx: { '& .MuiPaper-root': { maxWidth: 200 } },
                         }}
                     >
-                        {sortedProjects.map((project) => (
+                        {projects.map((project) => (
                             <ProjectMenuItem
                                 key={project.id}
                                 id={id}
@@ -140,7 +114,6 @@ export const ProjectAccessSection = ({
                                 selected={selectedProjectIds.includes(
                                     project.id,
                                 )}
-                                onAccessResolved={handleAccessResolved}
                             />
                         ))}
                     </Select>

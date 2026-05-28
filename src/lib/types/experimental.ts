@@ -81,7 +81,7 @@ export type IFlagKey =
     | 'newProjectList'
     | 'reactRouter_v7_relativeSplatPath'
     | 'reactRouter_v7_startTransition'
-    | 'newFeatureFlag';
+    | 'newModalDesign';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -368,8 +368,8 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_REACT_ROUTER_V7_RELATIVE_SPLAT_PATH,
         false,
     ),
-    newFeatureFlag: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_FEATURE_FLAG,
+    newModalDesign: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_NEW_MODAL_DESIGN,
         false,
     ),
 };

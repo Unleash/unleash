@@ -12,7 +12,7 @@ const setupBaseApi = () => {
     testServerRoute(server, '/api/admin/ui-config', {
         resourceLimits: { featureFlags: 999 },
         versionInfo: { current: { oss: 'version' } },
-        flags: { newFeatureFlag: true },
+        flags: { newModalDesign: true },
     });
     testServerRoute(server, '/api/admin/projects', { projects: [] });
     testServerRoute(server, '/api/admin/projects/default/overview', {

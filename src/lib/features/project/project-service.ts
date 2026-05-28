@@ -261,6 +261,7 @@ export default class ProjectService {
 
         if (this.flagResolver.isEnabled('newProjectList')) {
             //TODO: update project-schema when removing this flag
+            const stopTimer = this.timer('newProjectListFields');
             const projectIds = projects.map((p) => p.id);
             const [onboardingStatuses, cleanupByProject] = await Promise.all([
                 this.onboardingReadModel
@@ -279,6 +280,8 @@ export default class ProjectService {
                     })
                     .catch(() => new Map<string, number>()),
             ]);
+
+            stopTimer();
 
             for (const project of projects) {
                 project.onboardingStatus = onboardingStatuses.get(project.id);

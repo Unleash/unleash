@@ -5,6 +5,7 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
 import type { GetProjectsParams, ProjectSchema, ProjectsSchema } from 'openapi';
 import type { OnboardingStatusSchema } from 'openapi';
+import { useImpactMetricsHistogram } from 'hooks/useImpactMetrics';
 
 // TODO: `onboardingStatus` and `cleanupCount` are currently gated behind the 'newProjectList' flag
 // and not included on `projectSchema` (see openapi/spec/project-schema.ts).
@@ -18,13 +19,24 @@ export type ProjectListItem = ProjectSchema & {
 const useProjects = (options: SWRConfiguration & GetProjectsParams = {}) => {
     const KEY = `api/admin/projects${options.archived ? '?archived=true' : ''}`;
 
+    // TODO: remove when cleaning up 'newProjectList' flag
+    const { observe } = useImpactMetricsHistogram(
+        'project_list_load_ms',
+        'Client-side load time for the project list',
+        [50, 100, 200, 500, 1000, 2000, 5000],
+    );
+
     const fetcher = () => {
         const path = formatApiPath(KEY);
+        const start = performance.now();
         return fetch(path, {
             method: 'GET',
         })
             .then(handleErrorResponses('Projects'))
-            .then((res) => res.json());
+            .then((res) => {
+                observe(performance.now() - start);
+                return res.json();
+            });
     };
 
     const { data, error } = useSWR<{ projects: ProjectsSchema['projects'] }>(

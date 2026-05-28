@@ -63,7 +63,7 @@ import {
     type UserAccessOverviewSchema,
     userAccessOverviewSchema,
 } from '../../openapi/index.js';
-import type { ProjectService, WithTransactional } from '../../server-impl.js';
+import type { WithTransactional } from '../../server-impl.js';
 
 export default class UserAdminController extends Controller {
     private flagResolver: IFlagResolver;
@@ -84,8 +84,6 @@ export default class UserAdminController extends Controller {
 
     private groupService: GroupService;
 
-    private projectService: ProjectService;
-
     readonly isEnterprise: boolean;
 
     constructor(
@@ -98,7 +96,6 @@ export default class UserAdminController extends Controller {
             settingService,
             openApiService,
             groupService,
-            projectService,
         }: Pick<
             IUnleashServices,
             | 'userService'
@@ -109,7 +106,6 @@ export default class UserAdminController extends Controller {
             | 'settingService'
             | 'openApiService'
             | 'groupService'
-            | 'projectService'
         >,
     ) {
         super(config);
@@ -122,7 +118,6 @@ export default class UserAdminController extends Controller {
         this.groupService = groupService;
         this.logger = config.getLogger('routes/user-controller.ts');
         this.flagResolver = config.flagResolver;
-        this.projectService = projectService;
         this.isEnterprise = config.isEnterprise;
 
         this.route({
@@ -753,7 +748,6 @@ export default class UserAdminController extends Controller {
             req.params.id,
         );
         const rootRole = await this.accessService.getRootRoleForUser(user.id);
-        const projectIds = await this.projectService.getProjectsByUser(user.id);
         let projectRoles: IRoleWithPermissions[] = [];
         if (project) {
             const projectRoleIds =
@@ -783,7 +777,6 @@ export default class UserAdminController extends Controller {
                 user: serializeDates(user),
                 rootRole,
                 projectRoles,
-                projectIds,
             },
         );
     }

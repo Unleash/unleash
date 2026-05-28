@@ -53,7 +53,7 @@ const permissionWithHasPermission = {
 export const userAccessOverviewSchema = {
     $id: '#/components/schemas/userAccessOverviewSchema',
     type: 'object',
-    required: ['overview', 'user', 'rootRole', 'projectRoles', 'projectIds'],
+    required: ['overview', 'user', 'rootRole', 'projectRoles'],
     additionalProperties: false,
     description:
         'Describes the access overview (list of permissions and metadata) for a user.',
@@ -115,17 +115,6 @@ export const userAccessOverviewSchema = {
                     },
                 },
             },
-        },
-        projectIds: {
-            type: 'array',
-            description:
-                'The list ids of projects the user has been granted explicit access to',
-            items: {
-                type: 'string',
-                description: 'Project id',
-                example: 'project-1',
-            },
-            example: ['project-1', 'project-2'],
         },
     },
     components: {

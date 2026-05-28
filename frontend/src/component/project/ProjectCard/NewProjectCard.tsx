@@ -17,7 +17,6 @@ import { Truncator } from 'component/common/Truncator/Truncator.tsx';
 import { ProjectLastSeen } from './ProjectLastSeen/ProjectLastSeen.tsx';
 import { OnboardingStatusBadge } from './OnboardingStatusBadge/OnboardingStatusBadge.tsx';
 import type { ProjectListItem } from 'hooks/api/getters/useProjects/useProjects.ts';
-import { ProjectUsers } from './ProjectCardFooter/ProjectUsers/ProjectUsers.tsx';
 
 const StyledNewProjectCard = styled(StyledProjectCard)(({ theme }) => ({
     minHeight: theme.spacing(23),
@@ -31,7 +30,6 @@ export const NewProjectCard = ({
     id,
     mode,
     favorite = false,
-    owners,
     createdAt,
     lastUpdatedAt,
     lastReportedFlagUsage,
@@ -84,9 +82,8 @@ export const NewProjectCard = ({
             <NewProjectCardFooter
                 lastUpdatedAt={lastUpdatedAt}
                 createdAt={createdAt}
-            >
-                <ProjectUsers owners={owners} total={memberCount} />
-            </NewProjectCardFooter>
+                memberCount={memberCount}
+            ></NewProjectCardFooter>
         </StyledNewProjectCard>
     );
 };

@@ -7,10 +7,13 @@ import {
 import type { MetricFlagContext } from 'unleash-client/lib/impact-metrics/metric-types.js';
 import type { Context } from '../features/playground/feature-evaluator/index.js';
 
-export type IFlagKey =
+// biome-ignore lint/suspicious/noEmptyInterface: extension point for enterprise module augmentation
+export interface IFlagKeyOverrides {}
+
+export type IOssFlagKey =
     | 'accessLogs'
     | 'anonymiseEventLog'
-    | 'encryptEmails'
+    | 'encryptEmails' // enterprise-owned; kept in OSS until middleware usage moves
     | 'enableLicense'
     | 'responseTimeWithAppNameKillSwitch'
     | 'maintenanceMode'
@@ -23,14 +26,10 @@ export type IFlagKey =
     | 'advancedPlayground'
     | 'filterInvalidClientMetrics'
     | 'disableMetrics'
-    | 'signals'
-    | 'automatedActions'
     | 'celebrateUnleash'
     | 'feedbackPosting'
     | 'extendedUsageMetrics'
     | 'feedbackComments'
-    | 'killScheduledChangeRequestCache'
-    | 'estimateTrafficDataCost'
     | 'useMemoizedActiveTokens'
     | 'queryMissingTokens'
     | 'disableUpdateMaxRevisionId'
@@ -48,39 +47,28 @@ export type IFlagKey =
     | 'productivityReportUnsubscribers'
     | 'showUserDeviceCount'
     | 'memorizeStats'
-    | 'streaming'
-    | 'denyStreamingForNonEdge'
-    | 'deltaApi'
-    | 'deltaDiff'
+    | 'deltaApi' // enterprise-owned; kept in OSS until delta API usage moves
+    | 'deltaDiff' // enterprise-owned; kept in OSS until delta diff usage moves
     | 'uniqueSdkTracking'
-    | 'consumptionModel'
-    | 'consumptionModelUI'
     | 'customMetrics'
-    | 'impactMetrics'
-    | 'registerImpactMetrics'
+    | 'impactMetrics' // enterprise-owned; kept in OSS until metrics usage moves
     | 'etagByEnv'
-    | 'fetchMode'
     | 'optimizeLifecycle'
-    | 'milestoneProgression'
     | 'plausibleMetrics'
-    | 'safeguards'
     | 'newInUnleash'
-    | 'oidcPkceSupport'
-    | 'remoteMcpServer'
     | 'regexConstraintOperator'
-    | 'enterpriseEdgeTokensList'
-    | 'impactMetricsFlagPage'
     | 'userTokenWithClientApiLoggingKillSwitch'
     | 'onlyFeatureTokensWithFeatureAPIs'
     | 'onboardingProjectSetupNewSteps'
     | 'multiMetricChart'
-    | 'elasticEventSync'
     | 'accessOverviewRework'
     | 'onboardingConnectSDKNewDialog'
     | 'logRocketEnabled'
     | 'newProjectList'
     | 'reactRouter_v7_relativeSplatPath'
     | 'reactRouter_v7_startTransition';
+
+export type IFlagKey = IOssFlagKey | keyof IFlagKeyOverrides;
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -129,14 +117,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_METRICS,
         false,
     ),
-    signals: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SIGNALS,
-        false,
-    ),
-    automatedActions: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_AUTOMATED_ACTIONS,
-        false,
-    ),
     celebrateUnleash: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CELEBRATE_UNLEASH,
         false,
@@ -172,14 +152,6 @@ const flags: IFlags = {
     },
     useMemoizedActiveTokens: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_MEMOIZED_ACTIVE_TOKENS,
-        false,
-    ),
-    killScheduledChangeRequestCache: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_KILL_SCHEDULED_CHANGE_REQUEST_CACHE,
-        false,
-    ),
-    estimateTrafficDataCost: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ESTIMATE_TRAFFIC_DATA_COST,
         false,
     ),
     disableUpdateMaxRevisionId: parseEnvVarBoolean(
@@ -251,75 +223,20 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_UNIQUE_SDK_TRACKING,
         false,
     ),
-    consumptionModel: parseEnvVarBoolean(
-        process.env.EXPERIMENTAL_CONSUMPTION_MODEL,
-        false,
-    ),
-    consumptionModelUI: parseEnvVarBoolean(
-        process.env.EXPERIMENTAL_CONSUMPTION_MODEL_UI,
-        false,
-    ),
     impactMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_IMPACT_METRICS,
         false,
     ),
-    registerImpactMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_REGISTER_IMPACT_METRICS,
-        false,
-    ),
-    streaming: {
-        name: 'disabled',
-        enabled: parseEnvVarBoolean(
-            process.env.UNLEASH_EXPERIMENTAL_STREAMING,
-            false,
-        ),
-    },
-    denyStreamingForNonEdge: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_STREAMING_DENY_STREAMING_FOR_NON_EDGE,
-        false,
-    ),
-    fetchMode: {
-        name: 'disabled',
-        enabled: parseEnvVarBoolean(
-            process.env.UNLEASH_EXPERIMENTAL_FETCH_MODE,
-            false,
-        ),
-    },
-    milestoneProgression: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_MILESTONE_PROGRESSION,
-        false,
-    ),
-
     plausibleMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PLAUSIBLE_METRICS,
-        false,
-    ),
-    safeguards: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SAFEGUARDS,
-        false,
-    ),
-    oidcPkceSupport: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_OIDC_PKCE_SUPPORT,
         false,
     ),
     newInUnleash: parseEnvVarBooleanOrStringVariant(
         process.env.UNLEASH_EXPERIMENTAL_NEW_IN_UNLEASH,
         false,
     ),
-    remoteMcpServer: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_REMOTE_MCP_SERVER,
-        false,
-    ),
     regexConstraintOperator: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_REGEX_CONSTRAINT_OPERATOR,
-        false,
-    ),
-    enterpriseEdgeTokensList: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ENTERPRISE_EDGE_TOKENS_LIST,
-        false,
-    ),
-    impactMetricsFlagPage: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_IMPACT_METRICS_FLAG_PAGE,
         false,
     ),
     userTokenWithClientApiLoggingKillSwitch: parseEnvVarBoolean(
@@ -337,10 +254,6 @@ const flags: IFlags = {
     ),
     multiMetricChart: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_MULTI_METRIC_CHART,
-        false,
-    ),
-    elasticEventSync: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ELASTIC_EVENT_SYNC,
         false,
     ),
     accessOverviewRework: parseEnvVarBoolean(

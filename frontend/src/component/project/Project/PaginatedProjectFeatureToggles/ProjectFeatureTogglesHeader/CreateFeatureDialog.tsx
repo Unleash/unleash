@@ -4,6 +4,7 @@ import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { type ReactNode, useState, type FormEvent, useMemo } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, styled } from '@mui/material';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
@@ -23,6 +24,11 @@ import type { FeatureTypeSchema } from 'openapi';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { DialogFormTemplate } from 'component/common/DialogFormTemplate/DialogFormTemplate';
+import {
+    MultiPillDropdown,
+    NewDialogFormTemplate,
+    SinglePillDropdown,
+} from 'component/common/DialogFormTemplate/NewDialogFormTemplate';
 import { SingleSelectConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/SingleSelectConfigButton';
 import useAllTags from 'hooks/api/getters/useAllTags/useAllTags';
 import Label from '@mui/icons-material/Label';
@@ -96,6 +102,7 @@ const CreateFeatureDialogContent = ({
     onClose,
     onSuccess,
 }: ICreateFeatureDialogProps) => {
+    const useNewDesign = true; //useUiFlag('newFeatureFlag');
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig, isOss } = useUiConfig();
     const navigate = useNavigate();
@@ -227,179 +234,293 @@ const CreateFeatureDialogContent = ({
         onClose();
     };
 
+    const createButtonProps = {
+        projectId: project,
+        disabled:
+            loading ||
+            loadingTotalFlagCount ||
+            globalFlagLimitReached ||
+            projectFlagLimitReached,
+        permission: CREATE_FEATURE,
+        tooltipProps: { title: limitMessage, arrow: true },
+    };
+
+    const limitNode = (
+        <Limit
+            name='feature flags'
+            limit={uiConfig.resourceLimits.featureFlags}
+            currentValue={totalFlags ?? 0}
+        />
+    );
+
     return (
         <StyledDialog open={open} onClose={onDialogClose}>
             <FormTemplate
                 compact
                 disablePadding
-                description={documentation.text}
-                documentationIcon={documentation.icon}
-                documentationLink={documentation.link?.url}
-                documentationLinkLabel={documentation.link?.label}
+                showDescription={!useNewDesign}
+                description={useNewDesign ? '' : documentation.text}
+                documentationIcon={
+                    useNewDesign ? undefined : documentation.icon
+                }
+                documentationLink={
+                    useNewDesign
+                        ? 'https://docs.getunleash.io/concepts/feature-flags'
+                        : documentation.link?.url
+                }
+                documentationLinkLabel={
+                    useNewDesign
+                        ? 'Feature flags documentation'
+                        : documentation.link?.label
+                }
                 formatApiCode={formatApiCode}
                 useFixedSidebar
+                onClose={useNewDesign ? onDialogClose : undefined}
             >
-                <DialogFormTemplate
-                    createButtonProps={{
-                        projectId: project,
-                        disabled:
-                            loading ||
-                            loadingTotalFlagCount ||
-                            globalFlagLimitReached ||
-                            projectFlagLimitReached,
-                        permission: CREATE_FEATURE,
-                        tooltipProps: { title: limitMessage, arrow: true },
-                    }}
-                    description={description}
-                    namingPattern={projectInfo.featureNaming}
-                    errors={errors}
-                    handleSubmit={handleSubmit}
-                    Icon={<FlagIcon />}
-                    validateName={validateToggleName}
-                    Limit={
-                        <Limit
-                            name='feature flags'
-                            limit={uiConfig.resourceLimits.featureFlags}
-                            currentValue={totalFlags ?? 0}
-                        />
-                    }
-                    name={name}
-                    onClose={onClose}
-                    resource={'feature flag'}
-                    setDescription={setDescription}
-                    setName={setName}
-                    configButtons={
-                        <>
-                            <ConditionallyRender
-                                condition={!isOss()}
-                                show={
-                                    <SingleSelectConfigButton
-                                        tooltip={{
-                                            header: 'Select a project for the flag',
-                                        }}
-                                        description={
-                                            configButtonData.project.text
-                                        }
-                                        options={projects.map((project) => ({
-                                            label: project.name,
-                                            value: project.id,
-                                        }))}
-                                        onChange={(value: any) => {
-                                            setProject(value);
-                                        }}
-                                        button={{
-                                            label:
-                                                currentProjectName ?? project,
-                                            icon: configButtonData.project.icon,
-                                            labelWidth: '20ch',
-                                        }}
-                                        search={{
-                                            label: 'Filter projects',
-                                            placeholder: 'Select project',
-                                        }}
-                                        onOpen={() =>
-                                            setDocumentation(
-                                                configButtonData.project,
-                                            )
-                                        }
-                                        onClose={clearDocumentationOverride}
-                                    />
-                                }
-                            />
-                            <MultiSelectConfigButton
-                                tooltip={{
-                                    header: 'Select tags',
-                                }}
-                                description={configButtonData.tags.text}
-                                selectedOptions={
-                                    new Set(
-                                        Array.from(tags).map(
-                                            (tag) => `${tag.type}:${tag.value}`,
-                                        ),
-                                    )
-                                }
-                                options={allTags.map((tag) => ({
-                                    label: formatTag(tag),
-                                    value: `${tag.type}:${tag.value}`,
-                                }))}
-                                onChange={(strings) => {
-                                    const normalized = Array.from(strings).map(
-                                        (string) => {
+                {useNewDesign ? (
+                    <NewDialogFormTemplate
+                        title='New feature flag'
+                        resource='feature flag'
+                        projects={projects.map((p) => ({
+                            label: p.name,
+                            value: p.id,
+                        }))}
+                        project={project}
+                        currentProjectName={currentProjectName}
+                        onProjectChange={setProject}
+                        hideProjectSelector={isOss()}
+                        name={name}
+                        setName={setName}
+                        description={description}
+                        setDescription={setDescription}
+                        errors={errors}
+                        validateName={validateToggleName}
+                        namingPattern={projectInfo.featureNaming}
+                        impressionData={impressionData}
+                        setImpressionData={setImpressionData}
+                        impressionDataHelp={
+                            configButtonData.impressionData.text
+                        }
+                        handleSubmit={handleSubmit}
+                        onClose={onDialogClose}
+                        createButtonProps={createButtonProps}
+                        Limit={limitNode}
+                        configButtons={
+                            <>
+                                <SinglePillDropdown<string>
+                                    label={
+                                        featureTypes.find((t) => t.id === type)
+                                            ?.name || 'Select flag type'
+                                    }
+                                    tooltip={{
+                                        header: 'Select a flag type',
+                                        description: configButtonData.type.text,
+                                    }}
+                                    options={featureTypes.map(
+                                        (t: FeatureTypeSchema) => ({
+                                            label: t.name,
+                                            value: t.id,
+                                        }),
+                                    )}
+                                    onChange={(value) =>
+                                        setType(value as typeof type)
+                                    }
+                                    searchLabel='Filter flag types'
+                                    searchPlaceholder='Select flag type'
+                                />
+                                <MultiPillDropdown<string>
+                                    label={
+                                        tags.size > 0
+                                            ? `${tags.size} selected`
+                                            : 'Add tags'
+                                    }
+                                    tooltip={{
+                                        header: 'Select tags',
+                                        description: configButtonData.tags.text,
+                                    }}
+                                    options={allTags.map((tag) => ({
+                                        label: formatTag(tag),
+                                        value: `${tag.type}:${tag.value}`,
+                                    }))}
+                                    selectedOptions={
+                                        new Set(
+                                            Array.from(tags).map(
+                                                (tag) =>
+                                                    `${tag.type}:${tag.value}`,
+                                            ),
+                                        )
+                                    }
+                                    onChange={(strings) => {
+                                        const normalized = Array.from(
+                                            strings,
+                                        ).map((s) => {
+                                            const [tagType, value] =
+                                                s.split(':');
+                                            return { type: tagType, value };
+                                        });
+                                        setTags(new Set(normalized));
+                                    }}
+                                    searchLabel='Filter tags'
+                                    searchPlaceholder='Select tags'
+                                />
+                            </>
+                        }
+                    />
+                ) : (
+                    <DialogFormTemplate
+                        createButtonProps={createButtonProps}
+                        description={description}
+                        namingPattern={projectInfo.featureNaming}
+                        errors={errors}
+                        handleSubmit={handleSubmit}
+                        Icon={<FlagIcon />}
+                        validateName={validateToggleName}
+                        Limit={limitNode}
+                        name={name}
+                        onClose={onClose}
+                        resource={'feature flag'}
+                        setDescription={setDescription}
+                        setName={setName}
+                        configButtons={
+                            <>
+                                <ConditionallyRender
+                                    condition={!isOss()}
+                                    show={
+                                        <SingleSelectConfigButton
+                                            tooltip={{
+                                                header: 'Select a project for the flag',
+                                            }}
+                                            description={
+                                                configButtonData.project.text
+                                            }
+                                            options={projects.map(
+                                                (project) => ({
+                                                    label: project.name,
+                                                    value: project.id,
+                                                }),
+                                            )}
+                                            onChange={(value: any) => {
+                                                setProject(value);
+                                            }}
+                                            button={{
+                                                label:
+                                                    currentProjectName ??
+                                                    project,
+                                                icon: configButtonData.project
+                                                    .icon,
+                                                labelWidth: '20ch',
+                                            }}
+                                            search={{
+                                                label: 'Filter projects',
+                                                placeholder: 'Select project',
+                                            }}
+                                            onOpen={() =>
+                                                setDocumentation(
+                                                    configButtonData.project,
+                                                )
+                                            }
+                                            onClose={clearDocumentationOverride}
+                                        />
+                                    }
+                                />
+                                <MultiSelectConfigButton
+                                    tooltip={{
+                                        header: 'Select tags',
+                                    }}
+                                    description={configButtonData.tags.text}
+                                    selectedOptions={
+                                        new Set(
+                                            Array.from(tags).map(
+                                                (tag) =>
+                                                    `${tag.type}:${tag.value}`,
+                                            ),
+                                        )
+                                    }
+                                    options={allTags.map((tag) => ({
+                                        label: formatTag(tag),
+                                        value: `${tag.type}:${tag.value}`,
+                                    }))}
+                                    onChange={(strings) => {
+                                        const normalized = Array.from(
+                                            strings,
+                                        ).map((string) => {
                                             const [type, value] =
                                                 string.split(':');
                                             return { type, value };
-                                        },
-                                    );
-                                    setTags(new Set(normalized));
-                                }}
-                                button={{
-                                    label:
-                                        tags.size > 0
-                                            ? `${tags.size} selected`
-                                            : 'Tags',
-                                    labelWidth: `${'nn selected'.length}ch`,
-                                    icon: <Label />,
-                                }}
-                                search={{
-                                    label: 'Filter tags',
-                                    placeholder: 'Select tags',
-                                }}
-                                onOpen={() =>
-                                    setDocumentation(configButtonData.tags)
-                                }
-                                onClose={clearDocumentationOverride}
-                            />
-                            <SingleSelectConfigButton
-                                tooltip={{
-                                    header: 'Select a flag type',
-                                }}
-                                description={configButtonData.type.text}
-                                options={featureTypes.map(
-                                    (type: FeatureTypeSchema) => ({
-                                        label: type.name,
-                                        value: type.id,
-                                    }),
-                                )}
-                                onChange={(value: any) => {
-                                    setType(value);
-                                }}
-                                button={{
-                                    label:
-                                        featureTypes.find((t) => t.id === type)
-                                            ?.name || 'Select flag type',
-                                    icon: <FeatureTypeIcon />,
-                                    labelWidth: `${longestFeatureTypeName}ch`,
-                                }}
-                                search={{
-                                    label: 'Filter flag types',
-                                    placeholder: 'Select flag type',
-                                }}
-                                onOpen={() =>
-                                    setDocumentation({
-                                        text: configButtonData.type.text,
+                                        });
+                                        setTags(new Set(normalized));
+                                    }}
+                                    button={{
+                                        label:
+                                            tags.size > 0
+                                                ? `${tags.size} selected`
+                                                : 'Tags',
+                                        labelWidth: `${'nn selected'.length}ch`,
+                                        icon: <Label />,
+                                    }}
+                                    search={{
+                                        label: 'Filter tags',
+                                        placeholder: 'Select tags',
+                                    }}
+                                    onOpen={() =>
+                                        setDocumentation(configButtonData.tags)
+                                    }
+                                    onClose={clearDocumentationOverride}
+                                />
+                                <SingleSelectConfigButton
+                                    tooltip={{
+                                        header: 'Select a flag type',
+                                    }}
+                                    description={configButtonData.type.text}
+                                    options={featureTypes.map(
+                                        (type: FeatureTypeSchema) => ({
+                                            label: type.name,
+                                            value: type.id,
+                                        }),
+                                    )}
+                                    onChange={(value: any) => {
+                                        setType(value);
+                                    }}
+                                    button={{
+                                        label:
+                                            featureTypes.find(
+                                                (t) => t.id === type,
+                                            )?.name || 'Select flag type',
                                         icon: <FeatureTypeIcon />,
-                                    })
-                                }
-                                onClose={clearDocumentationOverride}
-                            />
+                                        labelWidth: `${longestFeatureTypeName}ch`,
+                                    }}
+                                    search={{
+                                        label: 'Filter flag types',
+                                        placeholder: 'Select flag type',
+                                    }}
+                                    onOpen={() =>
+                                        setDocumentation({
+                                            text: configButtonData.type.text,
+                                            icon: <FeatureTypeIcon />,
+                                        })
+                                    }
+                                    onClose={clearDocumentationOverride}
+                                />
 
-                            <ToggleConfigButton
-                                tooltip={{
-                                    header: 'Enable or disable impression data',
-                                    description:
-                                        configButtonData.impressionData.text,
-                                }}
-                                currentValue={impressionData}
-                                onClick={() =>
-                                    setImpressionData(!impressionData)
-                                }
-                                label={`Impression data ${impressionData ? 'on' : 'off'}`}
-                                icon={<ImpressionDataIcon />}
-                                labelWidth={`${'impression data off'.length}ch`}
-                            />
-                        </>
-                    }
-                />
+                                <ToggleConfigButton
+                                    tooltip={{
+                                        header: 'Enable or disable impression data',
+                                        description:
+                                            configButtonData.impressionData
+                                                .text,
+                                    }}
+                                    currentValue={impressionData}
+                                    onClick={() =>
+                                        setImpressionData(!impressionData)
+                                    }
+                                    label={`Impression data ${impressionData ? 'on' : 'off'}`}
+                                    icon={<ImpressionDataIcon />}
+                                    labelWidth={`${'impression data off'.length}ch`}
+                                />
+                            </>
+                        }
+                    />
+                )}
             </FormTemplate>
         </StyledDialog>
     );

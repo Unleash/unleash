@@ -80,7 +80,8 @@ export type IFlagKey =
     | 'logRocketEnabled'
     | 'newProjectList'
     | 'reactRouter_v7_relativeSplatPath'
-    | 'reactRouter_v7_startTransition';
+    | 'reactRouter_v7_startTransition'
+    | 'newFeatureFlag';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -365,6 +366,10 @@ const flags: IFlags = {
     ),
     reactRouter_v7_relativeSplatPath: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_REACT_ROUTER_V7_RELATIVE_SPLAT_PATH,
+        false,
+    ),
+    newFeatureFlag: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_NEW_FEATURE_FLAG,
         false,
     ),
 };

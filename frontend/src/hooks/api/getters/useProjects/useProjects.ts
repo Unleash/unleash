@@ -19,6 +19,7 @@ export type ProjectListItem = ProjectSchema & {
 const useProjects = (options: SWRConfiguration & GetProjectsParams = {}) => {
     const KEY = `api/admin/projects${options.archived ? '?archived=true' : ''}`;
 
+    // TODO: remove when cleaning up 'newProjectList' flag
     const { observe } = useImpactMetricsHistogram(
         'project_list_load_ms',
         'Client-side load time for the project list',

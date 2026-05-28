@@ -15,6 +15,20 @@ const StyledDialogFooter = styled(Box)({
     justifyContent: 'flex-end',
 });
 
+const StyledContent = styled('div')(({ theme }) => ({
+    flex: 1,
+    padding: theme.spacing(3),
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
+}));
+
+const StyledAsideContent = styled('div')(({ theme }) => ({
+    padding: theme.spacing(3),
+    display: 'flex',
+    flexDirection: 'column',
+}));
+
 type Step = {
     title: string;
     content: React.ReactNode;
@@ -110,20 +124,12 @@ const InnerDialog = ({
             title='Connect SDK'
             fullHeight
             aside={
-                <Box sx={{ p: 3, display: 'flex', flexDirection: 'column' }}>
+                <StyledAsideContent>
                     <NewConnectSdkDialogAside />
-                </Box>
+                </StyledAsideContent>
             }
         >
-            <Box
-                sx={{
-                    flex: 1,
-                    p: 3,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 2,
-                }}
-            >
+            <StyledContent>
                 {steps.map(({ title, content, summary }, index) => {
                     const isCompleted = index < currentStep;
                     const isDisabled = index > currentStep;
@@ -154,7 +160,7 @@ const InnerDialog = ({
                         Finish setup
                     </Button>
                 </StyledDialogFooter>
-            </Box>
+            </StyledContent>
         </DialogWithAside>
     );
 };

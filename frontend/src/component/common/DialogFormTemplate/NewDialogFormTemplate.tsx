@@ -295,7 +295,7 @@ export const NewDialogFormTemplate: React.FC<Props> = ({
                 title={title}
             />
 
-            <Section sx={{ pt: 4, pb: 1, width: '100%' }}>
+            <Section sx={{ pt: 4, pb: 3, width: '100%' }}>
                 <Input
                     label={`${resource} name`}
                     placeholder='Feature-flag-name'

@@ -98,6 +98,7 @@ export type UiFlags = {
     newProjectList?: boolean;
     reactRouter_v7_startTransition?: boolean;
     reactRouter_v7_relativeSplatPath?: boolean;
+    newModalDesign?: boolean;
 };
 
 export interface IVersionInfo {

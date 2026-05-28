@@ -1,5 +1,4 @@
 import MenuBookIcon from '@mui/icons-material/MenuBook';
-import Codebox from '../Codebox/Codebox.tsx';
 import {
     Collapse,
     IconButton,
@@ -9,7 +8,6 @@ import {
     styled,
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import FileCopy from '@mui/icons-material/FileCopy';
 import Info from '@mui/icons-material/Info';
 import Loader from '../Loader/Loader.tsx';
 import copy from 'copy-to-clipboard';
@@ -23,6 +21,7 @@ import {
     formTemplateSidebarWidth,
 } from './FormTemplate.styles';
 import { relative } from 'themes/themeStyles';
+import { ApiCommandBlock } from './ApiCommandBlock.tsx';
 
 interface ICreateProps {
     title?: ReactNode;
@@ -42,6 +41,13 @@ interface ICreateProps {
     showGuidance?: boolean;
     useFixedSidebar?: boolean;
     sidebarWidth?: string;
+    /**
+     * Override the entire sidebar contents. The sidebar `<aside>` wrapper
+     * (background, width, responsive behavior) is kept; only the contents
+     * are replaced. When omitted, the default sidebar (description + docs
+     * link + API command) is rendered.
+     */
+    sidebar?: ReactNode;
     children?: React.ReactNode;
 }
 
@@ -143,25 +149,6 @@ const StyledFooter = styled('div')(({ theme }) => ({
 const StyledTitle = styled('h1')(({ theme }) => ({
     marginBottom: theme.fontSizes.mainHeader,
     fontWeight: 'normal',
-}));
-
-const StyledSidebarDivider = styled(Divider)(({ theme }) => ({
-    opacity: 0.3,
-    marginBottom: theme.spacing(0.5),
-}));
-
-const StyledSubtitle = styled('h2')(({ theme }) => ({
-    color: theme.palette.common.white,
-    marginBottom: theme.spacing(2),
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    fontWeight: theme.fontWeight.bold,
-    fontSize: theme.fontSizes.bodySize,
-}));
-
-const StyledIcon = styled(FileCopy)(({ theme }) => ({
-    fill: theme.palette.primary.contrastText,
 }));
 
 const StyledMobileGuidanceContainer = styled('div')(() => ({
@@ -266,6 +253,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
     showGuidance = true,
     useFixedSidebar,
     sidebarWidth,
+    sidebar,
 }) => {
     const { setToastData } = useToast();
     const smallScreen = useMediaQuery(`(max-width:${1099}px)`);
@@ -289,27 +277,14 @@ const FormTemplate: React.FC<ICreateProps> = ({
         }
     };
 
-    const renderApiInfo = (apiDisabled: boolean, dividerDisabled = false) => {
-        if (!apiDisabled) {
-            return (
-                <>
-                    <ConditionallyRender
-                        condition={!dividerDisabled}
-                        show={<StyledSidebarDivider />}
-                    />
-                    <StyledSubtitle>
-                        API Command{' '}
-                        <Tooltip title='Copy command' arrow>
-                            <IconButton onClick={copyCommand} size='large'>
-                                <StyledIcon />
-                            </IconButton>
-                        </Tooltip>
-                    </StyledSubtitle>
-                    <Codebox text={formatApiCode!()} />{' '}
-                </>
-            );
-        }
-    };
+    const renderApiInfo = (apiDisabled: boolean, dividerDisabled = false) =>
+        apiDisabled ? null : (
+            <ApiCommandBlock
+                command={formatApiCode!()}
+                onCopy={copyCommand}
+                hideDivider={dividerDisabled}
+            />
+        );
 
     const SidebarComponent = useFixedSidebar ? FixedGuidance : Guidance;
 
@@ -362,20 +337,32 @@ const FormTemplate: React.FC<ICreateProps> = ({
             <ConditionallyRender
                 condition={showGuidance && !smallScreen}
                 show={
-                    <SidebarComponent
-                        documentationIcon={documentationIcon}
-                        description={description}
-                        documentationLink={documentationLink}
-                        documentationLinkLabel={documentationLinkLabel}
-                        showDescription={showDescription}
-                        showLink={showLink}
-                        sidebarWidth={sidebarWidth}
-                    >
-                        {renderApiInfo(
-                            formatApiCode === undefined,
-                            !(showDescription || showLink),
-                        )}
-                    </SidebarComponent>
+                    sidebar !== undefined ? (
+                        <StyledSidebar
+                            sidebarWidth={
+                                useFixedSidebar
+                                    ? formTemplateFixedSidebarWidth
+                                    : sidebarWidth
+                            }
+                        >
+                            {sidebar}
+                        </StyledSidebar>
+                    ) : (
+                        <SidebarComponent
+                            documentationIcon={documentationIcon}
+                            description={description}
+                            documentationLink={documentationLink}
+                            documentationLinkLabel={documentationLinkLabel}
+                            showDescription={showDescription}
+                            showLink={showLink}
+                            sidebarWidth={sidebarWidth}
+                        >
+                            {renderApiInfo(
+                                formatApiCode === undefined,
+                                !(showDescription || showLink),
+                            )}
+                        </SidebarComponent>
+                    )
                 }
             />
         </StyledContainer>

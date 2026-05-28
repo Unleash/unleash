@@ -1,12 +1,11 @@
-import type { ReactNode } from 'react';
 import { Box, styled } from '@mui/material';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo.tsx';
 import { StyledSubtitle } from './ProjectCard.styles';
 
 type NewProjectCardFooterProps = {
-    children?: ReactNode;
     lastUpdatedAt?: string | null;
     createdAt?: string;
+    memberCount: number;
 };
 
 const StyledFooter = styled(Box)(({ theme }) => ({
@@ -28,9 +27,9 @@ const StyledRightGroup = styled('div')(({ theme }) => ({
 }));
 
 export const NewProjectCardFooter = ({
-    children,
     lastUpdatedAt,
     createdAt,
+    memberCount,
 }: NewProjectCardFooterProps) => {
     return (
         <StyledFooter>
@@ -43,7 +42,12 @@ export const NewProjectCardFooter = ({
                     Created <TimeAgo date={createdAt} />
                 </StyledSubtitle>
             ) : null}
-            <StyledRightGroup>{children}</StyledRightGroup>
+            <StyledRightGroup>
+                <StyledSubtitle>
+                    {memberCount} member
+                    {memberCount === 1 ? '' : 's'}
+                </StyledSubtitle>
+            </StyledRightGroup>
         </StyledFooter>
     );
 };

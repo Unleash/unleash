@@ -2,10 +2,6 @@ import { describe, expect, it, vi } from 'vitest';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
-import {
-    clientSdks,
-    serverSdks,
-} from 'component/onboarding/dialog/sharedTypes';
 import { SelectSdk } from './SelectSdk';
 
 describe('SelectSdk', () => {

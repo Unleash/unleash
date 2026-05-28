@@ -16,7 +16,7 @@ export type Gauge<T extends string = string> = {
  */
 
 /**
- * One labelled sample produced by a `fetchSamples` collector.
+ * A labelled sample. used by `fetchSamples`
  */
 export type GaugeSample<T extends string> = {
     labels: Record<T, string | number>;

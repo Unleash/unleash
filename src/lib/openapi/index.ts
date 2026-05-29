@@ -18,7 +18,7 @@ export interface JsonSchemaProps {
     components: object;
 }
 
-type SchemaWithMandatoryFields = Partial<
+export type UnleashOpenApiSchema = Partial<
     Omit<
         OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject,
         '$id' | 'components'
@@ -26,8 +26,8 @@ type SchemaWithMandatoryFields = Partial<
 > &
     JsonSchemaProps;
 
-interface UnleashSchemas {
-    [name: string]: SchemaWithMandatoryFields;
+export interface UnleashSchemas {
+    [name: string]: UnleashOpenApiSchema;
 }
 
 interface OpenAPIV3DocumentWithServers extends OpenAPIV3.Document {

@@ -6,41 +6,43 @@ import { getAddons, type IAddonProviders } from '../../../addons/index.js';
 import { AUTH_PROVIDERS_CATALOG } from '../../../types/settings/auth-settings.js';
 import type { IAddon } from '../../../types/stores/addon-store.js';
 import { AUTH_LOGIN_COMPLETED } from '../../../metric-events.js';
-import {
-    createCounter,
-    createGauge,
-    type Gauge,
-    type GaugeSample,
-} from '../../../util/metrics/index.js';
-import { minutesToMilliseconds } from 'date-fns';
+import { createCounter } from '../../../util/metrics/index.js';
+import type { DbMetricsMonitor } from '../../../metrics-gauge.js';
 
 interface IntegrationMetricsDeps {
-    addonProviders?: IAddonProviders; // used for testing
-    stores: Pick<IUnleashStores, 'addonStore' | 'settingStore'>;
     config: Pick<IUnleashConfig, 'getLogger' | 'server' | 'flagResolver'>;
+    stores: Pick<IUnleashStores, 'addonStore' | 'settingStore'>;
     eventBus: EventEmitter;
+    dbMetrics: DbMetricsMonitor;
+    addonProviders?: IAddonProviders; // only for testing
 }
 
-type ConfiguredLabels = 'name' | 'kind' | 'state';
-type AvailableLabels = 'name' | 'kind' | 'deprecated' | 'removal_target';
+/**
+ * row of the `integration_available` gauge
+ */
+interface AvailableIntegrationMetric {
+    name: string;
+    kind: 'addon' | 'auth';
+    deprecated: string;
+    removal_target: string;
+}
 
-interface ConfiguredSample {
+/**
+ * row of the `integration_configured` gauge
+ */
+interface ConfiguredIntegrationMetric {
     name: string;
     kind: 'addon' | 'auth';
     state: 'enabled' | 'disabled' | 'not_configured';
     count: number;
 }
 
-/**
- *  metrics show up on `/internal-backstage/prometheus`.
- */
 export function registerIntegrationMetrics(deps: IntegrationMetricsDeps): void {
-    const { config, stores, eventBus } = deps;
+    const { config, stores, eventBus, dbMetrics } = deps;
     const logger = config.getLogger('metrics/integrations');
 
-    // Get the Addon catalog. Used for tests - production always derives it.
     const addonProviders =
-        deps.addonProviders ?? // passed on tests
+        deps.addonProviders ??
         getAddons({
             getLogger: config.getLogger,
             unleashUrl: config.server.unleashUrl,
@@ -48,13 +50,13 @@ export function registerIntegrationMetrics(deps: IntegrationMetricsDeps): void {
             eventBus,
         } as Parameters<typeof getAddons>[0]);
 
-    registerAvailableGauge(addonProviders);
-    registerConfiguredGauge({ stores, logger });
+    registerAvailableGauge({ dbMetrics, addonProviders });
+    registerConfiguredGauge({ dbMetrics, stores, logger });
 
     registerAuthLoginTotalCounter(eventBus);
 }
 
-function registerAuthLoginTotalCounter(eventBus: EventEmitter<[never]>) {
+function registerAuthLoginTotalCounter(eventBus: EventEmitter): void {
     const authLoginTotal = createCounter({
         name: 'auth_login_total',
         help: 'Authentication attempts by provider per outcome.',
@@ -72,119 +74,103 @@ function registerAuthLoginTotalCounter(eventBus: EventEmitter<[never]>) {
     );
 }
 
-function registerAddons(
-    gauge: Gauge<AvailableLabels>,
-    addonProviders: IAddonProviders,
-): void {
-    if (!gauge) {
-        throw new Error('Gauge must not be null');
-    }
-
-    for (const addon of Object.values(addonProviders)) {
-        const { name, deprecated } = addon.definition;
-
-        gauge
-            .labels({
-                name,
-                kind: 'addon',
-                deprecated: String(Boolean(deprecated)),
-                removal_target: deprecated ?? '',
-            })
-            .set(1);
-    }
-}
-
-function registerAuthProviders(gauge: Gauge<AvailableLabels>): void {
-    if (!gauge) {
-        throw new Error('Gauge must not be null');
-    }
-
-    for (const provider of Object.values(AUTH_PROVIDERS_CATALOG)) {
-        const { name, deprecatedRemovalTarget } = provider;
-
-        gauge
-            .labels({
-                name,
-                kind: 'auth',
-                deprecated: String(Boolean(deprecatedRemovalTarget)),
-                removal_target: deprecatedRemovalTarget ?? '',
-            })
-            .set(1);
-    }
-}
-
 /**
- *  `integration_available{name, kind, deprecated, removal_target}`
+ * `integration_available{name, kind, deprecated, removal_target}`
  *
- *  all available integrations of this server. value=1: registered entry.
- *  removal_target: set only if deprecated, empty string otherwise.
+ * All available integrations (addons + auth providers). value=1 per entry.
+ * `removal_target` is empty if not deprecated.
  */
-function registerAvailableGauge(addonProviders: IAddonProviders): void {
-    const gauge = createGauge<AvailableLabels>({
+function registerAvailableGauge(args: {
+    dbMetrics: DbMetricsMonitor;
+    addonProviders: IAddonProviders;
+}): void {
+    const { dbMetrics, addonProviders } = args;
+
+    dbMetrics.registerGaugeDbMetric({
         name: 'integration_available',
         help: 'Available integrations with this Unleash server. removal_target set if deprecated.',
         labelNames: ['name', 'kind', 'deprecated', 'removal_target'] as const,
+        query: async () => collectAvailableSamples(addonProviders),
+        map: (samples) =>
+            samples.map((s) => ({
+                value: 1,
+                labels: {
+                    name: s.name,
+                    kind: s.kind,
+                    deprecated: s.deprecated,
+                    removal_target: s.removal_target,
+                },
+            })),
     });
-
-    registerAddons(gauge, addonProviders);
-    registerAuthProviders(gauge);
 }
 
 /**
  * `integration_configured{name, kind, state}`
  *
- *  lists configured instances per integration and state (`enabled`/`disabled`)
- *  plus `not_configured` for auth providers that have never been saved.
- *
- *  Uses createGauge's `fetchSamples` mode — the wrapper owns the TTL cache,
- *  the stale-on-error fallback, and the per-scrape reset. The fetcher here
- *  is a pure function from store reads → labelled samples.
+ * Configured addons and auth providers.
+ * For addons: `enabled`/`disabled`.
+ * For auth providers: `enabled`/`disabled`/ `not_configured` ( when no settings).
  */
 function registerConfiguredGauge(args: {
+    dbMetrics: DbMetricsMonitor;
     stores: Pick<IUnleashStores, 'addonStore' | 'settingStore'>;
     logger: Logger;
 }): void {
-    const { stores, logger } = args;
+    const { dbMetrics, stores, logger } = args;
 
-    createGauge<ConfiguredLabels>({
+    dbMetrics.registerGaugeDbMetric({
         name: 'integration_configured',
         help: 'Configured integrations on this Unleash server, per state.',
         labelNames: ['name', 'kind', 'state'] as const,
-        ttlMs: minutesToMilliseconds(1),
-        fetchSamples: () => fetchConfiguredSamples(stores, logger),
+        query: () => collectConfiguredSamples(stores, logger),
+        map: (samples) =>
+            samples.map((s) => ({
+                value: s.count,
+                labels: { name: s.name, kind: s.kind, state: s.state },
+            })),
     });
 }
 
-/**
- * Fetches and formats configured integration metrics.
- */
-async function fetchConfiguredSamples(
-    stores: Pick<IUnleashStores, 'addonStore' | 'settingStore'>,
-    logger: Logger,
-): Promise<GaugeSample<ConfiguredLabels>[]> {
-    const samples = await collectConfiguredSamples(stores, logger);
+export function collectAvailableSamples(
+    addonProviders: IAddonProviders,
+): AvailableIntegrationMetric[] {
+    const samples: AvailableIntegrationMetric[] = [];
 
-    return samples.map((s) => ({
-        labels: { name: s.name, kind: s.kind, state: s.state },
-        value: s.count,
-    }));
+    for (const addon of Object.values(addonProviders)) {
+        const { name, deprecated } = addon.definition;
+        samples.push({
+            name,
+            kind: 'addon',
+            deprecated: String(Boolean(deprecated)),
+            removal_target: typeof deprecated === 'string' ? deprecated : '',
+        });
+    }
+
+    for (const provider of Object.values(AUTH_PROVIDERS_CATALOG)) {
+        const { name, deprecatedRemovalTarget } = provider;
+        samples.push({
+            name,
+            kind: 'auth',
+            deprecated: String(Boolean(deprecatedRemovalTarget)),
+            removal_target: deprecatedRemovalTarget ?? '',
+        });
+    }
+
+    return samples;
 }
 
 export async function collectConfiguredSamples(
     stores: Pick<IUnleashStores, 'addonStore' | 'settingStore'>,
     logger?: Logger,
-): Promise<ConfiguredSample[]> {
-    // Addons
+): Promise<ConfiguredIntegrationMetric[]> {
+    // Addons — per provider × state.
     const addons = await stores.addonStore.getAll();
-    const addonBuckets = collectAddonSamples(addons);
+    const addonBuckets = bucketAddons(addons);
+    const samples = addonBucketsToSamples(addonBuckets);
 
-    // Only push if count > 0 to avoid empty entries
-    const samples = bucketAddonsByState(addonBuckets);
-
-    // Auth providers
-    const authResults = await collectAuthSamples(stores, logger);
-
-    samples.push(...authResults);
+    // Auth providers — one sample per entry
+    const authSamples = await collectAuthSamples(stores, logger);
+    samples.push(...authSamples);
 
     return samples;
 }
@@ -192,26 +178,26 @@ export async function collectConfiguredSamples(
 async function collectAuthSamples(
     stores: Pick<IUnleashStores, 'addonStore' | 'settingStore'>,
     logger: Logger | undefined,
-) {
-    const authResults = await Promise.all(
+): Promise<ConfiguredIntegrationMetric[]> {
+    const results = await Promise.all(
         Object.values(AUTH_PROVIDERS_CATALOG).map(async (provider) => {
             try {
-                const config = await stores.settingStore.get<{
+                const row = await stores.settingStore.get<{
                     enabled?: boolean;
                 }>(provider.configId);
 
-                const state = config
-                    ? config.enabled
+                const state: ConfiguredIntegrationMetric['state'] = row
+                    ? row.enabled
                         ? 'enabled'
                         : 'disabled'
                     : 'not_configured';
 
                 return {
                     name: provider.name,
-                    kind: 'auth',
+                    kind: 'auth' as const,
                     state,
                     count: 1,
-                };
+                } satisfies ConfiguredIntegrationMetric;
             } catch (error) {
                 logger?.warn(
                     `Failed to fetch auth config for ${provider.name}`,
@@ -221,17 +207,38 @@ async function collectAuthSamples(
             }
         }),
     );
-    const validAuthSamples = authResults.filter(
-        (result): result is ConfiguredSample => result !== null,
-    );
 
-    return validAuthSamples;
+    return results.filter((result) => result !== null);
 }
 
-function bucketAddonsByState(
+function bucketAddons(
+    addons: IAddon[],
+): Map<string, { enabled: number; disabled: number }> {
+    const addonBuckets = new Map<
+        string,
+        { enabled: number; disabled: number }
+    >();
+
+    for (const addon of addons) {
+        const bucket = addonBuckets.get(addon.provider) ?? {
+            enabled: 0,
+            disabled: 0,
+        };
+        if (addon.enabled) {
+            bucket.enabled++;
+        } else {
+            bucket.disabled++;
+        }
+        addonBuckets.set(addon.provider, bucket);
+    }
+
+    return addonBuckets;
+}
+
+function addonBucketsToSamples(
     addonBuckets: Map<string, { enabled: number; disabled: number }>,
-): ConfiguredSample[] {
-    const samples: ConfiguredSample[] = [];
+): ConfiguredIntegrationMetric[] {
+    const samples: ConfiguredIntegrationMetric[] = [];
 
     for (const [provider, bucket] of addonBuckets) {
         if (bucket.enabled > 0) {
@@ -253,28 +260,4 @@ function bucketAddonsByState(
     }
 
     return samples;
-}
-
-function collectAddonSamples(addons: IAddon[]) {
-    const addonBuckets = new Map<
-        string,
-        { enabled: number; disabled: number }
-    >();
-
-    for (const addon of addons) {
-        const bucket = {
-            enabled: 0,
-            disabled: 0,
-        };
-
-        if (addon.enabled) {
-            bucket.enabled++;
-        } else {
-            bucket.disabled++;
-        }
-
-        addonBuckets.set(addon.provider, bucket);
-    }
-
-    return addonBuckets;
 }

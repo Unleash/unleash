@@ -8,6 +8,7 @@ import {
     registerIntegrationMetrics,
 } from './integration-metrics.js';
 import { AUTH_PROVIDERS_CATALOG } from '../../../types/settings/auth-settings.js';
+import { DbMetricsMonitor } from '../../../metrics-gauge.js';
 
 beforeEach(() => {
     register.clear();
@@ -25,13 +26,18 @@ const setupMetrics = (overrides: {
 }) => {
     const eventBus = new EventEmitter();
 
+    // tests call dbMetrics.refreshMetrics()
+    // before scraping to populate the gauge from the stub stores.
+    const dbMetrics = new DbMetricsMonitor(testConfig);
+
     registerIntegrationMetrics({
         config: testConfig,
         eventBus,
+        dbMetrics,
         addonProviders: overrides.addonProviders ?? {},
         stores: overrides.stores,
     });
-    return { eventBus };
+    return { eventBus, dbMetrics };
 };
 
 const makeAddonProvider = (
@@ -80,10 +86,12 @@ describe('Integration Metrics', () => {
                 ),
             };
 
-            setupMetrics({
+            const { dbMetrics } = setupMetrics({
                 addonProviders,
                 stores: stores([], {}),
             });
+            // the gauge only carries values after a refresh.
+            await dbMetrics.refreshMetrics();
 
             const output = await register.metrics();
 
@@ -121,10 +129,12 @@ describe('Integration Metrics', () => {
                 'old-addon': makeAddonProvider('old-addon', 'v7.0.0'),
             };
 
-            setupMetrics({
+            const { dbMetrics } = setupMetrics({
                 addonProviders,
                 stores: stores([], {}),
             });
+            // the gauge only carries values after a refresh.
+            await dbMetrics.refreshMetrics();
 
             const output = await register.metrics();
 
@@ -144,10 +154,12 @@ describe('Integration Metrics', () => {
                 webhook: makeAddonProvider('webhook'),
             };
 
-            setupMetrics({
+            const { dbMetrics } = setupMetrics({
                 addonProviders,
                 stores: stores([], {}),
             });
+            // the gauge only carries values after a refresh.
+            await dbMetrics.refreshMetrics();
 
             const output = await register.metrics();
 
@@ -176,19 +188,21 @@ describe('Integration Metrics', () => {
                 { provider: 'datadog', enabled: false },
             ];
 
-            setupMetrics({
+            const { dbMetrics } = setupMetrics({
                 addonProviders: {},
                 stores: stores(addonRows, {}),
             });
+            // Push-based: the gauge only carries values after a refresh.
+            await dbMetrics.refreshMetrics();
 
             const output = await register.metrics();
 
             expect(output).toMatch(
-                /integration_configured\{[^}]*name="webhook"[^}]*state="enabled"[^}]*\} 1/,
+                /integration_configured\{[^}]*name="webhook"[^}]*state="enabled"[^}]*\} 2/,
             );
-            // expect(output).toMatch(
-            //     /integration_configured\{[^}]*name="webhook"[^}]*state="disabled"[^}]*\} 1/,
-            // );
+            expect(output).toMatch(
+                /integration_configured\{[^}]*name="webhook"[^}]*state="disabled"[^}]*\} 1/,
+            );
             expect(output).toMatch(
                 /integration_configured\{[^}]*name="datadog"[^}]*state="disabled"[^}]*\} 1/,
             );
@@ -200,7 +214,7 @@ describe('Integration Metrics', () => {
         });
 
         test('reports auth providers as not_configured / enabled / disabled based on settings', async () => {
-            setupMetrics({
+            const { dbMetrics } = setupMetrics({
                 addonProviders: {},
                 stores: stores([], {
                     'unleash.enterprise.auth.oidc': { enabled: true },
@@ -209,6 +223,7 @@ describe('Integration Metrics', () => {
                     // simple is missing entirely
                 }),
             });
+            await dbMetrics.refreshMetrics();
 
             const output = await register.metrics();
 
@@ -233,7 +248,7 @@ describe('Integration Metrics', () => {
             );
         });
 
-        test('caches the DB read across calls within the TTL window', async () => {
+        test('scrapes between refreshes are zero-cost: the DB is not re-read', async () => {
             let calls = 0;
             const countingStores = {
                 addonStore: {
@@ -247,21 +262,24 @@ describe('Integration Metrics', () => {
                 },
             } as any;
 
-            setupMetrics({
+            const { dbMetrics } = setupMetrics({
                 addonProviders: {},
                 stores: countingStores,
             });
 
+            // one refresh -> populates the gauge.
+            await dbMetrics.refreshMetrics();
+
             await register.metrics();
+
+            // next scrapes read from memory - not hit the store until the next refresh.
             await register.metrics();
             await register.metrics();
 
-            // Each scrape only reads on the 1st call (cache miss).
-            // Two consecutive calls within 60s must not double-query.
             expect(calls).toBe(1);
         });
 
-        test('serves stale samples and never throws when the store fails', async () => {
+        test('serves stale values when a refresh fails (DbMetricsMonitor hides the error)', async () => {
             let attempt = 0;
             const flakyStores = {
                 addonStore: {
@@ -276,22 +294,21 @@ describe('Integration Metrics', () => {
                 settingStore: { get: async () => undefined },
             } as any;
 
-            setupMetrics({
+            const { dbMetrics } = setupMetrics({
                 addonProviders: {},
                 stores: flakyStores,
             });
 
-            // 1st call
+            // 1st refresh  gauge populate
+            await dbMetrics.refreshMetrics();
             const first = await register.metrics();
 
             expect(first).toMatch(
                 /integration_configured\{[^}]*name="webhook"[^}]*state="enabled"[^}]*\} 1/,
             );
 
-            // 2nd call: store throws — must not throw, must serve stale
-            await expect(register.metrics()).resolves.toEqual(
-                expect.any(String),
-            );
+            // 2nd refresh: store throws. the previous gauge values stay in place.
+            await expect(dbMetrics.refreshMetrics()).resolves.not.toThrow();
             const second = await register.metrics();
 
             expect(second).toMatch(

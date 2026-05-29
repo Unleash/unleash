@@ -1222,7 +1222,7 @@ export function registerPrometheusMetrics(
         addonEventsHandledCounter.increment({ result, destination });
     });
 
-    registerIntegrationMetrics({ config, stores, eventBus });
+    registerIntegrationMetrics({ config, stores, eventBus, dbMetrics });
 
     return {
         collectAggDbMetrics: dbMetrics.refreshMetrics,

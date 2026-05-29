@@ -38,7 +38,7 @@ UnleashConfig config = UnleashConfig.builder()
 ---
 - [SDK repository with documentation](https://github.com/Unleash/unleash-client-java)
 - [Java SDK example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/Java)
-- [How to Implement Feature Flags in Java](https://docs.getunleash.io/feature-flag-tutorials/java)
+- [How to Implement Feature Flags in Java](https://docs.getunleash.io/guides/implement-feature-flags-in-java)
 
 ---
 

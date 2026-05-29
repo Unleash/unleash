@@ -78,7 +78,7 @@ export const GoogleAuth = () => {
                 <Alert severity='info' sx={{ mb: 3 }}>
                     Read the{' '}
                     <a
-                        href='https://www.unleash-hosted.com/docs/enterprise-authentication/google'
+                        href='https://docs.getunleash.io/single-sign-on/how-to-add-sso-google'
                         target='_blank'
                         rel='noreferrer'
                     >

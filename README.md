@@ -155,7 +155,7 @@ You can visit the Unleash documentation at https://docs.getunleash.io. As of 2 F
 - Targeted releases using [activation strategies](https://docs.getunleash.io/concepts/activation-strategies) to enable and disable features for certain users or segments without having to redeploy your application.
 - [Canary releases / gradual rollouts](https://docs.getunleash.io/concepts/activation-strategies)
 - [Kill switches](https://docs.getunleash.io/concepts/feature-flags#feature-flag-types)
-- [A/B testing](https://docs.getunleash.io/feature-flag-tutorials/use-cases/a-b-testing)
+- [A/B testing](https://docs.getunleash.io/guides/a-b-testing)
 - 2 [environments](https://docs.getunleash.io/concepts/environments)
 - Organize feature flags using [tags](https://docs.getunleash.io/concepts/feature-flags#tags)
 - Out-of-the-box integrations with popular tools ([Slack](https://docs.getunleash.io/integrate/slack-app), [Microsoft Teams](https://docs.getunleash.io/integrate/teams), [Datadog](https://docs.getunleash.io/integrate/datadog)) + integrate with anything with [webhooks](https://docs.getunleash.io/integrate/webhook)

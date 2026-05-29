@@ -114,7 +114,7 @@ export const ReleaseManagement = () => {
                         variant='outlined'
                         target='_blank'
                         rel='noopener noreferrer'
-                        to='https://docs.getunleash.io/reference/release-templates'
+                        to='https://docs.getunleash.io/concepts/release-templates'
                     >
                         Learn about release templates
                     </StyledAlertButton>

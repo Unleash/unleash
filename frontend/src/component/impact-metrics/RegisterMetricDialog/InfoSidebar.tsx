@@ -68,7 +68,7 @@ export const MetricDefinitionSidebar = () => {
             </SidebarSection>
 
             <div>
-                <ExternalLink to='https://docs.getunleash.io/reference/impact-metrics'>
+                <ExternalLink to='https://docs.getunleash.io/concepts/impact-metrics'>
                     View full documentation
                 </ExternalLink>
             </div>

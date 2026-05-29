@@ -47,7 +47,7 @@ const config = {
 ---
 - [SDK repository with documentation](https://github.com/Unleash/proxy-client-react)
 - [React SDK example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/React)
-- [https://docs.getunleash.io/feature-flag-tutorials/react](https://docs.getunleash.io/feature-flag-tutorials/react)
+- [https://docs.getunleash.io/guides/implement-feature-flags-in-react](https://docs.getunleash.io/guides/implement-feature-flags-in-react)
 
 ---
 

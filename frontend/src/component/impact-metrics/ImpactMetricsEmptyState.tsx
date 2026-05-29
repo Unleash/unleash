@@ -6,7 +6,7 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { ADMIN } from '../providers/AccessProvider/permissions';
 
-const DOCS_URL = 'https://docs.getunleash.io/reference/impact-metrics';
+const DOCS_URL = 'https://docs.getunleash.io/concepts/impact-metrics';
 
 const StyledContent = styled(Box)(({ theme }) => ({
     display: 'flex',

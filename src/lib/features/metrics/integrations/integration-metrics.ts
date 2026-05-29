@@ -12,18 +12,12 @@ import {
     type Gauge,
     type GaugeSample,
 } from '../../../util/metrics/index.js';
-
-const DEFAULT_TTL_MS = 60_000; // 1 minute
-
-interface IntegrationMetricsOptions {
-    cacheTtlMs?: number;
-}
+import { minutesToMilliseconds } from 'date-fns';
 
 interface IntegrationMetricsDeps {
-    addonProviders?: IAddonProviders;
+    addonProviders?: IAddonProviders; // used for testing
     stores: Pick<IUnleashStores, 'addonStore' | 'settingStore'>;
     config: Pick<IUnleashConfig, 'getLogger' | 'server' | 'flagResolver'>;
-    options?: IntegrationMetricsOptions;
     eventBus: EventEmitter;
 }
 
@@ -44,13 +38,9 @@ export function registerIntegrationMetrics(deps: IntegrationMetricsDeps): void {
     const { config, stores, eventBus } = deps;
     const logger = config.getLogger('metrics/integrations');
 
-    // prom-client invokes `collect()` on every call; this short cache prevents
-    // lots of Prometheus replicas from hitting the database
-    const ttlMs = deps.options?.cacheTtlMs ?? DEFAULT_TTL_MS;
-
     // Get the Addon catalog. Used for tests - production always derives it.
     const addonProviders =
-        deps.addonProviders ??
+        deps.addonProviders ?? // passed on tests
         getAddons({
             getLogger: config.getLogger,
             unleashUrl: config.server.unleashUrl,
@@ -59,8 +49,12 @@ export function registerIntegrationMetrics(deps: IntegrationMetricsDeps): void {
         } as Parameters<typeof getAddons>[0]);
 
     registerAvailableGauge(addonProviders);
-    registerConfiguredGauge({ stores, ttlMs, logger });
+    registerConfiguredGauge({ stores, logger });
 
+    registerAuthLoginTotalCounter(eventBus);
+}
+
+function registerAuthLoginTotalCounter(eventBus: EventEmitter<[never]>) {
     const authLoginTotal = createCounter({
         name: 'auth_login_total',
         help: 'Authentication attempts by provider per outcome.',
@@ -148,24 +142,32 @@ function registerAvailableGauge(addonProviders: IAddonProviders): void {
  */
 function registerConfiguredGauge(args: {
     stores: Pick<IUnleashStores, 'addonStore' | 'settingStore'>;
-    ttlMs: number;
     logger: Logger;
 }): void {
-    const { stores, ttlMs, logger } = args;
+    const { stores, logger } = args;
 
     createGauge<ConfiguredLabels>({
         name: 'integration_configured',
         help: 'Configured integrations on this Unleash server, per state.',
         labelNames: ['name', 'kind', 'state'] as const,
-        ttlMs,
-        fetchSamples: async (): Promise<GaugeSample<ConfiguredLabels>[]> => {
-            const samples = await collectConfiguredSamples(stores, logger);
-            return samples.map((s) => ({
-                labels: { name: s.name, kind: s.kind, state: s.state },
-                value: s.count,
-            }));
-        },
+        ttlMs: minutesToMilliseconds(1),
+        fetchSamples: () => fetchConfiguredSamples(stores, logger),
     });
+}
+
+/**
+ * Fetches and formats configured integration metrics.
+ */
+async function fetchConfiguredSamples(
+    stores: Pick<IUnleashStores, 'addonStore' | 'settingStore'>,
+    logger: Logger,
+): Promise<GaugeSample<ConfiguredLabels>[]> {
+    const samples = await collectConfiguredSamples(stores, logger);
+
+    return samples.map((s) => ({
+        labels: { name: s.name, kind: s.kind, state: s.state },
+        value: s.count,
+    }));
 }
 
 export async function collectConfiguredSamples(

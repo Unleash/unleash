@@ -7,7 +7,7 @@ import {
     Typography,
 } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
-import { allSdks, type SdkName } from 'component/onboarding/dialog/sharedTypes';
+import type { SdkName } from 'component/onboarding/dialog/sharedTypes';
 import useFeatureMetrics from 'hooks/api/getters/useFeatureMetrics/useFeatureMetrics';
 import { useProjectSdkNamesFromFirstApplicationsPage } from 'hooks/api/getters/useProjectSdkNames/useProjectSdkNamesFromFirstApplicationsPage';
 import { ImplementFlagInformation } from './ImplementFlagInformation.tsx';
@@ -162,7 +162,7 @@ interface DialogBodyProps {
 const DialogBody = ({ projectId, feature, onClose }: DialogBodyProps) => {
     const { sdkNames: projectSdkNames, loading: loadingProjectSdks } =
         useProjectSdkNamesFromFirstApplicationsPage(projectId);
-    const defaultSdkName = projectSdkNames[0] ?? allSdks[0].name;
+    const defaultSdkName: SdkName = projectSdkNames[0] ?? 'Node.js';
     const [selectedSdkName, setSelectedSdkName] = useState<SdkName | undefined>(
         undefined,
     );
@@ -181,11 +181,7 @@ const DialogBody = ({ projectId, feature, onClose }: DialogBodyProps) => {
                 </LoadingContainer>
             ) : (
                 <>
-                    <SelectSdk
-                        projectSdks={projectSdkNames}
-                        value={sdkName}
-                        onChange={setSelectedSdkName}
-                    />
+                    <SelectSdk value={sdkName} onChange={setSelectedSdkName} />
 
                     <Box>
                         <Typography

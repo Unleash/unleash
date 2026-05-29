@@ -69,7 +69,7 @@ const inlineFieldSlotProps = (htmlInputSx: Record<string, unknown>) => ({
     htmlInput: { sx: { padding: 0, width: '100%', ...htmlInputSx } },
 });
 
-const nameInputSlotProps = (theme: Theme) =>
+export const nameInputSlotProps = (theme: Theme) =>
     inlineFieldSlotProps({
         fontSize: theme.typography.body1.fontSize,
         fontWeight: theme.fontWeight.bold,
@@ -81,7 +81,7 @@ const nameInputSlotProps = (theme: Theme) =>
         },
     });
 
-const descriptionInputSlotProps = (theme: Theme) =>
+export const descriptionInputSlotProps = (theme: Theme) =>
     inlineFieldSlotProps({
         fontSize: theme.typography.body1.fontSize,
         color: theme.palette.text.secondary,
@@ -98,7 +98,7 @@ const ToggleWrapper = styled('div')(({ theme }) => ({
     marginLeft: theme.spacing(-1.5),
 }));
 
-const PillButton = styled(Button)(({ theme }) => ({
+export const PillButton = styled(Button)(({ theme }) => ({
     borderColor: theme.palette.divider,
     backgroundColor: theme.palette.background.paper,
     color: theme.palette.text.primary,
@@ -119,9 +119,10 @@ const PillButton = styled(Button)(({ theme }) => ({
 
 type DropdownOption<T> = { label: string; value: T };
 
-type Tooltip = { header: string; description: string };
+export type PillTooltip = { header: string; description: string };
+type Tooltip = PillTooltip;
 
-const PillTrigger = ({
+export const PillTrigger = ({
     label,
     tooltip,
     onClick,

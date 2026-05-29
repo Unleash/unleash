@@ -8,8 +8,10 @@ import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import ProPlanIcon from 'assets/icons/pro-enterprise-feature-badge.svg?react';
 import ProPlanIconLight from 'assets/icons/pro-enterprise-feature-badge-light.svg?react';
 import { CreateProjectDialog } from '../../Project/CreateProject/CreateProjectForm/CreateProjectDialog.tsx';
+import { NewCreateProjectDialog } from '../../Project/CreateProject/CreateProjectForm/NewCreateProjectDialog.tsx';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface ICreateButtonData {
     disabled: boolean;
@@ -71,6 +73,7 @@ export const ProjectCreationButton: FC<ProjectCreationButtonProps> = ({
 }) => {
     const { hasAccess } = useContext(AccessContext);
     const { isOss, loading } = useUiConfig();
+    const useNewDesign = useUiFlag('newModalDesign');
 
     const createButtonData = resolveCreateButtonData(
         isOss(),
@@ -92,10 +95,17 @@ export const ProjectCreationButton: FC<ProjectCreationButtonProps> = ({
             >
                 New project
             </ResponsiveButton>
-            <CreateProjectDialog
-                open={isDialogOpen}
-                onClose={() => setIsDialogOpen(false)}
-            />
+            {useNewDesign ? (
+                <NewCreateProjectDialog
+                    open={isDialogOpen}
+                    onClose={() => setIsDialogOpen(false)}
+                />
+            ) : (
+                <CreateProjectDialog
+                    open={isDialogOpen}
+                    onClose={() => setIsDialogOpen(false)}
+                />
+            )}
         </>
     );
 };

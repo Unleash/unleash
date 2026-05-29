@@ -163,19 +163,12 @@ export async function collectConfiguredSamples(
     stores: Pick<IUnleashStores, 'addonStore' | 'settingStore'>,
     logger?: Logger,
 ): Promise<ConfiguredSample[]> {
-    const samples: ConfiguredSample[] = [];
-
     // Addons
     const addons = await stores.addonStore.getAll();
-    const addonBuckets = new Map<
-        string,
-        { enabled: number; disabled: number }
-    >();
-
-    collectAddonSamples(addons, addonBuckets);
+    const addonBuckets = collectAddonSamples(addons);
 
     // Only push if count > 0 to avoid empty entries
-    bucketAddonsByState(addonBuckets, samples);
+    const samples = bucketAddonsByState(addonBuckets);
 
     // Auth providers
     const authResults = await collectAuthSamples(stores, logger);
@@ -220,13 +213,15 @@ async function collectAuthSamples(
     const validAuthSamples = authResults.filter(
         (result): result is ConfiguredSample => result !== null,
     );
+
     return validAuthSamples;
 }
 
 function bucketAddonsByState(
     addonBuckets: Map<string, { enabled: number; disabled: number }>,
-    samples: ConfiguredSample[],
-) {
+): ConfiguredSample[] {
+    const samples: ConfiguredSample[] = [];
+
     for (const [provider, bucket] of addonBuckets) {
         if (bucket.enabled > 0) {
             samples.push({
@@ -245,14 +240,18 @@ function bucketAddonsByState(
             });
         }
     }
+
+    return samples;
 }
 
-function collectAddonSamples(
-    addons: IAddon[],
-    addonBuckets: Map<string, { enabled: number; disabled: number }>,
-) {
+function collectAddonSamples(addons: IAddon[]) {
+    const addonBuckets = new Map<
+        string,
+        { enabled: number; disabled: number }
+    >();
+
     for (const addon of addons) {
-        const bucket = addonBuckets.get(addon.provider) ?? {
+        const bucket = {
             enabled: 0,
             disabled: 0,
         };
@@ -265,4 +264,6 @@ function collectAddonSamples(
 
         addonBuckets.set(addon.provider, bucket);
     }
+
+    return addonBuckets;
 }

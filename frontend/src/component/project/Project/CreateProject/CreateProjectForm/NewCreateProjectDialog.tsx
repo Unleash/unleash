@@ -4,7 +4,6 @@ import {
     type ReactNode,
     useEffect,
     useMemo,
-    useRef,
     useState,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -18,6 +17,7 @@ import {
     InputAdornment,
     Link,
     styled,
+    Typography,
     useTheme,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -44,7 +44,6 @@ import {
     nameInputSlotProps,
     SinglePillDropdown,
 } from 'component/common/DialogFormTemplate/NewDialogFormTemplate';
-import { StyledPopover } from 'component/common/DialogFormTemplate/ConfigButtons/shared.styles';
 import useProjectForm, {
     DEFAULT_PROJECT_STICKINESS,
 } from '../../hooks/useProjectForm.ts';
@@ -121,7 +120,7 @@ const StyledForm = styled('form')(({ theme }) => ({
 const TitleBar = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    padding: theme.spacing(0, 3),
+    padding: theme.spacing(0, 4),
     borderBottom: `1px solid ${theme.palette.divider}`,
     height: theme.spacing(8),
     fontWeight: theme.typography.body1.fontWeight,
@@ -150,7 +149,7 @@ const useProjectLimit = () => {
     };
 };
 
-type ChangeRequestCheckboxPopoverProps = {
+type ChangeRequestCheckboxProps = {
     activeEnvironments: {
         name: string;
         type: string;
@@ -167,17 +166,41 @@ type ChangeRequestCheckboxPopoverProps = {
     };
 };
 
-const ChangeRequestCheckboxPopover: FC<ChangeRequestCheckboxPopoverProps> = ({
+const InlineChangeRequestConfig = styled('div')(({ theme }) => ({
+    marginTop: theme.spacing(2),
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadiusMedium,
+    padding: theme.spacing(2),
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
+    maxWidth: '100%',
+    overflowX: 'auto',
+}));
+
+const EnforcedHelpText = styled(Typography)(({ theme }) => ({
+    marginTop: theme.spacing(0.5),
+    marginLeft: theme.spacing(4),
+    color: theme.palette.text.secondary,
+    fontSize: theme.fontSizes.smallBody,
+}));
+
+const ChangeRequestCheckbox: FC<ChangeRequestCheckboxProps> = ({
     activeEnvironments,
     projectChangeRequestConfiguration,
     updateProjectChangeRequestConfiguration,
 }) => {
-    const ref = useRef<HTMLLabelElement>(null);
-    const [anchor, setAnchor] = useState<HTMLElement | null>(null);
     const [searchText, setSearchText] = useState('');
 
     const enabledCount = Object.keys(projectChangeRequestConfiguration).length;
-    const checked = enabledCount > 0;
+    // Change requests are enforced at the instance level when an environment
+    // has a fixed required-approvals value (i.e. it is not configurable here).
+    // When that's the case the user must not be able to opt out.
+    const enforced = activeEnvironments.some((env) => !env.configurable);
+    // Start expanded if change requests are enforced or any environments are
+    // already configured (e.g. when the parent auto-enables environments that
+    // require approvals).
+    const [expanded, setExpanded] = useState(enforced || enabledCount > 0);
 
     const configured = useMemo(
         () =>
@@ -233,58 +256,72 @@ const ChangeRequestCheckboxPopover: FC<ChangeRequestCheckboxPopoverProps> = ({
         }
     };
 
-    const openPopover = () => setAnchor(ref.current);
+    const handleToggle = (_event: React.SyntheticEvent, isChecked: boolean) => {
+        // Change requests are mandated; ignore attempts to opt out.
+        if (enforced) return;
+
+        setExpanded(isChecked);
+        if (!isChecked) {
+            // Clear any configured environments when collapsing.
+            Object.keys(projectChangeRequestConfiguration).forEach((name) => {
+                onDisable(name);
+            });
+            setSearchText('');
+        }
+    };
+
+    const showConfig = expanded || enforced;
 
     return (
         <>
             <FormControlLabel
-                ref={ref}
                 sx={{ m: 0 }}
                 control={
                     <Checkbox
                         size='small'
-                        checked={checked}
-                        onChange={openPopover}
-                        onClick={openPopover}
+                        checked={showConfig}
+                        disabled={enforced}
+                        onChange={handleToggle}
                     />
                 }
                 label='Enable change request'
             />
-            <StyledPopover
-                open={Boolean(anchor)}
-                anchorEl={anchor}
-                onClose={() => setAnchor(null)}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-            >
-                <TableSearchInput
-                    variant='outlined'
-                    size='small'
-                    value={searchText}
-                    onChange={(event) => setSearchText(event.target.value)}
-                    hideLabel
-                    label='Filter environments'
-                    placeholder='Filter environments'
-                    autoFocus
-                    slotProps={{
-                        input: {
-                            startAdornment: (
-                                <InputAdornment position='start'>
-                                    <Search fontSize='small' />
-                                </InputAdornment>
-                            ),
-                        },
-                    }}
-                    onKeyDown={toggleTopItem}
-                />
-                <ScrollContainer>
-                    <ChangeRequestTable
-                        environments={filteredEnvs}
-                        enableEnvironment={onEnable}
-                        disableEnvironment={onDisable}
+            {enforced ? (
+                <EnforcedHelpText>
+                    Change requests are enforced at the instance level and
+                    cannot be disabled for this project.
+                </EnforcedHelpText>
+            ) : null}
+            {showConfig ? (
+                <InlineChangeRequestConfig>
+                    <TableSearchInput
+                        variant='outlined'
+                        size='small'
+                        value={searchText}
+                        onChange={(event) => setSearchText(event.target.value)}
+                        hideLabel
+                        label='Filter environments'
+                        placeholder='Filter environments'
+                        slotProps={{
+                            input: {
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                        <Search fontSize='small' />
+                                    </InputAdornment>
+                                ),
+                            },
+                        }}
+                        onKeyDown={toggleTopItem}
                     />
-                </ScrollContainer>
-            </StyledPopover>
+                    <ScrollContainer>
+                        <ChangeRequestTable
+                            environments={filteredEnvs}
+                            enableEnvironment={onEnable}
+                            disableEnvironment={onDisable}
+                        />
+                    </ScrollContainer>
+                </InlineChangeRequestConfig>
+            ) : null}
         </>
     );
 };
@@ -553,7 +590,7 @@ const NewCreateProjectDialogContent: FC<Props> = ({ open, onClose }) => {
 
                     {isEnterprise() ? (
                         <Section sx={{ pb: 3 }}>
-                            <ChangeRequestCheckboxPopover
+                            <ChangeRequestCheckbox
                                 activeEnvironments={
                                     availableChangeRequestEnvironments
                                 }

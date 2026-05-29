@@ -324,11 +324,6 @@ const ChangeRequestCheckbox: FC<ChangeRequestCheckboxProps> = ({
 };
 
 export const NewCreateProjectDialog: FC<Props> = ({ open, onClose }) => {
-    if (!open) return null;
-    return <NewCreateProjectDialogContent open={open} onClose={onClose} />;
-};
-
-const NewCreateProjectDialogContent: FC<Props> = ({ open, onClose }) => {
     const theme = useTheme();
     const navigate = useNavigate();
     const { setToastData, setToastApiError } = useToast();

@@ -18,23 +18,23 @@ type SdkOption = {
     group: string;
 };
 
-const StyledAutocomplete = styled(Autocomplete<SdkOption>)({
-    minWidth: 160,
-    maxWidth: 260,
-});
+const StyledAutocomplete = styled(Autocomplete<SdkOption>)(({ theme }) => ({
+    minWidth: theme.spacing(20),
+    maxWidth: theme.spacing(32.5),
+}));
 
-const StyledOptionRow = styled('li')({
+const StyledOptionRow = styled('li')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    gap: 8,
-});
+    gap: theme.spacing(1),
+}));
 
-const StyledSdkIcon = styled('img')({
-    width: 20,
-    height: 20,
+const StyledSdkIcon = styled('img')(({ theme }) => ({
+    width: theme.spacing(2.5),
+    height: theme.spacing(2.5),
     flexShrink: 0,
-    borderRadius: 4,
-});
+    borderRadius: theme.shape.borderRadiusSmall,
+}));
 
 const StyledSdkName = styled('span')({
     flex: 1,

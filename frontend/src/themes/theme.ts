@@ -65,6 +65,7 @@ export const baseTheme = {
         bold: 700,
     },
     shape: {
+        borderRadiusSmall: 2,
         borderRadius: 4,
         borderRadiusMedium: 8,
         borderRadiusLarge: 12,

@@ -180,6 +180,7 @@ declare module '@mui/material/styles' {
 
 declare module '@mui/system/createTheme/shape' {
     interface Shape {
+        borderRadiusSmall: number;
         borderRadiusMedium: number;
         borderRadiusLarge: number;
         borderRadiusExtraLarge: number;

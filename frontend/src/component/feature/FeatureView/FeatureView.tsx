@@ -15,6 +15,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { FeatureImpactHeader } from './FeatureImpactOverview/FeatureImpactHeader';
 import { ImpactMetricModal } from '../../impact-metrics/ImpactMetricModal/ImpactMetricModal';
 import { useFeatureImpactChartActions } from './useFeatureImpactChartActions';
+import { FeatureExperimentOverview } from './FeatureExperiment/FeatureExperimentOverview.tsx';
 
 export const StyledLink = styled(Link)(() => ({
     maxWidth: '100%',
@@ -32,7 +33,7 @@ export const FeatureView = () => {
     const { isEnterprise } = useUiConfig();
     const showImpactMetrics = impactMetricsFlagPage && isEnterprise();
 
-    const { feature, loading, error, status } = useFeature(
+    const { feature, loading, error, status, refetchFeature } = useFeature(
         projectId,
         featureId,
     );
@@ -56,6 +57,26 @@ export const FeatureView = () => {
         return <div ref={ref} />;
     }
 
+    const overview =
+        feature.type === 'experiment' ? (
+            <FeatureExperimentOverview
+                feature={feature}
+                onChange={refetchFeature}
+            />
+        ) : (
+            <FeatureOverview
+                header={
+                    showImpactMetrics ? (
+                        <FeatureImpactHeader
+                            projectId={projectId}
+                            featureName={featureId}
+                            onAddChart={openChartModal}
+                        />
+                    ) : undefined
+                }
+            />
+        );
+
     return (
         <div ref={ref}>
             <FeatureViewHeader feature={feature} />
@@ -67,22 +88,7 @@ export const FeatureView = () => {
                     element={<FeatureEnvironmentVariants />}
                 />
                 <Route path='settings' element={<FeatureSettings />} />
-                <Route
-                    path='*'
-                    element={
-                        <FeatureOverview
-                            header={
-                                showImpactMetrics ? (
-                                    <FeatureImpactHeader
-                                        projectId={projectId}
-                                        featureName={featureId}
-                                        onAddChart={openChartModal}
-                                    />
-                                ) : undefined
-                            }
-                        />
-                    }
-                />
+                <Route path='*' element={overview} />
             </Routes>
             {showImpactMetrics && (
                 <ImpactMetricModal

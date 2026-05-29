@@ -1,4 +1,4 @@
-import { Autocomplete, Box, TextField, Tooltip, styled } from '@mui/material';
+import { Autocomplete, TextField, styled } from '@mui/material';
 import {
     allSdks,
     serverSdks,
@@ -6,7 +6,6 @@ import {
 } from 'component/onboarding/dialog/sharedTypes';
 
 interface SelectSdkProps {
-    projectSdks: SdkName[];
     value: SdkName;
     onChange: (sdk: SdkName) => void;
 }
@@ -17,7 +16,6 @@ type SdkOption = {
     name: SdkName;
     icon: string;
     group: string;
-    suggested: boolean;
 };
 
 const StyledAutocomplete = styled(Autocomplete<SdkOption>)({
@@ -42,24 +40,13 @@ const StyledSdkName = styled('span')({
     flex: 1,
 });
 
-const StyledSuggestedIndicator = styled(Box)(({ theme }) => ({
-    width: 8,
-    height: 8,
-    borderRadius: '50%',
-    backgroundColor: theme.palette.text.disabled,
-    flexShrink: 0,
-}));
-
-export const SelectSdk = ({ projectSdks, value, onChange }: SelectSdkProps) => {
-    const suggestedSet = new Set(projectSdks);
-
+export const SelectSdk = ({ value, onChange }: SelectSdkProps) => {
     const options: SdkOption[] = allSdks
         .map((sdk) => ({
             ...sdk,
             group: backendNames.has(sdk.name)
                 ? 'Backend SDKs'
                 : 'Frontend SDKs',
-            suggested: suggestedSet.has(sdk.name),
         }))
         .sort(
             (a, b) =>
@@ -82,11 +69,6 @@ export const SelectSdk = ({ projectSdks, value, onChange }: SelectSdkProps) => {
                 <StyledOptionRow key={key} {...props}>
                     <StyledSdkIcon src={option.icon} alt='' />
                     <StyledSdkName>{option.name}</StyledSdkName>
-                    {option.suggested && (
-                        <Tooltip title='SDK connected to this project'>
-                            <StyledSuggestedIndicator data-testid='sdk-suggested-indicator' />
-                        </Tooltip>
-                    )}
                 </StyledOptionRow>
             )}
             renderInput={(params) => (

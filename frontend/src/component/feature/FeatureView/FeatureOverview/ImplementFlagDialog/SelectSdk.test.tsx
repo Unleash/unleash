@@ -7,9 +7,7 @@ import { SelectSdk } from './SelectSdk';
 describe('SelectSdk', () => {
     it('always groups sdks into Backend and Frontend sections', async () => {
         const user = userEvent.setup();
-        render(
-            <SelectSdk projectSdks={[]} value='Node.js' onChange={vi.fn()} />,
-        );
+        render(<SelectSdk value='Node.js' onChange={vi.fn()} />);
 
         await user.click(screen.getByRole('combobox'));
 
@@ -17,25 +15,10 @@ describe('SelectSdk', () => {
         expect(screen.getByText('Frontend SDKs')).toBeInTheDocument();
     });
 
-    it('marks project sdks connected to the project with an indicator', async () => {
-        const user = userEvent.setup();
-        render(
-            <SelectSdk projectSdks={['Go']} value='Go' onChange={vi.fn()} />,
-        );
-
-        await user.click(screen.getByRole('combobox'));
-
-        expect(
-            screen.getByTestId('sdk-suggested-indicator'),
-        ).toBeInTheDocument();
-    });
-
     it('clearing the selection does not call onChange', async () => {
         const user = userEvent.setup();
         const onChange = vi.fn();
-        render(
-            <SelectSdk projectSdks={[]} value='Node.js' onChange={onChange} />,
-        );
+        render(<SelectSdk value='Node.js' onChange={onChange} />);
 
         await user.click(screen.getByLabelText('Clear'));
 
@@ -45,9 +28,7 @@ describe('SelectSdk', () => {
     it('selecting an sdk passes its name to onChange', async () => {
         const user = userEvent.setup();
         const onChange = vi.fn();
-        render(
-            <SelectSdk projectSdks={[]} value='Node.js' onChange={onChange} />,
-        );
+        render(<SelectSdk value='Node.js' onChange={onChange} />);
 
         await user.click(screen.getByRole('combobox'));
         await user.click(screen.getByText('Go'));

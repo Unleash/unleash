@@ -8,37 +8,9 @@ export const meta: StoryMeta = {
     background: 'paper',
 };
 
-const allSdkNames = allSdks.map((sdk) => sdk.name);
-
-const Controlled = ({
-    projectSdks,
-    initial,
-}: {
-    projectSdks: SdkName[];
-    initial: SdkName;
-}) => {
+const Controlled = ({ initial }: { initial: SdkName }) => {
     const [value, setValue] = useState<SdkName>(initial);
-    return (
-        <SelectSdk
-            projectSdks={projectSdks}
-            value={value}
-            onChange={(sdk) => sdk && setValue(sdk)}
-        />
-    );
+    return <SelectSdk value={value} onChange={(sdk) => sdk && setValue(sdk)} />;
 };
 
-export const NoProjectSdks: Story = () => (
-    <Controlled projectSdks={[]} initial={allSdks[0].name} />
-);
-
-export const OneProjectSdk: Story = () => (
-    <Controlled projectSdks={['Python']} initial='Python' />
-);
-
-export const SomeProjectSdks: Story = () => (
-    <Controlled projectSdks={['Node.js', 'Go']} initial='Node.js' />
-);
-
-export const AllSdksAreProjectSdks: Story = () => (
-    <Controlled projectSdks={allSdkNames} initial={allSdkNames[0]} />
-);
+export const Default: Story = () => <Controlled initial={allSdks[0].name} />;

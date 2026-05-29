@@ -52,7 +52,6 @@ import type {
     IFeatureToggle,
 } from 'interfaces/featureToggle';
 import {
-    createDefaultLanes,
     createExperimentStrategyPayload,
     createTreatmentKey,
     experimentIsValid,

@@ -16,6 +16,7 @@ import {
     FormControlLabel,
     IconButton,
     InputAdornment,
+    Link,
     styled,
     useTheme,
 } from '@mui/material';
@@ -72,7 +73,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     },
 }));
 
-const StyledNewSidebarHeader = styled('div')(({ theme }) => ({
+const StyledNewSidebarHeader = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'center',
@@ -90,7 +91,7 @@ const StyledNewSidebarCloseButton = styled(IconButton)(({ theme }) => ({
     color: theme.palette.common.white,
 }));
 
-const StyledNewSidebarLinkContainer = styled('div')(({ theme }) => ({
+const StyledNewSidebarLinkContainer = styled(Box)(({ theme }) => ({
     margin: theme.spacing(3, 0),
     display: 'flex',
     alignItems: 'center',
@@ -102,7 +103,7 @@ const StyledNewSidebarLinkIcon = styled(MenuBookIcon)(({ theme }) => ({
     color: theme.palette.primary.contrastText,
 }));
 
-const StyledNewSidebarLink = styled('a')(({ theme }) => ({
+const StyledNewSidebarLink = styled(Link)(({ theme }) => ({
     color: theme.palette.primary.contrastText,
     display: 'block',
     '&:hover': {
@@ -117,7 +118,7 @@ const StyledForm = styled('form')(({ theme }) => ({
     flex: 1,
 }));
 
-const TitleBar = styled('div')(({ theme }) => ({
+const TitleBar = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(0, 3),
@@ -126,7 +127,7 @@ const TitleBar = styled('div')(({ theme }) => ({
     fontWeight: theme.typography.body1.fontWeight,
 }));
 
-const Section = styled('div')(({ theme }) => ({
+const Section = styled(Box)(({ theme }) => ({
     padding: theme.spacing(0, 4),
 }));
 

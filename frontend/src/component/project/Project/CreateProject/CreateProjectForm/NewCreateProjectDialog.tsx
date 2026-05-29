@@ -192,15 +192,12 @@ const ChangeRequestCheckbox: FC<ChangeRequestCheckboxProps> = ({
 }) => {
     const [searchText, setSearchText] = useState('');
 
-    const enabledCount = Object.keys(projectChangeRequestConfiguration).length;
     // Change requests are enforced at the instance level when an environment
     // has a fixed required-approvals value (i.e. it is not configurable here).
-    // When that's the case the user must not be able to opt out.
+    // When that's the case the user must not be able to opt out; the config is
+    // kept visible via `showConfig` below rather than this initial state.
     const enforced = activeEnvironments.some((env) => !env.configurable);
-    // Start expanded if change requests are enforced or any environments are
-    // already configured (e.g. when the parent auto-enables environments that
-    // require approvals).
-    const [expanded, setExpanded] = useState(enforced || enabledCount > 0);
+    const [expanded, setExpanded] = useState(false);
 
     const configured = useMemo(
         () =>

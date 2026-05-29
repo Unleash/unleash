@@ -361,7 +361,10 @@ const NewCreateProjectDialogContent: FC<Props> = ({ open, onClose }) => {
     const formErrors = errors as { name?: string };
 
     const { environments: allEnvironments } = useEnvironments();
-    const activeEnvironments = allEnvironments.filter((env) => env.enabled);
+    const activeEnvironments = useMemo(
+        () => allEnvironments.filter((env) => env.enabled),
+        [allEnvironments],
+    );
     const stickinessOptions = useStickinessOptions(projectStickiness);
     const {
         limit,
@@ -415,19 +418,23 @@ const NewCreateProjectDialogContent: FC<Props> = ({ open, onClose }) => {
 
     // Auto-enable change requests for environments that already require approvals
     // (mirrors the legacy modal's behavior).
-    const availableChangeRequestEnvironments = (
-        projectEnvironments.size === 0
-            ? activeEnvironments
-            : activeEnvironments.filter((env) =>
-                  projectEnvironments.has(env.name),
-              )
-    ).map(({ name, type, requiredApprovals }) => ({
-        name,
-        type,
-        requiredApprovals,
-        configurable: !Number.isInteger(requiredApprovals),
-    }));
+    const availableChangeRequestEnvironments = useMemo(
+        () =>
+            (projectEnvironments.size === 0
+                ? activeEnvironments
+                : activeEnvironments.filter((env) =>
+                      projectEnvironments.has(env.name),
+                  )
+            ).map(({ name, type, requiredApprovals }) => ({
+                name,
+                type,
+                requiredApprovals,
+                configurable: !Number.isInteger(requiredApprovals),
+            })),
+        [activeEnvironments, projectEnvironments],
+    );
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: updateProjectChangeRequestConfig's functions are recreated every render and re-enabling produces a new config object, so listing them would loop. The effect only needs to re-run when the available environments change.
     useEffect(() => {
         availableChangeRequestEnvironments.forEach((environment) => {
             if (Number.isInteger(environment.requiredApprovals)) {
@@ -437,7 +444,7 @@ const NewCreateProjectDialogContent: FC<Props> = ({ open, onClose }) => {
                 );
             }
         });
-    }, [JSON.stringify(availableChangeRequestEnvironments)]);
+    }, [availableChangeRequestEnvironments]);
 
     const stickinessLabel = projectStickiness;
 

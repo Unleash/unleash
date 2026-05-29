@@ -30,7 +30,7 @@ describe('SelectSdk', () => {
         ).toBeInTheDocument();
     });
 
-    it('clearing the selection emits undefined to the parent', async () => {
+    it('clearing the selection does not call onChange', async () => {
         const user = userEvent.setup();
         const onChange = vi.fn();
         render(
@@ -39,7 +39,7 @@ describe('SelectSdk', () => {
 
         await user.click(screen.getByLabelText('Clear'));
 
-        expect(onChange).toHaveBeenCalledWith(undefined);
+        expect(onChange).not.toHaveBeenCalled();
     });
 
     it('selecting an sdk passes its name to onChange', async () => {

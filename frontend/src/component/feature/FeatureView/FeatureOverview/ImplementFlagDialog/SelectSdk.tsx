@@ -8,7 +8,7 @@ import {
 interface SelectSdkProps {
     projectSdks: SdkName[];
     value: SdkName;
-    onChange: (sdk: SdkName | undefined) => void;
+    onChange: (sdk: SdkName) => void;
 }
 
 const backendNames = new Set<SdkName>(serverSdks.map((s) => s.name));
@@ -74,7 +74,9 @@ export const SelectSdk = ({ projectSdks, value, onChange }: SelectSdkProps) => {
             getOptionLabel={(option) => option.name}
             isOptionEqualToValue={(option, val) => option.name === val.name}
             onChange={(_, newValue) => {
-                onChange(newValue?.name);
+                if (newValue?.name) {
+                    onChange(newValue.name);
+                }
             }}
             renderOption={({ key, ...props }, option) => (
                 <StyledOptionRow key={key} {...props}>

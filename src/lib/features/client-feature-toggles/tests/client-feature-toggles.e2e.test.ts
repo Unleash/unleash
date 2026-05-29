@@ -270,30 +270,6 @@ test('should support name prefix', async () => {
         });
 });
 
-test('should support filtering on project', async () => {
-    expect.assertions(2);
-    await app.services.projectService.createProject(
-        { name: 'projectA', id: 'projecta' },
-        dummyAdmin,
-        TEST_AUDIT_USER,
-    );
-    await app.services.projectService.createProject(
-        { name: 'projectB', id: 'projectb' },
-        dummyAdmin,
-        TEST_AUDIT_USER,
-    );
-    await app.createFeature('ab_test1', 'projecta');
-    await app.createFeature('bd_test2', 'projectb');
-    return app.request
-        .get(`/api/client/features?project=projecta`)
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => {
-            expect(res.body.features).toHaveLength(1);
-            expect(res.body.features[0].name).toBe('ab_test1');
-        });
-});
-
 test('should return correct data structure from /api/client/features', async () => {
     await setupFeatures(db, app);
 

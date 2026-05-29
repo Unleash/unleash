@@ -238,7 +238,9 @@ export default class FeatureController extends Controller {
         const override: QueryOverride = {};
         if (user instanceof ApiUser) {
             if (!isAllProjects(user.projects)) {
-                override.project = user.projects;
+                override.project = [...user.projects];
+            } else {
+                override.project = ['*'];
             }
             if (user.environment !== ALL) {
                 override.environment = user.environment;
@@ -247,7 +249,8 @@ export default class FeatureController extends Controller {
 
         const inlineSegmentConstraints =
             !this.clientSpecService.requestSupportsSpec(req, 'segments');
-
+        console.dir(query);
+        console.dir(override);
         return this.prepQuery({
             ...query,
             ...override,
@@ -281,7 +284,6 @@ export default class FeatureController extends Controller {
         }
 
         const tagQuery = this.paramToArray(tag);
-        const projectQuery = this.paramToArray(project);
 
         if (namePrefix) {
             this.eventBus.emit(CLIENT_METRICS_NAMEPREFIX, { namePrefix });
@@ -293,14 +295,9 @@ export default class FeatureController extends Controller {
             });
         }
 
-        if (projectQuery?.length) {
-            this.eventBus.emit(CLIENT_METRICS_PROJECT, {
-                projects: projectQuery.map(String),
-            });
-        }
         const query = await querySchema.validateAsync({
             tag: tagQuery,
-            project: projectQuery,
+            project,
             namePrefix,
             environment,
             inlineSegmentConstraints,

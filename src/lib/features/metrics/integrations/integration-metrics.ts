@@ -9,6 +9,7 @@ import { AUTH_LOGIN_COMPLETED } from '../../../metric-events.js';
 import {
     createCounter,
     createGauge,
+    type Gauge,
     type GaugeSample,
 } from '../../../util/metrics/index.js';
 
@@ -78,31 +79,43 @@ export function registerIntegrationMetrics(deps: IntegrationMetricsDeps): void {
 }
 
 function registerAddons(
-    setLabels: (labels: Record<AvailableLabels, string | number>) => void,
+    gauge: Gauge<AvailableLabels>,
     addonProviders: IAddonProviders,
 ): void {
+    if (!gauge) {
+        throw new Error('Gauge must not be null');
+    }
+
     for (const addon of Object.values(addonProviders)) {
         const { name, deprecated } = addon.definition;
-        setLabels({
-            name,
-            kind: 'addon',
-            deprecated: String(Boolean(deprecated)),
-            removal_target: deprecated ?? '',
-        });
+
+        gauge
+            .labels({
+                name,
+                kind: 'addon',
+                deprecated: String(Boolean(deprecated)),
+                removal_target: deprecated ?? '',
+            })
+            .set(1);
     }
 }
 
-function registerAuthProviders(
-    setLabels: (labels: Record<AvailableLabels, string | number>) => void,
-): void {
+function registerAuthProviders(gauge: Gauge<AvailableLabels>): void {
+    if (!gauge) {
+        throw new Error('Gauge must not be null');
+    }
+
     for (const provider of Object.values(AUTH_PROVIDERS_CATALOG)) {
         const { name, deprecatedRemovalTarget } = provider;
-        setLabels({
-            name,
-            kind: 'auth',
-            deprecated: String(Boolean(deprecatedRemovalTarget)),
-            removal_target: deprecatedRemovalTarget ?? '',
-        });
+
+        gauge
+            .labels({
+                name,
+                kind: 'auth',
+                deprecated: String(Boolean(deprecatedRemovalTarget)),
+                removal_target: deprecatedRemovalTarget ?? '',
+            })
+            .set(1);
     }
 }
 
@@ -119,12 +132,8 @@ function registerAvailableGauge(addonProviders: IAddonProviders): void {
         labelNames: ['name', 'kind', 'deprecated', 'removal_target'] as const,
     });
 
-    const setLabels = (labels: Record<AvailableLabels, string | number>) => {
-        gauge.labels(labels).set(1);
-    };
-
-    registerAddons(setLabels, addonProviders);
-    registerAuthProviders(setLabels);
+    registerAddons(gauge, addonProviders);
+    registerAuthProviders(gauge);
 }
 
 /**

@@ -414,7 +414,6 @@ const NewCreateProjectDialogContent: FC<Props> = ({ open, onClose }) => {
     };
 
     // Auto-enable change requests for environments that already require approvals
-    // (mirrors the legacy modal's behavior).
     const availableChangeRequestEnvironments = useMemo(
         () =>
             (projectEnvironments.size === 0

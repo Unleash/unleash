@@ -71,9 +71,30 @@ export const SelectSdk = ({ value, onChange }: SelectSdkProps) => {
                     <StyledSdkName>{option.name}</StyledSdkName>
                 </StyledOptionRow>
             )}
-            renderInput={(params) => (
-                <TextField {...params} label='SDK' size='small' />
-            )}
+            renderInput={(params) => {
+                const selectedOption = options.find(
+                    (opt) => opt.name === value,
+                );
+                return (
+                    <TextField
+                        {...params}
+                        label='SDK'
+                        size='small'
+                        slotProps={{
+                            ...params.slotProps,
+                            input: {
+                                ...(params.slotProps?.input as object),
+                                startAdornment: selectedOption && (
+                                    <StyledSdkIcon
+                                        src={selectedOption.icon}
+                                        alt=''
+                                    />
+                                ),
+                            },
+                        }}
+                    />
+                );
+            }}
         />
     );
 };

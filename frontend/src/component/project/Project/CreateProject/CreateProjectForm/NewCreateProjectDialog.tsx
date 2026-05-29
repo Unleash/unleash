@@ -402,9 +402,7 @@ const NewCreateProjectDialogContent: FC<Props> = ({ open, onClose }) => {
         });
     }, [JSON.stringify(availableChangeRequestEnvironments)]);
 
-    const stickinessLabel =
-        stickinessOptions.find((option) => option.key === projectStickiness)
-            ?.label ?? projectStickiness;
+    const stickinessLabel = projectStickiness;
 
     const projectModeLabel =
         projectModeOptions.find((option) => option.value === projectMode)

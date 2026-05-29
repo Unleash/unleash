@@ -10,7 +10,7 @@ export const meta: StoryMeta = {
 
 const Controlled = ({ initial }: { initial: SdkName }) => {
     const [value, setValue] = useState<SdkName>(initial);
-    return <SelectSdk value={value} onChange={(sdk) => sdk && setValue(sdk)} />;
+    return <SelectSdk value={value} onChange={setValue} />;
 };
 
 export const Default: Story = () => <Controlled initial={allSdks[0].name} />;

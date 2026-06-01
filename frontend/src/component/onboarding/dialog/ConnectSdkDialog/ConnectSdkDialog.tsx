@@ -47,6 +47,7 @@ interface IConnectSDKDialogProps {
 }
 
 export const ConnectSdkDialog = ({
+    open,
     onClose,
     onFinish,
     projectId,

@@ -42,10 +42,7 @@ import { Box, styled, useMediaQuery, useTheme } from '@mui/material';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ConnectSdkDialog } from '../../../onboarding/dialog/ConnectSdkDialog/ConnectSdkDialog.tsx';
 import { ProjectOnboarding } from '../../../onboarding/flow/ProjectOnboarding.tsx';
-import { OldProjectOnboarding } from '../../../onboarding/flow/OldProjectOnboarding.tsx';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
-import { ProjectOnboarded } from 'component/onboarding/flow/ProjectOnboarded';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { ArchivedFeatureActionCell } from '../../../archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureActionCell.tsx';
 import { ArchiveBatchActions } from '../../../archive/ArchiveTable/ArchiveBatchActions.tsx';
@@ -178,15 +175,11 @@ export const ProjectFeatureToggles = ({
         'hide-setup' | 'show-setup'
     >(`onboarding-state:v1-${projectId}`, 'hide-setup');
 
-    const isOnboarding =
-        project.onboardingStatus.status !== 'onboarded' &&
-        onboardingFlow === 'visible';
     const isOnboarded = project.onboardingStatus.status === 'onboarded';
     const userCompletedOldOnboardingFlow =
         isOnboarded && setupCompletedState === 'hide-setup';
     const showNewOnboarding =
         onboardingFlow === 'visible' && !userCompletedOldOnboardingFlow;
-    const newOnboardingSteps = useUiFlag('onboardingProjectSetupNewSteps');
 
     const showCleanupReminder = !tableState.lastSeenAt && !tableState.lifecycle;
     const showArchived = Boolean(tableState.archived);
@@ -490,39 +483,17 @@ export const ProjectFeatureToggles = ({
 
     return (
         <Container>
-            {newOnboardingSteps && (
-                <ConditionallyRender
-                    condition={showNewOnboarding}
-                    show={() => (
-                        <ProjectOnboarding
-                            projectId={projectId}
-                            setConnectSdkOpen={setConnectSdkOpen}
-                            setOnboardingFlow={setOnboardingFlow}
-                            refetchFeatures={refetch}
-                        />
-                    )}
-                />
-            )}
-            {!newOnboardingSteps && (
-                <>
-                    {isOnboarding && (
-                        <OldProjectOnboarding
-                            projectId={projectId}
-                            setConnectSdkOpen={setConnectSdkOpen}
-                            setOnboardingFlow={setOnboardingFlow}
-                            refetchFeatures={refetch}
-                        />
-                    )}
-                    {setupCompletedState === 'show-setup' && !isOnboarding && (
-                        <ProjectOnboarded
-                            projectId={projectId}
-                            onClose={() => {
-                                setSetupCompletedState('hide-setup');
-                            }}
-                        />
-                    )}
-                </>
-            )}
+            <ConditionallyRender
+                condition={showNewOnboarding}
+                show={() => (
+                    <ProjectOnboarding
+                        projectId={projectId}
+                        setConnectSdkOpen={setConnectSdkOpen}
+                        setOnboardingFlow={setOnboardingFlow}
+                        refetchFeatures={refetch}
+                    />
+                )}
+            />
             {showCleanupReminder ? (
                 <ProjectCleanupReminder projectId={projectId} />
             ) : null}

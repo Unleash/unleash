@@ -1,5 +1,4 @@
 import type { Db } from '../../db/db.js';
-import type { IFlagResolver } from '../../types/index.js';
 import type {
     IOnboardingReadModel,
     InstanceOnboarding,
@@ -25,11 +24,8 @@ const projectEventLookup = {
 export class OnboardingReadModel implements IOnboardingReadModel {
     private db: Db;
 
-    private flagResolver: IFlagResolver;
-
-    constructor(db: Db, flagResolver: IFlagResolver) {
+    constructor(db: Db) {
         this.db = db;
-        this.flagResolver = flagResolver;
     }
 
     async getInstanceOnboardingMetrics(): Promise<InstanceOnboarding> {

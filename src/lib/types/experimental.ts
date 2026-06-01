@@ -68,6 +68,7 @@ export type IFlagKey =
     | 'oidcPkceSupport'
     | 'remoteMcpServer'
     | 'flightRecorder'
+    | 'flightRecorderSdk'
     | 'regexConstraintOperator'
     | 'enterpriseEdgeTokensList'
     | 'impactMetricsFlagPage'

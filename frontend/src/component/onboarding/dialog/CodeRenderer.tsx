@@ -48,7 +48,7 @@ const StyledCodeBlock = styled('pre')(({ theme }) => ({
     wordBreak: 'break-all',
     whiteSpace: 'pre-wrap',
     position: 'relative',
-    maxHeight: theme.spacing(50),
+    maxHeight: theme.spacing(66),
 }));
 
 const CopyToClipboard = styled(Tooltip)(({ theme }) => ({

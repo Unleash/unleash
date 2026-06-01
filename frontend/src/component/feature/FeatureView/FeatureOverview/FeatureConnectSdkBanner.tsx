@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ConnectSdkDialog } from 'component/onboarding/dialog/ConnectSdkDialog';
+import { ConnectSdkDialog } from 'component/onboarding/dialog/ConnectSdkDialog/ConnectSdkDialog.tsx';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { FeatureFlagSetupBannerCard } from './FeatureFlagSetupBannerCard.tsx';
@@ -62,8 +62,7 @@ export const FeatureConnectSdkBanner = ({
             <ConnectSdkDialog
                 open={connectSdkOpen}
                 onClose={onDialogClose}
-                onFinish={onDialogClose}
-                project={projectId}
+                projectId={projectId}
                 environments={environments}
                 feature={featureId}
             />

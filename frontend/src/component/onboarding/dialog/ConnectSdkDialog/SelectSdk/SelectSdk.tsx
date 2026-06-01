@@ -1,5 +1,5 @@
 import { Box, Button, styled } from '@mui/material';
-import { SdkLogo } from './SdkLogo';
+import { SdkLogo } from './SdkLogo.tsx';
 import { formatAssetPath } from 'utils/formatPath';
 import {
     clientSdks,

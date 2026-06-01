@@ -67,6 +67,7 @@ export type IFlagKey =
     | 'newInUnleash'
     | 'oidcPkceSupport'
     | 'flightRecorder'
+    | 'flightRecorderSdk'
     | 'regexConstraintOperator'
     | 'enterpriseEdgeTokensList'
     | 'impactMetricsFlagPage'
@@ -309,6 +310,10 @@ const flags: IFlags = {
     ),
     flightRecorder: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FLIGHT_RECORDER,
+        false,
+    ),
+    flightRecorderSdk: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FLIGHT_RECORDER_SDK,
         false,
     ),
     regexConstraintOperator: parseEnvVarBoolean(

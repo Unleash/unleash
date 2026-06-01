@@ -317,6 +317,10 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_FLIGHT_RECORDER,
         false,
     ),
+    flightRecorderSdk: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FLIGHT_RECORDER_SDK,
+        false,
+    ),
     regexConstraintOperator: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_REGEX_CONSTRAINT_OPERATOR,
         false,

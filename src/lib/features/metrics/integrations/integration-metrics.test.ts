@@ -66,7 +66,10 @@ const fakeSettingStore = (
 
 const stores = (
     addons: Partial<IAddon>[],
-    settings: Record<string, { enabled?: boolean } | undefined>,
+    settings: Record<
+        string,
+        { enabled?: boolean; disabled?: boolean } | undefined
+    >,
 ) =>
     ({
         addonStore: fakeAddonStore(addons),
@@ -218,32 +221,56 @@ describe('Integration Metrics', () => {
                 stores: stores([], {
                     'unleash.enterprise.auth.oidc': { enabled: true },
                     'unleash.enterprise.auth.saml': { enabled: false },
-                    'unleash.enterprise.auth.google': {}, // google has a row but enabled is undefined-ish
-                    // simple is missing entirely
+                    'unleash.enterprise.auth.google': {}, // configured, disabled
+                    // simple missing => enabled by default
                 }),
             });
             await dbMetrics.refreshMetrics();
 
             const output = await register.metrics();
 
-            // enabled auth provider
             expect(output).toMatch(
                 /integration_configured\{[^}]*name="oidc"[^}]*kind="auth"[^}]*state="enabled"[^}]*\} 1/,
             );
-
-            // disabled auth provider
             expect(output).toMatch(
                 /integration_configured\{[^}]*name="saml"[^}]*kind="auth"[^}]*state="disabled"[^}]*\} 1/,
             );
-
-            // google configured but disabled
             expect(output).toMatch(
                 /integration_configured\{[^}]*name="google"[^}]*kind="auth"[^}]*state="disabled"[^}]*\} 1/,
             );
-
-            // not_configured
+            // simple missing => enabled by default
             expect(output).toMatch(
-                /integration_configured\{[^}]*name="simple"[^}]*kind="auth"[^}]*state="not_configured"[^}]*\} 1/,
+                /integration_configured\{[^}]*name="simple"[^}]*kind="auth"[^}]*state="enabled"[^}]*\} 1/,
+            );
+        });
+
+        test('simple auth: row with disabled=true is reported as disabled', async () => {
+            const { dbMetrics } = setupMetrics({
+                addonProviders: {},
+                stores: stores([], {
+                    'unleash.auth.simple': { disabled: true },
+                }),
+            });
+            await dbMetrics.refreshMetrics();
+
+            const output = await register.metrics();
+            expect(output).toMatch(
+                /integration_configured\{[^}]*name="simple"[^}]*kind="auth"[^}]*state="disabled"[^}]*\} 1/,
+            );
+        });
+
+        test('simple auth: empty row is reported as enabled', async () => {
+            const { dbMetrics } = setupMetrics({
+                addonProviders: {},
+                stores: stores([], {
+                    'unleash.auth.simple': {},
+                }),
+            });
+            await dbMetrics.refreshMetrics();
+
+            const output = await register.metrics();
+            expect(output).toMatch(
+                /integration_configured\{[^}]*name="simple"[^}]*kind="auth"[^}]*state="enabled"[^}]*\} 1/,
             );
         });
 

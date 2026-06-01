@@ -3,7 +3,10 @@ import type { Logger } from '../../../logger.js';
 import type { IUnleashConfig } from '../../../types/option.js';
 import type { IUnleashStores } from '../../../types/stores.js';
 import { getAddons, type IAddonProviders } from '../../../addons/index.js';
-import { AUTH_PROVIDERS_CATALOG } from '../../../types/settings/auth-settings.js';
+import {
+    AUTH_PROVIDERS_CATALOG,
+    type AuthProviderConfig,
+} from '../../../types/settings/auth-settings.js';
 import { AUTH_LOGIN_COMPLETED } from '../../../metric-events.js';
 import { createCounter } from '../../../util/metrics/index.js';
 import type { DbMetricsMonitor } from '../../../metrics-gauge.js';
@@ -206,16 +209,13 @@ export async function collectConfiguredIntegrations(
                 try {
                     const row = await stores.settingStore.get<{
                         enabled?: boolean;
+                        disabled?: boolean;
                     }>(provider.configId);
-                    const state: ConfiguredIntegration['state'] = row
-                        ? row.enabled
-                            ? 'enabled'
-                            : 'disabled'
-                        : 'not_configured';
+
                     return {
                         name: provider.name,
                         kind: 'auth' as const,
-                        state,
+                        state: resolveAuthState(provider, row),
                         count: 1,
                     } satisfies ConfiguredIntegration;
                 } catch (error) {
@@ -230,4 +230,29 @@ export async function collectConfiguredIntegrations(
     ).filter((r) => r !== null);
 
     return [...addonBuckets, ...authBuckets];
+}
+
+/**
+ * The providers in Unleash have two interpretations:
+ *   - `default === 'enabled'` (e.g. `simple`)
+ *     row stores `{disabled: boolean}`. If no config row, means addon enabled
+ *     the row only exists once user turns it off (disabled: true).
+ *   - `default === 'disabled'` (e.g. oidc, saml, google) —
+ *     row stores `{enabled: boolean}`. If no config row, means not_configured
+ *     so that dashboards show "nobody ever set this up".
+ */
+function resolveAuthState(
+    provider: AuthProviderConfig,
+    row: { enabled?: boolean; disabled?: boolean } | undefined,
+): ConfiguredIntegration['state'] {
+    if (provider.default === 'enabled') {
+        // e.g. in 'simple' auth, default is enabled, with no config
+        // otherwise stored field is `disabled`;
+        if (row === undefined) return 'enabled';
+        return row.disabled ? 'disabled' : 'enabled';
+    }
+
+    // Standard convention, no row means not_configured.
+    if (row === undefined) return 'not_configured';
+    return row.enabled ? 'enabled' : 'disabled';
 }

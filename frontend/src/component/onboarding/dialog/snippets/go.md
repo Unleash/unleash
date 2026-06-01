@@ -22,6 +22,7 @@ func main() {
         panic(err)
     }
     defer unleash.Close()
+    unleash.WaitForReady()
 
     if unleash.IsEnabled("<YOUR_FLAG>", unleash.FeatureOptions{}) {
         // New behaviour

@@ -2,6 +2,8 @@ ARG NODE_VERSION=22.22-alpine3.23
 
 FROM node:$NODE_VERSION AS builder
 
+RUN apk add --no-cache grep
+
 WORKDIR /unleash
 
 COPY . /unleash

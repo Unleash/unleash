@@ -15,7 +15,6 @@ const setupApi = ({
     postStatus?: number;
 }) => {
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: { remoteMcpServer: true },
         unleashUrl: 'https://unleash.example.com',
     });
     testServerRoute(server, '/api/admin/remote-mcp/settings', { enabled });

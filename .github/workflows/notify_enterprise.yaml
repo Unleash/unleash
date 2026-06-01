@@ -21,7 +21,7 @@ jobs:
           cache: 'pnpm'
           cache-dependency-path: pnpm-lock.yaml
       - name: Trigger sync
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         env:
           COMMIT_ACTOR: ${{ github.event.commits[0].author.name }} <${{ github.event.commits[0].author.email }}>
         with:

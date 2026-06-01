@@ -225,17 +225,10 @@ const PermissionStatus = ({
                 }
             >
                 <StyledPermissionStatus hasPermission={hasPermission}>
-                    {hasPermission ? (
-                        <>
-                            <Check />
-                            Has permission
-                        </>
-                    ) : (
-                        <>
-                            <Close />
-                            No permission
-                        </>
-                    )}
+                    <>
+                        <Check />
+                        Has permission
+                    </>
                 </StyledPermissionStatus>
             </TooltipLink>
         )}

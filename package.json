@@ -40,7 +40,7 @@
     "build:backend": "tsc --pretty && pnpm run copy-migrations-package",
     "build:frontend": "pnpm --dir ./frontend run build",
     "build:frontend:if-needed": "./scripts/build-frontend-if-needed.sh",
-    "build": "pnpm run clean && concurrently \"pnpm run copy-templates\" \"pnpm run build:frontend\" \"pnpm run build:backend\"",
+    "build": "pnpm run clean && pnpm run copy-templates && pnpm run build:frontend && pnpm run build:backend",
     "dev:vite": "TZ=UTC NODE_ENV=development vite-node src/server-dev.ts",
     "dev:backend": "pnpm run copy-migrations-package && TZ=UTC NODE_ENV=${NODE_ENV:-development} tsc-watch --onSuccess \"node dist/server-dev.js\"",
     "dev:frontend": "wait-on tcp:4242 && pnpm --dir ./frontend run dev",

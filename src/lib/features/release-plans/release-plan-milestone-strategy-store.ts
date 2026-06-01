@@ -135,7 +135,7 @@ export class ReleasePlanMilestoneStrategyStore
         return fromRow(row);
     }
 
-    private async updateStrategy(
+    async update(
         strategyId: string,
         { segments, ...strategy }: Partial<MilestoneStrategyConfigUpdate>,
     ): Promise<ReleasePlanMilestoneStrategy> {
@@ -150,7 +150,7 @@ export class ReleasePlanMilestoneStrategyStore
         strategyId: string,
         { segments, ...strategy }: Partial<MilestoneStrategyConfigUpdate>,
     ): Promise<ReleasePlanMilestoneStrategy> {
-        const releasePlanMilestoneStrategy = await this.updateStrategy(
+        const releasePlanMilestoneStrategy = await this.update(
             strategyId,
             strategy,
         );

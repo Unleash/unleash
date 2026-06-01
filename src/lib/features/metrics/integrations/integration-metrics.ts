@@ -157,44 +157,32 @@ export async function collectConfiguredIntegrations(
 ): Promise<ConfiguredIntegration[]> {
     const addons = await stores.addonStore.getAll();
 
-    const addonBuckets = Object.entries(
-        addons.reduce<Record<string, { enabled: number; disabled: number }>>(
-            (acc, addon) => {
-                const bucket = acc[addon.provider] ?? {
-                    enabled: 0,
-                    disabled: 0,
-                };
-                acc[addon.provider] = bucket;
+    const addonBuckets: Array<{
+        name: string;
+        state: 'enabled' | 'disabled';
+        count: number;
+    }> = [];
+    addons.forEach((addon) => {
+        const enabled = addons.filter(
+            (a) => a.provider === addon.provider && a.enabled,
+        ).length;
+        const disabled = addons.filter(
+            (a) => a.provider === addon.provider && !a.enabled,
+        ).length;
 
-                if (addon.enabled) {
-                    bucket.enabled++;
-                } else {
-                    bucket.disabled++;
-                }
-                return acc;
-            },
-            {},
-        ),
-    ).flatMap(([provider, { enabled, disabled }]) => [
-        ...(enabled > 0
-            ? [
-                  {
-                      name: provider,
-                      state: 'enabled' as const,
-                      count: enabled,
-                  },
-              ]
-            : []),
-        ...(disabled > 0
-            ? [
-                  {
-                      name: provider,
-                      state: 'disabled' as const,
-                      count: disabled,
-                  },
-              ]
-            : []),
-    ]);
+        if (enabled > 0)
+            addonBuckets.push({
+                name: addon.provider,
+                state: 'enabled',
+                count: enabled,
+            });
+        if (disabled > 0)
+            addonBuckets.push({
+                name: addon.provider,
+                state: 'disabled',
+                count: disabled,
+            });
+    });
 
     const authBuckets = (
         await Promise.all(

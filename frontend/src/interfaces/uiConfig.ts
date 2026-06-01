@@ -92,7 +92,6 @@ export type UiFlags = {
     onboardingProjectSetupNewSteps?: boolean;
     multiMetricChart?: boolean;
     remoteMcpServer?: boolean;
-    accessOverviewRework?: boolean;
     onboardingConnectSDKNewDialog?: boolean;
     logRocketEnabled?: boolean;
     newProjectList?: boolean;

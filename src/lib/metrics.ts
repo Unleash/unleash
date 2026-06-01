@@ -43,7 +43,7 @@ import type { IClientMetricsEnv } from './features/metrics/client-metrics/client
 import { DbMetricsMonitor } from './metrics-gauge.js';
 import * as impactMetrics from './features/metrics/impact/define-impact-metrics.js';
 import HyperLogLog from 'hyperloglog-lite';
-import { registerIntegrationMetrics } from './features/metrics/integrations/integration-metrics.js';
+import { setupIntegrationMetrics } from './features/metrics/integrations/integration-metrics.js';
 
 const DISTINCT_HLL_REGISTERS_EXPONENT = 14;
 
@@ -1222,7 +1222,7 @@ export function registerPrometheusMetrics(
         addonEventsHandledCounter.increment({ result, destination });
     });
 
-    registerIntegrationMetrics({ config, stores, eventBus, dbMetrics });
+    setupIntegrationMetrics({ config, stores, eventBus, dbMetrics });
 
     return {
         collectAggDbMetrics: dbMetrics.refreshMetrics,

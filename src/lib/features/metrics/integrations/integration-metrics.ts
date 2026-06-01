@@ -8,12 +8,15 @@ import { AUTH_LOGIN_COMPLETED } from '../../../metric-events.js';
 import { createCounter } from '../../../util/metrics/index.js';
 import type { DbMetricsMonitor } from '../../../metrics-gauge.js';
 
-interface IntegrationMetricsDeps {
+interface IntegrationMetricsSetupOpts {
     config: Pick<IUnleashConfig, 'getLogger' | 'server' | 'flagResolver'>;
     stores: Pick<IUnleashStores, 'addonStore' | 'settingStore'>;
     eventBus: EventEmitter;
     dbMetrics: DbMetricsMonitor;
-    addonProviders?: IAddonProviders;
+}
+
+interface IntegrationMetricsDeps extends IntegrationMetricsSetupOpts {
+    addonProviders: IAddonProviders;
 }
 
 interface AvailableIntegration {
@@ -30,6 +33,19 @@ interface ConfiguredIntegration {
     count: number;
 }
 
+export function setupIntegrationMetrics(
+    opts: IntegrationMetricsSetupOpts,
+): void {
+    const addonProviders = getAddons({
+        getLogger: opts.config.getLogger,
+        unleashUrl: opts.config.server.unleashUrl,
+        flagResolver: opts.config.flagResolver,
+        eventBus: opts.eventBus,
+    } as Parameters<typeof getAddons>[0]);
+
+    registerIntegrationMetrics({ ...opts, addonProviders });
+}
+
 export function registerIntegrationMetrics({
     config,
     stores,
@@ -38,16 +54,6 @@ export function registerIntegrationMetrics({
     addonProviders,
 }: IntegrationMetricsDeps): void {
     const logger = config.getLogger('metrics/integrations');
-
-    // passed only in testing
-    addonProviders =
-        addonProviders ??
-        getAddons({
-            getLogger: config.getLogger,
-            unleashUrl: config.server.unleashUrl,
-            flagResolver: config.flagResolver,
-            eventBus,
-        } as Parameters<typeof getAddons>[0]);
 
     registerGaugeWithParams({
         dbMetrics,
@@ -123,7 +129,7 @@ function registerAuthLoginTotalCounter(eventBus: EventEmitter): void {
     );
 }
 
-export function collectAvailableIntegrations(
+function collectAvailableIntegrations(
     addonProviders: IAddonProviders,
 ): AvailableIntegration[] {
     const addons = Object.values(addonProviders).map(

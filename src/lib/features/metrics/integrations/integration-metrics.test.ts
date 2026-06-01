@@ -21,20 +21,19 @@ const testConfig = {
 } as any;
 
 const setupMetrics = (overrides: {
-    addonProviders?: IAddonProviders;
+    addonProviders: IAddonProviders;
     stores: any;
 }) => {
     const eventBus = new EventEmitter();
 
-    // tests call dbMetrics.refreshMetrics()
-    // before scraping to populate the gauge from the stub stores.
+    // call dbMetrics.refreshMetrics() before scraping to populate the gauges from the stub stores.
     const dbMetrics = new DbMetricsMonitor(testConfig);
 
     registerIntegrationMetrics({
         config: testConfig,
         eventBus,
         dbMetrics,
-        addonProviders: overrides.addonProviders ?? {},
+        addonProviders: overrides.addonProviders,
         stores: overrides.stores,
     });
     return { eventBus, dbMetrics };

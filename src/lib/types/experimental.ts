@@ -66,8 +66,8 @@ export type IFlagKey =
     | 'safeguards'
     | 'newInUnleash'
     | 'oidcPkceSupport'
-    | 'remoteMcpServer'
     | 'flightRecorder'
+    | 'flightRecorderSdk'
     | 'regexConstraintOperator'
     | 'enterpriseEdgeTokensList'
     | 'impactMetricsFlagPage'
@@ -307,12 +307,12 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_NEW_IN_UNLEASH,
         false,
     ),
-    remoteMcpServer: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_REMOTE_MCP_SERVER,
-        false,
-    ),
     flightRecorder: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FLIGHT_RECORDER,
+        false,
+    ),
+    flightRecorderSdk: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FLIGHT_RECORDER_SDK,
         false,
     ),
     regexConstraintOperator: parseEnvVarBoolean(

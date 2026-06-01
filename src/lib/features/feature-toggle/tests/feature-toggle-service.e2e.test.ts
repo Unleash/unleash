@@ -17,7 +17,7 @@ import {
     ADMIN_TOKEN_USER,
     ADMIN,
 } from '../../../types/index.js';
-import EnvironmentService from '../../project-environments/environment-service.js';
+import type EnvironmentService from '../../project-environments/environment-service.js';
 import {
     ForbiddenError,
     NotFoundError,
@@ -256,70 +256,6 @@ test('should not get empty rows as features', async () => {
 
     expect(features.length).toBe(7);
     expect(namelessFeature).toBeUndefined();
-});
-
-test('adding and removing an environment preserves variants when variants per env is off', async () => {
-    const featureName = 'something-that-has-variants';
-    const prodEnv = 'mock-prod-env';
-
-    await stores.environmentStore.create({
-        name: prodEnv,
-        type: 'production',
-    });
-
-    await service.createFeatureToggle(
-        'default',
-        {
-            name: featureName,
-            description: 'Second flag',
-            variants: [
-                {
-                    name: 'variant1',
-                    weight: 100,
-                    weightType: 'fix',
-                    stickiness: 'default',
-                },
-            ],
-        },
-        TEST_AUDIT_USER,
-    );
-
-    //force the variantEnvironments flag off so that we can test legacy behavior
-    environmentService = new EnvironmentService(
-        stores,
-        {
-            ...unleashConfig,
-            // @ts-expect-error - incomplete flag resolver definition
-            flagResolver: {
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                isEnabled: (_flagName: string) => false,
-            },
-        },
-        eventService,
-    );
-
-    await environmentService.addEnvironmentToProject(
-        prodEnv,
-        'default',
-        SYSTEM_USER_AUDIT,
-    );
-    await environmentService.removeEnvironmentFromProject(
-        prodEnv,
-        'default',
-        SYSTEM_USER_AUDIT,
-    );
-    await environmentService.addEnvironmentToProject(
-        prodEnv,
-        'default',
-        SYSTEM_USER_AUDIT,
-    );
-
-    const flag = await service.getFeature({
-        featureName,
-        projectId: undefined,
-        environmentVariants: false,
-    });
-    expect(flag.variants).toHaveLength(1);
 });
 
 test('cloning a feature flag copies variant environments correctly', async () => {
@@ -767,7 +703,6 @@ test('Should return last seen at per environment', async () => {
     expect(featureToggle.environments[0].lastSeenAt).toEqual(
         new Date(lastSeenAtStoreDate),
     );
-    expect(featureToggle.lastSeenAt).toEqual(new Date(lastSeenAtStoreDate));
 });
 
 test.each([

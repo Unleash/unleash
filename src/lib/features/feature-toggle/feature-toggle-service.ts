@@ -1259,19 +1259,6 @@ export class FeatureToggleService {
                 projectId,
             );
 
-            if (value.variants && value.variants.length > 0) {
-                const environments =
-                    await this.featureEnvironmentStore.getEnvironmentsForFeature(
-                        featureName,
-                    );
-
-                await this.featureEnvironmentStore.setVariantsToFeatureEnvironments(
-                    featureName,
-                    environments.map((env) => env.environment),
-                    value.variants,
-                );
-            }
-
             if (value.tags && value.tags.length > 0) {
                 const mapTagsToFeatureTagInserts = value.tags.map((tag) => ({
                     tagValue: tag.value,
@@ -2197,7 +2184,6 @@ export class FeatureToggleService {
             }),
         );
         await Promise.all(promises);
-        ft.variants = ft.environments[0].variants;
         return ft;
     }
 

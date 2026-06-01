@@ -103,15 +103,6 @@ export const featureSearchResponseSchema = {
             example: '2023-01-29T15:21:39.975Z',
             description: 'The date the feature was archived',
         },
-        lastSeenAt: {
-            type: 'string',
-            format: 'date-time',
-            nullable: true,
-            deprecated: true,
-            example: '2023-01-28T16:21:39.975Z',
-            description:
-                'The date when metrics where last collected for the feature. This field was deprecated in v5 and will be removed in a future release, use the one in featureEnvironmentSchema',
-        },
         environments: {
             type: 'array',
             items: {
@@ -127,23 +118,6 @@ export const featureSearchResponseSchema = {
             items: {
                 type: 'string',
             },
-        },
-        variants: {
-            type: 'array',
-            items: {
-                $ref: '#/components/schemas/variantSchema',
-            },
-            description:
-                'The list of feature variants. This field was deprecated in v5',
-            deprecated: true,
-        },
-        strategies: {
-            type: 'array',
-            items: {
-                type: 'object',
-            },
-            description: 'This is a legacy field that was deprecated in v5',
-            deprecated: true,
         },
         tags: {
             type: 'array',

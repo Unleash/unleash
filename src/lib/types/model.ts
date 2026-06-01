@@ -71,7 +71,6 @@ export interface FeatureToggleDTO {
     archivedAt?: Date;
     createdAt?: Date;
     impressionData?: boolean;
-    variants?: IVariant[];
     tags?: ITag[];
     createdByUserId?: number;
     createdBy?: {
@@ -83,7 +82,6 @@ export interface FeatureToggleDTO {
 
 export interface FeatureToggle extends FeatureToggleDTO {
     project: string;
-    lastSeenAt?: Date;
     createdAt?: Date;
 }
 
@@ -292,7 +290,6 @@ export interface IFeatureOverview {
     type: string;
     stale: boolean;
     createdAt: Date;
-    lastSeenAt: Date;
     environments: IEnvironmentOverview[];
     lifecycle?: IFeatureLifecycleStage;
 }

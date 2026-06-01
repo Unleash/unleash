@@ -202,73 +202,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         throw new NotFoundError('Could not find feature to update');
     }
 
-    async setLastSeen(data: LastSeenInput[]): Promise<void> {
-        const envArrays = data.reduce(
-            (acc: EnvironmentFeatureNames, feature: LastSeenInput) => {
-                const { environment, featureName } = feature;
-
-                if (!acc[environment]) {
-                    acc[environment] = [];
-                }
-
-                acc[environment].push(featureName);
-
-                return acc;
-            },
-            {},
-        );
-
-        for (const env of Object.keys(envArrays)) {
-            const toggleNames = envArrays[env];
-            if (toggleNames && Array.isArray(toggleNames)) {
-                toggleNames.forEach((t) => {
-                    const toUpdate = this.features.find((f) => f.name === t);
-                    if (toUpdate) {
-                        toUpdate.lastSeenAt = new Date();
-                    }
-                });
-            }
-        }
-    }
-
-    async getAllVariants(): Promise<IFeatureEnvironment[]> {
-        const features = await this.getAll();
-        const variants = features.flatMap((feature) => ({
-            featureName: feature.name,
-            environment: 'development',
-            variants: feature.variants,
-            enabled: true,
-        }));
-        return Promise.resolve(variants);
-    }
-
-    async getVariantsForEnv(
-        featureName: string,
-        _environment_name: string,
-    ): Promise<IVariant[]> {
-        const feature = await this.get(featureName);
-        // there's no way to filter by environment in the fake store
-        return feature.variants as IVariant[];
-    }
-
-    async saveVariants(
-        _project: string,
-        featureName: string,
-        newVariants: IVariant[],
-    ): Promise<FeatureToggle> {
-        const feature = await this.get(featureName);
-        feature.variants = newVariants;
-        return feature;
-    }
-
-    async saveVariantsOnEnv(
-        featureName: string,
-        _environment: string,
-        newVariants: IVariant[],
-    ): Promise<IVariant[]> {
-        await this.saveVariants('default', featureName, newVariants);
-        return Promise.resolve(newVariants);
-    }
+    async setLastSeen(data: LastSeenInput[]): Promise<void> {}
 
     async countByDate(queryModifiers: {
         archived?: boolean;
@@ -303,13 +237,6 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
                 featureDate <= new Date(queryModifiers.range[1]).getTime()
             );
         }).length;
-    }
-
-    dropAllVariants(): Promise<void> {
-        this.features.forEach((feature) => {
-            feature.variants = [];
-        });
-        return Promise.resolve();
     }
 
     updatePotentiallyStaleFeatures(): Promise<

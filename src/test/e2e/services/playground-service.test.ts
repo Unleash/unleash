@@ -123,7 +123,6 @@ export const seedDatabaseForPlaygroundTest = async (
                 {
                     ...feature,
                     createdAt: undefined,
-                    variants: [],
                     description: undefined,
                     impressionData: false,
                     createdByUserId: 9999,

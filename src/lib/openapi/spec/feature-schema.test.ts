@@ -4,16 +4,6 @@ import type { FeatureSchema } from './feature-schema.js';
 test('featureSchema', () => {
     const data: FeatureSchema = {
         name: 'a',
-        variants: [
-            {
-                name: 'a',
-                weight: 1,
-                weightType: 'fix',
-                stickiness: 'a',
-                overrides: [{ contextName: 'a', values: ['a'] }],
-                payload: { type: 'string', value: 'b' },
-            },
-        ],
         environments: [
             {
                 name: 'a',

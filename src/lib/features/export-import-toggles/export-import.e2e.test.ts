@@ -784,9 +784,14 @@ const importWithMultipleFeatures: ImportTogglesSchema = {
     environment: DEFAULT_ENV,
 };
 
-const getFeature = async (feature: string) =>
+const getFeature = async (
+    feature: string,
+    variantEnvironments: boolean = false,
+) =>
     app.request
-        .get(`/api/admin/projects/${DEFAULT_PROJECT}/features/${feature}`)
+        .get(
+            `/api/admin/projects/${DEFAULT_PROJECT}/features/${feature}?variantEnvironments=${variantEnvironments}`,
+        )
         .expect(200);
 
 const getFeatureEnvironment = (feature: string) =>
@@ -1351,11 +1356,25 @@ test('should import features from file', async () => {
         DEFAULT_PROJECT,
         DEFAULT_ENV,
     );
-    const { body: importedFeature } = await getFeature(defaultFeatureName);
+    const { body: importedFeature } = await getFeature(
+        defaultFeatureName,
+        true,
+    );
     expect(importedFeature).toMatchObject({
+        environments: [
+            {
+                name: DEFAULT_ENV,
+                lastSeenAt: null,
+                enabled: true,
+                yes: 0,
+                no: 0,
+                type: 'production',
+                sortOrder: 9999,
+                variants,
+            },
+        ],
         name: defaultFeatureName,
         project: DEFAULT_PROJECT,
         type: 'release',
-        variants,
     });
 });

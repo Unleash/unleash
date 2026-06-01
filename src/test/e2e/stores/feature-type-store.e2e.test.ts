@@ -17,9 +17,9 @@ afterAll(async () => {
     await db.destroy();
 });
 
-test('should have 5 default types', async () => {
+test('should have 6 default types', async () => {
     const types = await featureTypeStore.getAll();
-    expect(types.length).toBe(5);
+    expect(types.length).toBe(6);
     expect(types[0].name).toBe('Release');
 });
 
@@ -38,7 +38,7 @@ test('should be possible to delete by id', async () => {
     const deleteType = types.pop()!;
     await featureTypeStore.delete(deleteType.id);
     const typesAfterDelete = await featureTypeStore.getAll();
-    expect(typesAfterDelete.length).toBe(4);
+    expect(typesAfterDelete.length).toBe(5);
 });
 
 describe('update lifetimes', () => {

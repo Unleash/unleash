@@ -1,3 +1,4 @@
+import { AUTH_PROVIDERS_CATALOG } from '../../types/settings/auth-settings.js';
 import { sha256 } from 'js-sha256';
 import type { IUnleashConfig } from '../../types/option.js';
 import type {
@@ -276,7 +277,7 @@ export class InstanceStatsService {
     async hasOIDC(): Promise<boolean> {
         return this.memorize('hasOIDC', async () => {
             const settings = await this.settingStore.get<{ enabled: boolean }>(
-                'unleash.enterprise.auth.oidc',
+                AUTH_PROVIDERS_CATALOG.OIDC.configId,
             );
 
             return settings?.enabled || false;
@@ -286,7 +287,7 @@ export class InstanceStatsService {
     async hasSAML(): Promise<boolean> {
         return this.memorize('hasSAML', async () => {
             const settings = await this.settingStore.get<{ enabled: boolean }>(
-                'unleash.enterprise.auth.saml',
+                AUTH_PROVIDERS_CATALOG.SAML.configId,
             );
 
             return settings?.enabled || false;
@@ -296,7 +297,7 @@ export class InstanceStatsService {
     async hasPasswordAuth(): Promise<boolean> {
         return this.memorize('hasPasswordAuth', async () => {
             const settings = await this.settingStore.get<{ disabled: boolean }>(
-                'unleash.auth.simple',
+                AUTH_PROVIDERS_CATALOG.Simple.configId,
             );
 
             return (

@@ -15,6 +15,7 @@ const USER_LOGIN = 'user-login' as const;
 const EXCEEDS_LIMIT = 'exceeds-limit' as const;
 const REQUEST_ORIGIN = 'request_origin' as const;
 const ADDON_EVENTS_HANDLED = 'addon-event-handled' as const;
+const AUTH_LOGIN_COMPLETED = 'auth-login-completed' as const;
 const CLIENT_METRICS_NAMEPREFIX = 'client-api-nameprefix';
 const CLIENT_METRICS_TAGS = 'client-api-tags';
 const CLIENT_METRICS_PROJECT = 'client-api-project';
@@ -107,6 +108,7 @@ export {
     EXCEEDS_LIMIT,
     REQUEST_ORIGIN,
     ADDON_EVENTS_HANDLED,
+    AUTH_LOGIN_COMPLETED,
     CLIENT_METRICS_NAMEPREFIX,
     CLIENT_METRICS_TAGS,
     CLIENT_METRICS_PROJECT,

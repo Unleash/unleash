@@ -22,7 +22,7 @@ func main() {
         panic(err)
     }
     defer unleash.Close()
-    unleash.WaitForReady()
+    unleash.WaitForReady() // optional: blocks until first sync
 
     if unleash.IsEnabled("<YOUR_FLAG>", unleash.FeatureOptions{}) {
         // New behaviour

@@ -113,38 +113,37 @@ export const AccessOverviewList = ({
     groups: IGroup[] | undefined;
 }) => {
     const { searchQuery } = useSearchHighlightContext();
-
-    const list = (
-        <StyledList>
-            {categories.map((category) => (
-                <>
-                    <li key={category.label}>
-                        <strong>{category.label}</strong>
-                    </li>
-                    <StyledList>
-                        {category.permissions.map((permission) => (
-                            <li key={permission.name}>
-                                <div>
-                                    <Highlighter search={searchQuery}>
-                                        {permission.displayName}
-                                    </Highlighter>
-                                </div>
-                                <PermissionStatus
-                                    hasPermission={permission.hasPermission}
-                                    permission={permission.name}
-                                    rootRole={rootRole}
-                                    roles={roles}
-                                    groups={groups}
-                                />
-                            </li>
-                        ))}
-                    </StyledList>
-                </>
-            ))}
-        </StyledList>
+    return (
+        <Box sx={{ maxHeight: 500, overflow: 'auto' }}>
+            <StyledList>
+                {categories.map((category) => (
+                    <>
+                        <li key={category.label}>
+                            <strong>{category.label}</strong>
+                        </li>
+                        <StyledList>
+                            {category.permissions.map((permission) => (
+                                <li key={permission.name}>
+                                    <div>
+                                        <Highlighter search={searchQuery}>
+                                            {permission.displayName}
+                                        </Highlighter>
+                                    </div>
+                                    <PermissionStatus
+                                        hasPermission={permission.hasPermission}
+                                        permission={permission.name}
+                                        rootRole={rootRole}
+                                        roles={roles}
+                                        groups={groups}
+                                    />
+                                </li>
+                            ))}
+                        </StyledList>
+                    </>
+                ))}
+            </StyledList>
+        </Box>
     );
-
-    return <Box sx={{ maxHeight: 500, overflow: 'auto' }}>{list}</Box>;
 };
 
 const RoleDescription = ({

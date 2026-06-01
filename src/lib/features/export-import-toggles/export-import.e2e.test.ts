@@ -960,12 +960,20 @@ test('can update toggles on subsequent import', async () => {
         },
     });
 
-    const { body: importedFeature } = await getFeature(defaultFeatureName);
+    const { body: importedFeature } = await getFeature(
+        defaultFeatureName,
+        true,
+    );
     expect(importedFeature).toMatchObject({
         name: defaultFeatureName,
         project: DEFAULT_PROJECT,
         type: 'operational',
-        variants,
+        environments: [
+            {
+                name: DEFAULT_ENV,
+                variants,
+            },
+        ],
     });
 
     const { body: importedFeatureEnvironment } =

@@ -620,6 +620,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         });
 
         const flag = this.rowToFeature(row[0]);
+        flag.variants = newVariants;
 
         return flag;
     }

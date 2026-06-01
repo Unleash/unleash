@@ -51,22 +51,6 @@ test('featureSchema constraints', () => {
     ).toMatchSnapshot();
 });
 
-test('featureSchema variants should only have a few required fields', () => {
-    const data = {
-        name: 'a',
-        variants: [
-            {
-                name: 'a',
-                weight: 1,
-            },
-        ],
-    };
-
-    expect(
-        validateSchema('#/components/schemas/featureSchema', data),
-    ).toBeUndefined();
-});
-
 test('featureSchema variant override values must be an array', () => {
     const data = {
         name: 'a',

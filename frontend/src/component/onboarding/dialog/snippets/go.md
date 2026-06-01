@@ -1,6 +1,6 @@
 1\. Install the SDK
 ```sh
-go get github.com/Unleash/unleash-client-go/v4
+go get github.com/Unleash/unleash-go-sdk/v6@latest
 ```
 
 2\. Run Unleash
@@ -8,50 +8,62 @@ go get github.com/Unleash/unleash-client-go/v4
 package main
 
 import (
-    "github.com/Unleash/unleash-client-go/v4"
+    unleash "github.com/Unleash/unleash-go-sdk/v6"
     "net/http"
-    "time"
 )
 
-func init() {
+func main() {
     unleash.Initialize(
-        unleash.WithListener(&unleash.DebugListener{}),
         unleash.WithAppName("unleash-onboarding-golang"),
         unleash.WithUrl("<YOUR_API_URL>"),
         unleash.WithCustomHeaders(http.Header{"Authorization": {"<YOUR_API_TOKEN>"}}), // in production use environment variable
     )
-}
+    defer unleash.Close()
+    
+    unleash.WaitForReady()
 
-func main() {
-    for {
-        unleash.IsEnabled("<YOUR_FLAG>")
-        time.Sleep(time.Second)
+    if unleash.IsEnabled("<YOUR_FLAG>", unleash.FeatureOptions{}) {
+        // New behaviour
     }
 }
 ```
 
 ---
 ```go
-func init() {
+package main
+
+import (
+    unleash "github.com/Unleash/unleash-go-sdk/v6"
+    "net/http"
+    "os"
+)
+
+func main() {
     unleash.Initialize(
-        unleash.WithListener(&unleash.DebugListener{}),
         unleash.WithAppName("unleash-onboarding-golang"),
         unleash.WithUrl("<YOUR_API_URL>"),
         unleash.WithCustomHeaders(http.Header{
             "Authorization": {os.Getenv("UNLEASH_API_KEY")},
-        })
+        }),
     )
+    defer unleash.Close()
+
+    unleash.WaitForReady()
+
+    if unleash.IsEnabled("<YOUR_FLAG>", unleash.FeatureOptions{}) {
+        // New behaviour
+    }
 }
 ```
 
 ---
-- [SDK repository with documentation](https://github.com/Unleash/unleash-client-go)
+- [SDK repository with documentation](https://github.com/Unleash/unleash-go-sdk)
 - [Go SDK example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/Go)
 
 ---
 
 ```go
-if unleash.IsEnabled("<YOUR_FLAG>") {
+if unleash.IsEnabled("<YOUR_FLAG>", unleash.FeatureOptions{}) {
     fmt.Println("<YOUR_FLAG> is enabled")
 } else {
     fmt.Println("<YOUR_FLAG> is disabled")

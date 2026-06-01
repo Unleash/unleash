@@ -66,7 +66,6 @@ export type IFlagKey =
     | 'safeguards'
     | 'newInUnleash'
     | 'oidcPkceSupport'
-    | 'remoteMcpServer'
     | 'flightRecorder'
     | 'regexConstraintOperator'
     | 'enterpriseEdgeTokensList'
@@ -306,10 +305,6 @@ const flags: IFlags = {
     ),
     newInUnleash: parseEnvVarBooleanOrStringVariant(
         process.env.UNLEASH_EXPERIMENTAL_NEW_IN_UNLEASH,
-        false,
-    ),
-    remoteMcpServer: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_REMOTE_MCP_SERVER,
         false,
     ),
     flightRecorder: parseEnvVarBoolean(

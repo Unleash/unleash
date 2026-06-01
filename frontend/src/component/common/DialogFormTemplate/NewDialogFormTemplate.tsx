@@ -351,7 +351,12 @@ export const NewDialogFormTemplate: React.FC<Props> = ({
             <Section sx={{ pb: 4 }}>
                 <ToggleWrapper>
                     <FormControlLabel
-                        sx={{ m: 0 }}
+                        sx={{
+                            m: 0,
+                            '& .MuiFormControlLabel-label': {
+                                fontWeight: theme.fontWeight.bold,
+                            },
+                        }}
                         control={
                             <Switch
                                 checked={impressionData}

@@ -53,7 +53,7 @@ interface ICreateFeatureDialogProps {
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
         borderRadius: theme.shape.borderRadiusLarge,
-        maxWidth: theme.spacing(170),
+        maxWidth: theme.spacing(110),
         width: '100%',
         backgroundColor: 'transparent',
     },

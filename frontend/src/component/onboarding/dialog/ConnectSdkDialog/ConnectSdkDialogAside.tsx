@@ -37,7 +37,7 @@ const StyledResourceLink = styled(Link)(({ theme }) => ({
     },
 }));
 
-export const NewConnectSdkDialogAside = () => (
+export const ConnectSdkDialogAside = () => (
     <>
         <StyledHeader>Why do I need an SDK?</StyledHeader>
         <Typography variant='body2'>

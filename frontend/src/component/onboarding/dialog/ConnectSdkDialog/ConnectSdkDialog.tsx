@@ -1,5 +1,5 @@
 import { Box, Button, styled } from '@mui/material';
-import { NewConnectSdkDialogAside } from './NewConnectSdkDialogAside';
+import { ConnectSdkDialogAside } from './ConnectSdkDialogAside';
 import { useState } from 'react';
 import { ConnectSdkDialogStep } from './ConnectSdkDialogStep';
 import type { Sdk } from '../sharedTypes';
@@ -9,6 +9,7 @@ import { GenerateApiKey } from './GenerateApiKey/GenerateApiKey';
 import { GenerateApiKeySummary } from './GenerateApiKey/GenerateApiKeySummary';
 import { ConfigureSdk } from './ConfigureSdk';
 import { DialogWithAside } from 'component/common/DialogWithAside/DialogWithAside';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledDialogFooter = styled(Box)({
     display: 'flex',
@@ -35,13 +36,25 @@ type Step = {
     summary?: React.ReactNode;
 };
 
-const InnerDialog = ({
+interface IConnectSDKDialogProps {
+    open: boolean;
+    onClose: () => void;
+    // TODO: Deprecated. Remove once we no longer need it, after we clean up `onboardingProjectSetupNewSteps`
+    onFinish?: () => void;
+    projectId: string;
+    environments: string[];
+    feature?: string;
+}
+
+export const ConnectSdkDialog = ({
     onClose,
     onFinish,
-    project: projectId, // TODO: Cleanup prop names once we remove `onboardingConnectSDKNewDialog`
+    projectId,
     environments,
     feature,
-}: Omit<IConnectSDKDialogProps, 'open'>) => {
+}: IConnectSDKDialogProps) => {
+    const { trackEvent } = usePlausibleTracker();
+
     const [currentStep, setCurrentStep] = useState(0);
     const [expandedStep, setExpandedStep] = useState(0);
 
@@ -117,6 +130,21 @@ const InnerDialog = ({
         }
     };
 
+    const onFinishClick = () => {
+        if (complete) {
+            trackEvent('onboarding', {
+                props: {
+                    eventType: 'onboarding-finished',
+                    onboardedSdk: sdk.name,
+                },
+            });
+            onFinish?.();
+            onClose();
+        }
+    };
+
+    if (!open) return null;
+
     return (
         <DialogWithAside
             open
@@ -125,7 +153,7 @@ const InnerDialog = ({
             fullHeight
             aside={
                 <StyledAsideContent>
-                    <NewConnectSdkDialogAside />
+                    <ConnectSdkDialogAside />
                 </StyledAsideContent>
             }
         >
@@ -153,9 +181,7 @@ const InnerDialog = ({
                     <Button
                         variant='contained'
                         disabled={!complete}
-                        onClick={
-                            complete ? () => onFinish(sdk.name) : undefined
-                        }
+                        onClick={onFinishClick}
                     >
                         Finish setup
                     </Button>
@@ -163,21 +189,4 @@ const InnerDialog = ({
             </StyledContent>
         </DialogWithAside>
     );
-};
-
-interface IConnectSDKDialogProps {
-    open: boolean;
-    onClose: () => void;
-    onFinish: (sdkName: string) => void;
-    project: string;
-    environments: string[];
-    feature?: string;
-}
-
-export const ConnectSdkDialog = ({
-    open,
-    ...props
-}: IConnectSDKDialogProps) => {
-    if (!open) return null;
-    return <InnerDialog {...props} />;
 };

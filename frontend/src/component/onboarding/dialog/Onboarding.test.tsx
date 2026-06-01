@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 import { render } from 'utils/testRenderer';
-import { ConnectSdkDialog } from './ConnectSdkDialog.tsx';
+import { ConnectSdkDialog } from './ConnectSdkDialog/ConnectSdkDialog.tsx';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { resizeScreen } from 'utils/resizeScreen';
@@ -32,12 +32,11 @@ test('Onboarding for SDK', async () => {
 
     render(
         <ConnectSdkDialog
-            project='default'
+            projectId='default'
             onClose={() => {}}
             open={true}
             environments={['development', 'production']}
             feature='featureA'
-            onFinish={() => {}}
         />,
     );
 

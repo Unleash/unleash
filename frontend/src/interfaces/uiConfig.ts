@@ -93,7 +93,6 @@ export type UiFlags = {
     multiMetricChart?: boolean;
     remoteMcpServer?: boolean;
     accessOverviewRework?: boolean;
-    onboardingConnectSDKNewDialog?: boolean;
     logRocketEnabled?: boolean;
     newProjectList?: boolean;
     reactRouter_v7_startTransition?: boolean;

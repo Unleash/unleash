@@ -2,7 +2,7 @@ import { expect, test } from 'vitest';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { NewCreateProjectDialog } from './NewCreateProjectDialog.tsx';
+import { CreateProjectDialog } from './CreateProjectDialog.tsx';
 import { CREATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 
 const server = testServerSetup();
@@ -37,7 +37,7 @@ test('new project modal posts the expected payload', async () => {
         201,
     );
 
-    render(<NewCreateProjectDialog open={true} onClose={() => {}} />, {
+    render(<CreateProjectDialog open={true} onClose={() => {}} />, {
         permissions: [{ permission: CREATE_PROJECT }],
     });
 
@@ -60,7 +60,7 @@ test('new project modal posts the expected payload', async () => {
 test('new project modal disables Create when limit reached', async () => {
     setupApi(1);
 
-    render(<NewCreateProjectDialog open={true} onClose={() => {}} />, {
+    render(<CreateProjectDialog open={true} onClose={() => {}} />, {
         permissions: [{ permission: CREATE_PROJECT }],
     });
 

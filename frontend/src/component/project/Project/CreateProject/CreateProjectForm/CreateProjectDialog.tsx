@@ -323,7 +323,7 @@ const ChangeRequestCheckbox: FC<ChangeRequestCheckboxProps> = ({
     );
 };
 
-export const NewCreateProjectDialog: FC<Props> = ({ open, onClose }) => {
+export const CreateProjectDialog: FC<Props> = ({ open, onClose }) => {
     const theme = useTheme();
     const navigate = useNavigate();
     const { setToastData, setToastApiError } = useToast();

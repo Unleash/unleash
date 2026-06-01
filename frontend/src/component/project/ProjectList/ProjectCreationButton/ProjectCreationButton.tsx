@@ -8,7 +8,7 @@ import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import ProPlanIcon from 'assets/icons/pro-enterprise-feature-badge.svg?react';
 import ProPlanIconLight from 'assets/icons/pro-enterprise-feature-badge-light.svg?react';
 import { CreateProjectDialog } from '../../Project/CreateProject/CreateProjectForm/CreateProjectDialog.tsx';
-import { NewCreateProjectDialog } from '../../Project/CreateProject/CreateProjectForm/NewCreateProjectDialog.tsx';
+import { LegacyCreateProjectDialog } from '../../Project/CreateProject/CreateProjectForm/LegacyCreateProjectDialog.tsx';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
@@ -96,12 +96,12 @@ export const ProjectCreationButton: FC<ProjectCreationButtonProps> = ({
                 New project
             </ResponsiveButton>
             {useNewDesign ? (
-                <NewCreateProjectDialog
+                <CreateProjectDialog
                     open={isDialogOpen}
                     onClose={() => setIsDialogOpen(false)}
                 />
             ) : (
-                <CreateProjectDialog
+                <LegacyCreateProjectDialog
                     open={isDialogOpen}
                     onClose={() => setIsDialogOpen(false)}
                 />

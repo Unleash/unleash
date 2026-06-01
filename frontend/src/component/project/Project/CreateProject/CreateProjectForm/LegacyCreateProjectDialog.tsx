@@ -24,11 +24,11 @@ import { SingleSelectConfigButton } from 'component/common/DialogFormTemplate/Co
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { useStickinessOptions } from 'hooks/useStickinessOptions';
 import { ChangeRequestTableConfigButton } from './ConfigButtons/ChangeRequestTableConfigButton.tsx';
-import { StyledDefinitionList } from './CreateProjectDialog.styles';
+import { StyledDefinitionList } from './LegacyCreateProjectDialog.styles';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import { ChangeRequestIcon } from 'component/common/ChangeRequestIcon/ChangeRequestIcon.tsx';
 
-interface ICreateProjectDialogProps {
+interface ILegacyCreateProjectDialogProps {
     open: boolean;
     onClose: () => void;
 }
@@ -108,10 +108,10 @@ const useProjectLimit = () => {
     };
 };
 
-export const CreateProjectDialog = ({
+export const LegacyCreateProjectDialog = ({
     open,
     onClose,
-}: ICreateProjectDialogProps) => {
+}: ILegacyCreateProjectDialogProps) => {
     const { createProject, loading: creatingProject } = useProjectApi();
     const { refetchUser } = useAuthUser();
     const { uiConfig } = useUiConfig();

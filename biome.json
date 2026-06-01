@@ -200,7 +200,7 @@
         "frontend/src/component/playground/Playground/PlaygroundEnvironmentTable/PlaygroundEnvironmentTable.tsx",
         "frontend/src/component/playground/Playground/PlaygroundForm/PlaygroundCodeFieldset/PlaygroundCodeFieldset.tsx",
         "frontend/src/component/project/Project/CreateProject/CreateProjectForm/ConfigButtons/ChangeRequestTable.tsx",
-        "frontend/src/component/project/Project/CreateProject/CreateProjectForm/CreateProjectDialog.tsx",
+        "frontend/src/component/project/Project/CreateProject/CreateProjectForm/LegacyCreateProjectDialog.tsx",
         "frontend/src/component/project/Project/Import/ImportModal.tsx",
         "frontend/src/component/project/Project/Import/configure/FileDropZone.tsx",
         "frontend/src/component/project/Project/Import/configure/ImportOptions.tsx",

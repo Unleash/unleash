@@ -2,7 +2,7 @@ import { expect, test } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { screen, waitFor } from '@testing-library/react';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { CreateProjectDialog } from './CreateProjectDialog.tsx';
+import { LegacyCreateProjectDialog } from './LegacyCreateProjectDialog.tsx';
 import { CREATE_PROJECT } from '../../../../providers/AccessProvider/permissions.ts';
 
 const server = testServerSetup();
@@ -24,7 +24,7 @@ const setupApi = (existingProjectsCount: number) => {
 
 test('Enabled new project button when limits, version and permission allow for it', async () => {
     setupApi(0);
-    render(<CreateProjectDialog open={true} onClose={() => {}} />, {
+    render(<LegacyCreateProjectDialog open={true} onClose={() => {}} />, {
         permissions: [{ permission: CREATE_PROJECT }],
     });
 
@@ -38,7 +38,7 @@ test('Enabled new project button when limits, version and permission allow for i
 
 test('Project limit reached', async () => {
     setupApi(1);
-    render(<CreateProjectDialog open={true} onClose={() => {}} />, {
+    render(<LegacyCreateProjectDialog open={true} onClose={() => {}} />, {
         permissions: [{ permission: CREATE_PROJECT }],
     });
 

@@ -13,14 +13,15 @@ import (
 )
 
 func main() {
-    unleash.Initialize(
+    err := unleash.Initialize(
         unleash.WithAppName("unleash-onboarding-golang"),
         unleash.WithUrl("<YOUR_API_URL>"),
         unleash.WithCustomHeaders(http.Header{"Authorization": {"<YOUR_API_TOKEN>"}}), // in production use environment variable
     )
+    if err != nil {
+        panic(err)
+    }
     defer unleash.Close()
-    
-    unleash.WaitForReady()
 
     if unleash.IsEnabled("<YOUR_FLAG>", unleash.FeatureOptions{}) {
         // New behaviour
@@ -39,16 +40,17 @@ import (
 )
 
 func main() {
-    unleash.Initialize(
+    err := unleash.Initialize(
         unleash.WithAppName("unleash-onboarding-golang"),
         unleash.WithUrl("<YOUR_API_URL>"),
         unleash.WithCustomHeaders(http.Header{
             "Authorization": {os.Getenv("UNLEASH_API_KEY")},
         }),
     )
+    if err != nil {
+        panic(err)
+    }
     defer unleash.Close()
-
-    unleash.WaitForReady()
 
     if unleash.IsEnabled("<YOUR_FLAG>", unleash.FeatureOptions{}) {
         // New behaviour

@@ -99,15 +99,15 @@ describe('Integration Metrics', () => {
 
             // Non-deprecated addons: deprecated="false", removal_target=""
             expect(output).toMatch(
-                /integration_available\{[^}]*name="webhook"[^}]*kind="addon"[^}]*deprecated="false"[^}]*removal_target=""[^}]*\} 1/,
+                /integration_available\{[^}]*name="webhook"[^}]*deprecated="false"[^}]*removal_target=""[^}]*\} 1/,
             );
             expect(output).toMatch(
-                /integration_available\{[^}]*name="slack-app"[^}]*kind="addon"[^}]*deprecated="false"[^}]*removal_target=""[^}]*\} 1/,
+                /integration_available\{[^}]*name="slack-app"[^}]*deprecated="false"[^}]*removal_target=""[^}]*\} 1/,
             );
 
             // Deprecated addon: deprecated="true", removal_target="<message>"
             expect(output).toMatch(
-                /integration_available\{[^}]*name="slack"[^}]*kind="addon"[^}]*deprecated="true"[^}]*removal_target="Use slack-app instead\. Removed in v8\."[^}]*\} 1/,
+                /integration_available\{[^}]*name="slack"[^}]*deprecated="true"[^}]*removal_target="Use slack-app instead\. Removed in v8\."[^}]*\} 1/,
             );
 
             // All auth providers are present
@@ -120,7 +120,7 @@ describe('Integration Metrics', () => {
 
                 expect(output).toMatch(
                     new RegExp(
-                        `integration_available\\{[^}]*name="${provider.name}"[^}]*kind="auth"[^}]*deprecated="${expectedDeprecated}"[^}]*removal_target="${expectedRemovalTarget}"[^}]*\\} 1`,
+                        `integration_available\\{[^}]*name="${provider.name}"[^}]*deprecated="${expectedDeprecated}"[^}]*removal_target="${expectedRemovalTarget}"[^}]*\\} 1`,
                     ),
                 );
             }
@@ -147,7 +147,7 @@ describe('Integration Metrics', () => {
 
             // Verify Google auth provider (deprecated) has removal_target
             expect(output).toMatch(
-                /integration_available\{[^}]*name="google"[^}]*kind="auth"[^}]*deprecated="true"[^}]*removal_target="v8\.0\.0"[^}]*\} 1/,
+                /integration_available\{[^}]*name="google"[^}]*deprecated="true"[^}]*removal_target="v8\.0\.0"[^}]*\} 1/,
             );
         });
 
@@ -167,14 +167,14 @@ describe('Integration Metrics', () => {
 
             // Non-deprecated addon should have empty removal_target
             expect(output).toMatch(
-                /integration_available\{[^}]*name="webhook"[^}]*kind="addon"[^}]*deprecated="false"[^}]*removal_target=""[^}]*\} 1/,
+                /integration_available\{[^}]*name="webhook"[^}]*deprecated="false"[^}]*removal_target=""[^}]*\} 1/,
             );
 
             // Non-deprecated auth providers (simple, oidc, saml) have empty removal_target
             for (const providerName of ['simple', 'oidc', 'saml']) {
                 expect(output).toMatch(
                     new RegExp(
-                        `integration_available\\{[^}]*name="${providerName}"[^}]*kind="auth"[^}]*deprecated="false"[^}]*removal_target=""[^}]*\\} 1`,
+                        `integration_available\\{[^}]*name="${providerName}"[^}]*deprecated="false"[^}]*removal_target=""[^}]*\\} 1`,
                     ),
                 );
             }
@@ -230,17 +230,17 @@ describe('Integration Metrics', () => {
             const output = await register.metrics();
 
             expect(output).toMatch(
-                /integration_configured\{[^}]*name="oidc"[^}]*kind="auth"[^}]*state="enabled"[^}]*\} 1/,
+                /integration_configured\{[^}]*name="oidc"[^}]*state="enabled"[^}]*\} 1/,
             );
             expect(output).toMatch(
-                /integration_configured\{[^}]*name="saml"[^}]*kind="auth"[^}]*state="disabled"[^}]*\} 1/,
+                /integration_configured\{[^}]*name="saml"[^}]*state="disabled"[^}]*\} 1/,
             );
             expect(output).toMatch(
-                /integration_configured\{[^}]*name="google"[^}]*kind="auth"[^}]*state="disabled"[^}]*\} 1/,
+                /integration_configured\{[^}]*name="google"[^}]*state="disabled"[^}]*\} 1/,
             );
             // simple missing => enabled by default
             expect(output).toMatch(
-                /integration_configured\{[^}]*name="simple"[^}]*kind="auth"[^}]*state="enabled"[^}]*\} 1/,
+                /integration_configured\{[^}]*name="simple"[^}]*state="enabled"[^}]*\} 1/,
             );
         });
 
@@ -255,7 +255,7 @@ describe('Integration Metrics', () => {
 
             const output = await register.metrics();
             expect(output).toMatch(
-                /integration_configured\{[^}]*name="simple"[^}]*kind="auth"[^}]*state="disabled"[^}]*\} 1/,
+                /integration_configured\{[^}]*name="simple"[^}]*state="disabled"[^}]*\} 1/,
             );
         });
 
@@ -270,7 +270,7 @@ describe('Integration Metrics', () => {
 
             const output = await register.metrics();
             expect(output).toMatch(
-                /integration_configured\{[^}]*name="simple"[^}]*kind="auth"[^}]*state="enabled"[^}]*\} 1/,
+                /integration_configured\{[^}]*name="simple"[^}]*state="enabled"[^}]*\} 1/,
             );
         });
 

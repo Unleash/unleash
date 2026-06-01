@@ -374,14 +374,10 @@ test('should collect read_only_users metrics', async () => {
 test('registerPrometheusMetrics exposes integration_available for every registered addon', async () => {
     const output = await register.metrics();
 
+    expect(output).toMatch(/integration_available\{[^}]*name="webhook"[^}]/);
+    expect(output).toMatch(/integration_available\{[^}]*name="oidc"[^}]/);
     expect(output).toMatch(
-        /integration_available\{[^}]*name="webhook"[^}]*kind="addon"/,
-    );
-    expect(output).toMatch(
-        /integration_available\{[^}]*name="oidc"[^}]*kind="auth"/,
-    );
-    expect(output).toMatch(
-        /integration_available\{[^}]*name="google"[^}]*kind="auth"[^}]*deprecated="true"/,
+        /integration_available\{[^}]*name="google"[^}]*deprecated="true"/,
     );
 });
 

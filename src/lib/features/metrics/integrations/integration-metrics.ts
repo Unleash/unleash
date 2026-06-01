@@ -24,14 +24,12 @@ interface IntegrationMetricsDeps extends IntegrationMetricsSetupOpts {
 
 interface AvailableIntegration {
     name: string;
-    kind: 'addon' | 'auth';
     deprecated: string;
     removal_target: string;
 }
 
 interface ConfiguredIntegration {
     name: string;
-    kind: 'addon' | 'auth';
     state: 'enabled' | 'disabled' | 'not_configured';
     count: number;
 }
@@ -62,13 +60,12 @@ export function registerIntegrationMetrics({
         dbMetrics,
         name: 'integration_available',
         help: 'Available integrations with this Unleash server. removal_target set if deprecated.',
-        labelNames: ['name', 'kind', 'deprecated', 'removal_target'] as const,
+        labelNames: ['name', 'deprecated', 'removal_target'] as const,
         query: async () => collectAvailableIntegrations(addonProviders),
         mapMetric: (s: AvailableIntegration) => ({
             value: 1,
             labels: {
                 name: s.name,
-                kind: s.kind,
                 deprecated: s.deprecated,
                 removal_target: s.removal_target,
             },
@@ -79,18 +76,18 @@ export function registerIntegrationMetrics({
         dbMetrics,
         name: 'integration_configured',
         help: 'Configured integrations on this Unleash server, per state.',
-        labelNames: ['name', 'kind', 'state'] as const,
+        labelNames: ['name', 'state'] as const,
         query: () => collectConfiguredIntegrations(stores, logger),
         mapMetric: (s: ConfiguredIntegration) => ({
             value: s.count,
-            labels: { name: s.name, kind: s.kind, state: s.state },
+            labels: { name: s.name, state: s.state },
         }),
     });
 
     registerAuthLoginTotalCounter(eventBus);
 }
 
-function registerGaugeWithParams<T extends { name: string; kind: string }>({
+function registerGaugeWithParams<T extends { name: string }>({
     dbMetrics,
     name,
     help,
@@ -138,7 +135,6 @@ function collectAvailableIntegrations(
     const addons = Object.values(addonProviders).map(
         ({ definition: { name, deprecated } }) => ({
             name,
-            kind: 'addon' as const,
             deprecated: String(Boolean(deprecated)),
             removal_target: typeof deprecated === 'string' ? deprecated : '',
         }),
@@ -147,7 +143,6 @@ function collectAvailableIntegrations(
     const authProviders = Object.values(AUTH_PROVIDERS_CATALOG).map(
         ({ name, deprecatedRemovalTarget }) => ({
             name,
-            kind: 'auth' as const,
             deprecated: String(Boolean(deprecatedRemovalTarget)),
             removal_target: deprecatedRemovalTarget ?? '',
         }),
@@ -185,7 +180,6 @@ export async function collectConfiguredIntegrations(
             ? [
                   {
                       name: provider,
-                      kind: 'addon' as const,
                       state: 'enabled' as const,
                       count: enabled,
                   },
@@ -195,7 +189,6 @@ export async function collectConfiguredIntegrations(
             ? [
                   {
                       name: provider,
-                      kind: 'addon' as const,
                       state: 'disabled' as const,
                       count: disabled,
                   },
@@ -214,7 +207,6 @@ export async function collectConfiguredIntegrations(
 
                     return {
                         name: provider.name,
-                        kind: 'auth' as const,
                         state: resolveAuthState(provider, row),
                         count: 1,
                     } satisfies ConfiguredIntegration;

@@ -77,7 +77,6 @@ export type IFlagKey =
     | 'multiMetricChart'
     | 'elasticEventSync'
     | 'accessOverviewRework'
-    | 'onboardingConnectSDKNewDialog'
     | 'logRocketEnabled'
     | 'newProjectList'
     | 'reactRouter_v7_relativeSplatPath'
@@ -351,10 +350,6 @@ const flags: IFlags = {
     ),
     accessOverviewRework: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ACCESS_OVERVIEW_REWORK,
-        false,
-    ),
-    onboardingConnectSDKNewDialog: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ONBOARDING_CONNECT_SDK_NEW_DIALOG,
         false,
     ),
     logRocketEnabled: parseEnvVarBoolean(

@@ -1,7 +1,7 @@
 import { Box, styled } from '@mui/material';
 import { formatAssetPath } from 'utils/formatPath';
 import { allSdks, type Sdk } from '../../sharedTypes.ts';
-import { SdkLogo } from './SdkLogo';
+import { SdkLogo } from './SdkLogo.tsx';
 
 const StyledSummary = styled(Box)(({ theme }) => ({
     display: 'flex',

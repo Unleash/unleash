@@ -40,7 +40,7 @@ import {
 import { AvatarCell } from './AvatarCell.tsx';
 import { Box, styled, useMediaQuery, useTheme } from '@mui/material';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-import { ConnectSdkDialog } from '../../../onboarding/dialog/ConnectSdkDialog.tsx';
+import { ConnectSdkDialog } from '../../../onboarding/dialog/ConnectSdkDialog/ConnectSdkDialog.tsx';
 import { ProjectOnboarding } from '../../../onboarding/flow/ProjectOnboarding.tsx';
 import { OldProjectOnboarding } from '../../../onboarding/flow/OldProjectOnboarding.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
@@ -187,18 +187,6 @@ export const ProjectFeatureToggles = ({
     const showNewOnboarding =
         onboardingFlow === 'visible' && !userCompletedOldOnboardingFlow;
     const newOnboardingSteps = useUiFlag('onboardingProjectSetupNewSteps');
-
-    // TODO: Potential cleanup when removing `onboardingConnectSDKNewDialog`. Why are we tracking this here and not in the dialog?
-    const trackOnboardingFinish = (sdkName: string) => {
-        if (!isOnboarding) {
-            trackEvent('onboarding', {
-                props: {
-                    eventType: 'onboarding-finished',
-                    onboardedSdk: sdkName,
-                },
-            });
-        }
-    };
 
     const showCleanupReminder = !tableState.lastSeenAt && !tableState.lifecycle;
     const showArchived = Boolean(tableState.archived);
@@ -656,12 +644,10 @@ export const ProjectFeatureToggles = ({
                 onClose={() => {
                     setConnectSdkOpen(false);
                 }}
-                onFinish={(sdkName: string) => {
-                    setConnectSdkOpen(false);
+                onFinish={() => {
                     setSetupCompletedState('show-setup');
-                    trackOnboardingFinish(sdkName);
                 }}
-                project={projectId}
+                projectId={projectId}
                 environments={environments}
                 feature={
                     'feature' in project.onboardingStatus

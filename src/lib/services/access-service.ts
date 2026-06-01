@@ -266,7 +266,18 @@ export class AccessService {
                     projectId,
                 ),
             })),
-            groups,
+            groups: groups.map(
+                ({ id, name, description, mappingsSSO, rootRole, scimId }) => {
+                    return {
+                        id,
+                        name,
+                        description,
+                        mappingsSSO,
+                        rootRole,
+                        scimId,
+                    };
+                },
+            ),
             environment:
                 permissions.environments
                     .find((ep) => ep.name === environment)

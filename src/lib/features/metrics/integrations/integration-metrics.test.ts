@@ -4,7 +4,7 @@ import noLogger from '../../../../test/fixtures/no-logger.js';
 import type { IAddonProviders } from '../../../addons/index.js';
 import type { IAddon } from '../../../types/stores/addon-store.js';
 import {
-    collectConfiguredSamples,
+    collectConfiguredIntegrations,
     registerIntegrationMetrics,
 } from './integration-metrics.js';
 import { AUTH_PROVIDERS_CATALOG } from '../../../types/settings/auth-settings.js';
@@ -328,7 +328,7 @@ describe('Integration Metrics', () => {
                 },
             } as any;
 
-            const samples = await collectConfiguredSamples(throwingStores);
+            const samples = await collectConfiguredIntegrations(throwingStores);
 
             // empty auth samples produced
             expect(samples).toEqual([]);

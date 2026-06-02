@@ -13,7 +13,7 @@ import { ImplementFlagInformation } from './ImplementFlagInformation.tsx';
 import { FlagUsageSnippet } from './FlagUsageSnippet.tsx';
 import { SelectSdk } from './SelectSdk.tsx';
 import { DialogWithAside } from 'component/common/DialogWithAside/DialogWithAside';
-import { ListeningStatus } from 'component/onboarding/dialog/SdkEvaluationStatus';
+import { SdkConnectionStatus } from 'component/onboarding/dialog/SdkEvaluationStatus';
 
 const LoadingContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -121,7 +121,13 @@ const DialogBody = ({ projectId, feature, onClose }: DialogBodyProps) => {
                         >
                             Test flag
                         </Typography>
-                        <ListeningStatus evaluated={evaluated} />
+                        <SdkConnectionStatus
+                            sdkConnected={evaluated}
+                            connectedTitle='Got the first evaluation!'
+                            connectedBody='Your flag is wired up. Finish setup to close this dialog.'
+                            waitingTitle='Listening for the first evaluation…'
+                            waitingBody='Run your app and evaluate your flag.'
+                        />
                     </Box>
                 </>
             )}

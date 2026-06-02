@@ -77,7 +77,12 @@ export const ConfigureSdk = ({
             </div>
             <SdkConnectionStatus
                 sdkConnected={sdkConnected}
+                connectedTitle='We received metrics from your application'
+                connectedBody='Your SDK is connected and evaluating flags.'
+                waitingTitle='Waiting for SDK data...'
+                waitingBody='Run your app and evaluate your flag. This step completes on its own.'
                 showTroubleshooting={showTroubleshooting}
+                troubleshootingText='Not seeing evaluations after ~30s? Make sure your app has started and that the client was initialized with the API key from step 2.'
             />
         </StyledSpacedContainer>
     );

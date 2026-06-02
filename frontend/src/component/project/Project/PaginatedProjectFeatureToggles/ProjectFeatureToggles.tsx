@@ -171,7 +171,7 @@ export const ProjectFeatureToggles = ({
     const [onboardingFlow, setOnboardingFlow] = useLocalStorageState<
         'visible' | 'closed'
     >(`onboarding-flow:v1-${projectId}`, 'visible');
-    const [setupCompletedState, setSetupCompletedState] = useLocalStorageState<
+    const [setupCompletedState] = useLocalStorageState<
         'hide-setup' | 'show-setup'
     >(`onboarding-state:v1-${projectId}`, 'hide-setup');
 
@@ -614,9 +614,6 @@ export const ProjectFeatureToggles = ({
                 open={connectSdkOpen}
                 onClose={() => {
                     setConnectSdkOpen(false);
-                }}
-                onFinish={() => {
-                    setSetupCompletedState('show-setup');
                 }}
                 projectId={projectId}
                 environments={environments}

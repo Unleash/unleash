@@ -121,7 +121,7 @@ export const AccessOverviewList = ({
                         <li key={category.label}>
                             <strong>{category.label}</strong>
                         </li>
-                        <StyledList>
+                        <StyledList key={`${category.label}-permissions`}>
                             {category.permissions.map((permission) => (
                                 <li key={permission.name}>
                                     <div>

@@ -70,7 +70,6 @@ export type IFlagKey =
     | 'flightRecorderSdk'
     | 'regexConstraintOperator'
     | 'enterpriseEdgeTokensList'
-    | 'impactMetricsFlagPage'
     | 'userTokenWithClientApiLoggingKillSwitch'
     | 'onlyFeatureTokensWithFeatureAPIs'
     | 'multiMetricChart'
@@ -318,10 +317,6 @@ const flags: IFlags = {
     ),
     enterpriseEdgeTokensList: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ENTERPRISE_EDGE_TOKENS_LIST,
-        false,
-    ),
-    impactMetricsFlagPage: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_IMPACT_METRICS_FLAG_PAGE,
         false,
     ),
     userTokenWithClientApiLoggingKillSwitch: parseEnvVarBoolean(

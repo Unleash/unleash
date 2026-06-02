@@ -10,7 +10,6 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureViewHeader } from './FeatureViewHeader.tsx';
 import { styled } from '@mui/material';
 import { FeatureMetricsOverview } from './FeatureMetrics/FeatureMetricsOverview.tsx';
-import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { FeatureImpactHeader } from './FeatureImpactOverview/FeatureImpactHeader';
 import { ImpactMetricModal } from '../../impact-metrics/ImpactMetricModal/ImpactMetricModal';
@@ -28,9 +27,8 @@ export const FeatureView = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
 
-    const impactMetricsFlagPage = useUiFlag('impactMetricsFlagPage');
     const { isEnterprise } = useUiConfig();
-    const showImpactMetrics = impactMetricsFlagPage && isEnterprise();
+    const showImpactMetrics = isEnterprise();
 
     const { feature, loading, error, status } = useFeature(
         projectId,

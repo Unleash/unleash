@@ -131,9 +131,24 @@ const Section = styled(Box)(({ theme }) => ({
 }));
 
 const projectModeOptions = [
-    { value: 'open', label: 'open' },
-    { value: 'protected', label: 'protected' },
-    { value: 'private', label: 'private' },
+    {
+        value: 'open',
+        label: 'Open project',
+        description:
+            'Anyone can see the project and anyone can create change requests.',
+    },
+    {
+        value: 'protected',
+        label: 'Protected project',
+        description:
+            'Anyone can see the project, but only admins and project members can submit change requests.',
+    },
+    {
+        value: 'private',
+        label: 'Private project',
+        description:
+            'Hides the project from users with the "viewer" root role who are not members of the project. Only project members and admins can submit change requests.',
+    },
 ];
 
 const useProjectLimit = () => {
@@ -439,9 +454,7 @@ export const CreateProjectDialog: FC<Props> = ({ open, onClose }) => {
 
     const stickinessLabel = projectStickiness;
 
-    const projectModeLabel =
-        projectModeOptions.find((option) => option.value === projectMode)
-            ?.label ?? projectMode;
+    const projectModeLabel = projectMode;
 
     const sidebar: ReactNode = (
         <>
@@ -526,6 +539,7 @@ export const CreateProjectDialog: FC<Props> = ({ open, onClose }) => {
                             display: 'flex',
                             gap: 2,
                             flexFlow: 'row wrap',
+                            pt: 2,
                             pb: 3,
                         }}
                     >

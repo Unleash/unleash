@@ -18,8 +18,6 @@ import type { CreateFeatureNamingPatternSchema } from 'openapi';
 import { HeaderBreadcrumb } from './HeaderBreadcrumb.tsx';
 import { DropdownList } from './ConfigButtons/DropdownList.tsx';
 import { StyledPopover } from './ConfigButtons/shared.styles';
-import { StyledTooltipContent } from './ConfigButtons/ConfigButton.styles';
-import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 
 export type ProjectOption = { label: string; value: string };
 
@@ -117,41 +115,29 @@ export const PillButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-type DropdownOption<T> = { label: string; value: T };
+type DropdownOption<T> = { label: string; value: T; description?: string };
 
 export type PillTooltip = { header: string; description: string };
 type Tooltip = PillTooltip;
 
 export const PillTrigger = ({
     label,
-    tooltip,
     onClick,
     buttonRef,
 }: {
     label: string;
-    tooltip: Tooltip;
     onClick: () => void;
     buttonRef: React.RefObject<HTMLButtonElement | null>;
 }) => (
-    <TooltipResolver
-        titleComponent={
-            <StyledTooltipContent>
-                <h3>{tooltip.header}</h3>
-                <p>{tooltip.description}</p>
-            </StyledTooltipContent>
-        }
-        variant='custom'
+    <PillButton
+        ref={buttonRef}
+        variant='outlined'
+        color='inherit'
+        onClick={onClick}
     >
-        <PillButton
-            ref={buttonRef}
-            variant='outlined'
-            color='inherit'
-            onClick={onClick}
-        >
-            <span>{label}</span>
-            <ArrowDropDownIcon />
-        </PillButton>
-    </TooltipResolver>
+        <span>{label}</span>
+        <ArrowDropDownIcon />
+    </PillButton>
 );
 
 type SinglePillProps<T> = {
@@ -177,7 +163,6 @@ export function SinglePillDropdown<T = string>({
         <>
             <PillTrigger
                 label={label}
-                tooltip={tooltip}
                 buttonRef={ref}
                 onClick={() => setAnchorEl(ref.current)}
             />
@@ -189,6 +174,7 @@ export function SinglePillDropdown<T = string>({
                 transformOrigin={{ vertical: 'top', horizontal: 'left' }}
             >
                 <DropdownList<T>
+                    header={tooltip}
                     options={options}
                     onChange={(value) => {
                         onChange(value);
@@ -235,7 +221,6 @@ export function MultiPillDropdown<T = string>({
         <>
             <PillTrigger
                 label={label}
-                tooltip={tooltip}
                 buttonRef={ref}
                 onClick={() => setAnchorEl(ref.current)}
             />
@@ -247,6 +232,7 @@ export function MultiPillDropdown<T = string>({
                 transformOrigin={{ vertical: 'top', horizontal: 'left' }}
             >
                 <DropdownList<T>
+                    header={tooltip}
                     options={options}
                     multiselect={{ selectedOptions }}
                     onChange={toggle}
@@ -343,7 +329,13 @@ export const NewDialogFormTemplate: React.FC<Props> = ({
             </Section>
 
             <Section
-                sx={{ display: 'flex', gap: 2, flexFlow: 'row wrap', pb: 3 }}
+                sx={{
+                    display: 'flex',
+                    gap: 2,
+                    flexFlow: 'row wrap',
+                    pt: 2,
+                    pb: 3,
+                }}
             >
                 {configButtons}
             </Section>

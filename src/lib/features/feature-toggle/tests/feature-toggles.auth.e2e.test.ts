@@ -11,8 +11,6 @@ import {
     CREATE_FEATURE_STRATEGY,
     RoleName,
     TEST_AUDIT_USER,
-    UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
-    WeightType,
 } from '../../../types/index.js';
 
 let app: IUnleashTest;

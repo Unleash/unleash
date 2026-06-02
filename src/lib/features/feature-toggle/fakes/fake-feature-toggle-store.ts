@@ -6,16 +6,11 @@ import NotFoundError from '../../../error/notfound-error.js';
 import type {
     FeatureToggle,
     FeatureToggleDTO,
-    IFeatureEnvironment,
     IFeatureToggleQuery,
     IFeatureTypeCount,
-    IVariant,
 } from '../../../types/model.js';
 import type { LastSeenInput } from '../../metrics/last-seen/last-seen-service.js';
-import type {
-    EnvironmentFeatureNames,
-    FeatureToggleInsert,
-} from '../feature-toggle-store.js';
+import type { FeatureToggleInsert } from '../feature-toggle-store.js';
 import type { FeatureConfigurationClient } from '../types/feature-toggle-strategies-store-type.js';
 import type { IFeatureProjectUserParams } from '../feature-toggle-controller.js';
 

@@ -7,6 +7,8 @@ import { DEFAULT_ENV, extractAuditInfoFromUser } from '../../../util/index.js';
 import type { FeatureStrategySchema } from '../../../openapi/index.js';
 import type User from '../../../types/user.js';
 import {
+    ADMIN,
+    ADMIN_TOKEN_USER,
     type IConstraint,
     type IUnleashConfig,
     type IUnleashStores,
@@ -14,10 +16,7 @@ import {
     SKIP_CHANGE_REQUEST,
     SYSTEM_USER_AUDIT,
     TEST_AUDIT_USER,
-    ADMIN_TOKEN_USER,
-    ADMIN,
 } from '../../../types/index.js';
-import type EnvironmentService from '../../project-environments/environment-service.js';
 import {
     ForbiddenError,
     NotFoundError,
@@ -32,23 +31,21 @@ import {
     createSegmentService,
 } from '../../index.js';
 import { insertLastSeenAt } from '../../../../test/e2e/helpers/test-helper.js';
-import type { EventService } from '../../../services/index.js';
 import type FeatureLinkService from '../../feature-links/feature-link-service.js';
 import {
-    beforeAll,
     afterAll,
+    beforeAll,
     beforeEach,
-    test,
-    expect,
     describe,
+    expect,
+    test,
 } from 'vitest';
+
 let stores: IUnleashStores;
 let db: ITestDb;
 let service: FeatureToggleService;
 let segmentService: ISegmentService;
 let featureLinkService: FeatureLinkService;
-let eventService: EventService;
-let environmentService: EnvironmentService;
 let unleashConfig: IUnleashConfig;
 const mockConstraints = (): IConstraint[] => {
     return Array.from({ length: 5 }).map(() => ({

@@ -82,18 +82,6 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
         <div>
             <CleanupReminder feature={feature} onChange={refetchFeature} />
             <StyledContainer>
-                <div>
-                    {!loading ? (
-                        <FeatureOverviewMetaData
-                            hiddenEnvironments={hiddenEnvironments}
-                            onEnvironmentVisibilityChange={
-                                onEnvironmentVisibilityChange
-                            }
-                            feature={feature}
-                            onChange={refetchFeature}
-                        />
-                    ) : null}
-                </div>
                 <StyledMainContent>
                     {!loading && (
                         <>
@@ -113,6 +101,18 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
                         hiddenEnvironments={hiddenEnvironments}
                     />
                 </StyledMainContent>
+                <div>
+                    {!loading ? (
+                        <FeatureOverviewMetaData
+                            hiddenEnvironments={hiddenEnvironments}
+                            onEnvironmentVisibilityChange={
+                                onEnvironmentVisibilityChange
+                            }
+                            feature={feature}
+                            onChange={refetchFeature}
+                        />
+                    ) : null}
+                </div>
                 <Routes>
                     <Route
                         path='strategies/create'

@@ -13,7 +13,7 @@ import {
     Typography,
     styled,
 } from '@mui/material';
-import { NewAccessOverviewList } from './NewAccessOverviewList';
+import { AccessOverviewList } from './AccessOverviewList';
 
 const Badge = styled(MuiBadge)({
     whiteSpace: 'nowrap',
@@ -110,7 +110,7 @@ export const RootAccessOverviewAccordion = ({
                     </StyledSecondaryLabel>
                 </StyledAccordionSummary>
                 <StyledAccordionDetails>
-                    <NewAccessOverviewList
+                    <AccessOverviewList
                         categories={categories}
                         rootRole={rootRole}
                         roles={roles ?? []}

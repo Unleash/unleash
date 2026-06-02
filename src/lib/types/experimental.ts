@@ -76,7 +76,6 @@ export type IFlagKey =
     | 'onboardingProjectSetupNewSteps'
     | 'multiMetricChart'
     | 'elasticEventSync'
-    | 'accessOverviewRework'
     | 'logRocketEnabled'
     | 'newProjectList'
     | 'reactRouter_v7_relativeSplatPath'
@@ -346,10 +345,6 @@ const flags: IFlags = {
     ),
     elasticEventSync: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ELASTIC_EVENT_SYNC,
-        false,
-    ),
-    accessOverviewRework: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ACCESS_OVERVIEW_REWORK,
         false,
     ),
     logRocketEnabled: parseEnvVarBoolean(

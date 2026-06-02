@@ -1,5 +1,5 @@
 import { Badge } from 'component/common/Badge/Badge';
-import { NewAccessOverviewAccordion } from '../AccessOverviewAccordion/NewAccessOverviewAccordion.tsx';
+import { AccessOverviewAccordion } from '../AccessOverviewAccordion/AccessOverviewAccordion.tsx';
 import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
 import { useMemo } from 'react';
 import { useUserAccessOverview } from 'hooks/api/getters/useUserAccessOverview/useUserAccessOverview';
@@ -71,7 +71,7 @@ export const ProjectAccess = ({
         ) : undefined;
 
     return (
-        <NewAccessOverviewAccordion
+        <AccessOverviewAccordion
             title={
                 <>
                     <StyledTopicOutlined fontSize='small' />
@@ -99,6 +99,6 @@ export const ProjectAccess = ({
             categories={projectCategories}
         >
             {envContent}
-        </NewAccessOverviewAccordion>
+        </AccessOverviewAccordion>
     );
 };

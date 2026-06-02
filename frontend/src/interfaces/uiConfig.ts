@@ -91,7 +91,6 @@ export type UiFlags = {
     impactMetricsFlagPage?: boolean;
     onboardingProjectSetupNewSteps?: boolean;
     multiMetricChart?: boolean;
-    accessOverviewRework?: boolean;
     logRocketEnabled?: boolean;
     newProjectList?: boolean;
     reactRouter_v7_startTransition?: boolean;

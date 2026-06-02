@@ -1299,7 +1299,7 @@ test('should accept impact metrics in frontend API metrics endpoint', async () =
             frontendApiOrigins: ['https://example.com'],
             experimental: {
                 flags: {
-                    impactMetrics: true,
+                    disableImpactMetrics: false,
                 },
             },
         },

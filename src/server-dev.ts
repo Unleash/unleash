@@ -50,7 +50,7 @@ process.nextTick(async () => {
                         uniqueSdkTracking: true,
                         strictSchemaValidation: true,
                         customMetrics: true,
-                        impactMetrics: true,
+                        disableImpactMetrics: false,
                         registerImpactMetrics: true,
                         safeguards: true,
                         regexConstraintOperator: true,

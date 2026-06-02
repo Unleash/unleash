@@ -53,7 +53,7 @@ beforeAll(async () => {
     app = await setupAppWithCustomConfig(db.stores, {
         experimental: {
             flags: {
-                impactMetrics: true,
+                disableImpactMetrics: false,
             },
         },
     });

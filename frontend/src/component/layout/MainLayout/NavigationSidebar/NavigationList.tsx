@@ -13,6 +13,7 @@ import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
 import { AdminMenuNavigation } from '../AdminMenu/AdminNavigationItems.tsx';
 import { ConfigurationAccordion } from './ConfigurationAccordion.tsx';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { useImpactMetricsEnabled } from 'component/impact-metrics/hooks/useImpactMetricsEnabled.ts';
 import { NewFeatureBadge } from 'component/layout/components/NewFeatureBadge/NewFeatureBadge.tsx';
 import { useRoutes } from './useRoutes.ts';
 
@@ -74,7 +75,7 @@ export const PrimaryNavigationList: FC<{
     );
 
     const { isOss, isEnterprise } = useUiConfig();
-    const impactMetricsEnabled = useUiFlag('impactMetrics');
+    const impactMetricsEnabled = useImpactMetricsEnabled();
     const impactViewsEnabled = useUiFlag('impactViews');
     const showChangeRequestList = isEnterprise();
 
@@ -93,7 +94,7 @@ export const PrimaryNavigationList: FC<{
             {!isOss() ? (
                 <PrimaryListItem href='/insights' text='Analytics' />
             ) : null}
-            {!isOss() && impactMetricsEnabled ? (
+            {impactMetricsEnabled ? (
                 <PrimaryListItem href='/impact-metrics' text='Impact Metrics' />
             ) : null}
             {!isOss() && impactViewsEnabled ? (

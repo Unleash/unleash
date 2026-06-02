@@ -106,10 +106,10 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "enterprise": true,
-    "flag": "impactMetrics",
     "menu": {
       "primary": true,
     },
+    "notFlag": "disableImpactMetrics",
     "path": "/impact-metrics",
     "title": "Impact metrics",
     "type": "protected",

@@ -190,10 +190,7 @@ export default class ClientMetricsController extends Controller {
                     metricsData,
                     clientIp,
                 );
-                if (
-                    this.flagResolver.isEnabled('impactMetrics') &&
-                    impactMetrics
-                ) {
+                if (impactMetrics) {
                     await this.metricsV2.registerImpactMetrics(
                         impactMetrics as Metric[],
                     );
@@ -298,11 +295,7 @@ export default class ClientMetricsController extends Controller {
                     );
                 }
 
-                if (
-                    this.flagResolver.isEnabled('impactMetrics') &&
-                    impactMetrics &&
-                    impactMetrics.length > 0
-                ) {
+                if (impactMetrics && impactMetrics.length > 0) {
                     promises.push(
                         this.metricsV2.registerImpactMetrics(impactMetrics),
                     );

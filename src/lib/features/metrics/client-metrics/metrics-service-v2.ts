@@ -253,6 +253,9 @@ export default class ClientMetricsServiceV2 {
     }
 
     async registerImpactMetrics(impactMetrics: Metric[]) {
+        if (this.flagResolver.isEnabled('disableImpactMetrics')) {
+            return;
+        }
         try {
             const value =
                 await impactMetricsSchema.validateAsync(impactMetrics);

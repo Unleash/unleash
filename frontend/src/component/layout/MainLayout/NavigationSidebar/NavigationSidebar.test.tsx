@@ -98,6 +98,7 @@ describe('order of items in navigation', () => {
                 current: { enterprise: 'version' },
             },
             environment: 'Pro',
+            flags: { disableImpactMetrics: true },
         });
 
         render(<NavigationSidebar />);
@@ -111,6 +112,7 @@ describe('order of items in navigation', () => {
                 current: { enterprise: 'version' },
             },
             environment: 'Enterprise',
+            flags: { disableImpactMetrics: true },
         });
         render(<NavigationSidebar />);
 

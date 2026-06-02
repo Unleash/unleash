@@ -151,10 +151,7 @@ export class FrontendApiService {
             impactMetrics?: Metric[];
         };
 
-        if (
-            this.config.flagResolver.isEnabled('impactMetrics') &&
-            impactMetrics
-        ) {
+        if (impactMetrics) {
             await this.services.clientMetricsServiceV2.registerImpactMetrics(
                 impactMetrics as Metric[],
             );

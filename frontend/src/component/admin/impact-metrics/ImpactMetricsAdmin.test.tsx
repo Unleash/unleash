@@ -9,7 +9,7 @@ const server = testServerSetup();
 
 beforeEach(() => {
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: { impactMetrics: true },
+        flags: {},
     });
     testServerRoute(server, '/api/admin/impact-metrics/external-source', {
         enabled: false,

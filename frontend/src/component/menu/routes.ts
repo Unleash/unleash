@@ -183,7 +183,7 @@ export const routes: IRoute[] = [
         type: 'protected',
         menu: { primary: true },
         enterprise: true,
-        flag: 'impactMetrics',
+        notFlag: 'disableImpactMetrics',
     },
 
     // Applications

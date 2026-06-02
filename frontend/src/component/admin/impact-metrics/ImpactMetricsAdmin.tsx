@@ -74,7 +74,7 @@ const DOCS_URL =
     'https://docs.getunleash.io/concepts/impact-metrics#enable-external-metrics';
 
 export const ImpactMetricsAdmin = () => {
-    const impactMetricsEnabled = useUiFlag('impactMetrics');
+    const impactMetricsEnabled = !useUiFlag('disableImpactMetrics');
 
     if (!impactMetricsEnabled) {
         return <NotFound />;

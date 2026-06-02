@@ -171,7 +171,7 @@ export const adminRoutes: INavigationMenuItem[] = [
         path: '/admin/impact-metrics',
         title: 'Impact Metrics',
         menu: { adminSettings: true },
-        flag: 'impactMetrics',
+        notFlag: 'disableImpactMetrics',
     },
 
     // Instance configuration

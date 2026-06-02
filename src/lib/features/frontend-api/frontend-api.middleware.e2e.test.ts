@@ -1109,11 +1109,6 @@ test('should accept impact metrics in frontend API metrics endpoint', async () =
         db.stores,
         {
             frontendApiOrigins: ['https://example.com'],
-            experimental: {
-                flags: {
-                    impactMetrics: true,
-                },
-            },
         },
         db.rawDatabase,
     );

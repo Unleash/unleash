@@ -56,7 +56,6 @@ export type IFlagKey =
     | 'consumptionModel'
     | 'consumptionModelUI'
     | 'customMetrics'
-    | 'impactMetrics'
     | 'registerImpactMetrics'
     | 'disableImpactMetrics'
     | 'etagByEnv'
@@ -258,10 +257,6 @@ const flags: IFlags = {
     ),
     consumptionModelUI: parseEnvVarBoolean(
         process.env.EXPERIMENTAL_CONSUMPTION_MODEL_UI,
-        false,
-    ),
-    impactMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_IMPACT_METRICS,
         false,
     ),
     registerImpactMetrics: parseEnvVarBoolean(

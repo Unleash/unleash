@@ -4,7 +4,7 @@ import { useUiFlag } from 'hooks/useUiFlag.ts';
 import { Stack } from '@mui/material';
 
 export const FeatureMetricsOverview = () => {
-    const impactMetricsEnabled = useUiFlag('impactMetrics');
+    const impactMetricsEnabled = !useUiFlag('disableImpactMetrics');
 
     return (
         <Stack spacing={2}>

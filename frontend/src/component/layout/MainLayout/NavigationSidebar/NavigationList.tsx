@@ -74,7 +74,7 @@ export const PrimaryNavigationList: FC<{
     );
 
     const { isOss, isEnterprise } = useUiConfig();
-    const impactMetricsEnabled = useUiFlag('impactMetrics');
+    const impactMetricsEnabled = !useUiFlag('disableImpactMetrics');
     const showChangeRequestList = isEnterprise();
 
     return (

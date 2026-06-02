@@ -17,6 +17,15 @@ it('counts a pre-release as lower than its release', () => {
     expect(isVersionGreaterThanOrEqual('8.0.0-beta.1', '8')).toBe(false);
 });
 
+it('supports pre-release minimum versions when fully specified', () => {
+    expect(isVersionGreaterThanOrEqual('8.0.0-beta.2', '8.0.0-beta.1')).toBe(
+        true,
+    );
+    expect(isVersionGreaterThanOrEqual('8.0.0-beta.1', '8.0.0-beta.2')).toBe(
+        false,
+    );
+    expect(isVersionGreaterThanOrEqual('8.0.0', '8.0.0-beta.2')).toBe(true);
+});
 it('returns false when either version is unparseable', () => {
     expect(isVersionGreaterThanOrEqual('not-a-version', '8')).toBe(false);
     expect(isVersionGreaterThanOrEqual('8.0.0', 'not-a-version')).toBe(false);

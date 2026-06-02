@@ -1,14 +1,15 @@
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Button, Link, Paper, styled } from '@mui/material';
+import { Button, Link, Paper, Typography, styled } from '@mui/material';
 import { basePath } from 'utils/formatPath';
 import type { IUser } from 'interfaces/user';
 import OpenInNew from '@mui/icons-material/OpenInNew';
 import { Link as RouterLink } from 'react-router-dom';
+import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
+    alignItems: 'stretch',
     padding: theme.spacing(3),
     borderRadius: theme.shape.borderRadiusMedium,
     boxShadow: theme.boxShadows.popup,
@@ -23,9 +24,40 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
     },
 }));
 
+const StyledProfileHeader = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    textAlign: 'center',
+    gap: theme.spacing(1),
+}));
+
+const StyledAvatar = styled(UserAvatar)(({ theme }) => ({
+    width: theme.spacing(7),
+    height: theme.spacing(7),
+}));
+
+const StyledName = styled(Typography)(({ theme }) => ({
+    fontWeight: theme.fontWeight.bold,
+}));
+
+const StyledEmail = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    maxWidth: '100%',
+}));
+
+const StyledPrimaryAction = styled(Button)(({ theme }) => ({
+    width: '100%',
+    height: theme.spacing(5),
+}));
+
 const StyledLink = styled(Link<typeof RouterLink | 'a'>)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: theme.spacing(1),
     padding: 0,
     color: theme.palette.links,
@@ -47,7 +79,7 @@ const StyledDivider = styled('div')(({ theme }) => ({
     width: '100%',
     height: '1px',
     backgroundColor: theme.palette.divider,
-    margin: theme.spacing(3, 0),
+    margin: theme.spacing(2.5, 0),
 }));
 
 interface IUserProfileContentProps {
@@ -67,14 +99,29 @@ export const UserProfileContent = ({
         condition={showProfile}
         show={
             <StyledPaper className='dropdown-outline' id={id}>
-                <StyledLink
+                <StyledProfileHeader>
+                    <StyledAvatar user={profile} />
+                    <div>
+                        <StyledName variant='body1'>
+                            {profile.name || profile.username}
+                        </StyledName>
+                        <StyledEmail variant='body2' title={profile.email}>
+                            {profile.email}
+                        </StyledEmail>
+                    </div>
+                </StyledProfileHeader>
+
+                <StyledDivider />
+
+                <StyledPrimaryAction
                     component={RouterLink}
                     to='/profile'
-                    underline='hover'
+                    variant='contained'
+                    color='primary'
                     onClick={() => setShowProfile(false)}
                 >
                     View profile settings
-                </StyledLink>
+                </StyledPrimaryAction>
 
                 <StyledDivider />
 

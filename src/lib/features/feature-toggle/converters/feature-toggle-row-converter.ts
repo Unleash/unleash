@@ -145,6 +145,7 @@ export class FeatureToggleRowConverter {
         feature.project = row.project;
         feature.stale = row.stale || false;
         feature.type = row.type;
+        feature.variants = row.variants || [];
         feature.project = row.project;
 
         if (this.isUnseenStrategyRow(feature, row)) {

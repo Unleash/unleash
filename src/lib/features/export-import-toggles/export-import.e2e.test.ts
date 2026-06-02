@@ -861,11 +861,13 @@ test('import features to existing project and environment', async () => {
         },
     });
 
-    const { body: importedFeature } = await getFeature(defaultFeatureName);
+    const { body: importedFeature } = await getFeature(
+        defaultFeatureName,
+        true,
+    );
     expect(importedFeature).toMatchObject({
         name: defaultFeatureName,
         project: DEFAULT_PROJECT,
-        variants,
         environments: [
             {
                 strategies: [
@@ -873,6 +875,7 @@ test('import features to existing project and environment', async () => {
                         segments: [segment.id],
                     },
                 ],
+                variants,
             },
         ],
         dependencies: [

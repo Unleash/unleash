@@ -32,6 +32,8 @@ import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureS
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 import { FeatureCopyName } from './FeatureCopyName/FeatureCopyName.tsx';
+import { useMinimumUnleashVersion } from 'hooks/useMinimumUnleashVersion';
+import { FeatureHeaderActionsKebab } from './FeatureHeaderActionsKebab';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     backgroundColor: 'none',
@@ -65,6 +67,10 @@ const LowerHeaderRow = styled(UpperHeaderRow)(({ theme }) => ({
     columnGap: 0,
     flexFlow: 'column nowrap',
     alignItems: 'flex-start',
+    '&[data-reflow-on-narrow="false"]': {
+        alignItems: 'center',
+        flexFlow: 'row nowrap',
+    },
     ...onWideHeader(theme, {
         alignItems: 'center',
         flexFlow: 'row nowrap',
@@ -226,6 +232,7 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
     const basePath = `/projects/${projectId}/features/${featureId}`;
 
     const showLegacyVariants = useLegacyVariants(feature.environments);
+    const useKebabActions = useMinimumUnleashVersion('8.0.0');
 
     const tabData = [
         {
@@ -295,8 +302,10 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
                     </StyledTitle>
                     {feature.stale ? <FeatureStatusChip stale={true} /> : null}
                 </UpperHeaderRow>
-                <LowerHeaderRow>
-                    <HeaderActionsInner showOnNarrowScreens />
+                <LowerHeaderRow data-reflow-on-narrow={!useKebabActions}>
+                    {!useKebabActions && (
+                        <HeaderActionsInner showOnNarrowScreens />
+                    )}
                     <StyledTabs
                         value={activeTab.path}
                         indicatorColor='primary'
@@ -314,7 +323,16 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
                             />
                         ))}
                     </StyledTabs>
-                    <HeaderActionsInner />
+                    {useKebabActions ? (
+                        <FeatureHeaderActionsKebab
+                            feature={feature}
+                            onFavorite={onFavorite}
+                            openStaleDialog={() => setOpenStaleDialog(true)}
+                            openDeleteDialog={() => setShowDelDialog(true)}
+                        />
+                    ) : (
+                        <HeaderActionsInner />
+                    )}
                 </LowerHeaderRow>
             </StyledHeader>
             {feature.children.length > 0 ? (

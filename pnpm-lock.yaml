@@ -510,8 +510,8 @@ importers:
         specifier: 5.1.0-beta.2
         version: 5.1.0-beta.2(unleash-proxy-client@3.8.0)
       '@vitejs/plugin-react':
-        specifier: 6.0.1
-        version: 6.0.1(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.2)(rolldown@1.0.0-rc.17)(vite@8.0.10(@types/node@22.19.19)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4)))(vite@8.0.10(@types/node@22.19.19)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4))
+        specifier: 6.0.2
+        version: 6.0.2(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.2)(rolldown@1.0.0-rc.17)(vite@8.0.10(@types/node@22.19.19)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4)))(vite@8.0.10(@types/node@22.19.19)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4))
       cartesian:
         specifier: ^1.0.1
         version: 1.0.1
@@ -1882,8 +1882,8 @@ packages:
   '@rolldown/pluginutils@1.0.0-rc.17':
     resolution: {integrity: sha512-n8iosDOt6Ig1UhJ2AYqoIhHWh/isz0xpicHTzpKBeotdVsTEcxsSA/i3EVM7gQAj0rU27OLAxCjzlj15IWY7bg==}
 
-  '@rolldown/pluginutils@1.0.0-rc.7':
-    resolution: {integrity: sha512-qujRfC8sFVInYSPPMLQByRh7zhwkGFS4+tyMQ83srV1qrxL4g8E2tyxVVyxd0+8QeBM1mIk9KbWxkegRr76XzA==}
+  '@rolldown/pluginutils@1.0.1':
+    resolution: {integrity: sha512-2j9bGt5Jh8hj+vPtgzPtl72j0yRxHAyumoo6TNfAjsLB04UtpSvPbPcDcBMxz7n+9CYB0c1GxQFxYRg2jimqGw==}
 
   '@rollup/pluginutils@5.3.0':
     resolution: {integrity: sha512-5EdhGZtnu3V88ces7s53hhfK5KSASnJZv8Lulpc04cWO3REESroJXg73DFsOmgbU2BhwV0E20bu2IDZb3VKW4Q==}
@@ -2423,8 +2423,8 @@ packages:
     peerDependencies:
       unleash-proxy-client: 3.8.0-beta.3
 
-  '@vitejs/plugin-react@6.0.1':
-    resolution: {integrity: sha512-l9X/E3cDb+xY3SWzlG1MOGt2usfEHGMNIaegaUGFsLkb3RCn/k8/TOXBcab+OndDI4TBtktT8/9BwwW8Vi9KUQ==}
+  '@vitejs/plugin-react@6.0.2':
+    resolution: {integrity: sha512-DlSMqo4WhThw4vB8Mpn0Woe9J+Jfq1geJ61AKW0QEgLzGMNwtIMdxbDUzLxcun8W7NbJO0e2Jg/Nxm3cCSVzzg==}
     engines: {node: ^20.19.0 || >=22.12.0}
     peerDependencies:
       '@rolldown/plugin-babel': ^0.1.7 || ^0.2.0
@@ -7874,7 +7874,7 @@ snapshots:
 
   '@rolldown/pluginutils@1.0.0-rc.17': {}
 
-  '@rolldown/pluginutils@1.0.0-rc.7': {}
+  '@rolldown/pluginutils@1.0.1': {}
 
   '@rollup/pluginutils@5.3.0':
     dependencies:
@@ -8544,9 +8544,9 @@ snapshots:
     dependencies:
       unleash-proxy-client: 3.8.0
 
-  '@vitejs/plugin-react@6.0.1(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.2)(rolldown@1.0.0-rc.17)(vite@8.0.10(@types/node@22.19.19)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4)))(vite@8.0.10(@types/node@22.19.19)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4))':
+  '@vitejs/plugin-react@6.0.2(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.2)(rolldown@1.0.0-rc.17)(vite@8.0.10(@types/node@22.19.19)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4)))(vite@8.0.10(@types/node@22.19.19)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4))':
     dependencies:
-      '@rolldown/pluginutils': 1.0.0-rc.7
+      '@rolldown/pluginutils': 1.0.1
       vite: 8.0.10(@types/node@22.19.19)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4)
     optionalDependencies:
       '@rolldown/plugin-babel': 0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.2)(rolldown@1.0.0-rc.17)(vite@8.0.10(@types/node@22.19.19)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4))

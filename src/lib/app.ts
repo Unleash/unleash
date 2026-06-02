@@ -9,7 +9,6 @@ import {
     corsOriginMiddleware,
 } from './middleware/index.js';
 import rbacMiddleware from './middleware/rbac-middleware.js';
-import { apiAccessMiddleware } from './middleware/api-token-middleware.js';
 import type { IUnleashServices } from './services/index.js';
 import { IAuthType, type IUnleashConfig } from './types/option.js';
 import type { IUnleashStores } from './types/index.js';
@@ -136,7 +135,6 @@ export default async function getApp(
         `${baseUriPath}/api/client`,
         backendApiAccessMiddleware(config, services),
     );
-    app.use(baseUriPath, apiAccessMiddleware(config, services));
 
     switch (config.authentication.type) {
         case IAuthType.OPEN_SOURCE: {

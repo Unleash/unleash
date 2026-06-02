@@ -2,10 +2,12 @@ import { ApiTokenType } from '../types/model.js';
 import type { IUnleashConfig } from '../types/option.js';
 import type { IApiRequest, IAuthRequest } from '../routes/unleash-types.js';
 import type { IUnleashServices } from '../services/index.js';
-import {
-    NO_TOKEN_WHERE_TOKEN_WAS_REQUIRED,
-    TOKEN_TYPE_ERROR_MESSAGE,
-} from './api-token-middleware.js';
+
+const TOKEN_TYPE_ERROR_MESSAGE =
+    'invalid token: expected a different token type for this endpoint';
+
+const NO_TOKEN_WHERE_TOKEN_WAS_REQUIRED =
+    'This endpoint requires an API token. Please add an authorization header to your request with a valid token';
 
 export const frontendApiAccessMiddleware = (
     {

@@ -1,6 +1,6 @@
 1\. Install the SDK
 ```sh
-cargo add unleash-api-client --features async-std,reqwest
+cargo add unleash-api-client --features reqwest
 cargo add serde --features derive
 cargo add reqwest@0.12 --features json
 cargo add tokio --features full

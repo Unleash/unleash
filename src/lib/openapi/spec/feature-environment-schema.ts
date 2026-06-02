@@ -117,8 +117,7 @@ export const featureEnvironmentSchema = {
         },
         releasePlans: {
             type: 'array',
-            description:
-                'Release plans for this feature environment',
+            description: 'Release plans for this feature environment',
             items: {
                 $ref: '#/components/schemas/releasePlanSchema',
             },

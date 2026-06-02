@@ -111,9 +111,7 @@ interface IReleasePlanMilestoneStatusProps {
     environmentId?: string;
 }
 
-const getStatusText = (
-    status: MilestoneStatus,
-): string => {
+const getStatusText = (status: MilestoneStatus): string => {
     switch (status.type) {
         case 'active':
             return 'Running';
@@ -137,15 +135,10 @@ const getStatusIcon = (status: MilestoneStatus) => {
     }
 };
 
-const getStatusButton = (
-    status: MilestoneStatus,
-) => {
+const getStatusButton = (status: MilestoneStatus) => {
     if (status.type === 'active') return ActiveStatusButton;
     if (status.type === 'paused') return PausedStatusButton;
-    if (
-        status.type === 'not-started' &&
-        status.scheduledAt
-    ) {
+    if (status.type === 'not-started' && status.scheduledAt) {
         return ScheduledStatusButton;
     }
     if (status.type === 'completed') return CompletedStatusButton;
@@ -173,9 +166,7 @@ export const ReleasePlanMilestoneStatus = ({
     const isActionable =
         status.type === 'not-started' || status.type === 'completed';
     const disabled = !isActionable || !hasAccess;
-    const isScheduled =
-        status.type === 'not-started' &&
-        status.scheduledAt;
+    const isScheduled = status.type === 'not-started' && status.scheduledAt;
 
     const handleClick = (e: React.MouseEvent) => {
         e.stopPropagation();

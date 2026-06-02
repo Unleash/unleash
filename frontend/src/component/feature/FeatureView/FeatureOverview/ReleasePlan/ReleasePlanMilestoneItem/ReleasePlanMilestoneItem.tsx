@@ -163,8 +163,7 @@ export const ReleasePlanMilestoneItem = ({
     const pendingProgressionChange = getPendingProgressionChange(milestone.id);
     const effectiveTransitionCondition = milestone.transitionCondition;
 
-    const shouldShowAutomation =
-        isNotLastMilestone && !readonly;
+    const shouldShowAutomation = isNotLastMilestone && !readonly;
 
     const automationSection = shouldShowAutomation ? (
         <MilestoneAutomation

@@ -3,15 +3,25 @@ import semverCoerce from 'semver/functions/coerce';
 import semverValid from 'semver/functions/valid';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
+const validOrCoerced = (version: string): string | undefined => {
+    return (
+        semverValid(version) ??
+        semverCoerce(version, { includePrerelease: true })?.version
+    );
+};
+
 export const isVersionGreaterThanOrEqual = (
     currentVersion: string,
     minimumVersion: string,
 ): boolean => {
-    const minimum = semverCoerce(minimumVersion);
-    if (!minimum || !semverValid(currentVersion)) {
-        return false;
+    const minimum = validOrCoerced(minimumVersion);
+    const current = validOrCoerced(currentVersion);
+
+    if (minimum && current) {
+        return semverGte(current, minimum);
     }
-    return semverGte(currentVersion, minimum.version);
+
+    return false;
 };
 
 export const useMinimumUnleashVersion = (minimumVersion: string): boolean => {

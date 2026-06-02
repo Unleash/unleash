@@ -30,7 +30,7 @@ root.render(
 ```jsx
 import { useFlag } from '@unleash/proxy-client-react';
 
-const TestComponent = () => {
+export const TestComponent = () => {
     const enabled = useFlag('<YOUR_FLAG>');
 
     return enabled ? 'Flag is enabled' : 'Flag is disabled'

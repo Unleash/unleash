@@ -56,12 +56,12 @@ export type IFlagKey =
     | 'consumptionModel'
     | 'consumptionModelUI'
     | 'customMetrics'
+    | 'impactViews'
     | 'registerImpactMetrics'
     | 'disableImpactMetrics'
     | 'etagByEnv'
     | 'fetchMode'
     | 'optimizeLifecycle'
-    | 'milestoneProgression'
     | 'plausibleMetrics'
     | 'safeguards'
     | 'newInUnleash'
@@ -259,6 +259,10 @@ const flags: IFlags = {
         process.env.EXPERIMENTAL_CONSUMPTION_MODEL_UI,
         false,
     ),
+    impactViews: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_IMPACT_VIEWS,
+        false,
+    ),
     registerImpactMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_REGISTER_IMPACT_METRICS,
         false,
@@ -285,11 +289,6 @@ const flags: IFlags = {
             false,
         ),
     },
-    milestoneProgression: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_MILESTONE_PROGRESSION,
-        false,
-    ),
-
     plausibleMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PLAUSIBLE_METRICS,
         false,

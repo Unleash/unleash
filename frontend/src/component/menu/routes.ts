@@ -45,6 +45,7 @@ import { PaginatedApplicationList } from '../application/ApplicationList/Paginat
 import { AddonRedirect } from 'component/integrations/AddonRedirect/AddonRedirect';
 import { Insights } from '../insights/Insights.jsx';
 import { LazyImpactMetricsPage } from '../impact-metrics/LazyImpactMetricsPage.tsx';
+import { LazyImpactViewsPage } from '../impact-views/LazyImpactViewsPage.tsx';
 import { FeedbackList } from '../feedbackNew/FeedbackList.jsx';
 import { Application } from 'component/application/Application';
 import { Signals } from 'component/signals/Signals';
@@ -184,6 +185,17 @@ export const routes: IRoute[] = [
         menu: { primary: true },
         enterprise: true,
         notFlag: 'disableImpactMetrics',
+    },
+
+    // Impact Views
+    {
+        path: '/impact-views',
+        title: 'Impact views',
+        component: LazyImpactViewsPage,
+        type: 'protected',
+        menu: { primary: true },
+        enterprise: true,
+        flag: 'impactViews',
     },
 
     // Applications

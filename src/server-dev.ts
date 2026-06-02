@@ -52,7 +52,6 @@ process.nextTick(async () => {
                         customMetrics: true,
                         disableImpactMetrics: false,
                         registerImpactMetrics: true,
-                        milestoneProgression: true,
                         safeguards: true,
                         regexConstraintOperator: true,
                         onboardingProjectSetupNewSteps: true,

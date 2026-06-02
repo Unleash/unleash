@@ -78,9 +78,9 @@ export type UiFlags = {
     consumptionModelUI?: boolean;
     customMetrics?: boolean;
     disableImpactMetrics?: boolean;
+    impactViews?: boolean;
     registerImpactMetrics?: boolean;
     plausibleMetrics?: boolean;
-    milestoneProgression?: boolean;
     safeguards?: boolean;
     oidcPkceSupport?: boolean;
     extendedUsageMetrics?: boolean;

@@ -332,7 +332,7 @@ test('hides new onboarding when project is onboarded and setup state is hide-set
     expect(screen.queryByText('Project setup')).not.toBeInTheDocument();
 }, 10000);
 
-test('keeps new onboarding visible right after SDK connection before user dismisses', async () => {
+test('keeps onboarding visible for users with old-flow show-setup localStorage state', async () => {
     const projectId = 'default';
     setupApi();
     testServerRoute(server, '/api/admin/ui-config', {

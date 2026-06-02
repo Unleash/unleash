@@ -22,11 +22,11 @@ export const backendApiAccessMiddleware = (
     }
 
     return async (req: IAuthRequest | IApiRequest, res, next) => {
-        const onlyFeatureTokensWithFeatureAPIs = flagResolver.isEnabled(
-            'onlyFeatureTokensWithFeatureAPIs',
+        const allowDeprecatedApiTokenMiddleware = flagResolver.isEnabled(
+            'allowDeprecatedApiTokenMiddleware',
         );
         // Defer to api-token-middleware
-        if (!onlyFeatureTokensWithFeatureAPIs) {
+        if (allowDeprecatedApiTokenMiddleware) {
             return next();
         }
 

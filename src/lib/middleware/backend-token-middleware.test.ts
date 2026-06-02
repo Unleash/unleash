@@ -12,7 +12,7 @@ test('with flag set client api should return 403 if user object is set and token
         },
         experimental: {
             flags: {
-                onlyFeatureTokensWithFeatureAPIs: true,
+                allowDeprecatedApiTokenMiddleware: true,
             },
         },
     });
@@ -56,7 +56,7 @@ test.each([
         },
         experimental: {
             flags: {
-                onlyFeatureTokensWithFeatureAPIs: true,
+                allowDeprecatedApiTokenMiddleware: true,
             },
         },
     });

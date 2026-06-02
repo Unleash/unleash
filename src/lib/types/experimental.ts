@@ -72,7 +72,6 @@ export type IFlagKey =
     | 'enterpriseEdgeTokensList'
     | 'impactMetricsFlagPage'
     | 'userTokenWithClientApiLoggingKillSwitch'
-    | 'onlyFeatureTokensWithFeatureAPIs'
     | 'onboardingProjectSetupNewSteps'
     | 'multiMetricChart'
     | 'elasticEventSync'
@@ -80,7 +79,8 @@ export type IFlagKey =
     | 'newProjectList'
     | 'reactRouter_v7_relativeSplatPath'
     | 'reactRouter_v7_startTransition'
-    | 'newModalDesign';
+    | 'newModalDesign'
+    | 'allowDeprecatedApiTokenMiddleware';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -328,10 +328,6 @@ const flags: IFlags = {
     userTokenWithClientApiLoggingKillSwitch: parseEnvVarBoolean(
         process.env
             .UNLEASH_EXPERIMENTAL_USERTOKEN_WITH_CLIENTAPI_LOGGING_KILL_SWITCH,
-        false,
-    ),
-    onlyFeatureTokensWithFeatureAPIs: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ONLY_FEATURE_TOKENS_WITH_FEATURE_APIS,
         false,
     ),
     onboardingProjectSetupNewSteps: parseEnvVarBoolean(

@@ -57,8 +57,8 @@ process.nextTick(async () => {
                         onboardingProjectSetupNewSteps: true,
                         enterpriseEdgeTokensList: true,
                         userTokenWithClientApiLoggingKillSwitch: false,
-                        onlyFeatureTokensWithFeatureAPIs: false,
                         reactRouter_v7_relativeSplatPath: true,
+                        allowDeprecatedApiTokenMiddleware: false,
                     },
                 },
                 authentication: {

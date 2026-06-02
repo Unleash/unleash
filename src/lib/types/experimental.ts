@@ -265,7 +265,7 @@ const flags: IFlags = {
     ),
     disableImpactMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_IMPACT_METRICS,
-        false,
+        true,
     ),
     streaming: {
         name: 'disabled',

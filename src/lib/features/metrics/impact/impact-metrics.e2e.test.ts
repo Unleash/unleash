@@ -50,7 +50,13 @@ const sendBulkMetricsWithImpact = async (
 
 beforeAll(async () => {
     db = await dbInit('impact_metrics', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {});
+    app = await setupAppWithCustomConfig(db.stores, {
+        experimental: {
+            flags: {
+                disableImpactMetrics: false,
+            },
+        },
+    });
 });
 
 afterAll(async () => {

@@ -211,9 +211,7 @@ test('Project is onboarded', async () => {
             route: `/projects/${projectId}`,
         },
     );
-    expect(
-        screen.queryByText('Welcome to your project'),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText('Project setup')).not.toBeInTheDocument();
 }, 10000);
 
 test('Project is not onboarded', async () => {
@@ -235,7 +233,7 @@ test('Project is not onboarded', async () => {
             route: `/projects/${projectId}`,
         },
     );
-    await screen.findByText('Welcome to your project');
+    await screen.findByText('Project setup');
 }, 10000);
 
 test('renders lifecycle quick filters', async () => {

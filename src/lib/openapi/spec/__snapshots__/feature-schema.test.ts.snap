@@ -17,17 +17,17 @@ exports[`featureSchema constraints 1`] = `
 }
 `;
 
-exports[`featureSchema variant override values must be an array 1`] = `
+exports[`featureSchema variant override values must be an array in an environment 1`] = `
 {
   "errors": [
     {
-      "instancePath": "",
-      "keyword": "additionalProperties",
-      "message": "must NOT have additional properties",
+      "instancePath": "/environments/0/variants/0/overrides/0/values",
+      "keyword": "type",
+      "message": "must be array",
       "params": {
-        "additionalProperty": "variants",
+        "type": "array",
       },
-      "schemaPath": "#/additionalProperties",
+      "schemaPath": "#/components/schemas/overrideSchema/properties/values/type",
     },
   ],
   "schema": "#/components/schemas/featureSchema",

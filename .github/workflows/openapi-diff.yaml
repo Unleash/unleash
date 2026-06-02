@@ -8,6 +8,7 @@ on:
   pull_request:
     paths:
       - src/lib/**
+      - scripts/check-edge-openapi-routes.sh
       - .github/workflows/openapi-diff.yaml
   workflow_dispatch:
     inputs:
@@ -226,3 +227,58 @@ jobs:
                 });
               }
             }
+
+  edge-openapi-routes:
+    name: Check Edge OpenAPI routes
+    runs-on: ubuntu-latest
+    needs: [generate-openapi-current]
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Download openapi-current.json
+        uses: actions/download-artifact@v8
+        with:
+          name: openapi-current
+
+      - name: Start Edge
+        run: |
+          docker pull unleashorg/unleash-edge:edge
+          docker run \
+            --detach \
+            --name unleash-edge \
+            --publish 3063:3063 \
+            --env UPSTREAM_URL=http://localhost:4242/api \
+            --env TOKENS='*:development.edge-openapi-route-check' \
+            unleashorg/unleash-edge:edge \
+            edge
+
+      - name: Download Edge OpenAPI spec
+        run: |
+          edge_ready=false
+          for i in {1..30}; do
+            if curl -fsSL -o edge-openapi.json http://localhost:3063/docs/openapi.json; then
+              echo "Edge is up!"
+              edge_ready=true
+              break
+            fi
+            echo "Waiting for Edge... attempt $i"
+            sleep 2
+          done
+
+          if [[ "$edge_ready" != "true" ]]; then
+            echo "Edge did not become ready in time."
+            docker logs unleash-edge
+            exit 1
+          fi
+
+          jq empty openapi-current.json
+          jq empty edge-openapi.json
+
+      - name: Write allowed route exceptions
+        run: |
+          cat > edge-route-exceptions.txt <<'EOF'
+          POST /api/client/metrics/custom
+          EOF
+
+      - name: Check Edge contains all required client routes
+        run: scripts/check-edge-openapi-routes.sh openapi-current.json edge-openapi.json edge-route-exceptions.txt

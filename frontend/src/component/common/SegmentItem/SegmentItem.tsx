@@ -44,7 +44,7 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     ':focus-within': {
         backgroundColor: 'inherit',
     },
-}));
+})) as typeof AccordionSummary;
 
 const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     padding: theme.spacing(0.5, 3, 2.5),
@@ -120,6 +120,13 @@ export const SegmentItem: FC<SegmentItemProps> = ({
                     id={`segment-accordion-${segment.id}`}
                     tabIndex={-1}
                     aria-controls={segmentDetailsId}
+                    sx={{
+                        '&&&': {
+                            cursor: 'default',
+                        },
+                    }}
+                    component={'div'}
+                    role={'none'}
                 >
                     <StrategyEvaluationItem type='Segment'>
                         <StyledLink to={`/segments/edit/${segment.id}`}>

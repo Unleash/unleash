@@ -115,6 +115,16 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
+    "enterprise": true,
+    "flag": "impactViews",
+    "menu": {
+      "primary": true,
+    },
+    "path": "/impact-views",
+    "title": "Impact views",
+    "type": "protected",
+  },
+  {
     "menu": {},
     "parent": "/applications",
     "path": "/applications/:name/*",

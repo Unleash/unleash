@@ -8,29 +8,29 @@ gem install unleash
 require 'unleash'
 
 @unleash = Unleash::Client.new(
-  url: "<YOUR_API_URL>",
-  custom_http_headers: { 'Authorization': "<YOUR_API_TOKEN>" },  # in production use environment variable
-  app_name: 'unleash-onboarding-ruby',
-  instance_id: 'unleash-onboarding-ruby',
+    url: "<YOUR_API_URL>",
+    custom_http_headers: { 'Authorization': "<YOUR_API_TOKEN>" },  # in production use environment variable
+    app_name: 'unleash-onboarding-ruby',
+    instance_id: 'unleash-onboarding-ruby',
 )
 
 while true
-  if @unleash.is_enabled?("<YOUR_FLAG>")
-    puts "Flag is enabled"
-  else
-    puts "Flag is not enabled"
-  end
-  sleep 3
+    if @unleash.is_enabled?("<YOUR_FLAG>")
+        puts "Flag is enabled"
+    else
+        puts "Flag is not enabled"
+    end
+    sleep 3
 end
 
 ```
 ---
 ```rb
 @unleash = Unleash::Client.new(
-  url: "<YOUR_API_URL>",
-  custom_http_headers: { 'Authorization': ENV['UNLEASH_API_TOKEN'] },
-  app_name: 'unleash-onboarding-ruby',
-  instance_id: 'unleash-onboarding-ruby',
+    url: "<YOUR_API_URL>",
+    custom_http_headers: { 'Authorization': ENV['UNLEASH_API_TOKEN'] },
+    app_name: 'unleash-onboarding-ruby',
+    instance_id: 'unleash-onboarding-ruby',
 )
 ```
 

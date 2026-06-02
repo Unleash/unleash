@@ -1,10 +1,10 @@
 1\. Install the SDK
 ```sh
-cargo add unleash-api-client --features async-std,reqwest,surf
+cargo add unleash-api-client --features async-std,reqwest
 cargo add serde --features derive
-cargo add serde reqwest --features json
-cargo add serde tokio --features full
-cargo add serde anyhow cfg cfg-if enum-map@~2.0.0 surf
+cargo add reqwest@0.12 --features json
+cargo add tokio --features full
+cargo add enum-map
 ```
 
 2\. Run Unleash

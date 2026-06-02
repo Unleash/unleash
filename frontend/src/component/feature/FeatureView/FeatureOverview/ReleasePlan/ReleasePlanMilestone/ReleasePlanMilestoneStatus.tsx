@@ -2,7 +2,6 @@ import { styled } from '@mui/material';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 import TripOriginIcon from '@mui/icons-material/TripOrigin';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
@@ -114,7 +113,6 @@ interface IReleasePlanMilestoneStatusProps {
 
 const getStatusText = (
     status: MilestoneStatus,
-    progressionsEnabled: boolean,
 ): string => {
     switch (status.type) {
         case 'active':
@@ -122,9 +120,9 @@ const getStatusText = (
         case 'paused':
             return 'Paused (disabled in environment)';
         case 'completed':
-            return progressionsEnabled ? 'Start now' : 'Restart';
+            return 'Start now';
         case 'not-started':
-            return progressionsEnabled ? 'Start now' : 'Start';
+            return 'Start now';
     }
 };
 
@@ -141,12 +139,10 @@ const getStatusIcon = (status: MilestoneStatus) => {
 
 const getStatusButton = (
     status: MilestoneStatus,
-    progressionsEnabled: boolean,
 ) => {
     if (status.type === 'active') return ActiveStatusButton;
     if (status.type === 'paused') return PausedStatusButton;
     if (
-        progressionsEnabled &&
         status.type === 'not-started' &&
         status.scheduledAt
     ) {
@@ -162,7 +158,6 @@ export const ReleasePlanMilestoneStatus = ({
     projectId,
     environmentId,
 }: IReleasePlanMilestoneStatusProps) => {
-    const milestoneProgressionsEnabled = useUiFlag('milestoneProgression');
     const hasAccess =
         projectId && environmentId
             ? useHasProjectEnvironmentAccess(
@@ -172,14 +167,13 @@ export const ReleasePlanMilestoneStatus = ({
               )
             : true;
 
-    const StatusButton = getStatusButton(status, milestoneProgressionsEnabled);
-    const statusText = getStatusText(status, milestoneProgressionsEnabled);
+    const StatusButton = getStatusButton(status);
+    const statusText = getStatusText(status);
     const statusIcon = getStatusIcon(status);
     const isActionable =
         status.type === 'not-started' || status.type === 'completed';
     const disabled = !isActionable || !hasAccess;
     const isScheduled =
-        milestoneProgressionsEnabled &&
         status.type === 'not-started' &&
         status.scheduledAt;
 

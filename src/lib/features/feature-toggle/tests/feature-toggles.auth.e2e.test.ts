@@ -11,6 +11,8 @@ import {
     CREATE_FEATURE_STRATEGY,
     RoleName,
     TEST_AUDIT_USER,
+    UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
+    WeightType,
 } from '../../../types/index.js';
 
 let app: IUnleashTest;
@@ -198,6 +200,61 @@ test('Should not be possible to clone feature flag strategies without CREATE_FEA
         await db.stores.accessStore.addPermissionsToRole(
             role.id,
             [CREATE_FEATURE_STRATEGY],
+            DEFAULT_ENV,
+        );
+    }
+});
+
+test('Should not be possible to clone feature flag variants without UPDATE_FEATURE_ENVIRONMENT_VARIANTS permission', async () => {
+    const email = 'user35@mail.com';
+    const url = '/api/admin/projects/default/features';
+    const name = 'auth.flag.clone.variants';
+    const cloneName = 'auth.flag.clone.variants.copy';
+    const role = await db.stores.roleStore.getRoleByName(RoleName.EDITOR);
+
+    await app.services.featureToggleService.createFeatureToggle(
+        'default',
+        {
+            name,
+            variants: [
+                {
+                    name: 'variant-a',
+                    weight: 1000,
+                    weightType: WeightType.FIX,
+                    stickiness: 'default',
+                },
+            ],
+        },
+        TEST_AUDIT_USER,
+        true,
+    );
+    await app.services.userService.createUser(
+        {
+            email,
+            rootRole: RoleName.EDITOR,
+        },
+        TEST_AUDIT_USER,
+    );
+
+    await db.stores.accessStore.removePermissionFromRole(
+        role.id,
+        UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
+        DEFAULT_ENV,
+    );
+
+    try {
+        await app.request.post('/auth/demo/login').send({
+            email,
+        });
+
+        await app.request
+            .post(`${url}/${name}/clone`)
+            .send({ name: cloneName })
+            .expect(403);
+    } finally {
+        await db.stores.accessStore.addPermissionsToRole(
+            role.id,
+            [UPDATE_FEATURE_ENVIRONMENT_VARIANTS],
             DEFAULT_ENV,
         );
     }

@@ -25,7 +25,6 @@ import {
 } from '../../../error/index.js';
 import type { ISegmentService } from '../../segment/segment-service-interface.js';
 import {
-    createEventsService,
     createFeatureLinkService,
     createFeatureToggleService,
     createSegmentService,
@@ -72,8 +71,6 @@ beforeAll(async () => {
     featureLinkService = createFeatureLinkService(config)(db.rawDatabase);
 
     service = createFeatureToggleService(db.rawDatabase, config);
-
-    eventService = createEventsService(db.rawDatabase, config);
 });
 
 afterAll(async () => {

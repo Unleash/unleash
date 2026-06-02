@@ -58,6 +58,7 @@ export type IFlagKey =
     | 'customMetrics'
     | 'impactMetrics'
     | 'registerImpactMetrics'
+    | 'disableImpactMetrics'
     | 'etagByEnv'
     | 'fetchMode'
     | 'optimizeLifecycle'
@@ -265,6 +266,10 @@ const flags: IFlags = {
     ),
     registerImpactMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_REGISTER_IMPACT_METRICS,
+        false,
+    ),
+    disableImpactMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DISABLE_IMPACT_METRICS,
         false,
     ),
     streaming: {

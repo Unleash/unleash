@@ -6,7 +6,7 @@ pip install UnleashClient
 2\. Run Unleash
 ```python
 from UnleashClient import UnleashClient
-import asyncio
+import time
 
 client = UnleashClient(
     url="<YOUR_API_URL>",
@@ -16,19 +16,24 @@ client = UnleashClient(
 client.initialize_client()
 
 while True:
-    print(client.is_enabled("<YOUR_FLAG>"))
-    asyncio.run(asyncio.sleep(1))
+    if client.is_enabled("<YOUR_FLAG>"):
+        print("<YOUR_FLAG> is enabled")
+    else:
+        print("<YOUR_FLAG> is disabled")
+    time.sleep(2)
 ```
 ---
 ```python
 from UnleashClient import UnleashClient
-import asyncio
 import os
 
 client = UnleashClient(
     url="<YOUR_API_URL>",
     app_name="unleash-onboarding-python",
-    custom_headers={'Authorization': os.getenv('UNLEASH_API_TOKEN')}
+    custom_headers={'Authorization': os.getenv('UNLEASH_API_TOKEN')})
+
+client.initialize_client()
+
 ```
 
 ---

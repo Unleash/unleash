@@ -39,16 +39,20 @@ Source of the view files: the `feat/exp-views` branch under
 commits — the branch carries unrelated churn) and adjust import paths to the
 co-located locations.
 
+**Current focus: get the goal-tracking view rendering with hardcoded dummy data first.**
+Simulation/synthetic-data generators, the editor, localStorage CRUD, and the system-health
+view are deferred to a later phase.
+
 | PR | Contents |
 |----|----------|
-| **1 (this PR)** | `impactViews` flag (backend `experimental.ts` + frontend `UiFlags`), `/impact-views` route, gated nav item, stub page + this README. |
-| **2** | Types & pure utilities: `views/types.ts`, `flagImpactFormatting`, `normalizeSeriesToBaseline(+test)`, `computeGoalSummary(+test)`, `computeFlagEventImpact(+test)`, `simulateFlagContribution`. |
-| **3** | New co-located getters + chart card: `hooks/useEnvironmentEvents`, `hooks/useGroupedImpactMetricsData` + `sumSeriesByTimestamp(+test)`, `hooks/MultimetricChartCard`. |
-| **4** | View-local hooks: `views/useImpactMetricViews(+test)` (the localStorage CRUD core), `useAutoFollowedFeatureNames`, `useMergedFeatureEvents`. |
-| **5** | Simple UI: `FeaturePicker`, `ImpactMetricViewsEmptyState`, `FollowedFeaturesStrip`, `TemplatePickerDialog`, `ViewSwitcher`. |
-| **6** | Data-display panels: `GoalSummaryPanel`, `TopFlagMoversPanel(+test)`, `FlagImpactDialog(+test)`, `FollowedFeaturesList` (split if too large). |
-| **7** | Chart views: `ViewChart`, `GoalTrackingViewChart`, `SystemHealthViewChart`. |
-| **8** | Editor + wire live: `ViewEditorDialog` (split if needed), and replace this stub `ImpactViewsPage` with the full container driven by `useImpactMetricViews`. |
+| **1** ✅ | `impactViews` flag (backend `experimental.ts` + frontend `UiFlags`), `/impact-views` route, gated nav item, stub page + this README. |
+| **2** | Goal-view types + goal summary (no components, no API calls): `views/types.ts`, `computeGoalSummary(+test)`. |
+| **2b** | Flag-event impact math: `computeFlagEventImpact(+test)`, `flagImpactFormatting`. |
+| **3** | Goal-view display panels (render-only): `GoalSummaryPanel`, `TopFlagMoversPanel`, `FlagImpactDialog`, `FollowedFeaturesStrip`. |
+| **4** | Chart card + getter: `hooks/MultimetricChartCard`, `hooks/useGroupedImpactMetricsData` + `sumSeriesByTimestamp(+test)`. |
+| **5** | Goal chart + lists: `GoalTrackingViewChart` (dev simulation toggle stripped), `FollowedFeaturesList`, `useMergedFeatureEvents`. |
+| **6** | Wire the dummy goal view: `fixtures/dummyGoalView.ts` (hardcoded `MetricView` + static series/events) and render it from `ImpactViewsPage` — no API calls. |
+| **Deferred** | Real-data wiring; view editor + localStorage CRUD (`ViewEditorDialog`, `useImpactMetricViews`, `FeaturePicker`, `TemplatePickerDialog`, `ViewSwitcher`, `ImpactMetricViews`); system-health view (`SystemHealthViewChart`, `ViewChart`, `useAutoFollowedFeatureNames`, `useEnvironmentEvents`, `normalizeSeriesToBaseline`); the synthetic generator `simulateFlagContribution`. |
 
 ## Flag wiring
 

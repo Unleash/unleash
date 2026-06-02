@@ -37,7 +37,6 @@ export interface IReleasePlanMilestoneItemProps {
     activeIndex: number;
     environmentIsDisabled?: boolean;
     readonly?: boolean;
-    milestoneProgressionsEnabled: boolean;
     progressionFormOpenIndex: number | null;
     onSetProgressionFormOpenIndex: (index: number | null) => void;
     onStartMilestone?: (milestone: IReleasePlanMilestone) => void;
@@ -73,7 +72,6 @@ export const ReleasePlanMilestoneItem = ({
     activeIndex,
     environmentIsDisabled,
     readonly,
-    milestoneProgressionsEnabled,
     progressionFormOpenIndex,
     onSetProgressionFormOpenIndex,
     onStartMilestone,
@@ -165,15 +163,13 @@ export const ReleasePlanMilestoneItem = ({
     const pendingProgressionChange = getPendingProgressionChange(milestone.id);
     const effectiveTransitionCondition = milestone.transitionCondition;
 
-    const shouldShowAutomation =
-        isNotLastMilestone && milestoneProgressionsEnabled && !readonly;
+    const shouldShowAutomation = isNotLastMilestone && !readonly;
 
     const automationSection = shouldShowAutomation ? (
         <MilestoneAutomation
             milestone={milestone}
             milestones={milestones}
             status={status}
-            milestoneProgressionsEnabled={milestoneProgressionsEnabled}
             readonly={readonly}
             isProgressionFormOpen={isProgressionFormOpen}
             effectiveTransitionCondition={effectiveTransitionCondition}

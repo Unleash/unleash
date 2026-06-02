@@ -24,7 +24,6 @@ import type {
 } from 'component/changeRequest/changeRequest.types';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { Truncator } from 'component/common/Truncator/Truncator';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { useMilestoneProgressionsApi } from 'hooks/api/actions/useMilestoneProgressionsApi/useMilestoneProgressionsApi';
 import { DeleteProgressionDialog } from './DeleteProgressionDialog.tsx';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
@@ -184,7 +183,6 @@ export const ReleasePlan = ({
 
         return null;
     };
-    const milestoneProgressionsEnabled = useUiFlag('milestoneProgression');
     const [progressionFormOpenIndex, setProgressionFormOpenIndex] = useState<
         number | null
     >(null);
@@ -473,9 +471,6 @@ export const ReleasePlan = ({
                         activeIndex={activeIndex}
                         environmentIsDisabled={environmentIsDisabled}
                         readonly={readonly}
-                        milestoneProgressionsEnabled={
-                            milestoneProgressionsEnabled
-                        }
                         progressionFormOpenIndex={progressionFormOpenIndex}
                         onSetProgressionFormOpenIndex={
                             setProgressionFormOpenIndex

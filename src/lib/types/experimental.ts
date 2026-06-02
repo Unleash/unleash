@@ -62,7 +62,6 @@ export type IFlagKey =
     | 'etagByEnv'
     | 'fetchMode'
     | 'optimizeLifecycle'
-    | 'milestoneProgression'
     | 'plausibleMetrics'
     | 'safeguards'
     | 'newInUnleash'
@@ -290,11 +289,6 @@ const flags: IFlags = {
             false,
         ),
     },
-    milestoneProgression: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_MILESTONE_PROGRESSION,
-        false,
-    ),
-
     plausibleMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PLAUSIBLE_METRICS,
         false,

@@ -1,10 +1,10 @@
 import { FeatureExposureMetrics } from './FeatureExposureMetrics.tsx';
 import { FeatureImpactMetrics } from './FeatureImpactMetrics.tsx';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { useImpactMetricsEnabled } from 'component/impact-metrics/hooks/useImpactMetricsEnabled.ts';
 import { Stack } from '@mui/material';
 
 export const FeatureMetricsOverview = () => {
-    const impactMetricsEnabled = !useUiFlag('disableImpactMetrics');
+    const impactMetricsEnabled = useImpactMetricsEnabled();
 
     return (
         <Stack spacing={2}>

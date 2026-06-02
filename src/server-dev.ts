@@ -54,7 +54,6 @@ process.nextTick(async () => {
                         registerImpactMetrics: true,
                         safeguards: true,
                         regexConstraintOperator: true,
-                        onboardingProjectSetupNewSteps: true,
                         enterpriseEdgeTokensList: true,
                         userTokenWithClientApiLoggingKillSwitch: false,
                         onlyFeatureTokensWithFeatureAPIs: false,

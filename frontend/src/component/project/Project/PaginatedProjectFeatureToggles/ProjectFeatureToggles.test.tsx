@@ -211,9 +211,7 @@ test('Project is onboarded', async () => {
             route: `/projects/${projectId}`,
         },
     );
-    expect(
-        screen.queryByText('Welcome to your project'),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText('Project setup')).not.toBeInTheDocument();
 }, 10000);
 
 test('Project is not onboarded', async () => {
@@ -235,7 +233,7 @@ test('Project is not onboarded', async () => {
             route: `/projects/${projectId}`,
         },
     );
-    await screen.findByText('Welcome to your project');
+    await screen.findByText('Project setup');
 }, 10000);
 
 test('renders lifecycle quick filters', async () => {
@@ -267,7 +265,7 @@ test('shows new onboarding steps when flag is enabled and project is not onboard
     const projectId = 'default';
     setupApi();
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: { flagCreator: true, onboardingProjectSetupNewSteps: true },
+        flags: { flagCreator: true },
     });
     testServerRoute(server, '/api/admin/projects/default/overview', {
         onboardingStatus: { status: 'onboarding-started' },
@@ -288,7 +286,7 @@ test('hides new onboarding when user dismissed the flow', async () => {
     const projectId = 'default';
     setupApi();
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: { flagCreator: true, onboardingProjectSetupNewSteps: true },
+        flags: { flagCreator: true },
     });
     testServerRoute(server, '/api/admin/projects/default/overview', {
         onboardingStatus: { status: 'onboarding-started' },
@@ -313,7 +311,7 @@ test('hides new onboarding when project is onboarded and setup state is hide-set
     const projectId = 'default';
     setupApi();
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: { flagCreator: true, onboardingProjectSetupNewSteps: true },
+        flags: { flagCreator: true },
     });
     testServerRoute(server, '/api/admin/projects/default/overview', {
         onboardingStatus: { status: 'onboarded' },
@@ -334,33 +332,11 @@ test('hides new onboarding when project is onboarded and setup state is hide-set
     expect(screen.queryByText('Project setup')).not.toBeInTheDocument();
 }, 10000);
 
-test('shows setup completed banner if user did not dismiss the old flow', async () => {
-    const projectId = 'default';
-    setupApi();
-    testServerRoute(server, '/api/admin/projects/default/overview', {
-        onboardingStatus: { status: 'onboarded' },
-    });
-    setLocalStorageItem(
-        ':onboarding-state:v1-default:localStorage:v2',
-        'show-setup',
-    );
-    render(
-        <Routes>
-            <Route
-                path={'/projects/:projectId'}
-                element={<ProjectFeatureToggles environments={[]} />}
-            />
-        </Routes>,
-        { route: `/projects/${projectId}` },
-    );
-    await screen.findByText('Setup completed');
-}, 10000);
-
-test('keeps new onboarding visible right after SDK connection before user dismisses', async () => {
+test('keeps onboarding visible for users with old-flow show-setup localStorage state', async () => {
     const projectId = 'default';
     setupApi();
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: { flagCreator: true, onboardingProjectSetupNewSteps: true },
+        flags: { flagCreator: true },
     });
     testServerRoute(server, '/api/admin/projects/default/overview', {
         onboardingStatus: { status: 'onboarded' },

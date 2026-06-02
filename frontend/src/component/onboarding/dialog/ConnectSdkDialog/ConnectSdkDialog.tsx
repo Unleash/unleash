@@ -39,8 +39,6 @@ type Step = {
 interface IConnectSDKDialogProps {
     open: boolean;
     onClose: () => void;
-    // TODO: Deprecated. Remove once we no longer need it, after we clean up `onboardingProjectSetupNewSteps`
-    onFinish?: () => void;
     projectId: string;
     environments: string[];
     feature?: string;
@@ -49,7 +47,6 @@ interface IConnectSDKDialogProps {
 export const ConnectSdkDialog = ({
     open,
     onClose,
-    onFinish,
     projectId,
     environments,
     feature,
@@ -139,7 +136,6 @@ export const ConnectSdkDialog = ({
                     onboardedSdk: sdk.name,
                 },
             });
-            onFinish?.();
             onClose();
         }
     };

@@ -2,7 +2,14 @@ import Search from '@mui/icons-material/Search';
 import { useRef, useState } from 'react';
 import { InputAdornment, List, ListItemText } from '@mui/material';
 import { StyledDropdownSearch } from './shared.styles';
-import { StyledCheckbox, StyledListItem } from './DropdownList.styles';
+import {
+    StyledCheckbox,
+    StyledHeader,
+    StyledHeaderDescription,
+    StyledHeaderTitle,
+    StyledListItem,
+    StyledOptionDescription,
+} from './DropdownList.styles';
 
 function useSelectionManagement<T>(handleToggle: (value: T) => () => void) {
     const listRefs = useRef<Array<HTMLInputElement | HTMLLIElement | null>>([]);
@@ -46,12 +53,13 @@ function useSelectionManagement<T>(handleToggle: (value: T) => () => void) {
 }
 
 export type DropdownListProps<T> = {
-    options: Array<{ label: string; value: T }>;
+    options: Array<{ label: string; value: T; description?: string }>;
     onChange: (value: T) => void;
     search: {
         label: string;
         placeholder: string;
     };
+    header?: { header: string; description: string };
     multiselect?: { selectedOptions: Set<T> };
 };
 
@@ -59,6 +67,7 @@ export function DropdownList<T = string>({
     options,
     onChange,
     search,
+    header,
     multiselect,
 }: DropdownListProps<T>) {
     const [searchText, setSearchText] = useState('');
@@ -77,6 +86,14 @@ export function DropdownList<T = string>({
 
     return (
         <>
+            {header ? (
+                <StyledHeader>
+                    <StyledHeaderTitle>{header.header}</StyledHeaderTitle>
+                    <StyledHeaderDescription>
+                        {header.description}
+                    </StyledHeaderDescription>
+                </StyledHeader>
+            ) : null}
             <StyledDropdownSearch
                 variant='outlined'
                 size='small'
@@ -143,7 +160,24 @@ export function DropdownList<T = string>({
                                     disableRipple
                                 />
                             ) : null}
-                            <ListItemText id={labelId} primary={option.label} />
+                            <ListItemText
+                                id={labelId}
+                                primary={option.label}
+                                title={option.label}
+                                secondary={
+                                    option.description ? (
+                                        <StyledOptionDescription>
+                                            {option.description}
+                                        </StyledOptionDescription>
+                                    ) : undefined
+                                }
+                                sx={{ minWidth: 0 }}
+                                slotProps={{
+                                    primary: {
+                                        noWrap: !option.description,
+                                    },
+                                }}
+                            />
                         </StyledListItem>
                     );
                 })}

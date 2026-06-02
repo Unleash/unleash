@@ -5,7 +5,7 @@
  */
 
 /**
- * The feature flag's [type](https://docs.getunleash.io/concepts/feature-flags#feature-flag-types). One of experiment, kill-switch, release, operational, or permission
+ * The feature flag's [type](https://docs.getunleash.io/concepts/feature-flags#feature-flag-types). One of experiment, kill-switch, release, operational, permission, or sunset
  */
 export type CreateFeatureSchemaType =
     (typeof CreateFeatureSchemaType)[keyof typeof CreateFeatureSchemaType];
@@ -17,4 +17,5 @@ export const CreateFeatureSchemaType = {
     release: 'release',
     operational: 'operational',
     permission: 'permission',
+    sunset: 'sunset',
 } as const;

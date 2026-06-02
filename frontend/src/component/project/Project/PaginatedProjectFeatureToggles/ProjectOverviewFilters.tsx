@@ -117,6 +117,7 @@ export const ProjectOverviewFilters: FC<ProjectOverviewFiltersProps> = ({
                     { label: 'Operational', value: 'operational' },
                     { label: 'Kill switch', value: 'kill-switch' },
                     { label: 'Permission', value: 'permission' },
+                    { label: 'Sunset', value: 'sunset' },
                 ],
                 filterKey: 'type',
                 singularOperators: ['IS', 'IS_NOT'],

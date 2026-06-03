@@ -103,7 +103,7 @@ const setupServerRoutes = () => {
         versionInfo: {
             current: { oss: 'version', enterprise: 'version' },
         },
-        flags: { safeguards: true },
+        impactMetrics: 'internal',
     });
     testServerRoute(server, '/api/admin/user', {
         user: {

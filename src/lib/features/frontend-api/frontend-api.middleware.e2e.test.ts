@@ -33,7 +33,7 @@ beforeAll(async () => {
             frontendApiOrigins: ['https://example.com'],
             experimental: {
                 flags: {
-                    allowDeprecatedApiTokenMiddleware: true,
+                    allowDeprecatedApiTokenMiddleware: false,
                 },
             },
         },

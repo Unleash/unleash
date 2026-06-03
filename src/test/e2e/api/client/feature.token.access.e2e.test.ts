@@ -30,7 +30,7 @@ beforeAll(async () => {
         {
             experimental: {
                 flags: {
-                    allowDeprecatedApiTokenMiddleware: true,
+                    allowDeprecatedApiTokenMiddleware: false,
                 },
             },
         },

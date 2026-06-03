@@ -8,7 +8,13 @@ import type TestAgent from 'supertest/lib/agent.d.ts';
 
 async function getSetup() {
     const stores = createStores();
-    const config = createTestConfig();
+    const config = createTestConfig({
+        experimental: {
+            flags: {
+                allowDeprecatedApiTokenMiddleware: true,
+            },
+        },
+    });
     const services = createServices(stores, config);
     const app = await getApp(config, stores, services);
 

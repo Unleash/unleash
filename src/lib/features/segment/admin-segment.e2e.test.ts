@@ -120,6 +120,7 @@ beforeAll(async () => {
         experimental: {
             flags: {
                 anonymiseEventLog: true,
+                allowDeprecatedApiTokenMiddleware: true,
             },
         },
     };

@@ -4,6 +4,7 @@ import type {
 } from 'component/impact-metrics/MultimetricChart/types';
 import type { MultimetricStep } from 'component/impact-metrics/MultimetricChart/MultimetricTotals';
 import { computeGoalSummary } from '../views/computeGoalSummary';
+import type { ResolvedFeature } from '../views/FollowedFeaturesList/FollowedFeaturesList';
 
 // Temporary dummy data so the chart card (with the goal summary panel in its
 // header slot) can be previewed on the page before real data / the full goal
@@ -12,6 +13,33 @@ import { computeGoalSummary } from '../views/computeGoalSummary';
 
 export const DUMMY_GOAL_METRIC_LABEL = 'checkout_completed_total';
 export const DUMMY_GOAL_TIME_LABEL = 'Last 30 days';
+
+export const DUMMY_FOLLOWED_FEATURES: ResolvedFeature[] = [
+    {
+        name: 'new-checkout-flow',
+        project: 'default',
+        type: 'release',
+        lifecycleStage: 'live',
+    },
+    {
+        name: 'express-checkout',
+        project: 'default',
+        type: 'experiment',
+        lifecycleStage: 'pre-live',
+    },
+    {
+        name: 'one-click-purchase',
+        project: 'payments',
+        type: 'release',
+        lifecycleStage: 'completed',
+    },
+    {
+        name: 'legacy-cart',
+        project: 'default',
+        type: 'kill-switch',
+        lifecycleStage: 'archived',
+    },
+];
 
 const HOUR_SEC = 60 * 60;
 const POINTS = 48;

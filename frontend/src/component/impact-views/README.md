@@ -59,8 +59,8 @@ generators, the view editor, localStorage CRUD, and real-data wiring.
 | **2** | Goal-view types + goal summary (no components, no API calls): `views/types.ts`, `computeGoalSummary(+test)`. |
 | **3** | Goal summary panel (render-only): `GoalSummaryPanel`. (`FollowedFeaturesStrip` dropped — dead code, nothing imports it.) |
 | **4** | Chart card (render-only layout): `views/MultimetricChartCard/MultimetricChartCard.tsx`. (Getter `useGroupedImpactMetricsData` deferred to the real-data PR — not needed for dummy data.) |
-| **5** | Goal chart + lists: `GoalTrackingViewChart` (Top Movers / Flag Impact / dev simulation stripped), `FollowedFeaturesList`, `useMergedFeatureEvents`. |
-| **6** | Wire the dummy goal view: `fixtures/dummyGoalView.ts` (hardcoded `MetricView` + static series/events) rendered from `ImpactViewsPage` — no API calls. |
+| **5** | Followed-features list (render-only): `views/FollowedFeaturesList/FollowedFeaturesList.tsx`, rendered below the card on the page with dummy feature names. (The `GoalTrackingViewChart` orchestrator and `useMergedFeatureEvents` stay with the deferred real-data wiring — they exist to fetch live data the dummy view doesn't need.) |
+| **(later)** | Replace the per-piece dummy wiring on `ImpactViewsPage` with a single cohesive dummy goal view / `GoalTrackingViewChart` if desired — optional polish, no new components. |
 | **Deferred** | **Top Movers / Flag Impact** (`computeFlagEventImpact`, `flagImpactFormatting`, `TopFlagMoversPanel`, `FlagImpactDialog`); real-data wiring; view editor + localStorage CRUD (`ViewEditorDialog`, `useImpactMetricViews`, `FeaturePicker`, `TemplatePickerDialog`, `ViewSwitcher`, `ImpactMetricViews`); system-health view (`SystemHealthViewChart`, `ViewChart` template router, `useAutoFollowedFeatureNames`, `useEnvironmentEvents`, `normalizeSeriesToBaseline`); the synthetic generator `simulateFlagContribution`. |
 
 ## Status
@@ -71,13 +71,26 @@ generators, the view editor, localStorage CRUD, and real-data wiring.
   + a temporary dummy preview (`fixtures/dummyGoalSummary.ts` rendered from
   `ImpactViewsPage`). The preview is throwaway — `ImpactViewsPage` is replaced by the full
   `GoalTrackingViewChart` later.
-- **PR 4** — in progress. `views/MultimetricChartCard/MultimetricChartCard.tsx` (render-only
-  layout card). **Note:** the branch version passed `highlightedEventId` / `eventImpactById`
-  to `<MultimetricChart>` and exported `FeatureEventImpactSummary` — but those `MultimetricChart`
-  props are **branch-only additions** (part of the deferred Top Movers / event-tooltip work)
-  and are NOT on `main`. They were stripped from the co-located card to keep it compiling
-  against `main`. When Top Movers lands, re-add them to both `MultimetricChart` and this card.
-- **PR 5+** — not started.
+- **PR 4** — merged. `views/MultimetricChartCard/MultimetricChartCard.tsx` (render-only layout
+  card, prop interface tightened to what the goal view needs). The page now renders the card
+  with dummy data and the `GoalSummaryPanel` in its `totalsHeaderSlot`. **Note:** the branch
+  version passed `highlightedEventId` / `eventImpactById` to `<MultimetricChart>` and exported
+  `FeatureEventImpactSummary` — those `MultimetricChart` props are **branch-only additions**
+  (deferred Top Movers / event-tooltip work), NOT on `main`, so they were stripped from the
+  co-located card. When Top Movers lands, re-add them to both `MultimetricChart` and this card.
+- **PR 5** — in progress. `views/FollowedFeaturesList/FollowedFeaturesList.tsx` rendered below
+  the chart card on the page. **Made presentational:** the branch version resolved each name
+  via a real `useFeatureSearch` call internally; that data fetching is **deferred to the
+  real-data phase**. The component now takes `features: ResolvedFeature[]` (name / project /
+  type / lifecycleStage / found) and only groups + renders them. The page passes
+  `DUMMY_FOLLOWED_FEATURES` with varied lifecycle stages, so the whole dummy view makes **no
+  API calls**. (Removed `SingleFeatureLoader`, the resolve state machine, and the loading
+  group → 550 → ~399 LOC.) When real data lands, add a small resolver that maps
+  `featureNames` → `ResolvedFeature[]` via `useFeatureSearch` and feeds this component.
+  Also removed the `PageContent` wrapper from `ImpactViewsPage`. After this the basic goal
+  view is visually complete (chart + goal panel + followed list).
+- **PR 6+** — deferred phase (real data incl. the followed-features resolver, editor +
+  localStorage, system-health, Top Movers).
 
 ## Decisions & context (for picking this up later)
 

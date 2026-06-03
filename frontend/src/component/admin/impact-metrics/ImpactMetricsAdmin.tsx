@@ -19,7 +19,7 @@ import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuar
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { useImpactMetricsEnabled } from 'component/impact-metrics/hooks/useImpactMetricsEnabled';
+import { useImpactMetricsConfigEnabled } from 'component/impact-metrics/hooks/useImpactMetricsEnabled';
 import NotFound from 'component/common/NotFound/NotFound';
 import { useExternalImpactMetricsSource } from 'hooks/api/getters/useExternalImpactMetricsSource/useExternalImpactMetricsSource';
 import { useExternalImpactMetricsSourceApi } from 'hooks/api/actions/useExternalImpactMetricsSourceApi/useExternalImpactMetricsSourceApi';
@@ -74,9 +74,9 @@ const DOCS_URL =
     'https://docs.getunleash.io/concepts/impact-metrics#enable-external-metrics';
 
 export const ImpactMetricsAdmin = () => {
-    const impactMetricsEnabled = useImpactMetricsEnabled();
+    const impactMetricsConfigEnabled = useImpactMetricsConfigEnabled();
 
-    if (!impactMetricsEnabled) {
+    if (!impactMetricsConfigEnabled) {
         return <NotFound />;
     }
 

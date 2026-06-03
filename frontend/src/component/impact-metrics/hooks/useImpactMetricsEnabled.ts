@@ -1,9 +1,18 @@
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
-export const useImpactMetricsEnabled = (): boolean => {
-    const { isEnterprise } = useUiConfig();
-    const disableImpactMetrics = useUiFlag('disableImpactMetrics');
+// Reachable even without a configured source, so self-hosted users can set one up.
+export const useImpactMetricsConfigEnabled = (): boolean => {
+    const { impactMetrics } = useUiConfig().uiConfig;
 
-    return isEnterprise() && !disableImpactMetrics;
+    return impactMetrics !== undefined && impactMetrics !== 'disabled';
+};
+
+export const useImpactMetricsEnabled = (): boolean => {
+    const { impactMetrics } = useUiConfig().uiConfig;
+
+    return (
+        impactMetrics === 'external' ||
+        impactMetrics === 'internal' ||
+        impactMetrics === 'full'
+    );
 };

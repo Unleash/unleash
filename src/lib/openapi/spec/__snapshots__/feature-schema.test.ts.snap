@@ -17,22 +17,17 @@ exports[`featureSchema constraints 1`] = `
 }
 `;
 
-exports[`featureSchema variant override values must be an array 1`] = `
+exports[`featureSchema variant override values must be an array in an environment 1`] = `
 {
   "errors": [
     {
-      "instancePath": "/variants/0/payload/type",
-      "keyword": "enum",
-      "message": "must be equal to one of the allowed values",
+      "instancePath": "/environments/0/variants/0/overrides/0/values",
+      "keyword": "type",
+      "message": "must be array",
       "params": {
-        "allowedValues": [
-          "json",
-          "csv",
-          "string",
-          "number",
-        ],
+        "type": "array",
       },
-      "schemaPath": "#/properties/payload/properties/type/enum",
+      "schemaPath": "#/components/schemas/overrideSchema/properties/values/type",
     },
   ],
   "schema": "#/components/schemas/featureSchema",

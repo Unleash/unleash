@@ -83,9 +83,16 @@ export const ScimSettings = () => {
     };
 
     const saveScimSettings = async (enabled: boolean) => {
+        const previousEnabled = settings.enabled ?? false;
         try {
             setEnabled(enabled);
-            await saveSettings({ enabled });
+            try {
+                await saveSettings({ enabled });
+            } catch (error: unknown) {
+                setEnabled(previousEnabled);
+                throw error;
+            }
+
             if (enabled && !settings.hasToken) {
                 const token = await generateNewToken();
                 setNewToken(token);

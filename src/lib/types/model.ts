@@ -83,7 +83,6 @@ export interface FeatureToggleDTO {
 
 export interface FeatureToggle extends FeatureToggleDTO {
     project: string;
-    lastSeenAt?: Date;
     createdAt?: Date;
 }
 
@@ -292,7 +291,6 @@ export interface IFeatureOverview {
     type: string;
     stale: boolean;
     createdAt: Date;
-    lastSeenAt: Date;
     environments: IEnvironmentOverview[];
     lifecycle?: IFeatureLifecycleStage;
 }

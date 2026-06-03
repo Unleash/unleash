@@ -78,19 +78,39 @@ generators, the view editor, localStorage CRUD, and real-data wiring.
   `FeatureEventImpactSummary` — those `MultimetricChart` props are **branch-only additions**
   (deferred Top Movers / event-tooltip work), NOT on `main`, so they were stripped from the
   co-located card. When Top Movers lands, re-add them to both `MultimetricChart` and this card.
-- **PR 5** — in progress. `views/FollowedFeaturesList/FollowedFeaturesList.tsx` rendered below
-  the chart card on the page. **Made presentational:** the branch version resolved each name
-  via a real `useFeatureSearch` call internally; that data fetching is **deferred to the
-  real-data phase**. The component now takes `features: ResolvedFeature[]` (name / project /
-  type / lifecycleStage / found) and only groups + renders them. The page passes
-  `DUMMY_FOLLOWED_FEATURES` with varied lifecycle stages, so the whole dummy view makes **no
-  API calls**. (Removed `SingleFeatureLoader`, the resolve state machine, and the loading
-  group → 550 → ~399 LOC.) When real data lands, add a small resolver that maps
-  `featureNames` → `ResolvedFeature[]` via `useFeatureSearch` and feeds this component.
-  Also removed the `PageContent` wrapper from `ImpactViewsPage`. After this the basic goal
-  view is visually complete (chart + goal panel + followed list).
-- **PR 6+** — deferred phase (real data incl. the followed-features resolver, editor +
-  localStorage, system-health, Top Movers).
+- **PR 5** — merged. `views/FollowedFeaturesList/FollowedFeaturesList.tsx` rendered below the
+  chart card. Made **presentational**: it takes `features: ResolvedFeature[]` and only groups
+  + renders them (data fetching deferred to the real-data phase). Trimmed (550 → ~310) and
+  refactored into `StageBadge`/`GroupHeaderRow`/`FeatureRow`. Labels come from the shared
+  `getFeatureLifecycleName`. `PageContent` wrapper removed from the page.
+- **PR 6** — in progress. **Real data** from a hardcoded view template. The page is now
+  data-driven: `useGoalViewData(GOAL_VIEW)` fans out to live getters and feeds the same
+  card/panel/list. Pieces:
+  - `fixtures/goalViewConfig.ts` — hardcoded `GOAL_VIEW` (`purchases` goal + `error_rate`,
+    `count`/`month`; flags `impact-views-1/2/3`). **Project-agnostic by design** — a view
+    holds only `featureNames`; flags may live in different projects, so each flag's project
+    is resolved from the flag itself (no `project` on `MetricView`). `MetricView` keeps its
+    `id`/`createdAt`/`updatedAt` required (they belong on a real saved view); the hardcoded
+    `GOAL_VIEW` just supplies stub values for them.
+  - `views/goalView/useGoalViewData.ts` — composition seam (the only file the page calls).
+  - `views/FollowedFeaturesList/useResolvedFeatures.ts` — resolves `featureNames` →
+    `ResolvedFeature[]` via a **single cross-project** `useFeatureSearch` whose `query` is the
+    followed names (`name1,name2,…`). The backend comma-splits this into
+    `name ILIKE ANY (...)`, so only our flags come back regardless of instance size (no
+    project filter — each flag carries its own project). Matched client-side by **exact** name
+    (query is a substring match). One request, no loader machinery. Note: feature-search
+    `limit` is capped at 100 server-side (passing more silently falls back to the default of
+    50), but the name `query` keeps the result set to just our flags.
+  - `views/goalView/useFollowedFeatureEvents.ts` — a small co-located getter that fetches all
+    followed flags' toggle events in **one** cross-project request
+    (`feature: IS_ANY_OF:name1,name2,…`, no project filter), mapped + sorted for the chart's
+    event overlay. One request, no loader machinery. (Replaces the branch's per-flag
+    `useMergedFeatureEvents`.)
+  - Chart/totals/window come from on-`main` `useGroupedImpactMetricsData(view.metrics)`; goal
+    summary from `computeGoalSummary`. Dummy fixture `dummyGoalSummary.ts` deleted.
+  - **Architecture:** each data concern is its own small hook behind a narrow interface, so
+    any can be swapped (dummy ↔ real) or split into its own PR; the page has no fetching logic.
+- **PR 7+** — deferred phase (editor + localStorage CRUD, system-health, Top Movers).
 
 ## Decisions & context (for picking this up later)
 

@@ -133,6 +133,8 @@ import {
     createFakeAccessService,
     corsOriginMiddleware,
     impactRegister,
+    EXTERNAL_SOURCE_SETTING_KEY,
+    type ExternalImpactMetricsSource,
 } from './internals.js';
 import SessionStore from './db/session-store.js';
 import metricsHelper from './util/metrics-helper.js';
@@ -566,6 +568,7 @@ export {
     corsOriginMiddleware,
     ApiTokenType,
     impactRegister,
+    EXTERNAL_SOURCE_SETTING_KEY,
     EnvironmentStore,
     ProjectStore,
     defaultMetricsRegister,
@@ -575,6 +578,7 @@ export type {
     Db,
     Row,
     CrudStoreConfig,
+    ExternalImpactMetricsSource,
     IUnleashConfig,
     IUnleashOptions,
     IUnleashServices,

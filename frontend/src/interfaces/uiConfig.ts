@@ -28,6 +28,12 @@ export interface IUiConfig {
     disablePasswordAuth?: boolean;
     emailEnabled?: boolean;
     prometheusAPIAvailable: boolean;
+    impactMetrics?:
+        | 'disabled'
+        | 'unconfigured'
+        | 'external'
+        | 'internal'
+        | 'full';
     maintenanceMode?: boolean;
     frontendApiOrigins?: string[];
     resourceLimits: ResourceLimitsSchema;

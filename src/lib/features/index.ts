@@ -18,6 +18,7 @@ export * from './user-subscriptions/createUserSubscriptionsService.js';
 export * from './context/createContextService.js';
 export * from './feature-links/createFeatureLinkService.js';
 export * from './metrics/impact/impact-register.js';
+export * from './metrics/impact/external-impact-metrics-source.js';
 export * from './pat/createPatService.js';
 export * from './settings/createSettingService.js';
 export * from './client-feature-toggles/delta/visible-revision.js';

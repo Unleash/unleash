@@ -101,6 +101,13 @@ export const uiConfigSchema = {
             description: 'Whether a Prometheus API is available.',
             example: true,
         },
+        impactMetrics: {
+            type: 'string',
+            enum: ['disabled', 'unconfigured', 'external', 'internal', 'full'],
+            description:
+                'Impact metrics availability for this instance. `disabled` when the killswitch is on; `unconfigured` when no source is set up yet; `internal`/`external`/`full` depending on which data sources are available.',
+            example: 'internal',
+        },
         frontendApiOrigins: {
             type: 'array',
             description:

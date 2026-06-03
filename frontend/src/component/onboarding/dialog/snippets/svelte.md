@@ -7,7 +7,7 @@ npm install @unleash/proxy-client-svelte
 ```svelte
 <script>
 	import { FlagProvider } from '@unleash/proxy-client-svelte';
-	let { children } = $props();
+	const { children } = $props();
 
 	const config = {
         url: '<YOUR_API_URL>',

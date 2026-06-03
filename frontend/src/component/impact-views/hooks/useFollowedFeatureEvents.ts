@@ -26,15 +26,13 @@ export const useFollowedFeatureEvents = (
 
     const featureEvents = useMemo<MultimetricFeatureEvent[]>(
         () =>
-            events
-                .map((event) => ({
-                    id: event.id,
-                    timestamp: new Date(event.createdAt).getTime(),
-                    type: event.type as MultimetricFeatureEvent['type'],
-                    label: event.label ?? event.type,
-                    createdBy: event.createdBy,
-                }))
-                .sort((left, right) => left.timestamp - right.timestamp),
+            events.map((event) => ({
+                id: event.id,
+                timestamp: new Date(event.createdAt).getTime(),
+                type: event.type as MultimetricFeatureEvent['type'],
+                label: event.label ?? event.type,
+                createdBy: event.createdBy,
+            })),
         [events],
     );
 

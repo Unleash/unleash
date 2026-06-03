@@ -10,9 +10,6 @@ export type UseFollowedFeatureEvents = {
     loading: boolean;
 };
 
-// Fetches feature-toggle events for all followed flags in a single
-// cross-project request (`feature: IS_ANY_OF:...`, no project filter), mapped
-// + sorted for the chart's event overlay.
 export const useFollowedFeatureEvents = (
     featureNames: string[],
     environment: string,

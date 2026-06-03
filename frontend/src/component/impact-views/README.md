@@ -58,7 +58,7 @@ generators, the view editor, localStorage CRUD, and real-data wiring.
 | **1** ✅ | `impactViews` flag (backend `experimental.ts` + frontend `UiFlags`), `/impact-views` route, gated nav item, stub page + this README. |
 | **2** | Goal-view types + goal summary (no components, no API calls): `views/types.ts`, `computeGoalSummary(+test)`. |
 | **3** | Goal summary panel (render-only): `GoalSummaryPanel`. (`FollowedFeaturesStrip` dropped — dead code, nothing imports it.) |
-| **4** | Chart card + getter: `hooks/MultimetricChartCard`, `hooks/useGroupedImpactMetricsData` + `sumSeriesByTimestamp(+test)`. |
+| **4** | Chart card (render-only layout): `views/MultimetricChartCard/MultimetricChartCard.tsx`. (Getter `useGroupedImpactMetricsData` deferred to the real-data PR — not needed for dummy data.) |
 | **5** | Goal chart + lists: `GoalTrackingViewChart` (Top Movers / Flag Impact / dev simulation stripped), `FollowedFeaturesList`, `useMergedFeatureEvents`. |
 | **6** | Wire the dummy goal view: `fixtures/dummyGoalView.ts` (hardcoded `MetricView` + static series/events) rendered from `ImpactViewsPage` — no API calls. |
 | **Deferred** | **Top Movers / Flag Impact** (`computeFlagEventImpact`, `flagImpactFormatting`, `TopFlagMoversPanel`, `FlagImpactDialog`); real-data wiring; view editor + localStorage CRUD (`ViewEditorDialog`, `useImpactMetricViews`, `FeaturePicker`, `TemplatePickerDialog`, `ViewSwitcher`, `ImpactMetricViews`); system-health view (`SystemHealthViewChart`, `ViewChart` template router, `useAutoFollowedFeatureNames`, `useEnvironmentEvents`, `normalizeSeriesToBaseline`); the synthetic generator `simulateFlagContribution`. |
@@ -67,10 +67,17 @@ generators, the view editor, localStorage CRUD, and real-data wiring.
 
 - **PR 1** — merged (#12173). Flag, route, nav, stub page, this README.
 - **PR 2** — merged (#12177). `views/types.ts` + `views/computeGoalSummary.ts(+test)`.
-- **PR 3** — open. `views/GoalSummaryPanel.tsx` + a temporary dummy preview
-  (`fixtures/dummyGoalSummary.ts` rendered from `ImpactViewsPage`). The preview is
-  throwaway — `ImpactViewsPage` is replaced by the full `GoalTrackingViewChart` later.
-- **PR 4+** — not started.
+- **PR 3** — merged. `views/GoalSummaryPanel/` (panel + extracted, tested `sparkline.ts`)
+  + a temporary dummy preview (`fixtures/dummyGoalSummary.ts` rendered from
+  `ImpactViewsPage`). The preview is throwaway — `ImpactViewsPage` is replaced by the full
+  `GoalTrackingViewChart` later.
+- **PR 4** — in progress. `views/MultimetricChartCard/MultimetricChartCard.tsx` (render-only
+  layout card). **Note:** the branch version passed `highlightedEventId` / `eventImpactById`
+  to `<MultimetricChart>` and exported `FeatureEventImpactSummary` — but those `MultimetricChart`
+  props are **branch-only additions** (part of the deferred Top Movers / event-tooltip work)
+  and are NOT on `main`. They were stripped from the co-located card to keep it compiling
+  against `main`. When Top Movers lands, re-add them to both `MultimetricChart` and this card.
+- **PR 5+** — not started.
 
 ## Decisions & context (for picking this up later)
 

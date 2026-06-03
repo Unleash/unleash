@@ -232,7 +232,7 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
     const basePath = `/projects/${projectId}/features/${featureId}`;
 
     const showLegacyVariants = useLegacyVariants(feature.environments);
-    const useKebabActions = useMinimumUnleashVersion('8.0.0');
+    const useKebabActions = !useMinimumUnleashVersion('8.0.0');
 
     const tabData = [
         {

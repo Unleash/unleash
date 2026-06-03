@@ -20,11 +20,10 @@ import {
     UPDATE_FEATURE,
 } from 'component/providers/AccessProvider/permissions';
 import { useCheckProjectPermissions } from 'hooks/useHasAccess';
-import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import type { IFeatureToggle } from 'interfaces/featureToggle';
+import type { FeatureSchema } from 'openapi';
 
 type FeatureHeaderActionsKebabProps = {
-    feature: IFeatureToggle;
+    feature: Pick<FeatureSchema, 'project' | 'name' | 'favorite'>;
     onFavorite: () => void;
     openStaleDialog: () => void;
     openDeleteDialog: () => void;
@@ -36,9 +35,7 @@ export const FeatureHeaderActionsKebab: FC<FeatureHeaderActionsKebabProps> = ({
     openStaleDialog,
     openDeleteDialog,
 }) => {
-    const projectId = useRequiredPathParam('projectId');
-    const featureId = useRequiredPathParam('featureId');
-    const checkAccess = useCheckProjectPermissions(projectId);
+    const checkAccess = useCheckProjectPermissions(feature.project);
     const canClone = checkAccess(CREATE_FEATURE);
     const canArchive = checkAccess(DELETE_FEATURE);
     const canToggleStale = checkAccess(UPDATE_FEATURE);
@@ -63,7 +60,6 @@ export const FeatureHeaderActionsKebab: FC<FeatureHeaderActionsKebabProps> = ({
                 aria-expanded={open}
                 aria-haspopup='true'
                 onClick={handleClick}
-                data-loading
             >
                 <MoreVert />
             </IconButton>
@@ -101,8 +97,7 @@ export const FeatureHeaderActionsKebab: FC<FeatureHeaderActionsKebabProps> = ({
                     component={Link}
                     nativeButton={false}
                     disabled={!canClone}
-                    to={`/projects/${projectId}/features/${featureId}/copy`}
-                    onClick={handleClose}
+                    to={`/projects/${feature.project}/features/${feature.name}/copy`}
                 >
                     <ListItemIcon>
                         <LibraryAddOutlined />

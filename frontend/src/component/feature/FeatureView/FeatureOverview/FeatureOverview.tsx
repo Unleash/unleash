@@ -20,6 +20,7 @@ import { CleanupReminder } from '../CleanupReminder/CleanupReminder.tsx';
 import { useFeature } from '../../../../hooks/api/getters/useFeature/useFeature.ts';
 import { FeatureConnectSdkBanner } from './FeatureConnectSdkBanner.tsx';
 import { FeatureImplementFlagBanner } from './FeatureImplementFlagBanner.tsx';
+import { useMinimumUnleashVersion } from 'hooks/useMinimumUnleashVersion.ts';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -46,6 +47,7 @@ interface FeatureOverviewProps {
 }
 
 export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
+    const flipMainContentOrder = useMinimumUnleashVersion('8.0.0');
     const navigate = useNavigate();
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
@@ -82,18 +84,20 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
         <div>
             <CleanupReminder feature={feature} onChange={refetchFeature} />
             <StyledContainer>
-                <div>
-                    {!loading ? (
-                        <FeatureOverviewMetaData
-                            hiddenEnvironments={hiddenEnvironments}
-                            onEnvironmentVisibilityChange={
-                                onEnvironmentVisibilityChange
-                            }
-                            feature={feature}
-                            onChange={refetchFeature}
-                        />
-                    ) : null}
-                </div>
+                {!flipMainContentOrder && (
+                    <div>
+                        {!loading ? (
+                            <FeatureOverviewMetaData
+                                hiddenEnvironments={hiddenEnvironments}
+                                onEnvironmentVisibilityChange={
+                                    onEnvironmentVisibilityChange
+                                }
+                                feature={feature}
+                                onChange={refetchFeature}
+                            />
+                        ) : null}
+                    </div>
+                )}
                 <StyledMainContent>
                     {!loading && (
                         <>
@@ -113,6 +117,20 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
                         hiddenEnvironments={hiddenEnvironments}
                     />
                 </StyledMainContent>
+                {flipMainContentOrder && (
+                    <div>
+                        {!loading ? (
+                            <FeatureOverviewMetaData
+                                hiddenEnvironments={hiddenEnvironments}
+                                onEnvironmentVisibilityChange={
+                                    onEnvironmentVisibilityChange
+                                }
+                                feature={feature}
+                                onChange={refetchFeature}
+                            />
+                        ) : null}
+                    </div>
+                )}
                 <Routes>
                     <Route
                         path='strategies/create'

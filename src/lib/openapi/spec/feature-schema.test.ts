@@ -4,16 +4,6 @@ import type { FeatureSchema } from './feature-schema.js';
 test('featureSchema', () => {
     const data: FeatureSchema = {
         name: 'a',
-        variants: [
-            {
-                name: 'a',
-                weight: 1,
-                weightType: 'fix',
-                stickiness: 'a',
-                overrides: [{ contextName: 'a', values: ['a'] }],
-                payload: { type: 'string', value: 'b' },
-            },
-        ],
         environments: [
             {
                 name: 'a',
@@ -61,33 +51,24 @@ test('featureSchema constraints', () => {
     ).toMatchSnapshot();
 });
 
-test('featureSchema variants should only have a few required fields', () => {
+test('featureSchema variant override values must be an array in an environment', () => {
     const data = {
         name: 'a',
-        variants: [
+        environments: [
             {
                 name: 'a',
-                weight: 1,
-            },
-        ],
-    };
-
-    expect(
-        validateSchema('#/components/schemas/featureSchema', data),
-    ).toBeUndefined();
-});
-
-test('featureSchema variant override values must be an array', () => {
-    const data = {
-        name: 'a',
-        variants: [
-            {
-                name: 'a',
-                weight: 1,
-                weightType: 'fix',
-                stickiness: 'a',
-                overrides: [{ contextName: 'a', values: 'b' }],
-                payload: { type: 'a', value: 'b' },
+                type: 'b',
+                enabled: true,
+                variants: [
+                    {
+                        name: 'a',
+                        weight: 1,
+                        weightType: 'fix',
+                        stickiness: 'a',
+                        overrides: [{ contextName: 'a', values: 'b' }],
+                        payload: { type: 'string', value: 'b' },
+                    },
+                ],
             },
         ],
     };

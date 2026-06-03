@@ -114,7 +114,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     'features.project as project',
                     'features.created_at as created_at',
                     'features.stale as stale',
-                    'features.last_seen_at as last_seen_at',
                     'features.impression_data as impression_data',
                     'feature_environments.enabled as enabled',
                     'feature_environments.environment as environment',
@@ -578,7 +577,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     stale: row.stale,
                     archivedAt: row.archived_at,
                     impressionData: row.impression_data,
-                    lastSeenAt: row.last_seen_at,
                     dependencyType: row.dependency,
                     environments: [],
                     segments: row.segment_name ? [row.segment_name] : [],
@@ -621,14 +619,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
             // Add tag if new
             if (this.isNewTag(entry, row)) {
                 this.addTag(entry, row);
-            }
-
-            // Update lastSeenAt if more recent
-            if (
-                !entry.lastSeenAt ||
-                new Date(row.env_last_seen_at) > new Date(entry.lastSeenAt)
-            ) {
-                entry.lastSeenAt = row.env_last_seen_at;
             }
         });
 

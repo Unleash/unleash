@@ -1,9 +1,5 @@
 import type { MetricView } from '../views/types';
 
-// Hardcoded goal-view template pointing at real sandbox data. Replaced by
-// user-created views once the editor + localStorage land. The metric names,
-// project, and feature flags below must exist in the target instance to render
-// real data (sandbox enterprise project `impact-views`).
 export const GOAL_VIEW: MetricView = {
     id: 'goal-view',
     title: 'Purchases',

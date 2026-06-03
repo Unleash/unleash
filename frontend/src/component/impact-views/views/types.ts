@@ -24,9 +24,6 @@ export type ViewMetricConfig = Pick<
 export type MetricView = {
     id: string;
     title: string;
-    // Flags are followed by name and may live in different projects; the view
-    // is intentionally project-agnostic. Each flag's project is resolved from
-    // the flag itself, not declared here.
     featureNames: string[];
     metrics: ViewMetricConfig[];
     timeRange: ChartTimeRange;

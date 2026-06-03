@@ -1,5 +1,4 @@
 import type { FC, ReactNode } from 'react';
-import { Link } from 'react-router-dom';
 import { styled, Typography } from '@mui/material';
 import {
     MultimetricTotals,
@@ -14,46 +13,25 @@ import type {
 
 export interface MultimetricChartCardProps {
     title: string;
+    subtitle: string;
     timeRange: ChartTimeRange;
     aggregationMode?: string;
-    stepCount: number;
     stepSeries: MultimetricStepSeries[];
     stepTotals: MultimetricStep[];
-    featureEvents?: MultimetricFeatureEvent[];
+    featureEvents: MultimetricFeatureEvent[];
     start: string;
     end: string;
-    loading?: boolean;
-    href?: string;
-    chartHeightSpacing?: { base: number; lg: number; sm: number };
-    subtitle?: string;
-    totalsHeaderSlot?: ReactNode;
+    loading: boolean;
+    chartHeightSpacing: { base: number; lg: number; sm: number };
+    totalsHeaderSlot: ReactNode;
     totalsLabel?: string;
-    headerExtras?: ReactNode;
-    totalsMiddleSlot?: ReactNode;
-    expandTotalsColumn?: boolean;
 }
 
-const DEFAULT_CHART_HEIGHT_SPACING = { base: 34, lg: 28, sm: 24 } as const;
-
-const cardBaseStyles = (theme: {
-    shape: { borderRadiusMedium: number };
-    palette: { divider: string; background: { paper: string } };
-}) => ({
+const StyledCard = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusMedium,
     border: `1px solid ${theme.palette.divider}`,
     backgroundColor: theme.palette.background.paper,
-    textDecoration: 'none',
     color: 'inherit',
-});
-
-const StyledCardLink = styled(Link)(({ theme }) => ({
-    ...cardBaseStyles(theme),
-    display: 'block',
-    cursor: 'pointer',
-}));
-
-const StyledCardDiv = styled('div')(({ theme }) => ({
-    ...cardBaseStyles(theme),
 }));
 
 const StyledRoot = styled('div')(({ theme }) => ({
@@ -65,19 +43,15 @@ const StyledRoot = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledChartColumn = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'expanded',
-})<{ expanded: boolean }>(({ expanded }) => ({
-    flex: expanded ? 5 : 2,
+const StyledChartColumn = styled('div')({
+    flex: 2,
     minWidth: 0,
     display: 'flex',
     flexDirection: 'column',
-}));
+});
 
-const StyledTotalsColumn = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'expanded',
-})<{ expanded: boolean }>(({ theme, expanded }) => ({
-    flex: expanded ? 3 : 1,
+const StyledTotalsColumn = styled('div')(({ theme }) => ({
+    flex: 1,
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: theme.palette.background.elevation1,
@@ -174,96 +148,58 @@ const StyledTotalsSlot = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledTotalsMiddleSlot = styled('div')(({ theme }) => ({
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    padding: theme.spacing(2, 2.5, 1.25, 2.5),
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    [theme.breakpoints.down('lg')]: {
-        padding: theme.spacing(1.5, 2, 1, 2),
-    },
-}));
-
-const timeRangeLabels: Record<ChartTimeRange, string> = {
-    hour: 'Last hour',
-    day: 'Last 24 hours',
-    week: 'Last 7 days',
-    month: 'Last 30 days',
-};
-
 const SUM_MODES = new Set(['count', 'sum']);
 
 export const MultimetricChartCard: FC<MultimetricChartCardProps> = ({
     title,
+    subtitle,
     timeRange,
     aggregationMode,
-    stepCount,
     stepSeries,
     stepTotals,
-    featureEvents = [],
+    featureEvents,
     start,
     end,
     loading,
-    href,
-    chartHeightSpacing = DEFAULT_CHART_HEIGHT_SPACING,
-    subtitle,
+    chartHeightSpacing,
     totalsHeaderSlot,
     totalsLabel: totalsLabelOverride,
-    headerExtras,
-    totalsMiddleSlot,
-    expandTotalsColumn = false,
 }) => {
-    const timeLabel = timeRangeLabels[timeRange];
-    const resolvedSubtitle =
-        subtitle ?? `${stepCount} metrics \u00B7 ${timeLabel}`;
     const defaultTotalsLabel =
         aggregationMode && !SUM_MODES.has(aggregationMode)
             ? 'Last recorded value'
             : 'Totals';
     const totalsLabel = totalsLabelOverride ?? defaultTotalsLabel;
 
-    const expanded = expandTotalsColumn && Boolean(totalsMiddleSlot);
-    const content: ReactNode = (
-        <StyledRoot>
-            <StyledChartColumn expanded={expanded}>
-                <StyledChartHeader>
-                    <StyledTitle>{title}</StyledTitle>
-                    <StyledSubtitle>{resolvedSubtitle}</StyledSubtitle>
-                    {headerExtras}
-                </StyledChartHeader>
-                <StyledChartPane heightSpacing={chartHeightSpacing}>
-                    <MultimetricChart
-                        stepSeries={stepSeries}
-                        timeRange={timeRange}
-                        start={start}
-                        end={end}
-                        loading={loading}
-                        featureEvents={featureEvents}
-                    />
-                </StyledChartPane>
-            </StyledChartColumn>
-            <StyledTotalsColumn expanded={expanded}>
-                {totalsHeaderSlot ? (
+    return (
+        <StyledCard>
+            <StyledRoot>
+                <StyledChartColumn>
+                    <StyledChartHeader>
+                        <StyledTitle>{title}</StyledTitle>
+                        <StyledSubtitle>{subtitle}</StyledSubtitle>
+                    </StyledChartHeader>
+                    <StyledChartPane heightSpacing={chartHeightSpacing}>
+                        <MultimetricChart
+                            stepSeries={stepSeries}
+                            timeRange={timeRange}
+                            start={start}
+                            end={end}
+                            loading={loading}
+                            featureEvents={featureEvents}
+                        />
+                    </StyledChartPane>
+                </StyledChartColumn>
+                <StyledTotalsColumn>
                     <StyledTotalsSlot>{totalsHeaderSlot}</StyledTotalsSlot>
-                ) : null}
-                {totalsMiddleSlot ? (
-                    <StyledTotalsMiddleSlot>
-                        {totalsMiddleSlot}
-                    </StyledTotalsMiddleSlot>
-                ) : null}
-                <StyledTotalsHeader>
-                    <StyledTotalsLabel>{totalsLabel}</StyledTotalsLabel>
-                </StyledTotalsHeader>
-                <StyledTotalsPane>
-                    <MultimetricTotals steps={stepTotals} />
-                </StyledTotalsPane>
-            </StyledTotalsColumn>
-        </StyledRoot>
+                    <StyledTotalsHeader>
+                        <StyledTotalsLabel>{totalsLabel}</StyledTotalsLabel>
+                    </StyledTotalsHeader>
+                    <StyledTotalsPane>
+                        <MultimetricTotals steps={stepTotals} />
+                    </StyledTotalsPane>
+                </StyledTotalsColumn>
+            </StyledRoot>
+        </StyledCard>
     );
-
-    if (href) {
-        return <StyledCardLink to={href}>{content}</StyledCardLink>;
-    }
-    return <StyledCardDiv>{content}</StyledCardDiv>;
 };

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -168,18 +168,19 @@ export const ProjectFeatureToggles = ({
 
     const isPlaceholder = Boolean(initialLoad || loading);
 
+    const isOnboarded = project.onboardingStatus.status === 'onboarded';
+
     const [onboardingFlow, setOnboardingFlow] = useLocalStorageState<
         'visible' | 'closed'
-    >(`onboarding-flow:v1-${projectId}`, 'visible');
-    const [setupCompletedState] = useLocalStorageState<
-        'hide-setup' | 'show-setup'
-    >(`onboarding-state:v1-${projectId}`, 'hide-setup');
+    >(`onboarding-flow:v1-${projectId}`, 'closed');
 
-    const isOnboarded = project.onboardingStatus.status === 'onboarded';
-    const userCompletedOldOnboardingFlow =
-        isOnboarded && setupCompletedState === 'hide-setup';
-    const showNewOnboarding =
-        onboardingFlow === 'visible' && !userCompletedOldOnboardingFlow;
+    useEffect(() => {
+        if (!isPlaceholder && !isOnboarded) {
+            setOnboardingFlow('visible');
+        }
+    }, [isPlaceholder, isOnboarded]);
+
+    const showNewOnboarding = onboardingFlow === 'visible';
 
     const showCleanupReminder = !tableState.lastSeenAt && !tableState.lifecycle;
     const showArchived = Boolean(tableState.archived);
@@ -483,17 +484,14 @@ export const ProjectFeatureToggles = ({
 
     return (
         <Container>
-            <ConditionallyRender
-                condition={showNewOnboarding}
-                show={() => (
-                    <ProjectOnboarding
-                        projectId={projectId}
-                        setConnectSdkOpen={setConnectSdkOpen}
-                        setOnboardingFlow={setOnboardingFlow}
-                        refetchFeatures={refetch}
-                    />
-                )}
-            />
+            {showNewOnboarding && (
+                <ProjectOnboarding
+                    projectId={projectId}
+                    setConnectSdkOpen={setConnectSdkOpen}
+                    setOnboardingFlow={setOnboardingFlow}
+                    refetchFeatures={refetch}
+                />
+            )}
             {showCleanupReminder ? (
                 <ProjectCleanupReminder projectId={projectId} />
             ) : null}

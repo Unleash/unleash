@@ -1,6 +1,5 @@
-import useSWR from 'swr';
-import { formatApiPath } from 'utils/formatPath';
-import type { EventSearchResponseSchema } from 'openapi';
+import { useMemo } from 'react';
+import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
 import type { MultimetricFeatureEvent } from 'component/impact-metrics/MultimetricChart/types';
 
 const FEATURE_TYPES =
@@ -11,41 +10,36 @@ export type UseFollowedFeatureEvents = {
     loading: boolean;
 };
 
+// Fetches feature-toggle events for all followed flags in a single
+// cross-project request (`feature: IS_ANY_OF:...`, no project filter), mapped
+// + sorted for the chart's event overlay.
 export const useFollowedFeatureEvents = (
     featureNames: string[],
     environment: string,
 ): UseFollowedFeatureEvents => {
-    const params = new URLSearchParams({
-        feature: `IS_ANY_OF:${featureNames.join(',')}`,
-        type: FEATURE_TYPES,
-        environment: `IS:${environment}`,
-        limit: '1000',
-    });
-    const path = `api/admin/search/events?${params.toString()}`;
-
-    const { data, isLoading } = useSWR<EventSearchResponseSchema>(
-        featureNames.length > 0 ? path : null,
-        async () => {
-            const res = await fetch(formatApiPath(path));
-            if (!res.ok) {
-                throw new Error(
-                    `Failed to fetch feature events: ${res.status}`,
-                );
-            }
-            return res.json();
+    const { events, loading } = useEventSearch(
+        {
+            feature: `IS_ANY_OF:${featureNames.join(',')}`,
+            type: FEATURE_TYPES,
+            environment: `IS:${environment}`,
+            limit: '1000',
         },
         { refreshInterval: 30_000 },
     );
 
-    const featureEvents: MultimetricFeatureEvent[] = (data?.events ?? [])
-        .map((event) => ({
-            id: event.id,
-            timestamp: new Date(event.createdAt).getTime(),
-            type: event.type as MultimetricFeatureEvent['type'],
-            label: event.label ?? event.type,
-            createdBy: event.createdBy,
-        }))
-        .sort((left, right) => left.timestamp - right.timestamp);
+    const featureEvents = useMemo<MultimetricFeatureEvent[]>(
+        () =>
+            events
+                .map((event) => ({
+                    id: event.id,
+                    timestamp: new Date(event.createdAt).getTime(),
+                    type: event.type as MultimetricFeatureEvent['type'],
+                    label: event.label ?? event.type,
+                    createdBy: event.createdBy,
+                }))
+                .sort((left, right) => left.timestamp - right.timestamp),
+        [events],
+    );
 
-    return { featureEvents, loading: isLoading };
+    return { featureEvents, loading };
 };

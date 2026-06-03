@@ -5,7 +5,6 @@ import { ProjectFeatureToggles } from './ProjectFeatureToggles.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { fireEvent, screen } from '@testing-library/react';
 import { BATCH_SELECTED_COUNT } from 'utils/testIds';
-import { setLocalStorageItem } from 'utils/storage';
 
 const server = testServerSetup();
 

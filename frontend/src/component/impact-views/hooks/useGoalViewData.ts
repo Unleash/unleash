@@ -5,11 +5,14 @@ import type {
     MultimetricFeatureEvent,
 } from 'component/impact-metrics/MultimetricChart/types';
 import type { MultimetricStep } from 'component/impact-metrics/MultimetricChart/MultimetricTotals';
-import { computeGoalSummary, type GoalSummary } from '../computeGoalSummary';
-import type { ResolvedFeature } from '../FollowedFeaturesList/FollowedFeaturesList';
-import { useResolvedFeatures } from '../FollowedFeaturesList/useResolvedFeatures';
+import {
+    computeGoalSummary,
+    type GoalSummary,
+} from '../views/computeGoalSummary';
+import type { ResolvedFeature } from '../views/FollowedFeaturesList/FollowedFeaturesList';
+import { useResolvedFeatures } from './useResolvedFeatures';
 import { useFollowedFeatureEvents } from './useFollowedFeatureEvents';
-import type { MetricView } from '../types';
+import type { MetricView } from '../views/types';
 
 export type GoalViewData = {
     goalSummary: GoalSummary | undefined;

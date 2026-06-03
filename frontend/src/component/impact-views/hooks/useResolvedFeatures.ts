@@ -4,7 +4,7 @@ import type { FeatureSearchResponseSchema } from 'openapi';
 import type {
     LifecycleStageName,
     ResolvedFeature,
-} from './FollowedFeaturesList';
+} from '../views/FollowedFeaturesList/FollowedFeaturesList';
 
 const KNOWN_STAGES: ReadonlySet<string> = new Set<LifecycleStageName>([
     'initial',

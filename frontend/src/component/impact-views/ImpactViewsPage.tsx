@@ -5,7 +5,7 @@ import type { ChartTimeRange } from 'component/impact-metrics/MultimetricChart/c
 import { GoalSummaryPanel } from './views/GoalSummaryPanel/GoalSummaryPanel';
 import { MultimetricChartCard } from './views/MultimetricChartCard/MultimetricChartCard';
 import { FollowedFeaturesList } from './views/FollowedFeaturesList/FollowedFeaturesList';
-import { useGoalViewData } from './views/goalView/useGoalViewData';
+import { useGoalViewData } from './hooks/useGoalViewData';
 import { GOAL_VIEW } from './fixtures/goalViewConfig';
 
 const TIME_RANGE_LABELS: Record<ChartTimeRange, string> = {

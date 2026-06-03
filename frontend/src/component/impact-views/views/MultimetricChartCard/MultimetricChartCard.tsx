@@ -1,5 +1,5 @@
 import type { FC, ReactNode } from 'react';
-import { styled, Typography } from '@mui/material';
+import { Box, styled, Typography } from '@mui/material';
 import {
     MultimetricTotals,
     type MultimetricStep,
@@ -27,14 +27,14 @@ export interface MultimetricChartCardProps {
     totalsLabel?: string;
 }
 
-const StyledCard = styled('div')(({ theme }) => ({
+const StyledCard = styled(Box)(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusMedium,
     border: `1px solid ${theme.palette.divider}`,
     backgroundColor: theme.palette.background.paper,
     color: 'inherit',
 }));
 
-const StyledRoot = styled('div')(({ theme }) => ({
+const StyledRoot = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
 
@@ -43,14 +43,14 @@ const StyledRoot = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledChartColumn = styled('div')({
+const StyledChartColumn = styled(Box)({
     flex: 2,
     minWidth: 0,
     display: 'flex',
     flexDirection: 'column',
 });
 
-const StyledTotalsColumn = styled('div')(({ theme }) => ({
+const StyledTotalsColumn = styled(Box)(({ theme }) => ({
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
@@ -63,7 +63,7 @@ const StyledTotalsColumn = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledChartHeader = styled('div')(({ theme }) => ({
+const StyledChartHeader = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     padding: theme.spacing(1.5, 3, 0, 3),
@@ -73,7 +73,7 @@ const StyledChartHeader = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledTotalsHeader = styled('div')(({ theme }) => ({
+const StyledTotalsHeader = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'flex-end',
     padding: theme.spacing(3, 3, 0, 3),
@@ -102,7 +102,7 @@ const StyledTotalsLabel = styled(Typography)(({ theme }) => ({
     letterSpacing: '0.06em',
 }));
 
-const StyledChartPane = styled('div', {
+const StyledChartPane = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'heightSpacing',
 })<{ heightSpacing: { base: number; lg: number; sm: number } }>(
     ({ theme, heightSpacing }) => ({
@@ -125,7 +125,7 @@ const StyledChartPane = styled('div', {
     }),
 );
 
-const StyledTotalsPane = styled('div')(({ theme }) => ({
+const StyledTotalsPane = styled(Box)(({ theme }) => ({
     flex: 1,
     minWidth: 0,
     display: 'flex',
@@ -137,7 +137,7 @@ const StyledTotalsPane = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledTotalsSlot = styled('div')(({ theme }) => ({
+const StyledTotalsSlot = styled(Box)(({ theme }) => ({
     flex: 1,
     display: 'flex',
     flexDirection: 'column',

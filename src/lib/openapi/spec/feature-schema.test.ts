@@ -51,17 +51,24 @@ test('featureSchema constraints', () => {
     ).toMatchSnapshot();
 });
 
-test('featureSchema variant override values must be an array', () => {
+test('featureSchema variant override values must be an array in an environment', () => {
     const data = {
         name: 'a',
-        variants: [
+        environments: [
             {
                 name: 'a',
-                weight: 1,
-                weightType: 'fix',
-                stickiness: 'a',
-                overrides: [{ contextName: 'a', values: 'b' }],
-                payload: { type: 'a', value: 'b' },
+                type: 'b',
+                enabled: true,
+                variants: [
+                    {
+                        name: 'a',
+                        weight: 1,
+                        weightType: 'fix',
+                        stickiness: 'a',
+                        overrides: [{ contextName: 'a', values: 'b' }],
+                        payload: { type: 'string', value: 'b' },
+                    },
+                ],
             },
         ],
     };

@@ -41,10 +41,11 @@ export const Profile = () => {
         });
     };
 
-    const foundTab = tabs.find(
+    const visibleTabs = tabs.filter((tab) => !tab.hidden);
+    const foundTab = visibleTabs.find(
         ({ path }) => path && location.pathname.includes(path),
     );
-    const tab = (foundTab || tabs[0]).id;
+    const tab = (foundTab || visibleTabs[0] || tabs[0]).id;
 
     if (loading) return null;
 

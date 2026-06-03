@@ -17,11 +17,11 @@ export const isVersionGreaterThanOrEqual = (
     const minimum = validOrCoerced(minimumVersion);
     const current = validOrCoerced(currentVersion);
 
-    if (minimum && current) {
-        return semverGte(current, minimum);
+    if (!minimum || !current) {
+        return false;
     }
 
-    return false;
+    return semverGte(current, minimum);
 };
 
 export const useMinimumUnleashVersion = (minimumVersion: string): boolean => {

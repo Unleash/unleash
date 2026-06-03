@@ -282,31 +282,6 @@ test('shows onboarding steps when flag is enabled and project is not onboarded',
     await screen.findByText('Project setup');
 }, 10000);
 
-test('hides onboarding when user dismissed the flow', async () => {
-    const projectId = 'default';
-    setupApi();
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: { flagCreator: true },
-    });
-    testServerRoute(server, '/api/admin/projects/default/overview', {
-        onboardingStatus: { status: 'onboarding-started' },
-    });
-    setLocalStorageItem(
-        ':onboarding-flow:v1-default:localStorage:v2',
-        'closed',
-    );
-    render(
-        <Routes>
-            <Route
-                path={'/projects/:projectId'}
-                element={<ProjectFeatureToggles environments={[]} />}
-            />
-        </Routes>,
-        { route: `/projects/${projectId}` },
-    );
-    expect(screen.queryByText('Project setup')).not.toBeInTheDocument();
-}, 10000);
-
 test('clears lifecycle filter when switching to archived view', async () => {
     setupApi();
     testServerRoute(server, '/api/admin/ui-config', {

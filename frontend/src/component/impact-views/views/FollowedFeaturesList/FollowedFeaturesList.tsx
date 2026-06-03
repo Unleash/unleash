@@ -146,8 +146,72 @@ const StyledDash = styled('span')(({ theme }) => ({
     color: theme.palette.text.disabled,
 }));
 
-const groupLabel = (key: GroupKey): string =>
-    key === 'unknown' ? 'Not found' : getFeatureLifecycleName(key);
+const StageBadge: FC<{ stage: LifecycleStageName }> = ({ stage }) => (
+    <StyledStageWrapper>
+        <StyledStageIcon>
+            <FeatureLifecycleStageIcon stage={{ name: stage }} />
+        </StyledStageIcon>
+        <span>{getFeatureLifecycleName(stage)}</span>
+    </StyledStageWrapper>
+);
+
+const GroupHeaderRow: FC<{
+    groupKey: GroupKey;
+    count: number;
+    collapsed: boolean;
+    onToggle: () => void;
+}> = ({ groupKey, count, collapsed, onToggle }) => (
+    <StyledGroupRow>
+        <StyledGroupCell colSpan={4}>
+            <StyledGroupButton
+                type='button'
+                aria-expanded={!collapsed}
+                onClick={onToggle}
+            >
+                <StyledChevron>
+                    {collapsed ? <ChevronRightIcon /> : <ExpandMoreIcon />}
+                </StyledChevron>
+                {groupKey === 'unknown' ? (
+                    <span>Not found</span>
+                ) : (
+                    <>
+                        <StyledStageIcon>
+                            <FeatureLifecycleStageIcon
+                                stage={{ name: groupKey }}
+                            />
+                        </StyledStageIcon>
+                        <span>{getFeatureLifecycleName(groupKey)}</span>
+                    </>
+                )}
+                <StyledGroupCount>{count}</StyledGroupCount>
+            </StyledGroupButton>
+        </StyledGroupCell>
+    </StyledGroupRow>
+);
+
+const FeatureRow: FC<{ feature: ResolvedFeature }> = ({ feature }) => (
+    <TableRow>
+        <TableCell>
+            <StyledNameWrapper>
+                <StyledNameIcon>
+                    <FlagOutlinedIcon />
+                </StyledNameIcon>
+                <span>{feature.name}</span>
+            </StyledNameWrapper>
+        </TableCell>
+        <TableCell>{feature.project}</TableCell>
+        <TableCell sx={{ textTransform: 'capitalize' }}>
+            {feature.type}
+        </TableCell>
+        <TableCell>
+            {feature.lifecycleStage ? (
+                <StageBadge stage={feature.lifecycleStage} />
+            ) : (
+                <StyledDash>—</StyledDash>
+            )}
+        </TableCell>
+    </TableRow>
+);
 
 export type FollowedFeaturesListProps = {
     features: ResolvedFeature[];
@@ -193,94 +257,24 @@ export const FollowedFeaturesList: FC<FollowedFeaturesListProps> = ({
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {groups.map(({ key, entries }) => {
-                            const isCollapsed = Boolean(collapsed[key]);
-                            const isStage = key !== 'unknown';
-
-                            return (
-                                <Fragment key={key}>
-                                    <StyledGroupRow>
-                                        <StyledGroupCell colSpan={4}>
-                                            <StyledGroupButton
-                                                type='button'
-                                                aria-expanded={!isCollapsed}
-                                                onClick={() => toggleGroup(key)}
-                                            >
-                                                <StyledChevron>
-                                                    {isCollapsed ? (
-                                                        <ChevronRightIcon />
-                                                    ) : (
-                                                        <ExpandMoreIcon />
-                                                    )}
-                                                </StyledChevron>
-                                                {isStage ? (
-                                                    <StyledStageIcon>
-                                                        <FeatureLifecycleStageIcon
-                                                            stage={{
-                                                                name: key,
-                                                            }}
-                                                        />
-                                                    </StyledStageIcon>
-                                                ) : null}
-                                                <span>{groupLabel(key)}</span>
-                                                <StyledGroupCount>
-                                                    {entries.length}
-                                                </StyledGroupCount>
-                                            </StyledGroupButton>
-                                        </StyledGroupCell>
-                                    </StyledGroupRow>
-                                    {!isCollapsed
-                                        ? entries.map((entry) => (
-                                              <TableRow key={entry.name}>
-                                                  <TableCell>
-                                                      <StyledNameWrapper>
-                                                          <StyledNameIcon>
-                                                              <FlagOutlinedIcon />
-                                                          </StyledNameIcon>
-                                                          <span>
-                                                              {entry.name}
-                                                          </span>
-                                                      </StyledNameWrapper>
-                                                  </TableCell>
-                                                  <TableCell>
-                                                      {entry.project}
-                                                  </TableCell>
-                                                  <TableCell
-                                                      sx={{
-                                                          textTransform:
-                                                              'capitalize',
-                                                      }}
-                                                  >
-                                                      {entry.type}
-                                                  </TableCell>
-                                                  <TableCell>
-                                                      {entry.lifecycleStage ? (
-                                                          <StyledStageWrapper>
-                                                              <StyledStageIcon>
-                                                                  <FeatureLifecycleStageIcon
-                                                                      stage={{
-                                                                          name: entry.lifecycleStage,
-                                                                      }}
-                                                                  />
-                                                              </StyledStageIcon>
-                                                              <span>
-                                                                  {getFeatureLifecycleName(
-                                                                      entry.lifecycleStage,
-                                                                  )}
-                                                              </span>
-                                                          </StyledStageWrapper>
-                                                      ) : (
-                                                          <StyledDash>
-                                                              —
-                                                          </StyledDash>
-                                                      )}
-                                                  </TableCell>
-                                              </TableRow>
-                                          ))
-                                        : null}
-                                </Fragment>
-                            );
-                        })}
+                        {groups.map(({ key, entries }) => (
+                            <Fragment key={key}>
+                                <GroupHeaderRow
+                                    groupKey={key}
+                                    count={entries.length}
+                                    collapsed={Boolean(collapsed[key])}
+                                    onToggle={() => toggleGroup(key)}
+                                />
+                                {!collapsed[key]
+                                    ? entries.map((entry) => (
+                                          <FeatureRow
+                                              key={entry.name}
+                                              feature={entry}
+                                          />
+                                      ))
+                                    : null}
+                            </Fragment>
+                        ))}
                     </TableBody>
                 </Table>
             </StyledSurface>

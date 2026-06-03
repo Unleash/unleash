@@ -7,6 +7,7 @@ npm install @unleash/proxy-client-svelte
 ```svelte
 <script>
 	import { FlagProvider } from '@unleash/proxy-client-svelte';
+	const { children } = $props();
 
 	const config = {
         url: '<YOUR_API_URL>',
@@ -18,7 +19,7 @@ npm install @unleash/proxy-client-svelte
 <div class="app">
 	<FlagProvider {config}>
 		<main>
-			<slot />
+			{@render children()}
 		</main>
 	</FlagProvider>
 </div>
@@ -32,9 +33,11 @@ npm install @unleash/proxy-client-svelte
 </script>
 
 <section>
-    <p>
-        {$enabled ? 'Feature is enabled!' : 'Feature is disabled!'}
-    </p>
+	{#if $enabled}
+		<p><YOUR_FLAG> is enabled!</p>
+	{:else}
+		<p><YOUR_FLAG> is disabled!</p>
+	{/if}
 </section>
 ```
 ---

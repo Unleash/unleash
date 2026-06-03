@@ -6,7 +6,7 @@ import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
 import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import { formatLargeNumbers } from 'component/impact-metrics/metricsFormatters';
 import type { MultimetricStepSeries } from 'component/impact-metrics/MultimetricChart/types';
-import type { GoalSummary } from './computeGoalSummary';
+import type { GoalSummary } from '../computeGoalSummary';
 import {
     buildSparklinePaths,
     SPARKLINE_HEIGHT,

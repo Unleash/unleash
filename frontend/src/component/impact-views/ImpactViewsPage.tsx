@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { styled } from '@mui/material';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { GoalSummaryPanel } from './views/GoalSummaryPanel';
+import { GoalSummaryPanel } from './views/GoalSummaryPanel/GoalSummaryPanel';
 import {
     DUMMY_GOAL_METRIC_LABEL,
     DUMMY_GOAL_SERIES,

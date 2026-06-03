@@ -5,7 +5,6 @@ import {
 } from 'component/common/VerticalTabs/VerticalTabs';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
-import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { PasswordTab } from './PasswordTab/PasswordTab.tsx';
 import { PersonalAPITokensTab } from './PersonalAPITokensTab/PersonalAPITokensTab.tsx';
@@ -40,20 +39,12 @@ export const Profile = () => {
         navigate(tab.path ? `/profile/${tab.path}` : '/profile', {
             replace: true,
         });
-        setTab(tab.id);
     };
 
-    const tabFromUrl = () => {
-        const url = location.pathname;
-        const foundTab = tabs.find(({ path }) => path && url.includes(path));
-        return (foundTab || tabs[0]).id;
-    };
-
-    const [tab, setTab] = useState(tabFromUrl());
-
-    useEffect(() => {
-        setTab(tabFromUrl());
-    }, [location]);
+    const foundTab = tabs.find(
+        ({ path }) => path && location.pathname.includes(path),
+    );
+    const tab = (foundTab || tabs[0]).id;
 
     if (loading) return null;
 

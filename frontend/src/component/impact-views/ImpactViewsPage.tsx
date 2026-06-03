@@ -1,39 +1,41 @@
 import type { FC } from 'react';
-import { Typography, styled } from '@mui/material';
+import { styled } from '@mui/material';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
+import { GoalSummaryPanel } from './views/GoalSummaryPanel';
+import {
+    DUMMY_GOAL_METRIC_LABEL,
+    DUMMY_GOAL_SERIES,
+    DUMMY_GOAL_SUMMARY,
+    DUMMY_GOAL_TIME_LABEL,
+} from './fixtures/dummyGoalSummary';
 
 const StyledWrapper = styled('div')(({ theme }) => ({
     paddingTop: theme.spacing(2),
 }));
 
-const StyledContent = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: theme.spacing(6, 4),
-    textAlign: 'center',
+// Temporary: previews the goal summary panel with dummy data so we can see it
+// render. Replaced by the full GoalTrackingViewChart (still dummy-fed) in a
+// later PR — see ./README.md.
+const StyledPanelPreview = styled('div')(({ theme }) => ({
+    maxWidth: 520,
+    marginTop: theme.spacing(3),
+    borderRadius: theme.shape.borderRadiusLarge,
+    overflow: 'hidden',
+    padding: theme.spacing(3),
 }));
 
-/**
- * Stub page for the Impact Views feature. The full implementation (view
- * switcher, goal-tracking / system-health charts, editor) is introduced in
- * later PRs — see ./README.md for the rollout plan. Gated behind the
- * `impactViews` flag via the `/impact-views` route.
- */
 export const ImpactViewsPage: FC = () => (
     <StyledWrapper>
         <PageContent header={<PageHeader title='Impact views' />}>
-            <StyledContent>
-                <Typography variant='h3' component='h2' sx={{ mb: 1.5 }}>
-                    Impact views are on the way
-                </Typography>
-                <Typography sx={{ color: 'text.secondary', maxWidth: 480 }}>
-                    Follow a set of features and their impact metrics together
-                    on a single chart. This experimental feature is still being
-                    put together.
-                </Typography>
-            </StyledContent>
+            <StyledPanelPreview>
+                <GoalSummaryPanel
+                    goalMetricLabel={DUMMY_GOAL_METRIC_LABEL}
+                    summary={DUMMY_GOAL_SUMMARY}
+                    series={DUMMY_GOAL_SERIES}
+                    timeLabel={DUMMY_GOAL_TIME_LABEL}
+                />
+            </StyledPanelPreview>
         </PageContent>
     </StyledWrapper>
 );

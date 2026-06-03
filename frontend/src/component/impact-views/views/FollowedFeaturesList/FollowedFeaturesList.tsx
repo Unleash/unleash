@@ -25,21 +25,25 @@ export type LifecycleStageName =
 
 export type ResolvedFeature = {
     name: string;
-    project: string | null;
+    project: string;
+    type: string;
     lifecycleStage: LifecycleStageName | null;
-    type: string | null;
-    found: boolean;
 };
 
 type GroupKey = LifecycleStageName | 'unknown';
 
-const STAGE_ORDER: LifecycleStageName[] = [
+// Render order; 'unknown' (no resolvable lifecycle) always sits last.
+const GROUP_ORDER: GroupKey[] = [
     'initial',
     'pre-live',
     'live',
     'completed',
     'archived',
+    'unknown',
 ];
+
+const groupKeyOf = (feature: ResolvedFeature): GroupKey =>
+    feature.lifecycleStage ?? 'unknown';
 
 const StyledSectionHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -154,25 +158,20 @@ export const FollowedFeaturesList: FC<FollowedFeaturesListProps> = ({
 }) => {
     const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
 
-    const groups = useMemo(() => {
-        const byKey: Record<string, ResolvedFeature[]> = {};
-        for (const feature of features) {
-            const key =
-                feature.found && feature.lifecycleStage
-                    ? feature.lifecycleStage
-                    : 'unknown';
-            if (!byKey[key]) byKey[key] = [];
-            byKey[key].push(feature);
-        }
-        return byKey;
-    }, [features]);
+    // Each lifecycle stage (then 'unknown'), in render order, with the
+    // features that belong to it. Empty groups are dropped.
+    const groups = useMemo(
+        () =>
+            GROUP_ORDER.map((key) => ({
+                key,
+                entries: features.filter(
+                    (feature) => groupKeyOf(feature) === key,
+                ),
+            })).filter((group) => group.entries.length > 0),
+        [features],
+    );
 
     if (features.length === 0) return null;
-
-    const orderedKeys: GroupKey[] = [
-        ...STAGE_ORDER.filter((key) => (groups[key] ?? []).length > 0),
-        ...(groups.unknown?.length ? (['unknown'] as const) : []),
-    ];
 
     const toggleGroup = (key: GroupKey) =>
         setCollapsed((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -194,8 +193,7 @@ export const FollowedFeaturesList: FC<FollowedFeaturesListProps> = ({
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {orderedKeys.map((key) => {
-                            const entries = groups[key] ?? [];
+                        {groups.map(({ key, entries }) => {
                             const isCollapsed = Boolean(collapsed[key]);
                             const isStage = key !== 'unknown';
 
@@ -245,11 +243,7 @@ export const FollowedFeaturesList: FC<FollowedFeaturesListProps> = ({
                                                       </StyledNameWrapper>
                                                   </TableCell>
                                                   <TableCell>
-                                                      {entry.project ?? (
-                                                          <StyledDash>
-                                                              —
-                                                          </StyledDash>
-                                                      )}
+                                                      {entry.project}
                                                   </TableCell>
                                                   <TableCell
                                                       sx={{
@@ -257,11 +251,7 @@ export const FollowedFeaturesList: FC<FollowedFeaturesListProps> = ({
                                                               'capitalize',
                                                       }}
                                                   >
-                                                      {entry.type ?? (
-                                                          <StyledDash>
-                                                              —
-                                                          </StyledDash>
-                                                      )}
+                                                      {entry.type}
                                                   </TableCell>
                                                   <TableCell>
                                                       {entry.lifecycleStage ? (

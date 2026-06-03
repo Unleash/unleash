@@ -20,28 +20,24 @@ export const DUMMY_FOLLOWED_FEATURES: ResolvedFeature[] = [
         project: 'default',
         type: 'release',
         lifecycleStage: 'live',
-        found: true,
     },
     {
         name: 'express-checkout',
         project: 'default',
         type: 'experiment',
         lifecycleStage: 'pre-live',
-        found: true,
     },
     {
         name: 'one-click-purchase',
         project: 'payments',
         type: 'release',
         lifecycleStage: 'completed',
-        found: true,
     },
     {
         name: 'legacy-cart',
         project: 'default',
         type: 'kill-switch',
         lifecycleStage: 'archived',
-        found: true,
     },
 ];
 

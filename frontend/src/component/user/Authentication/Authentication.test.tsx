@@ -81,10 +81,6 @@ test('should render email auth', async () => {
     expect(screen.getByTestId(LOGIN_BUTTON)).toBeInTheDocument();
 });
 
-test('should render Google auth', async () => {
-    await testSSOAuthOption('google');
-});
-
 test('should render OIDC auth', async () => {
     await testSSOAuthOption('oidc');
 });

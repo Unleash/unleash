@@ -67,7 +67,6 @@ const icons: Record<
     '/admin/auth/saml': SingleSignOnIcon,
     '/admin/auth/scim': SingleSignOnIcon,
     '/admin/auth/password': SingleSignOnIcon,
-    '/admin/auth/google': SingleSignOnIcon,
     '/admin/network': NetworkIcon,
     '/admin/network/traffic': NetworkIcon,
     '/admin/network/data-usage': NetworkIcon,

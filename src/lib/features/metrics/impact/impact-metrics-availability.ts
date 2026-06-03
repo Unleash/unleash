@@ -17,13 +17,6 @@ export type ImpactMetricsAvailabilityConfig = Pick<
     'isEnterprise' | 'prometheusImpactMetricsApi' | 'flagResolver'
 >;
 
-/**
- * Resolves the impact-metrics availability state surfaced in uiConfig.
- *
- * Edition and the internal-source presence come from config (static); the
- * killswitch flag and the configured external source are read on each
- * `resolve()` because they can change at runtime.
- */
 export class ImpactMetricsAvailabilityResolver {
     private readonly config: ImpactMetricsAvailabilityConfig;
     private readonly settingService: Pick<SettingService, 'getWithDefault'>;

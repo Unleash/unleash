@@ -1,12 +1,10 @@
 import { expect, test } from 'vitest';
-import type { IFlagResolver } from '../../../types/index.js';
 import { TEST_AUDIT_USER } from '../../../types/core.js';
 import { createFakeSettingService } from '../../settings/createSettingService.js';
 import { createTestConfig } from '../../../../test/config/test-config.js';
 import {
     ImpactMetricsAvailabilityResolver,
     type ImpactMetricsAvailability,
-    type ImpactMetricsAvailabilityConfig,
 } from './impact-metrics-availability.js';
 import {
     EXTERNAL_SOURCE_SETTING_KEY,
@@ -26,16 +24,13 @@ const resolve = async (options: {
         externalSource,
     } = options;
 
-    const config: ImpactMetricsAvailabilityConfig = {
-        isEnterprise,
+    const config = createTestConfig({
+        enterpriseVersion: isEnterprise ? '1.0.0' : undefined,
         prometheusImpactMetricsApi,
-        flagResolver: {
-            isEnabled: (flag) =>
-                flag === 'disableImpactMetrics' && disableImpactMetrics,
-        } as IFlagResolver,
-    };
+        experimental: { flags: { disableImpactMetrics } },
+    });
 
-    const settingService = createFakeSettingService(createTestConfig());
+    const settingService = createFakeSettingService(config);
     if (externalSource) {
         await settingService.insert(
             EXTERNAL_SOURCE_SETTING_KEY,

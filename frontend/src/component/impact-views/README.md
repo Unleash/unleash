@@ -57,7 +57,7 @@ generators, the view editor, localStorage CRUD, and real-data wiring.
 |----|----------|
 | **1** ✅ | `impactViews` flag (backend `experimental.ts` + frontend `UiFlags`), `/impact-views` route, gated nav item, stub page + this README. |
 | **2** | Goal-view types + goal summary (no components, no API calls): `views/types.ts`, `computeGoalSummary(+test)`. |
-| **3** | Basic goal-view display: `GoalSummaryPanel`, `FollowedFeaturesStrip` (render-only). |
+| **3** | Goal summary panel (render-only): `GoalSummaryPanel`. (`FollowedFeaturesStrip` dropped — dead code, nothing imports it.) |
 | **4** | Chart card + getter: `hooks/MultimetricChartCard`, `hooks/useGroupedImpactMetricsData` + `sumSeriesByTimestamp(+test)`. |
 | **5** | Goal chart + lists: `GoalTrackingViewChart` (Top Movers / Flag Impact / dev simulation stripped), `FollowedFeaturesList`, `useMergedFeatureEvents`. |
 | **6** | Wire the dummy goal view: `fixtures/dummyGoalView.ts` (hardcoded `MetricView` + static series/events) rendered from `ImpactViewsPage` — no API calls. |
@@ -66,8 +66,11 @@ generators, the view editor, localStorage CRUD, and real-data wiring.
 ## Status
 
 - **PR 1** — merged (#12173). Flag, route, nav, stub page, this README.
-- **PR 2** — open (#12177). `views/types.ts` + `views/computeGoalSummary.ts(+test)`.
-- **PR 3+** — not started.
+- **PR 2** — merged (#12177). `views/types.ts` + `views/computeGoalSummary.ts(+test)`.
+- **PR 3** — open. `views/GoalSummaryPanel.tsx` + a temporary dummy preview
+  (`fixtures/dummyGoalSummary.ts` rendered from `ImpactViewsPage`). The preview is
+  throwaway — `ImpactViewsPage` is replaced by the full `GoalTrackingViewChart` later.
+- **PR 4+** — not started.
 
 ## Decisions & context (for picking this up later)
 

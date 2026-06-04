@@ -34,7 +34,6 @@ import {
 import type ConfigurationRevisionService from '../feature-toggle/configuration-revision-service.js';
 import type { ClientFeatureToggleService } from './client-feature-toggle-service.js';
 import {
-    CLIENT_FEATURES_MEMORY,
     CLIENT_METRICS_NAMEPREFIX,
     CLIENT_METRICS_PROJECT,
     CLIENT_METRICS_TAGS,
@@ -72,8 +71,6 @@ export default class FeatureController extends Controller {
     private flagResolver: IFlagResolver;
 
     private eventBus: EventEmitter;
-
-    private clientFeaturesCacheMap = new Map<string, number>();
 
     private featuresAndSegments: (
         query: IFeatureToggleQuery,
@@ -174,13 +171,6 @@ export default class FeatureController extends Controller {
                 await this.clientFeatureToggleService.getActiveSegmentsForClient();
 
             try {
-                const featuresSize = this.getCacheSizeInBytes(features);
-                const segmentsSize = this.getCacheSizeInBytes(segments);
-                this.clientFeaturesCacheMap.set(
-                    JSON.stringify(query),
-                    featuresSize + segmentsSize,
-                );
-
                 const delta =
                     await this.clientFeatureToggleService.getClientDelta(
                         undefined,
@@ -216,8 +206,6 @@ export default class FeatureController extends Controller {
                         `Delta diff should have only hydration event, query ${JSON.stringify(query)}`,
                     );
                 }
-
-                this.storeFootprint();
             } catch (e) {
                 this.logger.error('Delta diff failed', e);
             }
@@ -395,19 +383,6 @@ export default class FeatureController extends Controller {
                 ...toggle,
             },
         );
-    }
-
-    storeFootprint() {
-        let memory = 0;
-        for (const value of this.clientFeaturesCacheMap.values()) {
-            memory += value;
-        }
-        this.eventBus.emit(CLIENT_FEATURES_MEMORY, { memory });
-    }
-
-    getCacheSizeInBytes(value: any): number {
-        const jsonString = JSON.stringify(value);
-        return Buffer.byteLength(jsonString, 'utf8');
     }
 
     deepEqualIgnoreOrder = (obj1, obj2) => {

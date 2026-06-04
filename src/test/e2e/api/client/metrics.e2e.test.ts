@@ -18,6 +18,7 @@ beforeAll(async () => {
         experimental: {
             flags: {
                 responseTimeMetricsFix: true,
+                allowDeprecatedApiTokenMiddleware: true,
             },
         },
     });

@@ -54,6 +54,7 @@ beforeAll(async () => {
         experimental: {
             flags: {
                 disableImpactMetrics: false,
+                allowDeprecatedApiTokenMiddleware: true,
             },
         },
     });

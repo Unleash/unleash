@@ -45,7 +45,15 @@ let services: IUnleashServices;
 let destroy: () => Promise<void>;
 
 beforeAll(async () => {
-    const setup = await getSetup();
+    const setup = await getSetup({
+        experimental: {
+            flags: {
+                strictSchemaValidation: true,
+                deltaApi: true,
+                allowDeprecatedApiTokenMiddleware: true,
+            },
+        },
+    });
     request = setup.request;
     stores = setup.stores;
     destroy = setup.destroy;
@@ -231,6 +239,7 @@ test('should return 204 if metrics are disabled by feature flag', async () => {
         experimental: {
             flags: {
                 disableMetrics: true,
+                allowDeprecatedApiTokenMiddleware: true,
             },
         },
     });
@@ -486,6 +495,7 @@ describe('bulk metrics', () => {
             experimental: {
                 flags: {
                     disableMetrics: true,
+                    allowDeprecatedApiTokenMiddleware: true,
                 },
             },
         });
@@ -504,6 +514,11 @@ describe('bulk metrics', () => {
             authentication: {
                 type: IAuthType.DEMO,
                 enableApiToken: true,
+            },
+            experimental: {
+                flags: {
+                    allowDeprecatedApiTokenMiddleware: true,
+                },
             },
         });
         const clientToken =

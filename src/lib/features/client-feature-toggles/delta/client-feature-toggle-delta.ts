@@ -178,8 +178,6 @@ export class ClientFeatureToggleDelta extends EventEmitter {
 
     private readonly segmentReadModel: ISegmentReadModel;
 
-    private eventBus: EventEmitter;
-
     private readonly logger: Logger;
 
     constructor(
@@ -196,7 +194,6 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             clientFeatureToggleDeltaReadModel;
         this.flagResolver = flagResolver;
         this.segmentReadModel = segmentReadModel;
-        this.eventBus = config.eventBus;
         this.logger = config.getLogger('delta/client-feature-toggle-delta.js');
         this.onUpdateRevisionEvent = this.onUpdateRevisionEvent.bind(this);
         this.delta = {};

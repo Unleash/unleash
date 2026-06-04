@@ -59,4 +59,4 @@ The licenses you grant to Unleash under this Agreement are irrevocable and survi
 
 ## 9. Acceptance
 
-Unleash uses a pull request CLA check to record acceptance of this Agreement. When requested, provide your full name, email address, GitHub username, and whether you are signing on your own behalf or on behalf of an organization.
+Unleash records acceptance of this Agreement via a pull request CLA check. When prompted by that check, provide the requested details through the check UI (do not post personal information in the pull request discussion).

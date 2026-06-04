@@ -113,7 +113,6 @@ describe('User Admin API with email configuration', () => {
                     flags: {
                         strictSchemaValidation: true,
                         showUserDeviceCount: true,
-                        allowDeprecatedApiTokenMiddleware: true,
                     },
                 },
             },

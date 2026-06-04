@@ -453,6 +453,7 @@ export const VariantForm = ({
                                     content={{ text: payload.value }}
                                     onChange={(content) =>
                                         setPayload((payload) => {
+                                            clearError(ErrorField.PAYLOAD);
                                             return {
                                                 ...payload,
                                                 value:
@@ -463,6 +464,7 @@ export const VariantForm = ({
                                             };
                                         })
                                     }
+                                    onBlur={() => validatePayload(payload)}
                                 />
                             </Suspense>
                         }

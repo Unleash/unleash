@@ -139,7 +139,6 @@
     "typescript": "5.9.3",
     "unleash-proxy-client": "3.8.0",
     "use-query-params": "^2.2.2",
-    "vanilla-jsoneditor": "^3.12.0",
     "vite": "^8.0.10",
     "vite-plugin-env-compatible": "2.0.1",
     "vite-plugin-svgr": "5.2.0",

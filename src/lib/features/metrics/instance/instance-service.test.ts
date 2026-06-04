@@ -270,13 +270,14 @@ test('`registerInstance` sets `instanceId` to `default` if it is not provided', 
         config,
         {} as any,
     );
+    const environment = '';
 
     await instanceService.registerInstance(
         {
             appName: 'appName',
-            environment: '',
         },
         '::1',
+        environment,
     );
 
     expect(instanceService.seenClients.appName_default).toMatchObject({
@@ -304,18 +305,20 @@ describe('upserting into `seenClients`', () => {
             [key]: { ...client, sdkVersion: 'my-sdk' },
         };
 
+        const environment = 'blue';
+
         await instanceService.registerInstance(
             {
                 ...client,
-                environment: 'blue',
             },
             '::1',
+            environment,
         );
 
         expect(instanceService.seenClients[key]).toMatchObject({
             appName: 'appName',
             instanceId: 'instanceId',
-            environment: 'blue',
+            environment: environment,
             sdkVersion: 'my-sdk',
         });
     });
@@ -343,6 +346,7 @@ describe('upserting into `seenClients`', () => {
                 sdkVersion: 'my-sdk',
                 started: new Date(),
                 interval: 5,
+                environment: 'blue',
             },
             '::1',
         );

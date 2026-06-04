@@ -179,16 +179,19 @@ export default class ClientMetricsController extends Controller {
                 const { body: data, user } = req;
                 const clientIp = extractClientIp(req);
                 const { impactMetrics, ...metricsData } = data;
-                metricsData.environment =
-                    this.metricsV2.resolveMetricsEnvironment(user, metricsData);
+                const environment =
+                    this.metricsV2.resolveMetricsEnvironment(user);
+
                 await this.clientInstanceService.registerInstance(
                     metricsData,
                     clientIp,
+                    environment,
                 );
 
                 await this.metricsV2.registerClientMetrics(
                     metricsData,
                     clientIp,
+                    environment,
                 );
                 if (impactMetrics) {
                     await this.metricsV2.registerImpactMetrics(

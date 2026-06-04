@@ -107,16 +107,14 @@ export default class ClientInstanceService {
     };
 
     public async registerInstance(
-        data: Pick<
-            ClientMetricsSchema,
-            'appName' | 'instanceId' | 'environment'
-        >,
+        data: Pick<ClientMetricsSchema, 'appName' | 'instanceId'>,
         clientIp: string,
+        environment: string,
     ): Promise<void> {
         this.updateSeenClient({
             appName: data.appName,
             instanceId: data.instanceId ?? 'default',
-            environment: data.environment,
+            environment,
             clientIp: clientIp,
         });
     }
@@ -135,6 +133,8 @@ export default class ClientInstanceService {
         value.clientIp = clientIp;
         value.createdBy = SYSTEM_USER.username!;
         value.sdkType = 'backend';
+        value.environment = data.environment;
+
         this.updateSeenClient(value);
         this.eventBus.emit(CLIENT_REGISTERED, value);
 

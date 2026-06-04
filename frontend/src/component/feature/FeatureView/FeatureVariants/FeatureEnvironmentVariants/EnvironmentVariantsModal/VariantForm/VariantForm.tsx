@@ -470,8 +470,9 @@ export const VariantForm = ({
                                                 ...payload,
                                                 value:
                                                     'json' in content
-                                                        ? content.json?.toString() ||
-                                                          ''
+                                                        ? JSON.stringify(
+                                                              content.json,
+                                                          ) || ''
                                                         : content.text,
                                             };
                                         })

@@ -203,19 +203,25 @@ const ReactJSONEditor: FC<IReactJSONEditorProps> = ({
         () => [json(), ...(readOnly ? [] : [linter(jsonParseLinter())])],
         [readOnly],
     );
+    const shouldValidateInternally =
+        !readOnly && validationErrorProp === undefined;
 
     useEffect(() => {
         setValidationError(
-            readOnly ? undefined : getJsonValidationError(value),
+            shouldValidateInternally
+                ? getJsonValidationError(value)
+                : undefined,
         );
-    }, [readOnly, value]);
+    }, [shouldValidateInternally, value]);
 
     const handleChange = useCallback(
         (value: string) => {
-            setValidationError(getJsonValidationError(value));
+            if (shouldValidateInternally) {
+                setValidationError(getJsonValidationError(value));
+            }
             onChange?.({ text: value });
         },
-        [onChange],
+        [onChange, shouldValidateInternally],
     );
 
     const formatJson = useCallback(() => {

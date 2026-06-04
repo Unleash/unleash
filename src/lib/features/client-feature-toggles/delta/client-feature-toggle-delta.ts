@@ -13,7 +13,6 @@ import type {
     FeatureConfigurationDeltaClient,
     IClientFeatureToggleDeltaReadModel,
 } from './client-feature-toggle-delta-read-model-type.js';
-import { CLIENT_DELTA_MEMORY } from '../../../metric-events.js';
 import EventEmitter from 'events';
 import type { Logger } from '../../../logger.js';
 import type { ClientFeaturesDeltaSchema } from '../../../openapi/index.js';
@@ -179,8 +178,6 @@ export class ClientFeatureToggleDelta extends EventEmitter {
 
     private readonly segmentReadModel: ISegmentReadModel;
 
-    private eventBus: EventEmitter;
-
     private readonly logger: Logger;
 
     constructor(
@@ -197,7 +194,6 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             clientFeatureToggleDeltaReadModel;
         this.flagResolver = flagResolver;
         this.segmentReadModel = segmentReadModel;
-        this.eventBus = config.eventBus;
         this.logger = config.getLogger('delta/client-feature-toggle-delta.js');
         this.onUpdateRevisionEvent = this.onUpdateRevisionEvent.bind(this);
         this.delta = {};
@@ -308,7 +304,6 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         if (this.flagResolver.isEnabled('deltaApi')) {
             try {
                 await this.updateFeaturesDelta();
-                this.storeFootprint();
                 this.emit(UPDATE_DELTA);
             } catch (e) {
                 if (e instanceof BadDataError) {
@@ -583,7 +578,6 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         this.lastDeltaProcessedRevisionId = maxRevision;
         this.visibleRevisions[environment] = revisionState;
         deltaRevisionIdMetric.labels({ environment }).set(maxRevision);
-        this.storeFootprint();
     }
 
     private updateVisibleRevisions(
@@ -661,20 +655,6 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         const result =
             await this.clientFeatureToggleDeltaReadModel.getAll(query);
         return result;
-    }
-
-    storeFootprint() {
-        try {
-            const memory = this.getCacheSizeInBytes(this.delta);
-            this.eventBus.emit(CLIENT_DELTA_MEMORY, { memory });
-        } catch (e) {
-            this.logger.error('Client delta footprint error', e);
-        }
-    }
-
-    getCacheSizeInBytes(value: any): number {
-        const jsonString = JSON.stringify(value);
-        return Buffer.byteLength(jsonString, 'utf8');
     }
 }
 

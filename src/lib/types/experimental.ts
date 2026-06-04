@@ -51,7 +51,6 @@ export type IFlagKey =
     | 'streaming'
     | 'denyStreamingForNonEdge'
     | 'deltaApi'
-    | 'deltaDiff'
     | 'uniqueSdkTracking'
     | 'consumptionModel'
     | 'consumptionModelUI'
@@ -241,10 +240,6 @@ const flags: IFlags = {
     ),
     deltaApi: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DELTA_API,
-        false,
-    ),
-    deltaDiff: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_DELTA_DIFF,
         false,
     ),
     uniqueSdkTracking: parseEnvVarBoolean(

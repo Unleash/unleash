@@ -240,36 +240,9 @@ jobs:
         with:
           name: openapi-current
 
-      - name: Start Edge
-        run: |
-          docker pull unleashorg/unleash-edge:edge
-          docker run \
-            --detach \
-            --name unleash-edge \
-            --publish 3063:3063 \
-            --env UPSTREAM_URL=http://localhost:4242/api \
-            --env TOKENS='*:development.edge-openapi-route-check' \
-            unleashorg/unleash-edge:edge \
-            edge
-
       - name: Download Edge OpenAPI spec
         run: |
-          edge_ready=false
-          for i in {1..30}; do
-            if curl -fsSL -o edge-openapi.json http://localhost:3063/docs/openapi.json; then
-              echo "Edge is up!"
-              edge_ready=true
-              break
-            fi
-            echo "Waiting for Edge... attempt $i"
-            sleep 2
-          done
-
-          if [[ "$edge_ready" != "true" ]]; then
-            echo "Edge did not become ready in time."
-            docker logs unleash-edge
-            exit 1
-          fi
+          curl -fsSL -o edge-openapi.json https://unleashsbx.edge.getunleash.io/docs/openapi.json
 
           jq empty openapi-current.json
           jq empty edge-openapi.json

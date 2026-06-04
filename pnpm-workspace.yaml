@@ -12,7 +12,10 @@ allowBuilds:
   ssh2: true
 
 trustPolicy: no-downgrade
-
+trustPolicyExclude:
+  - chokidar@4.0.3
+  - reselect@5.1.1
+  - undici-types@6.21.0
 # The minimum age of a release to be considered for dependency installation.
 # The value is in minutes (1440 minutes = 1 day).
 # 10 080 minutes = 7 days

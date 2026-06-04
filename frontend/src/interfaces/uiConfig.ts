@@ -28,6 +28,12 @@ export interface IUiConfig {
     disablePasswordAuth?: boolean;
     emailEnabled?: boolean;
     prometheusAPIAvailable: boolean;
+    impactMetrics?:
+        | 'disabled'
+        | 'unconfigured'
+        | 'external'
+        | 'internal'
+        | 'full';
     maintenanceMode?: boolean;
     frontendApiOrigins?: string[];
     resourceLimits: ResourceLimitsSchema;
@@ -52,7 +58,6 @@ export type UiFlags = {
     personalAccessTokensKillSwitch?: boolean;
     demo?: boolean;
     interactiveDemoKillSwitch?: boolean;
-    googleAuthEnabled?: boolean;
     advancedPlayground?: boolean;
     strategyVariant?: boolean;
     doraMetrics?: boolean;
@@ -89,7 +94,6 @@ export type UiFlags = {
     signupDialog?: boolean;
     enterpriseEdgeTokensList?: boolean;
     impactMetricsFlagPage?: boolean;
-    onboardingProjectSetupNewSteps?: boolean;
     multiMetricChart?: boolean;
     logRocketEnabled?: boolean;
     newProjectList?: boolean;

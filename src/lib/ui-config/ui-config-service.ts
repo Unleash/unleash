@@ -18,6 +18,7 @@ import {
 } from '../types/settings/simple-auth-settings.js';
 import version from '../util/version.js';
 import type { ResourceLimitsService } from '../features/resource-limits/resource-limits-service.js';
+import { ImpactMetricsAvailabilityResolver } from '../features/metrics/impact/impact-metrics-availability.js';
 
 export class UiConfigService {
     private config: IUnleashConfig;
@@ -37,6 +38,8 @@ export class UiConfigService {
     private resourceLimitsService: ResourceLimitsService;
 
     private flagResolver: IFlagResolver;
+
+    private impactMetricsAvailabilityResolver: ImpactMetricsAvailabilityResolver;
 
     constructor(
         config: IUnleashConfig,
@@ -68,6 +71,8 @@ export class UiConfigService {
         this.maintenanceService = maintenanceService;
         this.sessionService = sessionService;
         this.resourceLimitsService = resourceLimitsService;
+        this.impactMetricsAvailabilityResolver =
+            new ImpactMetricsAvailabilityResolver(config, settingService);
     }
 
     async getMaxSessionsCount(): Promise<number> {
@@ -83,11 +88,13 @@ export class UiConfigService {
             simpleAuthSettings,
             maintenanceMode,
             maxSessionsCount,
+            impactMetrics,
         ] = await Promise.all([
             this.frontendApiService.getFrontendSettings(false),
             this.settingService.get<SimpleAuthSettings>(simpleAuthSettingsKey),
             this.maintenanceService.isMaintenanceMode(),
             this.getMaxSessionsCount(),
+            this.impactMetricsAvailabilityResolver.resolve(),
         ]);
 
         const disablePasswordAuth =
@@ -121,6 +128,7 @@ export class UiConfigService {
             frontendApiOrigins: frontendSettings.frontendApiOrigins,
             versionInfo: await this.versionService.getVersionInfo(),
             prometheusAPIAvailable: this.config.prometheusApi !== undefined,
+            impactMetrics,
             resourceLimits:
                 await this.resourceLimitsService.getResourceLimits(),
             disablePasswordAuth,

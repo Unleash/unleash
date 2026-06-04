@@ -1,10 +1,8 @@
-import { useState, type JSX } from 'react';
+import { useState } from 'react';
 import {
     Accordion,
     AccordionSummary,
     AccordionDetails,
-    type SxProps,
-    type Theme,
     styled,
 } from '@mui/material';
 import type { IConstraint } from 'interfaces/strategy';
@@ -14,9 +12,7 @@ import { ConstraintAccordionViewHeader } from './ConstraintAccordionViewHeader/C
 interface IConstraintAccordionViewProps {
     constraint: IConstraint;
     onUse?: () => void;
-    sx?: SxProps<Theme>;
     disabled?: boolean;
-    renderAfter?: JSX.Element;
     borderStyle?: 'solid' | 'dashed';
 }
 
@@ -65,9 +61,7 @@ const StyledWrapper = styled('div')({
 export const ConstraintAccordionView = ({
     constraint,
     onUse,
-    sx = undefined,
     disabled = false,
-    renderAfter,
     borderStyle = 'solid',
 }: IConstraintAccordionViewProps) => {
     const [expandable, setExpandable] = useState(true);
@@ -80,7 +74,7 @@ export const ConstraintAccordionView = ({
     };
 
     return (
-        <StyledAccordion expanded={expanded} sx={sx} borderStyle={borderStyle}>
+        <StyledAccordion expanded={expanded} borderStyle={borderStyle}>
             <StyledAccordionSummary
                 expandIcon={null}
                 onClick={handleClick}
@@ -100,7 +94,6 @@ export const ConstraintAccordionView = ({
                         disabled={disabled}
                         expanded={expanded}
                     />
-                    {renderAfter}
                 </StyledWrapper>
             </StyledAccordionSummary>
 

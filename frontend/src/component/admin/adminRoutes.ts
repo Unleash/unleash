@@ -104,13 +104,6 @@ export const adminRoutes: INavigationMenuItem[] = [
         group: 'sso',
     },
     {
-        path: '/admin/auth/google',
-        title: 'Google',
-        menu: { adminSettings: true, mode: ['enterprise'] },
-        flag: 'googleAuthEnabled',
-        group: 'sso',
-    },
-    {
         path: '/admin/auth/scim',
         title: 'SCIM',
         menu: { adminSettings: true, mode: ['enterprise'] },

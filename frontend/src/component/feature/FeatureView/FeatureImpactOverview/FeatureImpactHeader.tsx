@@ -1,12 +1,11 @@
 import type { FC } from 'react';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { Button, Collapse, styled, Typography } from '@mui/material';
-import { Badge } from 'component/common/Badge/Badge';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import Add from '@mui/icons-material/Add';
 import { useFeatureImpactMetrics } from 'hooks/api/getters/useFeatureImpactMetrics/useFeatureImpactMetrics';
-import { PlaceholderChart } from './ImpactDashboard/PlaceholderChart';
+import { ImpactMetricsEmptyState } from './ImpactMetricsEmptyState';
 import { CompactChartCard } from './CompactChartCard';
 import { GroupedChartCard } from './GroupedChartCard';
 import { groupImpactConfigs, multimetricFirst } from './groupImpactConfigs';
@@ -70,12 +69,6 @@ const StyledExpandedContent = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.elevation2,
 }));
 
-const StyledEmptyDescription = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
-    color: theme.palette.text.secondary,
-    maxWidth: '100%',
-}));
-
 const StyledChartRow = styled('div')(({ theme }) => ({
     display: 'grid',
     gridTemplateColumns: 'repeat(3, 1fr)',
@@ -87,12 +80,6 @@ const StyledChartRow = styled('div')(({ theme }) => ({
         gridTemplateColumns: '1fr',
     },
 }));
-
-const StyledConnectButton = styled(Button)({
-    textTransform: 'none',
-    whiteSpace: 'nowrap',
-    flexShrink: 0,
-});
 
 const StyledFooter = styled('div')(({ theme }) => ({
     padding: theme.spacing(2, 3, 2),
@@ -119,6 +106,9 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
             'impact-metrics-accordion:expanded',
             'closed',
         );
+    const [bannerState, setBannerState] = useLocalStorageState<
+        'open' | 'closed'
+    >('impact-metrics-banner:dismissed', 'open');
     const { trackEvent } = usePlausibleTracker();
     const { trackAccordionOpened, trackAddMetricClicked } =
         useTrackFlagpageImpactMetrics();
@@ -151,71 +141,15 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
     };
 
     if (!hasMetrics) {
+        if (bannerState === 'closed') {
+            return null;
+        }
+
         return (
-            <StyledContainer>
-                <StyledHeaderBar
-                    role='button'
-                    tabIndex={0}
-                    aria-expanded={expanded}
-                    aria-label='Toggle impact metrics details'
-                    onClick={toggleExpanded}
-                    onKeyDown={onHeaderKeyDown}
-                >
-                    <StyledImpactLabel>
-                        <StyledImpactTitle>
-                            Measure the impact of this feature
-                        </StyledImpactTitle>
-                        <Badge color='success' sx={{ ml: 1 }}>
-                            New
-                        </Badge>
-                    </StyledImpactLabel>
-                    <StyledRightSection sx={{ marginLeft: 'auto' }}>
-                        <StyledConnectButton
-                            variant='outlined'
-                            startIcon={<Add />}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                trackEvent('flagpage-impact-metrics', {
-                                    props: {
-                                        eventType: 'add-impact-metric-clicked',
-                                    },
-                                });
-                                trackAddMetricClicked();
-                                onAddChart();
-                            }}
-                        >
-                            Add impact metric
-                        </StyledConnectButton>
-                        {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                    </StyledRightSection>
-                </StyledHeaderBar>
-                <Collapse in={expanded}>
-                    <StyledExpandedContent>
-                        <StyledEmptyDescription>
-                            Connect your metrics to see how this feature affects
-                            adoption, error counts, latency, and other key
-                            indicators during rollout.
-                        </StyledEmptyDescription>
-                        <StyledChartRow>
-                            <PlaceholderChart
-                                title='Adoption'
-                                change='+1,204'
-                                variant='upward'
-                            />
-                            <PlaceholderChart
-                                title='Errors'
-                                change='3'
-                                variant='downward'
-                            />
-                            <PlaceholderChart
-                                title='Latency (p95)'
-                                change='~230ms'
-                                variant='stable'
-                            />
-                        </StyledChartRow>
-                    </StyledExpandedContent>
-                </Collapse>
-            </StyledContainer>
+            <ImpactMetricsEmptyState
+                onAddChart={onAddChart}
+                onDismiss={() => setBannerState('closed')}
+            />
         );
     }
 

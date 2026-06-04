@@ -122,7 +122,7 @@ test('with flag set should set user if known token', async () => {
         },
         experimental: {
             flags: {
-                onlyFeatureTokensWithFeatureAPIs: true,
+                allowDeprecatedApiTokenMiddleware: true,
             },
         },
     });

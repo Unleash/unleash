@@ -180,8 +180,6 @@ test('should set lastSeen for toggles with metrics both for toggle and toggle en
     const t1Env = t1.environments.find((e) => e.name === DEFAULT_ENV);
     const t2Env = t2.environments.find((e) => e.name === DEFAULT_ENV);
 
-    expect(t1.lastSeenAt?.getTime()).toBeGreaterThanOrEqual(start);
     expect(t1Env?.lastSeenAt.getTime()).toBeGreaterThanOrEqual(start);
-    expect(t2?.lastSeenAt).toBeDefined();
     expect(t2Env?.lastSeenAt).toBeDefined();
 });

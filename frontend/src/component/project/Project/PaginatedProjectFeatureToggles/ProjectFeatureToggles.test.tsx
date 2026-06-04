@@ -5,7 +5,6 @@ import { ProjectFeatureToggles } from './ProjectFeatureToggles.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { fireEvent, screen } from '@testing-library/react';
 import { BATCH_SELECTED_COUNT } from 'utils/testIds';
-import { setLocalStorageItem } from 'utils/storage';
 
 const server = testServerSetup();
 
@@ -211,9 +210,7 @@ test('Project is onboarded', async () => {
             route: `/projects/${projectId}`,
         },
     );
-    expect(
-        screen.queryByText('Welcome to your project'),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText('Project setup')).not.toBeInTheDocument();
 }, 10000);
 
 test('Project is not onboarded', async () => {
@@ -235,7 +232,7 @@ test('Project is not onboarded', async () => {
             route: `/projects/${projectId}`,
         },
     );
-    await screen.findByText('Welcome to your project');
+    await screen.findByText('Project setup');
 }, 10000);
 
 test('renders lifecycle quick filters', async () => {
@@ -263,112 +260,15 @@ test('renders lifecycle quick filters', async () => {
     await screen.findByText(/Cleanup/);
 }, 10000);
 
-test('shows new onboarding steps when flag is enabled and project is not onboarded', async () => {
+test('shows onboarding steps when flag is enabled and project is not onboarded', async () => {
     const projectId = 'default';
     setupApi();
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: { flagCreator: true, onboardingProjectSetupNewSteps: true },
+        flags: { flagCreator: true },
     });
     testServerRoute(server, '/api/admin/projects/default/overview', {
         onboardingStatus: { status: 'onboarding-started' },
     });
-    render(
-        <Routes>
-            <Route
-                path={'/projects/:projectId'}
-                element={<ProjectFeatureToggles environments={[]} />}
-            />
-        </Routes>,
-        { route: `/projects/${projectId}` },
-    );
-    await screen.findByText('Project setup');
-}, 10000);
-
-test('hides new onboarding when user dismissed the flow', async () => {
-    const projectId = 'default';
-    setupApi();
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: { flagCreator: true, onboardingProjectSetupNewSteps: true },
-    });
-    testServerRoute(server, '/api/admin/projects/default/overview', {
-        onboardingStatus: { status: 'onboarding-started' },
-    });
-    setLocalStorageItem(
-        ':onboarding-flow:v1-default:localStorage:v2',
-        'closed',
-    );
-    render(
-        <Routes>
-            <Route
-                path={'/projects/:projectId'}
-                element={<ProjectFeatureToggles environments={[]} />}
-            />
-        </Routes>,
-        { route: `/projects/${projectId}` },
-    );
-    expect(screen.queryByText('Project setup')).not.toBeInTheDocument();
-}, 10000);
-
-test('hides new onboarding when project is onboarded and setup state is hide-setup', async () => {
-    const projectId = 'default';
-    setupApi();
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: { flagCreator: true, onboardingProjectSetupNewSteps: true },
-    });
-    testServerRoute(server, '/api/admin/projects/default/overview', {
-        onboardingStatus: { status: 'onboarded' },
-    });
-    setLocalStorageItem(
-        ':onboarding-state:v1-default:localStorage:v2',
-        'hide-setup',
-    );
-    render(
-        <Routes>
-            <Route
-                path={'/projects/:projectId'}
-                element={<ProjectFeatureToggles environments={[]} />}
-            />
-        </Routes>,
-        { route: `/projects/${projectId}` },
-    );
-    expect(screen.queryByText('Project setup')).not.toBeInTheDocument();
-}, 10000);
-
-test('shows setup completed banner if user did not dismiss the old flow', async () => {
-    const projectId = 'default';
-    setupApi();
-    testServerRoute(server, '/api/admin/projects/default/overview', {
-        onboardingStatus: { status: 'onboarded' },
-    });
-    setLocalStorageItem(
-        ':onboarding-state:v1-default:localStorage:v2',
-        'show-setup',
-    );
-    render(
-        <Routes>
-            <Route
-                path={'/projects/:projectId'}
-                element={<ProjectFeatureToggles environments={[]} />}
-            />
-        </Routes>,
-        { route: `/projects/${projectId}` },
-    );
-    await screen.findByText('Setup completed');
-}, 10000);
-
-test('keeps new onboarding visible right after SDK connection before user dismisses', async () => {
-    const projectId = 'default';
-    setupApi();
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: { flagCreator: true, onboardingProjectSetupNewSteps: true },
-    });
-    testServerRoute(server, '/api/admin/projects/default/overview', {
-        onboardingStatus: { status: 'onboarded' },
-    });
-    setLocalStorageItem(
-        ':onboarding-state:v1-default:localStorage:v2',
-        'show-setup',
-    );
     render(
         <Routes>
             <Route

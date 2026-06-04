@@ -9,7 +9,7 @@ const server = testServerSetup();
 
 beforeEach(() => {
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: { disableImpactMetrics: false },
+        impactMetrics: 'unconfigured',
         versionInfo: { current: { enterprise: 'version' } },
         environment: 'Enterprise',
     });
@@ -19,7 +19,7 @@ beforeEach(() => {
     });
 });
 
-test('user journey: disabled state → invalid URL error → valid URL with metrics', async () => {
+test('user journey: empty URL (test button disabled) → invalid URL error → valid URL with metrics', async () => {
     const user = userEvent.setup();
 
     render(<ImpactMetricsAdmin />, {

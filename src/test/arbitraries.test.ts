@@ -173,6 +173,7 @@ export const clientFeature = (name?: string): Arbitrary<ClientFeatureSchema> =>
                 'experiment',
                 'operational',
                 'permission',
+                'sunset',
             ),
             description: fc.lorem(),
             project: urlFriendlyString(),

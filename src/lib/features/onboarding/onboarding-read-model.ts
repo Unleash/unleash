@@ -1,5 +1,4 @@
 import type { Db } from '../../db/db.js';
-import type { IFlagResolver } from '../../types/index.js';
 import type {
     IOnboardingReadModel,
     InstanceOnboarding,
@@ -25,11 +24,8 @@ const projectEventLookup = {
 export class OnboardingReadModel implements IOnboardingReadModel {
     private db: Db;
 
-    private flagResolver: IFlagResolver;
-
-    constructor(db: Db, flagResolver: IFlagResolver) {
+    constructor(db: Db) {
         this.db = db;
-        this.flagResolver = flagResolver;
     }
 
     async getInstanceOnboardingMetrics(): Promise<InstanceOnboarding> {
@@ -97,10 +93,6 @@ export class OnboardingReadModel implements IOnboardingReadModel {
     async getOnboardingStatusesForProjects(
         projectIds: string[],
     ): Promise<Map<string, OnboardingStatus>> {
-        const useNewSteps = this.flagResolver.isEnabled(
-            'onboardingProjectSetupNewSteps',
-        );
-
         const result = new Map<string, OnboardingStatus>();
 
         if (projectIds.length === 0) {
@@ -149,10 +141,6 @@ export class OnboardingReadModel implements IOnboardingReadModel {
 
         const determineStatus = (projectId: string): OnboardingStatus => {
             if (projectsWithSdkUsage.has(projectId)) {
-                if (!useNewSteps) {
-                    return { status: 'onboarded' };
-                }
-
                 if (projectsWithEnabledFlagEvent.has(projectId)) {
                     return { status: 'onboarded' };
                 }

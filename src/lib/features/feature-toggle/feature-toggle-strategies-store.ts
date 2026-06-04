@@ -447,16 +447,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     };
                 }
 
-                if (
-                    acc.lastSeenAt == null ||
-                    isAfter(
-                        new Date(r.env_last_seen_at),
-                        new Date(acc.lastSeenAt),
-                    )
-                ) {
-                    acc.lastSeenAt = r.env_last_seen_at;
-                }
-
                 const env = acc.environments[r.environment];
 
                 const variants = r.variants || [];
@@ -464,15 +454,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 if (withEnvironmentVariants) {
                     env.variants = variants;
                 }
-
-                // this code sets variants at the feature level (should be deprecated with variants per environment)
-                const currentVariants = new Map(
-                    acc.variants?.map((v) => [v.name, v]),
-                );
-                variants.forEach((variant) => {
-                    currentVariants.set(variant.name, variant);
-                });
-                acc.variants = Array.from(currentVariants.values());
 
                 env.enabled = r.enabled;
                 env.yes = Number(r.yes) || 0;
@@ -630,7 +611,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             'features.type as type',
             'features.created_at as created_at',
             'features.stale as stale',
-            'features.last_seen_at as last_seen_at',
             'features.impression_data as impression_data',
             'feature_environments.enabled as enabled',
             'feature_environments.environment as environment',
@@ -771,7 +751,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     createdAt: row.created_at,
                     stale: row.stale,
                     impressionData: row.impression_data,
-                    lastSeenAt: row.last_seen_at,
                     environments: [FeatureStrategiesStore.getEnvironment(row)],
                 };
 

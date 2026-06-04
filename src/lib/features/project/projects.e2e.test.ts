@@ -106,68 +106,35 @@ test('response should include technical debt field', async () => {
     expect(body.projects[0].technicalDebt).toBeLessThanOrEqual(100);
 });
 
-describe('onboardingStatus with onboardingProjectSetupNewSteps flag enabled', () => {
-    let appWithNewSteps: IUnleashTest;
-    let dbWithNewSteps: ITestDb;
+test('returns sdk-connected when SDK is connected but no flag has been enabled in an environment', async () => {
+    await app.createFeature({ name: 'my-flag' });
+    await db.stores.lastSeenStore.setLastSeen([
+        { environment: DEFAULT_ENV, featureName: 'my-flag' },
+    ]);
 
-    beforeAll(async () => {
-        dbWithNewSteps = await dbInit(
-            'projects_api_new_onboarding_steps',
-            getLogger,
-        );
-        appWithNewSteps = await setupAppWithCustomConfig(
-            dbWithNewSteps.stores,
-            {
-                experimental: {
-                    flags: {
-                        strictSchemaValidation: true,
-                        onboardingProjectSetupNewSteps: true,
-                    },
-                },
-            },
-            dbWithNewSteps.rawDatabase,
-        );
+    const { body } = await app.request
+        .get('/api/admin/projects/default/overview')
+        .expect(200);
+
+    expect(body.onboardingStatus).toMatchObject({
+        status: 'sdk-connected',
     });
+});
 
-    afterEach(async () => {
-        await dbWithNewSteps.stores.featureToggleStore.deleteAll();
-    });
+test('returns onboarded when SDK is connected and a flag has been enabled in an environment', async () => {
+    await app.createFeature({ name: 'my-flag' });
+    await db.stores.lastSeenStore.setLastSeen([
+        { environment: DEFAULT_ENV, featureName: 'my-flag' },
+    ]);
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/my-flag/environments/${DEFAULT_ENV}/on`,
+        )
+        .expect(200);
 
-    afterAll(async () => {
-        await appWithNewSteps.destroy();
-        await dbWithNewSteps.destroy();
-    });
+    const { body } = await app.request
+        .get('/api/admin/projects/default/overview')
+        .expect(200);
 
-    test('returns sdk-connected when SDK is connected but no flag has been enabled in an environment', async () => {
-        await appWithNewSteps.createFeature({ name: 'my-flag' });
-        await dbWithNewSteps.stores.lastSeenStore.setLastSeen([
-            { environment: DEFAULT_ENV, featureName: 'my-flag' },
-        ]);
-
-        const { body } = await appWithNewSteps.request
-            .get('/api/admin/projects/default/overview')
-            .expect(200);
-
-        expect(body.onboardingStatus).toMatchObject({
-            status: 'sdk-connected',
-        });
-    });
-
-    test('returns onboarded when SDK is connected and a flag has been enabled in an environment', async () => {
-        await appWithNewSteps.createFeature({ name: 'my-flag' });
-        await dbWithNewSteps.stores.lastSeenStore.setLastSeen([
-            { environment: DEFAULT_ENV, featureName: 'my-flag' },
-        ]);
-        await appWithNewSteps.request
-            .post(
-                `/api/admin/projects/default/features/my-flag/environments/${DEFAULT_ENV}/on`,
-            )
-            .expect(200);
-
-        const { body } = await appWithNewSteps.request
-            .get('/api/admin/projects/default/overview')
-            .expect(200);
-
-        expect(body.onboardingStatus).toMatchObject({ status: 'onboarded' });
-    });
+    expect(body.onboardingStatus).toMatchObject({ status: 'onboarded' });
 });

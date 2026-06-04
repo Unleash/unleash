@@ -1,39 +1,69 @@
 import type { FC } from 'react';
-import { Typography, styled } from '@mui/material';
-import { PageContent } from 'component/common/PageContent/PageContent';
+import { styled } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
+import type { ChartTimeRange } from 'component/impact-metrics/MultimetricChart/chartConfig';
+import { GoalSummaryPanel } from './views/GoalSummaryPanel/GoalSummaryPanel';
+import { MultimetricChartCard } from './views/MultimetricChartCard/MultimetricChartCard';
+import { FollowedFeaturesList } from './views/FollowedFeaturesList/FollowedFeaturesList';
+import { useGoalViewData } from './hooks/useGoalViewData';
+import { GOAL_VIEW } from './fixtures/goalViewConfig';
+
+const TIME_RANGE_LABELS: Record<ChartTimeRange, string> = {
+    hour: 'Last hour',
+    day: 'Last 24 hours',
+    week: 'Last 7 days',
+    month: 'Last 30 days',
+};
 
 const StyledWrapper = styled('div')(({ theme }) => ({
     paddingTop: theme.spacing(2),
 }));
 
-const StyledContent = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: theme.spacing(6, 4),
-    textAlign: 'center',
+const StyledCard = styled('div')(({ theme }) => ({
+    marginTop: theme.spacing(3),
 }));
 
-/**
- * Stub page for the Impact Views feature. The full implementation (view
- * switcher, goal-tracking / system-health charts, editor) is introduced in
- * later PRs — see ./README.md for the rollout plan. Gated behind the
- * `impactViews` flag via the `/impact-views` route.
- */
-export const ImpactViewsPage: FC = () => (
-    <StyledWrapper>
-        <PageContent header={<PageHeader title='Impact views' />}>
-            <StyledContent>
-                <Typography variant='h3' component='h2' sx={{ mb: 1.5 }}>
-                    Impact views are on the way
-                </Typography>
-                <Typography sx={{ color: 'text.secondary', maxWidth: 480 }}>
-                    Follow a set of features and their impact metrics together
-                    on a single chart. This experimental feature is still being
-                    put together.
-                </Typography>
-            </StyledContent>
-        </PageContent>
-    </StyledWrapper>
-);
+const StyledFeatures = styled('div')(({ theme }) => ({
+    marginTop: theme.spacing(3),
+}));
+
+export const ImpactViewsPage: FC = () => {
+    const view = GOAL_VIEW;
+    const data = useGoalViewData(view);
+    const timeLabel = TIME_RANGE_LABELS[view.timeRange];
+
+    return (
+        <StyledWrapper>
+            <PageHeader title='Impact views' />
+            <StyledCard>
+                <MultimetricChartCard
+                    title={data.goalLabel}
+                    subtitle={`Goal · ${timeLabel}`}
+                    timeRange={view.timeRange}
+                    aggregationMode={view.metrics[0]?.aggregationMode}
+                    stepSeries={data.stepSeries}
+                    stepTotals={data.stepTotals}
+                    featureEvents={data.featureEvents}
+                    start={data.start}
+                    end={data.end}
+                    loading={data.loading}
+                    chartHeightSpacing={{ base: 48, lg: 40, sm: 32 }}
+                    totalsLabel='Goal'
+                    totalsHeaderSlot={
+                        data.goalSummary ? (
+                            <GoalSummaryPanel
+                                goalMetricLabel={data.goalLabel}
+                                summary={data.goalSummary}
+                                series={data.goalSeries}
+                                timeLabel={timeLabel}
+                            />
+                        ) : null
+                    }
+                />
+            </StyledCard>
+            <StyledFeatures>
+                <FollowedFeaturesList features={data.resolvedFeatures} />
+            </StyledFeatures>
+        </StyledWrapper>
+    );
+};

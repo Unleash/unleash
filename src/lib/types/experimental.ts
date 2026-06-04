@@ -72,15 +72,15 @@ export type IFlagKey =
     | 'enterpriseEdgeTokensList'
     | 'impactMetricsFlagPage'
     | 'userTokenWithClientApiLoggingKillSwitch'
-    | 'onlyFeatureTokensWithFeatureAPIs'
-    | 'onboardingProjectSetupNewSteps'
+    | 'disableScimAdminGroupGuard'
     | 'multiMetricChart'
     | 'elasticEventSync'
     | 'logRocketEnabled'
     | 'newProjectList'
     | 'reactRouter_v7_relativeSplatPath'
     | 'reactRouter_v7_startTransition'
-    | 'newModalDesign';
+    | 'newModalDesign'
+    | 'allowDeprecatedApiTokenMiddleware';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -269,7 +269,7 @@ const flags: IFlags = {
     ),
     disableImpactMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_IMPACT_METRICS,
-        true,
+        false,
     ),
     streaming: {
         name: 'disabled',
@@ -330,12 +330,8 @@ const flags: IFlags = {
             .UNLEASH_EXPERIMENTAL_USERTOKEN_WITH_CLIENTAPI_LOGGING_KILL_SWITCH,
         false,
     ),
-    onlyFeatureTokensWithFeatureAPIs: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ONLY_FEATURE_TOKENS_WITH_FEATURE_APIS,
-        false,
-    ),
-    onboardingProjectSetupNewSteps: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ONBOARDING_PROJECT_SETUP_NEW_STEPS,
+    disableScimAdminGroupGuard: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DISABLE_SCIM_ADMIN_GROUP_GUARD,
         false,
     ),
     multiMetricChart: parseEnvVarBoolean(

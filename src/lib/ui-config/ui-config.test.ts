@@ -63,6 +63,7 @@ test('should get ui config', async () => {
         DEFAULT_STRATEGY_SEGMENTS_LIMIT,
     );
     expect(body.edgeUrl).toEqual('https://yourcompany.edge.getunleash.io');
+    expect(body.impactMetrics).toBe('disabled');
 });
 
 test('should update CORS settings', async () => {

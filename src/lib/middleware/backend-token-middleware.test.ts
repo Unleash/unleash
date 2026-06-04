@@ -3,16 +3,18 @@ import getLogger from '../../test/fixtures/no-logger.js';
 import { vi } from 'vitest';
 import type { ApiTokenService } from '../services/index.js';
 import backendApiAccessMiddleware from './backend-token-middleware.js';
+import { IAuthType } from '../server-impl.js';
 
 test('with flag set client api should return 403 if user object is set and token is PAT', async () => {
     const localConfig = createTestConfig({
         getLogger,
         authentication: {
             enableApiToken: true,
+            type: IAuthType.HOSTED,
         },
         experimental: {
             flags: {
-                onlyFeatureTokensWithFeatureAPIs: true,
+                allowDeprecatedApiTokenMiddleware: false,
             },
         },
     });
@@ -53,10 +55,11 @@ test.each([
         getLogger,
         authentication: {
             enableApiToken: true,
+            type: IAuthType.HOSTED,
         },
         experimental: {
             flags: {
-                onlyFeatureTokensWithFeatureAPIs: true,
+                allowDeprecatedApiTokenMiddleware: false,
             },
         },
     });

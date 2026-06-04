@@ -7,6 +7,8 @@ import { DEFAULT_ENV, extractAuditInfoFromUser } from '../../../util/index.js';
 import type { FeatureStrategySchema } from '../../../openapi/index.js';
 import type User from '../../../types/user.js';
 import {
+    ADMIN,
+    ADMIN_TOKEN_USER,
     type IConstraint,
     type IUnleashConfig,
     type IUnleashStores,
@@ -14,10 +16,7 @@ import {
     SKIP_CHANGE_REQUEST,
     SYSTEM_USER_AUDIT,
     TEST_AUDIT_USER,
-    ADMIN_TOKEN_USER,
-    ADMIN,
 } from '../../../types/index.js';
-import EnvironmentService from '../../project-environments/environment-service.js';
 import {
     ForbiddenError,
     NotFoundError,
@@ -26,29 +25,26 @@ import {
 } from '../../../error/index.js';
 import type { ISegmentService } from '../../segment/segment-service-interface.js';
 import {
-    createEventsService,
     createFeatureLinkService,
     createFeatureToggleService,
     createSegmentService,
 } from '../../index.js';
 import { insertLastSeenAt } from '../../../../test/e2e/helpers/test-helper.js';
-import type { EventService } from '../../../services/index.js';
 import type FeatureLinkService from '../../feature-links/feature-link-service.js';
 import {
-    beforeAll,
     afterAll,
+    beforeAll,
     beforeEach,
-    test,
-    expect,
     describe,
+    expect,
+    test,
 } from 'vitest';
+
 let stores: IUnleashStores;
 let db: ITestDb;
 let service: FeatureToggleService;
 let segmentService: ISegmentService;
 let featureLinkService: FeatureLinkService;
-let eventService: EventService;
-let environmentService: EnvironmentService;
 let unleashConfig: IUnleashConfig;
 const mockConstraints = (): IConstraint[] => {
     return Array.from({ length: 5 }).map(() => ({
@@ -75,8 +71,6 @@ beforeAll(async () => {
     featureLinkService = createFeatureLinkService(config)(db.rawDatabase);
 
     service = createFeatureToggleService(db.rawDatabase, config);
-
-    eventService = createEventsService(db.rawDatabase, config);
 });
 
 afterAll(async () => {
@@ -256,70 +250,6 @@ test('should not get empty rows as features', async () => {
 
     expect(features.length).toBe(7);
     expect(namelessFeature).toBeUndefined();
-});
-
-test('adding and removing an environment preserves variants when variants per env is off', async () => {
-    const featureName = 'something-that-has-variants';
-    const prodEnv = 'mock-prod-env';
-
-    await stores.environmentStore.create({
-        name: prodEnv,
-        type: 'production',
-    });
-
-    await service.createFeatureToggle(
-        'default',
-        {
-            name: featureName,
-            description: 'Second flag',
-            variants: [
-                {
-                    name: 'variant1',
-                    weight: 100,
-                    weightType: 'fix',
-                    stickiness: 'default',
-                },
-            ],
-        },
-        TEST_AUDIT_USER,
-    );
-
-    //force the variantEnvironments flag off so that we can test legacy behavior
-    environmentService = new EnvironmentService(
-        stores,
-        {
-            ...unleashConfig,
-            // @ts-expect-error - incomplete flag resolver definition
-            flagResolver: {
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                isEnabled: (_flagName: string) => false,
-            },
-        },
-        eventService,
-    );
-
-    await environmentService.addEnvironmentToProject(
-        prodEnv,
-        'default',
-        SYSTEM_USER_AUDIT,
-    );
-    await environmentService.removeEnvironmentFromProject(
-        prodEnv,
-        'default',
-        SYSTEM_USER_AUDIT,
-    );
-    await environmentService.addEnvironmentToProject(
-        prodEnv,
-        'default',
-        SYSTEM_USER_AUDIT,
-    );
-
-    const flag = await service.getFeature({
-        featureName,
-        projectId: undefined,
-        environmentVariants: false,
-    });
-    expect(flag.variants).toHaveLength(1);
 });
 
 test('cloning a feature flag copies variant environments correctly', async () => {
@@ -767,7 +697,6 @@ test('Should return last seen at per environment', async () => {
     expect(featureToggle.environments[0].lastSeenAt).toEqual(
         new Date(lastSeenAtStoreDate),
     );
-    expect(featureToggle.lastSeenAt).toEqual(new Date(lastSeenAtStoreDate));
 });
 
 test.each([

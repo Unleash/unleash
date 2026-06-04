@@ -31,6 +31,11 @@ beforeAll(async () => {
     app = await setupAppWithAuth(
         db.stores,
         {
+            experimental: {
+                flags: {
+                    allowDeprecatedApiTokenMiddleware: true,
+                },
+            },
             frontendApiOrigins: ['https://example.com'],
         },
         db.rawDatabase,

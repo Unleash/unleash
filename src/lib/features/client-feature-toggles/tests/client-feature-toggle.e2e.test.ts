@@ -20,6 +20,11 @@ async function getSetup() {
     const stores = createStores();
     const config = createTestConfig({
         server: { baseUriPath: base },
+        experimental: {
+            flags: {
+                allowDeprecatedApiTokenMiddleware: true,
+            },
+        },
     });
     const services = createServices(stores, config);
 

@@ -42,9 +42,6 @@ const viewWith = (metrics: ViewMetricConfig[]): MetricView => ({
     updatedAt: 0,
 });
 
-// Impact-metrics is fetched once per metric (the metricName is in the query
-// string), so we return a value keyed by metricName. Feature/event search are
-// queried for the followed flags — empty here, those aren't under test.
 const setupApi = (valueByMetric: Record<string, number>) => {
     server.use(
         http.get('/api/admin/impact-metrics/', ({ request }) => {
@@ -58,6 +55,24 @@ const setupApi = (valueByMetric: Record<string, number>) => {
                 series: [{ data: [[1, value]] }],
             });
         }),
+    );
+    server.use(
+        http.get('/api/admin/search/features', () =>
+            HttpResponse.json({ features: [], total: 0 }),
+        ),
+    );
+    server.use(
+        http.get('/api/admin/search/events', () =>
+            HttpResponse.json({ events: [], total: 0 }),
+        ),
+    );
+};
+
+const setupMetricsError = () => {
+    server.use(
+        http.get('/api/admin/impact-metrics/', () =>
+            HttpResponse.json({ error: 'boom' }, { status: 500 }),
+        ),
     );
     server.use(
         http.get('/api/admin/search/features', () =>
@@ -100,5 +115,22 @@ describe('useGoalViewData', () => {
         });
         expect(result.current.goalSeries).toBeUndefined();
         expect(result.current.goalSummary).toBeUndefined();
+    });
+
+    it('handles empty series from useGroupedImpactMetricsData without throwing', async () => {
+        setupMetricsError();
+
+        const view = viewWith([metric('goal', { goal: true })]);
+
+        const { result } = renderHook(() => useGoalViewData(view), { wrapper });
+
+        await waitFor(() => {
+            expect(result.current.loading).toBe(false);
+        });
+
+        expect(result.current.stepSeries).toEqual([]);
+        expect(result.current.stepTotals).toEqual([]);
+        expect(result.current.goalSeries).toBeUndefined();
+        expect(result.current.goalSummary?.current).toBe(0);
     });
 });

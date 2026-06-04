@@ -58,7 +58,6 @@ export type UiFlags = {
     personalAccessTokensKillSwitch?: boolean;
     demo?: boolean;
     interactiveDemoKillSwitch?: boolean;
-    googleAuthEnabled?: boolean;
     advancedPlayground?: boolean;
     strategyVariant?: boolean;
     doraMetrics?: boolean;

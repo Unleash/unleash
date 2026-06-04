@@ -4,17 +4,14 @@ import { OidcAuth } from './OidcAuth/OidcAuth.tsx';
 import { SamlAuth } from './SamlAuth/SamlAuth.tsx';
 import { ScimSettings } from './ScimSettings/ScimSettings.tsx';
 import { PasswordAuth } from './PasswordAuth/PasswordAuth.tsx';
-import { GoogleAuth } from './GoogleAuth/GoogleAuth.tsx';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 import { ADMIN, UPDATE_AUTH_CONFIGURATION } from '@server/types/permissions';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { usePageTitle } from 'hooks/usePageTitle';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 export const AuthSettings = () => {
     const { isEnterprise } = useUiConfig();
-    const googleAuthEnabled = useUiFlag('googleAuthEnabled');
 
     const tabs = [
         {
@@ -28,10 +25,6 @@ export const AuthSettings = () => {
         {
             label: 'Password login',
             path: '/admin/auth/password',
-        },
-        {
-            label: 'Single sign-on: Google',
-            path: '/admin/auth/google',
         },
         {
             label: 'Single sign-on: SCIM',
@@ -62,9 +55,6 @@ export const AuthSettings = () => {
                         <Route path='/oidc' index element={<OidcAuth />} />
                         <Route path='/saml' element={<SamlAuth />} />
                         <Route path='/password' element={<PasswordAuth />} />
-                        {googleAuthEnabled && (
-                            <Route path='/google' element={<GoogleAuth />} />
-                        )}
                         <Route path='/scim' element={<ScimSettings />} />
                     </Routes>
                 </PageContent>

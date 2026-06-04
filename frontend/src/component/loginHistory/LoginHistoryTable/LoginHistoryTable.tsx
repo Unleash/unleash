@@ -43,7 +43,6 @@ const AUTH_TYPE_LABEL: { [key: string]: string } = {
     simple: 'Password',
     oidc: 'OIDC',
     saml: 'SAML',
-    google: 'Google',
     github: 'GitHub',
 };
 

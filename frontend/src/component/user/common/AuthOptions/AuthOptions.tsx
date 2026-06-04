@@ -3,7 +3,6 @@ import LockRounded from '@mui/icons-material/LockRounded';
 import type { IAuthOptions } from 'hooks/api/getters/useAuth/useAuthEndpoint';
 import { SSO_LOGIN_BUTTON } from 'utils/testIds';
 import useQueryParams from 'hooks/useQueryParams';
-import GoogleIcon from '@mui/icons-material/Google';
 import GitHubIcon from '@mui/icons-material/GitHub';
 
 interface IAuthOptionProps {
@@ -28,16 +27,7 @@ const StyledSsoButton = styled(Button)(({ theme }) => ({
 }));
 
 const renderStartIcon = ({ type }: IAuthOptions) => {
-    if (type === 'google') {
-        return (
-            <GoogleIcon
-                style={{
-                    height: '20px',
-                    width: '20px',
-                }}
-            />
-        );
-    } else if (type === 'github') {
+    if (type === 'github') {
         return (
             <GitHubIcon
                 style={{

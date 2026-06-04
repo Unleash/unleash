@@ -585,9 +585,9 @@ describe('Error serialization special cases', () => {
             defaultHidden: true,
             options: [
                 {
-                    type: 'google',
-                    message: 'Sign in with Google',
-                    path: `base-path/auth/google/login`,
+                    type: 'oidc',
+                    message: 'Sign in with OIDC',
+                    path: `base-path/auth/oidc/login`,
                 },
             ],
         };

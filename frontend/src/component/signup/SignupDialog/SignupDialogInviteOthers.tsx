@@ -35,7 +35,6 @@ export const SignupDialogInviteOthers: SignupStepContent = ({
     data,
     setData,
     onNext,
-    onBack,
     signupData,
 }) => {
     const isFirstSignup = !signupData?.companyName;
@@ -149,11 +148,7 @@ export const SignupDialogInviteOthers: SignupStepContent = ({
                 />
             </StyledSignupDialogField>
             <StyledButtonRow>
-                <div>
-                    <Button variant='outlined' onClick={onBack}>
-                        Back
-                    </Button>
-                </div>
+                <div />
                 <div>
                     <Button variant='text' onClick={onLater} sx={{ mr: 2 }}>
                         Later

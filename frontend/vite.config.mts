@@ -115,6 +115,20 @@ export default defineConfig(({ mode }) => {
                     },
                 },
                 {
+                    // Theme files feed createTheme/emotion. Hot-swapping them
+                    // into a live React tree desyncs the DOM (insertBefore/
+                    // removeChild crashes), so force a clean full reload on any
+                    // theme edit instead of HMR.
+                    name: 'full-reload-on-theme-change',
+                    apply: 'serve',
+                    handleHotUpdate({ file, server }) {
+                        if (/\/src\/themes\/.*\.tsx?$/.test(file)) {
+                            server.ws.send({ type: 'full-reload' });
+                            return [];
+                        }
+                    },
+                },
+                {
                     // Route @mui/icons-material deep imports to the
                     // package's ESM build. Vite 8 follows Node-style CJS
                     // interop for ESM importers (see "Consistent CommonJS

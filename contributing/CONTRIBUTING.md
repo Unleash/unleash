@@ -5,22 +5,11 @@
 Before you begin:
 
 - Have you read the [code of conduct](../CODE_OF_CONDUCT.md)?
-- Have you read and agreed to the [Unleash Contributor License Agreement](../CLA.md)?
 - Check out the [existing issues](https://github.com/unleash/Unleash/issues)
 - Browse the [developer-guide](https://docs.getunleash.io/contribute) for tips on environment setup, running the tests, and running Unleash from source.
 - You need
   - Node 22
   - corepack enabled `corepack enable`
-
-### Contributor License Agreement
-
-Before we can merge a pull request, every human contributor must read and agree to the [Unleash Contributor License Agreement](../CLA.md). The CLA keeps ownership of your contribution with you while giving Unleash the rights needed to use, distribute, sublicense, and relicense contributions.
-
-When you open a pull request, the CLA check will ask you to confirm the agreement with your GitHub account. If you are contributing on behalf of your employer or another organization, make sure you are authorized to do so before signing.
-
-Please do not add new individual copyright headers to files. Git history and pull request history record contribution attribution. Preserve existing third-party copyright and license notices when they are already present or when you are explicitly importing third-party work.
-
-If your contribution includes AI-generated code, documentation, or other content, disclose that in the pull request, review the generated content carefully, and make sure the tool terms allow you to contribute it under the CLA and repository license.
 
 ### Don't see your issue? Open one
 

@@ -50,6 +50,7 @@
     "@base-ui/react": "^1.4.1",
     "@biomejs/biome": "^2.4.14",
     "@codemirror/lang-json": "6.0.2",
+    "@codemirror/lint": "6.9.5",
     "@emotion/babel-plugin": "^11.13.5",
     "@emotion/cache": "11.14.0",
     "@emotion/react": "^11.14.0",

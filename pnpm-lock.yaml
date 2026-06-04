@@ -407,6 +407,9 @@ importers:
       '@codemirror/lang-json':
         specifier: 6.0.2
         version: 6.0.2
+      '@codemirror/lint':
+        specifier: 6.9.5
+        version: 6.9.5
       '@emotion/babel-plugin':
         specifier: ^11.13.5
         version: 11.13.5

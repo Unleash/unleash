@@ -301,6 +301,18 @@ export const VariantForm = ({
             return false;
         }
     };
+    const getJsonPayloadError = (payload: IPayload): string | undefined => {
+        if (payload.type !== 'json' || payload.value.trim() === '') {
+            return undefined;
+        }
+
+        try {
+            JSON.parse(payload.value);
+            return undefined;
+        } catch (error) {
+            return error instanceof Error ? error.message : 'Invalid JSON';
+        }
+    };
 
     useEffect(() => {
         const newVariant: IFeatureVariantEdit = {
@@ -465,6 +477,9 @@ export const VariantForm = ({
                                         })
                                     }
                                     onBlur={() => validatePayload(payload)}
+                                    validationError={getJsonPayloadError(
+                                        payload,
+                                    )}
                                 />
                             </Suspense>
                         }

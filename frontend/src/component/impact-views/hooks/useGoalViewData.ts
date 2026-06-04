@@ -28,7 +28,6 @@ export type GoalViewData = {
 };
 
 export const useGoalViewData = (view: MetricView): GoalViewData => {
-    const goalMetric = view.metrics.find((metric) => metric.goal);
     const configs = view.metrics as ImpactMetricsConfigSchema[];
 
     const { stepSeries, stepTotals, start, end, loading } =
@@ -42,12 +41,17 @@ export const useGoalViewData = (view: MetricView): GoalViewData => {
         view.environment,
     );
 
-    const goalSeries = stepSeries[0];
+    // `useGroupedImpactMetricsData` returns series/totals positionally aligned
+    // with `view.metrics`, so the goal's series is at the goal metric's index —
+    // not necessarily index 0.
+    const goalIndex = view.metrics.findIndex((metric) => metric.goal);
+    const goalMetric = goalIndex >= 0 ? view.metrics[goalIndex] : undefined;
+    const goalSeries = goalIndex >= 0 ? stepSeries[goalIndex] : undefined;
     const goalSummary = goalMetric
         ? computeGoalSummary(
               goalSeries,
               goalMetric.aggregationMode,
-              stepTotals[0]?.value ?? 0,
+              stepTotals[goalIndex]?.value ?? 0,
           )
         : undefined;
 

@@ -46,22 +46,52 @@ const sizeOf = (size: unknown): ControlSize =>
  * sets `defaultProps.size = 'large'` to preserve their visual weight on
  * the new scale. Buttons explicitly marked `small` today map to `medium`.
  */
+const buttonPaddingX: Record<ControlSize, number> = {
+    small: controlPaddingX.small + 2, // 10px
+    medium: controlPaddingX.medium + 2, // 12px
+    large: controlPaddingX.large, // 12px
+};
+
+// Gap between a button's icon and its label, per size.
+const buttonIconGap: Record<ControlSize, number> = {
+    small: 3,
+    medium: 4,
+    large: 5,
+};
+
+// How far the icon pulls toward the button edge (reduces the padding on the
+// icon side so icon buttons don't look left-heavy).
+const buttonIconPull: Record<ControlSize, number> = {
+    small: -4,
+    medium: -5,
+    large: -7,
+};
+
+const buttonSize = (size: ControlSize) => ({
+    height: controlHeights[size],
+    minHeight: controlHeights[size],
+    padding: `0 ${buttonPaddingX[size]}px`,
+    fontSize: controlFontSizes[size],
+    // Scale the icon and tighten its spacing to the button height. MUI's
+    // defaults are tuned for its own (taller) sizes and look oversized here.
+    '& .MuiButton-startIcon > *:first-of-type, & .MuiButton-endIcon > *:first-of-type':
+        {
+            fontSize: controlIconSizes[size],
+        },
+    '& .MuiButton-startIcon': {
+        marginLeft: buttonIconPull[size],
+        marginRight: buttonIconGap[size],
+    },
+    '& .MuiButton-endIcon': {
+        marginRight: buttonIconPull[size],
+        marginLeft: buttonIconGap[size],
+    },
+});
+
 export const buttonSizes = {
-    sizeSmall: {
-        height: controlHeights.small,
-        padding: `0 ${controlPaddingX.small + 2}px`,
-        fontSize: controlFontSizes.small,
-    },
-    sizeMedium: {
-        height: controlHeights.medium,
-        padding: `0 ${controlPaddingX.medium + 2}px`,
-        fontSize: controlFontSizes.medium,
-    },
-    sizeLarge: {
-        height: controlHeights.large,
-        padding: `0 ${controlPaddingX.large + 4}px`,
-        fontSize: controlFontSizes.large,
-    },
+    sizeSmall: buttonSize('small'),
+    sizeMedium: buttonSize('medium'),
+    sizeLarge: buttonSize('large'),
 } as const;
 
 /**
@@ -91,17 +121,20 @@ export const iconButtonSizes = {
 } as const;
 
 /**
- * Secondary (outlined) buttons: subtle gray instead of the purple
- * outline, so they pull less focus and sit well in groups.
- * Spread into the `MuiButton.styleOverrides.root` object in both themes.
+ * Secondary (outlined) buttons: divider-colored border with primary-colored
+ * text (matching the text button), so they read as a quiet secondary action
+ * and sit well next to a contained primary. Spread into the
+ * `MuiButton.styleOverrides.root` object in both themes.
  */
 export const subtleOutlinedButton = (theme: Theme) => ({
     '&.MuiButton-outlined.MuiButton-colorPrimary': {
-        color: theme.palette.text.primary,
-        borderColor: theme.palette.neutral.border,
+        color: theme.palette.primary.main,
+        borderColor: theme.palette.divider,
         '&:hover': {
-            borderColor: theme.palette.neutral.main,
-            backgroundColor: theme.palette.action.hover,
+            // border picks up the primary purple; background uses the light
+            // purple token (secondary.light = purple[50] in light mode)
+            borderColor: theme.palette.primary.main,
+            backgroundColor: theme.palette.secondary.light,
         },
     },
 });

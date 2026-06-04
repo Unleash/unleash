@@ -342,12 +342,13 @@ export const lightTheme = createTheme({
                 // unsized buttons render ~36px today — `large` on the new
                 // scale preserves their visual weight
                 size: 'large',
+                disableElevation: true, // no shadow on contained buttons
             },
             styleOverrides: {
                 root: ({ theme }) => ({
                     borderRadius: theme.shape.borderRadius,
                     textTransform: 'none',
-                    fontWeight: theme.typography.fontWeightBold,
+                    fontWeight: 600, // semi-bold
                     ...subtleOutlinedButton(theme),
                 }),
                 ...buttonSizes,

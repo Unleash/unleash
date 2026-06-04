@@ -75,7 +75,7 @@ export const PlaceholderChart: FC<PlaceholderChartProps> = ({
                 borderColor: placeholderColor,
                 backgroundColor: placeholderFill,
                 fill: true,
-                tension: 0.4,
+                tension: 0,
                 pointRadius: 2,
                 pointBackgroundColor: placeholderColor,
                 borderWidth: 2,

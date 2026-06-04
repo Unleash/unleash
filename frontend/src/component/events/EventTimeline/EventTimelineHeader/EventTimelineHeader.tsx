@@ -61,7 +61,7 @@ export const EventTimelineHeader = ({
             show={() => (
                 <StyledFilter
                     select
-                    size='small'
+                    size='large'
                     variant='outlined'
                     value={environment!.name}
                     onChange={(e) =>
@@ -85,7 +85,7 @@ export const EventTimelineHeader = ({
     const TimeSpanFilter = () => (
         <StyledFilter
             select
-            size='small'
+            size='large'
             variant='outlined'
             value={timeSpan.key}
             onChange={(e) =>

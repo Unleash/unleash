@@ -203,3 +203,34 @@ declare module '@mui/material/FormHelperText' {
         'data-testid'?: string;
     }
 }
+
+/*
+ * Design system v2: inputs and selects share the button height scale
+ * (small/medium/large, see themes/controls.ts). MUI only types
+ * 'small' | 'medium' for inputs, so allow 'large' as well.
+ */
+declare module '@mui/material/InputBase' {
+    interface InputBasePropsSizeOverrides {
+        large: true;
+    }
+}
+declare module '@mui/material/TextField' {
+    interface TextFieldPropsSizeOverrides {
+        large: true;
+    }
+}
+declare module '@mui/material/FormControl' {
+    interface FormControlPropsSizeOverrides {
+        large: true;
+    }
+}
+declare module '@mui/material/Autocomplete' {
+    interface AutocompletePropsSizeOverrides {
+        large: true;
+    }
+}
+declare module '@mui/material/InputLabel' {
+    interface InputLabelPropsSizeOverrides {
+        large: true;
+    }
+}

@@ -18,7 +18,8 @@ import {
     useReactTable,
 } from '@tanstack/react-table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { Box, styled, Tab, Tabs, useMediaQuery } from '@mui/material';
+import { Box, styled, Tabs, useMediaQuery } from '@mui/material';
+import { NavTab } from 'component/common/NavTab/NavTab';
 import { Link, useSearchParams } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Search } from 'component/common/Search/Search';
@@ -54,15 +55,6 @@ const StyledTabContainer = styled('div')({
     paddingLeft: 0,
     paddingBottom: 0,
 });
-
-const StyledTabButton = styled(Tab)(({ theme }) => ({
-    textTransform: 'none',
-    width: 'auto',
-    fontSize: theme.typography.body2.fontSize,
-    [theme.breakpoints.up('md')]: {
-        minWidth: 160,
-    },
-}));
 
 const ConfigurationLinkBox = styled(Box)(({ theme }) => ({
     textAlign: 'right',
@@ -331,7 +323,7 @@ export const ChangeRequestsTabs = ({
                                 allowScrollButtonsMobile
                             >
                                 {tabs.map((tab) => (
-                                    <StyledTabButton
+                                    <NavTab
                                         key={tab.title}
                                         label={`${tab.title} (${tab.data.length})`}
                                         value={tab.title}

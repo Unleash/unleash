@@ -73,7 +73,7 @@ export const StickinessSelect = ({
     return (
         <FormControl
             variant='outlined'
-            size='small'
+            size='large'
             sx={{
                 width: '100%',
                 marginBottom: theme.spacing(2),

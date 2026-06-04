@@ -189,7 +189,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
                 <StyledDropdown>
                     <StyledTextField
                         variant='outlined'
-                        size='small'
+                        size='large'
                         value={searchText}
                         onChange={(event) => setSearchText(event.target.value)}
                         placeholder='Search'

@@ -89,7 +89,7 @@ export const IntegrationMultiSelector: FC<IIntegrationMultiSelectorProps> = ({
             <StyledTitle>{capitalize(`${entityName}s`)}</StyledTitle>
             <StyledHelpText>{description}</StyledHelpText>
             <Autocomplete
-                size='small'
+                size='large'
                 multiple
                 limitTags={2}
                 options={options}

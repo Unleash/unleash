@@ -118,7 +118,7 @@ export const EnvironmentProjectSelect = ({
     return (
         <StyledGroupFormUsersSelect>
             <Autocomplete
-                size='small'
+                size='large'
                 multiple
                 limitTags={1}
                 openOnFocus

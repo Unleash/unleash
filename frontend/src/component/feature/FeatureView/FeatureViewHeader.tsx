@@ -2,7 +2,6 @@ import { type PropsWithChildren, useState, type FC } from 'react';
 import {
     IconButton,
     styled,
-    Tab,
     Tabs,
     type Theme,
     Typography,
@@ -20,6 +19,7 @@ import {
 } from 'component/providers/AccessProvider/permissions';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { FeatureStatusChip } from 'component/common/FeatureStatusChip/FeatureStatusChip';
+import { NavTab } from 'component/common/NavTab/NavTab';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import useToast from 'hooks/useToast';
@@ -105,22 +105,7 @@ const IconButtonWithTooltip: FC<
 const StyledTabs = styled(Tabs)({
     minWidth: 0,
     maxWidth: '100%',
-    '& .MuiTabs-flexContainer': {
-        // remove the global min height set in frontend/src/themes/theme.ts
-        // (70px) and use the height of the tabs instead.
-        minHeight: 'unset',
-    },
 });
-
-const StyledTabButton = styled(Tab)(({ theme }) => ({
-    textTransform: 'none',
-    width: 'auto',
-    fontSize: theme.typography.body2.fontSize,
-    padding: '0 !important',
-    ...onWideHeader(theme, {
-        minWidth: 100,
-    }),
-}));
 
 export const StyledLink = styled(Link)(() => ({
     maxWidth: '100%',
@@ -305,7 +290,7 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
                         variant='scrollable'
                     >
                         {tabData.map((tab) => (
-                            <StyledTabButton
+                            <NavTab
                                 key={tab.title}
                                 label={tab.title}
                                 value={tab.path}

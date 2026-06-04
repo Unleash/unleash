@@ -133,7 +133,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                             },
                         },
                     }}
-                    size='small'
+                    size='large'
                 />
                 <MilestoneList
                     milestones={milestones}

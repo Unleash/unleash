@@ -96,7 +96,7 @@ export const MultipleRoleSelect = ({
                 multiple
                 disableCloseOnSelect
                 openOnFocus
-                size='small'
+                size='large'
                 value={value}
                 groupBy={(option) => {
                     return option.type === 'project'

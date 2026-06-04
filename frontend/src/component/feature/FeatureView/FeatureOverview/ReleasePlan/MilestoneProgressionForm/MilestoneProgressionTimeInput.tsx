@@ -56,7 +56,7 @@ export const MilestoneProgressionTimeInput = ({
                     width: `max(60px, ${String(timeValue).length + 8}ch)`,
                     maxWidth: '300px',
                 }}
-                size='small'
+                size='large'
                 disabled={disabled}
                 slotProps={{
                     htmlInput: {
@@ -69,7 +69,7 @@ export const MilestoneProgressionTimeInput = ({
             <StyledSelect
                 value={timeUnit}
                 onChange={onTimeUnitChange}
-                size='small'
+                size='large'
                 aria-label='Time unit'
                 id='time-unit-select'
                 disabled={disabled}

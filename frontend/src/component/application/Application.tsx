@@ -6,7 +6,6 @@ import {
     IconButton,
     LinearProgress,
     Link,
-    Tab,
     Tabs,
     Typography,
     styled,
@@ -30,6 +29,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import ApplicationOverview from './ApplicationOverview.tsx';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
+import { NavTab } from 'component/common/NavTab/NavTab';
 
 type Tab = {
     title: string;
@@ -51,19 +51,6 @@ const Separator = styled('div')(({ theme }) => ({
     width: '100%',
     backgroundColor: theme.palette.divider,
     height: '1px',
-}));
-
-const StyledTab = styled(Tab)(({ theme }) => ({
-    textTransform: 'none',
-    flexGrow: 1,
-    flexBasis: 0,
-    [theme.breakpoints.down('md')]: {
-        paddingLeft: theme.spacing(1),
-        paddingRight: theme.spacing(1),
-    },
-    [theme.breakpoints.up('md')]: {
-        minWidth: 160,
-    },
 }));
 
 export const Application = () => {
@@ -188,7 +175,7 @@ export const Application = () => {
                     >
                         {tabs.map((tab) => {
                             return (
-                                <StyledTab
+                                <NavTab
                                     key={tab.title}
                                     label={tab.title}
                                     value={tab.path}

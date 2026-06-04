@@ -116,7 +116,7 @@ export const LabelFilterItem: FC<LabelFilterItemProps> = ({
                             isAllSelected ? undefined : 'Select values…'
                         }
                         variant='outlined'
-                        size='small'
+                        size='large'
                     />
                     {isTruncated && (
                         <Alert

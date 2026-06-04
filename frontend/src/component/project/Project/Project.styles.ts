@@ -1,4 +1,4 @@
-import { styled, Tab } from '@mui/material';
+import { styled } from '@mui/material';
 import { FavoriteIconButton } from 'component/common/FavoriteIconButton/FavoriteIconButton';
 
 export const StyledDiv = styled('div')(() => ({
@@ -72,15 +72,3 @@ export const StyledTabContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 4),
 }));
 
-export const StyledTab = styled(Tab)(({ theme }) => ({
-    textTransform: 'none',
-    flexBasis: 0,
-    [theme.breakpoints.down('md')]: {
-        paddingLeft: theme.spacing(1),
-        paddingRight: theme.spacing(1),
-        minWidth: 170,
-    },
-    [theme.breakpoints.up('md')]: {
-        minWidth: 170,
-    },
-}));

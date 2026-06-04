@@ -176,7 +176,7 @@ export const NewUser = () => {
                             id='email'
                             label='Email'
                             variant='outlined'
-                            size='small'
+                            size='large'
                             sx={{ my: 1 }}
                             disabled={isValidToken}
                             fullWidth
@@ -197,7 +197,7 @@ export const NewUser = () => {
                                     id='username'
                                     label='Full name'
                                     variant='outlined'
-                                    size='small'
+                                    size='large'
                                     sx={{ my: 1 }}
                                     fullWidth
                                     required

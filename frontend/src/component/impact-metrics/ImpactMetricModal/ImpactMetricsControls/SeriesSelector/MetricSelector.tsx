@@ -198,7 +198,7 @@ export const MetricSelector = ({
                         label={label}
                         placeholder='Search for a metric…'
                         variant='outlined'
-                        size='small'
+                        size='large'
                         required
                     />
                 )}

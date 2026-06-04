@@ -112,7 +112,7 @@ export const GroupFormUsersSelect: FC<IGroupFormUsersSelectProps> = ({
         <StyledGroupFormUsersSelect>
             <AutocompleteVirtual
                 data-testid={UG_USERS_ID}
-                size='small'
+                size='large'
                 limitTags={1}
                 openOnFocus
                 multiple

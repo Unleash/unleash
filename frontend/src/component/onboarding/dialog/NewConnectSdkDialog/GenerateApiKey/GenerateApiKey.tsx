@@ -142,7 +142,7 @@ export const GenerateApiKey = ({
                 <Select
                     value={environment}
                     onChange={(e) => setEnvironment(e.target.value)}
-                    size='small'
+                    size='large'
                     inputProps={{ 'aria-label': 'Select environment' }}
                     sx={{ minWidth: `${longestEnv + 5}ch` }}
                 >

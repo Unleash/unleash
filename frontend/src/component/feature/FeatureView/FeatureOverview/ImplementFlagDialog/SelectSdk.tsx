@@ -22,7 +22,7 @@ export const SelectSdk = ({ projectSdks, value, onChange }: SelectSdkProps) => {
         <StyledSelect
             value={value}
             onChange={(event) => onChange(event.target.value as SdkName)}
-            size='small'
+            size='large'
         >
             {projectSdks.length > 0
                 ? [

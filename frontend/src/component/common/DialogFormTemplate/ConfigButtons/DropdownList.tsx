@@ -79,7 +79,7 @@ export function DropdownList<T = string>({
         <>
             <StyledDropdownSearch
                 variant='outlined'
-                size='small'
+                size='large'
                 value={searchText}
                 onChange={(event) => setSearchText(event.target.value)}
                 label={search.label}

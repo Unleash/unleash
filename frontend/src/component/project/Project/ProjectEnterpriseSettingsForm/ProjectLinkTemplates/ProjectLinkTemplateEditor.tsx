@@ -71,7 +71,7 @@ const ProjectLinkTemplateEditor = ({
                 onChange={(e) => setTemplateTitle(e.target.value)}
                 placeholder='e.g., GitHub Issue, Ticket number'
                 helperText='A descriptive name for the link.'
-                size='small'
+                size='large'
             />
             <TextField
                 label='URL Template'
@@ -84,7 +84,7 @@ const ProjectLinkTemplateEditor = ({
                     templateErrors.url ||
                     'You can optionally use placeholders {{project}} and {{feature}} that will be replaced with actual values.'
                 }
-                size='small'
+                size='large'
                 error={Boolean(templateErrors.url)}
             />
             <StyledDialogActions>

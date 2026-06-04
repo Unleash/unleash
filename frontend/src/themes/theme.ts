@@ -1,5 +1,11 @@
 import { createTheme } from '@mui/material/styles';
 import { colors } from './colors.js';
+import {
+    buttonSizes,
+    controlOverrides,
+    iconButtonSizes,
+    subtleOutlinedButton,
+} from './controls.js';
 import { focusable } from 'themes/themeStyles';
 
 export const baseTheme = {
@@ -303,6 +309,9 @@ const theme = {
 export const lightTheme = createTheme({
     ...theme,
     components: {
+        // Shared control sizing + ripple removal (design system v2)
+        ...controlOverrides,
+
         // Skeleton
         MuiCssBaseline: {
             styleOverrides: {
@@ -329,12 +338,24 @@ export const lightTheme = createTheme({
 
         // Buttons
         MuiButton: {
+            defaultProps: {
+                // unsized buttons render ~36px today — `large` on the new
+                // scale preserves their visual weight
+                size: 'large',
+            },
             styleOverrides: {
                 root: ({ theme }) => ({
                     borderRadius: theme.shape.borderRadius,
                     textTransform: 'none',
                     fontWeight: theme.typography.fontWeightBold,
+                    ...subtleOutlinedButton(theme),
                 }),
+                ...buttonSizes,
+            },
+        },
+        MuiIconButton: {
+            styleOverrides: {
+                ...iconButtonSizes,
             },
         },
 
@@ -470,12 +491,9 @@ export const lightTheme = createTheme({
             } as any,
             styleOverrides: {
                 root: ({ theme }) => ({
+                    minHeight: theme.spacing(6.5), // 52px, fixed tab row height
                     '& .MuiTabs-indicator': {
-                        height: '4px',
-                    },
-                    '& .MuiTabs-flexContainer': {
-                        minHeight: '70px',
-                        maxHeight: '70px',
+                        height: '3px',
                     },
                 }),
             },
@@ -488,19 +506,16 @@ export const lightTheme = createTheme({
                     textTransform: 'none',
                     fontWeight: theme.typography.fontWeightMedium,
                     lineHeight: '1',
-                    minHeight: '62px',
+                    minHeight: theme.spacing(6.5), // 52px
+                    minWidth: 0,
+                    padding: theme.spacing(0, 2), // 16px horizontal
+                    overflow: 'visible', // let counter badges spill past the tab edge
                     '&:hover': {
                         backgroundColor: theme.palette.action.hover,
                     },
                     '&.Mui-selected': {
                         color: theme.palette.text.primary,
                         fontWeight: 700,
-                    },
-                    '& > span': {
-                        color: theme.palette.primary.main, //Based on this color is created the focus color/effect
-                    },
-                    [theme.breakpoints.down('md')]: {
-                        padding: '12px 0px',
                     },
                 }),
             },

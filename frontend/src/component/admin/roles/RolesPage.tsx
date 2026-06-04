@@ -3,7 +3,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { RolesTable } from './RolesTable/RolesTable.tsx';
 import { PageContent } from 'component/common/PageContent/PageContent';
-import { Tab, Tabs, styled, useMediaQuery } from '@mui/material';
+import { Tabs, styled, useMediaQuery } from '@mui/material';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { PROJECT_ROLE_TYPE, ROOT_ROLE_TYPE } from '@server/util/constants';
 import { useRoles } from 'hooks/api/getters/useRoles/useRoles';
@@ -14,6 +14,7 @@ import Add from '@mui/icons-material/Add';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import type { IRole } from 'interfaces/role';
 import { TabLink } from 'component/common/TabNav/TabLink';
+import { NavTab } from 'component/common/NavTab/NavTab';
 import { usePageTitle } from 'hooks/usePageTitle';
 
 const StyledHeader = styled('div')(() => ({
@@ -77,7 +78,7 @@ export const RolesPage = () => {
                                 allowScrollButtonsMobile
                             >
                                 {tabs.map(({ label, path, total }) => (
-                                    <Tab
+                                    <NavTab
                                         key={label}
                                         value={path}
                                         label={

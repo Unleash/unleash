@@ -24,7 +24,7 @@ const PasswordField: FC<TextFieldProps> = ({ ...rest }) => {
     return (
         <StyledAutofillTextField
             variant='outlined'
-            size='small'
+            size='large'
             type={showPassword ? 'text' : 'password'}
             slotProps={{
                 input: {

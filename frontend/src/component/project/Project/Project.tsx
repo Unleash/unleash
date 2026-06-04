@@ -10,7 +10,6 @@ import {
     StyledName,
     StyledProjectTitle,
     StyledSeparator,
-    StyledTab,
     StyledTabContainer,
     StyledTopRow,
 } from './Project.styles';
@@ -45,6 +44,8 @@ import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi
 import { ImportModal } from './Import/ImportModal.tsx';
 import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
 import { Badge } from 'component/common/Badge/Badge';
+import { SteadyWidthText } from 'component/common/SteadyWidthText/SteadyWidthText';
+import { NavTab } from 'component/common/NavTab/NavTab';
 import type { UiFlags } from 'interfaces/uiConfig';
 import { HiddenProjectIconWithTooltip } from './HiddenProjectIconWithTooltip/HiddenProjectIconWithTooltip.tsx';
 import { ChangeRequestPlausibleProvider } from 'component/changeRequest/ChangeRequestContext';
@@ -78,15 +79,10 @@ interface ITab {
 const StyledCounterBadge = styled(CounterBadge)(({ theme }) => ({
     '.MuiBadge-badge': {
         backgroundColor: theme.palette.background.alternative,
-        right: '-4px',
+        // Offset the bubble clear of the last character. Content-width tabs no
+        // longer give the badge room to float right on their own.
+        right: theme.spacing(-1),
     },
-    [theme.breakpoints.down('md')]: {
-        right: '6px',
-    },
-    flex: 'auto',
-    justifyContent: 'center',
-    minHeight: '1.5em',
-    alignItems: 'center',
 }));
 
 const TabText = styled('span')(({ theme }) => ({
@@ -99,7 +95,9 @@ const ChangeRequestsLabel = () => {
 
     return (
         <StyledCounterBadge badgeContent={total ?? 0} color='primary'>
-            <TabText>Change requests</TabText>
+            <TabText>
+                <SteadyWidthText>Change requests</SteadyWidthText>
+            </TabText>
         </StyledCounterBadge>
     );
 };
@@ -306,8 +304,31 @@ export const Project = () => {
                         allowScrollButtonsMobile
                     >
                         {filteredTabs.map((tab) => {
+                            // Only render the icon slot when it has content;
+                            // an empty icon forces MUI's icon+label layout and
+                            // misaligns the tab against its plain-label siblings.
+                            const betaBadge = tab.new ? (
+                                // extra span to avoid badge getting color override from the overly specific parent component
+                                <span>
+                                    <StyledBadge color='success'>
+                                        Beta
+                                    </StyledBadge>
+                                </span>
+                            ) : null;
+                            const tabEnterpriseIcon =
+                                (tab.isEnterprise &&
+                                    isPro() &&
+                                    enterpriseIcon) ||
+                                null;
+                            const icon =
+                                betaBadge || tabEnterpriseIcon ? (
+                                    <div>
+                                        {betaBadge}
+                                        {tabEnterpriseIcon}
+                                    </div>
+                                ) : undefined;
                             return (
-                                <StyledTab
+                                <NavTab
                                     data-loading-project
                                     key={tab.title}
                                     label={
@@ -333,28 +354,8 @@ export const Project = () => {
                                         );
                                     }}
                                     data-testid={`TAB_${tab.title}`}
-                                    iconPosition={
-                                        tab.isEnterprise ? 'end' : undefined
-                                    }
-                                    icon={
-                                        <div>
-                                            <ConditionallyRender
-                                                condition={Boolean(tab.new)}
-                                                show={
-                                                    // extra span to avoid badge getting color override from the overly specific parent component
-                                                    <span>
-                                                        <StyledBadge color='success'>
-                                                            Beta
-                                                        </StyledBadge>
-                                                    </span>
-                                                }
-                                            />
-                                            {(tab.isEnterprise &&
-                                                isPro() &&
-                                                enterpriseIcon) ||
-                                                undefined}
-                                        </div>
-                                    }
+                                    iconPosition={icon ? 'end' : undefined}
+                                    icon={icon}
                                 />
                             );
                         })}

@@ -175,7 +175,7 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
                                 Is this segment tied to a specific project?
                             </StyledInputDescription>
                             <Autocomplete
-                                size='small'
+                                size='large'
                                 value={selectedProject}
                                 onChange={(_, newValue) => {
                                     setProject(newValue?.id);

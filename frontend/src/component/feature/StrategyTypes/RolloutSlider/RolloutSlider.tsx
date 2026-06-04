@@ -200,7 +200,7 @@ const RolloutSlider = ({
                 </SliderContent>
                 <StyledInputBox>
                     <StyledTextField
-                        size='small'
+                        size='large'
                         aria-labelledby='discrete-slider-always'
                         type='number'
                         value={inputValue}

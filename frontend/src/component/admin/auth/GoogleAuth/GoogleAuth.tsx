@@ -129,7 +129,7 @@ export const GoogleAuth = () => {
                             value={data.clientId}
                             style={{ width: '400px' }}
                             variant='outlined'
-                            size='small'
+                            size='large'
                             required
                         />
                     </Grid>
@@ -151,7 +151,7 @@ export const GoogleAuth = () => {
                             placeholder=''
                             style={{ width: '400px' }}
                             variant='outlined'
-                            size='small'
+                            size='large'
                             required
                         />
                     </Grid>
@@ -179,7 +179,7 @@ export const GoogleAuth = () => {
                             value={data.unleashHostname || ''}
                             style={{ width: '400px' }}
                             variant='outlined'
-                            size='small'
+                            size='large'
                         />
                     </Grid>
                 </Grid>
@@ -218,7 +218,7 @@ export const GoogleAuth = () => {
                             rows={2}
                             multiline
                             variant='outlined'
-                            size='small'
+                            size='large'
                         />
                     </Grid>
                 </Grid>

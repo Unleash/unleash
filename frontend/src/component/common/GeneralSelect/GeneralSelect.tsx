@@ -90,7 +90,8 @@ function GeneralSelect<T extends string = string>({
     return (
         <StyledFormControl
             variant={variant}
-            size='small'
+            // old MUI `small` (~40px) maps to `large` (32px) on the v2 control scale
+            size='large'
             classes={classes}
             fullWidth={fullWidth}
         >

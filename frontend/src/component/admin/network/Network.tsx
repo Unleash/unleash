@@ -1,8 +1,9 @@
 import { lazy } from 'react';
 
-import { Tab, Tabs } from '@mui/material';
+import { Tabs } from '@mui/material';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { TabLink } from 'component/common/TabNav/TabLink';
+import { NavTab } from 'component/common/NavTab/NavTab';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { useUiFlag } from 'hooks/useUiFlag';
 
@@ -71,7 +72,7 @@ export const Network = () => {
                         allowScrollButtonsMobile
                     >
                         {allTabs.map(({ label, path }) => (
-                            <Tab
+                            <NavTab
                                 key={label}
                                 value={path}
                                 label={

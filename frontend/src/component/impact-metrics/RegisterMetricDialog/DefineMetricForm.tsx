@@ -141,7 +141,7 @@ export const DefineMetricForm = ({
                     onChange={(event) => setMetricName(event.target.value)}
                     placeholder='e.g., checkout_error_count'
                     variant='outlined'
-                    size='small'
+                    size='large'
                     fullWidth
                     required
                     helperText={`Use letters, numbers, colons, and underscores. Be descriptive and specific.`}

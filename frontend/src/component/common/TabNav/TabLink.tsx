@@ -2,6 +2,7 @@ import { styled } from '@mui/material';
 import type React from 'react';
 import type { FC } from 'react';
 import { Link } from 'react-router-dom';
+import { SteadyWidthText } from 'component/common/SteadyWidthText/SteadyWidthText';
 
 const StyledTabLink = styled(Link)(({ theme }) => ({
     display: 'flex',
@@ -11,7 +12,7 @@ const StyledTabLink = styled(Link)(({ theme }) => ({
     height: '100%',
     textDecoration: 'none',
     color: 'inherit',
-    padding: theme.spacing(0, 5),
+    padding: theme.spacing(0, 2), // 16px horizontal, matches the tab scale
     '&.active': {
         fontWeight: 'bold',
     },
@@ -23,5 +24,7 @@ interface ICenteredTabLinkProps {
 }
 
 export const TabLink: FC<ICenteredTabLinkProps> = ({ to, children }) => (
-    <StyledTabLink to={to}>{children}</StyledTabLink>
+    <StyledTabLink to={to}>
+        <SteadyWidthText>{children}</SteadyWidthText>
+    </StyledTabLink>
 );

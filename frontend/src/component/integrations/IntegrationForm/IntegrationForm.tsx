@@ -350,7 +350,7 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                         )}
                     />
                     <StyledTextField
-                        size='small'
+                        size='large'
                         label='Provider'
                         name='provider'
                         value={formValues.provider}
@@ -393,7 +393,7 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                                 What is your integration description?
                             </StyledTitle>
                             <StyledTextField
-                                size='small'
+                                size='large'
                                 minRows={1}
                                 multiline
                                 label='Description'

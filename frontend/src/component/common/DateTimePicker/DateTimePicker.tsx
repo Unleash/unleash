@@ -42,7 +42,7 @@ export const DateTimePicker = ({
     return (
         <TextField
             type={inputType}
-            size='small'
+            size='large'
             variant='outlined'
             label={label}
             error={error}

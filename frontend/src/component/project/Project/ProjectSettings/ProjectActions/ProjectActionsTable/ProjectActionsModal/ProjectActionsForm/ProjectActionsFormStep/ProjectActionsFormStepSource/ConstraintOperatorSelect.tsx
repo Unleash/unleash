@@ -97,7 +97,7 @@ export const ConstraintOperatorSelect = ({
     };
 
     return (
-        <StyledFormInput variant='outlined' size='small' fullWidth>
+        <StyledFormInput variant='outlined' size='large' fullWidth>
             <InputLabel htmlFor='operator-select'>Operator</InputLabel>
             <Select
                 id='operator-select'

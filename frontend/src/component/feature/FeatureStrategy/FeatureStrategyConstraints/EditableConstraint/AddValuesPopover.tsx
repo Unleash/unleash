@@ -122,7 +122,7 @@ export const AddValuesPopover: FC<AddValuesProps> = ({
                                 setInputValue(e.target.value);
                                 setError('');
                             }}
-                            size='small'
+                            size='large'
                             variant='standard'
                             fullWidth
                             inputRef={inputRef}

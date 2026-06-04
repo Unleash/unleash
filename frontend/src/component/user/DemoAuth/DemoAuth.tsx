@@ -65,7 +65,7 @@ const DemoAuth: FC<IDemoAuthProps> = ({ authDetails, redirect }) => {
                         value={email}
                         className={styles.emailField}
                         onChange={handleChange}
-                        size='small'
+                        size='large'
                         variant='outlined'
                         label='Email'
                         name='email'

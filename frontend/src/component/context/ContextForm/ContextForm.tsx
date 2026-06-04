@@ -182,7 +182,7 @@ export const ContextForm: React.FC<IContextForm> = ({
                     multiline
                     maxRows={4}
                     value={contextDesc}
-                    size='small'
+                    size='large'
                     onChange={(e) => setContextDesc(e.target.value)}
                 />
                 <StyledInputDescription>
@@ -197,7 +197,7 @@ export const ContextForm: React.FC<IContextForm> = ({
                         error={Boolean(errors.tag)}
                         helperText={errors.tag}
                         variant='outlined'
-                        size='small'
+                        size='large'
                         onChange={(e) => setValue(e.target.value)}
                         onKeyPress={(e) => onKeyDown(e)}
                         onBlur={() => setValueFocused(false)}
@@ -211,7 +211,7 @@ export const ContextForm: React.FC<IContextForm> = ({
                         sx={{ gridColumn: 1 }}
                         value={valueDesc}
                         variant='outlined'
-                        size='small'
+                        size='large'
                         onChange={(e) => setValueDesc(e.target.value)}
                         onKeyPress={(e) => onKeyDown(e)}
                         onBlur={() => setValueFocused(false)}

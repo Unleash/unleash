@@ -2,6 +2,13 @@ import { createTheme } from '@mui/material/styles';
 import { alpha } from '@mui/material';
 import { focusable } from 'themes/themeStyles';
 import { colors } from './colors.js';
+import {
+    buttonSizes,
+    controlOverrides,
+    iconButtonSizes,
+    outlinedInputSizing,
+    subtleOutlinedButton,
+} from './controls.js';
 import { baseTheme } from './theme.js';
 
 const actionColors = {
@@ -245,6 +252,9 @@ const theme = {
 export const darkTheme = createTheme({
     ...theme,
     components: {
+        // Shared control sizing + ripple removal (design system v2)
+        ...controlOverrides,
+
         // Skeleton
         MuiCssBaseline: {
             styleOverrides: {
@@ -404,13 +414,10 @@ export const darkTheme = createTheme({
             } as any,
             styleOverrides: {
                 root: ({ theme }) => ({
+                    minHeight: theme.spacing(6.5), // 52px, fixed tab row height
                     '& .MuiTabs-indicator': {
                         backgroundColor: theme.palette.background.alternative,
-                        height: '4px',
-                    },
-                    '& .MuiTabs-flexContainer': {
-                        minHeight: '70px',
-                        maxHeight: '70px',
+                        height: '3px',
                     },
                 }),
             },
@@ -423,19 +430,16 @@ export const darkTheme = createTheme({
                     textTransform: 'none',
                     fontWeight: theme.typography.fontWeightMedium,
                     lineHeight: '1',
-                    minHeight: '62px',
+                    minHeight: theme.spacing(6.5), // 52px
+                    minWidth: 0,
+                    padding: theme.spacing(0, 2), // 16px horizontal
+                    overflow: 'visible', // let counter badges spill past the tab edge
                     '&:hover': {
                         backgroundColor: theme.palette.action.hover,
                     },
                     '&.Mui-selected': {
                         color: theme.palette.text.primary,
                         fontWeight: 700,
-                    },
-                    '& > span': {
-                        color: theme.palette.primary.main, //Based on this color is created the focus color/effect
-                    },
-                    [theme.breakpoints.down('md')]: {
-                        padding: '12px 0px',
                     },
                 }),
             },
@@ -528,11 +532,17 @@ export const darkTheme = createTheme({
 
         // For dark theme, primary buttons are a bit darker then the primary.main that we use as a primary color
         MuiButton: {
+            defaultProps: {
+                // unsized buttons render ~36px today — `large` on the new
+                // scale preserves their visual weight
+                size: 'large',
+            },
             styleOverrides: {
                 root: ({ theme }) => ({
                     borderRadius: theme.shape.borderRadius,
                     textTransform: 'none',
                     fontWeight: theme.typography.fontWeightBold,
+                    ...subtleOutlinedButton(theme),
                     '&:not(.Mui-disabled).MuiButton-contained.MuiButton-colorPrimary':
                         {
                             backgroundColor:
@@ -542,6 +552,7 @@ export const darkTheme = createTheme({
                             },
                         },
                 }),
+                ...buttonSizes,
             },
         },
 
@@ -553,13 +564,15 @@ export const darkTheme = createTheme({
                         fill: theme.palette.background.application,
                     },
                 }),
+                ...iconButtonSizes,
             },
         },
 
         // Inputs
         MuiOutlinedInput: {
             styleOverrides: {
-                root: ({ theme }) => ({
+                root: ({ theme, ownerState }) => ({
+                    ...outlinedInputSizing(ownerState),
                     fieldset: {
                         borderColor: '#646382',
                     },

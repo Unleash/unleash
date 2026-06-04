@@ -108,7 +108,7 @@ export const ChangeRequestTableConfigButton: FC<
         >
             <TableSearchInput
                 variant='outlined'
-                size='small'
+                size='large'
                 value={searchText}
                 onChange={(event) => setSearchText(event.target.value)}
                 hideLabel

@@ -26,12 +26,26 @@ const StyledActions = styled('div')(({ theme }) => ({
 
 interface FeatureSetupGuideBannerProps
     extends Omit<AlertProps, 'severity' | 'color' | 'variant'> {
+    variant?: 'set-up-guide' | 'info';
     subtitle: ReactNode;
     actions: ReactNode;
     children?: ReactNode;
 }
 
+const StyledAlert = styled(Alert, {
+    shouldForwardProp: (prop) => prop !== 'highlighted',
+})<{ isSetupBanner?: boolean }>(({ theme, isSetupBanner }) => ({
+    ...(isSetupBanner && {
+        '&&.MuiAlert-standard.MuiAlert-colorInfo': {
+            backgroundColor: theme.palette.secondary.light,
+            borderColor: theme.palette.secondary.border,
+            color: theme.palette.secondary.dark,
+        },
+    }),
+}));
+
 export const FeatureSetupGuideBanner = ({
+    variant = 'info',
     icon,
     title,
     subtitle,
@@ -39,7 +53,12 @@ export const FeatureSetupGuideBanner = ({
     children,
     ...props
 }: FeatureSetupGuideBannerProps) => (
-    <Alert severity='info' icon={icon} {...props}>
+    <StyledAlert
+        severity='info'
+        icon={icon}
+        isSetupBanner={variant === 'set-up-guide'}
+        {...props}
+    >
         <StyledBody>
             <div>
                 <StyledTitle>{title}</StyledTitle>
@@ -48,5 +67,5 @@ export const FeatureSetupGuideBanner = ({
             {children}
             <StyledActions>{actions}</StyledActions>
         </StyledBody>
-    </Alert>
+    </StyledAlert>
 );

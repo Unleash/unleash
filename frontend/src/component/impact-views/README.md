@@ -69,10 +69,8 @@ them), and the synthetic-data generators.
 
 - **PR 1** — merged (#12173). Flag, route, nav, stub page, this README.
 - **PR 2** — merged (#12177). `views/types.ts` + `views/computeGoalSummary.ts(+test)`.
-- **PR 3** — merged. `views/GoalSummaryPanel/` (panel + extracted, tested `sparkline.ts`)
-  + a temporary dummy preview (`fixtures/dummyGoalSummary.ts` rendered from
-  `ImpactViewsPage`). The preview is throwaway — `ImpactViewsPage` is replaced by the full
-  `GoalTrackingViewChart` later.
+- **PR 3** — merged. `views/GoalSummaryPanel/` (panel + extracted, tested `sparkline.ts`).
+  (Shipped with a throwaway dummy preview that was later replaced by real data in PR 6.)
 - **PR 4** — merged. `views/MultimetricChartCard/MultimetricChartCard.tsx` (render-only layout
   card, prop interface tightened to what the goal view needs). The page now renders the card
   with dummy data and the `GoalSummaryPanel` in its `totalsHeaderSlot`. **Note:** the branch

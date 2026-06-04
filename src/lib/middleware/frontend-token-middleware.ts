@@ -1,5 +1,5 @@
 import { ApiTokenType } from '../types/model.js';
-import type { IUnleashConfig } from '../types/option.js';
+import { IAuthType, type IUnleashConfig } from '../types/option.js';
 import type { IApiRequest, IAuthRequest } from '../routes/unleash-types.js';
 import type { IUnleashServices } from '../services/index.js';
 import {
@@ -17,7 +17,10 @@ export const frontendApiAccessMiddleware = (
 ): any => {
     const logger = getLogger('/middleware/frontend-token-middleware.ts');
     logger.debug('Enabling frontend-token middleware');
-    if (!authentication.enableApiToken) {
+    if (
+        !authentication.enableApiToken ||
+        authentication.type === IAuthType.NONE
+    ) {
         return (_req, _res, next) => next();
     }
 

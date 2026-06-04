@@ -1,12 +1,14 @@
-import type { FC } from 'react';
+import { useState, type FC } from 'react';
 import { styled } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import type { ChartTimeRange } from 'component/impact-metrics/MultimetricChart/chartConfig';
+import useToast from 'hooks/useToast';
 import { GoalSummaryPanel } from './views/GoalSummaryPanel/GoalSummaryPanel';
 import { MultimetricChartCard } from './views/MultimetricChartCard/MultimetricChartCard';
 import { FollowedFeaturesList } from './views/FollowedFeaturesList/FollowedFeaturesList';
+import { ViewSwitcher } from './views/ViewSwitcher/ViewSwitcher';
 import { useGoalViewData } from './hooks/useGoalViewData';
-import { GOAL_VIEW } from './fixtures/goalViewConfig';
+import { DUMMY_VIEWS } from './fixtures/goalViewConfig';
 
 const TIME_RANGE_LABELS: Record<ChartTimeRange, string> = {
     hour: 'Last hour',
@@ -28,13 +30,30 @@ const StyledFeatures = styled('div')(({ theme }) => ({
 }));
 
 export const ImpactViewsPage: FC = () => {
-    const view = GOAL_VIEW;
+    const { setToastData } = useToast();
+    const [activeViewId, setActiveViewId] = useState(DUMMY_VIEWS[0].id);
+
+    const view =
+        DUMMY_VIEWS.find((candidate) => candidate.id === activeViewId) ??
+        DUMMY_VIEWS[0];
     const data = useGoalViewData(view);
     const timeLabel = TIME_RANGE_LABELS[view.timeRange];
+
+    const comingSoon = () =>
+        setToastData({ type: 'success', text: 'Coming soon' });
 
     return (
         <StyledWrapper>
             <PageHeader title='Impact views' />
+            <ViewSwitcher
+                views={DUMMY_VIEWS}
+                activeViewId={activeViewId}
+                onSelect={setActiveViewId}
+                onCreate={comingSoon}
+                onEdit={comingSoon}
+                onDuplicate={comingSoon}
+                onDelete={comingSoon}
+            />
             <StyledCard>
                 <MultimetricChartCard
                     title={data.goalLabel}

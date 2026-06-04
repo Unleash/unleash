@@ -3,11 +3,7 @@ import type { Response } from 'express';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import hashSum from 'hash-sum';
 import Controller from '../../routes/controller.js';
-import type {
-    IClientSegment,
-    IFlagResolver,
-    IUnleashConfig,
-} from '../../types/index.js';
+import type { IClientSegment, IUnleashConfig } from '../../types/index.js';
 import type { FeatureToggleService } from '../feature-toggle/feature-toggle-service.js';
 import type { Logger } from '../../logger.js';
 import { querySchema } from '../../schema/feature-schema.js';
@@ -38,8 +34,6 @@ import {
     CLIENT_METRICS_PROJECT,
     CLIENT_METRICS_TAGS,
 } from '../../internals.js';
-import isEqual from 'lodash.isequal';
-import { diff } from 'json-diff';
 import type { IUnleashServices } from '../../services/index.js';
 
 const version = 2;
@@ -67,8 +61,6 @@ export default class FeatureController extends Controller {
     private configurationRevisionService: ConfigurationRevisionService;
 
     private featureToggleService: FeatureToggleService;
-
-    private flagResolver: IFlagResolver;
 
     private eventBus: EventEmitter;
 
@@ -101,7 +93,6 @@ export default class FeatureController extends Controller {
         this.openApiService = openApiService;
         this.configurationRevisionService = configurationRevisionService;
         this.featureToggleService = featureToggleService;
-        this.flagResolver = config.flagResolver;
         this.eventBus = config.eventBus;
         this.logger = config.getLogger('client-api/feature.js');
 
@@ -163,55 +154,6 @@ export default class FeatureController extends Controller {
     private async resolveFeaturesAndSegments(
         query?: IFeatureToggleQuery,
     ): Promise<[FeatureConfigurationClient[], IClientSegment[]]> {
-        if (this.flagResolver.isEnabled('deltaDiff')) {
-            const features =
-                await this.clientFeatureToggleService.getClientFeatures(query);
-
-            const segments =
-                await this.clientFeatureToggleService.getActiveSegmentsForClient();
-
-            try {
-                const delta =
-                    await this.clientFeatureToggleService.getClientDelta(
-                        undefined,
-                        query!,
-                    );
-
-                const sortedToggles = features.sort((a, b) =>
-                    a.name.localeCompare(b.name),
-                );
-                if (delta?.events[0].type === 'hydration') {
-                    const hydrationEvent = delta?.events[0];
-                    const sortedNewToggles = hydrationEvent.features.sort(
-                        (a, b) => a.name.localeCompare(b.name),
-                    );
-
-                    if (
-                        !this.deepEqualIgnoreOrder(
-                            sortedToggles,
-                            sortedNewToggles,
-                        )
-                    ) {
-                        this.logger.warn(
-                            `old features and new features are different. Old count ${
-                                features.length
-                            }, new count ${hydrationEvent.features.length}, query ${JSON.stringify(query)},
-                        diff ${JSON.stringify(
-                            diff(sortedToggles, sortedNewToggles),
-                        )}`,
-                        );
-                    }
-                } else {
-                    this.logger.warn(
-                        `Delta diff should have only hydration event, query ${JSON.stringify(query)}`,
-                    );
-                }
-            } catch (e) {
-                this.logger.error('Delta diff failed', e);
-            }
-
-            return [features, segments];
-        }
         return Promise.all([
             this.clientFeatureToggleService.getClientFeatures(query),
             this.clientFeatureToggleService.getActiveSegmentsForClient(),
@@ -384,14 +326,4 @@ export default class FeatureController extends Controller {
             },
         );
     }
-
-    deepEqualIgnoreOrder = (obj1, obj2) => {
-        const sortedObj1 = JSON.parse(
-            JSON.stringify(obj1, Object.keys(obj1).sort()),
-        );
-        const sortedObj2 = JSON.parse(
-            JSON.stringify(obj2, Object.keys(obj2).sort()),
-        );
-        return isEqual(sortedObj1, sortedObj2);
-    };
 }

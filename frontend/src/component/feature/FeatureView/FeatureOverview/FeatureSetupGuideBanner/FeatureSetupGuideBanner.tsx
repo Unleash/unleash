@@ -26,22 +26,18 @@ const StyledActions = styled('div')(({ theme }) => ({
 
 interface FeatureSetupGuideBannerProps
     extends Omit<AlertProps, 'severity' | 'color' | 'variant'> {
-    variant?: 'set-up-guide' | 'info';
+    variant: 'set-up-guide' | 'info';
     subtitle: ReactNode;
     actions: ReactNode;
     children?: ReactNode;
 }
 
-const StyledAlert = styled(Alert, {
-    shouldForwardProp: (prop) => prop !== 'isSetupBanner',
-})<{ isSetupBanner?: boolean }>(({ theme, isSetupBanner }) => ({
-    ...(isSetupBanner && {
-        '&&.MuiAlert-standard.MuiAlert-colorInfo': {
-            backgroundColor: theme.palette.secondary.light,
-            borderColor: theme.palette.secondary.border,
-            color: theme.palette.secondary.dark,
-        },
-    }),
+const StyledAlert = styled(Alert)(({ theme }) => ({
+    '&[data-variant="set-up-guide"].MuiAlert-standard.MuiAlert-colorInfo': {
+        backgroundColor: theme.palette.secondary.light,
+        borderColor: theme.palette.secondary.border,
+        color: theme.palette.secondary.dark,
+    },
 }));
 
 export const FeatureSetupGuideBanner = ({
@@ -53,12 +49,7 @@ export const FeatureSetupGuideBanner = ({
     children,
     ...props
 }: FeatureSetupGuideBannerProps) => (
-    <StyledAlert
-        severity='info'
-        icon={icon}
-        isSetupBanner={variant === 'set-up-guide'}
-        {...props}
-    >
+    <StyledAlert severity='info' icon={icon} data-variant={variant} {...props}>
         <StyledBody>
             <div>
                 <StyledTitle>{title}</StyledTitle>

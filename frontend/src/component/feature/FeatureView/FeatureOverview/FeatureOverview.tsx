@@ -20,7 +20,7 @@ import { CleanupReminder } from '../CleanupReminder/CleanupReminder.tsx';
 import { useFeature } from '../../../../hooks/api/getters/useFeature/useFeature.ts';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useMinimumUnleashVersion } from 'hooks/useMinimumUnleashVersion.ts';
-import type { FeatureSchema } from 'openapi/index.ts';
+import type { FeatureSchema, ProjectOverviewSchema } from 'openapi/index.ts';
 import { FeatureSetupBanner } from './FeatureSetupBanner.tsx';
 
 const StyledContainer = styled('div')(({ theme }) => ({
@@ -115,8 +115,10 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
                 <StyledMainContent>
                     {!featureLoading && !projectLoading && (
                         <FeatureSetupBanner
-                            projectId={projectId}
-                            project={project}
+                            project={{
+                                ...(project as ProjectOverviewSchema),
+                                id: projectId,
+                            }}
                             feature={{
                                 ...(feature as FeatureSchema),
                                 id: featureId,

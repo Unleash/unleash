@@ -6,7 +6,6 @@ import { screen } from '@testing-library/react';
 const renderBanner = (project, feature) =>
     render(
         <FeatureSetupBanner
-            projectId={'banner-project'}
             project={project}
             feature={{ ...feature, id: 'banner-feature' }}
             onComplete={() => {}}

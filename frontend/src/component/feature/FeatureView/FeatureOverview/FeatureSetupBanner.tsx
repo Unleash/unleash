@@ -1,29 +1,30 @@
-import { getFlagSetupStage } from './getFlagSetupStage.ts';
+import { getFeatureSetupStage } from './getFeatureSetupStage.ts';
 import { FeatureConnectSdkBanner } from './FeatureConnectSdkBanner.tsx';
 import { FeatureImplementFlagBanner } from './FeatureImplementFlagBanner.tsx';
 import { FeatureAddStrategyBanner } from './FeatureAddStrategyBanner.tsx';
 import type { FeatureSchema, ProjectOverviewSchema } from 'openapi/index.ts';
 
 interface FeatureSetupBannerProps {
-    projectId: string;
-    project: ProjectOverviewSchema;
+    project: ProjectOverviewSchema & { id: string };
     feature: FeatureSchema & { id: string };
     onComplete: () => void;
 }
 
 export const FeatureSetupBanner = ({
-    projectId,
     project,
     feature,
     onComplete,
 }: FeatureSetupBannerProps) => {
-    const stage = getFlagSetupStage(project.onboardingStatus, feature);
+    const stage = getFeatureSetupStage({
+        projectOnboardingStatus: project.onboardingStatus.status,
+        feature,
+    });
 
     switch (stage) {
         case 'connect-sdk':
             return (
                 <FeatureConnectSdkBanner
-                    projectId={projectId}
+                    projectId={project.id}
                     featureId={feature.id}
                     environments={
                         project.environments?.map((env) => env.environment) ??
@@ -35,7 +36,7 @@ export const FeatureSetupBanner = ({
         case 'implement-flag':
             return (
                 <FeatureImplementFlagBanner
-                    projectId={projectId}
+                    projectId={project.id}
                     featureId={feature.id}
                     onComplete={onComplete}
                 />

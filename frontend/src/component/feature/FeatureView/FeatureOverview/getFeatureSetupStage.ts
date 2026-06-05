@@ -1,30 +1,22 @@
-import type {
-    FeatureSchemaLifecycleStage,
-    FeatureStrategySchema,
-    ProjectOverviewSchema,
-} from 'openapi';
+import type { FeatureSchema, ProjectOverviewSchema } from 'openapi';
 
-export type FlagSetupStage =
+export type FeatureSetupStage =
     | 'connect-sdk'
     | 'implement-flag'
     | 'add-strategy'
     | null;
 
-export const getFlagSetupStage = (
-    projectOnboarding:
-        | { status: ProjectOverviewSchema['onboardingStatus']['status'] }
-        | undefined,
-    feature:
-        | {
-              lifecycle?: {
-                  stage: FeatureSchemaLifecycleStage;
-              };
-              environments?: { strategies?: FeatureStrategySchema[] }[];
-          }
-        | undefined,
-): FlagSetupStage => {
-    const status = projectOnboarding?.status;
-    if (status !== 'onboarded' && status !== 'sdk-connected') {
+export const getFeatureSetupStage = ({
+    projectOnboardingStatus,
+    feature,
+}: {
+    projectOnboardingStatus?: ProjectOverviewSchema['onboardingStatus']['status'];
+    feature?: Pick<FeatureSchema, 'lifecycle' | 'environments'>;
+}): FeatureSetupStage => {
+    if (
+        projectOnboardingStatus !== 'onboarded' &&
+        projectOnboardingStatus !== 'sdk-connected'
+    ) {
         return 'connect-sdk';
     }
 
@@ -40,7 +32,7 @@ export const getFlagSetupStage = (
     // pre-live/live are the stages set once a flag has received metrics — see
     // backend feature-lifecycle-service.ts (featuresReceivedMetrics).
     const receivingMetrics = stage === 'pre-live' || stage === 'live';
-    const noStrategies = (feature?.environments ?? []).every(
+    const noStrategies = (feature.environments ?? []).every(
         (env) => env.strategies?.length === 0,
     );
 

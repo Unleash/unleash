@@ -73,21 +73,14 @@ export const FeaturePicker: FC<FeaturePickerProps> = ({
         limit: PICKER_LIMIT,
     });
 
-    const options = useMemo(
-        () => buildOptions(value, features),
-        [value, features],
-    );
+    const options = buildOptions(value, features);
 
-    const selectedOptions = useMemo(
-        () =>
-            value.map(
-                (name) =>
-                    options.find((option) => option.name === name) ?? {
-                        name,
-                        project: '',
-                    },
-            ),
-        [options, value],
+    const selectedOptions = value.map(
+        (name) =>
+            options.find((option) => option.name === name) ?? {
+                name,
+                project: '',
+            },
     );
 
     return (

@@ -18,9 +18,10 @@ import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
 import { StrategyDragTooltip } from './StrategyDragTooltip.tsx';
 import { CleanupReminder } from '../CleanupReminder/CleanupReminder.tsx';
 import { useFeature } from '../../../../hooks/api/getters/useFeature/useFeature.ts';
-import { FeatureConnectSdkBanner } from './FeatureConnectSdkBanner.tsx';
-import { FeatureImplementFlagBanner } from './FeatureImplementFlagBanner.tsx';
+import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useMinimumUnleashVersion } from 'hooks/useMinimumUnleashVersion.ts';
+import type { FeatureSchema, ProjectOverviewSchema } from 'openapi/index.ts';
+import { FeatureSetupBanner } from './FeatureSetupBanner.tsx';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -64,10 +65,23 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
     const { splash } = useAuthSplash();
     const [showTooltip, setShowTooltip] = useState(false);
     const [hasClosedTooltip, setHasClosedTooltip] = useState(false);
-    const { feature, refetchFeature, loading } = useFeature(
-        projectId,
-        featureId,
-    );
+    const {
+        feature,
+        refetchFeature,
+        loading: featureLoading,
+    } = useFeature(projectId, featureId);
+    const {
+        project,
+        loading: projectLoading,
+        refetch: refetchProject,
+    } = useProjectOverview(projectId);
+
+    // A completed setup step can advance the project's or the feature's onboarding status,
+    // so refresh both to re-evaluate the stage.
+    const refreshSetupBanner = () => {
+        refetchFeature();
+        refetchProject();
+    };
     const dragTooltipSplashId = 'strategy-drag-tooltip';
     const shouldShowStrategyDragTooltip = !splash?.[dragTooltipSplashId];
     const toggleShowTooltip = (envIsOpen: boolean) => {
@@ -86,7 +100,7 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
             <StyledContainer>
                 {!flipMainContentOrder && (
                     <div>
-                        {!loading ? (
+                        {!featureLoading ? (
                             <FeatureOverviewMetaData
                                 hiddenEnvironments={hiddenEnvironments}
                                 onEnvironmentVisibilityChange={
@@ -99,19 +113,20 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
                     </div>
                 )}
                 <StyledMainContent>
-                    {!loading && (
-                        <>
-                            <FeatureConnectSdkBanner
-                                projectId={projectId}
-                                featureId={featureId}
-                            />
-                            <FeatureImplementFlagBanner
-                                projectId={projectId}
-                                featureId={featureId}
-                            />
-                        </>
+                    {!featureLoading && !projectLoading && (
+                        <FeatureSetupBanner
+                            project={{
+                                ...(project as ProjectOverviewSchema),
+                                id: projectId,
+                            }}
+                            feature={{
+                                ...(feature as FeatureSchema),
+                                id: featureId,
+                            }}
+                            onComplete={refreshSetupBanner}
+                        />
                     )}
-                    {!loading && header}
+                    {!featureLoading && header}
                     <FeatureOverviewEnvironments
                         onToggleEnvOpen={toggleShowTooltip}
                         hiddenEnvironments={hiddenEnvironments}
@@ -119,7 +134,7 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
                 </StyledMainContent>
                 {flipMainContentOrder && (
                     <div>
-                        {!loading ? (
+                        {!featureLoading ? (
                             <FeatureOverviewMetaData
                                 hiddenEnvironments={hiddenEnvironments}
                                 onEnvironmentVisibilityChange={

@@ -32,6 +32,7 @@ export const ImpactMetricsEmptyState = ({
 
     return (
         <FeatureSetupGuideBanner
+            variant='info'
             icon={<LightbulbOutlined />}
             aria-label='Measure the impact of this flag'
             title='Tip: Measure the impact of this flag'

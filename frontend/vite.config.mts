@@ -115,14 +115,19 @@ export default defineConfig(({ mode }) => {
                     },
                 },
                 {
-                    // Theme files feed createTheme/emotion. Hot-swapping them
-                    // into a live React tree desyncs the DOM (insertBefore/
-                    // removeChild crashes), so force a clean full reload on any
-                    // theme edit instead of HMR.
-                    name: 'full-reload-on-theme-change',
+                    // Theme + styled-component edits feed createTheme/emotion;
+                    // hot-swapping them into a live React tree desyncs the DOM
+                    // (insertBefore/removeChild crashes), so force a clean full
+                    // reload instead of HMR.
+                    //
+                    // TEMPORARY: while doing the design-system pass we also
+                    // full-reload on src/component edits (lots of styled() churn
+                    // there). Once that work lands, narrow this back to
+                    // src/themes only (or remove it). See design backlog.
+                    name: 'full-reload-on-style-change',
                     apply: 'serve',
                     handleHotUpdate({ file, server }) {
-                        if (/\/src\/themes\/.*\.tsx?$/.test(file)) {
+                        if (/\/src\/(themes|component)\/.*\.tsx?$/.test(file)) {
                             server.ws.send({ type: 'full-reload' });
                             return [];
                         }

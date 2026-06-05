@@ -300,7 +300,7 @@ export default class ClientMetricsServiceV2 {
         ).map((name) => ({
             featureName: name,
             appName: value.appName,
-            environment: environment ?? 'default',
+            environment,
             timestamp: bucket.stop, //we might need to approximate between start/stop...
             yes: bucket.toggles[name].yes ?? 0,
             no: bucket.toggles[name].no ?? 0,
@@ -414,7 +414,7 @@ export default class ClientMetricsServiceV2 {
                             no: 0,
                             yes: 0,
                             appName,
-                            environment: environment ?? 'default',
+                            environment,
                             featureName,
                         }
                     );

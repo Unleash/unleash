@@ -7,6 +7,7 @@ import {
     debounce,
 } from '@mui/material';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
+import type { FeatureSearchResponseSchema } from 'openapi';
 
 type FeatureOption = {
     name: string;
@@ -21,15 +22,37 @@ export type FeaturePickerProps = {
 
 const PICKER_LIMIT = '50';
 
+const FeatureOptionRow: FC<{ option: FeatureOption }> = ({ option }) => (
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Typography variant='body2'>{option.name}</Typography>
+        {option.project ? (
+            <Typography variant='caption' sx={{ color: 'text.secondary' }}>
+                {option.project}
+            </Typography>
+        ) : null}
+    </Box>
+);
+
+// Merges the search results with any already-selected names that aren't in the
+// current results (so a selected feature stays a valid option even after the
+// search query changes). The orphan's project is unknown, hence empty.
 const buildOptions = (
     selected: string[],
-    fetched: FeatureOption[],
+    fetched: FeatureSearchResponseSchema[],
 ): FeatureOption[] => {
     const fetchedNames = new Set(fetched.map((feature) => feature.name));
     const orphans: FeatureOption[] = selected
         .filter((name) => !fetchedNames.has(name))
         .map((name) => ({ name, project: '' }));
-    return [...orphans, ...fetched];
+
+    const fetchedOptions: FeatureOption[] = fetched.map(
+        ({ name, project }) => ({
+            name,
+            project,
+        }),
+    );
+
+    return [...orphans, ...fetchedOptions];
 };
 
 export const FeaturePicker: FC<FeaturePickerProps> = ({
@@ -54,7 +77,7 @@ export const FeaturePicker: FC<FeaturePickerProps> = ({
     });
 
     const options = useMemo(
-        () => buildOptions(value, features as FeatureOption[]),
+        () => buildOptions(value, features),
         [value, features],
     );
 
@@ -79,7 +102,11 @@ export const FeaturePicker: FC<FeaturePickerProps> = ({
             options={options}
             value={selectedOptions}
             inputValue={inputValue}
-            onInputChange={(_, next) => {
+            onInputChange={(_, next, reason) => {
+                // Only react to typing. MUI also fires this with reason
+                // 'reset'/'clear' (e.g. after a selection), which would wipe the
+                // query back to the default list mid-search.
+                if (reason !== 'input') return;
                 setInputValue(next);
                 updateQuery(next);
             }}
@@ -92,17 +119,7 @@ export const FeaturePicker: FC<FeaturePickerProps> = ({
             getOptionLabel={(option) => option.name}
             renderOption={(props, option) => (
                 <Box component='li' {...props} key={option.name}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                        <Typography variant='body2'>{option.name}</Typography>
-                        {option.project ? (
-                            <Typography
-                                variant='caption'
-                                sx={{ color: 'text.secondary' }}
-                            >
-                                {option.project}
-                            </Typography>
-                        ) : null}
-                    </Box>
+                    <FeatureOptionRow option={option} />
                 </Box>
             )}
             renderInput={(params) => (

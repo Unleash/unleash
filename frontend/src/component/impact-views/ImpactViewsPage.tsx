@@ -7,6 +7,7 @@ import { GoalSummaryPanel } from './views/GoalSummaryPanel/GoalSummaryPanel';
 import { MultimetricChartCard } from './views/MultimetricChartCard/MultimetricChartCard';
 import { FollowedFeaturesList } from './views/FollowedFeaturesList/FollowedFeaturesList';
 import { ViewSwitcher } from './views/ViewSwitcher/ViewSwitcher';
+import { FeaturePicker } from './views/FeaturePicker/FeaturePicker';
 import { useGoalViewData } from './hooks/useGoalViewData';
 import { DUMMY_VIEWS } from './fixtures/goalViewConfig';
 
@@ -32,6 +33,9 @@ const StyledFeatures = styled('div')(({ theme }) => ({
 export const ImpactViewsPage: FC = () => {
     const { setToastData } = useToast();
     const [activeViewId, setActiveViewId] = useState(DUMMY_VIEWS[0].id);
+    // TEMPORARY: preview the FeaturePicker on the page. Remove before PR B1 —
+    // the picker belongs in the view editor (PR B2), not the page.
+    const [pickerValue, setPickerValue] = useState<string[]>([]);
 
     const view =
         DUMMY_VIEWS.find((candidate) => candidate.id === activeViewId) ??
@@ -45,6 +49,10 @@ export const ImpactViewsPage: FC = () => {
     return (
         <StyledWrapper>
             <PageHeader title='Impact views' />
+            {/* TEMPORARY FeaturePicker preview — remove before PR B1 lands. */}
+            <StyledCard>
+                <FeaturePicker value={pickerValue} onChange={setPickerValue} />
+            </StyledCard>
             <ViewSwitcher
                 views={DUMMY_VIEWS}
                 activeViewId={activeViewId}

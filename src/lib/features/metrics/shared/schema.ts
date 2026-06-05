@@ -45,6 +45,7 @@ export const clientMetricsEnvSchema = joi
     .options({ stripUnknown: true })
     .keys({
         featureName: joi.string().required().allow(''),
+        environment: joi.string().required(),
         appName: joi.string().required(),
         yes: joi.number().default(0),
         no: joi.number().default(0),

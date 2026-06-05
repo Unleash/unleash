@@ -7,7 +7,6 @@ import {
     debounce,
 } from '@mui/material';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
-import type { FeatureSearchResponseSchema } from 'openapi';
 
 type FeatureOption = {
     name: string;
@@ -33,25 +32,6 @@ const FeatureOptionRow: FC<{ option: FeatureOption }> = ({ option }) => (
     </Box>
 );
 
-const buildOptions = (
-    selected: string[],
-    fetched: FeatureSearchResponseSchema[],
-): FeatureOption[] => {
-    const fetchedNames = new Set(fetched.map((feature) => feature.name));
-    const orphans: FeatureOption[] = selected
-        .filter((name) => !fetchedNames.has(name))
-        .map((name) => ({ name, project: '' }));
-
-    const fetchedOptions: FeatureOption[] = fetched.map(
-        ({ name, project }) => ({
-            name,
-            project,
-        }),
-    );
-
-    return [...orphans, ...fetchedOptions];
-};
-
 export const FeaturePicker: FC<FeaturePickerProps> = ({
     value,
     onChange,
@@ -73,7 +53,10 @@ export const FeaturePicker: FC<FeaturePickerProps> = ({
         limit: PICKER_LIMIT,
     });
 
-    const options = buildOptions(value, features);
+    const options: FeatureOption[] = features.map(({ name, project }) => ({
+        name,
+        project,
+    }));
 
     const selectedOptions = value.map(
         (name) =>

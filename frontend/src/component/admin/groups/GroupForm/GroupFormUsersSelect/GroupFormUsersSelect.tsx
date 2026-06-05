@@ -21,6 +21,10 @@ const StyledOption = styled('div')(({ theme }) => ({
 
 const StyledTags = styled('div')(({ theme }) => ({
     paddingLeft: theme.spacing(1),
+    minWidth: 0,
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
 }));
 
 const StyledGroupFormUsersSelect = styled('div')(({ theme }) => ({

@@ -13,7 +13,7 @@ const scales = {
     comfortable: { small: 24, medium: 30, large: 36 },
 } as const;
 
-export const controlHeights = scales.compact;
+export const controlHeights = scales.comfortable;
 
 type ControlSize = keyof typeof scales.compact;
 
@@ -159,11 +159,32 @@ export const outlinedInputSizing = (ownerState?: { size?: unknown }) => {
             minHeight: height,
             paddingTop: 0,
             paddingBottom: 0,
+            // center the value/tags vertically; without this the zeroed
+            // padding leaves the content stuck to the top of the field
+            alignItems: 'center',
         },
         '&:not(.MuiInputBase-multiline) .MuiOutlinedInput-input': {
             paddingTop: 0,
             paddingBottom: 0,
             paddingLeft: paddingX,
+        },
+        // Multiline fields: match the single-line horizontal padding (MUI's
+        // stock multiline padding is different and looks inconsistent), and
+        // read as a distinct box at least two lines tall. The min-height acts
+        // as a floor; fields with explicit rows/minRows still grow beyond it.
+        '&.MuiInputBase-multiline': {
+            paddingTop: 8,
+            paddingBottom: 8,
+            paddingLeft: paddingX,
+            paddingRight: paddingX,
+        },
+        // Floor only: short multiline fields read as a ~2-line box. Fields
+        // with explicit minRows/rows are already taller, so this is a no-op for
+        // them. CRITICAL: exclude the aria-hidden shadow textarea MUI uses to
+        // measure row height — styling it inflates the measured row height and
+        // multiplies the height of minRows fields.
+        '&.MuiInputBase-multiline .MuiInputBase-input:not([aria-hidden])': {
+            minHeight: '4rem',
         },
         '& .MuiSelect-select': {
             display: 'flex',
@@ -210,6 +231,25 @@ export const controlOverrides: Components<Theme> = {
     MuiOutlinedInput: {
         styleOverrides: {
             root: ({ ownerState }) => outlinedInputSizing(ownerState),
+        },
+    },
+
+    // Vertically center the value/tags in Autocompletes. MUI applies an
+    // asymmetric paddingTop to its inputRoot here (outranking a rule coming
+    // from MuiOutlinedInput), which leaves a single selected value sitting
+    // high in the field. Override it at MUI's own injection point.
+    MuiAutocomplete: {
+        styleOverrides: {
+            inputRoot: {
+                alignItems: 'center',
+                paddingTop: 0,
+                paddingBottom: 0,
+                // summary-style selects (no chips): keep the value + input on
+                // one line instead of wrapping the input below a long value
+                '&:not(:has(.MuiChip-root))': {
+                    flexWrap: 'nowrap',
+                },
+            },
         },
     },
 

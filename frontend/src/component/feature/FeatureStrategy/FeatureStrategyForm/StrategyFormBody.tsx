@@ -71,11 +71,6 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
     borderBottom: `1px solid ${theme.palette.divider}`,
     paddingLeft: theme.spacing(6),
     paddingRight: theme.spacing(6),
-    minHeight: '60px',
-}));
-
-const StyledTab = styled(Tab)(({ theme }) => ({
-    width: '100px',
 }));
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -236,7 +231,7 @@ export const StrategyFormBody = <T extends StrategyFormState>({
             {alertContent}
 
             <StyledTabs value={tab} onChange={handleTabChange}>
-                <StyledTab label='General' />
+                <Tab label='General' />
                 <Tab
                     data-testid='STRATEGY_TARGETING_TAB'
                     label={

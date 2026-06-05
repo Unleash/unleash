@@ -19,16 +19,20 @@ interface IStickinessSelectProps {
 }
 
 const StyledValueContainer = styled('div')(({ theme }) => ({
-    lineHeight: 1.1,
-    marginTop: -2,
-    marginBottom: -10,
+    display: 'flex',
+    alignItems: 'baseline',
+    gap: theme.spacing(1),
+    overflow: 'hidden',
 }));
 
 const StyledLabel = styled('div')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
+    flexShrink: 0,
 }));
 
 const StyledDescription = styled('p')(({ theme }) => ({
+    margin: 0,
+    minWidth: 0,
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.neutral.main,
     overflow: 'hidden',
@@ -37,16 +41,21 @@ const StyledDescription = styled('p')(({ theme }) => ({
 }));
 
 const StyledDropdownDescription = styled('p')(({ theme }) => ({
+    margin: 0,
+    minWidth: 0,
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.neutral.main,
     overflow: 'hidden',
-    whiteSpace: 'normal',
-    wordBreak: 'break-word',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
 }));
 
 const StyledOptionContainer = styled('div')(({ theme }) => ({
-    lineHeight: 1.2,
+    display: 'flex',
+    alignItems: 'baseline',
+    gap: theme.spacing(1),
     width: '100%',
+    overflow: 'hidden',
 }));
 
 export const StickinessSelect = ({

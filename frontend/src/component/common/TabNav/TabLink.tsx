@@ -13,8 +13,11 @@ const StyledTabLink = styled(Link)(({ theme }) => ({
     textDecoration: 'none',
     color: 'inherit',
     padding: theme.spacing(0, 2), // 16px horizontal, matches the tab scale
-    '&.active': {
-        fontWeight: 'bold',
+    // Bold when the parent tab is selected. Higher specificity than the global
+    // `a { font-weight: medium }` baseline, which would otherwise win. Paired
+    // with SteadyWidthText below so the weight change doesn't shift layout.
+    '.MuiTab-root.Mui-selected &': {
+        fontWeight: theme.typography.fontWeightBold,
     },
 }));
 

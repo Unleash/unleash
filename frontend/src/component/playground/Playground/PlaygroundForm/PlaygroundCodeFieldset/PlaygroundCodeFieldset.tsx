@@ -310,7 +310,7 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
                     value={contextField}
                     onChange={changeContextField}
                     variant='outlined'
-                    size='small'
+                    size='large'
                     sx={{ width: 200, maxWidth: '100%' }}
                     options={contextOptions}
                 />

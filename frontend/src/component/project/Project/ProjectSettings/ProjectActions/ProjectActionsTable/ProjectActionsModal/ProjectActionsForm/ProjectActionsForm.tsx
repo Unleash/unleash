@@ -1,6 +1,6 @@
-import { Alert, Link, styled } from '@mui/material';
+import { Alert, Link, styled, TextField } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import Input from 'component/common/Input/Input';
+import { FormField } from 'component/common/FormField/FormField';
 import { FormSwitch } from 'component/common/FormSwitch/FormSwitch';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type {
@@ -21,19 +21,6 @@ const StyledRaisedSection = styled('div')(({ theme }) => ({
     padding: theme.spacing(2, 3),
     borderRadius: theme.shape.borderRadiusLarge,
     marginBottom: theme.spacing(4),
-}));
-
-const StyledInputDescription = styled('p')(({ theme }) => ({
-    display: 'flex',
-    color: theme.palette.text.primary,
-    marginBottom: theme.spacing(1),
-    '&:not(:first-of-type)': {
-        marginTop: theme.spacing(3),
-    },
-}));
-
-const StyledInput = styled(Input)(() => ({
-    width: '100%',
 }));
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
@@ -115,31 +102,37 @@ export const ProjectActionsForm = ({
                     Action status
                 </FormSwitch>
             </StyledRaisedSection>
-            <StyledInputDescription>
-                What is your new action name?
-            </StyledInputDescription>
-            <StyledInput
-                autoFocus
+            <FormField
                 label='Action name'
-                error={Boolean(errors.name)}
-                errorText={errors.name}
-                value={name}
-                onChange={(e) => {
-                    validateName(e.target.value);
-                    setName(e.target.value);
-                }}
-                onBlur={(e) => handleOnBlur(() => validateName(e.target.value))}
-                autoComplete='off'
-            />
-            <StyledInputDescription>
-                What is your new action description?
-            </StyledInputDescription>
-            <StyledInput
+                description='What is your new action name?'
+            >
+                <TextField
+                    fullWidth
+                    autoFocus
+                    error={Boolean(errors.name)}
+                    helperText={errors.name}
+                    value={name}
+                    onChange={(e) => {
+                        validateName(e.target.value);
+                        setName(e.target.value);
+                    }}
+                    onBlur={(e) =>
+                        handleOnBlur(() => validateName(e.target.value))
+                    }
+                    autoComplete='off'
+                />
+            </FormField>
+            <FormField
                 label='Action description'
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                autoComplete='off'
-            />
+                description='What is your new action description?'
+            >
+                <TextField
+                    fullWidth
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    autoComplete='off'
+                />
+            </FormField>
 
             <ProjectActionsFormStepSource
                 sourceId={sourceId}

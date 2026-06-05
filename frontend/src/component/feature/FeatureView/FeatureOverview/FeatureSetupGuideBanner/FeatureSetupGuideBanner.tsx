@@ -33,7 +33,7 @@ interface FeatureSetupGuideBannerProps
 }
 
 const StyledAlert = styled(Alert, {
-    shouldForwardProp: (prop) => prop !== 'highlighted',
+    shouldForwardProp: (prop) => prop !== 'isSetupBanner',
 })<{ isSetupBanner?: boolean }>(({ theme, isSetupBanner }) => ({
     ...(isSetupBanner && {
         '&&.MuiAlert-standard.MuiAlert-colorInfo': {

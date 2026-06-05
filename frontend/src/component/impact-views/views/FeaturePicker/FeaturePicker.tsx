@@ -33,9 +33,6 @@ const FeatureOptionRow: FC<{ option: FeatureOption }> = ({ option }) => (
     </Box>
 );
 
-// Merges the search results with any already-selected names that aren't in the
-// current results (so a selected feature stays a valid option even after the
-// search query changes). The orphan's project is unknown, hence empty.
 const buildOptions = (
     selected: string[],
     fetched: FeatureSearchResponseSchema[],
@@ -103,9 +100,6 @@ export const FeaturePicker: FC<FeaturePickerProps> = ({
             value={selectedOptions}
             inputValue={inputValue}
             onInputChange={(_, next, reason) => {
-                // Only react to typing. MUI also fires this with reason
-                // 'reset'/'clear' (e.g. after a selection), which would wipe the
-                // query back to the default list mid-search.
                 if (reason !== 'input') return;
                 setInputValue(next);
                 updateQuery(next);

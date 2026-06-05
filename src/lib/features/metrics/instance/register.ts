@@ -90,10 +90,14 @@ export default class RegisterController extends Controller {
     ): Promise<void> {
         const { body: data, user } = req;
         const clientIp = extractClientIp(req);
-        data.environment = this.resolveEnvironment(user);
+        const environment = this.resolveEnvironment(user); // derived from the API token only
         data.projects = this.resolveProject(user);
 
-        await this.clientInstanceService.registerBackendClient(data, clientIp);
+        await this.clientInstanceService.registerBackendClient(
+            data,
+            clientIp,
+            environment,
+        );
         res.header('X-Unleash-Version', version).status(202).end();
     }
 }

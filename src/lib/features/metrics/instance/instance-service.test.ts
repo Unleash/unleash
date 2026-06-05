@@ -46,10 +46,10 @@ test('Multiple registrations of same appname and instanceid within same time per
         started: new Date(),
         interval: 10,
     };
-    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
-    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
-    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
-    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1', 'default');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1', 'default');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1', 'default');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1', 'default');
 
     await clientMetrics.bulkAdd(); // in prod called by a SchedulerService
 
@@ -104,12 +104,12 @@ test('Multiple unique clients causes multiple registrations', async () => {
         started: new Date(),
         interval: 10,
     };
-    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
-    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
-    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
-    await clientMetrics.registerBackendClient(client2, '127.0.0.1');
-    await clientMetrics.registerBackendClient(client2, '127.0.0.1');
-    await clientMetrics.registerBackendClient(client2, '127.0.0.1');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1', 'default');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1', 'default');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1', 'default');
+    await clientMetrics.registerBackendClient(client2, '127.0.0.1', 'default');
+    await clientMetrics.registerBackendClient(client2, '127.0.0.1', 'default');
+    await clientMetrics.registerBackendClient(client2, '127.0.0.1', 'default');
 
     await clientMetrics.bulkAdd(); // in prod called by a SchedulerService
     const registrations: IClientApp[] = appStoreSpy.mock
@@ -147,15 +147,15 @@ test('Same client registered outside of dedup interval will be registered twice'
         started: new Date(),
         interval: 10,
     };
-    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
-    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
-    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1', 'default');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1', 'default');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1', 'default');
 
     await clientMetrics.bulkAdd(); // in prod called by a SchedulerService
 
-    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
-    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
-    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1', 'default');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1', 'default');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1', 'default');
 
     await clientMetrics.bulkAdd(); // in prod called by a SchedulerService
 
@@ -337,25 +337,28 @@ describe('upserting into `seenClients`', () => {
         const key = instanceService.clientKey(client);
 
         instanceService.seenClients = {
-            [key]: { ...client, environment: 'blue' },
+            [key]: {
+                ...client,
+                sdkVersion: 'previously-seen-sdk',
+                environment: 'blue',
+            },
         };
 
         await instanceService.registerBackendClient(
             {
                 ...client,
-                sdkVersion: 'my-sdk',
                 started: new Date(),
                 interval: 5,
-                environment: 'blue',
             },
             '::1',
+            'not-merged',
         );
 
         expect(instanceService.seenClients[key]).toMatchObject({
             appName: 'appName',
             instanceId: 'instanceId',
             environment: 'blue',
-            sdkVersion: 'my-sdk',
+            sdkVersion: 'previously-seen-sdk',
         });
     });
     test('registerFrontendClient merges its data', async () => {

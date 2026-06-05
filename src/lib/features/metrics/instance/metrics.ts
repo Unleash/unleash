@@ -256,13 +256,23 @@ export default class ClientMetricsController extends Controller {
         if (this.config.flagResolver.isEnabled('disableMetrics')) {
             res.status(204).end();
         } else {
-            const { body } = req;
+            const { body, user } = req;
             const clientIp = extractClientIp(req);
             const { metrics, applications, impactMetrics } = body;
             const promises: Promise<void>[] = [];
 
+            // when an app omits its `environment` and
+            // the filter on raw `metrics[]` entries — only metrics
+            // matching the token's scope are persisted
+            const acceptedEnvironment =
+                this.metricsV2.resolveUserEnvironment(user);
+
             try {
                 for (const app of applications) {
+                    // per app `environment` from the body - when this bulk endpoint
+                    // forwards metrics from many environments for edge proxies
+                    const appEnvironment =
+                        app.environment ?? acceptedEnvironment;
                     if (
                         app.sdkType === 'frontend' &&
                         typeof app.sdkVersion === 'string'
@@ -270,7 +280,7 @@ export default class ClientMetricsController extends Controller {
                         this.clientInstanceService.registerFrontendClient({
                             appName: app.appName,
                             instanceId: app.instanceId,
-                            environment: app.environment,
+                            environment: appEnvironment,
                             sdkType: app.sdkType,
                             sdkVersion: app.sdkVersion,
                             projects: app.projects,
@@ -280,6 +290,7 @@ export default class ClientMetricsController extends Controller {
                             this.clientInstanceService.registerBackendClient(
                                 app,
                                 clientIp,
+                                appEnvironment,
                             ),
                         );
                     }
@@ -287,9 +298,6 @@ export default class ClientMetricsController extends Controller {
                 if (metrics && metrics.length > 0) {
                     const data: IClientMetricsEnv[] =
                         await clientMetricsEnvBulkSchema.validateAsync(metrics);
-                    const { user } = req;
-                    const acceptedEnvironment =
-                        this.metricsV2.resolveUserEnvironment(user);
                     const filteredData = data.filter(
                         (metric) => metric.environment === acceptedEnvironment,
                     );

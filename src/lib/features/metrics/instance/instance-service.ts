@@ -128,12 +128,15 @@ export default class ClientInstanceService {
     public async registerBackendClient(
         data: PartialSome<IClientApp, 'instanceId'>,
         clientIp: string,
+        environment: string,
     ): Promise<void> {
         const value = await clientRegisterSchema.validateAsync(data);
         value.clientIp = clientIp;
         value.createdBy = SYSTEM_USER.username!;
         value.sdkType = 'backend';
-        value.environment = data.environment;
+
+        const existing = this.seenClients[this.clientKey(value)];
+        value.environment = existing?.environment ?? environment; // existing or from the authenticated API token
 
         this.updateSeenClient(value);
         this.eventBus.emit(CLIENT_REGISTERED, value);

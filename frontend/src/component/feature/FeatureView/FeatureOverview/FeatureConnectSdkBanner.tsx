@@ -1,12 +1,26 @@
 import { useState } from 'react';
+import { styled } from '@mui/material';
+import CodeBlockIcon from 'assets/icons/code-block.svg?react';
 import { ConnectSdkDialog } from 'component/onboarding/dialog/ConnectSdkDialog/ConnectSdkDialog.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { FeatureFlagSetupBannerCard } from './FeatureFlagSetupBannerCard.tsx';
+import { FeatureSetupGuideBanner } from './FeatureSetupGuideBanner/FeatureSetupGuideBanner.tsx';
+import { ConnectionPulse } from 'component/common/ConnectionPulse/ConnectionPulse.tsx';
+import { PendingBadge } from 'component/common/PendingBadge/PendingBadge.tsx';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import {
     UPDATE_PROJECT,
     CREATE_PROJECT_API_TOKEN,
 } from 'component/providers/AccessProvider/permissions';
+
+const StyledActions = styled('span')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(2),
+}));
+
+const StyledPermissionButton = styled(PermissionButton)({
+    '& svg path': { fill: 'currentColor' },
+});
 
 interface FeatureConnectSdkBannerProps {
     projectId: string;
@@ -38,20 +52,29 @@ export const FeatureConnectSdkBanner = ({
 
     return (
         <>
-            <FeatureFlagSetupBannerCard
+            <FeatureSetupGuideBanner
+                variant='set-up-guide'
+                icon={<ConnectionPulse />}
                 title='Connect SDK'
-                description='You must connect an SDK to the project before you can implement this flag in your code.'
-            >
-                <PermissionButton
-                    variant='contained'
-                    onClick={onConnectSdkClick}
-                    permission={[UPDATE_PROJECT, CREATE_PROJECT_API_TOKEN]}
-                    projectId={projectId}
-                    sx={{ alignSelf: 'auto' }}
-                >
-                    Connect SDK
-                </PermissionButton>
-            </FeatureFlagSetupBannerCard>
+                subtitle='You must connect an SDK to the project before you can implement this flag in your code.'
+                actions={
+                    <StyledActions>
+                        <StyledPermissionButton
+                            variant='contained'
+                            startIcon={<CodeBlockIcon />}
+                            onClick={onConnectSdkClick}
+                            permission={[
+                                UPDATE_PROJECT,
+                                CREATE_PROJECT_API_TOKEN,
+                            ]}
+                            projectId={projectId}
+                        >
+                            Connect SDK
+                        </StyledPermissionButton>
+                        <PendingBadge />
+                    </StyledActions>
+                }
+            />
             <ConnectSdkDialog
                 open={connectSdkOpen}
                 onClose={onDialogClose}

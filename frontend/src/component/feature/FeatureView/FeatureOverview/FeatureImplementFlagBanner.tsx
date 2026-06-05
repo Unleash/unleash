@@ -1,8 +1,17 @@
 import { useState } from 'react';
-import { Button } from '@mui/material';
+import { Button, styled } from '@mui/material';
+import Code from '@mui/icons-material/Code';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { FeatureFlagSetupBannerCard } from './FeatureFlagSetupBannerCard.tsx';
+import { FeatureSetupGuideBanner } from './FeatureSetupGuideBanner/FeatureSetupGuideBanner.tsx';
+import { PendingBadge } from 'component/common/PendingBadge/PendingBadge.tsx';
 import { ImplementFlagDialog } from './ImplementFlagDialog/ImplementFlagDialog.tsx';
+import { ConnectionPulse } from 'component/common/ConnectionPulse/ConnectionPulse.tsx';
+
+const StyledActions = styled('span')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(2),
+}));
 
 interface FeatureImplementFlagBannerProps {
     projectId: string;
@@ -32,14 +41,24 @@ export const FeatureImplementFlagBanner = ({
 
     return (
         <>
-            <FeatureFlagSetupBannerCard
+            <FeatureSetupGuideBanner
+                variant='set-up-guide'
+                icon={<ConnectionPulse />}
                 title='Implement your flag'
-                description='Waiting for flag evaluations. Wrap your feature logic in a flag evaluation to get set up.'
-            >
-                <Button variant='contained' onClick={onImplementClick}>
-                    Wrap your code
-                </Button>
-            </FeatureFlagSetupBannerCard>
+                subtitle='Waiting for flag evaluations. Wrap your feature logic in a flag evaluation to get set up.'
+                actions={
+                    <StyledActions>
+                        <Button
+                            variant='contained'
+                            startIcon={<Code />}
+                            onClick={onImplementClick}
+                        >
+                            Wrap your code
+                        </Button>
+                        <PendingBadge />
+                    </StyledActions>
+                }
+            />
             <ImplementFlagDialog
                 open={dialogOpen}
                 onClose={onDialogClose}

@@ -42,20 +42,18 @@ const StyledDescription = styled('p')(({ theme }) => ({
 
 const StyledDropdownDescription = styled('p')(({ theme }) => ({
     margin: 0,
-    minWidth: 0,
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.neutral.main,
     overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
+    whiteSpace: 'normal',
+    wordBreak: 'break-word',
 }));
 
+// Dropdown options keep the description stacked BELOW the value (unlike the
+// collapsed value, which shows them side by side to fit the field height).
 const StyledOptionContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'baseline',
-    gap: theme.spacing(1),
+    lineHeight: 1.2,
     width: '100%',
-    overflow: 'hidden',
 }));
 
 export const StickinessSelect = ({

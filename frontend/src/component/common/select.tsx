@@ -59,13 +59,13 @@ const SelectMenu: React.FC<ISelectMenuProps> = ({
             classes={classes}
             style={formControlStyles}
         >
-            <InputLabel htmlFor={id}>{label}</InputLabel>
+            {label ? <InputLabel htmlFor={id}>{label}</InputLabel> : null}
             <Select
                 name={name}
                 disabled={disabled}
                 onChange={onChange}
                 className={className}
-                label={label}
+                label={label || undefined}
                 id={id}
                 value={value}
                 {...rest}

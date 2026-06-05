@@ -3,7 +3,7 @@ import { trim } from 'component/common/util';
 import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Box, styled, TextField } from '@mui/material';
-import Input from 'component/common/Input/Input';
+import { FormField } from 'component/common/FormField/FormField';
 import { FeatureTogglesLimitTooltip } from './FeatureTogglesLimitTooltip.tsx';
 import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm.ts';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -42,32 +42,15 @@ const StyledForm = styled('form')(({ theme }) => ({
     paddingBottom: theme.spacing(1),
 }));
 
-const StyledDescription = styled('p')(({ theme }) => ({
-    marginBottom: theme.spacing(1),
-    marginRight: theme.spacing(1),
+const StyledLabelWithTooltip = styled('span')(({ theme }) => ({
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.5),
 }));
 
 const StyledSelect = styled(Select)(({ theme }) => ({
     marginBottom: theme.spacing(2),
     minWidth: '200px',
-}));
-
-const StyledSubtitle = styled('div')(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    fontSize: theme.fontSizes.smallerBody,
-    lineHeight: 1.25,
-    paddingBottom: theme.spacing(1),
-}));
-
-const StyledInput = styled(Input)(({ theme }) => ({
-    width: '100%',
-    marginBottom: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-}));
-
-const StyledTextField = styled(TextField)(({ theme }) => ({
-    width: '100%',
-    marginBottom: theme.spacing(2),
 }));
 
 const StyledButtonContainer = styled('div')(() => ({
@@ -116,98 +99,96 @@ const ProjectForm: React.FC<IProjectForm> = ({
                 handleSubmit(submitEvent);
             }}
         >
-            <StyledDescription>What is your project Id?</StyledDescription>
-            <StyledInput
-                label='Project Id'
-                value={projectId}
-                onChange={(e) => setProjectId(trim(e.target.value))}
-                error={Boolean(errors.id)}
-                errorText={errors.id}
-                onFocus={() => clearErrors()}
-                onBlur={validateProjectId}
-                disabled={mode === 'Edit'}
-                data-testid={PROJECT_ID_INPUT}
-                autoFocus
-                required
-            />
+            <FormField label='Project Id' description='What is your project Id?'>
+                <TextField
+                    fullWidth
+                    value={projectId}
+                    onChange={(e) => setProjectId(trim(e.target.value))}
+                    error={Boolean(errors.id)}
+                    helperText={errors.id}
+                    onFocus={() => clearErrors()}
+                    onBlur={validateProjectId}
+                    disabled={mode === 'Edit'}
+                    data-testid={PROJECT_ID_INPUT}
+                    autoFocus
+                    required
+                />
+            </FormField>
 
-            <StyledDescription>What is your project name?</StyledDescription>
-            <StyledInput
+            <FormField
                 label='Project name'
-                value={projectName}
-                onChange={(e) => setProjectName(e.target.value)}
-                error={Boolean(errors.name)}
-                errorText={errors.name}
-                onFocus={() => {
-                    delete errors.name;
-                }}
-                data-testid={PROJECT_NAME_INPUT}
-                required
-            />
+                description='What is your project name?'
+            >
+                <TextField
+                    fullWidth
+                    value={projectName}
+                    onChange={(e) => setProjectName(e.target.value)}
+                    error={Boolean(errors.name)}
+                    helperText={errors.name}
+                    onFocus={() => {
+                        delete errors.name;
+                    }}
+                    data-testid={PROJECT_NAME_INPUT}
+                    required
+                />
+            </FormField>
 
-            <StyledDescription>
-                What is your project description?
-            </StyledDescription>
-            <StyledTextField
+            <FormField
                 label='Project description'
-                variant='outlined'
-                multiline
-                maxRows={4}
-                value={projectDesc}
-                onChange={(e) => setProjectDesc(e.target.value)}
-                data-testid={PROJECT_DESCRIPTION_INPUT}
-            />
+                description='What is your project description?'
+            >
+                <TextField
+                    fullWidth
+                    multiline
+                    maxRows={4}
+                    value={projectDesc}
+                    onChange={(e) => setProjectDesc(e.target.value)}
+                    data-testid={PROJECT_DESCRIPTION_INPUT}
+                />
+            </FormField>
 
             <ConditionallyRender
                 condition={setProjectStickiness != null}
                 show={
-                    <>
-                        <StyledDescription>
-                            What is the default stickiness for the project?
-                        </StyledDescription>
+                    <FormField
+                        label='Stickiness'
+                        description='What is the default stickiness for the project?'
+                    >
                         <StickinessSelect
-                            label='Stickiness'
+                            label=''
                             value={projectStickiness}
                             data-testid={PROJECT_STICKINESS_SELECT}
                             onChange={(e) =>
                                 setProjectStickiness?.(e.target.value)
                             }
                         />
-                    </>
+                    </FormField>
                 }
             />
             <ConditionallyRender
                 condition={mode === 'Edit'}
                 show={() => (
-                    <>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                marginBottom: 1,
-                                gap: 1,
-                            }}
-                        >
-                            <p>Feature flag limit?</p>
-                            <FeatureTogglesLimitTooltip />
-                        </Box>
-                        <StyledSubtitle>
-                            Leave it empty if you don’t want to add a limit
-                        </StyledSubtitle>
+                    <FormField
+                        label={
+                            <StyledLabelWithTooltip>
+                                Feature flag limit
+                                <FeatureTogglesLimitTooltip />
+                            </StyledLabelWithTooltip>
+                        }
+                        description='Leave it empty if you don’t want to add a limit'
+                    >
                         <StyledInputContainer>
-                            <StyledInput
-                                label={'Limit'}
+                            <TextField
+                                fullWidth
                                 name='value'
-                                type={'number'}
+                                type='number'
                                 value={
                                     featureLimit === 'null' ||
                                     featureLimit === undefined
                                         ? ''
                                         : featureLimit
                                 }
-                                onChange={(e) =>
-                                    setFeatureLimit!(e.target.value)
-                                }
+                                onChange={(e) => setFeatureLimit!(e.target.value)}
                             />
                             <ConditionallyRender
                                 condition={
@@ -221,35 +202,31 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                 }
                             />
                         </StyledInputContainer>
-                    </>
+                    </FormField>
                 )}
             />
             <ConditionallyRender
                 condition={mode === 'Create' && isEnterprise()}
                 show={
-                    <>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                marginBottom: 1,
-                                gap: 1,
-                            }}
-                        >
-                            <p>What is your project collaboration mode?</p>
-                            <CollaborationModeTooltip />
-                        </Box>
+                    <FormField
+                        label={
+                            <StyledLabelWithTooltip>
+                                Project collaboration mode
+                                <CollaborationModeTooltip />
+                            </StyledLabelWithTooltip>
+                        }
+                        description='What is your project collaboration mode?'
+                    >
                         <StyledSelect
                             id='project-mode'
                             value={projectMode}
-                            label='Project collaboration mode'
                             name='Project collaboration mode'
                             onChange={(e) => {
                                 setProjectMode?.(e.target.value as ProjectMode);
                             }}
                             options={projectModeOptions}
                         />
-                    </>
+                    </FormField>
                 }
             />
             <StyledButtonContainer>{children}</StyledButtonContainer>

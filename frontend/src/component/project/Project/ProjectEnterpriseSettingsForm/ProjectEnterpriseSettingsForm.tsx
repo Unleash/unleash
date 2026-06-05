@@ -6,9 +6,15 @@ import React, {
 } from 'react';
 import Select from 'component/common/select';
 import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm.ts';
-import { Box, InputAdornment, styled, TextField } from '@mui/material';
+import {
+    Box,
+    InputAdornment,
+    styled,
+    TextField,
+    Typography,
+} from '@mui/material';
 import { CollaborationModeTooltip } from './CollaborationModeTooltip.tsx';
-import Input from 'component/common/Input/Input';
+import { FormField } from 'component/common/FormField/FormField';
 import { FeatureFlagNamingTooltip } from './FeatureFlagNamingTooltip.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import type { ProjectLinkTemplateSchema } from 'openapi';
@@ -44,15 +50,10 @@ const StyledSubtitle = styled('div')(({ theme }) => ({
     paddingBottom: theme.spacing(1),
 }));
 
-const StyledInput = styled(Input)(({ theme }) => ({
-    width: '100%',
-    marginBottom: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-}));
-
-const StyledTextField = styled(TextField)(({ theme }) => ({
-    width: '100%',
-    marginBottom: theme.spacing(2),
+const StyledLabelWithTooltip = styled('span')(({ theme }) => ({
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.5),
 }));
 
 const StyledFieldset = styled('fieldset')(() => ({
@@ -71,11 +72,10 @@ const StyledButtonContainer = styled('div')(() => ({
     justifyContent: 'flex-end',
 }));
 
-const StyledFlagNamingContainer = styled('div')(({ theme }) => ({
+const StyledFlagNamingContainer = styled('div')(() => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
-    gap: theme.spacing(1),
     '& > *': { width: '100%' },
 }));
 
@@ -232,29 +232,25 @@ const ProjectEnterpriseSettingsForm: React.FC<
                 trackPattern(featureNamingPattern);
             }}
         >
-            <>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        marginBottom: 1,
-                        gap: 1,
-                    }}
-                >
-                    <p>What is your project collaboration mode?</p>
-                    <CollaborationModeTooltip />
-                </Box>
+            <FormField
+                label={
+                    <StyledLabelWithTooltip>
+                        Project collaboration mode
+                        <CollaborationModeTooltip />
+                    </StyledLabelWithTooltip>
+                }
+                description='What is your project collaboration mode?'
+            >
                 <StyledSelect
                     id='project-mode'
                     value={projectMode}
-                    label='Project collaboration mode'
                     name='Project collaboration mode'
                     onChange={(e) => {
                         setProjectMode?.(e.target.value as ProjectMode);
                     }}
                     options={projectModeOptions}
                 />
-            </>
+            </FormField>
             <StyledFieldset>
                 <Box
                     sx={{
@@ -264,7 +260,9 @@ const ProjectEnterpriseSettingsForm: React.FC<
                         gap: 1,
                     }}
                 >
-                    <legend>Feature flag naming pattern</legend>
+                    <Typography variant='h4' component='legend'>
+                        Feature flag naming pattern
+                    </Typography>
                     <FeatureFlagNamingTooltip />
                 </Box>
                 <StyledSubtitle>
@@ -289,33 +287,35 @@ const ProjectEnterpriseSettingsForm: React.FC<
                     </StyledPatternNamingExplanation>
                 </StyledSubtitle>
                 <StyledFlagNamingContainer>
-                    <StyledInput
-                        label={'Naming Pattern'}
-                        name='feature flag naming pattern'
-                        aria-describedby='pattern-naming-description'
-                        placeholder='[A-Za-z]+.[A-Za-z]+.[A-Za-z0-9-]+'
-                        slotProps={{
-                            input: {
-                                startAdornment: (
-                                    <InputAdornment position='start'>
-                                        ^
-                                    </InputAdornment>
-                                ),
-                                endAdornment: (
-                                    <InputAdornment position='end'>
-                                        $
-                                    </InputAdornment>
-                                ),
-                            },
-                        }}
-                        type={'text'}
-                        value={featureNamingPattern || ''}
-                        error={Boolean(errors.featureNamingPattern)}
-                        errorText={errors.featureNamingPattern}
-                        onChange={(e) =>
-                            onSetFeatureNamingPattern(e.target.value)
-                        }
-                    />
+                    <FormField label='Naming Pattern'>
+                        <TextField
+                            fullWidth
+                            name='feature flag naming pattern'
+                            aria-describedby='pattern-naming-description'
+                            placeholder='[A-Za-z]+.[A-Za-z]+.[A-Za-z0-9-]+'
+                            slotProps={{
+                                input: {
+                                    startAdornment: (
+                                        <InputAdornment position='start'>
+                                            ^
+                                        </InputAdornment>
+                                    ),
+                                    endAdornment: (
+                                        <InputAdornment position='end'>
+                                            $
+                                        </InputAdornment>
+                                    ),
+                                },
+                            }}
+                            type='text'
+                            value={featureNamingPattern || ''}
+                            error={Boolean(errors.featureNamingPattern)}
+                            helperText={errors.featureNamingPattern}
+                            onChange={(e) =>
+                                onSetFeatureNamingPattern(e.target.value)
+                            }
+                        />
+                    </FormField>
                     <StyledSubtitle>
                         <p id='pattern-additional-description'>
                             The example and description will be shown to users
@@ -323,34 +323,37 @@ const ProjectEnterpriseSettingsForm: React.FC<
                         </p>
                     </StyledSubtitle>
 
-                    <StyledInput
-                        label={'Naming Example'}
-                        name='feature flag naming example'
-                        type={'text'}
-                        aria-describedby='pattern-additional-description'
-                        value={featureNamingExample || ''}
-                        placeholder='dx.feature1.1-135'
-                        error={Boolean(errors.namingExample)}
-                        errorText={errors.namingExample}
-                        onChange={(e) =>
-                            onSetFeatureNamingExample(e.target.value)
-                        }
-                    />
-                    <StyledTextField
-                        label={'Naming pattern description'}
-                        name='feature flag naming description'
-                        type={'text'}
-                        aria-describedby='pattern-additional-description'
-                        placeholder={`<project>.<featureName>.<ticket>
+                    <FormField label='Naming Example'>
+                        <TextField
+                            fullWidth
+                            name='feature flag naming example'
+                            type='text'
+                            aria-describedby='pattern-additional-description'
+                            value={featureNamingExample || ''}
+                            placeholder='dx.feature1.1-135'
+                            error={Boolean(errors.namingExample)}
+                            helperText={errors.namingExample}
+                            onChange={(e) =>
+                                onSetFeatureNamingExample(e.target.value)
+                            }
+                        />
+                    </FormField>
+                    <FormField label='Naming pattern description'>
+                        <TextField
+                            fullWidth
+                            name='feature flag naming description'
+                            aria-describedby='pattern-additional-description'
+                            placeholder={`<project>.<featureName>.<ticket>
 
 The flag name should contain the project name, the feature name, and the ticket number, each separated by a dot.`}
-                        multiline
-                        minRows={5}
-                        value={featureNamingDescription || ''}
-                        onChange={(e) =>
-                            onSetFeatureNamingDescription(e.target.value)
-                        }
-                    />
+                            multiline
+                            minRows={5}
+                            value={featureNamingDescription || ''}
+                            onChange={(e) =>
+                                onSetFeatureNamingDescription(e.target.value)
+                            }
+                        />
+                    </FormField>
                 </StyledFlagNamingContainer>
 
                 <ProjectLinkTemplates

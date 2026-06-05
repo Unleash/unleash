@@ -62,7 +62,6 @@ export type IFlagKey =
     | 'fetchMode'
     | 'optimizeLifecycle'
     | 'plausibleMetrics'
-    | 'safeguards'
     | 'newInUnleash'
     | 'oidcPkceSupport'
     | 'flightRecorder'
@@ -286,10 +285,6 @@ const flags: IFlags = {
     },
     plausibleMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PLAUSIBLE_METRICS,
-        false,
-    ),
-    safeguards: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SAFEGUARDS,
         false,
     ),
     oidcPkceSupport: parseEnvVarBoolean(

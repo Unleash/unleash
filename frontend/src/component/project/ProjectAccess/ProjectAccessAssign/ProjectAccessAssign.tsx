@@ -31,7 +31,6 @@ import {
     PA_ASSIGN_CREATE_ID,
     PA_ROLE_ID,
     PA_USERS_GROUPS_ID,
-    PA_USERS_GROUPS_TITLE_ID,
 } from 'utils/testIds';
 import { caseInsensitiveSearch } from 'utils/search';
 import type { IServiceAccount } from 'interfaces/service-account';
@@ -40,16 +39,12 @@ import type { IUserProjectRole } from '../../../../interfaces/userProjectRoles.t
 import { useCheckProjectPermissions } from 'hooks/useHasAccess';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import AutocompleteVirtual from 'component/common/AutocompleteVirtual/AutcompleteVirtual';
+import { FormField } from 'component/common/FormField/FormField';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-}));
-
-const StyledInputDescription = styled('p')(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    marginBottom: theme.spacing(1),
 }));
 
 const StyledAutocompleteWrapper = styled('div')(({ theme }) => ({
@@ -357,15 +352,14 @@ export const ProjectAccessAssign = ({
             >
                 <StyledForm onSubmit={handleSubmit}>
                     <div>
-                        <StyledInputDescription
-                            data-testid={PA_USERS_GROUPS_TITLE_ID}
-                        >
-                            Select the {entityType}
-                        </StyledInputDescription>
                         <StyledAutocompleteWrapper>
-                            <AutocompleteVirtual
+                            <FormField
+                                label={capitalize(entityType)}
+                                description={`Select the ${entityType}`}
+                            >
+                                <AutocompleteVirtual
                                 data-testid={PA_USERS_GROUPS_ID}
-                                size={autocompleteSize}
+                                size='large'
                                 multiple
                                 openOnFocus
                                 limitTags={10}
@@ -436,23 +430,24 @@ export const ProjectAccessAssign = ({
                                     option.entity.id === value.entity.id
                                 }
                                 renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        label={capitalize(entityType)}
-                                    />
+                                    <TextField {...params} />
                                 )}
-                            />
+                                />
+                            </FormField>
                         </StyledAutocompleteWrapper>
-                        <StyledInputDescription>
-                            Select the role to assign for this project
-                        </StyledInputDescription>
                         <StyledAutocompleteWrapper>
-                            <MultipleRoleSelect
-                                data-testid={PA_ROLE_ID}
-                                roles={filteredRoles}
-                                value={selectedRoles}
-                                setValue={setRoles}
-                            />
+                            <FormField
+                                label='Role'
+                                description='Select the role to assign for this project'
+                            >
+                                <MultipleRoleSelect
+                                    label=''
+                                    data-testid={PA_ROLE_ID}
+                                    roles={filteredRoles}
+                                    value={selectedRoles}
+                                    setValue={setRoles}
+                                />
+                            </FormField>
                         </StyledAutocompleteWrapper>
                     </div>
 

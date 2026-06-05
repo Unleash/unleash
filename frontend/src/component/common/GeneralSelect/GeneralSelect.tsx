@@ -47,11 +47,17 @@ export interface IGeneralSelectProps<T extends string = string>
     defaultValue?: string;
     visuallyHideLabel?: boolean;
     variant?: 'outlined' | 'filled' | 'standard';
+    /** Shown (muted) when no option is selected. */
+    placeholder?: string;
 }
 
 const StyledFormControl = styled(FormControl)({
     maxWidth: '100%',
 });
+
+const StyledPlaceholder = styled('span')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+}));
 
 const toMenuItem = (option: ISelectOption) => (
     <MenuItem
@@ -80,12 +86,29 @@ function GeneralSelect<T extends string = string>({
     fullWidth,
     visuallyHideLabel,
     labelId,
+    placeholder,
     ...rest
 }: IGeneralSelectProps<T>) {
     const onSelectChange = (event: SelectChangeEvent) => {
         event.preventDefault();
         onChange(String(event.target.value) as T);
     };
+
+    const flatOptions = isSelectOptionGroup(options)
+        ? options.flatMap((group) => group.options)
+        : options;
+    const renderValue = placeholder
+        ? (selected: unknown) => {
+              const selectedLabel = flatOptions.find(
+                  (option) => option.key === String(selected),
+              )?.label;
+              return (
+                  selectedLabel ?? (
+                      <StyledPlaceholder>{placeholder}</StyledPlaceholder>
+                  )
+              );
+          }
+        : undefined;
 
     return (
         <StyledFormControl
@@ -113,6 +136,8 @@ function GeneralSelect<T extends string = string>({
                 id={id}
                 value={value ?? ''}
                 autoWidth
+                displayEmpty={Boolean(placeholder)}
+                renderValue={renderValue}
                 IconComponent={KeyboardArrowDownOutlined}
                 labelId={labelId}
                 {...rest}

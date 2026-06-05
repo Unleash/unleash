@@ -84,7 +84,7 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
         <div>
             <CleanupReminder feature={feature} onChange={refetchFeature} />
             <StyledContainer>
-                {!flipMainContentOrder && (
+                {flipMainContentOrder && (
                     <div>
                         {!loading ? (
                             <FeatureOverviewMetaData
@@ -117,7 +117,7 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
                         hiddenEnvironments={hiddenEnvironments}
                     />
                 </StyledMainContent>
-                {flipMainContentOrder && (
+                {!flipMainContentOrder && (
                     <div>
                         {!loading ? (
                             <FeatureOverviewMetaData

@@ -251,11 +251,6 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
 
     return (
         <>
-            <FeatureLinks
-                links={feature.links || []}
-                project={feature.project}
-                feature={feature.name}
-            />
             <StyledMetaDataContainer>
                 <div>
                     <StyledTitle>Flag details</StyledTitle>
@@ -344,6 +339,11 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
                     ) : null}
                 </StyledBody>
             </StyledMetaDataContainer>
+            <FeatureLinks
+                links={feature.links || []}
+                project={feature.project}
+                feature={feature.name}
+            />
             {feature.children.length > 0 ? (
                 <FeatureArchiveNotAllowedDialog
                     features={feature.children}

@@ -46,6 +46,11 @@ const AUTH_TYPE_LABEL: { [key: string]: string } = {
     github: 'GitHub',
 };
 
+const EVENT_TYPE_LABEL: { [key: string]: string } = {
+    login: 'Login',
+    logout: 'Logout',
+};
+
 export const LoginHistoryTable = () => {
     const { events, loading } = useLoginHistory();
     const { downloadCSV } = useLoginHistoryApi();
@@ -83,6 +88,19 @@ export const LoginHistoryTable = () => {
                     />
                 ),
                 meta: { maxWidth: 150 },
+            },
+            {
+                id: 'type',
+                header: 'Type',
+                accessorFn: (event) =>
+                    EVENT_TYPE_LABEL[event.type] || event.type || 'Login',
+                cell: HighlightCell,
+                meta: {
+                    width: 100,
+                    maxWidth: 100,
+                    searchable: true,
+                    filterName: 'type',
+                },
             },
             {
                 id: 'username',

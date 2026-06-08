@@ -240,6 +240,7 @@ export default class ProjectService {
         query?: IProjectQuery & IProjectsQuery,
         userId?: number,
     ): Promise<ProjectForUi[]> {
+        const stopTimer = this.timer('oldProjectListFields');
         const allProjects = await this.projectReadModel.getProjectsForAdminUi(
             query,
             userId,
@@ -258,6 +259,7 @@ export default class ProjectService {
                 );
             }
         }
+        stopTimer();
 
         if (this.flagResolver.isEnabled('newProjectList')) {
             //TODO: update project-schema when removing this flag

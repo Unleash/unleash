@@ -1,5 +1,5 @@
 import type { ComponentType, ReactNode } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { ProjectCard as DefaultProjectCard } from '../ProjectCard/ProjectCard.tsx';
 import { loadingData } from './loadingData.ts';
 import { styled } from '@mui/material';

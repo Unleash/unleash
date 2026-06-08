@@ -18,7 +18,7 @@ import {
 import { IconRenderer } from './AdminMenuIcons.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router';
 import { filterByConfig } from 'component/common/util';
 import { filterRoutesByPlanData } from 'component/admin/filterRoutesByPlanData';
 import { adminGroups, adminRoutes } from 'component/admin/adminRoutes';

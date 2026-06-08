@@ -1,5 +1,5 @@
 import type { FC, JSX } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router';
 import {
     render as rtlRender,
     type RenderOptions,
@@ -10,7 +10,7 @@ import type { IPermission } from 'interfaces/user';
 import { AnnouncerProvider } from 'component/common/Announcer/AnnouncerProvider/AnnouncerProvider';
 import { AccessProviderMock } from 'component/providers/AccessProvider/AccessProviderMock';
 import { UIProviderContainer } from '../component/providers/UIProvider/UIProviderContainer.tsx';
-import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
+import { ReactRouter7Adapter } from 'utils/ReactRouter7Adapter';
 import { QueryParamProvider } from 'use-query-params';
 import { FeedbackProvider } from 'component/feedbackNew/FeedbackProvider';
 import { StickyProvider } from 'component/common/Sticky/StickyProvider';
@@ -48,13 +48,8 @@ export const render = (
             <UIProviderContainer>
                 <FeedbackProvider>
                     <AccessProviderMock permissions={permissions}>
-                        <BrowserRouter
-                            future={{
-                                v7_startTransition: true,
-                                v7_relativeSplatPath: true,
-                            }}
-                        >
-                            <QueryParamProvider adapter={ReactRouter6Adapter}>
+                        <BrowserRouter>
+                            <QueryParamProvider adapter={ReactRouter7Adapter}>
                                 <ThemeProvider>
                                     <AnnouncerProvider>
                                         <UnleashFlagProvider>

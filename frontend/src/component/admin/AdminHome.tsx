@@ -14,7 +14,7 @@ import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutlineOutlined';
 import { formatAssetPath } from 'utils/formatPath';
 import easyToDeploy from 'assets/img/easyToDeploy.png';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 import { EnterpriseEdgeDismissibleAlert } from './enterprise-edge/EnterpriseEdgeDismissibleAlert.tsx';
 
 const UI_SWITCH_WIDGET_RATIO_BREAKPOINT = 1505;

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { Box, TextField, Typography } from '@mui/material';
 import { CREATED, OK } from 'constants/statusCodes';
 import useToast from 'hooks/useToast';

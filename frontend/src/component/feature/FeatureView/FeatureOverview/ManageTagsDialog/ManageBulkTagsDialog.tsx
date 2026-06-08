@@ -1,5 +1,5 @@
 import { type FC, useEffect, useReducer, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 import {
     type AutocompleteProps,
     Link,

@@ -1,7 +1,7 @@
 import { styled } from '@mui/material';
 import type React from 'react';
 import type { FC } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 const StyledTabLink = styled(Link)(({ theme }) => ({
     display: 'flex',

@@ -1,6 +1,6 @@
 import { Box, IconButton, styled, Tooltip, Typography } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import WarningIcon from '@mui/icons-material/ErrorOutlined';
 import ErrorIcon from '@mui/icons-material/Cancel';
 import CloseIcon from '@mui/icons-material/Close';

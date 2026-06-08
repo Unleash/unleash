@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Add from '@mui/icons-material/Add';
 import { styled, type ButtonProps } from '@mui/material';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';

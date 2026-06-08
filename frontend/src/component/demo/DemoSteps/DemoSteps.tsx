@@ -6,7 +6,7 @@ import Joyride, {
 import { useTheme } from '@mui/material';
 import type { ITutorialTopic, ITutorialTopicStep } from '../demo-topics.ts';
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router';
 import { DemoStepTooltip } from './DemoStepTooltip/DemoStepTooltip.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 

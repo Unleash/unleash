@@ -1,6 +1,6 @@
 import { styled, Typography } from '@mui/material';
 import type { FC } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import Lightbulb from '@mui/icons-material/LightbulbOutlined';
 import type { PersonalDashboardProjectDetailsSchemaInsights } from 'openapi';
 import { ActionBox } from './ActionBox.tsx';

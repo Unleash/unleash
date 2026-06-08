@@ -1,7 +1,7 @@
 import UsersList from './UsersList/UsersList.tsx';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import EditUser from './EditUser/EditUser.tsx';
 import NotFound from 'component/common/NotFound/NotFound';
 import { InactiveUsersList } from './InactiveUsersList/InactiveUsersList.tsx';

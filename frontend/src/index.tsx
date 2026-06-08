@@ -3,9 +3,9 @@ import 'themes/app.css';
 import 'regenerator-runtime/runtime';
 
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router';
 import { QueryParamProvider } from 'use-query-params';
-import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
+import { ReactRouter7Adapter } from 'utils/ReactRouter7Adapter';
 import { ThemeProvider } from 'themes/ThemeProvider';
 import { App } from 'component/App';
 import { ScrollTop } from 'component/common/ScrollTop/ScrollTop';
@@ -26,14 +26,11 @@ import { useRecordUIErrorApi } from 'hooks/api/actions/useRecordUIErrorApi/useRe
 import { HighlightProvider } from 'component/common/Highlight/HighlightProvider';
 import { UnleashFlagProvider } from 'component/providers/UnleashFlagProvider/UnleashFlagProvider';
 import { WelcomeDialogProvider } from 'component/personalDashboard/WelcomeDialogProvider.tsx';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 window.global ||= window;
 
 const ApplicationRoot = () => {
     const { recordUiError } = useRecordUIErrorApi();
-    const useStartTransition = useUiFlag('reactRouter_v7_startTransition');
-    const useRelativeSplatPath = useUiFlag('reactRouter_v7_relativeSplatPath');
 
     const sendErrorToApi = async (
         error: Error,
@@ -52,14 +49,8 @@ const ApplicationRoot = () => {
     return (
         <UIProviderContainer>
             <AccessProvider>
-                <BrowserRouter
-                    future={{
-                        v7_startTransition: useStartTransition,
-                        v7_relativeSplatPath: useRelativeSplatPath,
-                    }}
-                    basename={basePath}
-                >
-                    <QueryParamProvider adapter={ReactRouter6Adapter}>
+                <BrowserRouter basename={basePath}>
+                    <QueryParamProvider adapter={ReactRouter7Adapter}>
                         <ThemeProvider>
                             <AnnouncerProvider>
                                 <PlausibleProvider>

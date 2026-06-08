@@ -13,7 +13,7 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { type ReactNode, useState, type FormEvent, useEffect } from 'react';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { Dialog, styled } from '@mui/material';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { Limit } from 'component/common/Limit/Limit';

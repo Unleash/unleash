@@ -1,6 +1,6 @@
 import { styled } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 /**
  * A card container with a border that highlights on hover/focus.

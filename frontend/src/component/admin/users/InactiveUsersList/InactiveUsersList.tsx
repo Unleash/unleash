@@ -31,7 +31,7 @@ import { InactiveUsersActionCell } from './InactiveUsersActionCell/InactiveUsers
 import { TextCell } from '../../../common/Table/cells/TextCell/TextCell.tsx';
 import DeleteUser from './DeleteUser/DeleteUser.tsx';
 import { DeleteInactiveUsers } from './DeleteInactiveUsers/DeleteInactiveUsers.tsx';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { StyledUsersLinkDiv } from '../Users.styles';
 
 type InactiveUserRow = IInactiveUser & { rootRole?: number };

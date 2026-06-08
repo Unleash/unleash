@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { Alert, Box, Button, styled } from '@mui/material';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { subDays, formatISO } from 'date-fns';
 import { useReminders } from 'component/feature/FeatureView/CleanupReminder/useReminders';
 import { useHasRootAccess } from 'hooks/useHasAccess';

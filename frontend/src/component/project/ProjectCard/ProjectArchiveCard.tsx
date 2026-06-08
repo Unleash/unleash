@@ -14,7 +14,7 @@ import { formatDateYMDHM } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { parseISO } from 'date-fns';
 import { Box, styled, Tooltip } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import {
     DELETE_PROJECT,
     UPDATE_PROJECT,

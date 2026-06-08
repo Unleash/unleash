@@ -4,7 +4,7 @@ import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import WarningAmber from '@mui/icons-material/WarningAmber';
 import { styled, Icon, Link } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { BannerDialog } from './BannerDialog/BannerDialog.tsx';
 import { useState } from 'react';
 import { Markdown } from 'component/common/Markdown/Markdown';

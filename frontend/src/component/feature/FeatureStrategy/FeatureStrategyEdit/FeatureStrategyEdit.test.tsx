@@ -3,7 +3,7 @@ import { formatUpdateStrategyApiCode } from 'component/feature/FeatureStrategy/F
 import type { IFeatureStrategy, IStrategy } from 'interfaces/strategy';
 import { screen, waitFor, within, fireEvent } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 import {
     CREATE_FEATURE_STRATEGY,

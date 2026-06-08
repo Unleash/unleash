@@ -2,7 +2,7 @@ import { Button, styled, Typography } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import type { FC } from 'react';
 import { ActionBox } from './ActionBox.tsx';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { NeutralCircleContainer } from './SharedComponents.tsx';
 
 const MainCircleContainer = styled(NeutralCircleContainer)(({ theme }) => ({

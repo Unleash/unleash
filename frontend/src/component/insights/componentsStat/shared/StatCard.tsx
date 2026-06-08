@@ -4,7 +4,7 @@ import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import Lightbulb from '@mui/icons-material/LightbulbOutlined';
 import { StatsExplanation } from 'component/insights/InsightsCharts.styles';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 const StyledRatioContainer = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.elevation1,

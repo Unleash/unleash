@@ -5,7 +5,7 @@ import useEnvironment from 'hooks/api/getters/useEnvironment/useEnvironment';
 import usePermissions from 'hooks/api/getters/usePermissions/usePermissions';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import EnvironmentForm from '../EnvironmentForm/EnvironmentForm.tsx';
 import useEnvironmentForm from '../hooks/useEnvironmentForm.ts';

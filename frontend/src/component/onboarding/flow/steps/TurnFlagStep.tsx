@@ -1,7 +1,7 @@
 import { Button } from '@mui/material';
 import ToggleOnIcon from '@mui/icons-material/ToggleOn';
 import CheckIcon from '@mui/icons-material/Check';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import { StepLayout, type StepState } from './StepLayout.tsx';
 

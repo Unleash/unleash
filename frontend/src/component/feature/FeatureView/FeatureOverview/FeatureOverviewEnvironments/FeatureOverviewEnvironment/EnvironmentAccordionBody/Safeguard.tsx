@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import HelpOutlineOutlined from '@mui/icons-material/HelpOutlineOutlined';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';

@@ -6,7 +6,7 @@ import { TemplateForm } from './TemplateForm/TemplateForm.tsx';
 import { Button, styled } from '@mui/material';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import { RELEASE_PLAN_TEMPLATE_UPDATE } from '@server/types/permissions';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import useReleasePlanTemplatesApi from 'hooks/api/actions/useReleasePlanTemplatesApi/useReleasePlanTemplatesApi';

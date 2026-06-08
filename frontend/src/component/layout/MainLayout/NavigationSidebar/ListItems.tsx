@@ -11,7 +11,7 @@ import {
     Tooltip,
     Typography,
 } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { basePath } from 'utils/formatPath';
 import SignOutIcon from '@mui/icons-material/ExitToApp';
 import type { Theme } from '@mui/material/styles';

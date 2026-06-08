@@ -1,7 +1,7 @@
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import type { ISegment } from 'interfaces/segment';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { formatEditStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { formatStrategyName } from 'utils/strategyNames';
 import { styled } from '@mui/material';

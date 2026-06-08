@@ -55,7 +55,6 @@ process.nextTick(async () => {
                         regexConstraintOperator: true,
                         enterpriseEdgeTokensList: true,
                         userTokenWithClientApiLoggingKillSwitch: false,
-                        reactRouter_v7_relativeSplatPath: true,
                         allowDeprecatedApiTokenMiddleware: false,
                         archiveInFlagsView: true,
                     },

@@ -6,7 +6,7 @@ import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { type ReactNode, useState, type FormEvent, useMemo } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { Dialog, IconButton, styled } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import MenuBookIcon from '@mui/icons-material/MenuBook';

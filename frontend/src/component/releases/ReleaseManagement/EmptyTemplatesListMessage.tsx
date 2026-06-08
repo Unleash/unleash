@@ -2,7 +2,7 @@ import { Button, styled, Typography } from '@mui/material';
 import { RELEASE_PLAN_TEMPLATE_CREATE } from '@server/types/permissions';
 import ReleaseTemplateIcon from 'assets/img/releaseTemplates.svg?react';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 
 const Container = styled('article')(({ theme }) => ({
     paddingBlock: theme.spacing(5),

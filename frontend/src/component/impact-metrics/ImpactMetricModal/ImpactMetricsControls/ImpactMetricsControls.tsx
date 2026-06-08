@@ -5,7 +5,7 @@ import { MetricSelector } from './SeriesSelector/MetricSelector.tsx';
 import { RangeSelector } from './RangeSelector/RangeSelector.tsx';
 import { ModeSelector } from './ModeSelector/ModeSelector.tsx';
 import type { ChartFormState } from '../../hooks/useChartFormState.ts';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
 export type ImpactMetricsControlsProps = {
     formData: ChartFormState['formData'];

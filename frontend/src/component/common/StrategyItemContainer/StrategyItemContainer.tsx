@@ -6,7 +6,7 @@ import type { IFeatureStrategy } from 'interfaces/strategy';
 import { formatStrategyName } from 'utils/strategyNames';
 import type { PlaygroundStrategySchema } from 'openapi';
 import { Badge } from '../Badge/Badge.tsx';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { Truncator } from '../Truncator/Truncator.tsx';
 import { disabledStrategyClassName } from './disabled-strategy-utils.ts';
 

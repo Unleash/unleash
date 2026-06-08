@@ -3,7 +3,7 @@ import { type IInstanceStatus, InstancePlan } from 'interfaces/instance';
 import { INSTANCE_STATUS_BAR_ID } from 'utils/testIds';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import WarningAmber from '@mui/icons-material/WarningAmber';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useContext } from 'react';
 import AccessContext from 'contexts/AccessContext';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';

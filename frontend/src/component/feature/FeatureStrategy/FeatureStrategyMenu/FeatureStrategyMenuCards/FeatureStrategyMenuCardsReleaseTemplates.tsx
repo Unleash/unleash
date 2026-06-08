@@ -6,7 +6,7 @@ import { Box, Button, styled } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import type { StrategyFilterValue } from './FeatureStrategyMenuCards.tsx';
 import { useState, type Dispatch, type SetStateAction } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 import {
     FeatureStrategyMenuCardsSection,
     StyledStrategyModalSectionHeader,

@@ -12,7 +12,7 @@ import { VariantPatch } from './VariantPatch/VariantPatch.tsx';
 import { EnvironmentStrategyExecutionOrder } from './EnvironmentStrategyExecutionOrder/EnvironmentStrategyExecutionOrder.tsx';
 import { ArchiveFeatureChange } from './ArchiveFeatureChange.tsx';
 import { DependencyChange } from './DependencyChange.tsx';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import {
     ReleasePlanChange,
     isConsolidatedMilestoneAction,

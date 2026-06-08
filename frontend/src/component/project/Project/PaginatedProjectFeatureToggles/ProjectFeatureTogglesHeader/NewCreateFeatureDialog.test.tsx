@@ -2,7 +2,7 @@ import { beforeEach, expect, test } from 'vitest';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import { CreateFeatureDialog } from './CreateFeatureDialog.tsx';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 

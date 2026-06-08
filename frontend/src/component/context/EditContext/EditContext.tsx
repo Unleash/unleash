@@ -6,7 +6,7 @@ import useContext from 'hooks/api/getters/useContext/useContext';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { type FC, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { scrollToTop } from 'component/common/util';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ContextForm } from '../ContextForm/ContextForm.tsx';

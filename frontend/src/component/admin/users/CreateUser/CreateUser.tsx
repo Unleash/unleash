@@ -1,5 +1,5 @@
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import UserForm from '../UserForm/UserForm.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';

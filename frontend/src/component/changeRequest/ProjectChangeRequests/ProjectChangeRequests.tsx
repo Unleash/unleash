@@ -7,7 +7,7 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useChangeRequestConfig } from 'hooks/api/getters/useChangeRequestConfig/useChangeRequestConfig';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 export const ProjectChangeRequests = () => {
     const projectId = useRequiredPathParam('projectId');

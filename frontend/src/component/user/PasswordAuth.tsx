@@ -2,7 +2,7 @@ import { type FormEventHandler, useState, type FC } from 'react';
 import { Button, styled } from '@mui/material';
 import { StyledAutofillTextField } from './StyledAutofillTextField.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import useQueryParams from 'hooks/useQueryParams';
 import AuthOptions from './common/AuthOptions/AuthOptions.tsx';
 import OrDivider from './common/OrDivider';

@@ -21,7 +21,7 @@ import type { AddonSchema, AddonTypeSchema } from 'openapi';
 import { IntegrationParameters } from './IntegrationParameters/IntegrationParameters.tsx';
 import { IntegrationInstall } from './IntegrationInstall/IntegrationInstall.tsx';
 import cloneDeep from 'lodash.clonedeep';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import useAddonsApi from 'hooks/api/actions/useAddonsApi/useAddonsApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';

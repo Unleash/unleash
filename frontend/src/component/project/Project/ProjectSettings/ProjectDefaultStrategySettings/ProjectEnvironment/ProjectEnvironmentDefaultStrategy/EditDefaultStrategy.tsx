@@ -1,6 +1,6 @@
 import useToast from 'hooks/useToast';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { useState } from 'react';

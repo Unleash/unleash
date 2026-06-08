@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 import { Modal, Backdrop, styled } from '@mui/material';
 import Fade from '@mui/material/Fade';
 import { useFlag } from '@unleash/proxy-client-react';

@@ -1,7 +1,7 @@
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import ReleaseTemplateIcon from 'assets/img/releaseTemplates.svg?react';
 import { styled } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { Card } from 'component/common/Card/Card';
 import { Truncator } from 'component/common/Truncator/Truncator';
 import { ReleasePlanTemplateCardActions } from './ReleasePlanTemplateCardActions.tsx';

@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import NotFound from 'component/common/NotFound/NotFound';
 import { JiraIntegration } from './JiraIntegration/JiraIntegration.tsx';
 import { EdgeIntegration } from './EdgeIntegration/EdgeIntegration.tsx';

@@ -74,8 +74,6 @@ export type IFlagKey =
     | 'elasticEventSync'
     | 'logRocketEnabled'
     | 'newProjectList'
-    | 'reactRouter_v7_relativeSplatPath'
-    | 'reactRouter_v7_startTransition'
     | 'newModalDesign'
     | 'archiveInFlagsView'
     | 'allowDeprecatedApiTokenMiddleware';
@@ -334,14 +332,6 @@ const flags: IFlags = {
     ),
     newProjectList: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NEW_PROJECT_LIST,
-        false,
-    ),
-    reactRouter_v7_startTransition: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_REACT_ROUTER_V7_START_TRANSITION,
-        false,
-    ),
-    reactRouter_v7_relativeSplatPath: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_REACT_ROUTER_V7_RELATIVE_SPLAT_PATH,
         false,
     ),
     newModalDesign: parseEnvVarBoolean(

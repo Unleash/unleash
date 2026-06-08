@@ -12,7 +12,7 @@ import { useMediaQuery } from '@mui/material';
 import theme from 'themes/theme';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { DemoNotice } from './DemoNotice.tsx';
 
 const defaultProgress = {

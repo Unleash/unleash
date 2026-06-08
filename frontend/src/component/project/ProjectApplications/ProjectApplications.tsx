@@ -28,7 +28,7 @@ import {
 import { StringArrayCell } from 'component/common/Table/cells/StringArrayCell';
 import { SdkCell } from './SdkCell.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 const columnHelper = createColumnHelper<ProjectApplicationSchema>();
 

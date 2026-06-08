@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router';
 import { ApiTokenPage } from './apiToken/ApiTokenPage/ApiTokenPage.tsx';
 import { CreateApiToken } from './apiToken/CreateApiToken/CreateApiToken.tsx';
 import { AuthSettings } from './auth/AuthSettings.tsx';

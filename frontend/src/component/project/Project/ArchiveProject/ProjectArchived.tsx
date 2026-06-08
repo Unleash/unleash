@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import type { FC } from 'react';
 
 export const ProjectArchived: FC<{ name: string }> = ({ name }) => {

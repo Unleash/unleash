@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 import { Link, styled, Tooltip, Typography } from '@mui/material';
 import { IntegrationIcon } from '../IntegrationIcon/IntegrationIcon.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

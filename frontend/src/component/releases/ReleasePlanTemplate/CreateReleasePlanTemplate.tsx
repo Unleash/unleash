@@ -4,7 +4,7 @@ import { TemplateForm } from './TemplateForm/TemplateForm.tsx';
 import { useTemplateForm } from '../hooks/useTemplateForm.ts';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import { RELEASE_PLAN_TEMPLATE_CREATE } from '@server/types/permissions';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { GO_BACK } from 'constants/navigate';
 import useReleasePlanTemplatesApi from 'hooks/api/actions/useReleasePlanTemplatesApi/useReleasePlanTemplatesApi';
 import { scrollToTop } from 'component/common/util';

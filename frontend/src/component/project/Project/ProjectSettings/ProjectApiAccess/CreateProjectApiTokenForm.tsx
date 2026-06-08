@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 
 import { CreateButton } from 'component/common/CreateButton/CreateButton';

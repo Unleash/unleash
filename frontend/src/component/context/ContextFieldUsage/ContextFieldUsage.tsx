@@ -1,7 +1,7 @@
 import { Alert, styled } from '@mui/material';
 import { formatEditStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { formatStrategyName } from 'utils/strategyNames';
 import { useStrategiesByContext } from 'hooks/api/getters/useStrategiesByContext/useStrategiesByContext';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';

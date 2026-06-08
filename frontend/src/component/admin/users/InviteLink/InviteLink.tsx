@@ -1,5 +1,5 @@
 import { type FormEventHandler, useState, type FC } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useSWRConfig } from 'swr';
 import { Box, Button, Typography } from '@mui/material';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';

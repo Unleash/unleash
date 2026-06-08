@@ -1,5 +1,5 @@
 import type { UnknownFlag } from './hooks/useUnknownFlags.js';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import {
     TimeAgoCell,
     type ITimeAgoCellProps,

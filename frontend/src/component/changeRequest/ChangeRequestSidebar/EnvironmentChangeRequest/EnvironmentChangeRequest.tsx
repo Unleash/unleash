@@ -9,7 +9,7 @@ import {
     useTheme,
 } from '@mui/material';
 import type { ChangeRequestType } from '../../changeRequest.types';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { ChangeRequestStatusBadge } from '../../ChangeRequestStatusBadge/ChangeRequestStatusBadge.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {

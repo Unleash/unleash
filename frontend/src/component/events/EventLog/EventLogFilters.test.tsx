@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 import { renderHook } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { useEventLogFilters } from './EventLogFilters.tsx';
 
 const allFilterKeys = ['from', 'to', 'createdBy', 'type', 'project', 'feature'];
@@ -10,13 +10,7 @@ allFilterKeys.sort();
 const renderWithRouter = (callback: () => any, initialEntries = ['/']) => {
     return renderHook(callback, {
         wrapper: ({ children }) => (
-            <MemoryRouter
-                initialEntries={initialEntries}
-                future={{
-                    v7_startTransition: true,
-                    v7_relativeSplatPath: true,
-                }}
-            >
+            <MemoryRouter initialEntries={initialEntries}>
                 {children}
             </MemoryRouter>
         ),

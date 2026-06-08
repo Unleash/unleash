@@ -8,7 +8,7 @@ import { Button, styled, TextField } from '@mui/material';
 import styles from './DemoAuth.module.scss';
 import Logo from 'assets/img/logo.svg?react';
 import { LOGIN_BUTTON, LOGIN_EMAIL_ID } from 'utils/testIds';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useAuthApi } from 'hooks/api/actions/useAuthApi/useAuthApi';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import useToast from 'hooks/useToast';

@@ -2,7 +2,7 @@ import { expect, test } from 'vitest';
 import type React from 'react';
 import type { FC } from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import { MemoryRouter, Routes, Route } from 'react-router';
 import { ThemeProvider } from 'themes/ThemeProvider';
 import { MainLayout } from 'component/layout/MainLayout/MainLayout';
 import { FeatureView } from '../feature/FeatureView/FeatureView.tsx';
@@ -232,13 +232,7 @@ const UnleashUiSetup: FC<{
 }> = ({ children, path, pathTemplate }) => (
     <UIProviderContainer>
         <AccessProvider>
-            <MemoryRouter
-                initialEntries={[path]}
-                future={{
-                    v7_startTransition: true,
-                    v7_relativeSplatPath: true,
-                }}
-            >
+            <MemoryRouter initialEntries={[path]}>
                 <ThemeProvider>
                     <AnnouncerProvider>
                         <StickyProvider>

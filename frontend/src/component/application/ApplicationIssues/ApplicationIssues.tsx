@@ -2,7 +2,7 @@ import { Box, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import WarningAmberRounded from '@mui/icons-material/WarningAmberRounded';
 import type { ApplicationOverviewSchema } from 'openapi';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import {
     CREATE_FEATURE,
     CREATE_STRATEGY,

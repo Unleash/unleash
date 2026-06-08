@@ -6,7 +6,7 @@ import {
     StyledListItemText,
 } from './RecentlyVisited/CommandResultGroup.tsx';
 import { ListItemButton } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { IconRenderer } from 'component/layout/MainLayout/NavigationSidebar/IconRenderer';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import type { JSX } from 'react';

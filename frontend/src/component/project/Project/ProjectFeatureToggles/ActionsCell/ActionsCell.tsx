@@ -10,7 +10,7 @@ import {
     Typography,
     styled,
 } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';

@@ -51,6 +51,7 @@ const IconBadge = styled('div')(() => ({
     alignItems: 'center',
     justifyContent: 'center',
     '& svg': { fontSize: 20 },
+    '& svg path': { fill: 'currentColor' },
 }));
 
 const ActiveIcon = styled(IconBadge)(({ theme }) => ({

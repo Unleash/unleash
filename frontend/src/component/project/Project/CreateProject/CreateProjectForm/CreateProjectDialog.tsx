@@ -123,7 +123,7 @@ const TitleBar = styled(Box)(({ theme }) => ({
     padding: theme.spacing(0, 4),
     borderBottom: `1px solid ${theme.palette.divider}`,
     height: theme.spacing(8),
-    fontWeight: theme.typography.body1.fontWeight,
+    fontWeight: theme.fontWeight.bold,
 }));
 
 const Section = styled(Box)(({ theme }) => ({
@@ -134,20 +134,19 @@ const projectModeOptions = [
     {
         value: 'open',
         label: 'Open project',
-        description:
-            'Anyone can see the project and anyone can create change requests.',
+        description: 'Anyone can see the project and create change requests.',
     },
     {
         value: 'protected',
         label: 'Protected project',
         description:
-            'Anyone can see the project, but only admins and project members can submit change requests.',
+            'Anyone can see the project; only admins and members can submit change requests.',
     },
     {
         value: 'private',
         label: 'Private project',
         description:
-            'Hides the project from users with the "viewer" root role who are not members of the project. Only project members and admins can submit change requests.',
+            'Hidden from non-member viewers; only members and admins can submit change requests.',
     },
 ];
 
@@ -452,7 +451,9 @@ export const CreateProjectDialog: FC<Props> = ({ open, onClose }) => {
         });
     }, [availableChangeRequestEnvironments]);
 
-    const stickinessLabel = projectStickiness;
+    const stickinessLabel = projectStickiness
+        ? `${projectStickiness} stickiness`
+        : 'Select stickiness';
 
     const projectModeLabel = projectMode;
 
@@ -552,7 +553,7 @@ export const CreateProjectDialog: FC<Props> = ({ open, onClose }) => {
                             tooltip={{
                                 header: 'Select project environments',
                                 description:
-                                    'Each feature flag can have a separate configuration per environment. This setting configures which environments your project should start with.',
+                                    'Each feature flag can have a separate configuration per environment.',
                             }}
                             options={activeEnvironments.map((env) => ({
                                 label: env.name,
@@ -566,15 +567,17 @@ export const CreateProjectDialog: FC<Props> = ({ open, onClose }) => {
 
                         <SinglePillDropdown<string>
                             label={stickinessLabel}
+                            selectedValue={projectStickiness}
                             tooltip={{
                                 header: 'Set default project stickiness',
                                 description:
-                                    'Stickiness is used to guarantee that your users see the same result when using a gradual rollout. Default stickiness allows you to choose which field is used by default in this project.',
+                                    'Stickiness is used to guarantee that your users see the same result when using a gradual rollout.',
                             }}
                             options={stickinessOptions.map(
-                                ({ key, label }) => ({
+                                ({ key, label, description }) => ({
                                     value: key,
                                     label,
+                                    description,
                                 }),
                             )}
                             onChange={(value) => setProjectStickiness(value)}
@@ -585,10 +588,11 @@ export const CreateProjectDialog: FC<Props> = ({ open, onClose }) => {
                         {isEnterprise() ? (
                             <SinglePillDropdown<string>
                                 label={`${projectModeLabel} project`}
+                                selectedValue={projectMode}
+                                hideSearch
                                 tooltip={{
                                     header: 'Set project collaboration mode',
-                                    description:
-                                        "A project's collaboration mode defines who can see your project and create change requests in it.",
+                                    description: '',
                                 }}
                                 options={projectModeOptions}
                                 onChange={(value) =>

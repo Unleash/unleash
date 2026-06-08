@@ -384,14 +384,18 @@ const CreateFeatureDialogContent = ({
                                                 featureType.id === type,
                                         )?.name || 'Select flag type'
                                     }
+                                    selectedValue={type}
+                                    hideSearch
                                     tooltip={{
                                         header: 'Select a flag type',
-                                        description: configButtonData.type.text,
+                                        description: '',
                                     }}
                                     options={featureTypes.map(
                                         (featureType: FeatureTypeSchema) => ({
                                             label: featureType.name,
                                             value: featureType.id,
+                                            description:
+                                                featureType.description,
                                         }),
                                     )}
                                     onChange={(value) =>
@@ -403,7 +407,7 @@ const CreateFeatureDialogContent = ({
                                 <MultiPillDropdown<string>
                                     label={
                                         tags.size > 0
-                                            ? `${tags.size} selected`
+                                            ? `${tags.size} tags selected`
                                             : 'Add tags'
                                     }
                                     tooltip={{

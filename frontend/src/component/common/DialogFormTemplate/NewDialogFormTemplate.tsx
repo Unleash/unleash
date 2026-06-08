@@ -147,6 +147,8 @@ type SinglePillProps<T> = {
     onChange: (value: T) => void;
     searchLabel: string;
     searchPlaceholder: string;
+    selectedValue?: T;
+    hideSearch?: boolean;
 };
 
 export function SinglePillDropdown<T = string>({
@@ -156,6 +158,8 @@ export function SinglePillDropdown<T = string>({
     onChange,
     searchLabel,
     searchPlaceholder,
+    selectedValue,
+    hideSearch,
 }: SinglePillProps<T>) {
     const ref = useRef<HTMLButtonElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -176,6 +180,8 @@ export function SinglePillDropdown<T = string>({
                 <DropdownList<T>
                     header={tooltip}
                     options={options}
+                    selectedValue={selectedValue}
+                    hideSearch={hideSearch}
                     onChange={(value) => {
                         onChange(value);
                         setAnchorEl(null);

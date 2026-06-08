@@ -51,5 +51,20 @@ export const useStickinessOptions = (value: string | undefined) => {
         });
     }
 
+    // Sort so that `default` always comes first, followed by the other
+    // built-in system stickiness options, and finally any custom options.
+    const SYSTEM_STICKINESS_ORDER = [
+        DEFAULT_STICKINESS_OPTION,
+        'userId',
+        'sessionId',
+        DEFAULT_RANDOM_OPTION,
+    ];
+    const rank = (key: string) => {
+        const index = SYSTEM_STICKINESS_ORDER.indexOf(key);
+        return index === -1 ? SYSTEM_STICKINESS_ORDER.length : index;
+    };
+
+    options.sort((a, b) => rank(a.key) - rank(b.key));
+
     return options;
 };

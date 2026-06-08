@@ -31,6 +31,10 @@ const ProjectButton = styled(Button)(({ theme }) => ({
     minWidth: 0,
 }));
 
+const Title = styled('span')(({ theme }) => ({
+    fontWeight: theme.fontWeight.bold,
+}));
+
 export const HeaderBreadcrumb: React.FC<Props> = ({
     options,
     value,
@@ -58,7 +62,7 @@ export const HeaderBreadcrumb: React.FC<Props> = ({
                     <span style={{ margin: '0 4px' }}>/</span>
                 </>
             ) : null}
-            <span>{title}</span>
+            <Title>{title}</Title>
             {showSelector ? (
                 <StyledPopover
                     open={Boolean(anchorEl)}

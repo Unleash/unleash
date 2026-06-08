@@ -112,6 +112,13 @@ const metricConfigFor = (
     };
 };
 
+const metricToOption = (metric: ViewMetricConfig): MetricOption => ({
+    name: metric.metricName,
+    displayName: metric.displayName,
+    help: '',
+    source: metric.source === 'external' ? 'external' : 'internal',
+});
+
 const metricTypeHint = (metricName: string): string => {
     const metricType = getMetricType(metricName);
     if (metricType === 'unknown') return 'Metric type could not be inferred.';
@@ -179,6 +186,11 @@ export type ViewFormData = {
     environment: string;
 };
 
+const goalAggregation = (metrics: ViewMetricConfig[]): AggregationMode => {
+    const goalMetric = metrics.find((metric) => metric.goal) ?? metrics[0];
+    return goalMetric?.aggregationMode ?? DEFAULT_AGGREGATION;
+};
+
 const seedForm = (initialView?: MetricView | null): ViewFormData => {
     if (!initialView) {
         return {
@@ -190,15 +202,12 @@ const seedForm = (initialView?: MetricView | null): ViewFormData => {
             environment: DEFAULT_ENVIRONMENT,
         };
     }
-    const goalMetric =
-        initialView.metrics.find((metric) => metric.goal) ??
-        initialView.metrics[0];
     return {
         title: initialView.title,
         featureNames: initialView.featureNames,
         metrics: initialView.metrics,
         timeRange: initialView.timeRange,
-        aggregationMode: goalMetric?.aggregationMode ?? DEFAULT_AGGREGATION,
+        aggregationMode: goalAggregation(initialView.metrics),
         environment: initialView.environment,
     };
 };
@@ -217,6 +226,31 @@ const patchMetrics = (
     metrics: ViewMetricConfig[],
     patch: Partial<ViewMetricConfig>,
 ): ViewMetricConfig[] => metrics.map((metric) => ({ ...metric, ...patch }));
+
+const aggregationForSelection = (
+    state: ViewFormData,
+    options: MetricOption[],
+): AggregationMode => {
+    const addingFirstMetric = state.metrics.length === 0 && options.length > 0;
+    if (addingFirstMetric) {
+        return getDefaultAggregation(getMetricType(options[0].name));
+    }
+    return state.aggregationMode;
+};
+
+const mergeSelectedMetrics = (
+    state: ViewFormData,
+    options: MetricOption[],
+): ViewMetricConfig[] => {
+    const existingByName = new Map(
+        state.metrics.map((metric) => [metric.metricName, metric]),
+    );
+    return options.map(
+        (option) =>
+            existingByName.get(option.name) ??
+            metricConfigFor(option, state.timeRange),
+    );
+};
 
 const formReducer = (state: ViewFormData, action: FormAction): ViewFormData => {
     switch (action.type) {
@@ -245,20 +279,11 @@ const formReducer = (state: ViewFormData, action: FormAction): ViewFormData => {
                 }),
             };
         case 'setMetrics': {
-            const aggregationMode =
-                state.metrics.length === 0 && action.options.length > 0
-                    ? getDefaultAggregation(
-                          getMetricType(action.options[0].name),
-                      )
-                    : state.aggregationMode;
-            const byName = new Map(
-                state.metrics.map((metric) => [metric.metricName, metric]),
+            const aggregationMode = aggregationForSelection(
+                state,
+                action.options,
             );
-            const metrics = action.options.map(
-                (option) =>
-                    byName.get(option.name) ??
-                    metricConfigFor(option, state.timeRange),
-            );
+            const metrics = mergeSelectedMetrics(state, action.options);
             return {
                 ...state,
                 aggregationMode,
@@ -301,12 +326,8 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
     }, [open, initialView]);
 
     const optionForMetric = (metric: ViewMetricConfig): MetricOption =>
-        metricOptions.find((option) => option.name === metric.metricName) ?? {
-            name: metric.metricName,
-            displayName: metric.displayName,
-            help: '',
-            source: metric.source === 'external' ? 'external' : 'internal',
-        };
+        metricOptions.find((option) => option.name === metric.metricName) ??
+        metricToOption(metric);
     const selectedOptions = form.metrics.map(optionForMetric);
 
     const environmentOptions: ISelectOption[] =

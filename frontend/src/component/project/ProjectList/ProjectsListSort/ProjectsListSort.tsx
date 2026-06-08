@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { styled } from '@mui/material';
+import SortOutlined from '@mui/icons-material/SortOutlined';
 
 const StyledContainer = styled('div')(() => ({
     maxWidth: '200px',
@@ -32,7 +33,8 @@ export const ProjectsListSort: FC<ProjectsListSortProps> = ({
         <StyledContainer>
             <GeneralSelect
                 fullWidth
-                label='Sort by'
+                aria-label='Sort by'
+                startIcon={<SortOutlined />}
                 onChange={setSortBy}
                 options={options}
                 value={sortBy || options[0].key}

@@ -13,6 +13,7 @@ import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutl
 import type { SxProps } from '@mui/system';
 import type { Theme } from '@mui/material/styles';
 import { visuallyHidden } from '@mui/utils';
+import type { ReactNode } from 'react';
 
 export interface ISelectOption {
     key: string;
@@ -49,6 +50,11 @@ export interface IGeneralSelectProps<T extends string = string>
     variant?: 'outlined' | 'filled' | 'standard';
     /** Shown (muted) when no option is selected. */
     placeholder?: string;
+    /**
+     * Icon rendered inside the trigger, before the selected value. Lets the
+     * control carry its own meaning (e.g. a sort glyph) instead of a label.
+     */
+    startIcon?: ReactNode;
 }
 
 const StyledFormControl = styled(FormControl)({
@@ -57,6 +63,16 @@ const StyledFormControl = styled(FormControl)({
 
 const StyledPlaceholder = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
+}));
+
+const StyledValueWithIcon = styled('span')(({ theme }) => ({
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    '& > svg': {
+        fontSize: theme.spacing(2.5),
+        color: theme.palette.text.secondary,
+    },
 }));
 
 const toMenuItem = (option: ISelectOption) => (
@@ -87,6 +103,7 @@ function GeneralSelect<T extends string = string>({
     visuallyHideLabel,
     labelId,
     placeholder,
+    startIcon,
     ...rest
 }: IGeneralSelectProps<T>) {
     const onSelectChange = (event: SelectChangeEvent) => {
@@ -97,18 +114,25 @@ function GeneralSelect<T extends string = string>({
     const flatOptions = isSelectOptionGroup(options)
         ? options.flatMap((group) => group.options)
         : options;
-    const renderValue = placeholder
-        ? (selected: unknown) => {
-              const selectedLabel = flatOptions.find(
-                  (option) => option.key === String(selected),
-              )?.label;
-              return (
-                  selectedLabel ?? (
+    const renderValue =
+        placeholder || startIcon
+            ? (selected: unknown) => {
+                  const selectedLabel = flatOptions.find(
+                      (option) => option.key === String(selected),
+                  )?.label;
+                  const content = selectedLabel ?? (
                       <StyledPlaceholder>{placeholder}</StyledPlaceholder>
-                  )
-              );
-          }
-        : undefined;
+                  );
+                  return startIcon ? (
+                      <StyledValueWithIcon>
+                          {startIcon}
+                          {content}
+                      </StyledValueWithIcon>
+                  ) : (
+                      content
+                  );
+              }
+            : undefined;
 
     return (
         <StyledFormControl

@@ -26,10 +26,10 @@ component/impact-views/
   README.md                  # this file (rollout plan + context)
   ImpactViewsPage.tsx        # page: switcher + active view's chart (useGoalViewData)
   LazyImpactViewsPage.tsx    # lazy wrapper used by the route
-  views/                     # render-only components (GoalSummaryPanel, MultimetricChartCard,
-                             #   FollowedFeaturesList, ViewSwitcher, FeaturePicker, …)
+  views/                     # components (GoalSummaryPanel, MultimetricChartCard, FollowedFeaturesList,
+                             #   ViewSwitcher, FeaturePicker, ViewEditorDialog, ImpactMetricViewsEmptyState, …)
   hooks/                     # data hooks (useGoalViewData seam + resolver/event/metrics hooks)
-  fixtures/                  # goalViewConfig.ts — GOAL_VIEW + DUMMY_VIEWS (real config)
+                             #   + useImpactMetricViews (localStorage CRUD)
 ```
 
 **Reused from `main` (imported, not copied):** the `MultimetricChart` suite
@@ -90,6 +90,7 @@ them), and the synthetic-data generators.
     `month`; flags `impact-views-1/2/3`). **Project-agnostic** — a view holds only
     `featureNames`; each flag's project is resolved from the flag itself (no `project` on
     `MetricView`). `id`/`createdAt`/`updatedAt` stay required (`GOAL_VIEW` stubs them).
+    *(This fixture was removed in PR C once localStorage-backed user views replaced the seed data.)*
   - `hooks/useGoalViewData.ts` (+`.test.tsx`) — composition seam (the only file the page calls).
     Picks the goal series/total by the **goal metric's index** (not `[0]`); handles empty series.
   - `hooks/useResolvedFeatures.ts` — `featureNames` → `ResolvedFeature[]` via **one
@@ -103,69 +104,41 @@ them), and the synthetic-data generators.
   - **Architecture:** each data concern is its own small hook behind a narrow interface (all
     under `hooks/`); the page has no fetching logic.
 
-### Editor + localStorage CRUD (current phase — goal-tracking only)
-Lets users create/edit/switch/delete their own views, persisted in localStorage. Extracted
-from `feat/exp-views:.../views/`, **stripping** template/system-health/`normalize`/
-`autoFollowFlags`. 4 PRs:
-- **PR A** — merged. View **switcher** (`views/ViewSwitcher/`) + `DUMMY_VIEWS` (3 views sharing
-  `GOAL_VIEW` data). Page holds `activeViewId`, renders the active view via
-  `useGoalViewData(activeView)`. Create/edit/duplicate/delete are no-op "Coming soon" toasts.
-- **PR B1** — in progress (branch `feat/impact-views-pr-b1-feature-picker`, uncommitted).
-  `views/FeaturePicker/FeaturePicker.tsx` — extracted **verbatim** (0 comments, only on-`main`
-  `useFeatureSearch`). MUI `<Autocomplete multiple>`, 250ms debounce, merges orphaned
-  selections. **Not wired yet** — just lands the component for PR B2's editor to consume.
-- **PR B2 / PR C** — see "NEXT" below.
+### Editor + localStorage CRUD (goal-tracking only) — ✅ COMPLETE
+Users create/edit/switch/duplicate/delete their own views, persisted in browser localStorage.
+Extracted from `feat/exp-views:.../views/`, **stripping** template/system-health/`normalize`/
+`autoFollowFlags`. 4 PRs, all merged:
+- **PR A** — View **switcher** (`views/ViewSwitcher/`). Page held `activeViewId` and rendered the
+  active view via `useGoalViewData`. (Seeded from a temporary `DUMMY_VIEWS` fixture, since removed.)
+- **PR B1** — `views/FeaturePicker/FeaturePicker.tsx` — MUI `<Autocomplete multiple>`, 250ms debounce.
+- **PR B2** — `views/ViewEditorDialog/ViewEditorDialog.tsx` (goal-only create/edit form, shared
+  `Dialogue` chrome, single view-level aggregation via `GeneralSelect`, `useReducer` form state) +
+  page wiring (in-memory create/edit via the `editor` discriminated union).
+- **PR C** — `hooks/useImpactMetricViews.ts` (localStorage CRUD: keys `impact-metric-views:list` /
+  `impact-metric-views:active-id`, via `useLocalStorageState` + `createUuid`, real `Date.now()`
+  timestamps) + `hooks/useImpactMetricViews.test.tsx` + `views/ImpactMetricViewsEmptyState/`.
+  Page now uses the hook (no more in-memory state / `DUMMY_VIEWS`): empty storage → empty-state CTA;
+  delete → shared `Dialogue` confirm; duplicate → `duplicateView`. The `goalViewConfig.ts` fixture
+  was deleted (dead once localStorage landed).
 
-## NEXT: resume here
+## NEXT: deferred work (revisit when prioritized)
 
-All work goes under `component/impact-views/`. Extract from
-`feat/exp-views:frontend/src/component/impact-metrics/views/<file>` via `git show`, **strip**
-template/`ViewTemplate`/`TEMPLATE_DEFAULTS`/`normalize`/`autoFollowFlags`/system-health
-(goal-tracking only), strip comments, point imports at on-`main` modules. **No template
-picker** — Create opens the editor directly. Reuse the trimmed `MetricView` + `useGoalViewData`.
+The editor phase is done. Remaining deferred items (not yet started) — see the table above and
+"Decisions & context" below:
+- **Top Movers / Flag Impact** — `computeFlagEventImpact(+test)`, `flagImpactFormatting`,
+  `TopFlagMoversPanel`, `FlagImpactDialog` (re-extract from `feat/exp-views`; not on `main`).
+- **System-health view** — `SystemHealthViewChart`, `ViewChart` template router,
+  `useAutoFollowedFeatureNames`, `useEnvironmentEvents`, `normalizeSeriesToBaseline`.
+- Synthetic generator `simulateFlagContribution`.
 
-**PR B2 — `ViewEditorDialog` + page wiring** (the big one, ~534 LOC after strip; mostly form
-JSX — don't shrink further). Branch off `origin/main` once PR B1 lands.
-- Extract `ViewEditorDialog.tsx` → `views/ViewEditorDialog/ViewEditorDialog.tsx`. Strip
-  (verified): the `template` prop+destructure, `TEMPLATE_DEFAULTS`/`ViewTemplate` imports,
-  `templateDefaults`/`isSystemHealth`, `normalize`/`autoFollowFlags` state + effect branches +
-  conditional save fields, the **normalize switch JSX** (~33 LOC) and **autoFollowFlags switch
-  JSX** (~34 LOC); make the **goal radio unconditional**. Result: title, metrics picker, goal
-  radio, timeRange, environment, features.
-- Imports (all on `main`): `useImpactMetricsOptions`
-  (`hooks/api/getters/useImpactMetricsMetadata/` → `{ metricOptions, loading }`),
-  `useEnvironments`, `getMetricType`/`getDefaultAggregation` (`metricsFormatters`), `createUuid`,
-  `ChartTimeRange`, `AggregationMode`, `FeaturePicker` (PR B1). `metricConfigFor` is defined
-  inside the editor.
-- Save: `onSave({ title, featureNames, metrics: metrics.map(m => ({...m, timeRange})), timeRange,
-  environment })`. `ViewInput = Omit<MetricView, 'id'|'createdAt'|'updatedAt'>`. Valid when
-  `title.trim() && metrics.length > 0` (goal optional). Does create + edit via `initialView`.
-- Page: `onCreate` opens the editor, `onEdit(view)` opens it with that view, `onSave(input)`
-  updates **in-memory** state (no persistence yet — that's PR C). Drop the create/edit
-  `comingSoon` stubs.
-- Verify: `tsc` + `biome`; "New view" → form opens with real metrics/env/features → save adds it.
-
-**PR C — localStorage CRUD.** Branch off PR B2.
-- Extract `useImpactMetricViews.ts` → `hooks/useImpactMetricViews.ts`. Strip
-  `template`/`TEMPLATE_DEFAULTS`/`normalize`/`autoFollowFlags`/`migrateStoredView`; keep `views`,
-  `activeView(Id)`, `setActiveViewId`, `addView`, `updateView`, `deleteView`, `duplicateView`.
-  Uses on-`main` `useLocalStorageState` (keys `impact-metric-views:list` /
-  `impact-metric-views:active-id`) + `createUuid`. Add a CRUD test (testServer/localStorage).
-- Extract `ImpactMetricViewsEmptyState.tsx` (no views → CTA).
-- Replace the page's `useState`/`DUMMY_VIEWS` with `useImpactMetricViews()`; seed from
-  `GOAL_VIEW` when storage empty (or empty state). Wire onSave→add/update, onDelete→confirm+
-  delete, onDuplicate→duplicate.
-- Verify (end-to-end): flag on, `/impact-views`: create → persists across **reload** →
-  switch/edit/duplicate/delete work → active view renders real data.
-
-**On-main deps for this phase (all present):** `useLocalStorageState`, `createUuid`,
-`useImpactMetricsOptions`, `useEnvironments`, `useFeatureSearch`, `useEventSearch`. No backend.
+Extraction mechanic unchanged: `git show feat/exp-views:.../<file>` → strip
+template/system-health/`normalize`/`autoFollowFlags` + comments → point imports at on-`main` modules.
 
 ## Decisions & context (for picking this up later)
 
-- **Real data is live** — the goal view renders real sandbox data (PR 6); the old dummy
-  fixtures were removed. The only remaining "dummy" is `DUMMY_VIEWS` (3 views sharing
-  `GOAL_VIEW`) in the switcher, which the localStorage CRUD (PR C) replaces with user views.
+- **Real data is live** — the goal view renders real sandbox data (PR 6). All dummy fixtures
+  (including the `DUMMY_VIEWS`/`GOAL_VIEW` `goalViewConfig.ts`) have been removed; views are now
+  user-created and persisted in localStorage (PR C).
 - **No backend work** is needed; getters hit existing endpoints. If an extracted file imports
   a symbol not on `main`, add the smallest co-located copy rather than editing shared/backend
   code.

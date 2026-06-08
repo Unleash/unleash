@@ -1,15 +1,15 @@
 import { useState, type FC } from 'react';
 import { Box } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { createUuid } from 'utils/createUuid';
-import useToast from 'hooks/useToast';
+import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { GoalSummaryPanel } from './views/GoalSummaryPanel/GoalSummaryPanel';
 import { MultimetricChartCard } from './views/MultimetricChartCard/MultimetricChartCard';
 import { FollowedFeaturesList } from './views/FollowedFeaturesList/FollowedFeaturesList';
 import { ViewSwitcher } from './views/ViewSwitcher/ViewSwitcher';
 import { ViewEditorDialog } from './views/ViewEditorDialog/ViewEditorDialog';
+import { ImpactMetricViewsEmptyState } from './views/ImpactMetricViewsEmptyState/ImpactMetricViewsEmptyState';
 import { useGoalViewData } from './hooks/useGoalViewData';
-import { DUMMY_VIEWS } from './fixtures/goalViewConfig';
+import { useImpactMetricViews } from './hooks/useImpactMetricViews';
 import { TIME_RANGE_LABELS } from './constants';
 import type { MetricView } from './views/types';
 
@@ -20,63 +20,12 @@ type EditorState =
     | { type: 'create' }
     | { type: 'edit'; view: MetricView };
 
-const createView = (input: ViewInput): MetricView => ({
-    ...input,
-    id: createUuid(),
-    createdAt: 0,
-    updatedAt: 0,
-});
-
-const replaceView = (views: MetricView[], id: string, input: ViewInput) =>
-    views.map((view) => (view.id === id ? { ...view, ...input } : view));
-
-export const ImpactViewsPage: FC = () => {
-    const { setToastData } = useToast();
-    const [views, setViews] = useState<MetricView[]>(DUMMY_VIEWS);
-    const [activeViewId, setActiveViewId] = useState(DUMMY_VIEWS[0].id);
-    const [editor, setEditor] = useState<EditorState>({ type: 'closed' });
-
-    const view =
-        views.find((candidate) => candidate.id === activeViewId) ?? views[0];
+const ActiveView: FC<{ view: MetricView }> = ({ view }) => {
     const data = useGoalViewData(view);
     const timeLabel = TIME_RANGE_LABELS[view.timeRange];
 
-    const comingSoon = () =>
-        setToastData({ type: 'success', text: 'Coming soon' });
-
-    const openCreate = () => setEditor({ type: 'create' });
-    const openEdit = (view: MetricView) => setEditor({ type: 'edit', view });
-    const closeEditor = () => setEditor({ type: 'closed' });
-
-    const saveView = (input: ViewInput) => {
-        if (editor.type === 'edit') {
-            setViews((views) => replaceView(views, editor.view.id, input));
-        } else {
-            const created = createView(input);
-            setViews((views) => [...views, created]);
-            setActiveViewId(created.id);
-        }
-        closeEditor();
-    };
-
     return (
-        <Box sx={{ pt: 2 }}>
-            <PageHeader title='Impact views' />
-            <ViewSwitcher
-                views={views}
-                activeViewId={activeViewId}
-                onSelect={setActiveViewId}
-                onCreate={openCreate}
-                onEdit={openEdit}
-                onDuplicate={comingSoon}
-                onDelete={comingSoon}
-            />
-            <ViewEditorDialog
-                open={editor.type !== 'closed'}
-                initialView={editor.type === 'edit' ? editor.view : null}
-                onClose={closeEditor}
-                onSave={saveView}
-            />
+        <>
             <Box sx={{ mt: 3 }}>
                 <MultimetricChartCard
                     title={data.goalLabel}
@@ -90,7 +39,7 @@ export const ImpactViewsPage: FC = () => {
                     end={data.end}
                     loading={data.loading}
                     chartHeightSpacing={{ base: 48, lg: 40, sm: 32 }}
-                    totalsLabel='Goal'
+                    totalsLabel='Signals'
                     totalsHeaderSlot={
                         data.goalSummary ? (
                             <GoalSummaryPanel
@@ -106,6 +55,81 @@ export const ImpactViewsPage: FC = () => {
             <Box sx={{ mt: 3 }}>
                 <FollowedFeaturesList features={data.resolvedFeatures} />
             </Box>
+        </>
+    );
+};
+
+export const ImpactViewsPage: FC = () => {
+    const {
+        views,
+        activeView,
+        activeViewId,
+        setActiveViewId,
+        addView,
+        updateView,
+        deleteView,
+        duplicateView,
+    } = useImpactMetricViews();
+    const [editor, setEditor] = useState<EditorState>({ type: 'closed' });
+    const [pendingDelete, setPendingDelete] = useState<MetricView | null>(null);
+
+    const openCreate = () => setEditor({ type: 'create' });
+    const openEdit = (view: MetricView) => setEditor({ type: 'edit', view });
+    const closeEditor = () => setEditor({ type: 'closed' });
+
+    const saveView = (input: ViewInput) => {
+        if (editor.type === 'edit') {
+            updateView(editor.view.id, input);
+        } else {
+            addView(input);
+        }
+        closeEditor();
+    };
+
+    const confirmDelete = () => {
+        if (pendingDelete) deleteView(pendingDelete.id);
+        setPendingDelete(null);
+    };
+
+    return (
+        <Box sx={{ pt: 2 }}>
+            {views.length === 0 ? (
+                <ImpactMetricViewsEmptyState onCreate={openCreate} />
+            ) : (
+                <>
+                    <PageHeader title='Impact views' />
+                    <ViewSwitcher
+                        views={views}
+                        activeViewId={activeViewId}
+                        onSelect={setActiveViewId}
+                        onCreate={openCreate}
+                        onEdit={openEdit}
+                        onDuplicate={(view) => duplicateView(view.id)}
+                        onDelete={setPendingDelete}
+                    />
+                    {activeView ? <ActiveView view={activeView} /> : null}
+                </>
+            )}
+
+            <ViewEditorDialog
+                open={editor.type !== 'closed'}
+                initialView={editor.type === 'edit' ? editor.view : null}
+                onClose={closeEditor}
+                onSave={saveView}
+            />
+
+            <Dialogue
+                open={pendingDelete !== null}
+                title={
+                    pendingDelete
+                        ? `Delete "${pendingDelete.title}"?`
+                        : 'Delete view?'
+                }
+                primaryButtonText='Delete'
+                secondaryButtonText='Cancel'
+                onClick={confirmDelete}
+                onClose={() => setPendingDelete(null)}
+            />
         </Box>
     );
 };

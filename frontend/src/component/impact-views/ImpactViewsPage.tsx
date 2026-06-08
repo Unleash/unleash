@@ -1,7 +1,6 @@
 import { useState, type FC } from 'react';
 import { Box } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import type { ChartTimeRange } from 'component/impact-metrics/MultimetricChart/chartConfig';
 import { createUuid } from 'utils/createUuid';
 import useToast from 'hooks/useToast';
 import { GoalSummaryPanel } from './views/GoalSummaryPanel/GoalSummaryPanel';
@@ -11,6 +10,7 @@ import { ViewSwitcher } from './views/ViewSwitcher/ViewSwitcher';
 import { ViewEditorDialog } from './views/ViewEditorDialog/ViewEditorDialog';
 import { useGoalViewData } from './hooks/useGoalViewData';
 import { DUMMY_VIEWS } from './fixtures/goalViewConfig';
+import { TIME_RANGE_LABELS } from './constants';
 import type { MetricView } from './views/types';
 
 type ViewInput = Omit<MetricView, 'id' | 'createdAt' | 'updatedAt'>;
@@ -29,13 +29,6 @@ const createView = (input: ViewInput): MetricView => ({
 
 const replaceView = (views: MetricView[], id: string, input: ViewInput) =>
     views.map((view) => (view.id === id ? { ...view, ...input } : view));
-
-const TIME_RANGE_LABELS: Record<ChartTimeRange, string> = {
-    hour: 'Last hour',
-    day: 'Last 24 hours',
-    week: 'Last 7 days',
-    month: 'Last 30 days',
-};
 
 export const ImpactViewsPage: FC = () => {
     const { setToastData } = useToast();

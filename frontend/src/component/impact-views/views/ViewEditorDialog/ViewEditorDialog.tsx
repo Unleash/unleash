@@ -24,6 +24,7 @@ import type { AggregationMode } from 'component/impact-metrics/types';
 import type { AvailableImpactMetricsSchemaMetricsItem } from 'openapi';
 import { FeaturePicker } from '../FeaturePicker/FeaturePicker';
 import type { MetricView, ViewMetricConfig } from '../types';
+import { TIME_RANGE_OPTIONS } from '../../constants';
 
 type ViewInput = Omit<MetricView, 'id' | 'createdAt' | 'updatedAt'>;
 
@@ -89,13 +90,6 @@ const AGGREGATION_OPTIONS: ISelectOption[] = [
     { key: 'p50', label: '50th percentile' },
     { key: 'p95', label: '95th percentile' },
     { key: 'p99', label: '99th percentile' },
-];
-
-const TIME_RANGE_OPTIONS: ISelectOption[] = [
-    { key: 'hour', label: 'Last hour' },
-    { key: 'day', label: 'Last 24 hours' },
-    { key: 'week', label: 'Last 7 days' },
-    { key: 'month', label: 'Last 30 days' },
 ];
 
 type MetricOption = AvailableImpactMetricsSchemaMetricsItem;

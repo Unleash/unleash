@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
-import { styled } from '@mui/material';
+import { styled, Tooltip } from '@mui/material';
 import SortOutlined from '@mui/icons-material/SortOutlined';
 
 const StyledContainer = styled('div')(() => ({
@@ -30,15 +30,17 @@ export const ProjectsListSort: FC<ProjectsListSortProps> = ({
     setSortBy,
 }) => {
     return (
-        <StyledContainer>
-            <GeneralSelect
-                fullWidth
-                aria-label='Sort by'
-                startIcon={<SortOutlined />}
-                onChange={setSortBy}
-                options={options}
-                value={sortBy || options[0].key}
-            />
-        </StyledContainer>
+        <Tooltip title='Change sorting' arrow>
+            <StyledContainer>
+                <GeneralSelect
+                    fullWidth
+                    aria-label='Sort by'
+                    startIcon={<SortOutlined />}
+                    onChange={setSortBy}
+                    options={options}
+                    value={sortBy || options[0].key}
+                />
+            </StyledContainer>
+        </Tooltip>
     );
 };

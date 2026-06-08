@@ -25,7 +25,5 @@ updates:
       - "dependencies"
     ignore:
       - dependency-name: "react-router-dom"
-      - dependency-name: "docusaurus-plugin-openapi-docs"
-      - dependency-name: "docusaurus-theme-openapi-docs"
     cooldown:
       default-days: 7

@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { styled, Button } from '@mui/material';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { DropdownList } from './ConfigButtons/DropdownList.tsx';
 import { StyledPopover } from './ConfigButtons/shared.styles';
 
@@ -52,7 +52,7 @@ export const HeaderBreadcrumb: React.FC<Props> = ({
                 <>
                     <div ref={ref}>
                         <ProjectButton
-                            endIcon={<ArrowDropDownIcon />}
+                            endIcon={<KeyboardArrowDownOutlined />}
                             onClick={() => setAnchorEl(ref.current)}
                             aria-label='Select project'
                         >

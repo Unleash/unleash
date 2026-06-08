@@ -54,6 +54,7 @@ import { ProjectArchived } from './ArchiveProject/ProjectArchived.tsx';
 import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker.ts';
 import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
 import { ProjectStatusModal } from './ProjectStatus/ProjectStatusModal.tsx';
+import { DynamicConfiguration } from './DynamicConfiguration/DynamicConfiguration.tsx';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -190,6 +191,12 @@ export const Project = () => {
             title: 'Applications',
             path: `${basePath}/applications`,
             name: 'applications',
+        },
+        {
+            title: 'Dynamic configuration',
+            path: `${basePath}/configurations`,
+            name: 'configurations',
+            new: true,
         },
         {
             title: 'Event log',
@@ -403,6 +410,10 @@ export const Project = () => {
                 />
                 <Route path='settings/*' element={<ProjectSettings />} />
                 <Route path='applications' element={<ProjectApplications />} />
+                <Route
+                    path='configurations'
+                    element={<DynamicConfiguration />}
+                />
                 <Route path='*' element={<ProjectFlags />} />
             </Routes>
             <ImportModal

@@ -47,6 +47,7 @@ import {
 import ProjectStatusController from '../project-status/project-status-controller.js';
 import FeatureLinkController from '../feature-links/feature-link-controller.js';
 import { ContextController } from '../context/context.js';
+import { DynamicConfigurationAdminController } from '../dynamic-configuration/dynamic-configuration-admin-controller.js';
 
 export default class ProjectController extends Controller {
     private projectService: ProjectService;
@@ -214,6 +215,13 @@ export default class ProjectController extends Controller {
         this.use(
             '/',
             new ContextController(config, services, 'project').router,
+        );
+        this.use(
+            '/',
+            new DynamicConfigurationAdminController(
+                config,
+                services.openApiService,
+            ).router,
         );
     }
 

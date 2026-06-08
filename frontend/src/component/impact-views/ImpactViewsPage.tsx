@@ -1,5 +1,5 @@
 import { useState, type FC } from 'react';
-import { styled } from '@mui/material';
+import { Box } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import type { ChartTimeRange } from 'component/impact-metrics/MultimetricChart/chartConfig';
 import { createUuid } from 'utils/createUuid';
@@ -20,24 +20,22 @@ type EditorState =
     | { kind: 'create' }
     | { kind: 'edit'; view: MetricView };
 
+const createView = (input: ViewInput): MetricView => ({
+    ...input,
+    id: createUuid(),
+    createdAt: 0,
+    updatedAt: 0,
+});
+
+const replaceView = (views: MetricView[], id: string, input: ViewInput) =>
+    views.map((view) => (view.id === id ? { ...view, ...input } : view));
+
 const TIME_RANGE_LABELS: Record<ChartTimeRange, string> = {
     hour: 'Last hour',
     day: 'Last 24 hours',
     week: 'Last 7 days',
     month: 'Last 30 days',
 };
-
-const StyledWrapper = styled('div')(({ theme }) => ({
-    paddingTop: theme.spacing(2),
-}));
-
-const StyledCard = styled('div')(({ theme }) => ({
-    marginTop: theme.spacing(3),
-}));
-
-const StyledFeatures = styled('div')(({ theme }) => ({
-    marginTop: theme.spacing(3),
-}));
 
 export const ImpactViewsPage: FC = () => {
     const { setToastData } = useToast();
@@ -59,29 +57,17 @@ export const ImpactViewsPage: FC = () => {
 
     const saveView = (input: ViewInput) => {
         if (editor.kind === 'edit') {
-            const edited = editor.view;
-            setViews((current) =>
-                current.map((candidate) =>
-                    candidate.id === edited.id
-                        ? { ...edited, ...input }
-                        : candidate,
-                ),
-            );
+            setViews((views) => replaceView(views, editor.view.id, input));
         } else {
-            const created: MetricView = {
-                ...input,
-                id: createUuid(),
-                createdAt: 0,
-                updatedAt: 0,
-            };
-            setViews((current) => [...current, created]);
+            const created = createView(input);
+            setViews((views) => [...views, created]);
             setActiveViewId(created.id);
         }
         closeEditor();
     };
 
     return (
-        <StyledWrapper>
+        <Box sx={{ pt: 2 }}>
             <PageHeader title='Impact views' />
             <ViewSwitcher
                 views={views}
@@ -98,7 +84,7 @@ export const ImpactViewsPage: FC = () => {
                 onClose={closeEditor}
                 onSave={saveView}
             />
-            <StyledCard>
+            <Box sx={{ mt: 3 }}>
                 <MultimetricChartCard
                     title={data.goalLabel}
                     subtitle={`Goal · ${timeLabel}`}
@@ -123,10 +109,10 @@ export const ImpactViewsPage: FC = () => {
                         ) : null
                     }
                 />
-            </StyledCard>
-            <StyledFeatures>
+            </Box>
+            <Box sx={{ mt: 3 }}>
                 <FollowedFeaturesList features={data.resolvedFeatures} />
-            </StyledFeatures>
-        </StyledWrapper>
+            </Box>
+        </Box>
     );
 };

@@ -31,19 +31,6 @@ const DEFAULT_ENVIRONMENT = 'production';
 const DEFAULT_TIME_RANGE: ChartTimeRange = 'month';
 const DEFAULT_AGGREGATION: AggregationMode = 'count';
 
-const StyledForm = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(3),
-    paddingTop: theme.spacing(1),
-}));
-
-const StyledRow = styled('div')(({ theme }) => ({
-    display: 'flex',
-    gap: theme.spacing(2),
-    flexWrap: 'wrap',
-}));
-
 const StyledFieldGroup = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -61,13 +48,6 @@ const StyledFieldLabel = styled(Typography)(({ theme }) => ({
 const StyledHelper = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.text.secondary,
-}));
-
-const StyledMetricRows = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(1),
-    marginTop: theme.spacing(0.5),
 }));
 
 const StyledMetricRow = styled('div')(({ theme }) => ({
@@ -239,6 +219,11 @@ type FormAction =
     | { type: 'setGoal'; metricName: string }
     | { type: 'setEnvironment'; environment: string };
 
+const patchMetrics = (
+    metrics: ViewMetricConfig[],
+    patch: Partial<ViewMetricConfig>,
+): ViewMetricConfig[] => metrics.map((metric) => ({ ...metric, ...patch }));
+
 const formReducer = (state: ViewFormData, action: FormAction): ViewFormData => {
     switch (action.type) {
         case 'reset':
@@ -253,19 +238,17 @@ const formReducer = (state: ViewFormData, action: FormAction): ViewFormData => {
             return {
                 ...state,
                 timeRange: action.timeRange,
-                metrics: state.metrics.map((metric) => ({
-                    ...metric,
+                metrics: patchMetrics(state.metrics, {
                     timeRange: action.timeRange,
-                })),
+                }),
             };
         case 'setAggregation':
             return {
                 ...state,
                 aggregationMode: action.aggregationMode,
-                metrics: state.metrics.map((metric) => ({
-                    ...metric,
+                metrics: patchMetrics(state.metrics, {
                     aggregationMode: action.aggregationMode,
-                })),
+                }),
             };
         case 'setMetrics': {
             const aggregationMode =
@@ -277,15 +260,16 @@ const formReducer = (state: ViewFormData, action: FormAction): ViewFormData => {
             const byName = new Map(
                 state.metrics.map((metric) => [metric.metricName, metric]),
             );
-            const metrics = action.options.map((option) => {
-                const existing = byName.get(option.name);
-                if (existing) return { ...existing, aggregationMode };
-                return {
-                    ...metricConfigFor(option, state.timeRange),
-                    aggregationMode,
-                };
-            });
-            return { ...state, aggregationMode, metrics };
+            const metrics = action.options.map(
+                (option) =>
+                    byName.get(option.name) ??
+                    metricConfigFor(option, state.timeRange),
+            );
+            return {
+                ...state,
+                aggregationMode,
+                metrics: patchMetrics(metrics, { aggregationMode }),
+            };
         }
         case 'setGoal':
             return {
@@ -361,7 +345,14 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
             maxWidth='md'
             fullWidth
         >
-            <StyledForm>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 3,
+                    pt: 1,
+                }}
+            >
                 <TextField
                     label='View title'
                     value={form.title}
@@ -426,7 +417,14 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
                         chart.
                     </StyledHelper>
                     {form.metrics.length > 0 ? (
-                        <StyledMetricRows>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 1,
+                                mt: 0.5,
+                            }}
+                        >
                             {form.metrics.map((metric) => (
                                 <MetricGoalRow
                                     key={metric.metricName}
@@ -439,7 +437,7 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
                                     }
                                 />
                             ))}
-                        </StyledMetricRows>
+                        </Box>
                     ) : null}
                 </StyledFieldGroup>
 
@@ -450,7 +448,7 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
                     }
                 />
 
-                <StyledRow>
+                <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
                     <StyledFieldGroup>
                         <GeneralSelect<AggregationMode>
                             id='view-aggregation'
@@ -501,8 +499,8 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
                             the chart.
                         </StyledHelper>
                     </StyledFieldGroup>
-                </StyledRow>
-            </StyledForm>
+                </Box>
+            </Box>
         </Dialogue>
     );
 };

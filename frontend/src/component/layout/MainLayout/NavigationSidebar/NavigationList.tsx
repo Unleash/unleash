@@ -1,4 +1,4 @@
-import type { ComponentProps, FC } from 'react';
+import type { ComponentProps, FC, ReactNode } from 'react';
 import type { INavigationMenuItem } from 'interfaces/route';
 import type { NavigationMode } from './NavigationMode.tsx';
 import {
@@ -14,6 +14,7 @@ import { AdminMenuNavigation } from '../AdminMenu/AdminNavigationItems.tsx';
 import { ConfigurationAccordion } from './ConfigurationAccordion.tsx';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
 import { NewFeatureBadge } from 'component/layout/components/NewFeatureBadge/NewFeatureBadge.tsx';
+import { Badge } from 'component/common/Badge/Badge.tsx';
 import { useRoutes } from './useRoutes.ts';
 
 const StyledNavigationList = styled(List)(({ theme }) => ({
@@ -55,8 +56,10 @@ export const PrimaryNavigationList: FC<{
         href,
         text,
         isNew,
+        badge,
     }: Pick<ComponentProps<typeof MenuListItem>, 'href' | 'text'> & {
         isNew?: boolean;
+        badge?: ReactNode;
     }) => (
         <MenuListItem
             href={href}
@@ -66,9 +69,10 @@ export const PrimaryNavigationList: FC<{
             selected={activeItem === href}
             mode={mode}
             badge={
-                newRoute?.title.toLowerCase() === text.toLowerCase() ? (
+                badge ??
+                (newRoute?.title.toLowerCase() === text.toLowerCase() ? (
                     <NewFeatureBadge />
-                ) : null
+                ) : null)
             }
         />
     );
@@ -93,7 +97,25 @@ export const PrimaryNavigationList: FC<{
                 <PrimaryListItem href='/insights' text='Analytics' />
             ) : null}
             {!isOss() && impactViewsEnabled ? (
-                <PrimaryListItem href='/impact-views' text='Impact views' />
+                <PrimaryListItem
+                    href='/impact-views'
+                    text='Impact views'
+                    badge={
+                        <Badge
+                            color='info'
+                            sx={{
+                                fontSize: '10px',
+                                py: 0,
+                                px: 0.75,
+                                height: 'auto',
+                                lineHeight: 1.4,
+                                whiteSpace: 'nowrap',
+                            }}
+                        >
+                            Beta
+                        </Badge>
+                    }
+                />
             ) : null}
             <ConfigurationAccordion
                 mode={mode}

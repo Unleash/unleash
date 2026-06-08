@@ -15,7 +15,7 @@ const StyledHeaderContainer = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
     [theme.breakpoints.up('md')]: {
         flexDirection: 'row',
-        alignItems: 'flex-end',
+        alignItems: 'center',
     },
     marginBottom: theme.spacing(2),
 }));

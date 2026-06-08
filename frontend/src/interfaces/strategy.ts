@@ -33,6 +33,7 @@ export interface IFeatureStrategyPayload {
     id?: string;
     name?: string;
     title?: string;
+    sortOrder?: number;
     constraints: IConstraint[];
     parameters: IFeatureStrategyParameters;
     variants?: IFeatureVariant[];

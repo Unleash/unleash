@@ -76,6 +76,7 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
         loading: projectLoading,
         refetch: refetchProject,
     } = useProjectOverview(projectId);
+    const allLoadingDone = !featureLoading && !projectLoading;
 
     // A completed setup step can advance the project's or the feature's onboarding status,
     // so refresh both to re-evaluate the stage.
@@ -87,6 +88,8 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
         projectOnboardingStatus: project?.onboardingStatus?.status,
         feature: feature as FeatureSchema,
     });
+    const shouldShowSetup = setupStage !== 'setup-completed';
+
     const dragTooltipSplashId = 'strategy-drag-tooltip';
     const shouldShowStrategyDragTooltip = !splash?.[dragTooltipSplashId];
     const toggleShowTooltip = (envIsOpen: boolean) => {
@@ -118,9 +121,8 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
                     </div>
                 )}
                 <StyledMainContent>
-                    {!featureLoading &&
-                        !projectLoading &&
-                        (setupStage !== null ? (
+                    {allLoadingDone &&
+                        (shouldShowSetup ? (
                             <FeatureSetupBanner
                                 project={{
                                     ...(project as ProjectOverviewSchema),

@@ -88,7 +88,7 @@ describe('getFeatureSetupStage', () => {
                     environments: [env(), env([{ name: 'flexibleRollout' }])],
                 },
             }),
-        ).toBeNull();
+        ).toBe('setup-completed');
     });
 
     it('returns null for the completed stage', () => {
@@ -97,7 +97,7 @@ describe('getFeatureSetupStage', () => {
                 projectOnboardingStatus: 'onboarded',
                 feature: { lifecycle: lifecycle('completed') },
             }),
-        ).toBeNull();
+        ).toBe('setup-completed');
     });
 
     it('returns null for the archived stage', () => {
@@ -106,6 +106,6 @@ describe('getFeatureSetupStage', () => {
                 projectOnboardingStatus: 'onboarded',
                 feature: { lifecycle: lifecycle('archived') },
             }),
-        ).toBeNull();
+        ).toBe('setup-completed');
     });
 });

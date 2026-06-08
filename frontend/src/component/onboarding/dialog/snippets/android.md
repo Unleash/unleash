@@ -1,7 +1,7 @@
 1\. Install the SDK
 
 ```gradle
-implementation("io.getunleash:unleash-android:1")
+implementation("io.getunleash:unleash-android:+")
 ```
 
 2\. Enable required [permissions](https://developer.android.com/guide/topics/manifest/uses-permission-element)
@@ -11,7 +11,7 @@ implementation("io.getunleash:unleash-android:1")
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 ```
 
-2\. Initialize Unleash in your application
+3\. Initialize Unleash in your application
 
 ```kotlin
 class MyApplication: Application() {
@@ -34,7 +34,7 @@ class MyApplication: Application() {
 }
 ```
 
-3\. Check flag status
+4\. Check flag status
 
 ```kotlin
 class MainActivity : ComponentActivity() {
@@ -47,12 +47,16 @@ class MainActivity : ComponentActivity() {
             LaunchedEffect(Unit) {
                 while (isActive) {
                     val isFlagEnabled = unleashInstance.isEnabled("<YOUR_FLAG>")
-                    flagStatus = if (isFlagEnabled) "enabled" else "disabled"
-                    delay(3000L)
+                    flagStatus = if (isFlagEnabled) {
+                        "Flag is enabled"
+                    } else {
+                        "Flag is disabled"
+                    }
+                    delay(3.seconds)
                 }
             }
 
-            Text(text = "Flag is $flagStatus!")
+            Text(text = flagStatus)
         }
 
     }

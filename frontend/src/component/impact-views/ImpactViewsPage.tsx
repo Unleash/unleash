@@ -1,6 +1,7 @@
 import { useState, type FC } from 'react';
 import { Box } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
+import { Badge } from 'component/common/Badge/Badge';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { GoalSummaryPanel } from './views/GoalSummaryPanel/GoalSummaryPanel';
 import { MultimetricChartCard } from './views/MultimetricChartCard/MultimetricChartCard';
@@ -25,37 +26,33 @@ const ActiveView: FC<{ view: MetricView }> = ({ view }) => {
     const timeLabel = TIME_RANGE_LABELS[view.timeRange];
 
     return (
-        <>
-            <Box sx={{ mt: 3 }}>
-                <MultimetricChartCard
-                    title={data.goalLabel}
-                    subtitle={`Goal · ${timeLabel}`}
-                    timeRange={view.timeRange}
-                    aggregationMode={view.metrics[0]?.aggregationMode}
-                    stepSeries={data.stepSeries}
-                    stepTotals={data.stepTotals}
-                    featureEvents={data.featureEvents}
-                    start={data.start}
-                    end={data.end}
-                    loading={data.loading}
-                    chartHeightSpacing={{ base: 48, lg: 40, sm: 32 }}
-                    totalsLabel='Signals'
-                    totalsHeaderSlot={
-                        data.goalSummary ? (
-                            <GoalSummaryPanel
-                                goalMetricLabel={data.goalLabel}
-                                summary={data.goalSummary}
-                                series={data.goalSeries}
-                                timeLabel={timeLabel}
-                            />
-                        ) : null
-                    }
-                />
-            </Box>
-            <Box sx={{ mt: 3 }}>
-                <FollowedFeaturesList features={data.resolvedFeatures} />
-            </Box>
-        </>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            <MultimetricChartCard
+                title={data.goalLabel}
+                subtitle={`Goal · ${timeLabel}`}
+                timeRange={view.timeRange}
+                aggregationMode={view.metrics[0]?.aggregationMode}
+                stepSeries={data.stepSeries}
+                stepTotals={data.stepTotals}
+                featureEvents={data.featureEvents}
+                start={data.start}
+                end={data.end}
+                loading={data.loading}
+                chartHeightSpacing={{ base: 48, lg: 40, sm: 32 }}
+                totalsLabel='Signals'
+                totalsHeaderSlot={
+                    data.goalSummary ? (
+                        <GoalSummaryPanel
+                            goalMetricLabel={data.goalLabel}
+                            summary={data.goalSummary}
+                            series={data.goalSeries}
+                            timeLabel={timeLabel}
+                        />
+                    ) : null
+                }
+            />
+            <FollowedFeaturesList features={data.resolvedFeatures} />
+        </Box>
     );
 };
 
@@ -92,12 +89,21 @@ export const ImpactViewsPage: FC = () => {
     };
 
     return (
-        <Box sx={{ pt: 2 }}>
+        <Box sx={{ pt: 3, mt: -4 }}>
             {views.length === 0 ? (
                 <ImpactMetricViewsEmptyState onCreate={openCreate} />
             ) : (
-                <>
-                    <PageHeader title='Impact views' />
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 3,
+                    }}
+                >
+                    <PageHeader
+                        title='Impact views'
+                        actions={<Badge color='info'>Internal beta</Badge>}
+                    />
                     <ViewSwitcher
                         views={views}
                         activeViewId={activeViewId}
@@ -108,7 +114,7 @@ export const ImpactViewsPage: FC = () => {
                         onDelete={setPendingDelete}
                     />
                     {activeView ? <ActiveView view={activeView} /> : null}
-                </>
+                </Box>
             )}
 
             <ViewEditorDialog

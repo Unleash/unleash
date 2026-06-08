@@ -1,6 +1,13 @@
-import { Fragment, useMemo, useState, type FC } from 'react';
+import {
+    Fragment,
+    useMemo,
+    useState,
+    type ComponentType,
+    type FC,
+} from 'react';
 import {
     Box,
+    Link,
     Paper,
     Table,
     TableBody,
@@ -10,9 +17,9 @@ import {
     Typography,
     styled,
 } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import { FeatureLifecycleStageIcon } from 'component/common/FeatureLifecycle/FeatureLifecycleStageIcon';
 import { getFeatureLifecycleName } from 'component/common/FeatureLifecycle/getFeatureLifecycleName';
 
@@ -62,6 +69,11 @@ const StyledSectionMeta = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.text.secondary,
 }));
+
+const StyledTableHead = styled(TableHead)({
+    '& th:first-of-type': { borderBottomLeftRadius: 0 },
+    '& th:last-of-type': { borderBottomRightRadius: 0 },
+});
 
 const StyledSurface = styled(Paper)(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -129,11 +141,11 @@ const StyledNameWrapper = styled(Box)(({ theme }) => ({
     fontWeight: theme.typography.fontWeightMedium,
 }));
 
-const StyledNameIcon = styled(Box)(({ theme }) => ({
-    display: 'inline-flex',
-    alignItems: 'center',
-    color: theme.palette.text.disabled,
-    '& svg': { fontSize: 16 },
+const StyledFeatureLink = styled(Link)<{
+    component?: ComponentType<any>;
+    to?: string;
+}>(({ theme }) => ({
+    fontWeight: theme.typography.fontWeightBold,
 }));
 
 const StyledStageWrapper = styled(Box)(({ theme }) => ({
@@ -193,10 +205,17 @@ const FeatureRow: FC<{ feature: ResolvedFeature }> = ({ feature }) => (
     <TableRow>
         <TableCell>
             <StyledNameWrapper>
-                <StyledNameIcon>
-                    <FlagOutlinedIcon />
-                </StyledNameIcon>
-                <span>{feature.name}</span>
+                {feature.project ? (
+                    <StyledFeatureLink
+                        component={RouterLink}
+                        to={`/projects/${feature.project}/features/${feature.name}`}
+                        underline='hover'
+                    >
+                        {feature.name}
+                    </StyledFeatureLink>
+                ) : (
+                    <span>{feature.name}</span>
+                )}
             </StyledNameWrapper>
         </TableCell>
         <TableCell>{feature.project}</TableCell>
@@ -248,14 +267,14 @@ export const FollowedFeaturesList: FC<FollowedFeaturesListProps> = ({
             </StyledSectionHeader>
             <StyledSurface>
                 <Table>
-                    <TableHead>
+                    <StyledTableHead>
                         <TableRow>
                             <TableCell>Name</TableCell>
                             <TableCell>Project</TableCell>
                             <TableCell>Type</TableCell>
                             <TableCell>Lifecycle stage</TableCell>
                         </TableRow>
-                    </TableHead>
+                    </StyledTableHead>
                     <TableBody>
                         {groups.map(({ key, entries }) => (
                             <Fragment key={key}>

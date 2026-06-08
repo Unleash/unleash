@@ -22,6 +22,7 @@ import NetworkIcon from '@mui/icons-material/HubOutlined';
 import MaintenanceIcon from '@mui/icons-material/BuildOutlined';
 import BannersIcon from '@mui/icons-material/ViewCarousel';
 import InstanceStatsIcon from '@mui/icons-material/QueryStatsOutlined';
+import ImpactViewsIcon from '@mui/icons-material/QueryStatsOutlined';
 import LicenseIcon from '@mui/icons-material/ReceiptLongOutlined';
 import InstancePrivacyIcon from '@mui/icons-material/ShieldOutlined';
 import LoginHistoryIcon from '@mui/icons-material/HistoryOutlined';
@@ -47,6 +48,7 @@ const icons: Record<
     '/search': FlagOutlinedIcon,
     '/insights': InsightsIcon,
     '/impact-metrics': ImpactMetricsIcon,
+    '/impact-views': ImpactViewsIcon,
     '/applications': ApplicationsIcon,
     '/context': ContextFieldsIcon,
     '/feature-toggle-type': FlagTypesIcon,

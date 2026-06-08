@@ -8,7 +8,7 @@ import {
     useTheme,
     type Theme,
 } from '@mui/material';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import type { IPermissionButtonProps } from 'component/common/PermissionButton/PermissionButton';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
@@ -136,7 +136,7 @@ export const PillTrigger = ({
         onClick={onClick}
     >
         <span>{label}</span>
-        <ArrowDropDownIcon />
+        <KeyboardArrowDownOutlined />
     </PillButton>
 );
 

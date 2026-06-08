@@ -108,7 +108,7 @@ const configButtonData = {
     },
     tags: {
         icon: <Label />,
-        text: 'Tags are used to label flags in Unleash. They can be used when filtering flags in the UI. Additionally, they are used by some integrations.',
+        text: 'Tags are used to label flags, and can be used when filtering flags in the UI',
     },
     type: {
         icon: <FlagIcon />,

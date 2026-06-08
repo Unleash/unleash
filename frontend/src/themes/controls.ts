@@ -136,6 +136,11 @@ export const subtleOutlinedButton = (theme: Theme) => ({
             borderColor: theme.palette.primary.main,
             backgroundColor: theme.palette.secondary.light,
         },
+        // the primary-colored text above out-specifies MUI's disabled color,
+        // so restore the disabled text color explicitly
+        '&.Mui-disabled': {
+            color: theme.palette.text.disabled,
+        },
     },
 });
 

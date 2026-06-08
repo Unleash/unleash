@@ -18,10 +18,6 @@ const StyledActions = styled('span')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-const StyledPermissionButton = styled(PermissionButton)({
-    '& svg path': { fill: 'currentColor' },
-});
-
 interface FeatureConnectSdkBannerProps {
     projectId: string;
     featureId: string;
@@ -59,7 +55,7 @@ export const FeatureConnectSdkBanner = ({
                 subtitle='You must connect an SDK to the project before you can implement this flag in your code.'
                 actions={
                     <StyledActions>
-                        <StyledPermissionButton
+                        <PermissionButton
                             variant='contained'
                             startIcon={<CodeBlockIcon />}
                             onClick={onConnectSdkClick}
@@ -70,7 +66,7 @@ export const FeatureConnectSdkBanner = ({
                             projectId={projectId}
                         >
                             Connect SDK
-                        </StyledPermissionButton>
+                        </PermissionButton>
                         <PendingBadge />
                     </StyledActions>
                 }

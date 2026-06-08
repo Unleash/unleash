@@ -22,6 +22,7 @@ import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectO
 import { useMinimumUnleashVersion } from 'hooks/useMinimumUnleashVersion.ts';
 import type { FeatureSchema, ProjectOverviewSchema } from 'openapi/index.ts';
 import { FeatureSetupBanner } from './FeatureSetupBanner.tsx';
+import { getFeatureSetupStage } from './getFeatureSetupStage.ts';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -75,6 +76,7 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
         loading: projectLoading,
         refetch: refetchProject,
     } = useProjectOverview(projectId);
+    const allLoadingDone = !featureLoading && !projectLoading;
 
     // A completed setup step can advance the project's or the feature's onboarding status,
     // so refresh both to re-evaluate the stage.
@@ -82,6 +84,12 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
         refetchFeature();
         refetchProject();
     };
+    const setupStage = getFeatureSetupStage({
+        projectOnboardingStatus: project?.onboardingStatus?.status,
+        feature: feature as FeatureSchema,
+    });
+    const shouldShowSetup = setupStage !== 'setup-completed';
+
     const dragTooltipSplashId = 'strategy-drag-tooltip';
     const shouldShowStrategyDragTooltip = !splash?.[dragTooltipSplashId];
     const toggleShowTooltip = (envIsOpen: boolean) => {
@@ -113,20 +121,22 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
                     </div>
                 )}
                 <StyledMainContent>
-                    {!featureLoading && !projectLoading && (
-                        <FeatureSetupBanner
-                            project={{
-                                ...(project as ProjectOverviewSchema),
-                                id: projectId,
-                            }}
-                            feature={{
-                                ...(feature as FeatureSchema),
-                                id: featureId,
-                            }}
-                            onComplete={refreshSetupBanner}
-                        />
-                    )}
-                    {!featureLoading && header}
+                    {allLoadingDone &&
+                        (shouldShowSetup ? (
+                            <FeatureSetupBanner
+                                project={{
+                                    ...(project as ProjectOverviewSchema),
+                                    id: projectId,
+                                }}
+                                feature={{
+                                    ...(feature as FeatureSchema),
+                                    id: featureId,
+                                }}
+                                onComplete={refreshSetupBanner}
+                            />
+                        ) : (
+                            header
+                        ))}
                     <FeatureOverviewEnvironments
                         onToggleEnvOpen={toggleShowTooltip}
                         hiddenEnvironments={hiddenEnvironments}

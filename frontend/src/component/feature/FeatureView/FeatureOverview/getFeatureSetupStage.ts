@@ -4,7 +4,7 @@ export type FeatureSetupStage =
     | 'connect-sdk'
     | 'implement-flag'
     | 'add-strategy'
-    | null;
+    | 'setup-completed';
 
 export const getFeatureSetupStage = ({
     projectOnboardingStatus,
@@ -40,5 +40,5 @@ export const getFeatureSetupStage = ({
         return 'add-strategy';
     }
 
-    return null;
+    return 'setup-completed';
 };

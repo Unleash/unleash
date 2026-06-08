@@ -33,6 +33,10 @@ interface FeatureSetupGuideBannerProps
 }
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
+    // The message slot defaults to overflow:auto, which clips children's drop shadows
+    '& .MuiAlert-message': {
+        overflow: 'visible',
+    },
     '&[data-variant="set-up-guide"].MuiAlert-standard.MuiAlert-colorInfo': {
         backgroundColor: theme.palette.secondary.light,
         borderColor: theme.palette.secondary.border,

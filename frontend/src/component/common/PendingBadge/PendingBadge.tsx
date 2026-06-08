@@ -10,7 +10,7 @@ const StyledPending = styled('span')(({ theme }) => ({
 const StyledPendingDot = styled('span')(({ theme }) => ({
     width: 5,
     height: 5,
-    borderRadius: theme.shape.borderRadiusExtraLarge,
+    borderRadius: '50%',
     backgroundColor: theme.palette.warning.main,
 }));
 

@@ -27,7 +27,7 @@ const StyledConnectionPulse = styled('span')(({ theme }) => {
         flexShrink: 0,
         width: theme.spacing(3),
         height: theme.spacing(3),
-        borderRadius: theme.shape.borderRadiusExtraLarge,
+        borderRadius: '50%',
         backgroundColor: theme.palette.primary.main,
         color: theme.palette.common.white,
         animation: `${pulse} 1.8s ease-out infinite`,

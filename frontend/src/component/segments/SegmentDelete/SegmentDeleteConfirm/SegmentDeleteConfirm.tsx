@@ -2,12 +2,13 @@ import type React from 'react';
 import { useState } from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import Input from 'component/common/Input/Input';
+import { FormField } from 'component/common/FormField/FormField';
 import type { ISegment } from 'interfaces/segment';
 import { SEGMENT_DIALOG_NAME_ID } from 'utils/testIds';
 import { Alert, styled } from '@mui/material';
 
-const StyledInput = styled(Input)(({ theme }) => ({
-    marginTop: theme.spacing(2),
+const StyledInput = styled(Input)(() => ({
+    width: '100%',
 }));
 
 interface ISegmentDeleteConfirmProps {
@@ -54,19 +55,25 @@ export const SegmentDeleteConfirm = ({
                 flag is archived. Removing the segment will also remove the
                 segments from strategies of archived flags.
             </Alert>
-            <p>
-                In order to delete this segment, please enter the name of the
-                segment in the field below: <strong>{segment?.name}</strong>
-            </p>
-
             <form id={formId}>
-                <StyledInput
-                    autoFocus
-                    onChange={handleChange}
-                    value={confirmName}
+                <FormField
                     label='Segment name'
-                    data-testid={SEGMENT_DIALOG_NAME_ID}
-                />
+                    description={
+                        <>
+                            In order to delete this segment, please enter the
+                            name of the segment in the field below:{' '}
+                            <strong>{segment?.name}</strong>
+                        </>
+                    }
+                >
+                    <StyledInput
+                        autoFocus
+                        onChange={handleChange}
+                        value={confirmName}
+                        label=''
+                        data-testid={SEGMENT_DIALOG_NAME_ID}
+                    />
+                </FormField>
             </form>
         </Dialogue>
     );

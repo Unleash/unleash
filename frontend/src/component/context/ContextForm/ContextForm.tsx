@@ -5,9 +5,10 @@ import {
     Switch,
     Typography,
     styled,
-    type Theme,
     Link,
 } from '@mui/material';
+import { FormField } from 'component/common/FormField/FormField';
+import { FormGroup } from 'component/common/FormGroup/FormGroup';
 import type React from 'react';
 import { useState, useEffect } from 'react';
 import Add from '@mui/icons-material/Add';
@@ -43,24 +44,17 @@ const StyledForm = styled('form')({
     height: '100%',
 });
 
-const StyledInputDescription = styled('p')(({ theme }) => ({
-    marginBottom: theme.spacing(1),
-}));
-
-const styledInput = (theme: Theme) => ({
-    width: '100%',
-    marginBottom: theme.spacing(2),
-});
-
-const StyledTagContainer = styled('div')(({ theme }) => ({
+const StyledValueRow = styled('div')(({ theme }) => ({
     display: 'grid',
-    gridTemplateColumns: '1fr auto',
+    gridTemplateColumns: '1fr 2fr auto',
     gap: theme.spacing(1),
-    marginBottom: theme.spacing(2),
-}));
-
-const StyledInputHeader = styled('p')(({ theme }) => ({
-    marginBottom: theme.spacing(0.5),
+    // Top-align so a field's error text extends downward without nudging its
+    // neighbours out of line.
+    alignItems: 'start',
+    // members align via the grid; drop their own bottom margins (FormField's)
+    '&& > *': {
+        marginBottom: 0,
+    },
 }));
 
 const StyledSwitchContainer = styled('div')({
@@ -157,115 +151,136 @@ export const ContextForm: React.FC<IContextForm> = ({
     return (
         <StyledForm onSubmit={onSubmit}>
             <div>
-                <StyledInputDescription>
-                    What is your context name?
-                </StyledInputDescription>
-                <Input
-                    sx={styledInput}
+                <FormField
                     label='Context name'
-                    value={contextName}
-                    disabled={mode === 'Edit'}
-                    onChange={(e) => setContextName(e.target.value.trim())}
-                    error={Boolean(errors.name)}
-                    errorText={errors.name}
-                    onFocus={() => clearErrors('name')}
-                    onBlur={validateContext}
-                    autoFocus
-                />
-                <StyledInputDescription>
-                    What is this context for?
-                </StyledInputDescription>
-                <TextField
-                    sx={styledInput}
+                    description='What is your context name?'
+                >
+                    <Input
+                        fullWidth
+                        label=''
+                        value={contextName}
+                        disabled={mode === 'Edit'}
+                        onChange={(e) => setContextName(e.target.value.trim())}
+                        error={Boolean(errors.name)}
+                        errorText={errors.name}
+                        onFocus={() => clearErrors('name')}
+                        onBlur={validateContext}
+                        autoFocus
+                    />
+                </FormField>
+                <FormField
                     label='Context description (optional)'
-                    variant='outlined'
-                    multiline
-                    maxRows={4}
-                    value={contextDesc}
-                    size='large'
-                    onChange={(e) => setContextDesc(e.target.value)}
-                />
-                <StyledInputDescription>
-                    Which values do you want to allow?
-                </StyledInputDescription>
-                <StyledTagContainer>
+                    description='What is this context for?'
+                >
                     <TextField
-                        label='Legal value (optional)'
-                        name='value'
-                        sx={{ gridColumn: 1 }}
-                        value={value}
-                        error={Boolean(errors.tag)}
-                        helperText={errors.tag}
+                        fullWidth
                         variant='outlined'
+                        multiline
+                        maxRows={4}
+                        value={contextDesc}
                         size='large'
-                        onChange={(e) => setValue(e.target.value)}
-                        onKeyPress={(e) => onKeyDown(e)}
-                        onBlur={() => setValueFocused(false)}
-                        onFocus={() => setValueFocused(true)}
-                        slotProps={{
-                            htmlInput: { maxLength: 100 },
-                        }}
+                        onChange={(e) => setContextDesc(e.target.value)}
                     />
-                    <TextField
-                        label='Value description (optional)'
-                        sx={{ gridColumn: 1 }}
-                        value={valueDesc}
-                        variant='outlined'
-                        size='large'
-                        onChange={(e) => setValueDesc(e.target.value)}
-                        onKeyPress={(e) => onKeyDown(e)}
-                        onBlur={() => setValueFocused(false)}
-                        onFocus={() => setValueFocused(true)}
-                        slotProps={{
-                            htmlInput: { maxLength: 100 },
-                        }}
-                    />
-                    <Button
-                        sx={{ gridColumn: 2 }}
-                        startIcon={<Add />}
-                        onClick={addLegalValue}
-                        variant='outlined'
-                        color='primary'
-                        disabled={!value.trim() || isDuplicateValue}
-                    >
-                        Add
-                    </Button>
-                </StyledTagContainer>
-                <ContextFormChipList>
-                    {legalValues.map((legalValue) => {
-                        return (
-                            <ContextFormChip
-                                key={legalValue.value}
-                                label={legalValue.value}
-                                description={legalValue.description}
-                                onRemove={() => removeLegalValue(legalValue)}
-                            />
-                        );
-                    })}
-                </ContextFormChipList>
-                <StyledInputHeader>Custom stickiness</StyledInputHeader>
-                <p>
-                    By enabling stickiness on this context field you can use it
-                    together with the flexible-rollout strategy. This will
-                    guarantee a consistent behavior for specific values of this
-                    context field. PS! Not all client SDK's support this feature
-                    yet!{' '}
-                    <Link
-                        href='https://docs.getunleash.io/concepts/stickiness'
-                        target='_blank'
-                        rel='noreferrer'
-                    >
-                        Read more
-                    </Link>
-                </p>
-                <StyledSwitchContainer>
-                    <Switch
-                        checked={stickiness}
-                        value={stickiness}
-                        onChange={() => setStickiness(!stickiness)}
-                    />
-                    <Typography>{stickiness ? 'On' : 'Off'}</Typography>
-                </StyledSwitchContainer>
+                </FormField>
+                <FormField
+                    label='Legal values (optional)'
+                    description='Which values do you want to allow?'
+                >
+                    <FormGroup>
+                        <StyledValueRow>
+                            <FormField label='Legal value'>
+                                <TextField
+                                    name='value'
+                                    fullWidth
+                                    value={value}
+                                    error={Boolean(errors.tag)}
+                                    helperText={errors.tag}
+                                    variant='outlined'
+                                    size='large'
+                                    onChange={(e) => setValue(e.target.value)}
+                                    onKeyPress={(e) => onKeyDown(e)}
+                                    onBlur={() => setValueFocused(false)}
+                                    onFocus={() => setValueFocused(true)}
+                                    slotProps={{
+                                        htmlInput: { maxLength: 100 },
+                                    }}
+                                />
+                            </FormField>
+                            <FormField label='Value description'>
+                                <TextField
+                                    fullWidth
+                                    value={valueDesc}
+                                    variant='outlined'
+                                    size='large'
+                                    onChange={(e) =>
+                                        setValueDesc(e.target.value)
+                                    }
+                                    onKeyPress={(e) => onKeyDown(e)}
+                                    onBlur={() => setValueFocused(false)}
+                                    onFocus={() => setValueFocused(true)}
+                                    slotProps={{
+                                        htmlInput: { maxLength: 100 },
+                                    }}
+                                />
+                            </FormField>
+                            {/* Spacer label aligns the button with the inputs,
+                                not the labels above them. */}
+                            <FormField label={' '}>
+                                <Button
+                                    startIcon={<Add />}
+                                    onClick={addLegalValue}
+                                    variant='outlined'
+                                    color='primary'
+                                    disabled={!value.trim() || isDuplicateValue}
+                                >
+                                    Add
+                                </Button>
+                            </FormField>
+                        </StyledValueRow>
+                        {legalValues.length > 0 ? (
+                            <ContextFormChipList>
+                                {legalValues.map((legalValue) => (
+                                    <ContextFormChip
+                                        key={legalValue.value}
+                                        label={legalValue.value}
+                                        description={legalValue.description}
+                                        onRemove={() =>
+                                            removeLegalValue(legalValue)
+                                        }
+                                    />
+                                ))}
+                            </ContextFormChipList>
+                        ) : null}
+                    </FormGroup>
+                </FormField>
+                <FormField
+                    label='Custom stickiness'
+                    description={
+                        <>
+                            By enabling stickiness on this context field you can
+                            use it together with the flexible-rollout strategy.
+                            This will guarantee a consistent behavior for
+                            specific values of this context field. PS! Not all
+                            client SDK's support this feature yet!{' '}
+                            <Link
+                                href='https://docs.getunleash.io/concepts/stickiness'
+                                target='_blank'
+                                rel='noreferrer'
+                            >
+                                Read more
+                            </Link>
+                        </>
+                    }
+                >
+                    <StyledSwitchContainer>
+                        <Switch
+                            checked={stickiness}
+                            value={stickiness}
+                            onChange={() => setStickiness(!stickiness)}
+                        />
+                        <Typography>{stickiness ? 'On' : 'Off'}</Typography>
+                    </StyledSwitchContainer>
+                </FormField>
                 {mode === 'Edit' ? (
                     <ContextFieldUsage contextName={contextName} />
                 ) : null}

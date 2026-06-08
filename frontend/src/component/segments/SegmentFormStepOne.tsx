@@ -1,5 +1,6 @@
 import { Autocomplete, Box, Button, styled, TextField } from '@mui/material';
 import Input from 'component/common/Input/Input';
+import { FormField } from 'component/common/FormField/FormField';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { SegmentFormStep } from './SegmentForm.tsx';
@@ -46,13 +47,8 @@ const StyledContainer = styled('div')({
     maxWidth: '400px',
 });
 
-const StyledInputDescription = styled('p')(({ theme }) => ({
-    marginBottom: theme.spacing(1),
-}));
-
-const StyledInput = styled(Input)(({ theme }) => ({
+const StyledInput = styled(Input)(() => ({
     width: '100%',
-    marginBottom: theme.spacing(2),
 }));
 
 const StyledButtonContainer = styled('div')({
@@ -143,50 +139,59 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
     return (
         <StyledForm>
             <StyledContainer>
-                <StyledInputDescription>
-                    What is the segment name?
-                </StyledInputDescription>
-                <StyledInput
+                <FormField
                     label='Segment name'
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    error={Boolean(errors.name)}
-                    errorText={errors.name}
-                    autoFocus
-                    required
-                    data-testid={SEGMENT_NAME_ID}
-                />
-                <StyledInputDescription>
-                    What is the segment description?
-                </StyledInputDescription>
-                <StyledInput
+                    description='What is the segment name?'
+                >
+                    <StyledInput
+                        label=''
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        error={Boolean(errors.name)}
+                        errorText={errors.name}
+                        autoFocus
+                        required
+                        data-testid={SEGMENT_NAME_ID}
+                    />
+                </FormField>
+                <FormField
                     label='Description (optional)'
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    error={Boolean(errors.description)}
-                    errorText={errors.description}
-                    data-testid={SEGMENT_DESC_ID}
-                />
+                    description='What is the segment description?'
+                >
+                    <StyledInput
+                        label=''
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        error={Boolean(errors.description)}
+                        errorText={errors.description}
+                        data-testid={SEGMENT_DESC_ID}
+                    />
+                </FormField>
                 <ConditionallyRender
                     condition={!projectId && !loading}
                     show={
                         <>
-                            <StyledInputDescription>
-                                Is this segment tied to a specific project?
-                            </StyledInputDescription>
-                            <Autocomplete
-                                size='large'
-                                value={selectedProject}
-                                onChange={(_, newValue) => {
-                                    setProject(newValue?.id);
-                                }}
-                                options={availableProjects}
-                                getOptionLabel={(option) => option.name}
-                                renderInput={(params) => (
-                                    <TextField {...params} label='Project' />
-                                )}
-                                disabled={projectsUsed.size > 1}
-                            />
+                            <FormField
+                                label='Project'
+                                description='Is this segment tied to a specific project?'
+                            >
+                                <Autocomplete
+                                    size='large'
+                                    value={selectedProject}
+                                    onChange={(_, newValue) => {
+                                        setProject(newValue?.id);
+                                    }}
+                                    options={availableProjects}
+                                    getOptionLabel={(option) => option.name}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            placeholder='Select a project'
+                                        />
+                                    )}
+                                    disabled={projectsUsed.size > 1}
+                                />
+                            </FormField>
                             <SegmentProjectAlert
                                 projects={projects}
                                 strategies={collectedStrategies}

@@ -1,10 +1,8 @@
 import { TokenType } from '../../../../../interfaces/token.ts';
 import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import type React from 'react';
-import {
-    StyledInputDescription,
-    StyledSelectInput,
-} from '../ApiTokenForm.styles';
+import { FormField } from 'component/common/FormField/FormField';
+import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 
 interface IEnvironmentSelectorProps {
@@ -31,21 +29,19 @@ export const EnvironmentSelector = ({
               }));
 
     return (
-        <>
-            <StyledInputDescription>
-                Which environment should the token have access to?
-            </StyledInputDescription>
-            <StyledSelectInput
+        <FormField
+            label='Environment'
+            description='Which environment should the token have access to?'
+        >
+            <GeneralSelect
                 disabled={type === TokenType.ADMIN}
                 options={selectableEnvs}
                 value={environment}
                 onChange={setEnvironment}
-                label='Environment'
-                id='api_key_environment'
                 name='environment'
                 IconComponent={KeyboardArrowDownOutlined}
                 fullWidth
             />
-        </>
+        </FormField>
     );
 };

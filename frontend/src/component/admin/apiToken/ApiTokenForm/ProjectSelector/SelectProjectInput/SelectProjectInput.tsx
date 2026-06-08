@@ -45,6 +45,8 @@ export interface ISelectProjectInputProps {
     onChange: (value: string[]) => void;
     onFocus?: () => void;
     error?: string;
+    id?: string;
+    'aria-describedby'?: string;
 }
 
 export const SelectProjectInput: FC<ISelectProjectInputProps> = ({
@@ -54,6 +56,8 @@ export const SelectProjectInput: FC<ISelectProjectInputProps> = ({
     disabled,
     error,
     onFocus,
+    id,
+    'aria-describedby': ariaDescribedby,
 }) => {
     const [projects, setProjects] = useState<string[]>(
         typeof defaultValue === 'string' ? [defaultValue] : defaultValue,
@@ -123,10 +127,16 @@ export const SelectProjectInput: FC<ISelectProjectInputProps> = ({
     const renderInput = (params: AutocompleteRenderInputParams) => (
         <TextField
             {...params}
+            slotProps={{
+                ...params.slotProps,
+                htmlInput: {
+                    ...params.slotProps.htmlInput,
+                    'aria-describedby': ariaDescribedby,
+                },
+            }}
             error={Boolean(error)}
             helperText={error}
             variant='outlined'
-            label='Projects'
             placeholder='Select one or more projects'
             onFocus={onFocus}
             data-testid='select-input'
@@ -134,8 +144,8 @@ export const SelectProjectInput: FC<ISelectProjectInputProps> = ({
     );
 
     return (
-        <Box sx={{ mt: -1, mb: 3 }}>
-            <Box sx={{ mt: 1, mb: 0.25, ml: 1.5 }}>
+        <Box>
+            <Box sx={{ mb: 0.25, ml: 1.5 }}>
                 <FormControlLabel
                     disabled={disabled}
                     data-testid='select-all-projects'
@@ -149,6 +159,7 @@ export const SelectProjectInput: FC<ISelectProjectInputProps> = ({
                 />
             </Box>
             <Autocomplete
+                id={id}
                 disabled={disabled || isWildcardSelected}
                 multiple
                 limitTags={2}

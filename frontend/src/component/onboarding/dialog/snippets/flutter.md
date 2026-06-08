@@ -16,14 +16,16 @@ final unleash = UnleashClient(
 unleash.start();
 
 Timer.periodic(Duration(seconds: 1), (Timer timer) {
-   final flagStatus = unleash.isEnabled('<YOUR_FLAG>');
-   print('Flag is ${unleash.isEnabled("<YOUR_FLAG>") ? "enabled" : "disabled"}');
+    if (unleash.isEnabled('<YOUR_FLAG>')) {
+        print('<YOUR_FLAG> is enabled');
+    } else {
+        print('<YOUR_FLAG> is disabled');
+    }
 });
 ```
 ---
 ```dart
 import 'package:unleash_proxy_client_flutter/unleash_proxy_client_flutter.dart';
-import 'dart:async';
 import 'dart:io';
 
 final unleash = UnleashClient(

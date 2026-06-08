@@ -41,17 +41,20 @@ describe('useImpactMetricViews', () => {
     it('adds a view, marks it active, and stamps id + timestamps', () => {
         const { result } = renderHook(() => useImpactMetricViews());
 
+        const input = baseInput();
         let created: MetricView | undefined;
         act(() => {
-            created = result.current.addView(baseInput());
+            created = result.current.addView(input);
         });
 
-        expect(result.current.views).toHaveLength(1);
+        expect(created).toEqual({
+            ...input,
+            id: expect.any(String),
+            createdAt: expect.any(Number),
+            updatedAt: expect.any(Number),
+        });
+        expect(result.current.views).toEqual([created]);
         expect(result.current.activeViewId).toBe(created?.id);
-        expect(result.current.activeView?.title).toBe('My view');
-        expect(created?.id).toBeTruthy();
-        expect(created?.createdAt).toBeGreaterThan(0);
-        expect(created?.updatedAt).toBeGreaterThan(0);
     });
 
     it('updates an existing view in place, leaving others untouched', () => {

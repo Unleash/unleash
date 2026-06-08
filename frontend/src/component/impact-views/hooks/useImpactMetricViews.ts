@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { createUuid } from 'utils/createUuid';
 import type { MetricView } from '../views/types';
@@ -31,20 +31,15 @@ export const useImpactMetricViews = (): UseImpactMetricViews => {
         '',
     );
 
-    const activeViewId = useMemo(() => {
-        if (
-            storedActiveId &&
-            views.some((view) => view.id === storedActiveId)
-        ) {
-            return storedActiveId;
-        }
-        return views[0]?.id ?? null;
-    }, [views, storedActiveId]);
-
-    const activeView = useMemo(
-        () => views.find((view) => view.id === activeViewId) ?? null,
-        [views, activeViewId],
+    const storedActiveIdExists = views.some(
+        (view) => view.id === storedActiveId,
     );
+    const activeViewId =
+        storedActiveId && storedActiveIdExists
+            ? storedActiveId
+            : (views[0]?.id ?? null);
+
+    const activeView = views.find((view) => view.id === activeViewId) ?? null;
 
     const setActiveViewId = useCallback(
         (id: string | null) => {

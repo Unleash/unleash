@@ -5,6 +5,7 @@ import ShieldOutlined from '@mui/icons-material/ShieldOutlined';
 import { ImpactMetricsChart } from 'component/impact-metrics/ImpactMetricsChart';
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import { formatLargeNumbers } from 'component/impact-metrics/metricsFormatters';
+import { Truncator } from 'component/common/Truncator/Truncator';
 import type { ImpactMetricsConfigSchema } from 'openapi';
 
 const StyledCard = styled(Link)(({ theme }) => ({
@@ -122,7 +123,9 @@ export const CompactChartCard: FC<CompactChartCardProps> = ({
         >
             <StyledHeader>
                 <StyledHeaderLeft>
-                    <StyledTitle>{title}</StyledTitle>
+                    <Truncator title={title} arrow component={StyledTitle}>
+                        {title}
+                    </Truncator>
                     <StyledSubtitle>
                         {timeLabel} &middot; {config.aggregationMode}
                     </StyledSubtitle>

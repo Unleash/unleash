@@ -6,33 +6,35 @@ npm install @unleash/proxy-client-vue
 2\. Initialize Unleash
 ```vue
 <script setup lang="ts">
-    import { FlagProvider } from '@unleash/proxy-client-vue'
+import { FlagProvider } from '@unleash/proxy-client-vue'
 
-    const config = {
-        url: '<YOUR_API_URL>',
-        clientKey: '<YOUR_API_TOKEN>', // in production use environment variable
-        appName: 'unleash-onboarding-vue',
-    }
+const config = {
+    url: '<YOUR_API_URL>',
+    clientKey: '<YOUR_API_TOKEN>', // in production use environment variable
+    appName: 'unleash-onboarding-vue',
+}
 </script>
 
 <template>
-  <FlagProvider :config="config">
-    <!-- <YourComponent /> -->
-  </FlagProvider>
+    <FlagProvider :config="config">
+        <!-- <YourComponent /> -->
+    </FlagProvider>
 </template>
 ```
 
 3\. Check feature flag status
 ```vue
 <script setup lang="ts">
-    import { useFlag } from '@unleash/proxy-client-vue'
-    const enabled = useFlag('<YOUR_FLAG>')
+import { useFlag } from '@unleash/proxy-client-vue'
+
+const flagEnabled = useFlag('<YOUR_FLAG>')
 </script>
 
 <template>
-  <div>
-    {{ enabled ? 'Feature is enabled!' : 'Feature is disabled!' }}
-  </div>
+    <div>
+        <div v-if="flagEnabled"><YOUR_FLAG> is enabled</div>
+        <div v-else><YOUR_FLAG> is disabled</div>
+    </div>
 </template>
 ```
 ---
@@ -52,17 +54,15 @@ const config = {
 
 ```vue
 <script setup lang="ts">
-import { useFlag, useFlagsStatus } from '@unleash/proxy-client-vue'
+import { useFlag } from '@unleash/proxy-client-vue'
 
-const enabled = useFlag('<YOUR_FLAG>')
-const { flagsReady } = useFlagsStatus()
+const flagEnabled = useFlag('<YOUR_FLAG>')
 </script>
 
 <template>
-  <div>
-    <div v-if="!flagsReady">Loading...</div>
-    <div v-else-if="enabled"><YOUR_FLAG> is enabled</div>
-    <div v-else><YOUR_FLAG> is disabled</div>
-  </div>
+    <div>
+        <div v-if="flagEnabled"><YOUR_FLAG> is enabled</div>
+        <div v-else><YOUR_FLAG> is disabled</div>
+    </div>
 </template>
 ```

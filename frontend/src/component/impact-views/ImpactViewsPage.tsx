@@ -16,9 +16,9 @@ import type { MetricView } from './views/types';
 type ViewInput = Omit<MetricView, 'id' | 'createdAt' | 'updatedAt'>;
 
 type EditorState =
-    | { kind: 'closed' }
-    | { kind: 'create' }
-    | { kind: 'edit'; view: MetricView };
+    | { type: 'closed' }
+    | { type: 'create' }
+    | { type: 'edit'; view: MetricView };
 
 const createView = (input: ViewInput): MetricView => ({
     ...input,
@@ -34,7 +34,7 @@ export const ImpactViewsPage: FC = () => {
     const { setToastData } = useToast();
     const [views, setViews] = useState<MetricView[]>(DUMMY_VIEWS);
     const [activeViewId, setActiveViewId] = useState(DUMMY_VIEWS[0].id);
-    const [editor, setEditor] = useState<EditorState>({ kind: 'closed' });
+    const [editor, setEditor] = useState<EditorState>({ type: 'closed' });
 
     const view =
         views.find((candidate) => candidate.id === activeViewId) ?? views[0];
@@ -44,12 +44,12 @@ export const ImpactViewsPage: FC = () => {
     const comingSoon = () =>
         setToastData({ type: 'success', text: 'Coming soon' });
 
-    const openCreate = () => setEditor({ kind: 'create' });
-    const openEdit = (view: MetricView) => setEditor({ kind: 'edit', view });
-    const closeEditor = () => setEditor({ kind: 'closed' });
+    const openCreate = () => setEditor({ type: 'create' });
+    const openEdit = (view: MetricView) => setEditor({ type: 'edit', view });
+    const closeEditor = () => setEditor({ type: 'closed' });
 
     const saveView = (input: ViewInput) => {
-        if (editor.kind === 'edit') {
+        if (editor.type === 'edit') {
             setViews((views) => replaceView(views, editor.view.id, input));
         } else {
             const created = createView(input);
@@ -72,8 +72,8 @@ export const ImpactViewsPage: FC = () => {
                 onDelete={comingSoon}
             />
             <ViewEditorDialog
-                open={editor.kind !== 'closed'}
-                initialView={editor.kind === 'edit' ? editor.view : null}
+                open={editor.type !== 'closed'}
+                initialView={editor.type === 'edit' ? editor.view : null}
                 onClose={closeEditor}
                 onSave={saveView}
             />

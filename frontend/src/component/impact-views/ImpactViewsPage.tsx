@@ -1,60 +1,83 @@
 import { useState, type FC } from 'react';
-import { styled } from '@mui/material';
+import { Box } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import type { ChartTimeRange } from 'component/impact-metrics/MultimetricChart/chartConfig';
+import { createUuid } from 'utils/createUuid';
 import useToast from 'hooks/useToast';
 import { GoalSummaryPanel } from './views/GoalSummaryPanel/GoalSummaryPanel';
 import { MultimetricChartCard } from './views/MultimetricChartCard/MultimetricChartCard';
 import { FollowedFeaturesList } from './views/FollowedFeaturesList/FollowedFeaturesList';
 import { ViewSwitcher } from './views/ViewSwitcher/ViewSwitcher';
+import { ViewEditorDialog } from './views/ViewEditorDialog/ViewEditorDialog';
 import { useGoalViewData } from './hooks/useGoalViewData';
 import { DUMMY_VIEWS } from './fixtures/goalViewConfig';
+import { TIME_RANGE_LABELS } from './constants';
+import type { MetricView } from './views/types';
 
-const TIME_RANGE_LABELS: Record<ChartTimeRange, string> = {
-    hour: 'Last hour',
-    day: 'Last 24 hours',
-    week: 'Last 7 days',
-    month: 'Last 30 days',
-};
+type ViewInput = Omit<MetricView, 'id' | 'createdAt' | 'updatedAt'>;
 
-const StyledWrapper = styled('div')(({ theme }) => ({
-    paddingTop: theme.spacing(2),
-}));
+type EditorState =
+    | { type: 'closed' }
+    | { type: 'create' }
+    | { type: 'edit'; view: MetricView };
 
-const StyledCard = styled('div')(({ theme }) => ({
-    marginTop: theme.spacing(3),
-}));
+const createView = (input: ViewInput): MetricView => ({
+    ...input,
+    id: createUuid(),
+    createdAt: 0,
+    updatedAt: 0,
+});
 
-const StyledFeatures = styled('div')(({ theme }) => ({
-    marginTop: theme.spacing(3),
-}));
+const replaceView = (views: MetricView[], id: string, input: ViewInput) =>
+    views.map((view) => (view.id === id ? { ...view, ...input } : view));
 
 export const ImpactViewsPage: FC = () => {
     const { setToastData } = useToast();
+    const [views, setViews] = useState<MetricView[]>(DUMMY_VIEWS);
     const [activeViewId, setActiveViewId] = useState(DUMMY_VIEWS[0].id);
+    const [editor, setEditor] = useState<EditorState>({ type: 'closed' });
 
     const view =
-        DUMMY_VIEWS.find((candidate) => candidate.id === activeViewId) ??
-        DUMMY_VIEWS[0];
+        views.find((candidate) => candidate.id === activeViewId) ?? views[0];
     const data = useGoalViewData(view);
     const timeLabel = TIME_RANGE_LABELS[view.timeRange];
 
     const comingSoon = () =>
         setToastData({ type: 'success', text: 'Coming soon' });
 
+    const openCreate = () => setEditor({ type: 'create' });
+    const openEdit = (view: MetricView) => setEditor({ type: 'edit', view });
+    const closeEditor = () => setEditor({ type: 'closed' });
+
+    const saveView = (input: ViewInput) => {
+        if (editor.type === 'edit') {
+            setViews((views) => replaceView(views, editor.view.id, input));
+        } else {
+            const created = createView(input);
+            setViews((views) => [...views, created]);
+            setActiveViewId(created.id);
+        }
+        closeEditor();
+    };
+
     return (
-        <StyledWrapper>
+        <Box sx={{ pt: 2 }}>
             <PageHeader title='Impact views' />
             <ViewSwitcher
-                views={DUMMY_VIEWS}
+                views={views}
                 activeViewId={activeViewId}
                 onSelect={setActiveViewId}
-                onCreate={comingSoon}
-                onEdit={comingSoon}
+                onCreate={openCreate}
+                onEdit={openEdit}
                 onDuplicate={comingSoon}
                 onDelete={comingSoon}
             />
-            <StyledCard>
+            <ViewEditorDialog
+                open={editor.type !== 'closed'}
+                initialView={editor.type === 'edit' ? editor.view : null}
+                onClose={closeEditor}
+                onSave={saveView}
+            />
+            <Box sx={{ mt: 3 }}>
                 <MultimetricChartCard
                     title={data.goalLabel}
                     subtitle={`Goal · ${timeLabel}`}
@@ -79,10 +102,10 @@ export const ImpactViewsPage: FC = () => {
                         ) : null
                     }
                 />
-            </StyledCard>
-            <StyledFeatures>
+            </Box>
+            <Box sx={{ mt: 3 }}>
                 <FollowedFeaturesList features={data.resolvedFeatures} />
-            </StyledFeatures>
-        </StyledWrapper>
+            </Box>
+        </Box>
     );
 };

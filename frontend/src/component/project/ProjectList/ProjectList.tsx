@@ -20,6 +20,7 @@ import { ProjectsListHeader } from './ProjectsListHeader/ProjectsListHeader.tsx'
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { TablePlaceholder } from 'component/common/Table/index.ts';
 import { ProjectsListViewToggle } from './ProjectsListViewToggle/ProjectsListViewToggle.tsx';
+import { useStyles } from './ProjectList.styles.ts';
 
 const StyledApiError = styled(ApiError)(({ theme }) => ({
     maxWidth: '500px',
@@ -37,6 +38,7 @@ const projectCardDisplayLimit = 500;
 export const ProjectList = () => {
     const { projects, loading, error, refetch } = useProjects();
     const { isOss } = useUiConfig();
+    const { classes } = useStyles();
 
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -81,6 +83,7 @@ export const ProjectList = () => {
     return (
         <PageContent
             isLoading={loading}
+            bodyClass={classes.bodyClass}
             header={
                 <PageHeader
                     title={`Projects (${projectCount})`}

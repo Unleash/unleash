@@ -12,6 +12,8 @@ export interface LoginEventSchema {
     auth_type?: string;
     /** The date and time of when the login was attempted. */
     created_at?: string;
+    /** The type of event. `login` for sign-in attempts and `logout` for sign-outs. */
+    type?: 'login' | 'logout';
     /**
      * The reason for the login failure. This property is only present if the login was unsuccessful.
      * @nullable

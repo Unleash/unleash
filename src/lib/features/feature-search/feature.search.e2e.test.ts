@@ -1413,6 +1413,56 @@ test('should return archived when query param set', async () => {
     });
 });
 
+test('should return archived flags when lifecycle filter targets the archived stage', async () => {
+    await app.createFeature({
+        name: 'lifecycle_active',
+        createdAt: '2023-01-29T15:21:39.975Z',
+    });
+    await app.createFeature({
+        name: 'lifecycle_archived',
+        createdAt: '2023-01-29T15:21:39.975Z',
+        archived: true,
+    });
+    // legacy-style archived flag with no lifecycle row should still match
+    await stores.featureLifecycleStore.insert([
+        { feature: 'lifecycle_active', stage: 'live' },
+    ]);
+
+    // lifecycle=IS:archived behaves like archived=IS:true
+    const { body: archivedOnly } = await app.request
+        .get(
+            '/api/admin/search/features?query=lifecycle_&project=IS:default&lifecycle=IS:archived',
+        )
+        .expect(200);
+    expect(archivedOnly).toMatchObject({
+        total: 1,
+        features: [{ name: 'lifecycle_archived' }],
+    });
+
+    // IS_ANY_OF returns both the requested active stage and archived flags
+    const { body: liveAndArchived } = await app.request
+        .get(
+            '/api/admin/search/features?query=lifecycle_&project=IS:default&lifecycle=IS_ANY_OF:live,archived',
+        )
+        .expect(200);
+    expect(liveAndArchived.total).toBe(2);
+    expect(liveAndArchived.features.map((f) => f.name).sort()).toEqual([
+        'lifecycle_active',
+        'lifecycle_archived',
+    ]);
+
+    // excluding the archived stage keeps only active flags
+    const { body: activeOnly } = await app.request
+        .get(
+            '/api/admin/search/features?query=lifecycle_&project=IS:default&lifecycle=IS_NONE_OF:archived',
+        )
+        .expect(200);
+    expect(activeOnly).toMatchObject({
+        total: 1,
+        features: [{ name: 'lifecycle_active' }],
+    });
+});
+
 test('should filter by favorite=IS:true', async () => {
     await app.createFeature('my_feature_a');
     await app.createFeature('my_feature_b');

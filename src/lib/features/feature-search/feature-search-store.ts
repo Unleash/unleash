@@ -8,6 +8,7 @@ import type {
     IFeatureSearchOverview,
     IFeatureSearchStore,
     IFlagResolver,
+    StageName,
 } from '../../types/index.js';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store.js';
 import type { Db } from '../../db/db.js';
@@ -183,7 +184,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     });
                 }
                 query
-                    .modify(FeatureToggleStore.filterByArchived, archived)
                     .leftJoin(
                         'feature_environments',
                         'feature_environments.feature_name',
@@ -267,9 +267,11 @@ class FeatureSearchStore implements IFeatureSearchStore {
                           lifecycle,
                       )
                     : null;
-                if (parsedLifecycle) {
-                    applyGenericQueryParams(query, [parsedLifecycle]);
-                }
+                applyLifecycleAndArchivedFilters(
+                    query,
+                    parsedLifecycle,
+                    archived,
+                );
 
                 const rankingSql = this.buildRankingSql(
                     favoritesFirst,
@@ -659,6 +661,47 @@ class FeatureSearchStore implements IFeatureSearchStore {
         );
     }
 }
+
+const ARCHIVED_STAGE: StageName = 'archived';
+
+const applyLifecycleAndArchivedFilters = (
+    query: Knex.QueryBuilder,
+    parsedLifecycle: IQueryParam | null,
+    archived?: boolean,
+): void => {
+    if (!parsedLifecycle) {
+        query.modify(FeatureToggleStore.filterByArchived, Boolean(archived));
+        return;
+    }
+
+    const { operator, values } = parsedLifecycle;
+    const includesArchived = values.includes(ARCHIVED_STAGE);
+    const stageValues = values.filter((value) => value !== ARCHIVED_STAGE);
+
+    if (operator === 'IS' || operator === 'IS_ANY_OF') {
+        const wantArchived = includesArchived || Boolean(archived);
+        query.where((builder) => {
+            if (stageValues.length > 0) {
+                builder.orWhereIn('lifecycle.latest_stage', stageValues);
+            }
+            if (wantArchived) {
+                builder.orWhereNotNull('features.archived_at');
+            }
+        });
+        if (!wantArchived) {
+            query.whereNull('features.archived_at');
+        }
+    } else {
+        // IS_NOT / IS_NONE_OF: exclude the listed active stages and never
+        // surface archived flags.
+        if (stageValues.length === 1) {
+            query.whereNot('lifecycle.latest_stage', stageValues[0]);
+        } else if (stageValues.length > 1) {
+            query.whereNotIn('lifecycle.latest_stage', stageValues);
+        }
+        query.whereNull('features.archived_at');
+    }
+};
 
 const applyStaleConditions = (
     query: Knex.QueryBuilder,

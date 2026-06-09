@@ -17,12 +17,16 @@ var unleash = UnleashProxyClientSwift.UnleashClient(
 unleash.start()
 
 Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-    if unleash.isEnabled(name: "<YOUR_FLAG>") {
-        print("<YOUR_FLAG> is enabled")
-    } else {
-        print("<YOUR_FLAG> is disabled")
+    MainActor.assumeIsolated {
+        if unleash.isEnabled(name: "<YOUR_FLAG>") {
+            print("<YOUR_FLAG> is enabled")
+        } else {
+            print("<YOUR_FLAG> is disabled")
+        }
     }
 }
+
+RunLoop.main.run()
 ```
 ℹ️ **Info:** The Swift SDK takes at least 60 seconds to post metrics to Unleash.
 ---

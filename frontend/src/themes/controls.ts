@@ -267,6 +267,18 @@ export const controlOverrides: Components<Theme> = {
         },
     },
 
+    // Helper/error text sits flush with the field's left edge. MUI's default
+    // "contained" variant indents it 14px, which breaks the left-alignment
+    // rhythm with the field above it and the label.
+    MuiFormHelperText: {
+        styleOverrides: {
+            contained: {
+                marginLeft: 0,
+                marginRight: 0,
+            },
+        },
+    },
+
     MuiInputLabel: {
         styleOverrides: {
             root: ({ ownerState }) => {

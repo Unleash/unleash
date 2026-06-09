@@ -133,15 +133,14 @@ export class FrontendApiService {
         const environment =
             this.services.clientMetricsServiceV2.resolveMetricsEnvironment(
                 token as ApiUser,
-                metrics,
             );
 
         await this.services.clientMetricsServiceV2.registerClientMetrics(
             {
                 ...metrics,
-                environment,
             },
             ip,
+            environment,
         );
 
         // Because we're keeping impact metrics out of the client schema for now,

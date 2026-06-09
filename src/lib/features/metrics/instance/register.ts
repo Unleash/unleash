@@ -6,7 +6,6 @@ import type { IUnleashConfig } from '../../../types/option.js';
 import type { Logger } from '../../../logger.js';
 import type ClientInstanceService from './instance-service.js';
 import type { IAuthRequest, IUser } from '../../../types/index.js';
-import type { IClientApp } from '../../../types/model.js';
 import ApiUser, { type IApiUser } from '../../../types/api-user.js';
 import { ALL } from '../../../types/models/api-token.js';
 import { NONE } from '../../../types/permissions.js';
@@ -69,15 +68,10 @@ export default class RegisterController extends Controller {
         });
     }
 
-    private resolveEnvironment(
-        user: IUser | IApiUser,
-        data: Partial<IClientApp>,
-    ) {
+    private resolveEnvironment(user: IUser | IApiUser) {
         if (user instanceof ApiUser) {
             if (user.environment !== ALL) {
                 return user.environment;
-            } else if (user.environment === ALL && data.environment) {
-                return data.environment;
             }
         }
         return 'default';
@@ -96,10 +90,14 @@ export default class RegisterController extends Controller {
     ): Promise<void> {
         const { body: data, user } = req;
         const clientIp = extractClientIp(req);
-        data.environment = this.resolveEnvironment(user, data);
+        const environment = this.resolveEnvironment(user); // derived from the API token only
         data.projects = this.resolveProject(user);
 
-        await this.clientInstanceService.registerBackendClient(data, clientIp);
+        await this.clientInstanceService.registerBackendClient(
+            data,
+            clientIp,
+            environment,
+        );
         res.header('X-Unleash-Version', version).status(202).end();
     }
 }

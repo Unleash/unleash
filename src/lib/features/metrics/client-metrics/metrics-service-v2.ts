@@ -269,6 +269,7 @@ export default class ClientMetricsServiceV2 {
     async registerClientMetrics(
         data: ClientMetricsSchema,
         _clientIp: string,
+        environment: string,
     ): Promise<void> {
         const value = await clientMetricsSchema.validateAsync(data);
 
@@ -299,7 +300,7 @@ export default class ClientMetricsServiceV2 {
         ).map((name) => ({
             featureName: name,
             appName: value.appName,
-            environment: value.environment ?? 'default',
+            environment,
             timestamp: bucket.stop, //we might need to approximate between start/stop...
             yes: bucket.toggles[name].yes ?? 0,
             no: bucket.toggles[name].no ?? 0,
@@ -423,15 +424,10 @@ export default class ClientMetricsServiceV2 {
         return result.sort((a, b) => compareAsc(a.timestamp, b.timestamp));
     }
 
-    resolveMetricsEnvironment(
-        user: IUser | IApiUser,
-        data: { environment?: string },
-    ): string {
+    resolveMetricsEnvironment(user: IUser | IApiUser): string {
         if (user instanceof ApiUser) {
             if (user.environment !== ALL) {
                 return user.environment;
-            } else if (user.environment === ALL && data.environment) {
-                return data.environment;
             }
         }
         return 'default';

@@ -20,13 +20,6 @@ export const clientMetricsSchema = {
             type: 'string',
             example: 'application-name-dacb1234',
         },
-        environment: {
-            description:
-                'Which environment the application is running in. This property was deprecated in v5. This can be determined by the API key calling this endpoint.',
-            type: 'string',
-            example: 'development',
-            deprecated: true,
-        },
         sdkVersion: {
             type: 'string',
             description:

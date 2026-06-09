@@ -55,10 +55,12 @@ test('Apps registered should be announced', async () => {
     await clientInstanceService.registerBackendClient(
         clientRegistration,
         '127.0.0.1',
+        'default',
     );
     await clientInstanceService.registerBackendClient(
         differentClient,
         '127.0.0.1',
+        'default',
     );
     await clientInstanceService.bulkAdd(); // in prod called by a SchedulerService
     const first = await stores.clientApplicationsStore.getUnannounced();
@@ -66,6 +68,7 @@ test('Apps registered should be announced', async () => {
     await clientInstanceService.registerBackendClient(
         clientRegistration,
         '127.0.0.1',
+        'default',
     );
     await clientInstanceService.announceUnannounced(); // in prod called by a SchedulerService
     const second = await stores.clientApplicationsStore.getUnannounced();

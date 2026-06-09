@@ -15,8 +15,7 @@ const countSchema = joi
     });
 
 // validated type from client-metrics-schema.ts with default values
-export type ValidatedClientMetrics = {
-    environment?: string;
+type ValidatedClientMetrics = {
     appName: string;
     instanceId: string;
     bucket?: IMetricsBucket;
@@ -26,7 +25,6 @@ export const clientMetricsSchema = joi
     .object<ValidatedClientMetrics>()
     .options({ stripUnknown: true })
     .keys({
-        environment: joi.string().optional(),
         appName: joi.string().required(),
         instanceId: joi.string().empty(['', null]).default('default'),
         // bucket is optional: requests carrying only impact metrics may omit it
@@ -175,7 +173,6 @@ export const clientRegisterSchema = joi
         strategies: joi.array().items(joi.string(), joi.any().strip()),
         started: joi.date().required(),
         interval: joi.number().required(),
-        environment: joi.string().optional(),
         project: joi.string().optional(),
         projects: joi.array().optional().items(joi.string()),
     });

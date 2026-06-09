@@ -1,6 +1,7 @@
 import { Box, Button, styled } from '@mui/material';
 import type React from 'react';
 import Input from 'component/common/Input/Input';
+import { FormField } from 'component/common/FormField/FormField';
 import { EnvironmentTypeSelector } from './EnvironmentTypeSelector.tsx';
 import { ChangeRequestSelector } from './ChangeRequestSelector.tsx';
 import { trim } from 'component/common/util';
@@ -32,15 +33,6 @@ const StyledForm = styled('form')({
 const StyledContainer = styled('div')({
     maxWidth: '440px',
 });
-
-const StyledInputDescription = styled('p')(({ theme }) => ({
-    marginBottom: theme.spacing(1),
-}));
-
-const StyledInput = styled(Input)(({ theme }) => ({
-    width: '100%',
-    marginBottom: theme.spacing(2),
-}));
 
 const StyledButtonContainer = styled('div')(({ theme }) => ({
     marginTop: 'auto',
@@ -79,39 +71,43 @@ const EnvironmentForm: React.FC<IEnvironmentForm> = ({
     return (
         <StyledForm onSubmit={handleSubmit}>
             <StyledContainer>
-                <StyledInputDescription>
-                    What is your environment name? (Can't be changed later)
-                </StyledInputDescription>
-                <StyledInput
+                <FormField
                     label='Environment name'
-                    value={name}
-                    onChange={(e) => setName(trim(e.target.value))}
-                    error={Boolean(errors.name)}
-                    errorText={errors.name}
-                    onFocus={() => clearErrors()}
-                    onBlur={validateEnvironmentName}
-                    disabled={mode === 'Edit'}
-                    autoFocus
-                />
+                    description="What is your environment name? (Can't be changed later)"
+                >
+                    <Input
+                        fullWidth
+                        label=''
+                        value={name}
+                        onChange={(e) => setName(trim(e.target.value))}
+                        error={Boolean(errors.name)}
+                        errorText={errors.name}
+                        onFocus={() => clearErrors()}
+                        onBlur={validateEnvironmentName}
+                        disabled={mode === 'Edit'}
+                        autoFocus
+                    />
+                </FormField>
 
-                <StyledInputDescription>
-                    What type of environment do you want to create?
-                </StyledInputDescription>
-                <EnvironmentTypeSelector
-                    onChange={(e) => setType(e.currentTarget.value)}
-                    value={type}
-                />
+                <FormField
+                    label='Environment type'
+                    description='What type of environment do you want to create?'
+                >
+                    <EnvironmentTypeSelector
+                        onChange={(e) => setType(e.currentTarget.value)}
+                        value={type}
+                    />
+                </FormField>
 
-                <>
-                    <StyledInputDescription sx={{ mt: 2 }}>
-                        Would you like to predefine change requests for this
-                        environment?
-                    </StyledInputDescription>
+                <FormField
+                    label='Change requests'
+                    description='Would you like to predefine change requests for this environment?'
+                >
                     <ChangeRequestSelector
                         onChange={setRequiredApprovals}
                         value={requiredApprovals}
                     />
-                </>
+                </FormField>
             </StyledContainer>
 
             <LimitContainer>{Limit}</LimitContainer>

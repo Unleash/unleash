@@ -1,5 +1,5 @@
 import { type FormEventHandler, type FC, useState, useCallback } from 'react';
-import { Box, Button, Typography, Checkbox, styled } from '@mui/material';
+import { Box, Button, Checkbox, styled } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useFeatureTypeApi } from 'hooks/api/actions/useFeatureTypeApi/useFeatureTypeApi';
@@ -9,6 +9,7 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { GO_BACK } from 'constants/navigate';
 import Input from 'component/common/Input/Input';
+import { FormField } from 'component/common/FormField/FormField';
 import type { FeatureTypeSchema } from 'openapi';
 import { trim } from 'component/common/util';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
@@ -34,6 +35,22 @@ const StyledForm = styled('form')(() => ({
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
+}));
+
+// Inline label content so the help icon sits next to the bold field label.
+const StyledLabelContent = styled('span')(({ theme }) => ({
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.5),
+}));
+
+const StyledExpireRow = styled('label')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    cursor: 'pointer',
+    marginLeft: theme.spacing(-1),
+    marginBottom: theme.spacing(1),
+    marginRight: 'auto',
 }));
 
 export const FeatureTypeForm: FC<FeatureTypeFormProps> = ({
@@ -130,66 +147,55 @@ export const FeatureTypeForm: FC<FeatureTypeFormProps> = ({
             formatApiCode={formatApiCode}
         >
             <StyledForm onSubmit={onSubmit}>
-                <Typography
-                    sx={(theme) => ({
-                        margin: theme.spacing(3, 0, 1),
-                        display: 'flex',
-                        alignItems: 'center',
-                    })}
+                <FormField
+                    label={
+                        <StyledLabelContent>
+                            Expected lifetime
+                            <HelpIcon
+                                htmlTooltip
+                                tooltip={
+                                    <>
+                                        <p>
+                                            If your flag exceeds the expected
+                                            lifetime of its flag type it will be
+                                            marked as potentially stale.
+                                        </p>
+                                        <br />
+                                        <a
+                                            href='https://docs.getunleash.io/concepts/feature-flags#feature-flag-types'
+                                            target='_blank'
+                                            rel='noreferrer'
+                                        >
+                                            Read more in the documentation
+                                        </a>
+                                    </>
+                                }
+                            />
+                        </StyledLabelContent>
+                    }
                 >
-                    <Box component='label' htmlFor='feature-flag-lifetime'>
-                        Expected lifetime
+                    <Box>
+                        <StyledExpireRow htmlFor='feature-flag-expire'>
+                            <Checkbox
+                                checked={doesntExpire || lifetime === 0}
+                                id='feature-flag-expire'
+                                onChange={onChangeDoesntExpire}
+                                disabled={loading}
+                            />
+                            <Box>doesn't expire</Box>
+                        </StyledExpireRow>
+                        <Input
+                            fullWidth
+                            autoFocus
+                            disabled={doesntExpire || loading}
+                            type='number'
+                            label=''
+                            value={doesntExpire ? '0' : `${lifetime}`}
+                            onChange={onChangeLifetime}
+                            error={isIncorrect}
+                        />
                     </Box>
-                    <HelpIcon
-                        htmlTooltip
-                        tooltip={
-                            <>
-                                <p>
-                                    If your flag exceeds the expected lifetime
-                                    of its flag type it will be marked as
-                                    potentially stale.
-                                </p>
-                                <br />
-                                <a
-                                    href='https://docs.getunleash.io/concepts/feature-flags#feature-flag-types'
-                                    target='_blank'
-                                    rel='noreferrer'
-                                >
-                                    Read more in the documentation
-                                </a>
-                            </>
-                        }
-                    />
-                </Typography>
-                <Box
-                    component='label'
-                    sx={(theme) => ({
-                        display: 'flex',
-                        alignItems: 'center',
-                        cursor: 'pointer',
-                        marginBottom: theme.spacing(1),
-                        marginRight: 'auto',
-                    })}
-                    htmlFor='feature-flag-expire'
-                >
-                    <Checkbox
-                        checked={doesntExpire || lifetime === 0}
-                        id='feature-flag-expire'
-                        onChange={onChangeDoesntExpire}
-                        disabled={loading}
-                    />
-                    <Box>doesn't expire</Box>
-                </Box>
-                <Input
-                    autoFocus
-                    disabled={doesntExpire || loading}
-                    type='number'
-                    label='Lifetime in days'
-                    id='feature-flag-lifetime'
-                    value={doesntExpire ? '0' : `${lifetime}`}
-                    onChange={onChangeLifetime}
-                    error={isIncorrect}
-                />
+                </FormField>
                 <StyledButtons>
                     <PermissionButton
                         permission={ADMIN}

@@ -28,7 +28,7 @@ describe('FeatureTypeForm', () => {
         render(
             <FeatureTypeForm featureType={mockFeatureType} loading={true} />,
         );
-        expect(screen.getByLabelText('Expected lifetime')).toBeDisabled();
+        expect(screen.getByRole('spinbutton')).toBeDisabled();
         expect(screen.getByLabelText("doesn't expire")).toBeDisabled();
         expect(screen.getByText('Save feature flag type')).toHaveAttribute(
             'aria-disabled',
@@ -48,7 +48,7 @@ describe('FeatureTypeForm', () => {
         );
         const doesntExpire = screen.getByLabelText("doesn't expire");
         expect(doesntExpire).toBeChecked();
-        expect(screen.getByLabelText('Expected lifetime')).toBeDisabled();
+        expect(screen.getByRole('spinbutton')).toBeDisabled();
     });
 
     it('should disable lifetime input when "doesn\'t expire" is checked', () => {
@@ -56,7 +56,7 @@ describe('FeatureTypeForm', () => {
             <FeatureTypeForm featureType={mockFeatureType} loading={false} />,
         );
         const doesntExpire = screen.getByLabelText("doesn't expire");
-        const lifetime = screen.getByLabelText('Expected lifetime');
+        const lifetime = screen.getByRole('spinbutton');
         expect(lifetime).toBeEnabled();
         doesntExpire.click();
         expect(lifetime).toBeDisabled();
@@ -73,7 +73,7 @@ describe('FeatureTypeForm', () => {
             />,
         );
         const doesntExpire = screen.getByLabelText("doesn't expire");
-        const lifetime = screen.getByLabelText('Expected lifetime');
+        const lifetime = screen.getByRole('spinbutton');
         doesntExpire.click();
         expect(lifetime).toBeDisabled();
         doesntExpire.click();

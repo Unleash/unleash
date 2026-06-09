@@ -7,6 +7,7 @@ import {
 } from '@mui/material';
 import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import GeneralSelect from '../../common/GeneralSelect/GeneralSelect.tsx';
+import { FormField } from 'component/common/FormField/FormField';
 import { useTheme } from '@mui/material/styles';
 
 interface IEnvironmentChangeRequestProps {
@@ -22,11 +23,6 @@ const StyledRadioButtonGroup = styled('div')({
     display: 'flex',
     flexDirection: 'column',
 });
-
-const StyledRequiredApprovals = styled('p')(({ theme }) => ({
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(0.5),
-}));
 
 const useApprovalOptions = () => {
     const theme = useTheme();
@@ -76,13 +72,9 @@ export const ChangeRequestSelector = ({
                 </StyledRadioButtonGroup>
             </StyledRadioGroup>
             {value ? (
-                <>
-                    <StyledRequiredApprovals>
-                        Required approvals
-                    </StyledRequiredApprovals>
+                <FormField label='Required approvals'>
                     <GeneralSelect
-                        label='Set required approvals for the current environment'
-                        visuallyHideLabel
+                        label=''
                         sx={{ width: '160px' }}
                         options={approvalOptions}
                         value={value ? String(value) : undefined}
@@ -90,7 +82,7 @@ export const ChangeRequestSelector = ({
                         IconComponent={KeyboardArrowDownOutlined}
                         fullWidth
                     />
-                </>
+                </FormField>
             ) : null}
         </FormControl>
     );

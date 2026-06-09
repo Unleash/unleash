@@ -150,7 +150,10 @@ export const EnvironmentProjectSelect = ({
                     option.name || option.description || ''
                 }
                 renderInput={(params) => (
-                    <TextField {...params} label='Projects' />
+                    <TextField
+                        {...params}
+                        placeholder='Select one or more projects'
+                    />
                 )}
                 renderValue={(value) => renderTags(value)}
                 groupBy={() => 'Select/Deselect all'}

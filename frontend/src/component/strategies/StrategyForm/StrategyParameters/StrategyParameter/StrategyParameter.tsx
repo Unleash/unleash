@@ -10,6 +10,7 @@ import {
 import Delete from '@mui/icons-material/Delete';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import Input from 'component/common/Input/Input';
+import { FormField } from 'component/common/FormField/FormField';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type React from 'react';
 import type { IStrategyParameter } from 'interfaces/strategy';
@@ -63,26 +64,15 @@ const StyledParagraph = styled('p')(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
-const StyledNameContainer = styled('div')(({ theme }) => ({
+const StyledNameRow = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    marginBottom: theme.spacing(2),
-}));
-
-const StyledNameInput = styled(Input)(({ theme }) => ({
-    minWidth: '365px',
-    width: '100%',
-}));
-
-const StyledGeneralSelect = styled(GeneralSelect)(({ theme }) => ({
-    minWidth: '365px',
-    width: '100%',
-    marginBottom: theme.spacing(2),
-}));
-
-const StyledDescriptionInput = styled(Input)(({ theme }) => ({
-    minWidth: '365px',
-    marginBottom: theme.spacing(2),
+    gap: theme.spacing(1),
+    // Let the input wrapper (first child) grow to fill the row; the delete
+    // button keeps its size.
+    '& > :first-child': {
+        flex: 1,
+    },
 }));
 
 const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
@@ -121,41 +111,53 @@ export const StrategyParameter = ({
                     </StyledParagraph>
                 }
             />
-            <StyledNameContainer>
-                <StyledNameInput
-                    autoFocus
-                    label={`Parameter name ${index + 1}*`}
-                    onChange={(e) => set({ name: e.target.value })}
-                    value={input.name}
-                    error={Boolean(errors?.[`paramName${index}`])}
-                    errorText={errors?.[`paramName${index}`]}
+            <FormField label={`Parameter name ${index + 1}`}>
+                <StyledNameRow>
+                    <Input
+                        fullWidth
+                        autoFocus
+                        label=''
+                        onChange={(e) => set({ name: e.target.value })}
+                        value={input.name}
+                        error={Boolean(errors?.[`paramName${index}`])}
+                        errorText={errors?.[`paramName${index}`]}
+                    />
+                    <Tooltip title='Remove parameter' arrow>
+                        <IconButton
+                            onClick={() => {
+                                setParams(
+                                    params.filter((_e, i) => i !== index),
+                                );
+                            }}
+                            size='large'
+                        >
+                            <Delete />
+                        </IconButton>
+                    </Tooltip>
+                </StyledNameRow>
+            </FormField>
+            <FormField label='Type'>
+                <GeneralSelect
+                    fullWidth
+                    label=''
+                    name='type'
+                    options={paramTypesOptions}
+                    value={input.type}
+                    onChange={onTypeChange}
                 />
-                <Tooltip title='Remove parameter' arrow>
-                    <IconButton
-                        onClick={() => {
-                            setParams(params.filter((_e, i) => i !== index));
-                        }}
-                        size='large'
-                    >
-                        <Delete />
-                    </IconButton>
-                </Tooltip>
-            </StyledNameContainer>
-            <StyledGeneralSelect
-                label='Type*'
-                name='type'
-                options={paramTypesOptions}
-                value={input.type}
-                onChange={onTypeChange}
-                id={`prop-type-${index}-select`}
-            />
-            <StyledDescriptionInput
-                rows={2}
-                multiline
-                label={`Parameter name ${index + 1} description`}
-                onChange={({ target }) => set({ description: target.value })}
-                value={input.description}
-            />
+            </FormField>
+            <FormField label={`Parameter name ${index + 1} description`}>
+                <Input
+                    fullWidth
+                    rows={2}
+                    multiline
+                    label=''
+                    onChange={({ target }) =>
+                        set({ description: target.value })
+                    }
+                    value={input.description}
+                />
+            </FormField>
             <StyledFormControlLabel
                 control={
                     <Checkbox

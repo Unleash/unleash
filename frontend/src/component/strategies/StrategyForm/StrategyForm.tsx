@@ -1,6 +1,7 @@
 import Input from 'component/common/Input/Input';
 import { Button, styled } from '@mui/material';
 import Add from '@mui/icons-material/Add';
+import { FormField } from 'component/common/FormField/FormField';
 import { trim } from 'component/common/util';
 import { StrategyParameters } from './StrategyParameters/StrategyParameters.tsx';
 import type { IStrategyParameter } from 'interfaces/strategy';
@@ -31,15 +32,6 @@ const StyledForm = styled('form')(({ theme }) => ({
 
 const StyledContainer = styled('div')(({ theme }) => ({
     maxWidth: 400,
-}));
-
-const StyledInputDescription = styled('p')(({ theme }) => ({
-    marginBottom: theme.spacing(1),
-}));
-
-const StyledInput = styled(Input)(({ theme }) => ({
-    width: '100%',
-    marginBottom: theme.spacing(2),
 }));
 
 const StyledParamButton = styled(Button)(({ theme }) => ({
@@ -87,30 +79,36 @@ export const StrategyForm: React.FC<IStrategyFormProps> = ({
     return (
         <StyledForm onSubmit={handleSubmit}>
             <StyledContainer>
-                <StyledInputDescription>
-                    What would you like to call your strategy?
-                </StyledInputDescription>
-                <StyledInput
-                    disabled={mode === 'Edit'}
-                    autoFocus
-                    label='Strategy name*'
-                    value={strategyName}
-                    onChange={(e) => setStrategyName(trim(e.target.value))}
-                    error={Boolean(errors.name)}
-                    errorText={errors.name}
-                    onFocus={clearErrors}
-                    onBlur={validateStrategyName}
-                />
-                <StyledInputDescription>
-                    What is your strategy description?
-                </StyledInputDescription>
-                <StyledInput
+                <FormField
+                    label='Strategy name'
+                    description='What would you like to call your strategy?'
+                >
+                    <Input
+                        fullWidth
+                        disabled={mode === 'Edit'}
+                        autoFocus
+                        label=''
+                        value={strategyName}
+                        onChange={(e) => setStrategyName(trim(e.target.value))}
+                        error={Boolean(errors.name)}
+                        errorText={errors.name}
+                        onFocus={clearErrors}
+                        onBlur={validateStrategyName}
+                    />
+                </FormField>
+                <FormField
                     label='Strategy description'
-                    value={strategyDesc}
-                    onChange={(e) => setStrategyDesc(e.target.value)}
-                    rows={2}
-                    multiline
-                />
+                    description='What is your strategy description?'
+                >
+                    <Input
+                        fullWidth
+                        label=''
+                        value={strategyDesc}
+                        onChange={(e) => setStrategyDesc(e.target.value)}
+                        rows={2}
+                        multiline
+                    />
+                </FormField>
 
                 <StrategyParameters
                     input={params}

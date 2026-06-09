@@ -2,6 +2,118 @@
 
 All notable changes to this project will be documented in this file.
 
+## [8.0.0] - 2026-06-09
+
+### Bug Fixes
+
+- Invalid button nesting in segment accordion headers ([#12167](https://github.com/Unleash/unleash/issues/12167))
+
+- Profile tab navigation with React Router `v7_startTransition` ([#12205](https://github.com/Unleash/unleash/issues/12205))
+
+- Remove deprecated Google auth integration - EG-4389 ([#12208](https://github.com/Unleash/unleash/issues/12208))
+
+- Remove json viewer ([#12217](https://github.com/Unleash/unleash/issues/12217))
+
+- Only show impact metrics tip once flag setup is complete ([#12240](https://github.com/Unleash/unleash/issues/12240))
+
+- Impact views minor visual improvements ([#12238](https://github.com/Unleash/unleash/issues/12238))
+
+- Remove SDK registration and metrics `environment` field ([#12224](https://github.com/Unleash/unleash/issues/12224))
+
+
+### Features
+
+- Add Sunset feature flag type ([#12157](https://github.com/Unleash/unleash/issues/12157))
+
+- Goal-view types + goal summary (PR 2) ([#12177](https://github.com/Unleash/unleash/issues/12177))
+
+- Goal summary panel (PR 3) ([#12197](https://github.com/Unleash/unleash/issues/12197))
+
+- Add a new useMinimumUnleashVersion hook ([#12172](https://github.com/Unleash/unleash/issues/12172))
+
+- Followed-features list + dummy goal view ([#12200](https://github.com/Unleash/unleash/issues/12200))
+
+- Impact metrics for all setup options ([#12201](https://github.com/Unleash/unleash/issues/12201))
+
+- Remove instance level impact metrics ([#12203](https://github.com/Unleash/unleash/issues/12203))
+
+- Impact views data fetching ([#12204](https://github.com/Unleash/unleash/issues/12204))
+
+- Add view switcher ([#12214](https://github.com/Unleash/unleash/issues/12214))
+
+- Add roll out strategy banner + refactor flag setup banners ([#12218](https://github.com/Unleash/unleash/issues/12218))
+
+- Setup form ([#12229](https://github.com/Unleash/unleash/issues/12229))
+
+- Add support for logout event ([#12226](https://github.com/Unleash/unleash/issues/12226))
+
+
+### Miscellaneous Tasks
+
+- Remove v5 deprecated admin strategies and variants fields ([#12156](https://github.com/Unleash/unleash/issues/12156))
+
+- Clean up scim error handling, add a flag to disabling scim guard ([#12198](https://github.com/Unleash/unleash/issues/12198))
+
+- Move flag details sidebar from the left to the right ([#12165](https://github.com/Unleash/unleash/issues/12165))
+
+- Remove unused attributes and props in constraint accordion view. ([#12168](https://github.com/Unleash/unleash/issues/12168))
+
+- Project onboarding steps shown simplification ([#12202](https://github.com/Unleash/unleash/issues/12202))
+
+- Svelte snippet update ([#12206](https://github.com/Unleash/unleash/issues/12206))
+
+- Replace feature page impace metrics empty state ([#12209](https://github.com/Unleash/unleash/issues/12209))
+
+- Remove back button from signup screen ([#12212](https://github.com/Unleash/unleash/issues/12212))
+
+- Remove old feature flag and introduce new inverted flag ([#12185](https://github.com/Unleash/unleash/issues/12185))
+
+- Add a build check to see if unleash meets parity with edge api ([#12183](https://github.com/Unleash/unleash/issues/12183))
+
+- Remove deltaDiff parity logic ([#12216](https://github.com/Unleash/unleash/issues/12216))
+
+- Include CLA ([#12213](https://github.com/Unleash/unleash/issues/12213))
+
+- Update PR template ([#12219](https://github.com/Unleash/unleash/issues/12219))
+
+- Remove safeguards flag ([#12207](https://github.com/Unleash/unleash/issues/12207))
+
+- Onboarding android snippet ([#12189](https://github.com/Unleash/unleash/issues/12189))
+
+- Simper Vue code snippets ([#12227](https://github.com/Unleash/unleash/issues/12227))
+
+- Add timing metric for old project list path ([#12228](https://github.com/Unleash/unleash/issues/12228))
+
+- Redesign Connect SDK and Implement flag setup banners ([#12225](https://github.com/Unleash/unleash/issues/12225))
+
+- Bump biome to 2.4.16 ([#12233](https://github.com/Unleash/unleash/issues/12233))
+
+- Bump dependencies ([#12234](https://github.com/Unleash/unleash/issues/12234))
+
+- Onboarding flutter snippet ([#12236](https://github.com/Unleash/unleash/issues/12236))
+
+- Make environment_revision_id gauge register idempotent ([#12239](https://github.com/Unleash/unleash/issues/12239))
+
+- Onboarding small fix in Java snippet ([#12242](https://github.com/Unleash/unleash/issues/12242))
+
+- Gate flag-page impact metrics on useImpactMetricsEnabled ([#12248](https://github.com/Unleash/unleash/issues/12248))
+
+- Set minimum postgres version to 15.0.0 ([#12249](https://github.com/Unleash/unleash/issues/12249))
+
+- Onboarding .NET snippet style ([#12250](https://github.com/Unleash/unleash/issues/12250))
+
+- Remove completed `flightRecorder` experimental flag wiring ([#12252](https://github.com/Unleash/unleash/issues/12252))
+
+- Add new archiveInFlagsView flag to Unleash ([#12257](https://github.com/Unleash/unleash/issues/12257))
+
+- Add new lifecycle options so that we can show archived ([#12259](https://github.com/Unleash/unleash/issues/12259))
+
+
+### Refactor
+
+- Reuse ConnectionPulse component in connect SDK dialog ([#12243](https://github.com/Unleash/unleash/issues/12243))
+
+
 ## [7.6.3] - 2026-04-15
 
 ### Features

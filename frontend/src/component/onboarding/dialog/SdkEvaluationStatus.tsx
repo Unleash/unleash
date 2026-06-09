@@ -1,7 +1,6 @@
-import { Alert, alpha, styled, Typography } from '@mui/material';
+import { Alert, styled, Typography } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { PulsingAvatar } from 'component/common/PulsingAvatar/PulsingAvatar.tsx';
+import { ConnectionPulse } from 'component/common/ConnectionPulse/ConnectionPulse.tsx';
 
 const ConnectionAlert = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -19,19 +18,9 @@ const ConnectedAlert = styled(ConnectionAlert)(({ theme }) => ({
     border: `1px solid ${theme.palette.success.border}`,
 }));
 
-const ConnectionPulsingAvatar = styled(PulsingAvatar)(({ theme }) => ({
+const StyledPulse = styled('div')(({ theme }) => ({
     marginLeft: theme.spacing(1),
     marginTop: theme.spacing(1),
-    width: theme.spacing(3),
-    height: theme.spacing(3),
-    '@keyframes pulse': {
-        '0%': {
-            boxShadow: `0 0 0 0px ${alpha(theme.palette.primary.main, 0.4)}`,
-        },
-        '100%': {
-            boxShadow: `0 0 0 16px ${alpha(theme.palette.primary.main, 0.0)}`,
-        },
-    },
 }));
 
 const ConnectedIcon = styled(CheckCircleIcon)(({ theme }) => ({
@@ -92,11 +81,9 @@ export const SdkConnectionStatus = ({
 
     return (
         <ConnectionAlert>
-            <div>
-                <ConnectionPulsingAvatar active>
-                    <MoreHorizIcon />
-                </ConnectionPulsingAvatar>
-            </div>
+            <StyledPulse>
+                <ConnectionPulse />
+            </StyledPulse>
             <div>
                 <strong>{waitingTitle}</strong>
                 <Typography variant='body2' color='textSecondary'>

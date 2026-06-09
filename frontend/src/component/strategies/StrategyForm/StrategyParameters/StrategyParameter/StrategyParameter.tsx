@@ -66,12 +66,16 @@ const StyledParagraph = styled('p')(({ theme }) => ({
 
 const StyledNameRow = styled('div')(({ theme }) => ({
     display: 'flex',
-    alignItems: 'center',
+    // Align the delete button to the input baseline, not the label above it.
+    alignItems: 'flex-end',
     gap: theme.spacing(1),
-    // Let the input wrapper (first child) grow to fill the row; the delete
-    // button keeps its size.
-    '& > :first-child': {
+    // Let the field (first child) grow to fill the row; the delete button keeps
+    // its size. Spacing is owned by the row, so drop the FormField's margin.
+    '& > :first-of-type': {
         flex: 1,
+    },
+    '& > *': {
+        marginBottom: 0,
     },
 }));
 
@@ -111,8 +115,8 @@ export const StrategyParameter = ({
                     </StyledParagraph>
                 }
             />
-            <FormField label={`Parameter name ${index + 1}`}>
-                <StyledNameRow>
+            <StyledNameRow>
+                <FormField label={`Parameter name ${index + 1}`}>
                     <Input
                         fullWidth
                         autoFocus
@@ -122,20 +126,18 @@ export const StrategyParameter = ({
                         error={Boolean(errors?.[`paramName${index}`])}
                         errorText={errors?.[`paramName${index}`]}
                     />
-                    <Tooltip title='Remove parameter' arrow>
-                        <IconButton
-                            onClick={() => {
-                                setParams(
-                                    params.filter((_e, i) => i !== index),
-                                );
-                            }}
-                            size='large'
-                        >
-                            <Delete />
-                        </IconButton>
-                    </Tooltip>
-                </StyledNameRow>
-            </FormField>
+                </FormField>
+                <Tooltip title='Remove parameter' arrow>
+                    <IconButton
+                        onClick={() => {
+                            setParams(params.filter((_e, i) => i !== index));
+                        }}
+                        size='large'
+                    >
+                        <Delete />
+                    </IconButton>
+                </Tooltip>
+            </StyledNameRow>
             <FormField label='Type'>
                 <GeneralSelect
                     fullWidth

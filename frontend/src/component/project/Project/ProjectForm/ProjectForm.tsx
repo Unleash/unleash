@@ -59,9 +59,18 @@ const StyledButtonContainer = styled('div')(() => ({
     justifyContent: 'flex-end',
 }));
 
-const StyledInputContainer = styled('div')(() => ({
+const StyledInputContainer = styled('div')(({ theme }) => ({
     display: 'flex',
-    alignItems: 'center',
+    // Align the "x of y used" note to the input baseline, not the label above.
+    alignItems: 'flex-end',
+    gap: theme.spacing(1.5),
+    // The field grows; the note keeps its width. Spacing is owned by the row.
+    '& > :first-of-type': {
+        flex: 1,
+    },
+    '& > *': {
+        marginBottom: 0,
+    },
 }));
 
 const ProjectForm: React.FC<IProjectForm> = ({
@@ -99,7 +108,10 @@ const ProjectForm: React.FC<IProjectForm> = ({
                 handleSubmit(submitEvent);
             }}
         >
-            <FormField label='Project Id' description='What is your project Id?'>
+            <FormField
+                label='Project Id'
+                description='What is your project Id?'
+            >
                 <TextField
                     fullWidth
                     value={projectId}
@@ -168,16 +180,16 @@ const ProjectForm: React.FC<IProjectForm> = ({
             <ConditionallyRender
                 condition={mode === 'Edit'}
                 show={() => (
-                    <FormField
-                        label={
-                            <StyledLabelWithTooltip>
-                                Feature flag limit
-                                <FeatureTogglesLimitTooltip />
-                            </StyledLabelWithTooltip>
-                        }
-                        description='Leave it empty if you don’t want to add a limit'
-                    >
-                        <StyledInputContainer>
+                    <StyledInputContainer>
+                        <FormField
+                            label={
+                                <StyledLabelWithTooltip>
+                                    Feature flag limit
+                                    <FeatureTogglesLimitTooltip />
+                                </StyledLabelWithTooltip>
+                            }
+                            description='Leave it empty if you don’t want to add a limit'
+                        >
                             <TextField
                                 fullWidth
                                 name='value'
@@ -188,21 +200,23 @@ const ProjectForm: React.FC<IProjectForm> = ({
                                         ? ''
                                         : featureLimit
                                 }
-                                onChange={(e) => setFeatureLimit!(e.target.value)}
-                            />
-                            <ConditionallyRender
-                                condition={
-                                    featureCount !== undefined &&
-                                    Boolean(featureLimit)
-                                }
-                                show={
-                                    <Box>
-                                        ({featureCount} of {featureLimit} used)
-                                    </Box>
+                                onChange={(e) =>
+                                    setFeatureLimit!(e.target.value)
                                 }
                             />
-                        </StyledInputContainer>
-                    </FormField>
+                        </FormField>
+                        <ConditionallyRender
+                            condition={
+                                featureCount !== undefined &&
+                                Boolean(featureLimit)
+                            }
+                            show={
+                                <Box>
+                                    ({featureCount} of {featureLimit} used)
+                                </Box>
+                            }
+                        />
+                    </StyledInputContainer>
                 )}
             />
             <ConditionallyRender

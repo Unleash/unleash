@@ -147,6 +147,15 @@ export const FeatureTypeForm: FC<FeatureTypeFormProps> = ({
             formatApiCode={formatApiCode}
         >
             <StyledForm onSubmit={onSubmit}>
+                <StyledExpireRow htmlFor='feature-flag-expire'>
+                    <Checkbox
+                        checked={doesntExpire || lifetime === 0}
+                        id='feature-flag-expire'
+                        onChange={onChangeDoesntExpire}
+                        disabled={loading}
+                    />
+                    <Box>doesn't expire</Box>
+                </StyledExpireRow>
                 <FormField
                     label={
                         <StyledLabelContent>
@@ -174,27 +183,16 @@ export const FeatureTypeForm: FC<FeatureTypeFormProps> = ({
                         </StyledLabelContent>
                     }
                 >
-                    <Box>
-                        <StyledExpireRow htmlFor='feature-flag-expire'>
-                            <Checkbox
-                                checked={doesntExpire || lifetime === 0}
-                                id='feature-flag-expire'
-                                onChange={onChangeDoesntExpire}
-                                disabled={loading}
-                            />
-                            <Box>doesn't expire</Box>
-                        </StyledExpireRow>
-                        <Input
-                            fullWidth
-                            autoFocus
-                            disabled={doesntExpire || loading}
-                            type='number'
-                            label=''
-                            value={doesntExpire ? '0' : `${lifetime}`}
-                            onChange={onChangeLifetime}
-                            error={isIncorrect}
-                        />
-                    </Box>
+                    <Input
+                        fullWidth
+                        autoFocus
+                        disabled={doesntExpire || loading}
+                        type='number'
+                        label=''
+                        value={doesntExpire ? '0' : `${lifetime}`}
+                        onChange={onChangeLifetime}
+                        error={isIncorrect}
+                    />
                 </FormField>
                 <StyledButtons>
                     <PermissionButton

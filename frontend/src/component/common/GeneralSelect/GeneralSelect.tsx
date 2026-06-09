@@ -14,6 +14,7 @@ import type { SxProps } from '@mui/system';
 import type { Theme } from '@mui/material/styles';
 import { visuallyHidden } from '@mui/utils';
 import type { ReactNode } from 'react';
+import { formFieldLabelId } from 'component/common/FormField/FormField';
 
 export interface ISelectOption {
     key: string;
@@ -106,6 +107,11 @@ function GeneralSelect<T extends string = string>({
     startIcon,
     ...rest
 }: IGeneralSelectProps<T>) {
+    // MUI names the combobox via `labelId` (a `<label htmlFor>` can't name the
+    // `div[role=combobox]`). When wrapped in a FormField the label has no own
+    // `label` text here, so point `labelId` at FormField's label element,
+    // derived from the injected `id`. An explicit `labelId` still wins.
+    const resolvedLabelId = labelId ?? (id ? formFieldLabelId(id) : undefined);
     const onSelectChange = (event: SelectChangeEvent) => {
         event.preventDefault();
         onChange(String(event.target.value) as T);
@@ -146,7 +152,7 @@ function GeneralSelect<T extends string = string>({
                 <InputLabel
                     sx={visuallyHideLabel ? visuallyHidden : null}
                     htmlFor={id}
-                    id={labelId}
+                    id={resolvedLabelId}
                 >
                     {label}
                 </InputLabel>
@@ -163,7 +169,7 @@ function GeneralSelect<T extends string = string>({
                 displayEmpty={Boolean(placeholder)}
                 renderValue={renderValue}
                 IconComponent={KeyboardArrowDownOutlined}
-                labelId={labelId}
+                labelId={resolvedLabelId}
                 {...rest}
             >
                 {isSelectOptionGroup(options)

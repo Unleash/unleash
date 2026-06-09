@@ -70,11 +70,14 @@ interface IProjectBase {
 interface IEnvironmentProjectSelectProps {
     projects: string[];
     setProjects: React.Dispatch<React.SetStateAction<string[]>>;
+    /** Set by a wrapping FormField so its label names the input. */
+    id?: string;
 }
 
 export const EnvironmentProjectSelect = ({
     projects,
     setProjects,
+    id,
 }: IEnvironmentProjectSelectProps) => {
     const { projects: projectsAll } = useProjects();
 
@@ -118,6 +121,7 @@ export const EnvironmentProjectSelect = ({
     return (
         <StyledGroupFormUsersSelect>
             <Autocomplete
+                id={id}
                 size='large'
                 multiple
                 limitTags={1}

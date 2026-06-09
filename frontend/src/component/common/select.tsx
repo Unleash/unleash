@@ -7,6 +7,7 @@ import {
     type SelectChangeEvent,
 } from '@mui/material';
 import { SELECT_ITEM_ID } from 'utils/testIds';
+import { formFieldLabelId } from 'component/common/FormField/FormField';
 
 export interface ISelectOption {
     key: string;
@@ -40,6 +41,10 @@ const SelectMenu: React.FC<ISelectMenuProps> = ({
     formControlStyles = {},
     ...rest
 }) => {
+    // MUI names the combobox via `labelId`, not a `<label htmlFor>` on the
+    // combobox div. Point it at the label element (the own InputLabel below, or
+    // a wrapping FormField's label, both derived from `id`).
+    const labelId = formFieldLabelId(id);
     const renderSelectItems = () =>
         options.map((option) => (
             <MenuItem
@@ -59,7 +64,11 @@ const SelectMenu: React.FC<ISelectMenuProps> = ({
             classes={classes}
             style={formControlStyles}
         >
-            {label ? <InputLabel htmlFor={id}>{label}</InputLabel> : null}
+            {label ? (
+                <InputLabel id={labelId} htmlFor={id}>
+                    {label}
+                </InputLabel>
+            ) : null}
             <Select
                 name={name}
                 disabled={disabled}
@@ -67,6 +76,7 @@ const SelectMenu: React.FC<ISelectMenuProps> = ({
                 className={className}
                 label={label || undefined}
                 id={id}
+                labelId={labelId}
                 value={value}
                 {...rest}
             >

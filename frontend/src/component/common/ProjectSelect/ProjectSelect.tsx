@@ -100,10 +100,10 @@ export const ProjectSelect: FC<IProjectSelectProps> = forwardRef(
 
         return (
             <Autocomplete
+                id='projects'
                 {...props}
                 ref={ref}
                 disablePortal
-                id='projects'
                 limitTags={limitTags}
                 multiple={!isAllProjects}
                 options={projectsOptions}

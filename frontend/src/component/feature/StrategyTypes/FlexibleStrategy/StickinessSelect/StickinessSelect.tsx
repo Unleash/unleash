@@ -10,12 +10,15 @@ import {
 import { useStickinessOptions } from 'hooks/useStickinessOptions';
 import { SELECT_ITEM_ID } from 'utils/testIds';
 import type { ReactNode } from 'react';
+import { formFieldLabelId } from 'component/common/FormField/FormField';
 
 interface IStickinessSelectProps {
     label: string;
     value: string | undefined;
     onChange: (event: SelectChangeEvent<string>) => void;
     dataTestId?: string;
+    /** Set by a wrapping FormField so its label can name the combobox. */
+    id?: string;
 }
 
 const StyledValueContainer = styled('div')(({ theme }) => ({
@@ -61,9 +64,11 @@ export const StickinessSelect = ({
     value,
     onChange,
     dataTestId,
+    id = 'stickiness-select',
 }: IStickinessSelectProps) => {
     const theme = useTheme();
     const stickinessOptions = useStickinessOptions(value);
+    const labelId = formFieldLabelId(id);
 
     const renderValue = (selected: string): ReactNode => {
         const option = stickinessOptions.find((o) => o.key === selected);
@@ -86,9 +91,14 @@ export const StickinessSelect = ({
                 marginBottom: theme.spacing(2),
             }}
         >
-            <InputLabel htmlFor='stickiness-select'>{label}</InputLabel>
+            {label ? (
+                <InputLabel id={labelId} htmlFor={id}>
+                    {label}
+                </InputLabel>
+            ) : null}
             <Select
-                id='stickiness-select'
+                id={id}
+                labelId={labelId}
                 name='stickiness'
                 label={label}
                 value={value || ''}

@@ -41,7 +41,20 @@ interface IFormFieldProps {
  * and `aria-describedby` so the label and description are associated with the
  * control for accessibility.
  */
-export const FormField = ({ label, description, children }: IFormFieldProps) => {
+/**
+ * The label's element id, derived from the control's `id`. A `<label htmlFor>`
+ * names native inputs, but not the non-labelable element a MUI `Select` /
+ * radio group / switch exposes (e.g. a `div[role=combobox]`); those controls
+ * point their `aria-labelledby` at this id instead. Keep in sync with how
+ * controls derive it (see `GeneralSelect`).
+ */
+export const formFieldLabelId = (controlId: string) => `${controlId}-label`;
+
+export const FormField = ({
+    label,
+    description,
+    children,
+}: IFormFieldProps) => {
     const id = useId();
     const descriptionId = description ? `${id}-description` : undefined;
 
@@ -63,7 +76,9 @@ export const FormField = ({ label, description, children }: IFormFieldProps) => 
 
     return (
         <StyledFormField>
-            <StyledLabel htmlFor={id}>{label}</StyledLabel>
+            <StyledLabel id={formFieldLabelId(id)} htmlFor={id}>
+                {label}
+            </StyledLabel>
             {description ? (
                 <StyledDescription id={descriptionId}>
                     {description}

@@ -1,7 +1,6 @@
 1\. Install the SDK
-```sh
-// Instructions to add the Swift SDK can be found at the provided URL:
-https://github.com/Unleash/unleash-proxy-client-swift.git
+```swift
+.package(url: "https://github.com/Unleash/unleash-ios-sdk.git", from: "0.0.0")
 ```
 
 2\. Run Unleash
@@ -18,12 +17,17 @@ var unleash = UnleashProxyClientSwift.UnleashClient(
 unleash.start()
 
 Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-    print("Is enabled", unleash.isEnabled(name: "<YOUR_FLAG>"))
+    if unleash.isEnabled(name: "<YOUR_FLAG>") {
+        print("<YOUR_FLAG> is enabled")
+    } else {
+        print("<YOUR_FLAG> is disabled")
+    }
 }
 ```
 ℹ️ **Info:** The Swift SDK takes at least 60 seconds to post metrics to Unleash.
 ---
 ---
+- [SDK repository with documentation](https://github.com/Unleash/unleash-ios-sdk)
 ---
 
 ```swift

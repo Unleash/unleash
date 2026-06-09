@@ -1,7 +1,12 @@
-import { useMemo, useState, type FC } from 'react';
+import { useCallback, useMemo, useState, type FC, type ReactNode } from 'react';
 import {
     Autocomplete,
     Box,
+    Checkbox,
+    Divider,
+    FormControlLabel,
+    Paper,
+    type PaperProps,
     TextField,
     Typography,
     debounce,
@@ -39,6 +44,7 @@ export const FeaturePicker: FC<FeaturePickerProps> = ({
 }) => {
     const [inputValue, setInputValue] = useState('');
     const [debouncedQuery, setDebouncedQuery] = useState('');
+    const [includeArchived, setIncludeArchived] = useState(false);
 
     const updateQuery = useMemo(
         () =>
@@ -48,9 +54,41 @@ export const FeaturePicker: FC<FeaturePickerProps> = ({
         [],
     );
 
+    const ArchivedFilterPaper = useCallback(
+        ({
+            children,
+            ...paperProps
+        }: PaperProps & { children?: ReactNode }) => (
+            <Paper {...paperProps}>
+                <FormControlLabel
+                    sx={{ px: 2, py: 1 }}
+                    onMouseDown={(event) => event.preventDefault()}
+                    control={
+                        <Checkbox
+                            size='small'
+                            checked={includeArchived}
+                            onChange={(_, checked) =>
+                                setIncludeArchived(checked)
+                            }
+                        />
+                    }
+                    label={
+                        <Typography variant='body2'>
+                            Search archived features
+                        </Typography>
+                    }
+                />
+                <Divider />
+                {children}
+            </Paper>
+        ),
+        [includeArchived],
+    );
+
     const { features, loading } = useFeatureSearch({
         query: debouncedQuery || undefined,
         limit: PICKER_LIMIT,
+        archived: includeArchived ? 'IS:true' : undefined,
     });
 
     const options: FeatureOption[] = features.map(({ name, project }) => ({
@@ -75,6 +113,7 @@ export const FeaturePicker: FC<FeaturePickerProps> = ({
             options={options}
             value={selectedOptions}
             inputValue={inputValue}
+            slots={{ paper: ArchivedFilterPaper }}
             onInputChange={(_, next, reason) => {
                 if (reason !== 'input') return;
                 setInputValue(next);

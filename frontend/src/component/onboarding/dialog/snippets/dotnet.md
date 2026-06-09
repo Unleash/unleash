@@ -27,7 +27,14 @@ public class Program
         var unleash =  new DefaultUnleash(settings);
 
         while (true) {
-            Console.WriteLine($"Flag is enabled: {unleash.IsEnabled("<YOUR_FLAG>")}");
+            if (unleash.IsEnabled("<YOUR_FLAG>"))
+            {
+                Console.WriteLine("<YOUR_FLAG> is enabled");
+            }
+            else
+            {
+                Console.WriteLine("<YOUR_FLAG> is disabled");
+            }
             await Task.Delay(1000);
         }
     }
@@ -55,9 +62,12 @@ var settings = new UnleashSettings()
 ---
 
 ```csharp
-if (unleash.IsEnabled("<YOUR_FLAG>")) {
+if (unleash.IsEnabled("<YOUR_FLAG>"))
+{
     Console.WriteLine("<YOUR_FLAG> is enabled");
-} else {
+}
+else
+{
     Console.WriteLine("<YOUR_FLAG> is disabled");
 }
 ```

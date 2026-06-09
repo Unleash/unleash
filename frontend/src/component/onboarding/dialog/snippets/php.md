@@ -1,6 +1,10 @@
 1\. Install the SDK
 ```sh
-composer require unleash/client
+composer require unleash/client guzzlehttp/guzzle symfony/cache
+```
+or
+```sh
+composer require unleash/client symfony/http-client nyholm/psr7 symfony/cache
 ```
 
 2\. Initialize Unleash
@@ -19,7 +23,11 @@ $unleash = UnleashBuilder::create()
     ->build();
 
 while (true) {
-    echo 'Feature flag is:  ' . $unleash->isEnabled('<YOUR_FLAG>') . PHP_EOL;
+    if ($unleash->isEnabled('<YOUR_FLAG>')) {
+        echo '<YOUR_FLAG> is enabled' . PHP_EOL;
+    } else {
+        echo '<YOUR_FLAG> is disabled' . PHP_EOL;
+    }
     sleep(1);
 }
 ```

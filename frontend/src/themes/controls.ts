@@ -254,6 +254,15 @@ export const controlOverrides: Components<Theme> = {
                 '&:not(:has(.MuiChip-root))': {
                     flexWrap: 'nowrap',
                 },
+                // chip pickers: give symmetric vertical padding so the top/
+                // bottom spacing around the chips stays consistent when they
+                // wrap to multiple lines (otherwise the zeroed padding leaves
+                // wrapped rows flush to the top while a single row reads as
+                // centered). Pairs with the chips' own 3px margin.
+                '&:has(.MuiChip-root)': {
+                    paddingTop: 3,
+                    paddingBottom: 3,
+                },
             },
         },
     },

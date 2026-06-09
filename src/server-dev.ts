@@ -57,6 +57,7 @@ process.nextTick(async () => {
                         userTokenWithClientApiLoggingKillSwitch: false,
                         reactRouter_v7_relativeSplatPath: true,
                         allowDeprecatedApiTokenMiddleware: false,
+                        archiveInFlagsView: true,
                     },
                 },
                 authentication: {

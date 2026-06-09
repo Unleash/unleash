@@ -77,6 +77,7 @@ export type IFlagKey =
     | 'reactRouter_v7_relativeSplatPath'
     | 'reactRouter_v7_startTransition'
     | 'newModalDesign'
+    | 'archiveInFlagsView'
     | 'allowDeprecatedApiTokenMiddleware';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -345,6 +346,10 @@ const flags: IFlags = {
     ),
     newModalDesign: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NEW_MODAL_DESIGN,
+        false,
+    ),
+    archiveInFlagsView: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ARCHIVE_IN_FLAGS_VIEW,
         false,
     ),
 };

@@ -99,6 +99,7 @@ export type UiFlags = {
     reactRouter_v7_startTransition?: boolean;
     reactRouter_v7_relativeSplatPath?: boolean;
     newModalDesign?: boolean;
+    archiveInFlagsView?: boolean;
 };
 
 export interface IVersionInfo {

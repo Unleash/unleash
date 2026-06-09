@@ -11,10 +11,10 @@ import { FeatureViewHeader } from './FeatureViewHeader.tsx';
 import { styled } from '@mui/material';
 import { FeatureMetricsOverview } from './FeatureMetrics/FeatureMetricsOverview.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { FeatureImpactHeader } from './FeatureImpactOverview/FeatureImpactHeader';
 import { ImpactMetricModal } from '../../impact-metrics/ImpactMetricModal/ImpactMetricModal';
 import { useFeatureImpactChartActions } from './useFeatureImpactChartActions';
+import { useImpactMetricsEnabled } from 'component/impact-metrics/hooks/useImpactMetricsEnabled.ts';
 
 export const StyledLink = styled(Link)(() => ({
     maxWidth: '100%',
@@ -29,8 +29,8 @@ export const FeatureView = () => {
     const featureId = useRequiredPathParam('featureId');
 
     const impactMetricsFlagPage = useUiFlag('impactMetricsFlagPage');
-    const { isEnterprise } = useUiConfig();
-    const showImpactMetrics = impactMetricsFlagPage && isEnterprise();
+    const impactMetricsEnabled = useImpactMetricsEnabled();
+    const showImpactMetrics = impactMetricsFlagPage && impactMetricsEnabled;
 
     const { feature, loading, error, status } = useFeature(
         projectId,

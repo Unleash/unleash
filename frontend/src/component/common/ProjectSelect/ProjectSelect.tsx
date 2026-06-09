@@ -108,9 +108,7 @@ export const ProjectSelect: FC<IProjectSelectProps> = forwardRef(
                 multiple={!isAllProjects}
                 options={projectsOptions}
                 sx={sx}
-                renderInput={(params) => (
-                    <TextField {...params} label='Projects' />
-                )}
+                renderInput={(params) => <TextField {...params} />}
                 renderOption={renderOption}
                 getOptionLabel={({ label }) => label}
                 disableCloseOnSelect

@@ -1,5 +1,6 @@
 import type { ComponentProps, Dispatch, FC, SetStateAction } from 'react';
 import { Autocomplete, Chip, TextField } from '@mui/material';
+import { FormField } from 'component/common/FormField/FormField';
 import { renderOption } from '../../renderOption.tsx';
 
 interface IEnvironmentsFieldProps {
@@ -48,37 +49,37 @@ export const EnvironmentsField: FC<IEnvironmentsFieldProps> = ({
     };
 
     return (
-        <Autocomplete
-            disablePortal
-            limitTags={3}
-            id='environment'
-            multiple={true}
-            options={environmentOptions}
-            sx={{ flex: 1 }}
-            renderInput={(params) => (
-                <TextField {...params} label='Environments' />
-            )}
-            renderOption={renderOption}
-            renderValue={(value, getItemProps) => {
-                return value.map((option, index) => {
-                    const { key, ...props } = getItemProps({ index });
-                    return (
-                        <Chip
-                            size='small'
-                            key={key}
-                            {...props}
-                            label={option.label}
-                        />
-                    );
-                });
-            }}
-            getOptionLabel={({ label }) => label}
-            disableCloseOnSelect={false}
-            size='small'
-            value={envValue}
-            onChange={onEnvironmentsChange}
-            disabled={disabled}
-            data-testid={'PLAYGROUND_ENVIRONMENT_SELECT'}
-        />
+        <FormField label='Environments'>
+            <Autocomplete
+                disablePortal
+                limitTags={3}
+                id='environment'
+                multiple={true}
+                options={environmentOptions}
+                fullWidth
+                renderInput={(params) => <TextField {...params} />}
+                renderOption={renderOption}
+                renderValue={(value, getItemProps) => {
+                    return value.map((option, index) => {
+                        const { key, ...props } = getItemProps({ index });
+                        return (
+                            <Chip
+                                size='small'
+                                key={key}
+                                {...props}
+                                label={option.label}
+                            />
+                        );
+                    });
+                }}
+                getOptionLabel={({ label }) => label}
+                disableCloseOnSelect={false}
+                size='small'
+                value={envValue}
+                onChange={onEnvironmentsChange}
+                disabled={disabled}
+                data-testid={'PLAYGROUND_ENVIRONMENT_SELECT'}
+            />
+        </FormField>
     );
 };

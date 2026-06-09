@@ -22,6 +22,8 @@ import {
     useApiTokens,
 } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import Input from 'component/common/Input/Input';
+import { FormField } from 'component/common/FormField/FormField';
+import { FormGroup } from 'component/common/FormGroup/FormGroup';
 import {
     extractProjectEnvironmentFromToken,
     validateTokenFormat,
@@ -62,11 +64,28 @@ const StyledInput = styled(Input)(() => ({
 const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
     columnGap: theme.spacing(2),
-    rowGap: theme.spacing(2),
+    // Vertical rhythm comes from each field's own FormField margin so rows line
+    // up regardless of how deeply the control is wrapped (e.g. tooltips).
+    rowGap: 0,
     gridTemplateColumns: '1fr',
 
     [theme.breakpoints.up('md')]: {
         gridTemplateColumns: '1fr 1fr',
+    },
+}));
+
+// Pairs the change request input with its action button, aligning the button to
+// the input baseline rather than the label above it.
+const StyledChangeRequestRow = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(2),
+    alignItems: 'flex-end',
+    '& > *': {
+        marginBottom: 0,
+    },
+    // The input takes the remaining width; the button keeps its content width.
+    '& > *:first-of-type': {
+        flex: 1,
     },
 }));
 
@@ -193,13 +212,13 @@ export const PlaygroundConnectionFieldset: FC<
                 <Typography
                     variant='body2'
                     color={theme.palette.text.primary}
-                    sx={{ ml: 1 }}
+                    sx={{ ml: 1, fontWeight: 'bold' }}
                 >
                     Access configuration
                 </Typography>
             </Box>
-            <StyledGrid>
-                <Box>
+            <FormGroup>
+                <StyledGrid>
                     <Tooltip
                         arrow
                         title={
@@ -217,8 +236,6 @@ export const PlaygroundConnectionFieldset: FC<
                             />
                         </Box>
                     </Tooltip>
-                </Box>
-                <Box>
                     <Tooltip
                         arrow
                         title={
@@ -227,93 +244,96 @@ export const PlaygroundConnectionFieldset: FC<
                                 : 'Select projects to use in the playground'
                         }
                     >
-                        <ProjectSelect
-                            selectedProjects={projects}
-                            onChange={setProjects}
-                            dataTestId={'PLAYGROUND_PROJECT_SELECT'}
-                            disabled={Boolean(token || changeRequest)}
-                            limitTags={3}
-                        />
-                    </Tooltip>
-                </Box>
-                <Box>
-                    <StyledInput
-                        label='API token'
-                        value={token || (changeRequest ? ' ' : '')}
-                        onChange={onSetToken}
-                        type={'text'}
-                        error={Boolean(tokenError)}
-                        errorText={tokenError}
-                        placeholder={'Enter your API token'}
-                        data-testid={'PLAYGROUND_TOKEN_INPUT'}
-                        slotProps={{
-                            input: {
-                                endAdornment: token ? (
-                                    <InputAdornment
-                                        position='end'
-                                        data-testid='TOKEN_INPUT_CLEAR_BTN'
-                                    >
-                                        <IconButton
-                                            aria-label='clear API token'
-                                            onClick={clearToken}
-                                            edge='end'
-                                        >
-                                            <SmallClear />
-                                        </IconButton>
-                                    </InputAdornment>
-                                ) : null,
-                            },
-                        }}
-                        disabled={Boolean(changeRequest)}
-                    />
-                </Box>
-                <ConditionallyRender
-                    condition={Boolean(changeRequest)}
-                    show={
-                        <Box sx={{ display: 'flex', gap: 2 }}>
-                            <Box sx={{ flex: 1 }}>
-                                <StyledChangeRequestInput
-                                    label='Change request'
-                                    value={
-                                        changeRequest
-                                            ? `Change request #${changeRequest}`
-                                            : ''
-                                    }
-                                    onChange={() => {}}
-                                    type={'text'}
-                                    disabled
-                                    slotProps={{
-                                        input: {
-                                            endAdornment: (
-                                                <InputAdornment position='end'>
-                                                    <IconButton
-                                                        aria-label='clear Change request results'
-                                                        onClick={
-                                                            onClearChangeRequest
-                                                        }
-                                                        edge='end'
-                                                    >
-                                                        <SmallClear />
-                                                    </IconButton>
-                                                </InputAdornment>
-                                            ),
-                                        },
-                                    }}
+                        <Box>
+                            <FormField label='Projects'>
+                                <ProjectSelect
+                                    selectedProjects={projects}
+                                    onChange={setProjects}
+                                    dataTestId={'PLAYGROUND_PROJECT_SELECT'}
+                                    disabled={Boolean(token || changeRequest)}
+                                    limitTags={3}
                                 />
-                            </Box>
-                            <Button
-                                variant='outlined'
-                                size='small'
-                                to={`/projects/${projects[0]}/change-requests/${changeRequest}`}
-                                component={Link}
-                                nativeButton={false}
-                            >
-                                View change request
-                            </Button>
+                            </FormField>
                         </Box>
-                    }
-                />
-            </StyledGrid>
+                    </Tooltip>
+                    <FormField label='API token'>
+                        <StyledInput
+                            label=''
+                            value={token || (changeRequest ? ' ' : '')}
+                            onChange={onSetToken}
+                            type={'text'}
+                            error={Boolean(tokenError)}
+                            errorText={tokenError}
+                            placeholder={'Enter your API token'}
+                            data-testid={'PLAYGROUND_TOKEN_INPUT'}
+                            slotProps={{
+                                input: {
+                                    endAdornment: token ? (
+                                        <InputAdornment
+                                            position='end'
+                                            data-testid='TOKEN_INPUT_CLEAR_BTN'
+                                        >
+                                            <IconButton
+                                                aria-label='clear API token'
+                                                onClick={clearToken}
+                                                edge='end'
+                                            >
+                                                <SmallClear />
+                                            </IconButton>
+                                        </InputAdornment>
+                                    ) : null,
+                                },
+                            }}
+                            disabled={Boolean(changeRequest)}
+                        />
+                    </FormField>
+                    <ConditionallyRender
+                        condition={Boolean(changeRequest)}
+                        show={
+                            <StyledChangeRequestRow>
+                                <FormField label='Change request'>
+                                    <StyledChangeRequestInput
+                                        label=''
+                                        value={
+                                            changeRequest
+                                                ? `Change request #${changeRequest}`
+                                                : ''
+                                        }
+                                        onChange={() => {}}
+                                        type={'text'}
+                                        disabled
+                                        slotProps={{
+                                            input: {
+                                                endAdornment: (
+                                                    <InputAdornment position='end'>
+                                                        <IconButton
+                                                            aria-label='clear Change request results'
+                                                            onClick={
+                                                                onClearChangeRequest
+                                                            }
+                                                            edge='end'
+                                                        >
+                                                            <SmallClear />
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                ),
+                                            },
+                                        }}
+                                    />
+                                </FormField>
+                                <Button
+                                    variant='outlined'
+                                    to={`/projects/${projects[0]}/change-requests/${changeRequest}`}
+                                    component={Link}
+                                    nativeButton={false}
+                                >
+                                    View change request
+                                </Button>
+                            </StyledChangeRequestRow>
+                        }
+                    />
+                </StyledGrid>
+            </FormGroup>
         </Box>
     );
 };

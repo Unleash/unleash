@@ -36,6 +36,7 @@ beforeEach(() => {
     });
 });
 test.each([
+    '14.9',
     '13.9.2',
     '12.1.7',
     '12.1',
@@ -49,10 +50,10 @@ test.each([
     expect(infoMessages).toHaveLength(0);
 });
 test.each([
-    '14.9',
     '15.9',
     '16.2',
     '17',
+    '18.3.1',
 ])('Postgres version %s yields an info message', async (version) => {
     settingStore = fakeSettingStore(version);
     await compareAndLogPostgresVersion(config, settingStore);

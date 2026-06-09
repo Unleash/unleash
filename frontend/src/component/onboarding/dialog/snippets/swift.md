@@ -23,6 +23,7 @@ Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
         } else {
             print("<YOUR_FLAG> is disabled")
         }
+        fflush(stdout)
     }
 }
 

@@ -19,7 +19,6 @@ import type {
 import {
     applyGenericQueryParams,
     applySearchFilters,
-    parseSearchOperatorValue,
 } from './search-utils.js';
 import { generateImageUrl } from '../../util/index.js';
 type Raw<T = any> = Knex.Raw<T>;
@@ -88,7 +87,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
             status,
             offset,
             limit,
-            lifecycle,
             sortOrder,
             sortBy,
             archived,
@@ -261,12 +259,10 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         'lifecycle.stage_feature',
                     );
 
-                const parsedLifecycle = lifecycle
-                    ? parseSearchOperatorValue(
-                          'lifecycle.latest_stage',
-                          lifecycle,
-                      )
-                    : null;
+                const parsedLifecycle =
+                    queryParams.find(
+                        (param) => param.field === 'lifecycle.latest_stage',
+                    ) ?? null;
                 applyLifecycleAndArchivedFilters(
                     query,
                     parsedLifecycle,
@@ -852,9 +848,15 @@ const applyQueryParams = (
     );
     const genericConditions = queryParams.filter(
         (param) =>
-            !['tag', 'stale', 'segment', 'lastSeenAt', 'favorite'].includes(
-                param.field,
-            ),
+            ![
+                'tag',
+                'stale',
+                'segment',
+                'lastSeenAt',
+                'favorite',
+                // applied separately, with archived-aware handling
+                'lifecycle.latest_stage',
+            ].includes(param.field),
     );
     applyGenericQueryParams(query, genericConditions);
     applyFavoriteCondition(query, favoriteCondition);

@@ -3,7 +3,7 @@ import { render } from 'utils/testRenderer';
 import { Route, Routes } from 'react-router-dom';
 import { ProjectFeatureToggles } from './ProjectFeatureToggles.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { fireEvent, screen, within } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { BATCH_SELECTED_COUNT } from 'utils/testIds';
 import {
     DELETE_FEATURE,
@@ -377,4 +377,34 @@ test('shows revive and delete actions for archived flags', async () => {
     expect(
         screen.queryByRole('menuitem', { name: 'Clone' }),
     ).not.toBeInTheDocument();
+}, 10000);
+
+test('rewrites legacy archived view URLs to the archived lifecycle filter', async () => {
+    setupApi();
+    testServerRoute(server, '/api/admin/ui-config', {
+        flags: {
+            archiveInFlagsView: true,
+        },
+    });
+
+    render(
+        <Routes>
+            <Route
+                path={'/projects/:projectId'}
+                element={
+                    <ProjectFeatureToggles
+                        environments={['development', 'production']}
+                    />
+                }
+            />
+        </Routes>,
+        {
+            route: '/projects/default?archived=IS%3Atrue',
+        },
+    );
+
+    await waitFor(() => {
+        expect(window.location.href).not.toContain('archived=IS%3Atrue');
+        expect(window.location.href).toContain('lifecycle=IS%3Aarchived');
+    });
 }, 10000);

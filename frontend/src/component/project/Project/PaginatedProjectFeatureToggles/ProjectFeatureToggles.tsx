@@ -111,7 +111,8 @@ export const ProjectFeatureToggles = ({
     const [modalOpen, setModalOpen] = useState(false);
     const theme = useTheme();
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('xl'));
-    const showArchivedLink = !useUiFlag('archiveInFlagsView');
+    const archiveInFlagsView = useUiFlag('archiveInFlagsView');
+    const showArchivedLink = !archiveInFlagsView;
 
     const {
         features,
@@ -122,6 +123,17 @@ export const ProjectFeatureToggles = ({
         tableState,
         setTableState,
     } = useProjectFeatureSearch(projectId);
+
+    // The legacy archived view can still be reached through old URLs;
+    // rewrite them to the archived lifecycle filter, which has replaced it.
+    useEffect(() => {
+        if (archiveInFlagsView && tableState.archived) {
+            setTableState({
+                archived: undefined,
+                lifecycle: { operator: 'IS', values: ['archived'] },
+            });
+        }
+    }, [archiveInFlagsView, tableState.archived, setTableState]);
 
     const { onFlagTypeClick, onTagClick, onAvatarClick } =
         useProjectFeatureSearchActions(tableState, setTableState);

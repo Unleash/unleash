@@ -3,11 +3,14 @@ import {
     Autocomplete,
     Box,
     FormControlLabel,
+    IconButton,
     Radio,
     TextField,
+    Tooltip,
     Typography,
     styled,
 } from '@mui/material';
+import Delete from '@mui/icons-material/Delete';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import GeneralSelect, {
     type ISelectOption,
@@ -54,8 +57,8 @@ const StyledHelper = styled(Typography)(({ theme }) => ({
 const StyledMetricRow = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    gap: theme.spacing(1.5),
-    padding: theme.spacing(1, 1.5),
+    gap: theme.spacing(2),
+    padding: theme.spacing(2, 2.5),
     borderRadius: theme.shape.borderRadius,
     border: `1px solid ${theme.palette.divider}`,
     backgroundColor: theme.palette.background.elevation1,
@@ -66,20 +69,19 @@ const StyledMetricName = styled('div')(({ theme }) => ({
     minWidth: 0,
     display: 'flex',
     flexDirection: 'column',
+    gap: theme.spacing(0.5),
 }));
 
-const StyledMetricLabel = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
-    fontWeight: theme.typography.fontWeightMedium,
-    color: theme.palette.text.primary,
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
+const StyledNameInput = styled(TextField)(({ theme }) => ({
+    maxWidth: theme.spacing(30),
 }));
 
 const StyledMetricHint = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.text.secondary,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
 }));
 
 const AGGREGATION_OPTIONS: ISelectOption[] = [
@@ -140,8 +142,10 @@ const MetricOptionRow: FC<{ option: MetricOption }> = ({ option }) => (
 
 const MetricGoalRow: FC<{
     metric: ViewMetricConfig;
-    onSelectGoal: (metricName: string) => void;
-}> = ({ metric, onSelectGoal }) => {
+    onSelectGoal: (id: string) => void;
+    onRename: (id: string, displayName: string) => void;
+    onRemove: (id: string) => void;
+}> = ({ metric, onSelectGoal, onRename, onRemove }) => {
     const label = metric.displayName || metric.metricName;
     return (
         <StyledMetricRow>
@@ -152,7 +156,7 @@ const MetricGoalRow: FC<{
                     <Radio
                         size='small'
                         checked={Boolean(metric.goal)}
-                        onChange={() => onSelectGoal(metric.metricName)}
+                        onChange={() => onSelectGoal(metric.id)}
                     />
                 }
                 label={
@@ -166,13 +170,30 @@ const MetricGoalRow: FC<{
                 labelPlacement='bottom'
             />
             <StyledMetricName>
-                <StyledMetricLabel title={metric.metricName}>
-                    {label}
-                </StyledMetricLabel>
-                <StyledMetricHint>
-                    {metricTypeHint(metric.metricName)}
+                <StyledNameInput
+                    label='Display name'
+                    value={metric.displayName ?? ''}
+                    onChange={(event) =>
+                        onRename(metric.id, event.target.value)
+                    }
+                    placeholder={metric.metricName}
+                    size='small'
+                    variant='outlined'
+                    fullWidth
+                />
+                <StyledMetricHint title={metric.metricName}>
+                    {metric.metricName} · {metricTypeHint(metric.metricName)}
                 </StyledMetricHint>
             </StyledMetricName>
+            <Tooltip title='Remove metric' arrow>
+                <IconButton
+                    size='small'
+                    aria-label={`Remove ${label}`}
+                    onClick={() => onRemove(metric.id)}
+                >
+                    <Delete fontSize='small' />
+                </IconButton>
+            </Tooltip>
         </StyledMetricRow>
     );
 };
@@ -219,7 +240,9 @@ type FormAction =
     | { type: 'setMetrics'; options: MetricOption[] }
     | { type: 'setTimeRange'; timeRange: ChartTimeRange }
     | { type: 'setAggregation'; aggregationMode: AggregationMode }
-    | { type: 'setGoal'; metricName: string }
+    | { type: 'setGoal'; id: string }
+    | { type: 'renameMetric'; id: string; displayName: string }
+    | { type: 'removeMetric'; id: string }
     | { type: 'setEnvironment'; environment: string };
 
 const patchMetrics = (
@@ -295,8 +318,24 @@ const formReducer = (state: ViewFormData, action: FormAction): ViewFormData => {
                 ...state,
                 metrics: state.metrics.map((metric) => ({
                     ...metric,
-                    goal: metric.metricName === action.metricName,
+                    goal: metric.id === action.id,
                 })),
+            };
+        case 'renameMetric':
+            return {
+                ...state,
+                metrics: state.metrics.map((metric) =>
+                    metric.id === action.id
+                        ? { ...metric, displayName: action.displayName }
+                        : metric,
+                ),
+            };
+        case 'removeMetric':
+            return {
+                ...state,
+                metrics: state.metrics.filter(
+                    (metric) => metric.id !== action.id,
+                ),
             };
     }
 };
@@ -442,13 +481,20 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
                         >
                             {form.metrics.map((metric) => (
                                 <MetricGoalRow
-                                    key={metric.metricName}
+                                    key={metric.id}
                                     metric={metric}
-                                    onSelectGoal={(metricName) =>
+                                    onSelectGoal={(id) =>
+                                        dispatch({ type: 'setGoal', id })
+                                    }
+                                    onRename={(id, displayName) =>
                                         dispatch({
-                                            type: 'setGoal',
-                                            metricName,
+                                            type: 'renameMetric',
+                                            id,
+                                            displayName,
                                         })
+                                    }
+                                    onRemove={(id) =>
+                                        dispatch({ type: 'removeMetric', id })
                                     }
                                 />
                             ))}

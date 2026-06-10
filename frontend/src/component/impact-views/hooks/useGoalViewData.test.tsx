@@ -3,7 +3,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { SWRConfig } from 'swr';
 import { http, HttpResponse } from 'msw';
 import { describe, expect, it } from 'vitest';
-import { testServerSetup } from 'utils/testServer';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { useGoalViewData } from './useGoalViewData';
 import type { MetricView, ViewMetricConfig } from '../views/types';
 
@@ -42,6 +42,19 @@ const viewWith = (metrics: ViewMetricConfig[]): MetricView => ({
     updatedAt: 0,
 });
 
+const setupStaticStubs = () => {
+    testServerRoute(server, '/api/admin/search/features', {
+        features: [],
+        total: 0,
+    });
+    testServerRoute(server, '/api/admin/search/events', {
+        events: [],
+        total: 0,
+    });
+};
+
+// testServerRoute serves one static response per path, but this route's
+// response has to vary with the metricName search param, so it stays raw msw.
 const setupApi = (valueByMetric: Record<string, number>) => {
     server.use(
         http.get('/api/admin/impact-metrics/', ({ request }) => {
@@ -56,34 +69,18 @@ const setupApi = (valueByMetric: Record<string, number>) => {
             });
         }),
     );
-    server.use(
-        http.get('/api/admin/search/features', () =>
-            HttpResponse.json({ features: [], total: 0 }),
-        ),
-    );
-    server.use(
-        http.get('/api/admin/search/events', () =>
-            HttpResponse.json({ events: [], total: 0 }),
-        ),
-    );
+    setupStaticStubs();
 };
 
 const setupMetricsError = () => {
-    server.use(
-        http.get('/api/admin/impact-metrics/', () =>
-            HttpResponse.json({ error: 'boom' }, { status: 500 }),
-        ),
+    testServerRoute(
+        server,
+        '/api/admin/impact-metrics/',
+        { error: 'boom' },
+        'get',
+        500,
     );
-    server.use(
-        http.get('/api/admin/search/features', () =>
-            HttpResponse.json({ features: [], total: 0 }),
-        ),
-    );
-    server.use(
-        http.get('/api/admin/search/events', () =>
-            HttpResponse.json({ events: [], total: 0 }),
-        ),
-    );
+    setupStaticStubs();
 };
 
 describe('useGoalViewData', () => {
@@ -130,13 +127,8 @@ describe('useGoalViewData', () => {
                     series: [{ data: [[1, 1]] }],
                 });
             }),
-            http.get('/api/admin/search/features', () =>
-                HttpResponse.json({ features: [], total: 0 }),
-            ),
-            http.get('/api/admin/search/events', () =>
-                HttpResponse.json({ events: [], total: 0 }),
-            ),
         );
+        setupStaticStubs();
 
         const view = viewWith([
             metric('goal', { goal: true, timeRange: 'threeMonths' }),

@@ -12,8 +12,6 @@ import { Badge } from '../../../Badge/Badge.tsx';
 import { HtmlTooltip } from '../../../HtmlTooltip/HtmlTooltip.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { useLocationSettings } from 'hooks/useLocationSettings';
-import { getLocalizedDateString } from '../../../util.ts';
 import { Tag } from 'component/common/Tag/Tag';
 import { formatTag } from 'utils/format-tag';
 import { Truncator } from 'component/common/Truncator/Truncator';
@@ -328,11 +326,6 @@ export const PrimaryFeatureInfo: FC<{
         (featureType) => featureType.id === type,
     )?.name;
     const title = `${typeName || type} flag`;
-    const { locationSettings } = useLocationSettings();
-    const archivedDate = getLocalizedDateString(
-        archivedAt,
-        locationSettings.locale,
-    );
 
     const TypeIcon = () => (
         <HtmlTooltip arrow title={title} describeChild>
@@ -391,13 +384,6 @@ export const PrimaryFeatureInfo: FC<{
                     </HtmlTooltip>
                 }
             />
-            {archivedAt && (
-                <HtmlTooltip arrow title={archivedDate} describeChild>
-                    <Badge tabIndex={0} color='neutral'>
-                        Archived
-                    </Badge>
-                </HtmlTooltip>
-            )}
         </FeatureNameAndType>
     );
 };

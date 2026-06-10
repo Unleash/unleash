@@ -388,7 +388,6 @@ const CreateFeatureDialogContent = ({
                                     hideSearch
                                     tooltip={{
                                         header: 'Select a flag type',
-                                        description: '',
                                     }}
                                     options={featureTypes.map(
                                         (featureType: FeatureTypeSchema) => ({
@@ -407,7 +406,7 @@ const CreateFeatureDialogContent = ({
                                 <MultiPillDropdown<string>
                                     label={
                                         tags.size > 0
-                                            ? `${tags.size} tags selected`
+                                            ? `${tags.size} tag${tags.size > 1 ? 's' : ''} selected`
                                             : 'Add tags'
                                     }
                                     tooltip={{

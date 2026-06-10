@@ -592,7 +592,6 @@ export const CreateProjectDialog: FC<Props> = ({ open, onClose }) => {
                                 hideSearch
                                 tooltip={{
                                     header: 'Set project collaboration mode',
-                                    description: '',
                                 }}
                                 options={projectModeOptions}
                                 onChange={(value) =>

@@ -117,7 +117,7 @@ export const PillButton = styled(Button)(({ theme }) => ({
 
 type DropdownOption<T> = { label: string; value: T; description?: string };
 
-export type PillTooltip = { header: string; description: string };
+export type PillTooltip = { header: string; description?: string };
 type Tooltip = PillTooltip;
 
 export const PillTrigger = ({

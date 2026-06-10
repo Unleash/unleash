@@ -66,7 +66,7 @@ export type DropdownListProps<T> = {
         placeholder: string;
     };
     hideSearch?: boolean;
-    header?: { header: string; description: string };
+    header?: { header: string; description?: string };
     multiselect?: { selectedOptions: Set<T> };
     selectedValue?: T;
 };
@@ -136,6 +136,8 @@ export function DropdownList<T = string>({
             <List sx={{ overflowY: 'auto' }} disablePadding>
                 {filteredOptions.map((option, index) => {
                     const labelId = `checkbox-list-label-${option.value}`;
+                    const isSelected =
+                        !multiselect && option.value === selectedValue;
 
                     return (
                         <StyledListItem
@@ -192,9 +194,7 @@ export function DropdownList<T = string>({
                                     },
                                 }}
                             />
-                            {!multiselect &&
-                            selectedValue !== undefined &&
-                            option.value === selectedValue ? (
+                            {isSelected ? (
                                 <ListItemIcon>
                                     <StyledSelectedIcon fontSize='small' />
                                 </ListItemIcon>

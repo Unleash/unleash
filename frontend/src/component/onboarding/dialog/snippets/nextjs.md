@@ -54,9 +54,9 @@ export default function Home() {
 ```
 
 ---
-- [SDK repository with documentation](https://github.com/Unleash/unleash-sdk-js/tree/main/packages/nextjs)
+- [SDK repository with documentation](https://github.com/Unleash/unleash-nextjs-sdk)
 - [Next.js SDK example](https://github.com/Unleash/unleash-sdk-examples/tree/main/Next.js)
-- [https://docs.getunleash.io/guides/implement-feature-flags-in-next-js](https://docs.getunleash.io/guides/implement-feature-flags-in-next-js)
+- [https://docs.getunleash.io/sdks/next-js](https://docs.getunleash.io/sdks/next-js)
 
 ---
 

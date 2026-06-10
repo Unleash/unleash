@@ -3,14 +3,15 @@ import { Box, Typography, styled, useTheme } from '@mui/material';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import FlagIcon from '@mui/icons-material/Flag';
 import { format } from 'date-fns';
+import { capitalizeFirst } from 'utils/capitalizeFirst';
 import { withAlpha } from '../chartConfig';
 import { type EventGroup, EVENT_TYPE_LABEL, getEventColor } from './eventTheme';
 
 const StyledTooltipContent = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(1),
-    minWidth: 200,
+    gap: theme.spacing(1.5),
+    minWidth: 220,
     maxWidth: 280,
 }));
 
@@ -30,8 +31,8 @@ const StyledTooltipHeader = styled(Box)(({ theme }) => ({
 
 const StyledEventRow = styled(Box)(({ theme }) => ({
     display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
+    alignItems: 'flex-start',
+    gap: theme.spacing(1.25),
 }));
 
 const StyledEventIconBadge = styled(Box)({
@@ -40,15 +41,17 @@ const StyledEventIconBadge = styled(Box)({
     justifyContent: 'center',
     width: 20,
     height: 20,
-    borderRadius: 6,
+    borderRadius: 4,
     flexShrink: 0,
+    // Optically aligns the badge with the first text line of the row.
+    marginTop: 1,
 });
 
 const StyledEventMeta = styled(Box)({
     display: 'flex',
     flexDirection: 'column',
     minWidth: 0,
-    gap: 2,
+    gap: 4,
 });
 
 const StyledEventLabel = styled(Typography)(({ theme }) => ({
@@ -56,6 +59,9 @@ const StyledEventLabel = styled(Typography)(({ theme }) => ({
     fontWeight: 600,
     color: theme.palette.text.primary,
     lineHeight: 1.3,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
 }));
 
 const StyledEventSubtext = styled(Typography)(({ theme }) => ({
@@ -65,17 +71,18 @@ const StyledEventSubtext = styled(Typography)(({ theme }) => ({
 }));
 
 // Detailed breakdown shown on hover over a pill marker. Lists every event in
-// the group with its type, timestamp, and author.
+// the group with its feature flag, type, timestamp, and author.
 export const FeatureEventTooltip: FC<{ group: EventGroup }> = ({ group }) => {
     const theme = useTheme();
     const isGrouped = group.events.length > 1;
+    const environment = group.events[0].environment;
     return (
         <StyledTooltipContent>
             <StyledTooltipHeader>
                 <FlagIcon sx={{ fontSize: 12, color: 'inherit' }} />
                 {isGrouped
-                    ? `${group.events.length} events in production`
-                    : 'Production'}
+                    ? `${group.events.length} events in ${environment}`
+                    : capitalizeFirst(environment)}
             </StyledTooltipHeader>
             {group.events.map((event) => {
                 const eventColor = getEventColor(theme, event.type);
@@ -94,15 +101,25 @@ export const FeatureEventTooltip: FC<{ group: EventGroup }> = ({ group }) => {
                             />
                         </StyledEventIconBadge>
                         <StyledEventMeta>
-                            <StyledEventLabel>
-                                {EVENT_TYPE_LABEL[event.type]}
+                            <StyledEventLabel title={event.featureName}>
+                                {event.featureName ||
+                                    EVENT_TYPE_LABEL[event.type]}
                             </StyledEventLabel>
                             <StyledEventSubtext>
+                                {EVENT_TYPE_LABEL[event.type]}
+                                {' · '}
                                 {format(
                                     new Date(event.timestamp),
                                     'MMM d, HH:mm',
                                 )}
-                                {' · '}
+                            </StyledEventSubtext>
+                            <StyledEventSubtext
+                                sx={{
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                }}
+                            >
                                 {event.createdBy}
                             </StyledEventSubtext>
                         </StyledEventMeta>

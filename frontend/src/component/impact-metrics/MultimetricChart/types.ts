@@ -13,4 +13,6 @@ export type MultimetricFeatureEvent = {
     type: 'feature-environment-enabled' | 'feature-environment-disabled';
     label: string;
     createdBy: string;
+    featureName: string; // empty when the event has no feature attached
+    environment: string;
 };

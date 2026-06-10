@@ -1,10 +1,5 @@
 import type { ImpactMetricsConfigSchema } from 'openapi';
 import type { ChartTimeRange } from 'component/impact-metrics/MultimetricChart/chartConfig';
-import type { MultimetricFeatureEvent } from 'component/impact-metrics/MultimetricChart/types';
-
-export type ImpactViewFeatureEvent = MultimetricFeatureEvent & {
-    featureName?: string;
-};
 
 export type ViewMetricConfig = Pick<
     ImpactMetricsConfigSchema,

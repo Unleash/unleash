@@ -1462,6 +1462,18 @@ test('should return archived flags when lifecycle filter targets the archived st
         total: 1,
         features: [{ name: 'lifecycle_active' }],
     });
+
+    // archived=IS:true stays authoritative alongside an exclusion operator:
+    // it returns archived flags, not active ones
+    const { body: archivedExcludingLive } = await app.request
+        .get(
+            '/api/admin/search/features?query=lifecycle_&project=IS:default&archived=IS:true&lifecycle=IS_NOT:live',
+        )
+        .expect(200);
+    expect(archivedExcludingLive).toMatchObject({
+        total: 1,
+        features: [{ name: 'lifecycle_archived' }],
+    });
 });
 
 test('should filter by favorite=IS:true', async () => {

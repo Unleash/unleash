@@ -688,14 +688,24 @@ const applyLifecycleAndArchivedFilters = (
             query.whereNull('features.archived_at');
         }
     } else {
-        // IS_NOT / IS_NONE_OF: exclude the listed active stages and never
-        // surface archived flags.
-        if (stageValues.length === 1) {
-            query.whereNot('lifecycle.latest_stage', stageValues[0]);
-        } else if (stageValues.length > 1) {
-            query.whereNotIn('lifecycle.latest_stage', stageValues);
+        // IS_NOT / IS_NONE_OF. The archived gate stays governed by the
+        // `archived` param, so `archived=IS:true` still returns only archived
+        // flags - unless the lifecycle filter itself excludes the archived
+        // stage, in which case that wins.
+        const showArchived = Boolean(archived) && !includesArchived;
+        if (showArchived) {
+            // Archived flags aren't in an active lifecycle stage, so excluding
+            // active stages doesn't apply to them - return them all (matching
+            // `archived=IS:true`, including legacy flags with no lifecycle row).
+            query.whereNotNull('features.archived_at');
+        } else {
+            if (stageValues.length === 1) {
+                query.whereNot('lifecycle.latest_stage', stageValues[0]);
+            } else if (stageValues.length > 1) {
+                query.whereNotIn('lifecycle.latest_stage', stageValues);
+            }
+            query.whereNull('features.archived_at');
         }
-        query.whereNull('features.archived_at');
     }
 };
 

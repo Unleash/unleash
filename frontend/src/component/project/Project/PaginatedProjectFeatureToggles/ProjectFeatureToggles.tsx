@@ -7,6 +7,7 @@ import { PaginatedTable } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
 import { ActionsCell } from '../ProjectFeatureToggles/ActionsCell/ActionsCell.tsx';
+import { ArchivedActionsCell } from '../ProjectFeatureToggles/ActionsCell/ArchivedActionsCell.tsx';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { MemoizedRowSelectCell } from '../ProjectFeatureToggles/RowSelectCell/RowSelectCell.tsx';
 import { BatchSelectionActionsBar } from 'component/common/BatchSelectionActionsBar/BatchSelectionActionsBar';
@@ -359,6 +360,22 @@ export const ProjectFeatureToggles = ({
                     tableState.archived ? (
                         <ArchivedFeatureActionCell
                             project={projectId}
+                            onRevive={() => {
+                                setShowFeatureReviveDialogue({
+                                    featureId: row.id,
+                                    open: true,
+                                });
+                            }}
+                            onDelete={() => {
+                                setShowFeatureDeleteDialogue({
+                                    featureId: row.id,
+                                    open: true,
+                                });
+                            }}
+                        />
+                    ) : row.original.archivedAt ? (
+                        <ArchivedActionsCell
+                            projectId={projectId}
                             onRevive={() => {
                                 setShowFeatureReviveDialogue({
                                     featureId: row.id,

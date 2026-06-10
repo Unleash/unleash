@@ -34,10 +34,11 @@ const StyledGridItem = styled(Box)({
     },
 });
 
-const StyledTitle = styled(Typography)({
+const StyledTitle = styled(Typography)(({ theme }) => ({
     lineHeight: 1.5,
     height: '24px',
-});
+    fontWeight: theme.typography.fontWeightBold,
+}));
 
 const StyledClearAll = styled(Chip)(({ theme }) => ({
     position: 'relative',

@@ -17,6 +17,7 @@ import { getLocalizedDateString } from '../../../util.ts';
 import { Tag } from 'component/common/Tag/Tag';
 import { formatTag } from 'utils/format-tag';
 import { Truncator } from 'component/common/Truncator/Truncator';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IFeatureNameCellProps {
     row: {
@@ -323,6 +324,7 @@ export const PrimaryFeatureInfo: FC<{
     onFavorite,
 }) => {
     const { featureTypes } = useFeatureTypes();
+    const showArchivedBadge = !useUiFlag('archiveInFlagsView');
     const IconComponent = getFeatureTypeIcons(type);
     const typeName = featureTypes.find(
         (featureType) => featureType.id === type,
@@ -391,7 +393,7 @@ export const PrimaryFeatureInfo: FC<{
                     </HtmlTooltip>
                 }
             />
-            {archivedAt && (
+            {archivedAt && showArchivedBadge && (
                 <HtmlTooltip arrow title={archivedDate} describeChild>
                     <Badge tabIndex={0} color='neutral'>
                         Archived

@@ -23,6 +23,11 @@ const StyledForm = styled('form')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(2),
+    // Gap owns the spacing; drop the FormFields' own bottom margin so it isn't
+    // doubled up.
+    '&& > *': {
+        marginBottom: 0,
+    },
 }));
 
 const RadioCardContainer = styled(Card)(({ theme }) => ({

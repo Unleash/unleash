@@ -135,7 +135,12 @@ const RolloutSlider = ({
     return (
         <SliderWrapper>
             <StyledBox>
-                <Typography id='discrete-slider-always'>{name}</Typography>
+                <Typography
+                    id='discrete-slider-always'
+                    sx={{ fontWeight: 'bold' }}
+                >
+                    {name}
+                </Typography>
                 <HelpIcon
                     htmlTooltip
                     tooltip={

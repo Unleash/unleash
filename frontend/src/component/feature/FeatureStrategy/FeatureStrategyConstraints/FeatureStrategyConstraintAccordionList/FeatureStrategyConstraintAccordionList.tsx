@@ -96,7 +96,9 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
         <StyledContainer>
             <div>
                 <StyledHelpIconBox>
-                    <Typography>Constraints</Typography>
+                    <Typography sx={{ fontWeight: 'bold' }}>
+                        Constraints
+                    </Typography>
                     <HelpIcon
                         htmlTooltip
                         tooltip={

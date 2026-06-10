@@ -90,7 +90,7 @@ export const FeatureToggleListTable: FC = () => {
         filterState,
     } = useGlobalFeatureSearch();
     const showArchived = Boolean(
-        filterState.archived?.values?.includes('true'),
+        filterState.lifecycle?.values?.includes('archived'),
     );
     const archiveInFlagsView = useUiFlag('archiveInFlagsView');
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);

@@ -14,6 +14,7 @@ import swift from '../../../assets/icons/sdks/Logo-swift.svg';
 import android from '../../../assets/icons/sdks/Logo-android.svg';
 import flutter from '../../../assets/icons/sdks/Logo-flutter.svg';
 import nextjs from '../../../assets/icons/sdks/Logo-nextjs.svg';
+import reactnative from '../../../assets/icons/sdks/Logo-reactnative.svg';
 
 export type SdkType = 'client' | 'frontend';
 export type Sdk = { name: SdkName; type: SdkType };
@@ -29,6 +30,7 @@ export type ServerSdkName =
 export type ClientSdkName =
     | 'JavaScript'
     | 'React'
+    | 'React Native'
     | 'Vue'
     | 'Svelte'
     | 'Swift'
@@ -56,6 +58,7 @@ export const clientSdks: { name: ClientSdkName; icon: string }[] = [
     { name: 'Android', icon: android },
     { name: 'Flutter', icon: flutter },
     { name: 'Next.js', icon: nextjs },
+    { name: 'React Native', icon: reactnative },
 ];
 
 export const allSdks: { name: ClientSdkName | ServerSdkName; icon: string }[] =

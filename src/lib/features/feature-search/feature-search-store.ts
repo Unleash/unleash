@@ -672,17 +672,23 @@ const applyLifecycleAndArchivedFilters = (
     const stageValues = values.filter((value) => value !== ARCHIVED_STAGE);
 
     if (operator === 'IS' || operator === 'IS_ANY_OF') {
-        const wantArchived = includesArchived || Boolean(archived);
-        query.where((builder) => {
-            if (stageValues.length > 0) {
-                builder.orWhereIn('lifecycle.latest_stage', stageValues);
+        if (archived) {
+            query.whereNotNull('features.archived_at');
+            if (!includesArchived && stageValues.length > 0) {
+                query.whereIn('lifecycle.latest_stage', stageValues);
             }
-            if (wantArchived) {
-                builder.orWhereNotNull('features.archived_at');
+        } else {
+            query.where((builder) => {
+                if (stageValues.length > 0) {
+                    builder.orWhereIn('lifecycle.latest_stage', stageValues);
+                }
+                if (includesArchived) {
+                    builder.orWhereNotNull('features.archived_at');
+                }
+            });
+            if (!includesArchived) {
+                query.whereNull('features.archived_at');
             }
-        });
-        if (!wantArchived) {
-            query.whereNull('features.archived_at');
         }
     } else {
         const showArchived = Boolean(archived) && !includesArchived;

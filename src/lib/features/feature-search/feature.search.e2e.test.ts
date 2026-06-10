@@ -1504,6 +1504,31 @@ describe('lifecycle and archived filtering', () => {
             'lifecycle_archived_with_stage',
         ]);
     });
+
+    test('archived=IS:true stays authoritative alongside an inclusion operator: archived flags only, no active flags from the requested stages', async () => {
+        await setupLifecycleFlags();
+
+        const { body } = await searchByLifecycle(
+            'archived=IS:true&lifecycle=IS_ANY_OF:live,archived',
+        );
+
+        expect(body.total).toBe(2);
+        expect(sortedNames(body)).toEqual([
+            'archived_without_lifecycle',
+            'lifecycle_archived_with_stage',
+        ]);
+    });
+
+    test('archived=IS:true with a lifecycle filter for only active stages is contradictory and returns nothing', async () => {
+        await setupLifecycleFlags();
+
+        const { body } = await searchByLifecycle(
+            'archived=IS:true&lifecycle=IS:live',
+        );
+
+        expect(body.total).toBe(0);
+        expect(body.features).toEqual([]);
+    });
 });
 
 test('should filter by favorite=IS:true', async () => {

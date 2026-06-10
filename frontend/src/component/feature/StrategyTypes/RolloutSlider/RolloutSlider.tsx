@@ -53,7 +53,6 @@ const StyledSliderContainer = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     width: '100%',
     gap: theme.spacing(4),
-    marginBottom: theme.spacing(1),
 }));
 
 const StyledInputBox = styled(Box)(({ theme }) => ({

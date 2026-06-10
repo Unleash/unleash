@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { Box, Typography, Chip, styled } from '@mui/material';
+import { FormGroup } from 'component/common/FormGroup/FormGroup';
 import { LabelFilterItem } from './LabelFilterItem/LabelFilterItem.tsx';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
@@ -86,24 +87,26 @@ export const LabelFilterSection: FC<{
                     />
                 )}
             </StyledHeader>
-            <StyledGrid>
-                {labels.map(([labelKey, values]) => {
-                    const currentSelection = labelSelectors[labelKey] || [];
-                    return (
-                        <StyledGridItem key={labelKey}>
-                            <LabelFilterItem
-                                labelKey={labelKey}
-                                options={values}
-                                value={currentSelection}
-                                onChange={(newValues) =>
-                                    onLabelChange(labelKey, newValues)
-                                }
-                                handleAllToggle={onAllToggle}
-                            />
-                        </StyledGridItem>
-                    );
-                })}
-            </StyledGrid>
+            <FormGroup>
+                <StyledGrid>
+                    {labels.map(([labelKey, values]) => {
+                        const currentSelection = labelSelectors[labelKey] || [];
+                        return (
+                            <StyledGridItem key={labelKey}>
+                                <LabelFilterItem
+                                    labelKey={labelKey}
+                                    options={values}
+                                    value={currentSelection}
+                                    onChange={(newValues) =>
+                                        onLabelChange(labelKey, newValues)
+                                    }
+                                    handleAllToggle={onAllToggle}
+                                />
+                            </StyledGridItem>
+                        );
+                    })}
+                </StyledGrid>
+            </FormGroup>
         </StyledContainer>
     );
 };

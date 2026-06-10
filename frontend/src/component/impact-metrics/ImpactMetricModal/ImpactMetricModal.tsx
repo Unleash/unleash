@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { FormField } from 'component/common/FormField/FormField';
-import { FormGroup } from 'component/common/FormGroup/FormGroup';
 import { ImpactMetricsControls } from './ImpactMetricsControls/ImpactMetricsControls.tsx';
 import { useChartFormState } from '../hooks/useChartFormState.ts';
 import type { ChartConfig } from '../types.ts';
@@ -53,6 +52,11 @@ const StyledFormContent = styled('div')(({ theme }) => ({
     padding: theme.spacing(6),
     flexGrow: 1,
     minHeight: 600,
+    // Vertical spacing is owned by the gap; drop the fields' own bottom margins
+    // (e.g. FormField's) so it isn't doubled up.
+    '& > *': {
+        marginBottom: 0,
+    },
 }));
 
 const StyledButtonContainer = styled('div')(({ theme }) => ({
@@ -193,39 +197,33 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
                                 : 'Add impact metric'}
                         </StyledTitle>
 
-                        <FormGroup>
-                            <FormField label='Chart title (optional)'>
-                                <TextField
-                                    value={formData.title}
-                                    onChange={(e) =>
-                                        actions.setTitle(e.target.value)
-                                    }
-                                    fullWidth
-                                    variant='outlined'
-                                    size='large'
-                                />
-                            </FormField>
-
-                            <ImpactMetricsControls
-                                formData={formData}
-                                actions={actions}
-                                metrics={metrics}
-                                loading={loading}
-                                labelsFilter={
-                                    currentAvailableLabels ? (
-                                        <LabelsFilter
-                                            labelSelectors={
-                                                formData.labelSelectors
-                                            }
-                                            onChange={actions.setLabelSelectors}
-                                            availableLabels={
-                                                currentAvailableLabels
-                                            }
-                                        />
-                                    ) : null
+                        <FormField label='Chart title (optional)'>
+                            <TextField
+                                value={formData.title}
+                                onChange={(e) =>
+                                    actions.setTitle(e.target.value)
                                 }
+                                fullWidth
+                                variant='outlined'
+                                size='large'
                             />
-                        </FormGroup>
+                        </FormField>
+
+                        <ImpactMetricsControls
+                            formData={formData}
+                            actions={actions}
+                            metrics={metrics}
+                            loading={loading}
+                            labelsFilter={
+                                currentAvailableLabels ? (
+                                    <LabelsFilter
+                                        labelSelectors={formData.labelSelectors}
+                                        onChange={actions.setLabelSelectors}
+                                        availableLabels={currentAvailableLabels}
+                                    />
+                                ) : null
+                            }
+                        />
                     </StyledFormContent>
                     <StyledButtonContainer>
                         <Button onClick={onClose}>Cancel</Button>

@@ -48,7 +48,8 @@ const StyledTitle = styled('h1')(({ theme }) => ({
 const StyledFormContent = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(3),
+    // Match the shared field rhythm (FormField/FormGroup use spacing(2)).
+    gap: theme.spacing(2),
     padding: theme.spacing(6),
     flexGrow: 1,
     minHeight: 600,

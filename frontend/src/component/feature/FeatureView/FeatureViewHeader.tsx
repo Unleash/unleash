@@ -1,6 +1,6 @@
 import { useState, type FC } from 'react';
 import { styled, Tab, Tabs, type Theme, Typography } from '@mui/material';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { FeatureStatusChip } from 'component/common/FeatureStatusChip/FeatureStatusChip';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -8,7 +8,6 @@ import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi
 import useToast from 'hooks/useToast';
 import { useUiFlag } from 'hooks/useUiFlag';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
-import { ManageTagsDialog } from './FeatureOverview/ManageTagsDialog/ManageTagsDialog.tsx';
 import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
@@ -42,11 +41,11 @@ const StyledTitle = styled('div')(({ theme }) => ({
     columnGap: theme.spacing(0.5),
 }));
 
-const LowerHeaderRow = styled(UpperHeaderRow)(({ theme }) => ({
+const LowerHeaderRow = styled(UpperHeaderRow)({
     justifyContent: 'space-between',
     columnGap: 0,
     flexFlow: 'row nowrap',
-}));
+});
 
 const StyledTabs = styled(Tabs)({
     minWidth: 0,
@@ -68,14 +67,6 @@ const StyledTabButton = styled(Tab)(({ theme }) => ({
     }),
 }));
 
-export const StyledLink = styled(Link)(() => ({
-    maxWidth: '100%',
-    textDecoration: 'none',
-    '&:hover, &:focus': {
-        textDecoration: 'underline',
-    },
-}));
-
 const useLegacyVariants = (environments: IFeatureToggle['environments']) => {
     const enableLegacyVariants = useUiFlag('enableLegacyVariants');
     const existingLegacyVariantsExist = environments.some(
@@ -95,7 +86,6 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
     const { refetchFeature } = useFeature(projectId, featureId);
     const { setToastApiError } = useToast();
 
-    const [openTagDialog, setOpenTagDialog] = useState(false);
     const [showDelDialog, setShowDelDialog] = useState(false);
     const [openStaleDialog, setOpenStaleDialog] = useState(false);
 
@@ -215,7 +205,6 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
                 featureId={featureId}
                 projectId={projectId}
             />
-            <ManageTagsDialog open={openTagDialog} setOpen={setOpenTagDialog} />
         </>
     );
 };

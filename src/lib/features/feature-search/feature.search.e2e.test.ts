@@ -1427,6 +1427,7 @@ test('should return archived flags when lifecycle filter targets the archived st
     await stores.featureLifecycleStore.insert([
         { feature: 'lifecycle_active', stage: 'live' },
     ]);
+    expect(await stores.featureLifecycleStore.get('lifecycle_archived')).toHaveLength(0);
 
     // lifecycle=IS:archived behaves like archived=IS:true
     const { body: archivedOnly } = await app.request

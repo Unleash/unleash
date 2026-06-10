@@ -43,7 +43,7 @@ export const featureSearchQueryParameters = [
                 '^(IS|IS_NOT|IS_ANY_OF|IS_NONE_OF):(.*?)(,([a-zA-Z0-9_]+))*$',
         },
         description:
-            'The lifecycle stage of the feature. The stage can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF. The `archived` stage matches archived flags (equivalent to `archived=IS:true`), so it can be combined with active stages, e.g. `IS_ANY_OF:live,archived`.',
+            'The lifecycle stage of the feature. The stage can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF.',
         in: 'query',
     },
     {

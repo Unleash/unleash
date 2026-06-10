@@ -656,6 +656,8 @@ class FeatureSearchStore implements IFeatureSearchStore {
 }
 
 const ARCHIVED_STAGE: StageName = 'archived';
+const ARCHIVED_AT = 'features.archived_at';
+const LATEST_STAGE = 'lifecycle.latest_stage';
 
 const applyLifecycleAndArchivedFilters = (
     query: Knex.QueryBuilder,
@@ -668,40 +670,46 @@ const applyLifecycleAndArchivedFilters = (
     }
 
     const { operator, values } = parsedLifecycle;
-    const includesArchived = values.includes(ARCHIVED_STAGE);
-    const stageValues = values.filter((value) => value !== ARCHIVED_STAGE);
+    const exclude = operator === 'IS_NOT' || operator === 'IS_NONE_OF';
+    const archivedView = Boolean(archived);
+    const filterIncludesArchived = values.includes(ARCHIVED_STAGE);
+    const stages = values.filter((value) => value !== ARCHIVED_STAGE);
 
-    if (operator === 'IS' || operator === 'IS_ANY_OF') {
-        if (archived) {
-            query.whereNotNull('features.archived_at');
-            if (!includesArchived && stageValues.length > 0) {
-                query.whereIn('lifecycle.latest_stage', stageValues);
-            }
-        } else {
-            query.where((builder) => {
-                if (stageValues.length > 0) {
-                    builder.orWhereIn('lifecycle.latest_stage', stageValues);
-                }
-                if (includesArchived) {
-                    builder.orWhereNotNull('features.archived_at');
-                }
-            });
-            if (!includesArchived) {
-                query.whereNull('features.archived_at');
-            }
+    if (exclude) {
+        if (archivedView && !filterIncludesArchived) {
+            // The exclusion only concerns the stages of active flags, so
+            // the archived view is unaffected by it.
+            query.whereNotNull(ARCHIVED_AT);
+            return;
         }
-    } else {
-        const showArchived = Boolean(archived) && !includesArchived;
-        if (showArchived) {
-            query.whereNotNull('features.archived_at');
-        } else {
-            if (stageValues.length === 1) {
-                query.whereNot('lifecycle.latest_stage', stageValues[0]);
-            } else if (stageValues.length > 1) {
-                query.whereNotIn('lifecycle.latest_stage', stageValues);
-            }
-            query.whereNull('features.archived_at');
+        // Active flags whose stage is none of the given stages.
+        query.whereNull(ARCHIVED_AT);
+        if (stages.length > 0) {
+            query.whereNotIn(LATEST_STAGE, stages);
         }
+        return;
+    }
+
+    if (archivedView) {
+        // Archived flags, optionally narrowed to the given stages.
+        query.whereNotNull(ARCHIVED_AT);
+        if (!filterIncludesArchived && stages.length > 0) {
+            query.whereIn(LATEST_STAGE, stages);
+        }
+        return;
+    }
+
+    // Active flags in the given stages, plus archived flags if asked for.
+    query.where((builder) => {
+        if (stages.length > 0) {
+            builder.orWhereIn(LATEST_STAGE, stages);
+        }
+        if (filterIncludesArchived) {
+            builder.orWhereNotNull(ARCHIVED_AT);
+        }
+    });
+    if (!filterIncludesArchived) {
+        query.whereNull(ARCHIVED_AT);
     }
 };
 

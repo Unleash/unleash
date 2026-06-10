@@ -1,12 +1,11 @@
-import { useState, type FC } from 'react';
+import { useId, useState, type FC, type MouseEvent } from 'react';
 import {
     Box,
     IconButton,
     ListItemIcon,
     ListItemText,
+    Menu,
     MenuItem,
-    MenuList,
-    Popover,
     Tooltip,
     Typography,
     styled,
@@ -18,13 +17,12 @@ import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 import CheckIcon from '@mui/icons-material/Check';
 import ArchiveIcon from '@mui/icons-material/Archive';
 import WatchLaterIcon from '@mui/icons-material/WatchLater';
-import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
 import {
     CREATE_FEATURE,
     DELETE_FEATURE,
     UPDATE_FEATURE,
 } from 'component/providers/AccessProvider/permissions';
-import { defaultBorderRadius } from 'themes/themeStyles';
+import { useCheckProjectPermissions } from 'hooks/useHasAccess';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
 
@@ -52,6 +50,10 @@ export const ActionsCell: FC<IActionsCellProps> = ({
     onOpenArchiveDialog,
     onOpenStaleDialog,
 }) => {
+    const checkAccess = useCheckProjectPermissions(projectId);
+    const canClone = checkAccess(CREATE_FEATURE);
+    const canArchive = checkAccess(DELETE_FEATURE);
+    const canToggleStale = checkAccess(UPDATE_FEATURE);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [isFeatureNameCopied, setIsFeatureNameCopied] = useState(false);
     const { setToastData } = useToast();
@@ -60,14 +62,15 @@ export const ActionsCell: FC<IActionsCellProps> = ({
     } = row;
 
     const open = Boolean(anchorEl);
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const buttonId = useId();
+    const menuId = useId();
+
+    const handleClick = (event: MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
         setAnchorEl(null);
     };
-    const id = `feature-${featureId}-actions`;
-    const menuId = `${id}-menu`;
 
     const handleCopyToClipboard = () => {
         try {
@@ -90,129 +93,88 @@ export const ActionsCell: FC<IActionsCellProps> = ({
         <StyledBoxCell>
             <Tooltip title='Feature flag actions' arrow describeChild>
                 <IconButton
-                    id={id}
+                    aria-label='Feature flag actions'
+                    id={buttonId}
                     data-loading
                     aria-controls={open ? menuId : undefined}
                     aria-haspopup='true'
-                    aria-expanded={open ? 'true' : undefined}
+                    aria-expanded={open}
                     onClick={handleClick}
                     type='button'
                 >
                     <MoreVertIcon />
                 </IconButton>
             </Tooltip>
-            <Popover
+            <Menu
                 id={menuId}
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
-                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                disableScrollLock={true}
+                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 slotProps={{
-                    paper: {
-                        sx: (theme) => ({
-                            borderRadius: `${theme.shape.borderRadius}px`,
-                            padding: theme.spacing(1, 1.5),
-                        }),
+                    list: {
+                        'aria-labelledby': buttonId,
                     },
                 }}
             >
-                <MenuList aria-labelledby={id}>
-                    <MenuItem
-                        sx={defaultBorderRadius}
-                        onClick={handleCopyToClipboard}
-                    >
-                        <ListItemIcon>
-                            {isFeatureNameCopied ? (
-                                <CheckIcon />
-                            ) : (
-                                <FileCopyIcon />
-                            )}
-                        </ListItemIcon>
-                        <ListItemText>
-                            <Typography variant='body2'>
-                                {isFeatureNameCopied ? 'Copied!' : 'Copy Name'}
-                            </Typography>
-                        </ListItemText>
-                    </MenuItem>
-                    <PermissionHOC
-                        projectId={projectId}
-                        permission={CREATE_FEATURE}
-                    >
-                        {({ hasAccess }) => (
-                            <MenuItem
-                                sx={defaultBorderRadius}
-                                onClick={handleClose}
-                                disabled={!hasAccess}
-                                component={RouterLink}
-                                nativeButton={false}
-                                to={`/projects/${projectId}/features/${featureId}/copy`}
-                            >
-                                <ListItemIcon>
-                                    <LibraryAddIcon />
-                                </ListItemIcon>
-                                <ListItemText>
-                                    <Typography variant='body2'>
-                                        Clone
-                                    </Typography>
-                                </ListItemText>
-                            </MenuItem>
-                        )}
-                    </PermissionHOC>
-                    <PermissionHOC
-                        projectId={projectId}
-                        permission={DELETE_FEATURE}
-                    >
-                        {({ hasAccess }) => (
-                            <MenuItem
-                                sx={defaultBorderRadius}
-                                onClick={() => {
-                                    onOpenArchiveDialog(featureId);
-                                    handleClose();
-                                }}
-                                disabled={!hasAccess}
-                            >
-                                <ListItemIcon>
-                                    <ArchiveIcon />
-                                </ListItemIcon>
-                                <ListItemText>
-                                    <Typography variant='body2'>
-                                        Archive
-                                    </Typography>
-                                </ListItemText>
-                            </MenuItem>
-                        )}
-                    </PermissionHOC>
-                    <PermissionHOC
-                        projectId={projectId}
-                        permission={UPDATE_FEATURE}
-                    >
-                        {({ hasAccess }) => (
-                            <MenuItem
-                                sx={defaultBorderRadius}
-                                onClick={() => {
-                                    handleClose();
-                                    onOpenStaleDialog({
-                                        featureId,
-                                        stale: stale === true,
-                                    });
-                                }}
-                                disabled={!hasAccess}
-                            >
-                                <ListItemIcon>
-                                    <WatchLaterIcon />
-                                </ListItemIcon>
-                                <ListItemText>
-                                    <Typography variant='body2'>
-                                        {stale ? 'Un-mark' : 'Mark'} as stale
-                                    </Typography>
-                                </ListItemText>
-                            </MenuItem>
-                        )}
-                    </PermissionHOC>
-                </MenuList>
-            </Popover>
+                <MenuItem onClick={handleCopyToClipboard}>
+                    <ListItemIcon>
+                        {isFeatureNameCopied ? <CheckIcon /> : <FileCopyIcon />}
+                    </ListItemIcon>
+                    <ListItemText>
+                        <Typography variant='body2'>
+                            {isFeatureNameCopied ? 'Copied!' : 'Copy Name'}
+                        </Typography>
+                    </ListItemText>
+                </MenuItem>
+                <MenuItem
+                    disabled={!canClone}
+                    component={RouterLink}
+                    nativeButton={false}
+                    to={`/projects/${projectId}/features/${featureId}/copy`}
+                >
+                    <ListItemIcon>
+                        <LibraryAddIcon />
+                    </ListItemIcon>
+                    <ListItemText>
+                        <Typography variant='body2'>Clone</Typography>
+                    </ListItemText>
+                </MenuItem>
+                <MenuItem
+                    onClick={() => {
+                        onOpenArchiveDialog(featureId);
+                        handleClose();
+                    }}
+                    disabled={!canArchive}
+                >
+                    <ListItemIcon>
+                        <ArchiveIcon />
+                    </ListItemIcon>
+                    <ListItemText>
+                        <Typography variant='body2'>Archive</Typography>
+                    </ListItemText>
+                </MenuItem>
+                <MenuItem
+                    onClick={() => {
+                        handleClose();
+                        onOpenStaleDialog({
+                            featureId,
+                            stale: stale === true,
+                        });
+                    }}
+                    disabled={!canToggleStale}
+                >
+                    <ListItemIcon>
+                        <WatchLaterIcon />
+                    </ListItemIcon>
+                    <ListItemText>
+                        <Typography variant='body2'>
+                            {stale ? 'Un-mark' : 'Mark'} as stale
+                        </Typography>
+                    </ListItemText>
+                </MenuItem>
+            </Menu>
         </StyledBoxCell>
     );
 };

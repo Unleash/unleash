@@ -24,6 +24,8 @@ async function getSetup() {
         preHook: (a) => {
             a.use((req, _res, next) => {
                 req.user = currentUser;
+                // stub the session id the user is acting from
+                req.sessionID = 'current-session';
                 next();
             });
         },
@@ -85,6 +87,32 @@ test('should allow user to change password', async () => {
     const updated = await userStore.get(currentUser.id);
     // @ts-expect-error
     expect(updated.passwordHash).toBeTruthy();
+});
+
+test('changing own password keeps the current session and terminates the others', async () => {
+    const { request, base, sessionStore } = await getSetup();
+    await sessionStore.insertSession({
+        sid: 'current-session',
+        sess: { user: { id: currentUser.id } },
+    });
+    await sessionStore.insertSession({
+        sid: 'other-device',
+        sess: { user: { id: currentUser.id } },
+    });
+
+    await request
+        .post(`${base}/api/admin/user/change-password`)
+        .send({
+            password: owaspPassword,
+            confirmPassword: owaspPassword,
+            oldPassword,
+        })
+        .expect(200);
+
+    const remaining = await sessionStore.getSessionsForUser(currentUser.id);
+    expect(remaining.map((session) => session.sid)).toEqual([
+        'current-session',
+    ]);
 });
 
 test('should not allow user to change password with incorrect old password', async () => {

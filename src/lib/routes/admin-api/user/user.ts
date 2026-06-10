@@ -304,6 +304,9 @@ class UserController extends Controller {
                 user.id,
                 password,
                 oldPassword,
+                // Keep the session that performed the change alive and sign the
+                // user out of every other device (OWASP session management).
+                { keepSessionId: req.sessionID },
             );
             res.status(200).end();
         } else {

@@ -80,6 +80,21 @@ export interface ILoginUserRequest {
     autoCreate?: boolean;
 }
 
+export interface ChangePasswordOptions {
+    /**
+     * Opt out of invalidating sessions when changing the password. Defaults to
+     * logging the user out (only set this to `false` for flows like setting an
+     * initial password during signup).
+     */
+    logoutUser?: boolean;
+    /**
+     * When set, keep this session alive and only terminate the user's other
+     * sessions. Used by self-service password changes so the user who performed
+     * the change stays logged in while every other device is signed out.
+     */
+    keepSessionId?: string;
+}
+
 const saltRounds = 10;
 const disallowNPreviousPasswords = 5;
 
@@ -570,7 +585,7 @@ export class UserService {
     async changePassword(
         userId: number,
         password: string,
-        { logoutUser }: { logoutUser?: boolean } = { logoutUser: true },
+        { logoutUser, keepSessionId }: ChangePasswordOptions = {},
     ): Promise<void> {
         this.validatePassword(password);
         const passwordHash = await bcrypt.hash(password, saltRounds);
@@ -582,14 +597,30 @@ export class UserService {
         );
         await this.resetTokenService.expireExistingTokensForUser(userId);
 
-        if (logoutUser) {
-            await this.sessionService.deleteSessionsForUser(userId);
+        // Invalidate active sessions whenever the password changes so that
+        // other devices/browsers are forced to re-authenticate with the new
+        // credentials (OWASP session management). When `keepSessionId` is
+        // provided we keep that session alive (the one that performed the
+        // change) and only terminate the others. Callers must opt out of
+        // invalidation entirely with `logoutUser: false` (e.g. setting an
+        // initial password during signup); a missing/undefined flag stays
+        // secure.
+        if (logoutUser !== false) {
+            if (keepSessionId) {
+                await this.sessionService.deleteSessionsForUserExcept(
+                    userId,
+                    keepSessionId,
+                );
+            } else {
+                await this.sessionService.deleteSessionsForUser(userId);
+            }
         }
     }
 
     async changePasswordWithPreviouslyUsedPasswordCheck(
         userId: number,
         password: string,
+        options: ChangePasswordOptions = {},
     ): Promise<void> {
         const previouslyUsed =
             await this.store.getPasswordsPreviouslyUsed(userId);
@@ -600,13 +631,14 @@ export class UserService {
             throw new PasswordPreviouslyUsedError();
         }
 
-        await this.changePassword(userId, password);
+        await this.changePassword(userId, password, options);
     }
 
     async changePasswordWithVerification(
         userId: number,
         newPassword: string,
         oldPassword: string,
+        options: ChangePasswordOptions = {},
     ): Promise<void> {
         const currentPasswordHash = await this.store.getPasswordHash(userId);
         const match = await bcrypt.compare(oldPassword, currentPasswordHash);
@@ -619,6 +651,7 @@ export class UserService {
         await this.changePasswordWithPreviouslyUsedPasswordCheck(
             userId,
             newPassword,
+            options,
         );
     }
 

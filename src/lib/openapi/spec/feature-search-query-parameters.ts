@@ -160,13 +160,14 @@ export const featureSearchQueryParameters = [
     },
     {
         name: 'archived',
+        deprecated: true, // todo(v9): remove this parameter (deprecated since 8.0.1)
         schema: {
             type: 'string',
             example: 'IS:true',
             pattern: '^IS:(true|false)$',
         },
         description:
-            'Whether to get results for archived feature flags or active feature flags. If `IS:true`, Unleash will return only archived flags. If `IS:false`, it will return only active flags.',
+            'Deprecated: use the `lifecycle` parameter instead (`lifecycle=IS:archived` is equivalent to `archived=IS:true`). Whether to get results for archived feature flags or active feature flags. If `IS:true`, Unleash will return only archived flags, taking precedence over any `lifecycle` filter. If `IS:false`, it will return only active flags.',
         in: 'query',
     },
     {

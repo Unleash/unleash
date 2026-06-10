@@ -10,6 +10,8 @@ import {
     Typography,
 } from '@mui/material';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import { FormField } from 'component/common/FormField/FormField';
+import { FormGroup } from 'component/common/FormGroup/FormGroup';
 import { ImpactMetricsControls } from './ImpactMetricsControls/ImpactMetricsControls.tsx';
 import { useChartFormState } from '../hooks/useChartFormState.ts';
 import type { ChartConfig } from '../types.ts';
@@ -191,30 +193,39 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
                                 : 'Add impact metric'}
                         </StyledTitle>
 
-                        <TextField
-                            label='Chart Title (optional)'
-                            value={formData.title}
-                            onChange={(e) => actions.setTitle(e.target.value)}
-                            fullWidth
-                            variant='outlined'
-                            size='large'
-                        />
+                        <FormGroup>
+                            <FormField label='Chart title (optional)'>
+                                <TextField
+                                    value={formData.title}
+                                    onChange={(e) =>
+                                        actions.setTitle(e.target.value)
+                                    }
+                                    fullWidth
+                                    variant='outlined'
+                                    size='large'
+                                />
+                            </FormField>
 
-                        <ImpactMetricsControls
-                            formData={formData}
-                            actions={actions}
-                            metrics={metrics}
-                            loading={loading}
-                            labelsFilter={
-                                currentAvailableLabels ? (
-                                    <LabelsFilter
-                                        labelSelectors={formData.labelSelectors}
-                                        onChange={actions.setLabelSelectors}
-                                        availableLabels={currentAvailableLabels}
-                                    />
-                                ) : null
-                            }
-                        />
+                            <ImpactMetricsControls
+                                formData={formData}
+                                actions={actions}
+                                metrics={metrics}
+                                loading={loading}
+                                labelsFilter={
+                                    currentAvailableLabels ? (
+                                        <LabelsFilter
+                                            labelSelectors={
+                                                formData.labelSelectors
+                                            }
+                                            onChange={actions.setLabelSelectors}
+                                            availableLabels={
+                                                currentAvailableLabels
+                                            }
+                                        />
+                                    ) : null
+                                }
+                            />
+                        </FormGroup>
                     </StyledFormContent>
                     <StyledButtonContainer>
                         <Button onClick={onClose}>Cancel</Button>

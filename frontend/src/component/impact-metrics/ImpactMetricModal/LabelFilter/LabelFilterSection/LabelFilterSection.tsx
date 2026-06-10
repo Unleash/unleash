@@ -27,6 +27,10 @@ const StyledGridItem = styled(Box)({
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
+    // Spacing is owned by the grid gap; drop the FormField's own bottom margin.
+    '& > *': {
+        marginBottom: 0,
+    },
 });
 
 const StyledTitle = styled(Typography)({

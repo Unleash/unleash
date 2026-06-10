@@ -94,13 +94,15 @@ export const LifecycleFilters = ({
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const selectedLifecycle = state.lifecycle?.values?.[0] ?? null;
     const useNewLifecycleOptions = useUiFlag('archiveInFlagsView');
+    const isArchivedActive = Boolean(state.archived?.values?.includes('true'));
     const lifecycleOptions = useNewLifecycleOptions
         ? newLifecycleOptions
         : oldLifecycleOptions;
 
-    const isActive = (value: LifecycleStage['name'] | null) => {
-        return value === selectedLifecycle;
-    };
+    const isActive = (value: LifecycleStage['name'] | null) =>
+        value === 'archived'
+            ? isArchivedActive
+            : !isArchivedActive && value === selectedLifecycle;
 
     const allFlagsCount = Object.entries(countData ?? {}).reduce(
         (acc, [key, count]) => (key !== 'archived' ? acc + count : acc),
@@ -111,16 +113,26 @@ export const LifecycleFilters = ({
         value !== null ? countData?.[value] : allFlagsCount || undefined;
 
     const applyFilter = (value: LifecycleStage['name'] | null) => {
-        onChange(
-            value === null
-                ? { lifecycle: null }
-                : { lifecycle: { operator: 'IS', values: [value] } },
-        );
+        if (value === 'archived') {
+            onChange({
+                archived: { operator: 'IS', values: ['true'] },
+                lifecycle: null,
+            });
+        } else {
+            onChange({
+                archived: null,
+                lifecycle:
+                    value === null ? null : { operator: 'IS', values: [value] },
+            });
+        }
     };
 
     const selectedOption =
-        lifecycleOptions.find((option) => option.value === selectedLifecycle) ??
-        lifecycleOptions[0];
+        (isArchivedActive
+            ? lifecycleOptions.find((option) => option.value === 'archived')
+            : lifecycleOptions.find(
+                  (option) => option.value === selectedLifecycle,
+              )) ?? lifecycleOptions[0];
 
     const renderChips = () =>
         lifecycleOptions.map(({ label, value }) => {

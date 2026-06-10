@@ -13,6 +13,7 @@ import { HtmlTooltip } from '../../../HtmlTooltip/HtmlTooltip.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useLocationSettings } from 'hooks/useLocationSettings';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { getLocalizedDateString } from '../../../util.ts';
 import { Tag } from 'component/common/Tag/Tag';
 import { formatTag } from 'utils/format-tag';
@@ -329,6 +330,7 @@ export const PrimaryFeatureInfo: FC<{
     )?.name;
     const title = `${typeName || type} flag`;
     const { locationSettings } = useLocationSettings();
+    const archiveInFlagsView = useUiFlag('archiveInFlagsView');
     const archivedDate = getLocalizedDateString(
         archivedAt,
         locationSettings.locale,
@@ -391,7 +393,7 @@ export const PrimaryFeatureInfo: FC<{
                     </HtmlTooltip>
                 }
             />
-            {archivedAt && (
+            {archivedAt && !archiveInFlagsView && (
                 <HtmlTooltip arrow title={archivedDate} describeChild>
                     <Badge tabIndex={0} color='neutral'>
                         Archived

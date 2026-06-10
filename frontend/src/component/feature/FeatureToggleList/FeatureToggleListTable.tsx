@@ -16,6 +16,7 @@ import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/Fa
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { ExportDialog } from './ExportDialog.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { focusable } from 'themes/themeStyles';
 import { FeatureLifecycleCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import useToast from 'hooks/useToast';
@@ -33,6 +34,13 @@ import { ExportFlags } from './ExportFlags.tsx';
 import { createFeatureOverviewCell } from 'component/common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
 import { AvatarCell } from 'component/project/Project/PaginatedProjectFeatureToggles/AvatarCell';
 import { StatusCell } from './StatusCell/StatusCell.tsx';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import {
+    DELETE_FEATURE,
+    UPDATE_FEATURE,
+} from 'component/providers/AccessProvider/permissions';
+import { ArchivedFeatureDeleteConfirm } from 'component/archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureDeleteConfirm/ArchivedFeatureDeleteConfirm';
+import { ArchivedFeatureReviveConfirm } from 'component/archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureReviveConfirm/ArchivedFeatureReviveConfirm';
 
 export const featuresPlaceholder: FeatureSearchResponseSchema[] = Array.from(
     { length: 15 },
@@ -85,6 +93,16 @@ export const FeatureToggleListTable: FC = () => {
         setTableState,
         filterState,
     } = useGlobalFeatureSearch();
+    const showArchived = Boolean(
+        filterState.archived?.values?.includes('true'),
+    );
+    const archiveInFlagsView = useUiFlag('archiveInFlagsView');
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [deletedFeature, setDeletedFeature] =
+        useState<FeatureSearchResponseSchema>();
+    const [reviveModalOpen, setReviveModalOpen] = useState(false);
+    const [revivedFeature, setRevivedFeature] =
+        useState<FeatureSearchResponseSchema>();
     const onFlagTypeClick = useTableStateFilter(
         ['type', 'IS'],
         tableState,
@@ -157,14 +175,50 @@ export const FeatureToggleListTable: FC = () => {
                 size: 50,
                 meta: { width: '1%' },
             }),
-            ...(showStatusColumn
+            ...(showStatusColumn || showArchived
                 ? [
                       columnHelper.accessor('environments', {
                           id: 'status',
                           header: 'Status',
-                          cell: ({ row: { original } }) => (
-                              <StatusCell {...original} />
-                          ),
+                          cell: ({ row: { original } }) =>
+                              showArchived ? (
+                                  <Box
+                                      sx={{
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'flex-start',
+                                          gap: 1,
+                                          px: 2,
+                                      }}
+                                  >
+                                      <PermissionButton
+                                          variant='text'
+                                          size='small'
+                                          permission={UPDATE_FEATURE}
+                                          projectId={original.project}
+                                          onClick={() => {
+                                              setRevivedFeature(original);
+                                              setReviveModalOpen(true);
+                                          }}
+                                      >
+                                          Revive
+                                      </PermissionButton>
+                                      <PermissionButton
+                                          variant='text'
+                                          size='small'
+                                          permission={DELETE_FEATURE}
+                                          projectId={original.project}
+                                          onClick={() => {
+                                              setDeletedFeature(original);
+                                              setDeleteModalOpen(true);
+                                          }}
+                                      >
+                                          Delete
+                                      </PermissionButton>
+                                  </Box>
+                              ) : (
+                                  <StatusCell {...original} />
+                              ),
                           enableSorting: false,
                           size: 350,
                       }),
@@ -189,7 +243,7 @@ export const FeatureToggleListTable: FC = () => {
                 },
             }),
         ],
-        [tableState.favoritesFirst, showStatusColumn],
+        [tableState.favoritesFirst, showStatusColumn, showArchived],
     );
     const data = useMemo<FeatureSearchResponseSchema[]>(
         () =>
@@ -259,25 +313,28 @@ export const FeatureToggleListTable: FC = () => {
                             >
                                 Unknown flags
                             </Link>
-                            <Link
-                                component={RouterLink}
-                                to='/archive'
-                                underline='always'
-                                sx={{
-                                    marginRight: 2,
-                                    fontSize: theme.typography.body2.fontSize,
-                                    ...focusable(theme),
-                                }}
-                                onClick={() => {
-                                    trackEvent('search-feature-buttons', {
-                                        props: {
-                                            action: 'archive',
-                                        },
-                                    });
-                                }}
-                            >
-                                Archived flags
-                            </Link>
+                            {!archiveInFlagsView && (
+                                <Link
+                                    component={RouterLink}
+                                    to='/archive'
+                                    underline='always'
+                                    sx={{
+                                        marginRight: 2,
+                                        fontSize:
+                                            theme.typography.body2.fontSize,
+                                        ...focusable(theme),
+                                    }}
+                                    onClick={() => {
+                                        trackEvent('search-feature-buttons', {
+                                            props: {
+                                                action: 'archive',
+                                            },
+                                        });
+                                    }}
+                                >
+                                    Archived flags
+                                </Link>
+                            )}
                             <ExportFlags
                                 onClick={() => setShowExportDialog(true)}
                             />
@@ -362,6 +419,20 @@ export const FeatureToggleListTable: FC = () => {
                 data={data}
                 onClose={() => setShowExportDialog(false)}
                 environments={enabledEnvironments}
+            />
+            <ArchivedFeatureDeleteConfirm
+                deletedFeatures={[deletedFeature?.name!]}
+                projectId={deletedFeature?.project!}
+                open={deleteModalOpen}
+                setOpen={setDeleteModalOpen}
+                refetch={refetchFeatures}
+            />
+            <ArchivedFeatureReviveConfirm
+                revivedFeatures={[revivedFeature?.name!]}
+                projectId={revivedFeature?.project!}
+                open={reviveModalOpen}
+                setOpen={setReviveModalOpen}
+                refetch={refetchFeatures}
             />
         </PageContent>
     );

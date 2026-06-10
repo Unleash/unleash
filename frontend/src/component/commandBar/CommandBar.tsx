@@ -60,7 +60,7 @@ const StyledContainer = styled('div', {
     flexGrow: 1,
     alignItems: 'center',
     position: 'relative',
-    backgroundColor: theme.palette.background.application,
+    backgroundColor: 'transparent',
     maxWidth: active ? '100%' : '400px',
     [theme.breakpoints.down('md')]: {
         marginTop: theme.spacing(1),

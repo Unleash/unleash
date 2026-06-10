@@ -1,4 +1,5 @@
 import { Checkbox, ListItem, styled } from '@mui/material';
+import Check from '@mui/icons-material/Check';
 
 export const StyledHeader = styled('div')(({ theme }) => ({
     paddingInline: theme.spacing(2),
@@ -41,4 +42,9 @@ export const StyledListItem = styled(ListItem)(({ theme }) => ({
 
 export const StyledCheckbox = styled(Checkbox)(({ theme }) => ({
     padding: theme.spacing(1, 1, 1, 1.5),
+}));
+
+export const StyledSelectedIcon = styled(Check)(({ theme }) => ({
+    color: theme.palette.primary.main,
+    marginLeft: theme.spacing(1),
 }));

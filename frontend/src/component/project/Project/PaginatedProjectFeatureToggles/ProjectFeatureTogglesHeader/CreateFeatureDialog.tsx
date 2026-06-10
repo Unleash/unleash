@@ -108,7 +108,7 @@ const configButtonData = {
     },
     tags: {
         icon: <Label />,
-        text: 'Tags are used to label flags in Unleash. They can be used when filtering flags in the UI. Additionally, they are used by some integrations.',
+        text: 'Tags are used to label flags, and can be used when filtering flags in the UI',
     },
     type: {
         icon: <FlagIcon />,
@@ -384,14 +384,17 @@ const CreateFeatureDialogContent = ({
                                                 featureType.id === type,
                                         )?.name || 'Select flag type'
                                     }
+                                    selectedValue={type}
+                                    hideSearch
                                     tooltip={{
                                         header: 'Select a flag type',
-                                        description: configButtonData.type.text,
                                     }}
                                     options={featureTypes.map(
                                         (featureType: FeatureTypeSchema) => ({
                                             label: featureType.name,
                                             value: featureType.id,
+                                            description:
+                                                featureType.description,
                                         }),
                                     )}
                                     onChange={(value) =>
@@ -403,7 +406,7 @@ const CreateFeatureDialogContent = ({
                                 <MultiPillDropdown<string>
                                     label={
                                         tags.size > 0
-                                            ? `${tags.size} selected`
+                                            ? `${tags.size} tag${tags.size > 1 ? 's' : ''} selected`
                                             : 'Add tags'
                                     }
                                     tooltip={{

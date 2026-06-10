@@ -8,7 +8,7 @@ import {
     useTheme,
     type Theme,
 } from '@mui/material';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import type { IPermissionButtonProps } from 'component/common/PermissionButton/PermissionButton';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
@@ -117,7 +117,7 @@ export const PillButton = styled(Button)(({ theme }) => ({
 
 type DropdownOption<T> = { label: string; value: T; description?: string };
 
-export type PillTooltip = { header: string; description: string };
+export type PillTooltip = { header: string; description?: string };
 type Tooltip = PillTooltip;
 
 export const PillTrigger = ({
@@ -136,7 +136,7 @@ export const PillTrigger = ({
         onClick={onClick}
     >
         <span>{label}</span>
-        <ArrowDropDownIcon />
+        <KeyboardArrowDownOutlined />
     </PillButton>
 );
 
@@ -147,6 +147,8 @@ type SinglePillProps<T> = {
     onChange: (value: T) => void;
     searchLabel: string;
     searchPlaceholder: string;
+    selectedValue?: T;
+    hideSearch?: boolean;
 };
 
 export function SinglePillDropdown<T = string>({
@@ -156,6 +158,8 @@ export function SinglePillDropdown<T = string>({
     onChange,
     searchLabel,
     searchPlaceholder,
+    selectedValue,
+    hideSearch,
 }: SinglePillProps<T>) {
     const ref = useRef<HTMLButtonElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -176,6 +180,8 @@ export function SinglePillDropdown<T = string>({
                 <DropdownList<T>
                     header={tooltip}
                     options={options}
+                    selectedValue={selectedValue}
+                    hideSearch={hideSearch}
                     onChange={(value) => {
                         onChange(value);
                         setAnchorEl(null);

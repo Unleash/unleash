@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { styled, Button } from '@mui/material';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { DropdownList } from './ConfigButtons/DropdownList.tsx';
 import { StyledPopover } from './ConfigButtons/shared.styles';
 
@@ -31,6 +31,10 @@ const ProjectButton = styled(Button)(({ theme }) => ({
     minWidth: 0,
 }));
 
+const Title = styled('span')(({ theme }) => ({
+    fontWeight: theme.fontWeight.bold,
+}));
+
 export const HeaderBreadcrumb: React.FC<Props> = ({
     options,
     value,
@@ -48,7 +52,7 @@ export const HeaderBreadcrumb: React.FC<Props> = ({
                 <>
                     <div ref={ref}>
                         <ProjectButton
-                            endIcon={<ArrowDropDownIcon />}
+                            endIcon={<KeyboardArrowDownOutlined />}
                             onClick={() => setAnchorEl(ref.current)}
                             aria-label='Select project'
                         >
@@ -58,7 +62,7 @@ export const HeaderBreadcrumb: React.FC<Props> = ({
                     <span style={{ margin: '0 4px' }}>/</span>
                 </>
             ) : null}
-            <span>{title}</span>
+            <Title>{title}</Title>
             {showSelector ? (
                 <StyledPopover
                     open={Boolean(anchorEl)}

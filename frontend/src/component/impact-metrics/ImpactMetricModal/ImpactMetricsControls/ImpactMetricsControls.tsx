@@ -84,7 +84,7 @@ export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = ({
                         />
                     </FormField>
                     <FormControlLabel
-                        sx={(theme) => ({ margin: theme.spacing(0.5, 0) })}
+                        sx={{ margin: 0 }}
                         control={
                             <Checkbox
                                 checked={formData.yAxisMin === 'zero'}

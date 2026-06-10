@@ -54,9 +54,14 @@ const StyledFormContent = styled('div')(({ theme }) => ({
     flexGrow: 1,
     minHeight: 600,
     // Vertical spacing is owned by the gap; drop the fields' own bottom margins
-    // (e.g. FormField's) so it isn't doubled up.
-    '& > *': {
+    // (e.g. FormField's spacing(2)) so it isn't doubled up. Doubled selector
+    // raises specificity above the child's own rule.
+    '&& > *': {
         marginBottom: 0,
+    },
+    // The title gets extra separation (one field-gap more) from the first field.
+    '&& > h1': {
+        marginBottom: theme.spacing(2),
     },
 }));
 

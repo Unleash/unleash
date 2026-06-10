@@ -34,11 +34,7 @@ import { ExportFlags } from './ExportFlags.tsx';
 import { createFeatureOverviewCell } from 'component/common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
 import { AvatarCell } from 'component/project/Project/PaginatedProjectFeatureToggles/AvatarCell';
 import { StatusCell } from './StatusCell/StatusCell.tsx';
-import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import {
-    DELETE_FEATURE,
-    UPDATE_FEATURE,
-} from 'component/providers/AccessProvider/permissions';
+import { ArchivedActionsCell } from './ArchivedActionsCell.tsx';
 import { ArchivedFeatureDeleteConfirm } from 'component/archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureDeleteConfirm/ArchivedFeatureDeleteConfirm';
 import { ArchivedFeatureReviveConfirm } from 'component/archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureReviveConfirm/ArchivedFeatureReviveConfirm';
 
@@ -182,40 +178,17 @@ export const FeatureToggleListTable: FC = () => {
                           header: 'Status',
                           cell: ({ row: { original } }) =>
                               showArchived ? (
-                                  <Box
-                                      sx={{
-                                          display: 'flex',
-                                          alignItems: 'center',
-                                          justifyContent: 'flex-start',
-                                          gap: 1,
-                                          px: 2,
+                                  <ArchivedActionsCell
+                                      projectId={original.project}
+                                      onRevive={() => {
+                                          setRevivedFeature(original);
+                                          setReviveModalOpen(true);
                                       }}
-                                  >
-                                      <PermissionButton
-                                          variant='text'
-                                          size='small'
-                                          permission={UPDATE_FEATURE}
-                                          projectId={original.project}
-                                          onClick={() => {
-                                              setRevivedFeature(original);
-                                              setReviveModalOpen(true);
-                                          }}
-                                      >
-                                          Revive
-                                      </PermissionButton>
-                                      <PermissionButton
-                                          variant='text'
-                                          size='small'
-                                          permission={DELETE_FEATURE}
-                                          projectId={original.project}
-                                          onClick={() => {
-                                              setDeletedFeature(original);
-                                              setDeleteModalOpen(true);
-                                          }}
-                                      >
-                                          Delete
-                                      </PermissionButton>
-                                  </Box>
+                                      onDelete={() => {
+                                          setDeletedFeature(original);
+                                          setDeleteModalOpen(true);
+                                      }}
+                                  />
                               ) : (
                                   <StatusCell {...original} />
                               ),

@@ -40,6 +40,7 @@ import {
 import { AvatarCell } from './AvatarCell.tsx';
 import { Box, styled, useMediaQuery, useTheme } from '@mui/material';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
 import { ConnectSdkDialog } from '../../../onboarding/dialog/ConnectSdkDialog/ConnectSdkDialog.tsx';
 import { ProjectOnboarding } from '../../../onboarding/flow/ProjectOnboarding.tsx';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
@@ -123,6 +124,12 @@ export const ProjectFeatureToggles = ({
     const { onFlagTypeClick, onTagClick, onAvatarClick } =
         useProjectFeatureSearchActions(tableState, setTableState);
 
+    const { refetch: refetchProjectStatus } = useProjectStatus(projectId);
+    const refetchWithLifecycleCounts = useCallback(() => {
+        refetch();
+        refetchProjectStatus();
+    }, [refetch, refetchProjectStatus]);
+
     const filterState = {
         tag: tableState.tag,
         createdAt: tableState.createdAt,
@@ -164,7 +171,11 @@ export const ProjectFeatureToggles = ({
         setShowMarkCompletedDialogue,
         setShowFeatureReviveDialogue,
         setShowFeatureDeleteDialogue,
-    } = useRowActions(refetch, projectId, trackArchiveAction);
+    } = useRowActions(
+        refetchWithLifecycleCounts,
+        projectId,
+        trackArchiveAction,
+    );
 
     const isPlaceholder = Boolean(initialLoad || loading);
 
@@ -279,7 +290,7 @@ export const ProjectFeatureToggles = ({
                                 open: true,
                             });
                         }}
-                        onUncomplete={refetch}
+                        onUncomplete={refetchWithLifecycleCounts}
                         onArchive={() => setFeatureArchiveState(original.name)}
                         data-loading
                     />
@@ -627,7 +638,7 @@ export const ProjectFeatureToggles = ({
                         selectedIds={Object.keys(rowSelection)}
                         projectId={projectId}
                         onConfirm={() => {
-                            refetch();
+                            refetchWithLifecycleCounts();
                             table.resetRowSelection();
                             trackArchiveAction('bulk archived');
                         }}
@@ -638,7 +649,7 @@ export const ProjectFeatureToggles = ({
                         data={selectedData}
                         projectId={projectId}
                         onResetSelection={table.resetRowSelection}
-                        onChange={refetch}
+                        onChange={refetchWithLifecycleCounts}
                     />
                 )}
             </BatchSelectionActionsBar>

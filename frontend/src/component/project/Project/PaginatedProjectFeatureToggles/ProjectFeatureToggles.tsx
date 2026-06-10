@@ -52,6 +52,7 @@ import { formatEnvironmentColumnId } from './formatEnvironmentColumnId.ts';
 import { ProjectFeaturesColumnsMenu } from './ProjectFeaturesColumnsMenu/ProjectFeaturesColumnsMenu.tsx';
 import { ProjectFeatureTogglesHeader } from './ProjectFeatureTogglesHeader/ProjectFeatureTogglesHeader.tsx';
 import { ProjectFlagsSearch } from './ProjectFlagsSearch/ProjectFlagsSearch.tsx';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 type ProjectFeatureTogglesProps = {
     environments: string[];
@@ -109,6 +110,7 @@ export const ProjectFeatureToggles = ({
     const [modalOpen, setModalOpen] = useState(false);
     const theme = useTheme();
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('xl'));
+    const showArchivedLink = !useUiFlag('archiveInFlagsView');
 
     const {
         features,
@@ -503,11 +505,16 @@ export const ProjectFeatureToggles = ({
                         totalItems={total}
                         environmentsToExport={environments}
                         actions={
-                            <LinkToggle type='button' onClick={toggleArchived}>
-                                {showArchived
-                                    ? 'View active flags'
-                                    : 'View archived flags'}
-                            </LinkToggle>
+                            showArchivedLink && (
+                                <LinkToggle
+                                    type='button'
+                                    onClick={toggleArchived}
+                                >
+                                    {showArchived
+                                        ? 'View active flags'
+                                        : 'View archived flags'}
+                                </LinkToggle>
+                            )
                         }
                         title={
                             showArchived

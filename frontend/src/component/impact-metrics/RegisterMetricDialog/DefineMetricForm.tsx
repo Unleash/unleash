@@ -1,7 +1,5 @@
 import { type FormEvent, useId, useState } from 'react';
 import {
-    FormControl,
-    FormLabel,
     Radio,
     RadioGroup,
     TextField,
@@ -9,6 +7,7 @@ import {
     styled,
 } from '@mui/material';
 import { Card } from './RegisterMetricDialog.styles';
+import { FormField } from 'component/common/FormField/FormField';
 import { useRegisterImpactMetricApi } from 'hooks/api/actions/useImpactMetricsApi/useRegisterImpactMetricApi';
 import type { RegisterImpactMetricSchemaType } from 'openapi';
 import useToast from 'hooks/useToast';
@@ -20,21 +19,9 @@ type DefineMetricFormProps = {
 };
 
 const StyledForm = styled('form')(({ theme }) => ({
-    backgroundColor: theme.palette.background.elevation1,
-    borderRadius: theme.shape.borderRadius,
-    border: `1px solid ${theme.palette.divider}`,
-    padding: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(2),
-}));
-
-const StyledLabel = styled(FormLabel)(({ theme }) => ({
-    color: theme.palette.text.primary,
-    '&.Mui-focused': {
-        color: 'currentColor',
-    },
-    marginBottom: theme.spacing(1),
 }));
 
 const RadioCardContainer = styled(Card)(({ theme }) => ({
@@ -98,8 +85,6 @@ export const DefineMetricForm = ({
     const [metricType, setMetricType] =
         useState<RegisterImpactMetricSchemaType>(defaultMetricType);
     const { registerImpactMetric, loading } = useRegisterImpactMetricApi();
-    const metricNameInputId = useId();
-    const radioGroupLabelId = useId();
     const { setToastApiError } = useToast();
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -120,23 +105,11 @@ export const DefineMetricForm = ({
 
     return (
         <StyledForm id={formId} onSubmit={handleSubmit}>
-            <FormControl
-                sx={(theme) => ({
-                    '.MuiFormHelperText-root, label': {
-                        transition: 'color 0.2s ease',
-                    },
-                    ':has(input:invalid:not(:placeholder-shown))': {
-                        '.MuiFormHelperText-root, label': {
-                            color: theme.palette.error.main,
-                        },
-                    },
-                })}
+            <FormField
+                label='Metric name'
+                description='Use letters, numbers, colons, and underscores. Be descriptive and specific.'
             >
-                <StyledLabel htmlFor={metricNameInputId}>
-                    Metric name
-                </StyledLabel>
                 <TextField
-                    id={metricNameInputId}
                     value={metricName}
                     onChange={(event) => setMetricName(event.target.value)}
                     placeholder='e.g., checkout_error_count'
@@ -144,12 +117,6 @@ export const DefineMetricForm = ({
                     size='large'
                     fullWidth
                     required
-                    helperText={`Use letters, numbers, colons, and underscores. Be descriptive and specific.`}
-                    sx={{
-                        '.MuiFormHelperText-root': {
-                            marginInline: 0,
-                        },
-                    }}
                     slotProps={{
                         htmlInput: {
                             pattern: '^[a-zA-Z_:][a-zA-Z0-9_:]*$',
@@ -157,19 +124,16 @@ export const DefineMetricForm = ({
                         },
                     }}
                 />
-            </FormControl>
+            </FormField>
 
-            <FormControl>
-                <StyledLabel htmlFor={radioGroupLabelId}>
-                    Metric type
-                </StyledLabel>
+            <FormField label='Metric type'>
                 <StyledRadioGroup
+                    aria-label='Metric type'
                     onChange={(e) =>
                         setMetricType(
                             e.target.value as RegisterImpactMetricSchemaType,
                         )
                     }
-                    id={radioGroupLabelId}
                     defaultValue={defaultMetricType}
                     name='metricType'
                 >
@@ -189,7 +153,7 @@ export const DefineMetricForm = ({
                         examples={'request_duration_ms, payload_size_bytes'}
                     />
                 </StyledRadioGroup>
-            </FormControl>
+            </FormField>
         </StyledForm>
     );
 };

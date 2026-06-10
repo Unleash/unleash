@@ -68,14 +68,6 @@ const StyledTabButton = styled(Tab)(({ theme }) => ({
     }),
 }));
 
-export const StyledLink = styled(Link)(() => ({
-    maxWidth: '100%',
-    textDecoration: 'none',
-    '&:hover, &:focus': {
-        textDecoration: 'underline',
-    },
-}));
-
 const useLegacyVariants = (environments: IFeatureToggle['environments']) => {
     const enableLegacyVariants = useUiFlag('enableLegacyVariants');
     const existingLegacyVariantsExist = environments.some(
@@ -95,7 +87,6 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
     const { refetchFeature } = useFeature(projectId, featureId);
     const { setToastApiError } = useToast();
 
-    const [openTagDialog, setOpenTagDialog] = useState(false);
     const [showDelDialog, setShowDelDialog] = useState(false);
     const [openStaleDialog, setOpenStaleDialog] = useState(false);
 
@@ -215,7 +206,6 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
                 featureId={featureId}
                 projectId={projectId}
             />
-            <ManageTagsDialog open={openTagDialog} setOpen={setOpenTagDialog} />
         </>
     );
 };

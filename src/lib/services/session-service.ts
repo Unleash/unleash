@@ -52,12 +52,7 @@ export default class SessionService {
         userId: number,
         keepSid: string,
     ): Promise<void> {
-        const userSessions = await this.sessionStore.getSessionsForUser(userId);
-        await Promise.all(
-            userSessions
-                .filter((session) => session.sid !== keepSid)
-                .map((session) => this.sessionStore.delete(session.sid)),
-        );
+        return this.sessionStore.deleteSessionsForUserExcept(userId, keepSid);
     }
 
     async deleteStaleSessionsForUser(

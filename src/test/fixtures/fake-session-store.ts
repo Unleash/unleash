@@ -32,6 +32,16 @@ export default class FakeSessionStore implements ISessionStore {
         );
     }
 
+    async deleteSessionsForUserExcept(
+        userId: number,
+        keepSid: string,
+    ): Promise<void> {
+        this.sessions = this.sessions.filter(
+            (session) =>
+                session.sess.user.id !== userId || session.sid === keepSid,
+        );
+    }
+
     async deleteAll(): Promise<void> {
         this.sessions = [];
     }

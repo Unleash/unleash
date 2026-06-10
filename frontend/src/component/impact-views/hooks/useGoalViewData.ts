@@ -1,4 +1,3 @@
-import type { ImpactMetricsConfigSchema } from 'openapi';
 import { useGroupedImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useGroupedImpactMetricsData';
 import type {
     MultimetricStepSeries,
@@ -28,10 +27,8 @@ export type GoalViewData = {
 };
 
 export const useGoalViewData = (view: MetricView): GoalViewData => {
-    const configs = view.metrics as ImpactMetricsConfigSchema[];
-
     const { stepSeries, stepTotals, start, end, loading } =
-        useGroupedImpactMetricsData(configs);
+        useGroupedImpactMetricsData(view.metrics);
 
     const { features: resolvedFeatures, loading: featuresLoading } =
         useResolvedFeatures(view.featureNames);

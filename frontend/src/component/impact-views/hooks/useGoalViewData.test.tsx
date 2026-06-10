@@ -117,6 +117,41 @@ describe('useGoalViewData', () => {
         expect(result.current.goalSummary).toBeUndefined();
     });
 
+    it('queries the API with the extended time ranges', async () => {
+        const requestedRanges: (string | null)[] = [];
+        server.use(
+            http.get('/api/admin/impact-metrics/', ({ request }) => {
+                requestedRanges.push(
+                    new URL(request.url).searchParams.get('range'),
+                );
+                return HttpResponse.json({
+                    start: '0',
+                    end: '1',
+                    series: [{ data: [[1, 1]] }],
+                });
+            }),
+            http.get('/api/admin/search/features', () =>
+                HttpResponse.json({ features: [], total: 0 }),
+            ),
+            http.get('/api/admin/search/events', () =>
+                HttpResponse.json({ events: [], total: 0 }),
+            ),
+        );
+
+        const view = viewWith([
+            metric('goal', { goal: true, timeRange: 'threeMonths' }),
+            metric('support', { timeRange: 'sixMonths' }),
+        ]);
+
+        const { result } = renderHook(() => useGoalViewData(view), { wrapper });
+
+        await waitFor(() => {
+            expect(result.current.loading).toBe(false);
+        });
+
+        expect(requestedRanges.sort()).toEqual(['sixMonths', 'threeMonths']);
+    });
+
     it('handles empty series from useGroupedImpactMetricsData without throwing', async () => {
         setupMetricsError();
 

@@ -136,7 +136,7 @@
     "semver": "7.7.4",
     "serialize-query-params": "^2.0.4",
     "swr": "2.4.1",
-    "tss-react": "4.9.20",
+    "tss-react": "4.9.21",
     "typescript": "5.9.3",
     "unleash-proxy-client": "3.8.0",
     "use-query-params": "^2.2.2",

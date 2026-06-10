@@ -16,10 +16,7 @@ import type {
     IFeatureSearchParams,
     IQueryParam,
 } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
-import {
-    applyGenericQueryParams,
-    applySearchFilters,
-} from './search-utils.js';
+import { applyGenericQueryParams, applySearchFilters } from './search-utils.js';
 import { generateImageUrl } from '../../util/index.js';
 type Raw<T = any> = Knex.Raw<T>;
 import type { ITag } from '../../tags/index.js';
@@ -688,15 +685,8 @@ const applyLifecycleAndArchivedFilters = (
             query.whereNull('features.archived_at');
         }
     } else {
-        // IS_NOT / IS_NONE_OF. The archived gate stays governed by the
-        // `archived` param, so `archived=IS:true` still returns only archived
-        // flags - unless the lifecycle filter itself excludes the archived
-        // stage, in which case that wins.
         const showArchived = Boolean(archived) && !includesArchived;
         if (showArchived) {
-            // Archived flags aren't in an active lifecycle stage, so excluding
-            // active stages doesn't apply to them - return them all (matching
-            // `archived=IS:true`, including legacy flags with no lifecycle row).
             query.whereNotNull('features.archived_at');
         } else {
             if (stageValues.length === 1) {
@@ -864,7 +854,6 @@ const applyQueryParams = (
                 'segment',
                 'lastSeenAt',
                 'favorite',
-                // applied separately, with archived-aware handling
                 'lifecycle.latest_stage',
             ].includes(param.field),
     );

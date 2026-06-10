@@ -1413,7 +1413,7 @@ test('should return archived when query param set', async () => {
     });
 });
 
-test('should return archived flags when lifecycle filter targets the archived stage', async () => {
+const setupLifecycleFlags = async () => {
     await app.createFeature({
         name: 'lifecycle_active',
         createdAt: '2023-01-29T15:21:39.975Z',
@@ -1423,54 +1423,65 @@ test('should return archived flags when lifecycle filter targets the archived st
         createdAt: '2023-01-29T15:21:39.975Z',
         archived: true,
     });
-    // legacy-style archived flag with no lifecycle row should still match
     await stores.featureLifecycleStore.insert([
         { feature: 'lifecycle_active', stage: 'live' },
     ]);
-    expect(await stores.featureLifecycleStore.get('lifecycle_archived')).toHaveLength(0);
+    expect(
+        await stores.featureLifecycleStore.get('lifecycle_archived'),
+    ).toHaveLength(0);
+};
 
-    // lifecycle=IS:archived behaves like archived=IS:true
-    const { body: archivedOnly } = await app.request
+const searchByLifecycle = async (params: string) =>
+    app.request
         .get(
-            '/api/admin/search/features?query=lifecycle_&project=IS:default&lifecycle=IS:archived',
+            `/api/admin/search/features?query=lifecycle_&project=IS:default&${params}`,
         )
         .expect(200);
-    expect(archivedOnly).toMatchObject({
+
+test('lifecycle=IS:archived returns only archived flags, like archived=IS:true', async () => {
+    await setupLifecycleFlags();
+
+    const { body } = await searchByLifecycle('lifecycle=IS:archived');
+
+    expect(body).toMatchObject({
         total: 1,
         features: [{ name: 'lifecycle_archived' }],
     });
+});
 
-    // IS_ANY_OF returns both the requested active stage and archived flags
-    const { body: liveAndArchived } = await app.request
-        .get(
-            '/api/admin/search/features?query=lifecycle_&project=IS:default&lifecycle=IS_ANY_OF:live,archived',
-        )
-        .expect(200);
-    expect(liveAndArchived.total).toBe(2);
-    expect(liveAndArchived.features.map((f) => f.name).sort()).toEqual([
+test('lifecycle=IS_ANY_OF:live,archived returns both the requested active stage and archived flags', async () => {
+    await setupLifecycleFlags();
+
+    const { body } = await searchByLifecycle(
+        'lifecycle=IS_ANY_OF:live,archived',
+    );
+
+    expect(body.total).toBe(2);
+    expect(body.features.map((f) => f.name).sort()).toEqual([
         'lifecycle_active',
         'lifecycle_archived',
     ]);
+});
 
-    // excluding the archived stage keeps only active flags
-    const { body: activeOnly } = await app.request
-        .get(
-            '/api/admin/search/features?query=lifecycle_&project=IS:default&lifecycle=IS_NONE_OF:archived',
-        )
-        .expect(200);
-    expect(activeOnly).toMatchObject({
+test('lifecycle=IS_NONE_OF:archived excludes the archived stage and keeps only active flags', async () => {
+    await setupLifecycleFlags();
+
+    const { body } = await searchByLifecycle('lifecycle=IS_NONE_OF:archived');
+
+    expect(body).toMatchObject({
         total: 1,
         features: [{ name: 'lifecycle_active' }],
     });
+});
 
-    // archived=IS:true stays authoritative alongside an exclusion operator:
-    // it returns archived flags, not active ones
-    const { body: archivedExcludingLive } = await app.request
-        .get(
-            '/api/admin/search/features?query=lifecycle_&project=IS:default&archived=IS:true&lifecycle=IS_NOT:live',
-        )
-        .expect(200);
-    expect(archivedExcludingLive).toMatchObject({
+test('archived=IS:true stays authoritative alongside an exclusion operator and returns archived flags, not active ones', async () => {
+    await setupLifecycleFlags();
+
+    const { body } = await searchByLifecycle(
+        'archived=IS:true&lifecycle=IS_NOT:live',
+    );
+
+    expect(body).toMatchObject({
         total: 1,
         features: [{ name: 'lifecycle_archived' }],
     });

@@ -16,8 +16,10 @@ export type ViewMetricConfig = Pick<
     | 'source'
     | 'title'
     | 'yAxisMin'
-    | 'timeRange'
 > & {
+    // Wider than the stored-config schema type: views support the extended
+    // query-only ranges (threeMonths/sixMonths).
+    timeRange: ChartTimeRange;
     goal?: boolean;
 };
 

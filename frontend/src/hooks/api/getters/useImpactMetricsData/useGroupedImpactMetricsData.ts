@@ -1,6 +1,7 @@
 import useSWR from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import type { ImpactMetricsConfigSchema } from 'openapi';
+import type { ChartTimeRange } from 'component/impact-metrics/MultimetricChart/chartConfig';
 import type { MultimetricStepSeries } from 'component/impact-metrics/MultimetricChart/types';
 import type { MultimetricStep } from 'component/impact-metrics/MultimetricChart/MultimetricTotals';
 import type { ImpactMetricsResponse } from './useImpactMetricsData';
@@ -19,7 +20,16 @@ function aggregateTotal(
     return Number(data[data.length - 1][1]);
 }
 
-function buildPath(config: ImpactMetricsConfigSchema): string {
+// The stored-config schema only allows the original four time ranges; views
+// can also query the extended ranges (threeMonths/sixMonths).
+export type GroupedImpactMetricConfig = Omit<
+    ImpactMetricsConfigSchema,
+    'timeRange'
+> & {
+    timeRange: ChartTimeRange;
+};
+
+function buildPath(config: GroupedImpactMetricConfig): string {
     const params = new URLSearchParams({
         metricName: config.metricName,
         range: config.timeRange,
@@ -56,7 +66,7 @@ export type GroupedImpactMetricsResult = {
 };
 
 export const useGroupedImpactMetricsData = (
-    configs: ImpactMetricsConfigSchema[],
+    configs: GroupedImpactMetricConfig[],
 ): GroupedImpactMetricsResult => {
     const paths = configs.map(buildPath);
 

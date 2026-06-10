@@ -84,7 +84,13 @@ export const buildTimeSeriesChartData = (
     return { labels, datasets };
 };
 
-export type ChartTimeRange = 'hour' | 'day' | 'week' | 'month';
+export type ChartTimeRange =
+    | 'hour'
+    | 'day'
+    | 'week'
+    | 'month'
+    | 'threeMonths'
+    | 'sixMonths';
 
 // Builds the Chart.js options for the line chart. Pure config — no React.
 export const buildChartOptions = (

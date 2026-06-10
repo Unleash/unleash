@@ -152,6 +152,8 @@ const timeRangeLabels: Record<ChartTimeRange, string> = {
     day: 'Last 24 hours',
     week: 'Last 7 days',
     month: 'Last 30 days',
+    threeMonths: 'Last 3 months',
+    sixMonths: 'Last 6 months',
 };
 
 const SUM_MODES = new Set(['count', 'sum']);

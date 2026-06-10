@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import { Card } from './RegisterMetricDialog.styles';
 import { FormField } from 'component/common/FormField/FormField';
+import { FormGroup } from 'component/common/FormGroup/FormGroup';
 import { useRegisterImpactMetricApi } from 'hooks/api/actions/useImpactMetricsApi/useRegisterImpactMetricApi';
 import type { RegisterImpactMetricSchemaType } from 'openapi';
 import useToast from 'hooks/useToast';
@@ -127,32 +128,35 @@ export const DefineMetricForm = ({
             </FormField>
 
             <FormField label='Metric type'>
-                <StyledRadioGroup
-                    aria-label='Metric type'
-                    onChange={(e) =>
-                        setMetricType(
-                            e.target.value as RegisterImpactMetricSchemaType,
-                        )
-                    }
-                    defaultValue={defaultMetricType}
-                    name='metricType'
-                >
-                    <RadioCard
-                        value='counter'
-                        description='Tracks values that only increase (e.g., error counts, request counts)'
-                        examples={'client_error_count, total_purchases'}
-                    />
-                    <RadioCard
-                        value='gauge'
-                        description='Tracks values that can go up or down (e.g., active users, queue size'
-                        examples={'active_connections, memory_usage'}
-                    />
-                    <RadioCard
-                        value='histogram'
-                        description='Tracks the distribution of values, (e.g., response times, payload sizes)'
-                        examples={'request_duration_ms, payload_size_bytes'}
-                    />
-                </StyledRadioGroup>
+                <FormGroup>
+                    <StyledRadioGroup
+                        aria-label='Metric type'
+                        onChange={(e) =>
+                            setMetricType(
+                                e.target
+                                    .value as RegisterImpactMetricSchemaType,
+                            )
+                        }
+                        defaultValue={defaultMetricType}
+                        name='metricType'
+                    >
+                        <RadioCard
+                            value='counter'
+                            description='Tracks values that only increase (e.g., error counts, request counts)'
+                            examples={'client_error_count, total_purchases'}
+                        />
+                        <RadioCard
+                            value='gauge'
+                            description='Tracks values that can go up or down (e.g., active users, queue size'
+                            examples={'active_connections, memory_usage'}
+                        />
+                        <RadioCard
+                            value='histogram'
+                            description='Tracks the distribution of values, (e.g., response times, payload sizes)'
+                            examples={'request_duration_ms, payload_size_bytes'}
+                        />
+                    </StyledRadioGroup>
+                </FormGroup>
             </FormField>
         </StyledForm>
     );

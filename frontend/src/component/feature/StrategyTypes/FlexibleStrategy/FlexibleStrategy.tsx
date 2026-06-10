@@ -72,7 +72,7 @@ export const FlexibleStrategy = ({
     const groupId = parseParameterString(parameters.groupId);
 
     return (
-        <FormGroup>
+        <FormGroup sx={{ gap: 1 }}>
             <ConditionalRolloutSlider
                 name='Rollout'
                 value={rollout}

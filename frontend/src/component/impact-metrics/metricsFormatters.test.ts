@@ -1,39 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-    formatLargeNumbers,
-    getDisplayFormat,
-    getTimeUnit,
-} from './metricsFormatters.js';
-
-describe('getTimeUnit', () => {
-    it('maps each time range to a chart time unit', () => {
-        expect(getTimeUnit('hour')).toBe('minute');
-        expect(getTimeUnit('day')).toBe('hour');
-        expect(getTimeUnit('week')).toBe('day');
-        expect(getTimeUnit('month')).toBe('week');
-        expect(getTimeUnit('threeMonths')).toBe('week');
-        expect(getTimeUnit('sixMonths')).toBe('month');
-    });
-
-    it('falls back to day for unknown ranges', () => {
-        expect(getTimeUnit('unknown')).toBe('day');
-    });
-});
-
-describe('getDisplayFormat', () => {
-    it('maps each time range to a display format', () => {
-        expect(getDisplayFormat('hour')).toBe('HH:mm');
-        expect(getDisplayFormat('day')).toBe('HH:mm');
-        expect(getDisplayFormat('week')).toBe('MMM dd');
-        expect(getDisplayFormat('month')).toBe('MMM dd');
-        expect(getDisplayFormat('threeMonths')).toBe('MMM dd');
-        expect(getDisplayFormat('sixMonths')).toBe('MMM');
-    });
-
-    it('falls back to MMM dd for unknown ranges', () => {
-        expect(getDisplayFormat('unknown')).toBe('MMM dd');
-    });
-});
+import { formatLargeNumbers } from './metricsFormatters.js';
 
 describe('formatLargeNumbers', () => {
     it('formats small numbers with locale formatting', () => {

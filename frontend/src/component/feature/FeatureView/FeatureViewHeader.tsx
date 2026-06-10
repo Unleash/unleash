@@ -1,38 +1,17 @@
-import { type PropsWithChildren, useState, type FC } from 'react';
-import {
-    IconButton,
-    styled,
-    Tab,
-    Tabs,
-    type Theme,
-    Typography,
-} from '@mui/material';
-import ArchiveOutlined from '@mui/icons-material/ArchiveOutlined';
-import WatchLaterOutlined from '@mui/icons-material/WatchLaterOutlined';
-import LibraryAddOutlined from '@mui/icons-material/LibraryAddOutlined';
-import Star from '@mui/icons-material/Star';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useState, type FC } from 'react';
+import { styled, Tab, Tabs, type Theme, Typography } from '@mui/material';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import {
-    CREATE_FEATURE,
-    DELETE_FEATURE,
-    UPDATE_FEATURE,
-} from 'component/providers/AccessProvider/permissions';
-import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { FeatureStatusChip } from 'component/common/FeatureStatusChip/FeatureStatusChip';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import useToast from 'hooks/useToast';
 import { useUiFlag } from 'hooks/useUiFlag';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
-import StarBorder from '@mui/icons-material/StarBorder';
-import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
-import { ManageTagsDialog } from './FeatureOverview/ManageTagsDialog/ManageTagsDialog.tsx';
 import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 import { FeatureCopyName } from './FeatureCopyName/FeatureCopyName.tsx';
-import { useMinimumUnleashVersion } from 'hooks/useMinimumUnleashVersion';
 import { FeatureHeaderActionsKebab } from './FeatureHeaderActionsKebab';
 
 const StyledHeader = styled('div')(({ theme }) => ({
@@ -62,51 +41,11 @@ const StyledTitle = styled('div')(({ theme }) => ({
     columnGap: theme.spacing(0.5),
 }));
 
-const LowerHeaderRow = styled(UpperHeaderRow)(({ theme }) => ({
+const LowerHeaderRow = styled(UpperHeaderRow)({
     justifyContent: 'space-between',
     columnGap: 0,
-    flexFlow: 'column nowrap',
-    alignItems: 'flex-start',
-    '&[data-reflow-on-narrow="false"]': {
-        alignItems: 'center',
-        flexFlow: 'row nowrap',
-    },
-    ...onWideHeader(theme, {
-        alignItems: 'center',
-        flexFlow: 'row nowrap',
-    }),
-}));
-
-const HeaderActions = styled('div', {
-    shouldForwardProp: (propName) => propName !== 'showOnNarrowScreens',
-})<{ showOnNarrowScreens?: boolean }>(({ theme, showOnNarrowScreens }) => ({
-    display: showOnNarrowScreens ? 'flex' : 'none',
     flexFlow: 'row nowrap',
-    alignItems: 'center',
-
-    ...onWideHeader(theme, {
-        display: showOnNarrowScreens ? 'none' : 'flex',
-    }),
-}));
-
-const IconButtonWithTooltip: FC<
-    PropsWithChildren<{
-        onClick: () => void;
-        label: string;
-    }>
-> = ({ children, label, onClick }) => {
-    return (
-        <TooltipResolver
-            title={label}
-            arrow
-            onClick={(e) => e.preventDefault()}
-        >
-            <IconButton aria-label={label} onClick={onClick}>
-                {children}
-            </IconButton>
-        </TooltipResolver>
-    );
-};
+});
 
 const StyledTabs = styled(Tabs)({
     minWidth: 0,
@@ -128,86 +67,12 @@ const StyledTabButton = styled(Tab)(({ theme }) => ({
     }),
 }));
 
-export const StyledLink = styled(Link)(() => ({
-    maxWidth: '100%',
-    textDecoration: 'none',
-    '&:hover, &:focus': {
-        textDecoration: 'underline',
-    },
-}));
-
 const useLegacyVariants = (environments: IFeatureToggle['environments']) => {
     const enableLegacyVariants = useUiFlag('enableLegacyVariants');
     const existingLegacyVariantsExist = environments.some(
         (environment) => environment.variants?.length,
     );
     return enableLegacyVariants || existingLegacyVariantsExist;
-};
-
-type HeaderActionsProps = {
-    feature: IFeatureToggle;
-    showOnNarrowScreens?: boolean;
-    onFavorite: () => void;
-    openStaleDialog: () => void;
-    openDeleteDialog: () => void;
-};
-
-const HeaderActionsComponent = ({
-    showOnNarrowScreens,
-    feature,
-    onFavorite,
-    openStaleDialog,
-    openDeleteDialog,
-}: HeaderActionsProps) => {
-    const projectId = useRequiredPathParam('projectId');
-    const featureId = useRequiredPathParam('featureId');
-    return (
-        <HeaderActions showOnNarrowScreens={showOnNarrowScreens}>
-            <IconButtonWithTooltip
-                label='Favorite this feature flag'
-                onClick={onFavorite}
-                data-loading
-            >
-                {feature.favorite ? <Star /> : <StarBorder />}
-            </IconButtonWithTooltip>
-            <PermissionIconButton
-                permission={CREATE_FEATURE}
-                projectId={projectId}
-                data-loading
-                component={Link}
-                nativeButton={false}
-                to={`/projects/${projectId}/features/${featureId}/copy`}
-                tooltipProps={{
-                    title: 'Clone',
-                }}
-            >
-                <LibraryAddOutlined />
-            </PermissionIconButton>
-
-            <PermissionIconButton
-                permission={DELETE_FEATURE}
-                projectId={projectId}
-                tooltipProps={{
-                    title: 'Archive feature flag',
-                }}
-                data-loading
-                onClick={openDeleteDialog}
-            >
-                <ArchiveOutlined />
-            </PermissionIconButton>
-            <PermissionIconButton
-                onClick={openStaleDialog}
-                permission={UPDATE_FEATURE}
-                projectId={projectId}
-                tooltipProps={{
-                    title: 'Toggle stale state',
-                }}
-                data-loading
-            >
-                <WatchLaterOutlined />
-            </PermissionIconButton>
-        </HeaderActions>
-    );
 };
 
 type Props = {
@@ -221,7 +86,6 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
     const { refetchFeature } = useFeature(projectId, featureId);
     const { setToastApiError } = useToast();
 
-    const [openTagDialog, setOpenTagDialog] = useState(false);
     const [showDelDialog, setShowDelDialog] = useState(false);
     const [openStaleDialog, setOpenStaleDialog] = useState(false);
 
@@ -232,7 +96,6 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
     const basePath = `/projects/${projectId}/features/${featureId}`;
 
     const showLegacyVariants = useLegacyVariants(feature.environments);
-    const useKebabActions = !useMinimumUnleashVersion('8.0.0');
 
     const tabData = [
         {
@@ -278,20 +141,6 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
         }
     };
 
-    const HeaderActionsInner: FC<{ showOnNarrowScreens?: boolean }> = ({
-        showOnNarrowScreens,
-    }) => {
-        return (
-            <HeaderActionsComponent
-                showOnNarrowScreens={showOnNarrowScreens}
-                feature={feature}
-                onFavorite={onFavorite}
-                openStaleDialog={() => setOpenStaleDialog(true)}
-                openDeleteDialog={() => setShowDelDialog(true)}
-            />
-        );
-    };
-
     return (
         <>
             <StyledHeader>
@@ -302,10 +151,7 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
                     </StyledTitle>
                     {feature.stale ? <FeatureStatusChip stale={true} /> : null}
                 </UpperHeaderRow>
-                <LowerHeaderRow data-reflow-on-narrow={!useKebabActions}>
-                    {!useKebabActions && (
-                        <HeaderActionsInner showOnNarrowScreens />
-                    )}
+                <LowerHeaderRow>
                     <StyledTabs
                         value={activeTab.path}
                         indicatorColor='primary'
@@ -323,16 +169,12 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
                             />
                         ))}
                     </StyledTabs>
-                    {useKebabActions ? (
-                        <FeatureHeaderActionsKebab
-                            feature={feature}
-                            onFavorite={onFavorite}
-                            openStaleDialog={() => setOpenStaleDialog(true)}
-                            openDeleteDialog={() => setShowDelDialog(true)}
-                        />
-                    ) : (
-                        <HeaderActionsInner />
-                    )}
+                    <FeatureHeaderActionsKebab
+                        feature={feature}
+                        onFavorite={onFavorite}
+                        openStaleDialog={() => setOpenStaleDialog(true)}
+                        openDeleteDialog={() => setShowDelDialog(true)}
+                    />
                 </LowerHeaderRow>
             </StyledHeader>
             {feature.children.length > 0 ? (
@@ -363,7 +205,6 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
                 featureId={featureId}
                 projectId={projectId}
             />
-            <ManageTagsDialog open={openTagDialog} setOpen={setOpenTagDialog} />
         </>
     );
 };

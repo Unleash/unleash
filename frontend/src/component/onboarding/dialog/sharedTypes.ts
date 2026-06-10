@@ -13,6 +13,7 @@ import svelte from '../../../assets/icons/sdks/Logo-svelte.svg';
 import swift from '../../../assets/icons/sdks/Logo-swift.svg';
 import android from '../../../assets/icons/sdks/Logo-android.svg';
 import flutter from '../../../assets/icons/sdks/Logo-flutter.svg';
+import nextjs from '../../../assets/icons/sdks/Logo-nextjs.svg';
 
 export type SdkType = 'client' | 'frontend';
 export type Sdk = { name: SdkName; type: SdkType };
@@ -32,7 +33,8 @@ export type ClientSdkName =
     | 'Svelte'
     | 'Swift'
     | 'Android'
-    | 'Flutter';
+    | 'Flutter'
+    | 'Next.js';
 export type SdkName = ServerSdkName | ClientSdkName;
 
 export const serverSdks: { name: ServerSdkName; icon: string }[] = [
@@ -53,6 +55,7 @@ export const clientSdks: { name: ClientSdkName; icon: string }[] = [
     { name: 'Swift', icon: swift },
     { name: 'Android', icon: android },
     { name: 'Flutter', icon: flutter },
+    { name: 'Next.js', icon: nextjs },
 ];
 
 export const allSdks: { name: ClientSdkName | ServerSdkName; icon: string }[] =

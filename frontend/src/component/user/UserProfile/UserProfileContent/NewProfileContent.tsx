@@ -23,6 +23,7 @@ interface INewProfileContentProps {
     onClose: () => void;
 }
 
+// TODO: rename to UserProfileContent once newProfileDropdown feature flag is removed
 export const NewProfileContent = ({
     id,
     anchorEl,

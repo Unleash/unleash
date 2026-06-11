@@ -112,4 +112,20 @@ export const OFFICIAL_SDKS: Sdk[] = [
         documentationUrl: 'https://docs.getunleash.io/sdks/vue',
         type: 'client',
     },
+    {
+        name: 'nextjs',
+        displayName: 'Next.js SDK',
+        description: 'Official Unleash Client for Next.js',
+        documentationUrl: 'https://docs.getunleash.io/sdks/next-js',
+        type: 'client',
+    },
+    {
+        name: 'reactnative',
+        displayName: 'React Native SDK',
+        description: 'Official Unleash Client for React Native',
+        documentationUrl: 'https://docs.getunleash.io/sdks/react-native',
+        type: 'client',
+    },
 ];
+
+export type OfficialSdkName = (typeof OFFICIAL_SDKS)[number]['name'];

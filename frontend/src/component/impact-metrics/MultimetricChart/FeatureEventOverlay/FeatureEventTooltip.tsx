@@ -43,7 +43,6 @@ const StyledEventIconBadge = styled(Box)({
     height: 20,
     borderRadius: 4,
     flexShrink: 0,
-    // Optically aligns the badge with the first text line of the row.
     marginTop: 1,
 });
 

@@ -323,8 +323,8 @@ importers:
         specifier: ^10.0.0
         version: 10.0.3
       del-cli:
-        specifier: 6.0.0
-        version: 6.0.0
+        specifier: 7.0.0
+        version: 7.0.0
       fast-check:
         specifier: 4.7.0
         version: 4.7.0
@@ -3269,8 +3269,8 @@ packages:
     resolution: {integrity: sha512-8QmQKqEASLd5nx0U1B1okLElbUuuttJ/AnYmRXbbbGDWh6uS208EjD4Xqq/I9wK7u0v6O08XhTWnt5XtEbR6Dg==}
     engines: {node: '>= 0.4'}
 
-  del-cli@6.0.0:
-    resolution: {integrity: sha512-9nitGV2W6KLFyya4qYt4+9AKQFL+c0Ehj5K7V7IwlxTc6RMCfQUGY9E9pLG6e8TQjtwXpuiWIGGZb3mfVxyZkw==}
+  del-cli@7.0.0:
+    resolution: {integrity: sha512-fRl4pWJYu9WFQH8jXdQUYvcD0IMtij9WEc7qmB7xOyJEweNJNuE7iKmqNeoOT1DbBUjtRjxlw8Y63qKBI/NQ1g==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -4660,9 +4660,9 @@ packages:
     resolution: {integrity: sha512-DGqD7Hjpi/1or4F/aYAspXKNm5Yili0QDAFAY4QYvpqpgiY6+1jOfqpmByzjxbWd/T9mChbCArXAbDAsTm5oXA==}
     engines: {node: '>=0.12'}
 
-  meow@13.2.0:
-    resolution: {integrity: sha512-pxQJQzB6djGPXh08dacEloMFopsOqGVRKFPYvPOt9XDZ1HasbgDZA74CJGreSU4G3Ak7EFJGoiH2auq+yXISgA==}
-    engines: {node: '>=18'}
+  meow@14.1.0:
+    resolution: {integrity: sha512-EDYo6VlmtnumlcBCbh1gLJ//9jvM/ndXHfVXIFrZVr6fGcwTUyCTFNTLCKuY3ffbK8L/+3Mzqnd58RojiZqHVw==}
+    engines: {node: '>=20'}
 
   merge-deep@3.0.3:
     resolution: {integrity: sha512-qtmzAS6t6grwEkNrunqTBdn0qKwFgNWvlxUbAV8es9M7Ot1EbyApytCnvE0jALPa46ZpKDUo527kKiaWplmlFA==}
@@ -9489,10 +9489,11 @@ snapshots:
       has-property-descriptors: 1.0.2
       object-keys: 1.1.1
 
-  del-cli@6.0.0:
+  del-cli@7.0.0:
     dependencies:
       del: 8.0.1
-      meow: 13.2.0
+      meow: 14.1.0
+      presentable-error: 0.0.1
 
   del@8.0.1:
     dependencies:
@@ -11055,7 +11056,7 @@ snapshots:
       next-tick: 1.1.0
       timers-ext: 0.1.8
 
-  meow@13.2.0: {}
+  meow@14.1.0: {}
 
   merge-deep@3.0.3:
     dependencies:

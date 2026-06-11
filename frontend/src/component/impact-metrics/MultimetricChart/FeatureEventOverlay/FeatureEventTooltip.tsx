@@ -74,11 +74,9 @@ const StyledEventSubtext = styled(Typography)(({ theme }) => ({
 export const FeatureEventTooltip: FC<{ group: EventGroup }> = ({ group }) => {
     const theme = useTheme();
     const isGrouped = group.events.length > 1;
-    // The EventGroup type guarantees a first event, but degrade gracefully
-    // if the invariant is ever broken by untyped data.
     const [primaryEvent] = group.events;
-    if (!primaryEvent) return null;
     const environment = primaryEvent.environment;
+
     return (
         <StyledTooltipContent>
             <StyledTooltipHeader>

@@ -145,8 +145,8 @@ importers:
         specifier: ^3.2.10
         version: 3.2.10(pg@8.20.0)
       ky:
-        specifier: ^1.14.3
-        version: 1.14.3
+        specifier: ^2.0.0
+        version: 2.0.2
       lodash:
         specifier: '>=4.18.0'
         version: 4.18.1
@@ -4371,9 +4371,9 @@ packages:
       tedious:
         optional: true
 
-  ky@1.14.3:
-    resolution: {integrity: sha512-9zy9lkjac+TR1c2tG+mkNSVlyOpInnWdSMiue4F+kq8TwJSgv6o8jhLRg8Ho6SnZ9wOYUq/yozts9qQCfk7bIw==}
-    engines: {node: '>=18'}
+  ky@2.0.2:
+    resolution: {integrity: sha512-/GmXpo9F9W+f8n4Ivr2iH+7h7wL7jLbLKWkMlpflcCRb6kGjBfTlASEXaZ9qUgNTn4VgS0P2pwxxzQ4EM6Ulgg==}
+    engines: {node: '>=22'}
 
   launchdarkly-eventsource@2.2.0:
     resolution: {integrity: sha512-u38fYlLSq/m6oFz0MS1/76Sj2xzlYhTKZ+sf/vju6PA86PMc6fPlY5k8CdU79edLXjNwsvIQTDvDNy3llDqB8A==}
@@ -10723,7 +10723,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ky@1.14.3: {}
+  ky@2.0.2: {}
 
   launchdarkly-eventsource@2.2.0: {}
 

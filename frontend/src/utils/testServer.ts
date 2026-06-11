@@ -24,10 +24,20 @@ export const testServerRoute = (
     json: object | boolean | string | number,
     method: 'get' | 'post' | 'put' | 'delete' = 'get',
     status: number = 200,
+    searchParams?: Record<string, string>,
 ) => {
     const requests: unknown[] = [];
     server.use(
         http[method](path, async ({ request }) => {
+            if (searchParams) {
+                const url = new URL(request.url);
+                const matches = Object.entries(searchParams).every(
+                    ([key, value]) => url.searchParams.get(key) === value,
+                );
+                // Fall through to other handlers for this path when the
+                // search params don't match.
+                if (!matches) return undefined;
+            }
             if (method === 'post' || method === 'put') {
                 const body = await request.json().catch(() => undefined);
                 if (body !== undefined) {

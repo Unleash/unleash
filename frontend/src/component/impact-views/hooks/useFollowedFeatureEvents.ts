@@ -32,8 +32,10 @@ export const useFollowedFeatureEvents = (
                 type: event.type as MultimetricFeatureEvent['type'],
                 label: event.label ?? event.type,
                 createdBy: event.createdBy,
+                featureName: event.featureName ?? '',
+                environment,
             })),
-        [events],
+        [events, environment],
     );
 
     return { featureEvents, loading };

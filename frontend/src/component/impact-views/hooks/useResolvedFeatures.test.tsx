@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { renderHook, waitFor } from '@testing-library/react';
 import { SWRConfig } from 'swr';
-import { http, HttpResponse } from 'msw';
 import { describe, expect, it } from 'vitest';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { useResolvedFeatures } from './useResolvedFeatures';
@@ -33,26 +32,21 @@ const feature = (
 });
 
 // The hook fires one search for active features and one for archived, both
-// against the same path. testServerRoute serves the active response; the
-// archived response needs a raw msw handler because the two requests differ
-// only by the `archived` search param, which path matching ignores. The
-// handler falls through to the active route for non-archived requests.
+// against the same path, differing only by the `archived` search param.
+// The archived route is registered last so msw checks it first; it falls
+// through to the active route when the param is absent.
 const setupSearchApi = (active: StubFeature[], archived: StubFeature[]) => {
     testServerRoute(server, '/api/admin/search/features', {
         features: active,
         total: active.length,
     });
-    server.use(
-        http.get('/api/admin/search/features', ({ request }) => {
-            const isArchived =
-                new URL(request.url).searchParams.get('archived') === 'IS:true';
-            return isArchived
-                ? HttpResponse.json({
-                      features: archived,
-                      total: archived.length,
-                  })
-                : undefined;
-        }),
+    testServerRoute(
+        server,
+        '/api/admin/search/features',
+        { features: archived, total: archived.length },
+        'get',
+        200,
+        { archived: 'IS:true' },
     );
 };
 

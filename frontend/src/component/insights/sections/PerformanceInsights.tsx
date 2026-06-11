@@ -4,8 +4,10 @@ import { useInsights } from 'hooks/api/getters/useInsights/useInsights';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import type { FC } from 'react';
-import { withDefault } from 'use-query-params';
-import { FilterItemParam } from 'utils/serializeQueryParams';
+import {
+    filterItemQueryParam,
+    withDefaultQueryParam,
+} from 'utils/queryParamSpec';
 import type { FilterItemParamHolder } from 'component/filter/Filters/Filters';
 import { WidgetTitle } from 'component/insights/components/WidgetTitle/WidgetTitle';
 import { FlagsChart } from 'component/insights/componentsChart/FlagsChart/FlagsChart';
@@ -65,12 +67,12 @@ export const PerformanceInsights: FC = () => {
     const fromKey = `${statePrefix}from`;
     const toKey = `${statePrefix}to`;
     const stateConfig = {
-        [`${statePrefix}project`]: FilterItemParam,
-        [fromKey]: withDefault(FilterItemParam, {
+        [`${statePrefix}project`]: filterItemQueryParam,
+        [fromKey]: withDefaultQueryParam(filterItemQueryParam, {
             values: [format(subMonths(new Date(), 1), 'yyyy-MM-dd')],
             operator: 'IS',
         }),
-        [toKey]: withDefault(FilterItemParam, {
+        [toKey]: withDefaultQueryParam(filterItemQueryParam, {
             values: [format(new Date(), 'yyyy-MM-dd')],
             operator: 'IS',
         }),

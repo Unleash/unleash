@@ -1,5 +1,10 @@
-import { encodeQueryParams, StringParam, withDefault } from 'use-query-params';
-import { FilterItemParam } from 'utils/serializeQueryParams';
+import {
+    encodeSpecParams,
+    filterItemQueryParam,
+    safeNumberQueryParam,
+    stringQueryParam,
+    withDefaultQueryParam,
+} from 'utils/queryParamSpec';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import mapValues from 'lodash.mapvalues';
 import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
@@ -7,7 +12,6 @@ import type { SearchEventsParams } from 'openapi';
 import type { FilterItemParamHolder } from 'component/filter/Filters/Filters';
 import { format, subYears } from 'date-fns';
 import { autocorrectDateRange } from 'component/filter/autocorrectDateRange';
-import { SafeNumberParam } from 'utils/safeNumberParam';
 import { DEFAULT_PAGE_LIMIT } from 'utils/paginationConfig';
 
 type Log =
@@ -18,16 +22,25 @@ type Log =
 const extraParameters = (logType: Log) => {
     switch (logType.type) {
         case 'global':
-            return { project: FilterItemParam, feature: FilterItemParam };
+            return {
+                project: filterItemQueryParam,
+                feature: filterItemQueryParam,
+            };
         case 'project':
             return {
-                feature: FilterItemParam,
-                project: withDefault(StringParam, `IS:${logType.projectId}`),
+                feature: filterItemQueryParam,
+                project: withDefaultQueryParam(
+                    stringQueryParam,
+                    `IS:${logType.projectId}`,
+                ),
             };
         case 'flag':
             return {
-                project: FilterItemParam,
-                feature: withDefault(StringParam, `IS:${logType.flagName}`),
+                project: filterItemQueryParam,
+                feature: withDefaultQueryParam(
+                    stringQueryParam,
+                    `IS:${logType.flagName}`,
+                ),
             };
     }
 };
@@ -54,22 +67,22 @@ export const useEventLogSearch = (
     refreshInterval = 15 * 1000,
 ) => {
     const stateConfig = {
-        offset: withDefault(SafeNumberParam, 0),
-        limit: withDefault(SafeNumberParam, DEFAULT_PAGE_LIMIT),
-        query: StringParam,
-        from: withDefault(FilterItemParam, {
+        offset: withDefaultQueryParam(safeNumberQueryParam, 0),
+        limit: withDefaultQueryParam(safeNumberQueryParam, DEFAULT_PAGE_LIMIT),
+        query: stringQueryParam,
+        from: withDefaultQueryParam(filterItemQueryParam, {
             values: [format(subYears(new Date(), 1), 'yyyy-MM-dd')],
             operator: 'IS',
         }),
-        to: withDefault(FilterItemParam, {
+        to: withDefaultQueryParam(filterItemQueryParam, {
             values: [format(new Date(), 'yyyy-MM-dd')],
             operator: 'IS',
         }),
-        createdBy: FilterItemParam,
-        type: FilterItemParam,
-        environment: FilterItemParam,
-        id: FilterItemParam,
-        groupId: FilterItemParam,
+        createdBy: filterItemQueryParam,
+        type: filterItemQueryParam,
+        environment: filterItemQueryParam,
+        id: filterItemQueryParam,
+        groupId: filterItemQueryParam,
         ...extraParameters(logType),
     };
 
@@ -113,7 +126,7 @@ export const useEventLogSearch = (
     })();
 
     const { events, total, refetch, loading, initialLoad } = useEventSearch(
-        mapValues(encodeQueryParams(stateConfig, tableState), (value) =>
+        mapValues(encodeSpecParams(stateConfig, tableState), (value) =>
             value ? `${value}` : undefined,
         ) as SearchEventsParams,
         {

@@ -1,15 +1,28 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { screen, waitFor } from '@testing-library/react';
-import { usePersistentTableState } from './usePersistentTableState.nuqs.ts';
+import { usePersistentTableState } from './usePersistentTableState.ts';
 import { Route, Routes } from 'react-router';
 import { createLocalStorage } from '../utils/createLocalStorage.ts';
-import { parseAsInteger, parseAsNativeArrayOf, parseAsString } from 'nuqs';
-import { filterItemParam } from '../utils/nuqsParams.ts';
+import {
+    filterItemQueryParam,
+    safeNumberQueryParam,
+    stringArrayQueryParam,
+    stringQueryParam,
+    type QueryParamSpecMap,
+} from '../utils/queryParamSpec.ts';
+
+// Same scenarios as usePersistentTableState.test.tsx, but with the flag
+// flipped so nuqs is the primary library. The extra waitFors compared to
+// the use-query-params variant are expected: nuqs applies state
+// optimistically and flushes URL updates asynchronously.
+vi.mock('./useQueryStateLibrary.ts', () => ({
+    useQueryStateLibrary: () => ({ primary: 'nuqs', compare: false }),
+}));
 
 type TestComponentProps = {
     keyName: string;
-    queryParamsDefinition: Record<string, any>;
+    queryParamsDefinition: QueryParamSpecMap;
     nonPersistentParams?: string[];
 };
 
@@ -55,14 +68,14 @@ function TestComponent({
     );
 }
 
-describe('usePersistentTableState (nuqs)', () => {
+describe('usePersistentTableState (nuqs primary)', () => {
     it('initializes correctly from URL', async () => {
         createLocalStorage('testKey', {});
 
         render(
             <TestComponent
                 keyName='testKey'
-                queryParamsDefinition={{ query: parseAsString }}
+                queryParamsDefinition={{ query: stringQueryParam }}
             />,
             { route: '/my-url?query=initialUrl' },
         );
@@ -79,14 +92,11 @@ describe('usePersistentTableState (nuqs)', () => {
         render(
             <TestComponent
                 keyName='testKey'
-                queryParamsDefinition={{ query: parseAsString }}
+                queryParamsDefinition={{ query: stringQueryParam }}
             />,
             { route: '/my-url' },
         );
 
-        // the localStorage restore propagates through a navigation, which
-        // nuqs picks up asynchronously (the old adapter restored in the
-        // same render flush)
         await waitFor(() => {
             expect(screen.getByTestId('state-value').textContent).toBe(
                 'initialStorage',
@@ -109,9 +119,9 @@ describe('usePersistentTableState (nuqs)', () => {
             <TestComponent
                 keyName='testKey'
                 queryParamsDefinition={{
-                    query: parseAsString,
-                    filterItem: filterItemParam,
-                    columns: parseAsNativeArrayOf(parseAsString),
+                    query: stringQueryParam,
+                    filterItem: filterItemQueryParam,
+                    columns: stringArrayQueryParam,
                 }}
             />,
             { route: '/my-url' },
@@ -133,7 +143,7 @@ describe('usePersistentTableState (nuqs)', () => {
         render(
             <TestComponent
                 keyName='testKey'
-                queryParamsDefinition={{ query: parseAsString }}
+                queryParamsDefinition={{ query: stringQueryParam }}
             />,
             { route: '/my-url?query=initialUrl' },
         );
@@ -154,8 +164,8 @@ describe('usePersistentTableState (nuqs)', () => {
             <TestComponent
                 keyName='testKey'
                 queryParamsDefinition={{
-                    query: parseAsString,
-                    other: parseAsString,
+                    query: stringQueryParam,
+                    other: stringQueryParam,
                 }}
             />,
             { route: '/my-url' },
@@ -172,8 +182,6 @@ describe('usePersistentTableState (nuqs)', () => {
         expect((await screen.findByTestId('state-value')).textContent).toBe(
             'after',
         );
-        // nuqs flushes URL updates asynchronously, so unlike the
-        // use-query-params version this needs a waitFor
         await waitFor(() => {
             expect(window.location.href).toContain(
                 'my-url?query=after&other=other',
@@ -196,8 +204,8 @@ describe('usePersistentTableState (nuqs)', () => {
             <TestComponent
                 keyName='testKey'
                 queryParamsDefinition={{
-                    query: parseAsString,
-                    offset: parseAsInteger,
+                    query: stringQueryParam,
+                    offset: safeNumberQueryParam,
                 }}
             />,
             { route: '/my-url' },
@@ -225,8 +233,8 @@ describe('usePersistentTableState (nuqs)', () => {
             <TestComponent
                 keyName='testKey'
                 queryParamsDefinition={{
-                    query: parseAsString,
-                    offset: parseAsInteger,
+                    query: stringQueryParam,
+                    offset: safeNumberQueryParam,
                 }}
             />,
             { route: '/my-url?query=before&offset=10' },
@@ -251,7 +259,7 @@ describe('usePersistentTableState (nuqs)', () => {
             <TestComponent
                 keyName='testKey'
                 queryParamsDefinition={{
-                    query: parseAsString,
+                    query: stringQueryParam,
                 }}
             />,
             { route: '/my-url?query=before&offset=10' },
@@ -275,9 +283,9 @@ describe('usePersistentTableState (nuqs)', () => {
             <TestComponent
                 keyName='testKey'
                 queryParamsDefinition={{
-                    query: parseAsString,
-                    another: parseAsString,
-                    ignore: parseAsString,
+                    query: stringQueryParam,
+                    another: stringQueryParam,
+                    ignore: stringQueryParam,
                 }}
             />,
             { route: '/my-url?another=another&query=initialUrl' },

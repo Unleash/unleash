@@ -9,11 +9,11 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { PaginatedTable, TablePlaceholder } from 'component/common/Table';
 import theme from 'themes/theme';
 import {
-    encodeQueryParams,
-    NumberParam,
-    StringParam,
-    withDefault,
-} from 'use-query-params';
+    encodeSpecParams,
+    safeNumberQueryParam,
+    stringQueryParam,
+    withDefaultQueryParam,
+} from 'utils/queryParamSpec';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import useLoading from 'hooks/useLoading';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
@@ -59,11 +59,11 @@ export const ProjectApplications = () => {
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     const stateConfig = {
-        offset: withDefault(NumberParam, 0),
-        limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
-        query: StringParam,
-        sortBy: withDefault(StringParam, 'createdAt'),
-        sortOrder: withDefault(StringParam, 'desc'),
+        offset: withDefaultQueryParam(safeNumberQueryParam, 0),
+        limit: withDefaultQueryParam(safeNumberQueryParam, DEFAULT_PAGE_LIMIT),
+        query: stringQueryParam,
+        sortBy: withDefaultQueryParam(stringQueryParam, 'createdAt'),
+        sortOrder: withDefaultQueryParam(stringQueryParam, 'desc'),
     };
     const [tableState, setTableState] = usePersistentTableState(
         `project-applications-table-${projectId}`,
@@ -75,7 +75,7 @@ export const ProjectApplications = () => {
         total,
         loading,
     } = useProjectApplications(
-        mapValues(encodeQueryParams(stateConfig, tableState), (value) =>
+        mapValues(encodeSpecParams(stateConfig, tableState), (value) =>
             value ? `${value}` : undefined,
         ),
         projectId,

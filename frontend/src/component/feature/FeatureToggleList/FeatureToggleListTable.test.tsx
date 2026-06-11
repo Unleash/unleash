@@ -124,9 +124,11 @@ test('Filter table by project', async () => {
     anotherProjectCheckbox.click();
 
     await screen.findByText('No feature flags found matching your criteria.');
-    // nuqs omits default-valued params (offset=0) and empty arrays
-    // (columns=) from the URL, and does not percent-encode ':'. The old
-    // use-query-params URL for this state was
-    // '?offset=0&columns=&project=IS%3Aproject-b'; both decode the same.
-    expect(window.location.href).toContain('?project=IS:project-b');
+    // assert on the decoded param rather than the raw URL: the exact URL
+    // shape differs between use-query-params ('?offset=0&columns=&project=
+    // IS%3Aproject-b') and nuqs ('?project=IS:project-b'), but both decode
+    // identically, so this passes regardless of which library the
+    // query-state flag selects
+    const searchParams = new URLSearchParams(window.location.search);
+    expect(searchParams.get('project')).toBe('IS:project-b');
 }, 10000);

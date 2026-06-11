@@ -100,6 +100,7 @@ export type UiFlags = {
     reactRouter_v7_relativeSplatPath?: boolean;
     newModalDesign?: boolean;
     archiveInFlagsView?: boolean;
+    newProfileDropdown?: boolean;
 };
 
 export interface IVersionInfo {

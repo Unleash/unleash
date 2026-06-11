@@ -6,16 +6,6 @@ import type {
     ResolvedFeature,
 } from '../views/FollowedFeaturesList/FollowedFeaturesList';
 
-const toResolved = (
-    feature: FeatureSearchResponseSchema,
-    fallbackStage: LifecycleStageName | null,
-): ResolvedFeature => ({
-    name: feature.name,
-    project: feature.project,
-    type: feature.type,
-    lifecycleStage: feature.lifecycle?.stage ?? fallbackStage,
-});
-
 // The feature search endpoint returns either active or archived features,
 // never both, so followed features are resolved with one query per state.
 export const useResolvedFeatures = (
@@ -36,28 +26,26 @@ export const useResolvedFeatures = (
 
     const resolved = useMemo(() => {
         const followed = new Set(featureNames);
-        const seen = new Set<string>();
-        const merged: ResolvedFeature[] = [];
 
-        const collect = (
+        const resolve = (
             features: FeatureSearchResponseSchema[],
             fallbackStage: LifecycleStageName | null,
-        ) => {
-            for (const feature of features) {
-                if (!followed.has(feature.name) || seen.has(feature.name)) {
-                    continue;
-                }
-                seen.add(feature.name);
-                merged.push(toResolved(feature, fallbackStage));
-            }
-        };
+        ): ResolvedFeature[] =>
+            features
+                .filter((feature) => followed.has(feature.name))
+                .map((feature) => ({
+                    name: feature.name,
+                    project: feature.project,
+                    type: feature.type,
+                    lifecycleStage: feature.lifecycle?.stage ?? fallbackStage,
+                }));
 
-        collect(activeFeatures as FeatureSearchResponseSchema[], null);
-        // Flags archived before lifecycle tracking have no lifecycle data;
-        // they still belong in the archived group.
-        collect(archivedFeatures as FeatureSearchResponseSchema[], 'archived');
-
-        return merged;
+        return [
+            ...resolve(activeFeatures, null),
+            // Flags archived before lifecycle tracking have no lifecycle
+            // data; they still belong in the archived group.
+            ...resolve(archivedFeatures, 'archived'),
+        ];
     }, [activeFeatures, archivedFeatures, featureNames]);
 
     return {

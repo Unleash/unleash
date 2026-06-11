@@ -3,7 +3,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { SWRConfig } from 'swr';
 import { http, HttpResponse } from 'msw';
 import { describe, expect, it } from 'vitest';
-import { testServerSetup } from 'utils/testServer';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { useResolvedFeatures } from './useResolvedFeatures';
 
 const server = testServerSetup();
@@ -32,15 +32,26 @@ const feature = (
     ...overrides,
 });
 
-// The hook fires one search for active features and one for archived
-// (`archived=IS:true`), so the stub branches on that search param.
+// The hook fires one search for active features and one for archived, both
+// against the same path. testServerRoute serves the active response; the
+// archived response needs a raw msw handler because the two requests differ
+// only by the `archived` search param, which path matching ignores. The
+// handler falls through to the active route for non-archived requests.
 const setupSearchApi = (active: StubFeature[], archived: StubFeature[]) => {
+    testServerRoute(server, '/api/admin/search/features', {
+        features: active,
+        total: active.length,
+    });
     server.use(
         http.get('/api/admin/search/features', ({ request }) => {
             const isArchived =
                 new URL(request.url).searchParams.get('archived') === 'IS:true';
-            const features = isArchived ? archived : active;
-            return HttpResponse.json({ features, total: features.length });
+            return isArchived
+                ? HttpResponse.json({
+                      features: archived,
+                      total: archived.length,
+                  })
+                : undefined;
         }),
     );
 };
@@ -112,28 +123,6 @@ describe('useResolvedFeatures', () => {
 
         expect(result.current.features.map(({ name }) => name)).toEqual([
             'my-flag',
-        ]);
-    });
-
-    it('keeps a single entry when both searches return the same feature', async () => {
-        setupSearchApi(
-            [feature('my-flag')],
-            [feature('my-flag', { lifecycle: null })],
-        );
-
-        const { result } = renderHook(() => useResolvedFeatures(['my-flag']), {
-            wrapper,
-        });
-
-        await waitFor(() => {
-            expect(result.current.loading).toBe(false);
-        });
-
-        expect(result.current.features).toEqual([
-            expect.objectContaining({
-                name: 'my-flag',
-                lifecycleStage: 'live',
-            }),
         ]);
     });
 });

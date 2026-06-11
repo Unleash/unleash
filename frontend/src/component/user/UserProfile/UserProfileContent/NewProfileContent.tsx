@@ -7,15 +7,14 @@ import { Link as RouterLink } from 'react-router-dom';
 const menuItemSx: SxProps<Theme> = {
     display: 'flex',
     alignItems: 'center',
-    gap: (theme) => theme.spacing(1),
+    gap: (theme) => theme.spacing(0.5),
     paddingBlock: (theme) => theme.spacing(1.5),
-    color: (theme) => theme.palette.text.primary,
-    fontWeight: (theme) => theme.fontWeight.medium,
 };
 
 const StyledOpenInNew = styled(OpenInNew)(({ theme }) => ({
-    fontSize: theme.spacing(2.25),
+    fontSize: theme.spacing(2),
     color: theme.palette.text.secondary,
+    alignSelf: 'flex-end',
 }));
 
 interface INewProfileContentProps {
@@ -37,7 +36,12 @@ export const NewProfileContent = ({
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         slotProps={{
-            paper: { sx: { minWidth: (theme) => theme.spacing(34) } },
+            paper: {
+                sx: {
+                    minWidth: (theme) => theme.spacing(34),
+                    borderRadius: (theme) => theme.shape.borderRadiusSmall,
+                },
+            },
         }}
     >
         <MenuItem
@@ -57,7 +61,7 @@ export const NewProfileContent = ({
             onClick={onClose}
             sx={menuItemSx}
         >
-            Privacy Policy
+            Privacy policy
             <StyledOpenInNew />
         </MenuItem>
 

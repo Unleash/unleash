@@ -1,20 +1,15 @@
 import { DEFAULT_PAGE_LIMIT } from 'hooks/api/getters/useChangeRequestSearch/useChangeRequestSearch';
-import {
-    NumberParam,
-    StringParam,
-    withDefault,
-    type DecodedValueMap,
-} from 'use-query-params';
-import { FilterItemParam } from 'utils/serializeQueryParams';
+import { type inferParserType, parseAsInteger, parseAsString } from 'nuqs';
+import { filterItemParam } from 'utils/nuqsParams';
 
 export const stateConfig = {
-    offset: withDefault(NumberParam, 0),
-    limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
-    sortBy: withDefault(StringParam, 'createdAt'),
-    sortOrder: withDefault(StringParam, 'desc'),
-    createdBy: FilterItemParam,
-    requestedApproverId: FilterItemParam,
-    state: FilterItemParam,
+    offset: parseAsInteger.withDefault(0),
+    limit: parseAsInteger.withDefault(DEFAULT_PAGE_LIMIT),
+    sortBy: parseAsString.withDefault('createdAt'),
+    sortOrder: parseAsString.withDefault('desc'),
+    createdBy: filterItemParam,
+    requestedApproverId: filterItemParam,
+    state: filterItemParam,
 };
 
-export type TableState = DecodedValueMap<typeof stateConfig>;
+export type TableState = inferParserType<typeof stateConfig>;

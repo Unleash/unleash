@@ -7,7 +7,7 @@ import { useApplicationOverview } from 'hooks/api/getters/useApplicationOverview
 import { useConnectedInstances } from 'hooks/api/getters/useConnectedInstances/useConnectedInstances';
 import type { ApplicationEnvironmentInstancesSchemaInstancesItem } from '../../../openapi/index.ts';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { StringParam, useQueryParam, withDefault } from 'use-query-params';
+import { parseAsString, useQueryState } from 'nuqs';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const useEnvironments = (application: string) => {
@@ -16,9 +16,9 @@ const useEnvironments = (application: string) => {
     const applicationEnvironments = applicationOverview.environments
         .map((env) => env.name)
         .sort();
-    const [currentEnvironment, setCurrentEnvironment] = useQueryParam(
+    const [currentEnvironment, setCurrentEnvironment] = useQueryState(
         'environment',
-        withDefault(StringParam, applicationEnvironments[0]),
+        parseAsString.withDefault(applicationEnvironments[0] ?? ''),
     );
 
     useEffect(() => {

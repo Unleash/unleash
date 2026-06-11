@@ -5,17 +5,11 @@ import type { Components, Theme } from '@mui/material/styles';
  * (buttons, icon buttons, inputs, selects).
  *
  * Buttons, inputs and selects share one height scale so they line up
- * when placed next to each other. Two candidate scales are defined;
- * flip `controlHeights` between them to compare live in the app.
+ * when placed next to each other.
  */
-const scales = {
-    compact: { small: 24, medium: 28, large: 32 },
-    comfortable: { small: 24, medium: 30, large: 36 },
-} as const;
+export const controlHeights = { small: 24, medium: 30, large: 36 } as const;
 
-export const controlHeights = scales.comfortable;
-
-type ControlSize = keyof typeof scales.compact;
+type ControlSize = keyof typeof controlHeights;
 
 const controlFontSizes: Record<ControlSize, string> = {
     small: `${12 / 16}rem`,

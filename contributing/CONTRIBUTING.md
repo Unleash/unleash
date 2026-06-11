@@ -110,6 +110,12 @@ You'll need:
 
    The **connection details** that Unleash will try to use are found in **`src/server-dev.ts`**. The above command works with the current defaults (at the time of writing).
 
+   - Also create the **test database** used by `pnpm test`:
+
+   ```bash
+   docker exec postgres createdb -U unleash_user unleash_test
+   ```
+
    - If you've set up the database previously, you can restart the container by running this (assuming `postgres` is the name you gave the container):
 
    ```bash

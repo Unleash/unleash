@@ -165,8 +165,8 @@
     "@types/stoppable": "1.1.3",
     "@types/supertest": "6.0.3",
     "@types/type-is": "1.6.7",
-    "@vitest/coverage-v8": "4.1.5",
-    "@vitest/ui": "4.1.5",
+    "@vitest/coverage-v8": "4.1.8",
+    "@vitest/ui": "4.1.8",
     "concurrently": "^10.0.0",
     "del-cli": "6.0.0",
     "fast-check": "4.7.0",
@@ -183,7 +183,7 @@
     "tsc-watch": "7.2.0",
     "typescript": "5.9.3",
     "vite-node": "^6.0.0",
-    "vitest": "4.1.5",
+    "vitest": "4.1.8",
     "wait-on": "^9.0.5"
   },
   "lint-staged": {

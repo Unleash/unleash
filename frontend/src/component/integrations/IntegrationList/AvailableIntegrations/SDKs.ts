@@ -1,12 +1,53 @@
+import android from 'assets/icons/sdks/Logo-android.svg';
+import dotnet from 'assets/icons/sdks/Logo-net.svg';
+import flutter from 'assets/icons/sdks/Logo-flutter.svg';
+import go from 'assets/icons/sdks/Logo-go.svg';
+import java from 'assets/icons/sdks/Logo-java.svg';
+import javascript from 'assets/icons/sdks/Logo-javascript.svg';
+import nextjs from 'assets/icons/sdks/Logo-nextjs.svg';
+import node from 'assets/icons/sdks/Logo-node.svg';
+import php from 'assets/icons/sdks/Logo-php.svg';
+import python from 'assets/icons/sdks/Logo-python.svg';
+import react from 'assets/icons/sdks/Logo-react.svg';
+import reactnative from 'assets/icons/sdks/Logo-reactnative.svg';
+import ruby from 'assets/icons/sdks/Logo-ruby.svg';
+import rust from 'assets/icons/sdks/Logo-rust.svg';
+import svelte from 'assets/icons/sdks/Logo-svelte.svg';
+import swift from 'assets/icons/sdks/Logo-swift.svg';
+import vue from 'assets/icons/sdks/Logo-vue.svg';
+
+export const SDK_ICONS = {
+    android: { icon: android, title: 'Android' },
+    dotnet: { icon: dotnet, title: '.NET' },
+    flutter: { icon: flutter, title: 'Flutter' },
+    go: { icon: go, title: 'Go' },
+    java: { icon: java, title: 'Java' },
+    javascript: { icon: javascript, title: 'JavaScript' },
+    nextjs: { icon: nextjs, title: 'Next.js' },
+    node: { icon: node, title: 'Node.js' },
+    php: { icon: php, title: 'PHP' },
+    python: { icon: python, title: 'Python' },
+    react: { icon: react, title: 'React' },
+    reactnative: { icon: reactnative, title: 'React Native' },
+    ruby: { icon: ruby, title: 'Ruby' },
+    rust: { icon: rust, title: 'Rust' },
+    svelte: { icon: svelte, title: 'Svelte' },
+    swift: { icon: swift, title: 'Swift' },
+    vue: { icon: vue, title: 'Vue' },
+} as const;
+
+export type OfficialSdkName = keyof typeof SDK_ICONS;
+export type SdkName = (typeof SDK_ICONS)[OfficialSdkName]['title'];
+
 export interface Sdk {
-    name: string;
+    name: OfficialSdkName;
     displayName: string;
     description: string;
     documentationUrl: string;
     type: 'server' | 'client';
 }
 
-export const OFFICIAL_SDKS: Sdk[] = [
+export const OFFICIAL_SDKS = [
     {
         name: 'go',
         displayName: 'GO SDK',
@@ -126,6 +167,4 @@ export const OFFICIAL_SDKS: Sdk[] = [
         documentationUrl: 'https://docs.getunleash.io/sdks/react-native',
         type: 'client',
     },
-];
-
-export type OfficialSdkName = (typeof OFFICIAL_SDKS)[number]['name'];
+] as const satisfies Sdk[];

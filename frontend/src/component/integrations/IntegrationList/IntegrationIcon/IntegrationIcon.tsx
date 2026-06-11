@@ -3,7 +3,7 @@ import { Avatar, styled } from '@mui/material';
 import DeviceHub from '@mui/icons-material/DeviceHub';
 import { formatAssetPath } from 'utils/formatPath';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
-import type { OfficialSdkName } from '../AvailableIntegrations/SDKs.ts';
+import { SDK_ICONS } from '../AvailableIntegrations/SDKs.ts';
 
 import dataDogIcon from 'assets/icons/datadog.svg';
 import newRelicIcon from 'assets/icons/new-relic.svg';
@@ -15,23 +15,6 @@ import slackIcon from 'assets/icons/slack.svg';
 import teamsIcon from 'assets/icons/teams.svg';
 import webhooksIcon from 'assets/icons/webhooks.svg';
 import unleashIcon from 'assets/icons/unleash-integration.svg';
-import android from 'assets/icons/sdks/Logo-android.svg';
-import dotnet from 'assets/icons/sdks/Logo-net.svg';
-import flutter from 'assets/icons/sdks/Logo-flutter.svg';
-import go from 'assets/icons/sdks/Logo-go.svg';
-import swift from 'assets/icons/sdks/Logo-swift.svg';
-import java from 'assets/icons/sdks/Logo-java.svg';
-import javascript from 'assets/icons/sdks/Logo-javascript.svg';
-import nextjs from 'assets/icons/sdks/Logo-nextjs.svg';
-import node from 'assets/icons/sdks/Logo-node.svg';
-import php from 'assets/icons/sdks/Logo-php.svg';
-import python from 'assets/icons/sdks/Logo-python.svg';
-import react from 'assets/icons/sdks/Logo-react.svg';
-import reactnative from 'assets/icons/sdks/Logo-reactnative.svg';
-import ruby from 'assets/icons/sdks/Logo-ruby.svg';
-import rust from 'assets/icons/sdks/Logo-rust.svg';
-import svelte from 'assets/icons/sdks/Logo-svelte.svg';
-import vue from 'assets/icons/sdks/Logo-vue.svg';
 
 interface IIntegrationIconProps {
     name: string;
@@ -46,27 +29,6 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
     height: theme.spacing(4),
     fontSize: '28px',
 }));
-
-// Typed against OfficialSdkName so TypeScript catches missing entries when a new SDK is added.
-const sdks: Record<OfficialSdkName, { title: string; icon: string }> = {
-    android: { title: 'Android', icon: android },
-    dotnet: { title: 'Dotnet', icon: dotnet },
-    flutter: { title: 'Flutter', icon: flutter },
-    go: { title: 'Go', icon: go },
-    java: { title: 'Java', icon: java },
-    javascript: { title: 'Javascript', icon: javascript },
-    nextjs: { title: 'Next.js', icon: nextjs },
-    node: { title: 'Node', icon: node },
-    php: { title: 'PHP', icon: php },
-    python: { title: 'Python', icon: python },
-    react: { title: 'React', icon: react },
-    reactnative: { title: 'React Native', icon: reactnative },
-    ruby: { title: 'Ruby', icon: ruby },
-    rust: { title: 'Rust', icon: rust },
-    svelte: { title: 'Svelte', icon: svelte },
-    swift: { title: 'Swift', icon: swift },
-    vue: { title: 'Vue', icon: vue },
-};
 
 const integrations: Record<
     string,
@@ -83,7 +45,7 @@ const integrations: Record<
     teams: { title: 'Teams', icon: teamsIcon },
     webhook: { title: 'Webhook', icon: webhooksIcon },
     unleash: { title: 'Unleash', icon: unleashIcon },
-    ...sdks,
+    ...SDK_ICONS,
 };
 
 export const IntegrationIcon = ({ name }: IIntegrationIconProps) => {

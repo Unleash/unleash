@@ -13,7 +13,6 @@ const HOUR_MS = 60 * 60 * 1000;
 const HOUR_SEC = 60 * 60;
 const DAY_MS = 24 * HOUR_MS;
 
-// Days → hours, so series segments and events can use the same unit.
 const days = (count: number): number => count * 24;
 
 const makeEvent = (
@@ -30,7 +29,6 @@ const makeEvent = (
     ...overrides,
 });
 
-// `month` view → ±3h half-window.
 const MONTH_WINDOW: VisibleWindow = {
     minMs: 0,
     maxMs: 30 * DAY_MS,
@@ -42,10 +40,6 @@ const seriesOf = (data: [number, number][]): MultimetricStepSeries => ({
     data,
 });
 
-// Builds an hourly goal series across the month window from a list of
-// segments: each segment holds `value` from `fromHour` until the next
-// segment starts. So "10 until day 10, then 20" is
-// `[{ fromHour: 0, value: 10 }, { fromHour: days(10), value: 20 }]`.
 type SeriesSegment = { fromHour: number; value: number };
 
 const segmentedSeries = (segments: SeriesSegment[]): MultimetricStepSeries =>
@@ -57,9 +51,6 @@ const segmentedSeries = (segments: SeriesSegment[]): MultimetricStepSeries =>
         ]),
     );
 
-// Default scenario: one flip at day 10 on a series that steps 10 → 20 there,
-// so the ±3h month window measures +100%. Tests override the parts they care
-// about.
 const compute = (overrides: Partial<ComputeFlagImpactsInput>) =>
     computeFlagImpacts({
         events: [makeEvent({ id: 1, timestamp: 10 * DAY_MS })],
@@ -78,7 +69,6 @@ describe('computeFlagImpacts', () => {
         expect(compute({ goalSeries: undefined })).toEqual([]);
         expect(compute({ events: [] })).toEqual([]);
         expect(compute({ visibleWindow: null })).toEqual([]);
-        // `parseVisibleWindow('', '')` produces a NaN window rather than null.
         expect(
             compute({
                 visibleWindow: {
@@ -111,8 +101,6 @@ describe('computeFlagImpacts', () => {
     });
 
     it('sums values per side for cumulative goals', () => {
-        // ±3h window: pre side sums 3 hourly samples of 3 (= 9); post side
-        // sums 3 samples of 4 (= 12) → +33.3%.
         const result = compute({
             goalSeries: segmentedSeries([
                 { fromHour: 0, value: 3 },
@@ -137,7 +125,6 @@ describe('computeFlagImpacts', () => {
     });
 
     it('treats sub-threshold movement as flat', () => {
-        // 1000 → 1005 is +0.5%, below the 1% threshold.
         expect(
             compute({
                 goalSeries: segmentedSeries([
@@ -149,7 +136,6 @@ describe('computeFlagImpacts', () => {
     });
 
     it('drops flips that cannot be measured', () => {
-        // Zero pre-side baseline.
         expect(
             compute({
                 goalSeries: segmentedSeries([
@@ -158,22 +144,19 @@ describe('computeFlagImpacts', () => {
                 ]),
             }),
         ).toEqual([]);
-        // No data on the pre side — the series only starts after the flip.
+
         expect(
             compute({
                 goalSeries: seriesOf([[(days(10) + 1) * HOUR_SEC, 20]]),
             }),
         ).toEqual([]);
-        // No window room — the flip sits exactly on the chart edge.
+
         expect(
             compute({ events: [makeEvent({ id: 1, timestamp: 0 })] }),
         ).toEqual([]);
     });
 
     it('shrinks the window to half the gap to a neighbouring event of another flag', () => {
-        // `other-flag` flips 2h after `my-flag`, shrinking the ±3h window to
-        // ±1h: pre = 10, post = 30 → +200%. Without the clamp the post side
-        // would blend in the 50s after the second flip (≈ +267%).
         const result = compute({
             events: [
                 makeEvent({ id: 1, timestamp: 10 * DAY_MS }),
@@ -194,9 +177,6 @@ describe('computeFlagImpacts', () => {
     });
 
     it('shrinks the window to the visible chart bounds', () => {
-        // A flip 1h after the window start shrinks ±3h to ±1h: pre = 10,
-        // post = 20 → +100%. Without the clamp the post side would blend in
-        // the later 30s and 40s (+200%).
         expect(
             compute({
                 events: [makeEvent({ id: 1, timestamp: HOUR_MS })],
@@ -211,8 +191,6 @@ describe('computeFlagImpacts', () => {
     });
 
     it('collapses multiple events per flag to the largest |Δ%|', () => {
-        // Two flips of the same flag: day 10 (+100%) and day 20 (-25%). The
-        // +100% flip represents the flag.
         const result = compute({
             events: [
                 makeEvent({ id: 1, timestamp: 10 * DAY_MS }),
@@ -234,9 +212,6 @@ describe('computeFlagImpacts', () => {
     });
 
     it('ranks flags by |Δ%| desc and drops unmeasurable flags', () => {
-        // big-mover flips at day 10 (+100%); small-mover at day 20 (-50%);
-        // no-baseline flips at day 26, inside the all-zero tail, so its pre
-        // baseline is 0 and it gets no row.
         const result = compute({
             events: [
                 makeEvent({

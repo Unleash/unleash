@@ -13,9 +13,8 @@ import type {
 // averaging for the second, matching the split in `computeGoalSummary`.
 const SUM_MODES: ReadonlySet<AggregationMode> = new Set(['count', 'sum']);
 
-// Anything below this Δ% magnitude is rounded down to "flat" — centralised so
-// the list rows and any future drill-down agree on what counts as movement.
-export const SMALL_CHANGE_THRESHOLD_PCT = 1;
+// Anything below this Δ% magnitude is rounded down to "flat".
+const SMALL_CHANGE_THRESHOLD_PCT = 1;
 
 // Fixed half-window around a flag change, sized per chart time range so we
 // compare like-for-like buckets: ≈1/30 of the visible range, rounded to

@@ -26,9 +26,9 @@ component/impact-views/
   README.md                  # this file (rollout plan + context)
   ImpactViewsPage.tsx        # page: switcher + active view's chart (useGoalViewData)
   LazyImpactViewsPage.tsx    # lazy wrapper used by the route
-  views/                     # components (GoalSummaryPanel, TopMoversPanel, MultimetricChartCard,
-                             #   FollowedFeaturesList, ViewSwitcher, FeaturePicker, ViewEditorDialog,
-                             #   ImpactMetricViewsEmptyState, …) + math (computeGoalSummary, computeFlagImpacts)
+  views/                     # components (GoalSummaryPanel, MultimetricChartCard, FollowedFeaturesList,
+                             #   ViewSwitcher, FeaturePicker, ViewEditorDialog, ImpactMetricViewsEmptyState, …)
+                             #   + math (computeGoalSummary, computeFlagImpacts)
   hooks/                     # data hooks (useGoalViewData seam + resolver/event/metrics hooks)
                              #   + useImpactMetricViews (localStorage CRUD)
 ```
@@ -54,7 +54,8 @@ resume.
 
 Scope is **goal-tracking only**. Still **deferred** (revisit later): the system-health view,
 the **Flag Impact** dialog and chart hover-highlighting, and the synthetic-data generators.
-A **simplified Top Movers** section is on `main` (see "Top Movers" below).
+A **simplified Top Movers** section is being introduced in 3 PRs; the math (T1) lands first
+(see "Top Movers" below).
 
 | PR | Contents |
 |----|----------|
@@ -64,9 +65,9 @@ A **simplified Top Movers** section is on `main` (see "Top Movers" below).
 | **4** | Chart card (render-only layout): `views/MultimetricChartCard/MultimetricChartCard.tsx`. (Getter `useGroupedImpactMetricsData` deferred to the real-data PR — not needed for dummy data.) |
 | **5** | Followed-features list (render-only): `views/FollowedFeaturesList/FollowedFeaturesList.tsx`, rendered below the card on the page with dummy feature names. (The `GoalTrackingViewChart` orchestrator and `useMergedFeatureEvents` stay with the deferred real-data wiring — they exist to fetch live data the dummy view doesn't need.) |
 | **(later)** | Replace the per-piece dummy wiring on `ImpactViewsPage` with a single cohesive dummy goal view / `GoalTrackingViewChart` if desired — optional polish, no new components. |
-| **T1** | Top-movers math (pure, no UI): `views/computeFlagImpacts.ts(+test)` — per-flag impact, fixed per-time-range window. |
-| **T2** | `views/TopMoversPanel/` (render-only): `TopMoversPanel.tsx`, `formatting.ts(+test)`. Nothing imports it yet. |
-| **T3** | Wiring: `totalsMiddleSlot` on `MultimetricChartCard`, `flagImpacts` on `useGoalViewData(+test)`, slot pass-through on the page. |
+| **T1** | Top-movers math (pure, no UI): `views/computeFlagImpacts.ts(+test)` — per-flag impact, fixed per-time-range window. Nothing imports it yet. |
+| **T2** | `views/TopMoversPanel/` (render-only): `TopMoversPanel.tsx`, `formatting.ts(+test)` — extract from the local `feat/top-movers-full` branch, not `feat/exp-views`. |
+| **T3** | Wiring: `totalsMiddleSlot` on `MultimetricChartCard`, `flagImpacts` on `useGoalViewData(+test)`, slot pass-through on the page — same source as T2. |
 | **Deferred** | **Flag Impact dialog + chart highlighting + baseline picker** (`FlagImpactDialog`, branch-only `MultimetricChart` props `highlightedEventId`/`eventImpactById`, `BASELINE_OPTIONS` picker); system-health view (`SystemHealthViewChart`, `ViewChart` template router, `useAutoFollowedFeatureNames`, `useEnvironmentEvents`, `normalizeSeriesToBaseline`); the synthetic generator `simulateFlagContribution`. |
 
 ## Status
@@ -81,7 +82,7 @@ A **simplified Top Movers** section is on `main` (see "Top Movers" below).
   version passed `highlightedEventId` / `eventImpactById` to `<MultimetricChart>` and exported
   `FeatureEventImpactSummary` — those `MultimetricChart` props are **branch-only additions**
   (deferred event-tooltip / highlight work), NOT on `main`, so they were stripped from the
-  co-located card. The simplified Top Movers (below) deliberately did **not** re-add them —
+  co-located card. The simplified Top Movers (below) deliberately does **not** re-add them —
   they only come back if the chart-highlight / event-tooltip work is ever picked up.
 - **PR 5** — merged. `views/FollowedFeaturesList/FollowedFeaturesList.tsx` rendered below the
   chart card. Made **presentational**: it takes `features: ResolvedFeature[]` and only groups
@@ -126,17 +127,21 @@ Extracted from `feat/exp-views:.../views/`, **stripping** template/system-health
   delete → shared `Dialogue` confirm; duplicate → `duplicateView`. The `goalViewConfig.ts` fixture
   was deleted (dead once localStorage landed).
 
-### Top Movers (simplified) — ✅ COMPLETE
+### Top Movers (simplified) — IN PROGRESS (T1 in review; T2/T3 next)
 
 A pared-down version of the branch's Top Movers, extracted in 3 PRs (T1–T3 in the table).
-The rail now reads Goal / Top movers / Signals. Deliberate simplifications vs. the branch:
+**T1 (this PR) is the math only** — `views/computeFlagImpacts.ts(+test)`, no UI, nothing
+imports it yet (same pattern as PR 2's `computeGoalSummary`). T2 (panel) and T3 (wiring)
+follow; once T3 lands the rail reads Goal / Top movers / Signals. The panel and wiring were
+already built against this math on the local `feat/top-movers-full` branch — re-extract from
+there, not from `feat/exp-views`. Deliberate simplifications vs. the branch:
 
 - **Fixed delta window, no baseline picker.** One half-window per chart time range,
   ≈1/30 of the visible range (`HALF_WINDOW_MS_BY_TIME_RANGE`: hour ±5m, day ±1h, week ±6h,
   month ±1d, threeMonths ±3d, sixMonths ±7d). The branch's `BASELINE_OPTIONS` picker was
   dropped. The map is exported so the day-scale values can be tuned once we see the bucket
   resolution the backend serves at the coarse ranges (if ±3d/±7d sides hold 0–1 points,
-  rows degrade to flat/null — safe, but worth bumping the constants).
+  rows silently drop out — safe, but worth bumping the constants).
 - **One row per flag, not per flip event.** `computeFlagImpacts` computes per-event deltas
   with the branch math (window shrunk to half the gap to *any* neighbouring event — any flip
   can contaminate the goal series — and clamped to the visible window; sum for `count`/`sum`

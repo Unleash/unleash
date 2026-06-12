@@ -112,6 +112,59 @@ describe('useGoalViewData', () => {
         });
         expect(result.current.goalSeries).toBeUndefined();
         expect(result.current.goalSummary).toBeUndefined();
+        expect(result.current.flagImpacts).toEqual([]);
+    });
+
+    it('computes per-flag impacts from the goal series and flag events', async () => {
+        const DAY_SEC = 24 * 60 * 60;
+        // Hourly goal samples over a month: 10 before day 10, 20 after. A
+        // flag flip at day 10 with the month view's ±1d window measures
+        // pre 10 vs post 20 → +100%.
+        server.use(
+            http.get('/api/admin/impact-metrics/', () =>
+                HttpResponse.json({
+                    start: '0',
+                    end: String(30 * DAY_SEC),
+                    series: [
+                        {
+                            data: Array.from({ length: 30 * 24 }, (_, hour) => [
+                                hour * 3600,
+                                hour < 10 * 24 ? 10 : 20,
+                            ]),
+                        },
+                    ],
+                }),
+            ),
+        );
+        testServerRoute(server, '/api/admin/search/features', {
+            features: [],
+            total: 0,
+        });
+        testServerRoute(server, '/api/admin/search/events', {
+            events: [
+                {
+                    id: 1,
+                    createdAt: new Date(10 * DAY_SEC * 1000).toISOString(),
+                    type: 'feature-environment-enabled',
+                    createdBy: 'someone',
+                    featureName: 'my-flag',
+                },
+            ],
+            total: 1,
+        });
+
+        const view = {
+            ...viewWith([metric('goal', { goal: true })]),
+            featureNames: ['my-flag'],
+        };
+
+        const { result } = renderHook(() => useGoalViewData(view), { wrapper });
+
+        await waitFor(() => {
+            expect(result.current.flagImpacts).toEqual([
+                { featureName: 'my-flag', deltaPct: 100, tone: 'up' },
+            ]);
+        });
     });
 
     it('queries the API with the extended time ranges', async () => {
@@ -159,5 +212,7 @@ describe('useGoalViewData', () => {
         expect(result.current.stepTotals).toEqual([]);
         expect(result.current.goalSeries).toBeUndefined();
         expect(result.current.goalSummary?.current).toBe(0);
+        // No series and an empty (NaN) visible window → no impacts.
+        expect(result.current.flagImpacts).toEqual([]);
     });
 });

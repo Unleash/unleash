@@ -6,6 +6,12 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { GoalSummaryPanel } from './views/GoalSummaryPanel/GoalSummaryPanel';
 import { MultimetricChartCard } from './views/MultimetricChartCard/MultimetricChartCard';
 import { FollowedFeaturesList } from './views/FollowedFeaturesList/FollowedFeaturesList';
+import { TopMoversPanel } from './views/TopMoversPanel/TopMoversPanel';
+import { DUMMY_FLAG_IMPACTS } from './views/TopMoversPanel/dummyImpacts';
+
+// TEMPORARY: dev-only preview so the Top Movers panel renders populated rows
+// without real flag flips in the sandbox. Remove with `dummyImpacts.ts`.
+const showDummyTopMovers = import.meta.env.DEV;
 import { ViewSwitcher } from './views/ViewSwitcher/ViewSwitcher';
 import { ViewEditorDialog } from './views/ViewEditorDialog/ViewEditorDialog';
 import { ImpactMetricViewsEmptyState } from './views/ImpactMetricViewsEmptyState/ImpactMetricViewsEmptyState';
@@ -49,6 +55,16 @@ const ActiveView: FC<{ view: MetricView }> = ({ view }) => {
                             timeLabel={timeLabel}
                         />
                     ) : null
+                }
+                totalsMiddleSlot={
+                    <TopMoversPanel
+                        impacts={
+                            showDummyTopMovers
+                                ? DUMMY_FLAG_IMPACTS
+                                : data.flagImpacts
+                        }
+                        timeRange={view.timeRange}
+                    />
                 }
             />
             <FollowedFeaturesList features={data.resolvedFeatures} />

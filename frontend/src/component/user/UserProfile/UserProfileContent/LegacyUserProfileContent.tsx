@@ -3,7 +3,7 @@ import { Button, Link, Paper, styled } from '@mui/material';
 import { basePath } from 'utils/formatPath';
 import type { IUser } from 'interfaces/user';
 import OpenInNew from '@mui/icons-material/OpenInNew';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
     display: 'flex',

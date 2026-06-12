@@ -6,7 +6,7 @@ import {
     styled,
     Typography,
 } from '@mui/material';
-import { UserProfileContent } from './UserProfileContent/UserProfileContent.tsx';
+import { LegacyUserProfileContent } from './UserProfileContent/LegacyUserProfileContent.tsx';
 import type { IUser } from 'interfaces/user';
 import { useId } from 'hooks/useId';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
@@ -73,7 +73,7 @@ export const LegacyUserProfile = ({ profile }: IUserProfileProps) => {
                     {showProfile ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                 </Button>
 
-                <UserProfileContent
+                <LegacyUserProfileContent
                     id={modalId}
                     showProfile={showProfile}
                     setShowProfile={setShowProfile}

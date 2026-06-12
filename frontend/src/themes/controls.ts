@@ -6,6 +6,9 @@ import type { Components, Theme } from '@mui/material/styles';
  *
  * Buttons, inputs and selects share one height scale so they line up
  * when placed next to each other.
+ *
+ * Pixel dimensions are plain numbers (MUI/emotion render a unitless value as
+ * px); only font sizes are strings, because they're `rem`.
  */
 export const controlHeights = { small: 24, medium: 30, large: 36 } as const;
 
@@ -17,18 +20,16 @@ const controlFontSizes: Record<ControlSize, string> = {
     large: `${14 / 16}rem`,
 };
 
-// Plain numbers (not `px` strings like controlIconSizes) because they're used
-// in arithmetic — see buttonPaddingX — and interpolated as `${x}px`.
 const controlPaddingX: Record<ControlSize, number> = {
     small: 8,
     medium: 10,
     large: 12,
 };
 
-const controlIconSizes: Record<ControlSize, string> = {
-    small: '16px',
-    medium: '18px',
-    large: '20px',
+const controlIconSizes: Record<ControlSize, number> = {
+    small: 16,
+    medium: 18,
+    large: 20,
 };
 
 /**

@@ -3,7 +3,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { UserProfile } from './UserProfile.tsx';
 import { LegacyUserProfile } from './LegacyUserProfile.tsx';
 
-export const UserProfileContainer = () => {
+const UserProfileContainer = () => {
     const { user } = useAuthUser();
     const newProfileDropdown = useUiFlag('newProfileDropdown');
 
@@ -17,3 +17,5 @@ export const UserProfileContainer = () => {
         <LegacyUserProfile profile={user} />
     );
 };
+
+export default UserProfileContainer;

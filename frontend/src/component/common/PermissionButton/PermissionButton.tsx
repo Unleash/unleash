@@ -131,7 +131,9 @@ const BasePermissionButton = React.forwardRef<
                     variant={variant}
                     color={color}
                     className={
-                        disableButton ? `${className} Mui-disabled` : className
+                        [className, disableButton && 'Mui-disabled']
+                            .filter(Boolean)
+                            .join(' ') || undefined
                     }
                     {...rest}
                     endIcon={endIcon}

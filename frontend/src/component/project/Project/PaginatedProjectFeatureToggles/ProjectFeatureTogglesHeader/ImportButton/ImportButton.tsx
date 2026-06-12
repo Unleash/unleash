@@ -23,10 +23,7 @@ export const ImportButton: FC<ImportButtonProps> = () => {
                 data-testid={IMPORT_BUTTON}
                 data-loading-project
             >
-                {/* size in em so the icon follows the icon-button's font size
-                    (the theme's per-size icon scale) instead of its hardcoded
-                    24px attrs — keeps it in line with MUI icons like Export */}
-                <ImportSvg style={{ width: '1em', height: '1em' }} />
+                <ImportSvg />
             </PermissionIconButton>
             <ImportModal
                 open={modalOpen}

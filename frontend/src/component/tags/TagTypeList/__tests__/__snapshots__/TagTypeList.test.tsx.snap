@@ -73,7 +73,7 @@ exports[`renders an empty list correctly 1`] = `
               />
               <button
                 aria-labelledby="useId-0"
-                class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeLarge MuiButton-colorPrimary MuiButton-disableElevation mui-2yujv4-MuiButtonBase-root-MuiButton-root"
+                class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeLarge MuiButton-colorPrimary MuiButton-disableElevation mui-1t52om0-MuiButtonBase-root-MuiButton-root"
                 tabindex="0"
                 type="button"
               >

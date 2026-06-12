@@ -17,6 +17,8 @@ const controlFontSizes: Record<ControlSize, string> = {
     large: `${14 / 16}rem`,
 };
 
+// Plain numbers (not `px` strings like controlIconSizes) because they're used
+// in arithmetic — see buttonPaddingX — and interpolated as `${x}px`.
 const controlPaddingX: Record<ControlSize, number> = {
     small: 8,
     medium: 10,
@@ -65,7 +67,9 @@ const buttonSize = (size: ControlSize) => ({
     fontSize: controlFontSizes[size],
     // Scale the icon and tighten its spacing to the button height. MUI's
     // defaults are tuned for its own (taller) sizes and look oversized here.
-    '& .MuiButton-startIcon > *:first-of-type, & .MuiButton-endIcon > *:first-of-type':
+    // Selector mirrors MUI's own start/end-icon target (the icon is the first
+    // child of the icon span), so it works for any icon element, not just svg.
+    '& .MuiButton-startIcon > *:nth-of-type(1), & .MuiButton-endIcon > *:nth-of-type(1)':
         {
             fontSize: controlIconSizes[size],
         },

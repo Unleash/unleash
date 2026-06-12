@@ -136,12 +136,12 @@ follow; once T3 lands the rail reads Goal / Top movers / Signals. The panel and 
 already built against this math on the local `feat/top-movers-full` branch — re-extract from
 there, not from `feat/exp-views`. Deliberate simplifications vs. the branch:
 
-- **Fixed delta window, no baseline picker.** One half-window per chart time range,
-  ≈1/30 of the visible range (`HALF_WINDOW_MS_BY_TIME_RANGE`: hour ±5m, day ±1h, week ±6h,
-  month ±1d, threeMonths ±3d, sixMonths ±7d). The branch's `BASELINE_OPTIONS` picker was
-  dropped. The map is exported so the day-scale values can be tuned once we see the bucket
-  resolution the backend serves at the coarse ranges (if ±3d/±7d sides hold 0–1 points,
-  rows silently drop out — safe, but worth bumping the constants).
+- **Fixed delta window, no baseline picker.** One hand-tuned half-window per chart time
+  range (`HALF_WINDOW_MS_BY_TIME_RANGE`: hour ±5m, day ±1h, week ±6h, month ±3h,
+  threeMonths and sixMonths ±7d — one full weekly cycle per side). The branch's
+  `BASELINE_OPTIONS` picker was dropped. The map is exported so the values can be tuned
+  once we see the bucket resolution the backend serves at the coarse ranges (if the ±7d
+  sides hold 0–1 points, rows silently drop out — safe, but worth bumping the constants).
 - **One row per flag, not per flip event.** `computeFlagImpacts` computes per-event deltas
   with the branch math (window shrunk to half the gap to *any* neighbouring event — any flip
   can contaminate the goal series — and clamped to the visible window; sum for `count`/`sum`

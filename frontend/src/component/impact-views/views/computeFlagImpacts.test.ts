@@ -380,8 +380,8 @@ describe('computeFlagImpacts', () => {
             hour: 5 * 60 * 1000,
             day: HOUR_MS,
             week: 6 * HOUR_MS,
-            month: DAY_MS,
-            threeMonths: 3 * DAY_MS,
+            month: 3 * HOUR_MS,
+            threeMonths: 7 * DAY_MS,
             sixMonths: 7 * DAY_MS,
         });
     });

@@ -2,7 +2,7 @@ version: '3.1'
 
 services:
   postgres:
-    image: postgres:18-alpine
+    image: postgres:18
     environment:
       POSTGRES_USER: unleash_user
       POSTGRES_PASSWORD: password

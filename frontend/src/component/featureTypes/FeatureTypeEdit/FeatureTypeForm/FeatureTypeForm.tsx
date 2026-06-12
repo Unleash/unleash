@@ -1,6 +1,6 @@
 import { type FormEventHandler, type FC, useState, useCallback } from 'react';
 import { Box, Button, Typography, Checkbox, styled } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useFeatureTypeApi } from 'hooks/api/actions/useFeatureTypeApi/useFeatureTypeApi';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';

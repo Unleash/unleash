@@ -9,7 +9,7 @@ import { GroupFormUsersSelect } from './GroupFormUsersSelect/GroupFormUsersSelec
 import { GroupFormUsersTable } from './GroupFormUsersTable/GroupFormUsersTable.tsx';
 import { ItemList } from 'component/common/ItemList/ItemList';
 import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import type { IRole } from 'interfaces/role';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';

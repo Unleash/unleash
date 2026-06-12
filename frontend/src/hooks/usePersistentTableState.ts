@@ -1,5 +1,5 @@
 import { useEffect, useCallback, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { encodeQueryParams, useQueryParams } from 'use-query-params';
 import type { QueryParamConfigMap } from 'serialize-query-params/src/types';

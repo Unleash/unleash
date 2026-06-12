@@ -1,6 +1,6 @@
 import { Button, styled, Typography } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import type { ReactNode } from 'react';
 import EnterpriseEdgeCloud from 'assets/img/enterpriseEdgeCloud.svg?react';
 import EnterpriseEdgeSelfHosted from 'assets/img/enterpriseEdgeSelfHosted.svg?react';

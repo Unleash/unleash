@@ -1,6 +1,6 @@
 import { StyledHelpText, StyledTitle } from '../IntegrationForm.styles';
 import { Box, Button, styled } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 export interface IAddonInstallProps {
     url: string;

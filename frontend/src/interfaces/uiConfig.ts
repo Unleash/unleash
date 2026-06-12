@@ -96,8 +96,6 @@ export type UiFlags = {
     multiMetricChart?: boolean;
     logRocketEnabled?: boolean;
     newProjectList?: boolean;
-    reactRouter_v7_startTransition?: boolean;
-    reactRouter_v7_relativeSplatPath?: boolean;
     newModalDesign?: boolean;
     archiveInFlagsView?: boolean;
     newProfileDropdown?: boolean;

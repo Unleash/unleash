@@ -1,7 +1,7 @@
 import { Box, styled } from '@mui/material';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import type { UnknownFlag } from './hooks/useUnknownFlags.js';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton.js';
 import type { ProjectSchema } from 'openapi/index.js';
 

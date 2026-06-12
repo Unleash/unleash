@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState, type FC } from 'react';
 import { Box, Link, useMediaQuery, useTheme } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
 import { PaginatedTable, TablePlaceholder } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';

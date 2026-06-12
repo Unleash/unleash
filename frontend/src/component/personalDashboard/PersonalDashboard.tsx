@@ -21,7 +21,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { InfoSection } from './InfoSection.tsx';
 import { EventTimeline } from 'component/events/EventTimeline/EventTimeline';
 import { AccordionContent } from './SharedComponents.tsx';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { useWelcomeDialogContext } from './WelcomeDialogContext.tsx';
 
 const WelcomeSection = styled('div')(({ theme }) => ({

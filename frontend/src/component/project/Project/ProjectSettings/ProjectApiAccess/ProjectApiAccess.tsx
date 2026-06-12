@@ -6,7 +6,7 @@ import AccessContext from 'contexts/AccessContext';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { CreateProjectApiToken } from 'component/project/Project/ProjectSettings/ProjectApiAccess/CreateProjectApiToken';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router';
 import { ApiTokenTable } from 'component/common/ApiTokenTable/ApiTokenTable';
 import { useProjectApiTokens } from 'hooks/api/getters/useProjectApiTokens/useProjectApiTokens';
 import { CreateApiTokenButton } from 'component/common/ApiTokenTable/CreateApiTokenButton/CreateApiTokenButton';

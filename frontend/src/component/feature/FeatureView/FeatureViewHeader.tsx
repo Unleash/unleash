@@ -1,6 +1,6 @@
 import { useState, type FC } from 'react';
 import { styled, Tab, Tabs, type Theme, Typography } from '@mui/material';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { FeatureStatusChip } from 'component/common/FeatureStatusChip/FeatureStatusChip';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';

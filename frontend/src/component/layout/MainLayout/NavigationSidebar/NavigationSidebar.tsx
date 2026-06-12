@@ -18,7 +18,7 @@ import CelebratoryUnleashLogo from 'assets/img/unleashHoliday.svg?react';
 import CelebratoryUnleashLogoWhite from 'assets/img/unleashHolidayDark.svg?react';
 import LogoOnlyWhite from 'assets/img/logo.svg?react';
 import LogoOnly from 'assets/img/logoDark.svg?react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { useFlag } from '@unleash/proxy-client-react';
 import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
 

@@ -5,7 +5,7 @@ import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 const StyledLink = styled(Link)(({ theme }) => ({
     textDecoration: 'none',

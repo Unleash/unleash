@@ -7,7 +7,7 @@ import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import { useSearchHighlightContext } from '../../SearchHighlightContext/SearchHighlightContext.tsx';
 import { Highlighter } from '../../../Highlighter/Highlighter.tsx';
 import { StyledDescription } from '../LinkCell/LinkCell.styles';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { Badge } from '../../../Badge/Badge.tsx';
 import { HtmlTooltip } from '../../../HtmlTooltip/HtmlTooltip.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

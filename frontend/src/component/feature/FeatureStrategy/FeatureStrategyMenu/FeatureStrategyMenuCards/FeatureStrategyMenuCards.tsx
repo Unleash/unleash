@@ -2,7 +2,7 @@ import { styled, Box } from '@mui/material';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard.tsx';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon.tsx';
 import { type Dispatch, type SetStateAction, useContext, useMemo } from 'react';

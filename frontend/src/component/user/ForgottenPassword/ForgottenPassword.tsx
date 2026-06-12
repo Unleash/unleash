@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { type SyntheticEvent, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import useLoading from 'hooks/useLoading';
 import { FORGOTTEN_PASSWORD_FIELD } from 'utils/testIds';
 import { formatApiPath } from 'utils/formatPath';

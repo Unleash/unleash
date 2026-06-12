@@ -2,7 +2,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Banner } from '../Banner/Banner.tsx';
 import type { IBanner } from 'interfaces/banner';
 import { useOutdatedSdks } from 'hooks/api/getters/useOutdatedSdks/useOutdatedSdks';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { styled } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 

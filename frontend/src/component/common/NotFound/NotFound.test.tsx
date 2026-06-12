@@ -1,7 +1,7 @@
 import { beforeEach, expect, test } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 import { ThemeProvider } from 'themes/ThemeProvider';
 import { setLocalStorageItem, getLocalStorageItem } from 'utils/storage';
 import NotFound from './NotFound';
@@ -16,13 +16,7 @@ const LocationDisplay = () => {
 const renderNotFound = (initialPath = '/not-exists') =>
     render(
         <ThemeProvider>
-            <MemoryRouter
-                initialEntries={[initialPath]}
-                future={{
-                    v7_startTransition: true,
-                    v7_relativeSplatPath: true,
-                }}
-            >
+            <MemoryRouter initialEntries={[initialPath]}>
                 <Routes>
                     <Route path='*' element={<NotFound />} />
                     <Route path='/' element={<LocationDisplay />} />

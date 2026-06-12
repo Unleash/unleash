@@ -1,6 +1,6 @@
 import { beforeEach, expect, test } from 'vitest';
 import { render } from 'utils/testRenderer';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import { ProjectFeatureToggles } from './ProjectFeatureToggles.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';

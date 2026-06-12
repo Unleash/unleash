@@ -4,7 +4,7 @@ import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { RolesTable } from './RolesTable/RolesTable.tsx';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { Tab, Tabs, styled, useMediaQuery } from '@mui/material';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router';
 import { PROJECT_ROLE_TYPE, ROOT_ROLE_TYPE } from '@server/util/constants';
 import { useRoles } from 'hooks/api/getters/useRoles/useRoles';
 import { Search } from 'component/common/Search/Search';

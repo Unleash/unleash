@@ -7,7 +7,7 @@ import {
     type TypographyProps,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import NewReleases from '@mui/icons-material/NewReleases';
 import Close from '@mui/icons-material/Close';
 import { NewInUnleashDialog } from './NewInUnleashDialog.tsx';

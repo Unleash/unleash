@@ -1,7 +1,7 @@
 import { IconButton, type IconButtonProps } from '@mui/material';
 import type React from 'react';
 import type { ReactNode } from 'react';
-import type { Link } from 'react-router-dom';
+import type { Link } from 'react-router';
 import {
     type ITooltipResolverProps,
     TooltipResolver,

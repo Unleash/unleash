@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import useLoading from 'hooks/useLoading';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import ProjectStatusSvg from 'assets/icons/projectStatus.svg?react';
@@ -35,7 +35,7 @@ import {
     Routes,
     useLocation,
     useSearchParams,
-} from 'react-router-dom';
+} from 'react-router';
 import { DeleteProjectDialogue } from './DeleteProject/DeleteProjectDialogue.tsx';
 import { ProjectLog } from './ProjectLog/ProjectLog.tsx';
 import { ChangeRequestOverview } from 'component/changeRequest/ChangeRequestOverview/ChangeRequestOverview';

@@ -2,7 +2,7 @@ import { ArchiveTable } from 'component/archive/ArchiveTable/ArchiveTable';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
-import { Navigate, useSearchParams } from 'react-router-dom';
+import { Navigate, useSearchParams } from 'react-router';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 const defaultSort: { id: string; desc?: boolean } = { id: 'createdAt' };

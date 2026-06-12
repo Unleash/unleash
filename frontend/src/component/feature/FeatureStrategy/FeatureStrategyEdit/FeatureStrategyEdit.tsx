@@ -6,7 +6,7 @@ import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import useToast from 'hooks/useToast';
 import type {
     IFeatureStrategy,

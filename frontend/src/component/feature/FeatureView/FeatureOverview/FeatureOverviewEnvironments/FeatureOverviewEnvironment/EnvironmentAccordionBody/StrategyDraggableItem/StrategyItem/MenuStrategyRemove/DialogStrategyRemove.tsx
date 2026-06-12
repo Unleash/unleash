@@ -2,7 +2,7 @@ import type React from 'react';
 import type { FC } from 'react';
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 import useToast from 'hooks/useToast';
 import { formatFeaturePath } from '../../../../../../../../FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit.tsx';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';

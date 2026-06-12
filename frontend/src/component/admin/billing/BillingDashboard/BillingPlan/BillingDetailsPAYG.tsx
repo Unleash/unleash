@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { Divider, styled, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { GridRow } from 'component/common/GridRow/GridRow';

@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest';
 import { TagTypeList } from 'component/tags/TagTypeList/TagTypeList';
 import { render } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import UIProvider from 'component/providers/UIProvider/UIProvider';
 import { ThemeProvider } from 'themes/ThemeProvider';
@@ -10,9 +10,7 @@ import { AnnouncerProvider } from 'component/common/Announcer/AnnouncerProvider/
 
 test('renders an empty list correctly', () => {
     const { asFragment } = render(
-        <MemoryRouter
-            future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-        >
+        <MemoryRouter>
             <ThemeProvider>
                 <AnnouncerProvider>
                     <UIProvider>

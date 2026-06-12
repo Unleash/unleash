@@ -2,7 +2,7 @@ import { Menu, MenuItem, styled } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material';
 import { basePath } from 'utils/formatPath';
 import OpenInNew from '@mui/icons-material/OpenInNew';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 
 const menuItemSx: SxProps<Theme> = {
     display: 'flex',

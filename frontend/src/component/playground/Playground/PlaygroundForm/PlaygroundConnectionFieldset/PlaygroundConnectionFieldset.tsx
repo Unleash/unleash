@@ -30,7 +30,7 @@ import Clear from '@mui/icons-material/Clear';
 import { ProjectSelect } from '../../../../common/ProjectSelect/ProjectSelect.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { EnvironmentsField } from './EnvironmentsField/EnvironmentsField.tsx';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 interface IPlaygroundConnectionFieldsetProps {
     environments: string[];

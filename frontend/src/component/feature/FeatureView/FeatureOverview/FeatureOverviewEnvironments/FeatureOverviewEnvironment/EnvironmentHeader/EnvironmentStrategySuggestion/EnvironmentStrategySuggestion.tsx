@@ -1,5 +1,5 @@
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { StrategyExecution } from '../../EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution.js';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton.js';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker.js';

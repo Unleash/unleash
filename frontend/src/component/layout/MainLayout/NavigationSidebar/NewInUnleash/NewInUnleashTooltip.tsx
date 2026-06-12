@@ -9,7 +9,7 @@ import {
     Typography,
     ClickAwayListener,
 } from '@mui/material';
-import type { Link as RouterLink } from 'react-router-dom';
+import type { Link as RouterLink } from 'react-router';
 import OpenInNew from '@mui/icons-material/OpenInNew';
 import UnleashLogo from 'assets/img/logoWithWhiteText.svg?react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

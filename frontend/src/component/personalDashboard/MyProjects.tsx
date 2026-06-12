@@ -34,7 +34,7 @@ import {
 } from './SharedComponents.tsx';
 import { ContactAdmins, DataError } from './ProjectDetailsError.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { ActionBox } from './ActionBox.tsx';
 import useLoading from 'hooks/useLoading';
 import { NoProjectsContactAdmin } from './NoProjectsContactAdmin.tsx';

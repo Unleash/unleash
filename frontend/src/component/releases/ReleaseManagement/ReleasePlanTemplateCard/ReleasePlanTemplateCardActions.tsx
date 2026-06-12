@@ -19,7 +19,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { TemplateArchiveDialog } from '../TemplateArchiveDialog.tsx';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { RELEASE_PLAN_TEMPLATE_DELETE } from '@server/types/permissions';
 import { useHasRootAccess } from 'hooks/useHasAccess';

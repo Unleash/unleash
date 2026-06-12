@@ -6,7 +6,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender.tsx';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { Alert, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';

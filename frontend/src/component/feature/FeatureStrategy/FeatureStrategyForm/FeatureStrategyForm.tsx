@@ -1,6 +1,6 @@
 import type React from 'react';
 import { useEffect, useState, type JSX } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { Button, styled, Box } from '@mui/material';
 import type {
     IFeatureStrategyParameters,

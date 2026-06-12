@@ -14,7 +14,7 @@ import { ApplicationIssues } from './ApplicationIssues/ApplicationIssues.tsx';
 import { ApplicationChart } from './ApplicationChart.tsx';
 import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
 import { Badge } from '../common/Badge/Badge.tsx';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useEffect } from 'react';
 import { useFeedback } from '../feedbackNew/useFeedback.tsx';

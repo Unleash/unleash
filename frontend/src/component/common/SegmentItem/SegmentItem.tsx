@@ -1,5 +1,5 @@
 import { useId, useMemo, useState, type FC, type JSX } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import type { ISegment } from 'interfaces/segment';
 import {
     Accordion,

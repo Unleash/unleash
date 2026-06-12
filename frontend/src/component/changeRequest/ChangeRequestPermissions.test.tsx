@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import { MemoryRouter, Routes, Route } from 'react-router';
 import { FeatureView } from '../feature/FeatureView/FeatureView.tsx';
 import { ThemeProvider } from 'themes/ThemeProvider';
 import { AccessProvider } from '../providers/AccessProvider/AccessProvider.tsx';
@@ -200,13 +200,7 @@ const UnleashUiSetup: FC<{
     >
         <UIProviderContainer>
             <AccessProvider>
-                <MemoryRouter
-                    initialEntries={[path]}
-                    future={{
-                        v7_startTransition: true,
-                        v7_relativeSplatPath: true,
-                    }}
-                >
+                <MemoryRouter initialEntries={[path]}>
                     <ThemeProvider>
                         <AnnouncerProvider>
                             <StickyProvider>

@@ -41,7 +41,7 @@ import {
     isClosed,
     type PlausibleChangeRequestState,
 } from '../changeRequest.types';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
 import { ChangeRequestRequestedApprovers } from './ChangeRequestRequestedApprovers/ChangeRequestRequestedApprovers.tsx';
 import { ChangeRequestIcon } from 'component/common/ChangeRequestIcon/ChangeRequestIcon.tsx';

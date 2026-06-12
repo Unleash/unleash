@@ -32,7 +32,7 @@ import {
     Routes,
     useNavigate,
     useSearchParams,
-} from 'react-router-dom';
+} from 'react-router';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';

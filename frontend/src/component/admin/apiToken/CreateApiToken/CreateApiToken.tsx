@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { styled } from '@mui/material';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import ApiTokenForm from '../ApiTokenForm/ApiTokenForm.tsx';

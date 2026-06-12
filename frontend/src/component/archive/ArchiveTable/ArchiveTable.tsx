@@ -23,7 +23,7 @@ import theme from 'themes/theme';
 import type { FeatureSearchResponseSchema } from 'openapi';
 import { useSearch } from 'hooks/useSearch';
 import { FeatureArchivedCell } from 'component/archive/ArchiveTable/FeatureArchivedCell/FeatureArchivedCell';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 import { ArchivedFeatureDeleteConfirm } from 'component/archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureDeleteConfirm/ArchivedFeatureDeleteConfirm';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';

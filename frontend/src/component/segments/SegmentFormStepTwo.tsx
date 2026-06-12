@@ -14,7 +14,7 @@ import {
 } from 'component/providers/AccessProvider/permissions';
 
 import type { IConstraint, IConstraintWithId } from 'interfaces/strategy';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { EditableConstraintsList } from 'component/common/NewConstraintAccordion/ConstraintsList/EditableConstraintsList';
 import type { IEditableConstraintsListRef } from 'component/common/NewConstraintAccordion/ConstraintsList/EditableConstraintsList';
 import type { SegmentFormStep, SegmentFormMode } from './SegmentForm.tsx';

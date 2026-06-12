@@ -15,7 +15,7 @@ import { isSafeToArchive } from '../FeatureOverview/FeatureLifecycle/isSafeToArc
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useReminders } from './useReminders.ts';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useUncomplete } from '../FeatureOverview/FeatureLifecycle/useUncomplete.ts';

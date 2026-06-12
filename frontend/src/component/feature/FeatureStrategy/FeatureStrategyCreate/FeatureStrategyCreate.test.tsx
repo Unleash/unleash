@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, test } from 'vitest';
 import { formatAddStrategyApiCode } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
 import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 import {
     CREATE_FEATURE_STRATEGY,

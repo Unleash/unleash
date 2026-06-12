@@ -19,7 +19,7 @@ import {
 } from '@tanstack/react-table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Box, styled, Tab, Tabs, useMediaQuery } from '@mui/material';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Search } from 'component/common/Search/Search';
 import { featuresPlaceholder } from 'component/feature/FeatureToggleList/FeatureToggleListTable';

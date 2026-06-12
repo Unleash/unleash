@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { styled } from '@mui/material/styles';
 import { usePageTitle } from 'hooks/usePageTitle';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 import { Alert } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';

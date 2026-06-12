@@ -1,6 +1,6 @@
 import { createUuid } from 'utils/createUuid';
 import { useMemo } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 import { Button, Divider, styled } from '@mui/material';
 import { IN } from 'constants/operators';
 import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';

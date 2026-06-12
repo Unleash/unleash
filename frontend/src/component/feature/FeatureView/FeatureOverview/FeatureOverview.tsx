@@ -1,5 +1,5 @@
 import FeatureOverviewMetaData from './FeatureOverviewMetaData/FeatureOverviewMetaData.tsx';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import {
     FeatureStrategyEdit,

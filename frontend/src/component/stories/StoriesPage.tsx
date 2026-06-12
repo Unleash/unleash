@@ -5,7 +5,7 @@ import DarkModeOutlined from '@mui/icons-material/DarkModeOutlined';
 import LinkOutlined from '@mui/icons-material/LinkOutlined';
 import LightModeOutlined from '@mui/icons-material/LightModeOutlined';
 import { useThemeMode } from 'hooks/useThemeMode';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 import type { BgKey, Story, StoryMeta } from './types.ts';
 
 interface StoryModule {

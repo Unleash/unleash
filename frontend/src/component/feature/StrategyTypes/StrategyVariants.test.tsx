@@ -2,7 +2,7 @@ import { expect, test } from 'vitest';
 import { screen, waitFor } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { StrategyVariants } from './StrategyVariants.tsx';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvider/permissions.ts';
 import type {
     IFeatureStrategy,

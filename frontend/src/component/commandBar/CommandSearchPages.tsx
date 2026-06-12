@@ -1,5 +1,5 @@
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import {
     CommandResultGroup,
     StyledButtonTypography,

@@ -4,7 +4,7 @@ import {
     Routes,
     useLocation,
     useNavigate,
-} from 'react-router-dom';
+} from 'react-router';
 import {
     type ITab,
     VerticalTabs,

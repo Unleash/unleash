@@ -6,7 +6,7 @@ import {
 } from 'react';
 import { Button, TextField } from '@mui/material';
 import styles from './SimpleAuth.module.scss';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useAuthApi } from 'hooks/api/actions/useAuthApi/useAuthApi';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { LOGIN_BUTTON, LOGIN_EMAIL_ID } from 'utils/testIds';

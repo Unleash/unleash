@@ -17,7 +17,7 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import type { IUser } from 'interfaces/user';
 import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
 import GroupsIcon from '@mui/icons-material/Groups';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { RoleBadge } from 'component/common/RoleBadge/RoleBadge';

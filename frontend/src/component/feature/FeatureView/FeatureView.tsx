@@ -1,4 +1,4 @@
-import { Link, Route, Routes } from 'react-router-dom';
+import { Link, Route, Routes } from 'react-router';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import FeatureLog from './FeatureLog/FeatureLog.tsx';
 import { FeatureOverview } from './FeatureOverview/FeatureOverview.tsx';

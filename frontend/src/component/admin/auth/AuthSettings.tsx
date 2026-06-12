@@ -7,7 +7,7 @@ import { PasswordAuth } from './PasswordAuth/PasswordAuth.tsx';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 import { ADMIN, UPDATE_AUTH_CONFIGURATION } from '@server/types/permissions';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router';
 import { usePageTitle } from 'hooks/usePageTitle';
 
 export const AuthSettings = () => {

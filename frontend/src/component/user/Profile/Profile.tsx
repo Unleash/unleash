@@ -5,7 +5,7 @@ import {
 } from 'component/common/VerticalTabs/VerticalTabs';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router';
 import { PasswordTab } from './PasswordTab/PasswordTab.tsx';
 import { PersonalAPITokensTab } from './PersonalAPITokensTab/PersonalAPITokensTab.tsx';
 import { ProfileTab } from './ProfileTab/ProfileTab.tsx';

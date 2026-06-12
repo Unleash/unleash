@@ -1,5 +1,5 @@
 import Grid from '@mui/material/Grid';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { UPDATE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';

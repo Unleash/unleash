@@ -3,7 +3,7 @@ import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { FeatureExposureMetrics } from './FeatureExposureMetrics.tsx';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 describe('FeatureExposureMetrics – default production selection', () => {
     const server = testServerSetup();

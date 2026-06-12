@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Button, styled, Typography } from '@mui/material';
+import { Button, styled } from '@mui/material';
 import { UserProfileContent } from './UserProfileContent/UserProfileContent.tsx';
 import type { IUser } from 'interfaces/user';
 import { useId } from 'hooks/useId';
@@ -24,14 +24,6 @@ const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({
     marginRight: theme.spacing(1),
 }));
 
-const StyledSubtitle = styled(Typography)(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    maxWidth: theme.spacing(35),
-}));
-
 export const UserProfile = ({ profile }: IUserProfileProps) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const showProfile = Boolean(anchorEl);
@@ -53,20 +45,8 @@ export const UserProfile = ({ profile }: IUserProfileProps) => {
                 <StyledUserAvatar
                     user={profile}
                     data-testid={HEADER_USER_AVATAR}
+                    disableTooltip
                 />
-                <Box sx={{ mr: 0.5, textAlign: 'left' }}>
-                    <Typography
-                        variant='body2'
-                        sx={{
-                            fontWeight: 'medium',
-                        }}
-                    >
-                        {profile.name || profile.username}
-                    </Typography>
-                    <StyledSubtitle variant='body2' title={profile.email}>
-                        {profile.email}
-                    </StyledSubtitle>
-                </Box>
                 {showProfile ? <ExpandLessIcon /> : <ExpandMoreIcon />}
             </Button>
 
@@ -74,6 +54,7 @@ export const UserProfile = ({ profile }: IUserProfileProps) => {
                 id={modalId}
                 anchorEl={anchorEl}
                 onClose={() => setAnchorEl(null)}
+                profile={profile}
             />
         </StyledProfileContainer>
     );

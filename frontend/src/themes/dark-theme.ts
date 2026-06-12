@@ -535,7 +535,7 @@ export const darkTheme = createTheme({
             },
         },
 
-        // For dark theme, primary buttons are a bit darker then the primary.main that we use as a primary color
+        // For dark theme, primary buttons are a bit darker than the primary.main that we use as a primary color
         MuiButton: {
             defaultProps: {
                 // unsized buttons render ~36px today — `large` on the new

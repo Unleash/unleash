@@ -20,6 +20,7 @@ import LightModeOutlined from '@mui/icons-material/LightModeOutlined';
 import { useThemeMode } from 'hooks/useThemeMode';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton.tsx';
 import { CommandBar } from 'component/commandBar/CommandBar';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const HeaderComponent = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.application,
@@ -82,6 +83,7 @@ const Header = () => {
     const smallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [openDrawer, setOpenDrawer] = useState(false);
     const toggleDrawer = () => setOpenDrawer((prev) => !prev);
+    const hideTopmenuDocumentation = useUiFlag('hideTopmenuDocumentation');
 
     if (mediumScreen) {
         return (
@@ -145,21 +147,23 @@ const Header = () => {
                                 />
                             </StyledIconButton>
                         </Tooltip>
-                        <Tooltip title='Documentation' arrow>
-                            <StyledIconButton
-                                component='a'
-                                nativeButton={false}
-                                href='https://docs.getunleash.io/'
-                                target='_blank'
-                                rel='noopener noreferrer'
-                                size='large'
-                                sx={(theme) => ({
-                                    marginRight: theme.spacing(1),
-                                })}
-                            >
-                                <MenuBookIcon />
-                            </StyledIconButton>
-                        </Tooltip>
+                        {!hideTopmenuDocumentation && (
+                            <Tooltip title='Documentation' arrow>
+                                <StyledIconButton
+                                    component='a'
+                                    nativeButton={false}
+                                    href='https://docs.getunleash.io/'
+                                    target='_blank'
+                                    rel='noopener noreferrer'
+                                    size='large'
+                                    sx={(theme) => ({
+                                        marginRight: theme.spacing(1),
+                                    })}
+                                >
+                                    <MenuBookIcon />
+                                </StyledIconButton>
+                            </Tooltip>
+                        )}
                         <Divider
                             orientation='vertical'
                             variant='middle'

@@ -99,6 +99,7 @@ export type UiFlags = {
     newModalDesign?: boolean;
     archiveInFlagsView?: boolean;
     newProfileDropdown?: boolean;
+    hideTopmenuDocumentation?: boolean;
 };
 
 export interface IVersionInfo {

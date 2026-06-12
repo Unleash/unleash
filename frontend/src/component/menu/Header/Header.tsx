@@ -10,7 +10,7 @@ import {
     Tooltip,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import UserProfile from 'component/user/UserProfile';
+import { UserProfileContainer } from 'component/user/UserProfile';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 
@@ -103,7 +103,7 @@ const Header = () => {
                     <DrawerMenu open={openDrawer} toggleDrawer={toggleDrawer} />
                     <StyledUserContainer>
                         {!smallScreen && <CommandBar />}
-                        <UserProfile />
+                        <UserProfileContainer />
                     </StyledUserContainer>
                 </ContainerComponent>
             </HeaderComponent>
@@ -166,7 +166,7 @@ const Header = () => {
                             flexItem
                             sx={{ ml: 1 }}
                         />
-                        <UserProfile />
+                        <UserProfileContainer />
                     </StyledUserContainer>
                 </StyledNav>
             </ContainerComponent>

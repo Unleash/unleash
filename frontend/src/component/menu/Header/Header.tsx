@@ -85,6 +85,7 @@ const Header = () => {
     const smallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [openDrawer, setOpenDrawer] = useState(false);
     const toggleDrawer = () => setOpenDrawer((prev) => !prev);
+    const hideTopmenuDocumentation = useUiFlag('hideTopmenuDocumentation');
 
     if (mediumScreen) {
         return (
@@ -150,21 +151,23 @@ const Header = () => {
                                 </StyledIconButton>
                             </Tooltip>
                         )}
-                        <Tooltip title='Documentation' arrow>
-                            <StyledIconButton
-                                component='a'
-                                nativeButton={false}
-                                href='https://docs.getunleash.io/'
-                                target='_blank'
-                                rel='noopener noreferrer'
-                                size='large'
-                                sx={(theme) => ({
-                                    marginRight: theme.spacing(1),
-                                })}
-                            >
-                                <MenuBookIcon />
-                            </StyledIconButton>
-                        </Tooltip>
+                        {!hideTopmenuDocumentation && (
+                            <Tooltip title='Documentation' arrow>
+                                <StyledIconButton
+                                    component='a'
+                                    nativeButton={false}
+                                    href='https://docs.getunleash.io/'
+                                    target='_blank'
+                                    rel='noopener noreferrer'
+                                    size='large'
+                                    sx={(theme) => ({
+                                        marginRight: theme.spacing(1),
+                                    })}
+                                >
+                                    <MenuBookIcon />
+                                </StyledIconButton>
+                            </Tooltip>
+                        )}
                         <Divider
                             orientation='vertical'
                             variant='middle'

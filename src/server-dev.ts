@@ -58,6 +58,7 @@ process.nextTick(async () => {
                         allowDeprecatedApiTokenMiddleware: false,
                         archiveInFlagsView: true,
                         newProfileDropdown: true,
+                        hideTopmenuDocumentation: false,
                     },
                 },
                 authentication: {

@@ -76,7 +76,7 @@
     "@types/lodash.isequal": "^4.5.8",
     "@types/lodash.mapvalues": "^4.6.9",
     "@types/lodash.omit": "4.5.9",
-    "@types/node": "22.19.19",
+    "@types/node": "22.19.20",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@types/react-grid-layout": "^1.3.6",
@@ -101,7 +101,7 @@
     "deep-diff": "1.0.2",
     "dequal": "2.0.3",
     "fast-json-patch": "^3.1.1",
-    "http-proxy-middleware": "3.0.5",
+    "http-proxy-middleware": "3.0.6",
     "immer": "9.0.21",
     "jsdom": "25.0.1",
     "lodash.clonedeep": "4.5.0",
@@ -165,5 +165,5 @@
     "re2js": "2.3.2",
     "uuid": "^14.0.0"
   },
-  "packageManager": "pnpm@11.5.1+sha512.93f7b57422ea7068257235b4c16eb60762eb68e1dc23723199cc739043ea9be2c4143274a399d8c6defa2b1176226d9ca1c4b63482d6200c1a8fbaa78c1d1485"
+  "packageManager": "pnpm@11.5.2"
 }

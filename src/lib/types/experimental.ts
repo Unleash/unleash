@@ -77,7 +77,8 @@ export type IFlagKey =
     | 'newModalDesign'
     | 'archiveInFlagsView'
     | 'allowDeprecatedApiTokenMiddleware'
-    | 'newProfileDropdown';
+    | 'newProfileDropdown'
+    | 'hideTopmenuDocumentation';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -345,6 +346,10 @@ const flags: IFlags = {
     ),
     newProfileDropdown: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NEW_PROFILE_DROPDOWN,
+        false,
+    ),
+    hideTopmenuDocumentation: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_HIDE_TOPMENU_DOCUMENTATION,
         false,
     ),
 };

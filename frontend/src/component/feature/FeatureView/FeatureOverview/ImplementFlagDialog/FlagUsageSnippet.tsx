@@ -3,7 +3,6 @@ import { Markdown } from 'component/common/Markdown/Markdown';
 import {
     CodeRenderer,
     codeRenderSnippets,
-    rehypeHighlightPlugins,
 } from 'component/onboarding/dialog/CodeRenderer';
 import type { SdkName } from 'component/onboarding/dialog/sharedTypes';
 import { buildFlagUsageSnippet } from './buildFlagUsageSnippet.ts';
@@ -31,12 +30,5 @@ export const FlagUsageSnippet = ({
 
     if (snippet === null) return <FlagUsageSnippetError />;
 
-    return (
-        <Markdown
-            components={{ code: CodeRenderer }}
-            rehypePlugins={rehypeHighlightPlugins}
-        >
-            {snippet}
-        </Markdown>
-    );
+    return <Markdown components={{ code: CodeRenderer }}>{snippet}</Markdown>;
 };

@@ -1,11 +1,7 @@
 import { styled } from '@mui/material';
 import { Markdown } from 'component/common/Markdown/Markdown.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
-import {
-    CodeRenderer,
-    codeRenderSnippets,
-    rehypeHighlightPlugins,
-} from '../CodeRenderer.tsx';
+import { CodeRenderer, codeRenderSnippets } from '../CodeRenderer.tsx';
 import { buildSdkApiUrl } from '../buildSdkApiUrl.ts';
 import type { Sdk } from '../sharedTypes.ts';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview.ts';
@@ -75,10 +71,7 @@ export const ConfigureSdk = ({
     return (
         <StyledSpacedContainer>
             <div>
-                <Markdown
-                    components={{ code: CodeRenderer }}
-                    rehypePlugins={rehypeHighlightPlugins}
-                >
+                <Markdown components={{ code: CodeRenderer }}>
                     {connectSnippet}
                 </Markdown>
             </div>

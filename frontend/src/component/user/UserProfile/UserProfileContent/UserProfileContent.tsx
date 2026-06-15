@@ -93,7 +93,10 @@ const ThemeSubmenu = ({ onCloseAll }: { onCloseAll: () => void }) => {
             <Menu
                 anchorEl={anchorEl}
                 open={open}
-                onClose={() => setAnchorEl(null)}
+                onClose={() => {
+                    setAnchorEl(null);
+                    onCloseAll();
+                }}
                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                 transformOrigin={{ vertical: 'top', horizontal: 'left' }}
                 slotProps={{
@@ -110,7 +113,7 @@ const ThemeSubmenu = ({ onCloseAll }: { onCloseAll: () => void }) => {
                     <MenuItem
                         key={option.value}
                         onClick={() => handleSelect(option.value)}
-                        sx={{ menuItemSx }}
+                        sx={menuItemSx}
                     >
                         <StyledCheckSlot>
                             {themeMode === option.value ? <Check /> : null}

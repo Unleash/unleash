@@ -8,7 +8,7 @@ import type { OpenApiTag } from './openapi-tags.js';
  * - release.stable only: alpha before stable, stable after.
  * - release.alpha: explicitly opt out of cutoffs (remains alpha).
  * Note: legacy endpoints that omit release are temporarily tolerated in validPath,
- * which defers to calculateStability (stable until version 7.7.7, then alpha) until backfill is complete.
+ * which defers to calculateStability (stable until version 8.1.0, then alpha) until backfill is complete.
  */
 export type StabilityRelease =
     | { alpha: true }

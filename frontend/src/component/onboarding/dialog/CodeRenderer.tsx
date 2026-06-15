@@ -112,32 +112,32 @@ const StyledCodeBlock = styled('pre')(({ theme }) => ({
         color: theme.palette.text.primary,
     },
     '.hljs-keyword, .hljs-selector-tag': {
-        color: theme.mode === 'dark' ? '#ff7b72' : '#d73a49',
+        color: theme.palette.error.main,
     },
     '.hljs-string, .hljs-doctag, .hljs-template-variable': {
-        color: theme.mode === 'dark' ? '#a5d6ff' : '#032f62',
+        color: theme.palette.info.main,
     },
     '.hljs-number, .hljs-literal': {
-        color: theme.mode === 'dark' ? '#79c0ff' : '#005cc5',
+        color: theme.palette.primary.main,
     },
     '.hljs-comment': {
-        color: theme.mode === 'dark' ? '#8b949e' : '#6a737d',
+        color: theme.palette.text.secondary,
         fontStyle: 'italic',
     },
     '.hljs-built_in': {
-        color: theme.mode === 'dark' ? '#ffa657' : '#e36209',
+        color: theme.palette.warning.main,
     },
     '.hljs-title, .hljs-title.function_': {
-        color: theme.mode === 'dark' ? '#d2a8ff' : '#6f42c1',
+        color: theme.palette.primary.main,
     },
     '.hljs-type, .hljs-attr': {
-        color: theme.mode === 'dark' ? '#79c0ff' : '#005cc5',
+        color: theme.palette.info.main,
     },
     '.hljs-variable': {
         color: theme.palette.text.primary,
     },
     '.hljs-name, .hljs-tag': {
-        color: theme.mode === 'dark' ? '#7ee787' : '#22863a',
+        color: theme.palette.success.main,
     },
     '.hljs-meta': {
         color: theme.palette.text.secondary,

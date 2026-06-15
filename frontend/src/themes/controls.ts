@@ -1,4 +1,5 @@
 import type { Components, Theme } from '@mui/material/styles';
+import { focusOutline } from './themeStyles';
 
 /**
  * Design system v2 — shared sizing and behavior for controls
@@ -159,12 +160,7 @@ export const controlOverrides: Components<Theme> = {
         },
         styleOverrides: {
             root: ({ theme }) => ({
-                '&.Mui-focusVisible': {
-                    outlineStyle: 'solid',
-                    outlineWidth: 2,
-                    outlineOffset: 2,
-                    outlineColor: theme.palette.primary.main,
-                },
+                '&.Mui-focusVisible': focusOutline(theme),
             }),
         },
     },

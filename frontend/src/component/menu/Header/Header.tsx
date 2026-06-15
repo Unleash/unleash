@@ -18,9 +18,9 @@ import { DrawerMenu } from './DrawerMenu/DrawerMenu.tsx';
 import DarkModeOutlined from '@mui/icons-material/DarkModeOutlined';
 import LightModeOutlined from '@mui/icons-material/LightModeOutlined';
 import { useThemeMode } from 'hooks/useThemeMode';
+import { useUiFlag } from 'hooks/useUiFlag';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton.tsx';
 import { CommandBar } from 'component/commandBar/CommandBar';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const HeaderComponent = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.application,
@@ -76,7 +76,9 @@ const StyledIconButton = styled(IconButton)<{
 }));
 
 const Header = () => {
-    const { onSetThemeMode, themeMode } = useThemeMode();
+    const { onSetThemeMode } = useThemeMode();
+    const newProfileDropdown = useUiFlag('newProfileDropdown');
+    const showThemeButton = !newProfileDropdown;
     const theme = useTheme();
 
     const mediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
@@ -128,25 +130,27 @@ const Header = () => {
                             })}
                         />
                         <InviteLinkButton />
-                        <Tooltip
-                            title={
-                                themeMode === 'dark'
-                                    ? 'Switch to light theme'
-                                    : 'Switch to dark theme'
-                            }
-                            arrow
-                        >
-                            <StyledIconButton
-                                onClick={onSetThemeMode}
-                                size='large'
+                        {showThemeButton && (
+                            <Tooltip
+                                title={
+                                    theme.mode === 'dark'
+                                        ? 'Switch to light theme'
+                                        : 'Switch to dark theme'
+                                }
+                                arrow
                             >
-                                <ConditionallyRender
-                                    condition={themeMode === 'dark'}
-                                    show={<DarkModeOutlined />}
-                                    elseShow={<LightModeOutlined />}
-                                />
-                            </StyledIconButton>
-                        </Tooltip>
+                                <StyledIconButton
+                                    onClick={onSetThemeMode}
+                                    size='large'
+                                >
+                                    <ConditionallyRender
+                                        condition={theme.mode === 'dark'}
+                                        show={<DarkModeOutlined />}
+                                        elseShow={<LightModeOutlined />}
+                                    />
+                                </StyledIconButton>
+                            </Tooltip>
+                        )}
                         {!hideTopmenuDocumentation && (
                             <Tooltip title='Documentation' arrow>
                                 <StyledIconButton

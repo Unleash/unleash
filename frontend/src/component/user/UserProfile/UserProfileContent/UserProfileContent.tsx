@@ -1,10 +1,15 @@
+import { useState } from 'react';
 import { Menu, MenuItem, styled } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material';
 import { basePath } from 'utils/formatPath';
 import OpenInNew from '@mui/icons-material/OpenInNew';
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import Check from '@mui/icons-material/Check';
 import { Link as RouterLink } from 'react-router';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { Truncator } from 'component/common/Truncator/Truncator';
+import { useThemeMode } from 'hooks/useThemeMode';
+import type { themeMode } from 'contexts/UIContext';
 import type { IUser } from 'interfaces/user';
 
 const menuItemSx: SxProps<Theme> = {
@@ -42,6 +47,85 @@ const StyledOpenInNew = styled(OpenInNew)(({ theme }) => ({
     alignSelf: 'flex-end',
 }));
 
+const StyledChevron = styled(KeyboardArrowRight)(({ theme }) => ({
+    marginLeft: 'auto',
+    fontSize: theme.spacing(2.5),
+    color: theme.palette.text.secondary,
+}));
+
+const StyledCheckSlot = styled('span')(({ theme }) => ({
+    display: 'inline-flex',
+    width: theme.spacing(2.5),
+    color: theme.palette.primary.main,
+    '& svg': {
+        fontSize: theme.spacing(2),
+    },
+}));
+
+const THEME_OPTIONS: { label: string; value: themeMode }[] = [
+    { label: 'Dark', value: 'dark' },
+    { label: 'Light', value: 'light' },
+    { label: 'System', value: 'system' },
+];
+
+const ThemeSubmenu = ({ onCloseAll }: { onCloseAll: () => void }) => {
+    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const { themeMode, setThemeMode } = useThemeMode();
+    const open = Boolean(anchorEl);
+
+    const handleSelect = (mode: themeMode) => {
+        setThemeMode(mode);
+        setAnchorEl(null);
+        onCloseAll();
+    };
+
+    return (
+        <>
+            <MenuItem
+                onClick={(event) => setAnchorEl(event.currentTarget)}
+                sx={menuItemSx}
+                aria-haspopup='true'
+                aria-expanded={open}
+            >
+                Theme
+                <StyledChevron />
+            </MenuItem>
+            <Menu
+                anchorEl={anchorEl}
+                open={open}
+                onClose={() => {
+                    setAnchorEl(null);
+                    onCloseAll();
+                }}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                slotProps={{
+                    paper: {
+                        sx: {
+                            minWidth: (theme) => theme.spacing(15),
+                            borderRadius: (theme) =>
+                                theme.shape.borderRadiusSmall,
+                        },
+                    },
+                }}
+            >
+                {THEME_OPTIONS.map((option) => (
+                    <MenuItem
+                        key={option.value}
+                        onClick={() => handleSelect(option.value)}
+                        sx={menuItemSx}
+                    >
+                        <StyledCheckSlot>
+                            {themeMode === option.value ? <Check /> : null}
+                        </StyledCheckSlot>
+                        {option.label}
+                    </MenuItem>
+                ))}
+            </Menu>
+        </>
+    );
+};
+
 interface IUserProfileContentProps {
     id: string;
     anchorEl: HTMLElement | null;
@@ -67,6 +151,7 @@ export const UserProfileContent = ({
                 sx: {
                     minWidth: (theme) => theme.spacing(34),
                     borderRadius: (theme) => theme.shape.borderRadiusSmall,
+                    marginTop: (theme) => theme.spacing(1),
                 },
             },
         }}
@@ -89,6 +174,8 @@ export const UserProfileContent = ({
         >
             Profile settings
         </MenuItem>
+
+        <ThemeSubmenu onCloseAll={onClose} />
 
         <MenuItem
             component='a'

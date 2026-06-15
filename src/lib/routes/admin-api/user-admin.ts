@@ -128,6 +128,7 @@ export default class UserAdminController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Users'],
+                    release: { stable: '4.14.0' },
                     operationId: 'validateUserPassword',
                     summary: 'Validate password for a user',
                     description:
@@ -149,6 +150,7 @@ export default class UserAdminController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Users'],
+                    release: { stable: '4.14.0' },
                     operationId: 'changeUserPassword',
                     summary: 'Change password for a user',
                     description: 'Change password for a user as an admin',
@@ -180,6 +182,7 @@ export default class UserAdminController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Users'],
+                    release: { stable: '4.14.0' },
                     operationId: 'resetUserPassword',
                     summary: 'Reset user password',
                     description: 'Reset user password as an admin',
@@ -200,6 +203,7 @@ export default class UserAdminController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Users'],
+                    release: { stable: '4.14.0' },
                     operationId: 'getUsers',
                     summary:
                         'Get all users and [root roles](https://docs.getunleash.io/concepts/rbac#predefined-roles)',
@@ -221,6 +225,7 @@ export default class UserAdminController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Users'],
+                    release: { stable: '4.14.0' },
                     operationId: 'searchUsers',
                     summary: 'Search users',
                     description:
@@ -250,6 +255,7 @@ export default class UserAdminController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Users'],
+                    release: { stable: '4.14.0' },
                     operationId: 'getBaseUsersAndGroups',
                     summary: 'Get basic user and group information',
                     description:
@@ -318,6 +324,7 @@ export default class UserAdminController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Users'],
+                    release: { stable: '5.1.0' },
                     operationId: 'getAdminCount',
                     summary: 'Get total count of admin accounts',
                     description:
@@ -338,6 +345,7 @@ export default class UserAdminController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Users'],
+                    release: { stable: '4.14.0' },
                     operationId: 'createUser',
                     summary: 'Create a new user',
                     description: 'Creates a new user with the given root role.',
@@ -367,6 +375,7 @@ export default class UserAdminController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Users'],
+                    release: { stable: '4.14.0' },
                     operationId: 'getUser',
                     summary: 'Get user',
                     description: 'Will return a single user by id',
@@ -397,6 +406,7 @@ export default class UserAdminController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Users'],
+                    release: { stable: '4.14.0' },
                     operationId: 'updateUser',
                     summary: 'Update a user',
                     description:
@@ -430,6 +440,7 @@ export default class UserAdminController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Users'],
+                    release: { stable: '6.7.0' },
                     operationId: 'deleteScimUsers',
                     summary: 'Delete all SCIM users',
                     description: 'Deletes all users managed by SCIM',
@@ -450,6 +461,7 @@ export default class UserAdminController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Users'],
+                    release: { stable: '4.14.0' },
                     operationId: 'deleteUser',
                     summary: 'Delete a user',
                     description: 'Deletes the user with the given userId',

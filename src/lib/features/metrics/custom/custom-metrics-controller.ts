@@ -40,6 +40,7 @@ export default class CustomMetricsController extends Controller {
                     tags: ['Metrics'],
                     summary: 'Get stored custom metrics',
                     description: `Retrieves the stored custom metrics data.`,
+                    release: { stable: '7.0.0' },
                     operationId: 'getCustomMetrics',
                     responses: {
                         200: emptyResponse,
@@ -58,6 +59,7 @@ export default class CustomMetricsController extends Controller {
                     tags: ['Metrics'],
                     summary: 'Get metrics in Prometheus format',
                     description: `Exposes all custom metrics in Prometheus text format for scraping.`,
+                    release: { stable: '7.0.0' },
                     operationId: 'getPrometheusMetrics',
                     responses: {
                         200: {

@@ -49,6 +49,7 @@ export default class ArchiveController extends Controller {
                     description:
                         'This endpoint archives the specified feature.',
                     summary: 'Archives a feature',
+                    release: { stable: '4.13.0' },
                     operationId: 'deleteFeature',
                     responses: {
                         200: emptyResponse,
@@ -70,6 +71,7 @@ export default class ArchiveController extends Controller {
                     description:
                         'This endpoint revives the specified feature from archive.',
                     summary: 'Revives a feature',
+                    release: { stable: '4.13.0' },
                     operationId: 'reviveFeature',
                     responses: {
                         200: emptyResponse,

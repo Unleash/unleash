@@ -43,6 +43,7 @@ class UserFeedbackController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Admin UI'],
+                    release: { stable: '4.14.0' },
                     operationId: 'createFeedback',
                     summary: 'Send Unleash feedback',
                     description:
@@ -64,6 +65,7 @@ class UserFeedbackController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Admin UI'],
+                    release: { stable: '4.14.0' },
                     operationId: 'updateFeedback',
                     summary: 'Update Unleash feedback',
                     description:

@@ -103,6 +103,7 @@ export default class FeatureController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
+                    release: { stable: '4.14.0' },
                     operationId: 'getClientFeature',
                     summary: 'Get a single feature flag',
                     description:
@@ -125,6 +126,7 @@ export default class FeatureController extends Controller {
                     summary: 'Get all flags (SDK)',
                     description:
                         'Returns the SDK configuration for all feature flags that are available to the provided API key. Used by SDKs to configure local evaluation',
+                    release: { stable: '4.14.0' },
                     operationId: 'getAllClientFeatures',
                     tags: ['Client'],
                     responses: {

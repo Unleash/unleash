@@ -103,6 +103,7 @@ class UserController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Users'],
+                    release: { stable: '4.14.0' },
                     operationId: 'getMe',
                     summary: 'Get your own user details',
                     description:
@@ -123,6 +124,7 @@ class UserController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Users'],
+                    release: { stable: '4.16.0' },
                     operationId: 'getProfile',
                     summary: 'Get your own user profile',
                     description:
@@ -143,6 +145,7 @@ class UserController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Users'],
+                    release: { stable: '4.14.0' },
                     operationId: 'changeMyPassword',
                     summary: 'Change your own password',
                     description:
@@ -170,6 +173,7 @@ class UserController extends Controller {
             middleware: [
                 this.openApiService.validPath({
                     tags: ['Users'],
+                    release: { stable: '5.10.0' },
                     operationId: 'getUserRoles',
                     summary: 'Get roles for currently logged in user',
                     parameters: [

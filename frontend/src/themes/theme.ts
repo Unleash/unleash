@@ -356,6 +356,10 @@ export const lightTheme = createTheme({
             },
         },
         MuiIconButton: {
+            defaultProps: {
+                // unsized icon buttons keep their pre-v2 weight (~36px) for now
+                size: 'large',
+            },
             styleOverrides: {
                 ...iconButtonSizes,
             },

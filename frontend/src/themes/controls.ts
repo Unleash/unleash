@@ -29,8 +29,8 @@ const controlPaddingX: Record<ControlSize, number> = {
 
 const controlIconSizes: Record<ControlSize, number> = {
     small: 16,
-    medium: 18,
-    large: 20,
+    medium: 20,
+    large: 24,
 };
 
 /**

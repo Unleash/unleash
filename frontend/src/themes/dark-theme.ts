@@ -564,6 +564,10 @@ export const darkTheme = createTheme({
 
         // Constraints negation icon
         MuiIconButton: {
+            defaultProps: {
+                // unsized icon buttons keep their pre-v2 weight (~36px) for now
+                size: 'large',
+            },
             styleOverrides: {
                 root: ({ theme }) => ({
                     '&.operator-is-active svg': {

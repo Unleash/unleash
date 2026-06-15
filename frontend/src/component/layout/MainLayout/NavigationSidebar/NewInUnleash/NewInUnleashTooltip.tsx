@@ -163,7 +163,7 @@ export const NewInUnleashTooltip: FC<{
                                     variant='contained'
                                     color='primary'
                                     type='submit'
-                                    size='small'
+                                    size='medium'
                                     onClick={(event) => {
                                         event.stopPropagation();
                                         onClose();

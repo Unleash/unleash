@@ -279,7 +279,7 @@ export const MilestoneTransitionDisplay = ({
                         variant='outlined'
                         color='primary'
                         onClick={handleReset}
-                        size='small'
+                        size='medium'
                     >
                         Cancel
                     </Button>
@@ -290,7 +290,7 @@ export const MilestoneTransitionDisplay = ({
                         variant='contained'
                         color='primary'
                         onClick={handleSave}
-                        size='small'
+                        size='medium'
                     >
                         Save
                     </PermissionButton>

@@ -27,7 +27,7 @@ export const UnknownFlagsActionsCell = ({
         <StyledBox>
             <PermissionButton
                 variant='text'
-                size='small'
+                size='medium'
                 permission={CREATE_FEATURE}
                 projectId={suggestedProject.id}
                 onClick={() =>

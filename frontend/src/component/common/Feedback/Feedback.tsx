@@ -62,7 +62,7 @@ export const Feedback: FC<IFeedbackProps> = ({
             Was this information useful to you?
             <StyledBox>
                 <Button
-                    size='small'
+                    size='medium'
                     variant={selected === 'yes' ? 'contained' : 'outlined'}
                     sx={{ padding: 0 }}
                     onClick={() => onTrackFeedback('yes')}
@@ -71,7 +71,7 @@ export const Feedback: FC<IFeedbackProps> = ({
                     Yes
                 </Button>
                 <Button
-                    size='small'
+                    size='medium'
                     variant={selected === 'no' ? 'contained' : 'outlined'}
                     sx={{ padding: 0 }}
                     onClick={() => onTrackFeedback('no')}

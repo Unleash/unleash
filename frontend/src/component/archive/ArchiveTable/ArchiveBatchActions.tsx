@@ -41,7 +41,7 @@ export const ArchiveBatchActions: FC<IArchiveBatchActionsProps> = ({
                         disabled={!hasAccess}
                         startIcon={<Undo />}
                         variant='outlined'
-                        size='small'
+                        size='medium'
                         onClick={onRevive}
                         date-testid={'batch_revive'}
                     >
@@ -55,7 +55,7 @@ export const ArchiveBatchActions: FC<IArchiveBatchActionsProps> = ({
                         disabled={!hasAccess}
                         startIcon={<Delete />}
                         variant='outlined'
-                        size='small'
+                        size='medium'
                         onClick={onDelete}
                     >
                         Delete

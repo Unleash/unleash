@@ -303,7 +303,7 @@ export const PlaygroundConnectionFieldset: FC<
                             </Box>
                             <Button
                                 variant='outlined'
-                                size='small'
+                                size='medium'
                                 to={`/projects/${projects[0]}/change-requests/${changeRequest}`}
                                 component={Link}
                                 nativeButton={false}

@@ -87,7 +87,7 @@ export const MilestoneProgressionForm = ({
                 <StyledErrorMessage>{form.errors.time}</StyledErrorMessage>
             )}
             <StyledButtonGroup>
-                <Button variant='outlined' onClick={onCancel} size='small'>
+                <Button variant='outlined' onClick={onCancel} size='medium'>
                     Cancel
                 </Button>
                 <PermissionButton
@@ -97,7 +97,7 @@ export const MilestoneProgressionForm = ({
                     type='submit'
                     variant='contained'
                     color='primary'
-                    size='small'
+                    size='medium'
                 >
                     Save
                 </PermissionButton>

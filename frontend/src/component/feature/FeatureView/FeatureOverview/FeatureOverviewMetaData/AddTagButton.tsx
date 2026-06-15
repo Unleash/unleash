@@ -23,7 +23,7 @@ type AddTagButtonProps = {
 
 export const AddTagButton: FC<AddTagButtonProps> = ({ project, onClick }) => (
     <StyledAddTagButton
-        size='small'
+        size='medium'
         permission={UPDATE_FEATURE}
         projectId={project}
         variant='text'

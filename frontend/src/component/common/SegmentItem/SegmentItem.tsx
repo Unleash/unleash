@@ -138,7 +138,7 @@ export const SegmentItem: FC<SegmentItemProps> = ({
                         <StyledActionsContainer>
                             <StyledButton
                                 aria-controls={segmentDetailsId}
-                                size='small'
+                                size='medium'
                                 variant='outlined'
                                 onClick={() => setIsOpen((value) => !value)}
                             >

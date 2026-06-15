@@ -57,7 +57,7 @@ export const ArchiveButton: FC<IArchiveButtonProps> = ({
                         <Button
                             disabled={!hasAccess || isDialogOpen}
                             variant='outlined'
-                            size='small'
+                            size='medium'
                             onClick={() => setIsDialogOpen(true)}
                         >
                             Archive

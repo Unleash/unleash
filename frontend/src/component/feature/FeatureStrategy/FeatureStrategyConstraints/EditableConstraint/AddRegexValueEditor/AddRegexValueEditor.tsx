@@ -311,7 +311,7 @@ const RegexTestValues: FC<{
                 <Button
                     type='button'
                     variant='text'
-                    size='small'
+                    size='medium'
                     startIcon={<Add />}
                     onClick={handleAddTestString}
                 >

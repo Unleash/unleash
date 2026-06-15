@@ -138,7 +138,7 @@ export const AddValuesPopover: FC<AddValuesProps> = ({
                         <AddButton
                             variant='text'
                             type='submit'
-                            size='small'
+                            size='medium'
                             color='primary'
                             disabled={!inputValue?.trim()}
                             data-testid='CONSTRAINT_VALUES_ADD_BUTTON'

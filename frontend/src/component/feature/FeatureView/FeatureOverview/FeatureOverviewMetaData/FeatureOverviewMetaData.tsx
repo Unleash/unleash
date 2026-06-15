@@ -119,7 +119,7 @@ const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
 
     const addLinkButton = (
         <PermissionButton
-            size='small'
+            size='medium'
             startIcon={<AddIcon />}
             permission={UPDATE_FEATURE}
             disabled={links.length >= 10}

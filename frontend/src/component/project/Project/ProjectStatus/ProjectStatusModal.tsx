@@ -190,7 +190,7 @@ export const ProjectStatusModal = ({ open, onClose, onFollowLink }: Props) => {
                                     createFeedbackContext();
                                     onClose();
                                 }}
-                                size='small'
+                                size='medium'
                             >
                                 feedback
                             </FeedbackButton>

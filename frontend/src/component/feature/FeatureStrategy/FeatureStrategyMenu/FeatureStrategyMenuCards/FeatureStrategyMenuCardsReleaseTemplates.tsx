@@ -152,7 +152,7 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
                             to='/release-templates/create-template'
                             startIcon={<AddIcon />}
                             onClick={handleLinkClick}
-                            size='small'
+                            size='medium'
                         >
                             New template
                         </Button>
@@ -160,7 +160,7 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
                         <Button
                             startIcon={<AddIcon />}
                             onClick={handleNoAccessClick}
-                            size='small'
+                            size='medium'
                         >
                             New template
                         </Button>

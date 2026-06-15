@@ -96,7 +96,7 @@ export const ManageTags: FC<IManageTagsProps> = ({
                         <Button
                             disabled={!hasAccess || isOpen}
                             variant='outlined'
-                            size='small'
+                            size='medium'
                             onClick={() => setIsOpen(true)}
                         >
                             Tags

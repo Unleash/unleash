@@ -116,7 +116,7 @@ export const DependencyRow = ({ feature }: IDependencyRowProps) => {
                     </StyledMetaDataItemLabel>
                     <div>
                         <StyledPermissionButton
-                            size='small'
+                            size='medium'
                             permission={UPDATE_FEATURE_DEPENDENCY}
                             projectId={feature.project}
                             variant='text'

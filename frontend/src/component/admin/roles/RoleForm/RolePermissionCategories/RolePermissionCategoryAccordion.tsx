@@ -132,7 +132,7 @@ export const RolePermissionCategoryAccordion = ({
                     <Divider sx={{ mb: 1 }} />
                     <Button
                         variant='text'
-                        size='small'
+                        size='medium'
                         onClick={onCheckAll}
                         sx={{
                             fontWeight: (theme) =>

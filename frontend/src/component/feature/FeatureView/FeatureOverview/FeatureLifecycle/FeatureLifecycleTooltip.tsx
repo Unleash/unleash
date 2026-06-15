@@ -153,7 +153,7 @@ const LiveStageAction: FC<{
             <PermissionButton
                 variant='outlined'
                 permission={UPDATE_FEATURE}
-                size='small'
+                size='medium'
                 onClick={onComplete}
                 disabled={loading}
                 projectId={project}
@@ -180,7 +180,7 @@ const ReadyForCleanupAction: FC<{
             <PermissionButton
                 variant='outlined'
                 permission={UPDATE_FEATURE}
-                size='small'
+                size='medium'
                 onClick={onComplete}
                 disabled={loading}
                 projectId={project}
@@ -216,7 +216,7 @@ const SafeToArchive: FC<{
                 <PermissionButton
                     variant='outlined'
                     permission={UPDATE_FEATURE}
-                    size='small'
+                    size='medium'
                     onClick={onUncomplete}
                     disabled={loading}
                     projectId={project}
@@ -226,7 +226,7 @@ const SafeToArchive: FC<{
                 <PermissionButton
                     variant='outlined'
                     permission={DELETE_FEATURE}
-                    size='small'
+                    size='medium'
                     sx={{ mb: 2 }}
                     onClick={onArchive}
                     projectId={project}
@@ -255,7 +255,7 @@ const ActivelyUsed: FC<{
         <PermissionButton
             variant='outlined'
             permission={UPDATE_FEATURE}
-            size='small'
+            size='medium'
             sx={{ mb: 2 }}
             onClick={onUncomplete}
             disabled={loading}

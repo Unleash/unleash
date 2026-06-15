@@ -83,6 +83,7 @@ export default class ClientMetricsController extends Controller {
                     tags: ['Client'],
                     summary: 'Register client usage metrics',
                     description: `Registers usage metrics. Stores information about how many times each flag was evaluated to enabled and disabled within a time frame. If provided, this operation will also store data on how many times each feature flag's variants were displayed to the end user.`,
+                    release: { stable: '4.14.0' },
                     operationId: 'registerClientMetrics',
                     requestBody: createRequestSchema('clientMetricsSchema'),
                     responses: {
@@ -111,6 +112,7 @@ export default class ClientMetricsController extends Controller {
                     tags: ['Unleash Edge'],
                     summary: 'Send metrics in bulk',
                     description: `This operation accepts batched metrics from any client. Metrics will be inserted into Unleash's metrics storage`,
+                    release: { stable: '5.9.0' },
                     operationId: 'clientBulkMetrics',
                     requestBody: createRequestSchema('bulkMetricsSchema'),
                     responses: {
@@ -131,6 +133,7 @@ export default class ClientMetricsController extends Controller {
                     tags: ['Client'],
                     summary: 'Send custom metrics',
                     description: `This operation accepts custom metrics from clients. These metrics will be exposed via Prometheus in Unleash.`,
+                    release: { stable: '7.0.0' },
                     operationId: 'clientCustomMetrics',
                     requestBody: createRequestSchema('customMetricsSchema'),
                     responses: {

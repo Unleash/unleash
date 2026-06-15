@@ -160,6 +160,7 @@ export class ApiTokenController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['API tokens'],
+                    release: { stable: '4.14.0' },
                     operationId: 'getAllApiTokens',
                     summary: 'Get API tokens',
                     description:
@@ -180,6 +181,7 @@ export class ApiTokenController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['API tokens'],
+                    release: { stable: '5.4.0' },
                     operationId: 'getApiTokensByName',
                     summary: 'Get API tokens by name',
                     description:
@@ -204,6 +206,7 @@ export class ApiTokenController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['API tokens'],
+                    release: { stable: '4.14.0' },
                     operationId: 'createApiToken',
                     requestBody: createRequestSchema('createApiTokenSchema'),
                     summary: 'Create API token',
@@ -230,6 +233,7 @@ export class ApiTokenController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['API tokens'],
+                    release: { stable: '4.14.0' },
                     operationId: 'updateApiToken',
                     summary: 'Update API token',
                     description:
@@ -259,6 +263,7 @@ export class ApiTokenController extends Controller {
                     summary: 'Delete API token',
                     description:
                         "Deletes an existing API token. The `token` path parameter is the token's `secret`. If the token does not exist, this endpoint returns a 200 OK, but does nothing.",
+                    release: { stable: '4.14.0' },
                     operationId: 'deleteApiToken',
                     responses: {
                         200: emptyResponse,

@@ -61,6 +61,7 @@ class StrategyController extends Controller {
                     description:
                         'Retrieves all strategy types ([predefined](https://docs.getunleash.io/concepts/activation-strategies "predefined strategies") and [custom strategies](https://docs.getunleash.io/concepts/activation-strategies#custom-strategies)) that are defined on this Unleash instance.',
                     tags: ['Strategies'],
+                    release: { stable: '4.14.0' },
                     operationId: 'getAllStrategies',
                     responses: {
                         200: createResponseSchema('strategiesSchema'),
@@ -82,6 +83,7 @@ class StrategyController extends Controller {
                         'Retrieves the definition of the strategy specified in the URL',
 
                     tags: ['Strategies'],
+                    release: { stable: '4.12.0' },
                     operationId: 'getStrategy',
                     responses: {
                         200: createResponseSchema('strategySchema'),
@@ -102,6 +104,7 @@ class StrategyController extends Controller {
                     summary: 'Delete a strategy',
                     description: 'Deletes the specified strategy definition',
                     tags: ['Strategies'],
+                    release: { stable: '4.14.0' },
                     operationId: 'removeStrategy',
                     responses: {
                         200: emptyResponse,
@@ -119,6 +122,7 @@ class StrategyController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Strategies'],
+                    release: { stable: '4.14.0' },
                     operationId: 'createStrategy',
                     summary: 'Create a strategy',
                     description:
@@ -143,6 +147,7 @@ class StrategyController extends Controller {
                     summary: 'Update a strategy type',
                     description:
                         'Updates the specified strategy type. Any properties not specified in the request body are left untouched.',
+                    release: { stable: '4.12.0' },
                     operationId: 'updateStrategy',
                     requestBody: createRequestSchema('updateStrategySchema'),
                     responses: {
@@ -164,6 +169,7 @@ class StrategyController extends Controller {
                     tags: ['Strategies'],
                     summary: 'Deprecate a strategy',
                     description: 'Marks the specified strategy as deprecated.',
+                    release: { stable: '4.14.0' },
                     operationId: 'deprecateStrategy',
                     responses: {
                         200: emptyResponse,
@@ -182,6 +188,7 @@ class StrategyController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Strategies'],
+                    release: { stable: '4.14.0' },
                     operationId: 'reactivateStrategy',
                     summary: 'Reactivate a strategy',
                     description:

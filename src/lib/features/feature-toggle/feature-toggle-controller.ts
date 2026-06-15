@@ -152,6 +152,7 @@ export default class ProjectFeaturesController extends Controller {
                     description:
                         'Information about the enablement status and strategies for a feature flag in specified environment.',
                     tags: ['Features'],
+                    release: { stable: '4.13.0' },
                     operationId: 'getFeatureEnvironment',
                     responses: {
                         200: createResponseSchema('featureEnvironmentSchema'),
@@ -173,6 +174,7 @@ export default class ProjectFeaturesController extends Controller {
                     description:
                         'Disable a feature flag in the specified environment.',
                     tags: ['Features'],
+                    release: { stable: '4.13.0' },
                     operationId: 'toggleFeatureEnvironmentOff',
                     responses: {
                         200: createResponseSchema('featureSchema'),
@@ -194,6 +196,7 @@ export default class ProjectFeaturesController extends Controller {
                     description:
                         'Enable a feature flag in the specified environment.',
                     tags: ['Features'],
+                    release: { stable: '4.13.0' },
                     operationId: 'toggleFeatureEnvironmentOn',
                     responses: {
                         200: createResponseSchema('featureSchema'),
@@ -214,6 +217,7 @@ export default class ProjectFeaturesController extends Controller {
                     summary: 'Bulk enable a list of features',
                     description:
                         'This endpoint enables multiple feature flags.',
+                    release: { stable: '5.1.0' },
                     operationId: 'bulkToggleFeaturesEnvironmentOn',
                     requestBody: createRequestSchema(
                         'bulkToggleFeaturesSchema',
@@ -237,6 +241,7 @@ export default class ProjectFeaturesController extends Controller {
                     summary: 'Bulk disable a list of features',
                     description:
                         'This endpoint disables multiple feature flags.',
+                    release: { stable: '5.1.0' },
                     operationId: 'bulkToggleFeaturesEnvironmentOff',
                     requestBody: createRequestSchema(
                         'bulkToggleFeaturesSchema',
@@ -258,6 +263,7 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['Features'],
                     summary: 'Get feature flag strategies',
+                    release: { stable: '4.14.0' },
                     operationId: 'getFeatureStrategies',
                     description:
                         'Get strategies defined for a feature flag in the specified environment.',
@@ -280,6 +286,7 @@ export default class ProjectFeaturesController extends Controller {
                     summary: 'Add a strategy to a feature flag',
                     description:
                         'Add a strategy to a feature flag in the specified environment.',
+                    release: { stable: '4.14.0' },
                     operationId: 'addFeatureStrategy',
                     requestBody: createRequestSchema(
                         'createFeatureStrategySchema',
@@ -303,6 +310,7 @@ export default class ProjectFeaturesController extends Controller {
                     summary: 'Get a strategy configuration',
                     description:
                         'Get a strategy configuration for an environment in a feature flag.',
+                    release: { stable: '4.14.0' },
                     operationId: 'getFeatureStrategy',
                     responses: {
                         200: createResponseSchema('featureStrategySchema'),
@@ -320,6 +328,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
+                    release: { stable: '4.14.0' },
                     operationId: 'setStrategySortOrder',
                     summary: 'Set strategy sort order',
                     description:
@@ -346,6 +355,7 @@ export default class ProjectFeaturesController extends Controller {
                     summary: 'Update a strategy',
                     description:
                         'Replace strategy configuration for a feature flag in the specified environment.',
+                    release: { stable: '4.14.0' },
                     operationId: 'updateFeatureStrategy',
                     requestBody: createRequestSchema(
                         'updateFeatureStrategySchema',
@@ -369,6 +379,7 @@ export default class ProjectFeaturesController extends Controller {
                     summary: 'Change specific properties of a strategy',
                     description:
                         'Change specific properties of a strategy configuration in a feature flag.',
+                    release: { stable: '4.14.0' },
                     operationId: 'patchFeatureStrategy',
                     requestBody: createRequestSchema('patchesSchema'),
                     responses: {
@@ -391,6 +402,7 @@ export default class ProjectFeaturesController extends Controller {
                     summary: 'Delete a strategy from a feature flag',
                     description:
                         'Delete a strategy configuration from a feature flag in the specified environment.',
+                    release: { stable: '4.14.0' },
                     operationId: 'deleteFeatureStrategy',
                     responses: {
                         200: emptyResponse,
@@ -411,6 +423,7 @@ export default class ProjectFeaturesController extends Controller {
                     description:
                         'A list of all features for the specified project.',
                     tags: ['Features'],
+                    release: { stable: '4.12.0' },
                     operationId: 'getFeatures',
                     responses: {
                         200: createResponseSchema('projectFeaturesSchema'),
@@ -431,6 +444,7 @@ export default class ProjectFeaturesController extends Controller {
                     description:
                         'Create a new feature flag in a specified project.',
                     tags: ['Features'],
+                    release: { stable: '4.12.0' },
                     operationId: 'createFeature',
                     requestBody: createRequestSchema('createFeatureSchema'),
                     responses: {
@@ -453,6 +467,7 @@ export default class ProjectFeaturesController extends Controller {
                     description:
                         'Creates a copy of the specified feature flag. The copy can be created in any project.',
                     tags: ['Features'],
+                    release: { stable: '4.12.0' },
                     operationId: 'cloneFeature',
                     requestBody: createRequestSchema('cloneFeatureSchema'),
                     responses: {
@@ -470,6 +485,7 @@ export default class ProjectFeaturesController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
+                    release: { stable: '4.12.0' },
                     operationId: 'getFeature',
                     tags: ['Features'],
                     summary: 'Get a feature',
@@ -495,6 +511,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
+                    release: { stable: '4.12.0' },
                     operationId: 'updateFeature',
                     summary: 'Update a feature flag',
                     description:
@@ -516,6 +533,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
+                    release: { stable: '4.12.0' },
                     operationId: 'patchFeature',
                     summary: 'Modify a feature flag',
                     description:
@@ -538,6 +556,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
+                    release: { stable: '4.12.0' },
                     operationId: 'archiveFeature',
                     summary: 'Archive a feature flag',
                     description:
@@ -562,6 +581,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
+                    release: { stable: '4.22.0' },
                     operationId: 'staleFeatures',
                     summary: 'Mark features as stale / not stale',
                     description: `This endpoint marks the provided list of features as either [stale](https://docs.getunleash.io/concepts/technical-debt#stale-and-potentially-stale-flags) or not stale depending on the request body you send. Any provided features that don't exist are ignored.`,
@@ -582,6 +602,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Tags'],
+                    release: { stable: '4.22.0' },
                     operationId: 'addTagToFeatures',
                     summary: 'Adds a tag to the specified features',
                     description:

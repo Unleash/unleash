@@ -242,7 +242,6 @@ export const FilterItem: FC<IFilterItemProps> = ({
                                             },
                                         }}
                                         size='small'
-                                        disableRipple
                                     />
                                     <ListItemText
                                         id={labelId}

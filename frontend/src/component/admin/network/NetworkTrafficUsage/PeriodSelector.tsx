@@ -163,7 +163,6 @@ export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
             <SelectorDropdownButton
                 endIcon={open ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
                 variant='outlined'
-                disableRipple
                 onClick={() => setOpen(true)}
             >
                 {buttonText}

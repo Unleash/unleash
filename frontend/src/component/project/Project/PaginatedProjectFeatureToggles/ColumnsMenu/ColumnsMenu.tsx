@@ -111,7 +111,6 @@ export const ColumnsMenu: FC<IColumnsMenuProps> = ({ columns, onToggle }) => {
                                     <StyledCheckbox
                                         edge='start'
                                         checked={column.isVisible}
-                                        disableRipple
                                         slotProps={{
                                             input: {
                                                 'aria-labelledby': column.id,

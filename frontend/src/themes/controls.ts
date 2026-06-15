@@ -36,9 +36,11 @@ const controlIconSizes: Record<ControlSize, number> = {
  * Button size definitions. Spread into `MuiButton.styleOverrides`
  * (next to `root`) in both themes.
  *
- * Note: today's unsized buttons render ~36px (MUI medium), so the theme
- * sets `defaultProps.size = 'large'` to preserve their visual weight on
- * the new scale. Buttons explicitly marked `small` today map to `medium`.
+ * Buttons preserve their old visual weight on the new scale rather than
+ * shrinking: unsized buttons (~36px today) default to `large` via
+ * `defaultProps.size` (below), and an explicit `size="small"` (~30px in MUI
+ * today) is mapped up to the medium height — buttons never use the 24px
+ * `small` step, which is for inputs and icon buttons.
  */
 const buttonPaddingX: Record<ControlSize, number> = {
     small: controlPaddingX.small + 2, // 10px
@@ -85,7 +87,9 @@ const buttonSize = (size: ControlSize) => ({
 });
 
 export const buttonSizes = {
-    sizeSmall: buttonSize('small'),
+    // explicit `size="small"` maps up to the medium height (see note above) —
+    // mirrors the unsized→large default so small buttons don't shrink to 24px
+    sizeSmall: buttonSize('medium'),
     sizeMedium: buttonSize('medium'),
     sizeLarge: buttonSize('large'),
 } as const;

@@ -1,4 +1,4 @@
-import type { FC, ComponentProps, ReactNode } from 'react';
+import { type FC, type ComponentProps, useRef, useEffect } from 'react';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
 import { IconButton, styled, Tooltip } from '@mui/material';
@@ -21,11 +21,14 @@ import rust from './snippets/rust.md?raw';
 import swift from './snippets/swift.md?raw';
 import nextjs from './snippets/nextjs.md?raw';
 import reactnative from './snippets/reactnative.md?raw';
-import type ReactMarkdown from 'react-markdown';
 import type { ExtraProps } from 'react-markdown';
-import rehypeHighlightLib from 'rehype-highlight';
 
+import hljs from 'highlight.js/lib/core';
+import hljsBash from 'highlight.js/lib/languages/bash';
+import hljsCSharp from 'highlight.js/lib/languages/csharp';
+import hljsDart from 'highlight.js/lib/languages/dart';
 import hljsGo from 'highlight.js/lib/languages/go';
+import hljsGroovy from 'highlight.js/lib/languages/groovy';
 import hljsJava from 'highlight.js/lib/languages/java';
 import hljsJavaScript from 'highlight.js/lib/languages/javascript';
 import hljsKotlin from 'highlight.js/lib/languages/kotlin';
@@ -35,11 +38,42 @@ import hljsRuby from 'highlight.js/lib/languages/ruby';
 import hljsRust from 'highlight.js/lib/languages/rust';
 import hljsSwift from 'highlight.js/lib/languages/swift';
 import hljsTypeScript from 'highlight.js/lib/languages/typescript';
-import hljsCSharp from 'highlight.js/lib/languages/csharp';
-import hljsDart from 'highlight.js/lib/languages/dart';
-import hljsBash from 'highlight.js/lib/languages/bash';
 import hljsXml from 'highlight.js/lib/languages/xml';
-import hljsGroovy from 'highlight.js/lib/languages/groovy';
+
+hljs.registerLanguage('bash', hljsBash);
+hljs.registerLanguage('csharp', hljsCSharp);
+hljs.registerLanguage('dart', hljsDart);
+hljs.registerLanguage('go', hljsGo);
+hljs.registerLanguage('groovy', hljsGroovy);
+hljs.registerLanguage('java', hljsJava);
+hljs.registerLanguage('javascript', hljsJavaScript);
+hljs.registerLanguage('kotlin', hljsKotlin);
+hljs.registerLanguage('php', hljsPhp);
+hljs.registerLanguage('python', hljsPython);
+hljs.registerLanguage('ruby', hljsRuby);
+hljs.registerLanguage('rust', hljsRust);
+hljs.registerLanguage('swift', hljsSwift);
+hljs.registerLanguage('typescript', hljsTypeScript);
+hljs.registerLanguage('xml', hljsXml);
+
+const languageAliases: Record<string, string> = {
+    gradle: 'groovy',
+    js: 'javascript',
+    jsx: 'javascript',
+    rb: 'ruby',
+    sh: 'bash',
+    shell: 'bash',
+    svelte: 'xml',
+    ts: 'typescript',
+    tsx: 'typescript',
+    vue: 'xml',
+};
+
+function highlight(code: string, language: string): string | null {
+    const resolved = languageAliases[language] ?? language;
+    if (!hljs.getLanguage(resolved)) return null;
+    return hljs.highlight(code, { language: resolved }).value;
+}
 
 export const codeRenderSnippets: Record<SdkName, string> = {
     Android: android,
@@ -60,41 +94,6 @@ export const codeRenderSnippets: Record<SdkName, string> = {
     'Next.js': nextjs,
     'React Native': reactnative,
 };
-
-export const rehypeHighlightPlugins: ComponentProps<
-    typeof ReactMarkdown
->['rehypePlugins'] = [
-    [
-        rehypeHighlightLib,
-        {
-            languages: {
-                go: hljsGo,
-                java: hljsJava,
-                javascript: hljsJavaScript,
-                kotlin: hljsKotlin,
-                php: hljsPhp,
-                python: hljsPython,
-                ruby: hljsRuby,
-                rust: hljsRust,
-                swift: hljsSwift,
-                typescript: hljsTypeScript,
-                csharp: hljsCSharp,
-                dart: hljsDart,
-                bash: hljsBash,
-                xml: hljsXml,
-                groovy: hljsGroovy,
-            },
-            detect: false,
-            ignoreMissing: true,
-            aliases: {
-                javascript: ['jsx'],
-                typescript: ['tsx'],
-                xml: ['svelte', 'vue'],
-                groovy: ['gradle'],
-            },
-        },
-    ],
-];
 
 const StyledCodeBlock = styled('pre')(({ theme }) => ({
     backgroundColor: theme.palette.background.elevation1,
@@ -152,20 +151,22 @@ const CopyToClipboard = styled(Tooltip)(({ theme }) => ({
     right: theme.spacing(1),
 }));
 
-type HastNode = { type: string; value?: string; children?: HastNode[] };
+const HighlightedCode: FC<{ language: string; html: string }> = ({
+    language,
+    html,
+}) => {
+    const ref = useRef<HTMLElement>(null);
+    useEffect(() => {
+        if (ref.current) ref.current.innerHTML = html;
+    }, [html]);
+    return <code ref={ref} className={`hljs language-${language}`} />;
+};
 
-function hastToText(node: HastNode | null | undefined): string {
-    if (!node) return '';
-    if (node.type === 'text') return node.value ?? '';
-    return (node.children ?? []).map(hastToText).join('');
-}
-
-const CopyBlock: FC<{
-    title: string;
-    code: string;
-    className?: string;
-    children: ReactNode;
-}> = ({ title, code, className, children }) => {
+const CopyBlock: FC<{ title: string; code: string; language: string }> = ({
+    title,
+    code,
+    language,
+}) => {
     const { setToastData } = useToast();
 
     const onCopyToClipboard = (data: string) => () => {
@@ -176,9 +177,15 @@ const CopyBlock: FC<{
         });
     };
 
+    const highlightedHtml = highlight(code, language);
+
     return (
         <StyledCodeBlock>
-            <code className={className}>{children}</code>
+            {highlightedHtml ? (
+                <HighlightedCode language={language} html={highlightedHtml} />
+            ) : (
+                <code>{code}</code>
+            )}
             <CopyToClipboard title={title} arrow>
                 <IconButton onClick={onCopyToClipboard(code)} size='small'>
                     <CopyIcon />
@@ -191,17 +198,12 @@ const CopyBlock: FC<{
 export const CodeRenderer: FC<ComponentProps<'code'> & ExtraProps> = ({
     children,
     className,
-    node,
 }) => {
-    // In react-markdown v9+, block code fences have a language class; inline code does not.
     const isCodeBlock = Boolean(className);
-    if (isCodeBlock) {
-        const code = hastToText(node);
-        return (
-            <CopyBlock code={code} title='Copy code' className={className}>
-                {children}
-            </CopyBlock>
-        );
+    const code = Array.isArray(children) ? children[0] : children;
+    if (isCodeBlock && typeof code === 'string') {
+        const language = className?.replace('language-', '') ?? '';
+        return <CopyBlock code={code} language={language} title='Copy code' />;
     }
 
     return <code className={className}>{children}</code>;

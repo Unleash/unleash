@@ -15,7 +15,7 @@ const backendNames = new Set<SdkName>(serverSdks.map((s) => s.name));
 
 type SdkOption = {
     name: SdkName;
-    icon: string;
+    icon: UnformattedAssetPath;
     group: string;
 };
 

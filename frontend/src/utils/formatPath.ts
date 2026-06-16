@@ -2,13 +2,18 @@ export const formatApiPath = (path: string, base = basePath): string => {
     return joinPaths(base, path);
 };
 
-export const formatAssetPath = (path: string, base = basePath): string => {
+export const formatAssetPath = (
+    path: UnformattedAssetPath,
+    base = basePath,
+): string => {
+    // UnformattedAssetPath is a phantom compile-time type; at runtime it's always a string.
+    const pathStr = path as unknown as string;
     if (import.meta.env.DEV && import.meta.env.BASE_URL !== '/') {
         // Vite will automatically add BASE_URL to imported assets.
-        return joinPaths(path);
+        return joinPaths(pathStr);
     }
 
-    return joinPaths(base, path);
+    return joinPaths(base, pathStr);
 };
 
 // Parse the basePath value from the HTML meta tag.

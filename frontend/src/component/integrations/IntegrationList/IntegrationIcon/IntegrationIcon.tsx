@@ -1,4 +1,3 @@
-import type { ReactNode } from 'react';
 import { Avatar, styled } from '@mui/material';
 import DeviceHub from '@mui/icons-material/DeviceHub';
 import { formatAssetPath } from 'utils/formatPath';
@@ -32,7 +31,7 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
 
 const integrations: Record<
     string,
-    { icon: string | ReactNode; title: string }
+    { icon: UnformattedAssetPath; title: string }
 > = {
     datadog: { title: 'Datadog', icon: dataDogIcon },
     'new-relic': { title: 'New Relic', icon: newRelicIcon },
@@ -59,22 +58,11 @@ export const IntegrationIcon = ({ name }: IIntegrationIconProps) => {
         );
     }
 
-    if (typeof integration.icon === 'string') {
-        return (
-            <StyledAvatar
-                src={formatAssetPath(integration.icon)}
-                alt={`${capitalizeFirst(integration.title)} icon`}
-                variant='rounded'
-            />
-        );
-    }
-
     return (
         <StyledAvatar
+            src={formatAssetPath(integration.icon)}
             alt={`${capitalizeFirst(integration.title)} icon`}
             variant='rounded'
-        >
-            {integration.icon}
-        </StyledAvatar>
+        />
     );
 };

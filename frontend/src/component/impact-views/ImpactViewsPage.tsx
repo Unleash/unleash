@@ -6,6 +6,7 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { GoalSummaryPanel } from './views/GoalSummaryPanel/GoalSummaryPanel';
 import { MultimetricChartCard } from './views/MultimetricChartCard/MultimetricChartCard';
 import { FollowedFeaturesList } from './views/FollowedFeaturesList/FollowedFeaturesList';
+import { TopMoversPanel } from './views/TopMoversPanel/TopMoversPanel';
 import { ViewSwitcher } from './views/ViewSwitcher/ViewSwitcher';
 import { ViewEditorDialog } from './views/ViewEditorDialog/ViewEditorDialog';
 import { ImpactMetricViewsEmptyState } from './views/ImpactMetricViewsEmptyState/ImpactMetricViewsEmptyState';
@@ -49,6 +50,12 @@ const ActiveView: FC<{ view: MetricView }> = ({ view }) => {
                             timeLabel={timeLabel}
                         />
                     ) : null
+                }
+                totalsMiddleSlot={
+                    <TopMoversPanel
+                        impacts={data.flagImpacts}
+                        timeRange={view.timeRange}
+                    />
                 }
             />
             <FollowedFeaturesList features={data.resolvedFeatures} />

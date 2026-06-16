@@ -20,7 +20,10 @@ test('opens help menu with all items when clicking the button', async () => {
         screen.getByRole('button', { name: 'Help and resources' }),
     );
 
-    expect(screen.getByText('Learning Lab')).toBeInTheDocument();
+    expect(screen.getByText('Visit Learning Lab')).toBeInTheDocument();
+    expect(
+        screen.getByRole('menuitem', { name: 'Learning Lab' }),
+    ).toBeInTheDocument();
     expect(screen.getByText('Documentation')).toBeInTheDocument();
     expect(screen.getByText('GitHub')).toBeInTheDocument();
     expect(screen.getByText('Give feedback')).toBeInTheDocument();
@@ -34,10 +37,13 @@ test('external links have correct hrefs', async () => {
         screen.getByRole('button', { name: 'Help and resources' }),
     );
 
-    expect(screen.getByText('Learning Lab').closest('a')).toHaveAttribute(
+    expect(screen.getByText('Visit Learning Lab').closest('a')).toHaveAttribute(
         'href',
         'https://docs.getunleash.io/',
     );
+    expect(
+        screen.getByRole('menuitem', { name: 'Learning Lab' }),
+    ).toHaveAttribute('href', 'https://docs.getunleash.io/');
     expect(screen.getByText('Documentation').closest('a')).toHaveAttribute(
         'href',
         'https://docs.getunleash.io/',

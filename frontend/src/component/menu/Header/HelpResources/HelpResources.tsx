@@ -11,6 +11,7 @@ import {
 import { lighten } from '@mui/material/styles';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import SlackIcon from 'assets/icons/menu/slack.svg?react';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
@@ -31,8 +32,7 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
 
 const StyledMenu = styled(Menu)(({ theme }) => ({
     '& .MuiPaper-root': {
-        minWidth: theme.spacing(36),
-        maxWidth: theme.spacing(48),
+        width: theme.spacing(40),
         borderRadius: `${theme.shape.borderRadiusSmall}px`,
     },
 }));
@@ -62,7 +62,7 @@ const StyledVisitLink = styled(Box)(({ theme }) => ({
 
 const StyledFeaturedMenuItem = styled(MenuItem)<AnchorMenuItemProps>(
     ({ theme }) => ({
-        margin: theme.spacing(1, 1, 0.5),
+        margin: theme.spacing(1, 1, 1, 1.125),
         padding: theme.spacing(1.5, 2),
         borderRadius: `${theme.shape.borderRadiusMedium}px`,
         backgroundColor: theme.palette.web.main,
@@ -112,10 +112,12 @@ const StyledMenuItem = styled(MenuItem)<AnchorMenuItemProps>(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
-    paddingTop: theme.spacing(1.5),
-    paddingBottom: theme.spacing(1.5),
+    padding: theme.spacing(1, 2, 1, 1.125),
+    alignSelf: 'stretch',
     '& svg': {
         color: theme.palette.neutral.main,
+        width: 18,
+        height: 18,
     },
 }));
 
@@ -195,6 +197,16 @@ export const HelpResources = () => {
                 >
                     <MenuBookIcon fontSize='small' />
                     Documentation
+                </StyledMenuItem>
+                <StyledMenuItem
+                    component='a'
+                    href={LEARNING_LAB_URL}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    onClick={handleClose}
+                >
+                    <SchoolOutlinedIcon fontSize='small' />
+                    Learning Lab
                 </StyledMenuItem>
                 <StyledMenuItem
                     component='a'

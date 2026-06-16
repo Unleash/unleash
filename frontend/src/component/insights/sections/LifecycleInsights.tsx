@@ -1,6 +1,6 @@
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import type { FC } from 'react';
-import { FilterItemParam } from 'utils/serializeQueryParams';
+import { filterItemQueryParam } from 'utils/queryParamSpec';
 import { InsightsSection } from 'component/insights/sections/InsightsSection';
 import { LifecycleChart } from '../components/LifecycleChart/LifecycleChart.tsx';
 import { styled, useTheme } from '@mui/material';
@@ -102,7 +102,7 @@ const StatRow = styled('div')(({ theme }) => ({
 export const LifecycleInsights: FC = () => {
     const statePrefix = 'lifecycle-';
     const stateConfig = {
-        [`${statePrefix}project`]: FilterItemParam,
+        [`${statePrefix}project`]: filterItemQueryParam,
     };
     const [state, setState] = usePersistentTableState(
         'insights-lifecycle',

@@ -4,12 +4,17 @@ import { screen, waitFor } from '@testing-library/react';
 import { usePersistentTableState } from './usePersistentTableState.ts';
 import { Route, Routes } from 'react-router';
 import { createLocalStorage } from '../utils/createLocalStorage.ts';
-import { ArrayParam, NumberParam, StringParam } from 'use-query-params';
-import { FilterItemParam } from '../utils/serializeQueryParams.ts';
+import {
+    filterItemQueryParam,
+    safeNumberQueryParam,
+    stringArrayQueryParam,
+    stringQueryParam,
+    type QueryParamSpecMap,
+} from '../utils/queryParamSpec.ts';
 
 type TestComponentProps = {
     keyName: string;
-    queryParamsDefinition: Record<string, any>;
+    queryParamsDefinition: QueryParamSpecMap;
     nonPersistentParams?: string[];
 };
 
@@ -62,7 +67,7 @@ describe('usePersistentTableState', () => {
         render(
             <TestComponent
                 keyName='testKey'
-                queryParamsDefinition={{ query: StringParam }}
+                queryParamsDefinition={{ query: stringQueryParam }}
             />,
             { route: '/my-url?query=initialUrl' },
         );
@@ -79,7 +84,7 @@ describe('usePersistentTableState', () => {
         render(
             <TestComponent
                 keyName='testKey'
-                queryParamsDefinition={{ query: StringParam }}
+                queryParamsDefinition={{ query: stringQueryParam }}
             />,
             { route: '/my-url' },
         );
@@ -104,9 +109,9 @@ describe('usePersistentTableState', () => {
             <TestComponent
                 keyName='testKey'
                 queryParamsDefinition={{
-                    query: StringParam,
-                    filterItem: FilterItemParam,
-                    columns: ArrayParam,
+                    query: stringQueryParam,
+                    filterItem: filterItemQueryParam,
+                    columns: stringArrayQueryParam,
                 }}
             />,
             { route: '/my-url' },
@@ -126,7 +131,7 @@ describe('usePersistentTableState', () => {
         render(
             <TestComponent
                 keyName='testKey'
-                queryParamsDefinition={{ query: StringParam }}
+                queryParamsDefinition={{ query: stringQueryParam }}
             />,
             { route: '/my-url?query=initialUrl' },
         );
@@ -147,8 +152,8 @@ describe('usePersistentTableState', () => {
             <TestComponent
                 keyName='testKey'
                 queryParamsDefinition={{
-                    query: StringParam,
-                    other: StringParam,
+                    query: stringQueryParam,
+                    other: stringQueryParam,
                 }}
             />,
             { route: '/my-url' },
@@ -181,8 +186,8 @@ describe('usePersistentTableState', () => {
             <TestComponent
                 keyName='testKey'
                 queryParamsDefinition={{
-                    query: StringParam,
-                    offset: NumberParam,
+                    query: stringQueryParam,
+                    offset: safeNumberQueryParam,
                 }}
             />,
             { route: '/my-url' },
@@ -206,8 +211,8 @@ describe('usePersistentTableState', () => {
             <TestComponent
                 keyName='testKey'
                 queryParamsDefinition={{
-                    query: StringParam,
-                    offset: NumberParam,
+                    query: stringQueryParam,
+                    offset: safeNumberQueryParam,
                 }}
             />,
             { route: '/my-url?query=before&offset=10' },
@@ -232,7 +237,7 @@ describe('usePersistentTableState', () => {
             <TestComponent
                 keyName='testKey'
                 queryParamsDefinition={{
-                    query: StringParam,
+                    query: stringQueryParam,
                 }}
             />,
             { route: '/my-url?query=before&offset=10' },
@@ -256,9 +261,9 @@ describe('usePersistentTableState', () => {
             <TestComponent
                 keyName='testKey'
                 queryParamsDefinition={{
-                    query: StringParam,
-                    another: StringParam,
-                    ignore: StringParam,
+                    query: stringQueryParam,
+                    another: stringQueryParam,
+                    ignore: stringQueryParam,
                 }}
             />,
             { route: '/my-url?another=another&query=initialUrl' },

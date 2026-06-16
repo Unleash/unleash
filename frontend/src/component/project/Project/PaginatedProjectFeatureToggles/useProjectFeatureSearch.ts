@@ -1,18 +1,16 @@
-import {
-    ArrayParam,
-    encodeQueryParams,
-    StringParam,
-    withDefault,
-} from 'use-query-params';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import {
-    BooleansStringParam,
-    FilterItemParam,
-} from 'utils/serializeQueryParams';
+    encodeSpecParams,
+    filterItemQueryParam,
+    safeNumberQueryParam,
+    strictBooleanQueryParam,
+    stringArrayQueryParam,
+    stringQueryParam,
+    withDefaultQueryParam,
+} from 'utils/queryParamSpec';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import mapValues from 'lodash.mapvalues';
 import type { SearchFeaturesParams } from 'openapi';
-import { SafeNumberParam } from 'utils/safeNumberParam';
 import { DEFAULT_PAGE_LIMIT } from 'utils/paginationConfig';
 
 type Attribute =
@@ -26,22 +24,22 @@ export const useProjectFeatureSearch = (
     refreshInterval = 15 * 1000,
 ) => {
     const stateConfig = {
-        offset: withDefault(SafeNumberParam, 0),
-        limit: withDefault(SafeNumberParam, DEFAULT_PAGE_LIMIT),
-        query: StringParam,
-        favoritesFirst: withDefault(BooleansStringParam, true),
-        sortBy: withDefault(StringParam, 'createdAt'),
-        sortOrder: withDefault(StringParam, 'desc'),
-        columns: ArrayParam,
-        tag: FilterItemParam,
-        state: FilterItemParam,
-        createdAt: FilterItemParam,
-        lastSeenAt: FilterItemParam,
-        type: FilterItemParam,
-        createdBy: FilterItemParam,
-        archived: FilterItemParam,
-        lifecycle: FilterItemParam,
-        favorite: FilterItemParam,
+        offset: withDefaultQueryParam(safeNumberQueryParam, 0),
+        limit: withDefaultQueryParam(safeNumberQueryParam, DEFAULT_PAGE_LIMIT),
+        query: stringQueryParam,
+        favoritesFirst: withDefaultQueryParam(strictBooleanQueryParam, true),
+        sortBy: withDefaultQueryParam(stringQueryParam, 'createdAt'),
+        sortOrder: withDefaultQueryParam(stringQueryParam, 'desc'),
+        columns: stringArrayQueryParam,
+        tag: filterItemQueryParam,
+        state: filterItemQueryParam,
+        createdAt: filterItemQueryParam,
+        lastSeenAt: filterItemQueryParam,
+        type: filterItemQueryParam,
+        createdBy: filterItemQueryParam,
+        archived: filterItemQueryParam,
+        lifecycle: filterItemQueryParam,
+        favorite: filterItemQueryParam,
     };
     const [tableState, setTableState] = usePersistentTableState(
         `${storageKey}-${projectId}`,
@@ -52,7 +50,7 @@ export const useProjectFeatureSearch = (
     const { features, total, refetch, loading, initialLoad } = useFeatureSearch(
         mapValues(
             {
-                ...encodeQueryParams(stateConfig, apiTableState),
+                ...encodeSpecParams(stateConfig, apiTableState),
                 project: `IS:${projectId}`,
             },
             (value) => (value ? `${value}` : undefined),

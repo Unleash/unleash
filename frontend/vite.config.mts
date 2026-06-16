@@ -25,7 +25,7 @@ const vitestConfig = vitestDefineConfig({
         exclude: [...configDefaults.exclude, '**/cypress/**'],
         server: {
             deps: {
-                inline: ['chartjs-adapter-date-fns'],
+                inline: ['chartjs-adapter-date-fns', 'nuqs'],
             },
         },
     },

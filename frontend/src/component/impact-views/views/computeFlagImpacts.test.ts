@@ -108,13 +108,9 @@ describe('computeFlagImpacts', () => {
             deltaAbs: 10,
             event: { id: 1, featureName: 'my-flag' },
         });
-        expect(row.detail.halfWindowMs).toBe(
-            // month half-window is ±3h, and there is room for the full window
-            3 * HOUR_MS,
-        );
+        expect(row.detail.halfWindowMs).toBe(3 * HOUR_MS);
         expect(row.detail.preSeries.length).toBeGreaterThan(0);
         expect(row.detail.postSeries.length).toBeGreaterThan(0);
-        // Pre points sit before the flip, post points at/after it.
         const flipSec = (10 * DAY_MS) / 1000;
         expect(row.detail.preSeries.every(([ts]) => ts < flipSec)).toBe(true);
         expect(row.detail.postSeries.every(([ts]) => ts >= flipSec)).toBe(true);

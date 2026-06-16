@@ -4,6 +4,7 @@ import {
     serverSdks,
     type SdkName,
 } from 'component/onboarding/dialog/sharedTypes';
+import { formatAssetPath } from 'utils/formatPath';
 
 interface SelectSdkProps {
     value: SdkName;
@@ -72,7 +73,10 @@ export const SelectSdk = ({ value, onChange }: SelectSdkProps) => {
                 }}
                 renderOption={({ key, ...props }, option) => (
                     <StyledOptionRow key={key} {...props}>
-                        <StyledSdkIcon src={option.icon} alt='' />
+                        <StyledSdkIcon
+                            src={formatAssetPath(option.icon)}
+                            alt=''
+                        />
                         <StyledSdkName>{option.name}</StyledSdkName>
                     </StyledOptionRow>
                 )}

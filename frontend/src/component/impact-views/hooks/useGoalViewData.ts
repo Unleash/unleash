@@ -4,10 +4,15 @@ import type {
     MultimetricFeatureEvent,
 } from 'component/impact-metrics/MultimetricChart/types';
 import type { MultimetricStep } from 'component/impact-metrics/MultimetricChart/MultimetricTotals';
+import { parseVisibleWindow } from 'component/impact-metrics/MultimetricChart/chartConfig';
 import {
     computeGoalSummary,
     type GoalSummary,
 } from '../views/computeGoalSummary';
+import {
+    computeFlagImpacts,
+    type FlagImpact,
+} from '../views/computeFlagImpacts';
 import type { ResolvedFeature } from '../views/FollowedFeaturesList/FollowedFeaturesList';
 import { useResolvedFeatures } from './useResolvedFeatures';
 import { useFollowedFeatureEvents } from './useFollowedFeatureEvents';
@@ -17,6 +22,7 @@ export type GoalViewData = {
     goalSummary: GoalSummary | undefined;
     goalSeries: MultimetricStepSeries | undefined;
     goalLabel: string;
+    flagImpacts: FlagImpact[];
     stepSeries: MultimetricStepSeries[];
     stepTotals: MultimetricStep[];
     start: string;
@@ -52,10 +58,21 @@ export const useGoalViewData = (view: MetricView): GoalViewData => {
           )
         : undefined;
 
+    const flagImpacts = goalMetric
+        ? computeFlagImpacts({
+              events: featureEvents,
+              goalSeries,
+              aggregationMode: goalMetric.aggregationMode,
+              visibleWindow: parseVisibleWindow(start, end),
+              timeRange: view.timeRange,
+          })
+        : [];
+
     return {
         goalSummary,
         goalSeries,
         goalLabel: goalMetric?.title || goalMetric?.displayName || view.title,
+        flagImpacts,
         stepSeries,
         stepTotals,
         start,

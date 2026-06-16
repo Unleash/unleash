@@ -9,7 +9,7 @@ import {
     type FlagImpact,
     type FlagImpactTone,
 } from '../computeFlagImpacts';
-import { formatPct } from '../formatting';
+import { formatPercentage } from '../formatting';
 import { formatHalfWindow } from './formatting';
 
 const MAX_VISIBLE = 4;
@@ -153,7 +153,7 @@ export const TopMoversPanel: FC<TopMoversPanelProps> = ({
                                 </StyledFlagName>
                                 <StyledDelta tone={impact.tone}>
                                     <TrendIcon sx={{ fontSize: 14 }} />
-                                    {formatPct(impact.deltaPct)}
+                                    {formatPercentage(impact.deltaPct)}
                                 </StyledDelta>
                             </StyledRow>
                         );

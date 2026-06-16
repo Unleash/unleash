@@ -7,7 +7,7 @@ import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import { formatLargeNumbers } from 'component/impact-metrics/metricsFormatters';
 import type { MultimetricStepSeries } from 'component/impact-metrics/MultimetricChart/types';
 import type { GoalSummary } from '../computeGoalSummary';
-import { formatPct } from '../formatting';
+import { formatPercentage } from '../formatting';
 import {
     buildSparklinePaths,
     SPARKLINE_HEIGHT,
@@ -204,7 +204,7 @@ export const GoalSummaryPanel: FC<GoalSummaryPanelProps> = ({
                                 >
                                     {summary.deltaPct === null
                                         ? formatAbsoluteDelta(summary.deltaAbs)
-                                        : `${formatPct(summary.deltaPct)} (${formatAbsoluteDelta(summary.deltaAbs)})`}
+                                        : `${formatPercentage(summary.deltaPct)} (${formatAbsoluteDelta(summary.deltaAbs)})`}
                                 </Typography>
                             </StyledDeltaRow>
                         ) : null}

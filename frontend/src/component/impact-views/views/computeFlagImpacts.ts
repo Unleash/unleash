@@ -104,6 +104,11 @@ const measureGoalDeltaAroundFlip = (
     context: MeasurementContext,
 ): FlipMeasurement => {
     const halfWindowSec = halfWindowAround(flip, context);
+    // A non-positive half-window means the flip sits outside the visible
+    // chart window, so there is no surrounding data to measure against.
+    if (halfWindowSec <= 0) {
+        return { featureName: flip.featureName, deltaPct: null };
+    }
     const before = goalValueBetween(
         flip.atSec - halfWindowSec,
         flip.atSec,

@@ -190,6 +190,14 @@ describe('computeFlagImpacts', () => {
         ).toEqual([{ featureName: 'my-flag', deltaPct: 100, tone: 'up' }]);
     });
 
+    it('drops flips that fall outside the visible chart window', () => {
+        expect(
+            compute({
+                events: [makeEvent({ id: 1, timestamp: 40 * DAY_MS })],
+            }),
+        ).toEqual([]);
+    });
+
     it('collapses multiple events per flag to the largest |Δ%|', () => {
         const result = compute({
             events: [

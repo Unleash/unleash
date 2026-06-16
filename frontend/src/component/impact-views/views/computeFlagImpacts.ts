@@ -20,9 +20,6 @@ export const HALF_WINDOW_MS_BY_TIME_RANGE: Record<ChartTimeRange, number> = {
 
 export type FlagImpactTone = 'up' | 'down' | 'flat';
 
-// The per-flip detail behind a row's Δ%, retained so a drill-down can show how
-// the number was measured: the flip event, the effective half-window, the
-// before/after aggregates, and the raw goal points that fed each side.
 export type FlagImpactDetail = {
     event: MultimetricFeatureEvent;
     halfWindowMs: number;

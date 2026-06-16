@@ -136,13 +136,13 @@ export const HelpResources = () => {
 
     const handleOpen = (e: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(e.currentTarget);
-        trackEvent(EVENT_NAME, { props: { option: 'menu-opened' } });
+        trackEvent(EVENT_NAME, { props: { eventType: 'opened' } });
     };
 
     const handleClose = () => setAnchorEl(null);
 
     const handleOptionClick = (option: string) => {
-        trackEvent(EVENT_NAME, { props: { option } });
+        trackEvent(EVENT_NAME, { props: { eventType: 'click', option } });
         handleClose();
     };
 

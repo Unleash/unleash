@@ -87,12 +87,12 @@ test('tracks menu open and item click', async () => {
     );
 
     expect(trackEvent).toHaveBeenCalledWith('help-resources', {
-        props: { option: 'menu-opened' },
+        props: { eventType: 'opened' },
     });
 
     await userEvent.click(screen.getByText('GitHub'));
 
     expect(trackEvent).toHaveBeenCalledWith('help-resources', {
-        props: { option: 'github' },
+        props: { eventType: 'click', option: 'github' },
     });
 });

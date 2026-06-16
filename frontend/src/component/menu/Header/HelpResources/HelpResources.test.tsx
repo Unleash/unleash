@@ -13,6 +13,11 @@ vi.mock('component/feedbackNew/useFeedback', async (importOriginal) => {
     return { ...actual, useFeedback: () => ({ openFeedback }) };
 });
 
+const trackEvent = vi.fn();
+vi.mock('hooks/useEventTracker', () => ({
+    useEventTracker: () => ({ trackEvent }),
+}));
+
 test('opens help menu with all items when clicking the button', async () => {
     render(<HelpResources />);
 
@@ -71,5 +76,23 @@ test('give feedback calls openFeedback with the correct title and labels', async
         title: 'How easy is it to use Unleash?',
         positiveLabel: 'What do you like most about Unleash?',
         areasForImprovementsLabel: 'What should be improved in Unleash?',
+    });
+});
+
+test('tracks menu open and item click', async () => {
+    render(<HelpResources />);
+
+    await userEvent.click(
+        screen.getByRole('button', { name: 'Help and resources' }),
+    );
+
+    expect(trackEvent).toHaveBeenCalledWith('help-resources', {
+        props: { eventType: 'opened' },
+    });
+
+    await userEvent.click(screen.getByText('GitHub'));
+
+    expect(trackEvent).toHaveBeenCalledWith('help-resources', {
+        props: { eventType: 'click', option: 'github' },
     });
 });

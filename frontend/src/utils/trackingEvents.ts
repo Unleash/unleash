@@ -86,4 +86,5 @@ export type CustomEvents =
     | 'signup-dialog-error'
     | 'safeguards'
     | 'remote-mcp'
-    | 'external-impact-metrics';
+    | 'external-impact-metrics'
+    | 'help-resources';

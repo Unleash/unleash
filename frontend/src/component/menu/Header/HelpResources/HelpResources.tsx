@@ -18,6 +18,7 @@ import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import LearningLabIcon from 'assets/icons/menu/learning-lab.svg?react';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
     color: theme.palette.primary.main,
@@ -126,15 +127,29 @@ const GITHUB_URL = 'https://github.com/Unleash/unleash';
 const SLACK_URL = 'https://slack.unleash.run/';
 const LEARNING_LAB_URL = 'https://docs.getunleash.io/';
 
+const EVENT_NAME = 'help-resources';
+
 export const HelpResources = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const open = Boolean(anchorEl);
+    const { trackEvent } = useEventTracker();
+
+    const handleOpen = (e: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(e.currentTarget);
+        trackEvent(EVENT_NAME, { props: { eventType: 'opened' } });
+    };
+
     const handleClose = () => setAnchorEl(null);
+
+    const handleOptionClick = (option: string) => {
+        trackEvent(EVENT_NAME, { props: { eventType: 'click', option } });
+        handleClose();
+    };
 
     const { openFeedback } = useFeedback('general', 'automatic');
 
     const handleGiveFeedback = () => {
-        handleClose();
+        handleOptionClick('give-feedback');
         openFeedback({
             title: 'How easy is it to use Unleash?',
             positiveLabel: 'What do you like most about Unleash?',
@@ -147,7 +162,7 @@ export const HelpResources = () => {
             <Tooltip title='Help & Resources' arrow>
                 <StyledIconButton
                     size='large'
-                    onClick={(e) => setAnchorEl(e.currentTarget)}
+                    onClick={handleOpen}
                     aria-haspopup='true'
                     aria-expanded={open}
                     aria-label='Help and resources'
@@ -167,7 +182,7 @@ export const HelpResources = () => {
                     href={LEARNING_LAB_URL}
                     target='_blank'
                     rel='noopener noreferrer'
-                    onClick={handleClose}
+                    onClick={() => handleOptionClick('learning-lab-featured')}
                     disableGutters
                 >
                     <StyledLearningLabIcon />
@@ -193,7 +208,7 @@ export const HelpResources = () => {
                     href={DOCUMENTATION_URL}
                     target='_blank'
                     rel='noopener noreferrer'
-                    onClick={handleClose}
+                    onClick={() => handleOptionClick('documentation')}
                 >
                     <MenuBookIcon fontSize='small' />
                     Documentation
@@ -203,7 +218,7 @@ export const HelpResources = () => {
                     href={LEARNING_LAB_URL}
                     target='_blank'
                     rel='noopener noreferrer'
-                    onClick={handleClose}
+                    onClick={() => handleOptionClick('learning-lab')}
                 >
                     <SchoolOutlinedIcon fontSize='small' />
                     Learning Lab
@@ -213,7 +228,7 @@ export const HelpResources = () => {
                     href={GITHUB_URL}
                     target='_blank'
                     rel='noopener noreferrer'
-                    onClick={handleClose}
+                    onClick={() => handleOptionClick('github')}
                 >
                     <GitHubIcon fontSize='small' />
                     GitHub
@@ -227,7 +242,7 @@ export const HelpResources = () => {
                     href={SLACK_URL}
                     target='_blank'
                     rel='noopener noreferrer'
-                    onClick={handleClose}
+                    onClick={() => handleOptionClick('slack')}
                 >
                     <SlackIcon />
                     Slack community

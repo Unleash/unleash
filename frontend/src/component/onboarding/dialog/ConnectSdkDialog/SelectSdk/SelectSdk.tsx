@@ -65,7 +65,7 @@ const SelectLabel = styled('span')(({ theme }) => ({
 }));
 
 interface ISdkListProps {
-    sdks: { name: SdkName; icon: string }[];
+    sdks: { name: SdkName; icon: RawAssetURL }[];
     type: SdkType;
     selectedSdkName: string | undefined;
     onSelect: (sdk: Sdk) => void;

@@ -32,7 +32,7 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
 
 const integrations: Record<
     string,
-    { icon: string | ReactNode; title: string }
+    { icon: RawAssetURL | ReactNode; title: string }
 > = {
     datadog: { title: 'Datadog', icon: dataDogIcon },
     'new-relic': { title: 'New Relic', icon: newRelicIcon },
@@ -74,7 +74,7 @@ export const IntegrationIcon = ({ name }: IIntegrationIconProps) => {
             alt={`${capitalizeFirst(integration.title)} icon`}
             variant='rounded'
         >
-            {integration.icon}
+            {integration.icon as ReactNode}
         </StyledAvatar>
     );
 };

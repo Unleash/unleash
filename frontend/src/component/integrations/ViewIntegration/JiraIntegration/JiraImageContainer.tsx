@@ -26,7 +26,7 @@ export const StyledImg = styled('img')({
 interface JiraIntegrationProps {
     title: string;
     description: string;
-    src: string;
+    src: RawAssetURL | string;
 }
 
 export const JiraImageContainer: FC<JiraIntegrationProps> = ({

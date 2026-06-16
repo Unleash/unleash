@@ -108,38 +108,44 @@ const StyledCodeBlock = styled('pre')(({ theme }) => ({
     '.hljs': {
         background: 'transparent',
         padding: 0,
-        color: theme.palette.text.primary,
+        color: theme.palette.codeHighlighting.variable,
     },
-    '.hljs-keyword, .hljs-selector-tag': {
-        color: theme.palette.error.main,
+    '.hljs-keyword': {
+        color: theme.palette.codeHighlighting.keyword,
+    },
+    '.hljs-selector-tag': {
+        color: theme.palette.codeHighlighting.selectorTag,
     },
     '.hljs-string, .hljs-doctag, .hljs-template-variable': {
-        color: theme.palette.info.main,
+        color: theme.palette.codeHighlighting.string,
     },
-    '.hljs-number, .hljs-literal': {
-        color: theme.palette.primary.main,
+    '.hljs-number': {
+        color: theme.palette.codeHighlighting.number,
+    },
+    '.hljs-literal': {
+        color: theme.palette.codeHighlighting.literal,
     },
     '.hljs-comment': {
-        color: theme.palette.text.secondary,
+        color: theme.palette.codeHighlighting.comment,
         fontStyle: 'italic',
     },
     '.hljs-built_in': {
-        color: theme.palette.warning.main,
+        color: theme.palette.codeHighlighting.builtIn,
     },
     '.hljs-title, .hljs-title.function_': {
-        color: theme.palette.primary.main,
+        color: theme.palette.codeHighlighting.title,
     },
     '.hljs-type, .hljs-attr': {
-        color: theme.palette.info.main,
+        color: theme.palette.codeHighlighting.type,
     },
     '.hljs-variable': {
-        color: theme.palette.text.primary,
+        color: theme.palette.codeHighlighting.variable,
     },
     '.hljs-name, .hljs-tag': {
-        color: theme.palette.success.main,
+        color: theme.palette.codeHighlighting.tag,
     },
     '.hljs-meta': {
-        color: theme.palette.text.secondary,
+        color: theme.palette.codeHighlighting.meta,
     },
     '.hljs-emphasis': { fontStyle: 'italic' },
     '.hljs-strong': { fontWeight: 'bold' },

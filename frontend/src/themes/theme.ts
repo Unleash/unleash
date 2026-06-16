@@ -298,6 +298,24 @@ const theme = {
             main: '#222130',
             contrastText: '#EEEEFC',
         },
+
+        /**
+         * Syntax highlighting colors for code examples (e.g. SDK onboarding snippets).
+         */
+        codeHighlighting: {
+            keyword: colors.red[700],
+            selectorTag: colors.red[700],
+            string: colors.blue[500],
+            number: colors.purple[800],
+            literal: colors.purple[800],
+            comment: colors.grey[800],
+            builtIn: colors.orange[800],
+            title: colors.purple[800],
+            type: colors.blue[500],
+            variable: colors.grey[900],
+            tag: colors.green[600],
+            meta: colors.grey[800],
+        },
     },
 } as const;
 

@@ -20,10 +20,21 @@ export const HALF_WINDOW_MS_BY_TIME_RANGE: Record<ChartTimeRange, number> = {
 
 export type FlagImpactTone = 'up' | 'down' | 'flat';
 
+export type FlagImpactDetail = {
+    event: MultimetricFeatureEvent;
+    halfWindowMs: number;
+    before: number;
+    after: number;
+    deltaAbs: number;
+    preSeries: [number, number][];
+    postSeries: [number, number][];
+};
+
 export type FlagImpact = {
     featureName: string;
     deltaPct: number;
     tone: FlagImpactTone;
+    detail: FlagImpactDetail;
 };
 
 export type ComputeFlagImpactsInput = {
@@ -74,7 +85,11 @@ const hasFiniteBounds = (
     Number.isFinite(window.minMs) &&
     Number.isFinite(window.maxMs);
 
-type FlagFlip = { featureName: string; atSec: number };
+type FlagFlip = {
+    featureName: string;
+    atSec: number;
+    event: MultimetricFeatureEvent;
+};
 
 const chronologicalFlagFlips = (
     events: readonly MultimetricFeatureEvent[],
@@ -85,6 +100,7 @@ const chronologicalFlagFlips = (
         .map((event) => ({
             featureName: event.featureName,
             atSec: event.timestamp / 1000,
+            event,
         }));
 
 type MeasurementContext = {
@@ -96,8 +112,12 @@ type MeasurementContext = {
     timeRange: ChartTimeRange;
 };
 
-type FlipMeasurement = { featureName: string; deltaPct: number | null };
-type MeasuredFlip = { featureName: string; deltaPct: number };
+type FlipMeasurement = { featureName: string; deltaPct: null } | MeasuredFlip;
+type MeasuredFlip = {
+    featureName: string;
+    deltaPct: number;
+    detail: FlagImpactDetail;
+};
 
 const measureGoalDeltaAroundFlip = (
     flip: FlagFlip,
@@ -109,16 +129,18 @@ const measureGoalDeltaAroundFlip = (
     if (halfWindowSec <= 0) {
         return { featureName: flip.featureName, deltaPct: null };
     }
-    const before = goalValueBetween(
+    const preSeries = goalPointsBetween(
         flip.atSec - halfWindowSec,
         flip.atSec,
         context,
     );
-    const after = goalValueBetween(
+    const postSeries = goalPointsBetween(
         flip.atSec,
         flip.atSec + halfWindowSec,
         context,
     );
+    const before = aggregateGoalPoints(preSeries, context);
+    const after = aggregateGoalPoints(postSeries, context);
 
     if (before === null || after === null || before === 0) {
         return { featureName: flip.featureName, deltaPct: null };
@@ -126,6 +148,15 @@ const measureGoalDeltaAroundFlip = (
     return {
         featureName: flip.featureName,
         deltaPct: ((after - before) / before) * 100,
+        detail: {
+            event: flip.event,
+            halfWindowMs: halfWindowSec * 1000,
+            before,
+            after,
+            deltaAbs: after - before,
+            preSeries,
+            postSeries,
+        },
     };
 };
 
@@ -161,21 +192,25 @@ const halfWindowAround = (
 // averaging for the second, matching the split in `computeGoalSummary`.
 const SUM_MODES: ReadonlySet<AggregationMode> = new Set(['count', 'sum']);
 
-const goalValueBetween = (
+// The finite goal points in `[fromSec, toSec)`. Both the before/after aggregate
+// and the drill-down chart are built from this, so they never disagree.
+const goalPointsBetween = (
     fromSec: number,
     toSec: number,
-    { goalSeries, aggregationMode }: MeasurementContext,
-): number | null => {
-    const values = goalSeries.data
-        .filter(
-            ([tsSec, value]) =>
-                tsSec >= fromSec && tsSec < toSec && Number.isFinite(value),
-        )
-        .map(([, value]) => value);
-    if (values.length === 0) return null;
+    { goalSeries }: MeasurementContext,
+): [number, number][] =>
+    goalSeries.data.filter(
+        ([tsSec, value]) =>
+            tsSec >= fromSec && tsSec < toSec && Number.isFinite(value),
+    );
 
-    const sum = values.reduce((total, value) => total + value, 0);
-    return SUM_MODES.has(aggregationMode) ? sum : sum / values.length;
+const aggregateGoalPoints = (
+    points: readonly [number, number][],
+    { aggregationMode }: MeasurementContext,
+): number | null => {
+    if (points.length === 0) return null;
+    const sum = points.reduce((total, [, value]) => total + value, 0);
+    return SUM_MODES.has(aggregationMode) ? sum : sum / points.length;
 };
 
 const isMeasured = (
@@ -184,25 +219,26 @@ const isMeasured = (
 
 // Collapses to one entry per flag: the flip with the largest |Δ%|.
 const mostSignificantFlipPerFlag = (flips: MeasuredFlip[]): MeasuredFlip[] => {
-    const bestDeltaPctByFlag = new Map<string, number>();
-    for (const { featureName, deltaPct } of flips) {
-        const best = bestDeltaPctByFlag.get(featureName);
-        if (best === undefined || Math.abs(deltaPct) >= Math.abs(best)) {
-            bestDeltaPctByFlag.set(featureName, deltaPct);
+    const bestByFlag = new Map<string, MeasuredFlip>();
+    for (const flip of flips) {
+        const best = bestByFlag.get(flip.featureName);
+        if (
+            best === undefined ||
+            Math.abs(flip.deltaPct) >= Math.abs(best.deltaPct)
+        ) {
+            bestByFlag.set(flip.featureName, flip);
         }
     }
-    return [...bestDeltaPctByFlag].map(([featureName, deltaPct]) => ({
-        featureName,
-        deltaPct,
-    }));
+    return [...bestByFlag.values()];
 };
 
 const rankBySignificance = (flips: MeasuredFlip[]): FlagImpact[] =>
     flips
-        .map(({ featureName, deltaPct }) => ({
+        .map(({ featureName, deltaPct, detail }) => ({
             featureName,
             deltaPct,
             tone: toneOf(deltaPct),
+            detail,
         }))
         .sort(
             (left, right) =>

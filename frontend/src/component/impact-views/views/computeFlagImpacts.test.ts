@@ -95,9 +95,26 @@ describe('computeFlagImpacts', () => {
     });
 
     it('computes Δ% from pre/post means for a latest-mode goal', () => {
-        expect(compute({})).toEqual([
+        expect(compute({})).toMatchObject([
             { featureName: 'my-flag', deltaPct: 100, tone: 'up' },
         ]);
+    });
+
+    it('retains the winning flip detail for the drill-down', () => {
+        const [row] = compute({});
+        expect(row.detail.event).toMatchObject({
+            id: 1,
+            featureName: 'my-flag',
+        });
+        expect(row.detail.halfWindowMs).toBe(3 * HOUR_MS);
+        const flipSec = (10 * DAY_MS) / 1000;
+        const isBeforeFlip = ([tsSec]: [number, number]) => tsSec < flipSec;
+        const isAtOrAfterFlip = ([tsSec]: [number, number]) => tsSec >= flipSec;
+
+        expect(row.detail.preSeries).toHaveLength(3);
+        expect(row.detail.postSeries).toHaveLength(3);
+        expect(row.detail.preSeries.every(isBeforeFlip)).toBe(true);
+        expect(row.detail.postSeries.every(isAtOrAfterFlip)).toBe(true);
     });
 
     it('sums values per side for cumulative goals', () => {
@@ -121,7 +138,9 @@ describe('computeFlagImpacts', () => {
                     { fromHour: days(10), value: 10 },
                 ]),
             }),
-        ).toEqual([{ featureName: 'my-flag', deltaPct: -50, tone: 'down' }]);
+        ).toMatchObject([
+            { featureName: 'my-flag', deltaPct: -50, tone: 'down' },
+        ]);
     });
 
     it('treats sub-threshold movement as flat', () => {
@@ -132,7 +151,9 @@ describe('computeFlagImpacts', () => {
                     { fromHour: days(10), value: 1005 },
                 ]),
             }),
-        ).toEqual([{ featureName: 'my-flag', deltaPct: 0.5, tone: 'flat' }]);
+        ).toMatchObject([
+            { featureName: 'my-flag', deltaPct: 0.5, tone: 'flat' },
+        ]);
     });
 
     it('drops flips that cannot be measured', () => {
@@ -187,7 +208,9 @@ describe('computeFlagImpacts', () => {
                     { fromHour: 3, value: 40 },
                 ]),
             }),
-        ).toEqual([{ featureName: 'my-flag', deltaPct: 100, tone: 'up' }]);
+        ).toMatchObject([
+            { featureName: 'my-flag', deltaPct: 100, tone: 'up' },
+        ]);
     });
 
     it('drops flips that fall outside the visible chart window', () => {
@@ -214,7 +237,7 @@ describe('computeFlagImpacts', () => {
                 { fromHour: days(20), value: 15 },
             ]),
         });
-        expect(result).toEqual([
+        expect(result).toMatchObject([
             { featureName: 'my-flag', deltaPct: 100, tone: 'up' },
         ]);
     });
@@ -245,7 +268,7 @@ describe('computeFlagImpacts', () => {
                 { fromHour: days(25), value: 0 },
             ]),
         });
-        expect(result).toEqual([
+        expect(result).toMatchObject([
             { featureName: 'big-mover', deltaPct: 100, tone: 'up' },
             { featureName: 'small-mover', deltaPct: -50, tone: 'down' },
         ]);

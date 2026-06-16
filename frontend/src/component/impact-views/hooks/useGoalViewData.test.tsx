@@ -157,7 +157,7 @@ describe('useGoalViewData', () => {
         const { result } = renderHook(() => useGoalViewData(view), { wrapper });
 
         await waitFor(() => {
-            expect(result.current.flagImpacts).toEqual([
+            expect(result.current.flagImpacts).toMatchObject([
                 { featureName: 'my-flag', deltaPct: 100, tone: 'up' },
             ]);
         });

@@ -57,10 +57,6 @@ minimumReleaseAgeExclude:
   - form-data@4.0.6
   # Renovate security update: js-yaml@4.2.0
   - js-yaml@4.2.0
-  # Renovate security update: markdown-it@14.2.0
-  - markdown-it@14.2.0
-  # Renovate security update: vite@8.0.16
-  - vite@8.0.16
 
 patchedDependencies:
   # Fixes a bug in getAutoSortingFn where `.slice(10)` skips the first 10 rows

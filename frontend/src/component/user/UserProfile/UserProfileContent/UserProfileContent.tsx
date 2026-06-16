@@ -83,6 +83,7 @@ const ThemeSubmenu = ({ onCloseAll }: { onCloseAll: () => void }) => {
         <>
             <MenuItem
                 onClick={(event) => setAnchorEl(event.currentTarget)}
+                onMouseEnter={(event) => setAnchorEl(event.currentTarget)}
                 sx={menuItemSx}
                 aria-haspopup='true'
                 aria-expanded={open}
@@ -101,6 +102,7 @@ const ThemeSubmenu = ({ onCloseAll }: { onCloseAll: () => void }) => {
                 transformOrigin={{ vertical: 'top', horizontal: 'left' }}
                 slotProps={{
                     paper: {
+                        onMouseLeave: () => setAnchorEl(null),
                         sx: {
                             minWidth: (theme) => theme.spacing(15),
                             borderRadius: (theme) =>

@@ -90,7 +90,10 @@ export const SelectSdk = ({ value, onChange }: SelectSdkProps) => {
                             input: {
                                 ...params.slotProps?.input,
                                 startAdornment: icon && (
-                                    <StyledSdkIcon src={formatAssetPath(option.icon)} alt='' />
+                                    <StyledSdkIcon
+                                        src={formatAssetPath(icon)}
+                                        alt=''
+                                    />
                                 ),
                             },
                         }}

@@ -1,20 +1,20 @@
 import { DEFAULT_PAGE_LIMIT } from 'hooks/api/getters/useChangeRequestSearch/useChangeRequestSearch';
 import {
-    NumberParam,
-    StringParam,
-    withDefault,
-    type DecodedValueMap,
-} from 'use-query-params';
-import { FilterItemParam } from 'utils/serializeQueryParams';
+    filterItemQueryParam,
+    safeNumberQueryParam,
+    stringQueryParam,
+    withDefaultQueryParam,
+    type DecodedSpecMap,
+} from 'utils/queryParamSpec';
 
 export const stateConfig = {
-    offset: withDefault(NumberParam, 0),
-    limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
-    sortBy: withDefault(StringParam, 'createdAt'),
-    sortOrder: withDefault(StringParam, 'desc'),
-    createdBy: FilterItemParam,
-    requestedApproverId: FilterItemParam,
-    state: FilterItemParam,
+    offset: withDefaultQueryParam(safeNumberQueryParam, 0),
+    limit: withDefaultQueryParam(safeNumberQueryParam, DEFAULT_PAGE_LIMIT),
+    sortBy: withDefaultQueryParam(stringQueryParam, 'createdAt'),
+    sortOrder: withDefaultQueryParam(stringQueryParam, 'desc'),
+    createdBy: filterItemQueryParam,
+    requestedApproverId: filterItemQueryParam,
+    state: filterItemQueryParam,
 };
 
-export type TableState = DecodedValueMap<typeof stateConfig>;
+export type TableState = DecodedSpecMap<typeof stateConfig>;

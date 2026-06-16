@@ -13,13 +13,13 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { useDualQueryParams } from 'hooks/useDualQueryParams';
 import {
-    ArrayParam,
-    NumberParam,
-    StringParam,
-    useQueryParams,
-    withDefault,
-} from 'use-query-params';
+    safeNumberQueryParam,
+    stringArrayQueryParam,
+    stringQueryParam,
+    withDefaultQueryParam,
+} from 'utils/queryParamSpec';
 import { aggregateFeatureMetrics } from './aggregateFeatureMetrics.ts';
 import { PageHeader } from 'component/common/PageHeader/PageHeader.tsx';
 
@@ -33,11 +33,20 @@ export const FeatureExposureMetrics = () => {
 
     const defaultEnvironment = Array.from(environments)[defaultProductionIndex];
 
-    const [query, setQuery] = useQueryParams({
-        environment: withDefault(StringParam, defaultEnvironment),
-        applications: withDefault(ArrayParam, []),
-        hoursBack: withDefault(NumberParam, FEATURE_METRIC_HOURS_BACK_DEFAULT),
-    });
+    const [query, setQuery] = useDualQueryParams(
+        {
+            environment: withDefaultQueryParam(
+                stringQueryParam,
+                defaultEnvironment ?? '',
+            ),
+            applications: withDefaultQueryParam(stringArrayQueryParam, []),
+            hoursBack: withDefaultQueryParam(
+                safeNumberQueryParam,
+                FEATURE_METRIC_HOURS_BACK_DEFAULT,
+            ),
+        },
+        { source: 'feature-exposure-metrics', history: 'push' },
+    );
 
     const applications = useFeatureMetricsApplications(
         featureId,

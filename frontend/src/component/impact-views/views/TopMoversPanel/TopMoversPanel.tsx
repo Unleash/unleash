@@ -58,7 +58,6 @@ const StyledList = styled(Box)(({ theme }) => ({
 }));
 
 const StyledRow = styled('button')(({ theme }) => ({
-    // Reset native button chrome so the row reads as a list item, not a button.
     border: 'none',
     background: 'none',
     font: 'inherit',
@@ -70,8 +69,6 @@ const StyledRow = styled('button')(({ theme }) => ({
     gridTemplateColumns: '1fr auto',
     alignItems: 'center',
     gap: theme.spacing(1),
-    // No horizontal padding: the row's content aligns flush with the panel's
-    // header label and window caption so the rail sections read as a column.
     padding: theme.spacing(0.5, 0),
     borderRadius: theme.shape.borderRadius,
     '&:hover': {

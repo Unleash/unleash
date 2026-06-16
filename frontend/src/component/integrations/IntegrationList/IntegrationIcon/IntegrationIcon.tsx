@@ -29,7 +29,10 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
     fontSize: '28px',
 }));
 
-const integrations: Record<string, { icon: RawAssetURL; title: string }> = {
+const integrations: Record<
+    string,
+    { icon: UnformattedAssetPath; title: string }
+> = {
     datadog: { title: 'Datadog', icon: dataDogIcon },
     'new-relic': { title: 'New Relic', icon: newRelicIcon },
     jira: { title: 'Jira', icon: jiraIcon },

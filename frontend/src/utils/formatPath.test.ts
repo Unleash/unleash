@@ -6,8 +6,8 @@ import {
 } from 'utils/formatPath';
 
 // Cast helpers: in tests we pass string literals; in production these are
-// always RawAssetURL values coming from Vite's static asset imports.
-const asset = (path: string) => path as unknown as RawAssetURL;
+// always UnformattedAssetPath values coming from Vite's static asset imports.
+const asset = (path: string) => path as unknown as UnformattedAssetPath;
 
 test('formatBasePath', () => {
     expect(parseBasePath()).toEqual('');

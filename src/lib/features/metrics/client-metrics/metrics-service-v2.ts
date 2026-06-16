@@ -1,5 +1,9 @@
 import type { Logger } from '../../../logger.js';
-import type { IFlagResolver, IUnleashConfig } from '../../../types/index.js';
+import type {
+    IFlagResolver,
+    IOpenFeatureMetadata,
+    IUnleashConfig,
+} from '../../../types/index.js';
 import type { ISdkHeartbeat, IUnleashStores } from '../../../types/index.js';
 import type { ToggleMetricsSummary } from '../../../types/models/metrics.js';
 import type {
@@ -12,6 +16,7 @@ import {
     CLIENT_METRICS,
     CLIENT_METRICS_ADDED,
     CLIENT_REGISTER,
+    OPEN_FEATURE_REGISTER,
 } from '../../../events/index.js';
 import ApiUser, { type IApiUser } from '../../../types/api-user.js';
 import { ALL } from '../../../types/models/api-token.js';
@@ -264,6 +269,10 @@ export default class ClientMetricsServiceV2 {
             // impact metrics should not affect other metrics on failure
             this.logger.warn('Impact metrics registration failed:', e);
         }
+    }
+
+    async registerOpenFeatureUsage(data: IOpenFeatureMetadata): Promise<void> {
+        this.config.eventBus.emit(OPEN_FEATURE_REGISTER, data);
     }
 
     async registerClientMetrics(

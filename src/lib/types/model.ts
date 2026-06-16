@@ -724,3 +724,8 @@ export interface EnvironmentRevisionId {
     revisionId: number;
     projects?: string[];
 }
+
+export interface IOpenFeatureMetadata {
+    providerName: string;
+    version: string;
+}

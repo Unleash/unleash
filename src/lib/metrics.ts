@@ -26,12 +26,17 @@ import {
     RELEASE_PLAN_ADDED,
     RELEASE_PLAN_REMOVED,
     RELEASE_PLAN_MILESTONE_STARTED,
+    OPEN_FEATURE_REGISTER,
 } from './events/index.js';
 import type { IUnleashConfig } from './types/option.js';
 import type { IUnleashStores } from './types/stores.js';
 import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import type { InstanceStatsService } from './features/instance-stats/instance-stats-service.js';
-import type { IEnvironment, ISdkHeartbeat } from './types/index.js';
+import type {
+    IEnvironment,
+    IOpenFeatureMetadata,
+    ISdkHeartbeat,
+} from './types/index.js';
 import {
     createCounter,
     createGauge,
@@ -504,6 +509,12 @@ export function registerPrometheusMetrics(
             'yggdrasil_version',
             'spec_version',
         ],
+    });
+
+    const openFeatureUsage = createCounter({
+        name: 'open_feature_versions',
+        help: 'Which OpenFeature versions are being used',
+        labelNames: ['providerName', 'providerVersion'],
     });
 
     const productionChanges30 = createGauge({
@@ -1164,6 +1175,13 @@ export function registerPrometheusMetrics(
         } catch (e) {
             logger.warn('Metrics registration failed', e);
         }
+    });
+
+    eventStore.on(OPEN_FEATURE_REGISTER, (metadata: IOpenFeatureMetadata) => {
+        openFeatureUsage.increment({
+            providerName: metadata.providerName,
+            providerVersion: metadata.version,
+        });
     });
 
     eventStore.on(CLIENT_REGISTER, (heartbeatEvent: ISdkHeartbeat) => {

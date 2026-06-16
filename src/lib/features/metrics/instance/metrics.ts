@@ -176,7 +176,13 @@ export default class ClientMetricsController extends Controller {
             res.status(204).end();
         } else {
             try {
-                const { body: data, user } = req;
+                const { body: data, user, headers } = req;
+                const openFeatureName = headers['open-feature-provider-name'] as
+                    | string
+                    | undefined;
+                const openFeatureVersion = headers[
+                    'open-feature-provider-version'
+                ] as string | undefined;
                 const clientIp = extractClientIp(req);
                 const { impactMetrics, ...metricsData } = data;
                 const environment =
@@ -193,6 +199,14 @@ export default class ClientMetricsController extends Controller {
                     clientIp,
                     environment,
                 );
+
+                if (openFeatureName && openFeatureVersion) {
+                    await this.metricsV2.registerOpenFeatureUsage({
+                        providerName: openFeatureName,
+                        version: openFeatureVersion,
+                    });
+                }
+
                 if (impactMetrics) {
                     await this.metricsV2.registerImpactMetrics(
                         impactMetrics as Metric[],

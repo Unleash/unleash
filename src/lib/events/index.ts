@@ -122,6 +122,7 @@ export const DEFAULT_STRATEGY_UPDATED = 'default-strategy-updated' as const;
 export const CLIENT_METRICS = 'client-metrics' as const;
 export const CLIENT_METRICS_ADDED = 'client-metrics-added' as const;
 export const CLIENT_REGISTER = 'client-register' as const;
+export const OPEN_FEATURE_REGISTER = 'open_feature_register';
 
 export const PAT_CREATED = 'pat-created' as const;
 export const PAT_DELETED = 'pat-deleted' as const;
@@ -340,6 +341,7 @@ export const IEventTypes = [
     SETTING_DELETED,
     CLIENT_METRICS,
     CLIENT_REGISTER,
+    OPEN_FEATURE_REGISTER,
     PAT_CREATED,
     PAT_DELETED,
     PUBLIC_SIGNUP_TOKEN_CREATED,

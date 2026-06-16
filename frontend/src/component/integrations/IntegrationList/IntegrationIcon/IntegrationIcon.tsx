@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { Avatar, styled } from '@mui/material';
 import DeviceHub from '@mui/icons-material/DeviceHub';
-import { formatAssetPath } from 'utils/formatPath';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
 import { SDK_ICONS } from '../AvailableIntegrations/SDKs.ts';
 
@@ -62,7 +61,7 @@ export const IntegrationIcon = ({ name }: IIntegrationIconProps) => {
     if (typeof integration.icon === 'string') {
         return (
             <StyledAvatar
-                src={formatAssetPath(integration.icon)}
+                src={integration.icon}
                 alt={`${capitalizeFirst(integration.title)} icon`}
                 variant='rounded'
             />

@@ -1,3 +1,5 @@
+import { formatAssetPath } from 'utils/formatPath';
+
 import android from 'assets/icons/sdks/Logo-android.svg';
 import dotnet from 'assets/icons/sdks/Logo-net.svg';
 import flutter from 'assets/icons/sdks/Logo-flutter.svg';
@@ -17,23 +19,23 @@ import swift from 'assets/icons/sdks/Logo-swift.svg';
 import vue from 'assets/icons/sdks/Logo-vue.svg';
 
 export const SDK_ICONS = {
-    android: { icon: android, title: 'Android' },
-    dotnet: { icon: dotnet, title: '.NET' },
-    flutter: { icon: flutter, title: 'Flutter' },
-    go: { icon: go, title: 'Go' },
-    java: { icon: java, title: 'Java' },
-    javascript: { icon: javascript, title: 'JavaScript' },
-    nextjs: { icon: nextjs, title: 'Next.js' },
-    node: { icon: node, title: 'Node.js' },
-    php: { icon: php, title: 'PHP' },
-    python: { icon: python, title: 'Python' },
-    react: { icon: react, title: 'React' },
-    reactnative: { icon: reactnative, title: 'React Native' },
-    ruby: { icon: ruby, title: 'Ruby' },
-    rust: { icon: rust, title: 'Rust' },
-    svelte: { icon: svelte, title: 'Svelte' },
-    swift: { icon: swift, title: 'Swift' },
-    vue: { icon: vue, title: 'Vue' },
+    android: { icon: formatAssetPath(android), title: 'Android' },
+    dotnet: { icon: formatAssetPath(dotnet), title: '.NET' },
+    flutter: { icon: formatAssetPath(flutter), title: 'Flutter' },
+    go: { icon: formatAssetPath(go), title: 'Go' },
+    java: { icon: formatAssetPath(java), title: 'Java' },
+    javascript: { icon: formatAssetPath(javascript), title: 'JavaScript' },
+    nextjs: { icon: formatAssetPath(nextjs), title: 'Next.js' },
+    node: { icon: formatAssetPath(node), title: 'Node.js' },
+    php: { icon: formatAssetPath(php), title: 'PHP' },
+    python: { icon: formatAssetPath(python), title: 'Python' },
+    react: { icon: formatAssetPath(react), title: 'React' },
+    reactnative: { icon: formatAssetPath(reactnative), title: 'React Native' },
+    ruby: { icon: formatAssetPath(ruby), title: 'Ruby' },
+    rust: { icon: formatAssetPath(rust), title: 'Rust' },
+    svelte: { icon: formatAssetPath(svelte), title: 'Svelte' },
+    swift: { icon: formatAssetPath(swift), title: 'Swift' },
+    vue: { icon: formatAssetPath(vue), title: 'Vue' },
 } as const;
 
 export type OfficialSdkName = keyof typeof SDK_ICONS;

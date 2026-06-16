@@ -95,7 +95,7 @@
     "css-mediaquery": "^0.1.2",
     "cypress": "15.16.0",
     "cypress-vite": "1.8.0",
-    "date-fns": "4.1.0",
+    "date-fns": "4.4.0",
     "date-fns-tz": "^3.2.0",
     "debounce": "2.2.0",
     "deep-diff": "1.0.2",

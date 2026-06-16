@@ -157,6 +157,42 @@ declare module '@mui/material/styles' {
             main: string;
             contrastText: string;
         };
+
+        /**
+         * Syntax highlighting colors for code examples (e.g. SDK onboarding snippets).
+         * Use these tokens in any component that renders highlighted code so the
+         * colour choices are centralised and adapt to light / dark mode.
+         */
+        codeHighlighting: {
+            /** Control-flow and reserved words: if, for, return, const, … */
+            keyword: string;
+            /** CSS selector tag names */
+            selectorTag: string;
+            /** String literals, template expressions, and doc-comment tags */
+            string: string;
+            /** Numeric literals */
+            number: string;
+            /** Boolean/null/undefined literals */
+            literal: string;
+            /** Inline and block comments */
+            comment: string;
+            /** Language built-ins: console, print, len, … */
+            builtIn: string;
+            /** Function names at their definition or call site */
+            title: string;
+            /** Class names (e.g. UnleashConfig in UnleashConfig.builder()) */
+            class_: string;
+            /** Type annotations and generic parameters */
+            type: string;
+            /** HTML / XML attribute names and object keys */
+            attr: string;
+            /** Variable references */
+            variable: string;
+            /** HTML / XML tag names */
+            tag: string;
+            /** Preprocessor directives, decorators, and other metadata */
+            meta: string;
+        };
     }
     interface Theme extends CustomTheme {}
     interface ThemeOptions extends CustomTheme {}

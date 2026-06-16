@@ -58,15 +58,15 @@ const config = {
 
 ```svelte
 <script lang="ts">
-	import { useFlag } from '@unleash/proxy-client-svelte';
-	const enabled = useFlag('<YOUR_FLAG>');
+    import { useFlag } from '@unleash/proxy-client-svelte';
+    const enabled = useFlag('<YOUR_FLAG>');
 </script>
 
 <section>
-	{#if $enabled}
-		<p><YOUR_FLAG> is enabled!</p>
-	{:else}
-		<p><YOUR_FLAG> is disabled!</p>
-	{/if}
+    {#if $enabled}
+        <p><YOUR_FLAG> is enabled!</p>
+    {:else}
+        <p><YOUR_FLAG> is disabled!</p>
+    {/if}
 </section>
 ```

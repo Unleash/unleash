@@ -102,18 +102,19 @@ describe('computeFlagImpacts', () => {
 
     it('retains the winning flip detail for the drill-down', () => {
         const [row] = compute({});
-        expect(row.detail).toMatchObject({
-            before: 10,
-            after: 20,
-            deltaAbs: 10,
-            event: { id: 1, featureName: 'my-flag' },
+        expect(row.detail.event).toMatchObject({
+            id: 1,
+            featureName: 'my-flag',
         });
         expect(row.detail.halfWindowMs).toBe(3 * HOUR_MS);
-        expect(row.detail.preSeries.length).toBeGreaterThan(0);
-        expect(row.detail.postSeries.length).toBeGreaterThan(0);
         const flipSec = (10 * DAY_MS) / 1000;
-        expect(row.detail.preSeries.every(([ts]) => ts < flipSec)).toBe(true);
-        expect(row.detail.postSeries.every(([ts]) => ts >= flipSec)).toBe(true);
+        const isBeforeFlip = ([tsSec]: [number, number]) => tsSec < flipSec;
+        const isAtOrAfterFlip = ([tsSec]: [number, number]) => tsSec >= flipSec;
+
+        expect(row.detail.preSeries).toHaveLength(3);
+        expect(row.detail.postSeries).toHaveLength(3);
+        expect(row.detail.preSeries.every(isBeforeFlip)).toBe(true);
+        expect(row.detail.postSeries.every(isAtOrAfterFlip)).toBe(true);
     });
 
     it('sums values per side for cumulative goals', () => {

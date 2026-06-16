@@ -129,6 +129,22 @@ const LEARNING_LAB_URL = 'https://docs.getunleash.io/';
 
 const EVENT_NAME = 'help-resources';
 
+type LinkItem = {
+    name: string;
+    url: string;
+    icon: React.ReactNode;
+    label: string;
+};
+
+type ActionItem = {
+    name: string;
+    onClick: () => void;
+    icon: React.ReactNode;
+    label: string;
+};
+
+type HelpItem = LinkItem | ActionItem;
+
 export const HelpResources = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const open = Boolean(anchorEl);
@@ -148,14 +164,44 @@ export const HelpResources = () => {
 
     const { openFeedback } = useFeedback('general', 'automatic');
 
-    const handleGiveFeedback = () => {
-        handleOptionClick('give-feedback');
-        openFeedback({
-            title: 'How easy is it to use Unleash?',
-            positiveLabel: 'What do you like most about Unleash?',
-            areasForImprovementsLabel: 'What should be improved in Unleash?',
-        });
-    };
+    const helpItems: HelpItem[] = [
+        {
+            name: 'documentation',
+            url: DOCUMENTATION_URL,
+            icon: <MenuBookIcon fontSize='small' />,
+            label: 'Documentation',
+        },
+        {
+            name: 'learning-lab',
+            url: LEARNING_LAB_URL,
+            icon: <SchoolOutlinedIcon fontSize='small' />,
+            label: 'Learning Lab',
+        },
+        {
+            name: 'github',
+            url: GITHUB_URL,
+            icon: <GitHubIcon fontSize='small' />,
+            label: 'GitHub',
+        },
+        {
+            name: 'give-feedback',
+            onClick: () =>
+                openFeedback({
+                    title: 'How easy is it to use Unleash?',
+                    positiveLabel: 'What do you like most about Unleash?',
+                    areasForImprovementsLabel:
+                        'What should be improved in Unleash?',
+                }),
+            icon: <ChatOutlinedIcon fontSize='small' />,
+            label: 'Give feedback',
+        },
+        {
+            name: 'slack',
+            url: SLACK_URL,
+            icon: <SlackIcon />,
+            label: 'Slack community',
+        },
+    ];
 
     return (
         <>
@@ -203,50 +249,32 @@ export const HelpResources = () => {
                         </StyledVisitLink>
                     </StyledLearningLabContent>
                 </StyledFeaturedMenuItem>
-                <StyledMenuItem
-                    component='a'
-                    href={DOCUMENTATION_URL}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    onClick={() => handleOptionClick('documentation')}
-                >
-                    <MenuBookIcon fontSize='small' />
-                    Documentation
-                </StyledMenuItem>
-                <StyledMenuItem
-                    component='a'
-                    href={LEARNING_LAB_URL}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    onClick={() => handleOptionClick('learning-lab')}
-                >
-                    <SchoolOutlinedIcon fontSize='small' />
-                    Learning Lab
-                </StyledMenuItem>
-                <StyledMenuItem
-                    component='a'
-                    href={GITHUB_URL}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    onClick={() => handleOptionClick('github')}
-                >
-                    <GitHubIcon fontSize='small' />
-                    GitHub
-                </StyledMenuItem>
-                <StyledMenuItem onClick={handleGiveFeedback}>
-                    <ChatOutlinedIcon fontSize='small' />
-                    Give feedback
-                </StyledMenuItem>
-                <StyledMenuItem
-                    component='a'
-                    href={SLACK_URL}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    onClick={() => handleOptionClick('slack')}
-                >
-                    <SlackIcon />
-                    Slack community
-                </StyledMenuItem>
+                {helpItems.map((item) =>
+                    'url' in item ? (
+                        <StyledMenuItem
+                            key={item.name}
+                            component='a'
+                            href={item.url}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            onClick={() => handleOptionClick(item.name)}
+                        >
+                            {item.icon}
+                            {item.label}
+                        </StyledMenuItem>
+                    ) : (
+                        <StyledMenuItem
+                            key={item.name}
+                            onClick={() => {
+                                handleOptionClick(item.name);
+                                item.onClick();
+                            }}
+                        >
+                            {item.icon}
+                            {item.label}
+                        </StyledMenuItem>
+                    ),
+                )}
             </StyledMenu>
         </>
     );

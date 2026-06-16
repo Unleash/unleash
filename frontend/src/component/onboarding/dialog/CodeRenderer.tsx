@@ -135,8 +135,14 @@ const StyledCodeBlock = styled('pre')(({ theme }) => ({
     '.hljs-title, .hljs-title.function_': {
         color: theme.palette.codeHighlighting.title,
     },
-    '.hljs-type, .hljs-attr': {
+    '.hljs-title.class_': {
+        color: theme.palette.codeHighlighting.class_,
+    },
+    '.hljs-type': {
         color: theme.palette.codeHighlighting.type,
+    },
+    '.hljs-attr': {
+        color: theme.palette.codeHighlighting.attr,
     },
     '.hljs-variable': {
         color: theme.palette.codeHighlighting.variable,

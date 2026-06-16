@@ -178,10 +178,14 @@ declare module '@mui/material/styles' {
             comment: string;
             /** Language built-ins: console, print, len, … */
             builtIn: string;
-            /** Function and class names at their definition site */
+            /** Function names at their definition or call site */
             title: string;
-            /** Type annotations, generic parameters, and HTML / XML attribute names */
+            /** Class names (e.g. UnleashConfig in UnleashConfig.builder()) */
+            class_: string;
+            /** Type annotations and generic parameters */
             type: string;
+            /** HTML / XML attribute names and object keys */
+            attr: string;
             /** Variable references */
             variable: string;
             /** HTML / XML tag names */

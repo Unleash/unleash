@@ -25,6 +25,8 @@ minimumReleaseAge: 10080
 minimumReleaseAgeIgnoreMissingTime: false
 minimumReleaseAgeExclude:
   - '@unleash/proxy-client-react'
+  # Renovate security update: js-yaml@4.2.0
+  - js-yaml@4.2.0
 
 patchedDependencies:
   # Fixes a bug in getAutoSortingFn where `.slice(10)` skips the first 10 rows

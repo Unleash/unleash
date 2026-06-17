@@ -100,6 +100,7 @@ export type UiFlags = {
     archiveInFlagsView?: boolean;
     newProfileDropdown?: boolean;
     hideTopmenuDocumentation?: boolean;
+    learningLab?: Variant;
 };
 
 export interface IVersionInfo {

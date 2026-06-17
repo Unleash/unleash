@@ -19,6 +19,8 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import LearningLabIcon from 'assets/icons/menu/learning-lab.svg?react';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
 import { useEventTracker } from 'hooks/useEventTracker';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { useVariant } from 'hooks/useVariant';
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
     color: theme.palette.primary.main,
@@ -125,7 +127,7 @@ const StyledMenuItem = styled(MenuItem)<AnchorMenuItemProps>(({ theme }) => ({
 const DOCUMENTATION_URL = 'https://docs.getunleash.io/';
 const GITHUB_URL = 'https://github.com/Unleash/unleash';
 const SLACK_URL = 'https://slack.unleash.run/';
-const LEARNING_LAB_URL = 'https://docs.getunleash.io/';
+const LEARNING_LAB_FALLBACK_URL = 'https://docs.getunleash.io/';
 
 const EVENT_NAME = 'help-resources';
 
@@ -133,6 +135,23 @@ export const HelpResources = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const open = Boolean(anchorEl);
     const { trackEvent } = useEventTracker();
+    const learningLabFlag = useUiFlag('learningLab');
+    const learningLabVariant = useVariant<{
+        url?: string;
+        title?: string;
+        description?: string;
+        visitLabel?: string;
+        menuLabel?: string;
+    }>(learningLabFlag || undefined);
+    const learningLabUrl = learningLabVariant?.url ?? LEARNING_LAB_FALLBACK_URL;
+    const learningLabTitle = learningLabVariant?.title ?? 'Learning Lab';
+    const learningLabDescription =
+        learningLabVariant?.description ??
+        'Learn Unleash at your own pace. Watch short videos on FeatureOps, feature flags, and AI-native development.';
+    const learningLabVisitLabel =
+        learningLabVariant?.visitLabel ?? 'Visit Learning Lab';
+    const learningLabMenuLabel =
+        learningLabVariant?.menuLabel ?? 'Learning Lab';
 
     const handleOpen = (e: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(e.currentTarget);
@@ -179,7 +198,7 @@ export const HelpResources = () => {
             >
                 <StyledFeaturedMenuItem
                     component='a'
-                    href={LEARNING_LAB_URL}
+                    href={learningLabUrl}
                     target='_blank'
                     rel='noopener noreferrer'
                     onClick={() => handleOptionClick('learning-lab-featured')}
@@ -188,16 +207,14 @@ export const HelpResources = () => {
                     <StyledLearningLabIcon />
                     <StyledLearningLabContent>
                         <StyledPortalTitle variant='subtitle2'>
-                            Learning Lab
+                            {learningLabTitle}
                         </StyledPortalTitle>
                         <StyledDimText variant='body2'>
-                            Learn Unleash at your own pace. Watch short videos
-                            on FeatureOps, feature flags, and AI-native
-                            development.
+                            {learningLabDescription}
                         </StyledDimText>
                         <StyledVisitLink>
                             <StyledBoldText variant='body2' color='inherit'>
-                                Visit Learning Lab
+                                {learningLabVisitLabel}
                             </StyledBoldText>
                             <ArrowForwardIcon fontSize='small' />
                         </StyledVisitLink>
@@ -215,13 +232,13 @@ export const HelpResources = () => {
                 </StyledMenuItem>
                 <StyledMenuItem
                     component='a'
-                    href={LEARNING_LAB_URL}
+                    href={learningLabUrl}
                     target='_blank'
                     rel='noopener noreferrer'
                     onClick={() => handleOptionClick('learning-lab')}
                 >
                     <SchoolOutlinedIcon fontSize='small' />
-                    Learning Lab
+                    {learningLabMenuLabel}
                 </StyledMenuItem>
                 <StyledMenuItem
                     component='a'

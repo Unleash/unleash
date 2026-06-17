@@ -58,8 +58,9 @@ export const strictBooleanParam = createParser<boolean>({
 /**
  * Object-to-object encoder replacing `encodeQueryParams` from
  * `serialize-query-params`: runs each value through its parser's
- * `serialize` and drops absent values. Used for API/SWR params and
- * the localStorage payload in `usePersistentTableState.nuqs.ts`.
+ * `serialize` and maps absent values to `undefined` entries (to match
+ * `encodeQueryParams`). Intended for API/SWR params and the localStorage
+ * payload once nuqs becomes the write source.
  *
  * Multi parsers (e.g. `parseAsNativeArrayOf`) serialize to `string[]`.
  */

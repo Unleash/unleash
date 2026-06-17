@@ -43,7 +43,7 @@ describe('filterItemParam parity with FilterItemParam', () => {
         );
     });
 
-    // KNOWN DIVERGENCE (review comment): the old encoder omits empty-values
+    // KNOWN DIVERGENCE: the old encoder omits empty-values
     // filters (encode -> undefined), but a nuqs `serialize` must return a
     // string, so it writes 'IS:' which does NOT round-trip
     // (parse('IS:') -> null). Only reachable once nuqs drives WRITES (flag

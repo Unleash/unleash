@@ -32,10 +32,6 @@ const Body = styled('div')(({ theme }) => ({
     minHeight: '620px',
 }));
 
-const BottomBox = styled(Box)({
-    marginTop: 'auto',
-});
-
 const Footer = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -116,7 +112,7 @@ const DialogBody = ({ projectId, feature, onClose }: DialogBodyProps) => {
                         <FlagUsageSnippet sdkName={sdkName} feature={feature} />
                     </Box>
 
-                    <BottomBox>
+                    <Box>
                         <Typography
                             variant='body1'
                             sx={{
@@ -133,7 +129,7 @@ const DialogBody = ({ projectId, feature, onClose }: DialogBodyProps) => {
                             waitingTitle='Listening for the first evaluation…'
                             waitingBody='Run your app and evaluate your flag.'
                         />
-                    </BottomBox>
+                    </Box>
                 </>
             )}
             <Footer>

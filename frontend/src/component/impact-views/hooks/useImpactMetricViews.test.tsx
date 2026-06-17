@@ -123,6 +123,25 @@ describe('useImpactMetricViews', () => {
         expect(result.current.activeViewId).toBe(copy?.id);
     });
 
+    it('round-trips the optional showTopMovers flag, leaving it absent when unset', () => {
+        const { result } = renderHook(() => useImpactMetricViews());
+
+        let withFlag: MetricView | undefined;
+        let withoutFlag: MetricView | undefined;
+        act(() => {
+            withFlag = result.current.addView({
+                ...baseInput(),
+                showTopMovers: true,
+            });
+            // baseInput() omits showTopMovers — an "old" view shape.
+            withoutFlag = result.current.addView(baseInput());
+        });
+
+        expect(withFlag?.showTopMovers).toBe(true);
+        // Absent (not coerced to false) so the page's `=== true` gate hides it.
+        expect(withoutFlag).not.toHaveProperty('showTopMovers');
+    });
+
     it('persists views across a remount', () => {
         const first = renderHook(() => useImpactMetricViews());
         act(() => {

@@ -25,6 +25,7 @@ export type MetricView = {
     metrics: ViewMetricConfig[];
     timeRange: ChartTimeRange;
     environment: string;
+    showTopMovers?: boolean;
     createdAt: number;
     updatedAt: number;
 };

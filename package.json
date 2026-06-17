@@ -169,7 +169,7 @@
     "@vitest/ui": "4.1.8",
     "concurrently": "^10.0.0",
     "del-cli": "7.0.0",
-    "fast-check": "4.7.0",
+    "fast-check": "4.8.0",
     "fetch-mock": "^12.6.0",
     "husky": "^9.1.7",
     "lint-staged": "16.4.0",

@@ -97,12 +97,12 @@ export default class TeamsWorkflowAddon extends Addon {
         if (typeof customHeaders === 'string' && customHeaders.length > 1) {
             try {
                 extraHeaders = JSON.parse(customHeaders);
-            } catch (_e) {
+            } catch (e) {
                 state = 'successWithErrors';
                 const badHeadersMessage =
                     'Could not parse the JSON in the customHeaders parameter.';
                 stateDetails.push(badHeadersMessage);
-                this.logger.warn(badHeadersMessage);
+                this.logger.warn(badHeadersMessage, e);
             }
         }
 

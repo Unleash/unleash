@@ -35,7 +35,7 @@ import {
 import type { IAddonDefinition } from '../types/model.js';
 
 const teamsWorkflowDefinition: IAddonDefinition = {
-    name: 'teams',
+    name: 'teamsworkflow',
     displayName: 'Microsoft Teams - Workflow',
     description: 'Allows Unleash to post updates to Microsoft Teams.',
     documentationUrl: 'https://docs.getunleash.io/integrate/teams',

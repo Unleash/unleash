@@ -16,3 +16,10 @@ export type MultimetricFeatureEvent = {
     featureName: string;
     environment: string;
 };
+
+// A user-selected time window on the chart (the brush selection). Bounds are
+// ms since epoch, matching the chart's millisecond x-axis.
+export type TimeWindow = {
+    fromMs: number;
+    toMs: number;
+};

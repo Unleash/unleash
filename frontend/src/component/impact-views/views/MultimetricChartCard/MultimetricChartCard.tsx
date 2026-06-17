@@ -9,6 +9,7 @@ import type { ChartTimeRange } from 'component/impact-metrics/MultimetricChart/c
 import type {
     MultimetricStepSeries,
     MultimetricFeatureEvent,
+    TimeWindow,
 } from 'component/impact-metrics/MultimetricChart/types';
 
 export interface MultimetricChartCardProps {
@@ -26,6 +27,13 @@ export interface MultimetricChartCardProps {
     totalsHeaderSlot: ReactNode;
     totalsMiddleSlot?: ReactNode;
     totalsLabel?: string;
+    selection?: TimeWindow | null;
+    onSelectionChange?: (selection: TimeWindow | null) => void;
+    highlightedFlipMs?: number | null;
+    renderSelectionPopover?: (
+        anchorEl: HTMLElement | null,
+        isDragging: boolean,
+    ) => ReactNode;
 }
 
 const StyledCard = styled(Box)(({ theme }) => ({
@@ -177,6 +185,10 @@ export const MultimetricChartCard: FC<MultimetricChartCardProps> = ({
     totalsHeaderSlot,
     totalsMiddleSlot,
     totalsLabel: totalsLabelOverride,
+    selection,
+    onSelectionChange,
+    highlightedFlipMs,
+    renderSelectionPopover,
 }) => {
     const defaultTotalsLabel =
         aggregationMode && !SUM_MODES.has(aggregationMode)
@@ -200,6 +212,10 @@ export const MultimetricChartCard: FC<MultimetricChartCardProps> = ({
                             end={end}
                             loading={loading}
                             featureEvents={featureEvents}
+                            selection={selection}
+                            onSelectionChange={onSelectionChange}
+                            highlightedFlipMs={highlightedFlipMs}
+                            renderSelectionPopover={renderSelectionPopover}
                         />
                     </StyledChartPane>
                 </StyledChartColumn>

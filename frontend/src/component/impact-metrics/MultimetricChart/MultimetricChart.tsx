@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, ReactNode } from 'react';
 import { useRef, useState } from 'react';
 import { Box, styled, useTheme } from '@mui/material';
 import type { Chart as ChartInstance } from 'chart.js';
@@ -7,7 +7,11 @@ import {
     NotEnoughData,
 } from '../../insights/components/LineChart/LineChart.tsx';
 import { usePlaceholderData } from '../../insights/hooks/usePlaceholderData.js';
-import type { MultimetricStepSeries, MultimetricFeatureEvent } from './types';
+import type {
+    MultimetricStepSeries,
+    MultimetricFeatureEvent,
+    TimeWindow,
+} from './types';
 import {
     type ChartTimeRange,
     buildChartOptions,
@@ -15,6 +19,7 @@ import {
     parseVisibleWindow,
 } from './chartConfig';
 import { useChartPlotArea } from './useChartPlotArea';
+import { BrushOverlay } from './BrushOverlay/BrushOverlay';
 import { StepLegend } from './StepLegend';
 import {
     FeatureEventOverlay,
@@ -58,6 +63,13 @@ type MultimetricChartProps = {
     end: string;
     loading?: boolean;
     featureEvents?: MultimetricFeatureEvent[];
+    selection?: TimeWindow | null;
+    onSelectionChange?: (selection: TimeWindow | null) => void;
+    highlightedFlipMs?: number | null;
+    renderSelectionPopover?: (
+        anchorEl: HTMLElement | null,
+        isDragging: boolean,
+    ) => ReactNode;
 };
 
 // Wires together the Chart.js line chart, the feature-event overlay (pills +
@@ -69,6 +81,10 @@ export const MultimetricChart: FC<MultimetricChartProps> = ({
     end,
     loading,
     featureEvents = [],
+    selection = null,
+    onSelectionChange,
+    highlightedFlipMs = null,
+    renderSelectionPopover,
 }) => {
     const theme = useTheme();
     const colors = theme.palette.charts.series;
@@ -151,6 +167,17 @@ export const MultimetricChart: FC<MultimetricChartProps> = ({
                     <FeatureEventOverlay
                         groups={eventGroups}
                         plotArea={plotArea}
+                    />
+                )}
+                {showOverlay && onSelectionChange && visibleWindow && (
+                    <BrushOverlay
+                        plotArea={plotArea}
+                        chartRef={chartInstanceRef}
+                        visibleWindow={visibleWindow}
+                        selection={selection}
+                        onSelectionChange={onSelectionChange}
+                        highlightedFlipMs={highlightedFlipMs}
+                        renderPopover={renderSelectionPopover}
                     />
                 )}
             </StyledChartArea>

@@ -1,9 +1,7 @@
 import { useMemo } from 'react';
 import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
 import type { MultimetricFeatureEvent } from 'component/impact-metrics/MultimetricChart/types';
-
-const FEATURE_TYPES =
-    'IS_ANY_OF:feature-environment-enabled,feature-environment-disabled';
+import { FEATURE_TYPES, mapFeatureEvents } from './mapFeatureEvents';
 
 export type UseFollowedFeatureEvents = {
     featureEvents: MultimetricFeatureEvent[];
@@ -25,16 +23,7 @@ export const useFollowedFeatureEvents = (
     );
 
     const featureEvents = useMemo<MultimetricFeatureEvent[]>(
-        () =>
-            events.map((event) => ({
-                id: event.id,
-                timestamp: new Date(event.createdAt).getTime(),
-                type: event.type as MultimetricFeatureEvent['type'],
-                label: event.label ?? event.type,
-                createdBy: event.createdBy,
-                featureName: event.featureName ?? '',
-                environment,
-            })),
+        () => mapFeatureEvents(events, environment),
         [events, environment],
     );
 

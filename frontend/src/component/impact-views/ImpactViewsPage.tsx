@@ -1,4 +1,4 @@
-import { useState, type FC } from 'react';
+import { useMemo, useState, type FC } from 'react';
 import { Box } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Badge } from 'component/common/Badge/Badge';
@@ -7,13 +7,20 @@ import { GoalSummaryPanel } from './views/GoalSummaryPanel/GoalSummaryPanel';
 import { MultimetricChartCard } from './views/MultimetricChartCard/MultimetricChartCard';
 import { FollowedFeaturesList } from './views/FollowedFeaturesList/FollowedFeaturesList';
 import { TopMoversPanel } from './views/TopMoversPanel/TopMoversPanel';
+import { BrushSelectionPopover } from './views/BrushSelectionPopover/BrushSelectionPopover';
+import { computeWindowSummary } from './views/computeWindowSummary';
+import { computeFlagImpacts } from './views/computeFlagImpacts';
 import { ViewSwitcher } from './views/ViewSwitcher/ViewSwitcher';
 import { ViewEditorDialog } from './views/ViewEditorDialog/ViewEditorDialog';
 import { ImpactMetricViewsEmptyState } from './views/ImpactMetricViewsEmptyState/ImpactMetricViewsEmptyState';
 import { useGoalViewData } from './hooks/useGoalViewData';
 import { useImpactMetricViews } from './hooks/useImpactMetricViews';
+import { useWindowFlagEvents } from './hooks/useWindowFlagEvents';
+import { deriveDateRange, filterEventsToWindow } from './hooks/windowEvents';
+import { dummyWindowFlagEvents } from './hooks/dummyWindowFlagEvents';
 import { TIME_RANGE_LABELS } from './constants';
 import type { MetricView } from './views/types';
+import type { TimeWindow } from 'component/impact-metrics/MultimetricChart/types';
 
 type ViewInput = Omit<MetricView, 'id' | 'createdAt' | 'updatedAt'>;
 
@@ -27,6 +34,64 @@ const ActiveView: FC<{ view: MetricView }> = ({ view }) => {
     const timeLabel = TIME_RANGE_LABELS[view.timeRange];
     const goalAggregationMode =
         view.metrics.find((metric) => metric.goal)?.aggregationMode ?? 'avg';
+
+    const [selection, setSelection] = useState<TimeWindow | null>(null);
+    const [highlightedFlipMs, setHighlightedFlipMs] = useState<number | null>(
+        null,
+    );
+
+    // All flag flips (not just followed) covering the visible window's date
+    // range; the brush narrows to the exact window client-side. The range is
+    // null until the chart window loads (start/end arrive empty at first).
+    const dateRange = deriveDateRange(data.start, data.end);
+    const windowFlags = useWindowFlagEvents(view.environment, dateRange);
+
+    // TEMPORARY: dev-only preview events so the brush + popover show populated
+    // rows in the sandbox. Remove with `dummyWindowFlagEvents.ts`.
+    const allWindowEvents =
+        import.meta.env.DEV && dateRange && windowFlags.events.length === 0
+            ? dummyWindowFlagEvents(
+                  Number.parseInt(data.start, 10) * 1000,
+                  Number.parseInt(data.end, 10) * 1000,
+                  view.environment,
+              )
+            : windowFlags.events;
+
+    const windowSummary = useMemo(
+        () =>
+            selection
+                ? computeWindowSummary({
+                      goalSeries: data.goalSeries,
+                      aggregationMode: goalAggregationMode,
+                      window: selection,
+                  })
+                : null,
+        [selection, data.goalSeries, goalAggregationMode],
+    );
+
+    // Per-flip goal Δ around each flag change in the window (works for
+    // unfollowed flags too), ranked by |Δ%| — the meaningful per-row signal.
+    const windowImpacts = useMemo(() => {
+        if (!selection) return [];
+        const events = filterEventsToWindow(allWindowEvents, selection);
+        return computeFlagImpacts({
+            events,
+            goalSeries: data.goalSeries,
+            aggregationMode: goalAggregationMode,
+            visibleWindow: {
+                minMs: selection.fromMs,
+                maxMs: selection.toMs,
+                rangeMs: selection.toMs - selection.fromMs,
+            },
+            timeRange: view.timeRange,
+        });
+    }, [
+        selection,
+        allWindowEvents,
+        data.goalSeries,
+        goalAggregationMode,
+        view.timeRange,
+    ]);
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
@@ -43,6 +108,22 @@ const ActiveView: FC<{ view: MetricView }> = ({ view }) => {
                 loading={data.loading}
                 chartHeightSpacing={{ base: 48, lg: 40, sm: 32 }}
                 totalsLabel='Signals'
+                selection={selection}
+                onSelectionChange={setSelection}
+                highlightedFlipMs={highlightedFlipMs}
+                renderSelectionPopover={(anchorEl, isDragging) =>
+                    selection && windowSummary ? (
+                        <BrushSelectionPopover
+                            anchorEl={anchorEl}
+                            open={!isDragging}
+                            selection={selection}
+                            summary={windowSummary}
+                            impacts={windowImpacts}
+                            onClear={() => setSelection(null)}
+                            onHoverFlip={setHighlightedFlipMs}
+                        />
+                    ) : null
+                }
                 totalsHeaderSlot={
                     data.goalSummary ? (
                         <GoalSummaryPanel
@@ -123,7 +204,9 @@ export const ImpactViewsPage: FC = () => {
                         onDuplicate={(view) => duplicateView(view.id)}
                         onDelete={setPendingDelete}
                     />
-                    {activeView ? <ActiveView view={activeView} /> : null}
+                    {activeView ? (
+                        <ActiveView key={activeView.id} view={activeView} />
+                    ) : null}
                 </Box>
             )}
 

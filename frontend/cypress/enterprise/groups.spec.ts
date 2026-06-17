@@ -100,6 +100,6 @@ describe('groups', () => {
         cy.get("[data-testid='UG_DELETE_BTN_ID']").click();
         cy.get("[data-testid='DIALOGUE_CONFIRM_ID'").click();
 
-        cy.contains(groupName).should('not.exist');
+        cy.get('body').should('not.contain', groupName);
     });
 });

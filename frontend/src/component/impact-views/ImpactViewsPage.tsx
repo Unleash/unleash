@@ -54,7 +54,7 @@ const ActiveView: FC<{ view: MetricView }> = ({ view }) => {
                     ) : null
                 }
                 totalsMiddleSlot={
-                    view.showTopMovers === true ? (
+                    view.showTopMovers ? (
                         <TopMoversPanel
                             impacts={data.flagImpacts}
                             timeRange={view.timeRange}

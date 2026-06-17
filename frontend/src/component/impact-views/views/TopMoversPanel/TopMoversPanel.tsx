@@ -1,9 +1,10 @@
-import type { FC } from 'react';
+import { useState, type FC } from 'react';
 import { Box, styled, Tooltip, Typography } from '@mui/material';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
 import type { ChartTimeRange } from 'component/impact-metrics/MultimetricChart/chartConfig';
+import type { AggregationMode } from 'component/impact-metrics/types';
 import {
     HALF_WINDOW_MS_BY_TIME_RANGE,
     type FlagImpact,
@@ -11,6 +12,7 @@ import {
 } from '../computeFlagImpacts';
 import { formatPercentage } from '../formatting';
 import { formatHalfWindow } from './formatting';
+import { FlagImpactDialog } from './FlagImpactDialog';
 
 const MAX_VISIBLE = 4;
 
@@ -55,13 +57,27 @@ const StyledList = styled(Box)(({ theme }) => ({
     gap: theme.spacing(0.25),
 }));
 
-const StyledRow = styled(Box)(({ theme }) => ({
+const StyledRow = styled('button')(({ theme }) => ({
+    border: 'none',
+    background: 'none',
+    font: 'inherit',
+    color: 'inherit',
+    width: '100%',
+    textAlign: 'left',
+    cursor: 'pointer',
     display: 'grid',
     gridTemplateColumns: '1fr auto',
     alignItems: 'center',
     gap: theme.spacing(1),
-    padding: theme.spacing(0.5, 0.75),
+    padding: theme.spacing(0.5, 0),
     borderRadius: theme.shape.borderRadius,
+    '&:hover': {
+        backgroundColor: theme.palette.action.hover,
+    },
+    '&:focus-visible': {
+        outline: `2px solid ${theme.palette.primary.main}`,
+        outlineOffset: -2,
+    },
 }));
 
 const StyledFlagName = styled(Box)(({ theme }) => ({
@@ -114,12 +130,15 @@ const StyledEmpty = styled(Typography)(({ theme }) => ({
 export type TopMoversPanelProps = {
     impacts: FlagImpact[];
     timeRange: ChartTimeRange;
+    aggregationMode: AggregationMode;
 };
 
 export const TopMoversPanel: FC<TopMoversPanelProps> = ({
     impacts,
     timeRange,
+    aggregationMode,
 }) => {
+    const [openImpact, setOpenImpact] = useState<FlagImpact | null>(null);
     const visible = impacts.slice(0, MAX_VISIBLE);
     const overflowCount = impacts.length - visible.length;
     const windowLabel = `±${formatHalfWindow(
@@ -147,7 +166,12 @@ export const TopMoversPanel: FC<TopMoversPanelProps> = ({
                     {visible.map((impact) => {
                         const TrendIcon = TONE_ICONS[impact.tone];
                         return (
-                            <StyledRow key={impact.featureName}>
+                            <StyledRow
+                                key={impact.featureName}
+                                type='button'
+                                onClick={() => setOpenImpact(impact)}
+                                aria-label={`${impact.featureName} ${formatPercentage(impact.deltaPct)}, view impact details`}
+                            >
                                 <StyledFlagName title={impact.featureName}>
                                     {impact.featureName}
                                 </StyledFlagName>
@@ -163,6 +187,11 @@ export const TopMoversPanel: FC<TopMoversPanelProps> = ({
                     ) : null}
                 </StyledList>
             )}
+            <FlagImpactDialog
+                impact={openImpact}
+                aggregationMode={aggregationMode}
+                onClose={() => setOpenImpact(null)}
+            />
         </StyledRoot>
     );
 };

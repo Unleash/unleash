@@ -25,6 +25,8 @@ type EditorState =
 const ActiveView: FC<{ view: MetricView }> = ({ view }) => {
     const data = useGoalViewData(view);
     const timeLabel = TIME_RANGE_LABELS[view.timeRange];
+    const goalAggregationMode =
+        view.metrics.find((metric) => metric.goal)?.aggregationMode ?? 'avg';
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
@@ -55,6 +57,7 @@ const ActiveView: FC<{ view: MetricView }> = ({ view }) => {
                     <TopMoversPanel
                         impacts={data.flagImpacts}
                         timeRange={view.timeRange}
+                        aggregationMode={goalAggregationMode}
                     />
                 }
             />

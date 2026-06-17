@@ -131,27 +131,40 @@ const LEARNING_LAB_FALLBACK_URL = 'https://docs.getunleash.io/';
 
 const EVENT_NAME = 'help-resources';
 
+interface ILearningLabVariant {
+    url?: string;
+    title?: string;
+    description?: string;
+    visitLabel?: string;
+    menuLabel?: string;
+}
+
+const LEARNING_LAB_DEFAULTS: Required<ILearningLabVariant> = {
+    url: LEARNING_LAB_FALLBACK_URL,
+    title: 'Learning Lab',
+    description:
+        'Learn Unleash at your own pace. Watch short videos on FeatureOps, feature flags, and AI-native development.',
+    visitLabel: 'Visit Learning Lab',
+    menuLabel: 'Learning Lab',
+};
+
 export const HelpResources = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const open = Boolean(anchorEl);
     const { trackEvent } = useEventTracker();
     const learningLabFlag = useUiFlag('learningLab');
-    const learningLabVariant = useVariant<{
-        url?: string;
-        title?: string;
-        description?: string;
-        visitLabel?: string;
-        menuLabel?: string;
-    }>(learningLabFlag || undefined);
-    const learningLabUrl = learningLabVariant?.url ?? LEARNING_LAB_FALLBACK_URL;
-    const learningLabTitle = learningLabVariant?.title ?? 'Learning Lab';
+    const learningLabVariant = useVariant<ILearningLabVariant>(
+        learningLabFlag || undefined,
+    );
+    const learningLabUrl = learningLabVariant?.url ?? LEARNING_LAB_DEFAULTS.url;
+    const learningLabTitle =
+        learningLabVariant?.title ?? LEARNING_LAB_DEFAULTS.title;
     const learningLabDescription =
-        learningLabVariant?.description ??
-        'Learn Unleash at your own pace. Watch short videos on FeatureOps, feature flags, and AI-native development.';
+        learningLabVariant?.description ?? LEARNING_LAB_DEFAULTS.description;
     const learningLabVisitLabel =
-        learningLabVariant?.visitLabel ?? 'Visit Learning Lab';
+        learningLabVariant?.visitLabel ?? LEARNING_LAB_DEFAULTS.visitLabel;
     const learningLabMenuLabel =
-        learningLabVariant?.menuLabel ?? 'Learning Lab';
+        learningLabVariant?.menuLabel ?? LEARNING_LAB_DEFAULTS.menuLabel;
 
     const handleOpen = (e: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(e.currentTarget);

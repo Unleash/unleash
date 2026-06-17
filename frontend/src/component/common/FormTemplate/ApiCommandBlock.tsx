@@ -28,11 +28,6 @@ const StyledIcon = styled(FileCopy)(({ theme }) => ({
     fill: theme.palette.primary.contrastText,
 }));
 
-const StyledCodeboxWrapper = styled('div')(() => ({
-    maxHeight: '320px',
-    overflow: 'auto',
-}));
-
 export const ApiCommandBlock: React.FC<Props> = ({
     command,
     onCopy,
@@ -48,8 +43,6 @@ export const ApiCommandBlock: React.FC<Props> = ({
                 </IconButton>
             </Tooltip>
         </StyledSubtitle>
-        <StyledCodeboxWrapper>
-            <Codebox text={command} />
-        </StyledCodeboxWrapper>
+        <Codebox text={command} />
     </>
 );

@@ -101,6 +101,19 @@ const StyledNewSidebarLink = styled('a')(({ theme }) => ({
     },
 }));
 
+// Concise, purpose-first descriptions shown in the flag type dropdown.
+// Keyed by feature type id; falls back to the API-provided description.
+const featureTypeDescriptionOverrides: Record<string, string> = {
+    release: 'Roll out new or incomplete features • Expected lifetime ~40 days',
+    experiment: 'A/B and multivariate testing • Expected lifetime ~40 days',
+    'kill-switch':
+        'Quickly disable certain functionalities or features • Expected lifetime: permanent',
+    operational:
+        'Transition between technical implementations with minimal risk • Expected lifetime: ~7 days',
+    permission:
+        'Control feature access based on user roles or entitlements • Expected lifetime: permanent',
+};
+
 const configButtonData = {
     project: {
         icon: <ProjectIcon />,
@@ -394,7 +407,9 @@ const CreateFeatureDialogContent = ({
                                             label: featureType.name,
                                             value: featureType.id,
                                             description:
-                                                featureType.description,
+                                                featureTypeDescriptionOverrides[
+                                                    featureType.id
+                                                ] ?? featureType.description,
                                         }),
                                     )}
                                     onChange={(value) =>

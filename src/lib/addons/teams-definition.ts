@@ -36,7 +36,7 @@ import type { IAddonDefinition } from '../types/model.js';
 
 const teamsDefinition: IAddonDefinition = {
     name: 'teams',
-    displayName: 'Microsoft Teams',
+    displayName: 'Microsoft Teams (deprecated)',
     description: 'Allows Unleash to post updates to Microsoft Teams.',
     documentationUrl: 'https://docs.getunleash.io/integrate/teams',
     howTo: 'The Microsoft Teams integration allows Unleash to post Updates when a feature flag is updated.',

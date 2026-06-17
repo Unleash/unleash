@@ -39,7 +39,7 @@ const teamsWorkflowDefinition: IAddonDefinition = {
     displayName: 'Microsoft Teams - Workflow',
     description: 'Allows Unleash to post updates to Microsoft Teams.',
     documentationUrl: 'https://docs.getunleash.io/integrate/teams',
-    howTo: 'The Microsoft Teams integration allows Unleash to post Updates when a feature flag is updated using a Workflow defined webhook.',
+    howTo: 'The Microsoft Teams integration allows Unleash to post updates when a feature flag is updated using a Workflow defined webhook.',
     parameters: [
         {
             name: 'url',

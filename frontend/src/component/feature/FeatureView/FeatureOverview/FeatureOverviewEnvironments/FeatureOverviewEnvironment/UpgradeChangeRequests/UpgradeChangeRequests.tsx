@@ -81,7 +81,7 @@ export const UpgradeChangeRequests = () => {
                     }}
                     size='small'
                 >
-                    <Close fontSize='inherit' />
+                    <Close />
                 </StyledCloseButton>
             </Tooltip>
         </Wrapper>

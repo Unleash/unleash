@@ -150,7 +150,7 @@ export const FilterItemChip: FC<IFilterItemChipProps> = ({
                                 }}
                                 size='small'
                             >
-                                <Close fontSize='inherit' color='action' />
+                                <Close color='action' />
                             </StyledIconButton>
                         )}
                     />

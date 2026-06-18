@@ -122,7 +122,7 @@ const ProjectLinkTemplates = ({
                     }
                 >
                     <IconButton size='small' sx={{ ml: 1 }}>
-                        <HelpOutlineIcon fontSize='small' />
+                        <HelpOutlineIcon />
                     </IconButton>
                 </Tooltip>
             </Box>

@@ -165,7 +165,7 @@ export const NewInUnleashToast = ({ item }: { item: NewInUnleashItem }) => {
                             }}
                             size='small'
                         >
-                            <Close fontSize='inherit' />
+                            <Close />
                         </CloseButton>
                     </TextContainer>
                 </NewInUnleashBody>

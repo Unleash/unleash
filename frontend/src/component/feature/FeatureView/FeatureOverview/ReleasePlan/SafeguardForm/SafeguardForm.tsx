@@ -518,7 +518,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                         }}
                         sx={{ padding: 0.5 }}
                     >
-                        <DeleteOutlineIcon fontSize='small' />
+                        <DeleteOutlineIcon />
                     </PermissionIconButton>
                 )}
             </StyledTopRow>

@@ -93,7 +93,7 @@ export const NewInUnleashSideBarItem = ({
                     onClick={onDismiss}
                     size='small'
                 >
-                    <Close fontSize='inherit' />
+                    <Close />
                 </StyledItemButtonClose>
             </Tooltip>
         </StyledItemButton>

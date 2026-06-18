@@ -202,7 +202,7 @@ const RegexTestInputItem: FC<RegexTestInputItemProps> = memo(
                                 sx={{ ml: 'auto' }}
                                 onClick={() => onRemove(input.id)}
                             >
-                                <Delete fontSize='inherit' />
+                                <Delete />
                             </IconButton>
                         </HtmlTooltip>
                     )}

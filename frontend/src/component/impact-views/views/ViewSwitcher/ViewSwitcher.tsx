@@ -121,7 +121,7 @@ export const ViewSwitcher: FC<ViewSwitcherProps> = ({
                                         openMenu(event, view.id)
                                     }
                                 >
-                                    <MoreVertIcon fontSize='small' />
+                                    <MoreVertIcon />
                                 </IconButton>
                             </StyledTabLabel>
                         }

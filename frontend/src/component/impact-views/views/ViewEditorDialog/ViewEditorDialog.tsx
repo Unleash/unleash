@@ -191,7 +191,7 @@ const MetricGoalRow: FC<{
                     aria-label={`Remove ${label}`}
                     onClick={() => onRemove(metric.id)}
                 >
-                    <Delete fontSize='small' />
+                    <Delete />
                 </IconButton>
             </Tooltip>
         </StyledMetricRow>

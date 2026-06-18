@@ -41,11 +41,7 @@ export const FavoriteButton: FC<FavoriteButtonProps> = ({
                 onClick();
             }}
         >
-            {isFavorite ? (
-                <StarIcon sx={{ fontSize: 'inherit' }} />
-            ) : (
-                <StarBorderIcon sx={{ fontSize: 'inherit' }} />
-            )}
+            {isFavorite ? <StarIcon /> : <StarBorderIcon />}
         </StyledButton>
     );
 };

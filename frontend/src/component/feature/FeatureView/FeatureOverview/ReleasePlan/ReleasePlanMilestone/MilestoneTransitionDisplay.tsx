@@ -262,7 +262,7 @@ export const MilestoneTransitionDisplay = ({
                             }}
                             sx={{ padding: 0.5 }}
                         >
-                            <DeleteOutlineIcon fontSize='small' />
+                            <DeleteOutlineIcon />
                         </PermissionIconButton>
                     </StyledButtonGroup>
                 )}

@@ -148,7 +148,7 @@ export const FeatureStrategyMenu = ({
                             edge='end'
                             aria-label='close'
                         >
-                            <CloseIcon fontSize='small' />
+                            <CloseIcon />
                         </IconButton>
                     </StyledHeader>
                     {releasePlanPreview && selectedTemplate ? (

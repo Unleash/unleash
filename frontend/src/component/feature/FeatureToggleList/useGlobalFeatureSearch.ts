@@ -1,34 +1,36 @@
 import { useCallback } from 'react';
-import { encodeQueryParams, StringParam, withDefault } from 'use-query-params';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import {
-    BooleansStringParam,
-    FilterItemParam,
-} from 'utils/serializeQueryParams';
+    encodeSpecParams,
+    filterItemQueryParam,
+    safeNumberQueryParam,
+    strictBooleanQueryParam,
+    stringQueryParam,
+    withDefaultQueryParam,
+} from 'utils/queryParamSpec';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import mapValues from 'lodash.mapvalues';
 import type { SearchFeaturesParams } from 'openapi';
-import { SafeNumberParam } from 'utils/safeNumberParam';
 import { DEFAULT_PAGE_LIMIT } from 'utils/paginationConfig';
 
 export const useGlobalFeatureSearch = (pageLimit = DEFAULT_PAGE_LIMIT) => {
     const storageKey = 'features-list-table';
     const stateConfig = {
-        offset: withDefault(SafeNumberParam, 0),
-        limit: withDefault(SafeNumberParam, pageLimit),
-        query: StringParam,
-        favoritesFirst: withDefault(BooleansStringParam, true),
-        sortBy: withDefault(StringParam, 'createdAt'),
-        sortOrder: withDefault(StringParam, 'desc'),
-        project: FilterItemParam,
-        tag: FilterItemParam,
-        state: FilterItemParam,
-        segment: FilterItemParam,
-        createdAt: FilterItemParam,
-        type: FilterItemParam,
-        lifecycle: FilterItemParam,
-        createdBy: FilterItemParam,
-        favorite: FilterItemParam,
+        offset: withDefaultQueryParam(safeNumberQueryParam, 0),
+        limit: withDefaultQueryParam(safeNumberQueryParam, pageLimit),
+        query: stringQueryParam,
+        favoritesFirst: withDefaultQueryParam(strictBooleanQueryParam, true),
+        sortBy: withDefaultQueryParam(stringQueryParam, 'createdAt'),
+        sortOrder: withDefaultQueryParam(stringQueryParam, 'desc'),
+        project: filterItemQueryParam,
+        tag: filterItemQueryParam,
+        state: filterItemQueryParam,
+        segment: filterItemQueryParam,
+        createdAt: filterItemQueryParam,
+        type: filterItemQueryParam,
+        lifecycle: filterItemQueryParam,
+        createdBy: filterItemQueryParam,
+        favorite: filterItemQueryParam,
     };
     const [tableState, setTableState] = usePersistentTableState(
         `${storageKey}`,
@@ -54,7 +56,7 @@ export const useGlobalFeatureSearch = (pageLimit = DEFAULT_PAGE_LIMIT) => {
         refetch,
         initialLoad,
     } = useFeatureSearch(
-        mapValues(encodeQueryParams(stateConfig, apiTableState), (value) =>
+        mapValues(encodeSpecParams(stateConfig, apiTableState), (value) =>
             value ? `${value}` : undefined,
         ) as SearchFeaturesParams,
     );

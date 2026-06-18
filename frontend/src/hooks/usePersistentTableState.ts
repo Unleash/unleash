@@ -3,18 +3,34 @@ import { useSearchParams } from 'react-router';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { encodeQueryParams, useQueryParams } from 'use-query-params';
 import type { QueryParamConfigMap } from 'serialize-query-params/src/types';
+import {
+    toUseQueryParamsConfig,
+    type DecodedSpecMap,
+    type QueryParamSpecMap,
+} from 'utils/queryParamSpec';
 import { reorderObject } from '../utils/reorderObject.js';
 import {
     isValidPaginationOption,
     DEFAULT_PAGE_LIMIT,
 } from 'utils/paginationConfig';
 
-const usePersistentSearchParams = <T extends QueryParamConfigMap>(
+export type TableStateUpdate<TSpecs extends QueryParamSpecMap> =
+    | Partial<DecodedSpecMap<TSpecs>>
+    | ((prev: DecodedSpecMap<TSpecs>) => Partial<DecodedSpecMap<TSpecs>>);
+
+export type TableStateSetter<TSpecs extends QueryParamSpecMap> = (
+    update: TableStateUpdate<TSpecs>,
+) => void;
+
+const usePersistentSearchParams = (
     key: string,
-    queryParamsDefinition: T,
+    queryParamsDefinition: QueryParamConfigMap,
 ) => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const { value, setValue } = createLocalStorage(key, {});
+    const { value, setValue } = createLocalStorage<Record<string, unknown>>(
+        key,
+        {},
+    );
     useEffect(() => {
         const params = Object.fromEntries(searchParams.entries());
         if (Object.keys(params).length > 0) {
@@ -35,11 +51,26 @@ const usePersistentSearchParams = <T extends QueryParamConfigMap>(
     return setValue;
 };
 
-export const usePersistentTableState = <T extends QueryParamConfigMap>(
+/**
+ * Persistent (URL + localStorage) table state.
+ *
+ * Consumers declare params with the library-agnostic specs from
+ * `utils/queryParamSpec`. During the use-query-params → nuqs migration this
+ * hook converts those specs to a use-query-params config and runs
+ * use-query-params only; the nuqs side of each spec is dormant. PR4
+ * (nuqs-4-dual-run) turns this into a flag-gated dual-run.
+ */
+export const usePersistentTableState = <TSpecs extends QueryParamSpecMap>(
     key: string,
-    queryParamsDefinition: T,
-    excludedFromStorage: (keyof T)[] = ['offset'],
+    specs: TSpecs,
+    excludedFromStorage: (keyof TSpecs)[] = ['offset'],
 ) => {
+    const queryParamsDefinition = useMemo(
+        () => toUseQueryParamsConfig(specs),
+        [specs],
+    );
+    const excluded = excludedFromStorage as string[];
+
     const updateStoredParams = usePersistentSearchParams(
         key,
         queryParamsDefinition,
@@ -100,11 +131,14 @@ export const usePersistentTableState = <T extends QueryParamConfigMap>(
     useEffect(() => {
         const filteredTableState = Object.fromEntries(
             Object.entries(orderedTableState).filter(
-                ([key]) => !excludedFromStorage.includes(key),
+                ([key]) => !excluded.includes(key),
             ),
         );
         updateStoredParams(filteredTableState);
     }, [JSON.stringify(orderedTableState)]);
 
-    return [orderedTableState, setTableState] as const;
+    return [
+        orderedTableState as DecodedSpecMap<TSpecs>,
+        setTableState as TableStateSetter<TSpecs>,
+    ] as const;
 };

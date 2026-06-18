@@ -1,5 +1,7 @@
 import { json, jsonParseLinter } from '@codemirror/lang-json';
+import { HighlightStyle, syntaxHighlighting } from '@codemirror/language';
 import { linter } from '@codemirror/lint';
+import { tags } from '@lezer/highlight';
 import ErrorIcon from '@mui/icons-material/Error';
 import FormatIndentIncrease from '@mui/icons-material/FormatIndentIncrease';
 import { Box, Button, styled, useTheme } from '@mui/material';
@@ -203,10 +205,26 @@ const ReactJSONEditor: FC<IReactJSONEditorProps> = ({
     const theme = useTheme();
     const value = useMemo(() => contentToText(content), [content]);
     const [validationError, setValidationError] = useState<string>();
-    const extensions = useMemo(
-        () => [json(), ...(readOnly ? [] : [linter(jsonParseLinter())])],
-        [readOnly],
-    );
+    const extensions = useMemo(() => {
+        const { codeHighlighting } = theme.palette;
+        const jsonHighlight = syntaxHighlighting(
+            HighlightStyle.define([
+                { tag: tags.propertyName, color: codeHighlighting.attr },
+                { tag: tags.string, color: codeHighlighting.string },
+                { tag: tags.number, color: codeHighlighting.number },
+                {
+                    tag: [tags.bool, tags.null],
+                    color: codeHighlighting.literal,
+                },
+                { tag: tags.punctuation, color: codeHighlighting.comment },
+            ]),
+        );
+        return [
+            json(),
+            jsonHighlight,
+            ...(readOnly ? [] : [linter(jsonParseLinter())]),
+        ];
+    }, [readOnly, theme.palette]);
     const shouldValidateInternally =
         !readOnly && validationErrorProp === undefined;
 

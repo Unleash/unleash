@@ -158,6 +158,8 @@
     ]
   },
   "dependencies": {
+    "@codemirror/language": "^6.12.3",
+    "@lezer/highlight": "^1.2.3",
     "chartjs-plugin-datalabels": "^2.2.0",
     "highlight.js": "^11.11.1",
     "json-2-csv": "^5.5.10",

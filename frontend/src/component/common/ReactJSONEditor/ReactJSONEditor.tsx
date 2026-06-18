@@ -37,6 +37,10 @@ const StyledEditorWrapper = styled(Box, {
         '&:hover': {
             borderColor: theme.palette.action.disabled,
         },
+        '& .cm-cursor': {
+            borderLeftWidth: theme.spacing(0.2),
+            borderLeftColor: theme.palette.text.primary,
+        },
         '&:focus-within': {
             borderColor: hasError
                 ? theme.palette.error.main

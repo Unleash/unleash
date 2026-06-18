@@ -34,18 +34,16 @@ import {
 } from '../events/index.js';
 import type { IAddonDefinition } from '../types/model.js';
 
-const teamsDefinition: IAddonDefinition = {
-    name: 'teams',
-    displayName: 'Microsoft Teams',
-    deprecated:
-        'This integration is deprecated. Please try the new Microsoft Teams - Workflow integration instead.',
+const teamsWorkflowDefinition: IAddonDefinition = {
+    name: 'teamsworkflow',
+    displayName: 'Microsoft Teams - Workflow',
     description: 'Allows Unleash to post updates to Microsoft Teams.',
     documentationUrl: 'https://docs.getunleash.io/integrate/teams',
-    howTo: 'The Microsoft Teams integration allows Unleash to post Updates when a feature flag is updated.',
+    howTo: 'The Microsoft Teams integration allows Unleash to post updates when a feature flag is updated using a Workflow defined webhook.',
     parameters: [
         {
             name: 'url',
-            displayName: 'Microsoft Teams webhook URL',
+            displayName: 'Microsoft Teams Workflow webhook URL',
             description: '(Required)',
             type: 'url',
             required: true,
@@ -100,4 +98,4 @@ const teamsDefinition: IAddonDefinition = {
     ],
 };
 
-export default teamsDefinition;
+export default teamsWorkflowDefinition;

@@ -184,8 +184,8 @@ importers:
         specifier: ^4.2.0
         version: 4.2.0
       nodemailer:
-        specifier: ^8.0.7
-        version: 8.0.11
+        specifier: ^9.0.0
+        version: 9.0.1
       normalize-url:
         specifier: ^9.0.0
         version: 9.0.1
@@ -571,7 +571,7 @@ importers:
         version: 3.1.1
       http-proxy-middleware:
         specifier: 3.0.7
-        version: 3.0.7
+        version: 3.0.7(supports-color@8.1.1)
       immer:
         specifier: 9.0.21
         version: 9.0.21
@@ -4866,8 +4866,8 @@ packages:
     resolution: {integrity: sha512-GYVXHE2KnrzAfsAjl4uP++evGFCrAU1jta4ubEjIG7YWt/64Gqv66a30yKwWczVjA6j3bM4nBwH7Pk1JmDHaxQ==}
     engines: {node: '>=18'}
 
-  nodemailer@8.0.11:
-    resolution: {integrity: sha512-nrO/pDAUKl+wXX+lx16tDLbnm0fW6sK/x8mgohaCpg+CdCEl482bD4tCuAZk2DyliruiNTIZxRCoWkDqJEnAiA==}
+  nodemailer@9.0.1:
+    resolution: {integrity: sha512-Gwv8SQewT616ZM/URn0H54b8PWo/Wum7md3EW2aWy1lO27+WZCX+Xyak3J+NlmHUjDh5ME+uesJUDRbR3Ye8Bw==}
     engines: {node: '>=6.0.0'}
 
   normalize-path@3.0.0:
@@ -8674,7 +8674,7 @@ snapshots:
 
   axios@1.17.0(supports-color@8.1.1):
     dependencies:
-      follow-redirects: 1.16.0(debug@4.4.3)
+      follow-redirects: 1.16.0(debug@4.4.3(supports-color@8.1.1))
       form-data: 4.0.6
       https-proxy-agent: 5.0.1(supports-color@8.1.1)
       proxy-from-env: 2.1.0
@@ -9790,7 +9790,7 @@ snapshots:
 
   flatted@3.4.2: {}
 
-  follow-redirects@1.16.0(debug@4.4.3):
+  follow-redirects@1.16.0(debug@4.4.3(supports-color@8.1.1)):
     optionalDependencies:
       debug: 4.4.3(supports-color@8.1.1)
 
@@ -10061,21 +10061,21 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  http-proxy-middleware@3.0.7:
+  http-proxy-middleware@3.0.7(supports-color@8.1.1):
     dependencies:
       '@types/http-proxy': 1.17.17
       debug: 4.4.3(supports-color@8.1.1)
-      http-proxy: 1.18.1(debug@4.4.3)
+      http-proxy: 1.18.1(debug@4.4.3(supports-color@8.1.1))
       is-glob: 4.0.3
       is-plain-object: 5.0.0
       micromatch: 4.0.8
     transitivePeerDependencies:
       - supports-color
 
-  http-proxy@1.18.1(debug@4.4.3):
+  http-proxy@1.18.1(debug@4.4.3(supports-color@8.1.1)):
     dependencies:
       eventemitter3: 4.0.7
-      follow-redirects: 1.16.0(debug@4.4.3)
+      follow-redirects: 1.16.0(debug@4.4.3(supports-color@8.1.1))
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
@@ -11190,7 +11190,7 @@ snapshots:
 
   node-releases@2.0.46: {}
 
-  nodemailer@8.0.11: {}
+  nodemailer@9.0.1: {}
 
   normalize-path@3.0.0: {}
 

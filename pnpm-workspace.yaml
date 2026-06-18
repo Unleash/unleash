@@ -59,6 +59,8 @@ minimumReleaseAgeExclude:
   - js-yaml@4.2.0
   # Renovate security update: http-proxy-middleware@3.0.7
   - http-proxy-middleware@3.0.7
+  # Renovate security update: nodemailer@9.0.1
+  - nodemailer@9.0.1
 
 patchedDependencies:
   # Fixes a bug in getAutoSortingFn where `.slice(10)` skips the first 10 rows

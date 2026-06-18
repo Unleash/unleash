@@ -56,12 +56,13 @@ export default class TeamsWorkflowAddon extends Addon {
                                 items: [
                                     {
                                         type: 'TextBlock',
-                                        text: 'Unleash notification update',
+                                        text: 'Unleash update notification',
                                         style: 'heading',
                                     },
                                     {
                                         type: 'TextBlock',
                                         text,
+                                        wrap: true,
                                     },
                                     {
                                         type: 'FactSet',

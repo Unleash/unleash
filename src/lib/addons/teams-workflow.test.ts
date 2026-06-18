@@ -189,12 +189,13 @@ describe('Teams workflow integration', () => {
                                         items: [
                                             {
                                                 style: 'heading',
-                                                text: 'Unleash notification update',
+                                                text: 'Unleash update notification',
                                                 type: 'TextBlock',
                                             },
                                             {
                                                 text: `*${event.createdBy}* disabled *[${event.featureName}](${ARGS.unleashUrl}/projects/${event.project}/features/${event.featureName})* for the *${event.environment}* environment in project *[${event.project}](${ARGS.unleashUrl}/projects/${event.project})*`,
                                                 type: 'TextBlock',
+                                                wrap: true,
                                             },
                                             {
                                                 facts: [

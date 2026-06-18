@@ -60,19 +60,13 @@ const StyledNav = styled('nav')({
     flexGrow: 1,
 });
 
+// Typed wrapper so the documentation link can pass component/href/target.
+// Shape (square 4px) and focus outline now come from the theme.
 const StyledIconButton = styled(IconButton)<{
     component?: 'a' | 'button';
     href?: string;
     target?: string;
-}>(({ theme }) => ({
-    borderRadius: 100,
-    '&:focus-visible': {
-        outlineStyle: 'solid',
-        outlineWidth: 2,
-        outlineColor: theme.palette.primary.main,
-        borderRadius: '100%',
-    },
-}));
+}>({});
 
 const Header = () => {
     const { onSetThemeMode, themeMode } = useThemeMode();

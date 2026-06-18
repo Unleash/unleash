@@ -105,6 +105,6 @@ describe('groups', () => {
         // so after we've see the success message
         // reload the page and check that the group is really not there anymore
         cy.reload();
-        cy.get('body').should('not.contain', groupName);
+        cy.contains(groupName).should('not.exist');
     });
 });

@@ -3,6 +3,9 @@ import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { HelpResources } from './HelpResources';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
+
+const server = testServerSetup();
 
 const openFeedback = vi.fn();
 vi.mock('component/feedbackNew/useFeedback', async (importOriginal) => {
@@ -18,11 +21,24 @@ vi.mock('hooks/useEventTracker', () => ({
     useEventTracker: () => ({ trackEvent }),
 }));
 
+const withLearningLab = () =>
+    testServerRoute(server, '/api/admin/ui-config', {
+        flags: { learningLab: true },
+    });
+
+test('before we get production link renders nothing when learningLab flag is disabled', () => {
+    render(<HelpResources />);
+    expect(
+        screen.queryByRole('button', { name: 'Help and resources' }),
+    ).not.toBeInTheDocument();
+});
+
 test('opens help menu with all items when clicking the button', async () => {
+    withLearningLab();
     render(<HelpResources />);
 
     await userEvent.click(
-        screen.getByRole('button', { name: 'Help and resources' }),
+        await screen.findByRole('button', { name: 'Help and resources' }),
     );
 
     expect(screen.getByText('Visit Learning Lab')).toBeInTheDocument();
@@ -36,10 +52,11 @@ test('opens help menu with all items when clicking the button', async () => {
 });
 
 test('external links have correct hrefs', async () => {
+    withLearningLab();
     render(<HelpResources />);
 
     await userEvent.click(
-        screen.getByRole('button', { name: 'Help and resources' }),
+        await screen.findByRole('button', { name: 'Help and resources' }),
     );
 
     expect(screen.getByText('Visit Learning Lab').closest('a')).toHaveAttribute(
@@ -64,10 +81,11 @@ test('external links have correct hrefs', async () => {
 });
 
 test('give feedback calls openFeedback with the correct title and labels', async () => {
+    withLearningLab();
     render(<HelpResources />);
 
     await userEvent.click(
-        screen.getByRole('button', { name: 'Help and resources' }),
+        await screen.findByRole('button', { name: 'Help and resources' }),
     );
 
     await userEvent.click(screen.getByText('Give feedback'));
@@ -80,10 +98,11 @@ test('give feedback calls openFeedback with the correct title and labels', async
 });
 
 test('tracks menu open and item click', async () => {
+    withLearningLab();
     render(<HelpResources />);
 
     await userEvent.click(
-        screen.getByRole('button', { name: 'Help and resources' }),
+        await screen.findByRole('button', { name: 'Help and resources' }),
     );
 
     expect(trackEvent).toHaveBeenCalledWith('help-resources', {

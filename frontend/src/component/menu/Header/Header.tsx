@@ -21,6 +21,7 @@ import { useThemeMode } from 'hooks/useThemeMode';
 import { useUiFlag } from 'hooks/useUiFlag';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton.tsx';
 import { CommandBar } from 'component/commandBar/CommandBar';
+import { HelpResources } from './HelpResources/HelpResources';
 
 const HeaderComponent = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.application,
@@ -151,6 +152,7 @@ const Header = () => {
                                 </StyledIconButton>
                             </Tooltip>
                         )}
+                        {hideTopmenuDocumentation && <HelpResources />}
                         {!hideTopmenuDocumentation && (
                             <Tooltip title='Documentation' arrow>
                                 <StyledIconButton

@@ -3,6 +3,7 @@ import { colors } from './colors.js';
 import {
     buttonSizes,
     controlOverrides,
+    iconButtonRoot,
     iconButtonSizes,
     subtleOutlinedButton,
 } from './controls.js';
@@ -361,6 +362,9 @@ export const lightTheme = createTheme({
                 size: 'large',
             },
             styleOverrides: {
+                root: ({ theme }) => ({
+                    ...iconButtonRoot(theme),
+                }),
                 ...iconButtonSizes,
             },
         },

@@ -5,6 +5,7 @@ import { colors } from './colors.js';
 import {
     buttonSizes,
     controlOverrides,
+    iconButtonRoot,
     iconButtonSizes,
     subtleOutlinedButton,
 } from './controls.js';
@@ -570,6 +571,7 @@ export const darkTheme = createTheme({
             },
             styleOverrides: {
                 root: ({ theme }) => ({
+                    ...iconButtonRoot(theme),
                     '&.operator-is-active svg': {
                         fill: theme.palette.background.application,
                     },

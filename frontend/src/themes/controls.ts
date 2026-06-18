@@ -120,6 +120,27 @@ export const iconButtonSizes = {
 } as const;
 
 /**
+ * Size-agnostic root styling for icon buttons. Gives them the same square,
+ * rounded-corner shape as regular buttons (MUI's default icon button is a
+ * circle). Spread into each theme's `MuiIconButton.styleOverrides.root`.
+ *
+ * Kept separate from `iconButtonSizes` because the radius is shape, not size —
+ * it's constant across small/medium/large, mirroring how `buttonSizes` stays
+ * purely about box/glyph dimensions.
+ */
+export const iconButtonRoot = (theme: Theme) => ({
+    borderRadius: theme.shape.borderRadius,
+    // Plain (default-color) icon buttons rest at the muted `action.active` gray;
+    // on hover, darken the glyph toward the primary text color for a clearer
+    // affordance. Scoped to default-color buttons via `:not([class*=color])` so
+    // `color="primary"`/`"inherit"` buttons keep their own color — MUI only
+    // emits a `MuiIconButton-color*` class when color isn't the default.
+    '&:hover:not([class*="MuiIconButton-color"])': {
+        color: theme.palette.text.primary,
+    },
+});
+
+/**
  * Secondary (outlined) buttons: divider-colored border with primary-colored
  * text (matching the text button), so they read as a quiet secondary action
  * and sit well next to a contained primary. Spread into the

@@ -53,7 +53,7 @@ importers:
         version: 7.0.6
       '@slack/web-api':
         specifier: ^7.15.1
-        version: 7.16.0
+        version: 7.17.0
       '@wesleytodd/openapi':
         specifier: ^1.1.0
         version: 1.1.0(openapi-types@12.1.3)
@@ -378,7 +378,7 @@ importers:
         version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@22.19.21)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.8)(jsdom@25.0.1)(msw@2.14.6(@types/node@22.19.21)(typescript@5.9.3))(vite@8.0.16(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(sass@1.99.0)(yaml@2.8.4))
       wait-on:
         specifier: ^9.0.5
-        version: 9.0.10(supports-color@8.1.1)
+        version: 9.0.10
 
   frontend:
     dependencies:
@@ -1916,8 +1916,8 @@ packages:
     resolution: {integrity: sha512-I8vmSjNYWsaxuWPx6dz4yeh0h7vRBWbgAMK14LEmblbZ404BtrPbXs6jDPx4cYgGf8msDGF4A9opLZBu21FViQ==}
     engines: {node: '>= 12.13.0', npm: '>= 6.12.0'}
 
-  '@slack/web-api@7.16.0':
-    resolution: {integrity: sha512-68SAV77uuGKuhyyaRytX8UijVnqSLsTSKslGXw17cjQYXn+jtNl7gbaEjHgC5x2rhCuFdahBrEC2VCLppbzReg==}
+  '@slack/web-api@7.17.0':
+    resolution: {integrity: sha512-jejr34a8B4L5AS713wOAx1LAqNkW16HVMDEa6sYBvFDc/llUBl8hXaiI4BwF+Al+Sug19Vn2O7iokTVIhVvZ1Q==}
     engines: {node: '>= 18', npm: '>= 8.6.0'}
 
   '@standard-schema/spec@1.1.0':
@@ -7827,17 +7827,17 @@ snapshots:
 
   '@slack/logger@4.0.1':
     dependencies:
-      '@types/node': 22.19.20
+      '@types/node': 22.19.21
 
   '@slack/types@2.21.1': {}
 
-  '@slack/web-api@7.16.0':
+  '@slack/web-api@7.17.0':
     dependencies:
       '@slack/logger': 4.0.1
       '@slack/types': 2.21.1
-      '@types/node': 22.19.20
+      '@types/node': 22.19.21
       '@types/retry': 0.12.0
-      axios: 1.17.0(supports-color@8.1.1)
+      axios: 1.17.0
       eventemitter3: 5.0.4
       form-data: 4.0.6
       is-electron: 2.2.2
@@ -8184,7 +8184,7 @@ snapshots:
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 22.19.20
+      '@types/node': 22.19.21
 
   '@types/cookiejar@2.1.5': {}
 
@@ -8206,7 +8206,7 @@ snapshots:
 
   '@types/es-aggregate-error@1.0.6':
     dependencies:
-      '@types/node': 22.19.20
+      '@types/node': 22.19.21
 
   '@types/estree-jsx@1.0.5':
     dependencies:
@@ -8244,7 +8244,7 @@ snapshots:
 
   '@types/http-proxy@1.17.17':
     dependencies:
-      '@types/node': 22.19.20
+      '@types/node': 22.19.21
 
   '@types/js-yaml@4.0.9': {}
 
@@ -8339,11 +8339,11 @@ snapshots:
   '@types/send@0.17.6':
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 22.19.20
+      '@types/node': 22.19.21
 
   '@types/send@1.2.1':
     dependencies:
-      '@types/node': 22.19.20
+      '@types/node': 22.19.21
 
   '@types/serve-static@1.15.10':
     dependencies:
@@ -8353,7 +8353,7 @@ snapshots:
 
   '@types/set-cookie-parser@2.4.10':
     dependencies:
-      '@types/node': 22.19.20
+      '@types/node': 22.19.21
 
   '@types/sinonjs__fake-timers@8.1.1': {}
 
@@ -8371,7 +8371,7 @@ snapshots:
     dependencies:
       '@types/cookiejar': 2.1.5
       '@types/methods': 1.1.4
-      '@types/node': 22.19.20
+      '@types/node': 22.19.21
       form-data: 4.0.6
 
   '@types/supertest@6.0.3':
@@ -8544,7 +8544,7 @@ snapshots:
 
   acorn@8.16.0: {}
 
-  agent-base@6.0.2(supports-color@8.1.1):
+  agent-base@6.0.2:
     dependencies:
       debug: 4.4.3(supports-color@8.1.1)
     transitivePeerDependencies:
@@ -8672,11 +8672,11 @@ snapshots:
 
   aws4@1.13.2: {}
 
-  axios@1.17.0(supports-color@8.1.1):
+  axios@1.17.0:
     dependencies:
       follow-redirects: 1.16.0(debug@4.4.3(supports-color@8.1.1))
       form-data: 4.0.6
-      https-proxy-agent: 5.0.1(supports-color@8.1.1)
+      https-proxy-agent: 5.0.1
       proxy-from-env: 2.1.0
     transitivePeerDependencies:
       - debug
@@ -10088,9 +10088,9 @@ snapshots:
 
   http2-client@1.3.5: {}
 
-  https-proxy-agent@5.0.1(supports-color@8.1.1):
+  https-proxy-agent@5.0.1:
     dependencies:
-      agent-base: 6.0.2(supports-color@8.1.1)
+      agent-base: 6.0.2
       debug: 4.4.3(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
@@ -12843,9 +12843,9 @@ snapshots:
     dependencies:
       xml-name-validator: 5.0.0
 
-  wait-on@9.0.10(supports-color@8.1.1):
+  wait-on@9.0.10:
     dependencies:
-      axios: 1.17.0(supports-color@8.1.1)
+      axios: 1.17.0
       joi: 18.2.1
       lodash: 4.18.1
       minimist: 1.2.8

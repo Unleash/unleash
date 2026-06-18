@@ -166,5 +166,5 @@
     "re2js": "2.3.2",
     "uuid": "^14.0.0"
   },
-  "packageManager": "pnpm@11.5.2"
+  "packageManager": "pnpm@11.5.3"
 }

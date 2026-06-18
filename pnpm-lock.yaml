@@ -122,7 +122,7 @@ importers:
         version: 2.0.0
       helmet:
         specifier: ^8.1.0
-        version: 8.1.0
+        version: 8.2.0
       http-errors:
         specifier: ^2.0.1
         version: 2.0.1
@@ -3766,8 +3766,8 @@ packages:
   heap@0.2.7:
     resolution: {integrity: sha512-2bsegYkkHO+h/9MGbn6KWcE45cHZgPANo5LXF7EvWdT0yT2EguSVO1nDgU5c8+ZOPwp2vMNa7YFsJhVcDR9Sdg==}
 
-  helmet@8.1.0:
-    resolution: {integrity: sha512-jOiHyAZsmnr8LqoPGmCjYAaiuWwjAPLgY8ZX2XrmHawt99/u1y6RgrZMTeoPfpUbV96HOalYgz1qzkRbw54Pmg==}
+  helmet@8.2.0:
+    resolution: {integrity: sha512-DRgTIUgnWcJ62KyarxxziuqYxKGnR6Rgg19BlbucN/dpmJbl1XOit6qvoOX0ZT+HhWe5OUVhU/a1zpGyc1xA0Q==}
     engines: {node: '>=18.0.0'}
 
   highlight.js@11.11.1:
@@ -10028,7 +10028,7 @@ snapshots:
 
   heap@0.2.7: {}
 
-  helmet@8.1.0: {}
+  helmet@8.2.0: {}
 
   highlight.js@11.11.1: {}
 

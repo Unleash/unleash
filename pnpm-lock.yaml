@@ -296,8 +296,8 @@ importers:
         specifier: 22.19.21
         version: 22.19.21
       '@types/nodemailer':
-        specifier: ^7.0.11
-        version: 7.0.12
+        specifier: ^8.0.0
+        version: 8.0.1
       '@types/owasp-password-strength-test':
         specifier: 1.3.2
         version: 1.3.2
@@ -2260,8 +2260,8 @@ packages:
   '@types/node@22.19.21':
     resolution: {integrity: sha512-VMeFBSCKQKmm2swI2kW51SFusDqekC6q9trBCvJ/JliDchFSuoYYKN7yVNjPthP1HKZcx3U1gI/wTcEBjEFKTA==}
 
-  '@types/nodemailer@7.0.12':
-    resolution: {integrity: sha512-80vKwiIsVSyFA1rRovH59jNPLBOuc6dRZIHEu40gXTkBkZnQv8vog1xSGEb9j5q/tdMAs5ivvDR2pLTU0hGHXA==}
+  '@types/nodemailer@8.0.1':
+    resolution: {integrity: sha512-PxpaInm8V1JQDd4j0ds5HfvWQk8JupS1C0Picb96QJsrrRDjBH+DlK7L4ZdNSqNULhiZRQHc40nLVShaGxXAMw==}
 
   '@types/owasp-password-strength-test@1.3.2':
     resolution: {integrity: sha512-nGNNKSpeGk6JEfNUSzQ3Ri1m1gvzqL1k9t37x9cRgC6ZMJ8OSFL1t4cpN2VH9KQz9FdjuJ7ZYN0YLsed/MQnjg==}
@@ -7827,7 +7827,7 @@ snapshots:
 
   '@slack/logger@4.0.1':
     dependencies:
-      '@types/node': 22.19.20
+      '@types/node': 22.19.21
 
   '@slack/types@2.21.1': {}
 
@@ -8184,7 +8184,7 @@ snapshots:
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 22.19.20
+      '@types/node': 22.19.21
 
   '@types/cookiejar@2.1.5': {}
 
@@ -8206,7 +8206,7 @@ snapshots:
 
   '@types/es-aggregate-error@1.0.6':
     dependencies:
-      '@types/node': 22.19.20
+      '@types/node': 22.19.21
 
   '@types/estree-jsx@1.0.5':
     dependencies:
@@ -8244,7 +8244,7 @@ snapshots:
 
   '@types/http-proxy@1.17.17':
     dependencies:
-      '@types/node': 22.19.20
+      '@types/node': 22.19.21
 
   '@types/js-yaml@4.0.9': {}
 
@@ -8296,9 +8296,9 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
-  '@types/nodemailer@7.0.12':
+  '@types/nodemailer@8.0.1':
     dependencies:
-      '@types/node': 22.19.20
+      '@types/node': 22.19.21
 
   '@types/owasp-password-strength-test@1.3.2': {}
 
@@ -8339,11 +8339,11 @@ snapshots:
   '@types/send@0.17.6':
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 22.19.20
+      '@types/node': 22.19.21
 
   '@types/send@1.2.1':
     dependencies:
-      '@types/node': 22.19.20
+      '@types/node': 22.19.21
 
   '@types/serve-static@1.15.10':
     dependencies:
@@ -8353,7 +8353,7 @@ snapshots:
 
   '@types/set-cookie-parser@2.4.10':
     dependencies:
-      '@types/node': 22.19.20
+      '@types/node': 22.19.21
 
   '@types/sinonjs__fake-timers@8.1.1': {}
 
@@ -8371,7 +8371,7 @@ snapshots:
     dependencies:
       '@types/cookiejar': 2.1.5
       '@types/methods': 1.1.4
-      '@types/node': 22.19.20
+      '@types/node': 22.19.21
       form-data: 4.0.6
 
   '@types/supertest@6.0.3':

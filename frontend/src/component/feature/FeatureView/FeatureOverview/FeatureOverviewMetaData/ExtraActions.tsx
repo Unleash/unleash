@@ -16,11 +16,6 @@ import Delete from '@mui/icons-material/Delete';
 import Edit from '@mui/icons-material/Edit';
 import MoreVert from '@mui/icons-material/MoreVert';
 
-const StyledIconButton = styled(IconButton)(({ theme }) => ({
-    height: theme.spacing(3.5),
-    width: theme.spacing(3.5),
-}));
-
 const StyledPopover = styled(Popover)(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(1, 1.5),
@@ -55,8 +50,9 @@ export const ExtraActions = ({
     return (
         <Box>
             <Tooltip title='Dependency actions' arrow describeChild>
-                <StyledIconButton
+                <IconButton
                     id={id}
+                    size='medium'
                     aria-controls={open ? menuId : undefined}
                     aria-haspopup='true'
                     aria-expanded={open ? 'true' : undefined}
@@ -64,7 +60,7 @@ export const ExtraActions = ({
                     type='button'
                 >
                     <MoreVert />
-                </StyledIconButton>
+                </IconButton>
             </Tooltip>
             <StyledPopover
                 id={menuId}

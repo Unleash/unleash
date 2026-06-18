@@ -156,6 +156,10 @@ export const HelpResources = () => {
     const learningLabVariant = useVariant<ILearningLabVariant>(
         learningLabFlag || undefined,
     );
+
+    // TODO: we can remove this when we get final LEARNING_LAB_FALLBACK_URL
+    if (!learningLabFlag) return null;
+
     const learningLabUrl = learningLabVariant?.url ?? LEARNING_LAB_DEFAULTS.url;
     const learningLabTitle =
         learningLabVariant?.title ?? LEARNING_LAB_DEFAULTS.title;

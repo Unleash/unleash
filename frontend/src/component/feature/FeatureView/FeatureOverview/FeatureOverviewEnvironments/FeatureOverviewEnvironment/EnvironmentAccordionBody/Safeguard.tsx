@@ -118,10 +118,10 @@ const SafeguardSplashTrigger = () => {
         <Tooltip title='Learn how safeguards work' arrow>
             <StyledSplashTriggerButton
                 onClick={openSplash}
-                size='small'
+                size='medium'
                 aria-label='Learn how safeguards work'
             >
-                <HelpOutlineOutlined fontSize='small' />
+                <HelpOutlineOutlined />
             </StyledSplashTriggerButton>
         </Tooltip>
     );

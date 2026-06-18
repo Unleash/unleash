@@ -287,6 +287,7 @@ export const Project = () => {
                                 <StyledFavoriteIconButton
                                     onClick={onFavorite}
                                     isFavorite={project?.favorite || false}
+                                    size='medium'
                                 />
                             </StyledProjectTitle>
                         </StyledDiv>

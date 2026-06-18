@@ -100,6 +100,11 @@ describe('groups', () => {
         cy.get("[data-testid='UG_DELETE_BTN_ID']").click();
         cy.get("[data-testid='DIALOGUE_CONFIRM_ID'").click();
 
+        cy.contains('Group removed successfully');
+        // there is some issue on CI that I can't replicate locally
+        // so after we've see the success message
+        // reload the page and check that the group is really not there anymore
+        cy.reload();
         cy.get('body').should('not.contain', groupName);
     });
 });

@@ -186,7 +186,10 @@ export const constraintReducer = (
         case 'deleted legal values update': {
             const next = action.payload ?? new Set<string>();
             const current = state.deletedLegalValues ?? new Set<string>();
-            if (current.size === next.size && current.isSubsetOf(next)) {
+            if (
+                current.size === next.size &&
+                Array.from(current).every((value) => next.has(value))
+            ) {
                 return state;
             }
             return {

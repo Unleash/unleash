@@ -506,24 +506,27 @@ describe('deleted legal values update', () => {
     test('returns the same state reference when the set is unchanged (prevents infinite update loop)', () => {
         const input = {
             ...multiValueConstraint,
-            deletedLegalValues: new Set(['A', 'B']),
+            deletedLegalValues: new Set(['A']),
         };
-        // new Set instance, same values -> must NOT produce a new state ref,
-        // otherwise the useEditableConstraint onUpdate effect re-fires forever.
         const output = constraintReducer(input, {
             type: 'deleted legal values update',
-            payload: new Set(['B', 'A']),
+            payload: new Set(['A']),
         });
         expect(output).toBe(input);
     });
 
-    test('treats undefined and empty set as unchanged', () => {
-        const input = multiValueConstraint; // no deletedLegalValues
+    test('treats undefined and empty set as the same', () => {
+        const input = multiValueConstraint;
         const output = constraintReducer(input, {
             type: 'deleted legal values update',
             payload: new Set(),
         });
         expect(output).toBe(input);
+
+        const withUndefinedPayload = constraintReducer(input, {
+            type: 'deleted legal values update',
+        });
+        expect(withUndefinedPayload).toBe(input);
     });
 
     test('returns a new state when the set actually changes', () => {

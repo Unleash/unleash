@@ -26,13 +26,6 @@ const withLearningLab = () =>
         flags: { learningLab: true },
     });
 
-test('before we get production link renders nothing when learningLab flag is disabled', () => {
-    render(<HelpResources />);
-    expect(
-        screen.queryByRole('button', { name: 'Help and resources' }),
-    ).not.toBeInTheDocument();
-});
-
 test('opens help menu with all items when clicking the button', async () => {
     withLearningLab();
     render(<HelpResources />);
@@ -61,11 +54,11 @@ test('external links have correct hrefs', async () => {
 
     expect(screen.getByText('Visit Learning Lab').closest('a')).toHaveAttribute(
         'href',
-        'https://docs.getunleash.io/',
+        'https://unleash-learning-lab.learnworlds.com/',
     );
     expect(
         screen.getByRole('menuitem', { name: 'Learning Lab' }),
-    ).toHaveAttribute('href', 'https://docs.getunleash.io/');
+    ).toHaveAttribute('href', 'https://unleash-learning-lab.learnworlds.com/');
     expect(screen.getByText('Documentation').closest('a')).toHaveAttribute(
         'href',
         'https://docs.getunleash.io/',
@@ -91,9 +84,10 @@ test('give feedback calls openFeedback with the correct title and labels', async
     await userEvent.click(screen.getByText('Give feedback'));
 
     expect(openFeedback).toHaveBeenCalledWith({
-        title: 'How easy is it to use Unleash?',
-        positiveLabel: 'What do you like most about Unleash?',
-        areasForImprovementsLabel: 'What should be improved in Unleash?',
+        title: 'How would you rate your overall experience with Unleash?',
+        positiveLabel: "What's working well for you in Unleash?",
+        areasForImprovementsLabel:
+            'What could be improved to make Unleash work better for you? ',
     });
 });
 

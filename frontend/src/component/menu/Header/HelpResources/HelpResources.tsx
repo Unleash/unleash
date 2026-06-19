@@ -22,21 +22,23 @@ import { useEventTracker } from 'hooks/useEventTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useVariant } from 'hooks/useVariant';
 
-const StyledIconButton = styled(IconButton)(({ theme }) => ({
-    color: theme.palette.primary.main,
-    borderRadius: 100,
-    '&:focus-visible': {
-        outlineStyle: 'solid',
-        outlineWidth: 2,
-        outlineColor: theme.palette.primary.main,
-        borderRadius: '100%',
-    },
-}));
+const StyledIconButton = styled(IconButton)<{ open?: boolean }>(
+    ({ theme, open }) => ({
+        color: open ? theme.palette.primary.main : undefined,
+        borderRadius: 100,
+        '&:focus-visible': {
+            outlineStyle: 'solid',
+            outlineWidth: theme.spacing(0.5),
+            outlineColor: theme.palette.primary.main,
+            borderRadius: '100%',
+        },
+    }),
+);
 
 const StyledMenu = styled(Menu)(({ theme }) => ({
     '& .MuiPaper-root': {
         width: theme.spacing(40),
-        borderRadius: `${theme.shape.borderRadiusSmall}px`,
+        borderRadius: `${theme.shape.borderRadiusMedium}px`,
     },
 }));
 
@@ -127,7 +129,7 @@ const StyledMenuItem = styled(MenuItem)<AnchorMenuItemProps>(({ theme }) => ({
 const DOCUMENTATION_URL = 'https://docs.getunleash.io/';
 const GITHUB_URL = 'https://github.com/Unleash/unleash';
 const SLACK_URL = 'https://slack.unleash.run/';
-const LEARNING_LAB_FALLBACK_URL = 'https://docs.getunleash.io/';
+const LEARNING_LAB_URL = 'https://unleash-learning-lab.learnworlds.com/';
 
 const EVENT_NAME = 'help-resources';
 
@@ -140,7 +142,7 @@ interface ILearningLabVariant {
 }
 
 const LEARNING_LAB_DEFAULTS: Required<ILearningLabVariant> = {
-    url: LEARNING_LAB_FALLBACK_URL,
+    url: LEARNING_LAB_URL,
     title: 'Learning Lab',
     description:
         'Learn Unleash at your own pace. Watch short videos on FeatureOps, feature flags, and AI-native development.',
@@ -157,9 +159,6 @@ export const HelpResources = () => {
         learningLabFlag || undefined,
     );
 
-    // TODO: we can remove this when we get final LEARNING_LAB_FALLBACK_URL
-    if (!learningLabFlag) return null;
-
     const learningLabUrl = learningLabVariant?.url ?? LEARNING_LAB_DEFAULTS.url;
     const learningLabTitle =
         learningLabVariant?.title ?? LEARNING_LAB_DEFAULTS.title;
@@ -169,11 +168,15 @@ export const HelpResources = () => {
         learningLabVariant?.visitLabel ?? LEARNING_LAB_DEFAULTS.visitLabel;
     const learningLabMenuLabel =
         learningLabVariant?.menuLabel ?? LEARNING_LAB_DEFAULTS.menuLabel;
+    const variant = learningLabFlag ? learningLabFlag.name : 'default';
 
     const handleOpen = (e: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(e.currentTarget);
         trackEvent(EVENT_NAME, {
-            props: { eventType: 'opened', variant: learningLabFlag.name },
+            props: {
+                eventType: 'opened',
+                variant,
+            },
         });
     };
 
@@ -184,7 +187,7 @@ export const HelpResources = () => {
             props: {
                 eventType: 'click',
                 option,
-                variant: learningLabFlag.name,
+                variant,
             },
         });
         handleClose();
@@ -195,9 +198,10 @@ export const HelpResources = () => {
     const handleGiveFeedback = () => {
         handleOptionClick('give-feedback');
         openFeedback({
-            title: 'How easy is it to use Unleash?',
-            positiveLabel: 'What do you like most about Unleash?',
-            areasForImprovementsLabel: 'What should be improved in Unleash?',
+            title: 'How would you rate your overall experience with Unleash?',
+            positiveLabel: "What's working well for you in Unleash?",
+            areasForImprovementsLabel:
+                'What could be improved to make Unleash work better for you? ',
         });
     };
 
@@ -206,6 +210,7 @@ export const HelpResources = () => {
             <Tooltip title='Help & Resources' arrow>
                 <StyledIconButton
                     size='large'
+                    open={open}
                     onClick={handleOpen}
                     aria-haspopup='true'
                     aria-expanded={open}

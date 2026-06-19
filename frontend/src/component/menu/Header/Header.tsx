@@ -83,7 +83,10 @@ const Header = () => {
     const theme = useTheme();
 
     const mediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
-    const smallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const screenBigEnoughForExtraButtons = useMediaQuery(
+        theme.breakpoints.down(700),
+    );
     const [openDrawer, setOpenDrawer] = useState(false);
     const toggleDrawer = () => setOpenDrawer((prev) => !prev);
     const hideTopmenuDocumentation = useUiFlag('hideTopmenuDocumentation');
@@ -108,6 +111,16 @@ const Header = () => {
                     <DrawerMenu open={openDrawer} toggleDrawer={toggleDrawer} />
                     <StyledUserContainer>
                         {!smallScreen && <CommandBar />}
+                        {!screenBigEnoughForExtraButtons &&
+                            hideTopmenuDocumentation && <HelpResources />}
+                        {!screenBigEnoughForExtraButtons && (
+                            <Divider
+                                orientation='vertical'
+                                variant='middle'
+                                flexItem
+                                sx={{ ml: 1 }}
+                            />
+                        )}
                         <UserProfile />
                     </StyledUserContainer>
                 </ContainerComponent>

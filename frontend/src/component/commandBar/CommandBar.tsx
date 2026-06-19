@@ -63,7 +63,6 @@ const StyledContainer = styled('div', {
     backgroundColor: theme.palette.background.application,
     maxWidth: active ? '100%' : '400px',
     [theme.breakpoints.down('md')]: {
-        marginTop: theme.spacing(1),
         maxWidth: '100%',
     },
 }));

@@ -193,7 +193,7 @@ export const NewInUnleashDialog: FC<NewInUnleashDialogProps> = ({
                             onClose();
                             e.stopPropagation();
                         }}
-                        size='small'
+                        size='medium'
                     >
                         <Close />
                     </StyledItemButtonClose>

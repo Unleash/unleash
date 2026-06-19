@@ -197,7 +197,7 @@ const RegexTestInputItem: FC<RegexTestInputItemProps> = memo(
                         <HtmlTooltip title='Remove test string' arrow>
                             <IconButton
                                 type='button'
-                                size='small'
+                                size='medium'
                                 aria-label={`Remove test string ${index}: ${input.testString === '' ? 'empty string' : ''}`}
                                 sx={{ ml: 'auto' }}
                                 onClick={() => onRemove(input.id)}

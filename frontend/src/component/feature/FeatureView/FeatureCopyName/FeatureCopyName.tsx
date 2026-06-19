@@ -41,13 +41,7 @@ export const FeatureCopyName: FC<{ name: string }> = ({ name }) => {
             arrow
         >
             <IconButton size='medium' onClick={handleCopyToClipboard}>
-                {isFeatureNameCopied ? (
-                    <Check
-                        sx={(theme) => ({ color: theme.palette.success.main })}
-                    />
-                ) : (
-                    <FileCopyOutlined />
-                )}
+                {isFeatureNameCopied ? <Check /> : <FileCopyOutlined />}
             </IconButton>
         </Tooltip>
     );

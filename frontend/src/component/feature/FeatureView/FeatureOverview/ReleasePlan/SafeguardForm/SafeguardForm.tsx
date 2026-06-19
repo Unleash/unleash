@@ -511,7 +511,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                         projectId={projectId}
                         environmentId={environment}
                         onClick={handleDelete}
-                        size='small'
+                        size='medium'
                         aria-label='Remove safeguard'
                         tooltipProps={{
                             title: 'Remove safeguard',

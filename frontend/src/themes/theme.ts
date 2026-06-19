@@ -341,8 +341,8 @@ export const lightTheme = createTheme({
         // Buttons
         MuiButton: {
             defaultProps: {
-                // unsized buttons render ~36px today — `large` on the new
-                // scale preserves their visual weight
+                // pre-v2, unsized buttons fell back to MUI's `medium` (~36px);
+                // `large` on the new scale (also 36px) preserves their weight
                 size: 'large',
                 disableElevation: true, // no shadow on contained buttons
             },

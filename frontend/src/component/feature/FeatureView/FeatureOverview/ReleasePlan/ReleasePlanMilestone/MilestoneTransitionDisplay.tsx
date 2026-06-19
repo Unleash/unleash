@@ -255,7 +255,7 @@ export const MilestoneTransitionDisplay = ({
                             projectId={projectId}
                             environmentId={environment}
                             onClick={onDelete}
-                            size='small'
+                            size='medium'
                             aria-label={`Remove automation for ${milestoneName}`}
                             tooltipProps={{
                                 title: `Remove automation for ${milestoneName}`,

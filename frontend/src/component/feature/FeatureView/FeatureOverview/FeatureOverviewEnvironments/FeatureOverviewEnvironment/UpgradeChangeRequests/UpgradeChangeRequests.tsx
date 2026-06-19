@@ -79,7 +79,7 @@ export const UpgradeChangeRequests = () => {
                     onClick={() => {
                         setChangeRequestUpgrade('closed');
                     }}
-                    size='small'
+                    size='medium'
                 >
                     <Close />
                 </StyledCloseButton>

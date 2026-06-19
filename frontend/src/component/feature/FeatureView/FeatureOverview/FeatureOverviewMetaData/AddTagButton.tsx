@@ -8,7 +8,7 @@ const StyledAddTagButton = styled(PermissionButton)(({ theme }) => ({
     lineHeight: theme.typography.body1.lineHeight,
     borderRadius: theme.shape.borderRadiusExtraLarge,
     background: theme.palette.secondary.light,
-    padding: theme.spacing(0.5, 1),
+    padding: theme.spacing(0.5, 1.5),
     height: theme.spacing(3.5),
     // Keep the leading "+" small; out-specify the global button start-icon
     // sizing rule in the theme (same fix as StyledActionButton).

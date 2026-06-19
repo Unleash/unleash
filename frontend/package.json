@@ -158,10 +158,16 @@
     ]
   },
   "dependencies": {
+    "@codemirror/lang-java": "^6.0.2",
+    "@codemirror/lang-javascript": "^6.2.5",
+    "@codemirror/lang-php": "^6.0.2",
+    "@codemirror/lang-python": "^6.2.1",
+    "@codemirror/lang-rust": "^6.0.2",
+    "@codemirror/lang-xml": "^6.1.0",
     "@codemirror/language": "^6.12.3",
+    "@codemirror/legacy-modes": "^6.5.3",
     "@lezer/highlight": "^1.2.3",
     "chartjs-plugin-datalabels": "^2.2.0",
-    "highlight.js": "^11.11.1",
     "json-2-csv": "^5.5.10",
     "json-diff-react": "^1.0.1",
     "logrocket": "^12.1.1",

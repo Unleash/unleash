@@ -1,4 +1,4 @@
-import { type FC, type ComponentProps, useRef, useEffect } from 'react';
+import type { FC, ComponentProps } from 'react';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
 import { IconButton, styled, Tooltip } from '@mui/material';
@@ -23,38 +23,22 @@ import nextjs from './snippets/nextjs.md?raw';
 import reactnative from './snippets/reactnative.md?raw';
 import type { ExtraProps } from 'react-markdown';
 
-import hljs from 'highlight.js/lib/core';
-import hljsBash from 'highlight.js/lib/languages/bash';
-import hljsCSharp from 'highlight.js/lib/languages/csharp';
-import hljsDart from 'highlight.js/lib/languages/dart';
-import hljsGo from 'highlight.js/lib/languages/go';
-import hljsGroovy from 'highlight.js/lib/languages/groovy';
-import hljsJava from 'highlight.js/lib/languages/java';
-import hljsJavaScript from 'highlight.js/lib/languages/javascript';
-import hljsKotlin from 'highlight.js/lib/languages/kotlin';
-import hljsPhp from 'highlight.js/lib/languages/php';
-import hljsPython from 'highlight.js/lib/languages/python';
-import hljsRuby from 'highlight.js/lib/languages/ruby';
-import hljsRust from 'highlight.js/lib/languages/rust';
-import hljsSwift from 'highlight.js/lib/languages/swift';
-import hljsTypeScript from 'highlight.js/lib/languages/typescript';
-import hljsXml from 'highlight.js/lib/languages/xml';
-
-hljs.registerLanguage('bash', hljsBash);
-hljs.registerLanguage('csharp', hljsCSharp);
-hljs.registerLanguage('dart', hljsDart);
-hljs.registerLanguage('go', hljsGo);
-hljs.registerLanguage('groovy', hljsGroovy);
-hljs.registerLanguage('java', hljsJava);
-hljs.registerLanguage('javascript', hljsJavaScript);
-hljs.registerLanguage('kotlin', hljsKotlin);
-hljs.registerLanguage('php', hljsPhp);
-hljs.registerLanguage('python', hljsPython);
-hljs.registerLanguage('ruby', hljsRuby);
-hljs.registerLanguage('rust', hljsRust);
-hljs.registerLanguage('swift', hljsSwift);
-hljs.registerLanguage('typescript', hljsTypeScript);
-hljs.registerLanguage('xml', hljsXml);
+import CodeMirror from '@uiw/react-codemirror';
+import { javascript as jsLang } from '@codemirror/lang-javascript';
+import { python as pythonLang } from '@codemirror/lang-python';
+import { java as javaLang } from '@codemirror/lang-java';
+import { rust as rustLang } from '@codemirror/lang-rust';
+import { xml } from '@codemirror/lang-xml';
+import { php as phpLang } from '@codemirror/lang-php';
+import { json } from '@codemirror/lang-json';
+import { StreamLanguage, syntaxHighlighting } from '@codemirror/language';
+import { classHighlighter } from '@lezer/highlight';
+import { shell } from '@codemirror/legacy-modes/mode/shell';
+import { go as goMode } from '@codemirror/legacy-modes/mode/go';
+import { csharp, kotlin, dart } from '@codemirror/legacy-modes/mode/clike';
+import { groovy } from '@codemirror/legacy-modes/mode/groovy';
+import { ruby as rubyMode } from '@codemirror/legacy-modes/mode/ruby';
+import { swift as swiftMode } from '@codemirror/legacy-modes/mode/swift';
 
 const languageAliases: Record<string, string> = {
     gradle: 'groovy',
@@ -69,11 +53,47 @@ const languageAliases: Record<string, string> = {
     vue: 'xml',
 };
 
-function highlight(code: string, language: string): string | null {
+function getLanguageExtension(language: string) {
     const resolved = languageAliases[language] ?? language;
-    if (!hljs.getLanguage(resolved)) return null;
-    return hljs.highlight(code, { language: resolved }).value;
+    switch (resolved) {
+        case 'javascript':
+            return jsLang();
+        case 'typescript':
+            return jsLang({ typescript: true });
+        case 'python':
+            return pythonLang();
+        case 'java':
+            return javaLang();
+        case 'rust':
+            return rustLang();
+        case 'php':
+            return phpLang();
+        case 'json':
+            return json();
+        case 'xml':
+            return xml();
+        case 'bash':
+            return StreamLanguage.define(shell);
+        case 'go':
+            return StreamLanguage.define(goMode);
+        case 'csharp':
+            return StreamLanguage.define(csharp);
+        case 'dart':
+            return StreamLanguage.define(dart);
+        case 'groovy':
+            return StreamLanguage.define(groovy);
+        case 'kotlin':
+            return StreamLanguage.define(kotlin);
+        case 'ruby':
+            return StreamLanguage.define(rubyMode);
+        case 'swift':
+            return StreamLanguage.define(swiftMode);
+        default:
+            return null;
+    }
 }
+
+const BASE_EXTENSIONS = [syntaxHighlighting(classHighlighter)];
 
 export const codeRenderSnippets: Record<SdkName, string> = {
     Android: android,
@@ -95,66 +115,54 @@ export const codeRenderSnippets: Record<SdkName, string> = {
     'React Native': reactnative,
 };
 
-const StyledCodeBlock = styled('pre')(({ theme }) => ({
+const StyledCodeBlock = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.elevation1,
     padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadius,
     overflow: 'auto',
-    fontSize: theme.typography.body2.fontSize,
-    wordBreak: 'break-all',
-    whiteSpace: 'pre-wrap',
-    position: 'relative',
     maxHeight: theme.spacing(90),
-    '.hljs': {
-        background: 'transparent',
-        padding: 0,
+    position: 'relative',
+    '& .cm-editor': {
+        backgroundColor: 'transparent',
         color: theme.palette.codeHighlighting.variable,
+        outline: 0,
     },
-    '.hljs-keyword': {
-        color: theme.palette.codeHighlighting.keyword,
+    '& .cm-scroller': {
+        fontFamily: theme.typography.fontFamily,
+        fontSize: theme.typography.body2.fontSize,
+        overflow: 'visible',
     },
-    '.hljs-selector-tag': {
-        color: theme.palette.codeHighlighting.selectorTag,
+    '& .cm-content': {
+        padding: 0,
+        whiteSpace: 'pre-wrap',
+        wordBreak: 'break-all',
     },
-    '.hljs-string, .hljs-doctag, .hljs-template-variable': {
+    '& .cm-line': {
+        padding: 0,
+    },
+    '& .tok-keyword': { color: theme.palette.codeHighlighting.keyword },
+    '& .tok-string, & .tok-string2': {
         color: theme.palette.codeHighlighting.string,
     },
-    '.hljs-number': {
-        color: theme.palette.codeHighlighting.number,
-    },
-    '.hljs-literal': {
+    '& .tok-number': { color: theme.palette.codeHighlighting.number },
+    '& .tok-bool, & .tok-null': {
         color: theme.palette.codeHighlighting.literal,
     },
-    '.hljs-comment': {
+    '& .tok-comment': {
         color: theme.palette.codeHighlighting.comment,
         fontStyle: 'italic',
     },
-    '.hljs-built_in': {
-        color: theme.palette.codeHighlighting.builtIn,
-    },
-    '.hljs-title, .hljs-title.function_': {
-        color: theme.palette.codeHighlighting.title,
-    },
-    '.hljs-title.class_': {
-        color: theme.palette.codeHighlighting.class_,
-    },
-    '.hljs-type': {
-        color: theme.palette.codeHighlighting.type,
-    },
-    '.hljs-attr': {
+    '& .tok-builtin': { color: theme.palette.codeHighlighting.builtIn },
+    '& .tok-typeName': { color: theme.palette.codeHighlighting.type },
+    '& .tok-className': { color: theme.palette.codeHighlighting.class_ },
+    '& .tok-propertyName, & .tok-attributeName': {
         color: theme.palette.codeHighlighting.attr,
     },
-    '.hljs-variable': {
-        color: theme.palette.codeHighlighting.variable,
-    },
-    '.hljs-name, .hljs-tag': {
-        color: theme.palette.codeHighlighting.tag,
-    },
-    '.hljs-meta': {
-        color: theme.palette.codeHighlighting.meta,
-    },
-    '.hljs-emphasis': { fontStyle: 'italic' },
-    '.hljs-strong': { fontWeight: 'bold' },
+    '& .tok-variableName': { color: theme.palette.codeHighlighting.variable },
+    '& .tok-tagName': { color: theme.palette.codeHighlighting.tag },
+    '& .tok-meta': { color: theme.palette.codeHighlighting.meta },
+    '& .tok-emphasis': { fontStyle: 'italic' },
+    '& .tok-strong': { fontWeight: 'bold' },
 }));
 
 const CopyToClipboard = styled(Tooltip)(({ theme }) => ({
@@ -162,17 +170,6 @@ const CopyToClipboard = styled(Tooltip)(({ theme }) => ({
     top: theme.spacing(1),
     right: theme.spacing(1),
 }));
-
-const HighlightedCode: FC<{ language: string; html: string }> = ({
-    language,
-    html,
-}) => {
-    const ref = useRef<HTMLElement>(null);
-    useEffect(() => {
-        if (ref.current) ref.current.innerHTML = html;
-    }, [html]);
-    return <code ref={ref} className={`hljs language-${language}`} />;
-};
 
 const CopyBlock: FC<{ title: string; code: string; language: string }> = ({
     title,
@@ -189,15 +186,26 @@ const CopyBlock: FC<{ title: string; code: string; language: string }> = ({
         });
     };
 
-    const highlightedHtml = highlight(code, language);
+    const langExtension = getLanguageExtension(language);
+    const extensions = langExtension
+        ? [...BASE_EXTENSIONS, langExtension]
+        : BASE_EXTENSIONS;
 
     return (
         <StyledCodeBlock>
-            {highlightedHtml ? (
-                <HighlightedCode language={language} html={highlightedHtml} />
-            ) : (
-                <code>{code}</code>
-            )}
+            <CodeMirror
+                value={code}
+                theme='none'
+                extensions={extensions}
+                readOnly={true}
+                editable={false}
+                basicSetup={{
+                    foldGutter: false,
+                    lineNumbers: false,
+                    highlightActiveLine: false,
+                    highlightActiveLineGutter: false,
+                }}
+            />
             <CopyToClipboard title={title} arrow>
                 <IconButton onClick={onCopyToClipboard(code)} size='small'>
                     <CopyIcon />

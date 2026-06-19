@@ -502,6 +502,45 @@ describe('removing / clearing values', () => {
         });
     });
 });
+describe('deleted legal values update', () => {
+    test('returns the same state reference when the set is unchanged (prevents infinite update loop)', () => {
+        const input = {
+            ...multiValueConstraint,
+            deletedLegalValues: new Set(['A', 'B']),
+        };
+        // new Set instance, same values -> must NOT produce a new state ref,
+        // otherwise the useEditableConstraint onUpdate effect re-fires forever.
+        const output = constraintReducer(input, {
+            type: 'deleted legal values update',
+            payload: new Set(['B', 'A']),
+        });
+        expect(output).toBe(input);
+    });
+
+    test('treats undefined and empty set as unchanged', () => {
+        const input = multiValueConstraint; // no deletedLegalValues
+        const output = constraintReducer(input, {
+            type: 'deleted legal values update',
+            payload: new Set(),
+        });
+        expect(output).toBe(input);
+    });
+
+    test('returns a new state when the set actually changes', () => {
+        const input = {
+            ...multiValueConstraint,
+            deletedLegalValues: new Set(['A']),
+        };
+        const payload = new Set(['A', 'B']);
+        const output = constraintReducer(input, {
+            type: 'deleted legal values update',
+            payload,
+        });
+        expect(output).not.toBe(input);
+        expect(output.deletedLegalValues).toBe(payload);
+    });
+});
+
 describe('toggle options', () => {
     const stateTransitions = [
         [undefined, true],

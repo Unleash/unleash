@@ -20,7 +20,6 @@ import usePagination from 'hooks/usePagination';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { useImpactMetricsEnabled } from 'component/impact-metrics/hooks/useImpactMetricsEnabled';
 import { useFeatureReleasePlans } from 'hooks/api/getters/useFeatureReleasePlans/useFeatureReleasePlans';
 import { ReleasePlan } from '../../../ReleasePlan/ReleasePlan.tsx';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
@@ -74,7 +73,6 @@ export const EnvironmentAccordionBody = ({
     const { releasePlans, refetch: refetchReleasePlans } =
         useFeatureReleasePlans(projectId, featureId, featureEnvironment?.name);
     const { trackEvent } = usePlausibleTracker();
-    const safeguardsEnabled = useImpactMetricsEnabled();
     const [dragItem, setDragItem] = useState<{
         id: string;
         index: number;
@@ -232,17 +230,15 @@ export const EnvironmentAccordionBody = ({
                     </Alert>
                 </AlertContainer>
             ) : null}
-            {safeguardsEnabled ? (
-                <Suspense fallback={null}>
-                    <LazySafeguard
-                        featureEnvSafeguard={featureEnvironment.safeguards?.[0]}
-                        releasePlan={firstPlan}
-                        environmentName={featureEnvironment.name}
-                        featureId={featureId}
-                        onSafeguardChange={handleSafeguardChange}
-                    />
-                </Suspense>
-            ) : null}
+            <Suspense fallback={null}>
+                <LazySafeguard
+                    featureEnvSafeguard={featureEnvironment.safeguards?.[0]}
+                    releasePlan={firstPlan}
+                    environmentName={featureEnvironment.name}
+                    featureId={featureId}
+                    onSafeguardChange={handleSafeguardChange}
+                />
+            </Suspense>
             <StrategyList>
                 {releasePlans.map((plan) => (
                     <StrategyListItem data-type='release-plan' key={plan.id}>

@@ -378,7 +378,7 @@ importers:
         version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@22.19.21)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.8)(jsdom@25.0.1)(msw@2.14.6(@types/node@22.19.21)(typescript@5.9.3))(vite@8.0.16(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(sass@1.101.0)(yaml@2.8.4))
       wait-on:
         specifier: ^9.0.5
-        version: 9.0.10(supports-color@8.1.1)
+        version: 9.0.10
 
   frontend:
     dependencies:
@@ -518,6 +518,9 @@ importers:
       '@unleash/proxy-client-react':
         specifier: 5.1.0
         version: 5.1.0(unleash-proxy-client@3.8.0)
+      '@unleash/sdk-flight-recorder':
+        specifier: ^0.5.0
+        version: 0.5.0
       '@vitejs/plugin-react':
         specifier: 6.0.2
         version: 6.0.2(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7(supports-color@8.1.1))(@babel/runtime@7.29.7)(rolldown@1.0.3)(vite@8.0.16(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(sass@1.101.0)(yaml@2.8.4)))(vite@8.0.16(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(sass@1.101.0)(yaml@2.8.4))
@@ -945,9 +948,6 @@ packages:
 
   '@codemirror/theme-one-dark@6.1.3':
     resolution: {integrity: sha512-NzBdIvEJmx6fjeremiGp3t/okrLPYT0d9orIc7AFun8oZcRk58aejkqhv6spnz4MLAevrKNPMQYXEWMg4s+sKA==}
-
-  '@codemirror/view@6.41.1':
-    resolution: {integrity: sha512-ToDnWKbBnke+ZLrP6vgTTDScGi5H37YYuZGniQaBzxMVdtCxMrslsmtnOvbPZk4RX9bvkQqnWR/WS/35tJA0qg==}
 
   '@codemirror/view@6.43.0':
     resolution: {integrity: sha512-V7ZCLQO3Jus9hzh2jVCCPW3mO4IBMr43O37PqSUYautJSnnJF41YlgLw21x0fLJTYvJ+Vkm6Gp+qKGH9pltgXA==}
@@ -1388,10 +1388,6 @@ packages:
 
   '@marijn/find-cluster-break@1.0.2':
     resolution: {integrity: sha512-l0h88YhZFyKdXIFNfSWpyjStDjGHwZ/U7iobcK1cQQD8sejsONdQtTVU+1wVN1PBw40PiiHB1vA5S7VTfQiP9g==}
-
-  '@mswjs/interceptors@0.41.8':
-    resolution: {integrity: sha512-pRLMNKTSGRoLq+KnEB/7OY5vijw1XmcheAAOiv6pj7W1FG32kAGqj1C/RK/cqxRGr1Fh+zBi8sDur8kj3EQv6A==}
-    engines: {node: '>=18'}
 
   '@mswjs/interceptors@0.41.9':
     resolution: {integrity: sha512-VVPPgHyQ6ShqnrmDWuxjmUIsO9gWyOZFmuOfLd9LfBGQJwZfy0gvv9pbHSJuoFNIYC7ZDX9aoFwowjcdSC4E8w==}
@@ -2391,6 +2387,10 @@ packages:
     engines: {node: '>=16.0.0'}
     peerDependencies:
       unleash-proxy-client: ^3.8.0
+
+  '@unleash/sdk-flight-recorder@0.5.0':
+    resolution: {integrity: sha512-ObKmE6eklndM44BA8xY9elaV3RDTh0rb7mqsNVvPDd4GfoAStcGoa/S3LQ4cOu98Hc47IOchhYp4P+ja77DrXg==}
+    engines: {node: '>=20'}
 
   '@vitejs/plugin-react@6.0.2':
     resolution: {integrity: sha512-DlSMqo4WhThw4vB8Mpn0Woe9J+Jfq1geJ61AKW0QEgLzGMNwtIMdxbDUzLxcun8W7NbJO0e2Jg/Nxm3cCSVzzg==}
@@ -4284,6 +4284,10 @@ packages:
   ky@1.14.3:
     resolution: {integrity: sha512-9zy9lkjac+TR1c2tG+mkNSVlyOpInnWdSMiue4F+kq8TwJSgv6o8jhLRg8Ho6SnZ9wOYUq/yozts9qQCfk7bIw==}
     engines: {node: '>=18'}
+
+  ky@2.0.2:
+    resolution: {integrity: sha512-/GmXpo9F9W+f8n4Ivr2iH+7h7wL7jLbLKWkMlpflcCRb6kGjBfTlASEXaZ9qUgNTn4VgS0P2pwxxzQ4EM6Ulgg==}
+    engines: {node: '>=22'}
 
   launchdarkly-eventsource@2.2.0:
     resolution: {integrity: sha512-u38fYlLSq/m6oFz0MS1/76Sj2xzlYhTKZ+sf/vju6PA86PMc6fPlY5k8CdU79edLXjNwsvIQTDvDNy3llDqB8A==}
@@ -6876,7 +6880,7 @@ snapshots:
   '@codemirror/language@6.12.3':
     dependencies:
       '@codemirror/state': 6.6.0
-      '@codemirror/view': 6.41.1
+      '@codemirror/view': 6.43.0
       '@lezer/common': 1.5.2
       '@lezer/highlight': 1.2.3
       '@lezer/lr': 1.4.10
@@ -6904,13 +6908,6 @@ snapshots:
       '@codemirror/state': 6.6.0
       '@codemirror/view': 6.43.0
       '@lezer/highlight': 1.2.3
-
-  '@codemirror/view@6.41.1':
-    dependencies:
-      '@codemirror/state': 6.6.0
-      crelt: 1.0.6
-      style-mod: 4.1.3
-      w3c-keyname: 2.2.8
 
   '@codemirror/view@6.43.0':
     dependencies:
@@ -7330,15 +7327,6 @@ snapshots:
       '@lezer/common': 1.5.2
 
   '@marijn/find-cluster-break@1.0.2': {}
-
-  '@mswjs/interceptors@0.41.8':
-    dependencies:
-      '@open-draft/deferred-promise': 2.2.0
-      '@open-draft/logger': 0.3.0
-      '@open-draft/until': 2.1.0
-      is-node-process: 1.2.0
-      outvariant: 1.4.3
-      strict-event-emitter: 0.5.1
 
   '@mswjs/interceptors@0.41.9':
     dependencies:
@@ -7854,7 +7842,7 @@ snapshots:
       '@slack/types': 2.21.1
       '@types/node': 22.19.21
       '@types/retry': 0.12.0
-      axios: 1.17.0(supports-color@8.1.1)
+      axios: 1.17.0
       eventemitter3: 5.0.4
       form-data: 4.0.6
       is-electron: 2.2.2
@@ -8455,6 +8443,10 @@ snapshots:
     dependencies:
       unleash-proxy-client: 3.8.0
 
+  '@unleash/sdk-flight-recorder@0.5.0':
+    dependencies:
+      ky: 2.0.2
+
   '@vitejs/plugin-react@6.0.2(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7(supports-color@8.1.1))(@babel/runtime@7.29.7)(rolldown@1.0.3)(vite@8.0.16(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(sass@1.101.0)(yaml@2.8.4)))(vite@8.0.16(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(sass@1.101.0)(yaml@2.8.4))':
     dependencies:
       '@rolldown/pluginutils': 1.0.1
@@ -8561,7 +8553,7 @@ snapshots:
 
   acorn@8.16.0: {}
 
-  agent-base@6.0.2(supports-color@8.1.1):
+  agent-base@6.0.2:
     dependencies:
       debug: 4.4.3(supports-color@8.1.1)
     transitivePeerDependencies:
@@ -8689,11 +8681,11 @@ snapshots:
 
   aws4@1.13.2: {}
 
-  axios@1.17.0(supports-color@8.1.1):
+  axios@1.17.0:
     dependencies:
       follow-redirects: 1.16.0(debug@4.4.3(supports-color@8.1.1))
       form-data: 4.0.6
-      https-proxy-agent: 5.0.1(supports-color@8.1.1)
+      https-proxy-agent: 5.0.1
       proxy-from-env: 2.1.0
     transitivePeerDependencies:
       - debug
@@ -10109,9 +10101,9 @@ snapshots:
 
   http2-client@1.3.5: {}
 
-  https-proxy-agent@5.0.1(supports-color@8.1.1):
+  https-proxy-agent@5.0.1:
     dependencies:
-      agent-base: 6.0.2(supports-color@8.1.1)
+      agent-base: 6.0.2
       debug: 4.4.3(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
@@ -10541,6 +10533,8 @@ snapshots:
       - supports-color
 
   ky@1.14.3: {}
+
+  ky@2.0.2: {}
 
   launchdarkly-eventsource@2.2.0: {}
 
@@ -11126,7 +11120,7 @@ snapshots:
   msw@2.14.6(@types/node@22.19.21)(typescript@5.9.3):
     dependencies:
       '@inquirer/confirm': 6.0.12(@types/node@22.19.21)
-      '@mswjs/interceptors': 0.41.8
+      '@mswjs/interceptors': 0.41.9
       '@open-draft/deferred-promise': 3.0.0
       '@types/statuses': 2.0.6
       cookie: 1.1.1
@@ -12875,9 +12869,9 @@ snapshots:
     dependencies:
       xml-name-validator: 5.0.0
 
-  wait-on@9.0.10(supports-color@8.1.1):
+  wait-on@9.0.10:
     dependencies:
-      axios: 1.17.0(supports-color@8.1.1)
+      axios: 1.17.0
       joi: 18.2.1
       lodash: 4.18.1
       minimist: 1.2.8

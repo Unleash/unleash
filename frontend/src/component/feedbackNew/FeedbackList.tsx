@@ -210,8 +210,9 @@ export const FeedbackList = () => {
                             </Box>
                             <Box>
                                 <AverageScore>
-                                    {/* biome-ignore lint/suspicious/noGlobalIsNan: using isNaN to check if averageScore is not a number */}
-                                    {isNaN(Number(experiment.averageScore))
+                                    {Number.isNaN(
+                                        Number(experiment.averageScore),
+                                    )
                                         ? 'N/A'
                                         : `${experiment.averageScore}/5`}
                                 </AverageScore>

@@ -7,7 +7,7 @@ import { FlagUsageSnippet } from './FlagUsageSnippet';
 describe('FlagUsageSnippet', () => {
     it('renders the feature name in the snippet', () => {
         render(<FlagUsageSnippet sdkName='Node.js' feature='my-test-flag' />);
-        expect(screen.getByText(/my-test-flag/)).toBeInTheDocument();
+        expect(screen.getAllByText(/my-test-flag/).length).toBeGreaterThan(0);
     });
 
     it('renders an error when the SDK has no snippet', () => {

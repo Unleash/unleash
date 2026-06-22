@@ -60,6 +60,7 @@ export class EnvironmentsController extends Controller {
                     summary: 'Get all environments',
                     description:
                         'Retrieves all environments that exist in this Unleash instance.',
+                    release: { stable: '4.13.0' },
                     operationId: 'getAllEnvironments',
                     responses: {
                         200: createResponseSchema('environmentsSchema'),
@@ -77,6 +78,7 @@ export class EnvironmentsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Environments'],
+                    release: { stable: '4.12.0' },
                     operationId: 'getEnvironment',
                     summary: 'Get the environment with `name`',
                     description:
@@ -97,6 +99,7 @@ export class EnvironmentsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Environments'],
+                    release: { stable: '4.18.0' },
                     operationId: 'getProjectEnvironments',
                     summary: 'Get the environments available to a project',
                     description:
@@ -120,6 +123,7 @@ export class EnvironmentsController extends Controller {
                     summary: 'Update environment sort orders',
                     description:
                         'Updates sort orders for the named environments. Environments not specified are unaffected.',
+                    release: { stable: '4.13.0' },
                     operationId: 'updateSortOrder',
                     requestBody: createRequestSchema('sortOrderSchema'),
                     responses: {
@@ -142,6 +146,7 @@ export class EnvironmentsController extends Controller {
                     summary: 'Toggle the environment with `name` on',
                     description:
                         'Makes it possible to enable this environment for a project. An environment must first be globally enabled using this endpoint before it can be enabled for a project',
+                    release: { stable: '4.12.0' },
                     operationId: 'toggleEnvironmentOn',
                     responses: {
                         204: emptyResponse,
@@ -163,6 +168,7 @@ export class EnvironmentsController extends Controller {
                     summary: 'Toggle the environment with `name` off',
                     description:
                         'Removes this environment from the list of available environments for projects to use',
+                    release: { stable: '4.12.0' },
                     operationId: 'toggleEnvironmentOff',
                     responses: {
                         204: emptyResponse,

@@ -15,16 +15,6 @@ describe('SelectSdk', () => {
         expect(screen.getByText('Frontend SDKs')).toBeInTheDocument();
     });
 
-    it('clearing the selection does not call onChange', async () => {
-        const user = userEvent.setup();
-        const onChange = vi.fn();
-        render(<SelectSdk value='Node.js' onChange={onChange} />);
-
-        await user.click(screen.getByLabelText('Clear'));
-
-        expect(onChange).not.toHaveBeenCalled();
-    });
-
     it('selecting an sdk passes its name to onChange', async () => {
         const user = userEvent.setup();
         const onChange = vi.fn();

@@ -77,7 +77,9 @@ export type IFlagKey =
     | 'newModalDesign'
     | 'archiveInFlagsView'
     | 'allowDeprecatedApiTokenMiddleware'
-    | 'newProfileDropdown';
+    | 'newProfileDropdown'
+    | 'hideTopmenuDocumentation'
+    | 'learningLab';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -347,6 +349,21 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_NEW_PROFILE_DROPDOWN,
         false,
     ),
+    hideTopmenuDocumentation: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_HIDE_TOPMENU_DOCUMENTATION,
+        false,
+    ),
+    learningLab: {
+        name: 'learningLab',
+        enabled: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_LEARNING_LAB,
+            false,
+        ),
+        payload: {
+            type: PayloadType.JSON,
+            value: process.env.UNLEASH_EXPERIMENTAL_LEARNING_LAB_PAYLOAD ?? '',
+        },
+    },
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

@@ -77,7 +77,9 @@ export class ContextController extends Controller {
         this.openApiService = openApiService;
         this.transactionalContextService = transactionalContextService;
         const prefix = mode === 'global' ? '' : '/:projectId/context';
-        const rootLevelContextFieldsRelease = undefined; // this represents the legacy behavior
+        const rootLevelContextFieldsRelease = {
+            stable: '7.4.1' as const,
+        };
         const projectLevelContextFieldsRelease = {
             beta: '7.4.0' as const, // project context fields introduced in 7.4.0
         };

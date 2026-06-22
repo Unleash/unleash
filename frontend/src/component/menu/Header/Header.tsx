@@ -18,8 +18,10 @@ import { DrawerMenu } from './DrawerMenu/DrawerMenu.tsx';
 import DarkModeOutlined from '@mui/icons-material/DarkModeOutlined';
 import LightModeOutlined from '@mui/icons-material/LightModeOutlined';
 import { useThemeMode } from 'hooks/useThemeMode';
+import { useUiFlag } from 'hooks/useUiFlag';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton.tsx';
 import { CommandBar } from 'component/commandBar/CommandBar';
+import { HelpResources } from './HelpResources/HelpResources';
 
 const HeaderComponent = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.application,
@@ -61,13 +63,74 @@ const StyledNav = styled('nav')({
 });
 
 const Header = () => {
-    const { onSetThemeMode, themeMode } = useThemeMode();
+    const { onSetThemeMode } = useThemeMode();
+    const newProfileDropdown = useUiFlag('newProfileDropdown');
+    const showThemeButton = !newProfileDropdown;
     const theme = useTheme();
 
     const mediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
-    const smallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [openDrawer, setOpenDrawer] = useState(false);
     const toggleDrawer = () => setOpenDrawer((prev) => !prev);
+    const hideTopmenuDocumentation = useUiFlag('hideTopmenuDocumentation');
+
+    const headerItems = (
+        <StyledUserContainer>
+            <CommandBar />
+            <Divider
+                orientation='vertical'
+                variant='middle'
+                flexItem
+                sx={(theme) => ({
+                    marginLeft: theme.spacing(1),
+                    border: 'transparent',
+                })}
+            />
+            <InviteLinkButton />
+            {showThemeButton && (
+                <Tooltip
+                    title={
+                        theme.mode === 'dark'
+                            ? 'Switch to light theme'
+                            : 'Switch to dark theme'
+                    }
+                    arrow
+                >
+                    <IconButton onClick={onSetThemeMode} size='large'>
+                        <ConditionallyRender
+                            condition={theme.mode === 'dark'}
+                            show={<DarkModeOutlined />}
+                            elseShow={<LightModeOutlined />}
+                        />
+                    </IconButton>
+                </Tooltip>
+            )}
+            {hideTopmenuDocumentation && <HelpResources />}
+            {!hideTopmenuDocumentation && (
+                <Tooltip title='Documentation' arrow>
+                    <IconButton
+                        component='a'
+                        nativeButton={false}
+                        href='https://docs.getunleash.io/'
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        size='large'
+                        sx={(theme) => ({
+                            marginRight: theme.spacing(1),
+                        })}
+                    >
+                        <MenuBookIcon />
+                    </IconButton>
+                </Tooltip>
+            )}
+            <Divider
+                orientation='vertical'
+                variant='middle'
+                flexItem
+                sx={{ ml: 1 }}
+            />
+            <UserProfile />
+        </StyledUserContainer>
+    );
 
     if (mediumScreen) {
         return (
@@ -87,10 +150,7 @@ const Header = () => {
                         </IconButton>
                     </Tooltip>
                     <DrawerMenu open={openDrawer} toggleDrawer={toggleDrawer} />
-                    <StyledUserContainer>
-                        {!smallScreen && <CommandBar />}
-                        <UserProfile />
-                    </StyledUserContainer>
+                    {headerItems}
                 </ContainerComponent>
             </HeaderComponent>
         );
@@ -99,59 +159,7 @@ const Header = () => {
     return (
         <HeaderComponent position='static'>
             <ContainerComponent>
-                <StyledNav>
-                    <StyledUserContainer>
-                        <CommandBar />
-                        <Divider
-                            orientation='vertical'
-                            variant='middle'
-                            flexItem
-                            sx={(theme) => ({
-                                marginLeft: theme.spacing(1),
-                                border: 'transparent',
-                            })}
-                        />
-                        <InviteLinkButton />
-                        <Tooltip
-                            title={
-                                themeMode === 'dark'
-                                    ? 'Switch to light theme'
-                                    : 'Switch to dark theme'
-                            }
-                            arrow
-                        >
-                            <IconButton onClick={onSetThemeMode} size='large'>
-                                <ConditionallyRender
-                                    condition={themeMode === 'dark'}
-                                    show={<DarkModeOutlined />}
-                                    elseShow={<LightModeOutlined />}
-                                />
-                            </IconButton>
-                        </Tooltip>
-                        <Tooltip title='Documentation' arrow>
-                            <IconButton
-                                component='a'
-                                nativeButton={false}
-                                href='https://docs.getunleash.io/'
-                                target='_blank'
-                                rel='noopener noreferrer'
-                                size='large'
-                                sx={(theme) => ({
-                                    marginRight: theme.spacing(1),
-                                })}
-                            >
-                                <MenuBookIcon />
-                            </IconButton>
-                        </Tooltip>
-                        <Divider
-                            orientation='vertical'
-                            variant='middle'
-                            flexItem
-                            sx={{ ml: 1 }}
-                        />
-                        <UserProfile />
-                    </StyledUserContainer>
-                </StyledNav>
+                <StyledNav>{headerItems}</StyledNav>
             </ContainerComponent>
         </HeaderComponent>
     );

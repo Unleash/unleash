@@ -24,6 +24,7 @@ export interface MultimetricChartCardProps {
     loading: boolean;
     chartHeightSpacing: { base: number; lg: number; sm: number };
     totalsHeaderSlot: ReactNode;
+    totalsMiddleSlot?: ReactNode;
     totalsLabel?: string;
 }
 
@@ -148,6 +149,17 @@ const StyledTotalsSlot = styled(Box)(({ theme }) => ({
     },
 }));
 
+const StyledTotalsMiddleSlot = styled(Box)(({ theme }) => ({
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    padding: theme.spacing(2, 2.5, 1.25, 2.5),
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    [theme.breakpoints.down('lg')]: {
+        padding: theme.spacing(1.5, 2, 1, 2),
+    },
+}));
+
 const SUM_MODES = new Set(['count', 'sum']);
 
 export const MultimetricChartCard: FC<MultimetricChartCardProps> = ({
@@ -163,6 +175,7 @@ export const MultimetricChartCard: FC<MultimetricChartCardProps> = ({
     loading,
     chartHeightSpacing,
     totalsHeaderSlot,
+    totalsMiddleSlot,
     totalsLabel: totalsLabelOverride,
 }) => {
     const defaultTotalsLabel =
@@ -192,6 +205,11 @@ export const MultimetricChartCard: FC<MultimetricChartCardProps> = ({
                 </StyledChartColumn>
                 <StyledTotalsColumn>
                     <StyledTotalsSlot>{totalsHeaderSlot}</StyledTotalsSlot>
+                    {totalsMiddleSlot ? (
+                        <StyledTotalsMiddleSlot>
+                            {totalsMiddleSlot}
+                        </StyledTotalsMiddleSlot>
+                    ) : null}
                     <StyledTotalsHeader>
                         <StyledTotalsLabel>{totalsLabel}</StyledTotalsLabel>
                     </StyledTotalsHeader>

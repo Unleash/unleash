@@ -73,6 +73,7 @@ export default class FrontendAPIController extends Controller {
             middleware: [
                 this.services.openApiService.validPath({
                     tags: ['Frontend API'],
+                    release: { stable: '4.15.0' },
                     operationId: 'getFrontendFeatures',
                     responses: {
                         200: createResponseSchema('frontendApiFeaturesSchema'),
@@ -94,6 +95,7 @@ export default class FrontendAPIController extends Controller {
             middleware: [
                 this.services.openApiService.validPath({
                     tags: ['Frontend API'],
+                    release: { stable: '6.7.2' },
                     operationId: 'getFrontendApiFeaturesWithPost',
                     requestBody: createRequestSchema(
                         'frontendApiFeaturesPostSchema',
@@ -127,6 +129,7 @@ export default class FrontendAPIController extends Controller {
                     tags: ['Frontend API'],
                     summary: 'Register client usage metrics',
                     description: `Registers usage metrics. Stores information about how many times each flag was evaluated to enabled and disabled within a time frame. If provided, this operation will also store data on how many times each feature flag's variants were displayed to the end user. If the Frontend API is disabled 404 is returned.`,
+                    release: { stable: '4.15.0' },
                     operationId: 'registerFrontendMetrics',
                     requestBody: createRequestSchema('clientMetricsSchema'),
                     responses: {
@@ -156,6 +159,7 @@ export default class FrontendAPIController extends Controller {
                     summary: 'Register a client SDK',
                     description:
                         'This is for future use. Currently Frontend client registration is not supported. Returning 200 for clients that expect this status code. If the Frontend API is disabled 404 is returned.',
+                    release: { stable: '4.15.0' },
                     operationId: 'registerFrontendClient',
                     requestBody: createRequestSchema('frontendApiClientSchema'),
                     responses: {

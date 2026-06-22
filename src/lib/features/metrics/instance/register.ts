@@ -53,6 +53,7 @@ export default class RegisterController extends Controller {
                     summary: 'Register a client SDK',
                     description:
                         'Register a client SDK with Unleash. SDKs call this endpoint on startup to tell Unleash about their existence. Used to track custom strategies in use as well as SDK versions.',
+                    release: { stable: '4.14.0' },
                     operationId: 'registerClientApplication',
                     requestBody: createRequestSchema('clientApplicationSchema'),
                     responses: { 202: emptyResponse },

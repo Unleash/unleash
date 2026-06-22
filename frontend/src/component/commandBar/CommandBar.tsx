@@ -1,12 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import {
     Box,
+    Dialog,
     IconButton,
     InputBase,
     Paper,
     styled,
     Tooltip,
 } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 import Close from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -54,20 +57,34 @@ export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
 }));
 
 const StyledContainer = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'active',
+    shouldForwardProp: (prop) => prop !== 'active' && prop !== 'compact',
 })<{
     active: boolean | undefined;
-}>(({ theme, active }) => ({
+    compact?: boolean;
+}>(({ theme, active, compact }) => ({
     border: `1px solid transparent`,
     display: 'flex',
     flexGrow: 1,
     alignItems: 'center',
     position: 'relative',
-    backgroundColor: theme.palette.background.application,
+    backgroundColor: compact
+        ? 'transparent'
+        : theme.palette.background.application,
     maxWidth: active ? '100%' : '400px',
     [theme.breakpoints.down('md')]: {
-        marginTop: theme.spacing(1),
         maxWidth: '100%',
+    },
+}));
+
+const StyledCompactDialog = styled(Dialog)(({ theme }) => ({
+    '& .MuiDialog-container': { alignItems: 'flex-start' },
+    '& .MuiDialog-paper': {
+        overflow: 'visible',
+        marginTop: theme.spacing(8),
+        marginLeft: theme.spacing(2),
+        marginRight: theme.spacing(2),
+        background: 'transparent',
+        boxShadow: 'none',
     },
 }));
 
@@ -98,9 +115,11 @@ const StyledSearch = styled('div')<{ isOpen?: boolean }>(
     }),
 );
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
+const StyledInputBase = styled(InputBase, {
+    shouldForwardProp: (prop) => prop !== 'compact',
+})<{ compact?: boolean }>(({ theme, compact }) => ({
     width: '100%',
-    minWidth: '300px',
+    minWidth: compact ? 0 : '300px',
     backgroundColor: theme.palette.background.paper,
 }));
 
@@ -109,10 +128,17 @@ const StyledClose = styled(Close)(({ theme }) => ({
     fontSize: theme.typography.body1.fontSize,
 }));
 
+const StyledIconButton = styled(IconButton, {
+    shouldForwardProp: (prop) => prop !== 'open',
+})<{ open?: boolean }>(({ theme, open }) => ({
+    color: open ? theme.palette.primary.main : theme.palette.neutral.main,
+}));
+
 export const CommandBar = () => {
     const { trackEvent } = usePlausibleTracker();
     const searchInputRef = useRef<HTMLInputElement>(null);
     const searchContainerRef = useRef<HTMLInputElement>(null);
+    const compactIconRef = useRef<HTMLButtonElement>(null);
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [searchLoading, setSearchLoading] = useState(false);
     const [searchString, setSearchString] = useState<string | undefined>(
@@ -129,9 +155,16 @@ export const CommandBar = () => {
     const [hasNoResults, setHasNoResults] = useState(false);
     const [value, setValue] = useState<string>('');
     const { allRoutes } = useCommandBarRoutes();
+    const theme = useTheme();
+    const isCompact = useMediaQuery(theme.breakpoints.down('md'));
+    const [compactExpanded, setCompactExpanded] = useState(false);
 
     const hideSuggestions = () => {
         setShowSuggestions(false);
+        if (isCompact) {
+            setCompactExpanded(false);
+            setValue('');
+        }
     };
 
     const { projects } = useProjects();
@@ -188,6 +221,7 @@ export const CommandBar = () => {
     const clearSearchValue = () => {
         onSearchChange('');
         setShowSuggestions(false);
+        if (isCompact) setCompactExpanded(false);
     };
 
     const hotkey = useKeyboardShortcut(
@@ -197,7 +231,13 @@ export const CommandBar = () => {
             preventDefault: true,
         },
         () => {
-            if (document.activeElement === searchInputRef.current) {
+            if (isCompact) {
+                if (compactExpanded) {
+                    hideSuggestions();
+                } else {
+                    setCompactExpanded(true);
+                }
+            } else if (document.activeElement === searchInputRef.current) {
                 searchInputRef.current?.blur();
             } else {
                 searchInputRef.current?.focus();
@@ -208,6 +248,10 @@ export const CommandBar = () => {
         setShowSuggestions(false);
         if (searchContainerRef.current?.contains(document.activeElement)) {
             searchInputRef.current?.blur();
+        }
+        if (isCompact && compactExpanded) {
+            setCompactExpanded(false);
+            setValue('');
         }
     });
     const placeholder = `Command menu (${hotkey})`;
@@ -293,7 +337,7 @@ export const CommandBar = () => {
         setShowSuggestions(false);
     });
 
-    useOnClickOutside([searchContainerRef], hideSuggestions);
+    useOnClickOutside([searchContainerRef, compactIconRef], hideSuggestions);
     const onKeyDown = (event: React.KeyboardEvent) => {
         if (event.key === 'Escape') {
             setShowSuggestions(false);
@@ -306,8 +350,12 @@ export const CommandBar = () => {
         }
     };
 
-    return (
-        <StyledContainer ref={searchContainerRef} active={showSuggestions}>
+    const searchBar = (
+        <StyledContainer
+            ref={searchContainerRef}
+            active={showSuggestions}
+            compact={isCompact}
+        >
             <RecentlyVisitedRecorder />
             <StyledSearch isOpen={showSuggestions}>
                 <SearchIcon
@@ -324,6 +372,8 @@ export const CommandBar = () => {
                     id='command-bar-input'
                     inputRef={searchInputRef}
                     placeholder={placeholder}
+                    autoFocus={isCompact}
+                    compact={isCompact}
                     slotProps={{
                         input: {
                             'data-testid': SEARCH_INPUT,
@@ -417,4 +467,32 @@ export const CommandBar = () => {
             />
         </StyledContainer>
     );
+
+    if (isCompact) {
+        return (
+            <>
+                <Tooltip title={placeholder} arrow>
+                    <StyledIconButton
+                        ref={compactIconRef}
+                        size='large'
+                        open={compactExpanded}
+                        onClick={() => setCompactExpanded(true)}
+                        aria-label={placeholder}
+                    >
+                        <SearchIcon />
+                    </StyledIconButton>
+                </Tooltip>
+                <StyledCompactDialog
+                    open={compactExpanded}
+                    onClose={hideSuggestions}
+                    fullWidth
+                    maxWidth='sm'
+                >
+                    {searchBar}
+                </StyledCompactDialog>
+            </>
+        );
+    }
+
+    return searchBar;
 };

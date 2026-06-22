@@ -22,6 +22,7 @@ export class HealthCheckController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Operational'],
+                    release: { stable: '4.14.0' },
                     operationId: 'getHealth',
                     summary: 'Get instance operational status',
                     description:

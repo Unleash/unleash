@@ -49,6 +49,7 @@ export class FeatureTypeController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Feature Types'],
+                    release: { stable: '4.13.0' },
                     operationId: 'getAllFeatureTypes',
                     summary: 'Get all feature types',
                     description:
@@ -69,6 +70,7 @@ export class FeatureTypeController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Feature Types'],
+                    release: { stable: '5.3.0' },
                     operationId: 'updateFeatureTypeLifetime',
                     summary: 'Update feature type lifetime',
                     description: `Updates the lifetime configuration for the specified [feature flag type](https://docs.getunleash.io/concepts/feature-flags#feature-flag-types). The expected lifetime is an integer representing the number of days before Unleash marks a feature flag of that type as potentially stale. If set to \`null\` or \`0\`, then feature flags of that particular type will never be marked as potentially stale.

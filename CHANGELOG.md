@@ -2,6 +2,96 @@
 
 All notable changes to this project will be documented in this file.
 
+## [8.0.1] - 2026-06-16
+
+### Bug Fixes
+
+- Invalidate other sessions on password change ([#12262](https://github.com/Unleash/unleash/issues/12262))
+
+- Update lifecycle counts immediately after archiving/reviving/deleting flags ([#12274](https://github.com/Unleash/unleash/issues/12274))
+
+- Keep stable legacy endpoints for a bit longer ([#12307](https://github.com/Unleash/unleash/issues/12307))
+
+- Vulnerabilities ([#12325](https://github.com/Unleash/unleash/issues/12325))
+
+
+### Documentation
+
+- Add unleash_test database creation step to setup guide ([#12254](https://github.com/Unleash/unleash/issues/12254))
+
+
+### Features
+
+- Support filtering feature search by the `archived` lifecycle stage ([#12260](https://github.com/Unleash/unleash/issues/12260))
+
+- Update flags overview page to include archived ([#12268](https://github.com/Unleash/unleash/issues/12268))
+
+- Allow impact views to use 3 months and 6 months window ([#12276](https://github.com/Unleash/unleash/issues/12276))
+
+- Archived features in impact views ([#12287](https://github.com/Unleash/unleash/issues/12287))
+
+- Select theme preference from user profile menu ([#12300](https://github.com/Unleash/unleash/issues/12300))
+
+- Add wiring ([#12318](https://github.com/Unleash/unleash/issues/12318))
+
+- Prepare details for modal ([#12323](https://github.com/Unleash/unleash/issues/12323))
+
+
+### Miscellaneous Tasks
+
+- Onboarding php snippet update ([#12256](https://github.com/Unleash/unleash/issues/12256))
+
+- Onboarding ios snippet update ([#12261](https://github.com/Unleash/unleash/issues/12261))
+
+- Trust @unleash/proxy-client-react ([#12269](https://github.com/Unleash/unleash/issues/12269))
+
+- Onboarding add Next.js snippet ([#12273](https://github.com/Unleash/unleash/issues/12273))
+
+- Redirect /archive to flags page  ([#12279](https://github.com/Unleash/unleash/issues/12279))
+
+- Add react native to onboarding and add missing integrations ([#12280](https://github.com/Unleash/unleash/issues/12280))
+
+- Add newProfileDropdown feature flag ([#12290](https://github.com/Unleash/unleash/issues/12290))
+
+- Redesign user profile dropdown as MUI menu behind flag ([#12289](https://github.com/Unleash/unleash/issues/12289))
+
+- Upgrade react router to v7 ([#12241](https://github.com/Unleash/unleash/issues/12241))
+
+- Remove react-router-dom import ([#12295](https://github.com/Unleash/unleash/issues/12295))
+
+- Move avatar section from user profile button to dropdown ([#12291](https://github.com/Unleash/unleash/issues/12291))
+
+- Hide documentation from top header if flag enabled ([#12297](https://github.com/Unleash/unleash/issues/12297))
+
+- Add release versions to endpoints ([#12309](https://github.com/Unleash/unleash/issues/12309))
+
+- Enforce release definition ([#12310](https://github.com/Unleash/unleash/issues/12310))
+
+- Add new help icon with menu ([#12308](https://github.com/Unleash/unleash/issues/12308))
+
+- SelectSdk dropdown improvements ([#12306](https://github.com/Unleash/unleash/issues/12306))
+
+- Show theme sub menu on hover ([#12317](https://github.com/Unleash/unleash/issues/12317))
+
+- New help option and fix sizes ([#12319](https://github.com/Unleash/unleash/issues/12319))
+
+- Basic events for help resources ([#12320](https://github.com/Unleash/unleash/issues/12320))
+
+- Add TS safeguard around formatAssetPath trap ([#12321](https://github.com/Unleash/unleash/issues/12321))
+
+
+### Refactor
+
+- Migrate project flags table ActionsCell to MUI Menu ([#12277](https://github.com/Unleash/unleash/issues/12277))
+
+- One sdk icons list ([#12288](https://github.com/Unleash/unleash/issues/12288))
+
+
+### Testing
+
+- Make flag name match in any html element ([#12270](https://github.com/Unleash/unleash/issues/12270))
+
+
 ## [8.0.0] - 2026-06-09
 
 ### Bug Fixes

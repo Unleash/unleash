@@ -32,6 +32,7 @@ class TelemetryController extends Controller {
                     summary: 'Get telemetry settings',
                     description:
                         'Provides the configured settings for [telemetry information collection](https://docs.getunleash.io/privacy-and-compliance/data-privacy)',
+                    release: { stable: '5.3.0' },
                     operationId: 'getTelemetrySettings',
                     responses: {
                         200: createResponseSchema('telemetrySettingsSchema'),

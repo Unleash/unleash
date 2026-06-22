@@ -6,6 +6,7 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { GoalSummaryPanel } from './views/GoalSummaryPanel/GoalSummaryPanel';
 import { MultimetricChartCard } from './views/MultimetricChartCard/MultimetricChartCard';
 import { FollowedFeaturesList } from './views/FollowedFeaturesList/FollowedFeaturesList';
+import { TopMoversPanel } from './views/TopMoversPanel/TopMoversPanel';
 import { ViewSwitcher } from './views/ViewSwitcher/ViewSwitcher';
 import { ViewEditorDialog } from './views/ViewEditorDialog/ViewEditorDialog';
 import { ImpactMetricViewsEmptyState } from './views/ImpactMetricViewsEmptyState/ImpactMetricViewsEmptyState';
@@ -24,6 +25,8 @@ type EditorState =
 const ActiveView: FC<{ view: MetricView }> = ({ view }) => {
     const data = useGoalViewData(view);
     const timeLabel = TIME_RANGE_LABELS[view.timeRange];
+    const goalAggregationMode =
+        view.metrics.find((metric) => metric.goal)?.aggregationMode ?? 'avg';
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
@@ -49,6 +52,13 @@ const ActiveView: FC<{ view: MetricView }> = ({ view }) => {
                             timeLabel={timeLabel}
                         />
                     ) : null
+                }
+                totalsMiddleSlot={
+                    <TopMoversPanel
+                        impacts={data.flagImpacts}
+                        timeRange={view.timeRange}
+                        aggregationMode={goalAggregationMode}
+                    />
                 }
             />
             <FollowedFeaturesList features={data.resolvedFeatures} />

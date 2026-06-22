@@ -58,6 +58,8 @@ process.nextTick(async () => {
                         allowDeprecatedApiTokenMiddleware: false,
                         archiveInFlagsView: true,
                         newProfileDropdown: true,
+                        hideTopmenuDocumentation: true,
+                        learningLab: true,
                     },
                 },
                 authentication: {

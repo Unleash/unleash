@@ -42,6 +42,24 @@ export const FlightRecorderProvider: FC<{ children?: React.ReactNode }> = ({
         }
     }, [url]);
 
+    useEffect(() => {
+        if (!recorder) {
+            return;
+        }
+        const flushIfHidden = () => {
+            if (document.visibilityState === 'hidden') {
+                void recorder.flush({ keepalive: true });
+            }
+        };
+        const flush = () => void recorder.flush({ keepalive: true });
+        document.addEventListener('visibilitychange', flushIfHidden);
+        window.addEventListener('pagehide', flush);
+        return () => {
+            document.removeEventListener('visibilitychange', flushIfHidden);
+            window.removeEventListener('pagehide', flush);
+        };
+    }, [recorder]);
+
     return (
         <FlightRecorderContext.Provider value={recorder}>
             {children}

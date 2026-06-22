@@ -3,13 +3,6 @@
 import joi from 'joi';
 import sanitizeHtml from 'sanitize-html';
 
-const displayString: (string) => string = (input) => {
-    const sanitizeConfig = {
-        allowedTags: [],
-        allowedAttributes: {},
-    };
-    return sanitizeHtml(input, sanitizeConfig);
-};
 type HtmlInputOptions = sanitizeHtml.IOptions;
 
 const htmlInputExtension: joi.Extension = {

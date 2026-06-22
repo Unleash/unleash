@@ -60,14 +60,6 @@ const StyledNav = styled('nav')({
     flexGrow: 1,
 });
 
-// Typed wrapper so the documentation link can pass component/href/target.
-// Shape (square 4px) and focus outline now come from the theme.
-const StyledIconButton = styled(IconButton)<{
-    component?: 'a' | 'button';
-    href?: string;
-    target?: string;
-}>({});
-
 const Header = () => {
     const { onSetThemeMode, themeMode } = useThemeMode();
     const theme = useTheme();
@@ -128,19 +120,16 @@ const Header = () => {
                             }
                             arrow
                         >
-                            <StyledIconButton
-                                onClick={onSetThemeMode}
-                                size='large'
-                            >
+                            <IconButton onClick={onSetThemeMode} size='large'>
                                 <ConditionallyRender
                                     condition={themeMode === 'dark'}
                                     show={<DarkModeOutlined />}
                                     elseShow={<LightModeOutlined />}
                                 />
-                            </StyledIconButton>
+                            </IconButton>
                         </Tooltip>
                         <Tooltip title='Documentation' arrow>
-                            <StyledIconButton
+                            <IconButton
                                 component='a'
                                 nativeButton={false}
                                 href='https://docs.getunleash.io/'
@@ -152,7 +141,7 @@ const Header = () => {
                                 })}
                             >
                                 <MenuBookIcon />
-                            </StyledIconButton>
+                            </IconButton>
                         </Tooltip>
                         <Divider
                             orientation='vertical'

@@ -28,16 +28,12 @@ export const InvertedOperatorButton = ({
                     <StyledToggleButtonOn
                         className='operator-is-active'
                         onClick={setInvertedOperator}
-                        disableRipple
                     >
                         <NegatedOnIcon />
                     </StyledToggleButtonOn>
                 }
                 elseShow={
-                    <StyledToggleButtonOff
-                        onClick={setInvertedOperator}
-                        disableRipple
-                    >
+                    <StyledToggleButtonOff onClick={setInvertedOperator}>
                         <NegatedOffIcon />
                     </StyledToggleButtonOff>
                 }

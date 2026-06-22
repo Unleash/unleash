@@ -99,7 +99,7 @@ const NoOptionsMessage = ({
             </Typography>
             <Button
                 variant='contained'
-                size='small'
+                size='medium'
                 sx={{ alignSelf: 'flex-start', mt: 1 }}
                 {...buttonProps}
             >

@@ -255,14 +255,14 @@ export const MilestoneTransitionDisplay = ({
                             projectId={projectId}
                             environmentId={environment}
                             onClick={onDelete}
-                            size='small'
+                            size='medium'
                             aria-label={`Remove automation for ${milestoneName}`}
                             tooltipProps={{
                                 title: `Remove automation for ${milestoneName}`,
                             }}
                             sx={{ padding: 0.5 }}
                         >
-                            <DeleteOutlineIcon fontSize='small' />
+                            <DeleteOutlineIcon />
                         </PermissionIconButton>
                     </StyledButtonGroup>
                 )}
@@ -279,7 +279,7 @@ export const MilestoneTransitionDisplay = ({
                         variant='outlined'
                         color='primary'
                         onClick={handleReset}
-                        size='small'
+                        size='medium'
                     >
                         Cancel
                     </Button>
@@ -290,7 +290,7 @@ export const MilestoneTransitionDisplay = ({
                         variant='contained'
                         color='primary'
                         onClick={handleSave}
-                        size='small'
+                        size='medium'
                     >
                         Save
                     </PermissionButton>

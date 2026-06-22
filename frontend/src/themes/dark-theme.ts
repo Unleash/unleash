@@ -2,6 +2,13 @@ import { createTheme } from '@mui/material/styles';
 import { alpha } from '@mui/material';
 import { focusable } from 'themes/themeStyles';
 import { colors } from './colors.js';
+import {
+    buttonSizes,
+    controlOverrides,
+    iconButtonRoot,
+    iconButtonSizes,
+    subtleOutlinedButton,
+} from './controls.js';
 import { baseTheme } from './theme.js';
 
 const actionColors = {
@@ -265,6 +272,9 @@ const theme = {
 export const darkTheme = createTheme({
     ...theme,
     components: {
+        // Shared control sizing + ripple removal (design system v2)
+        ...controlOverrides,
+
         // Skeleton
         MuiCssBaseline: {
             styleOverrides: {
@@ -546,13 +556,20 @@ export const darkTheme = createTheme({
             },
         },
 
-        // For dark theme, primary buttons are a bit darker then the primary.main that we use as a primary color
+        // For dark theme, primary buttons are a bit darker than the primary.main that we use as a primary color
         MuiButton: {
+            defaultProps: {
+                // unsized buttons render ~36px today — `large` on the new
+                // scale preserves their visual weight
+                size: 'large',
+                disableElevation: true, // no shadow on contained buttons
+            },
             styleOverrides: {
                 root: ({ theme }) => ({
                     borderRadius: theme.shape.borderRadius,
                     textTransform: 'none',
-                    fontWeight: theme.typography.fontWeightBold,
+                    fontWeight: 600, // semi-bold
+                    ...subtleOutlinedButton(theme),
                     '&:not(.Mui-disabled).MuiButton-contained.MuiButton-colorPrimary':
                         {
                             backgroundColor:
@@ -562,17 +579,24 @@ export const darkTheme = createTheme({
                             },
                         },
                 }),
+                ...buttonSizes,
             },
         },
 
         // Constraints negation icon
         MuiIconButton: {
+            defaultProps: {
+                // unsized icon buttons keep their pre-v2 weight (~36px) for now
+                size: 'large',
+            },
             styleOverrides: {
                 root: ({ theme }) => ({
+                    ...iconButtonRoot(theme),
                     '&.operator-is-active svg': {
                         fill: theme.palette.background.application,
                     },
                 }),
+                ...iconButtonSizes,
             },
         },
 

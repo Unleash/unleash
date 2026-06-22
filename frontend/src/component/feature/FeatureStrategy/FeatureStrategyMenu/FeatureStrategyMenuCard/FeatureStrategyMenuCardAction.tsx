@@ -6,6 +6,6 @@ const StyledActionContainer = styled('div')(({ theme }) => ({
 
 export const FeatureStrategyMenuCardAction = (props: ButtonProps) => (
     <StyledActionContainer>
-        <Button variant='outlined' size='small' {...props} />
+        <Button variant='outlined' size='medium' {...props} />
     </StyledActionContainer>
 );

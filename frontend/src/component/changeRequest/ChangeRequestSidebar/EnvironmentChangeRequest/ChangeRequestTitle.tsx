@@ -25,10 +25,6 @@ export const StyledHeader = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,
 }));
 
-const StyledIconButton = styled(IconButton)(({ theme }) => ({
-    borderRadius: theme.shape.borderRadius,
-}));
-
 export const ChangeRequestTitle: FC<{
     environmentChangeRequest: ChangeRequestType;
     title: string;
@@ -78,9 +74,12 @@ export const ChangeRequestTitle: FC<{
             <ConditionallyRender
                 condition={isDisabled}
                 show={
-                    <StyledIconButton onClick={toggleEditState}>
+                    <IconButton
+                        onClick={toggleEditState}
+                        aria-label='edit title'
+                    >
                         <Edit />
-                    </StyledIconButton>
+                    </IconButton>
                 }
             />
             <ConditionallyRender

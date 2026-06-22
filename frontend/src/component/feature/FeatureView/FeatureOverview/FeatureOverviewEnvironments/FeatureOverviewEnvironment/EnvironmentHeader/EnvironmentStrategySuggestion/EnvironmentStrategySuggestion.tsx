@@ -113,7 +113,7 @@ export const EnvironmentStrategySuggestion = ({
             </HtmlTooltip>
             &nbsp;for this project&nbsp;
             <PermissionButton
-                size='small'
+                size='medium'
                 permission={UPDATE_FEATURE}
                 projectId={projectId}
                 variant='text'

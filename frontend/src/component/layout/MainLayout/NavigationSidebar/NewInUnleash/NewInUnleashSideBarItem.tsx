@@ -91,9 +91,9 @@ export const NewInUnleashSideBarItem = ({
                 <StyledItemButtonClose
                     aria-label='dismiss'
                     onClick={onDismiss}
-                    size='small'
+                    size='medium'
                 >
-                    <Close fontSize='inherit' />
+                    <Close />
                 </StyledItemButtonClose>
             </Tooltip>
         </StyledItemButton>

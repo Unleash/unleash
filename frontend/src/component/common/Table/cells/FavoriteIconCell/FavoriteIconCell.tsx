@@ -41,7 +41,7 @@ export const FavoriteIconCell: FC<IFavoriteIconCellProps> = ({
             condition={Boolean(value)}
             show={
                 <StyledIconButton onClick={onClick} size='small'>
-                    <StarIcon fontSize='small' />
+                    <StarIcon />
                 </StyledIconButton>
             }
             elseShow={
@@ -50,7 +50,7 @@ export const FavoriteIconCell: FC<IFavoriteIconCellProps> = ({
                     onClick={onClick}
                     size='small'
                 >
-                    <StarBorderIcon fontSize='small' />
+                    <StarBorderIcon />
                 </StyledIconButtonInactive>
             }
         />

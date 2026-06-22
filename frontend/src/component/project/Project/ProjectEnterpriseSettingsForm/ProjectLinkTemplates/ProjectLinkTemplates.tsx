@@ -121,8 +121,8 @@ const ProjectLinkTemplates = ({
                         </Box>
                     }
                 >
-                    <IconButton size='small' sx={{ ml: 1 }}>
-                        <HelpOutlineIcon fontSize='small' />
+                    <IconButton size='medium' sx={{ ml: 1 }}>
+                        <HelpOutlineIcon />
                     </IconButton>
                 </Tooltip>
             </Box>

@@ -187,11 +187,11 @@ const MetricGoalRow: FC<{
             </StyledMetricName>
             <Tooltip title='Remove metric' arrow>
                 <IconButton
-                    size='small'
+                    size='medium'
                     aria-label={`Remove ${label}`}
                     onClick={() => onRemove(metric.id)}
                 >
-                    <Delete fontSize='small' />
+                    <Delete />
                 </IconButton>
             </Tooltip>
         </StyledMetricRow>

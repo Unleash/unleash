@@ -29,10 +29,7 @@ export const CaseSensitiveButton = ({
             <ConditionallyRender
                 condition={Boolean(localConstraint.caseInsensitive)}
                 show={
-                    <StyledToggleButtonOff
-                        onClick={setCaseInsensitive}
-                        disableRipple
-                    >
+                    <StyledToggleButtonOff onClick={setCaseInsensitive}>
                         <CaseSensitiveOff />
                     </StyledToggleButtonOff>
                 }
@@ -40,7 +37,6 @@ export const CaseSensitiveButton = ({
                     <StyledToggleButtonOn
                         className='operator-is-active'
                         onClick={setCaseInsensitive}
-                        disableRipple
                     >
                         <CaseSensitive />
                     </StyledToggleButtonOn>

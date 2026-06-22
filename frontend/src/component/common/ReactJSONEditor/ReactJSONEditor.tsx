@@ -252,7 +252,7 @@ const ReactJSONEditor: FC<IReactJSONEditorProps> = ({
             >
                 {!readOnly ? (
                     <StyledFormatButton
-                        size='small'
+                        size='medium'
                         variant='outlined'
                         startIcon={<FormatIndentIncrease />}
                         onClick={formatJson}

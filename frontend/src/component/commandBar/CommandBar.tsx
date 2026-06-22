@@ -39,7 +39,10 @@ export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
     width: '100%',
     left: 0,
-    top: '39px',
+    // Anchor to the bottom edge of the input box rather than a fixed pixel
+    // offset, so the dropdown stays flush even if the input height changes.
+    // Pull up 1px to overlap the input's border row for a seamless seam.
+    top: 'calc(100% - 1px)',
     zIndex: theme.zIndex.drawer,
     borderTop: theme.spacing(0),
     padding: theme.spacing(1.5, 0, 1.5),
@@ -89,6 +92,10 @@ const StyledSearch = styled('div')<{ isOpen?: boolean }>(
     ({ theme, isOpen }) => ({
         display: 'flex',
         alignItems: 'center',
+        // Fixed integer height (a touch taller than the largest 36px control)
+        // so the box never lands on a sub-pixel — that kept the dropdown, which
+        // anchors to this box's bottom, from sitting flush.
+        height: 40,
         backgroundColor: theme.palette.background.paper,
         border: `1px solid ${theme.palette.neutral.border}`,
         borderRadius: theme.shape.borderRadiusExtraLarge,
@@ -99,9 +106,10 @@ const StyledSearch = styled('div')<{ isOpen?: boolean }>(
             ? {
                   borderBottomLeftRadius: 0,
                   borderBottomRightRadius: 0,
-                  borderBottom: '0px',
-                  paddingTop: theme.spacing(0.5),
-                  paddingBottom: theme.spacing(0.5),
+                  // Keep the bottom border in the layout (transparent) so the
+                  // box keeps its exact height when open — otherwise removing
+                  // it shifts the vertically-centered box and text by ~1px.
+                  borderBottomColor: 'transparent',
               }
             : {}),
     }),

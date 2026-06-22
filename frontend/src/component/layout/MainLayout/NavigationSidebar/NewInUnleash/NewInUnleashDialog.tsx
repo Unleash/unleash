@@ -193,9 +193,9 @@ export const NewInUnleashDialog: FC<NewInUnleashDialogProps> = ({
                             onClose();
                             e.stopPropagation();
                         }}
-                        size='small'
+                        size='medium'
                     >
-                        <Close fontSize='inherit' />
+                        <Close />
                     </StyledItemButtonClose>
                 </Tooltip>
 

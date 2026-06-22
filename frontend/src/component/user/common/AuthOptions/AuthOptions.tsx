@@ -70,7 +70,7 @@ const AuthOptions = ({ options }: IAuthOptionProps) => {
                             ? addOrOverwriteRedirect(o.path, redirectPath)
                             : o.path
                     }
-                    size='small'
+                    size='large'
                     data-testid={`${SSO_LOGIN_BUTTON}-${o.type}`}
                     startIcon={renderStartIcon(o)}
                 >

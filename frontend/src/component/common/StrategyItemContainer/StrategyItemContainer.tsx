@@ -100,7 +100,6 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
                             tabIndex={-1}
                             className='strategy-drag-handle'
                             draggable
-                            disableRipple
                             size='small'
                             onDragStart={onDragStart}
                             onDragEnd={onDragEnd}

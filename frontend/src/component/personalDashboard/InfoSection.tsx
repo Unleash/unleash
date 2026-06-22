@@ -103,7 +103,7 @@ export const InfoSection: FC<InfoSectionProps> = () => {
                     onClick={onDismiss}
                     size='small'
                 >
-                    <CloseIcon fontSize='inherit' />
+                    <CloseIcon />
                 </StyledCloseButton>
             </Tooltip>
             <StyledContent>

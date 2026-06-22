@@ -70,14 +70,14 @@ export const ProjectFeaturesBatchActions: FC<
         <>
             <Button
                 variant='outlined'
-                size='small'
+                size='medium'
                 onClick={() => setShowBulkEnableDialog(true)}
             >
                 Enable
             </Button>
             <Button
                 variant='outlined'
-                size='small'
+                size='medium'
                 onClick={() => setShowBulkDisableDialog(true)}
             >
                 Disable
@@ -90,7 +90,7 @@ export const ProjectFeaturesBatchActions: FC<
             />
             <Button
                 variant='outlined'
-                size='small'
+                size='medium'
                 onClick={() => setShowExportDialog(true)}
             >
                 Export

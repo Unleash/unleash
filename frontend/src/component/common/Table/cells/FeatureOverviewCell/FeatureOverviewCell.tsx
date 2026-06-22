@@ -330,14 +330,11 @@ export const PrimaryFeatureInfo: FC<{
     const TypeIcon = () => (
         <HtmlTooltip arrow title={title} describeChild>
             <IconButton
-                sx={{ p: 0 }}
+                size='medium'
                 aria-label={`add ${type} flag to filter`}
                 onClick={() => onTypeClick(type)}
             >
-                <IconComponent
-                    sx={(theme) => ({ fontSize: theme.spacing(2) })}
-                    data-testid='feature-type-icon'
-                />
+                <IconComponent data-testid='feature-type-icon' />
             </IconButton>
         </HtmlTooltip>
     );

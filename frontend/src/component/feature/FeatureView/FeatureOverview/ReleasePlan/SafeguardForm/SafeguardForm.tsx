@@ -511,14 +511,14 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                         projectId={projectId}
                         environmentId={environment}
                         onClick={handleDelete}
-                        size='small'
+                        size='medium'
                         aria-label='Remove safeguard'
                         tooltipProps={{
                             title: 'Remove safeguard',
                         }}
                         sx={{ padding: 0.5 }}
                     >
-                        <DeleteOutlineIcon fontSize='small' />
+                        <DeleteOutlineIcon />
                     </PermissionIconButton>
                 )}
             </StyledTopRow>
@@ -636,7 +636,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                     <Button
                         variant='outlined'
                         onClick={handleCancel}
-                        size='small'
+                        size='medium'
                     >
                         Cancel
                     </Button>
@@ -646,7 +646,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                         environmentId={environment}
                         variant='contained'
                         color='primary'
-                        size='small'
+                        size='medium'
                         type='submit'
                         disabled={Number.isNaN(Number(threshold))}
                     >

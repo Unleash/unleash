@@ -173,7 +173,6 @@ export function DropdownList<T = string>({
                                         },
                                     }}
                                     size='small'
-                                    disableRipple
                                 />
                             ) : null}
                             <ListItemText

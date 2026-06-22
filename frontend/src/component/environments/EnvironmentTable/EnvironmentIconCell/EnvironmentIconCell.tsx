@@ -37,7 +37,7 @@ export const EnvironmentIconCell: FC<IEnvironmentIconCellProps> = ({
     environment,
 }) => (
     <StyledCell>
-        <DragIcon size='large' disableRipple className='drag-icon'>
+        <DragIcon size='large' className='drag-icon'>
             <DragIndicator titleAccess='Drag to reorder' />
         </DragIcon>
         <StyledCloudCircle deprecated={!environment.enabled} />

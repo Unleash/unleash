@@ -60,7 +60,7 @@ export const UpgradeProjectCard = () => {
                         onClick={onDismiss}
                         size='small'
                     >
-                        <CloseIcon fontSize='inherit' />
+                        <CloseIcon />
                     </StyledCloseButton>
                 </Tooltip>
                 <StyledInfo

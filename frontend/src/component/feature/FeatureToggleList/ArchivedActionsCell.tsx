@@ -27,7 +27,7 @@ export const ArchivedActionsCell = ({
     <StyledActions>
         <PermissionButton
             variant='text'
-            size='small'
+            size='medium'
             permission={UPDATE_FEATURE}
             projectId={projectId}
             onClick={onRevive}
@@ -36,7 +36,7 @@ export const ArchivedActionsCell = ({
         </PermissionButton>
         <PermissionButton
             variant='text'
-            size='small'
+            size='medium'
             permission={DELETE_FEATURE}
             projectId={projectId}
             onClick={onDelete}

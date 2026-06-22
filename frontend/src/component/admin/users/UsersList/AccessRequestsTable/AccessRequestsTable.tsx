@@ -155,7 +155,7 @@ export const AccessRequestsTable = () => {
                         <Button
                             variant='outlined'
                             color='primary'
-                            size='small'
+                            size='medium'
                             onClick={() => handleApprove(original)}
                         >
                             Approve

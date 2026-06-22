@@ -130,9 +130,10 @@ const BasePermissionButton = React.forwardRef<
                     aria-labelledby={id}
                     variant={variant}
                     color={color}
-                    disableRipple={disableButton}
                     className={
-                        disableButton ? `${className} Mui-disabled` : className
+                        [className, disableButton && 'Mui-disabled']
+                            .filter(Boolean)
+                            .join(' ') || undefined
                     }
                     {...rest}
                     endIcon={endIcon}

@@ -2,7 +2,6 @@ import type { FC } from 'react';
 import {
     Box,
     IconButton,
-    styled,
     type Theme,
     Typography,
     useTheme,
@@ -223,11 +222,6 @@ const Applied = () => {
     );
 };
 
-const StyledIconButton = styled(IconButton)({
-    maxWidth: '32px',
-    maxHeight: '32px',
-});
-
 interface IScheduledProps {
     schedule?: ChangeRequestSchedule;
     onEditClick?: () => any;
@@ -270,9 +264,9 @@ const Scheduled = ({ schedule, onEditClick }: IScheduledProps) => {
 
             <StyledScheduledBox>
                 {scheduleStatusBox}
-                <StyledIconButton onClick={onEditClick}>
+                <IconButton onClick={onEditClick} aria-label='edit schedule'>
                     <StyledEditIcon />
-                </StyledIconButton>
+                </IconButton>
             </StyledScheduledBox>
         </>
     );

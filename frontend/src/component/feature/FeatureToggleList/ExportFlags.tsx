@@ -17,7 +17,6 @@ export const ExportFlags: FC<{ onClick: () => void }> = ({ onClick }) => {
                         },
                     });
                 }}
-                size='small'
             >
                 <IosShare />
             </IconButton>

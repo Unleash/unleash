@@ -1,5 +1,12 @@
 import { createTheme } from '@mui/material/styles';
 import { colors } from './colors.js';
+import {
+    buttonSizes,
+    controlOverrides,
+    iconButtonRoot,
+    iconButtonSizes,
+    subtleOutlinedButton,
+} from './controls.js';
 import { focusable } from 'themes/themeStyles';
 
 export const baseTheme = {
@@ -324,6 +331,9 @@ const theme = {
 export const lightTheme = createTheme({
     ...theme,
     components: {
+        // Shared control sizing + ripple removal (design system v2)
+        ...controlOverrides,
+
         // Skeleton
         MuiCssBaseline: {
             styleOverrides: {
@@ -350,12 +360,32 @@ export const lightTheme = createTheme({
 
         // Buttons
         MuiButton: {
+            defaultProps: {
+                // pre-v2, unsized buttons fell back to MUI's `medium` (~36px);
+                // `large` on the new scale (also 36px) preserves their weight
+                size: 'large',
+                disableElevation: true, // no shadow on contained buttons
+            },
             styleOverrides: {
                 root: ({ theme }) => ({
                     borderRadius: theme.shape.borderRadius,
                     textTransform: 'none',
-                    fontWeight: theme.typography.fontWeightBold,
+                    fontWeight: 600, // semi-bold
+                    ...subtleOutlinedButton(theme),
                 }),
+                ...buttonSizes,
+            },
+        },
+        MuiIconButton: {
+            defaultProps: {
+                // unsized icon buttons keep their pre-v2 weight (~36px) for now
+                size: 'large',
+            },
+            styleOverrides: {
+                root: ({ theme }) => ({
+                    ...iconButtonRoot(theme),
+                }),
+                ...iconButtonSizes,
             },
         },
 

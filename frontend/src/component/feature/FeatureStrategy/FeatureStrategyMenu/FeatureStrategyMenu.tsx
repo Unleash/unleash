@@ -143,12 +143,12 @@ export const FeatureStrategyMenu = ({
                     <StyledHeader>
                         <Typography variant='h2'>Add strategy</Typography>
                         <IconButton
-                            size='small'
+                            size='medium'
                             onClick={onClose}
                             edge='end'
                             aria-label='close'
                         >
-                            <CloseIcon fontSize='small' />
+                            <CloseIcon />
                         </IconButton>
                     </StyledHeader>
                     {releasePlanPreview && selectedTemplate ? (

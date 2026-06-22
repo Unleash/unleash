@@ -444,11 +444,11 @@ export const EditableConstraint: FC<Props> = ({
                     <StyledIconButton
                         type='button'
                         data-testid='DELETE_CONSTRAINT_BUTTON'
-                        size='small'
+                        size='medium'
                         onClick={onDelete}
                         ref={deleteButtonRef}
                     >
-                        <Delete fontSize='inherit' />
+                        <Delete />
                     </StyledIconButton>
                 </HtmlTooltip>
             </TopRow>

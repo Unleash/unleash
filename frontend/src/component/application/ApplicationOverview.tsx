@@ -126,7 +126,7 @@ const ApplicationOverview = () => {
                             startIcon={<ReviewsOutlined />}
                             variant='outlined'
                             onClick={createFeedbackContext}
-                            size='small'
+                            size='medium'
                         >
                             Provide feedback
                         </Button>

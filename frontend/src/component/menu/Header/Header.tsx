@@ -62,20 +62,6 @@ const StyledNav = styled('nav')({
     flexGrow: 1,
 });
 
-const StyledIconButton = styled(IconButton)<{
-    component?: 'a' | 'button';
-    href?: string;
-    target?: string;
-}>(({ theme }) => ({
-    borderRadius: 100,
-    '&:focus-visible': {
-        outlineStyle: 'solid',
-        outlineWidth: 2,
-        outlineColor: theme.palette.primary.main,
-        borderRadius: '100%',
-    },
-}));
-
 const Header = () => {
     const { onSetThemeMode } = useThemeMode();
     const newProfileDropdown = useUiFlag('newProfileDropdown');
@@ -109,19 +95,19 @@ const Header = () => {
                     }
                     arrow
                 >
-                    <StyledIconButton onClick={onSetThemeMode} size='large'>
+                    <IconButton onClick={onSetThemeMode} size='large'>
                         <ConditionallyRender
                             condition={theme.mode === 'dark'}
                             show={<DarkModeOutlined />}
                             elseShow={<LightModeOutlined />}
                         />
-                    </StyledIconButton>
+                    </IconButton>
                 </Tooltip>
             )}
             {hideTopmenuDocumentation && <HelpResources />}
             {!hideTopmenuDocumentation && (
                 <Tooltip title='Documentation' arrow>
-                    <StyledIconButton
+                    <IconButton
                         component='a'
                         nativeButton={false}
                         href='https://docs.getunleash.io/'
@@ -133,7 +119,7 @@ const Header = () => {
                         })}
                     >
                         <MenuBookIcon />
-                    </StyledIconButton>
+                    </IconButton>
                 </Tooltip>
             )}
             <Divider

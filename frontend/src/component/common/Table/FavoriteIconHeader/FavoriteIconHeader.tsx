@@ -49,8 +49,8 @@ export const FavoriteIconHeader: FC<IFavoriteIconHeaderProps> = ({
             >
                 <ConditionallyRender
                     condition={internalState}
-                    show={<StarIcon fontSize='small' />}
-                    elseShow={<StarBorderIcon fontSize='small' />}
+                    show={<StarIcon />}
+                    elseShow={<StarBorderIcon />}
                 />
             </IconButton>
         </TooltipResolver>

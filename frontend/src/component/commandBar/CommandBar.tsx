@@ -107,15 +107,23 @@ const StyledSearch = styled('div')<{ isOpen?: boolean }>(
     }),
 );
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
+const StyledInputBase = styled(InputBase, {
+    shouldForwardProp: (prop) => prop !== 'compact',
+})<{ compact?: boolean }>(({ theme, compact }) => ({
     width: '100%',
-    minWidth: '300px',
+    minWidth: compact ? 0 : '300px',
     backgroundColor: theme.palette.background.paper,
 }));
 
 const StyledClose = styled(Close)(({ theme }) => ({
     color: theme.palette.neutral.main,
     fontSize: theme.typography.body1.fontSize,
+}));
+
+const StyledIconButton = styled(IconButton, {
+    shouldForwardProp: (prop) => prop !== 'open',
+})<{ open?: boolean }>(({ theme, open }) => ({
+    color: open ? theme.palette.primary.main : theme.palette.neutral.main,
 }));
 
 export const CommandBar = () => {
@@ -357,6 +365,7 @@ export const CommandBar = () => {
                     inputRef={searchInputRef}
                     placeholder={placeholder}
                     autoFocus={isCompact}
+                    compact={isCompact}
                     slotProps={{
                         input: {
                             'data-testid': SEARCH_INPUT,
@@ -455,18 +464,15 @@ export const CommandBar = () => {
         return (
             <>
                 <Tooltip title={placeholder} arrow>
-                    <IconButton
+                    <StyledIconButton
                         ref={compactIconRef}
                         size='large'
+                        open={compactExpanded}
                         onClick={() => setCompactExpanded(true)}
                         aria-label={placeholder}
                     >
-                        <SearchIcon
-                            sx={{
-                                color: (theme) => theme.palette.neutral.main,
-                            }}
-                        />
-                    </IconButton>
+                        <SearchIcon />
+                    </StyledIconButton>
                 </Tooltip>
                 <StyledCompactDialog
                     open={compactExpanded}

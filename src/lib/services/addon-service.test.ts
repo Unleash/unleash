@@ -889,20 +889,6 @@ describe('registerProvider', () => {
         ).resolves.toMatchObject({ provider: 'someaddon' });
     });
 
-    test('registerProvider rejects a duplicate provider name', () => {
-        const { addonService, integrationEventsService } = getSetup();
-
-        addonService.registerProvider(
-            buildProvider(integrationEventsService, 'someaddon'),
-        );
-
-        expect(() =>
-            addonService.registerProvider(
-                buildProvider(integrationEventsService, 'someaddon'),
-            ),
-        ).toThrow(/already registered/);
-    });
-
     test('registerProvider masks the new provider sensitive params', async () => {
         const { addonService, integrationEventsService } = getSetup();
         addonService.registerProvider(

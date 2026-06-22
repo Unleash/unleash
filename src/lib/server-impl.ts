@@ -44,6 +44,7 @@ import { CRUDStore } from './db/crud/crud-store.js';
 import type { CrudStoreConfig } from './db/crud/crud-store.js';
 import { type Logger, LogLevel, type LogProvider } from './logger.js';
 import { ImportTogglesStore } from './features/export-import-toggles/import-toggles-store.js';
+import Addon from './addons/addon.js';
 import { ALL_PROJECTS, CUSTOM_ROOT_ROLE_TYPE } from './util/index.js';
 import {
     extractAuditInfoFromUser,
@@ -572,6 +573,7 @@ export {
     EnvironmentStore,
     ProjectStore,
     defaultMetricsRegister,
+    Addon,
 };
 
 export type {

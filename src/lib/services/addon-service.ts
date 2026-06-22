@@ -2,6 +2,7 @@ import memoizee from 'memoizee';
 import joi from 'joi';
 const { ValidationError } = joi;
 import { getAddons, type IAddonProviders } from '../addons/index.js';
+import type Addon from '../addons/addon.js';
 import {
     AddonConfigCreatedEvent,
     AddonConfigDeletedEvent,
@@ -120,6 +121,16 @@ export default class AddonService {
             o[definition.name] = sensitiveParams;
             return o;
         }, {});
+    }
+
+    registerProvider(provider: Addon): void {
+        if (this.addonProviders[provider.name]) {
+            throw new Error(
+                `Addon provider "${provider.name}" is already registered`,
+            );
+        }
+        this.addonProviders[provider.name] = provider;
+        this.sensitiveParams = this.loadSensitiveParams(this.addonProviders);
     }
 
     registerEventHandler(): void {

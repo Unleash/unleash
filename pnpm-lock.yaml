@@ -524,6 +524,9 @@ importers:
       '@unleash/proxy-client-react':
         specifier: 5.1.0
         version: 5.1.0(unleash-proxy-client@3.8.0)
+      '@unleash/sdk-flight-recorder':
+        specifier: ^0.5.0
+        version: 0.5.0
       '@vitejs/plugin-react':
         specifier: 6.0.2
         version: 6.0.2(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7(supports-color@8.1.1))(@babel/runtime@7.29.7)(rolldown@1.0.3)(vite@8.0.16(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(sass@1.101.0)(yaml@2.8.4)))(vite@8.0.16(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(sass@1.101.0)(yaml@2.8.4))
@@ -2393,6 +2396,10 @@ packages:
     engines: {node: '>=16.0.0'}
     peerDependencies:
       unleash-proxy-client: ^3.8.0
+
+  '@unleash/sdk-flight-recorder@0.5.0':
+    resolution: {integrity: sha512-ObKmE6eklndM44BA8xY9elaV3RDTh0rb7mqsNVvPDd4GfoAStcGoa/S3LQ4cOu98Hc47IOchhYp4P+ja77DrXg==}
+    engines: {node: '>=20'}
 
   '@vitejs/plugin-react@6.0.2':
     resolution: {integrity: sha512-DlSMqo4WhThw4vB8Mpn0Woe9J+Jfq1geJ61AKW0QEgLzGMNwtIMdxbDUzLxcun8W7NbJO0e2Jg/Nxm3cCSVzzg==}
@@ -4306,6 +4313,10 @@ packages:
   ky@1.14.3:
     resolution: {integrity: sha512-9zy9lkjac+TR1c2tG+mkNSVlyOpInnWdSMiue4F+kq8TwJSgv6o8jhLRg8Ho6SnZ9wOYUq/yozts9qQCfk7bIw==}
     engines: {node: '>=18'}
+
+  ky@2.0.2:
+    resolution: {integrity: sha512-/GmXpo9F9W+f8n4Ivr2iH+7h7wL7jLbLKWkMlpflcCRb6kGjBfTlASEXaZ9qUgNTn4VgS0P2pwxxzQ4EM6Ulgg==}
+    engines: {node: '>=22'}
 
   launchdarkly-eventsource@2.2.0:
     resolution: {integrity: sha512-u38fYlLSq/m6oFz0MS1/76Sj2xzlYhTKZ+sf/vju6PA86PMc6fPlY5k8CdU79edLXjNwsvIQTDvDNy3llDqB8A==}
@@ -8474,6 +8485,10 @@ snapshots:
     dependencies:
       unleash-proxy-client: 3.8.0
 
+  '@unleash/sdk-flight-recorder@0.5.0':
+    dependencies:
+      ky: 2.0.2
+
   '@vitejs/plugin-react@6.0.2(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7(supports-color@8.1.1))(@babel/runtime@7.29.7)(rolldown@1.0.3)(vite@8.0.16(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(sass@1.101.0)(yaml@2.8.4)))(vite@8.0.16(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(sass@1.101.0)(yaml@2.8.4))':
     dependencies:
       '@rolldown/pluginutils': 1.0.1
@@ -10587,6 +10602,8 @@ snapshots:
       - supports-color
 
   ky@1.14.3: {}
+
+  ky@2.0.2: {}
 
   launchdarkly-eventsource@2.2.0: {}
 

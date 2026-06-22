@@ -6,7 +6,6 @@ import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { EventTrackerProvider } from './EventTrackerProvider';
 import { PlausibleContext } from 'contexts/PlausibleContext';
-import { LogRocketContext } from 'contexts/LogRocketContext';
 import { FlightRecorderContext } from 'contexts/FlightRecorderContext';
 import { EventTrackerContext } from 'contexts/EventTrackerContext';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -34,27 +33,24 @@ const ConfigProbe = () => {
     return <span>ctx:{uiConfig?.unleashContext?.userId ?? 'none'}</span>;
 };
 
-test('trackEvent fans out to Plausible, LogRocket and the flight recorder', async () => {
+test('trackEvent fans out to Plausible and the flight recorder', async () => {
     testServerRoute(server, '/api/admin/ui-config', {
         unleashContext: { userId: 'u-1' },
     });
 
     const plausibleTrack = vi.fn();
-    const logRocketTrack = vi.fn();
     const record = vi.fn();
 
     render(
         <PlausibleContext.Provider
             value={{ trackEvent: plausibleTrack } as any}
         >
-            <LogRocketContext.Provider value={{ track: logRocketTrack }}>
-                <FlightRecorderContext.Provider value={{ record } as any}>
-                    <EventTrackerProvider>
-                        <ConfigProbe />
-                        <TrackButton />
-                    </EventTrackerProvider>
-                </FlightRecorderContext.Provider>
-            </LogRocketContext.Provider>
+            <FlightRecorderContext.Provider value={{ record } as any}>
+                <EventTrackerProvider>
+                    <ConfigProbe />
+                    <TrackButton />
+                </EventTrackerProvider>
+            </FlightRecorderContext.Provider>
         </PlausibleContext.Provider>,
     );
 
@@ -63,9 +59,6 @@ test('trackEvent fans out to Plausible, LogRocket and the flight recorder', asyn
 
     expect(plausibleTrack).toHaveBeenCalledWith('invite', {
         props: { eventType: 'test' },
-    });
-    expect(logRocketTrack).toHaveBeenCalledWith('invite', {
-        eventType: 'test',
     });
     expect(record).toHaveBeenCalledWith({
         eventType: 'custom',

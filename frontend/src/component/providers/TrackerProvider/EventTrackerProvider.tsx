@@ -1,7 +1,6 @@
 import type React from 'react';
 import { type FC, useContext, useMemo, useRef } from 'react';
 import { PlausibleContext } from 'contexts/PlausibleContext';
-import { LogRocketContext } from 'contexts/LogRocketContext';
 import { FlightRecorderContext } from 'contexts/FlightRecorderContext';
 import {
     EventTrackerContext,
@@ -13,14 +12,11 @@ export const EventTrackerProvider: FC<{ children?: React.ReactNode }> = ({
     children,
 }) => {
     const plausible = useContext(PlausibleContext);
-    const logRocket = useContext(LogRocketContext);
     const flightRecorder = useContext(FlightRecorderContext);
     const { uiConfig } = useUiConfig();
 
     const plausibleRef = useRef(plausible);
     plausibleRef.current = plausible;
-    const logRocketRef = useRef(logRocket);
-    logRocketRef.current = logRocket;
     const flightRecorderRef = useRef(flightRecorder);
     flightRecorderRef.current = flightRecorder;
     const unleashContextRef = useRef(uiConfig?.unleashContext);
@@ -30,7 +26,6 @@ export const EventTrackerProvider: FC<{ children?: React.ReactNode }> = ({
         () => ({
             trackEvent: (eventName, options) => {
                 plausibleRef.current?.trackEvent(eventName, options);
-                logRocketRef.current?.track(eventName, options?.props);
                 flightRecorderRef.current?.record({
                     eventType: 'custom',
                     eventName,

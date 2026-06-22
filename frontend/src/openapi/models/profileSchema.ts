@@ -11,6 +11,8 @@ import type { RoleSchema } from './roleSchema';
  * User profile overview
  */
 export interface ProfileSchema {
+    /** Whether the current user has a local password that can be changed. */
+    canChangePassword: boolean;
     /** Deprecated, always returns empty array */
     features: FeatureSchema[];
     /** Experimental: Which groups this user is a member of */

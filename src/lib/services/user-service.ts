@@ -641,6 +641,12 @@ export class UserService {
         options: ChangePasswordOptions = {},
     ): Promise<void> {
         const currentPasswordHash = await this.store.getPasswordHash(userId);
+        if (!currentPasswordHash) {
+            throw new PasswordMismatch(
+                `The old password you provided is invalid. If you have forgotten your password, visit ${this.baseUriPath}/forgotten-password or get in touch with your instance administrator.`,
+            );
+        }
+
         const match = await bcrypt.compare(oldPassword, currentPasswordHash);
         if (!match) {
             throw new PasswordMismatch(
@@ -653,6 +659,12 @@ export class UserService {
             newPassword,
             options,
         );
+    }
+
+    async hasPassword(userId: number): Promise<boolean> {
+        const passwordHash = await this.store.getPasswordHash(userId);
+
+        return Boolean(passwordHash);
     }
 
     async getUserForToken(token: string): Promise<TokenUserSchema> {

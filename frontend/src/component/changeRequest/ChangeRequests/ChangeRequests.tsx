@@ -16,7 +16,8 @@ import {
     type SearchChangeRequestsInput,
 } from 'hooks/api/getters/useChangeRequestSearch/useChangeRequestSearch';
 import type { ChangeRequestSearchItemSchema } from 'openapi';
-import { useQueryParams, encodeQueryParams } from 'use-query-params';
+import { useDualQueryParams } from 'hooks/useDualQueryParams';
+import { encodeSpecParams } from 'utils/queryParamSpec';
 import useLoading from 'hooks/useLoading';
 import { styles as themeStyles } from 'component/common';
 import { ChangeRequestFilters } from './ChangeRequestFilters/ChangeRequestFilters.js';
@@ -56,8 +57,9 @@ const ChangeRequestsInner = ({ user }: { user: IUser }) => {
 
     const initialState = shouldApplyDefaults ? defaultTableState(user) : {};
 
-    const [tableState, setTableStateRaw] = useQueryParams(stateConfig, {
-        updateType: 'replaceIn',
+    const [tableState, setTableStateRaw] = useDualQueryParams(stateConfig, {
+        source: 'change-requests',
+        history: 'replace',
     });
 
     const effectiveTableState = shouldApplyDefaults
@@ -79,7 +81,7 @@ const ChangeRequestsInner = ({ user }: { user: IUser }) => {
         total,
         loading,
     } = useChangeRequestSearch(
-        encodeQueryParams(
+        encodeSpecParams(
             stateConfig,
             effectiveTableState,
         ) as SearchChangeRequestsInput,

@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { screen, waitFor } from '@testing-library/react';
 import { usePersistentTableState } from './usePersistentTableState.ts';
@@ -11,6 +11,14 @@ import {
     stringQueryParam,
     type QueryParamSpecMap,
 } from '../utils/queryParamSpec.ts';
+
+// Same scenarios as usePersistentTableState.test.tsx, but with the flag
+// flipped so nuqs is the primary library. The extra waitFors compared to
+// the use-query-params variant are expected: nuqs applies state
+// optimistically and flushes URL updates asynchronously.
+vi.mock('./useQueryStateLibrary.ts', () => ({
+    useQueryStateLibrary: () => ({ primary: 'nuqs', compare: false }),
+}));
 
 type TestComponentProps = {
     keyName: string;
@@ -60,7 +68,7 @@ function TestComponent({
     );
 }
 
-describe('usePersistentTableState', () => {
+describe('usePersistentTableState (nuqs primary)', () => {
     it('initializes correctly from URL', async () => {
         createLocalStorage('testKey', {});
 
@@ -89,9 +97,11 @@ describe('usePersistentTableState', () => {
             { route: '/my-url' },
         );
 
-        expect(screen.getByTestId('state-value').textContent).toBe(
-            'initialStorage',
-        );
+        await waitFor(() => {
+            expect(screen.getByTestId('state-value').textContent).toBe(
+                'initialStorage',
+            );
+        });
         expect(window.location.href).toContain('my-url?query=initialStorage');
     });
 
@@ -117,9 +127,11 @@ describe('usePersistentTableState', () => {
             { route: '/my-url' },
         );
 
-        expect(screen.getByTestId('state-value').textContent).toBe(
-            'initialStorage',
-        );
+        await waitFor(() => {
+            expect(screen.getByTestId('state-value').textContent).toBe(
+                'initialStorage',
+            );
+        });
         expect(window.location.href).toContain(
             'my-url?query=initialStorage&filterItem=IS%3Adefault&columns=a&columns=b',
         );
@@ -159,16 +171,22 @@ describe('usePersistentTableState', () => {
             { route: '/my-url' },
         );
 
-        expect(screen.getByTestId('state-value').textContent).toBe('before');
+        await waitFor(() => {
+            expect(screen.getByTestId('state-value').textContent).toBe(
+                'before',
+            );
+        });
 
         (await screen.findByText('Update State')).click();
 
         expect((await screen.findByTestId('state-value')).textContent).toBe(
             'after',
         );
-        expect(window.location.href).toContain(
-            'my-url?query=after&other=other',
-        );
+        await waitFor(() => {
+            expect(window.location.href).toContain(
+                'my-url?query=after&other=other',
+            );
+        });
 
         await waitFor(() => {
             const { value } = createLocalStorage('testKey', {});
@@ -196,7 +214,11 @@ describe('usePersistentTableState', () => {
         screen.getByText('Update Offset').click();
         screen.getByText('Update State').click();
 
-        expect(window.location.href).toContain('my-url?query=after&offset=0');
+        await waitFor(() => {
+            expect(window.location.href).toContain(
+                'my-url?query=after&offset=0',
+            );
+        });
 
         await waitFor(() => {
             const { value } = createLocalStorage('testKey', {});

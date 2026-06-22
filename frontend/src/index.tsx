@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router';
 import { QueryParamProvider } from 'use-query-params';
 import { ReactRouter7Adapter } from 'utils/ReactRouter7Adapter';
+import { NuqsAdapter } from 'nuqs/adapters/react-router/v7';
 import { ThemeProvider } from 'themes/ThemeProvider';
 import { App } from 'component/App';
 import { ScrollTop } from 'component/common/ScrollTop/ScrollTop';
@@ -50,41 +51,45 @@ const ApplicationRoot = () => {
         <UIProviderContainer>
             <AccessProvider>
                 <BrowserRouter basename={basePath}>
-                    <QueryParamProvider adapter={ReactRouter7Adapter}>
-                        <ThemeProvider>
-                            <AnnouncerProvider>
-                                <PlausibleProvider>
-                                    <LogRocketProvider>
-                                        <EventTrackerProvider>
-                                            <UnleashFlagProvider>
-                                                <ErrorBoundary
-                                                    FallbackComponent={
-                                                        LayoutError
-                                                    }
-                                                    onError={sendErrorToApi}
-                                                >
-                                                    <FeedbackProvider>
-                                                        <FeedbackCESProvider>
-                                                            <StickyProvider>
-                                                                <HighlightProvider>
-                                                                    <WelcomeDialogProvider>
-                                                                        <InstanceStatus>
-                                                                            <ScrollTop />
-                                                                            <App />
-                                                                        </InstanceStatus>
-                                                                    </WelcomeDialogProvider>
-                                                                </HighlightProvider>
-                                                            </StickyProvider>
-                                                        </FeedbackCESProvider>
-                                                    </FeedbackProvider>
-                                                </ErrorBoundary>
-                                            </UnleashFlagProvider>
-                                        </EventTrackerProvider>
-                                    </LogRocketProvider>
-                                </PlausibleProvider>
-                            </AnnouncerProvider>
-                        </ThemeProvider>
-                    </QueryParamProvider>
+                    {/* Spike: NuqsAdapter coexists with QueryParamProvider
+                        while consumers migrate incrementally. */}
+                    <NuqsAdapter>
+                        <QueryParamProvider adapter={ReactRouter7Adapter}>
+                            <ThemeProvider>
+                                <AnnouncerProvider>
+                                    <PlausibleProvider>
+                                        <LogRocketProvider>
+                                            <EventTrackerProvider>
+                                                <UnleashFlagProvider>
+                                                    <ErrorBoundary
+                                                        FallbackComponent={
+                                                            LayoutError
+                                                        }
+                                                        onError={sendErrorToApi}
+                                                    >
+                                                        <FeedbackProvider>
+                                                            <FeedbackCESProvider>
+                                                                <StickyProvider>
+                                                                    <HighlightProvider>
+                                                                        <WelcomeDialogProvider>
+                                                                            <InstanceStatus>
+                                                                                <ScrollTop />
+                                                                                <App />
+                                                                            </InstanceStatus>
+                                                                        </WelcomeDialogProvider>
+                                                                    </HighlightProvider>
+                                                                </StickyProvider>
+                                                            </FeedbackCESProvider>
+                                                        </FeedbackProvider>
+                                                    </ErrorBoundary>
+                                                </UnleashFlagProvider>
+                                            </EventTrackerProvider>
+                                        </LogRocketProvider>
+                                    </PlausibleProvider>
+                                </AnnouncerProvider>
+                            </ThemeProvider>
+                        </QueryParamProvider>
+                    </NuqsAdapter>
                 </BrowserRouter>
             </AccessProvider>
         </UIProviderContainer>

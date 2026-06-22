@@ -13,11 +13,11 @@ import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { ApplicationUsageCell } from './ApplicationUsageCell/ApplicationUsageCell.tsx';
 import type { ApplicationSchema } from 'openapi';
 import {
-    encodeQueryParams,
-    NumberParam,
-    StringParam,
-    withDefault,
-} from 'use-query-params';
+    encodeSpecParams,
+    safeNumberQueryParam,
+    stringQueryParam,
+    withDefaultQueryParam,
+} from 'utils/queryParamSpec';
 import { DEFAULT_PAGE_LIMIT } from 'hooks/api/getters/useProjectApplications/useProjectApplications';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
@@ -57,11 +57,11 @@ const columnHelper = createColumnHelper<ApplicationSchema>();
 
 export const PaginatedApplicationList = () => {
     const stateConfig = {
-        offset: withDefault(NumberParam, 0),
-        limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
-        query: StringParam,
-        sortBy: withDefault(StringParam, 'appName'),
-        sortOrder: withDefault(StringParam, 'asc'),
+        offset: withDefaultQueryParam(safeNumberQueryParam, 0),
+        limit: withDefaultQueryParam(safeNumberQueryParam, DEFAULT_PAGE_LIMIT),
+        query: stringQueryParam,
+        sortBy: withDefaultQueryParam(stringQueryParam, 'appName'),
+        sortOrder: withDefaultQueryParam(stringQueryParam, 'asc'),
     };
     const [tableState, setTableState] = usePersistentTableState(
         `applications-table`,
@@ -72,7 +72,7 @@ export const PaginatedApplicationList = () => {
         total,
         loading,
     } = useApplications(
-        mapValues(encodeQueryParams(stateConfig, tableState), (value) =>
+        mapValues(encodeSpecParams(stateConfig, tableState), (value) =>
             value ? `${value}` : undefined,
         ),
     );

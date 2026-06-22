@@ -130,7 +130,7 @@
     "react-resizable": "^3.1.3",
     "react-router": "^7.16.0",
     "regenerator-runtime": "0.14.1",
-    "sass": "1.99.0",
+    "sass": "1.101.0",
     "semver": "7.7.4",
     "serialize-query-params": "^2.0.4",
     "swr": "2.4.1",

@@ -1,16 +1,17 @@
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { useContext } from 'react';
+import { vi, expect, test } from 'vitest';
+import { render } from 'utils/testRenderer';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { EventTrackerProvider } from './EventTrackerProvider';
 import { PlausibleContext } from 'contexts/PlausibleContext';
 import { LogRocketContext } from 'contexts/LogRocketContext';
 import { FlightRecorderContext } from 'contexts/FlightRecorderContext';
 import { EventTrackerContext } from 'contexts/EventTrackerContext';
-import { useContext } from 'react';
-import { vi, expect, test } from 'vitest';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
-vi.mock('hooks/api/getters/useUiConfig/useUiConfig', () => ({
-    default: () => ({ uiConfig: { unleashContext: { userId: 'u-1' } } }),
-}));
+const server = testServerSetup();
 
 const TrackButton = () => {
     const tracker = useContext(EventTrackerContext);
@@ -28,7 +29,16 @@ const TrackButton = () => {
     );
 };
 
+const ConfigProbe = () => {
+    const { uiConfig } = useUiConfig();
+    return <span>ctx:{uiConfig?.unleashContext?.userId ?? 'none'}</span>;
+};
+
 test('trackEvent fans out to Plausible, LogRocket and the flight recorder', async () => {
+    testServerRoute(server, '/api/admin/ui-config', {
+        unleashContext: { userId: 'u-1' },
+    });
+
     const plausibleTrack = vi.fn();
     const logRocketTrack = vi.fn();
     const record = vi.fn();
@@ -40,6 +50,7 @@ test('trackEvent fans out to Plausible, LogRocket and the flight recorder', asyn
             <LogRocketContext.Provider value={{ track: logRocketTrack }}>
                 <FlightRecorderContext.Provider value={{ record } as any}>
                     <EventTrackerProvider>
+                        <ConfigProbe />
                         <TrackButton />
                     </EventTrackerProvider>
                 </FlightRecorderContext.Provider>
@@ -47,6 +58,7 @@ test('trackEvent fans out to Plausible, LogRocket and the flight recorder', asyn
         </PlausibleContext.Provider>,
     );
 
+    await screen.findByText('ctx:u-1');
     await userEvent.click(screen.getByRole('button', { name: 'track' }));
 
     expect(plausibleTrack).toHaveBeenCalledWith('invite', {

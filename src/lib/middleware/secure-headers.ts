@@ -126,7 +126,9 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
                     ],
                 },
             },
-            crossOriginEmbedderPolicy: true,
+            crossOriginEmbedderPolicy: {
+                policy: 'credentialless',
+            },
             originAgentCluster: false,
             xDnsPrefetchControl: false,
         });

@@ -74,7 +74,7 @@ export const ChangeRequestTitle: FC<{
             <ConditionallyRender
                 condition={isDisabled}
                 show={
-                    <IconButton onClick={toggleEditState}>
+                    <IconButton onClick={toggleEditState} aria-label='edit title'>
                         <Edit />
                     </IconButton>
                 }

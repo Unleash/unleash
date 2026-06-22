@@ -264,7 +264,7 @@ const Scheduled = ({ schedule, onEditClick }: IScheduledProps) => {
 
             <StyledScheduledBox>
                 {scheduleStatusBox}
-                <IconButton onClick={onEditClick}>
+                <IconButton onClick={onEditClick} aria-label='edit schedule'>
                     <StyledEditIcon />
                 </IconButton>
             </StyledScheduledBox>

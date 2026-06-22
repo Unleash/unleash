@@ -7,18 +7,26 @@ import getApp from '../../../app.js';
 import User from '../../../types/user.js';
 import bcrypt from 'bcryptjs';
 
-const currentUser = new User({ id: 1337, email: 'test@mail.com' });
+const currentUserData = { id: 1337, email: 'test@mail.com' };
 const oldPassword = 'old-pass';
 
-async function getSetup() {
+async function getSetup({
+    withPassword = true,
+}: {
+    withPassword?: boolean;
+} = {}) {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const stores = createStores();
-    await stores.userStore.insert(currentUser);
-    await stores.userStore.setPasswordHash(
-        currentUser.id,
-        await bcrypt.hash(oldPassword, 10),
-        5,
+    const currentUser = await stores.userStore.insert(
+        new User(currentUserData),
     );
+    if (withPassword) {
+        await stores.userStore.setPasswordHash(
+            currentUser.id,
+            await bcrypt.hash(oldPassword, 10),
+            5,
+        );
+    }
 
     const config = createTestConfig({
         preHook: (a) => {
@@ -35,6 +43,7 @@ async function getSetup() {
     const app = await getApp(config, stores, services);
     return {
         base,
+        currentUser,
         userStore: stores.userStore,
         sessionStore: stores.sessionStore,
         request: supertest(app),
@@ -50,7 +59,7 @@ test('should return current user', async () => {
         .expect(200)
         .expect('Content-Type', /json/)
         .expect((res) => {
-            expect(res.body.user.email).toBe(currentUser.email);
+            expect(res.body.user.email).toBe(currentUserData.email);
         });
 });
 const owaspPassword = 't7GTx&$Y9pcsnxRv6';
@@ -65,6 +74,7 @@ test('should return current profile', async () => {
         .expect('Content-Type', /json/)
         .expect((res) => {
             expect(res.body).toMatchObject({
+                canChangePassword: true,
                 projects: [],
                 groups: [],
                 rootRole: { id: -1, name: 'Viewer', type: 'root' },
@@ -75,7 +85,7 @@ test('should return current profile', async () => {
 });
 
 test('should allow user to change password', async () => {
-    const { request, base, userStore } = await getSetup();
+    const { request, base, currentUser, userStore } = await getSetup();
     await request
         .post(`${base}/api/admin/user/change-password`)
         .send({
@@ -90,7 +100,7 @@ test('should allow user to change password', async () => {
 });
 
 test('changing own password keeps the current session and terminates the others', async () => {
-    const { request, base, sessionStore } = await getSetup();
+    const { request, base, currentUser, sessionStore } = await getSetup();
     await sessionStore.insertSession({
         sid: 'current-session',
         sess: { user: { id: currentUser.id } },
@@ -125,6 +135,30 @@ test('should not allow user to change password with incorrect old password', asy
             oldPassword: 'incorrect',
         })
         .expect(401);
+});
+
+test('should not allow user without a local password to change password', async () => {
+    const { request, base } = await getSetup({ withPassword: false });
+    await request
+        .post(`${base}/api/admin/user/change-password`)
+        .send({
+            password: owaspPassword,
+            confirmPassword: owaspPassword,
+            oldPassword,
+        })
+        .expect(401);
+});
+
+test('should report that user without a local password cannot change password', async () => {
+    const { request, base } = await getSetup({ withPassword: false });
+
+    return request
+        .get(`${base}/api/admin/user/profile`)
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect((res) => {
+            expect(res.body.canChangePassword).toBe(false);
+        });
 });
 
 test('should not allow user to change password without providing old password', async () => {

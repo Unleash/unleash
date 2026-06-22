@@ -273,12 +273,14 @@ class UserController extends Controller {
             throw new BadDataError('User id is missing in request user object');
         }
 
-        const [projects, groups, rootRole, subscriptions] = await Promise.all([
-            this.projectService.getProjectsByUser(user.id),
-            this.groupService.getGroupsForUser(user.id),
-            this.accessService.getRootRoleForUser(user.id),
-            this.userSubscriptionsService.getUserSubscriptions(user.id),
-        ]);
+        const [projects, groups, rootRole, subscriptions, canChangePassword] =
+            await Promise.all([
+                this.projectService.getProjectsByUser(user.id),
+                this.groupService.getGroupsForUser(user.id),
+                this.accessService.getRootRoleForUser(user.id),
+                this.userSubscriptionsService.getUserSubscriptions(user.id),
+                this.userService.hasPassword(user.id),
+            ]);
 
         const responseData: ProfileSchema = {
             projects,
@@ -286,6 +288,7 @@ class UserController extends Controller {
             rootRole,
             subscriptions,
             features: [],
+            canChangePassword,
         };
 
         this.openApiService.respondWithValidation(

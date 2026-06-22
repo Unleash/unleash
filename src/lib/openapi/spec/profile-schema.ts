@@ -8,7 +8,14 @@ export const profileSchema = {
     type: 'object',
     additionalProperties: false,
     description: 'User profile overview',
-    required: ['rootRole', 'projects', 'groups', 'features', 'subscriptions'],
+    required: [
+        'rootRole',
+        'projects',
+        'groups',
+        'features',
+        'subscriptions',
+        'canChangePassword',
+    ],
     properties: {
         rootRole: {
             $ref: '#/components/schemas/roleSchema',
@@ -44,6 +51,12 @@ export const profileSchema = {
                 $ref: '#/components/schemas/featureSchema',
             },
             example: [],
+        },
+        canChangePassword: {
+            description:
+                'Whether the current user has a local password that can be changed.',
+            type: 'boolean',
+            example: true,
         },
     },
     components: {

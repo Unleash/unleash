@@ -58,13 +58,51 @@ describe('joi.htmlInput', () => {
             expect(joiValidation.error).not.toBe(undefined);
         });
         it('Should not allow svg', () => {
-            const htmlString = '<svg/onload=prompt(1)>';
+            const penTestString = '<svg/onload=prompt(1)>';
+            const svgString = '<svg onload="alert(1)">';
             const joiSchema = joi.htmlInput().allowedTags(sanitizeConfig);
-            const joiValidation = joiSchema.validate(htmlString);
+            const joiValidation = joiSchema.validate(penTestString);
             expect(joiValidation.error).not.toBe(undefined);
+            const svgValidation = joiSchema.validate(svgString);
+            expect(svgValidation.error).not.toBe(undefined);
         });
         it('Should still allow emoji as input', () => {
             const htmlString = '🧦🧦';
+            const joiSchema = joi.htmlInput().allowedTags();
+            const joiValidation = joiSchema.validate(htmlString);
+            expect(joiValidation.error).toBe(undefined);
+            expect(joiValidation.value).toBe(htmlString);
+        });
+        it('Should allow Chinese characters as input', () => {
+            const htmlString = '你好';
+            const joiSchema = joi.htmlInput().allowedTags();
+            const joiValidation = joiSchema.validate(htmlString);
+            expect(joiValidation.error).toBe(undefined);
+            expect(joiValidation.value).toBe(htmlString);
+        });
+        it('Should allow Japanese as input', () => {
+            const htmlString = 'こんにちは';
+            const joiSchema = joi.htmlInput().allowedTags();
+            const joiValidation = joiSchema.validate(htmlString);
+            expect(joiValidation.error).toBe(undefined);
+            expect(joiValidation.value).toBe(htmlString);
+        });
+        it('Should allow Korean as input', () => {
+            const htmlString = '좋은 하루';
+            const joiSchema = joi.htmlInput().allowedTags();
+            const joiValidation = joiSchema.validate(htmlString);
+            expect(joiValidation.error).toBe(undefined);
+            expect(joiValidation.value).toBe(htmlString);
+        });
+        it('Should allow Hindi as input', () => {
+            const htmlString = 'शुभ दिवस';
+            const joiSchema = joi.htmlInput().allowedTags();
+            const joiValidation = joiSchema.validate(htmlString);
+            expect(joiValidation.error).toBe(undefined);
+            expect(joiValidation.value).toBe(htmlString);
+        });
+        it('Should allow Arabic as input', () => {
+            const htmlString = 'يوم سعيد';
             const joiSchema = joi.htmlInput().allowedTags();
             const joiValidation = joiSchema.validate(htmlString);
             expect(joiValidation.error).toBe(undefined);

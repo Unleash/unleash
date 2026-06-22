@@ -1,12 +1,12 @@
 import Joibase from 'joi';
 import { nameType } from '../routes/util.js';
-import htmlInput from '../schema/safe-html.js';
+import htmlInput from '../schema/html-input.js';
 const joi = Joibase.extend(htmlInput);
 export const projectSchema = joi
     .object()
     .keys({
         id: nameType,
-        name: joi.htmlInput().required(),
+        name: joi.htmlInput().allowedTags().required(),
         description: joi.string().allow(null).allow('').optional(),
         mode: joi
             .string()

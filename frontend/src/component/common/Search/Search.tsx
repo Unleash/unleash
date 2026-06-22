@@ -20,7 +20,7 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import { useSavedQuery } from './useSavedQuery.ts';
 import { useOnBlur } from 'hooks/useOnBlur';
 import { SearchHistory } from './SearchSuggestions/SearchHistory.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 interface ISearchProps {
     id?: string;
@@ -111,7 +111,7 @@ export const Search = ({
     debounceTime = 200,
     ...rest
 }: ISearchProps) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const searchInputRef = useRef<HTMLInputElement>(null);
     const searchContainerRef = useRef<HTMLInputElement>(null);
     const [showSuggestions, setShowSuggestions] = useState(false);

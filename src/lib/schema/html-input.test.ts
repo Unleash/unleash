@@ -63,7 +63,7 @@ describe('joi.htmlInput', () => {
             const joiValidation = joiSchema.validate(htmlString);
             expect(joiValidation.error).not.toBe(undefined);
         });
-        it('Should still allow emoticons as input', () => {
+        it('Should still allow emoji as input', () => {
             const htmlString = '🧦🧦';
             const joiSchema = joi.htmlInput().allowedTags();
             const joiValidation = joiSchema.validate(htmlString);

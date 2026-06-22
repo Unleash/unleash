@@ -12,6 +12,7 @@ import { AccessProviderMock } from 'component/providers/AccessProvider/AccessPro
 import { UIProviderContainer } from '../component/providers/UIProvider/UIProviderContainer.tsx';
 import { ReactRouter7Adapter } from 'utils/ReactRouter7Adapter';
 import { QueryParamProvider } from 'use-query-params';
+import { NuqsAdapter } from 'nuqs/adapters/react-router/v7';
 import { FeedbackProvider } from 'component/feedbackNew/FeedbackProvider';
 import { StickyProvider } from 'component/common/Sticky/StickyProvider';
 import { HighlightProvider } from 'component/common/Highlight/HighlightProvider';
@@ -49,21 +50,25 @@ export const render = (
                 <FeedbackProvider>
                     <AccessProviderMock permissions={permissions}>
                         <BrowserRouter>
-                            <QueryParamProvider adapter={ReactRouter7Adapter}>
-                                <ThemeProvider>
-                                    <AnnouncerProvider>
-                                        <UnleashFlagProvider>
-                                            <StickyProvider>
-                                                <HighlightProvider>
-                                                    <EventTimelineProvider>
-                                                        {children}
-                                                    </EventTimelineProvider>
-                                                </HighlightProvider>
-                                            </StickyProvider>
-                                        </UnleashFlagProvider>
-                                    </AnnouncerProvider>
-                                </ThemeProvider>
-                            </QueryParamProvider>
+                            <NuqsAdapter>
+                                <QueryParamProvider
+                                    adapter={ReactRouter7Adapter}
+                                >
+                                    <ThemeProvider>
+                                        <AnnouncerProvider>
+                                            <UnleashFlagProvider>
+                                                <StickyProvider>
+                                                    <HighlightProvider>
+                                                        <EventTimelineProvider>
+                                                            {children}
+                                                        </EventTimelineProvider>
+                                                    </HighlightProvider>
+                                                </StickyProvider>
+                                            </UnleashFlagProvider>
+                                        </AnnouncerProvider>
+                                    </ThemeProvider>
+                                </QueryParamProvider>
+                            </NuqsAdapter>
                         </BrowserRouter>
                     </AccessProviderMock>
                 </FeedbackProvider>

@@ -69,18 +69,18 @@ export const FeedbackList = () => {
                 cell: ({ row: { original } }) => (
                     <TextCell>{original.userType}</TextCell>
                 ),
-                meta: { searchable: true },
+                meta: { maxWidth: 120, searchable: true },
             },
             {
                 id: 'difficultyScore',
                 header: 'Score',
                 accessorKey: 'difficultyScore',
                 cell: ({ row: { original } }) => (
-                    <TextCell>
+                    <TextCell sx={{ textAlign: 'center' }}>
                         {original.difficultyScore?.toString() ?? ''}
                     </TextCell>
                 ),
-                meta: { maxWidth: 90 },
+                meta: { maxWidth: 90, align: 'center' },
             },
             {
                 id: 'positive',
@@ -123,6 +123,7 @@ export const FeedbackList = () => {
                 header: 'Date',
                 accessorKey: 'createdAt',
                 cell: DateCell,
+                meta: { maxWidth: 160 },
             },
         ],
         [],

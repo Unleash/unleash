@@ -8,14 +8,14 @@ import { styled } from '@mui/system';
 import {
     capitalize,
     Checkbox,
+    Chip,
     Paper,
     TextField,
     Autocomplete,
-    Typography,
 } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import { StyledHelpText, StyledTitle } from '../IntegrationForm.styles';
+import { FormField } from 'component/common/FormField/FormField';
 
 export interface IIntegrationMultiSelectorProps {
     options: IAutocompleteBoxOption[];
@@ -52,14 +52,6 @@ export const IntegrationMultiSelector: FC<IIntegrationMultiSelectorProps> = ({
             error={Boolean(error)}
             helperText={error || note}
             variant='outlined'
-            label={
-                <>
-                    {capitalize(`${entityName}s`)}
-                    {required ? (
-                        <Typography component='span'>*</Typography>
-                    ) : null}
-                </>
-            }
             placeholder={`Select ${entityName}s to filter by`}
             onFocus={onFocus}
             data-testid={`select-${entityName}-input`}
@@ -85,11 +77,17 @@ export const IntegrationMultiSelector: FC<IIntegrationMultiSelectorProps> = ({
     };
 
     return (
-        <>
-            <StyledTitle>{capitalize(`${entityName}s`)}</StyledTitle>
-            <StyledHelpText>{description}</StyledHelpText>
+        <FormField
+            label={
+                <>
+                    {capitalize(`${entityName}s`)}
+                    {required ? '*' : ''}
+                </>
+            }
+            description={description}
+        >
             <Autocomplete
-                size='small'
+                size='large'
                 multiple
                 limitTags={2}
                 options={options}
@@ -98,6 +96,19 @@ export const IntegrationMultiSelector: FC<IIntegrationMultiSelectorProps> = ({
                 fullWidth
                 renderOption={renderOption}
                 renderInput={renderInput}
+                renderValue={(value, getItemProps) =>
+                    value.map((option, index) => {
+                        const { key, ...itemProps } = getItemProps({ index });
+                        return (
+                            <Chip
+                                size='small'
+                                key={key}
+                                {...itemProps}
+                                label={option.label}
+                            />
+                        );
+                    })
+                }
                 value={options.filter((option) =>
                     selectedItems.includes(option.value),
                 )}
@@ -109,6 +120,6 @@ export const IntegrationMultiSelector: FC<IIntegrationMultiSelectorProps> = ({
                     paper: CustomPaper,
                 }}
             />
-        </>
+        </FormField>
     );
 };

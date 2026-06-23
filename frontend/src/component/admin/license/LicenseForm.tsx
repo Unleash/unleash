@@ -148,7 +148,7 @@ export const LicenseForm = () => {
                         value={token}
                         style={{ width: '100%' }}
                         variant='outlined'
-                        size='small'
+                        size='large'
                         multiline
                         rows={6}
                         required

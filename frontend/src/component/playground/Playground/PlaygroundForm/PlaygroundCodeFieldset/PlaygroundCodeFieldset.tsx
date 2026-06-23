@@ -15,7 +15,10 @@ import {
     useTheme,
     Autocomplete,
     Checkbox,
+    styled,
 } from '@mui/material';
+import { FormField } from 'component/common/FormField/FormField';
+import { FormGroup } from 'component/common/FormGroup/FormGroup';
 
 import debounce from 'debounce';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -37,6 +40,22 @@ interface IPlaygroundCodeFieldsetProps {
     context: string | undefined;
     setContext: Dispatch<SetStateAction<string | undefined>>;
 }
+
+// The "add a context value" row: field select, value input and the add button.
+const StyledValueRow = styled('div')(({ theme }) => ({
+    display: 'grid',
+    gridTemplateColumns: '200px 1fr auto',
+    gap: theme.spacing(2),
+    // Bottom-align so the button sits on the inputs' baseline, not the labels.
+    alignItems: 'end',
+    // Spacing is owned by the grid; drop the FormFields' own bottom margins.
+    '&& > *': {
+        marginBottom: 0,
+    },
+    [theme.breakpoints.down('sm')]: {
+        gridTemplateColumns: '1fr',
+    },
+}));
 
 const createContextFieldOptions = (
     context: IUnleashContextDefinition[],
@@ -203,22 +222,16 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
             return (
                 <TextField
                     id='date'
-                    label='Date'
-                    size='small'
+                    size='large'
                     type='datetime-local'
                     value={value}
-                    sx={{ width: 200, maxWidth: '100%' }}
+                    fullWidth
                     onChange={(e) => {
                         const parsedDate = parseValidDate(e.target.value);
                         const dateString = parsedDate?.toISOString();
                         dateString && setContextValue(dateString);
                     }}
                     required
-                    slotProps={{
-                        inputLabel: {
-                            shrink: true,
-                        },
-                    }}
                 />
             );
         }
@@ -236,7 +249,7 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
                     multiple={true}
                     options={options}
                     disableCloseOnSelect
-                    size='small'
+                    size='large'
                     value={resolveAutocompleteValue()}
                     onChange={changeContextValue}
                     getOptionLabel={(option) => option}
@@ -259,21 +272,18 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
                             </li>
                         );
                     }}
-                    sx={{ width: 370, maxWidth: '100%' }}
-                    renderInput={(params) => (
-                        <TextField {...params} label='Value' />
-                    )}
+                    fullWidth
+                    renderInput={(params) => <TextField {...params} />}
                 />
             );
         }
 
         return (
             <TextField
-                label='Value'
                 id='context-value'
-                sx={{ width: 370, maxWidth: '100%' }}
+                fullWidth
                 placeholder={'value1,value2,value3'}
-                size='small'
+                size='large'
                 value={contextValue}
                 onChange={(event) => setContextValue(event.target.value || '')}
             />
@@ -296,41 +306,48 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
                 <Typography
                     variant='body2'
                     color={theme.palette.text.primary}
-                    sx={{ ml: 1 }}
+                    sx={{ ml: 1, fontWeight: 'bold' }}
                 >
                     Unleash context
                 </Typography>
             </Box>
 
-            <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', mb: 2 }}>
-                <GeneralSelect
-                    label='Context field'
-                    labelId='context-field-label'
-                    id='context-field'
-                    value={contextField}
-                    onChange={changeContextField}
-                    variant='outlined'
-                    size='small'
-                    sx={{ width: 200, maxWidth: '100%' }}
-                    options={contextOptions}
+            <FormGroup>
+                <StyledValueRow>
+                    <FormField label='Context field'>
+                        <GeneralSelect
+                            value={contextField}
+                            onChange={changeContextField}
+                            options={contextOptions}
+                            fullWidth
+                        />
+                    </FormField>
+                    <FormField
+                        label={
+                            contextField === 'currentTime' ? 'Date' : 'Value'
+                        }
+                    >
+                        {resolveInput()}
+                    </FormField>
+                    {/* Spacer label aligns the button with the inputs, not the
+                        labels above them. */}
+                    <FormField label={' '}>
+                        <Button
+                            variant='outlined'
+                            disabled={!contextField || Boolean(error)}
+                            onClick={onAddField}
+                        >
+                            {fieldExist ? 'Replace' : 'Add'}
+                        </Button>
+                    </FormField>
+                </StyledValueRow>
+
+                <PlaygroundEditor
+                    context={context}
+                    setContext={setContext}
+                    error={error}
                 />
-
-                {resolveInput()}
-                <Button
-                    variant='outlined'
-                    disabled={!contextField || Boolean(error)}
-                    onClick={onAddField}
-                    sx={{ width: '95px', maxHeight: '40px' }}
-                >
-                    {`${!fieldExist ? 'Add' : 'Replace'} `}
-                </Button>
-            </Box>
-
-            <PlaygroundEditor
-                context={context}
-                setContext={setContext}
-                error={error}
-            />
+            </FormGroup>
         </Box>
     );
 };

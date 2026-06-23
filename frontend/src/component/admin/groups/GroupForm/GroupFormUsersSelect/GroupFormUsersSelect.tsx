@@ -21,6 +21,10 @@ const StyledOption = styled('div')(({ theme }) => ({
 
 const StyledTags = styled('div')(({ theme }) => ({
     paddingLeft: theme.spacing(1),
+    minWidth: 0,
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
 }));
 
 const StyledGroupFormUsersSelect = styled('div')(({ theme }) => ({
@@ -112,7 +116,7 @@ export const GroupFormUsersSelect: FC<IGroupFormUsersSelectProps> = ({
         <StyledGroupFormUsersSelect>
             <AutocompleteVirtual
                 data-testid={UG_USERS_ID}
-                size='small'
+                size='large'
                 limitTags={1}
                 openOnFocus
                 multiple

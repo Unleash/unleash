@@ -1,5 +1,6 @@
 import type React from 'react';
-import { StyledInput, StyledInputDescription } from '../ApiTokenForm.styles';
+import { TextField } from '@mui/material';
+import { FormField } from 'component/common/FormField/FormField';
 import type { ApiTokenFormErrorType } from '../useApiTokenForm.ts';
 
 interface ITokenInfoProps {
@@ -16,20 +17,20 @@ export const TokenInfo = ({
     clearErrors,
 }: ITokenInfoProps) => {
     return (
-        <>
-            <StyledInputDescription>
-                What would you like to call this token?
-            </StyledInputDescription>
-            <StyledInput
+        <FormField
+            label='Token name'
+            description='What would you like to call this token?'
+        >
+            <TextField
+                fullWidth
                 value={tokenName}
                 name='tokenName'
                 onChange={(e) => setTokenName(e.target.value)}
-                label='Token name'
                 error={errors.tokenName !== undefined}
-                errorText={errors.tokenName}
+                helperText={errors.tokenName}
                 onFocus={() => clearErrors('tokenName')}
                 autoFocus
             />
-        </>
+        </FormField>
     );
 };

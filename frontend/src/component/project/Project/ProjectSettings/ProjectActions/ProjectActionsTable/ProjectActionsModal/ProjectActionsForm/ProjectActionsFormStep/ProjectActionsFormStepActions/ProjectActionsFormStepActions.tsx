@@ -6,6 +6,7 @@ import { ProjectActionsActionItem } from './ProjectActionsActionItem.tsx';
 import type { ActionsActionState } from '../../useProjectActionsForm.ts';
 import { ProjectActionsFormStep } from '../ProjectActionsFormStep.tsx';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
+import { FormField } from 'component/common/FormField/FormField';
 import Add from '@mui/icons-material/Add';
 import type { IServiceAccount } from 'interfaces/service-account';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -91,16 +92,19 @@ export const ProjectActionsFormStepActions = ({
                 </RouterLink>
             }
         >
-            <GeneralSelect
-                label='Service account'
-                name='service-account'
-                options={serviceAccountOptions}
-                value={`${actorId}`}
-                onChange={(v) => {
-                    validateActorId(Number(v));
-                    setActorId(Number.parseInt(v, 10));
-                }}
-            />
+            <FormField label='Service account'>
+                <GeneralSelect
+                    fullWidth
+                    placeholder='Select'
+                    name='service-account'
+                    options={serviceAccountOptions}
+                    value={`${actorId}`}
+                    onChange={(v) => {
+                        validateActorId(Number(v));
+                        setActorId(Number.parseInt(v, 10));
+                    }}
+                />
+            </FormField>
             <StyledDivider />
             {actions.map((action, index) => (
                 <ProjectActionsActionItem

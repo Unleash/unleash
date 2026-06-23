@@ -15,6 +15,7 @@ import useToast from 'hooks/useToast';
 import { type FormEvent, useEffect, useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import Input from 'component/common/Input/Input';
+import { FormField } from 'component/common/FormField/FormField';
 import type {
     IEnvironment,
     IEnvironmentClonePayload,
@@ -38,23 +39,9 @@ const StyledForm = styled('form')(() => ({
     height: '100%',
 }));
 
-const StyledInputDescription = styled('p')(({ theme }) => ({
-    display: 'flex',
-    color: theme.palette.text.primary,
-    marginBottom: theme.spacing(1),
-    '&:not(:first-of-type)': {
-        marginTop: theme.spacing(4),
-    },
-}));
-
 const StyledInputSecondaryDescription = styled('p')(({ theme }) => ({
     color: theme.palette.text.secondary,
     marginBottom: theme.spacing(1),
-}));
-
-const StyledInput = styled(Input)(({ theme }) => ({
-    width: '100%',
-    maxWidth: theme.spacing(50),
 }));
 
 const StyledSecondaryContainer = styled('div')(({ theme }) => ({
@@ -244,94 +231,106 @@ export const EnvironmentCloneModal = ({
             >
                 <StyledForm onSubmit={handleSubmit}>
                     <div>
-                        <StyledInputDescription>
-                            What is your new environment name? (Can't be changed
-                            later)
-                        </StyledInputDescription>
-                        <StyledInput
-                            autoFocus
+                        <FormField
                             label='Environment name'
-                            error={Boolean(errors.name)}
-                            errorText={errors.name}
-                            value={name}
-                            onChange={(e) => onSetName(e.target.value)}
-                            required
-                        />
-                        <StyledInputDescription>
-                            What type of environment do you want to create?
-                        </StyledInputDescription>
-                        <EnvironmentTypeSelector
-                            onChange={(e) => setType(e.currentTarget.value)}
-                            value={type}
-                        />
-                        <StyledInputDescription>
-                            Select which projects you want to clone the
-                            environment configuration in?
-                            <HelpIcon tooltip='The cloned environment will keep the feature flag state for the selected projects, where it will be enabled by default.' />
-                        </StyledInputDescription>
-                        <EnvironmentProjectSelect
-                            projects={projects}
-                            setProjects={setProjects}
-                        />
-                        <StyledInputDescription>
-                            Keep the users permission for this environment?
-                        </StyledInputDescription>
-                        <StyledInputSecondaryDescription>
-                            If you turn it off, the permission for this
-                            environment across all projects and feature flags
-                            will remain only for admin and editor roles.
-                        </StyledInputSecondaryDescription>
-                        <FormControlLabel
-                            label={clonePermissions ? 'Yes' : 'No'}
-                            control={
-                                <Switch
-                                    onChange={(e) =>
-                                        setClonePermissions(e.target.checked)
-                                    }
-                                    checked={clonePermissions}
-                                />
+                            description="What is your new environment name? (Can't be changed later)"
+                        >
+                            <Input
+                                fullWidth
+                                autoFocus
+                                label=''
+                                error={Boolean(errors.name)}
+                                errorText={errors.name}
+                                value={name}
+                                onChange={(e) => onSetName(e.target.value)}
+                                required
+                            />
+                        </FormField>
+                        <FormField
+                            label='Environment type'
+                            description='What type of environment do you want to create?'
+                        >
+                            <EnvironmentTypeSelector
+                                onChange={(e) => setType(e.currentTarget.value)}
+                                value={type}
+                            />
+                        </FormField>
+                        <FormField
+                            label='Projects'
+                            description={
+                                <>
+                                    Select which projects you want to clone the
+                                    environment configuration in?
+                                    <HelpIcon tooltip='The cloned environment will keep the feature flag state for the selected projects, where it will be enabled by default.' />
+                                </>
                             }
-                        />
+                        >
+                            <EnvironmentProjectSelect
+                                projects={projects}
+                                setProjects={setProjects}
+                            />
+                        </FormField>
+                        <FormField
+                            label='Keep user permissions'
+                            description='If you turn it off, the permission for this environment across all projects and feature flags will remain only for admin and editor roles.'
+                        >
+                            <FormControlLabel
+                                label={clonePermissions ? 'Yes' : 'No'}
+                                control={
+                                    <Switch
+                                        onChange={(e) =>
+                                            setClonePermissions(
+                                                e.target.checked,
+                                            )
+                                        }
+                                        checked={clonePermissions}
+                                    />
+                                }
+                            />
+                        </FormField>
                         <StyledSecondaryContainer>
-                            <StyledInputDescription>
-                                API Token
-                            </StyledInputDescription>
-                            <StyledInputSecondaryDescription>
-                                In order to connect your SDKs to your newly
-                                cloned environment, you will also need an API
-                                token.{' '}
-                                <Link
-                                    href='https://docs.getunleash.io/concepts/api-tokens-and-client-keys'
-                                    target='_blank'
-                                    rel='noreferrer'
-                                >
-                                    Read more about API tokens
-                                </Link>
-                                .
-                            </StyledInputSecondaryDescription>
-                            <FormControl>
-                                <RadioGroup
-                                    value={apiTokenGeneration}
-                                    onChange={(e) =>
-                                        setApiTokenGeneration(
-                                            e.target
-                                                .value as APITokenGeneration,
-                                        )
-                                    }
-                                    name='api-token-generation'
-                                >
-                                    <FormControlLabel
-                                        value={APITokenGeneration.LATER}
-                                        control={<Radio />}
-                                        label='I want to generate an API token later'
-                                    />
-                                    <FormControlLabel
-                                        value={APITokenGeneration.NOW}
-                                        control={<Radio />}
-                                        label='Generate an API token now'
-                                    />
-                                </RadioGroup>
-                            </FormControl>
+                            <FormField
+                                label='API token'
+                                description={
+                                    <>
+                                        In order to connect your SDKs to your
+                                        newly cloned environment, you will also
+                                        need an API token.{' '}
+                                        <Link
+                                            href='https://docs.getunleash.io/concepts/api-tokens-and-client-keys'
+                                            target='_blank'
+                                            rel='noreferrer'
+                                        >
+                                            Read more about API tokens
+                                        </Link>
+                                        .
+                                    </>
+                                }
+                            >
+                                <FormControl>
+                                    <RadioGroup
+                                        value={apiTokenGeneration}
+                                        onChange={(e) =>
+                                            setApiTokenGeneration(
+                                                e.target
+                                                    .value as APITokenGeneration,
+                                            )
+                                        }
+                                        name='api-token-generation'
+                                    >
+                                        <FormControlLabel
+                                            value={APITokenGeneration.LATER}
+                                            control={<Radio />}
+                                            label='I want to generate an API token later'
+                                        />
+                                        <FormControlLabel
+                                            value={APITokenGeneration.NOW}
+                                            control={<Radio />}
+                                            label='Generate an API token now'
+                                        />
+                                    </RadioGroup>
+                                </FormControl>
+                            </FormField>
                             <StyledInlineContainer>
                                 <StyledInputSecondaryDescription>
                                     A new backend API token will be generated
@@ -344,11 +343,10 @@ export const EnvironmentCloneModal = ({
                                         APITokenGeneration.NOW
                                     }
                                     show={
-                                        <>
-                                            <StyledInputDescription>
-                                                Which projects do you want this
-                                                token to give access to?
-                                            </StyledInputDescription>
+                                        <FormField
+                                            label='Token projects'
+                                            description='Which projects do you want this token to give access to?'
+                                        >
                                             <SelectProjectInput
                                                 options={selectableProjects}
                                                 defaultValue={tokenProjects}
@@ -360,7 +358,7 @@ export const EnvironmentCloneModal = ({
                                                     )
                                                 }
                                             />
-                                        </>
+                                        </FormField>
                                     }
                                 />
                             </StyledInlineContainer>

@@ -188,7 +188,7 @@ export const CopyFeatureToggle = () => {
                         error={nameError !== undefined}
                         helperText={nameError}
                         variant='outlined'
-                        size='small'
+                        size='large'
                         aria-required
                         aria-details={
                             displayFeatureNamingInfo

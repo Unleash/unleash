@@ -98,7 +98,7 @@ export const ProjectAccessSection = ({
                             setSelectedProjectIds(e.target.value as string[])
                         }
                         renderValue={() => projectSelectorLabel}
-                        size='small'
+                        size='large'
                         sx={{ minWidth: 150, maxWidth: 200, flexShrink: 0 }}
                         displayEmpty
                         MenuProps={{
@@ -138,7 +138,7 @@ export const ProjectAccessSection = ({
                             }
                         }}
                         renderValue={() => environmentSelectorLabel}
-                        size='small'
+                        size='large'
                         sx={{ minWidth: 150, maxWidth: 200, flexShrink: 0 }}
                         displayEmpty
                         MenuProps={{

@@ -195,7 +195,7 @@ export const BannerForm = ({
                         What type of banner is it?
                     </StyledInputDescription>
                     <StyledSelect
-                        size='small'
+                        size='large'
                         value={variant}
                         onChange={(variant) =>
                             setVariant(variant as BannerVariant)
@@ -208,7 +208,7 @@ export const BannerForm = ({
                         What icon should be displayed on the banner?
                     </StyledInputDescription>
                     <StyledSelect
-                        size='small'
+                        size='large'
                         value={iconOption}
                         onChange={(iconOption) => {
                             setIconOption(iconOption as IconOption);
@@ -312,7 +312,7 @@ export const BannerForm = ({
                         What action should be available in the banner?
                     </StyledInputDescription>
                     <StyledSelect
-                        size='small'
+                        size='large'
                         value={linkOption}
                         onChange={(linkOption) => {
                             setLinkOption(linkOption as LinkOption);

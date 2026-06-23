@@ -1,4 +1,4 @@
-import type { FC, JSX } from 'react';
+import type { FC } from 'react';
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import type { AggregationMode } from '../../../types.ts';
 
@@ -9,42 +9,35 @@ export type ModeSelectorProps = {
     label?: string;
 };
 
-const counterOptions = [
-    <MenuItem key='rps' value='rps'>
-        Rate per second
-    </MenuItem>,
-    <MenuItem key='count' value='count'>
-        Count
-    </MenuItem>,
+type AggregationModeOption = { key: AggregationMode; label: string };
+
+const counterOptions: AggregationModeOption[] = [
+    { key: 'rps', label: 'Rate per second' },
+    { key: 'count', label: 'Count' },
 ];
 
-const gaugeOptions = [
-    <MenuItem key='avg' value='avg'>
-        Average
-    </MenuItem>,
-    <MenuItem key='sum' value='sum'>
-        Sum
-    </MenuItem>,
+const gaugeOptions: AggregationModeOption[] = [
+    { key: 'avg', label: 'Average' },
+    { key: 'sum', label: 'Sum' },
 ];
 
-const histogramOptions = [
-    <MenuItem key='p50' value='p50'>
-        50th percentile
-    </MenuItem>,
-    <MenuItem key='p95' value='p95'>
-        95th percentile
-    </MenuItem>,
-    <MenuItem key='p99' value='p99'>
-        99th percentile
-    </MenuItem>,
+const histogramOptions: AggregationModeOption[] = [
+    { key: 'p50', label: '50th percentile' },
+    { key: 'p95', label: '95th percentile' },
+    { key: 'p99', label: '99th percentile' },
 ];
 
-const optionsByType: Record<string, JSX.Element[]> = {
+const optionsByType: Record<string, AggregationModeOption[]> = {
     counter: counterOptions,
     gauge: gaugeOptions,
     histogram: histogramOptions,
     unknown: [...counterOptions, ...gaugeOptions, ...histogramOptions],
 };
+
+export const getAggregationModeOptions = (
+    metricType: ModeSelectorProps['metricType'],
+): AggregationModeOption[] =>
+    optionsByType[metricType] ?? optionsByType.unknown;
 
 export const ModeSelector: FC<ModeSelectorProps> = ({
     value,
@@ -52,10 +45,10 @@ export const ModeSelector: FC<ModeSelectorProps> = ({
     metricType,
     label = 'Aggregation Mode',
 }) => {
-    const options = optionsByType[metricType] ?? optionsByType.unknown;
+    const options = getAggregationModeOptions(metricType);
 
     return (
-        <FormControl variant='outlined' size='small'>
+        <FormControl variant='outlined' size='large'>
             {label ? (
                 <InputLabel id='mode-select-label'>{label}</InputLabel>
             ) : null}
@@ -65,7 +58,11 @@ export const ModeSelector: FC<ModeSelectorProps> = ({
                 onChange={(e) => onChange(e.target.value as AggregationMode)}
                 label={label}
             >
-                {options}
+                {options.map((option) => (
+                    <MenuItem key={option.key} value={option.key}>
+                        {option.label}
+                    </MenuItem>
+                ))}
             </Select>
         </FormControl>
     );

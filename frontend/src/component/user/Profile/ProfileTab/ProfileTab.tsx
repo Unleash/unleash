@@ -305,7 +305,7 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
                     This is the format used across the system for time and date
                 </Typography>
                 <LocaleSelector>
-                    <StyledFormControl variant='outlined' size='small'>
+                    <StyledFormControl variant='outlined' size='large'>
                         <StyledInputLabel htmlFor='locale-select'>
                             Date/Time formatting
                         </StyledInputLabel>

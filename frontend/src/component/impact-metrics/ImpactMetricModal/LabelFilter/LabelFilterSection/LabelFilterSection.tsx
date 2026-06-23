@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { Box, Typography, Chip, styled } from '@mui/material';
+import { FormGroup } from 'component/common/FormGroup/FormGroup';
 import { LabelFilterItem } from './LabelFilterItem/LabelFilterItem.tsx';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
@@ -27,12 +28,17 @@ const StyledGridItem = styled(Box)({
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
+    // Spacing is owned by the grid gap; drop the FormField's own bottom margin.
+    '& > *': {
+        marginBottom: 0,
+    },
 });
 
-const StyledTitle = styled(Typography)({
+const StyledTitle = styled(Typography)(({ theme }) => ({
     lineHeight: 1.5,
     height: '24px',
-});
+    fontWeight: theme.typography.fontWeightBold,
+}));
 
 const StyledClearAll = styled(Chip)(({ theme }) => ({
     position: 'relative',
@@ -82,24 +88,26 @@ export const LabelFilterSection: FC<{
                     />
                 )}
             </StyledHeader>
-            <StyledGrid>
-                {labels.map(([labelKey, values]) => {
-                    const currentSelection = labelSelectors[labelKey] || [];
-                    return (
-                        <StyledGridItem key={labelKey}>
-                            <LabelFilterItem
-                                labelKey={labelKey}
-                                options={values}
-                                value={currentSelection}
-                                onChange={(newValues) =>
-                                    onLabelChange(labelKey, newValues)
-                                }
-                                handleAllToggle={onAllToggle}
-                            />
-                        </StyledGridItem>
-                    );
-                })}
-            </StyledGrid>
+            <FormGroup>
+                <StyledGrid>
+                    {labels.map(([labelKey, values]) => {
+                        const currentSelection = labelSelectors[labelKey] || [];
+                        return (
+                            <StyledGridItem key={labelKey}>
+                                <LabelFilterItem
+                                    labelKey={labelKey}
+                                    options={values}
+                                    value={currentSelection}
+                                    onChange={(newValues) =>
+                                        onLabelChange(labelKey, newValues)
+                                    }
+                                    handleAllToggle={onAllToggle}
+                                />
+                            </StyledGridItem>
+                        );
+                    })}
+                </StyledGrid>
+            </FormGroup>
         </StyledContainer>
     );
 };

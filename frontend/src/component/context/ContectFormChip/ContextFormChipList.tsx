@@ -8,11 +8,11 @@ const StyledContainer = styled('ul')(({ theme }) => ({
     gap: theme.spacing(1),
     padding: theme.spacing(2),
     margin: 0,
-    marginBottom: '1rem !important',
     maxHeight: '412px',
     overflow: 'auto',
     borderRadius: theme.shape.borderRadiusMedium,
     border: `1px solid ${theme.palette.divider}`,
+    backgroundColor: theme.palette.background.paper,
     '&:empty': {
         display: 'none',
     },

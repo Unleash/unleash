@@ -11,6 +11,7 @@ import Add from '@mui/icons-material/Add';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ADD_TO_STRATEGY_INPUT_LIST, STRATEGY_INPUT_LIST } from 'utils/testIds';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
+import { FormField } from 'component/common/FormField/FormField';
 import type { IFormErrors } from 'hooks/useFormErrors';
 
 interface IStrategyInputList {
@@ -32,9 +33,16 @@ const ChipsList = styled('div')(({ theme }) => ({
 }));
 
 const InputContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
+    display: 'grid',
+    // Input fills the row; the Add button keeps its content width.
+    gridTemplateColumns: '1fr auto',
     gap: theme.spacing(1),
+    // Top-align so the input's error text extends downward without nudging the
+    // button; spacing is owned by the row, so drop the FormFields' margins.
     alignItems: 'start',
+    '&& > *': {
+        marginBottom: 0,
+    },
 }));
 
 const StrategyInputList = ({
@@ -91,7 +99,11 @@ const StrategyInputList = ({
 
     return (
         <Container>
-            <Typography variant='subtitle2' component='h2'>
+            <Typography
+                variant='subtitle2'
+                component='h2'
+                sx={{ fontWeight: 'bold' }}
+            >
                 List of {name}
             </Typography>
             <ConditionallyRender
@@ -116,32 +128,37 @@ const StrategyInputList = ({
                 }
             />
             <InputContainer>
-                <TextField
-                    error={Boolean(errors.getFormError(name))}
-                    helperText={errors.getFormError(name)}
-                    name={`input_field`}
-                    variant='outlined'
-                    label='Add items'
-                    id='input-add-items'
-                    value={input}
-                    size='small'
-                    placeholder=''
-                    onBlur={onBlur}
-                    onChange={onChange}
-                    // @ts-expect-error
-                    onKeyDown={onKeyDown}
-                    data-testid={STRATEGY_INPUT_LIST}
-                />
-                {/* @ts-expect-error */}
-                <Button
-                    onClick={setValue}
-                    data-testid={ADD_TO_STRATEGY_INPUT_LIST}
-                    variant='outlined'
-                    color='secondary'
-                    startIcon={<Add />}
-                >
-                    Add
-                </Button>
+                <FormField label='Add items'>
+                    <TextField
+                        error={Boolean(errors.getFormError(name))}
+                        helperText={errors.getFormError(name)}
+                        name={`input_field`}
+                        variant='outlined'
+                        fullWidth
+                        value={input}
+                        size='large'
+                        placeholder=''
+                        onBlur={onBlur}
+                        onChange={onChange}
+                        // @ts-expect-error
+                        onKeyDown={onKeyDown}
+                        data-testid={STRATEGY_INPUT_LIST}
+                    />
+                </FormField>
+                {/* Spacer label aligns the button with the input, not the
+                    label above it. */}
+                <FormField label={' '}>
+                    {/* @ts-expect-error */}
+                    <Button
+                        onClick={setValue}
+                        data-testid={ADD_TO_STRATEGY_INPUT_LIST}
+                        variant='outlined'
+                        color='secondary'
+                        startIcon={<Add />}
+                    >
+                        Add
+                    </Button>
+                </FormField>
             </InputContainer>
         </Container>
     );

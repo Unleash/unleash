@@ -137,7 +137,7 @@ export const DraftChangeRequestActions: FC<{
         <>
             <AutocompleteVirtual
                 sx={{ ml: 'auto', width: theme.spacing(40) }}
-                size='small'
+                size='large'
                 limitTags={3}
                 openOnFocus
                 multiple

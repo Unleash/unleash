@@ -140,7 +140,7 @@ const HostedAuth: FC<IHostedAuthProps> = ({ authDetails, redirect }) => {
                                 error={Boolean(usernameError)}
                                 helperText={usernameError}
                                 variant='outlined'
-                                size='small'
+                                size='large'
                                 data-testid={LOGIN_EMAIL_ID}
                             />
                             <PasswordField

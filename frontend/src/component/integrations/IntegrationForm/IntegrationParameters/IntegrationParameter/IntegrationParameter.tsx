@@ -1,5 +1,4 @@
 import type { ChangeEventHandler } from 'react';
-import { StyledAddonParameterContainer } from '../../IntegrationForm.styles';
 import type { AddonParameterSchema, AddonSchema } from 'openapi';
 import { IntegrationParameterTextField } from './IntegrationParameterTextField.tsx';
 
@@ -17,13 +16,11 @@ export const IntegrationParameter = ({
     setParameterValue,
 }: IIntegrationParameterProps) => {
     return (
-        <StyledAddonParameterContainer>
-            <IntegrationParameterTextField
-                config={config}
-                definition={definition}
-                parametersErrors={parametersErrors}
-                setParameterValue={setParameterValue}
-            />
-        </StyledAddonParameterContainer>
+        <IntegrationParameterTextField
+            config={config}
+            definition={definition}
+            parametersErrors={parametersErrors}
+            setParameterValue={setParameterValue}
+        />
     );
 };

@@ -64,7 +64,7 @@ const SimpleAuth: FC<ISimpleAuthProps> = ({ authDetails, redirect }) => {
                 <TextField
                     value={email}
                     onChange={handleChange}
-                    size='small'
+                    size='large'
                     variant='outlined'
                     label='Email'
                     name='email'

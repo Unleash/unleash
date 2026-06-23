@@ -12,6 +12,7 @@ import {
     parseParameterString,
 } from 'utils/parseParameter';
 import { InputCaption } from 'component/common/InputCaption/InputCaption';
+import { FormField } from 'component/common/FormField/FormField';
 import type { IFormErrors } from 'hooks/useFormErrors';
 
 interface IStrategyParameterProps {
@@ -83,20 +84,18 @@ export const StrategyParameter = ({
 
     if (type === 'number') {
         return (
-            <div>
+            <FormField label={label} description={description}>
                 <TextField
                     error={Boolean(error)}
                     helperText={error}
                     variant='outlined'
-                    size='small'
+                    size='large'
                     aria-required={required}
                     style={{ width: '100%' }}
-                    label={label}
                     onChange={onChange}
                     value={value}
                 />
-                <InputCaption text={description} />
-            </div>
+            </FormField>
         );
     }
 
@@ -121,22 +120,20 @@ export const StrategyParameter = ({
     }
 
     return (
-        <div>
+        <FormField label={label} description={description}>
             <TextField
                 rows={1}
                 placeholder=''
                 variant='outlined'
-                size='small'
+                size='large'
                 style={{ width: '100%' }}
                 aria-required={required}
                 error={Boolean(error)}
                 helperText={error}
                 name={name}
-                label={label}
                 onChange={onChangeString}
                 value={parseParameterString(parameters[name])}
             />
-            <InputCaption text={description} />
-        </div>
+        </FormField>
     );
 };

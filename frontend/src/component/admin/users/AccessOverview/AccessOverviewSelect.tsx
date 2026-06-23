@@ -22,7 +22,7 @@ export const AccessOverviewSelect = <T,>({
         renderInput={(params) => (
             <TextField {...params} label={label} fullWidth />
         )}
-        size='small'
+        size='large'
         fullWidth
         {...rest}
     />

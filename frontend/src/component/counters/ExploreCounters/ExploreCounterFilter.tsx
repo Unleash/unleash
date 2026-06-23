@@ -39,7 +39,7 @@ export const ExploreCounterFilter = ({
             <Grid size={{ xs: 12, md: 6 }}>
                 <Grid container spacing={2}>
                     <FormControl>
-                        <InputLabel id='counter-label' size='small'>
+                        <InputLabel id='counter-label' size='large'>
                             Counter
                         </InputLabel>
                         <Select
@@ -49,7 +49,7 @@ export const ExploreCounterFilter = ({
                             value={counter}
                             onChange={counterChanged}
                             variant='outlined'
-                            size='small'
+                            size='large'
                             sx={{ width: 200, maxWidth: '100%' }}
                         >
                             {counterNames?.map((option) => (

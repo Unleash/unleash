@@ -124,7 +124,7 @@ export const OverrideConfig: FC<IOverrideConfigProps> = ({
                                         value={filteredValues}
                                         style={{ width: '100%' }}
                                         filterSelectedOptions
-                                        size='small'
+                                        size='large'
                                         renderInput={(params) => (
                                             <StyledTextField
                                                 {...params}

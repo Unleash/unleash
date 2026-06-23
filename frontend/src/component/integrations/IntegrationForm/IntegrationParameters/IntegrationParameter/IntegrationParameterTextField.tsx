@@ -1,8 +1,9 @@
-import { TextField, Typography } from '@mui/material';
+import { TextField } from '@mui/material';
 import type { AddonParameterSchema, AddonSchema } from 'openapi';
 import type { ChangeEventHandler } from 'react';
 import { styled } from '@mui/material';
 import { Markdown } from 'component/common/Markdown/Markdown';
+import { FormField } from 'component/common/FormField/FormField';
 
 const MASKED_VALUE = '*****';
 
@@ -41,38 +42,32 @@ export const IntegrationParameterTextField = ({
     const error = parametersErrors[definition.name];
 
     return (
-        <StyledTextField
-            size='small'
-            minRows={definition.type === 'textfield' ? 5 : 0}
-            multiline={definition.type === 'textfield'}
-            type={type}
-            label={
-                <>
-                    {definition.displayName}
-                    {definition.required ? (
-                        <Typography component='span'>*</Typography>
-                    ) : null}
-                </>
-            }
-            name={definition.name}
-            placeholder={definition.placeholder || ''}
-            slotProps={{
-                inputLabel: {
-                    shrink: true,
-                },
-                formHelperText: {
-                    component: 'div',
-                },
-            }}
-            value={value}
-            error={Boolean(error)}
-            onChange={setParameterValue(definition.name)}
-            variant='outlined'
-            helperText={
-                definition.description ? (
-                    <Markdown>{definition.description}</Markdown>
-                ) : undefined
-            }
-        />
+        <FormField
+            label={`${definition.displayName}${definition.required ? '*' : ''}`}
+        >
+            <StyledTextField
+                size='large'
+                minRows={definition.type === 'textfield' ? 5 : 0}
+                multiline={definition.type === 'textfield'}
+                type={type}
+                label=''
+                name={definition.name}
+                placeholder={definition.placeholder || ''}
+                slotProps={{
+                    formHelperText: {
+                        component: 'div',
+                    },
+                }}
+                value={value}
+                error={Boolean(error)}
+                onChange={setParameterValue(definition.name)}
+                variant='outlined'
+                helperText={
+                    definition.description ? (
+                        <Markdown>{definition.description}</Markdown>
+                    ) : undefined
+                }
+            />
+        </FormField>
     );
 };

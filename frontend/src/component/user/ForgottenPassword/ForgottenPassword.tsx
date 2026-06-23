@@ -153,7 +153,7 @@ const ForgottenPassword = () => {
                     <TextField
                         label='Email'
                         variant='outlined'
-                        size='small'
+                        size='large'
                         type='email'
                         data-testid={FORGOTTEN_PASSWORD_FIELD}
                         value={email}

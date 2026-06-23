@@ -11,6 +11,7 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import type { MetricSource } from 'component/impact-metrics/types';
 import { useTrackFlagpageImpactMetrics } from 'component/impact-metrics/useImpactMetricsFunnel';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { FormField } from 'component/common/FormField/FormField';
 import { RegisterMetricDialog } from 'component/impact-metrics/RegisterMetricDialog/RegisterMetricDialog';
 import { useTrackRegisterImpactMetrics } from 'component/impact-metrics/RegisterMetricDialog/useTrackRegisterImpactMetrics';
 
@@ -148,74 +149,81 @@ export const MetricSelector = ({
     const [registerDialogOpen, setRegisterDialogOpen] = useState(false);
     const { trackFormOpened } = useTrackRegisterImpactMetrics(entryPoint);
 
+    const autocomplete = (
+        <Autocomplete
+            options={allOptions}
+            groupBy={(option) => groupLabel(option.source)}
+            getOptionLabel={(option) => option.displayName}
+            value={
+                allOptions.find((option) =>
+                    matchesSelection(option, value, valueSource),
+                ) || null
+            }
+            onChange={(_, newValue) => {
+                const selected = newValue || options[0];
+                onChange({
+                    metricName: selected?.name || '',
+                    source: selected?.source,
+                });
+            }}
+            disabled={loading}
+            renderOption={(props, option, { inputValue }) => (
+                <Box
+                    component='li'
+                    {...props}
+                    key={`${option.source}__${option.name}`}
+                >
+                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                        <Typography variant='body2'>
+                            <Highlighter search={inputValue}>
+                                {option.displayName}
+                            </Highlighter>
+                        </Typography>
+                        <Typography
+                            variant='caption'
+                            sx={{
+                                color: 'text.secondary',
+                            }}
+                        >
+                            <Highlighter search={inputValue}>
+                                {option.help}
+                            </Highlighter>
+                        </Typography>
+                    </Box>
+                </Box>
+            )}
+            renderInput={(params) => (
+                <TextField
+                    {...params}
+                    placeholder='Search for a metric…'
+                    variant='outlined'
+                    size='large'
+                    required
+                />
+            )}
+            noOptionsText={
+                <NoOptionsMessage
+                    onRegisterClick={
+                        registerImpactMetricsEnabled
+                            ? () => {
+                                  setRegisterDialogOpen(true);
+                                  trackFormOpened();
+                              }
+                            : undefined
+                    }
+                />
+            }
+            sx={{ minWidth: 300 }}
+        />
+    );
+
     return (
         <>
-            <Autocomplete
-                options={allOptions}
-                groupBy={(option) => groupLabel(option.source)}
-                getOptionLabel={(option) => option.displayName}
-                value={
-                    allOptions.find((option) =>
-                        matchesSelection(option, value, valueSource),
-                    ) || null
-                }
-                onChange={(_, newValue) => {
-                    const selected = newValue || options[0];
-                    onChange({
-                        metricName: selected?.name || '',
-                        source: selected?.source,
-                    });
-                }}
-                disabled={loading}
-                renderOption={(props, option, { inputValue }) => (
-                    <Box
-                        component='li'
-                        {...props}
-                        key={`${option.source}__${option.name}`}
-                    >
-                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                            <Typography variant='body2'>
-                                <Highlighter search={inputValue}>
-                                    {option.displayName}
-                                </Highlighter>
-                            </Typography>
-                            <Typography
-                                variant='caption'
-                                sx={{
-                                    color: 'text.secondary',
-                                }}
-                            >
-                                <Highlighter search={inputValue}>
-                                    {option.help}
-                                </Highlighter>
-                            </Typography>
-                        </Box>
-                    </Box>
-                )}
-                renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        label={label}
-                        placeholder='Search for a metric…'
-                        variant='outlined'
-                        size='small'
-                        required
-                    />
-                )}
-                noOptionsText={
-                    <NoOptionsMessage
-                        onRegisterClick={
-                            registerImpactMetricsEnabled
-                                ? () => {
-                                      setRegisterDialogOpen(true);
-                                      trackFormOpened();
-                                  }
-                                : undefined
-                        }
-                    />
-                }
-                sx={{ minWidth: 300 }}
-            />
+            {label ? (
+                <FormField label={label}>{autocomplete}</FormField>
+            ) : (
+                autocomplete
+            )}
             <RegisterMetricDialog
                 open={registerDialogOpen}
                 onClose={() => setRegisterDialogOpen(false)}

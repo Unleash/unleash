@@ -10,6 +10,7 @@ import {
     Typography,
 } from '@mui/material';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import { FormField } from 'component/common/FormField/FormField';
 import { ImpactMetricsControls } from './ImpactMetricsControls/ImpactMetricsControls.tsx';
 import { useChartFormState } from '../hooks/useChartFormState.ts';
 import type { ChartConfig } from '../types.ts';
@@ -47,10 +48,21 @@ const StyledTitle = styled('h1')(({ theme }) => ({
 const StyledFormContent = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(3),
+    // Match the shared field rhythm (FormField/FormGroup use spacing(2)).
+    gap: theme.spacing(2),
     padding: theme.spacing(6),
     flexGrow: 1,
     minHeight: 600,
+    // Vertical spacing is owned by the gap; drop the fields' own bottom margins
+    // (e.g. FormField's spacing(2)) so it isn't doubled up. Doubled selector
+    // raises specificity above the child's own rule.
+    '&& > *': {
+        marginBottom: 0,
+    },
+    // The title gets extra separation (one field-gap more) from the first field.
+    '&& > h1': {
+        marginBottom: theme.spacing(2),
+    },
 }));
 
 const StyledButtonContainer = styled('div')(({ theme }) => ({
@@ -191,14 +203,17 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
                                 : 'Add impact metric'}
                         </StyledTitle>
 
-                        <TextField
-                            label='Chart Title (optional)'
-                            value={formData.title}
-                            onChange={(e) => actions.setTitle(e.target.value)}
-                            fullWidth
-                            variant='outlined'
-                            size='small'
-                        />
+                        <FormField label='Chart title (optional)'>
+                            <TextField
+                                value={formData.title}
+                                onChange={(e) =>
+                                    actions.setTitle(e.target.value)
+                                }
+                                fullWidth
+                                variant='outlined'
+                                size='large'
+                            />
+                        </FormField>
 
                         <ImpactMetricsControls
                             formData={formData}

@@ -34,6 +34,17 @@ const LOGROCKET_CONNECT_SRC = [
     'https://*.logr-in.com',
 ];
 
+const flightRecorderConnectSrc = (flightRecorderUrl?: string): string[] => {
+    if (!flightRecorderUrl) {
+        return [];
+    }
+    try {
+        return [new URL(flightRecorderUrl).origin];
+    } catch {
+        return [];
+    }
+};
+
 const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
     if (config.secureHeaders) {
         const includeUnsafeInline = !config.flagResolver.isEnabled(
@@ -44,6 +55,9 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
         const logRocketConnectSrc = logRocketEnabled
             ? LOGROCKET_CONNECT_SRC
             : [];
+        const flightRecorderSrc = flightRecorderConnectSrc(
+            config.server.flightRecorderUrl,
+        );
         const workerSrc = logRocketEnabled ? ["'self'", 'blob:'] : ["'self'"];
         const styleSrc = ["'self'"];
         if (includeUnsafeInline) {
@@ -99,6 +113,7 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
                         'europe-west3-metrics-304612.cloudfunctions.net',
                         'app.unleash-hosted.com',
                         'hosted.edge.getunleash.io',
+                        ...flightRecorderSrc,
                         ...logRocketConnectSrc,
                         ...config.additionalCspAllowedDomains.connectSrc,
                     ],

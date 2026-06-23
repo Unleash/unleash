@@ -50,7 +50,7 @@ export const RoleSelect = ({
         <>
             <Autocomplete
                 openOnFocus
-                size='small'
+                size='large'
                 value={value}
                 onChange={(_, role) => setValue(role || null)}
                 options={roles}

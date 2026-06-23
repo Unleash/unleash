@@ -13,6 +13,7 @@ import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutl
 import type { SxProps } from '@mui/system';
 import type { Theme } from '@mui/material/styles';
 import { visuallyHidden } from '@mui/utils';
+import { formFieldLabelId } from 'component/common/FormField/FormField';
 
 export interface ISelectOption {
     key: string;
@@ -47,11 +48,17 @@ export interface IGeneralSelectProps<T extends string = string>
     defaultValue?: string;
     visuallyHideLabel?: boolean;
     variant?: 'outlined' | 'filled' | 'standard';
+    /** Shown (muted) when no option is selected. */
+    placeholder?: string;
 }
 
 const StyledFormControl = styled(FormControl)({
     maxWidth: '100%',
 });
+
+const StyledPlaceholder = styled('span')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+}));
 
 const toMenuItem = (option: ISelectOption) => (
     <MenuItem
@@ -80,17 +87,43 @@ function GeneralSelect<T extends string = string>({
     fullWidth,
     visuallyHideLabel,
     labelId,
+    placeholder,
     ...rest
 }: IGeneralSelectProps<T>) {
+    // MUI names the combobox via `labelId` (a `<label htmlFor>` can't name the
+    // `div[role=combobox]`). When wrapped in a FormField the label has no own
+    // `label` text here, so point `labelId` at FormField's label element,
+    // derived from the injected `id`. An explicit `labelId` still wins.
+    const resolvedLabelId = labelId ?? (id ? formFieldLabelId(id) : undefined);
     const onSelectChange = (event: SelectChangeEvent) => {
         event.preventDefault();
         onChange(String(event.target.value) as T);
     };
 
+    const flatOptions = isSelectOptionGroup(options)
+        ? options.flatMap((group) => group.options)
+        : options;
+    const renderValue = placeholder
+        ? (selected: unknown) => {
+              // Show the placeholder only when nothing is actually selected.
+              // Keying off the matched option (not its label) avoids treating a
+              // genuinely-selected option that happens to have no `label` as empty.
+              const selectedOption = flatOptions.find(
+                  (option) => option.key === String(selected),
+              );
+              return selectedOption ? (
+                  selectedOption.label
+              ) : (
+                  <StyledPlaceholder>{placeholder}</StyledPlaceholder>
+              );
+          }
+        : undefined;
+
     return (
         <StyledFormControl
             variant={variant}
-            size='small'
+            // old MUI `small` (~40px) maps to `large` (32px) on the v2 control scale
+            size='large'
             classes={classes}
             fullWidth={fullWidth}
         >
@@ -98,7 +131,7 @@ function GeneralSelect<T extends string = string>({
                 <InputLabel
                     sx={visuallyHideLabel ? visuallyHidden : null}
                     htmlFor={id}
-                    id={labelId}
+                    id={resolvedLabelId}
                 >
                     {label}
                 </InputLabel>
@@ -112,8 +145,10 @@ function GeneralSelect<T extends string = string>({
                 id={id}
                 value={value ?? ''}
                 autoWidth
+                displayEmpty={Boolean(placeholder)}
+                renderValue={renderValue}
                 IconComponent={KeyboardArrowDownOutlined}
-                labelId={labelId}
+                labelId={resolvedLabelId}
                 {...rest}
             >
                 {isSelectOptionGroup(options)

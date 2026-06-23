@@ -80,6 +80,7 @@ export type IFlagKey =
     | 'allowDeprecatedApiTokenMiddleware'
     | 'newProfileDropdown'
     | 'hideTopmenuDocumentation'
+    | 'serviceNowIntegration'
     | 'learningLab';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -369,6 +370,10 @@ const flags: IFlags = {
             value: process.env.UNLEASH_EXPERIMENTAL_LEARNING_LAB_PAYLOAD ?? '',
         },
     },
+    serviceNowIntegration: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SERVICE_NOW_INTEGRATION,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

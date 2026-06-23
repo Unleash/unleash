@@ -5,7 +5,10 @@ import {
     ADDON_CONFIG_DELETED,
     ADDON_CONFIG_UPDATED,
     FEATURE_CREATED,
+    type IEvent,
 } from '../events/index.js';
+import Addon from '../addons/addon.js';
+import type { IAddonConfig } from '../types/model.js';
 import createStores from '../../test/fixtures/store.js';
 
 import AddonService from './addon-service.js';
@@ -68,6 +71,7 @@ function getSetup() {
         eventService,
         stores,
         tagTypeService,
+        integrationEventsService,
     };
 }
 
@@ -804,4 +808,105 @@ test('Should reject addon config if a required parameter is just the empty strin
     await expect(async () =>
         addonService.createAddon(config, TEST_AUDIT_USER),
     ).rejects.toThrow(ValidationError);
+});
+
+describe('registerProvider', () => {
+    class RegisterableAddon extends Addon {
+        received: Array<{ event: IEvent; parameters: any }> = [];
+
+        constructor(cfg: IAddonConfig, name: string) {
+            super(
+                {
+                    name,
+                    displayName: name,
+                    description: 'Some addon',
+                    documentationUrl: 'https://www.example.com',
+                    parameters: [
+                        {
+                            name: 'token',
+                            displayName: 'Token',
+                            type: 'text',
+                            required: false,
+                            sensitive: true,
+                        },
+                    ],
+                    events: [FEATURE_CREATED],
+                },
+                cfg,
+            );
+        }
+
+        async handleEvent(event: IEvent, parameters: any): Promise<void> {
+            this.received.push({ event, parameters });
+        }
+    }
+
+    const buildProvider = (
+        integrationEventsService: IntegrationEventsService,
+        name: string,
+    ): RegisterableAddon =>
+        new RegisterableAddon(
+            {
+                getLogger,
+                unleashUrl: 'http://test',
+                integrationEventsService,
+                flagResolver: {} as IFlagResolver,
+                eventBus: config.eventBus,
+            },
+            name,
+        );
+
+    test('a registered provider appears in the provider list and can be used to create an addon', async () => {
+        const { addonService, integrationEventsService } = getSetup();
+
+        expect(
+            addonService
+                .getProviderDefinitions()
+                .find((p) => p.name === 'someaddon'),
+        ).toBeUndefined();
+
+        addonService.registerProvider(
+            buildProvider(integrationEventsService, 'someaddon'),
+        );
+
+        expect(
+            addonService
+                .getProviderDefinitions()
+                .find((p) => p.name === 'someaddon'),
+        ).toBeDefined();
+
+        await expect(
+            addonService.createAddon(
+                {
+                    provider: 'someaddon',
+                    enabled: true,
+                    parameters: { token: 'secret' },
+                    events: [FEATURE_CREATED],
+                    description: '',
+                },
+                TEST_AUDIT_USER,
+            ),
+        ).resolves.toMatchObject({ provider: 'someaddon' });
+    });
+
+    test('registerProvider masks the new provider sensitive params', async () => {
+        const { addonService, integrationEventsService } = getSetup();
+        addonService.registerProvider(
+            buildProvider(integrationEventsService, 'someaddon'),
+        );
+
+        const created = await addonService.createAddon(
+            {
+                provider: 'someaddon',
+                enabled: true,
+                parameters: { token: 'super-secret' },
+                events: [FEATURE_CREATED],
+                description: '',
+            },
+            TEST_AUDIT_USER,
+        );
+
+        const fetched = await addonService.getAddon(created.id);
+        expect(fetched.parameters.token).toBe(MASKED_VALUE);
+    });
 });

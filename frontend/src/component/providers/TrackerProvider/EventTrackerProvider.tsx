@@ -7,6 +7,7 @@ import {
     type EventTracker,
 } from 'contexts/EventTrackerContext';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { anonymizeContext } from './anonymizeContext.js';
 
 export const EventTrackerProvider: FC<{ children?: React.ReactNode }> = ({
     children,
@@ -29,7 +30,7 @@ export const EventTrackerProvider: FC<{ children?: React.ReactNode }> = ({
                 flightRecorderRef.current?.record({
                     eventType: 'custom',
                     eventName,
-                    context: { ...unleashContextRef.current },
+                    context: anonymizeContext({ ...unleashContextRef.current }),
                     payload: options?.props,
                 });
             },

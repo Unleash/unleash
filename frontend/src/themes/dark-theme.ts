@@ -7,6 +7,7 @@ import {
     controlOverrides,
     iconButtonRoot,
     iconButtonSizes,
+    outlinedInputSizing,
     subtleOutlinedButton,
 } from './controls.js';
 import { baseTheme } from './theme.js';
@@ -601,9 +602,14 @@ export const darkTheme = createTheme({
         },
 
         // Inputs
+        // NOTE: this redefines the `MuiOutlinedInput` key, which fully replaces
+        // (not deep-merges) the one from `...controlOverrides`. So the shared
+        // input sizing must be re-applied here via `outlinedInputSizing`. If you
+        // change input sizing in controls.ts, this spread keeps dark mode in sync.
         MuiOutlinedInput: {
             styleOverrides: {
-                root: ({ theme }) => ({
+                root: ({ theme, ownerState }) => ({
+                    ...outlinedInputSizing(ownerState),
                     fieldset: {
                         borderColor: '#646382',
                     },

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type MouseEvent, useState } from 'react';
 import { Menu, MenuItem, styled } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material';
 import { basePath } from 'utils/formatPath';
@@ -73,6 +73,10 @@ const ThemeSubmenu = ({ onCloseAll }: { onCloseAll: () => void }) => {
     const { themeMode, setThemeMode } = useThemeMode();
     const open = Boolean(anchorEl);
 
+    const openSubmenu = (event: MouseEvent<HTMLElement>) =>
+        setAnchorEl(event.currentTarget);
+    const closeSubmenu = () => setAnchorEl(null);
+
     const handleSelect = (mode: themeMode) => {
         setThemeMode(mode);
         setAnchorEl(null);
@@ -82,8 +86,9 @@ const ThemeSubmenu = ({ onCloseAll }: { onCloseAll: () => void }) => {
     return (
         <>
             <MenuItem
-                onClick={(event) => setAnchorEl(event.currentTarget)}
-                onMouseEnter={(event) => setAnchorEl(event.currentTarget)}
+                onClick={openSubmenu}
+                onMouseEnter={openSubmenu}
+                onMouseLeave={closeSubmenu}
                 sx={menuItemSx}
                 aria-haspopup='true'
                 aria-expanded={open}
@@ -101,9 +106,12 @@ const ThemeSubmenu = ({ onCloseAll }: { onCloseAll: () => void }) => {
                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                 transformOrigin={{ vertical: 'top', horizontal: 'left' }}
                 slotProps={{
+                    root: { sx: { pointerEvents: 'none' } },
                     paper: {
-                        onMouseLeave: () => setAnchorEl(null),
+                        onMouseLeave: closeSubmenu,
+                        onMouseEnter: openSubmenu,
                         sx: {
+                            pointerEvents: 'auto',
                             minWidth: (theme) => theme.spacing(15),
                             borderRadius: (theme) =>
                                 theme.shape.borderRadiusSmall,

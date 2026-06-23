@@ -1,4 +1,4 @@
-import { type MouseEvent, useState } from 'react';
+import { type KeyboardEvent, type MouseEvent, useState } from 'react';
 import { Menu, MenuItem, styled } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material';
 import { basePath } from 'utils/formatPath';
@@ -83,6 +83,32 @@ const ThemeSubmenu = ({ onCloseAll }: { onCloseAll: () => void }) => {
         onCloseAll();
     };
 
+    // support keyboard accessibility by manually moving focus between the options with up/down arrows,
+    // and go back to the main menu (Theme trigger) with left arrow or escape
+    const handleOptionKeyDown = (event: KeyboardEvent<HTMLLIElement>) => {
+        if (event.key === 'ArrowLeft') {
+            event.preventDefault();
+            event.stopPropagation();
+            const trigger = anchorEl;
+            closeSubmenu();
+            trigger?.focus();
+            return;
+        }
+        if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+        event.preventDefault();
+        event.stopPropagation();
+        const item = event.currentTarget;
+        const parent = item.parentElement;
+        if (!parent) {
+            return;
+        }
+        const next =
+            event.key === 'ArrowDown'
+                ? (item.nextElementSibling ?? parent.firstElementChild)
+                : (item.previousElementSibling ?? parent.lastElementChild);
+        (next as HTMLElement)?.focus();
+    };
+
     return (
         <>
             <MenuItem
@@ -123,6 +149,7 @@ const ThemeSubmenu = ({ onCloseAll }: { onCloseAll: () => void }) => {
                     <MenuItem
                         key={option.value}
                         onClick={() => handleSelect(option.value)}
+                        onKeyDown={handleOptionKeyDown}
                         sx={menuItemSx}
                     >
                         <StyledCheckSlot>

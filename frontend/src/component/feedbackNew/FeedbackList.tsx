@@ -18,7 +18,10 @@ import { useSearch } from 'hooks/useSearch';
 import theme from 'themes/theme';
 import { useState, useMemo } from 'react';
 import type { FeedbackSchema } from 'openapi';
-import { getActiveExperiments } from './activeExperiments.ts';
+import {
+    getActiveExperiments,
+    SCALE_CHANGE_DATE,
+} from './activeExperiments.ts';
 import { Truncator } from 'component/common/Truncator/Truncator';
 
 const StyledSectionHeader = styled(Typography)(({ theme }) => ({
@@ -28,6 +31,12 @@ const StyledSectionHeader = styled(Typography)(({ theme }) => ({
 
 const AverageScore = styled('div')(({ theme }) => ({
     fontSize: theme.fontSizes.mediumHeader,
+}));
+
+const ScaleChangeNote = styled('div')(({ theme }) => ({
+    fontSize: theme.fontSizes.smallerBody,
+    color: theme.palette.text.secondary,
+    marginTop: theme.spacing(0.5),
 }));
 
 const ActiveExperiments = styled('div')(({ theme }) => ({
@@ -199,12 +208,29 @@ export const FeedbackList = () => {
                                 </StyledSectionHeader>
                                 <Box>{experiment.commentCount} comments</Box>
                             </Box>
-                            <AverageScore>
-                                {/* biome-ignore lint/suspicious/noGlobalIsNan: using isNaN to check if averageScore is not a number */}
-                                {isNaN(Number(experiment.averageScore))
-                                    ? 'N/A'
-                                    : `${experiment.averageScore}/7`}
-                            </AverageScore>
+                            <Box>
+                                <AverageScore>
+                                    {Number.isNaN(
+                                        Number(experiment.averageScore),
+                                    )
+                                        ? 'N/A'
+                                        : `${experiment.averageScore}/5`}
+                                </AverageScore>
+                                {experiment.hasLegacyScores && (
+                                    <ScaleChangeNote>
+                                        Since{' '}
+                                        {SCALE_CHANGE_DATE.toLocaleDateString(
+                                            'en-US',
+                                            {
+                                                month: 'short',
+                                                day: 'numeric',
+                                                year: 'numeric',
+                                                timeZone: 'UTC',
+                                            },
+                                        )}
+                                    </ScaleChangeNote>
+                                )}
+                            </Box>
                         </ActiveExperimentCard>
                     ))
                 ) : (

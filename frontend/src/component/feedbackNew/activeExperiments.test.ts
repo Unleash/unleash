@@ -1,9 +1,12 @@
-import { describe, expect, it } from 'vitest';
-import { getActiveExperiments } from './activeExperiments.ts';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+    getActiveExperiments,
+    SCALE_CHANGE_DATE,
+} from './activeExperiments.ts';
 import type { FeedbackSchema } from 'openapi';
 
 describe('getActiveExperiments', () => {
-    const now = new Date();
+    const now = new Date('2026-08-15T12:00:00Z');
     const twoMonthsAgo = new Date(now);
     twoMonthsAgo.setMonth(now.getMonth() - 2);
 
@@ -12,6 +15,17 @@ describe('getActiveExperiments', () => {
 
     const oneWeekAgo = new Date(now);
     oneWeekAgo.setDate(now.getDate() - 7);
+
+    const beforeScaleChange = new Date('2026-06-01T12:00:00Z');
+
+    beforeEach(() => {
+        vi.useFakeTimers();
+        vi.setSystemTime(now);
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
+    });
 
     const mockFeedbackData: FeedbackSchema[] = [
         {
@@ -137,6 +151,90 @@ describe('getActiveExperiments', () => {
 
         const result = getActiveExperiments(allNullScores);
         expect(result[0].averageScore).toBe('N/A');
+    });
+
+    it(`should exclude scores submitted before the ${SCALE_CHANGE_DATE.toISOString().slice(0, 10)} scale change from the average`, () => {
+        const mixedScaleData: FeedbackSchema[] = [
+            {
+                id: 1,
+                category: 'feature1',
+                createdAt: now.toISOString(),
+                difficultyScore: 4,
+                areasForImprovement: null,
+                positive: null,
+                userType: 'developer',
+            },
+            {
+                id: 2,
+                category: 'feature1',
+                createdAt: beforeScaleChange.toISOString(),
+                difficultyScore: 7,
+                areasForImprovement: null,
+                positive: null,
+                userType: 'developer',
+            },
+        ];
+
+        const result = getActiveExperiments(mixedScaleData);
+        const feature1 = result.find((item) => item.category === 'feature1');
+
+        expect(feature1?.averageScore).toBe('4.0');
+        expect(feature1?.commentCount).toBe(2);
+    });
+
+    it('should set hasLegacyScores when some scores predate the scale change', () => {
+        const mixedScaleData: FeedbackSchema[] = [
+            {
+                id: 1,
+                category: 'feature1',
+                createdAt: now.toISOString(),
+                difficultyScore: 4,
+                areasForImprovement: null,
+                positive: null,
+                userType: 'developer',
+            },
+            {
+                id: 2,
+                category: 'feature1',
+                createdAt: beforeScaleChange.toISOString(),
+                difficultyScore: 7,
+                areasForImprovement: null,
+                positive: null,
+                userType: 'developer',
+            },
+        ];
+
+        const result = getActiveExperiments(mixedScaleData);
+        const feature1 = result.find((item) => item.category === 'feature1');
+
+        expect(feature1?.hasLegacyScores).toBe(true);
+    });
+
+    it('should not set hasLegacyScores when all scores are on the current scale', () => {
+        const result = getActiveExperiments(mockFeedbackData);
+        const feature1 = result.find((item) => item.category === 'feature1');
+
+        expect(feature1?.hasLegacyScores).toBe(false);
+    });
+
+    it('should return N/A when only legacy scores exist', () => {
+        const onlyLegacyData: FeedbackSchema[] = [
+            {
+                id: 1,
+                category: 'feature1',
+                createdAt: beforeScaleChange.toISOString(),
+                difficultyScore: 7,
+                areasForImprovement: null,
+                positive: null,
+                userType: 'developer',
+            },
+        ];
+
+        const result = getActiveExperiments(onlyLegacyData);
+        const feature1 = result.find((item) => item.category === 'feature1');
+
+        expect(feature1?.averageScore).toBe('N/A');
+        expect(feature1?.hasLegacyScores).toBe(true);
     });
 
     it('should preserve the order of experiments as returned from the backend', () => {

@@ -1,9 +1,14 @@
 import type { FeedbackSchema } from 'openapi';
 
+// Score scale changed from 1-7 to 1-5 on this date; averages mix two scales
+// otherwise, so we only average scores from on/after this date.
+export const SCALE_CHANGE_DATE = new Date('2026-06-23T00:00:00Z');
+
 export interface ActiveExperiment {
     category: string;
     commentCount: number;
     averageScore: string;
+    hasLegacyScores: boolean;
 }
 
 export function getActiveExperiments(
@@ -34,15 +39,22 @@ export function getActiveExperiments(
     return Object.entries(groupedByCategory).map(([category, items]) => {
         const commentCount = items.length;
 
-        const validScores = items
-            .filter((item) => item.difficultyScore !== null)
+        const itemsWithScore = items.filter(
+            (item) => item.difficultyScore !== null,
+        );
+        const currentScaleScores = itemsWithScore
+            .filter((item) => new Date(item.createdAt) >= SCALE_CHANGE_DATE)
             .map((item) => item.difficultyScore as number);
+        const hasLegacyScores =
+            itemsWithScore.length > currentScaleScores.length;
 
         const averageScore =
-            validScores.length > 0
+            currentScaleScores.length > 0
                 ? (
-                      validScores.reduce((sum, score) => sum + score, 0) /
-                      validScores.length
+                      currentScaleScores.reduce(
+                          (sum, score) => sum + score,
+                          0,
+                      ) / currentScaleScores.length
                   ).toFixed(1)
                 : 'N/A';
 
@@ -50,6 +62,7 @@ export function getActiveExperiments(
             category,
             commentCount,
             averageScore,
+            hasLegacyScores,
         };
     });
 }

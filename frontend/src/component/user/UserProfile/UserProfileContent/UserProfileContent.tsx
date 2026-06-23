@@ -109,12 +109,21 @@ const ThemeSubmenu = ({ onCloseAll }: { onCloseAll: () => void }) => {
         (next as HTMLElement)?.focus();
     };
 
+    // right arrow opens the submenu (mirrors left arrow closing it)
+    const handleTriggerKeyDown = (event: KeyboardEvent<HTMLLIElement>) => {
+        if (event.key === 'ArrowRight') {
+            event.preventDefault();
+            setAnchorEl(event.currentTarget);
+        }
+    };
+
     return (
         <>
             <MenuItem
                 onClick={openSubmenu}
                 onMouseEnter={openSubmenu}
                 onMouseLeave={closeSubmenu}
+                onKeyDown={handleTriggerKeyDown}
                 sx={menuItemSx}
                 aria-haspopup='true'
                 aria-expanded={open}
@@ -125,10 +134,7 @@ const ThemeSubmenu = ({ onCloseAll }: { onCloseAll: () => void }) => {
             <Menu
                 anchorEl={anchorEl}
                 open={open}
-                onClose={() => {
-                    setAnchorEl(null);
-                    onCloseAll();
-                }}
+                onClose={closeSubmenu}
                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                 transformOrigin={{ vertical: 'top', horizontal: 'left' }}
                 slotProps={{

@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { anonymizeContext } from './anonymizeContext.js';
 
 test('masks the email but keeps the rest of the context intact', () => {

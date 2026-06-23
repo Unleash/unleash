@@ -1,9 +1,15 @@
-import { anonymise, anonymiseKeys } from './anonymise.js';
+import { anonymise, anonymiseKeys, hashValue } from './anonymise.js';
 
 const REGEX_MATCH = /^[a-f0-9]{9}@unleash\.run$/;
 
 test('anonymise', () => {
     expect(anonymise('test')).toMatch(REGEX_MATCH);
+});
+
+test('hashValue returns the full sha256 hex of the input', () => {
+    expect(hashValue('someone@example.com')).toBe(
+        '72497f475e4f76d0b28f57c73a084ece576d170874eba3ee2609d9afe4b71aab',
+    );
 });
 
 describe('anonymiseKeys', () => {

@@ -206,8 +206,15 @@ Note: passing \`null\` as a value for the description property will set it to an
     }
 
     async getAddons(_req: Request, res: Response<AddonsSchema>): Promise<void> {
-        const addons = await this.addonService.getAddons();
-        const providers = this.addonService.getProviderDefinitions();
+        let addons = await this.addonService.getAddons();
+        let providers = this.addonService.getProviderDefinitions();
+
+        if (!this.flagResolver.isEnabled('serviceNowIntegration')) {
+            addons = addons.filter((addon) => addon.provider !== 'servicenow');
+            providers = providers.filter(
+                (provider) => provider.name !== 'servicenow',
+            );
+        }
 
         this.openApiService.respondWithValidation(200, res, addonsSchema.$id, {
             addons: serializeDates(addons),

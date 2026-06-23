@@ -54,11 +54,11 @@ test('external links have correct hrefs', async () => {
 
     expect(screen.getByText('Visit Learning Lab').closest('a')).toHaveAttribute(
         'href',
-        'https://unleash-learning-lab.learnworlds.com/',
+        'https://learning.getunleash.io/',
     );
     expect(
         screen.getByRole('menuitem', { name: 'Learning Lab' }),
-    ).toHaveAttribute('href', 'https://unleash-learning-lab.learnworlds.com/');
+    ).toHaveAttribute('href', 'https://learning.getunleash.io/');
     expect(screen.getByText('Documentation').closest('a')).toHaveAttribute(
         'href',
         'https://docs.getunleash.io/',

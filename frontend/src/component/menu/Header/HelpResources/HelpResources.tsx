@@ -129,7 +129,7 @@ const StyledMenuItem = styled(MenuItem)<AnchorMenuItemProps>(({ theme }) => ({
 const DOCUMENTATION_URL = 'https://docs.getunleash.io/';
 const GITHUB_URL = 'https://github.com/Unleash/unleash';
 const SLACK_URL = 'https://slack.unleash.run/';
-const LEARNING_LAB_URL = 'https://unleash-learning-lab.learnworlds.com/';
+const LEARNING_LAB_URL = 'https://learning.getunleash.io/';
 
 const EVENT_NAME = 'help-resources';
 

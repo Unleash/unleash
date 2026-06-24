@@ -217,6 +217,13 @@ export const outlinedInputSizing = (ownerState?: { size?: unknown }) => {
         '& .MuiSelect-select': {
             display: 'flex',
             alignItems: 'center',
+            // Fill the field height so the whole control (not just the text) is
+            // the clickable target and shows the pointer cursor. MUI puts the
+            // click handler + `cursor: pointer` on `.MuiSelect-select`; with the
+            // zeroed vertical padding above it would otherwise sit shorter than
+            // the fixed-height field, leaving dead strips top and bottom.
+            height: '100%',
+            boxSizing: 'border-box',
         },
         '& .MuiSelect-icon': {
             fontSize: controlIconSizes[size],

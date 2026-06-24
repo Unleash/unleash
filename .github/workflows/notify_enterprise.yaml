@@ -7,6 +7,10 @@ on:
     paths-ignore:
       - coverage/**
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -48,9 +52,9 @@ jobs:
           pnpm build
       - uses: aws-actions/configure-aws-credentials@v6
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+          role-to-assume: ${{ secrets.AWS_STATIC_ASSETS_ROLE_ARN }}
+          role-session-name: github-actions-unleash
       - name: Get the commit hash
         id: get_commit_hash
         run: |

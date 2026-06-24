@@ -39,7 +39,13 @@ export const handleErrors: (
     const finalError =
         error instanceof UnleashError ? error : fromLegacyError(error);
 
-    const format = (thing: object) => JSON.stringify(thing, null, 2);
+    const format = (thing: object) => {
+        try {
+            return JSON.stringify(thing, null, 2);
+        } catch {
+            return '[value too large or deeply nested to display]';
+        }
+    };
 
     if (!(error instanceof UnleashError)) {
         logger.debug(

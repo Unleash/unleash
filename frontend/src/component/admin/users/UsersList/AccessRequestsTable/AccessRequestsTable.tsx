@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useLocation } from 'react-router';
 import {
     type ColumnDef,
     getCoreRowModel,
@@ -38,6 +39,7 @@ const StyledContainer = styled('div')(({ theme }) => ({
 }));
 
 export const AccessRequestsTable = () => {
+    const { hash } = useLocation();
     const { roles, refetch: refetchUsers } = useUsers();
     const { accessRequests, refetchAccessRequests } = useUserAccessRequests();
     const { approveAccessRequest, rejectAccessRequest } =
@@ -52,6 +54,13 @@ export const AccessRequestsTable = () => {
     );
     const [requestToReject, setRequestToReject] =
         useState<UserAccessRequestSchema | null>(null);
+
+    useEffect(() => {
+        if (!hash) return;
+        document
+            .querySelector(hash)
+            ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, [hash, accessRequests]);
 
     const getRoleId = (requestId: string) =>
         selectedRoles[requestId] ?? defaultRoleId;
@@ -104,6 +113,7 @@ export const AccessRequestsTable = () => {
                 accessorKey: 'email',
                 cell: ({ row: { original } }) => (
                     <TextCell>
+                        <span id={`access-request-${original.id}`} />
                         <UserAvatar
                             user={{
                                 ...original,
@@ -204,7 +214,17 @@ export const AccessRequestsTable = () => {
     }
 
     return (
-        <StyledContainer>
+        <StyledContainer
+            sx={(theme) =>
+                hash
+                    ? {
+                          [`& tr:has(${hash})`]: {
+                              backgroundColor: theme.palette.highlight,
+                          },
+                      }
+                    : {}
+            }
+        >
             <StyledTitle>Access requests ({accessRequests.length})</StyledTitle>
             <VirtualizedTable tableInstance={table} />
             <Dialogue

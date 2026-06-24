@@ -92,7 +92,7 @@ export const NotificationCard = ({
                 variant='contained'
                 color='primary'
                 component={RouterLink}
-                to='/admin/users'
+                to={`/admin/users#access-request-${request.id}`}
             >
                 View request
             </StyledViewButton>

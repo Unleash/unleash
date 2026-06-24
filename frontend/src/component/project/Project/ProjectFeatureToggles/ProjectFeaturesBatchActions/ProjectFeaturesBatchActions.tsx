@@ -5,7 +5,7 @@ import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
 import { ArchiveButton } from './ArchiveButton.tsx';
 import { MoreActions } from './MoreActions.tsx';
 import { ManageTags } from './ManageTags.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { BulkDisableDialog } from 'component/feature/FeatureToggleList/BulkDisableDialog';
 import { BulkEnableDialog } from 'component/feature/FeatureToggleList/BulkEnableDialog';
 interface IProjectFeaturesBatchActionsProps {
@@ -22,7 +22,7 @@ export const ProjectFeaturesBatchActions: FC<
     const [showExportDialog, setShowExportDialog] = useState(false);
     const [showBulkEnableDialog, setShowBulkEnableDialog] = useState(false);
     const [showBulkDisableDialog, setShowBulkDisableDialog] = useState(false);
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const selectedData = useMemo(
         () => data.filter((d) => selectedIds.includes(d.name)),
         [data, selectedIds],

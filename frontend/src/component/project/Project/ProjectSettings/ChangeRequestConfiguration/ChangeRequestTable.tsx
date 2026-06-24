@@ -28,7 +28,7 @@ import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { useTheme } from '@mui/material/styles';
 import AccessContext from 'contexts/AccessContext';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { PROJECT_CHANGE_REQUEST_WRITE } from '../../../../providers/AccessProvider/permissions.ts';
 import type { IChangeRequestEnvironmentConfig as IChangeRequestRow } from 'component/changeRequest/changeRequest.types';
 
@@ -42,7 +42,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
 }));
 
 export const ChangeRequestTable: FC = () => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { hasAccess } = useContext(AccessContext);
     const [dialogState, setDialogState] = useState<{
         isOpen: boolean;

@@ -3,7 +3,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import type { FC } from 'react';
 import { useEmailSubscriptionApi } from 'hooks/api/actions/useEmailSubscriptionApi/useEmailSubscriptionApi';
 import useToast from 'hooks/useToast';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 export const ProductivityEmailSubscription: FC<{
     status: 'subscribed' | 'unsubscribed';
@@ -15,7 +15,7 @@ export const ProductivityEmailSubscription: FC<{
         loading: changingSubscriptionStatus,
     } = useEmailSubscriptionApi();
     const { setToastData, setToastApiError } = useToast();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     return (
         <Box>

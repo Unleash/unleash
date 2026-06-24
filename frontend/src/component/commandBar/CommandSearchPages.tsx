@@ -1,4 +1,4 @@
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { Link } from 'react-router';
 import {
     CommandResultGroup,
@@ -18,7 +18,7 @@ export const CommandSearchPages = ({
     items: CommandResultGroupItem[];
     onClick: () => void;
 }) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const groupName = 'Pages';
 
     const onItemClick = (item: CommandResultGroupItem) => {

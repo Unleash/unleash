@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Box, Dialog, IconButton, styled, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
@@ -42,7 +42,7 @@ export const FeatureStrategyMenu = ({
     defaultFilter = null,
 }: IFeatureStrategyMenuProps) => {
     const [filter, setFilter] = useState<StrategyFilterValue>(defaultFilter);
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const [selectedTemplate, setSelectedTemplate] =
         useState<IReleasePlanTemplate>();
     const [releasePlanPreview, setReleasePlanPreview] = useState(false);

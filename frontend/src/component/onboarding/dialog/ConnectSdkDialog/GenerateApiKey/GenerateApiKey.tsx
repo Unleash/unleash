@@ -3,7 +3,7 @@ import { Button, MenuItem, Select, styled } from '@mui/material';
 import { useProjectApiTokens } from 'hooks/api/getters/useProjectApiTokens/useProjectApiTokens';
 import useProjectApiTokensApi from 'hooks/api/actions/useProjectApiTokensApi/useProjectApiTokensApi';
 import useToast from 'hooks/useToast';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { parseToken } from '../../parseToken';
 import { TokenExplanation } from './TokenExplanation';
@@ -78,7 +78,7 @@ export const GenerateApiKey = ({
     onApiKeyChange,
     onNext,
 }: IGenerateApiKeyProps) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const {
         tokens,
         loading: fetchingTokens,

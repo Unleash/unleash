@@ -8,7 +8,7 @@ import {
     type IFilterItem,
 } from 'component/filter/Filters/Filters';
 import { formatTag } from 'utils/format-tag';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 type FeaturesOverviewToggleFiltersProps = {
     state: FilterItemParamHolder;
@@ -21,7 +21,7 @@ export const FeaturesOverviewToggleFilters: FC<
     const { projects } = useProjects();
     const { segments } = useSegments();
     const { tags } = useAllTags();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const onFilterChange = (value: FilterItemParamHolder) => {
         if (value.favorite !== state.favorite) {

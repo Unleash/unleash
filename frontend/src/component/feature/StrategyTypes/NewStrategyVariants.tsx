@@ -17,7 +17,7 @@ import type { StrategyFormState } from 'interfaces/strategy';
 import { VariantsSplitPreview } from 'component/common/VariantsSplitPreview/VariantsSplitPreview';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { StrategyVariantsUpgradeAlert } from 'component/common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import Add from '@mui/icons-material/Add';
 
 const StyledVariantForms = styled('div')({
@@ -43,7 +43,7 @@ export const NewStrategyVariants = <T extends StrategyFormState>({
     setStrategy,
     canRenamePreexistingVariants,
 }: NewStrategyVariantsProps<T>) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const initialVariants = (strategy.variants || []).map((variant) => ({
         ...variant,
         new: canRenamePreexistingVariants || false,

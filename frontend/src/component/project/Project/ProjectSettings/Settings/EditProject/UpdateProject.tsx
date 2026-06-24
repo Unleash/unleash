@@ -11,7 +11,7 @@ import useProjectForm, {
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -47,7 +47,7 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
     const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
     const { defaultStickiness } = useDefaultProjectSettings(id);
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const {
         projectId,
         projectName,

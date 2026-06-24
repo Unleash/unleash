@@ -2,14 +2,14 @@ import { useCallback } from 'react';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useAPI from '../useApi/useApi.js';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 export const useFavoriteProjectsApi = () => {
     const { makeLightRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
     });
     const { setToastData, setToastApiError } = useToast();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const favorite = useCallback(
         async (projectId: string) => {

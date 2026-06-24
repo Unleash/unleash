@@ -39,7 +39,7 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 import type { ISafeguard } from 'interfaces/safeguard';
 import { strategyBackground } from 'component/common/StrategyList/StrategyListItem';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 const StyledSafeguardContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -102,7 +102,7 @@ const StyledSplashTriggerButton = styled(IconButton)(({ theme }) => ({
 
 const SafeguardSplashTrigger = () => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const openSplash = () => {
         trackEvent('safeguards', {
@@ -135,7 +135,7 @@ export const AddSafeguard = ({
     releasePlan?: { id: string; name: string };
 }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     return (
         <StyledSafeguardContainer>
@@ -250,7 +250,7 @@ const useSafeguardActions = ({
     onSafeguardChange: () => void;
 }) => {
     const { setToastData, setToastApiError } = useToast();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { addChange } = useChangeRequestApi();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { data: pendingChangeRequests, refetch: refetchChangeRequests } =

@@ -12,7 +12,7 @@ import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
 import { useFormErrors } from 'hooks/useFormErrors';
 import { sortStrategyParameters } from 'utils/sortStrategyParameters';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import type { CreateFeatureStrategySchema } from 'openapi';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import {
@@ -69,7 +69,7 @@ const EditDefaultStrategy = () => {
     const { uiConfig } = useUiConfig();
     const { unleashUrl } = uiConfig;
     const navigate = useNavigate();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);
 
     if (!strategyDefinition) return null;

@@ -18,7 +18,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import usePagination from 'hooks/usePagination';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useImpactMetricsEnabled } from 'component/impact-metrics/hooks/useImpactMetricsEnabled';
 import { useFeatureReleasePlans } from 'hooks/api/getters/useFeatureReleasePlans/useFeatureReleasePlans';
@@ -73,7 +73,7 @@ export const EnvironmentAccordionBody = ({
     );
     const { releasePlans, refetch: refetchReleasePlans } =
         useFeatureReleasePlans(projectId, featureId, featureEnvironment?.name);
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const safeguardsEnabled = useImpactMetricsEnabled();
     const [dragItem, setDragItem] = useState<{
         id: string;

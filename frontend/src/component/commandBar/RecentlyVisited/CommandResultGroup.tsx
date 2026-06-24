@@ -11,7 +11,7 @@ import { Link } from 'react-router';
 import type { Theme } from '@mui/material/styles';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { Children } from 'react';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
@@ -57,7 +57,7 @@ export const RecentlyVisitedPathButton = ({
     name: string;
     onClick: () => void;
 }) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const onItemClick = () => {
         trackEvent('command-bar', {
@@ -102,7 +102,7 @@ export const RecentlyVisitedProjectButton = ({
     keyName: string;
     onClick: () => void;
 }) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { project, loading } = useProjectOverview(projectId);
     const projectDeleted = !project.name && !loading;
 
@@ -151,7 +151,7 @@ export const RecentlyVisitedFeatureButton = ({
     featureId: string;
     onClick: () => void;
 }) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const onItemClick = () => {
         trackEvent('command-bar', {
             props: {
@@ -199,7 +199,7 @@ export const CommandResultGroup = ({
     onClick,
     children,
 }: CommandResultGroupProps) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     if (
         (!children || Children.count(children) === 0) &&
         (!items || items.length === 0)

@@ -15,7 +15,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton.tsx';
 import { ADMIN } from '../providers/AccessProvider/permissions.ts';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
+import { useEventTracker } from 'hooks/useEventTracker.ts';
 
 const _StyledDragHandle = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -35,7 +35,7 @@ export const ImpactMetrics: FC = () => {
     const [editingChart, setEditingChart] = useState<ChartConfig | undefined>();
     const { setToastApiError } = useToast();
     const plausibleMetricsEnabled = useUiFlag('plausibleMetrics');
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const {
         charts,
         layout,

@@ -27,7 +27,7 @@ import {
     type CommandQueryCounter,
     CommandSearchFeatures,
 } from './CommandSearchFeatures.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { CommandQuickSuggestions } from './CommandQuickSuggestions.tsx';
 import { CommandSearchPages } from './CommandSearchPages.tsx';
 import { CommandBarFeedback } from './CommandBarFeedback.tsx';
@@ -135,7 +135,7 @@ const StyledIconButton = styled(IconButton, {
 }));
 
 export const CommandBar = () => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const searchInputRef = useRef<HTMLInputElement>(null);
     const searchContainerRef = useRef<HTMLInputElement>(null);
     const compactIconRef = useRef<HTMLButtonElement>(null);

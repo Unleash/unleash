@@ -7,7 +7,7 @@ import { DemoDialogWelcome } from './DemoDialog/DemoDialogWelcome/DemoDialogWelc
 import { DemoDialogFinish } from './DemoDialog/DemoDialogFinish/DemoDialogFinish.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { DemoBanner } from './DemoBanner/DemoBanner.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { useMediaQuery } from '@mui/material';
 import theme from 'themes/theme';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -32,7 +32,7 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
     const navigate = useNavigate();
     const { uiConfig } = useUiConfig();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down(768));
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const { value: storedProgress, setValue: setStoredProgress } =
         createLocalStorage('Tutorial:v1.1', defaultProgress);

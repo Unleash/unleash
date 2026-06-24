@@ -15,7 +15,7 @@ import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 type FeatureTypeFormProps = {
     featureType?: FeatureTypeSchema;
@@ -52,7 +52,7 @@ export const FeatureTypeForm: FC<FeatureTypeFormProps> = ({
         !featureType?.lifetimeDays,
     );
     const { setToastData, setToastApiError } = useToast();
-    const tracker = usePlausibleTracker();
+    const tracker = useEventTracker();
 
     const onChangeLifetime = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = Number.parseInt(trim(e.target.value), 10);

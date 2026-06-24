@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { sortingFns } from 'utils/sortingFns';
 import type { Row, SortingFn } from '@tanstack/react-table';
-import { usePlausibleTracker } from './usePlausibleTracker.js';
+import { useEventTracker } from './useEventTracker.js';
 
 type WithFavorite = {
     favorite: boolean;
@@ -35,7 +35,7 @@ export const sortingFnsWithFavorites: Record<
  */
 export const usePinnedFavorites = (initialState = false) => {
     const [isFavoritesPinned, setIsFavoritesPinned] = useState(initialState);
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const onChangeIsFavoritePinned = (newState: boolean) => {
         trackEvent('favorite', {

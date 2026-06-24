@@ -9,7 +9,7 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { calculateMilestoneStatus } from './milestoneStatusUtils.js';
 import { MilestoneAutomation } from './MilestoneAutomation.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
+import { useEventTracker } from 'hooks/useEventTracker.ts';
 import { ProjectEnvironmentStrategyDraggableItem } from '../../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/ProjectEnvironmentStrategyDraggableItem.tsx';
 
 const StyledConnection = styled('div', {
@@ -86,7 +86,7 @@ export const ReleasePlanMilestoneItem = ({
     const { changeMilestoneProgression } = useMilestoneProgressionsApi();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { setToastData, setToastApiError } = useToast();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const isNotLastMilestone = index < milestones.length - 1;
     const isProgressionFormOpen = progressionFormOpenIndex === index;

@@ -51,7 +51,7 @@ import { ChangeRequestPlausibleProvider } from 'component/changeRequest/ChangeRe
 import { ProjectApplications } from '../ProjectApplications/ProjectApplications.tsx';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ProjectArchived } from './ArchiveProject/ProjectArchived.tsx';
-import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker.ts';
+import { useEventTracker } from '../../../hooks/useEventTracker.ts';
 import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
 import { ProjectStatusModal } from './ProjectStatus/ProjectStatusModal.tsx';
 
@@ -153,7 +153,7 @@ const ProjectStatus = () => {
 
 export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const params = useQueryParams();
     const { project, loading, error, refetch } = useProjectOverview(projectId);
     const ref = useLoading(loading, '[data-loading-project=true]');

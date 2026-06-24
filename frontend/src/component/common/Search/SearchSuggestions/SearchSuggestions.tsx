@@ -14,7 +14,7 @@ import {
     SearchInstructions,
     StyledCode,
 } from './SearchInstructions/SearchInstructions.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { onEnter } from './onEnter.ts';
 import { SearchHistory } from './SearchHistory.tsx';
 import { SearchPaper } from '../Search.tsx';
@@ -50,7 +50,7 @@ export const SearchSuggestions: FC<SearchSuggestionsProps> = ({
     onSuggestion,
     savedQuery,
 }) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const searchContext = getSearchContext();
 
     const filters = getFilterableColumns(searchContext.columns)

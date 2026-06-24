@@ -15,16 +15,10 @@ const StyledOverlay = styled('div')(({ theme }) => ({
     maxWidth: `calc(100vw - ${theme.spacing(6)})`,
 }));
 
-export const AccessRequestsNotifications = () => {
-    const { pathname } = useLocation();
+const AdminAccessRequestsNotifications = () => {
     const { accessRequests } = useUserAccessRequests();
-    const hasAdminAccess = useHasRootAccess(ADMIN);
 
-    const isHiddenRoute = HIDDEN_PATH_PREFIXES.some((prefix) =>
-        pathname.startsWith(prefix),
-    );
-
-    if (!hasAdminAccess || isHiddenRoute || accessRequests.length === 0) {
+    if (accessRequests.length === 0) {
         return null;
     }
 
@@ -33,4 +27,19 @@ export const AccessRequestsNotifications = () => {
             <NotificationStack accessRequests={accessRequests} />
         </StyledOverlay>
     );
+};
+
+export const AccessRequestsNotifications = () => {
+    const { pathname } = useLocation();
+    const hasAdminAccess = useHasRootAccess(ADMIN);
+
+    const isHiddenRoute = HIDDEN_PATH_PREFIXES.some((prefix) =>
+        pathname.startsWith(prefix),
+    );
+
+    if (!hasAdminAccess || isHiddenRoute) {
+        return null;
+    }
+
+    return <AdminAccessRequestsNotifications />;
 };

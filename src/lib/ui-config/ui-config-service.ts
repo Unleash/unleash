@@ -102,8 +102,10 @@ export class UiConfigService {
             simpleAuthSettings?.disabled ||
             this.config.authentication.type === IAuthType.NONE;
 
+        const hashedEmail = user.email ? hashValue(user.email) : undefined;
+
         const expFlags = this.config.flagResolver.getAll({
-            email: user.email,
+            email: hashedEmail,
         });
 
         const flags = {
@@ -113,7 +115,7 @@ export class UiConfigService {
 
         const unleashContext = {
             ...this.flagResolver.getStaticContext(),
-            ...(user.email ? { email: hashValue(user.email) } : {}),
+            ...(hashedEmail ? { email: hashedEmail } : {}),
             userId: user.id,
         };
         const uiConfig: UiConfigSchema = {

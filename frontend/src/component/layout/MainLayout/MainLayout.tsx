@@ -15,6 +15,8 @@ import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar.tsx';
 import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
 import { NewInUnleash } from './NavigationSidebar/NewInUnleash/NewInUnleash.tsx';
+import { AccessRequestsNotifications } from 'component/admin/users/AccessRequestsNotifications/AccessRequestsNotifications';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -124,6 +126,9 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
         );
         const theme = useTheme();
         const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
+        const accessRequestsNotificationsEnabled = useUiFlag(
+            'accessRequestsNotifications',
+        );
 
         return (
             <EventTimelineProvider>
@@ -185,6 +190,9 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                     </MainLayoutContentWrapper>
                 </MainLayoutContainer>
                 <NewInUnleash />
+                {accessRequestsNotificationsEnabled && (
+                    <AccessRequestsNotifications />
+                )}
             </EventTimelineProvider>
         );
     },

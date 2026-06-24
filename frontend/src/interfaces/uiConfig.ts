@@ -102,6 +102,7 @@ export type UiFlags = {
     newProfileDropdown?: boolean;
     hideTopmenuDocumentation?: boolean;
     learningLab?: Variant;
+    accessRequestsNotifications?: boolean;
 };
 
 export interface IVersionInfo {

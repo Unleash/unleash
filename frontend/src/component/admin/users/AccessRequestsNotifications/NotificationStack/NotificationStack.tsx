@@ -17,8 +17,9 @@ const StyledStack = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1),
-    width: 320,
+    width: theme.spacing(40),
     maxWidth: '100%',
+    minWidth: theme.spacing(26),
 }));
 
 export const NotificationStack = ({

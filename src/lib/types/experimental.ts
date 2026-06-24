@@ -377,7 +377,7 @@ const flags: IFlags = {
     ),
     accessRequestsNotifications: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ACCESS_REQUESTS_NOTIFICATIONS,
-        true,
+        false,
     ),
 };
 

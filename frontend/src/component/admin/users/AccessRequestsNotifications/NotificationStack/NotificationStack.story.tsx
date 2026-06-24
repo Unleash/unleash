@@ -35,6 +35,7 @@ export const FourRequests: Story = () => (
 export const TenRequestsOnlyLatestFourShown: Story = () => (
     <NotificationStack
         accessRequests={makeRequests(10)}
+        maxVisible={4}
         storageKey='story:access-requests:ten'
     />
 );

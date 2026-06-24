@@ -77,8 +77,8 @@ export const NotificationCard = ({
         <StyledUserInfo>
             <UserAvatar
                 user={{
-                    ...request,
-                    id: Number(request.id),
+                    email: request.email,
+                    imageUrl: request.imageUrl,
                 }}
             />
             <StyledBody>

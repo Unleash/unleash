@@ -54,11 +54,13 @@ const ActiveView: FC<{ view: MetricView }> = ({ view }) => {
                     ) : null
                 }
                 totalsMiddleSlot={
-                    <TopMoversPanel
-                        impacts={data.flagImpacts}
-                        timeRange={view.timeRange}
-                        aggregationMode={goalAggregationMode}
-                    />
+                    view.showTopMovers ? (
+                        <TopMoversPanel
+                            impacts={data.flagImpacts}
+                            timeRange={view.timeRange}
+                            aggregationMode={goalAggregationMode}
+                        />
+                    ) : undefined
                 }
             />
             <FollowedFeaturesList features={data.resolvedFeatures} />

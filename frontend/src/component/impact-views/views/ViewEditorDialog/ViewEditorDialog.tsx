@@ -5,6 +5,7 @@ import {
     FormControlLabel,
     IconButton,
     Radio,
+    Switch,
     TextField,
     Tooltip,
     Typography,
@@ -205,6 +206,7 @@ export type ViewFormData = {
     timeRange: ChartTimeRange;
     aggregationMode: AggregationMode;
     environment: string;
+    showTopMovers: boolean;
 };
 
 const goalAggregation = (metrics: ViewMetricConfig[]): AggregationMode => {
@@ -221,6 +223,7 @@ const seedForm = (initialView?: MetricView | null): ViewFormData => {
             timeRange: DEFAULT_TIME_RANGE,
             aggregationMode: DEFAULT_AGGREGATION,
             environment: DEFAULT_ENVIRONMENT,
+            showTopMovers: false,
         };
     }
     return {
@@ -230,6 +233,7 @@ const seedForm = (initialView?: MetricView | null): ViewFormData => {
         timeRange: initialView.timeRange,
         aggregationMode: goalAggregation(initialView.metrics),
         environment: initialView.environment,
+        showTopMovers: initialView.showTopMovers ?? false,
     };
 };
 
@@ -243,7 +247,8 @@ type FormAction =
     | { type: 'setGoal'; id: string }
     | { type: 'renameMetric'; id: string; displayName: string }
     | { type: 'removeMetric'; id: string }
-    | { type: 'setEnvironment'; environment: string };
+    | { type: 'setEnvironment'; environment: string }
+    | { type: 'setShowTopMovers'; showTopMovers: boolean };
 
 const patchMetrics = (
     metrics: ViewMetricConfig[],
@@ -285,6 +290,8 @@ const formReducer = (state: ViewFormData, action: FormAction): ViewFormData => {
             return { ...state, featureNames: action.featureNames };
         case 'setEnvironment':
             return { ...state, environment: action.environment };
+        case 'setShowTopMovers':
+            return { ...state, showTopMovers: action.showTopMovers };
         case 'setTimeRange':
             return {
                 ...state,
@@ -384,6 +391,7 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
             metrics: form.metrics,
             timeRange: form.timeRange,
             environment: form.environment,
+            showTopMovers: form.showTopMovers,
         });
     };
 
@@ -561,6 +569,27 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
                         </StyledHelper>
                     </StyledFieldGroup>
                 </Box>
+
+                <StyledFieldGroup>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={form.showTopMovers}
+                                onChange={(event) =>
+                                    dispatch({
+                                        type: 'setShowTopMovers',
+                                        showTopMovers: event.target.checked,
+                                    })
+                                }
+                            />
+                        }
+                        label='Show top movers'
+                    />
+                    <StyledHelper>
+                        Ranks the flags whose toggle had the biggest effect on
+                        the goal metric, shown beside the chart.
+                    </StyledHelper>
+                </StyledFieldGroup>
             </Box>
         </Dialogue>
     );

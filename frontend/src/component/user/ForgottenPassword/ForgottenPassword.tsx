@@ -16,6 +16,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import OrDivider from '../common/OrDivider';
 import { AuthPageLayout } from '../common/AuthPageLayout';
 import { AuthSuccessIcon } from '../common/AuthSuccessIcon';
+import { FormField } from 'component/common/FormField/FormField';
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
     fontSize: theme.typography.h2.fontSize,
@@ -33,6 +34,10 @@ const StyledForm = styled('form')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(3),
+    // FormField brings its own bottom margin; the column gap owns spacing here.
+    '&& > *': {
+        marginBottom: 0,
+    },
 }));
 
 const StyledHeader = styled('div')(({ theme }) => ({
@@ -150,18 +155,21 @@ const ForgottenPassword = () => {
                             </Typography>
                         }
                     />
-                    <TextField
-                        label='Email'
-                        variant='outlined'
-                        size='large'
-                        type='email'
-                        data-testid={FORGOTTEN_PASSWORD_FIELD}
-                        value={email}
-                        onChange={(e) => {
-                            setEmail(e.target.value);
-                        }}
-                        autoFocus
-                    />
+                    <FormField label='Email'>
+                        <TextField
+                            label=''
+                            fullWidth
+                            variant='outlined'
+                            size='large'
+                            type='email'
+                            data-testid={FORGOTTEN_PASSWORD_FIELD}
+                            value={email}
+                            onChange={(e) => {
+                                setEmail(e.target.value);
+                            }}
+                            autoFocus
+                        />
+                    </FormField>
                     <Button
                         variant='contained'
                         type='submit'

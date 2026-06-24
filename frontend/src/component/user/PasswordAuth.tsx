@@ -9,6 +9,7 @@ import OrDivider from './common/OrDivider';
 import { Alert } from '@mui/material';
 import { LOGIN_BUTTON, LOGIN_EMAIL_ID, LOGIN_PASSWORD_ID } from 'utils/testIds';
 import PasswordField from 'component/common/PasswordField/PasswordField';
+import { FormField } from 'component/common/FormField/FormField';
 import { useAuthApi } from 'hooks/api/actions/useAuthApi/useAuthApi';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import type { IAuthEndpointDetailsResponse } from 'hooks/api/getters/useAuth/useAuthEndpoint';
@@ -33,6 +34,17 @@ const StyledDiv = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(3),
+}));
+
+// Login fields use FormField (static top labels). FormField brings its own
+// bottom margin, so zero it here and let the column gap own the spacing.
+const StyledFields = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(3),
+    '&& > *': {
+        marginBottom: 0,
+    },
 }));
 
 const StyledButton = styled(Button)({
@@ -128,37 +140,43 @@ const PasswordAuth: FC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
                             }
                         />
 
-                        <StyledDiv>
-                            <StyledAutofillTextField
-                                label='Email'
-                                name='username'
-                                id='username'
-                                type='text'
-                                onChange={(evt) =>
-                                    setUsername(evt.target.value)
-                                }
-                                value={username}
-                                error={Boolean(usernameError)}
-                                helperText={usernameError}
-                                autoComplete='username'
-                                data-testid={LOGIN_EMAIL_ID}
-                                variant='outlined'
-                                size='large'
-                                autoFocus
-                            />
-                            <PasswordField
-                                label='Password'
-                                onChange={(evt) =>
-                                    setPassword(evt.target.value)
-                                }
-                                name='password'
-                                id='password'
-                                value={password}
-                                error={Boolean(passwordError)}
-                                helperText={passwordError}
-                                autoComplete='off'
-                                data-testid={LOGIN_PASSWORD_ID}
-                            />
+                        <StyledFields>
+                            <FormField label='Email'>
+                                <StyledAutofillTextField
+                                    label=''
+                                    fullWidth
+                                    name='username'
+                                    id='username'
+                                    type='text'
+                                    onChange={(evt) =>
+                                        setUsername(evt.target.value)
+                                    }
+                                    value={username}
+                                    error={Boolean(usernameError)}
+                                    helperText={usernameError}
+                                    autoComplete='username'
+                                    data-testid={LOGIN_EMAIL_ID}
+                                    variant='outlined'
+                                    size='large'
+                                    autoFocus
+                                />
+                            </FormField>
+                            <FormField label='Password'>
+                                <PasswordField
+                                    label=''
+                                    fullWidth
+                                    onChange={(evt) =>
+                                        setPassword(evt.target.value)
+                                    }
+                                    name='password'
+                                    id='password'
+                                    value={password}
+                                    error={Boolean(passwordError)}
+                                    helperText={passwordError}
+                                    autoComplete='off'
+                                    data-testid={LOGIN_PASSWORD_ID}
+                                />
+                            </FormField>
                             <StyledButton
                                 variant='contained'
                                 color='primary'
@@ -167,7 +185,7 @@ const PasswordAuth: FC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
                             >
                                 Sign in
                             </StyledButton>
-                        </StyledDiv>
+                        </StyledFields>
                     </form>
                 }
             />

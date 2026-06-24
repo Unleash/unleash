@@ -29,7 +29,7 @@ import { comparisonModerator } from '../featureStrategy.utils';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm.tsx';
 import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 import {
@@ -45,7 +45,7 @@ import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
 
 const useTitleTracking = () => {
     const [previousTitle, setPreviousTitle] = useState<string>('');
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const trackTitle = (title: string = '') => {
         // don't expose the title, just if it was added, removed, or edited
@@ -154,7 +154,7 @@ export const FeatureStrategyEdit = () => {
         }
     }, [feature]);
 
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { changeRequests: scheduledChangeRequestThatUseStrategy } =
         useScheduledChangeRequestsWithStrategy(projectId, strategyId);
 

@@ -7,7 +7,7 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 interface IManageTagsProps {
     data: FeatureSchema[];
@@ -22,7 +22,7 @@ export const ManageTags: FC<IManageTagsProps> = ({
 }) => {
     const { bulkUpdateTags } = useTagApi();
     const { setToastData, setToastApiError } = useToast();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const [isOpen, setIsOpen] = useState(false);
     const [initialValues, indeterminateValues] = useMemo(() => {
         const uniqueTags = data

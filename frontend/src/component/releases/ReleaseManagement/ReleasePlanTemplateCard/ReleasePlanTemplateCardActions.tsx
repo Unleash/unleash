@@ -20,7 +20,7 @@ import { TemplateArchiveDialog } from '../TemplateArchiveDialog.tsx';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Link } from 'react-router';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { RELEASE_PLAN_TEMPLATE_DELETE } from '@server/types/permissions';
 import { useHasRootAccess } from 'hooks/useHasAccess';
 
@@ -46,7 +46,7 @@ export const ReleasePlanTemplateCardActions = ({
     const { archiveReleasePlanTemplate } = useReleasePlanTemplatesApi();
     const { refetch } = useReleasePlanTemplates();
     const { setToastData, setToastApiError } = useToast();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const [archiveOpen, setArchiveOpen] = useState(false);
     const hasArchivePermission = useHasRootAccess(RELEASE_PLAN_TEMPLATE_DELETE);
     const archiveReleasePlan = useCallback(async () => {

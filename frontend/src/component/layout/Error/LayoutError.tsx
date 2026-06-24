@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { Box, Button } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IErrorProps {
@@ -19,7 +19,7 @@ const ZendeskButton = () => {
 
 export const LayoutError: FC<IErrorProps> = ({ error }) => {
     const navigate = useNavigate();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { isOss } = useUiConfig();
     const showZendeskButton = !isOss();
 

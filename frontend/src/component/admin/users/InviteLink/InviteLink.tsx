@@ -17,7 +17,7 @@ import { useInviteTokenApi } from 'hooks/api/actions/useInviteTokenApi/useInvite
 import { useInviteTokens } from 'hooks/api/getters/useInviteTokens/useInviteTokens';
 import { LinkField } from '../LinkField/LinkField.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 type IInviteLinkProps = {};
 
@@ -61,7 +61,7 @@ export const InviteLink: FC<IInviteLinkProps> = () => {
     const { data, loading } = useInviteTokens();
     const [inviteLink, setInviteLink] = useState('');
     const { mutate } = useSWRConfig();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const [expiry, setExpiry] = useState(expiryOptions[0].key);
     const [showDisableDialog, setDisableDialogue] = useState(false);
     const defaultToken = data?.tokens?.find(

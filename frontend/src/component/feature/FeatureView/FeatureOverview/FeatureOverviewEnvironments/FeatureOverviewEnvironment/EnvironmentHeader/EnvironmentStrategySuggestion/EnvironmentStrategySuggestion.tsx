@@ -2,7 +2,7 @@ import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { Link } from 'react-router';
 import { StrategyExecution } from '../../EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution.js';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton.js';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker.js';
+import { useEventTracker } from 'hooks/useEventTracker.js';
 import { UPDATE_FEATURE } from '@server/types/permissions.js';
 import type { IFeatureStrategy } from 'interfaces/strategy.js';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled.js';
@@ -33,7 +33,7 @@ export const EnvironmentStrategySuggestion = ({
     environmentId,
     strategy,
 }: DefaultStrategySuggestionProps) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { addChange } = useChangeRequestApi();
     const { setToastData } = useToast();

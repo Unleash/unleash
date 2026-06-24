@@ -17,7 +17,7 @@ import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveD
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { useNavigate } from 'react-router';
 import { useReminders } from './useReminders.ts';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { useUncomplete } from '../FeatureOverview/FeatureLifecycle/useUncomplete.ts';
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -40,7 +40,7 @@ export const CleanupReminder: FC<{
     onChange: () => void;
 }> = ({ feature, onChange }) => {
     const navigate = useNavigate();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const [markCompleteDialogueOpen, setMarkCompleteDialogueOpen] =
         useState(false);

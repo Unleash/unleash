@@ -30,7 +30,7 @@ import { comparisonModerator } from '../featureStrategy.utils';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import useQueryParams from 'hooks/useQueryParams';
 import { useDefaultStrategy } from '../../../project/Project/ProjectSettings/ProjectDefaultStrategySettings/ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy.tsx';
 import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm.tsx';
@@ -84,7 +84,7 @@ export const FeatureStrategyCreate = () => {
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const { data, staleDataNotification, forceRefreshCache } =
         useCollaborateData<IFeatureToggle>(

@@ -8,7 +8,7 @@ import type { ITutorialTopic, ITutorialTopicStep } from '../demo-topics.ts';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { DemoStepTooltip } from './DemoStepTooltip/DemoStepTooltip.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 interface IDemoStepsProps {
     setExpanded: React.Dispatch<React.SetStateAction<boolean>>;
@@ -36,7 +36,7 @@ export const DemoSteps = ({
     const theme = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const [run, setRun] = useState(false);
     const [flow, setFlow] = useState<'next' | 'back' | 'load'>('load');
 

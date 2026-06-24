@@ -1,6 +1,6 @@
 import { Link, styled } from '@mui/material';
 import MenuBook from '@mui/icons-material/MenuBook';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { FeatureSetupGuideBanner } from './FeatureSetupGuideBanner/FeatureSetupGuideBanner.tsx';
 import ToggleOnOutlined from '@mui/icons-material/ToggleOnOutlined';
 
@@ -23,7 +23,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 export const FeatureAddStrategyBanner = () => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     return (
         <FeatureSetupGuideBanner

@@ -1,6 +1,6 @@
 import { formatApiPath } from 'utils/formatPath';
 import { Dialogue } from '../Dialogue/Dialogue';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { useContext, useEffect } from 'react';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import AccessContext from 'contexts/AccessContext';
@@ -55,7 +55,7 @@ export const UpgradeTrialDialog = ({
     setDialogOpen,
 }: IUpgradeTrialDialogProps) => {
     const { hasAccess } = useContext(AccessContext);
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { instancePrices } = useInstancePrices();
 
     const isAdmin = hasAccess(ADMIN);

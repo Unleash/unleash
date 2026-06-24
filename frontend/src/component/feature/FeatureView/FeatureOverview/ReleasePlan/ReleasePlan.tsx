@@ -22,7 +22,7 @@ import type {
     IChangeRequestChangeMilestoneProgression,
     IChangeRequestDeleteMilestoneProgression,
 } from 'component/changeRequest/changeRequest.types';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { Truncator } from 'component/common/Truncator/Truncator';
 import { useMilestoneProgressionsApi } from 'hooks/api/actions/useMilestoneProgressionsApi/useMilestoneProgressionsApi';
 import { DeleteProgressionDialog } from './DeleteProgressionDialog.tsx';
@@ -120,7 +120,7 @@ export const ReleasePlan = ({
         loading: milestoneProgressionLoading,
     } = useMilestoneProgressionsApi();
     const { setToastData, setToastApiError } = useToast();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const [removeOpen, setRemoveOpen] = useState(false);
     const [resumeDialogOpen, setResumeDialogOpen] = useState(false);

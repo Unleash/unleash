@@ -2,7 +2,7 @@ import { Button, styled } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import LightbulbOutlined from '@mui/icons-material/LightbulbOutlined';
 import { PlaceholderChart } from './ImpactDashboard/PlaceholderChart';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { useTrackFlagpageImpactMetrics } from 'component/impact-metrics/useImpactMetricsFunnel';
 import { FeatureSetupGuideBanner } from '../FeatureOverview/FeatureSetupGuideBanner/FeatureSetupGuideBanner';
 
@@ -27,7 +27,7 @@ export const ImpactMetricsEmptyState = ({
     onAddChart,
     onDismiss,
 }: ImpactMetricsEmptyStateProps) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { trackAddMetricClicked } = useTrackFlagpageImpactMetrics();
 
     return (

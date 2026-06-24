@@ -11,7 +11,7 @@ import { scrollToTop } from 'component/common/util';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { Limit } from 'component/common/Limit/Limit.tsx';
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates.ts';
 
@@ -30,7 +30,7 @@ export const CreateReleasePlanTemplate = () => {
     const { setToastApiError, setToastData } = useToast();
     const navigate = useNavigate();
     const { createReleasePlanTemplate } = useReleasePlanTemplatesApi();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { templates } = useReleasePlanTemplates();
     const releaseTemplateLimit = uiConfig.resourceLimits.releaseTemplates;
     const canCreateMore = templates.length < releaseTemplateLimit;

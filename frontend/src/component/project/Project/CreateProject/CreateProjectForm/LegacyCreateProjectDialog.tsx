@@ -9,7 +9,7 @@ import { CREATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import useProjectForm, {
     DEFAULT_PROJECT_STICKINESS,
 } from '../../hooks/useProjectForm.ts';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { type ReactNode, useState, type FormEvent, useEffect } from 'react';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -117,7 +117,7 @@ export const LegacyCreateProjectDialog = ({
     const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
     const navigate = useNavigate();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const {
         projectName,
         projectDesc,

@@ -11,7 +11,7 @@ import { usePersonalDashboard } from 'hooks/api/getters/usePersonalDashboard/use
 import { usePersonalDashboardProjectDetails } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboardProjectDetails';
 import { MyProjects } from './MyProjects.tsx';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { useDashboardState } from './useDashboardState.ts';
 import { MyFlags } from './MyFlags.tsx';
 import { usePageTitle } from 'hooks/usePageTitle';
@@ -115,7 +115,7 @@ const AccordionSummarySubtitle = styled(Typography)(({ theme }) => ({
 
 const EventTimelinePanel = () => {
     const { toggleSectionState, expandTimeline } = useDashboardState();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const signalsLink = '/integrations/signals';
     return (
@@ -268,7 +268,7 @@ const ProjectPanel = () => {
 
 export const PersonalDashboard = () => {
     const { user } = useAuthUser();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { setWelcomeDialog } = useWelcomeDialogContext();
     const { isOss } = useUiConfig();
 

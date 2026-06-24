@@ -9,7 +9,7 @@ import { ImpactMetricsEmptyState } from './ImpactMetricsEmptyState';
 import { CompactChartCard } from './CompactChartCard';
 import { GroupedChartCard } from './GroupedChartCard';
 import { groupImpactConfigs, multimetricFirst } from './groupImpactConfigs';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { useTrackFlagpageImpactMetrics } from 'component/impact-metrics/useImpactMetricsFunnel';
 import { useUiFlag } from 'hooks/useUiFlag';
 
@@ -109,7 +109,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
     const [bannerState, setBannerState] = useLocalStorageState<
         'open' | 'closed'
     >('impact-metrics-banner:dismissed', 'open');
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { trackAccordionOpened, trackAddMetricClicked } =
         useTrackFlagpageImpactMetrics();
 

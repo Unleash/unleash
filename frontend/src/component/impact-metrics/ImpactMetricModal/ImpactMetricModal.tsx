@@ -16,7 +16,7 @@ import type { ChartConfig } from '../types.ts';
 import type { ImpactMetric } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { LabelsFilter } from './LabelFilter/LabelsFilter.tsx';
 import { ImpactMetricsChart } from '../ImpactMetricsChart.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
+import { useEventTracker } from 'hooks/useEventTracker.ts';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
@@ -116,7 +116,7 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
         });
     const theme = useTheme();
     const screenBreakpoint = useMediaQuery(theme.breakpoints.down('lg'));
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const handleSave = () => {
         if (!isValid) return;

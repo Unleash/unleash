@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { styled } from '@mui/material';
 import CodeBlockIcon from 'assets/icons/code-block.svg?react';
 import { ConnectSdkDialog } from 'component/onboarding/dialog/ConnectSdkDialog/ConnectSdkDialog.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { FeatureSetupGuideBanner } from './FeatureSetupGuideBanner/FeatureSetupGuideBanner.tsx';
 import { ConnectionPulse } from 'component/common/ConnectionPulse/ConnectionPulse.tsx';
 import { PendingBadge } from 'component/common/PendingBadge/PendingBadge.tsx';
@@ -35,7 +35,7 @@ export const FeatureConnectSdkBanner = ({
     environments,
     onComplete,
 }: FeatureConnectSdkBannerProps) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
 
     const onConnectSdkClick = () => {

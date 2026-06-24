@@ -8,7 +8,7 @@ import { Badge } from 'component/common/Badge/Badge';
 import { IntegrationCardMenu } from './IntegrationCardMenu/IntegrationCardMenu.tsx';
 import type { AddonSchema } from 'openapi';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { IntegrationEventsLastEvent } from 'component/integrations/IntegrationEvents/IntegrationEventsLastEvent';
 
 type CardVariant = 'default' | 'stacked';
@@ -132,7 +132,7 @@ export const IntegrationCard: FC<IIntegrationCardProps> = ({
     deprecated,
     isExternal = false,
 }) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const isConfigured = addon !== undefined;
 
     const handleClick = () => {

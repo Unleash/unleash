@@ -15,7 +15,7 @@ import { ApplicationChart } from './ApplicationChart.tsx';
 import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
 import { Badge } from '../common/Badge/Badge.tsx';
 import { Link, useNavigate } from 'react-router';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { useEffect } from 'react';
 import { useFeedback } from '../feedbackNew/useFeedback.tsx';
 import ReviewsOutlined from '@mui/icons-material/ReviewsOutlined';
@@ -60,7 +60,7 @@ const ApplicationHeader = styled('div')(({ theme }) => ({
 }));
 
 const useTracking = () => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     useEffect(() => {
         trackEvent('sdk-reporting', {
             props: {

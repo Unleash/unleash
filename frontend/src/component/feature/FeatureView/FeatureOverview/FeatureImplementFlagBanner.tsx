@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button, styled } from '@mui/material';
 import Code from '@mui/icons-material/Code';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { FeatureSetupGuideBanner } from './FeatureSetupGuideBanner/FeatureSetupGuideBanner.tsx';
 import { PendingBadge } from 'component/common/PendingBadge/PendingBadge.tsx';
 import { ImplementFlagDialog } from './ImplementFlagDialog/ImplementFlagDialog.tsx';
@@ -24,7 +24,7 @@ export const FeatureImplementFlagBanner = ({
     featureId,
     onComplete,
 }: FeatureImplementFlagBannerProps) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const [dialogOpen, setDialogOpen] = useState(false);
 
     const onDialogClose = () => {

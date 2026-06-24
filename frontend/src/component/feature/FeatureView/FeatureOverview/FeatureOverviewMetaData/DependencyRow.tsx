@@ -15,7 +15,7 @@ import useToast from 'hooks/useToast';
 import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPermissionChangeRequestEnvironment';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { VariantsTooltip } from './VariantsTooltip.tsx';
 import { styled } from '@mui/material';
 import {
@@ -31,7 +31,7 @@ const StyledPermissionButton = styled(PermissionButton)(({ theme }) => ({
 }));
 
 const useDeleteDependency = (project: string, featureId: string) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { addChange } = useChangeRequestApi();
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(project);

@@ -81,7 +81,8 @@ export type IFlagKey =
     | 'newProfileDropdown'
     | 'hideTopmenuDocumentation'
     | 'serviceNowIntegration'
-    | 'learningLab';
+    | 'learningLab'
+    | 'accessRequestsNotifications';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -373,6 +374,10 @@ const flags: IFlags = {
     serviceNowIntegration: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SERVICE_NOW_INTEGRATION,
         false,
+    ),
+    accessRequestsNotifications: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ACCESS_REQUESTS_NOTIFICATIONS,
+        true,
     ),
 };
 

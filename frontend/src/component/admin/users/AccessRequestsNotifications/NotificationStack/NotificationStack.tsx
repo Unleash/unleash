@@ -1,11 +1,11 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { styled } from '@mui/material';
 import type { UserAccessRequestSchema } from 'openapi';
-import { getLocalStorageItem, setLocalStorageItem } from 'utils/storage';
+import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { NotificationCard } from './NotificationCard';
 
 const MAX_VISIBLE = 15;
-const DEFAULT_STORAGE_KEY = 'unleash:access-requests:dismissed';
+const DEFAULT_STORAGE_KEY = 'access-requests:dismissed';
 
 interface INotificationStackProps {
     accessRequests: UserAccessRequestSchema[];
@@ -27,20 +27,18 @@ export const NotificationStack = ({
     storageKey = DEFAULT_STORAGE_KEY,
     maxVisible = MAX_VISIBLE,
 }: INotificationStackProps) => {
-    const [dismissedIds, setDismissedIds] = useState<string[]>(
-        () => getLocalStorageItem<string[]>(storageKey) ?? [],
+    const [dismissedIds, setDismissedIds] = useLocalStorageState<string[]>(
+        storageKey,
+        [],
     );
 
     const dismiss = useCallback(
         (id: string) => {
-            setDismissedIds((prev) => {
-                if (prev.includes(id)) return prev;
-                const next = [...prev, id];
-                setLocalStorageItem(storageKey, next);
-                return next;
-            });
+            setDismissedIds((prev) =>
+                prev.includes(id) ? prev : [...prev, id],
+            );
         },
-        [storageKey],
+        [setDismissedIds],
     );
 
     const visibleRequests = useMemo(() => {

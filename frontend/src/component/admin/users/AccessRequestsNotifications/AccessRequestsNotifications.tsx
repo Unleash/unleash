@@ -5,7 +5,12 @@ import { useHasRootAccess } from 'hooks/useHasAccess';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { NotificationStack } from './NotificationStack/NotificationStack';
 
-const HIDDEN_PATH_PREFIXES = ['/admin/users'];
+const HIDDEN_PATH_SEGMENTS = ['/admin/users'];
+
+export const isHiddenRoute = (pathname: string): boolean =>
+    HIDDEN_PATH_SEGMENTS.some((segment) =>
+        new RegExp(`(^|/)${segment.slice(1)}(/|$)`).test(pathname),
+    );
 
 const StyledOverlay = styled('div')(({ theme }) => ({
     position: 'fixed',
@@ -33,11 +38,7 @@ export const AccessRequestsNotifications = () => {
     const { pathname } = useLocation();
     const hasAdminAccess = useHasRootAccess(ADMIN);
 
-    const isHiddenRoute = HIDDEN_PATH_PREFIXES.some((prefix) =>
-        pathname.startsWith(prefix),
-    );
-
-    if (!hasAdminAccess || isHiddenRoute) {
+    if (!hasAdminAccess || isHiddenRoute(pathname)) {
         return null;
     }
 

@@ -35,7 +35,7 @@ const ConfigProbe = () => {
 
 test('trackEvent fans out to Plausible and the flight recorder', async () => {
     testServerRoute(server, '/api/admin/ui-config', {
-        unleashContext: { userId: 'u-1' },
+        unleashContext: { userId: 'u-1', email: 'already-hashed-email' },
     });
 
     const plausibleTrack = vi.fn();
@@ -63,7 +63,7 @@ test('trackEvent fans out to Plausible and the flight recorder', async () => {
     expect(record).toHaveBeenCalledWith({
         eventType: 'custom',
         eventName: 'invite',
-        context: { userId: 'u-1' },
+        context: { userId: 'u-1', email: 'already-hashed-email' },
         payload: { eventType: 'test' },
     });
 });

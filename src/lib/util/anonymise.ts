@@ -18,6 +18,10 @@ export function encrypt(s?: string): string {
     return `${encrypted}@unleash.run`;
 }
 
+export function hashValue(value: string): string {
+    return createHash('sha256').update(value, 'utf-8').digest('hex');
+}
+
 export function anonymise(s?: string): string {
     if (!s) {
         return '';

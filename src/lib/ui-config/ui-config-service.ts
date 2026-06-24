@@ -19,6 +19,7 @@ import {
 import version from '../util/version.js';
 import type { ResourceLimitsService } from '../features/resource-limits/resource-limits-service.js';
 import { ImpactMetricsAvailabilityResolver } from '../features/metrics/impact/impact-metrics-availability.js';
+import { hashValue } from '../util/anonymise.js';
 
 export class UiConfigService {
     private config: IUnleashConfig;
@@ -112,7 +113,7 @@ export class UiConfigService {
 
         const unleashContext = {
             ...this.flagResolver.getStaticContext(),
-            email: user.email,
+            ...(user.email ? { email: hashValue(user.email) } : {}),
             userId: user.id,
         };
         const uiConfig: UiConfigSchema = {

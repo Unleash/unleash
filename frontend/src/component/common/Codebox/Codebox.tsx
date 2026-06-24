@@ -9,7 +9,7 @@ const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadiusMedium,
     position: 'relative',
-    maxHeight: '500px',
+    maxHeight: '320px',
     overflow: 'auto',
 }));
 

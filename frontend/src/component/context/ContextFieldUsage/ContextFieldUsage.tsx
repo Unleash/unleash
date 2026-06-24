@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 import { formatStrategyName } from 'utils/strategyNames';
 import { useStrategiesByContext } from 'hooks/api/getters/useStrategiesByContext/useStrategiesByContext';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 const StyledUl = styled('ul')(({ theme }) => ({
     listStyle: 'none',
@@ -23,7 +23,7 @@ interface IContextFieldUsageProps {
 export const ContextFieldUsage = ({ contextName }: IContextFieldUsageProps) => {
     const { strategies } = useStrategiesByContext(contextName);
     const { projects } = useProjects();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const trackClick = () => {
         trackEvent('context-usage', {

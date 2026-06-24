@@ -11,7 +11,7 @@ import useToast from 'hooks/useToast';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useRemoteMcpSettings } from 'hooks/api/getters/useRemoteMcpSettings/useRemoteMcpSettings';
 import { useRemoteMcpSettingsApi } from 'hooks/api/actions/useRemoteMcpSettingsApi/useRemoteMcpSettingsApi';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
 const StyledCard = styled('div')(({ theme }) => ({
@@ -61,7 +61,7 @@ export const RemoteMcpToggle = () => {
         uiConfig: { unleashUrl },
     } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const [enabled, setEnabled] = useState(settings.enabled);
 

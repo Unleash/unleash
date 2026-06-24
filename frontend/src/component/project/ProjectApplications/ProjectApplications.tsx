@@ -27,13 +27,13 @@ import {
 } from 'hooks/api/getters/useProjectApplications/useProjectApplications';
 import { StringArrayCell } from 'component/common/Table/cells/StringArrayCell';
 import { SdkCell } from './SdkCell.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { useNavigate } from 'react-router';
 
 const columnHelper = createColumnHelper<ProjectApplicationSchema>();
 
 const useTracking = () => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     useEffect(() => {
         trackEvent('sdk-reporting', {
             props: {

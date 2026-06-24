@@ -30,7 +30,7 @@ import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { useStickinessOptions } from 'hooks/useStickinessOptions';
 import { CREATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
@@ -344,7 +344,7 @@ export const CreateProjectDialog: FC<Props> = ({ open, onClose }) => {
     const { uiConfig, isEnterprise } = useUiConfig();
     const { createProject, loading: creatingProject } = useProjectApi();
     const { refetchUser } = useAuthUser();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const {
         projectName,

@@ -1,7 +1,7 @@
 import ProPlanIcon from 'assets/icons/pro-enterprise-feature-badge.svg?react';
 import ProPlanIconLight from 'assets/icons/pro-enterprise-feature-badge-light.svg?react';
 import { Box, Button, Link, styled, Typography } from '@mui/material';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender.tsx';
 import { ThemeMode } from '../ThemeMode/ThemeMode.tsx';
 import { PageContent } from '../PageContent/PageContent.tsx';
@@ -155,7 +155,7 @@ export const PremiumFeature = ({
 }: PremiumFeatureProps) => {
     const { url, plan, label } = PremiumFeatures[feature];
 
-    const tracker = usePlausibleTracker();
+    const tracker = useEventTracker();
 
     const trackUpgradePlan = () => {
         tracker.trackEvent('upgrade_plan_clicked', {

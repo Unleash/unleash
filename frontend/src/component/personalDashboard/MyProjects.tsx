@@ -33,7 +33,7 @@ import {
     VirtualizedList,
 } from './SharedComponents.tsx';
 import { ContactAdmins, DataError } from './ProjectDetailsError.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { Link } from 'react-router';
 import { ActionBox } from './ActionBox.tsx';
 import useLoading from 'hooks/useLoading';
@@ -98,7 +98,7 @@ const ProjectListItem: FC<{
     selected: boolean;
     onClick: () => void;
 }> = ({ project, selected, onClick }) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     return (
         <ListItem disablePadding={true} sx={{ mb: 1 }}>

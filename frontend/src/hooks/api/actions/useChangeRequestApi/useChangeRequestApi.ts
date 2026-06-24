@@ -1,5 +1,5 @@
 import useAPI from '../useApi/useApi.js';
-import { usePlausibleTracker } from '../../../usePlausibleTracker.js';
+import { useEventTracker } from '../../../useEventTracker.js';
 import type { PlausibleChangeRequestState } from 'component/changeRequest/changeRequest.types';
 import { getUniqueChangeRequestId } from 'utils/unique-change-request-id';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -41,7 +41,7 @@ export interface IChangeRequestConfig {
 }
 
 export const useChangeRequestApi = () => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
     });

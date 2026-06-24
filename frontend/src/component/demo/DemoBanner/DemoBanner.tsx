@@ -1,6 +1,6 @@
 import { Button, styled } from '@mui/material';
 import { Sticky } from 'component/common/Sticky/Sticky';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 const StyledBanner = styled(Sticky)(({ theme }) => ({
     zIndex: theme.zIndex.sticky - 100,
@@ -35,7 +35,7 @@ const StyledQuestionsButton = styled(StyledButton)(({ theme }) => ({
 })) as typeof Button;
 
 export const DemoBanner = () => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     return (
         <StyledBanner>

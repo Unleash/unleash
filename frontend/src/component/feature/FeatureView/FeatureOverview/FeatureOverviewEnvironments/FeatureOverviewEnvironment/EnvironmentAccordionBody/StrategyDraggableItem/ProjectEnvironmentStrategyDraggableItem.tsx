@@ -18,7 +18,7 @@ import MenuStrategyRemove from './StrategyItem/MenuStrategyRemove/MenuStrategyRe
 import { Link } from 'react-router';
 import { UPDATE_FEATURE_STRATEGY } from '@server/types/permissions';
 import { StrategyDraggableItem } from './StrategyDraggableItem.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
+import { useEventTracker } from 'hooks/useEventTracker.ts';
 
 type EditControlsProps = {
     projectId: string;
@@ -39,7 +39,7 @@ const EditControls = ({
     otherEnvironments,
     scope,
 }: EditControlsProps) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     return (
         <>
             <PermissionIconButton

@@ -22,7 +22,7 @@ import { AdvancedPlaygroundResultsTable } from './AdvancedPlaygroundResultsTable
 import type { AdvancedPlaygroundResponseSchema } from 'openapi';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { BadRequestError } from 'utils/apiUtils';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(3),
@@ -94,7 +94,7 @@ export const AdvancedPlayground: FC<{
         'AdvancedPlayground:v1',
         defaultSettings,
     );
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const { environments: availableEnvironments } = useEnvironments();
     const theme = useTheme();

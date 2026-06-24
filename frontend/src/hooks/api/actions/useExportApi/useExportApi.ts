@@ -1,12 +1,12 @@
 import type { ExportQuerySchema } from 'openapi';
 import useAPI from '../useApi/useApi.js';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 export const useExportApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
     });
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const createExport = async (payload: ExportQuerySchema) => {
         const path = `api/admin/features-batch/export`;

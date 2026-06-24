@@ -5,7 +5,7 @@ import {
     type FeedbackMode,
 } from './FeedbackContext.ts';
 import { type FC, useState } from 'react';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 export const FeedbackProvider: FC<{ children?: React.ReactNode }> = ({
     children,
@@ -13,7 +13,7 @@ export const FeedbackProvider: FC<{ children?: React.ReactNode }> = ({
     const [feedbackData, setFeedbackData] = useState<
         FeedbackData | undefined
     >();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const [showFeedback, setShowFeedback] = useState(false);
     const [feedbackMode, setFeedbackMode] = useState<

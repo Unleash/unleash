@@ -1,7 +1,7 @@
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Paper, styled } from '@mui/material';
 import { InviteLinkBarContent } from 'component/admin/users/InviteLinkBar/InviteLinkBarContent';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
     display: 'flex',
@@ -32,7 +32,7 @@ export const InviteLinkContent = ({
     showInviteLinkContent,
     setShowInviteLinkContent,
 }: IInviteLinkContentProps) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const onInviteLinkActionClick = (inviteLink?: string) => {
         setShowInviteLinkContent(false);

@@ -6,7 +6,7 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import type { FeatureLink } from 'interfaces/featureToggle';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
     width: '100%',
@@ -44,7 +44,7 @@ const LinkDialogue: FC<ILinkDialogueProps> = ({
     const isEditMode = mode === 'edit';
     const dialogueTitle = isEditMode ? 'Edit link' : 'Add link';
     const successMessage = isEditMode ? 'Link updated' : 'Link added';
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     useEffect(() => {
         if (isEditMode && link) {

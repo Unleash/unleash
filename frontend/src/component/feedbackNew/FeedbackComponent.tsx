@@ -20,7 +20,7 @@ import { useUserSubmittedFeedback } from 'hooks/useSubmittedFeedback';
 import type { IToast } from 'interfaces/toast';
 import { useTheme } from '@mui/material/styles';
 import type { FeedbackData, FeedbackMode } from './FeedbackContext.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUserType from './useUserType.ts';
 import { BaseModal } from 'component/common/SidebarModal/SidebarModal';
@@ -155,7 +155,7 @@ export const FeedbackComponent = ({
 }: IFeedbackComponent) => {
     const { setToastData } = useToast();
     const userType = useUserType();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const theme = useTheme();
 
     const { addFeedback } = useUserFeedbackApi();

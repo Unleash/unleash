@@ -23,7 +23,7 @@ import useToast from 'hooks/useToast';
 import { FeaturesOverviewToggleFilters } from './FeaturesOverviewLifecycleFilters/FeaturesOverviewToggleFilters.tsx';
 import { withTableState } from 'utils/withTableState';
 import useLoading from 'hooks/useLoading';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import {
     useGlobalFeatureSearch,
     useTableStateFilter,
@@ -67,7 +67,7 @@ const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
 export const FeatureToggleListTable: FC = () => {
     const theme = useTheme();
     const { isOss } = useUiConfig();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { environments } = useEnvironments();
     const enabledEnvironments = environments
         .filter((env) => env.enabled)

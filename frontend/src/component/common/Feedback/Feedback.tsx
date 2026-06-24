@@ -1,9 +1,7 @@
 import { useState, type FC } from 'react';
 import { Box, Paper, Button, styled } from '@mui/material';
-import {
-    type CustomEvents,
-    usePlausibleTracker,
-} from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
+import type { CustomEvents } from 'utils/trackingEvents';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { createLocalStorage } from 'utils/createLocalStorage';
 
@@ -33,7 +31,7 @@ export const Feedback: FC<IFeedbackProps> = ({
     const [selected, setSelected] = useState<'yes' | 'no' | undefined>(
         selectedValue.value,
     );
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     if (!uiConfig?.flags?.T || selected) {
         return null;

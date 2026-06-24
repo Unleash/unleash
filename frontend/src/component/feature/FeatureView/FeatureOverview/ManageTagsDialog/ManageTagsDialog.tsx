@@ -17,7 +17,7 @@ import { TagTypeSelect } from './TagTypeSelect.tsx';
 import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
 import useTags from 'hooks/api/getters/useTags/useTags';
 import cloneDeep from 'lodash.clonedeep';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import useTagTypes from 'hooks/api/getters/useTagTypes/useTagTypes';
 
 interface IManageTagsProps {
@@ -69,7 +69,7 @@ export const ManageTagsDialog = ({ open, setOpen }: IManageTagsProps) => {
 
     const [differenceCount, setDifferenceCount] = useState(0);
 
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const [selectedTagOptions, setSelectedTagOptions] = useState<TagOption[]>(
         tagsToOptions(tags.filter((tag) => tag.type === tagType.name)),

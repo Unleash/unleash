@@ -4,7 +4,7 @@ import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { TooltipResolver } from '../../TooltipResolver/TooltipResolver.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 interface IFavoriteIconHeaderProps {
     isActive: boolean;
@@ -15,7 +15,7 @@ export const FavoriteIconHeader: FC<IFavoriteIconHeaderProps> = ({
     isActive = false,
     onClick,
 }) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const [internalState, setInternalState] = useState(isActive);
     const onToggle = () => {
         const newState = !internalState;

@@ -7,7 +7,7 @@ import {
     Button,
 } from '@mui/material';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import type { MetricSource } from 'component/impact-metrics/types';
 import { useTrackFlagpageImpactMetrics } from 'component/impact-metrics/useImpactMetricsFunnel';
 import { useUiFlag } from 'hooks/useUiFlag';
@@ -50,7 +50,7 @@ const NoOptionsMessage = ({
 }: {
     onRegisterClick?: () => void;
 }) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { trackDocsClicked } = useTrackFlagpageImpactMetrics();
 
     const buttonProps = onRegisterClick

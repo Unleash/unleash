@@ -4,7 +4,7 @@ import type { IBanner } from 'interfaces/banner';
 import { useOutdatedSdks } from 'hooks/api/getters/useOutdatedSdks/useOutdatedSdks';
 import { Link } from 'react-router';
 import { styled } from '@mui/material';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 const StyledList = styled('ul')({ margin: 0 });
 
@@ -16,7 +16,7 @@ export const OutdatedSdksBanner = ({ project }: IOutdatedSdksBannerProps) => {
     const {
         data: { sdks },
     } = useOutdatedSdks(project);
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const applicationClickedWithVersion = (sdkVersion: string) => {
         trackEvent('sdk-banner', {

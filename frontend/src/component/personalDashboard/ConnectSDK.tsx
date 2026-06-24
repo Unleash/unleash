@@ -1,5 +1,5 @@
 import { Button, styled, Typography } from '@mui/material';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import type { FC } from 'react';
 import { ActionBox } from './ActionBox.tsx';
 import { Link } from 'react-router';
@@ -22,7 +22,7 @@ const SuccessContainer = styled('div')(({ theme }) => ({
 }));
 
 export const CreateFlag: FC<{ project: string }> = ({ project }) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     return (
         <ActionBox
             data-loading

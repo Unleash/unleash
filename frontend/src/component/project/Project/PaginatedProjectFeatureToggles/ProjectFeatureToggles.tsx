@@ -45,7 +45,7 @@ import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectS
 import { ConnectSdkDialog } from '../../../onboarding/dialog/ConnectSdkDialog/ConnectSdkDialog.tsx';
 import { ProjectOnboarding } from '../../../onboarding/flow/ProjectOnboarding.tsx';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { ArchivedFeatureActionCell } from '../../../archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureActionCell.tsx';
 import { ArchiveBatchActions } from '../../../archive/ArchiveTable/ArchiveBatchActions.tsx';
 import { ImportModal } from '../Import/ImportModal.tsx';
@@ -105,7 +105,7 @@ const LinkToggle = styled('button')(({ theme }) => ({
 export const ProjectFeatureToggles = ({
     environments: availableEnvironments,
 }: ProjectFeatureTogglesProps) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const projectId = useRequiredPathParam('projectId');
     const { project } = useProjectOverview(projectId);
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);

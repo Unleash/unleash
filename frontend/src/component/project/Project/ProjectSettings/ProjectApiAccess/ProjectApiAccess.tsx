@@ -20,7 +20,7 @@ import {
 import { CopyApiTokenButton } from 'component/common/ApiTokenTable/CopyApiTokenButton/CopyApiTokenButton';
 import { RemoveApiTokenButton } from 'component/common/ApiTokenTable/RemoveApiTokenButton/RemoveApiTokenButton';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import useProjectApiTokensApi from 'hooks/api/actions/useProjectApiTokensApi/useProjectApiTokensApi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
@@ -34,7 +34,7 @@ export const ProjectApiAccess = () => {
         loading,
         refetch: refetchProjectTokens,
     } = useProjectApiTokens(projectId);
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { deleteToken: deleteProjectToken } = useProjectApiTokensApi();
 
     usePageTitle(`Project api access – ${projectName}`);

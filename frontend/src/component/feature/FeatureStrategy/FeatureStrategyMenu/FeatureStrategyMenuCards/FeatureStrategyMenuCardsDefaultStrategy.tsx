@@ -5,7 +5,7 @@ import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFe
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi.ts';
 import useToast from 'hooks/useToast.tsx';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard.tsx';
 import { FeatureStrategyMenuCardAction } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardAction.tsx';
 import { FeatureStrategyMenuCardIcon } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardIcon.tsx';
@@ -42,7 +42,7 @@ export const FeatureStrategyMenuCardsDefaultStrategy = ({
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
     const { refetchFeature } = useFeature(projectId, featureId);
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const projectDefaultStrategy = project?.environments?.find(
         (env) => env.environment === environmentId,

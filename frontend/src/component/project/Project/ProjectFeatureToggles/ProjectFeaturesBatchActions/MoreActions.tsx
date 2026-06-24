@@ -18,7 +18,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { MORE_BATCH_ACTIONS } from 'utils/testIds';
 
 interface IMoreActionsProps {
@@ -37,7 +37,7 @@ export const MoreActions: FC<IMoreActionsProps> = ({
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const { staleFeatures } = useProjectApi();
     const { setToastData, setToastApiError } = useToast();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const open = Boolean(anchorEl);
     const selectedIds = data.map(({ name }) => name);

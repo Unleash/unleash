@@ -20,7 +20,7 @@ import { TokenInfo } from 'component/admin/apiToken/ApiTokenForm/TokenInfo/Token
 import { TokenTypeSelector } from 'component/admin/apiToken/ApiTokenForm/TokenTypeSelector/TokenTypeSelector';
 import { ConfirmToken } from 'component/admin/apiToken/ConfirmToken/ConfirmToken';
 import { useProjectApiTokens } from 'hooks/api/getters/useProjectApiTokens/useProjectApiTokens';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 const pageTitle = 'Create project API token';
 
@@ -49,7 +49,7 @@ export const CreateProjectApiTokenForm = () => {
     const { createToken: createProjectToken, loading } =
         useProjectApiTokensApi();
     const { refetch: refetchProjectTokens } = useProjectApiTokens(projectId);
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     usePageTitle(pageTitle);
 

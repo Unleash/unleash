@@ -18,7 +18,7 @@ import AccessContext from 'contexts/AccessContext.ts';
 import { formatStrategyName } from 'utils/strategyNames.tsx';
 import { FeatureStrategyMenuCardAction } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardAction.tsx';
 import { formatCreateStrategyPath } from '../../FeatureStrategyCreate/FeatureStrategyCreate.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
+import { useEventTracker } from 'hooks/useEventTracker.ts';
 import { FeatureStrategyMenuCardsDefaultStrategy } from './FeatureStrategyMenuCardsDefaultStrategy.tsx';
 import type { IStrategy } from 'interfaces/strategy.ts';
 import { FeatureStrategyMenuCardIcon } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardIcon.tsx';
@@ -87,7 +87,7 @@ export const FeatureStrategyMenuCards = ({
 }: IFeatureStrategyMenuCardsProps) => {
     const { isEnterprise } = useUiConfig();
     const { hasAccess } = useContext(AccessContext);
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const navigate = useNavigate();
 
     const { strategies } = useStrategies();

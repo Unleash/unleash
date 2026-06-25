@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import { CollaborationModeTooltip } from './CollaborationModeTooltip.tsx';
 import { FormField } from 'component/common/FormField/FormField';
+import { FormGroup } from 'component/common/FormGroup/FormGroup';
 import { FeatureFlagNamingTooltip } from './FeatureFlagNamingTooltip.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import type { ProjectLinkTemplateSchema } from 'openapi';
@@ -70,13 +71,6 @@ const StyledButtonContainer = styled('div')(() => ({
     marginTop: 'auto',
     display: 'flex',
     justifyContent: 'flex-end',
-}));
-
-const StyledFlagNamingContainer = styled('div')(() => ({
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    '& > *': { width: '100%' },
 }));
 
 const StyledPatternNamingExplanation = styled('div')(({ theme }) => ({
@@ -264,28 +258,29 @@ const ProjectEnterpriseSettingsForm: React.FC<
                     </Typography>
                     <FeatureFlagNamingTooltip />
                 </Box>
-                <StyledSubtitle>
-                    <StyledPatternNamingExplanation id='pattern-naming-description'>
-                        <p>
-                            Define a{' '}
-                            <a
-                                href={`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Cheatsheet`}
-                                target='_blank'
-                                rel='noreferrer'
-                            >
-                                JavaScript RegEx
-                            </a>{' '}
-                            used to enforce feature flag names within this
-                            project. The regex will be surrounded by a leading{' '}
-                            <code>^</code> and a trailing <code>$</code>.
-                        </p>
-                        <p>
-                            Leave it empty if you don’t want to add a naming
-                            pattern.
-                        </p>
-                    </StyledPatternNamingExplanation>
-                </StyledSubtitle>
-                <StyledFlagNamingContainer>
+                <FormGroup>
+                    <StyledSubtitle>
+                        <StyledPatternNamingExplanation id='pattern-naming-description'>
+                            <p>
+                                Define a{' '}
+                                <a
+                                    href={`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Cheatsheet`}
+                                    target='_blank'
+                                    rel='noreferrer'
+                                >
+                                    JavaScript RegEx
+                                </a>{' '}
+                                used to enforce feature flag names within this
+                                project. The regex will be surrounded by a
+                                leading <code>^</code> and a trailing{' '}
+                                <code>$</code>.
+                            </p>
+                            <p>
+                                Leave it empty if you don’t want to add a naming
+                                pattern.
+                            </p>
+                        </StyledPatternNamingExplanation>
+                    </StyledSubtitle>
                     <FormField label='Naming Pattern'>
                         <TextField
                             fullWidth
@@ -353,7 +348,7 @@ The flag name should contain the project name, the feature name, and the ticket 
                             }
                         />
                     </FormField>
-                </StyledFlagNamingContainer>
+                </FormGroup>
 
                 <ProjectLinkTemplates
                     linkTemplates={linkTemplates || []}

@@ -66,6 +66,7 @@ export type IFlagKey =
     | 'oidcPkceSupport'
     | 'flightRecorderSdk'
     | 'flightRecorderAdminEvents'
+    | 'flightRecorderFrontend'
     | 'regexConstraintOperator'
     | 'enterpriseEdgeTokensList'
     | 'impactMetricsFlagPage'
@@ -307,6 +308,19 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_FLIGHT_RECORDER_ADMIN_EVENTS,
         false,
     ),
+    flightRecorderFrontend: {
+        name: 'flightRecorderFrontend',
+        enabled: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_FLIGHT_RECORDER_FRONTEND,
+            false,
+        ),
+        payload: {
+            type: PayloadType.STRING,
+            value:
+                process.env.UNLEASH_EXPERIMENTAL_FLIGHT_RECORDER_FRONTEND_URL ??
+                '',
+        },
+    },
     regexConstraintOperator: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_REGEX_CONSTRAINT_OPERATOR,
         false,

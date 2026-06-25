@@ -67,9 +67,7 @@ const StyledContainer = styled('div', {
     flexGrow: 1,
     alignItems: 'center',
     position: 'relative',
-    backgroundColor: compact
-        ? 'transparent'
-        : theme.palette.background.application,
+    backgroundColor: 'transparent',
     maxWidth: active ? '100%' : '400px',
     [theme.breakpoints.down('md')]: {
         maxWidth: '100%',

@@ -3,10 +3,12 @@ import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
+    Alert,
     Button,
     styled,
     Typography,
 } from '@mui/material';
+import { useFlag } from '@unleash/proxy-client-react';
 import { usePersonalDashboard } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboard';
 import { usePersonalDashboardProjectDetails } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboardProjectDetails';
 import { MyProjects } from './MyProjects.tsx';
@@ -92,6 +94,10 @@ const MainContent = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(2),
+}));
+
+const ImpactMetricsBanner = styled(Alert)(({ theme }) => ({
+    marginBottom: theme.spacing(1),
 }));
 
 const AccordionSummaryText = styled('div')(({ theme }) => ({
@@ -271,6 +277,7 @@ export const PersonalDashboard = () => {
     const { trackEvent } = usePlausibleTracker();
     const { setWelcomeDialog } = useWelcomeDialogContext();
     const { isOss } = useUiConfig();
+    const impactMetricsBannerEnabled = useFlag('impact-metrics-banner');
 
     const name = user?.name || '';
 
@@ -287,6 +294,13 @@ export const PersonalDashboard = () => {
     return (
         <MainContent>
             {isOss() && <InfoSection />}
+
+            {impactMetricsBannerEnabled && (
+                <ImpactMetricsBanner severity='info'>
+                    Impact metrics are here — track how your feature flags
+                    affect your key metrics right from your dashboard.
+                </ImpactMetricsBanner>
+            )}
 
             <WelcomeSection>
                 <Typography component='h2' variant='h2'>

@@ -4,7 +4,8 @@ import {
     createFlightRecorder,
     type FlightRecorder,
 } from '@unleash/sdk-flight-recorder';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { getVariantValue, type Variant } from 'utils/variants';
 import { FlightRecorderContext } from 'contexts/FlightRecorderContext';
 
 // Custom UI events are low-frequency, so the periodic timer does the flushing
@@ -15,8 +16,8 @@ const BATCH = { flushAt: 100 };
 export const FlightRecorderProvider: FC<{ children?: React.ReactNode }> = ({
     children,
 }) => {
-    const { uiConfig } = useUiConfig();
-    const url = uiConfig?.flightRecorderUrl;
+    const flag = useUiFlag('flightRecorderFrontend');
+    const url = getVariantValue(flag as Variant);
 
     const [recorder, setRecorder] = useState<FlightRecorder | null>(null);
 

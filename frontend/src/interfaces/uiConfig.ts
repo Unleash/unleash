@@ -41,7 +41,6 @@ export interface IUiConfig {
     samlConfiguredThroughEnv?: boolean;
     maxSessionsCount?: number;
     unleashContext?: IMutableContext;
-    flightRecorderUrl?: string;
 }
 
 export type UiFlags = {

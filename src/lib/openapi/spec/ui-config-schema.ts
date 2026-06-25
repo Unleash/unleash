@@ -49,12 +49,6 @@ export const uiConfigSchema = {
             description: 'The URL of the Unleash instance.',
             example: 'https://unleash.mycompany.com/enterprise',
         },
-        flightRecorderUrl: {
-            type: 'string',
-            description:
-                'The URL the frontend flight recorder posts custom UI events to. When unset, the flight recorder stays disabled.',
-            example: 'https://recorder.mycompany.com',
-        },
         logRocketAppId: {
             type: 'string',
             description:

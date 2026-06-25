@@ -55,9 +55,13 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
         const logRocketConnectSrc = logRocketEnabled
             ? LOGROCKET_CONNECT_SRC
             : [];
-        const flightRecorderSrc = flightRecorderConnectSrc(
-            config.server.flightRecorderUrl,
+        const flightRecorderVariant = config.flagResolver.getVariant(
+            'flightRecorderFrontend',
         );
+        const flightRecorderUrl = flightRecorderVariant.enabled
+            ? flightRecorderVariant.payload?.value
+            : undefined;
+        const flightRecorderSrc = flightRecorderConnectSrc(flightRecorderUrl);
         const workerSrc = logRocketEnabled ? ["'self'", 'blob:'] : ["'self'"];
         const styleSrc = ["'self'"];
         if (includeUnsafeInline) {

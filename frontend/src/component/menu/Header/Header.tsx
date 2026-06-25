@@ -22,6 +22,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton.tsx';
 import { CommandBar } from 'component/commandBar/CommandBar';
 import { HelpResources } from './HelpResources/HelpResources';
+import { PendingAccessRequestsIndicator } from 'component/admin/users/AccessRequestsNotifications/PendingAccessRequestsIndicator';
 
 const HeaderComponent = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.application,
@@ -137,17 +138,35 @@ const Header = () => {
             <HeaderComponent position='static'>
                 <ContainerComponent>
                     <Tooltip title='Menu' arrow>
-                        <IconButton
+                        <Box
                             sx={{
-                                color: (theme) => theme.palette.text.primary,
+                                position: 'relative',
+                                display: 'inline-flex',
                             }}
-                            onClick={toggleDrawer}
-                            aria-controls='header-drawer'
-                            aria-expanded={openDrawer}
-                            size='large'
                         >
-                            <MenuIcon />
-                        </IconButton>
+                            <IconButton
+                                sx={{
+                                    color: (theme) =>
+                                        theme.palette.text.primary,
+                                }}
+                                onClick={toggleDrawer}
+                                aria-controls='header-drawer'
+                                aria-expanded={openDrawer}
+                                size='large'
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                            <Box
+                                sx={(theme) => ({
+                                    position: 'absolute',
+                                    top: theme.spacing(0.75),
+                                    right: theme.spacing(-0.5),
+                                    pointerEvents: 'none',
+                                })}
+                            >
+                                <PendingAccessRequestsIndicator />
+                            </Box>
+                        </Box>
                     </Tooltip>
                     <DrawerMenu open={openDrawer} toggleDrawer={toggleDrawer} />
                     {headerItems}

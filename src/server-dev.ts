@@ -62,6 +62,7 @@ process.nextTick(async () => {
                         learningLab: true,
                         serviceNowIntegration: true,
                         accessRequestsNotifications: true,
+                        accessRequestsMenuIndicator: true,
                     },
                 },
                 authentication: {

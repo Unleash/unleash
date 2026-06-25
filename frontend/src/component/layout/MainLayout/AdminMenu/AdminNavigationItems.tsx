@@ -26,6 +26,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import type { INavigationMenuItem } from 'interfaces/route';
 import { useShowBadge } from 'component/layout/components/EnterprisePlanBadge/useShowBadge';
 import { EnterprisePlanBadge } from 'component/layout/components/EnterprisePlanBadge/EnterprisePlanBadge';
+import { PendingAccessRequestsIndicator } from 'component/admin/users/AccessRequestsNotifications/PendingAccessRequestsIndicator';
 
 interface IMenuLinkItem {
     href: string;
@@ -239,6 +240,11 @@ export const AdminNavigationItems = ({
                             isActiveMenu={Boolean(isActiveMenu)}
                             key={item.text}
                             staticExpanded={staticExpanded}
+                            collapsedBadge={
+                                item.href === 'users' ? (
+                                    <PendingAccessRequestsIndicator />
+                                ) : null
+                            }
                         >
                             {item.items.map((subItem) => (
                                 <AdminSubListItem
@@ -250,6 +256,11 @@ export const AdminNavigationItems = ({
                                     badge={
                                         showBadge(subItem.menuMode) ? (
                                             <EnterprisePlanBadge />
+                                        ) : null
+                                    }
+                                    inlineBadge={
+                                        subItem.href === '/admin/users' ? (
+                                            <PendingAccessRequestsIndicator />
                                         ) : null
                                     }
                                 >

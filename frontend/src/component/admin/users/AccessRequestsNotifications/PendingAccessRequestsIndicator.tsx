@@ -11,23 +11,42 @@ const Dot = styled('span')(({ theme }) => ({
     backgroundColor: theme.palette.primary.main,
     display: 'inline-block',
     flexShrink: 0,
+    alignSelf: 'flex-start',
+    verticalAlign: 'top',
+    '.Mui-selected &': {
+        backgroundColor: theme.palette.common.white,
+    },
 }));
 
-const AdminPendingAccessRequestsIndicator = () => {
+type PendingAccessRequestsIndicatorProps = {
+    showTooltip?: boolean;
+};
+
+const AdminPendingAccessRequestsIndicator = ({
+    showTooltip = true,
+}: PendingAccessRequestsIndicatorProps) => {
     const { accessRequests } = useUserAccessRequests();
 
     if (accessRequests.length === 0) {
         return null;
     }
 
+    const dot = <Dot aria-label='Pending access requests' />;
+
+    if (!showTooltip) {
+        return dot;
+    }
+
     return (
         <Tooltip title='Pending access requests' arrow>
-            <Dot aria-label='Pending access requests' />
+            {dot}
         </Tooltip>
     );
 };
 
-export const PendingAccessRequestsIndicator = () => {
+export const PendingAccessRequestsIndicator = (
+    props: PendingAccessRequestsIndicatorProps,
+) => {
     const enabled = useUiFlag('accessRequestsMenuIndicator');
     const hasAdminAccess = useHasRootAccess(ADMIN);
 
@@ -35,5 +54,5 @@ export const PendingAccessRequestsIndicator = () => {
         return null;
     }
 
-    return <AdminPendingAccessRequestsIndicator />;
+    return <AdminPendingAccessRequestsIndicator {...props} />;
 };

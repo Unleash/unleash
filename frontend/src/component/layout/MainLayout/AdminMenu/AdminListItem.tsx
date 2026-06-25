@@ -91,9 +91,9 @@ const StyledListItemText = styled(ListItemText)(({ theme }) => ({
 
 const InlineBadgeSlot = styled('span')(({ theme }) => ({
     display: 'inline-flex',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     marginLeft: theme.spacing(1),
-    verticalAlign: 'middle',
+    verticalAlign: 'top',
 }));
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({

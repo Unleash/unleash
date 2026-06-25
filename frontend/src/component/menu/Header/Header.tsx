@@ -137,13 +137,13 @@ const Header = () => {
         return (
             <HeaderComponent position='static'>
                 <ContainerComponent>
-                    <Tooltip title='Menu' arrow>
-                        <Box
-                            sx={{
-                                position: 'relative',
-                                display: 'inline-flex',
-                            }}
-                        >
+                    <Box
+                        sx={{
+                            position: 'relative',
+                            display: 'inline-flex',
+                        }}
+                    >
+                        <Tooltip title='Menu' arrow>
                             <IconButton
                                 sx={{
                                     color: (theme) =>
@@ -156,18 +156,20 @@ const Header = () => {
                             >
                                 <MenuIcon />
                             </IconButton>
-                            <Box
-                                sx={(theme) => ({
-                                    position: 'absolute',
-                                    top: theme.spacing(0.75),
-                                    right: theme.spacing(-0.5),
-                                    pointerEvents: 'none',
-                                })}
-                            >
-                                <PendingAccessRequestsIndicator />
-                            </Box>
+                        </Tooltip>
+                        <Box
+                            sx={(theme) => ({
+                                position: 'absolute',
+                                top: 0,
+                                right: 0,
+                                pointerEvents: 'none',
+                            })}
+                        >
+                            <PendingAccessRequestsIndicator
+                                showTooltip={false}
+                            />
                         </Box>
-                    </Tooltip>
+                    </Box>
                     <DrawerMenu open={openDrawer} toggleDrawer={toggleDrawer} />
                     {headerItems}
                 </ContainerComponent>

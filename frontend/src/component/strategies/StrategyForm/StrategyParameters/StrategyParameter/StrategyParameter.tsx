@@ -64,18 +64,30 @@ const StyledParagraph = styled('p')(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
-const StyledNameRow = styled('div')(({ theme }) => ({
-    display: 'flex',
-    // Align the delete button to the input baseline, not the label above it.
-    alignItems: 'flex-end',
-    gap: theme.spacing(1),
-    // Let the field (first child) grow to fill the row; the delete button keeps
-    // its size. Spacing is owned by the row, so drop the FormField's margin.
-    '& > :first-of-type': {
-        flex: 1,
-    },
+// All parameter inputs share the 1fr column so their right edges line up; the
+// delete button takes the auto-sized column beside the first row (the name).
+// Using a grid means the inputs reserve room for the button without hardcoding
+// its width. alignItems: end drops the button to the name input's baseline.
+const StyledParamFields = styled('div')(({ theme }) => ({
+    display: 'grid',
+    gridTemplateColumns: '1fr auto',
+    columnGap: theme.spacing(1),
+    rowGap: theme.spacing(2),
+    alignItems: 'end',
+    marginBottom: theme.spacing(2),
+    // The grid owns the spacing between fields; drop the FormField's own margin.
     '& > *': {
         marginBottom: 0,
+    },
+    // Fields stack down the first column; the delete button takes the second
+    // column on the first (name) row.
+    '& > :not(.delete-parameter)': {
+        gridColumn: 1,
+        minWidth: 0,
+    },
+    '& > .delete-parameter': {
+        gridColumn: 2,
+        gridRow: 1,
     },
 }));
 
@@ -115,7 +127,7 @@ export const StrategyParameter = ({
                     </StyledParagraph>
                 }
             />
-            <StyledNameRow>
+            <StyledParamFields>
                 <FormField label={`Parameter name ${index + 1}`}>
                     <Input
                         fullWidth
@@ -129,6 +141,7 @@ export const StrategyParameter = ({
                 </FormField>
                 <Tooltip title='Remove parameter' arrow>
                     <IconButton
+                        className='delete-parameter'
                         onClick={() => {
                             setParams(params.filter((_e, i) => i !== index));
                         }}
@@ -137,29 +150,29 @@ export const StrategyParameter = ({
                         <Delete />
                     </IconButton>
                 </Tooltip>
-            </StyledNameRow>
-            <FormField label='Type'>
-                <GeneralSelect
-                    fullWidth
-                    label=''
-                    name='type'
-                    options={paramTypesOptions}
-                    value={input.type}
-                    onChange={onTypeChange}
-                />
-            </FormField>
-            <FormField label={`Parameter name ${index + 1} description`}>
-                <Input
-                    fullWidth
-                    rows={2}
-                    multiline
-                    label=''
-                    onChange={({ target }) =>
-                        set({ description: target.value })
-                    }
-                    value={input.description}
-                />
-            </FormField>
+                <FormField label='Type'>
+                    <GeneralSelect
+                        fullWidth
+                        label=''
+                        name='type'
+                        options={paramTypesOptions}
+                        value={input.type}
+                        onChange={onTypeChange}
+                    />
+                </FormField>
+                <FormField label={`Parameter name ${index + 1} description`}>
+                    <Input
+                        fullWidth
+                        rows={2}
+                        multiline
+                        label=''
+                        onChange={({ target }) =>
+                            set({ description: target.value })
+                        }
+                        value={input.description}
+                    />
+                </FormField>
+            </StyledParamFields>
             <StyledFormControlLabel
                 control={
                     <Checkbox

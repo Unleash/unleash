@@ -40,6 +40,12 @@ const PROJECT_DESCRIPTION_INPUT = 'PROJECT_DESCRIPTION_INPUT';
 const StyledForm = styled('form')(({ theme }) => ({
     height: '100%',
     paddingBottom: theme.spacing(1),
+    // StickinessSelect (and the collaboration-mode Select) ship a legacy bottom
+    // margin; here the wrapping FormField owns the spacing, so drop it to keep
+    // the rhythm even. TextFields default to no margin, so this is a no-op there.
+    '& .MuiFormControl-root': {
+        marginBottom: 0,
+    },
 }));
 
 const StyledLabelWithTooltip = styled('span')(({ theme }) => ({
@@ -49,7 +55,6 @@ const StyledLabelWithTooltip = styled('span')(({ theme }) => ({
 }));
 
 const StyledSelect = styled(Select)(({ theme }) => ({
-    marginBottom: theme.spacing(2),
     minWidth: '200px',
 }));
 
@@ -64,7 +69,11 @@ const StyledInputContainer = styled('div')(({ theme }) => ({
     // Align the "x of y used" note to the input baseline, not the label above.
     alignItems: 'flex-end',
     gap: theme.spacing(1.5),
-    // The field grows; the note keeps its width. Spacing is owned by the row.
+    // Spacing is owned by the row, so drop the FormField's own margin and apply
+    // the standard FormField gap here, keeping the rhythm with the fields above
+    // and a consistent gap before the Save button below.
+    marginBottom: theme.spacing(2),
+    // The field grows; the note keeps its width.
     '& > :first-of-type': {
         flex: 1,
     },

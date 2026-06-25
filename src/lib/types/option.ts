@@ -105,7 +105,6 @@ export interface IServerOption {
     cdnPrefix?: string;
     edgeUrl?: string;
     unleashUrl: string;
-    flightRecorderUrl?: string;
     logRocketAppId?: string;
     serverMetrics: boolean;
     enableHeapSnapshotEnpoint: boolean;

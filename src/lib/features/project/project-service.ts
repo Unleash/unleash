@@ -30,6 +30,7 @@ import {
     type IProjectHealth,
     type IProjectOverview,
     type IProjectOwnersReadModel,
+    type IProjectMembersReadModel,
     type IProjectRoleUsage,
     type IProjectStore,
     type IProjectUpdate,
@@ -90,6 +91,7 @@ import metricsHelper from '../../util/metrics-helper.js';
 import { FUNCTION_TIME } from '../../metric-events.js';
 import type { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
 import type { OnboardingStatus } from '../onboarding/onboarding-read-model-type.js';
+import type { ProjectMember } from './project-members-read-model.type.js';
 
 type Days = number;
 type Count = number;
@@ -114,6 +116,8 @@ export default class ProjectService {
     private projectStore: IProjectStore;
 
     private projectOwnersReadModel: IProjectOwnersReadModel;
+
+    private projectMembersReadModel: IProjectMembersReadModel;
 
     private projectFlagCreatorsReadModel: IProjectFlagCreatorsReadModel;
 
@@ -167,6 +171,7 @@ export default class ProjectService {
         {
             projectStore,
             projectOwnersReadModel,
+            projectMembersReadModel,
             projectFlagCreatorsReadModel,
             eventStore,
             featureToggleStore,
@@ -182,6 +187,7 @@ export default class ProjectService {
             IUnleashStores,
             | 'projectStore'
             | 'projectOwnersReadModel'
+            | 'projectMembersReadModel'
             | 'projectFlagCreatorsReadModel'
             | 'eventStore'
             | 'featureToggleStore'
@@ -206,6 +212,7 @@ export default class ProjectService {
     ) {
         this.projectStore = projectStore;
         this.projectOwnersReadModel = projectOwnersReadModel;
+        this.projectMembersReadModel = projectMembersReadModel;
         this.projectFlagCreatorsReadModel = projectFlagCreatorsReadModel;
         this.environmentStore = environmentStore;
         this.featureEnvironmentStore = featureEnvironmentStore;
@@ -265,7 +272,11 @@ export default class ProjectService {
             //TODO: update project-schema when removing this flag
             const stopTimer = this.timer('newProjectListFields');
             const projectIds = projects.map((p) => p.id);
-            const [onboardingStatuses, cleanupByProject] = await Promise.all([
+            const [
+                onboardingStatuses,
+                cleanupByProject,
+                membersPreviewByProject,
+            ] = await Promise.all([
                 this.onboardingReadModel
                     .getOnboardingStatusesForProjects(projectIds)
                     .catch(() => new Map<string, OnboardingStatus>()),
@@ -281,6 +292,9 @@ export default class ProjectService {
                         return map;
                     })
                     .catch(() => new Map<string, number>()),
+                this.projectMembersReadModel
+                    .getMembersPreviewByProject()
+                    .catch(() => ({}) as Record<string, ProjectMember[]>),
             ]);
 
             stopTimer();
@@ -288,6 +302,8 @@ export default class ProjectService {
             for (const project of projects) {
                 project.onboardingStatus = onboardingStatuses.get(project.id);
                 project.cleanupCount = cleanupByProject.get(project.id);
+                project.membersPreview =
+                    membersPreviewByProject[project.id] ?? [];
             }
         }
 

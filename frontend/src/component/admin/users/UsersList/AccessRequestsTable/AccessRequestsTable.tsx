@@ -1,5 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useLocation } from 'react-router';
+import { useMemo, useState } from 'react';
 import {
     type ColumnDef,
     getCoreRowModel,
@@ -12,6 +11,7 @@ import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/Virtua
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
+import { Highlight } from 'component/common/Highlight/Highlight';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import { useUserAccessRequests } from 'hooks/api/getters/useUserAccessRequests/useUserAccessRequests';
@@ -43,7 +43,6 @@ const StyledContainer = styled('div')(({ theme }) => ({
 }));
 
 export const AccessRequestsTable = () => {
-    const { hash } = useLocation();
     const { roles, refetch: refetchUsers } = useUsers();
     const { accessRequests, refetchAccessRequests } = useUserAccessRequests();
     const { approveAccessRequest, rejectAccessRequest } =
@@ -58,13 +57,6 @@ export const AccessRequestsTable = () => {
     );
     const [requestToReject, setRequestToReject] =
         useState<UserAccessRequestSchema | null>(null);
-
-    useEffect(() => {
-        if (!hash) return;
-        document
-            .querySelector(hash)
-            ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, [hash, accessRequests]);
 
     const getRoleId = (requestId: string) =>
         selectedRoles[requestId] ?? defaultRoleId;
@@ -117,7 +109,6 @@ export const AccessRequestsTable = () => {
                 accessorKey: 'email',
                 cell: ({ row: { original } }) => (
                     <TextCell>
-                        <span id={`access-request-${original.id}`} />
                         <UserAvatar
                             user={{
                                 ...original,
@@ -165,22 +156,24 @@ export const AccessRequestsTable = () => {
                 id: 'actions',
                 header: 'Actions',
                 cell: ({ row: { original } }) => (
-                    <StyledActions>
-                        <Button
-                            variant='outlined'
-                            color='primary'
-                            size='medium'
-                            onClick={() => handleApprove(original)}
-                        >
-                            Approve
-                        </Button>
-                        <IconButton
-                            size='small'
-                            onClick={() => handleDelete(original)}
-                        >
-                            <Delete />
-                        </IconButton>
-                    </StyledActions>
+                    <Highlight highlightKey={`access-request-${original.id}`}>
+                        <StyledActions>
+                            <Button
+                                variant='outlined'
+                                color='primary'
+                                size='medium'
+                                onClick={() => handleApprove(original)}
+                            >
+                                Approve
+                            </Button>
+                            <IconButton
+                                size='small'
+                                onClick={() => handleDelete(original)}
+                            >
+                                <Delete />
+                            </IconButton>
+                        </StyledActions>
+                    </Highlight>
                 ),
                 enableSorting: false,
                 meta: { width: 250, maxWidth: 250, align: 'center' },
@@ -218,17 +211,7 @@ export const AccessRequestsTable = () => {
     }
 
     return (
-        <StyledContainer
-            sx={(theme) =>
-                hash
-                    ? {
-                          [`& tr:has(${hash})`]: {
-                              backgroundColor: theme.palette.highlight,
-                          },
-                      }
-                    : {}
-            }
-        >
+        <StyledContainer>
             <StyledTitle>
                 Access requests ({accessRequests.length})
                 <PendingAccessRequestsIndicator />

@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
+import { useHighlightContext } from 'component/common/Highlight/HighlightContext';
 import type { UserAccessRequestSchema } from 'openapi';
 
 interface INotificationCardProps {
@@ -72,37 +73,44 @@ const StyledDismissButton = styled(IconButton)(({ theme }) => ({
 export const NotificationCard = ({
     request,
     onDismiss,
-}: INotificationCardProps) => (
-    <StyledCard elevation={3}>
-        <StyledUserInfo>
-            <UserAvatar
-                user={{
-                    email: request.email,
-                    imageUrl: request.imageUrl,
-                }}
-            />
-            <StyledBody>
-                <StyledEmail title={request.email}>{request.email}</StyledEmail>
-                <StyledCaption>requested access</StyledCaption>
-            </StyledBody>
-        </StyledUserInfo>
-        <StyledActions>
-            <StyledViewButton
-                size='small'
-                variant='contained'
-                color='primary'
-                component={RouterLink}
-                to={`/admin/users#access-request-${request.id}`}
-            >
-                View request
-            </StyledViewButton>
-            <StyledDismissButton
-                size='small'
-                aria-label={`Dismiss notification for ${request.email}`}
-                onClick={() => onDismiss(request.id)}
-            >
-                <CloseIcon fontSize='small' />
-            </StyledDismissButton>
-        </StyledActions>
-    </StyledCard>
-);
+}: INotificationCardProps) => {
+    const { highlight } = useHighlightContext();
+
+    return (
+        <StyledCard elevation={3}>
+            <StyledUserInfo>
+                <UserAvatar
+                    user={{
+                        email: request.email,
+                        imageUrl: request.imageUrl,
+                    }}
+                />
+                <StyledBody>
+                    <StyledEmail title={request.email}>
+                        {request.email}
+                    </StyledEmail>
+                    <StyledCaption>requested access</StyledCaption>
+                </StyledBody>
+            </StyledUserInfo>
+            <StyledActions>
+                <StyledViewButton
+                    size='small'
+                    variant='contained'
+                    color='primary'
+                    component={RouterLink}
+                    to='/admin/users'
+                    onClick={() => highlight(`access-request-${request.id}`)}
+                >
+                    View request
+                </StyledViewButton>
+                <StyledDismissButton
+                    size='small'
+                    aria-label={`Dismiss notification for ${request.email}`}
+                    onClick={() => onDismiss(request.id)}
+                >
+                    <CloseIcon fontSize='small' />
+                </StyledDismissButton>
+            </StyledActions>
+        </StyledCard>
+    );
+};

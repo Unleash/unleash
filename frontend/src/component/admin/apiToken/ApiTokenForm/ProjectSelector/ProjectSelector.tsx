@@ -1,7 +1,7 @@
 import { SelectProjectInput } from './SelectProjectInput/SelectProjectInput.tsx';
 import { TokenType } from '../../../../../interfaces/token.ts';
 import type React from 'react';
-import { StyledInputDescription } from '../ApiTokenForm.styles';
+import { FormField } from 'component/common/FormField/FormField';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import type { ApiTokenFormErrorType } from '../useApiTokenForm.ts';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
@@ -33,10 +33,10 @@ export const ProjectSelector = ({
     }
 
     return (
-        <>
-            <StyledInputDescription>
-                Which project do you want to give access to?
-            </StyledInputDescription>
+        <FormField
+            label='Projects'
+            description='Which projects do you want to give access to?'
+        >
             <SelectProjectInput
                 disabled={type === TokenType.ADMIN}
                 options={selectableProjects}
@@ -45,6 +45,6 @@ export const ProjectSelector = ({
                 error={errors?.projects}
                 onFocus={() => clearErrors('projects')}
             />
-        </>
+        </FormField>
     );
 };

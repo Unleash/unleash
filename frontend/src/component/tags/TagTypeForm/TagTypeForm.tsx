@@ -1,6 +1,7 @@
 import Input from 'component/common/Input/Input';
-import { TextField, Button, styled, Typography } from '@mui/material';
+import { Button, styled } from '@mui/material';
 import { TagTypeColorPicker } from './TagTypeColorPicker.tsx';
+import { FormField } from 'component/common/FormField/FormField';
 import type React from 'react';
 import { trim } from 'component/common/util';
 import { EDIT } from 'constants/misc';
@@ -31,20 +32,6 @@ const StyledContainer = styled('div')(({ theme }) => ({
     maxWidth: '400px',
 }));
 
-const StyledInputDescription = styled('p')(({ theme }) => ({
-    marginBottom: theme.spacing(1),
-}));
-
-const StyledInput = styled(Input)(({ theme }) => ({
-    width: '100%',
-    marginBottom: theme.spacing(2),
-}));
-
-const StyledTextField = styled(TextField)(({ theme }) => ({
-    width: '100%',
-    marginBottom: theme.spacing(2),
-}));
-
 const StyledButtonContainer = styled('div')(({ theme }) => ({
     marginTop: 'auto',
     display: 'flex',
@@ -73,40 +60,44 @@ const TagTypeForm: React.FC<ITagTypeForm> = ({
     return (
         <StyledForm onSubmit={handleSubmit}>
             <StyledContainer>
-                <StyledInputDescription>
-                    What is your tag name?
-                </StyledInputDescription>
-                <StyledInput
+                <FormField
                     label='Tag name'
-                    value={tagName}
-                    onChange={(e) => setTagName(trim(e.target.value))}
-                    error={Boolean(errors.name)}
-                    errorText={errors.name}
-                    onFocus={() => clearErrors()}
-                    disabled={mode === EDIT}
-                    onBlur={validateNameUniqueness}
-                    autoFocus
-                />
+                    description='What is your tag name?'
+                >
+                    <Input
+                        fullWidth
+                        label=''
+                        value={tagName}
+                        onChange={(e) => setTagName(trim(e.target.value))}
+                        error={Boolean(errors.name)}
+                        errorText={errors.name}
+                        onFocus={() => clearErrors()}
+                        disabled={mode === EDIT}
+                        onBlur={validateNameUniqueness}
+                        autoFocus
+                    />
+                </FormField>
 
-                <StyledInputDescription>
-                    What is this tag for?
-                </StyledInputDescription>
-                <StyledTextField
+                <FormField
                     label='Tag description'
-                    variant='outlined'
-                    multiline
-                    maxRows={4}
-                    value={tagDesc}
-                    onChange={(e) => setTagDesc(e.target.value)}
-                />
+                    description='What is this tag for?'
+                >
+                    <Input
+                        fullWidth
+                        label=''
+                        multiline
+                        maxRows={4}
+                        value={tagDesc}
+                        onChange={(e) => setTagDesc(e.target.value)}
+                    />
+                </FormField>
 
-                <Typography variant='body2'>
-                    Tag color
+                <FormField label='Tag color'>
                     <TagTypeColorPicker
                         selectedColor={color}
                         onChange={setColor}
                     />
-                </Typography>
+                </FormField>
             </StyledContainer>
             <StyledButtonContainer>
                 {children}

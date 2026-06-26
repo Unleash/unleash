@@ -122,7 +122,7 @@ const ChangePassword = ({
                     helperText={error}
                     onChange={updateField}
                     variant='outlined'
-                    size='small'
+                    size='large'
                 />
                 <TextField
                     label='Confirm password'
@@ -131,7 +131,7 @@ const ChangePassword = ({
                     value={data.confirm}
                     onChange={updateField}
                     variant='outlined'
-                    size='small'
+                    size='large'
                 />
                 <PasswordMatcher
                     started={Boolean(data.password && data.confirm)}

@@ -54,7 +54,7 @@ describe('SelectProjectInput', () => {
             screen.getByLabelText(/all current and future projects/i),
         ).not.toBeChecked();
 
-        expect(screen.getByLabelText('Projects')).toBeEnabled();
+        expect(screen.getByRole('combobox')).toBeEnabled();
 
         await user.click(screen.getByTestId('select-all-projects'));
 
@@ -62,7 +62,7 @@ describe('SelectProjectInput', () => {
             screen.getByLabelText(/all current and future projects/i),
         ).toBeChecked();
 
-        expect(screen.getByLabelText('Projects')).toBeDisabled();
+        expect(screen.getByRole('combobox')).toBeDisabled();
     });
 
     it('renders with autocomplete enabled if default value is not a wildcard', () => {
@@ -84,7 +84,7 @@ describe('SelectProjectInput', () => {
         it('selects and deselects all options', async () => {
             const user = userEvent.setup();
             render(<SelectProjectInput {...mockProps} defaultValue={[]} />);
-            await user.click(screen.getByLabelText('Projects'));
+            await user.click(screen.getByRole('combobox'));
 
             let button = screen.getByRole('button', {
                 name: /select all/i,
@@ -118,7 +118,7 @@ describe('SelectProjectInput', () => {
                     ]}
                 />,
             );
-            await user.click(screen.getByLabelText('Projects'));
+            await user.click(screen.getByRole('combobox'));
 
             const button = screen.queryByRole('button', {
                 name: /select all/i,
@@ -141,7 +141,7 @@ describe('SelectProjectInput', () => {
                 ]}
             />,
         );
-        const input = await screen.findByLabelText('Projects');
+        const input = await screen.findByRole('combobox');
         await user.type(input, 'alp');
 
         await waitFor(() => {

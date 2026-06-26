@@ -100,21 +100,19 @@ export const ProjectSelect: FC<IProjectSelectProps> = forwardRef(
 
         return (
             <Autocomplete
+                id='projects'
                 {...props}
                 ref={ref}
                 disablePortal
-                id='projects'
                 limitTags={limitTags}
                 multiple={!isAllProjects}
                 options={projectsOptions}
                 sx={sx}
-                renderInput={(params) => (
-                    <TextField {...params} label='Projects' />
-                )}
+                renderInput={(params) => <TextField {...params} />}
                 renderOption={renderOption}
                 getOptionLabel={({ label }) => label}
                 disableCloseOnSelect
-                size='small'
+                size='large'
                 disabled={disabled}
                 value={
                     isAllProjects

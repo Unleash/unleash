@@ -16,7 +16,7 @@ export const RangeSelector: FC<RangeSelectorProps> = ({
     label = 'Time',
     children,
 }) => (
-    <FormControl variant='outlined' size='small'>
+    <FormControl variant='outlined' size='large'>
         {label ? (
             <InputLabel id='range-select-label'>{label}</InputLabel>
         ) : null}

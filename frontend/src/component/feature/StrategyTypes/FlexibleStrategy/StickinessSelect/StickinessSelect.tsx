@@ -10,25 +10,32 @@ import {
 import { useStickinessOptions } from 'hooks/useStickinessOptions';
 import { SELECT_ITEM_ID } from 'utils/testIds';
 import type { ReactNode } from 'react';
+import { formFieldLabelId } from 'component/common/FormField/FormField';
 
 interface IStickinessSelectProps {
     label: string;
     value: string | undefined;
     onChange: (event: SelectChangeEvent<string>) => void;
     dataTestId?: string;
+    /** Set by a wrapping FormField so its label can name the combobox. */
+    id?: string;
 }
 
 const StyledValueContainer = styled('div')(({ theme }) => ({
-    lineHeight: 1.1,
-    marginTop: -2,
-    marginBottom: -10,
+    display: 'flex',
+    alignItems: 'baseline',
+    gap: theme.spacing(1),
+    overflow: 'hidden',
 }));
 
 const StyledLabel = styled('div')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
+    flexShrink: 0,
 }));
 
 const StyledDescription = styled('p')(({ theme }) => ({
+    margin: 0,
+    minWidth: 0,
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.neutral.main,
     overflow: 'hidden',
@@ -37,6 +44,7 @@ const StyledDescription = styled('p')(({ theme }) => ({
 }));
 
 const StyledDropdownDescription = styled('p')(({ theme }) => ({
+    margin: 0,
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.neutral.main,
     overflow: 'hidden',
@@ -44,6 +52,8 @@ const StyledDropdownDescription = styled('p')(({ theme }) => ({
     wordBreak: 'break-word',
 }));
 
+// Dropdown options keep the description stacked BELOW the value (unlike the
+// collapsed value, which shows them side by side to fit the field height).
 const StyledOptionContainer = styled('div')(({ theme }) => ({
     lineHeight: 1.2,
     width: '100%',
@@ -54,9 +64,11 @@ export const StickinessSelect = ({
     value,
     onChange,
     dataTestId,
+    id = 'stickiness-select',
 }: IStickinessSelectProps) => {
     const theme = useTheme();
     const stickinessOptions = useStickinessOptions(value);
+    const labelId = formFieldLabelId(id);
 
     const renderValue = (selected: string): ReactNode => {
         const option = stickinessOptions.find((o) => o.key === selected);
@@ -73,15 +85,20 @@ export const StickinessSelect = ({
     return (
         <FormControl
             variant='outlined'
-            size='small'
+            size='large'
             sx={{
                 width: '100%',
                 marginBottom: theme.spacing(2),
             }}
         >
-            <InputLabel htmlFor='stickiness-select'>{label}</InputLabel>
+            {label ? (
+                <InputLabel id={labelId} htmlFor={id}>
+                    {label}
+                </InputLabel>
+            ) : null}
             <Select
-                id='stickiness-select'
+                id={id}
+                labelId={labelId}
                 name='stickiness'
                 label={label}
                 value={value || ''}

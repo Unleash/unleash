@@ -53,7 +53,6 @@ const StyledSliderContainer = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     width: '100%',
     gap: theme.spacing(4),
-    marginBottom: theme.spacing(1),
 }));
 
 const StyledInputBox = styled(Box)(({ theme }) => ({
@@ -135,7 +134,12 @@ const RolloutSlider = ({
     return (
         <SliderWrapper>
             <StyledBox>
-                <Typography id='discrete-slider-always'>{name}</Typography>
+                <Typography
+                    id='discrete-slider-always'
+                    sx={{ fontWeight: 'bold' }}
+                >
+                    {name}
+                </Typography>
                 <HelpIcon
                     htmlTooltip
                     tooltip={
@@ -200,7 +204,7 @@ const RolloutSlider = ({
                 </SliderContent>
                 <StyledInputBox>
                     <StyledTextField
-                        size='small'
+                        size='large'
                         aria-labelledby='discrete-slider-always'
                         type='number'
                         value={inputValue}

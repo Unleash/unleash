@@ -24,7 +24,7 @@ import { CommandBar } from 'component/commandBar/CommandBar';
 import { HelpResources } from './HelpResources/HelpResources';
 
 const HeaderComponent = styled(AppBar)(({ theme }) => ({
-    backgroundColor: theme.palette.background.application,
+    backgroundColor: theme.palette.common.white,
     padding: theme.spacing(1),
     boxShadow: 'none',
     position: 'relative',

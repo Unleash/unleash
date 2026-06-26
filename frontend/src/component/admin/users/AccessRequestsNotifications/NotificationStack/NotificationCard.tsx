@@ -9,7 +9,6 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
-import { useHighlightContext } from 'component/common/Highlight/HighlightContext';
 import type { UserAccessRequestSchema } from 'openapi';
 
 interface INotificationCardProps {
@@ -68,8 +67,6 @@ export const NotificationCard = ({
     request,
     onDismiss,
 }: INotificationCardProps) => {
-    const { highlight } = useHighlightContext();
-
     return (
         <StyledCard elevation={3}>
             <StyledUserInfo>
@@ -93,7 +90,6 @@ export const NotificationCard = ({
                     color='primary'
                     component={RouterLink}
                     to='/admin/users'
-                    onClick={() => highlight(`access-request-${request.id}`)}
                 >
                     View request
                 </Button>

@@ -11,7 +11,6 @@ import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/Virtua
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
-import { Highlight } from 'component/common/Highlight/Highlight';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import { useUserAccessRequests } from 'hooks/api/getters/useUserAccessRequests/useUserAccessRequests';
@@ -152,24 +151,22 @@ export const AccessRequestsTable = () => {
                 id: 'actions',
                 header: 'Actions',
                 cell: ({ row: { original } }) => (
-                    <Highlight highlightKey={`access-request-${original.id}`}>
-                        <StyledActions>
-                            <Button
-                                variant='outlined'
-                                color='primary'
-                                size='medium'
-                                onClick={() => handleApprove(original)}
-                            >
-                                Approve
-                            </Button>
-                            <IconButton
-                                size='small'
-                                onClick={() => handleDelete(original)}
-                            >
-                                <Delete />
-                            </IconButton>
-                        </StyledActions>
-                    </Highlight>
+                    <StyledActions>
+                        <Button
+                            variant='outlined'
+                            color='primary'
+                            size='medium'
+                            onClick={() => handleApprove(original)}
+                        >
+                            Approve
+                        </Button>
+                        <IconButton
+                            size='small'
+                            onClick={() => handleDelete(original)}
+                        >
+                            <Delete />
+                        </IconButton>
+                    </StyledActions>
                 ),
                 enableSorting: false,
                 meta: { width: 250, maxWidth: 250, align: 'center' },

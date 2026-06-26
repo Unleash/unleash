@@ -36,6 +36,10 @@ export default abstract class Addon {
 
     flagResolver: IFlagResolver;
 
+    allowPrivateUrls: boolean;
+
+    allowList: string[];
+
     constructor(
         definition: IAddonDefinition,
         {
@@ -43,9 +47,13 @@ export default abstract class Addon {
             integrationEventsService,
             flagResolver,
             eventBus,
+            allowPrivateUrls,
+            allowList,
         }: IAddonConfig,
     ) {
         this.logger = getLogger(`addon/${definition.name}`);
+        this.allowPrivateUrls = allowPrivateUrls ?? false;
+        this.allowList = allowList ?? [];
         const { error } = addonDefinitionSchema.validate(definition);
         if (error) {
             this.logger.warn(
@@ -75,10 +83,14 @@ export default abstract class Addon {
         retries: number = 1,
     ): Promise<Response> {
         try {
-            const validated = await validateUrl(
-                url,
-                options.validateUrlOptions,
-            );
+            const validated = await validateUrl(url, {
+                allowPrivateNetworkUrls: this.allowPrivateUrls,
+                allowList: {
+                    hosts: this.allowList,
+                    suffixes: [],
+                },
+                ...options.validateUrlOptions,
+            });
             return await fetchPinned(validated, {
                 ...options,
                 retry: retries,

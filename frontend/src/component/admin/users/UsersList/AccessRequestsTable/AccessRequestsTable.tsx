@@ -27,7 +27,7 @@ const StyledTitle = styled(Typography)(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
     display: 'flex',
     alignItems: 'center',
-    gap: theme.spacing(1),
+    gap: theme.spacing(0.5),
 }));
 
 const StyledActions = styled('div')(({ theme }) => ({

@@ -1,4 +1,6 @@
 import ky, { type Options } from 'ky';
+import http from 'node:http';
+import https from 'node:https';
 import { addonDefinitionSchema } from './addon-schema.js';
 import type { Logger } from '../logger.js';
 import type { IAddonConfig, IAddonDefinition } from '../types/model.js';
@@ -13,7 +15,6 @@ import {
     validateUrl,
     type ValidateUrlOptions,
 } from './validate-url.js';
-import { Agent, fetch as undiciFetch } from 'undici';
 
 export type FetchRetryOptions = Omit<
     Options,
@@ -118,41 +119,87 @@ export const fetchPinned = async (
     validated: ValidatedUrl,
     options: Omit<Options, 'fetch' | 'redirect' | 'throwHttpErrors'>,
 ): Promise<Response> => {
-    const dispatcher = new Agent({
-        connect: {
-            autoSelectFamily: false,
-            lookup: (_hostname, opts, callback) => {
-                const address = validated.pinnedAddress;
-                const family = Number(validated.family) as 4 | 6;
-                callback(null, address, family);
-            },
-            servername:
-                validated.url.protocol === 'https:'
-                    ? validated.hostname
-                    : undefined,
-        },
+    return ky(validated.url.href, {
+        ...options,
+        // Do not let 30x redirect to metadata/internal hosts.
+        redirect: 'manual',
+        // Important: return 30x responses instead of throwing.
+        throwHttpErrors: false,
+        fetch: (input, init) => fetchWithPinnedLookup(input, init, validated),
     });
+};
 
-    try {
-        return await ky(validated.url.href, {
-            ...options,
-            // Do not let 30x redirect to metadata/internal hoststs
-            redirect: 'manual',
-            // Important: return 30x responses instead of throwing
-            throwHttpErrors: false,
-            // Force ky to use undici with our pinned DNS result.
-            fetch: (_input, init) =>
-                undiciFetch(validated.url.href, {
-                    method: init?.method,
-                    headers: init?.headers,
-                    body: init?.body,
-                    signal: init?.signal,
-                    dispatcher,
-                } as Parameters<typeof undiciFetch>[1]) as Promise<Response>,
-        });
-    } finally {
-        await dispatcher.destroy();
-    }
+const fetchWithPinnedLookup = async (
+    input: Parameters<typeof fetch>[0],
+    init: Parameters<typeof fetch>[1],
+    validated: ValidatedUrl,
+): Promise<Response> => {
+    const request = new Request(input, init);
+    const body = request.body
+        ? Buffer.from(await request.arrayBuffer())
+        : undefined;
+    const requestUrl = new URL(request.url);
+    const client = requestUrl.protocol === 'https:' ? https : http;
+
+    return new Promise<Response>((resolve, reject) => {
+        const req = client.request(
+            requestUrl,
+            {
+                method: request.method,
+                headers: Object.fromEntries(request.headers),
+                signal: request.signal,
+                lookup: (_hostname, options, callback) => {
+                    const cb =
+                        typeof options === 'function' ? options : callback;
+                    if (typeof cb !== 'function') {
+                        return;
+                    }
+                    if (typeof options !== 'function' && options?.all) {
+                        cb(null, [
+                            {
+                                address: validated.pinnedAddress,
+                                family: validated.family,
+                            },
+                        ]);
+                        return;
+                    }
+                    cb(null, validated.pinnedAddress, validated.family);
+                },
+            },
+            (res) => {
+                const chunks: Buffer[] = [];
+                res.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
+                res.on('end', () => {
+                    const status = res.statusCode ?? 200;
+                    const headers = new Headers();
+                    for (const [key, value] of Object.entries(res.headers)) {
+                        if (Array.isArray(value)) {
+                            for (const item of value) {
+                                headers.append(key, item);
+                            }
+                        } else if (value) {
+                            headers.set(key, value);
+                        }
+                    }
+                    resolve(
+                        new Response(
+                            status === 204 || status === 304
+                                ? null
+                                : Buffer.concat(chunks),
+                            {
+                                status,
+                                statusText: res.statusMessage,
+                                headers,
+                            },
+                        ),
+                    );
+                });
+            },
+        );
+
+        req.on('error', reject);
+        req.end(body);
+    });
 };
 
 const getErrorStatus = (error: unknown): number => {

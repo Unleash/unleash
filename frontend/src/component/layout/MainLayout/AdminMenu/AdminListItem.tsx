@@ -89,6 +89,13 @@ const StyledListItemText = styled(ListItemText)(({ theme }) => ({
     margin: 0,
 }));
 
+const InlineBadgeSlot = styled('span')(({ theme }) => ({
+    display: 'inline-flex',
+    alignItems: 'flex-start',
+    marginLeft: theme.spacing(1),
+    verticalAlign: 'top',
+}));
+
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
     paddingTop: theme.spacing(0),
     backgroundColor: 'inherit',
@@ -108,6 +115,7 @@ interface IMenuGroupProps {
     activeIcon: ReactNode;
     isActiveMenu: boolean;
     staticExpanded?: true | undefined;
+    collapsedBadge?: ReactNode;
 }
 
 export const MenuGroup = ({
@@ -117,6 +125,7 @@ export const MenuGroup = ({
     activeIcon,
     isActiveMenu,
     staticExpanded,
+    collapsedBadge,
 }: IMenuGroupProps) => {
     const [isExpanded, setIsExpanded] = staticExpanded
         ? [true, () => undefined]
@@ -145,7 +154,12 @@ export const MenuGroup = ({
                     {isActiveMenu ? activeIcon : icon}
                 </StyledListItemIcon>
                 <StyledListItemText>
-                    <CappedText bold={isActiveMenu}>{title}</CappedText>
+                    <CappedText bold={isActiveMenu}>
+                        {title}
+                        {!isExpanded && collapsedBadge ? (
+                            <InlineBadgeSlot>{collapsedBadge}</InlineBadgeSlot>
+                        ) : null}
+                    </CappedText>
                 </StyledListItemText>
             </StyledAccordionSummary>
             <AccordionDetails sx={{ p: 0 }}>{children}</AccordionDetails>
@@ -157,10 +171,11 @@ export const AdminListItem: FC<{
     href: string;
     text: string;
     badge?: ReactNode;
+    inlineBadge?: ReactNode;
     selected?: boolean;
     children?: React.ReactNode;
     onClick: () => void;
-}> = ({ href, text, badge, selected, children, onClick }) => {
+}> = ({ href, text, badge, inlineBadge, selected, children, onClick }) => {
     return (
         <ListItem disablePadding>
             <ListItemButton
@@ -174,7 +189,12 @@ export const AdminListItem: FC<{
             >
                 <StyledListItemIcon>{children}</StyledListItemIcon>
                 <StyledListItemText>
-                    <CappedText bold={selected}>{text}</CappedText>
+                    <CappedText bold={selected}>
+                        {text}
+                        {inlineBadge ? (
+                            <InlineBadgeSlot>{inlineBadge}</InlineBadgeSlot>
+                        ) : null}
+                    </CappedText>
                 </StyledListItemText>
                 {badge}
             </ListItemButton>
@@ -186,10 +206,11 @@ export const AdminSubListItem: FC<{
     href: string;
     text: string;
     badge?: ReactNode;
+    inlineBadge?: ReactNode;
     selected?: boolean;
     children?: React.ReactNode;
     onClick: () => void;
-}> = ({ href, text, badge, selected, children, onClick }) => {
+}> = ({ href, text, badge, inlineBadge, selected, children, onClick }) => {
     return (
         <ListItem disablePadding>
             <ListItemButton
@@ -203,7 +224,12 @@ export const AdminSubListItem: FC<{
             >
                 <StyledListItemIcon>{children}</StyledListItemIcon>
                 <StyledListItemText>
-                    <CappedText bold={selected}>{text}</CappedText>
+                    <CappedText bold={selected}>
+                        {text}
+                        {inlineBadge ? (
+                            <InlineBadgeSlot>{inlineBadge}</InlineBadgeSlot>
+                        ) : null}
+                    </CappedText>
                 </StyledListItemText>
                 {badge}
             </ListItemButton>

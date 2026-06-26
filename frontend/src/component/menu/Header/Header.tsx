@@ -22,6 +22,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton.tsx';
 import { CommandBar } from 'component/commandBar/CommandBar';
 import { HelpResources } from './HelpResources/HelpResources';
+import { PendingAccessRequestsIndicator } from 'component/admin/users/AccessRequestsNotifications/PendingAccessRequestsIndicator';
 
 const HeaderComponent = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.application,
@@ -136,19 +137,39 @@ const Header = () => {
         return (
             <HeaderComponent position='static'>
                 <ContainerComponent>
-                    <Tooltip title='Menu' arrow>
-                        <IconButton
-                            sx={{
-                                color: (theme) => theme.palette.text.primary,
-                            }}
-                            onClick={toggleDrawer}
-                            aria-controls='header-drawer'
-                            aria-expanded={openDrawer}
-                            size='large'
+                    <Box
+                        sx={{
+                            position: 'relative',
+                            display: 'inline-flex',
+                        }}
+                    >
+                        <Tooltip title='Menu' arrow>
+                            <IconButton
+                                sx={{
+                                    color: (theme) =>
+                                        theme.palette.text.primary,
+                                }}
+                                onClick={toggleDrawer}
+                                aria-controls='header-drawer'
+                                aria-expanded={openDrawer}
+                                size='large'
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                        </Tooltip>
+                        <Box
+                            sx={(theme) => ({
+                                position: 'absolute',
+                                top: 0,
+                                right: 0,
+                                pointerEvents: 'none',
+                            })}
                         >
-                            <MenuIcon />
-                        </IconButton>
-                    </Tooltip>
+                            <PendingAccessRequestsIndicator
+                                showTooltip={false}
+                            />
+                        </Box>
+                    </Box>
                     <DrawerMenu open={openDrawer} toggleDrawer={toggleDrawer} />
                     {headerItems}
                 </ContainerComponent>

@@ -15,6 +15,7 @@ import { ConfigurationAccordion } from './ConfigurationAccordion.tsx';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
 import { NewFeatureBadge } from 'component/layout/components/NewFeatureBadge/NewFeatureBadge.tsx';
 import { Badge } from 'component/common/Badge/Badge.tsx';
+import { PendingAccessRequestsIndicator } from 'component/admin/users/AccessRequestsNotifications/PendingAccessRequestsIndicator.tsx';
 import { useRoutes } from './useRoutes.ts';
 
 const StyledNavigationList = styled(List)(({ theme }) => ({
@@ -169,6 +170,7 @@ export const AdminSettingsLink: FC<{
                 onClick={() => onClick('/admin')}
                 mode={mode}
                 icon={<IconRenderer path='/admin' />}
+                badge={<PendingAccessRequestsIndicator />}
             />
         </StyledNavigationList>
     </Box>

@@ -83,7 +83,8 @@ export type IFlagKey =
     | 'hideTopmenuDocumentation'
     | 'serviceNowIntegration'
     | 'learningLab'
-    | 'accessRequestsNotifications';
+    | 'accessRequestsNotifications'
+    | 'accessRequestsMenuIndicator';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -391,6 +392,10 @@ const flags: IFlags = {
     ),
     accessRequestsNotifications: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ACCESS_REQUESTS_NOTIFICATIONS,
+        false,
+    ),
+    accessRequestsMenuIndicator: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ACCESS_REQUESTS_MENU_INDICATOR,
         false,
     ),
 };

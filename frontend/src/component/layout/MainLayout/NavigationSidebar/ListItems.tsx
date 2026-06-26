@@ -53,7 +53,7 @@ const StyledListItemText = styled(ListItemText)(({ theme }) => ({
     '.MuiListItemText-primary': {
         display: 'flex',
         flexFlow: 'row nowrap',
-        columnGap: '1ch',
+        columnGap: theme.spacing(0.5),
         alignItems: 'center',
     },
 }));

@@ -103,6 +103,7 @@ export type UiFlags = {
     learningLab?: Variant;
     accessRequestsNotifications?: boolean;
     flightRecorderFrontend?: Variant;
+    accessRequestsMenuIndicator?: boolean;
 };
 
 export interface IVersionInfo {

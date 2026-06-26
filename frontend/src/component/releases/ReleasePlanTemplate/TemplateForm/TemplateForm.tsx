@@ -1,24 +1,11 @@
 import Input from 'component/common/Input/Input';
-import { Alert, Box, styled, useTheme } from '@mui/material';
+import { Alert, Box, styled } from '@mui/material';
 import type { IReleasePlanMilestonePayload } from 'interfaces/releasePlans';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import { FormField } from 'component/common/FormField/FormField';
 import { TemplateFormDescription } from './TemplateFormDescription.tsx';
 import { MilestoneList } from './MilestoneList/MilestoneList.tsx';
 import type { IExtendedMilestonePayload } from 'component/releases/hooks/useTemplateForm';
-
-const StyledInput = styled(Input)(({ theme }) => ({
-    width: '100%',
-    fieldset: { border: 'none' },
-    'label::first-letter': {
-        textTransform: 'uppercase',
-    },
-    marginBottom: theme.spacing(2),
-    padding: theme.spacing(0),
-}));
-
-const StyledDescriptionInput = styled(StyledInput)(({ theme }) => ({
-    padding: theme.spacing(2, 5, 1, 1.75),
-}));
 
 const StyledForm = styled('form')(({ theme }) => ({
     display: 'flex',
@@ -71,8 +58,6 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
     Limit,
     children,
 }) => {
-    const theme = useTheme();
-
     const milestoneChanged = (milestone: IReleasePlanMilestonePayload) => {
         setMilestones((prev) =>
             prev.map((mstone) =>
@@ -93,48 +78,31 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                 </Alert>
             )}
             <StyledForm onSubmit={handleSubmit}>
-                <StyledInput
-                    label='Template name'
-                    aria-required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    error={Boolean(errors.name)}
-                    errorText={errors.name}
-                    onFocus={() => {
-                        delete errors.name;
-                    }}
-                    autoFocus
-                    slotProps={{
-                        input: {
-                            style: { fontSize: theme.typography.h1.fontSize },
-                        },
-                        inputLabel: {
-                            style: { fontSize: theme.typography.h1.fontSize },
-                        },
-                    }}
-                    size='medium'
-                />
-                <StyledDescriptionInput
-                    label='Template description (optional)'
-                    multiline
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    slotProps={{
-                        input: {
-                            style: {
-                                fontSize: theme.typography.h2.fontSize,
-                                padding: 0,
-                            },
-                        },
-                        inputLabel: {
-                            style: {
-                                fontSize: theme.typography.h2.fontSize,
-                                padding: 0,
-                            },
-                        },
-                    }}
-                    size='large'
-                />
+                <FormField label='Template name'>
+                    <Input
+                        fullWidth
+                        aria-required
+                        label=''
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        error={Boolean(errors.name)}
+                        errorText={errors.name}
+                        onFocus={() => {
+                            delete errors.name;
+                        }}
+                        autoFocus
+                    />
+                </FormField>
+                <FormField label='Template description (optional)'>
+                    <Input
+                        fullWidth
+                        multiline
+                        rows={4}
+                        label=''
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                    />
+                </FormField>
                 <MilestoneList
                     milestones={milestones}
                     setMilestones={setMilestones}

@@ -1,4 +1,11 @@
-import { Button, Switch, styled, Typography, Link, Box } from '@mui/material';
+import {
+    Button,
+    Switch,
+    styled,
+    FormControlLabel,
+    Link,
+    Box,
+} from '@mui/material';
 import FeatureTypeSelect from '../FeatureView/FeatureSettings/FeatureSettingsMetadata/FeatureTypeSelect/FeatureTypeSelect.tsx';
 import { CF_DESC_ID, CF_TYPE_ID } from 'utils/testIds';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
@@ -32,12 +39,6 @@ const StyledTypeDescription = styled('p')(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
     color: theme.palette.text.secondary,
 }));
-
-const StyledSwitchContainer = styled('div')({
-    display: 'flex',
-    alignItems: 'center',
-    marginLeft: '-9px',
-});
 
 const StyledButtonContainer = styled('div')({
     display: 'flex',
@@ -139,14 +140,16 @@ const EditFeatureForm: React.FC<IFeatureToggleForm> = ({
                     </>
                 }
             >
-                <StyledSwitchContainer>
-                    <Switch
-                        name='impressionData'
-                        onChange={() => setImpressionData(!impressionData)}
-                        checked={impressionData}
-                    />
-                    <Typography>Enable impression data</Typography>
-                </StyledSwitchContainer>
+                <FormControlLabel
+                    label='Enable impression data'
+                    control={
+                        <Switch
+                            name='impressionData'
+                            onChange={() => setImpressionData(!impressionData)}
+                            checked={impressionData}
+                        />
+                    }
+                />
             </FormField>
             <LimitContainer>{Limit}</LimitContainer>
             <StyledButtonContainer>

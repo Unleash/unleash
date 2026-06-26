@@ -2,7 +2,8 @@ import type { LookupAddress } from 'node:dns';
 import { lookup as dnsLookup } from 'node:dns/promises';
 import net from 'node:net';
 import { Address4, Address6 } from 'ip-address';
-import { ValidationError } from 'joi';
+import pkg from 'joi';
+const { ValidationError } = pkg;
 
 const isLocalIpv4: (ip: Address4) => boolean = (ip) => {
     return (

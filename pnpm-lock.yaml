@@ -525,8 +525,8 @@ importers:
         specifier: 5.1.0
         version: 5.1.0(unleash-proxy-client@3.8.0)
       '@unleash/sdk-flight-recorder':
-        specifier: ^0.6.0
-        version: 0.6.0
+        specifier: ^0.7.0
+        version: 0.7.0
       '@vitejs/plugin-react':
         specifier: 6.0.2
         version: 6.0.2(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7(supports-color@8.1.1))(@babel/runtime@7.29.7)(rolldown@1.0.3)(vite@8.0.16(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(sass@1.101.0)(yaml@2.8.4)))(vite@8.0.16(@types/node@22.19.21)(esbuild@0.28.1)(jiti@2.6.1)(sass@1.101.0)(yaml@2.8.4))
@@ -2397,8 +2397,8 @@ packages:
     peerDependencies:
       unleash-proxy-client: ^3.8.0
 
-  '@unleash/sdk-flight-recorder@0.6.0':
-    resolution: {integrity: sha512-V4Zs1E7PwQ2gKJvgzClu3aBhZCslG5eGG29Gq8ZXIUkPVVCRYuSz/he5iegTlHrCkpaVh2da0vNu2boGDo6n/g==}
+  '@unleash/sdk-flight-recorder@0.7.0':
+    resolution: {integrity: sha512-h8VqAvI6KqBEnqeMfb5jY1YvBdQAzhKxgxg+x59/wjqoz99dsufRMipfi+IclGE0D97DZ5YqUEt9EMlXSqj1lQ==}
     engines: {node: '>=20'}
 
   '@vitejs/plugin-react@6.0.2':
@@ -8489,7 +8489,7 @@ snapshots:
     dependencies:
       unleash-proxy-client: 3.8.0
 
-  '@unleash/sdk-flight-recorder@0.6.0':
+  '@unleash/sdk-flight-recorder@0.7.0':
     dependencies:
       ky: 2.0.2
 

@@ -134,7 +134,6 @@ export default class TeamsWorkflowAddon extends Addon {
             stateDetails: stateDetails.join('\n'),
             event: serializeDates(event),
             details: {
-                url,
                 body,
             },
         });

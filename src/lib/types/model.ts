@@ -472,6 +472,8 @@ export interface IAddonConfig {
     integrationEventsService: IntegrationEventsService;
     flagResolver: IFlagResolver;
     eventBus: EventEmitter;
+    allowPrivateUrls?: boolean;
+    allowList?: string[];
 }
 
 export interface IUserWithRole {

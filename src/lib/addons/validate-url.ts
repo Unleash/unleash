@@ -2,6 +2,7 @@ import type { LookupAddress } from 'node:dns';
 import { lookup as dnsLookup } from 'node:dns/promises';
 import net from 'node:net';
 import { Address4, Address6 } from 'ip-address';
+import { ValidationError } from 'joi';
 
 const isLocalIpv4: (ip: Address4) => boolean = (ip) => {
     return (
@@ -94,7 +95,7 @@ export const validateUrl = async (
 ): Promise<ValidatedUrl> => {
     const url = new URL(rawUrl);
     if (url.protocol !== 'http:' && url.protocol !== 'https:') {
-        throw new Error(`Invalid protocol: ${url.protocol}`);
+        throw new ValidationError(`Invalid protocol: ${url.protocol}`, [], url);
     }
     const hostname = url.hostname.toLowerCase();
     const ipFamily = net.isIP(hostname);
@@ -103,7 +104,11 @@ export const validateUrl = async (
             ? [{ address: hostname, family: ipFamily as 4 | 6 }]
             : await (options.lookup ?? defaultLookup)(hostname);
     if (resolved.length === 0) {
-        throw new Error(`Hostname did not resolve: ${hostname}`);
+        throw new ValidationError(
+            `Hostname did not resolve: ${hostname}`,
+            [],
+            url,
+        );
     }
 
     const allowPrivate =
@@ -113,8 +118,10 @@ export const validateUrl = async (
     if (!allowPrivate) {
         const blocked = resolved.find(({ address }) => !isPublicIp(address));
         if (blocked) {
-            throw new Error(
+            throw new ValidationError(
                 `URL resolves to a non-public address: ${blocked.address}`,
+                [],
+                url,
             );
         }
     }

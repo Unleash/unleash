@@ -53,6 +53,7 @@ function getSetup() {
             integrationEventsService,
             flagResolver: {} as IFlagResolver,
             eventBus: config.eventBus,
+            allowPrivateUrls: true,
         }),
     };
     return {
@@ -62,6 +63,7 @@ function getSetup() {
                 getLogger,
                 // @ts-expect-error
                 server: { unleashUrl: 'http://test' },
+                allowPrivateUrlInIntegration: true,
             },
             tagTypeService,
             eventService,
@@ -157,7 +159,7 @@ test('should not trigger event handler if project of event is different from add
         projects: ['someproject'],
         description: '',
         parameters: {
-            url: 'http://localhost:wh',
+            url: 'http://localhost:4242',
         },
     };
 
@@ -191,7 +193,7 @@ test('should trigger event handler if project for event is one of the desired pr
         projects: [desiredProject],
         description: '',
         parameters: {
-            url: 'http://localhost:wh',
+            url: 'http://localhost:4242',
         },
     };
 
@@ -239,7 +241,7 @@ test('should trigger events for multiple projects if addon is setup to filter mu
         projects: desiredProjects,
         description: '',
         parameters: {
-            url: 'http://localhost:wh',
+            url: 'http://localhost:4242',
         },
     };
 
@@ -302,7 +304,7 @@ test('should filter events on environment if addon is setup to filter for it', a
         environments: [desiredEnvironment],
         description: '',
         parameters: {
-            url: 'http://localhost:wh',
+            url: 'http://localhost:4242',
         },
     };
 
@@ -351,7 +353,7 @@ test('should not filter out global events (no specific environment) even if addo
         environments: [filteredEnvironment],
         description: '',
         parameters: {
-            url: 'http://localhost:wh',
+            url: 'http://localhost:4242',
         },
     };
 
@@ -389,7 +391,7 @@ test('should not filter out global events (no specific project) even if addon is
         environments: [],
         description: '',
         parameters: {
-            url: 'http://localhost:wh',
+            url: 'http://localhost:4242',
         },
     };
 
@@ -426,7 +428,7 @@ test('should support wildcard option for filtering addons', async () => {
         projects: ['*'],
         description: '',
         parameters: {
-            url: 'http://localhost:wh',
+            url: 'http://localhost:4242',
         },
     };
 
@@ -491,7 +493,7 @@ test('Should support filtering by both project and environment', async () => {
         environments: desiredEnvironments,
         description: '',
         parameters: {
-            url: 'http://localhost:wh',
+            url: 'http://localhost:4242',
         },
     };
     const expectedFeatureNames = [

@@ -54,12 +54,6 @@ const StyledCaption = styled(Typography)(({ theme }) => ({
     lineHeight: 'normal',
 }));
 
-const StyledViewButton = styled(Button)(({ theme }) => ({
-    height: theme.spacing(3),
-    padding: theme.spacing(0, 1),
-    fontSize: theme.typography.caption.fontSize,
-})) as typeof Button;
-
 const StyledActions = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -93,7 +87,7 @@ export const NotificationCard = ({
                 </StyledBody>
             </StyledUserInfo>
             <StyledActions>
-                <StyledViewButton
+                <Button
                     size='small'
                     variant='contained'
                     color='primary'
@@ -102,7 +96,7 @@ export const NotificationCard = ({
                     onClick={() => highlight(`access-request-${request.id}`)}
                 >
                     View request
-                </StyledViewButton>
+                </Button>
                 <StyledDismissButton
                     size='small'
                     aria-label={`Dismiss notification for ${request.email}`}

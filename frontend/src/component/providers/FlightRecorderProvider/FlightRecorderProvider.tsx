@@ -7,6 +7,8 @@ import {
 import { useUiFlag } from 'hooks/useUiFlag';
 import { getVariantValue, type Variant } from 'utils/variants';
 import { FlightRecorderContext } from 'contexts/FlightRecorderContext';
+import { routes } from 'component/menu/routes';
+import { usePageViewTracking } from './usePageViewTracking';
 
 // Custom UI events are low-frequency, so the periodic timer does the flushing
 // and the buffer stays small. Keep flushAt low so the keepalive flush on
@@ -60,6 +62,8 @@ export const FlightRecorderProvider: FC<{ children?: React.ReactNode }> = ({
             window.removeEventListener('pagehide', flush);
         };
     }, [recorder]);
+
+    usePageViewTracking(recorder, routes);
 
     return (
         <FlightRecorderContext.Provider value={recorder}>

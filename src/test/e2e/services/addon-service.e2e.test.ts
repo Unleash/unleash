@@ -23,6 +23,7 @@ const _TEST_USER_ID = -9999;
 beforeAll(async () => {
     const config = createTestConfig({
         server: { baseUriPath: '/test' },
+        allowPrivateUrlInIntegration: true,
     });
     db = await dbInit('addon_service_serial', getLogger);
     stores = db.stores;
@@ -39,6 +40,7 @@ beforeAll(async () => {
             integrationEventsService,
             flagResolver: config.flagResolver,
             eventBus: config.eventBus,
+            allowPrivateUrls: true,
         }),
     };
     addonService = new AddonService(

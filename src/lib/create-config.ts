@@ -586,6 +586,18 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         ).values(),
     ];
 
+    const integrationConfig = {
+        allowPrivateUrlInIntegration:
+            options.allowPrivateUrlInIntegration ??
+            parseEnvVarBoolean(
+                process.env.UNLEASH_ALLOW_PRIVATE_URL_IN_INTEGRATION,
+                false,
+            ),
+        allowListIntegration:
+            options.allowListIntegration ??
+            parseEnvVarStrings(process.env.UNLEASH_ALLOW_LIST_INTEGRATION, []),
+    };
+
     const customStrategySettings = options.customStrategySettings ?? {
         disableCreation: parseEnvVarBoolean(
             process.env.UNLEASH_DISABLE_CUSTOM_STRATEGY_CREATION,
@@ -854,5 +866,6 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         checkDbOnReady,
         edgeMasterKey,
         edgeClientSecret,
+        ...integrationConfig,
     };
 }

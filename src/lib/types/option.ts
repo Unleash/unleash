@@ -185,6 +185,8 @@ export interface IUnleashOptions {
     checkDbOnReady?: boolean;
     edgeMasterKey?: string;
     edgeClientSecret?: string;
+    allowPrivateUrlInIntegration?: boolean;
+    allowListIntegration?: string[];
 }
 
 export interface IEmailOption {
@@ -315,4 +317,6 @@ export interface IUnleashConfig {
     checkDbOnReady?: boolean;
     edgeMasterKey?: string;
     edgeClientSecret?: string;
+    allowPrivateUrlInIntegration?: boolean;
+    allowListIntegration?: string[];
 }

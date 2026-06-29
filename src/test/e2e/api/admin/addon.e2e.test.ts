@@ -17,6 +17,7 @@ beforeAll(async () => {
                 strictSchemaValidation: true,
             },
         },
+        allowPrivateUrlInIntegration: true,
     });
 });
 

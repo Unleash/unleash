@@ -27,5 +27,7 @@ export const ConstraintSchemaOperator = {
     SEMVER_EQ: 'SEMVER_EQ',
     SEMVER_GT: 'SEMVER_GT',
     SEMVER_LT: 'SEMVER_LT',
+    SEMVER_GTE: 'SEMVER_GTE',
+    SEMVER_LTE: 'SEMVER_LTE',
     REGEX: 'REGEX',
 } as const;

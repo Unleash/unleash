@@ -53,6 +53,7 @@ process.nextTick(async () => {
                         disableImpactMetrics: false,
                         registerImpactMetrics: true,
                         regexConstraintOperator: true,
+                        semverGteConstraintOperators: true,
                         enterpriseEdgeTokensList: true,
                         userTokenWithClientApiLoggingKillSwitch: false,
                         allowDeprecatedApiTokenMiddleware: false,

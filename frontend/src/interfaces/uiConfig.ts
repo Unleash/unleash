@@ -90,6 +90,7 @@ export type UiFlags = {
     extendedUsageMetrics?: boolean;
     newInUnleash?: boolean | Variant;
     regexConstraintOperator?: boolean;
+    semverGteConstraintOperators?: boolean;
     signupDialog?: boolean;
     enterpriseEdgeTokensList?: boolean;
     impactMetricsFlagPage?: boolean;

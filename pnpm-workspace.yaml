@@ -24,6 +24,7 @@ trustPolicyExclude:
 minimumReleaseAge: 10080
 minimumReleaseAgeIgnoreMissingTime: false
 minimumReleaseAgeExclude:
+  - 'unleash-client'
   - '@unleash/proxy-client-react'
   - '@unleash/sdk-flight-recorder'
   # Renovate security update: esbuild@0.28.1

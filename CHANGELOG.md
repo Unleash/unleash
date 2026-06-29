@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.6.5] - 2026-06-29
+
+### Bug Fixes
+
+- Nested json and addon url verification ([#12434](https://github.com/Unleash/unleash/issues/12434))
+
+
 ## [7.6.4] - 2026-05-14
 
 ### Bug Fixes

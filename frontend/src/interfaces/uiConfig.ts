@@ -89,6 +89,7 @@ export type UiFlags = {
     oidcPkceSupport?: boolean;
     extendedUsageMetrics?: boolean;
     newInUnleash?: boolean | Variant;
+    newInUnleashPage?: boolean;
     regexConstraintOperator?: boolean;
     semverGteConstraintOperators?: boolean;
     signupDialog?: boolean;

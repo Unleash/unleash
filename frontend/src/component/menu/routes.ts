@@ -51,6 +51,7 @@ import { Application } from 'component/application/Application';
 import { Signals } from 'component/signals/Signals';
 import { LazyCreateProject } from '../project/Project/CreateProject/LazyCreateProject.jsx';
 import { PersonalDashboard } from '../personalDashboard/PersonalDashboard.jsx';
+import { NewInUnleashPage } from 'component/newInUnleash/NewInUnleashPage';
 import { ReleaseManagement } from 'component/releases/ReleaseManagement/ReleaseManagement';
 import { CreateReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/CreateReleasePlanTemplate';
 import { EditReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/EditReleasePlanTemplate';
@@ -76,6 +77,16 @@ export const routes: IRoute[] = [
         component: PersonalDashboard,
         type: 'protected',
         menu: { primary: true },
+    },
+    {
+        path: '/new-in-unleash',
+        title: 'New in Unleash',
+        component: NewInUnleashPage,
+        type: 'protected',
+        enterprise: true,
+        flag: 'newInUnleashPage',
+        hidden: true,
+        menu: {},
     },
 
     // Project

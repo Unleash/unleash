@@ -64,6 +64,7 @@ process.nextTick(async () => {
                         serviceNowIntegration: true,
                         accessRequestsNotifications: true,
                         accessRequestsMenuIndicator: true,
+                        newInUnleashPage: true,
                     },
                 },
                 authentication: {

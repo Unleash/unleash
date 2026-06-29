@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.5.2] - 2026-06-29
+
+### Bug Fixes
+
+- Handle json serialization and url validation for addons ([#12436](https://github.com/Unleash/unleash/issues/12436))
+
+
 ## [7.5.1] - 2026-03-10
 
 ### Bug Fixes

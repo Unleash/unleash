@@ -101,12 +101,12 @@ export class FrontendApiService {
 
         const resultDefinitions: FrontendApiFeatureSchema[] = [];
         for (const feature of definitions) {
-            const enabled = client.isEnabled(feature.name, evaluationContext);
-            if (enabled) {
+            const variant = client.getVariant(feature.name, evaluationContext);
+            if (variant.feature_enabled) {
                 resultDefinitions.push({
                     name: feature.name,
                     enabled: Boolean(feature.enabled),
-                    variant: client.getVariant(feature.name, evaluationContext),
+                    variant,
                     impressionData: Boolean(feature.impressionData),
                 });
             }

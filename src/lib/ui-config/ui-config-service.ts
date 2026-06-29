@@ -8,9 +8,9 @@ import {
     type IUnleashServices,
     type SessionService,
     type SettingService,
-    type User,
     type VersionService,
 } from '../server-impl.js';
+import type { IUser } from '../types/user.js';
 import type MaintenanceService from '../features/maintenance/maintenance-service.js';
 import {
     type SimpleAuthSettings,
@@ -83,7 +83,10 @@ export class UiConfigService {
         return 0;
     }
 
-    async getUiConfig(user: User): Promise<UiConfigSchema> {
+    async getUiConfig(
+        user: Pick<IUser, 'id' | 'email'>,
+        sessionId?: string,
+    ): Promise<UiConfigSchema> {
         const [
             frontendSettings,
             simpleAuthSettings,
@@ -104,8 +107,13 @@ export class UiConfigService {
 
         const hashedEmail = user.email ? hashValue(user.email) : undefined;
 
+        // Hash the raw sessionID (a credential) before exposing it; safe
+        // unsalted because the sessionID is high-entropy.
+        const analyticsSessionId = sessionId ? hashValue(sessionId) : undefined;
+
         const expFlags = this.config.flagResolver.getAll({
             email: hashedEmail,
+            ...(analyticsSessionId ? { sessionId: analyticsSessionId } : {}),
         });
 
         const flags = {
@@ -117,6 +125,7 @@ export class UiConfigService {
             ...this.flagResolver.getStaticContext(),
             ...(hashedEmail ? { email: hashedEmail } : {}),
             userId: user.id,
+            ...(analyticsSessionId ? { sessionId: analyticsSessionId } : {}),
         };
         const uiConfig: UiConfigSchema = {
             ...this.config.ui,

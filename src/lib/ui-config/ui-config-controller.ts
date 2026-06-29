@@ -1,5 +1,4 @@
 import type { Response } from 'express';
-import type { AuthedRequest } from '../types/core.js';
 import type { IUnleashServices } from '../services/index.js';
 import type { IUnleashConfig } from '../types/option.js';
 import Controller from '../routes/controller.js';
@@ -85,10 +84,15 @@ class UiConfigController extends Controller {
     }
 
     async getUiConfig(
-        req: AuthedRequest,
+        req: IAuthRequest,
         res: Response<UiConfigSchema>,
     ): Promise<void> {
-        const uiConfig = await this.uiConfigService.getUiConfig(req.user);
+        // Only pass the sessionID for logged-in sessions; otherwise it's
+        // ephemeral per request and correlates nothing.
+        const uiConfig = await this.uiConfigService.getUiConfig(
+            req.user,
+            req.session?.user ? req.sessionID : undefined,
+        );
 
         this.openApiService.respondWithValidation(
             200,

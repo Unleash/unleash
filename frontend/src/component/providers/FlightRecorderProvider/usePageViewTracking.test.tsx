@@ -73,7 +73,7 @@ it('records a page view for the landing page and for each later navigation, with
 
     expect(record).toHaveBeenCalledWith({
         eventType: 'custom',
-        eventName: '$pageview',
+        eventName: 'pageview',
         context: { userId: 'u-1' },
         payload: {
             pageviewId: expect.any(String),
@@ -90,7 +90,7 @@ it('records a page view for the landing page and for each later navigation, with
 
     expect(record).toHaveBeenLastCalledWith({
         eventType: 'custom',
-        eventName: '$pageview',
+        eventName: 'pageview',
         context: { userId: 'u-1' },
         payload: {
             pageviewId: expect.any(String),

@@ -5,9 +5,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { createUuid } from 'utils/createUuid';
 import { resolvePageView } from './resolvePageView';
 
-// Records a `$pageview` custom event on every route change. The `$` prefix is
-// reserved for instrumentation events so they never collide with product custom
-// events. See the Page View Tracking design.
+// Records a `pageview` custom event on every route change.
 export const usePageViewTracking = (
     recorder: FlightRecorder | null,
     routePatterns: { path: string }[],
@@ -49,7 +47,7 @@ export const usePageViewTracking = (
 
         recorder.record({
             eventType: 'custom',
-            eventName: '$pageview',
+            eventName: 'pageview',
             context: { ...contextRef.current },
             payload: {
                 pageviewId: createUuid(),

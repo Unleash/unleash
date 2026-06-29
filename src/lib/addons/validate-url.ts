@@ -74,7 +74,7 @@ const defaultLookup = async (hostname: string) => {
     try {
         return await dnsLookup(hostname, { all: true, order: 'ipv4first' });
     } catch (error) {
-        // ponytail: old addon tests use nock-only hostnames; keep production DNS failures strict.
+        // old addon tests use nock-only hostnames; keep production DNS failures strict.
         if (process.env.NODE_ENV === 'test') {
             return [{ address: '93.184.216.34', family: 4 as const }];
         }

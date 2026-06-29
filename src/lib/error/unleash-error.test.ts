@@ -385,6 +385,37 @@ describe('OpenAPI error conversion', () => {
         });
     });
 
+    it('does not crash when the offending value is nested past the call-stack limit', () => {
+        let deep: unknown = {};
+        for (let i = 0; i < 100_000; i++) {
+            deep = [deep];
+        }
+
+        const errors: [ErrorObject, ...ErrorObject[]] = [
+            {
+                keyword: 'type',
+                instancePath: '/body/tokens/0',
+                schemaPath: '#/components/schemas/tokenStringListSchema',
+                params: { type: 'string' },
+                message: 'should be string',
+            },
+        ];
+
+        const result = fromOpenApiValidationErrors(
+            { body: { tokens: [deep] }, query: {} },
+            errors,
+        ).toJSON();
+
+        expect(result).toMatchObject({
+            details: [
+                {
+                    message:
+                        'The `/body/tokens/0` property should be string. You sent [value too large or deeply nested to display].',
+                },
+            ],
+        });
+    });
+
     describe('Disallowed additional properties', () => {
         it('gives useful messages for base-level properties', () => {
             const openApiError = {

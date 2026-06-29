@@ -98,7 +98,6 @@ export type UiFlags = {
     newProjectList?: boolean;
     newModalDesign?: boolean;
     archiveInFlagsView?: boolean;
-    newProfileDropdown?: boolean;
     hideTopmenuDocumentation?: boolean;
     learningLab?: Variant;
     accessRequestsNotifications?: boolean;

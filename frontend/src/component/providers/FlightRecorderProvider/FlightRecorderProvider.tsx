@@ -10,9 +10,7 @@ import { FlightRecorderContext } from 'contexts/FlightRecorderContext';
 import { routes } from 'component/menu/routes';
 import { usePageViewTracking } from './usePageViewTracking';
 
-// Custom UI events are low-frequency, so the periodic timer does the flushing
-// and the buffer stays small. Keep flushAt low so the keepalive flush on
-// close() stays well under the 64 KB browser limit (~35 KB at 350 bytes/event).
+// A low flushAt keeps the keepalive flush on close() well under the browser's 64 KB limit.
 const BATCH = { flushAt: 100 };
 
 export const FlightRecorderProvider: FC<{ children?: React.ReactNode }> = ({

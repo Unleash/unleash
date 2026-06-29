@@ -6,10 +6,9 @@ import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { FlightRecorderProvider } from './FlightRecorderProvider';
 
-// The flight recorder SDK is third-party; stub it at its module boundary so the
-// events the provider would ship are captured here instead of gzipped and sent
-// over the network (which jsdom can't do). Everything we own — the provider, the
-// tracking hook, the route table — stays real.
+// Stub the third-party SDK at its module boundary: it gzips and POSTs over the
+// network, which jsdom can't do. We capture what the provider would have shipped,
+// while the provider, hook, and route table stay real.
 const { recorded } = vi.hoisted(() => ({ recorded: [] as { path: string }[] }));
 vi.mock('@unleash/sdk-flight-recorder', () => ({
     createFlightRecorder: () => ({
@@ -22,9 +21,8 @@ vi.mock('@unleash/sdk-flight-recorder', () => ({
 
 const server = testServerSetup();
 
-// Turn the flag on (its payload carries the recorder URL the provider needs to
-// build a recorder) and load an identity, so the first pageview clears the gate
-// that holds it until userId is known.
+// The flag payload carries the recorder URL, and the identity opens the gate that
+// holds the first pageview until the userId is known.
 const enableRecorder = () =>
     testServerRoute(server, '/api/admin/ui-config', {
         unleashContext: { userId: 'u-1' },
@@ -70,8 +68,7 @@ it('records a templated, low-cardinality pageview for each route the user visits
         { route: '/projects/default/settings' },
     );
 
-    // Wait for the landing pageview before navigating: the first one is held
-    // until the identity gate opens, and navigating earlier would skip it.
+    // The landing pageview is gated on identity; navigating before it lands would skip it.
     await waitFor(() =>
         expect(recordedPaths()).toContain('/projects/:projectId/settings'),
     );
@@ -79,9 +76,8 @@ it('records a templated, low-cardinality pageview for each route the user visits
         screen.getByRole('button', { name: 'go to feature edit' }),
     );
 
-    // Both routes, in order, with concrete ids kept out of the path: the landing
-    // one proves the provider mounts the tracking hook, the second proves a route
-    // change fires an event.
+    // Expect both routes, templated and in order: mounting wires up the tracking
+    // hook, and the navigation fires the second event.
     await waitFor(() =>
         expect(recordedPaths()).toEqual([
             '/projects/:projectId/settings',

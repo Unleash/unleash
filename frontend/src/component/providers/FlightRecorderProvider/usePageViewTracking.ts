@@ -18,14 +18,15 @@ export const usePageViewTracking = (
     contextRef.current = context;
     const previousPathRef = useRef<string | null>(null);
 
-    // Read patterns through a ref so they aren't an effect dep: a caller passing
-    // an inline array changes its identity each render, which would refire the
-    // effect and record a pageview on every render. Only navigation should record.
+    // Kept in a ref rather than an effect dependency: an inline array changes identity
+    // on every render, which would refire the effect and record a pageview each render
+    // instead of only on navigation.
     const routePatternsRef = useRef(routePatterns);
     routePatternsRef.current = routePatterns;
 
-    // Boolean gate, not the context object: hold the first view until identity
-    // loads (no userId-less landing), but don't refire when SWR revalidates.
+    // Gate on a boolean rather than the context object, so SWR revalidation doesn't
+    // refire the effect. This holds the first pageview until identity loads, so we
+    // never record a landing without a userId.
     const contextReady = context !== undefined;
 
     useEffect(() => {
@@ -35,8 +36,8 @@ export const usePageViewTracking = (
 
         const resolved = resolvePageView(routePatternsRef.current, pathname);
 
-        // Skip unmatched routes (e.g. redirects through /) so they neither
-        // record nor pollute the referrer chain.
+        // Skip unmatched routes, such as redirects through "/", since they would
+        // pollute the referrer chain.
         if (!resolved.matched) {
             return;
         }

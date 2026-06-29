@@ -16,8 +16,7 @@ const routes = [
     { path: '/projects/:projectId/*' },
 ];
 
-// Signals when ui-config resolved, so a test can wait for the ready gate before
-// asserting nothing was recorded.
+// Renders once ui-config resolves, so a test can wait for the ready gate.
 const ConfigProbe = () => {
     const { uiConfig } = useUiConfig();
     return uiConfig?.unleashContext ? <span>config-ready</span> : null;
@@ -83,7 +82,6 @@ it('records a page view for the landing page and for each later navigation, with
         },
     });
 
-    // Second view; referrer is the resolved path we came from.
     await userEvent.click(
         screen.getByRole('button', { name: 'go to feature edit' }),
     );
@@ -126,8 +124,8 @@ it('does not record a page view for an unrecognized route', async () => {
     respondWithIdentity();
     const record = vi.fn();
 
-    // Unmatched route is skipped; wait for the gate to prove the skip is
-    // deliberate, not the gate still holding the view back.
+    // Wait for the gate first, so the skip is provably deliberate rather than the
+    // gate still holding the view back.
     render(<Harness recorder={{ record }} />, {
         route: '/nope/nowhere',
     });

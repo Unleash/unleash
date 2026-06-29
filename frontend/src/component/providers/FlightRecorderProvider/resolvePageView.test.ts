@@ -32,7 +32,6 @@ describe('resolvePageView', () => {
     });
 
     it('keeps the bare parent path when a delegating route has no sub-page', () => {
-        // No tail to append; record the bare parent.
         const routes = [{ path: '/projects/:projectId/*' }];
 
         expect(resolvePageView(routes, '/projects/default')).toEqual({
@@ -43,7 +42,6 @@ describe('resolvePageView', () => {
     });
 
     it('reports no match for an unrecognized URL', () => {
-        // No match: callers skip these instead of recording a junk path.
         const routes = [{ path: '/projects/:projectId/*' }];
 
         expect(resolvePageView(routes, '/nope/nowhere')).toEqual({

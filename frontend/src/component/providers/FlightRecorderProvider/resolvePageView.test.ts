@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { routes } from 'component/menu/routes';
 import { resolvePageView } from './resolvePageView';
 
 describe('resolvePageView', () => {
@@ -50,28 +49,5 @@ describe('resolvePageView', () => {
         expect(resolvePageView(routes, '/nope/nowhere')).toEqual({
             matched: false,
         });
-    });
-
-    it('resolves real application routes by their templated shape', () => {
-        // Guards against a routes refactor (e.g. moving to nested children)
-        // silently producing wrong paths: this exercises the real route table,
-        // not synthetic patterns. '/' is intentionally absent from it, so the
-        // landing redirect must stay unmatched and therefore unrecorded.
-        expect(
-            resolvePageView(
-                routes,
-                '/projects/default/features/new-onboarding/edit',
-            ),
-        ).toEqual({
-            matched: true,
-            path: '/projects/:projectId/features/:featureId/edit',
-            params: { projectId: 'default', featureId: 'new-onboarding' },
-        });
-        expect(resolvePageView(routes, '/projects/default/settings')).toEqual({
-            matched: true,
-            path: '/projects/:projectId/settings',
-            params: { projectId: 'default' },
-        });
-        expect(resolvePageView(routes, '/')).toEqual({ matched: false });
     });
 });

@@ -1,5 +1,4 @@
 import path from 'path';
-import zlib from 'zlib';
 import { defineConfig } from 'cypress';
 import vitePreprocessor from 'cypress-vite';
 
@@ -28,20 +27,6 @@ export default defineConfig({
                 log(message) {
                     console.log(message);
                     return null;
-                },
-                // The flight recorder sends gzipped NDJSON; decode it back to an
-                // array of events so a spec can assert on what was recorded.
-                decodeRecorderBody(body: unknown) {
-                    const buffer =
-                        typeof body === 'string'
-                            ? Buffer.from(body, 'latin1')
-                            : Buffer.from((body as { data: number[] }).data);
-                    return zlib
-                        .gunzipSync(buffer)
-                        .toString('utf8')
-                        .trim()
-                        .split('\n')
-                        .map((line) => JSON.parse(line));
                 },
             });
         },

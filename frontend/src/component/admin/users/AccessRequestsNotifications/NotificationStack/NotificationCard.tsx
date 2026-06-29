@@ -10,6 +10,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import type { UserAccessRequestSchema } from 'openapi';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 interface INotificationCardProps {
     request: UserAccessRequestSchema;
@@ -67,6 +68,25 @@ export const NotificationCard = ({
     request,
     onDismiss,
 }: INotificationCardProps) => {
+    const { trackEvent } = useEventTracker();
+
+    const onViewClick = () => {
+        trackEvent('access-requests-notification', {
+            props: {
+                eventType: 'view-click',
+            },
+        });
+    };
+
+    const onDismissClick = () => {
+        trackEvent('access-requests-notification', {
+            props: {
+                eventType: 'dismiss-click',
+            },
+        });
+        onDismiss(request.id);
+    };
+
     return (
         <StyledCard elevation={3}>
             <StyledUserInfo>
@@ -90,13 +110,14 @@ export const NotificationCard = ({
                     color='primary'
                     component={RouterLink}
                     to='/admin/users'
+                    onClick={onViewClick}
                 >
                     View request
                 </Button>
                 <StyledDismissButton
                     size='small'
                     aria-label={`Dismiss notification for ${request.email}`}
-                    onClick={() => onDismiss(request.id)}
+                    onClick={onDismissClick}
                 >
                     <CloseIcon fontSize='small' />
                 </StyledDismissButton>

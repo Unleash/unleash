@@ -1,8 +1,9 @@
-import { beforeEach, expect, test } from 'vitest';
+import { beforeEach, expect, test, vi } from 'vitest';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
 import type { UserAccessRequestSchema } from 'openapi';
+import { EventTrackerContext } from 'contexts/EventTrackerContext';
 import { NotificationStack } from './NotificationStack';
 
 const storageKey = 'test:access-requests:dismissed';
@@ -61,4 +62,33 @@ test('sorts newest first, caps to maxVisible, and persists dismissals', async ()
     expect(await screen.findByText('b@example.com')).toBeInTheDocument();
     expect(screen.getByText('a@example.com')).toBeInTheDocument();
     expect(screen.queryByText('c@example.com')).not.toBeInTheDocument();
+});
+
+test('tracks view and dismiss clicks', async () => {
+    const trackEvent = vi.fn();
+
+    render(
+        <EventTrackerContext.Provider value={{ trackEvent }}>
+            <NotificationStack
+                accessRequests={[request('a', '2026-06-20T00:00:00Z')]}
+                storageKey={storageKey}
+            />
+        </EventTrackerContext.Provider>,
+    );
+
+    await userEvent.click(
+        await screen.findByRole('link', { name: 'View request' }),
+    );
+    expect(trackEvent).toHaveBeenCalledWith('access-requests-notification', {
+        props: { eventType: 'view-click' },
+    });
+
+    await userEvent.click(
+        screen.getByRole('button', {
+            name: 'Dismiss notification for a@example.com',
+        }),
+    );
+    expect(trackEvent).toHaveBeenCalledWith('access-requests-notification', {
+        props: { eventType: 'dismiss-click' },
+    });
 });

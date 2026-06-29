@@ -87,4 +87,5 @@ export type CustomEvents =
     | 'safeguards'
     | 'remote-mcp'
     | 'external-impact-metrics'
-    | 'help-resources';
+    | 'help-resources'
+    | 'access-requests-notification';

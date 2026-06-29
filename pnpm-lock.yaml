@@ -244,8 +244,8 @@ importers:
         specifier: ^2.4.1
         version: 2.4.1
       unleash-client:
-        specifier: ^6.10.1
-        version: 6.11.0(supports-color@8.1.1)
+        specifier: ^6.11.0
+        version: 6.11.0
     devDependencies:
       '@apidevtools/swagger-parser':
         specifier: 12.1.0
@@ -7554,13 +7554,13 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.20.1
 
-  '@npmcli/agent@4.0.2(supports-color@8.1.1)':
+  '@npmcli/agent@4.0.2':
     dependencies:
       agent-base: 7.1.4
       http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.6
       lru-cache: 11.5.1
-      socks-proxy-agent: 8.0.5(supports-color@8.1.1)
+      socks-proxy-agent: 8.0.5
     transitivePeerDependencies:
       - supports-color
 
@@ -10813,10 +10813,10 @@ snapshots:
 
   make-error@1.3.6: {}
 
-  make-fetch-happen@15.0.6(supports-color@8.1.1):
+  make-fetch-happen@15.0.6:
     dependencies:
       '@gar/promise-retry': 1.0.3
-      '@npmcli/agent': 4.0.2(supports-color@8.1.1)
+      '@npmcli/agent': 4.0.2
       '@npmcli/redact': 4.0.0
       cacache: 20.0.4
       http-cache-semantics: 4.2.0
@@ -12257,7 +12257,7 @@ snapshots:
       dot-case: 3.0.4
       tslib: 2.8.1
 
-  socks-proxy-agent@8.0.5(supports-color@8.1.1):
+  socks-proxy-agent@8.0.5:
     dependencies:
       agent-base: 7.1.4
       debug: 4.4.3(supports-color@8.1.1)
@@ -12780,14 +12780,14 @@ snapshots:
 
   universalify@2.0.1: {}
 
-  unleash-client@6.11.0(supports-color@8.1.1):
+  unleash-client@6.11.0:
     dependencies:
       http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.6
       ip-address: 10.2.0
       launchdarkly-eventsource: 2.2.0
       lru-cache: 11.5.1
-      make-fetch-happen: 15.0.6(supports-color@8.1.1)
+      make-fetch-happen: 15.0.6
       murmurhash3js: 3.0.1
       proxy-from-env: 1.1.0
       re2js: 1.4.0

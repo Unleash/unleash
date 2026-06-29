@@ -2,6 +2,7 @@ import memoizee from 'memoizee';
 import joi from 'joi';
 const { ValidationError } = joi;
 import { getAddons, type IAddonProviders } from '../addons/index.js';
+import type Addon from '../addons/addon.js';
 import {
     AddonConfigCreatedEvent,
     AddonConfigDeletedEvent,
@@ -30,6 +31,7 @@ import { omitKeys } from '../util/index.js';
 import { BadDataError, NotFoundError } from '../error/index.js';
 import type { IntegrationEventsService } from '../features/integration-events/integration-events-service.js';
 import { type IEvent, type IEventType, IEventTypes } from '../events/index.js';
+import { validateUrl } from '../addons/validate-url.js';
 const MASKED_VALUE = '*****';
 
 const WILDCARD_OPTION = '*';
@@ -57,6 +59,10 @@ export default class AddonService {
 
     private eventHandlers: Map<IEventType, (event: IEvent) => Promise<void>>;
 
+    private allowPrivateUrls: boolean;
+
+    private allowList: string[];
+
     constructor(
         {
             addonStore,
@@ -67,9 +73,16 @@ export default class AddonService {
             server,
             flagResolver,
             eventBus,
+            allowPrivateUrlInIntegration,
+            allowListIntegration,
         }: Pick<
             IUnleashConfig,
-            'getLogger' | 'server' | 'flagResolver' | 'eventBus'
+            | 'getLogger'
+            | 'server'
+            | 'flagResolver'
+            | 'eventBus'
+            | 'allowPrivateUrlInIntegration'
+            | 'allowListIntegration'
         >,
         tagTypeService: TagTypeService,
         eventService: EventService,
@@ -82,6 +95,8 @@ export default class AddonService {
         this.tagTypeService = tagTypeService;
         this.eventService = eventService;
         this.eventHandlers = new Map();
+        this.allowPrivateUrls = allowPrivateUrlInIntegration ?? false;
+        this.allowList = allowListIntegration ?? [];
 
         this.addonProviders =
             addons ||
@@ -91,6 +106,8 @@ export default class AddonService {
                 integrationEventsService,
                 flagResolver,
                 eventBus,
+                allowPrivateUrls: allowPrivateUrlInIntegration,
+                allowList: allowListIntegration,
             });
         this.sensitiveParams = this.loadSensitiveParams(this.addonProviders);
         if (addonStore) {
@@ -120,6 +137,17 @@ export default class AddonService {
             o[definition.name] = sensitiveParams;
             return o;
         }, {});
+    }
+
+    registerProvider(provider: Addon): void {
+        if (this.addonProviders[provider.name]) {
+            this.logger.error(
+                `Addon provider "${provider.name}" is already registered`,
+            );
+            return;
+        }
+        this.addonProviders[provider.name] = provider;
+        this.sensitiveParams = this.loadSensitiveParams(this.addonProviders);
     }
 
     registerEventHandler(): void {
@@ -225,6 +253,7 @@ export default class AddonService {
         const addonConfig = await addonSchema.validateAsync(data);
         await this.validateKnownProvider(addonConfig);
         await this.validateRequiredParameters(addonConfig);
+        await this.validateUrlParameter(addonConfig);
         const addon = this.addonProviders[addonConfig.provider];
         if (addon.definition.deprecated) {
             throw new BadDataError(addon.definition.deprecated);
@@ -259,6 +288,7 @@ export default class AddonService {
         const addonConfig = await addonSchema.validateAsync(data);
         await this.validateKnownProvider(addonConfig);
         await this.validateRequiredParameters(addonConfig);
+        await this.validateUrlParameter(addonConfig);
         if (this.sensitiveParams[addonConfig.provider].length > 0) {
             addonConfig.parameters = Object.keys(addonConfig.parameters).reduce(
                 (params, key) => {
@@ -347,6 +377,14 @@ export default class AddonService {
             );
         }
         return true;
+    }
+    async validateUrlParameter({ parameters }): Promise<void> {
+        if (parameters?.url && parameters.url !== MASKED_VALUE) {
+            await validateUrl(parameters.url, {
+                allowList: { hosts: this.allowList, suffixes: [] },
+                allowPrivateNetworkUrls: this.allowPrivateUrls,
+            }); // This will throw ValidationError if it fails
+        }
     }
 
     destroy(): void {

@@ -1,6 +1,6 @@
 import { Box, Divider, styled, Typography, useTheme } from '@mui/material';
 import { ArcherContainer, ArcherElement } from 'react-archer';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import type React from 'react';
 import { type FC, useLayoutEffect, useRef, useState } from 'react';
 import type {
@@ -14,7 +14,7 @@ import CloudCircle from '@mui/icons-material/CloudCircle';
 import Flag from '@mui/icons-material/Flag';
 import WarningAmberRounded from '@mui/icons-material/WarningAmberRounded';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { getApplicationIssues } from './ApplicationIssues/ApplicationIssues.tsx';
 
 const StyledTable = styled('table')(({ theme }) => ({
@@ -170,7 +170,7 @@ const ApplicationCounters = ({
 };
 
 const useTracking = () => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     return () => {
         trackEvent('sdk-reporting', {
             props: {
@@ -225,8 +225,8 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                             <Typography
                                 sx={(theme) => ({
                                     fontSize: theme.fontSizes.smallerBody,
+                                    color: theme.palette.text.secondary,
                                 })}
-                                color='text.secondary'
                             >
                                 Application
                             </Typography>

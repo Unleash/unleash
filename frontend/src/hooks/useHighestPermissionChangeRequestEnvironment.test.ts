@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { getHighestChangeRequestEnv } from './useHighestPermissionChangeRequestEnvironment.js';
 
 describe('Get the right change request env', () => {

@@ -1,5 +1,7 @@
-import { type FormEventHandler, useState, type VFC } from 'react';
-import { Button, Grid, styled, TextField, Typography } from '@mui/material';
+import { type FormEventHandler, useState, type FC } from 'react';
+import { Button, styled, Typography } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import { StyledAutofillTextField } from './StyledAutofillTextField.tsx';
 import { useNavigate } from 'react-router';
 import useQueryParams from 'hooks/useQueryParams';
 import AuthOptions from './common/AuthOptions/AuthOptions.tsx';
@@ -36,7 +38,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
     textAlign: 'center',
 }));
 
-const HostedAuth: VFC<IHostedAuthProps> = ({ authDetails, redirect }) => {
+const HostedAuth: FC<IHostedAuthProps> = ({ authDetails, redirect }) => {
     const { refetchUser } = useAuthUser();
     const navigate = useNavigate();
     const params = useQueryParams();
@@ -126,7 +128,7 @@ const HostedAuth: VFC<IHostedAuthProps> = ({ authDetails, redirect }) => {
                             {apiError}
                         </StyledTypography>
                         <StyledDiv>
-                            <TextField
+                            <StyledAutofillTextField
                                 label='Username or email'
                                 name='username'
                                 id='username'

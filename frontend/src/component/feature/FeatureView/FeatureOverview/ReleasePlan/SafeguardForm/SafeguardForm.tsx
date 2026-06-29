@@ -7,7 +7,7 @@ import {
     MenuItem,
 } from '@mui/material';
 import ShieldIcon from '@mui/icons-material/ShieldOutlined';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import type { FormEvent, ReactNode } from 'react';
 import { useEffect, useMemo, useState, type FC } from 'react';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -15,12 +15,16 @@ import { useNumericStringInput } from 'hooks/useNumericStringInput';
 import { MiniMetricsChartWithTooltip } from './MiniMetricsChartWithTooltip.tsx';
 import {
     useImpactMetricsOptions,
-    type ImpactMetricsSeries,
+    type ImpactMetric,
 } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
-import { RangeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/RangeSelector/RangeSelector';
-import { ModeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/ModeSelector/ModeSelector';
-import { MetricSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/SeriesSelector/MetricSelector.tsx';
+import { RangeSelector } from 'component/impact-metrics/ImpactMetricModal/ImpactMetricsControls/RangeSelector/RangeSelector';
+import { ModeSelector } from 'component/impact-metrics/ImpactMetricModal/ImpactMetricsControls/ModeSelector/ModeSelector';
+import {
+    MetricSelector,
+    type MetricSelection,
+} from 'component/impact-metrics/ImpactMetricModal/ImpactMetricsControls/SeriesSelector/MetricSelector.tsx';
+import type { MetricSource } from 'component/impact-metrics/types';
 import {
     getDefaultAggregation,
     getMetricType,
@@ -40,7 +44,7 @@ import {
     StyledSelect,
     StyledTopRow,
 } from '../shared/SharedFormComponents.tsx';
-import type { ISafeguard } from 'interfaces/releasePlans.ts';
+import type { ISafeguard } from 'interfaces/safeguard.ts';
 import {
     UPDATE_FEATURE_ENVIRONMENT,
     UPDATE_FEATURE_STRATEGY,
@@ -61,6 +65,23 @@ const SafeguardConfigurationSection = styled(Box)({
 });
 export type SafeguardType = 'releasePlan' | 'featureEnvironment';
 
+const buildLabelSelectors = (
+    appName: string,
+    environment?: string,
+): Record<string, string[]> => {
+    const selectors: Record<string, string[]> = {};
+
+    if (environment) {
+        selectors.environment = [environment];
+    }
+
+    if (appName !== '*') {
+        selectors.appName = [appName];
+    }
+
+    return selectors;
+};
+
 interface IBaseSafeguardFormProps {
     onSubmit: (data: CreateSafeguardSchema) => void;
     onCancel?: () => void;
@@ -70,12 +91,14 @@ interface IBaseSafeguardFormProps {
     featureId: string;
     badge?: ReactNode;
     safeguardType?: SafeguardType;
+    headerAction?: ReactNode;
 }
 
-type MetricOption = { name: string } & ImpactMetricsSeries;
-
 const getInitialValues = (safeguard?: ISafeguard) => ({
-    metricName: safeguard?.impactMetric.metricName || '',
+    metric: {
+        metricName: safeguard?.impactMetric.metricName || '',
+        source: safeguard?.impactMetric.source,
+    },
     appName: safeguard?.impactMetric.labelSelectors.appName?.[0] || '*',
     aggregationMode: (safeguard?.impactMetric.aggregationMode ||
         'rps') as MetricQuerySchemaAggregationMode,
@@ -92,7 +115,7 @@ const useSafeguardFormValues = (safeguard?: ISafeguard) => {
         [safeguard],
     );
 
-    const [metricName, setMetricName] = useState(initialValues.metricName);
+    const [metric, setMetric] = useState<MetricSelection>(initialValues.metric);
     const [appName, setAppName] = useState(initialValues.appName);
     const [aggregationMode, setAggregationMode] =
         useState<MetricQuerySchemaAggregationMode>(
@@ -110,7 +133,7 @@ const useSafeguardFormValues = (safeguard?: ISafeguard) => {
     const resetToOriginalValues = () => {
         if (!safeguard) return;
 
-        setMetricName(initialValues.metricName);
+        setMetric(initialValues.metric);
         setAppName(initialValues.appName);
         setAggregationMode(initialValues.aggregationMode);
         setOperator(initialValues.operator);
@@ -118,24 +141,9 @@ const useSafeguardFormValues = (safeguard?: ISafeguard) => {
         setTimeRange(initialValues.timeRange);
     };
 
-    const buildSafeguardData = (): CreateSafeguardSchema => ({
-        impactMetric: {
-            metricName,
-            timeRange,
-            aggregationMode,
-            labelSelectors: {
-                appName: [appName],
-            },
-        },
-        triggerCondition: {
-            operator,
-            threshold: Number(threshold),
-        },
-    });
-
     return {
-        metricName,
-        setMetricName,
+        metric,
+        setMetric,
         appName,
         setAppName,
         aggregationMode,
@@ -147,7 +155,6 @@ const useSafeguardFormValues = (safeguard?: ISafeguard) => {
         timeRange,
         setTimeRange,
         resetToOriginalValues,
-        buildSafeguardData,
         initialValues,
     };
 };
@@ -174,14 +181,18 @@ const useSafeguardMetricsData = (
     metricName: string,
     timeRange: MetricQuerySchemaTimeRange,
     aggregationMode: MetricQuerySchemaAggregationMode,
+    environment: string,
+    source?: MetricSource,
 ) => {
     const { metricOptions, loading } = useImpactMetricsOptions();
     const { data: metricsData } = useImpactMetricsData(
         metricName
             ? {
-                  series: metricName,
+                  metricName,
                   range: timeRange,
                   aggregationMode: aggregationMode,
+                  source,
+                  mode: 'edit',
               }
             : undefined,
     );
@@ -191,24 +202,37 @@ const useSafeguardMetricsData = (
         return ['*', ...appNames];
     }, [metricsData?.labels?.appName]);
 
-    const metricType = getMetricType(metricName, metricsData?.labels?.type);
+    const metricType = getMetricType(
+        metricName,
+        metricsData?.labels?.metric_type,
+    );
+
+    // External Prometheus metrics may not have an environment label —
+    // only filter by environment when the metric actually exposes one.
+    // When the label exists, always filter by the current environment even
+    // if it's not in the values list — showing unfiltered data from other
+    // environments (e.g. development data in production) would be misleading.
+    const metricEnvironment = metricsData?.labels?.environment
+        ? environment
+        : undefined;
 
     return {
         metricOptions,
         loading,
         applicationNames,
         metricType,
+        metricEnvironment,
     };
 };
 
 const useSafeguardFormHandlers = (
     formValues: ReturnType<typeof useSafeguardFormValues>,
     formMode: ReturnType<typeof useSafeguardFormMode>,
-    metricOptions: MetricOption[],
+    metricOptions: ImpactMetric[],
     metricType: MetricType,
 ) => {
     const {
-        setMetricName,
+        setMetric,
         setAppName,
         setAggregationMode,
         setOperator,
@@ -216,29 +240,32 @@ const useSafeguardFormHandlers = (
         setTimeRange,
     } = formValues;
     const { enterEditMode } = formMode;
-    const initialMetricName = formValues.initialValues.metricName;
+    const initialMetricName = formValues.initialValues.metric.metricName;
 
     // Auto-select first metric when options become available
     useEffect(() => {
-        if (metricOptions.length > 0 && !formValues.metricName) {
-            setMetricName(metricOptions[0].name);
+        if (metricOptions.length > 0 && !formValues.metric.metricName) {
+            setMetric({
+                metricName: metricOptions[0].name,
+                source: metricOptions[0].source,
+            });
         }
-    }, [metricOptions, formValues.metricName, setMetricName]);
+    }, [metricOptions, formValues.metric.metricName, setMetric]);
 
     // Set default aggregation when metric type becomes known
     // Skip when metric hasn't changed from initial (existing safeguard opened)
     useEffect(() => {
         if (
-            formValues.metricName !== initialMetricName &&
+            formValues.metric.metricName !== initialMetricName &&
             metricType !== 'unknown'
         ) {
             setAggregationMode(getDefaultAggregation(metricType));
         }
-    }, [formValues.metricName, initialMetricName, metricType]);
+    }, [formValues.metric.metricName, initialMetricName, metricType]);
 
-    const handleMetricChange = (value: string) => {
+    const handleMetricChange = (selection: MetricSelection) => {
         enterEditMode();
-        setMetricName(value);
+        setMetric(selection);
         setAppName('*');
     };
 
@@ -284,14 +311,18 @@ const useSafeguardFormHandlers = (
 const useSafeguardFormState = (
     safeguard: ISafeguard | undefined,
     featureId: string,
+    environment: string,
+    onSubmit: (data: CreateSafeguardSchema) => void,
 ) => {
     const projectId = useRequiredPathParam('projectId');
     const formValues = useSafeguardFormValues(safeguard);
     const formMode = useSafeguardFormMode(safeguard);
     const metricsData = useSafeguardMetricsData(
-        formValues.metricName,
+        formValues.metric.metricName,
         formValues.timeRange,
         formValues.aggregationMode,
+        environment,
+        formValues.metric.source,
     );
     const handlers = useSafeguardFormHandlers(
         formValues,
@@ -300,6 +331,53 @@ const useSafeguardFormState = (
         metricsData.metricType,
     );
 
+    const labelSelectors = useMemo(
+        () =>
+            buildLabelSelectors(
+                formValues.appName,
+                metricsData.metricEnvironment,
+            ),
+        [formValues.appName, metricsData.metricEnvironment],
+    );
+
+    const safeguardData: CreateSafeguardSchema = useMemo(
+        () => ({
+            impactMetric: {
+                metricName: formValues.metric.metricName,
+                timeRange: formValues.timeRange,
+                aggregationMode: formValues.aggregationMode,
+                labelSelectors,
+                source: formValues.metric.source ?? 'internal',
+            },
+            triggerCondition: {
+                operator: formValues.operator,
+                threshold: Number(formValues.threshold),
+            },
+        }),
+        [
+            formValues.metric,
+            formValues.timeRange,
+            formValues.aggregationMode,
+            labelSelectors,
+            formValues.operator,
+            formValues.threshold,
+        ],
+    );
+
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault();
+
+        if (Number.isNaN(Number(formValues.threshold))) {
+            return;
+        }
+
+        onSubmit(safeguardData);
+
+        if (formMode.mode === 'edit' || formMode.mode === 'create') {
+            formMode.setMode('display');
+        }
+    };
+
     return {
         ...formValues,
         ...formMode,
@@ -307,7 +385,8 @@ const useSafeguardFormState = (
         ...handlers,
         projectId,
         featureId,
-        safeguard,
+        labelSelectors,
+        handleSubmit,
     };
 };
 
@@ -320,6 +399,7 @@ interface SafeguardFormBaseProps {
     badge?: ReactNode;
     children?: React.ReactNode;
     safeguardType?: SafeguardType;
+    headerAction?: ReactNode;
 }
 
 const safeguardTypeLabel: Record<SafeguardType, string> = {
@@ -336,9 +416,10 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
     badge,
     children,
     safeguardType = 'releasePlan',
+    headerAction,
 }) => {
     const {
-        metricName,
+        metric,
         appName,
         aggregationMode,
         operator,
@@ -360,6 +441,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
         handleTimeRangeChange,
         resetToOriginalValues,
         enterEditMode,
+        labelSelectors,
     } = formState;
 
     const permission =
@@ -385,20 +467,10 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
 
     const showButtons = mode === 'create' || mode === 'edit';
 
-    const labelSelectors = useMemo((): Record<string, string[]> => {
-        const selectors: Record<string, string[]> = {
-            environment: [environment],
-        };
-
-        if (appName !== '*') {
-            selectors.appName = [appName];
-        }
-
-        return selectors;
-    }, [appName, environment]);
-
     const miniChartMetricDisplayName = metricOptions.find(
-        (m) => m.name === metricName,
+        (m) =>
+            m.name === metric.metricName &&
+            m.source === (metric.source ?? 'internal'),
     )?.displayName;
 
     const {
@@ -419,9 +491,10 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                     {safeguardTypeLabel[safeguardType]}
                 </StyledLabel>
                 {mode === 'display' && badge}
-                {metricName && (
+                {headerAction}
+                {metric.metricName && (
                     <MiniMetricsChartWithTooltip
-                        metricName={metricName}
+                        metricName={metric.metricName}
                         metricDisplayName={miniChartMetricDisplayName}
                         timeRange={timeRange}
                         labelSelectors={labelSelectors}
@@ -429,6 +502,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                         threshold={threshold}
                         projectId={projectId}
                         featureId={featureId}
+                        source={metric.source}
                     />
                 )}
                 {mode !== 'create' && onDelete && (
@@ -437,14 +511,14 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                         projectId={projectId}
                         environmentId={environment}
                         onClick={handleDelete}
-                        size='small'
+                        size='medium'
                         aria-label='Remove safeguard'
                         tooltipProps={{
                             title: 'Remove safeguard',
                         }}
                         sx={{ padding: 0.5 }}
                     >
-                        <DeleteOutlineIcon fontSize='small' />
+                        <DeleteOutlineIcon />
                     </PermissionIconButton>
                 )}
             </StyledTopRow>
@@ -453,11 +527,13 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                 <SafeguardConfigurationSection>
                     <StyledTopRow sx={{ ml: 3, mb: 1.5 }}>
                         <MetricSelector
-                            value={metricName}
+                            value={metric.metricName}
+                            valueSource={metric.source}
                             onChange={handleMetricChange}
                             options={metricOptions}
                             loading={loading}
                             label=''
+                            entryPoint='flag-safeguards'
                         />
 
                         <StyledTopRow>
@@ -519,9 +595,6 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                             <FormControl variant='outlined' size='small'>
                                 <TextField
                                     type='number'
-                                    inputProps={{
-                                        step: 0.1,
-                                    }}
                                     value={thresholdInputValue}
                                     onChange={handleThresholdInputChange}
                                     onFocus={handleThresholdFocus}
@@ -531,6 +604,11 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                                     variant='outlined'
                                     size='small'
                                     required
+                                    slotProps={{
+                                        htmlInput: {
+                                            step: 0.1,
+                                        },
+                                    }}
                                 />
                             </FormControl>
                         </StyledTopRow>
@@ -558,7 +636,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                     <Button
                         variant='outlined'
                         onClick={handleCancel}
-                        size='small'
+                        size='medium'
                     >
                         Cancel
                     </Button>
@@ -568,7 +646,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                         environmentId={environment}
                         variant='contained'
                         color='primary'
-                        size='small'
+                        size='medium'
                         type='submit'
                         disabled={Number.isNaN(Number(threshold))}
                     >
@@ -581,7 +659,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
     );
 };
 
-export const SafeguardFormDirect: FC<IBaseSafeguardFormProps> = ({
+export const SafeguardForm: FC<IBaseSafeguardFormProps> = ({
     onSubmit,
     onCancel,
     onDelete,
@@ -590,75 +668,25 @@ export const SafeguardFormDirect: FC<IBaseSafeguardFormProps> = ({
     featureId,
     badge,
     safeguardType,
+    headerAction,
 }) => {
-    const formState = useSafeguardFormState(safeguard, featureId);
-    const { mode, setMode, buildSafeguardData, threshold } = formState;
-
-    const handleSubmit = (e: FormEvent) => {
-        e.preventDefault();
-
-        if (Number.isNaN(Number(threshold))) {
-            return;
-        }
-
-        onSubmit(buildSafeguardData());
-
-        // Show changes immediately
-        if (mode === 'edit' || mode === 'create') {
-            setMode('display');
-        }
-    };
+    const formState = useSafeguardFormState(
+        safeguard,
+        featureId,
+        environment,
+        onSubmit,
+    );
 
     return (
         <SafeguardFormBase
             formState={formState}
-            onSubmit={handleSubmit}
+            onSubmit={formState.handleSubmit}
             onCancel={onCancel}
             onDelete={onDelete}
             environment={environment}
             badge={badge}
             safeguardType={safeguardType}
-        />
-    );
-};
-
-export const SafeguardFormChangeRequestView: FC<
-    Omit<IBaseSafeguardFormProps, 'onCancel'>
-> = ({
-    onSubmit,
-    onDelete,
-    safeguard,
-    environment,
-    featureId,
-    badge,
-    safeguardType,
-}) => {
-    const formState = useSafeguardFormState(safeguard, featureId);
-    const { mode, setMode, buildSafeguardData, threshold } = formState;
-
-    const handleSubmit = (e: FormEvent) => {
-        e.preventDefault();
-
-        if (Number.isNaN(Number(threshold))) {
-            return;
-        }
-
-        onSubmit(buildSafeguardData());
-
-        // Keep changes visible in CR view
-        if (mode === 'edit' || mode === 'create') {
-            setMode('display');
-        }
-    };
-
-    return (
-        <SafeguardFormBase
-            formState={formState}
-            onSubmit={handleSubmit}
-            onDelete={onDelete}
-            environment={environment}
-            badge={badge}
-            safeguardType={safeguardType}
+            headerAction={headerAction}
         />
     );
 };

@@ -165,7 +165,7 @@ const EditFeatureForm: React.FC<IFeatureToggleForm> = ({
                     <Link
                         target='_blank'
                         rel='noopener noreferrer'
-                        href='https://docs.getunleash.io/advanced/impression_data'
+                        href='https://docs.getunleash.io/concepts/impression-data'
                     >
                         the impression data documentation
                     </Link>

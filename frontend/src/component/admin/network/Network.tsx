@@ -1,7 +1,7 @@
 import { lazy } from 'react';
 
 import { Tab, Tabs } from '@mui/material';
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router';
 import { TabLink } from 'component/common/TabNav/TabLink';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { useUiFlag } from 'hooks/useUiFlag';

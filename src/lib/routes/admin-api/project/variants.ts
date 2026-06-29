@@ -67,6 +67,7 @@ export default class VariantsController extends Controller {
                     summary: 'Get variants for a feature in an environment',
                     description: `Returns the variants for a feature in a specific environment. If the feature has no variants it will return an empty array of variants`,
                     tags: ['Features'],
+                    release: { stable: '4.18.0' },
                     operationId: 'getEnvironmentFeatureVariants',
                     responses: {
                         200: createResponseSchema('featureVariantsSchema'),
@@ -85,6 +86,7 @@ export default class VariantsController extends Controller {
                     summary: "Patch a feature's variants in an environment",
                     description: `Apply a list of patches to the features environments in the specified environment. The patch objects should conform to the [JSON-patch format (RFC 6902)](https://www.rfc-editor.org/rfc/rfc6902).`,
                     tags: ['Features'],
+                    release: { stable: '4.18.0' },
                     operationId: 'patchEnvironmentsFeatureVariants',
                     requestBody: createRequestSchema('patchesSchema'),
                     responses: {
@@ -112,6 +114,7 @@ The backend will validate the input for the following invariants:
 
 The backend will also distribute remaining weight up to 1000 after adding the variants with \`weightType: fix\` together amongst the variants of \`weightType: variable\``,
                     tags: ['Features'],
+                    release: { stable: '4.18.0' },
                     operationId: 'overwriteEnvironmentFeatureVariants',
                     requestBody: createRequestSchema('variantsSchema'),
                     responses: {
@@ -129,6 +132,7 @@ The backend will also distribute remaining weight up to 1000 after adding the va
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
+                    release: { stable: '4.20.0' },
                     operationId: 'overwriteFeatureVariantsOnEnvironments',
                     summary:
                         'Create (overwrite) variants for a feature flag in multiple environments',

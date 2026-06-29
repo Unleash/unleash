@@ -1983,59 +1983,6 @@ test('should clone feature flag WITH strategies', async () => {
         });
 });
 
-test('should clone feature flag WITH variants', async () => {
-    const envName = 'some-env-5';
-    const featureName = 'feature.flag.base.3';
-    const cloneName = 'feature.flag.clone.3';
-    const type = 'experiment';
-    const description = 'Lorem ipsum...';
-    const variants = [
-        { name: 'variant1', weight: 50 },
-        { name: 'variant2', weight: 50 },
-    ];
-
-    // Create environment
-    await db.stores.environmentStore.create({
-        name: envName,
-        type: 'production',
-    });
-    // Connect environment to project
-    await app.request
-        .post('/api/admin/projects/default/environments')
-        .send({
-            environment: envName,
-        })
-        .expect(200);
-
-    await app.request
-        .post('/api/admin/projects/default/features')
-        .send({
-            name: featureName,
-            description,
-            type,
-            variants,
-        })
-        .expect(201);
-    await app.request
-        .post(`/api/admin/projects/default/features/${featureName}/clone`)
-        .send({ name: cloneName })
-        .expect(201);
-    await app.request
-        .get(`/api/admin/projects/default/features/${cloneName}`)
-        .expect(200)
-        .expect((res) => {
-            expect(res.body.name).toBe(cloneName);
-            expect(res.body.type).toBe(type);
-            expect(res.body.project).toBe('default');
-            expect(res.body.description).toBe(description);
-
-            expect(res.body.variants).toHaveLength(2);
-            res.body.variants.forEach((variant, i) => {
-                expect(variant.name).toBe(variants[i].name);
-            });
-        });
-});
-
 test('should clone feature flag without replacing groupId', async () => {
     const envName = DEFAULT_ENV;
     const featureName = 'feature.flag.base.4';

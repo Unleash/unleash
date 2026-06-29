@@ -15,6 +15,7 @@ import type {
 import {
     constraintReducer,
     type ConstraintUpdateAction,
+    type EditableConstraintWithDeletedLegalValues,
 } from './constraint-reducer.ts';
 import {
     constraintValidator,
@@ -63,10 +64,10 @@ export const useEditableConstraint = (
     constraint: IConstraint,
     onUpdate: (constraint: IConstraint) => void,
 ): EditableConstraintState => {
-    const [constraintState, updateConstraint] = useReducer(
-        constraintReducer,
-        fromIConstraint(constraint),
-    );
+    const [constraintState, updateConstraint] = useReducer<
+        EditableConstraintWithDeletedLegalValues,
+        [ConstraintUpdateAction]
+    >(constraintReducer, fromIConstraint(constraint));
     const { deletedLegalValues, localConstraint } = useMemo(() => {
         const { deletedLegalValues, ...localConstraint } = constraintState;
         return { deletedLegalValues, localConstraint };

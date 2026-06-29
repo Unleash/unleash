@@ -30,6 +30,7 @@ const Input = ({
     value,
     onChange,
     size = 'small',
+    slotProps,
     ...rest
 }: IInputProps) => {
     const { classes: styles } = useStyles();
@@ -46,14 +47,17 @@ const Input = ({
                 className={className ? className : ''}
                 value={value}
                 onChange={onChange}
-                FormHelperTextProps={{
-                    'data-testid': INPUT_ERROR_TEXT,
-                    title: errorText,
-                    classes: {
-                        root: styles.helperText,
-                    },
-                }}
                 {...rest}
+                slotProps={{
+                    formHelperText: {
+                        'data-testid': INPUT_ERROR_TEXT,
+                        title: errorText,
+                        classes: {
+                            root: styles.helperText,
+                        },
+                    },
+                    ...slotProps,
+                }}
             />
         </StyledDiv>
     );

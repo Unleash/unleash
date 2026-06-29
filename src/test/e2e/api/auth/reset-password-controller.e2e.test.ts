@@ -17,8 +17,8 @@ import { EmailService } from '../../../../lib/services/email-service.js';
 import SessionStore from '../../../../lib/db/session-store.js';
 import SessionService from '../../../../lib/services/session-service.js';
 import { RoleName } from '../../../../lib/types/model.js';
-import SettingService from '../../../../lib/services/setting-service.js';
-import FakeSettingStore from '../../../fixtures/fake-setting-store.js';
+import SettingService from '../../../../lib/features/settings/setting-service.js';
+import FakeSettingStore from '../../../../lib/features/settings/fake-setting-store.js';
 import { GroupService } from '../../../../lib/services/group-service.js';
 import {
     type IUnleashStores,

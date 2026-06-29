@@ -123,3 +123,22 @@ test('clientMetricsSchema should accept null variants and default to empty objec
     expect(error).toBeUndefined();
     expect(value.bucket.toggles.Demo.variants).toEqual({});
 });
+
+test('clientMetricsSchema should allow omitted bucket (impact-metrics-only request)', () => {
+    const { error, value } = clientMetricsSchema.validate({
+        appName: 'test',
+    });
+
+    expect(error).toBeUndefined();
+    expect(value.bucket).toBeUndefined();
+});
+
+test('clientMetricsSchema should allow null bucket', () => {
+    const { error, value } = clientMetricsSchema.validate({
+        appName: 'test',
+        bucket: null,
+    });
+
+    expect(error).toBeUndefined();
+    expect(value.bucket).toBeUndefined();
+});

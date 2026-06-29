@@ -49,6 +49,7 @@ export default class PlaygroundController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
+                    release: { stable: '4.14.0' },
                     operationId: 'getPlayground',
                     tags: ['Playground'],
                     responses: {
@@ -71,6 +72,7 @@ export default class PlaygroundController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
+                    release: { stable: '5.2.0' },
                     operationId: 'getAdvancedPlayground',
                     tags: ['Playground'],
                     responses: {

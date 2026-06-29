@@ -1,5 +1,5 @@
 import { styled, useTheme, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';

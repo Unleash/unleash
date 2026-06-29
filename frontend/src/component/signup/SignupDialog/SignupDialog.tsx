@@ -7,6 +7,7 @@ import {
     Typography,
 } from '@mui/material';
 import { type ComponentType, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { SignupDialogSetPassword } from './SignupDialogSetPassword/SignupDialogSetPassword.tsx';
 import { SignupDialogAccountDetails } from './SignupDialogAccountDetails.tsx';
 import { SignupDialogInviteOthers } from './SignupDialogInviteOthers.tsx';
@@ -15,11 +16,14 @@ import { type SubmitSignupData, useSignupApi } from '../hooks/useSignupApi.ts';
 import useToast from 'hooks/useToast.tsx';
 import { formatUnknownError } from 'utils/formatUnknownError.ts';
 import textureImage from 'assets/img/texture-signup.png';
-import { ReactComponent as Heart } from 'assets/icons/heart.svg';
+import Heart from 'assets/icons/heart.svg?react';
 import { formatAssetPath } from 'utils/formatPath.ts';
 import { SignupDialogComplete } from './SignupDialogComplete.tsx';
-import { useWelcomeDialogContext } from 'component/personalDashboard/WelcomeDialogContext.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
+import { useEventTracker } from 'hooks/useEventTracker.ts';
+import {
+    DEFAULT_PROJECT_ID,
+    useDefaultProjectId,
+} from 'hooks/api/getters/useDefaultProject/useDefaultProjectId.ts';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -216,11 +220,12 @@ const SIGNUP_STEPS: SignupStep[] = [
 ];
 
 export const SignupDialog = () => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { setToastApiError } = useToast();
-    const { setWelcomeDialog } = useWelcomeDialogContext();
     const { signupData, signupRequired, refetch } = useSignup();
     const { submitSignupData } = useSignupApi();
+    const navigate = useNavigate();
+    const defaultProjectId = useDefaultProjectId();
 
     const [data, setData] = useState<SubmitSignupData>({
         password: '',
@@ -281,17 +286,13 @@ export const SignupDialog = () => {
             setIsSubmitting(true);
             await submitSignupData(data);
             refetch();
-            setWelcomeDialog('open');
+            navigate(`/projects/${defaultProjectId ?? DEFAULT_PROJECT_ID}`);
         } catch (e: unknown) {
             const error = formatUnknownError(e);
             setToastApiError(error);
             setError(error);
 
-            trackEvent('signup-dialog-error', {
-                props: {
-                    error,
-                },
-            });
+            trackEvent('signup-dialog-error', { props: { error } });
         } finally {
             setIsSubmitting(false);
         }
@@ -320,12 +321,14 @@ export const SignupDialog = () => {
             </StyledAside>
             <StyledBody>
                 {!currentStep.isCustom && (
-                    <StyledHeader>
+                    <StyledHeader data-public>
                         <StyledTitle>{currentStep.title}</StyledTitle>
                         <Typography
                             variant='body2'
-                            color='text.secondary'
-                            sx={{ whiteSpace: 'pre-line' }}
+                            sx={{
+                                color: 'text.secondary',
+                                whiteSpace: 'pre-line',
+                            }}
                         >
                             {currentStep.description}
                         </Typography>

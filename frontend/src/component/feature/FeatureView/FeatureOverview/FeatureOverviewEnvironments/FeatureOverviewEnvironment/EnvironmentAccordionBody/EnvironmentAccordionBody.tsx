@@ -1,6 +1,8 @@
 import {
     type DragEventHandler,
     type RefObject,
+    Suspense,
+    lazy,
     useEffect,
     useState,
 } from 'react';
@@ -16,8 +18,9 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import usePagination from 'hooks/usePagination';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { useImpactMetricsEnabled } from 'component/impact-metrics/hooks/useImpactMetricsEnabled';
 import { useFeatureReleasePlans } from 'hooks/api/getters/useFeatureReleasePlans/useFeatureReleasePlans';
 import { ReleasePlan } from '../../../ReleasePlan/ReleasePlan.tsx';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
@@ -28,7 +31,8 @@ import {
     strategyBackground,
 } from 'component/common/StrategyList/StrategyListItem';
 import { StrategyList } from 'component/common/StrategyList/StrategyList';
-import { Safeguard } from './Safeguard.tsx';
+
+const LazySafeguard = lazy(() => import('./Safeguard.tsx'));
 
 interface IEnvironmentAccordionBodyProps {
     isDisabled: boolean;
@@ -69,8 +73,8 @@ export const EnvironmentAccordionBody = ({
     );
     const { releasePlans, refetch: refetchReleasePlans } =
         useFeatureReleasePlans(projectId, featureId, featureEnvironment?.name);
-    const { trackEvent } = usePlausibleTracker();
-    const safeguardsEnabled = useUiFlag('safeguards');
+    const { trackEvent } = useEventTracker();
+    const safeguardsEnabled = useImpactMetricsEnabled();
     const [dragItem, setDragItem] = useState<{
         id: string;
         index: number;
@@ -145,7 +149,7 @@ export const EnvironmentAccordionBody = ({
 
     const onDragStartRef =
         (
-            ref: RefObject<HTMLDivElement>,
+            ref: RefObject<HTMLDivElement | null>,
             index: number,
         ): DragEventHandler<HTMLButtonElement> =>
         (event) => {
@@ -165,7 +169,7 @@ export const EnvironmentAccordionBody = ({
     const onDragOver =
         (targetId: string) =>
         (
-            ref: RefObject<HTMLDivElement>,
+            ref: RefObject<HTMLDivElement | null>,
             targetIndex: number,
         ): DragEventHandler<HTMLDivElement> =>
         (event) => {
@@ -229,13 +233,15 @@ export const EnvironmentAccordionBody = ({
                 </AlertContainer>
             ) : null}
             {safeguardsEnabled ? (
-                <Safeguard
-                    featureEnvSafeguard={featureEnvironment.safeguards?.[0]}
-                    releasePlan={firstPlan}
-                    environmentName={featureEnvironment.name}
-                    featureId={featureId}
-                    onSafeguardChange={handleSafeguardChange}
-                />
+                <Suspense fallback={null}>
+                    <LazySafeguard
+                        featureEnvSafeguard={featureEnvironment.safeguards?.[0]}
+                        releasePlan={firstPlan}
+                        environmentName={featureEnvironment.name}
+                        featureId={featureId}
+                        onSafeguardChange={handleSafeguardChange}
+                    />
+                </Suspense>
             ) : null}
             <StrategyList>
                 {releasePlans.map((plan) => (

@@ -1,3 +1,4 @@
+import { createUuid } from 'utils/createUuid';
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import type { IReleasePlanMilestonePayload } from 'interfaces/releasePlans';
@@ -12,7 +13,7 @@ export const useTemplateForm = (
     initialName = '',
     initialDescription = '',
     initialMilestones: IExtendedMilestonePayload[] = [
-        { id: crypto.randomUUID(), name: 'Milestone 1', sortOrder: 0 },
+        { id: createUuid(), name: 'Milestone 1', sortOrder: 0 },
     ],
 ) => {
     const templateId = useOptionalPathParam('templateId');

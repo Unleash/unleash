@@ -5,7 +5,6 @@ import Controller from './controller.js';
 import type { IAuthRequest } from './unleash-types.js';
 import type { IUnleashServices } from '../services/index.js';
 import type SessionService from '../services/session-service.js';
-import type { IFlagResolver } from '../types/experimental.js';
 
 class LogoutController extends Controller {
     private clearSiteDataOnLogout: boolean;
@@ -16,8 +15,6 @@ class LogoutController extends Controller {
 
     private sessionService: SessionService;
 
-    private flagResolver: IFlagResolver;
-
     constructor(
         config: IUnleashConfig,
         { sessionService }: Pick<IUnleashServices, 'sessionService'>,
@@ -27,7 +24,6 @@ class LogoutController extends Controller {
         this.baseUri = config.server.baseUriPath;
         this.clearSiteDataOnLogout = config.session.clearSiteDataOnLogout;
         this.cookieName = config.session.cookieName;
-        this.flagResolver = config.flagResolver;
 
         this.route({
             method: 'post',
@@ -75,10 +71,7 @@ class LogoutController extends Controller {
         if (req.user?.id) {
             await this.sessionService.deleteSessionsForUser(req.user.id);
         }
-        const redirectPath = this.flagResolver.isEnabled('newSignOut')
-            ? `${this.baseUri}/signed-out`
-            : `${this.baseUri}/`;
-        res.redirect(redirectPath);
+        res.redirect(`${this.baseUri}/signed-out`);
     }
 
     private isReqLogoutWithoutCallback(

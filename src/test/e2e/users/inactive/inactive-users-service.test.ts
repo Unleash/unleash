@@ -10,7 +10,7 @@ import {
 } from '../../../../lib/services/index.js';
 import ResetTokenService from '../../../../lib/services/reset-token-service.js';
 import SessionService from '../../../../lib/services/session-service.js';
-import SettingService from '../../../../lib/services/setting-service.js';
+import SettingService from '../../../../lib/features/settings/setting-service.js';
 import UserService from '../../../../lib/services/user-service.js';
 import {
     ADMIN,

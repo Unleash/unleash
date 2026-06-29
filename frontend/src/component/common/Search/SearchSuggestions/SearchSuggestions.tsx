@@ -8,13 +8,13 @@ import {
     getFilterValues,
     type IGetSearchContextOutput,
 } from 'hooks/useSearch';
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { SearchDescription } from './SearchDescription/SearchDescription.tsx';
 import {
     SearchInstructions,
     StyledCode,
 } from './SearchInstructions/SearchInstructions.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { onEnter } from './onEnter.ts';
 import { SearchHistory } from './SearchHistory.tsx';
 import { SearchPaper } from '../Search.tsx';
@@ -45,12 +45,12 @@ interface SearchSuggestionsProps {
 
 const quote = (item: string) => (item.includes(' ') ? `"${item}"` : item);
 
-export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
+export const SearchSuggestions: FC<SearchSuggestionsProps> = ({
     getSearchContext,
     onSuggestion,
     savedQuery,
 }) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const searchContext = getSearchContext();
 
     const filters = getFilterableColumns(searchContext.columns)

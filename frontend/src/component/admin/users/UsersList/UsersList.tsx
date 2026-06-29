@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
+import { TablePlaceholder } from 'component/common/Table';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import ChangePassword from './ChangePassword/ChangePassword.tsx';
 import ResetPassword from './ResetPassword/ResetPassword.tsx';
 import DeleteUser from './DeleteUser/DeleteUser.tsx';
@@ -18,11 +19,16 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Button, IconButton, Tooltip, useMediaQuery } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { UserTypeCell } from './UserTypeCell/UserTypeCell.tsx';
-import { useFlexLayout, useSortBy, useTable } from 'react-table';
-import { sortTypes } from 'utils/sortTypes';
+import {
+    type ColumnDef,
+    getCoreRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
+import { sortingFns } from 'utils/sortingFns';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import theme from 'themes/theme';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
@@ -41,14 +47,11 @@ import { useScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettin
 import { UserSessionsCell } from './UserSessionsCell/UserSessionsCell.tsx';
 import { UsersHeader } from '../UsersHeader/UsersHeader.tsx';
 import { UpgradeSSO } from './UpgradeSSO.tsx';
+import { AccessRequestsTable } from './AccessRequestsTable/AccessRequestsTable.tsx';
 
 const UsersList = () => {
     const navigate = useNavigate();
-    const {
-        isEnterprise,
-        isOss,
-        uiConfig: { resourceLimits },
-    } = useUiConfig();
+    const { isEnterprise, isOss } = useUiConfig();
     const { users, roles, refetch, loading } = useUsers();
     const { setToastData, setToastApiError } = useToast();
     const { removeUser, userLoading, userApiErrors } = useAdminUsersApi();
@@ -64,9 +67,6 @@ const UsersList = () => {
     });
     const showUserDeviceCount = useUiFlag('showUserDeviceCount');
     const showSSOUpgrade = isOss() && users.length > 3;
-
-    const showSeatTypes =
-        useUiFlag('readOnlyUsersUI') && resourceLimits.readOnlyUsers;
 
     const {
         settings: { enabled: scimEnabled },
@@ -127,103 +127,90 @@ const UsersList = () => {
         setInviteLink('');
     };
 
-    const columns = useMemo(
+    const columns = useMemo<ColumnDef<IUser, unknown>[]>(
         () => [
             {
-                Header: 'Avatar',
-                accessor: 'imageUrl',
-                Cell: ({ row: { original: user } }: any) => (
+                id: 'imageUrl',
+                header: 'Avatar',
+                accessorKey: 'imageUrl',
+                cell: ({ row: { original: user } }) => (
                     <TextCell>
                         <UserAvatar user={user} />
                     </TextCell>
                 ),
-                disableSortBy: true,
-                maxWidth: 80,
+                enableSorting: false,
+                meta: { maxWidth: 80 },
             },
             {
                 id: 'name',
-                Header: 'Name',
-                accessor: (row: any) => row.name || '',
-                minWidth: 180,
-                Cell: ({ row: { original: user } }: any) => (
+                header: 'Name',
+                accessorFn: (row) => row.name || '',
+                cell: ({ row: { original: user } }) => (
                     <HighlightCell
-                        value={user.name}
+                        value={user.name ?? ''}
                         subtitle={user.email || user.username}
                     />
                 ),
-                searchable: true,
+                meta: { minWidth: 180, searchable: true },
             },
             ...(showUserDeviceCount
                 ? [
                       {
                           id: 'warning',
-                          Header: ' ',
-                          accessor: (row: any) => row.name || '',
-                          maxWidth: 40,
-                          Cell: ({ row: { original: user } }: any) => (
+                          header: ' ',
+                          accessorFn: (row: IUser) => row.name || '',
+                          cell: ({ row: { original: user } }) => (
                               <UserSessionsCell count={user.activeSessions} />
                           ),
-                          searchable: false,
-                          disableSortBy: true,
-                      },
+                          enableSorting: false,
+                          meta: { maxWidth: 40 },
+                      } satisfies ColumnDef<IUser, unknown>,
                   ]
                 : []),
             {
                 id: 'role',
-                Header: 'Role',
-                accessor: (row: any) =>
+                header: 'Role',
+                accessorFn: (row) =>
                     roles.find((role: IRole) => role.id === row.rootRole)
                         ?.name || '',
-                Cell: ({
-                    row: { original: user },
-                    value,
-                }: {
-                    row: { original: IUser };
-                    value: string;
-                }) => <RoleCell value={value} role={user.rootRole} />,
-                maxWidth: 120,
+                cell: ({ getValue, row: { original: user } }) => (
+                    <RoleCell
+                        value={String(getValue() ?? '')}
+                        role={user.rootRole}
+                    />
+                ),
+                meta: { maxWidth: 120 },
             },
             {
-                Header: 'Created',
-                accessor: 'createdAt',
-                Cell: DateCell,
-                width: 120,
-                maxWidth: 120,
+                id: 'createdAt',
+                header: 'Created',
+                accessorKey: 'createdAt',
+                cell: DateCell,
+                meta: { width: 120, maxWidth: 120 },
             },
             {
                 id: 'last-login',
-                Header: 'Last login',
-                accessor: 'seenAt',
-                Cell: TimeAgoCell,
-                maxWidth: 150,
+                header: 'Last login',
+                accessorKey: 'seenAt',
+                cell: TimeAgoCell,
+                meta: { maxWidth: 150 },
             },
             {
                 id: 'type',
-                Header: 'Type',
-                accessor: 'paid',
-                maxWidth: 100,
-                Cell: ({ row: { original: user } }: any) => (
-                    <UserTypeCell value={isBillingUsers && user.paid} />
+                header: 'Type',
+                accessorKey: 'paid',
+                cell: ({ row: { original: user } }) => (
+                    <UserTypeCell
+                        value={Boolean(isBillingUsers && user.paid)}
+                    />
                 ),
-                sortType: 'boolean',
+                sortingFn: sortingFns.boolean,
+                meta: { maxWidth: 100 },
             },
             {
-                id: 'seatType',
-                Header: 'Seat type',
-                accessor: 'seatType',
-                maxWidth: 100,
-                sortType: 'boolean',
-                Cell: TextCell,
-            },
-            {
-                Header: '',
                 id: 'Actions',
-                align: 'center',
-                Cell: ({
-                    row: { original: user },
-                }: {
-                    row: { original: IUser };
-                }) => (
+                header: '',
+                cell: ({ row: { original: user } }) => (
                     <UsersActionsCell
                         onEdit={() => {
                             navigate(`/admin/users/${user.id}/edit`);
@@ -238,36 +225,40 @@ const UsersList = () => {
                         userId={user.id}
                     />
                 ),
-                width: 80,
-                disableSortBy: true,
+                enableSorting: false,
+                meta: { width: 80, align: 'center' },
             },
             // Always hidden -- for search
             {
-                accessor: 'username',
-                Header: 'Username',
-                searchable: true,
+                id: 'username',
+                header: 'Username',
+                accessorKey: 'username',
+                meta: { searchable: true },
             },
-            // Always hidden -- for search
             {
-                accessor: 'email',
-                Header: 'Email',
-                searchable: true,
+                id: 'email',
+                header: 'Email',
+                accessorKey: 'email',
+                meta: { searchable: true },
             },
         ],
-        [roles, navigate, isBillingUsers, showSeatTypes],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [roles, navigate, isBillingUsers, showUserDeviceCount, scimEnabled],
     );
 
     const initialState = useMemo(() => {
-        return {
-            sortBy: [{ id: 'createdAt', desc: true }],
-            hiddenColumns: [
-                'username',
-                'email',
-                ...(isBillingUsers ? [] : ['type']),
-                ...(showSeatTypes ? [] : ['seatType']),
-            ],
+        const hidden: Record<string, boolean> = {
+            username: false,
+            email: false,
         };
-    }, [isBillingUsers, showSeatTypes]);
+        if (!isBillingUsers) {
+            hidden.type = false;
+        }
+        return {
+            sorting: [{ id: 'createdAt', desc: true }],
+            columnVisibility: hidden,
+        };
+    }, [isBillingUsers]);
 
     const { data, getSearchText } = useSearch(
         columns,
@@ -275,33 +266,27 @@ const UsersList = () => {
         isBillingUsers ? planUsers : users,
     );
 
-    const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
-        {
-            columns: columns as any,
-            data,
-            initialState,
-            sortTypes,
-            autoResetHiddenColumns: false,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            disableMultiSort: true,
-            defaultColumn: {
-                Cell: TextCell,
-            },
+    const table = useReactTable({
+        columns,
+        data,
+        initialState,
+        defaultColumn: {
+            cell: ({ getValue }) => (
+                <TextCell value={String(getValue() ?? '')} />
+            ),
         },
-        useSortBy,
-        useFlexLayout,
-    );
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+        enableMultiSort: false,
+    });
 
     useConditionallyHiddenColumns(
         [
             {
                 condition: !isBillingUsers || isSmallScreen,
                 columns: ['type'],
-            },
-            {
-                condition: !showSeatTypes || isSmallScreen,
-                columns: ['seatType'],
             },
             {
                 condition: isExtraSmallScreen,
@@ -312,16 +297,18 @@ const UsersList = () => {
                 columns: ['createdAt', 'last-login', 'warning'],
             },
         ],
-        setHiddenColumns,
+        table.setColumnVisibility,
         columns,
     );
+
+    const rowCount = table.getRowModel().rows.length;
 
     return (
         <PageContent
             isLoading={loading}
             header={
                 <PageHeader
-                    title={`Users (${rows.length})`}
+                    title={`Users (${rowCount})`}
                     actions={
                         <>
                             <Search
@@ -362,16 +349,13 @@ const UsersList = () => {
                 }
             />
             <UsersHeader />
+            <AccessRequestsTable />
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <VirtualizedTable
-                    rows={rows}
-                    headerGroups={headerGroups}
-                    prepareRow={prepareRow}
-                />
+                <VirtualizedTable tableInstance={table} />
             </SearchHighlightProvider>
 
             <ConditionallyRender
-                condition={rows.length === 0}
+                condition={rowCount === 0}
                 show={
                     <ConditionallyRender
                         condition={searchValue?.length > 0}

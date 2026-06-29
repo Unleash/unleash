@@ -59,9 +59,9 @@ export const EnvironmentsField: FC<IEnvironmentsFieldProps> = ({
                 <TextField {...params} label='Environments' />
             )}
             renderOption={renderOption}
-            renderTags={(value, getTagProps) => {
+            renderValue={(value, getItemProps) => {
                 return value.map((option, index) => {
-                    const { key, ...props } = getTagProps({ index });
+                    const { key, ...props } = getItemProps({ index });
                     return (
                         <Chip
                             size='small'

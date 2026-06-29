@@ -21,7 +21,7 @@
     "paths": {
       "@server/*": ["./../../src/lib/*"]
     },
-    "types": ["cypress"]
+    "types": ["cypress", "node"]
   },
   "include": ["./src", "cypress.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]

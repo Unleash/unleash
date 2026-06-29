@@ -8,7 +8,7 @@ import { useConnectedInstances } from 'hooks/api/getters/useConnectedInstances/u
 import type { ApplicationEnvironmentInstancesSchemaInstancesItem } from '../../../openapi/index.ts';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StringParam, useQueryParam, withDefault } from 'use-query-params';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 const useEnvironments = (application: string) => {
     const { data: applicationOverview } = useApplicationOverview(application);
@@ -35,7 +35,7 @@ const useEnvironments = (application: string) => {
 };
 
 const useTracking = () => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     useEffect(() => {
         trackEvent('sdk-reporting', {
             props: {
@@ -82,8 +82,7 @@ export const ConnectedInstances: FC = () => {
         return connectedInstances.instances.map(map);
     }, [JSON.stringify(connectedInstances), currentEnvironment]);
 
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-        useConnectedInstancesTable(tableData);
+    const { table } = useConnectedInstancesTable(tableData);
 
     return (
         <Box>
@@ -118,14 +117,7 @@ export const ConnectedInstances: FC = () => {
                     }
                 />
             </Box>
-            <ConnectedInstancesTable
-                loading={loading}
-                headerGroups={headerGroups}
-                prepareRow={prepareRow}
-                getTableBodyProps={getTableBodyProps}
-                getTableProps={getTableProps}
-                rows={rows}
-            />
+            <ConnectedInstancesTable loading={loading} table={table} />
         </Box>
     );
 };

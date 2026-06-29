@@ -85,17 +85,19 @@ export const AdvancedPlaygroundEnvironmentCell = ({
                 <Popover
                     open={open}
                     id={`${value}-result-details`}
-                    PaperProps={{
-                        sx: {
-                            borderRadius: `${theme.shape.borderRadiusLarge}px`,
-                            padding: theme.spacing(3),
-                        },
-                    }}
                     onClose={onClose}
                     anchorEl={anchor}
                     anchorOrigin={{
                         vertical: 'bottom',
                         horizontal: -320,
+                    }}
+                    slotProps={{
+                        paper: {
+                            sx: {
+                                borderRadius: `${theme.shape.borderRadiusLarge}px`,
+                                padding: theme.spacing(3),
+                            },
+                        },
                     }}
                 >
                     <Typography variant='subtitle2' sx={{ mb: 3 }}>

@@ -6,12 +6,12 @@ import { TemplateForm } from './TemplateForm/TemplateForm.tsx';
 import { Button, styled } from '@mui/material';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import { RELEASE_PLAN_TEMPLATE_UPDATE } from '@server/types/permissions';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import useReleasePlanTemplatesApi from 'hooks/api/actions/useReleasePlanTemplatesApi/useReleasePlanTemplatesApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 const StyledButtonContainer = styled('div')(() => ({
     marginTop: 'auto',
@@ -27,7 +27,7 @@ export const EditReleasePlanTemplate = () => {
     const { uiConfig, isEnterprise } = useUiConfig();
     const templateId = useRequiredPathParam('templateId');
     const { template, loading, refetch } = useReleasePlanTemplate(templateId);
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     usePageTitle(`Edit release template`);
     const navigate = useNavigate();
     const { setToastApiError, setToastData } = useToast();

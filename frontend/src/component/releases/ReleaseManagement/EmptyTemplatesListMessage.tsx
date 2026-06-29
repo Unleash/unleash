@@ -1,8 +1,8 @@
 import { Button, styled, Typography } from '@mui/material';
 import { RELEASE_PLAN_TEMPLATE_CREATE } from '@server/types/permissions';
-import { ReactComponent as ReleaseTemplateIcon } from 'assets/img/releaseTemplates.svg';
+import ReleaseTemplateIcon from 'assets/img/releaseTemplates.svg?react';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 
 const Container = styled('article')(({ theme }) => ({
     paddingBlock: theme.spacing(5),
@@ -31,15 +31,21 @@ export const EmptyTemplatesListMessage = () => {
             <Typography component='h2' variant='h3'>
                 Get started with release templates
             </Typography>
-            <Typography component='p' color='text.secondary'>
+            <Typography
+                component='p'
+                sx={{
+                    color: 'text.secondary',
+                }}
+            >
                 Control your releases with milestones that can be reused by the
                 entire team.
             </Typography>
             <Buttons>
                 <Button
                     component={Link}
+                    nativeButton={false}
                     sx={{ whiteSpace: 'nowrap' }}
-                    to='https://docs.getunleash.io/reference/release-templates'
+                    to='https://docs.getunleash.io/concepts/release-templates'
                     variant='text'
                     rel='noopener noreferrer'
                     target='_blank'

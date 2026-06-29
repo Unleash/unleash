@@ -56,6 +56,7 @@ class TagController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Tags'],
+                    release: { stable: '4.14.0' },
                     operationId: 'getTags',
                     summary: 'List all tags.',
                     description: 'List all tags available in Unleash.',
@@ -74,6 +75,7 @@ class TagController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Tags'],
+                    release: { stable: '4.14.0' },
                     operationId: 'createTag',
                     summary: 'Create a new tag.',
                     description: 'Create a new tag with the specified data.',
@@ -96,6 +98,7 @@ class TagController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Tags'],
+                    release: { stable: '4.14.0' },
                     operationId: 'getTagsByType',
                     summary: 'List all tags of a given type.',
                     description:
@@ -115,6 +118,7 @@ class TagController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Tags'],
+                    release: { stable: '4.14.0' },
                     operationId: 'getTag',
                     summary: 'Get a tag by type and value.',
                     description:
@@ -135,6 +139,7 @@ class TagController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Tags'],
+                    release: { stable: '4.14.0' },
                     operationId: 'deleteTag',
                     summary: 'Delete a tag.',
                     description:

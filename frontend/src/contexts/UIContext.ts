@@ -10,7 +10,7 @@ interface IUIContext {
     themeMode: themeMode;
 }
 
-export type themeMode = 'light' | 'dark';
+export type themeMode = 'light' | 'dark' | 'system';
 
 export const createEmptyToast = (): IToast => {
     return {

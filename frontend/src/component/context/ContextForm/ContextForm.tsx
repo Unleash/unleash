@@ -202,7 +202,9 @@ export const ContextForm: React.FC<IContextForm> = ({
                         onKeyPress={(e) => onKeyDown(e)}
                         onBlur={() => setValueFocused(false)}
                         onFocus={() => setValueFocused(true)}
-                        inputProps={{ maxLength: 100 }}
+                        slotProps={{
+                            htmlInput: { maxLength: 100 },
+                        }}
                     />
                     <TextField
                         label='Value description (optional)'
@@ -214,7 +216,9 @@ export const ContextForm: React.FC<IContextForm> = ({
                         onKeyPress={(e) => onKeyDown(e)}
                         onBlur={() => setValueFocused(false)}
                         onFocus={() => setValueFocused(true)}
-                        inputProps={{ maxLength: 100 }}
+                        slotProps={{
+                            htmlInput: { maxLength: 100 },
+                        }}
                     />
                     <Button
                         sx={{ gridColumn: 2 }}

@@ -34,7 +34,7 @@ export interface ProjectSchema {
      */
     description?: string | null;
     /** `true` if the project was favorited, otherwise `false`. */
-    favorite: boolean;
+    favorite?: boolean;
     /** The number of features this project has */
     featureCount?: number;
     /**

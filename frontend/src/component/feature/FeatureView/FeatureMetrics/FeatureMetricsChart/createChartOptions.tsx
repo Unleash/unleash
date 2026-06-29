@@ -3,7 +3,7 @@ import 'chartjs-adapter-date-fns';
 import { type ChartOptions, defaults } from 'chart.js';
 import type { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import { formatDateHM, formatDateYMD, formatDateYMDHM } from 'utils/formatDate';
-import type { Theme } from '@mui/material/styles/createTheme';
+import type { Theme } from '@mui/material/styles';
 import type { IPoint } from './createChartData.ts';
 import { daysOrHours } from '../daysOrHours.ts';
 
@@ -22,7 +22,7 @@ export const createChartOptions = (
     _metrics: IFeatureMetricsRaw[],
     hoursBack: number,
     locationSettings: ILocationSettings,
-): ChartOptions<'line'> => {
+): ChartOptions<'bar'> => {
     return {
         locale: locationSettings.locale,
         responsive: true,
@@ -42,13 +42,21 @@ export const createChartOptions = (
                 padding: 10,
                 boxPadding: 5,
                 usePointStyle: true,
+                position: 'nearest',
                 itemSort: (a, b) => {
-                    const order = ['Total requests', 'Exposed', 'Not exposed'];
+                    const order = ['Enabled', 'Not enabled'];
                     const aIndex = order.indexOf(a.dataset.label!);
                     const bIndex = order.indexOf(b.dataset.label!);
                     return aIndex - bIndex;
                 },
                 callbacks: {
+                    beforeBody: (items) => {
+                        const total = items.reduce(
+                            (sum, item) => sum + (item.parsed.y ?? 0),
+                            0,
+                        );
+                        return `${total.toLocaleString(locationSettings.locale)} - Total evaluations`;
+                    },
                     label: (item) => {
                         return `${item.formattedValue} - ${item.dataset.label}`;
                     },
@@ -58,7 +66,7 @@ export const createChartOptions = (
                         ] as unknown as IPoint;
 
                         if (
-                            item.dataset.label !== 'Exposed' ||
+                            item.dataset.label !== 'Enabled' ||
                             data.variants === undefined
                         ) {
                             return '';
@@ -72,12 +80,12 @@ export const createChartOptions = (
                         `Time: ${
                             hoursBack > 48
                                 ? formatDateYMDHM(
-                                      items[0].parsed.x,
+                                      items[0].parsed.x ?? 0,
                                       locationSettings.locale,
                                       'UTC',
                                   )
                                 : formatDateHM(
-                                      items[0].parsed.x,
+                                      items[0].parsed.x ?? 0,
                                       locationSettings.locale,
                                   )
                         }`,
@@ -99,7 +107,7 @@ export const createChartOptions = (
                 display: true,
                 font: {
                     size: 16,
-                    weight: '400',
+                    weight: 400,
                 },
                 color: theme.palette.text.primary,
             },
@@ -107,21 +115,24 @@ export const createChartOptions = (
         scales: {
             y: {
                 type: 'linear',
+                stacked: true,
                 title: {
                     display: true,
                     text: 'Number of requests',
                     color: theme.palette.text.secondary,
                 },
-                // min: 0,
                 suggestedMin: 0,
                 ticks: { precision: 0, color: theme.palette.text.secondary },
                 grid: {
                     color: theme.palette.divider,
-                    borderColor: theme.palette.divider,
+                },
+                border: {
+                    color: theme.palette.divider,
                 },
             },
             x: {
                 type: 'time',
+                stacked: true,
                 time: { unit: hoursBack > 48 ? 'day' : 'hour' },
                 grid: { display: false },
                 ticks: {
@@ -154,5 +165,5 @@ defaults.font = {
     ...defaults.font,
     family: 'Sen',
     size: 13,
-    weight: '400',
+    weight: 400,
 };

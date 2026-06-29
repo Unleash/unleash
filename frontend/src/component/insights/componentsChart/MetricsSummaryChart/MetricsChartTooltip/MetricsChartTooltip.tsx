@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import type { InstanceInsightsSchemaMetricsSummaryTrendsItem } from 'openapi';
 import { Box, Divider, Paper, styled, Typography } from '@mui/material';
 import type { TooltipState } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
@@ -41,7 +41,12 @@ export const InfoSummary = ({
 }: {
     data: { key: string; value: string | number }[];
 }) => (
-    <Box display={'flex'} flexDirection={'row'}>
+    <Box
+        sx={{
+            display: 'flex',
+            flexDirection: 'row',
+        }}
+    >
         {data.map(({ key, value }) => (
             <div style={{ flex: 1, flexDirection: 'column' }} key={key}>
                 <div
@@ -61,7 +66,7 @@ export const InfoSummary = ({
     </Box>
 );
 
-export const MetricsSummaryTooltip: VFC<{ tooltip: TooltipState | null }> = ({
+export const MetricsSummaryTooltip: FC<{ tooltip: TooltipState | null }> = ({
     tooltip,
 }) => {
     const data = tooltip?.dataPoints.map((point) => {
@@ -114,17 +119,17 @@ export const MetricsSummaryTooltip: VFC<{ tooltip: TooltipState | null }> = ({
                     />
                     <InfoLine
                         iconChar={'▣ '}
-                        title={`Total requests: ${(point.value.totalRequests ?? 0).toLocaleString()}`}
+                        title={`Total evaluations: ${(point.value.totalRequests ?? 0).toLocaleString()}`}
                         color={'info'}
                     />
                     <InfoLine
                         iconChar={'▲ '}
-                        title={`Exposed: ${(point.value.totalYes ?? 0).toLocaleString()}`}
+                        title={`Enabled: ${(point.value.totalYes ?? 0).toLocaleString()}`}
                         color={'success'}
                     />
                     <InfoLine
                         iconChar={'▼ '}
-                        title={`Not exposed: ${(point.value.totalNo ?? 0).toLocaleString()}`}
+                        title={`Not enabled: ${(point.value.totalNo ?? 0).toLocaleString()}`}
                         color={'error'}
                     />
                     <ConditionallyRender

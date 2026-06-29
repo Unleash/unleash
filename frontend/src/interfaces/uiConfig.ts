@@ -21,12 +21,19 @@ export interface IUiConfig {
     billing?: 'subscription' | 'pay-as-you-go' | 'enterprise-consumption';
     unleashUrl?: string;
     edgeUrl?: string;
+    logRocketAppId?: string;
     version: string;
     versionInfo?: IVersionInfo;
     links: ILinks[];
     disablePasswordAuth?: boolean;
     emailEnabled?: boolean;
     prometheusAPIAvailable: boolean;
+    impactMetrics?:
+        | 'disabled'
+        | 'unconfigured'
+        | 'external'
+        | 'internal'
+        | 'full';
     maintenanceMode?: boolean;
     frontendApiOrigins?: string[];
     resourceLimits: ResourceLimitsSchema;
@@ -51,7 +58,6 @@ export type UiFlags = {
     personalAccessTokensKillSwitch?: boolean;
     demo?: boolean;
     interactiveDemoKillSwitch?: boolean;
-    googleAuthEnabled?: boolean;
     advancedPlayground?: boolean;
     strategyVariant?: boolean;
     doraMetrics?: boolean;
@@ -76,27 +82,29 @@ export type UiFlags = {
     consumptionModel?: boolean;
     consumptionModelUI?: boolean;
     customMetrics?: boolean;
-    impactMetrics?: boolean;
+    disableImpactMetrics?: boolean;
+    impactViews?: boolean;
+    registerImpactMetrics?: boolean;
     plausibleMetrics?: boolean;
-    milestoneProgression?: boolean;
-
-    safeguards?: boolean;
     oidcPkceSupport?: boolean;
     extendedUsageMetrics?: boolean;
     newInUnleash?: boolean | Variant;
-    gtmReleaseManagement?: boolean;
-    projectContextFields?: boolean;
-    readOnlyUsersUI?: boolean;
     regexConstraintOperator?: boolean;
     semverGteConstraintOperators?: boolean;
     signupDialog?: boolean;
-    updateMilestoneStrategy?: boolean;
-    strategyFormConsolidation?: boolean;
     enterpriseEdgeTokensList?: boolean;
     impactMetricsFlagPage?: boolean;
-    featureEnvSafeguards?: boolean;
-    filterFavorites?: boolean;
-    externalPrometheusImpactMetrics?: boolean;
+    multiMetricChart?: boolean;
+    logRocketEnabled?: boolean;
+    newProjectList?: boolean;
+    newModalDesign?: boolean;
+    archiveInFlagsView?: boolean;
+    newProfileDropdown?: boolean;
+    hideTopmenuDocumentation?: boolean;
+    learningLab?: Variant;
+    accessRequestsNotifications?: boolean;
+    flightRecorderFrontend?: Variant;
+    accessRequestsMenuIndicator?: boolean;
 };
 
 export interface IVersionInfo {

@@ -9,7 +9,7 @@ import {
 } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { Bar } from 'react-chartjs-2';
-import useTheme from '@mui/material/styles/useTheme';
+import { useTheme } from '@mui/material/styles';
 import { type FC, useEffect, useMemo, useState } from 'react';
 import { Box, type Theme, styled, Typography } from '@mui/material';
 import { FeatureMetricsHours } from '../feature/FeatureView/FeatureMetrics/FeatureMetricsHours/FeatureMetricsHours.tsx';
@@ -121,6 +121,8 @@ const useFlagMetrics = (
     environment: string | null,
     hoursBack: number,
 ) => {
+    const theme = useTheme();
+
     const {
         featureMetrics: metrics = [],
         loading,
@@ -144,10 +146,8 @@ const useFlagMetrics = (
     }, [sortedMetrics, environment]);
 
     const data = useMemo(() => {
-        return createChartData(filteredMetrics);
-    }, [filteredMetrics]);
-
-    const theme = useTheme();
+        return createChartData(theme, filteredMetrics);
+    }, [theme, filteredMetrics]);
     const { locationSettings } = useLocationSettings();
     const options = useMemo(() => {
         return createBarChartOptions(theme, hoursBack, locationSettings);

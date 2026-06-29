@@ -1,9 +1,9 @@
-import { useEffect, type VFC } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, type FC } from 'react';
+import { useNavigate } from 'react-router';
 import { Box, Button } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IErrorProps {
@@ -17,9 +17,9 @@ const ZendeskButton = () => {
     return <Button onClick={openZendeskSupport}>Open a ticket</Button>;
 };
 
-export const LayoutError: VFC<IErrorProps> = ({ error }) => {
+export const LayoutError: FC<IErrorProps> = ({ error }) => {
     const navigate = useNavigate();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { isOss } = useUiConfig();
     const showZendeskButton = !isOss();
 

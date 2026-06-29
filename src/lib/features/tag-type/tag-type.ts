@@ -58,6 +58,7 @@ class TagTypeController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Tags'],
+                    release: { stable: '4.13.0' },
                     operationId: 'getTagTypes',
                     summary: 'Get all tag types',
                     description: 'Get a list of all available tag types.',
@@ -76,6 +77,7 @@ class TagTypeController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Tags'],
+                    release: { stable: '4.13.0' },
                     operationId: 'createTagType',
                     summary: 'Create a tag type',
                     description: 'Create a new tag type.',
@@ -95,6 +97,7 @@ class TagTypeController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Tags'],
+                    release: { stable: '4.13.0' },
                     operationId: 'validateTagType',
                     summary: 'Validate a tag type',
                     description:
@@ -115,6 +118,7 @@ class TagTypeController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Tags'],
+                    release: { stable: '4.13.0' },
                     operationId: 'getTagType',
                     summary: 'Get a tag type',
                     description: 'Get a tag type by name.',
@@ -133,6 +137,7 @@ class TagTypeController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Tags'],
+                    release: { stable: '4.13.0' },
                     operationId: 'updateTagType',
                     summary: 'Update a tag type',
                     description:
@@ -154,6 +159,7 @@ class TagTypeController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Tags'],
+                    release: { stable: '4.13.0' },
                     operationId: 'deleteTagType',
                     summary: 'Delete a tag type',
                     description:

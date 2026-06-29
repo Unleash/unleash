@@ -1,9 +1,10 @@
+import { beforeEach, expect, test } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { StrategyChange } from './StrategyChange.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 const server = testServerSetup();
 
@@ -165,11 +166,15 @@ test('Editing strategy before change request is applied diffs against current st
     });
     await userEvent.click(viewDiff);
 
-    const rollout = await screen.findByText(`rollout: "${currentRollout}"`);
+    const changeOverview = await screen.findByRole('tabpanel');
+    const changeScope = within(changeOverview);
+    const rollout = await changeScope.findByText(
+        `rollout: "${currentRollout}"`,
+    );
     expect(rollout).toHaveClass('deletion');
-    const oldName = await screen.findByText('name: "current_variant"');
+    const oldName = await changeScope.findByText('name: "current_variant"');
     expect(oldName).toHaveClass('deletion');
-    const newName = await screen.findByText('name: "change_variant"');
+    const newName = await changeScope.findByText('name: "change_variant"');
     expect(newName).toHaveClass('addition');
 });
 

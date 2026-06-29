@@ -7,7 +7,7 @@ import {
     useTheme,
 } from '@mui/material';
 import type { AutocompleteRenderInputParams } from '@mui/material/Autocomplete';
-import type { ReactNode } from 'react';
+import type { ReactNode, JSX } from 'react';
 
 interface IAutocompleteBoxProps {
     label: string;
@@ -49,8 +49,6 @@ export const AutocompleteBox = ({
     const theme = useTheme();
 
     const renderCustomInput = (params: AutocompleteRenderInputParams) => {
-        const { InputProps } = params;
-
         let startAdornment: undefined | JSX.Element;
         if (icon !== null) {
             startAdornment = (
@@ -71,10 +69,6 @@ export const AutocompleteBox = ({
         return (
             <TextField
                 {...params}
-                InputProps={{
-                    ...InputProps,
-                    startAdornment,
-                }}
                 variant='outlined'
                 sx={{
                     width,
@@ -98,6 +92,13 @@ export const AutocompleteBox = ({
                     },
                 }}
                 placeholder={label}
+                slotProps={{
+                    ...params.slotProps,
+                    input: {
+                        ...params.slotProps.input,
+                        startAdornment,
+                    },
+                }}
             />
         );
     };

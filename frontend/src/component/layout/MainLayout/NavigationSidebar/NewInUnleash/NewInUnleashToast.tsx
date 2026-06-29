@@ -7,7 +7,7 @@ import {
     type TypographyProps,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import NewReleases from '@mui/icons-material/NewReleases';
 import Close from '@mui/icons-material/Close';
 import { NewInUnleashDialog } from './NewInUnleashDialog.tsx';
@@ -135,7 +135,9 @@ export const NewInUnleashToast = ({ item }: { item: NewInUnleashItem }) => {
                         markAsSeen(item);
                     }
                 }}
-                TransitionComponent={Slide}
+                slots={{
+                    transition: Slide,
+                }}
             >
                 <NewInUnleashBody>
                     <TextContainer>
@@ -150,7 +152,9 @@ export const NewInUnleashToast = ({ item }: { item: NewInUnleashItem }) => {
                             component={StyledButton}
                             onClick={handleClick}
                             variant='body2'
-                            fontWeight='bold'
+                            sx={{
+                                fontWeight: 'bold',
+                            }}
                         >
                             {item.summary}
                         </Typography>
@@ -161,12 +165,11 @@ export const NewInUnleashToast = ({ item }: { item: NewInUnleashItem }) => {
                             }}
                             size='small'
                         >
-                            <Close fontSize='inherit' />
+                            <Close />
                         </CloseButton>
                     </TextContainer>
                 </NewInUnleashBody>
             </Snackbar>
-
             <NewInUnleashDialog
                 open={modalOpen}
                 onClose={() => {

@@ -1,5 +1,5 @@
-import { useId, useMemo, useState, type FC } from 'react';
-import { Link } from 'react-router-dom';
+import { useId, useMemo, useState, type FC, type JSX } from 'react';
+import { Link } from 'react-router';
 import type { ISegment } from 'interfaces/segment';
 import {
     Accordion,
@@ -44,7 +44,7 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     ':focus-within': {
         backgroundColor: 'inherit',
     },
-}));
+})) as typeof AccordionSummary;
 
 const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     padding: theme.spacing(0.5, 3, 2.5),
@@ -112,12 +112,21 @@ export const SegmentItem: FC<SegmentItemProps> = ({
             <StyledAccordion
                 expanded={isOpen}
                 disableGutters
-                TransitionProps={{ mountOnEnter: true, unmountOnExit: true }}
+                slotProps={{
+                    transition: { mountOnEnter: true, unmountOnExit: true },
+                }}
             >
                 <StyledAccordionSummary
                     id={`segment-accordion-${segment.id}`}
                     tabIndex={-1}
                     aria-controls={segmentDetailsId}
+                    sx={{
+                        '&&&': {
+                            cursor: 'default',
+                        },
+                    }}
+                    component={'div'}
+                    role={'none'}
                 >
                     <StrategyEvaluationItem type='Segment'>
                         <StyledLink to={`/segments/edit/${segment.id}`}>
@@ -129,7 +138,7 @@ export const SegmentItem: FC<SegmentItemProps> = ({
                         <StyledActionsContainer>
                             <StyledButton
                                 aria-controls={segmentDetailsId}
-                                size='small'
+                                size='medium'
                                 variant='outlined'
                                 onClick={() => setIsOpen((value) => !value)}
                             >

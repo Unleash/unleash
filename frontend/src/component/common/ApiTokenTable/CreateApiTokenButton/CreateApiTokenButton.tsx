@@ -1,6 +1,6 @@
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import { CREATE_API_TOKEN_BUTTON } from 'utils/testIds';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import Add from '@mui/icons-material/Add';
 import { useApiTokens } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';

@@ -5,7 +5,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Chip, IconButton, styled } from '@mui/material';
 import { FilterItemOperator } from './FilterItemOperator/FilterItemOperator.tsx';
 import { FILTER_ITEM } from 'utils/testIds';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 const StyledChip = styled(
     ({
@@ -99,7 +99,7 @@ export const FilterItemChip: FC<IFilterItemChipProps> = ({
     const maxExplicitOptions = 2;
     const explicitOptions = selectedDisplayOptions.slice(0, maxExplicitOptions);
     const remainingOptions = selectedDisplayOptions.length - maxExplicitOptions;
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const onChange = (operator: string) => {
         onChangeOperator(operator);
@@ -150,7 +150,7 @@ export const FilterItemChip: FC<IFilterItemChipProps> = ({
                                 }}
                                 size='small'
                             >
-                                <Close fontSize='inherit' color='action' />
+                                <Close color='action' />
                             </StyledIconButton>
                         )}
                     />

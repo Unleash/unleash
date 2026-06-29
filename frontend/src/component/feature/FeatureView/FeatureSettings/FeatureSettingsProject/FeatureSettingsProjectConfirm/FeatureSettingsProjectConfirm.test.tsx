@@ -1,9 +1,10 @@
+import { expect, test } from 'vitest';
 import { screen, waitFor } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import FeatureSettingsProjectConfirm from './FeatureSettingsProjectConfirm.tsx';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import userEvent from '@testing-library/user-event';
 
 const server = testServerSetup();

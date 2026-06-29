@@ -10,7 +10,7 @@ import { Box, InputAdornment, styled, TextField } from '@mui/material';
 import { CollaborationModeTooltip } from './CollaborationModeTooltip.tsx';
 import Input from 'component/common/Input/Input';
 import { FeatureFlagNamingTooltip } from './FeatureFlagNamingTooltip.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import type { ProjectLinkTemplateSchema } from 'openapi';
 import ProjectLinkTemplates from './ProjectLinkTemplates/ProjectLinkTemplates.tsx';
 
@@ -108,7 +108,7 @@ export const validateFeatureNamingExample = ({
 
 const useFeatureNamePatternTracking = () => {
     const [previousPattern, setPreviousPattern] = React.useState<string>('');
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const eventName = 'feature-naming-pattern' as const;
 
     const trackPattern = (pattern: string = '') => {
@@ -294,17 +294,19 @@ const ProjectEnterpriseSettingsForm: React.FC<
                         name='feature flag naming pattern'
                         aria-describedby='pattern-naming-description'
                         placeholder='[A-Za-z]+.[A-Za-z]+.[A-Za-z0-9-]+'
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position='start'>
-                                    ^
-                                </InputAdornment>
-                            ),
-                            endAdornment: (
-                                <InputAdornment position='end'>
-                                    $
-                                </InputAdornment>
-                            ),
+                        slotProps={{
+                            input: {
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                        ^
+                                    </InputAdornment>
+                                ),
+                                endAdornment: (
+                                    <InputAdornment position='end'>
+                                        $
+                                    </InputAdornment>
+                                ),
+                            },
                         }}
                         type={'text'}
                         value={featureNamingPattern || ''}

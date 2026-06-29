@@ -102,7 +102,7 @@ export const CellSortable: FC<ICellSortableProps> = ({
         if (newTooltipTitle !== tooltipTitle) {
             setTooltipTitle(newTooltipTitle);
         }
-    }, [setTooltipTitle, ariaTitle]);
+    }, [ariaTitle, children, tooltipTitle]);
 
     return (
         <StyledTableCell

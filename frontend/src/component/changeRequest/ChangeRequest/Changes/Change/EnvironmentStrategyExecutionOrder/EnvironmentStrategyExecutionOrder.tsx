@@ -103,13 +103,13 @@ export const EnvironmentStrategyExecutionOrder = ({
                     </NewChangeItemInfo>
                     <div>
                         <TabList>
-                            <Tab>View change</Tab>
-                            <Tab>View diff</Tab>
+                            <Tab value='change'>View change</Tab>
+                            <Tab value='diff'>View diff</Tab>
                         </TabList>
                         {actions}
                     </div>
                 </ChangeItemWrapper>
-                <TabPanel>
+                <TabPanel value='change'>
                     <StyledStrategyExecutionWrapper>
                         {updatedStrategies.map((strategy, index) => (
                             <StyledStrategyContainer key={strategy.id}>
@@ -121,7 +121,7 @@ export const EnvironmentStrategyExecutionOrder = ({
                         ))}
                     </StyledStrategyExecutionWrapper>
                 </TabPanel>
-                <TabPanel variant='diff'>
+                <TabPanel value='diff'>
                     <EnvironmentStrategyOrderDiff
                         preData={preData}
                         data={data}

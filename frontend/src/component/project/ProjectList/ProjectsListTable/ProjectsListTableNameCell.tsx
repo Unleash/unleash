@@ -5,7 +5,7 @@ import { useSearchHighlightContext } from 'component/common/Table/SearchHighligh
 import { Truncator } from 'component/common/Truncator/Truncator';
 import { ProjectModeBadge } from 'component/project/ProjectCard/ProjectModeBadge/ProjectModeBadge';
 import type { ProjectSchema } from 'openapi';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 const StyledCellContainer = styled('div')(({ theme }) => ({
     display: 'inline-flex',

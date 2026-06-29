@@ -1,3 +1,4 @@
+import { beforeEach, expect, test } from 'vitest';
 import { InstanceStatusBar } from 'component/common/InstanceStatus/InstanceStatusBar';
 import { InstancePlan, InstanceState } from 'interfaces/instance';
 import { render } from 'utils/testRenderer';

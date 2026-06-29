@@ -6,7 +6,7 @@ import AccessContext from 'contexts/AccessContext';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { CreateProjectApiToken } from 'component/project/Project/ProjectSettings/ProjectApiAccess/CreateProjectApiToken';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router';
 import { ApiTokenTable } from 'component/common/ApiTokenTable/ApiTokenTable';
 import { useProjectApiTokens } from 'hooks/api/getters/useProjectApiTokens/useProjectApiTokens';
 import { CreateApiTokenButton } from 'component/common/ApiTokenTable/CreateApiTokenButton/CreateApiTokenButton';
@@ -20,7 +20,7 @@ import {
 import { CopyApiTokenButton } from 'component/common/ApiTokenTable/CopyApiTokenButton/CopyApiTokenButton';
 import { RemoveApiTokenButton } from 'component/common/ApiTokenTable/RemoveApiTokenButton/RemoveApiTokenButton';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import useProjectApiTokensApi from 'hooks/api/actions/useProjectApiTokensApi/useProjectApiTokensApi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
@@ -34,55 +34,52 @@ export const ProjectApiAccess = () => {
         loading,
         refetch: refetchProjectTokens,
     } = useProjectApiTokens(projectId);
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { deleteToken: deleteProjectToken } = useProjectApiTokensApi();
 
     usePageTitle(`Project api access – ${projectName}`);
 
-    const {
-        headerGroups,
-        rows,
-        prepareRow,
-        state: { globalFilter },
-        setGlobalFilter,
-        setHiddenColumns,
-        columns,
-    } = useApiTokenTable(tokens, (props) => (
-        <ActionCell>
-            <CopyApiTokenButton
-                token={props.row.original}
-                permission={READ_PROJECT_API_TOKEN}
-                project={projectId}
-                track={() =>
-                    trackEvent('project_api_tokens', {
-                        props: { eventType: 'api_key_copied' },
-                    })
-                }
-            />
-            <RemoveApiTokenButton
-                token={props.row.original}
-                permission={DELETE_PROJECT_API_TOKEN}
-                project={projectId}
-                onRemove={async () => {
-                    await deleteProjectToken(
-                        props.row.original.secret,
-                        projectId,
-                    );
-                    trackEvent('project_api_tokens', {
-                        props: { eventType: 'api_key_deleted' },
-                    });
-                    refetchProjectTokens();
-                }}
-            />
-        </ActionCell>
-    ));
+    const { table, columns, globalFilter, setGlobalFilter } = useApiTokenTable(
+        tokens,
+        (props) => (
+            <ActionCell>
+                <CopyApiTokenButton
+                    token={props.row.original}
+                    permission={READ_PROJECT_API_TOKEN}
+                    project={projectId}
+                    track={() =>
+                        trackEvent('project_api_tokens', {
+                            props: { eventType: 'api_key_copied' },
+                        })
+                    }
+                />
+                <RemoveApiTokenButton
+                    token={props.row.original}
+                    permission={DELETE_PROJECT_API_TOKEN}
+                    project={projectId}
+                    onRemove={async () => {
+                        await deleteProjectToken(
+                            props.row.original.secret,
+                            projectId,
+                        );
+                        trackEvent('project_api_tokens', {
+                            props: { eventType: 'api_key_deleted' },
+                        });
+                        refetchProjectTokens();
+                    }}
+                />
+            </ActionCell>
+        ),
+    );
+
+    const rowCount = table.getRowModel().rows.length;
 
     return (
         <div style={{ width: '100%', overflow: 'hidden' }}>
             <PageContent
                 header={
                     <PageHeader
-                        title={`API access (${rows.length})`}
+                        title={`API access (${rowCount})`}
                         actions={
                             <>
                                 <Search
@@ -112,10 +109,7 @@ export const ProjectApiAccess = () => {
                         <ApiTokenTable
                             compact
                             loading={loading}
-                            headerGroups={headerGroups}
-                            setHiddenColumns={setHiddenColumns}
-                            prepareRow={prepareRow}
-                            rows={rows}
+                            table={table}
                             columns={columns}
                             globalFilter={globalFilter}
                         />

@@ -1,3 +1,4 @@
+import { expect, it } from 'vitest';
 import type { Flag } from 'hooks/useUiFlag';
 import type { NewInUnleashItem } from './NewInUnleashItems.tsx';
 import { shouldBeDisplayed } from './shouldBeDisplayed.ts';

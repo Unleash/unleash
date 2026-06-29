@@ -1,4 +1,4 @@
-import React, { type FC } from 'react';
+import React, { type FC, type JSX } from 'react';
 
 import {
     ClickAwayListener,

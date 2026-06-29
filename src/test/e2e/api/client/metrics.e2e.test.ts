@@ -18,6 +18,7 @@ beforeAll(async () => {
         experimental: {
             flags: {
                 responseTimeMetricsFix: true,
+                allowDeprecatedApiTokenMiddleware: true,
             },
         },
     });
@@ -47,7 +48,7 @@ test('should require valid send metrics', async () => {
     return app.request
         .post('/api/client/metrics')
         .send({
-            appName: 'test',
+            instanceId: 'test',
         })
         .expect(400);
 });

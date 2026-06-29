@@ -11,19 +11,17 @@ import { usePersonalDashboard } from 'hooks/api/getters/usePersonalDashboard/use
 import { usePersonalDashboardProjectDetails } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboardProjectDetails';
 import { MyProjects } from './MyProjects.tsx';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { useDashboardState } from './useDashboardState.ts';
 import { MyFlags } from './MyFlags.tsx';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { fromPersonalDashboardProjectDetailsOutput } from './RemoteData.ts';
 import { useEffect } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { InfoSection } from './InfoSection.tsx';
 import { EventTimeline } from 'component/events/EventTimeline/EventTimeline';
 import { AccordionContent } from './SharedComponents.tsx';
-import { Link } from 'react-router-dom';
-import { ReleaseTemplatesBanner } from 'component/common/ReleaseTemplatesBanner/ReleaseTemplatesBanner';
+import { Link } from 'react-router';
 import { useWelcomeDialogContext } from './WelcomeDialogContext.tsx';
 
 const WelcomeSection = styled('div')(({ theme }) => ({
@@ -117,7 +115,7 @@ const AccordionSummarySubtitle = styled(Typography)(({ theme }) => ({
 
 const EventTimelinePanel = () => {
     const { toggleSectionState, expandTimeline } = useDashboardState();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const signalsLink = '/integrations/signals';
     return (
@@ -270,10 +268,10 @@ const ProjectPanel = () => {
 
 export const PersonalDashboard = () => {
     const { user } = useAuthUser();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { setWelcomeDialog } = useWelcomeDialogContext();
-    const { isOss, isEnterprise } = useUiConfig();
-    const gtmReleaseManagementEnabled = useUiFlag('gtmReleaseManagement');
+    const { isOss } = useUiConfig();
+
     const name = user?.name || '';
 
     usePageTitle(name ? `Dashboard: ${name}` : 'Dashboard');
@@ -288,10 +286,7 @@ export const PersonalDashboard = () => {
 
     return (
         <MainContent>
-            {isEnterprise() && gtmReleaseManagementEnabled ? (
-                <ReleaseTemplatesBanner />
-            ) : null}
-            {isOss() ? <InfoSection /> : null}
+            {isOss() && <InfoSection />}
 
             <WelcomeSection>
                 <Typography component='h2' variant='h2'>

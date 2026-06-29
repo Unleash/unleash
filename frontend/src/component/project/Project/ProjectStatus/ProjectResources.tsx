@@ -2,7 +2,7 @@ import { Typography, styled } from '@mui/material';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { ReactNode, FC, PropsWithChildren } from 'react';
 import UsersIcon from '@mui/icons-material/Group';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import ApiKeyIcon from '@mui/icons-material/Key';
 import SegmentsIcon from '@mui/icons-material/DonutLarge';
 import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';

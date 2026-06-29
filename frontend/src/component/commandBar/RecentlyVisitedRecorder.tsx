@@ -1,5 +1,5 @@
 import { useRecentlyVisited } from 'hooks/useRecentlyVisited';
-import { useLocation, useMatch } from 'react-router-dom';
+import { useLocation, useMatch } from 'react-router';
 import { routes } from 'component/menu/routes';
 import { useEffect } from 'react';
 

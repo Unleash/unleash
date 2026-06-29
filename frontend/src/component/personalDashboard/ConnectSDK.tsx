@@ -1,8 +1,8 @@
 import { Button, styled, Typography } from '@mui/material';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import type { FC } from 'react';
 import { ActionBox } from './ActionBox.tsx';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { NeutralCircleContainer } from './SharedComponents.tsx';
 
 const MainCircleContainer = styled(NeutralCircleContainer)(({ theme }) => ({
@@ -22,7 +22,7 @@ const SuccessContainer = styled('div')(({ theme }) => ({
 }));
 
 export const CreateFlag: FC<{ project: string }> = ({ project }) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     return (
         <ActionBox
             data-loading
@@ -67,7 +67,12 @@ export const ExistingFlag: FC<{ project: string }> = ({ project }) => {
             }
         >
             <SuccessContainer>
-                <Typography fontWeight='bold' variant='body2'>
+                <Typography
+                    variant='body2'
+                    sx={{
+                        fontWeight: 'bold',
+                    }}
+                >
                     You have created your first flag
                 </Typography>
                 <Typography variant='body2'>
@@ -77,6 +82,7 @@ export const ExistingFlag: FC<{ project: string }> = ({ project }) => {
             <div>
                 <Button
                     component={Link}
+                    nativeButton={false}
                     to={`/projects/${project}`}
                     variant='contained'
                 >
@@ -108,6 +114,7 @@ export const ConnectSDK: FC<{ project: string }> = ({ project }) => {
             <div>
                 <Button
                     component={Link}
+                    nativeButton={false}
                     to={`/projects/${project}`}
                     variant='contained'
                 >

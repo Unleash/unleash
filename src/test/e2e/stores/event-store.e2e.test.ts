@@ -373,14 +373,11 @@ describe('getDeltaRevisionState', () => {
             (e) => e.type === SEGMENT_UPDATED,
         )!;
 
-        const state = await eventStore.getDeltaRevisionState(
-            ALL_ENVS,
-            segmentStored.id,
-        );
+        const state = await eventStore.getDeltaRevisionState(ALL_ENVS);
 
         expect(state.projectRevisions.get('default')).toBe(defaultStored.id);
         expect(state.projectRevisions.get('other')).toBe(otherStored.id);
-        expect(state.globalSegmentRevision).toBe(segmentStored.id);
+        expect(state.maxReferencedSegmentRevision).toBe(segmentStored.id);
     });
 
     test('respects environment filtering and includes null-environment feature events', async () => {
@@ -429,10 +426,7 @@ describe('getDeltaRevisionState', () => {
         )!;
         const nullEnvStored = allEvents.find((e) => e.environment == null)!;
 
-        const state = await eventStore.getDeltaRevisionState(
-            'development',
-            nullEnvStored.id,
-        );
+        const state = await eventStore.getDeltaRevisionState('development');
 
         expect(state.projectRevisions.get('default')).toBe(
             Math.max(devStored.id, nullEnvStored.id),
@@ -454,14 +448,11 @@ describe('getDeltaRevisionState', () => {
             (e) => e.type === FEATURE_PROJECT_CHANGE,
         )!;
 
-        const state = await eventStore.getDeltaRevisionState(
-            ALL_ENVS,
-            storedMove.id,
-        );
+        const state = await eventStore.getDeltaRevisionState(ALL_ENVS);
 
         expect(state.projectRevisions.get('old-project')).toBe(storedMove.id);
         expect(state.projectRevisions.get('new-project')).toBe(storedMove.id);
-        expect(state.globalSegmentRevision).toBe(0);
+        expect(state.maxReferencedSegmentRevision).toBe(0);
     });
 
     test('ignores non-interesting feature events', async () => {
@@ -477,17 +468,13 @@ describe('getDeltaRevisionState', () => {
 
         await eventStore.store(favoritedEvent);
 
-        const stored = (await eventStore.getAll())[0];
-        const state = await eventStore.getDeltaRevisionState(
-            ALL_ENVS,
-            stored.id,
-        );
+        const state = await eventStore.getDeltaRevisionState(ALL_ENVS);
 
         expect(state.projectRevisions.size).toBe(0);
-        expect(state.globalSegmentRevision).toBe(0);
+        expect(state.maxReferencedSegmentRevision).toBe(0);
     });
 
-    test('respects upperBound for project and segment revisions', async () => {
+    test('returns latest project and segment revisions', async () => {
         const firstFeature = new FeatureUpdatedEvent({
             project: 'default',
             featureName: 'feature-a',
@@ -525,14 +512,49 @@ describe('getDeltaRevisionState', () => {
             (e) => e.type === FEATURE_UPDATED && e.data.enabled === false,
         )!;
 
+        const state = await eventStore.getDeltaRevisionState(ALL_ENVS);
+
+        expect(state.projectRevisions.get('default')).not.toBe(firstStored.id);
+        expect(state.projectRevisions.get('default')).toBe(secondStored.id);
+        expect(state.maxReferencedSegmentRevision).toBe(segmentStored.id);
+    });
+
+    test('filters segment revision by referenced segment ids from event payload', async () => {
+        const firstSegmentEvent = {
+            type: SEGMENT_UPDATED,
+            createdBy: testAudit.username,
+            createdByUserId: testAudit.id,
+            ip: testAudit.ip,
+            data: { id: 123, name: 'segment-a' },
+        };
+
+        const secondSegmentEvent = {
+            type: SEGMENT_UPDATED,
+            createdBy: testAudit.username,
+            createdByUserId: testAudit.id,
+            ip: testAudit.ip,
+            data: { id: 999, name: 'segment-b' },
+        };
+
+        await eventStore.store(firstSegmentEvent);
+        await eventStore.store(secondSegmentEvent);
+
+        const allEvents = await eventStore.getAll();
+        const firstStored = allEvents.find(
+            (e) => e.type === SEGMENT_UPDATED && e.data.id === 123,
+        )!;
+        const secondStored = allEvents.find(
+            (e) => e.type === SEGMENT_UPDATED && e.data.id === 999,
+        )!;
+
+        expect(secondStored.id).toBeGreaterThan(firstStored.id);
+
         const state = await eventStore.getDeltaRevisionState(
             ALL_ENVS,
-            segmentStored.id,
+            new Set([123]),
         );
 
-        expect(state.projectRevisions.get('default')).toBe(firstStored.id);
-        expect(state.projectRevisions.get('default')).not.toBe(secondStored.id);
-        expect(state.globalSegmentRevision).toBe(segmentStored.id);
+        expect(state.maxReferencedSegmentRevision).toBe(firstStored.id);
     });
 });
 

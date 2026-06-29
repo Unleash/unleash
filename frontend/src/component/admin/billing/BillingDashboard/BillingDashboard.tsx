@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { BillingInformation } from './BillingInformation/BillingInformation.tsx';
 import { BillingPlan } from './BillingPlan/BillingPlan.tsx';
 

@@ -1,10 +1,10 @@
 1\. Install the SDK
 ```sh
-cargo add unleash-api-client --features async-std,reqwest,surf
+cargo add unleash-api-client --features reqwest
 cargo add serde --features derive
-cargo add serde reqwest --features json
-cargo add serde tokio --features full
-cargo add serde anyhow cfg cfg-if enum-map@~2.0.0 surf
+cargo add reqwest@0.12 --features json
+cargo add tokio --features full
+cargo add enum-map
 ```
 
 2\. Run Unleash
@@ -66,4 +66,19 @@ client.register().await?;
 ---
 - [SDK repository with documentation](https://github.com/Unleash/unleash-client-rust)
 - [Rust example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/Rust)
-- [How to Implement Feature Flags in Rust](https://docs.getunleash.io/feature-flag-tutorials/rust)
+- [How to Implement Feature Flags in Rust](https://docs.getunleash.io/guides/implement-feature-flags-in-rust)
+
+---
+
+```rust
+enum Flags {
+    #[serde(rename = "<YOUR_FLAG>")]
+    TestFlag,
+}
+
+if client.is_enabled(Flags::TestFlag, None, true) {
+    println!("<YOUR_FLAG> is enabled");
+} else {
+    println!("<YOUR_FLAG> is disabled");
+}
+```

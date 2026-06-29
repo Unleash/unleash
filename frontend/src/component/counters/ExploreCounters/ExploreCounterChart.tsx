@@ -1,7 +1,7 @@
 import { Line } from 'react-chartjs-2';
 import type { IMetricsCount } from 'hooks/api/getters/useMetricCounters/useMetricCounters';
 import type {} from 'chart.js';
-import type { Theme } from '@mui/material/styles/createTheme';
+import type { Theme } from '@mui/material/styles';
 import {
     useLocationSettings,
     type ILocationSettings,
@@ -69,7 +69,9 @@ export const createChartOptions = (
                 ticks: { precision: 0, color: theme.palette.text.secondary },
                 grid: {
                     color: theme.palette.divider,
-                    borderColor: theme.palette.divider,
+                },
+                border: {
+                    color: theme.palette.divider,
                 },
             },
             x: {

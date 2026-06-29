@@ -1,9 +1,4 @@
-import {
-    type Dispatch,
-    type SetStateAction,
-    type ReactNode,
-    useEffect,
-} from 'react';
+import type { Dispatch, SetStateAction, ReactNode } from 'react';
 import { WelcomeDialogContext } from './WelcomeDialogContext.tsx';
 import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash.ts';
 import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi.ts';
@@ -30,14 +25,8 @@ export const WelcomeDialogProvider = ({
 
     const [welcomeDialog, setWelcomeDialog] = useLocalStorageState<DialogState>(
         'welcome-dialog:v1',
-        splash?.personalDashboardKeyConcepts ? 'closed' : 'open',
+        'closed',
     );
-
-    useEffect(() => {
-        if (splash?.personalDashboardKeyConcepts && welcomeDialog === 'open') {
-            setWelcomeDialog('closed');
-        }
-    }, [splash?.personalDashboardKeyConcepts]);
 
     const onClose = () => {
         setSplashSeen('personalDashboardKeyConcepts');

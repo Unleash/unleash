@@ -301,6 +301,18 @@ export const VariantForm = ({
             return false;
         }
     };
+    const getJsonPayloadError = (payload: IPayload): string | undefined => {
+        if (payload.type !== 'json' || payload.value.trim() === '') {
+            return undefined;
+        }
+
+        try {
+            JSON.parse(payload.value);
+            return undefined;
+        } catch (error) {
+            return error instanceof Error ? error.message : 'Invalid JSON';
+        }
+    };
 
     useEffect(() => {
         const newVariant: IFeatureVariantEdit = {
@@ -411,12 +423,14 @@ export const VariantForm = ({
                                 disabled={!customPercentage}
                                 aria-valuemin={0}
                                 aria-valuemax={100}
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment position='end'>
-                                            %
-                                        </InputAdornment>
-                                    ),
+                                slotProps={{
+                                    input: {
+                                        endAdornment: (
+                                            <InputAdornment position='end'>
+                                                %
+                                            </InputAdornment>
+                                        ),
+                                    },
                                 }}
                             />
                         </StyledPercentageContainer>
@@ -451,16 +465,22 @@ export const VariantForm = ({
                                     content={{ text: payload.value }}
                                     onChange={(content) =>
                                         setPayload((payload) => {
+                                            clearError(ErrorField.PAYLOAD);
                                             return {
                                                 ...payload,
                                                 value:
                                                     'json' in content
-                                                        ? content.json?.toString() ||
-                                                          ''
+                                                        ? JSON.stringify(
+                                                              content.json,
+                                                          ) || ''
                                                         : content.text,
                                             };
                                         })
                                     }
+                                    onBlur={() => validatePayload(payload)}
+                                    validationError={getJsonPayloadError(
+                                        payload,
+                                    )}
                                 />
                             </Suspense>
                         }

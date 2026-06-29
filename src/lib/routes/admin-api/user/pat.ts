@@ -58,6 +58,7 @@ export default class PatController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Personal access tokens'],
+                    release: { stable: '4.16.0' },
                     operationId: 'getPats',
                     summary:
                         'Get all personal access tokens (PATs) for the current user.',
@@ -78,6 +79,7 @@ export default class PatController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Personal access tokens'],
+                    release: { stable: '4.16.0' },
                     operationId: 'createPat',
                     summary:
                         'Create a new personal access token (PAT) for the current user.',
@@ -101,6 +103,7 @@ export default class PatController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Personal access tokens'],
+                    release: { stable: '4.16.0' },
                     operationId: 'deletePat',
                     summary:
                         'Delete a personal access token (PAT) for the current user.',

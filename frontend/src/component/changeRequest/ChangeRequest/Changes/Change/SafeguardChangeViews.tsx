@@ -5,10 +5,10 @@ import {
     type ChangeRequestState,
 } from 'component/changeRequest/changeRequest.types';
 import type { CreateSafeguardSchema } from 'openapi';
-import type { ISafeguard } from 'interfaces/releasePlans';
+import type { ISafeguard } from 'interfaces/safeguard';
 import type { SafeguardType } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/SafeguardForm/SafeguardForm';
 import { EventDiff } from 'component/events/EventDiff/EventDiff';
-import { SafeguardFormChangeRequestView } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/SafeguardForm/SafeguardForm';
+import { SafeguardForm } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/SafeguardForm/SafeguardForm';
 import { ReadonlySafeguardDisplay } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/SafeguardForm/ReadonlySafeguardDisplay';
 import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
 import {
@@ -56,20 +56,20 @@ export const SafeguardChangeView: FC<{
                 </ChangeItemInfo>
                 <div>
                     <TabList>
-                        <Tab>View change</Tab>
-                        <Tab>View diff</Tab>
+                        <Tab value='change'>View change</Tab>
+                        <Tab value='diff'>View diff</Tab>
                     </TabList>
                     {actions}
                 </div>
             </ChangeItemWrapper>
-            <TabPanel>
+            <TabPanel value='change'>
                 {readonly ? (
                     <ReadonlySafeguardDisplay
                         safeguard={safeguard}
                         safeguardType={safeguardType}
                     />
                 ) : (
-                    <SafeguardFormChangeRequestView
+                    <SafeguardForm
                         onSubmit={onSubmit}
                         onDelete={
                             currentSafeguard?.id
@@ -83,14 +83,13 @@ export const SafeguardChangeView: FC<{
                     />
                 )}
             </TabPanel>
-            <TabPanel variant='diff'>
+            <TabPanel value='diff'>
                 <EventDiff
                     entry={{
                         preData: omitIfDefined(currentSafeguard, [
                             'id',
                             'action',
                             'impactMetric.id',
-                            'impactMetric.labelSelectors.environment',
                         ]),
                         data: safeguard,
                     }}
@@ -129,20 +128,20 @@ export const SafeguardDeleteView: FC<{
                 </ChangeItemInfo>
                 <div>
                     <TabList>
-                        <Tab>View change</Tab>
-                        <Tab>View diff</Tab>
+                        <Tab value='change'>View change</Tab>
+                        <Tab value='diff'>View diff</Tab>
                     </TabList>
                     {actions}
                 </div>
             </ChangeItemWrapper>
-            <TabPanel>
+            <TabPanel value='change'>
                 {readonly ? (
                     <ReadonlySafeguardDisplay
                         safeguard={safeguard}
                         safeguardType={safeguardType}
                     />
                 ) : (
-                    <SafeguardFormChangeRequestView
+                    <SafeguardForm
                         onSubmit={onSubmit}
                         onDelete={
                             safeguard?.id
@@ -156,7 +155,7 @@ export const SafeguardDeleteView: FC<{
                     />
                 )}
             </TabPanel>
-            <TabPanel variant='diff'>
+            <TabPanel value='diff'>
                 <EventDiff
                     entry={{
                         preData: safeguard,

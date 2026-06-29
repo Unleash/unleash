@@ -18,6 +18,8 @@ import {
 } from '../types/settings/simple-auth-settings.js';
 import version from '../util/version.js';
 import type { ResourceLimitsService } from '../features/resource-limits/resource-limits-service.js';
+import { ImpactMetricsAvailabilityResolver } from '../features/metrics/impact/impact-metrics-availability.js';
+import { hashValue } from '../util/anonymise.js';
 
 export class UiConfigService {
     private config: IUnleashConfig;
@@ -37,6 +39,8 @@ export class UiConfigService {
     private resourceLimitsService: ResourceLimitsService;
 
     private flagResolver: IFlagResolver;
+
+    private impactMetricsAvailabilityResolver: ImpactMetricsAvailabilityResolver;
 
     constructor(
         config: IUnleashConfig,
@@ -68,6 +72,8 @@ export class UiConfigService {
         this.maintenanceService = maintenanceService;
         this.sessionService = sessionService;
         this.resourceLimitsService = resourceLimitsService;
+        this.impactMetricsAvailabilityResolver =
+            new ImpactMetricsAvailabilityResolver(config, settingService);
     }
 
     async getMaxSessionsCount(): Promise<number> {
@@ -83,19 +89,23 @@ export class UiConfigService {
             simpleAuthSettings,
             maintenanceMode,
             maxSessionsCount,
+            impactMetrics,
         ] = await Promise.all([
             this.frontendApiService.getFrontendSettings(false),
             this.settingService.get<SimpleAuthSettings>(simpleAuthSettingsKey),
             this.maintenanceService.isMaintenanceMode(),
             this.getMaxSessionsCount(),
+            this.impactMetricsAvailabilityResolver.resolve(),
         ]);
 
         const disablePasswordAuth =
             simpleAuthSettings?.disabled ||
             this.config.authentication.type === IAuthType.NONE;
 
+        const hashedEmail = user.email ? hashValue(user.email) : undefined;
+
         const expFlags = this.config.flagResolver.getAll({
-            email: user.email,
+            email: hashedEmail,
         });
 
         const flags = {
@@ -105,7 +115,7 @@ export class UiConfigService {
 
         const unleashContext = {
             ...this.flagResolver.getStaticContext(),
-            email: user.email,
+            ...(hashedEmail ? { email: hashedEmail } : {}),
             userId: user.id,
         };
         const uiConfig: UiConfigSchema = {
@@ -115,11 +125,13 @@ export class UiConfigService {
             emailEnabled: this.emailService.isEnabled(),
             edgeUrl: this.config.server.edgeUrl,
             unleashUrl: this.config.server.unleashUrl,
+            logRocketAppId: this.config.server.logRocketAppId,
             baseUriPath: this.config.server.baseUriPath,
             authenticationType: this.config.authentication?.type,
             frontendApiOrigins: frontendSettings.frontendApiOrigins,
             versionInfo: await this.versionService.getVersionInfo(),
             prometheusAPIAvailable: this.config.prometheusApi !== undefined,
+            impactMetrics,
             resourceLimits:
                 await this.resourceLimitsService.getResourceLimits(),
             disablePasswordAuth,

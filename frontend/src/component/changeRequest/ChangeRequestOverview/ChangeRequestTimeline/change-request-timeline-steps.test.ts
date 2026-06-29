@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { stepsFromTimestamps } from './change-request-timeline-steps.ts';
 
 describe('stepsFromTimestamps', () => {

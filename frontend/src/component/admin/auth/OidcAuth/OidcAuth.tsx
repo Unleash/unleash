@@ -4,13 +4,13 @@ import {
     Button,
     FormControl,
     FormControlLabel,
-    Grid,
     InputLabel,
     MenuItem,
     Select,
     Switch,
     TextField,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { Alert } from '@mui/material';
 import { AutoCreateForm } from '../AutoCreateForm/AutoCreateForm.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -37,6 +37,7 @@ const initialState = {
     acrValues: '',
     idTokenSigningAlgorithm: 'RS256',
     enablePkce: false,
+    extraScopes: '',
 };
 
 type State = typeof initialState & {
@@ -110,7 +111,7 @@ export const OidcAuth = () => {
     return (
         <>
             <Grid container sx={{ mb: 3 }}>
-                <Grid item md={12}>
+                <Grid size={{ md: 12 }}>
                     <ConditionallyRender
                         condition={Boolean(oidcConfiguredThroughEnv)}
                         show={
@@ -118,7 +119,7 @@ export const OidcAuth = () => {
                                 OIDC is currently configured via environment
                                 variables. Please refer to the{' '}
                                 <a
-                                    href='https://www.unleash-hosted.com/docs/enterprise-authentication'
+                                    href='https://docs.getunleash.io/single-sign-on/how-to-add-sso-open-id-connect'
                                     target='_blank'
                                     rel='noreferrer'
                                 >
@@ -132,7 +133,7 @@ export const OidcAuth = () => {
                     <Alert severity='info'>
                         Please read the{' '}
                         <a
-                            href='https://www.unleash-hosted.com/docs/enterprise-authentication'
+                            href='https://docs.getunleash.io/single-sign-on/how-to-add-sso-open-id-connect'
                             target='_blank'
                             rel='noreferrer'
                         >
@@ -146,12 +147,12 @@ export const OidcAuth = () => {
                 </Grid>
             </Grid>
             <form onSubmit={onSubmit}>
-                <Grid container spacing={3} mb={2}>
-                    <Grid item md={5}>
+                <Grid container spacing={3} sx={{ mb: 2 }}>
+                    <Grid size={{ md: 5 }}>
                         <strong>Enable</strong>
                         <p>Enable Open Id Connect Authentication.</p>
                     </Grid>
-                    <Grid item md={6} style={{ padding: '20px' }}>
+                    <Grid size={{ md: 6 }} style={{ padding: '20px' }}>
                         <FormControlLabel
                             control={
                                 <Switch
@@ -166,12 +167,12 @@ export const OidcAuth = () => {
                         />
                     </Grid>
                 </Grid>
-                <Grid container spacing={3} mb={2}>
-                    <Grid item md={5}>
+                <Grid container spacing={3} sx={{ mb: 2 }}>
+                    <Grid size={{ md: 5 }}>
                         <strong>Discover URL</strong>
                         <p>(Required) Issuer discover metadata URL</p>
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid size={{ md: 6 }}>
                         <TextField
                             onChange={trimAndUpdateField}
                             label='Discover URL'
@@ -184,12 +185,12 @@ export const OidcAuth = () => {
                         />
                     </Grid>
                 </Grid>
-                <Grid container spacing={3} mb={2}>
-                    <Grid item md={5}>
+                <Grid container spacing={3} sx={{ mb: 2 }}>
+                    <Grid size={{ md: 5 }}>
                         <strong>Client ID</strong>
                         <p>(Required) Client ID of your OpenID application</p>
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid size={{ md: 6 }}>
                         <TextField
                             onChange={trimAndUpdateField}
                             label='Client ID'
@@ -203,14 +204,14 @@ export const OidcAuth = () => {
                         />
                     </Grid>
                 </Grid>
-                <Grid container spacing={3} mb={4}>
-                    <Grid item md={5}>
+                <Grid container spacing={3} sx={{ mb: 4 }}>
+                    <Grid size={{ md: 5 }}>
                         <strong>Client secret</strong>
                         <p>
                             (Required) Client secret of your OpenID application.{' '}
                         </p>
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid size={{ md: 6 }}>
                         <TextField
                             onChange={trimAndUpdateField}
                             label='Client Secret'
@@ -225,15 +226,15 @@ export const OidcAuth = () => {
                     </Grid>
                 </Grid>
                 <h3>Optional Configuration</h3>
-                <Grid container spacing={3} mb={2}>
-                    <Grid item md={5}>
+                <Grid container spacing={3} sx={{ mb: 2 }}>
+                    <Grid size={{ md: 5 }}>
                         <strong>Enable Single Sign-Out</strong>
                         <p>
                             If you enable Single Sign-Out Unleash will redirect
                             the user to the IDP as part of the Sign-out process.
                         </p>
                     </Grid>
-                    <Grid item md={6} style={{ padding: '20px' }}>
+                    <Grid size={{ md: 6 }} style={{ padding: '20px' }}>
                         <FormControlLabel
                             control={
                                 <Switch
@@ -258,8 +259,8 @@ export const OidcAuth = () => {
                 <ConditionallyRender
                     condition={oidcPkceSupport}
                     show={
-                        <Grid container spacing={3} mb={2}>
-                            <Grid item md={5}>
+                        <Grid container spacing={3} sx={{ mb: 2 }}>
+                            <Grid size={{ md: 5 }}>
                                 <strong>Enable PKCE</strong>
                                 <p>
                                     Require Proof Key for Code Exchange (PKCE)
@@ -267,7 +268,7 @@ export const OidcAuth = () => {
                                     authorization code flow.
                                 </p>
                             </Grid>
-                            <Grid item md={6} style={{ padding: '20px' }}>
+                            <Grid size={{ md: 6 }} style={{ padding: '20px' }}>
                                 <FormControlLabel
                                     control={
                                         <Switch
@@ -293,8 +294,8 @@ export const OidcAuth = () => {
                         </Grid>
                     }
                 />
-                <Grid container spacing={3} mb={2}>
-                    <Grid item md={5}>
+                <Grid container spacing={3} sx={{ mb: 2 }}>
+                    <Grid size={{ md: 5 }}>
                         <strong>ACR Values</strong>
                         <p>
                             Requested Authentication Context Class Reference
@@ -305,7 +306,7 @@ export const OidcAuth = () => {
                             against the list of acr values.
                         </p>
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid size={{ md: 6 }}>
                         <TextField
                             onChange={updateField}
                             label='ACR Values'
@@ -315,6 +316,30 @@ export const OidcAuth = () => {
                             style={{ width: '400px' }}
                             variant='outlined'
                             size='small'
+                        />
+                    </Grid>
+                </Grid>
+                <Grid container spacing={3} sx={{ mb: 2 }}>
+                    <Grid size={{ md: 5 }}>
+                        <strong>Extra Scopes</strong>
+                        <p>
+                            Space-separated list of additional scopes to request
+                            during login, beyond the default{' '}
+                            <code>openid email profile</code> (and{' '}
+                            <code>groups</code> if group syncing is enabled).
+                        </p>
+                    </Grid>
+                    <Grid size={{ md: 6 }}>
+                        <TextField
+                            onChange={updateField}
+                            label='Extra Scopes'
+                            name='extraScopes'
+                            value={data.extraScopes}
+                            disabled={!data.enabled}
+                            style={{ width: '400px' }}
+                            variant='outlined'
+                            size='small'
+                            placeholder='custom_scope1 custom_scope2'
                         />
                     </Grid>
                 </Grid>
@@ -331,8 +356,8 @@ export const OidcAuth = () => {
                     onUpdateRole={onUpdateRole}
                     disabled={oidcConfiguredThroughEnv}
                 />
-                <Grid container spacing={3} mb={2}>
-                    <Grid item md={5}>
+                <Grid container spacing={3} sx={{ mb: 2 }}>
+                    <Grid size={{ md: 5 }}>
                         <strong>ID Signing algorithm</strong>
                         <p>
                             Which signing algorithm to use. <br /> Leave this
@@ -341,7 +366,7 @@ export const OidcAuth = () => {
                             RS512" in your logs.
                         </p>
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid size={{ md: 6 }}>
                         <FormControl style={{ minWidth: '200px' }}>
                             <InputLabel id='defaultRootRole-label'>
                                 Signing algorithm
@@ -370,7 +395,7 @@ export const OidcAuth = () => {
                 </Grid>
 
                 <Grid container spacing={3}>
-                    <Grid item md={12}>
+                    <Grid size={{ md: 12 }}>
                         <Button
                             variant='contained'
                             color='primary'

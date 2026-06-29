@@ -1,11 +1,9 @@
 import postgresPkg from 'pg';
 const { Client } = postgresPkg;
-import {
-    migrateDb,
-    getDbConfig,
-    testDbPrefix,
-    type IUnleashConfig,
-} from 'unleash-server';
+import { migrateDb } from './migrator.js';
+import { getDbConfig } from './test/e2e/helpers/database-config.js';
+import { testDbPrefix } from './test/e2e/helpers/database-init.js';
+import type { IUnleashConfig } from './lib/types/option.js';
 
 let initializationPromise: Promise<void> | null = null;
 

@@ -3,7 +3,7 @@ import { useState, useCallback } from 'react';
 import { Typography, styled, Box } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader.tsx';
 import { useImpactMetricsOptions } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
-import { ChartConfigModal } from './ChartConfigModal/ChartConfigModal.tsx';
+import { ImpactMetricModal } from './ImpactMetricModal/ImpactMetricModal.tsx';
 import { ChartItem } from './ChartItem.tsx';
 import { PlausibleChartItem } from './PlausibleChartItem.tsx';
 import { GridLayoutWrapper, type GridItem } from './GridLayoutWrapper.tsx';
@@ -15,7 +15,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton.tsx';
 import { ADMIN } from '../providers/AccessProvider/permissions.ts';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
+import { useEventTracker } from 'hooks/useEventTracker.ts';
 
 const _StyledDragHandle = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -35,7 +35,7 @@ export const ImpactMetrics: FC = () => {
     const [editingChart, setEditingChart] = useState<ChartConfig | undefined>();
     const { setToastApiError } = useToast();
     const plausibleMetricsEnabled = useUiFlag('plausibleMetrics');
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const {
         charts,
         layout,
@@ -180,12 +180,12 @@ export const ImpactMetrics: FC = () => {
                 </>
             )}
 
-            <ChartConfigModal
+            <ImpactMetricModal
                 open={modalOpen}
                 onClose={() => setModalOpen(false)}
                 onSave={handleSaveChart}
                 initialConfig={editingChart}
-                metricSeries={metricOptions}
+                metrics={metricOptions}
                 loading={metadataLoading || settingsLoading}
             />
         </>

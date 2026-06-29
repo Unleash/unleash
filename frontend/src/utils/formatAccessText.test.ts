@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { formatAccessText } from 'utils/formatAccessText';
 
 test('formatAccessText with access', () => {

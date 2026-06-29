@@ -9,8 +9,8 @@ import { createTestConfig } from '../../config/test-config.js';
 import SessionService from '../../../lib/services/session-service.js';
 import InvalidTokenError from '../../../lib/error/invalid-token-error.js';
 import type { IUser, IUserWithRootRole } from '../../../lib/types/user.js';
-import SettingService from '../../../lib/services/setting-service.js';
-import FakeSettingStore from '../../fixtures/fake-setting-store.js';
+import SettingService from '../../../lib/features/settings/setting-service.js';
+import FakeSettingStore from '../../../lib/features/settings/fake-setting-store.js';
 import { GroupService } from '../../../lib/services/group-service.js';
 import {
     type IUnleashStores,

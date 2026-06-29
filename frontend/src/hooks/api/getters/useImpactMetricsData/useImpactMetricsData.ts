@@ -1,47 +1,52 @@
 import { fetcher, useApiGetter } from '../useApiGetter/useApiGetter.js';
 import { formatApiPath } from 'utils/formatPath';
+import type { MetricSource } from 'component/impact-metrics/types';
+import type {
+    ImpactMetricsDataSchema,
+    ImpactMetricsDataSchemaLabels,
+    ImpactMetricsDataSchemaSeriesItem,
+} from 'openapi';
 
-export type TimeSeriesData = [number, number][];
-
-export type ImpactMetricsLabels = Record<string, string[]>;
-
-export type ImpactMetricsSeries = {
-    metric: Record<string, string>;
-    data: TimeSeriesData;
+// Narrow the generated `(number | string)[][]` tuple to the actual contract
+// `[number, string][]`. OpenAPI 3.0 can't express ordered tuples, so orval
+// generates the loose form; the backend always returns [timestamp, value].
+export type ImpactMetricsLabels = ImpactMetricsDataSchemaLabels;
+export type ImpactMetricsSeries = Omit<
+    ImpactMetricsDataSchemaSeriesItem,
+    'data'
+> & {
+    data: [number, string][];
 };
-
-// TODO(impactMetrics): use OpenAPI types
-export type ImpactMetricsResponse = {
-    start?: string;
-    end?: string;
-    step?: string;
+export type ImpactMetricsResponse = Omit<ImpactMetricsDataSchema, 'series'> & {
     series: ImpactMetricsSeries[];
-    labels?: ImpactMetricsLabels;
-    debug?: {
-        query?: string;
-        isTruncated?: string;
-    };
 };
 
 export type ImpactMetricsQuery = {
-    series: string;
+    metricName: string;
     range: 'hour' | 'day' | 'week' | 'month';
-    labels?: Record<string, string[]>;
     aggregationMode?: 'rps' | 'count' | 'avg' | 'sum' | 'p50' | 'p95' | 'p99';
+    source?: MetricSource;
+    labels?: Record<string, string[]>;
+    mode?: 'display' | 'edit';
 };
 
+const DEFAULT_AGGREGATION_MODE = 'count';
+const DEFAULT_SOURCE: MetricSource = 'internal';
+
 export const useImpactMetricsData = (query?: ImpactMetricsQuery) => {
-    const shouldFetch = Boolean(query?.series && query?.range);
+    const shouldFetch = Boolean(query?.metricName && query?.range);
 
     const createPath = () => {
         if (!query) return '';
         const params = new URLSearchParams({
-            series: query.series,
+            metricName: query.metricName,
             range: query.range,
+            aggregationMode: query.aggregationMode ?? DEFAULT_AGGREGATION_MODE,
+            source: query.source ?? DEFAULT_SOURCE,
         });
 
-        if (query.aggregationMode !== undefined) {
-            params.append('aggregationMode', query.aggregationMode);
+        if (query.mode) {
+            params.append('mode', query.mode);
         }
 
         if (query.labels && Object.keys(query.labels).length > 0) {
@@ -79,10 +84,15 @@ export const useImpactMetricsData = (query?: ImpactMetricsQuery) => {
         );
 
     return {
-        data: data || {
-            series: [],
-            labels: {},
-        },
+        data:
+            data ||
+            ({
+                series: [],
+                labels: {},
+                start: '',
+                end: '',
+                step: '',
+            } as ImpactMetricsResponse),
         refetch,
         loading: shouldFetch ? loading : false,
         error,

@@ -52,17 +52,19 @@ export const MilestoneProgressionTimeInput = ({
                 value={timeValue}
                 onChange={onTimeValueChange}
                 onPaste={handleNumericPaste}
-                inputProps={{
-                    pattern: '[0-9]*',
-                    'aria-label': 'Time duration value',
-                    'aria-describedby': 'time-unit-select',
-                }}
                 sx={{
                     width: `max(60px, ${String(timeValue).length + 8}ch)`,
                     maxWidth: '300px',
                 }}
                 size='small'
                 disabled={disabled}
+                slotProps={{
+                    htmlInput: {
+                        pattern: '[0-9]*',
+                        'aria-label': 'Time duration value',
+                        'aria-describedby': 'time-unit-select',
+                    },
+                }}
             />
             <StyledSelect
                 value={timeUnit}

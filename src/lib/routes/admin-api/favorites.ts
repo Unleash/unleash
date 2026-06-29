@@ -37,6 +37,7 @@ export default class FavoritesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
+                    release: { stable: '4.18.0' },
                     operationId: 'addFavoriteFeature',
                     summary: 'Add feature to favorites',
                     description:
@@ -57,6 +58,7 @@ export default class FavoritesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
+                    release: { stable: '4.18.0' },
                     operationId: 'removeFavoriteFeature',
                     summary: 'Remove feature from favorites',
                     description:
@@ -80,6 +82,7 @@ export default class FavoritesController extends Controller {
                     summary: 'Add project to favorites',
                     description:
                         'This endpoint marks the project in the url as favorite',
+                    release: { stable: '4.18.0' },
                     operationId: 'addFavoriteProject',
                     responses: {
                         200: emptyResponse,
@@ -100,6 +103,7 @@ export default class FavoritesController extends Controller {
                     summary: 'Remove project from favorites',
                     description:
                         'This endpoint removes the project in the url from favorites',
+                    release: { stable: '4.18.0' },
                     operationId: 'removeFavoriteProject',
                     responses: {
                         200: emptyResponse,

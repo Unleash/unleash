@@ -1,5 +1,5 @@
 import type { IFlagResolver } from '../../types/index.js';
-import { Knex } from 'knex';
+import type { Knex } from 'knex';
 import type { Db } from '../../db/db.js';
 import type {
     IProjectReadModel,
@@ -10,7 +10,7 @@ import type { IProjectQuery, IProjectsQuery } from './project-store-type.js';
 import metricsHelper from '../../util/metrics-helper.js';
 import type EventEmitter from 'events';
 import type { IProjectMembersCount } from './project-store.js';
-import Raw = Knex.Raw;
+type Raw<T = any> = Knex.Raw<T>;
 
 const TABLE = 'projects';
 const DB_TIME = 'db_time';
@@ -234,25 +234,26 @@ export class ProjectReadModel implements IProjectReadModel {
 
     private async getMembersCount(): Promise<IProjectMembersCount[]> {
         const memberTimer = this.timer('getMembersCount');
+        const membersQuery = this.db
+            .select('user_id', 'project')
+            .from('role_user')
+            .leftJoin('roles', 'role_user.role_id', 'roles.id')
+            .where((builder) => builder.whereNot('type', 'root'))
+            .union((queryBuilder) => {
+                queryBuilder
+                    .select('user_id', 'project')
+                    .from('group_role')
+                    .leftJoin(
+                        'group_user',
+                        'group_user.group_id',
+                        'group_role.group_id',
+                    );
+            })
+            .as('query');
+
         const members = await this.db
             .select('project')
-            .from((db) => {
-                db.select('user_id', 'project')
-                    .from('role_user')
-                    .leftJoin('roles', 'role_user.role_id', 'roles.id')
-                    .where((builder) => builder.whereNot('type', 'root'))
-                    .union((queryBuilder) => {
-                        queryBuilder
-                            .select('user_id', 'project')
-                            .from('group_role')
-                            .leftJoin(
-                                'group_user',
-                                'group_user.group_id',
-                                'group_role.group_id',
-                            );
-                    })
-                    .as('query');
-            })
+            .from(membersQuery)
             .groupBy('project')
             .count('user_id');
 
@@ -261,34 +262,29 @@ export class ProjectReadModel implements IProjectReadModel {
     }
 
     async getProjectsByUser(userId: number): Promise<string[]> {
-        const projects = await this.db
-            .from((db) => {
-                db.select('role_user.project')
-                    .from('role_user')
-                    .leftJoin('roles', 'role_user.role_id', 'roles.id')
-                    .leftJoin('projects', 'role_user.project', 'projects.id')
-                    .where('user_id', userId)
-                    .andWhere('projects.archived_at', null)
-                    .union((queryBuilder) => {
-                        queryBuilder
-                            .select('group_role.project')
-                            .from('group_role')
-                            .leftJoin(
-                                'group_user',
-                                'group_user.group_id',
-                                'group_role.group_id',
-                            )
-                            .leftJoin(
-                                'projects',
-                                'group_role.project',
-                                'projects.id',
-                            )
-                            .where('group_user.user_id', userId)
-                            .andWhere('projects.archived_at', null);
-                    })
-                    .as('query');
+        const projectsQuery = this.db
+            .select('role_user.project')
+            .from('role_user')
+            .leftJoin('roles', 'role_user.role_id', 'roles.id')
+            .leftJoin('projects', 'role_user.project', 'projects.id')
+            .where('user_id', userId)
+            .andWhere('projects.archived_at', null)
+            .union((queryBuilder) => {
+                queryBuilder
+                    .select('group_role.project')
+                    .from('group_role')
+                    .leftJoin(
+                        'group_user',
+                        'group_user.group_id',
+                        'group_role.group_id',
+                    )
+                    .leftJoin('projects', 'group_role.project', 'projects.id')
+                    .where('group_user.user_id', userId)
+                    .andWhere('projects.archived_at', null);
             })
-            .pluck('project');
+            .as('query');
+
+        const projects = await this.db.from(projectsQuery).pluck('project');
         return projects;
     }
 

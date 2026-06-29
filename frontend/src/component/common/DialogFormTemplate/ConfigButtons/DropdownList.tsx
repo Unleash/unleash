@@ -1,8 +1,21 @@
 import Search from '@mui/icons-material/Search';
 import { useRef, useState } from 'react';
-import { InputAdornment, List, ListItemText } from '@mui/material';
+import {
+    InputAdornment,
+    List,
+    ListItemIcon,
+    ListItemText,
+} from '@mui/material';
 import { StyledDropdownSearch } from './shared.styles';
-import { StyledCheckbox, StyledListItem } from './DropdownList.styles';
+import {
+    StyledCheckbox,
+    StyledHeader,
+    StyledHeaderDescription,
+    StyledHeaderTitle,
+    StyledListItem,
+    StyledOptionDescription,
+    StyledSelectedIcon,
+} from './DropdownList.styles';
 
 function useSelectionManagement<T>(handleToggle: (value: T) => () => void) {
     const listRefs = useRef<Array<HTMLInputElement | HTMLLIElement | null>>([]);
@@ -46,20 +59,26 @@ function useSelectionManagement<T>(handleToggle: (value: T) => () => void) {
 }
 
 export type DropdownListProps<T> = {
-    options: Array<{ label: string; value: T }>;
+    options: Array<{ label: string; value: T; description?: string }>;
     onChange: (value: T) => void;
     search: {
         label: string;
         placeholder: string;
     };
+    hideSearch?: boolean;
+    header?: { header: string; description?: string };
     multiselect?: { selectedOptions: Set<T> };
+    selectedValue?: T;
 };
 
 export function DropdownList<T = string>({
     options,
     onChange,
     search,
+    hideSearch,
+    header,
     multiselect,
+    selectedValue,
 }: DropdownListProps<T>) {
     const [searchText, setSearchText] = useState('');
 
@@ -77,32 +96,48 @@ export function DropdownList<T = string>({
 
     return (
         <>
-            <StyledDropdownSearch
-                variant='outlined'
-                size='small'
-                value={searchText}
-                onChange={(event) => setSearchText(event.target.value)}
-                label={search.label}
-                hideLabel
-                placeholder={search.placeholder}
-                autoFocus
-                InputProps={{
-                    startAdornment: (
-                        <InputAdornment position='start'>
-                            <Search fontSize='small' />
-                        </InputAdornment>
-                    ),
-                }}
-                inputRef={(el) => {
-                    listRefs.current[0] = el;
-                }}
-                onKeyDown={(event) =>
-                    handleSelection(event, 0, filteredOptions)
-                }
-            />
+            {header ? (
+                <StyledHeader>
+                    <StyledHeaderTitle>{header.header}</StyledHeaderTitle>
+                    {header.description ? (
+                        <StyledHeaderDescription>
+                            {header.description}
+                        </StyledHeaderDescription>
+                    ) : null}
+                </StyledHeader>
+            ) : null}
+            {hideSearch ? null : (
+                <StyledDropdownSearch
+                    variant='outlined'
+                    size='small'
+                    value={searchText}
+                    onChange={(event) => setSearchText(event.target.value)}
+                    label={search.label}
+                    hideLabel
+                    placeholder={search.placeholder}
+                    autoFocus
+                    slotProps={{
+                        input: {
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                    <Search fontSize='small' />
+                                </InputAdornment>
+                            ),
+                        },
+                    }}
+                    inputRef={(el) => {
+                        listRefs.current[0] = el;
+                    }}
+                    onKeyDown={(event) =>
+                        handleSelection(event, 0, filteredOptions)
+                    }
+                />
+            )}
             <List sx={{ overflowY: 'auto' }} disablePadding>
                 {filteredOptions.map((option, index) => {
                     const labelId = `checkbox-list-label-${option.value}`;
+                    const isSelected =
+                        !multiselect && option.value === selectedValue;
 
                     return (
                         <StyledListItem
@@ -132,14 +167,37 @@ export function DropdownList<T = string>({
                                         option.value,
                                     )}
                                     tabIndex={-1}
-                                    inputProps={{
-                                        'aria-labelledby': labelId,
+                                    slotProps={{
+                                        input: {
+                                            'aria-labelledby': labelId,
+                                        },
                                     }}
                                     size='small'
-                                    disableRipple
                                 />
                             ) : null}
-                            <ListItemText id={labelId} primary={option.label} />
+                            <ListItemText
+                                id={labelId}
+                                primary={option.label}
+                                title={option.label}
+                                secondary={
+                                    option.description ? (
+                                        <StyledOptionDescription>
+                                            {option.description}
+                                        </StyledOptionDescription>
+                                    ) : undefined
+                                }
+                                sx={{ minWidth: 0 }}
+                                slotProps={{
+                                    primary: {
+                                        noWrap: !option.description,
+                                    },
+                                }}
+                            />
+                            {isSelected ? (
+                                <ListItemIcon>
+                                    <StyledSelectedIcon fontSize='small' />
+                                </ListItemIcon>
+                            ) : null}
                         </StyledListItem>
                     );
                 })}

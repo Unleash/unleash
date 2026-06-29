@@ -32,6 +32,7 @@ export class UiObservabilityController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Admin UI'],
+                    release: { stable: '5.10.0' },
                     operationId: 'uiObservability',
                     summary: 'Accepts errors from the UI client',
                     description:

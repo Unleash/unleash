@@ -5,7 +5,7 @@ import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import useToast from 'hooks/useToast';
 import type {
     IFeatureStrategy,
@@ -30,14 +30,12 @@ import { comparisonModerator } from '../featureStrategy.utils';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import useQueryParams from 'hooks/useQueryParams';
 import { useDefaultStrategy } from '../../../project/Project/ProjectSettings/ProjectDefaultStrategySettings/ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy.tsx';
 import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm.tsx';
 import { Limit } from 'component/common/Limit/Limit';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
-import { LegacyFeatureStrategyCreate } from './LegacyFeatureStrategyCreate.tsx';
 
 const useStrategyLimit = (strategyCount: number) => {
     const { uiConfig } = useUiConfig();
@@ -51,7 +49,7 @@ const useStrategyLimit = (strategyCount: number) => {
     };
 };
 
-const NewFeatureStrategyCreate = () => {
+export const FeatureStrategyCreate = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const environmentId = useRequiredQueryParam('environmentId');
@@ -86,7 +84,7 @@ const NewFeatureStrategyCreate = () => {
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const { data, staleDataNotification, forceRefreshCache } =
         useCollaborateData<IFeatureToggle>(
@@ -191,7 +189,7 @@ const NewFeatureStrategyCreate = () => {
         }
     };
 
-    const emptyFeature = !data || !data.project;
+    const emptyFeature = !data?.project;
 
     if (emptyFeature) return null;
 
@@ -235,15 +233,6 @@ const NewFeatureStrategyCreate = () => {
             />
             {staleDataNotification}
         </FormTemplate>
-    );
-};
-
-export const FeatureStrategyCreate = () => {
-    const consolidate = useUiFlag('strategyFormConsolidation');
-    return consolidate ? (
-        <NewFeatureStrategyCreate />
-    ) : (
-        <LegacyFeatureStrategyCreate />
     );
 };
 

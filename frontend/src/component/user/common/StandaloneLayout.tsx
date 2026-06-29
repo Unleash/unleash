@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, JSX } from 'react';
 import StandaloneBanner from 'component/user/StandaloneBanner';
 import { styled } from '@mui/material';
 

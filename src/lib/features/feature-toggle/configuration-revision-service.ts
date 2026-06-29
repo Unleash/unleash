@@ -1,23 +1,45 @@
 import type { Logger } from '../../logger.js';
 import type {
-    EnvironmentRevisionId,
     IEventStore,
     IFlagResolver,
     IUnleashConfig,
     IUnleashStores,
 } from '../../types/index.js';
 import EventEmitter from 'events';
-import { createGauge } from '../../util/metrics/index.js';
-import { getVisibleRevisionForProjects } from '../client-feature-toggles/delta/visible-revision.js';
+import {
+    Gauge as PromGauge,
+    register as prometheusRegister,
+} from 'prom-client';
+import { createGauge, type Gauge } from '../../util/metrics/index.js';
 
 export const UPDATE_REVISION = 'UPDATE_REVISION';
 
-const revisionIdMetric = createGauge({
-    name: 'environment_revision_id',
-    help: 'Current revision id for environment',
-    labelNames: ['environment'],
+const revisionIdMetricName = 'environment_revision_id';
+
+const asGaugeWrapper = <T extends string>(gauge: PromGauge<T>): Gauge<T> => ({
+    gauge,
+    labels: (labels: Record<T, string | number>) => gauge.labels(labels),
+    reset: () => gauge.reset(),
+    set: (value: number) => gauge.set(value),
 });
 
+const getRevisionIdMetric = (): Gauge<'environment'> => {
+    const existing = prometheusRegister.getSingleMetric(revisionIdMetricName);
+
+    if (existing instanceof PromGauge) {
+        return asGaugeWrapper(existing as PromGauge<'environment'>);
+    }
+
+    return createGauge({
+        name: revisionIdMetricName,
+        help: 'Current revision id for environment',
+        labelNames: ['environment'],
+    });
+};
+
+const revisionIdMetric = getRevisionIdMetric();
+
+// Should only be used for standard polling
 export default class ConfigurationRevisionService extends EventEmitter {
     private static instance: ConfigurationRevisionService | undefined;
 
@@ -61,36 +83,6 @@ export default class ConfigurationRevisionService extends EventEmitter {
         }
         return ConfigurationRevisionService.instance;
     }
-    // Used in enterprise to give edge observability data
-    getCachedRevisionIdsPerEnvironment(): EnvironmentRevisionId[] {
-        return Array.from(this.maxRevisionId.entries()).map(
-            ([environment, revisionId]) => {
-                return {
-                    environment,
-                    revisionId,
-                };
-            },
-        );
-    }
-
-    async getVisibleRevisionId(
-        environment: string,
-        projects: string[],
-    ): Promise<number> {
-        const upperBound = await this.getMaxRevisionId();
-        if (projects.length === 0 || projects.includes('*')) {
-            return upperBound;
-        }
-        const revisionState = await this.eventStore.getDeltaRevisionState(
-            environment,
-            upperBound,
-        );
-        return getVisibleRevisionForProjects(
-            revisionState,
-            projects,
-            upperBound,
-        );
-    }
 
     async getMaxRevisionId(environment?: string): Promise<number> {
         if (environment) {
@@ -117,6 +109,9 @@ export default class ConfigurationRevisionService extends EventEmitter {
             environment,
         );
         if (maxRevId < actualMax) {
+            this.logger.info(
+                `[revision] Environment revision advanced for ${environment}: ${maxRevId} -> ${actualMax}`,
+            );
             this.maxRevisionId.set(environment, actualMax);
             maxRevId = actualMax;
         }
@@ -134,9 +129,6 @@ export default class ConfigurationRevisionService extends EventEmitter {
         );
         if (this.revisionId !== revisionId) {
             const knownEnvironments = [...this.maxRevisionId.keys()];
-            this.logger.debug(
-                `Updating feature configuration with new revision Id ${revisionId} and all envs: ${knownEnvironments.join(', ')}`,
-            );
             await Promise.allSettled(
                 knownEnvironments.map((environment) =>
                     this.updateMaxEnvironmentRevisionId(environment),

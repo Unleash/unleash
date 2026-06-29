@@ -1,6 +1,6 @@
 import { styled } from '@mui/material';
-import CheckCircleOutline from '@mui/icons-material/CheckCircleOutline';
-import ErrorOutline from '@mui/icons-material/ErrorOutline';
+import CheckCircleOutline from '@mui/icons-material/CheckCircleOutlineOutlined';
+import ErrorOutline from '@mui/icons-material/ErrorOutlineOutlined';
 import WarningAmber from '@mui/icons-material/WarningAmber';
 import type { IntegrationEvent } from 'interfaces/integrationEvent';
 

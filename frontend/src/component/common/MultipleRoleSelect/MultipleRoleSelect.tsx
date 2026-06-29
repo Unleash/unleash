@@ -54,6 +54,7 @@ export const MultipleRoleSelect = ({
     value,
     setValue,
     required,
+    slotProps,
     ...rest
 }: IMultipleRoleSelectProps) => {
     const renderRoleOption = (
@@ -90,6 +91,7 @@ export const MultipleRoleSelect = ({
                             },
                         },
                     },
+                    ...slotProps,
                 }}
                 multiple
                 disableCloseOnSelect

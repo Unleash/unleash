@@ -1,10 +1,10 @@
 import { forwardRef, type ReactNode } from 'react';
-import { Box, Grid, styled, useMediaQuery, useTheme } from '@mui/material';
+import { Box, styled, useMediaQuery, useTheme } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import Header from 'component/menu/Header/Header';
 import Footer from 'component/menu/Footer/Footer';
 import BreadcrumbNav from 'component/common/BreadcrumbNav/BreadcrumbNav';
 import textureImage from 'assets/img/texture.png';
-import { SkipNavLink } from 'component/common/SkipNavLink/SkipNavLink';
 import { SkipNavTarget } from 'component/common/SkipNavLink/SkipNavTarget';
 import { formatAssetPath } from 'utils/formatPath';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
@@ -14,9 +14,9 @@ import { DraftBanner } from './DraftBanner/DraftBanner.tsx';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar.tsx';
 import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
-import { LegacyNewInUnleash } from './NavigationSidebar/NewInUnleash/LegacyNewInUnleash.tsx';
 import { NewInUnleash } from './NavigationSidebar/NewInUnleash/NewInUnleash.tsx';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { AccessRequestsNotifications } from 'component/admin/users/AccessRequestsNotifications/AccessRequestsNotifications';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -126,25 +126,18 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
         );
         const theme = useTheme();
         const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
-        const useNewNewInUnleash = useUiFlag('gtmReleaseManagement');
+        const accessRequestsNotificationsEnabled = useUiFlag(
+            'accessRequestsNotifications',
+        );
 
         return (
             <EventTimelineProvider>
-                <SkipNavLink />
                 <MainLayoutContainer>
                     <MainLayoutContentWrapper>
                         <LayoutFlexContainer>
                             <ConditionallyRender
                                 condition={!isSmallScreen}
-                                show={
-                                    <NavigationSidebar
-                                        NewInUnleash={
-                                            useNewNewInUnleash
-                                                ? undefined
-                                                : LegacyNewInUnleash
-                                        }
-                                    />
-                                }
+                                show={<NavigationSidebar />}
                             />
 
                             <MainContentWrapper>
@@ -196,7 +189,10 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                         />
                     </MainLayoutContentWrapper>
                 </MainLayoutContainer>
-                {useNewNewInUnleash && <NewInUnleash />}
+                <NewInUnleash />
+                {accessRequestsNotificationsEnabled && (
+                    <AccessRequestsNotifications />
+                )}
             </EventTimelineProvider>
         );
     },

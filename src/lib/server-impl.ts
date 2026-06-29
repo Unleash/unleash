@@ -44,6 +44,7 @@ import { CRUDStore } from './db/crud/crud-store.js';
 import type { CrudStoreConfig } from './db/crud/crud-store.js';
 import { type Logger, LogLevel, type LogProvider } from './logger.js';
 import { ImportTogglesStore } from './features/export-import-toggles/import-toggles-store.js';
+import Addon from './addons/addon.js';
 import { ALL_PROJECTS, CUSTOM_ROOT_ROLE_TYPE } from './util/index.js';
 import {
     extractAuditInfoFromUser,
@@ -88,8 +89,13 @@ import type { Constraint } from 'unleash-client/lib/strategy/strategy.js';
 import {
     type ClientFeatureToggleDelta,
     type DeltaEvent,
+    type EnvironmentVisibleRevisionState,
     UPDATE_DELTA,
 } from './features/client-feature-toggles/delta/client-feature-toggle-delta.js';
+import {
+    getReferencedSegmentIds,
+    getVisibleRevision,
+} from './features/client-feature-toggles/delta/visible-revision.js';
 import type { IQueryParam } from './features/feature-toggle/types/feature-toggle-strategies-store-type.js';
 import {
     applyGenericQueryParams,
@@ -102,6 +108,7 @@ import {
     createContextService,
     createEnvironmentService,
     createEventsService,
+    createUserService,
     createFakeInstanceStatsService,
     createFakeProjectService,
     createFeatureToggleService,
@@ -111,18 +118,24 @@ import {
     createTagTypeService,
     createExportImportTogglesService,
     DB_TIME,
+    IMPACT_METRICS_QUERY_TIME,
     findParam,
     conditionalMiddleware,
+    requireFeatureEnabled,
     createPlaygroundService,
     createSegmentService,
+    createSettingService,
     createFakeEventsService,
     createFakeFeatureToggleService,
     createFakeSegmentService,
+    createFakeSettingService,
     createDependentFeaturesService,
     createFakeDependentFeaturesService,
     createFakeAccessService,
     corsOriginMiddleware,
     impactRegister,
+    EXTERNAL_SOURCE_SETTING_KEY,
+    type ExternalImpactMetricsSource,
 } from './internals.js';
 import SessionStore from './db/session-store.js';
 import metricsHelper from './util/metrics-helper.js';
@@ -137,8 +150,18 @@ import {
     type ISchemaValidationErrors,
     validateSchema,
 } from './openapi/validate.js';
-import type { Counter, Gauge } from './util/metrics/index.js';
-import { createCounter, createGauge } from './util/metrics/index.js';
+import type {
+    Counter,
+    Gauge,
+    Histogram,
+    Summary,
+} from './util/metrics/index.js';
+import {
+    createCounter,
+    createGauge,
+    createSummary,
+    createHistogram,
+} from './util/metrics/index.js';
 import FakeEventStore from '../test/fixtures/fake-event-store.js';
 import type { Subscriber } from './features/user-subscriptions/user-subscriptions-read-model-type.js';
 import { UserSubscriptionsReadModel } from './features/user-subscriptions/user-subscriptions-read-model.js';
@@ -468,14 +491,18 @@ export {
     getVariantValue,
     UPDATE_DELTA,
     UPDATE_REVISION,
+    getReferencedSegmentIds,
+    getVisibleRevision,
     applyGenericQueryParams,
     normalizeQueryParams,
     parseSearchOperatorValue,
     createEventsService,
+    createUserService,
     SessionStore,
     createAccessService,
     metricsHelper,
     DB_TIME,
+    IMPACT_METRICS_QUERY_TIME,
     EventStore,
     FakeEventStore,
     fakeImpactMetricsResolver,
@@ -492,6 +519,8 @@ export {
     addAjvSchema,
     createCounter,
     createGauge,
+    createSummary,
+    createHistogram,
     UserSubscriptionsReadModel,
     FakeUserSubscriptionsReadModel,
     FakePrivateProjectChecker,
@@ -518,6 +547,7 @@ export {
     FeatureTagStore,
     ExportImportController,
     conditionalMiddleware,
+    requireFeatureEnabled,
     DELTA_EVENT_TYPES,
     createKnexTransactionStarter,
     createPlaygroundService,
@@ -528,6 +558,8 @@ export {
     createFakeAccessReadModel,
     createFakeSegmentService,
     createSegmentService,
+    createFakeSettingService,
+    createSettingService,
     createFakeFeatureToggleService,
     createFakeEventsService,
     createDependentFeaturesService,
@@ -537,15 +569,18 @@ export {
     corsOriginMiddleware,
     ApiTokenType,
     impactRegister,
+    EXTERNAL_SOURCE_SETTING_KEY,
     EnvironmentStore,
     ProjectStore,
     defaultMetricsRegister,
+    Addon,
 };
 
 export type {
     Db,
     Row,
     CrudStoreConfig,
+    ExternalImpactMetricsSource,
     IUnleashConfig,
     IUnleashOptions,
     IUnleashServices,
@@ -573,6 +608,7 @@ export type {
     Constraint,
     ClientFeatureToggleDelta,
     DeltaEvent,
+    EnvironmentVisibleRevisionState,
     IQueryParam,
     PatService,
     IRoleWithPermissions,
@@ -588,6 +624,8 @@ export type {
     IContextFieldDto,
     Gauge,
     Counter,
+    Histogram,
+    Summary,
     Subscriber,
     ProjectAccess,
     IPrivateProjectChecker,

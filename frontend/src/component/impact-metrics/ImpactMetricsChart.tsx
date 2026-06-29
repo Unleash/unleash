@@ -15,7 +15,7 @@ import {
 } from './metricsFormatters.js';
 import { fromUnixTime } from 'date-fns';
 import { useChartData } from './hooks/useChartData.ts';
-import type { AggregationMode } from './types.ts';
+import type { AggregationMode, MetricSource } from './types.ts';
 
 type ChartComponent =
     | 'xAxis'
@@ -38,6 +38,7 @@ type ImpactMetricsChartProps = {
     isPreview?: boolean;
     showComponents?: ChartComponent[];
     threshold?: number;
+    source?: MetricSource;
 };
 
 export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
@@ -60,6 +61,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
         'notEnoughDataMessage',
     ],
     threshold,
+    source,
 }) => {
     const shouldShowComponent = (component: ChartComponent) =>
         showComponents.includes(component);
@@ -70,13 +72,15 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
     } = useImpactMetricsData(
         metricName
             ? {
-                  series: metricName,
+                  metricName,
                   range: timeRange,
                   aggregationMode,
                   labels:
                       Object.keys(labelSelectors).length > 0
                           ? labelSelectors
                           : undefined,
+                  source,
+                  mode: 'display',
               }
             : undefined,
     );
@@ -160,12 +164,13 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
                                 },
                                 tooltipFormat: 'PPpp',
                             },
+                            ...overrideScales.x,
                             ticks: {
                                 maxRotation: 45,
                                 minRotation: 45,
                                 maxTicksLimit: 8,
+                                ...overrideScales.x?.ticks,
                             },
-                            ...overrideScales.x,
                         }
                       : {
                             display: false,
@@ -180,14 +185,15 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
                                         ? 'Rate per second'
                                         : '',
                             },
+                            ...overrideScales.y,
                             ticks: {
                                 precision: 0,
                                 callback: (value: unknown): string | number =>
                                     typeof value === 'number'
                                         ? `${formatLargeNumbers(value)}${aggregationMode === 'rps' ? '/s' : ''}`
                                         : (value as number),
+                                ...overrideScales.y?.ticks,
                             },
-                            ...overrideScales.y,
                         }
                       : {
                             display: false,
@@ -253,8 +259,10 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
                 >
                     <Typography
                         variant='caption'
-                        color='text.secondary'
-                        sx={{ wordBreak: 'break-all' }}
+                        sx={{
+                            color: 'text.secondary',
+                            wordBreak: 'break-all',
+                        }}
                     >
                         <code>{debug.query}</code>
                     </Typography>

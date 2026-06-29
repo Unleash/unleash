@@ -45,6 +45,7 @@ import { PaginatedApplicationList } from '../application/ApplicationList/Paginat
 import { AddonRedirect } from 'component/integrations/AddonRedirect/AddonRedirect';
 import { Insights } from '../insights/Insights.jsx';
 import { LazyImpactMetricsPage } from '../impact-metrics/LazyImpactMetricsPage.tsx';
+import { LazyImpactViewsPage } from '../impact-views/LazyImpactViewsPage.tsx';
 import { FeedbackList } from '../feedbackNew/FeedbackList.jsx';
 import { Application } from 'component/application/Application';
 import { Signals } from 'component/signals/Signals';
@@ -56,6 +57,7 @@ import { EditReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/
 import { ExploreCounters } from 'component/counters/ExploreCounters/ExploreCounters.js';
 import { UnknownFlagsTable } from 'component/unknownFlags/UnknownFlagsTable';
 import { ChangeRequests } from 'component/changeRequest/ChangeRequests/ChangeRequests';
+import { LazyStoriesPage } from 'component/stories/LazyStoriesPage.tsx';
 
 export const routes: IRoute[] = [
     // Splash
@@ -182,7 +184,18 @@ export const routes: IRoute[] = [
         type: 'protected',
         menu: { primary: true },
         enterprise: true,
-        flag: 'impactMetrics',
+        notFlag: 'disableImpactMetrics',
+    },
+
+    // Impact Views
+    {
+        path: '/impact-views',
+        title: 'Impact views',
+        component: LazyImpactViewsPage,
+        type: 'protected',
+        menu: { primary: true },
+        enterprise: true,
+        flag: 'impactViews',
     },
 
     // Applications
@@ -566,6 +579,19 @@ export const routes: IRoute[] = [
         menu: {},
         isStandalone: true,
     },
+    ...(import.meta.env.DEV
+        ? [
+              {
+                  path: '/_stories',
+                  title: 'Stories',
+                  hidden: true,
+                  component: LazyStoriesPage,
+                  type: 'unprotected' as const,
+                  menu: {},
+                  isStandalone: true,
+              },
+          ]
+        : []),
 ];
 
 export const getRoute = (path: string) =>

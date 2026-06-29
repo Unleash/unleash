@@ -53,7 +53,7 @@ export const SignupDialogAccountDetails: SignupStepContent = ({
                     }
                 />
             </StyledSignupDialogField>
-            <StyledSignupDialogField>
+            <StyledSignupDialogField data-public>
                 <StyledSignupDialogLabel>
                     What's your role?
                 </StyledSignupDialogLabel>

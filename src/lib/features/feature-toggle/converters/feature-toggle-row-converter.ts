@@ -145,7 +145,6 @@ export class FeatureToggleRowConverter {
         feature.project = row.project;
         feature.stale = row.stale || false;
         feature.type = row.type;
-        feature.lastSeenAt = row.last_seen_at;
         feature.variants = row.variants || [];
         feature.project = row.project;
 

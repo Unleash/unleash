@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { fireEvent, screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { FILTER_ITEM, FILTERS_MENU } from 'utils/testIds';

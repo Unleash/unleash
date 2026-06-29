@@ -1,5 +1,5 @@
 import { type SyntheticEvent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { OK } from 'constants/statusCodes';
 import useLoading from 'hooks/useLoading';
 import { Button, styled, Typography } from '@mui/material';
@@ -10,8 +10,6 @@ import ResetPasswordError from '../common/ResetPasswordError/ResetPasswordError.
 import { useAuthResetPasswordApi } from 'hooks/api/actions/useAuthResetPasswordApi/useAuthResetPasswordApi';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useFlag } from '@unleash/proxy-client-react';
-import DeprecatedResetPassword from './DeprecatedResetPassword';
 import { AuthPageLayout } from '../common/AuthPageLayout';
 import PasswordField from 'component/common/PasswordField/PasswordField';
 import { PasswordRequirementsChecker } from '../common/PasswordRequirementsChecker/PasswordRequirementsChecker';
@@ -34,7 +32,7 @@ const StyledLabel = styled(Typography)(({ theme }) => ({
     marginBottom: theme.spacing(1),
 }));
 
-const NewResetPassword = () => {
+const ResetPassword = () => {
     const { token, loading, isValidToken } = useResetPassword();
     const { resetPassword, loading: actionLoading } = useAuthResetPasswordApi();
     const { authDetails } = useAuthDetails();
@@ -112,14 +110,6 @@ const NewResetPassword = () => {
             </div>
         </AuthPageLayout>
     );
-};
-
-const ResetPassword = () => {
-    const newLogin = useFlag('newLogin');
-    if (newLogin) {
-        return <NewResetPassword />;
-    }
-    return <DeprecatedResetPassword />;
 };
 
 export default ResetPassword;

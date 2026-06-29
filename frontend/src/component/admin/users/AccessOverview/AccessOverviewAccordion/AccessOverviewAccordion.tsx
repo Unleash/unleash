@@ -9,6 +9,8 @@ import {
     AccessOverviewList,
     type IAccessOverviewPermissionCategory,
 } from './AccessOverviewList.tsx';
+import type { IGroup } from 'interfaces/group.ts';
+import type { IRole } from 'interfaces/role.ts';
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,
@@ -30,15 +32,19 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     },
 }));
 
-const StyledTitleContainer = styled('div')(({ theme }) => ({
+const StyledTitleContainer = styled('div')({
     display: 'flex',
-    alignItems: 'start',
-    flexDirection: 'column',
-    gap: theme.spacing(0.5),
-}));
+    alignItems: 'center',
+    minWidth: 0,
+    flex: 1,
+});
 
 const StyledTitle = styled('span')(({ theme }) => ({
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
     fontWeight: theme.fontWeight.bold,
+    minWidth: 0,
 }));
 
 const StyledSecondaryLabel = styled('span')(({ theme }) => ({
@@ -53,31 +59,44 @@ const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
 
 interface IAccessAccordionProps {
     categories: IAccessOverviewPermissionCategory[];
-    children: React.ReactNode;
+    rootRole: IRole | undefined;
+    roles: number[] | undefined;
+    groups: IGroup[] | undefined;
+    title: React.ReactNode;
+    children?: React.ReactNode;
 }
 
 export const AccessOverviewAccordion = ({
     categories,
+    rootRole,
+    roles,
+    groups,
+    title,
     children,
 }: IAccessAccordionProps) => {
     const permissions = categories.flatMap(({ permissions }) => permissions);
+    const hasAccess = permissions.filter((p) => p.hasPermission);
 
     return (
         <StyledAccordion>
             <StyledAccordionSummary expandIcon={<ExpandMore />}>
                 <StyledTitleContainer>
-                    <StyledTitle>{children}</StyledTitle>
+                    <StyledTitle>{title}</StyledTitle>
                 </StyledTitleContainer>
                 <StyledSecondaryLabel>
-                    {
-                        permissions.filter(({ hasPermission }) => hasPermission)
-                            .length
-                    }
-                    /{permissions.length} permissions
+                    {hasAccess.length} / {permissions.length} permissions
                 </StyledSecondaryLabel>
             </StyledAccordionSummary>
             <StyledAccordionDetails>
-                <AccessOverviewList categories={categories} />
+                {permissions.length > 0 && (
+                    <AccessOverviewList
+                        categories={categories}
+                        rootRole={rootRole}
+                        roles={roles}
+                        groups={groups}
+                    />
+                )}
+                {children}
             </StyledAccordionDetails>
         </StyledAccordion>
     );

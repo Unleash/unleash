@@ -12,11 +12,11 @@ import {
 } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import MoreVert from '@mui/icons-material/MoreVert';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
 import { useCreateFeaturePath } from 'component/feature/CreateFeatureButton/useCreateFeaturePath';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import IosShare from '@mui/icons-material/IosShare';
 
 const StyledActions = styled('div')(({ theme }) => ({
@@ -36,7 +36,7 @@ interface IFeatureFlagListActions {
 export const FeatureToggleListActions: FC<IFeatureFlagListActions> = ({
     onExportClick,
 }: IFeatureFlagListActions) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const createFeature = useCreateFeaturePath({
         query: '',
@@ -98,6 +98,7 @@ export const FeatureToggleListActions: FC<IFeatureFlagListActions> = ({
                         {({ hasAccess }) => (
                             <MenuItem
                                 component={Link}
+                                nativeButton={false}
                                 disabled={!hasAccess}
                                 to={createFeature!.path}
                                 onClick={() => {

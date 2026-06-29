@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { Dialogue } from './Dialogue.tsx';
-import { vi } from 'vitest';
+import { expect, test, vi } from 'vitest';
 
 test('modal should close when escape is pressed', () => {
     const mockSetOpen = vi.fn();
@@ -15,7 +15,7 @@ test('modal should close when escape is pressed', () => {
 
     expect(screen.getByText('New dialogue created')).toBeInTheDocument();
 
-    const dialogue = screen.getByRole('presentation');
+    const dialogue = screen.getByRole('dialog');
     fireEvent.keyDown(dialogue, { key: 'Escape', code: 'Escape' });
 
     expect(mockSetOpen).toHaveBeenCalledWith(false);

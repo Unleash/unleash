@@ -10,7 +10,10 @@ export const getTimeUnit = (timeRange: string) => {
         case 'week':
             return 'day';
         case 'month':
+        case 'threeMonths':
             return 'week';
+        case 'sixMonths':
+            return 'month';
         default:
             return 'day';
     }
@@ -25,7 +28,10 @@ export const getDisplayFormat = (timeRange: string) => {
         case 'week':
             return 'MMM dd';
         case 'month':
+        case 'threeMonths':
             return 'MMM dd';
+        case 'sixMonths':
+            return 'MMM';
         default:
             return 'MMM dd';
     }
@@ -62,28 +68,20 @@ const KNOWN_METRIC_TYPES: MetricType[] = ['counter', 'gauge', 'histogram'];
 
 export const getMetricType = (
     seriesName: string,
-    typeLabel?: string[],
+    metricTypeLabel?: string[],
 ): MetricType => {
+    if (
+        metricTypeLabel?.length === 1 &&
+        KNOWN_METRIC_TYPES.includes(metricTypeLabel[0] as MetricType)
+    ) {
+        return metricTypeLabel[0] as MetricType;
+    }
     if (seriesName.startsWith('unleash_counter_')) return 'counter';
     if (seriesName.startsWith('unleash_gauge_')) return 'gauge';
     if (seriesName.startsWith('unleash_histogram_')) return 'histogram';
-    if (
-        typeLabel?.length === 1 &&
-        KNOWN_METRIC_TYPES.includes(typeLabel[0] as MetricType)
-    ) {
-        return typeLabel[0] as MetricType;
-    }
+    if (seriesName.endsWith('_bucket')) return 'histogram';
+    if (seriesName.endsWith('_count')) return 'counter';
     return 'unknown';
-};
-
-export const getMetricDisplayName = (metricName: string): string => {
-    if (metricName.startsWith('unleash_counter_'))
-        return metricName.slice('unleash_counter_'.length);
-    if (metricName.startsWith('unleash_gauge_'))
-        return metricName.slice('unleash_gauge_'.length);
-    if (metricName.startsWith('unleash_histogram_'))
-        return metricName.slice('unleash_histogram_'.length);
-    return metricName;
 };
 
 export const getDefaultAggregation = (

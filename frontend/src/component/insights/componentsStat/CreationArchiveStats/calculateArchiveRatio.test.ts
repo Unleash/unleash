@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import type { GroupedDataByProject } from 'component/insights/hooks/useGroupedProjectTrends.ts';
 import { calculateArchiveRatio } from './calculateArchiveRatio.ts';
 import type { InstanceInsightsSchema } from 'openapi/index.ts';

@@ -59,6 +59,9 @@ import {
     PROJECT_ARCHIVED,
     RELEASE_PLAN_PROGRESSIONS_PAUSED,
     RELEASE_PLAN_PROGRESSIONS_RESUMED,
+    USER_ACCESS_REQUEST_APPROVED,
+    USER_ACCESS_REQUEST_REGISTERED,
+    USER_ACCESS_REQUEST_REJECTED,
 } from '../events/index.js';
 import type { IAddonDefinition } from '../types/model.js';
 
@@ -68,7 +71,7 @@ const slackAppDefinition: IAddonDefinition = {
     description:
         'The Unleash App for Slack posts messages to the selected channels in your Slack workspace.',
     howTo: 'Below you can specify which Slack channels receive event notifications. The configuration settings allow you to choose the events and whether you want to filter them by projects and environments.\n\nYou can also select which channels to post to by configuring your feature flags with “slack” tags. For example, if you’d like the bot to post messages to the #general channel, you can configure your feature flag with the “slack:general” tag.\n\nThe Unleash App for Slack bot has access to public channels by default. If you want the bot to post messages to private channels, you’ll need to invite it to those channels.',
-    documentationUrl: 'https://docs.getunleash.io/docs/addons/slack-app',
+    documentationUrl: 'https://docs.getunleash.io/integrate/slack-app',
     installation: {
         url: 'https://app-for-slack.getunleash.io/install',
         title: 'App for Slack installation',
@@ -155,6 +158,9 @@ const slackAppDefinition: IAddonDefinition = {
         USER_CREATED,
         USER_DELETED,
         USER_UPDATED,
+        USER_ACCESS_REQUEST_REGISTERED,
+        USER_ACCESS_REQUEST_APPROVED,
+        USER_ACCESS_REQUEST_REJECTED,
     ],
     tagTypes: [
         {

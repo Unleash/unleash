@@ -1,5 +1,5 @@
 import { styled, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import {
     CREATE_SEGMENT,
     UPDATE_PROJECT_SEGMENT,

@@ -1,5 +1,5 @@
 import { Suspense, useEffect } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeedbackNPS } from 'component/feedback/FeedbackNPS/FeedbackNPS';
 import { LayoutPicker } from 'component/layout/LayoutPicker/LayoutPicker';
@@ -26,6 +26,7 @@ import { SecurityBanner } from './banners/internalBanners/SecurityBanner.tsx';
 import { MonthsOldVersionBanner } from './banners/internalBanners/MonthsOldVersionBanner.tsx';
 import { SignupDialog } from './signup/SignupDialog/SignupDialog.tsx';
 import { WelcomeDialog } from './personalDashboard/WelcomeDialog.tsx';
+import { SkipNavLink } from './common/SkipNavLink/SkipNavLink.tsx';
 
 const StyledContainer = styled('div')(() => ({
     '& ul': {
@@ -46,7 +47,7 @@ export const App = () => {
         : routes;
 
     useEffect(() => {
-        if (hasFetchedAuth && Boolean(user?.id)) {
+        if (hasFetchedAuth && user?.id) {
             refetchUiConfig();
         }
     }, [authDetails, user]);
@@ -65,6 +66,7 @@ export const App = () => {
                     elseShow={
                         <Demo>
                             <>
+                                <SkipNavLink />
                                 <ConditionallyRender
                                     condition={Boolean(
                                         uiConfig?.maintenanceMode,

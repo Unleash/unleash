@@ -9,7 +9,7 @@ import SessionService from '../../../lib/services/session-service.js';
 import NotFoundError from '../../../lib/error/notfound-error.js';
 import type { IRole } from '../../../lib/types/stores/access-store.js';
 import { RoleName } from '../../../lib/types/model.js';
-import SettingService from '../../../lib/services/setting-service.js';
+import SettingService from '../../../lib/features/settings/setting-service.js';
 import { simpleAuthSettingsKey } from '../../../lib/types/settings/simple-auth-settings.js';
 import { addDays, minutesToMilliseconds } from 'date-fns';
 import { GroupService } from '../../../lib/services/group-service.js';

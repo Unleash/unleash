@@ -23,6 +23,8 @@ export const StyledPopover = styled(Popover)(({ theme }) => ({
         flexDirection: 'column',
         gap: theme.spacing(1),
         maxHeight: '70vh',
+        width: theme.spacing(40),
+        maxWidth: '90vw',
     },
 }));
 

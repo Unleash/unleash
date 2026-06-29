@@ -104,13 +104,6 @@ export const adminRoutes: INavigationMenuItem[] = [
         group: 'sso',
     },
     {
-        path: '/admin/auth/google',
-        title: 'Google',
-        menu: { adminSettings: true, mode: ['enterprise'] },
-        flag: 'googleAuthEnabled',
-        group: 'sso',
-    },
-    {
         path: '/admin/auth/scim',
         title: 'SCIM',
         menu: { adminSettings: true, mode: ['enterprise'] },
@@ -157,6 +150,21 @@ export const adminRoutes: INavigationMenuItem[] = [
         menu: { adminSettings: true, mode: ['pro', 'enterprise'] },
         group: 'network',
         notFlag: 'consumptionModelUI',
+    },
+
+    // Remote MCP
+    {
+        path: '/admin/remote-mcp',
+        title: 'Remote MCP server',
+        menu: { adminSettings: true },
+    },
+
+    // Impact Metrics
+    {
+        path: '/admin/impact-metrics',
+        title: 'Impact Metrics',
+        menu: { adminSettings: true, mode: ['enterprise'] },
+        notFlag: 'disableImpactMetrics',
     },
 
     // Instance configuration

@@ -4,15 +4,13 @@
  * See `gen:api` script in package.json
  */
 import type { ChangeRequestCreateSchemaOneOfTwosevenAction } from './changeRequestCreateSchemaOneOfTwosevenAction';
-import type { ReleasePlanTemplateIdSchema } from './releasePlanTemplateIdSchema';
 
 /**
- * Add a release plan to this feature environment.
+ * Remove a parent feature dependency or all dependencies if no payload.
  */
 export type ChangeRequestCreateSchemaOneOfTwoseven = {
     /** The name of this action. */
     action: ChangeRequestCreateSchemaOneOfTwosevenAction;
     /** The name of the feature that this change applies to. */
     feature: string;
-    payload: ReleasePlanTemplateIdSchema;
 };

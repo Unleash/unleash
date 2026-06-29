@@ -1,3 +1,4 @@
+import { createUuid } from 'utils/createUuid';
 import { useEffect, useRef, useState } from 'react';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -28,8 +29,6 @@ import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { FeatureStrategyForm } from '../../../../feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm.tsx';
 import { constraintId } from 'constants/constraintId.ts';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
-import { LegacyEditChange } from './LegacyEditChange.tsx';
 import { getChangeStrategyName } from 'utils/getChangeStrategyName.ts';
 
 interface IEditChangeProps {
@@ -54,11 +53,11 @@ const addIdSymbolToConstraints = (
     if (!strategy) return;
 
     return strategy?.constraints.map((constraint) => {
-        return { ...constraint, [constraintId]: crypto.randomUUID() };
+        return { ...constraint, [constraintId]: createUuid() };
     });
 };
 
-const NewEditChange = ({
+export const EditChange = ({
     change,
     changeRequestId,
     environment,
@@ -174,15 +173,6 @@ const NewEditChange = ({
                 {staleDataNotification}
             </FormTemplate>
         </SidebarModal>
-    );
-};
-
-export const EditChange = (props: IEditChangeProps) => {
-    const consolidate = useUiFlag('strategyFormConsolidation');
-    return consolidate ? (
-        <NewEditChange {...props} />
-    ) : (
-        <LegacyEditChange {...props} />
     );
 };
 

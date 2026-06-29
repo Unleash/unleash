@@ -1,7 +1,7 @@
 import memoizee from 'memoizee';
 import type { IAuditUser, IUnleashConfig } from '../../types/index.js';
 import type { Logger } from '../../logger.js';
-import type SettingService from '../../services/setting-service.js';
+import type SettingService from '../settings/setting-service.js';
 import { maintenanceSettingsKey } from '../../types/settings/maintenance-settings.js';
 import type { MaintenanceSchema } from '../../openapi/spec/maintenance-schema.js';
 import { minutesToMilliseconds } from 'date-fns';

@@ -48,7 +48,13 @@ let services: IUnleashServices;
 let destroy: () => Promise<void>;
 
 beforeAll(async () => {
-    const setup = await getSetup();
+    const setup = await getSetup({
+        experimental: {
+            flags: {
+                allowDeprecatedApiTokenMiddleware: true,
+            },
+        },
+    });
     request = setup.request;
     stores = setup.stores;
     destroy = setup.destroy;

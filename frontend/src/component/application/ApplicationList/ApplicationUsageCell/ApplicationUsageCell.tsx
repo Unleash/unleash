@@ -1,7 +1,7 @@
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { styled, Typography, useTheme } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import type { ApplicationUsageSchema } from 'openapi';
 
 export interface IApplicationUsageCellProps {

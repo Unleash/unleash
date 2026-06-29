@@ -1,5 +1,5 @@
 import { Button, styled } from '@mui/material';
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 
 const PORTAL_URL = formatApiPath('api/admin/invoices');
@@ -13,7 +13,7 @@ interface IBillingInformationButtonProps {
     update?: boolean;
 }
 
-export const BillingInformationButton: VFC<IBillingInformationButtonProps> = ({
+export const BillingInformationButton: FC<IBillingInformationButtonProps> = ({
     update,
 }) => (
     <StyledButton

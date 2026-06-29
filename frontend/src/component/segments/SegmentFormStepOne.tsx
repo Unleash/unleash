@@ -1,7 +1,7 @@
 import { Autocomplete, Box, Button, styled, TextField } from '@mui/material';
 import Input from 'component/common/Input/Input';
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import type { SegmentFormStep } from './SegmentForm.tsx';
 import {
     SEGMENT_NAME_ID,

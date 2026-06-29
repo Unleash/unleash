@@ -1,5 +1,5 @@
 import { type FC, useEffect, useReducer, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 import {
     type AutocompleteProps,
     Link,
@@ -250,10 +250,7 @@ export const ManageBulkTagsDialog: FC<IManageBulkTagsDialogProps> = ({
             onClose={onClose}
             formId={formId}
         >
-            <Typography
-                paragraph
-                sx={{ marginBottom: (theme) => theme.spacing(2.5) }}
-            >
+            <Typography sx={{ marginBottom: (theme) => theme.spacing(2.5) }}>
                 Tags allow you to group features together
             </Typography>
             <form id={formId} onSubmit={submitAndReset}>

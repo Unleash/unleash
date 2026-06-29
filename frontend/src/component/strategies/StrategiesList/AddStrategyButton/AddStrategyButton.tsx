@@ -5,7 +5,7 @@ import { useMediaQuery } from '@mui/material';
 import { CREATE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { ADD_NEW_STRATEGY_ID } from 'utils/testIds';
 import Add from '@mui/icons-material/Add';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 export const AddStrategyButton = () => {
     const smallScreen = useMediaQuery('(max-width:700px)');

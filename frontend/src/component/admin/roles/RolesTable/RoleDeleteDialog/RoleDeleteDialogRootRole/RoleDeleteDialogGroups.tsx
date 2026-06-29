@@ -1,9 +1,13 @@
-import { VirtualizedTable } from 'component/common/Table';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { useMemo, useState } from 'react';
-import { useTable, useSortBy, useFlexLayout, type Column } from 'react-table';
-import { sortTypes } from 'utils/sortTypes';
+import {
+    type ColumnDef,
+    getCoreRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
 import type { IGroup } from 'interfaces/group';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 
@@ -19,65 +23,54 @@ export const RoleDeleteDialogGroups = ({
     groups,
 }: IRoleDeleteDialogGroupsProps) => {
     const [initialState] = useState(() => ({
-        sortBy: [{ id: 'createdAt', desc: true }],
+        sorting: [{ id: 'createdAt', desc: true }],
     }));
 
-    const columns = useMemo(
-        () =>
-            [
-                {
-                    id: 'name',
-                    Header: 'Name',
-                    accessor: (row: any) => row.name || '',
-                    minWidth: 200,
-                    Cell: ({ row: { original: group } }: any) => (
-                        <HighlightCell
-                            value={group.name}
-                            subtitle={group.description}
-                        />
-                    ),
-                },
-                {
-                    Header: 'Created',
-                    accessor: 'createdAt',
-                    Cell: DateCell,
-                    width: 120,
-                    maxWidth: 120,
-                },
-                {
-                    id: 'users',
-                    Header: 'Users',
-                    accessor: (row: IGroup) =>
-                        row.users.length === 1
-                            ? '1 user'
-                            : `${row.users.length} users`,
-                    Cell: TextCell,
-                    maxWidth: 150,
-                },
-            ] as Column<IGroup>[],
+    const columns = useMemo<ColumnDef<IGroup, unknown>[]>(
+        () => [
+            {
+                id: 'name',
+                header: 'Name',
+                accessorFn: (row) => row.name || '',
+                meta: { minWidth: 200 },
+                cell: ({ row: { original: group } }) => (
+                    <HighlightCell
+                        value={group.name ?? ''}
+                        subtitle={group.description}
+                    />
+                ),
+            },
+            {
+                id: 'createdAt',
+                header: 'Created',
+                accessorKey: 'createdAt',
+                cell: DateCell,
+                meta: { width: 120, maxWidth: 120 },
+            },
+            {
+                id: 'users',
+                header: 'Users',
+                accessorFn: (row) =>
+                    row.users.length === 1
+                        ? '1 user'
+                        : `${row.users.length} users`,
+                cell: TextCell,
+                meta: { maxWidth: 150 },
+            },
+        ],
         [],
     );
 
-    const { headerGroups, rows, prepareRow } = useTable(
-        {
-            columns,
-            data: groups,
-            initialState,
-            sortTypes,
-            autoResetHiddenColumns: false,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            disableMultiSort: true,
-        },
-        useSortBy,
-        useFlexLayout,
-    );
+    const table = useReactTable({
+        columns,
+        data: groups,
+        initialState,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+        enableMultiSort: false,
+    });
 
-    return (
-        <VirtualizedTable
-            rows={rows}
-            headerGroups={headerGroups}
-            prepareRow={prepareRow}
-        />
-    );
+    return <VirtualizedTable tableInstance={table} />;
 };

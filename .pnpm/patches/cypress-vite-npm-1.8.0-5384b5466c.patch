@@ -1,0 +1,36 @@
+diff --git a/dist/index.cjs b/dist/index.cjs
+index 2921cb6d91fec0227d60c403c4cb7b1297c0f2e3..23919b25fb5dee5bba6bfb6899641b65b5d81808 100644
+--- a/dist/index.cjs
++++ b/dist/index.cjs
+@@ -65,13 +65,6 @@ function vitePreprocessor(userConfig) {
+           formats: ["umd"],
+           name: filenameWithoutExtension
+         },
+-        rollupOptions: {
+-          output: {
+-            // override any manualChunks from the user config because they don't work with UMD
+-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+-            manualChunks: false
+-          }
+-        }
+       }
+     };
+     await vite.build({
+diff --git a/dist/index.mjs b/dist/index.mjs
+index 88981fa66db5fc6f8d1bff495391ea71477aeff7..b0daf0eeaa15dd6da88b07808e5fd15affa3ba46 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -55,13 +55,6 @@ function vitePreprocessor(userConfig) {
+           formats: ["umd"],
+           name: filenameWithoutExtension
+         },
+-        rollupOptions: {
+-          output: {
+-            // override any manualChunks from the user config because they don't work with UMD
+-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+-            manualChunks: false
+-          }
+-        }
+       }
+     };
+     await build({

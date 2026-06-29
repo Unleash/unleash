@@ -1,5 +1,5 @@
 import type { FC, ReactNode } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 import { Box, Card, Typography, Link } from '@mui/material';
 import type {
     ChangeRequestState,

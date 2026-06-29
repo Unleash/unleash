@@ -5,20 +5,21 @@ export default defineConfig({
         globals: true,
         globalSetup: ['./src/test-setup.ts'],
         setupFiles: ['./src/test/errorWithMessage.ts'],
-        reporters: process.env.GITHUB_ACTIONS
-            ? [
-                  ['dot'],
-                  [
-                      'junit',
-                      {
-                          suiteName: 'Unleash Unit Tests',
-                          outputFile: 'reports/jest-junit.xml',
-                          classnameTemplate: '{filename} - {filepath}',
-                      },
-                  ],
-                  ['github-actions'],
-              ]
-            : [['default']],
+        reporters:
+            process.env.GITHUB_ACTIONS === 'true'
+                ? [
+                      ['dot'],
+                      [
+                          'junit',
+                          {
+                              suiteName: 'Unleash Unit Tests',
+                              outputFile: 'reports/jest-junit.xml',
+                              classnameTemplate: '{filename} - {filepath}',
+                          },
+                      ],
+                      ['github-actions'],
+                  ]
+                : [['default']],
         testTimeout: 30000,
         exclude: [
             ...configDefaults.exclude,

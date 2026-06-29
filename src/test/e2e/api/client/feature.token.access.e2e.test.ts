@@ -209,3 +209,34 @@ test('returns feature flag for all projects', async () => {
             expect(features).toHaveLength(3);
         });
 });
+
+test('returns 401 when not provided token', async () => {
+    await app.request
+        .get('/api/client/features')
+        .expect('Content-Type', /json/)
+        .expect(401);
+});
+
+test('returns 401 when provided token that doesnt exist', async () => {
+    await app.request
+        .get('/api/client/features')
+        .set('Authorization', '*:production.secret')
+        .expect('Content-Type', /json/)
+        .expect(401);
+});
+
+test('returns 403 when provided admin token', async () => {
+    await app.request
+        .get('/api/client/features')
+        .set('Authorization', '*:*.secret')
+        .expect('Content-Type', /json/)
+        .expect(403);
+});
+
+test('returns 403 when provided user token', async () => {
+    await app.request
+        .get('/api/client/features')
+        .set('Authorization', 'user:secret')
+        .expect('Content-Type', /json/)
+        .expect(403);
+});

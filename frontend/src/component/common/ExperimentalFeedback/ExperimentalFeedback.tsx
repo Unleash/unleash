@@ -1,11 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Box, Button, Divider, Typography, styled } from '@mui/material';
 import PermMedia from '@mui/icons-material/PermMedia';
 import Send from '@mui/icons-material/Send';
-import {
-    type CustomEvents,
-    usePlausibleTracker,
-} from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
+import type { CustomEvents } from 'utils/trackingEvents';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
@@ -78,13 +76,16 @@ export const ExperimentalFeedback: React.FC<IExperimentalFeedbackProps> = ({
     description,
     sketchURL,
 }) => {
-    const { trackEvent } = usePlausibleTracker();
-    const { value, setValue } = createLocalStorage(trackerKey, { sent: false });
+    const { trackEvent } = useEventTracker();
+    const { value, setValue } = useMemo(
+        () => createLocalStorage(trackerKey, { sent: false }),
+        [trackerKey],
+    );
     const [metrics, setMetrics] = useState(value);
 
     useEffect(() => {
         setValue(metrics);
-    }, [metrics]);
+    }, [metrics, setValue]);
 
     const onBtnClick = (type: string) => {
         try {

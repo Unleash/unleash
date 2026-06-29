@@ -25,7 +25,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import type { IUser } from 'interfaces/user';
 import type { IGroup } from 'interfaces/group';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { GO_BACK } from 'constants/navigate';
 import {
     PA_ASSIGN_CREATE_ID,
@@ -389,11 +389,11 @@ export const ProjectAccessAssign = ({
                                     renderOption(props, option, selected)
                                 }
                                 getOptionLabel={getOptionLabel}
-                                renderTags={(tagValue, getTagProps) =>
-                                    tagValue.map((option, index) => {
+                                renderValue={(value, getItemProps) =>
+                                    value.map((option, index) => {
                                         return (
                                             <Chip
-                                                {...getTagProps({ index })}
+                                                {...getItemProps({ index })}
                                                 size={autocompleteSize}
                                                 key={`${option.type}:${option.id}`}
                                                 label={getOptionLabel(option)}

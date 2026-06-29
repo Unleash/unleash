@@ -43,6 +43,7 @@ export default class ProjectHealthReport extends Controller {
                 openApiService.validPath({
                     tags: ['Projects'],
                     deprecated: true,
+                    release: { stable: '4.13.0' },
                     operationId: 'getProjectHealthReport',
                     summary: 'Get a health report for a project.',
                     description:

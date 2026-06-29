@@ -1,4 +1,4 @@
-import { Knex } from 'knex';
+import type { Knex } from 'knex';
 import type EventEmitter from 'events';
 import metricsHelper from '../../util/metrics-helper.js';
 import { DB_TIME } from '../../metric-events.js';
@@ -8,6 +8,7 @@ import type {
     IFeatureSearchOverview,
     IFeatureSearchStore,
     IFlagResolver,
+    StageName,
 } from '../../types/index.js';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store.js';
 import type { Db } from '../../db/db.js';
@@ -15,13 +16,9 @@ import type {
     IFeatureSearchParams,
     IQueryParam,
 } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
-import {
-    applyGenericQueryParams,
-    applySearchFilters,
-    parseSearchOperatorValue,
-} from './search-utils.js';
+import { applyGenericQueryParams, applySearchFilters } from './search-utils.js';
 import { generateImageUrl } from '../../util/index.js';
-import Raw = Knex.Raw;
+type Raw<T = any> = Knex.Raw<T>;
 import type { ITag } from '../../tags/index.js';
 
 const sortEnvironments = (overview: IFeatureSearchOverview[]) => {
@@ -87,7 +84,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
             status,
             offset,
             limit,
-            lifecycle,
             sortOrder,
             sortBy,
             archived,
@@ -114,7 +110,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     'features.project as project',
                     'features.created_at as created_at',
                     'features.stale as stale',
-                    'features.last_seen_at as last_seen_at',
                     'features.impression_data as impression_data',
                     'feature_environments.enabled as enabled',
                     'feature_environments.environment as environment',
@@ -184,7 +179,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     });
                 }
                 query
-                    .modify(FeatureToggleStore.filterByArchived, archived)
                     .leftJoin(
                         'feature_environments',
                         'feature_environments.feature_name',
@@ -262,15 +256,15 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         'lifecycle.stage_feature',
                     );
 
-                const parsedLifecycle = lifecycle
-                    ? parseSearchOperatorValue(
-                          'lifecycle.latest_stage',
-                          lifecycle,
-                      )
-                    : null;
-                if (parsedLifecycle) {
-                    applyGenericQueryParams(query, [parsedLifecycle]);
-                }
+                const parsedLifecycle =
+                    queryParams.find(
+                        (param) => param.field === 'lifecycle.latest_stage',
+                    ) ?? null;
+                applyLifecycleAndArchivedFilters(
+                    query,
+                    parsedLifecycle,
+                    archived,
+                );
 
                 const rankingSql = this.buildRankingSql(
                     favoritesFirst,
@@ -578,7 +572,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     stale: row.stale,
                     archivedAt: row.archived_at,
                     impressionData: row.impression_data,
-                    lastSeenAt: row.last_seen_at,
                     dependencyType: row.dependency,
                     environments: [],
                     segments: row.segment_name ? [row.segment_name] : [],
@@ -622,14 +615,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
             if (this.isNewTag(entry, row)) {
                 this.addTag(entry, row);
             }
-
-            // Update lastSeenAt if more recent
-            if (
-                !entry.lastSeenAt ||
-                new Date(row.env_last_seen_at) > new Date(entry.lastSeenAt)
-            ) {
-                entry.lastSeenAt = row.env_last_seen_at;
-            }
         });
 
         return orderedEntries;
@@ -669,6 +654,64 @@ class FeatureSearchStore implements IFeatureSearchStore {
         );
     }
 }
+
+const ARCHIVED_STAGE: StageName = 'archived';
+const ARCHIVED_AT = 'features.archived_at';
+const LATEST_STAGE = 'lifecycle.latest_stage';
+
+const applyLifecycleAndArchivedFilters = (
+    query: Knex.QueryBuilder,
+    parsedLifecycle: IQueryParam | null,
+    archived?: boolean,
+): void => {
+    if (!parsedLifecycle) {
+        query.modify(FeatureToggleStore.filterByArchived, Boolean(archived));
+        return;
+    }
+
+    const { operator, values } = parsedLifecycle;
+    const exclude = operator === 'IS_NOT' || operator === 'IS_NONE_OF';
+    const archivedView = Boolean(archived);
+    const filterIncludesArchived = values.includes(ARCHIVED_STAGE);
+    const stages = values.filter((value) => value !== ARCHIVED_STAGE);
+
+    if (exclude) {
+        if (archivedView && !filterIncludesArchived) {
+            // The exclusion only concerns the stages of active flags, so
+            // the archived view is unaffected by it.
+            query.whereNotNull(ARCHIVED_AT);
+            return;
+        }
+        // Active flags whose stage is none of the given stages.
+        query.whereNull(ARCHIVED_AT);
+        if (stages.length > 0) {
+            query.whereNotIn(LATEST_STAGE, stages);
+        }
+        return;
+    }
+
+    if (archivedView) {
+        // Archived flags, optionally narrowed to the given stages.
+        query.whereNotNull(ARCHIVED_AT);
+        if (!filterIncludesArchived && stages.length > 0) {
+            query.whereIn(LATEST_STAGE, stages);
+        }
+        return;
+    }
+
+    // Active flags in the given stages, plus archived flags if asked for.
+    query.where((builder) => {
+        if (stages.length > 0) {
+            builder.orWhereIn(LATEST_STAGE, stages);
+        }
+        if (filterIncludesArchived) {
+            builder.orWhereNotNull(ARCHIVED_AT);
+        }
+    });
+    if (!filterIncludesArchived) {
+        query.whereNull(ARCHIVED_AT);
+    }
+};
 
 const applyStaleConditions = (
     query: Knex.QueryBuilder,
@@ -819,9 +862,14 @@ const applyQueryParams = (
     );
     const genericConditions = queryParams.filter(
         (param) =>
-            !['tag', 'stale', 'segment', 'lastSeenAt', 'favorite'].includes(
-                param.field,
-            ),
+            ![
+                'tag',
+                'stale',
+                'segment',
+                'lastSeenAt',
+                'favorite',
+                'lifecycle.latest_stage',
+            ].includes(param.field),
     );
     applyGenericQueryParams(query, genericConditions);
     applyFavoriteCondition(query, favoriteCondition);

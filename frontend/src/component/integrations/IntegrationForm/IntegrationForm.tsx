@@ -21,7 +21,7 @@ import type { AddonSchema, AddonTypeSchema } from 'openapi';
 import { IntegrationParameters } from './IntegrationParameters/IntegrationParameters.tsx';
 import { IntegrationInstall } from './IntegrationInstall/IntegrationInstall.tsx';
 import cloneDeep from 'lodash.clonedeep';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import useAddonsApi from 'hooks/api/actions/useAddonsApi/useAddonsApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -72,6 +72,7 @@ type IntegrationFormProps = {
     fetch: () => void;
     editMode: boolean;
     addon: AddonSchema | Omit<AddonSchema, 'id'>;
+    deprecated?: boolean;
 };
 
 export const IntegrationForm: FC<IntegrationFormProps> = ({
@@ -79,6 +80,7 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
     provider,
     addon: initialValues,
     fetch,
+    deprecated,
 }) => {
     const { createAddon, updateAddon } = useAddonsApi();
     const { setToastData, setToastApiError } = useToast();
@@ -216,7 +218,7 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
         event.preventDefault();
-        if (!provider) {
+        if (!provider || deprecated) {
             return;
         }
 
@@ -298,6 +300,7 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                             variant='contained'
                             permission={editMode ? UPDATE_ADDON : CREATE_ADDON}
                             onClick={onSubmit}
+                            disabled={deprecated}
                         >
                             {submitText}
                         </PermissionButton>
@@ -329,9 +332,18 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                         condition={Boolean(alerts)}
                         show={() => (
                             <StyledAlerts>
-                                {alerts?.map(({ type, text }) => (
+                                {alerts?.map(({ type, text, link }) => (
                                     <Alert severity={type} key={text}>
-                                        {text}
+                                        {text}{' '}
+                                        {link && (
+                                            <Link
+                                                href={link.url}
+                                                target='_blank'
+                                                rel='noreferrer'
+                                            >
+                                                {link.title}
+                                            </Link>
+                                        )}
                                     </Alert>
                                 ))}
                             </StyledAlerts>

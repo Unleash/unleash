@@ -2,11 +2,11 @@ import { IconButton, Tooltip } from '@mui/material';
 import LinearScaleIcon from '@mui/icons-material/LinearScale';
 import { useEventTimelineContext } from 'component/events/EventTimeline/EventTimelineContext';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { Highlight } from 'component/common/Highlight/Highlight';
 
 export const HeaderEventTimelineButton = () => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { isOss } = useUiConfig();
     const { open: showTimeline, setOpen: setShowTimeline } =
         useEventTimelineContext();

@@ -1,12 +1,12 @@
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { ReactComponent as ReleaseTemplateIcon } from 'assets/img/releaseTemplates.svg';
+import ReleaseTemplateIcon from 'assets/img/releaseTemplates.svg?react';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans.ts';
 import { Box, Button, styled } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import type { StrategyFilterValue } from './FeatureStrategyMenuCards.tsx';
 import { useState, type Dispatch, type SetStateAction } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 import {
     FeatureStrategyMenuCardsSection,
     StyledStrategyModalSectionHeader,
@@ -14,7 +14,7 @@ import {
 import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard.tsx';
 import { FeatureStrategyMenuCardAction } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardAction.tsx';
 import { FeatureStrategyMenuCardIcon } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardIcon.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
+import { useEventTracker } from 'hooks/useEventTracker.ts';
 import { useHasRootAccess } from 'hooks/useHasAccess.ts';
 import { RELEASE_PLAN_TEMPLATE_CREATE } from '@server/types/permissions.ts';
 import { Dialogue } from 'component/common/Dialogue/Dialogue.tsx';
@@ -101,7 +101,7 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
 }: IFeatureStrategyMenuCardsReleaseTemplatesProps) => {
     const { isEnterprise } = useUiConfig();
     const { templates } = useReleasePlanTemplates();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const canCreateTemplate = useHasRootAccess(RELEASE_PLAN_TEMPLATE_CREATE);
 
     const [noAccessDialogOpen, setNoAccessDialogOpen] =
@@ -148,10 +148,11 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
                     {canCreateTemplate ? (
                         <Button
                             component={RouterLink}
+                            nativeButton={false}
                             to='/release-templates/create-template'
                             startIcon={<AddIcon />}
                             onClick={handleLinkClick}
-                            size='small'
+                            size='medium'
                         >
                             New template
                         </Button>
@@ -159,7 +160,7 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
                         <Button
                             startIcon={<AddIcon />}
                             onClick={handleNoAccessClick}
-                            size='small'
+                            size='medium'
                         >
                             New template
                         </Button>

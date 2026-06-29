@@ -1,3 +1,4 @@
+import { test } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -36,7 +37,7 @@ test('should show deleted stale sessions info for Password Auth', async () => {
             />
         </>,
     );
-    const login = screen.getByLabelText('Username or email');
+    const login = screen.getByLabelText('Email');
     await userEvent.type(login, 'user@getunleash.io');
 
     const password = screen.getByLabelText('Password');

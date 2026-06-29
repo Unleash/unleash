@@ -79,9 +79,9 @@ export const UpgradeChangeRequests = () => {
                     onClick={() => {
                         setChangeRequestUpgrade('closed');
                     }}
-                    size='small'
+                    size='medium'
                 >
-                    <Close fontSize='inherit' />
+                    <Close />
                 </StyledCloseButton>
             </Tooltip>
         </Wrapper>

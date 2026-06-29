@@ -1,4 +1,4 @@
-import { useEffect, useState, type VFC } from 'react';
+import { useEffect, useState, type FC } from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useToast from 'hooks/useToast';
@@ -6,7 +6,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender.tsx';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { Alert, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
@@ -49,9 +49,11 @@ const UsageWarning = ({
                 sx={{ m: (theme) => theme.spacing(2, 0) }}
             >
                 <Typography
-                    fontWeight={'bold'}
                     variant={'body2'}
-                    display='inline'
+                    sx={{
+                        fontWeight: 'bold',
+                        display: 'inline',
+                    }}
                 >
                     {`${ids.length} feature flags `}
                 </Typography>
@@ -90,9 +92,11 @@ const ArchiveParentError = ({
                 sx={{ m: (theme) => theme.spacing(2, 0) }}
             >
                 <Typography
-                    fontWeight={'bold'}
                     variant={'body2'}
-                    display='inline'
+                    sx={{
+                        fontWeight: 'bold',
+                        display: 'inline',
+                    }}
                 >
                     {`${ids.length} feature flags `}
                 </Typography>
@@ -125,7 +129,7 @@ const ArchiveParentError = ({
     return null;
 };
 
-const ScheduledChangeRequestAlert: VFC<{
+const ScheduledChangeRequestAlert: FC<{
     changeRequests?: ScheduledChangeRequestViewModel[];
     projectId: string;
 }> = ({ changeRequests, projectId }) => {
@@ -292,6 +296,7 @@ const useVerifyArchive = (
     const [hasDeletedDependencies, setHasDeletedDependencies] = useState(false);
     const { verifyArchiveFeatures } = useProjectApi();
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: JSON.stringify(featureIds) covers structural equality for the array
     useEffect(() => {
         if (isOpen) {
             verifyArchiveFeatures(projectId, featureIds)
@@ -316,12 +321,13 @@ const useVerifyArchive = (
         setOffendingParents,
         setDisableArchive,
         setHasDeletedDependencies,
+        verifyArchiveFeatures,
     ]);
 
     return { disableArchive, offendingParents, hasDeletedDependencies };
 };
 
-export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
+export const FeatureArchiveDialog: FC<IFeatureArchiveDialogProps> = ({
     isOpen,
     onClose,
     onConfirm,

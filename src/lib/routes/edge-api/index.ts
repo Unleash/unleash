@@ -52,6 +52,7 @@ export default class EdgeController extends Controller {
                     summary: 'Check which tokens are valid',
                     description:
                         'This operation accepts a list of tokens to validate. Unleash will validate each token you provide. For each valid token you provide, Unleash will return the token along with its type and which projects it has access to.',
+                    release: { stable: '4.15.0' },
                     operationId: 'getValidTokens',
                     requestBody: createRequestSchema('tokenStringListSchema'),
                     responses: {

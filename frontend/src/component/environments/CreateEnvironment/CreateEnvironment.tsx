@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import useEnvironmentForm from '../hooks/useEnvironmentForm.ts';
 import EnvironmentForm from '../EnvironmentForm/EnvironmentForm.tsx';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';

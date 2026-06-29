@@ -1,6 +1,5 @@
 import { Counter, Gauge, type Registry } from 'prom-client';
 import { BatchHistogram } from './batch-histogram.js';
-import type { IFlagResolver } from '../../../types/experimental.js';
 
 export interface NumericMetricSample {
     labels?: Record<string, string | number>;
@@ -32,18 +31,9 @@ export type Metric = NumericMetric | BucketMetric;
 
 export class MetricsTranslator {
     private registry: Registry;
-    private flagResolver: Pick<IFlagResolver, 'isEnabled'>;
 
-    constructor(
-        registry: Registry,
-        flagResolver: Pick<IFlagResolver, 'isEnabled'>,
-    ) {
+    constructor(registry: Registry) {
         this.registry = registry;
-        this.flagResolver = flagResolver;
-    }
-
-    private isPlainMetricsEnabled(): boolean {
-        return this.flagResolver.isEnabled('externalPrometheusImpactMetrics');
     }
 
     sanitizeName(name: string): string {
@@ -82,33 +72,13 @@ export class MetricsTranslator {
         return false;
     }
 
-    private transformLabels(
-        labels: Record<string, string | number>,
-    ): Record<string, string | number> {
-        return Object.fromEntries(
-            Object.entries(labels).map(([labelKey, value]) => [
-                `unleash_${this.sanitizeName(labelKey)}`,
-                value,
-            ]),
-        );
-    }
-
-    private prefixedLabels(
-        sample: NumericMetricSample | BucketMetricSample,
-    ): Record<string, string | number> {
-        return this.transformLabels({
-            ...(sample.labels || {}),
-            origin: sample.labels?.origin || 'sdk',
-        });
-    }
-
-    private plainLabels(
+    private buildLabels(
         sample: NumericMetricSample | BucketMetricSample,
         type: string,
     ): Record<string, string | number> {
         const result: Record<string, string | number> = {
             origin: sample.labels?.origin || 'sdk',
-            type,
+            metric_type: type,
         };
         if (sample.labels) {
             for (const [key, value] of Object.entries(sample.labels)) {
@@ -194,133 +164,78 @@ export class MetricsTranslator {
         });
     }
 
-    private collectLabelNames(metric: Metric): {
-        prefixedLabelNames: string[];
-        plainLabelNames: string[];
-    } {
-        const allPrefixed = new Set<string>(['unleash_origin']);
-        const allPlain = new Set<string>(['origin', 'type']);
+    private collectLabelNames(metric: Metric): string[] {
+        const allPlain = new Set<string>(['origin', 'metric_type']);
 
         for (const sample of metric.samples) {
             if (sample.labels) {
                 for (const label of Object.keys(sample.labels)) {
-                    allPrefixed.add(`unleash_${label}`);
                     allPlain.add(label);
                 }
             }
         }
 
-        const prefixedLabelNames = Array.from(allPrefixed).map((l) =>
-            this.sanitizeName(l),
-        );
-        const plainLabelNames = Array.from(allPlain)
+        return Array.from(allPlain)
             .map((l) => this.sanitizeName(l))
             .filter((l) => /^[a-zA-Z_]/.test(l));
-
-        return { prefixedLabelNames, plainLabelNames };
     }
 
     translateMetric(
         metric: Metric,
     ): Counter<string> | Gauge<string> | BatchHistogram | null {
         const sanitizedName = this.sanitizeName(metric.name);
-        const prefixedName = `unleash_${metric.type}_${sanitizedName}`;
-        const plainValid = /^[a-zA-Z_]/.test(sanitizedName);
-        const { prefixedLabelNames, plainLabelNames } =
-            this.collectLabelNames(metric);
+        const validName = /^[a-zA-Z_]/.test(sanitizedName);
+        const labelNames = this.collectLabelNames(metric);
+
+        if (!validName) {
+            return null;
+        }
 
         if (metric.type === 'counter') {
             const counter = this.resolveCounter(
-                prefixedName,
+                sanitizedName,
                 metric.help,
-                prefixedLabelNames,
+                labelNames,
             );
-
             for (const sample of metric.samples) {
-                counter.inc(this.prefixedLabels(sample), sample.value);
-            }
-
-            if (this.isPlainMetricsEnabled() && plainValid) {
-                const plainCounter = this.resolveCounter(
-                    sanitizedName,
-                    metric.help,
-                    plainLabelNames,
+                counter.inc(
+                    this.buildLabels(sample, metric.type),
+                    sample.value,
                 );
-                for (const sample of metric.samples) {
-                    plainCounter.inc(
-                        this.plainLabels(sample, metric.type),
-                        sample.value,
-                    );
-                }
             }
 
-            return counter;
+            return null;
         } else if (metric.type === 'gauge') {
             const gauge = this.resolveGauge(
-                prefixedName,
+                sanitizedName,
                 metric.help,
-                prefixedLabelNames,
+                labelNames,
             );
-
             for (const sample of metric.samples) {
-                gauge.set(this.prefixedLabels(sample), sample.value);
+                gauge.set(this.buildLabels(sample, metric.type), sample.value);
             }
 
-            if (this.isPlainMetricsEnabled() && plainValid) {
-                const plainGauge = this.resolveGauge(
-                    sanitizedName,
-                    metric.help,
-                    plainLabelNames,
-                );
-                for (const sample of metric.samples) {
-                    plainGauge.set(
-                        this.plainLabels(sample, metric.type),
-                        sample.value,
-                    );
-                }
-            }
-
-            return gauge;
+            return null;
         } else if (metric.type === 'histogram') {
             if (!metric.samples || metric.samples.length === 0) {
                 return null;
             }
 
             const histogram = this.resolveHistogram(
-                prefixedName,
+                sanitizedName,
                 metric.help,
-                prefixedLabelNames,
+                labelNames,
                 metric.samples,
             );
-
             for (const sample of metric.samples) {
-                histogram.recordBatch(this.prefixedLabels(sample), {
+                histogram.recordBatch(this.buildLabels(sample, metric.type), {
                     count: sample.count,
                     sum: sample.sum,
                     buckets: sample.buckets,
                 });
             }
 
-            if (this.isPlainMetricsEnabled() && plainValid) {
-                const plainHistogram = this.resolveHistogram(
-                    sanitizedName,
-                    metric.help,
-                    plainLabelNames,
-                    metric.samples,
-                );
-                for (const sample of metric.samples) {
-                    plainHistogram.recordBatch(
-                        this.plainLabels(sample, metric.type),
-                        {
-                            count: sample.count,
-                            sum: sample.sum,
-                            buckets: sample.buckets,
-                        },
-                    );
-                }
-            }
-
-            return histogram;
+            return null;
         }
 
         return null;

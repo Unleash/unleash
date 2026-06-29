@@ -1,6 +1,6 @@
 import { Box, IconButton, styled, Tooltip, Typography } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import WarningIcon from '@mui/icons-material/ErrorOutlined';
 import ErrorIcon from '@mui/icons-material/Cancel';
 import CloseIcon from '@mui/icons-material/Close';
@@ -149,7 +149,13 @@ export const Limit: FC<{
                     >
                         Read more about limits
                     </Link>
-                    <Typography fontWeight='bold'>Limit: {limit}</Typography>
+                    <Typography
+                        sx={{
+                            fontWeight: 'bold',
+                        }}
+                    >
+                        Limit: {limit}
+                    </Typography>
                 </LimitExplanation>
             </Main>
             <Footer>{footerContent}</Footer>

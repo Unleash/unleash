@@ -1,8 +1,8 @@
 import { SchedulerService } from '../scheduler/scheduler-service.js';
 import MaintenanceService from './maintenance-service.js';
-import SettingService from '../../services/setting-service.js';
+import SettingService from '../settings/setting-service.js';
 import { createTestConfig } from '../../../test/config/test-config.js';
-import FakeSettingStore from '../../../test/fixtures/fake-setting-store.js';
+import FakeSettingStore from '../settings/fake-setting-store.js';
 import type EventService from '../events/event-service.js';
 import { TEST_AUDIT_USER } from '../../types/index.js';
 import { vi } from 'vitest';

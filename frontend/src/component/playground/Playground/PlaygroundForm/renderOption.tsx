@@ -1,13 +1,14 @@
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { Checkbox, styled } from '@mui/material';
+import type { HTMLAttributes, Key } from 'react';
 
 const SelectOptionCheckbox = styled(Checkbox)(({ theme }) => ({
     marginRight: theme.spacing(0.4),
 }));
 
 export const renderOption = (
-    props: object & { key?: string },
+    props: HTMLAttributes<HTMLLIElement> & { key?: Key },
     option: { label: string },
     { selected }: { selected: boolean },
 ) => {

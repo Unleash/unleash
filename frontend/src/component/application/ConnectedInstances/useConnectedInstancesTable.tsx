@@ -1,7 +1,11 @@
 import { useMemo } from 'react';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
-import { useTable, useGlobalFilter, useSortBy } from 'react-table';
-import { sortTypes } from 'utils/sortTypes';
+import {
+    type ColumnDef,
+    getCoreRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 
 type ConnectedInstancesTableData = {
@@ -15,78 +19,53 @@ export const useConnectedInstancesTable = (
     instanceData: ConnectedInstancesTableData[],
 ) => {
     const initialState = useMemo(
-        () => ({ sortBy: [{ id: 'lastSeen', desc: true }] }),
+        () => ({ sorting: [{ id: 'lastSeen', desc: true }] }),
         [],
     );
 
-    const COLUMNS = useMemo(() => {
-        return [
+    const columns = useMemo<ColumnDef<ConnectedInstancesTableData, unknown>[]>(
+        () => [
             {
-                Header: 'Instances',
-                accessor: 'instanceId',
-                Cell: HighlightCell,
-                styles: {
-                    width: '45%',
-                },
+                id: 'instanceId',
+                header: 'Instances',
+                accessorKey: 'instanceId',
+                cell: HighlightCell,
+                meta: { styles: { width: '45%' } },
             },
             {
-                Header: 'SDK',
-                accessor: 'sdkVersion',
-                Cell: HighlightCell,
-                styles: {
-                    width: '20%',
-                },
+                id: 'sdkVersion',
+                header: 'SDK',
+                accessorKey: 'sdkVersion',
+                cell: HighlightCell,
+                meta: { styles: { width: '20%' } },
             },
             {
-                Header: 'Last seen',
-                accessor: 'lastSeen',
-                Cell: TimeAgoCell,
-                styles: {
-                    width: '20%',
-                },
+                id: 'lastSeen',
+                header: 'Last seen',
+                accessorKey: 'lastSeen',
+                cell: TimeAgoCell,
+                meta: { styles: { width: '20%' } },
             },
             {
-                Header: 'IP',
-                accessor: 'ip',
-                Cell: HighlightCell,
-                styles: {
-                    width: '15%',
-                },
+                id: 'ip',
+                header: 'IP',
+                accessorKey: 'ip',
+                cell: HighlightCell,
+                meta: { styles: { width: '15%' } },
             },
-        ];
-    }, []);
-
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        rows,
-        prepareRow,
-        state,
-        setGlobalFilter,
-        setHiddenColumns,
-    } = useTable(
-        {
-            columns: COLUMNS as any,
-            data: instanceData as any,
-            initialState,
-            sortTypes,
-            autoResetHiddenColumns: false,
-            disableSortRemove: true,
-        },
-        useGlobalFilter,
-        useSortBy,
+        ],
+        [],
     );
 
-    return {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        rows,
-        prepareRow,
-        state,
-        setGlobalFilter,
-        setHiddenColumns,
-        columns: COLUMNS,
-    };
+    const table = useReactTable({
+        columns,
+        data: instanceData,
+        initialState,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+    });
+
+    return { table, columns };
 };

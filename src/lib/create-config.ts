@@ -295,6 +295,7 @@ const defaultServerOption: IServerOption = {
     cdnPrefix: process.env.CDN_PREFIX,
     edgeUrl: process.env.EDGE_URL,
     unleashUrl: process.env.UNLEASH_URL || 'http://localhost:4242',
+    logRocketAppId: process.env.LOGROCKET_APP_ID,
     serverMetrics: true,
     enableHeapSnapshotEnpoint: parseEnvVarBoolean(
         process.env.ENABLE_HEAP_SNAPSHOT_ENPOINT,
@@ -586,6 +587,18 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         ).values(),
     ];
 
+    const integrationConfig = {
+        allowPrivateUrlInIntegration:
+            options.allowPrivateUrlInIntegration ??
+            parseEnvVarBoolean(
+                process.env.UNLEASH_ALLOW_PRIVATE_URL_IN_INTEGRATION,
+                false,
+            ),
+        allowListIntegration:
+            options.allowListIntegration ??
+            parseEnvVarStrings(process.env.UNLEASH_ALLOW_LIST_INTEGRATION, []),
+    };
+
     const customStrategySettings = options.customStrategySettings ?? {
         disableCreation: parseEnvVarBoolean(
             process.env.UNLEASH_DISABLE_CUSTOM_STRATEGY_CREATION,
@@ -799,6 +812,10 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         options.prometheusImpactMetricsApi ||
         process.env.PROMETHEUS_IMPACT_METRICS_API;
 
+    const externalPrometheusImpactMetricsApi =
+        options.externalPrometheusImpactMetricsApi ||
+        process.env.EXTERNAL_PROMETHEUS_IMPACT_METRICS_API;
+
     const checkDbOnReady =
         Boolean(options.checkDbOnReady) ??
         parseEnvVarBoolean(process.env.CHECK_DB_ON_READY, false);
@@ -838,6 +855,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         accessControlMaxAge,
         prometheusApi,
         prometheusImpactMetricsApi,
+        externalPrometheusImpactMetricsApi,
         publicFolder: options.publicFolder,
         disableScheduler: options.disableScheduler,
         isEnterprise: isEnterprise,
@@ -854,5 +872,6 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         checkDbOnReady,
         edgeMasterKey,
         edgeClientSecret,
+        ...integrationConfig,
     };
 }

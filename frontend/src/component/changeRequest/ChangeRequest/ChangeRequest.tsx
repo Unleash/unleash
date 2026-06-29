@@ -23,12 +23,16 @@ export const ChangeRequest: FC<IChangeRequestProps> = ({
             <ConditionallyRender
                 condition={changeRequest.segments.length > 0}
                 show={
-                    <Typography variant='body2' color='text.secondary'>
+                    <Typography
+                        variant='body2'
+                        sx={{
+                            color: 'text.secondary',
+                        }}
+                    >
                         You request changes for these segments:
                     </Typography>
                 }
             />
-
             {changeRequest.segments?.map((segmentChange) => (
                 <SegmentChange
                     key={segmentChange.payload.id}
@@ -48,7 +52,12 @@ export const ChangeRequest: FC<IChangeRequestProps> = ({
             <ConditionallyRender
                 condition={changeRequest.features.length > 0}
                 show={
-                    <Typography variant='body2' color='text.secondary'>
+                    <Typography
+                        variant='body2'
+                        sx={{
+                            color: 'text.secondary',
+                        }}
+                    >
                         You request changes for these feature flags:
                     </Typography>
                 }

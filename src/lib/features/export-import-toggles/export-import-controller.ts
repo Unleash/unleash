@@ -56,6 +56,7 @@ class ExportImportController extends Controller {
             middleware: [
                 this.openApiService.validPath({
                     tags: ['Import/Export'],
+                    release: { stable: '4.20.0' },
                     operationId: 'exportFeatures',
                     requestBody: createRequestSchema('exportQuerySchema'),
                     responses: {
@@ -76,6 +77,7 @@ class ExportImportController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Import/Export'],
+                    release: { stable: '4.21.0' },
                     operationId: 'validateImport',
                     requestBody: createRequestSchema('importTogglesSchema'),
                     responses: {
@@ -97,6 +99,7 @@ class ExportImportController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Import/Export'],
+                    release: { stable: '4.21.0' },
                     operationId: 'importToggles',
                     requestBody: createRequestSchema('importTogglesSchema'),
                     responses: {

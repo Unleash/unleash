@@ -1,0 +1,26 @@
+diff --git a/build/lib/index.mjs b/build/lib/index.mjs
+index b00ad055d1f95ef714072fba3ea0a528ea545ded..90dcfb62db759c22ba38add601c57d7b63c098ef 100644
+--- a/build/lib/index.mjs
++++ b/build/lib/index.mjs
+@@ -2561,7 +2561,7 @@ const RowSorting = {
+   },
+   createColumn: (column, table) => {
+     column.getAutoSortingFn = () => {
+-      const firstRows = table.getFilteredRowModel().flatRows.slice(10);
++      const firstRows = table.getFilteredRowModel().flatRows.slice(0, 10);
+       let isString = false;
+       for (const row of firstRows) {
+         const value = row == null ? void 0 : row.getValue(column.id);
+diff --git a/src/features/RowSorting.ts b/src/features/RowSorting.ts
+index c2e7c32d53ef08b1dd680a23dd8435c7c04fbb5c..53557710a9be5335c6a74ed2e971a0574f7ea4d2 100644
+--- a/src/features/RowSorting.ts
++++ b/src/features/RowSorting.ts
+@@ -306,7 +306,7 @@ export const RowSorting: TableFeature = {
+     table: Table<TData>
+   ): void => {
+     column.getAutoSortingFn = () => {
+-      const firstRows = table.getFilteredRowModel().flatRows.slice(10)
++      const firstRows = table.getFilteredRowModel().flatRows.slice(0, 10)
+
+       let isString = false
+

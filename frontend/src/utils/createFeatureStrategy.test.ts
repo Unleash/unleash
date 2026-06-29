@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { createFeatureStrategy } from 'utils/createFeatureStrategy';
 
 test('createFeatureStrategy', () => {

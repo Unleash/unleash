@@ -3,7 +3,7 @@ import {
     type FormEventHandler,
     type ChangeEventHandler,
 } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 import {
     Button,
     TextField,
@@ -126,7 +126,7 @@ export const CopyFeatureToggle = () => {
         }
     };
 
-    if (!feature || !feature.name) return <span>Toggle not found</span>;
+    if (!feature?.name) return <span>Toggle not found</span>;
 
     const displayFeatureNamingInfo = Boolean(featureNaming?.pattern);
 

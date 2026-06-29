@@ -1,22 +1,21 @@
-import { useMemo } from 'react';
+import type { SWRConfiguration } from 'swr';
 import { fetcher, useApiGetter } from '../useApiGetter/useApiGetter.js';
 import { formatApiPath } from 'utils/formatPath';
+import type {
+    AvailableImpactMetricsSchema,
+    AvailableImpactMetricsSchemaMetricsItem,
+} from 'openapi';
 
-export type ImpactMetricsSeries = {
-    type: 'counter' | 'gauge' | 'histogram' | 'unknown';
-    help: string;
-    displayName: string;
-};
+export type ImpactMetric = AvailableImpactMetricsSchemaMetricsItem;
+export type ImpactMetricsMetadata = AvailableImpactMetricsSchema;
 
-export type ImpactMetricsMetadata = {
-    series: Record<string, ImpactMetricsSeries>;
-};
-
-export const useImpactMetricsMetadata = () => {
+export const useImpactMetricsMetadata = (options?: SWRConfiguration) => {
     const PATH = `api/admin/impact-metrics/metadata`;
     const { data, refetch, loading, error } =
-        useApiGetter<ImpactMetricsMetadata>(formatApiPath(PATH), () =>
-            fetcher(formatApiPath(PATH), 'Impact metrics metadata'),
+        useApiGetter<ImpactMetricsMetadata>(
+            formatApiPath(PATH),
+            () => fetcher(formatApiPath(PATH), 'Impact metrics metadata'),
+            options,
         );
 
     return {
@@ -30,18 +29,8 @@ export const useImpactMetricsMetadata = () => {
 export const useImpactMetricsOptions = () => {
     const { metadata, loading, error } = useImpactMetricsMetadata();
 
-    const metricOptions = useMemo(() => {
-        if (!metadata?.series) {
-            return [];
-        }
-        return Object.entries(metadata.series).map(([name, rest]) => ({
-            name,
-            ...rest,
-        }));
-    }, [metadata]);
-
     return {
-        metricOptions,
+        metricOptions: metadata?.metrics ?? [],
         loading,
         error,
     };

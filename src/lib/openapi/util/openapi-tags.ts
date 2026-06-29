@@ -6,7 +6,7 @@ const OPENAPI_TAGS = [
     {
         name: 'Addons',
         description:
-            'Create, update, and delete [Unleash addons](https://docs.getunleash.io/addons).',
+            'Create, update, and delete [Unleash addons](https://docs.getunleash.io/integrate).',
     },
     {
         name: 'Admin UI',
@@ -21,7 +21,7 @@ const OPENAPI_TAGS = [
     {
         name: 'Archive',
         description:
-            'Revive or permanently delete [archived feature flags](https://docs.getunleash.io/advanced/archived_toggles).',
+            'Revive or permanently delete [archived feature flags](https://docs.getunleash.io/concepts/technical-debt).',
     },
     { name: 'Auth', description: 'Manage logins, passwords, etc.' },
     {
@@ -90,7 +90,7 @@ const OPENAPI_TAGS = [
     {
         name: 'Notifications',
         description:
-            'API for managing [notifications](https://docs.getunleash.io/concepts/notifications).',
+            'API for managing [notifications](https://docs.getunleash.io/api/get-notifications).',
     },
     {
         name: 'Operational',
@@ -114,7 +114,7 @@ const OPENAPI_TAGS = [
     {
         name: 'Public signup tokens',
         description:
-            'Create, update, and delete [Unleash Public Signup tokens](https://docs.getunleash.io/concepts/public-signup-tokens).',
+            'Create, update, and delete [Unleash Public Signup tokens](https://docs.getunleash.io/concepts/public-signup).',
     },
     {
         name: 'Release Templates',

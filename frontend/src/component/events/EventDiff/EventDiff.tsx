@@ -5,6 +5,7 @@ import { Button, styled } from '@mui/material';
 interface IEventDiffProps {
     entry: { data?: unknown; preData?: unknown };
     excludeKeys?: string[];
+    className?: string;
 }
 
 const DiffStyles = styled('div')(({ theme }) => ({
@@ -59,7 +60,11 @@ const ButtonIcon = styled('span')(({ theme }) => ({
     marginInlineEnd: theme.spacing(0.5),
 }));
 
-export const EventDiff: FC<IEventDiffProps> = ({ entry, excludeKeys }) => {
+export const EventDiff: FC<IEventDiffProps> = ({
+    entry,
+    excludeKeys,
+    className,
+}) => {
     const changeType = entry.preData && entry.data ? 'edit' : 'replacement';
     const showExpandButton = changeType === 'edit';
     const [full, setFull] = useState(false);
@@ -79,7 +84,11 @@ export const EventDiff: FC<IEventDiffProps> = ({ entry, excludeKeys }) => {
                         : 'Show all properties'}
                 </Button>
             ) : null}
-            <DiffStyles data-change-type={changeType} id={diffId}>
+            <DiffStyles
+                className={className}
+                data-change-type={changeType}
+                id={diffId}
+            >
                 <JsonDiffComponent
                     jsonA={(entry.preData ?? {}) as JsonValue}
                     jsonB={(entry.data ?? {}) as JsonValue}

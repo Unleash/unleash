@@ -62,8 +62,10 @@ export const EnvironmentVariantsCopyFrom = ({
                         anchorEl={copyFromAnchorEl}
                         open={copyFromOpen}
                         onClose={() => setCopyFromAnchorEl(null)}
-                        MenuListProps={{
-                            'aria-labelledby': `copy-from-menu-${environment.name}`,
+                        slotProps={{
+                            list: {
+                                'aria-labelledby': `copy-from-menu-${environment.name}`,
+                            },
                         }}
                     >
                         {otherEnvsWithVariants.map((otherEnvironment) => (

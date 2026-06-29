@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { CreateUnleashContext } from 'component/context/CreateUnleashContext/CreateUnleashContext';
 import { GO_BACK } from 'constants/navigate';
 

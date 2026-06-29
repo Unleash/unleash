@@ -10,7 +10,7 @@ import { EventSchemaType, type FeatureSearchResponseSchema } from 'openapi';
 import type { ProjectSchema } from 'openapi';
 import { useEventCreators } from 'hooks/api/getters/useEventCreators/useEventCreators';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import { FilterItemParam } from 'utils/serializeQueryParams';
 
 export const useEventLogFilters = (

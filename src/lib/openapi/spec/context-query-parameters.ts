@@ -1,4 +1,4 @@
-import type { FromQueryParams } from 'unleash-server';
+import type { FromQueryParams } from '../util/from-query-params.js';
 
 export const contextQueryParameters = [
     {

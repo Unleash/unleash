@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { Box, styled } from '@mui/material';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { UPDATE_FEATURE_ENVIRONMENT } from 'component/providers/AccessProvider/permissions';
@@ -18,7 +18,7 @@ type FeatureToggleSwitchProps = {
     onToggle: (newState: boolean, onRollback: () => void) => void;
 };
 
-export const FeatureToggleSwitch: VFC<FeatureToggleSwitchProps> = ({
+export const FeatureToggleSwitch: FC<FeatureToggleSwitchProps> = ({
     projectId,
     featureId,
     environmentName,
@@ -53,7 +53,7 @@ export const FeatureToggleSwitch: VFC<FeatureToggleSwitchProps> = ({
                     environmentId={environmentName}
                     projectId={projectId}
                     permission={UPDATE_FEATURE_ENVIRONMENT}
-                    inputProps={{ 'aria-label': environmentName }}
+                    slotProps={{ input: { 'aria-label': environmentName } }}
                     onClick={onClick}
                     data-testid={'permission-switch'}
                     disabled={value !== isChecked}

@@ -4,15 +4,12 @@ import {
     AdminSettingsLink,
     OtherLinksList,
 } from './NavigationList.tsx';
-import type { LegacyNewInUnleash } from './NewInUnleash/LegacyNewInUnleash.tsx';
 
 export const MobileNavigationSidebar: FC<{
     onClick: () => void;
-    NewInUnleash?: typeof LegacyNewInUnleash;
-}> = ({ onClick, NewInUnleash }) => {
+}> = ({ onClick }) => {
     return (
         <>
-            {NewInUnleash ? <NewInUnleash /> : null}
             <PrimaryNavigationList
                 mode='full'
                 onClick={onClick}

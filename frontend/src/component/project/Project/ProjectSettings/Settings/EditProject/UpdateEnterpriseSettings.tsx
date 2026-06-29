@@ -10,7 +10,7 @@ import ProjectEnterpriseSettingsForm from 'component/project/Project/ProjectEnte
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import { styled } from '@mui/material';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import type { ProjectOverviewSchema } from 'openapi';
 
@@ -39,7 +39,7 @@ const EDIT_PROJECT_SETTINGS_BTN = 'EDIT_PROJECT_SETTINGS_BTN';
 
 export const useModeTracking = () => {
     const [previousMode, setPreviousMode] = React.useState<string>('');
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const eventName = 'project-mode' as const;
 
     const trackModePattern = (newMode: string) => {
@@ -97,7 +97,7 @@ export const UpdateEnterpriseSettings = ({
     const useFeatureNamePatternTracking = () => {
         const [previousPattern, setPreviousPattern] =
             React.useState<string>('');
-        const { trackEvent } = usePlausibleTracker();
+        const { trackEvent } = useEventTracker();
         const eventName = 'feature-naming-pattern' as const;
 
         const trackPattern = (newPattern: string = '') => {

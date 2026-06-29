@@ -1,6 +1,7 @@
+import { expect, test } from 'vitest';
 import { TagTypeList } from 'component/tags/TagTypeList/TagTypeList';
-import renderer from 'react-test-renderer';
-import { MemoryRouter } from 'react-router-dom';
+import { render } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import UIProvider from 'component/providers/UIProvider/UIProvider';
 import { ThemeProvider } from 'themes/ThemeProvider';
@@ -8,7 +9,7 @@ import { AccessProviderMock } from 'component/providers/AccessProvider/AccessPro
 import { AnnouncerProvider } from 'component/common/Announcer/AnnouncerProvider/AnnouncerProvider';
 
 test('renders an empty list correctly', () => {
-    const tree = renderer.create(
+    const { asFragment } = render(
         <MemoryRouter>
             <ThemeProvider>
                 <AnnouncerProvider>
@@ -23,5 +24,5 @@ test('renders an empty list correctly', () => {
             </ThemeProvider>
         </MemoryRouter>,
     );
-    expect(tree).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 });

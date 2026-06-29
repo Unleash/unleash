@@ -1,8 +1,8 @@
 import type { LogProvider } from '../logger.js';
 import { SchedulerService } from '../features/scheduler/scheduler-service.js';
 import { createTestConfig } from '../../test/config/test-config.js';
-import FakeSettingStore from '../../test/fixtures/fake-setting-store.js';
-import SettingService from './setting-service.js';
+import FakeSettingStore from '../features/settings/fake-setting-store.js';
+import SettingService from '../features/settings/setting-service.js';
 import type EventService from '../features/events/event-service.js';
 import MaintenanceService from '../features/maintenance/maintenance-service.js';
 

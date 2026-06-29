@@ -14,18 +14,28 @@ export interface ReleasePlanMilestoneStrategySchema {
     /** A list of the constraints attached to the strategy. See https://docs.getunleash.io/concepts/activation-strategies#constraints */
     constraints?: ConstraintSchema[];
     /**
+     * A toggle to disable the strategy. defaults to false. Disabled strategies are not evaluated or returned to the SDKs
+     * @nullable
+     */
+    disabled?: boolean | null;
+    /**
      * The milestone strategy's ID. Milestone strategy IDs are ulids.
      */
     id: string;
     /** The ID of the milestone that this strategy belongs to. */
     milestoneId: string;
+    /** The name of the strategy type */
+    name: string;
     /** An object containing the parameters for the strategy */
     parameters?: ParametersSchema;
     /** Ids of segments to use for this strategy */
     segments?: number[];
     /** The order of the strategy in the list */
     sortOrder: number;
-    /** The name of the strategy type */
+    /**
+     * The name of the strategy type
+     * @deprecated
+     */
     strategyName: string;
     /**
      * A descriptive title for the strategy

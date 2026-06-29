@@ -49,9 +49,6 @@ const TableContainer = styled('div')(({ theme }) => ({
     isolation: 'isolate',
 }));
 
-/**
- * Use with react-table v8
- */
 export const PaginatedTable = <T extends object>({
     className,
     totalItems,

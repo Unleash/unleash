@@ -1,13 +1,12 @@
 import type { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import { useMemo } from 'react';
-import { Line } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 import {
+    BarElement,
     CategoryScale,
     Chart as ChartJS,
     Legend,
     LinearScale,
-    LineElement,
-    PointElement,
     TimeScale,
     Title,
     Tooltip,
@@ -53,10 +52,10 @@ export const FeatureMetricsChart = ({
 
     return (
         <div style={{ height: 400 }}>
-            <Line
-                options={options}
+            <Bar
                 data={data}
-                aria-label='A feature metrics line chart, with three lines: all requests, positive requests, and negative requests.'
+                options={options}
+                aria-label='A stacked bar chart showing feature flag exposure metrics: exposed and not exposed requests.'
                 aria-describedby={statsSectionId}
             />
         </div>
@@ -67,8 +66,7 @@ export const FeatureMetricsChart = ({
 ChartJS.register(
     CategoryScale,
     LinearScale,
-    PointElement,
-    LineElement,
+    BarElement,
     TimeScale,
     Legend,
     Tooltip,

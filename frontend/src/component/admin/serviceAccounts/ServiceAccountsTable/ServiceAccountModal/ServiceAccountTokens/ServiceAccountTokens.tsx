@@ -9,7 +9,8 @@ import {
     useTheme,
 } from '@mui/material';
 import { Search } from 'component/common/Search/Search';
-import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
+import { TablePlaceholder } from 'component/common/Table';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
@@ -24,12 +25,11 @@ import type {
 } from 'interfaces/personalAPIToken';
 import { useMemo, useState } from 'react';
 import {
-    useTable,
-    type SortingRule,
-    useSortBy,
-    useFlexLayout,
-} from 'react-table';
-import { sortTypes } from 'utils/sortTypes';
+    type ColumnDef,
+    getCoreRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
 import { ServiceAccountCreateTokenDialog } from './ServiceAccountCreateTokenDialog/ServiceAccountCreateTokenDialog.tsx';
 import { ServiceAccountTokenDialog } from 'component/admin/serviceAccounts/ServiceAccountsTable/ServiceAccountTokenDialog/ServiceAccountTokenDialog';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
@@ -80,7 +80,7 @@ export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search', string>
 >;
 
-const defaultSort: SortingRule<string> = { id: 'createdAt', desc: true };
+const defaultSort = { id: 'createdAt', desc: true };
 
 interface IServiceAccountTokensProps {
     serviceAccount: IServiceAccount;
@@ -103,7 +103,7 @@ export const ServiceAccountTokens = ({
         useServiceAccountTokensApi();
 
     const [initialState] = useState(() => ({
-        sortBy: readOnly ? [{ id: 'seenAt' }] : [defaultSort],
+        sorting: readOnly ? [{ id: 'seenAt', desc: false }] : [defaultSort],
     }));
 
     const [searchValue, setSearchValue] = useState('');
@@ -155,44 +155,47 @@ export const ServiceAccountTokens = ({
         }
     };
 
-    const columns = useMemo(
+    const columns = useMemo<ColumnDef<IPersonalAPIToken, unknown>[]>(
         () => [
             {
-                Header: 'Description',
-                accessor: 'description',
-                Cell: HighlightCell,
-                minWidth: 100,
-                searchable: true,
+                id: 'description',
+                header: 'Description',
+                accessorKey: 'description',
+                cell: HighlightCell,
+                meta: { minWidth: 100, searchable: true },
             },
             {
-                Header: 'Expires',
-                accessor: 'expiresAt',
-                Cell: ({ value }: { value: string }) => {
+                id: 'expiresAt',
+                header: 'Expires',
+                accessorKey: 'expiresAt',
+                cell: ({ getValue }) => {
+                    const value = String(getValue() ?? '');
                     const date = new Date(value);
                     if (date.getFullYear() > new Date().getFullYear() + 100) {
                         return <TextCell>Never</TextCell>;
                     }
                     return <DateCell value={value} />;
                 },
-                maxWidth: 150,
+                meta: { maxWidth: 150 },
             },
             {
-                Header: 'Created',
-                accessor: 'createdAt',
-                Cell: DateCell,
-                maxWidth: 150,
+                id: 'createdAt',
+                header: 'Created',
+                accessorKey: 'createdAt',
+                cell: DateCell,
+                meta: { maxWidth: 150 },
             },
             {
-                Header: 'Last seen',
-                accessor: 'seenAt',
-                Cell: TimeAgoCell,
-                maxWidth: 150,
+                id: 'seenAt',
+                header: 'Last seen',
+                accessorKey: 'seenAt',
+                cell: TimeAgoCell,
+                meta: { maxWidth: 150 },
             },
             {
-                Header: 'Actions',
                 id: 'Actions',
-                align: 'center',
-                Cell: ({ row: { original: rowToken } }: any) => (
+                header: 'Actions',
+                cell: ({ row: { original: rowToken } }) => (
                     <ActionCell>
                         <Tooltip title='Delete token' arrow describeChild>
                             <span>
@@ -208,11 +211,11 @@ export const ServiceAccountTokens = ({
                         </Tooltip>
                     </ActionCell>
                 ),
-                maxWidth: 100,
-                disableSortBy: true,
+                enableSorting: false,
+                meta: { maxWidth: 100, align: 'center' },
             },
         ],
-        [setSelectedToken, setDeleteOpen],
+        [],
     );
 
     const { data, getSearchText, getSearchContext } = useSearch(
@@ -221,20 +224,16 @@ export const ServiceAccountTokens = ({
         tokens,
     );
 
-    const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
-        {
-            columns: columns as any[],
-            data,
-            initialState,
-            sortTypes,
-            autoResetHiddenColumns: false,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            disableMultiSort: true,
-        },
-        useSortBy,
-        useFlexLayout,
-    );
+    const table = useReactTable({
+        columns,
+        data,
+        initialState,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+        enableMultiSort: false,
+    });
 
     useConditionallyHiddenColumns(
         [
@@ -251,9 +250,11 @@ export const ServiceAccountTokens = ({
                 columns: ['Actions', 'expiresAt', 'createdAt'],
             },
         ],
-        setHiddenColumns,
+        table.setColumnVisibility,
         columns,
     );
+
+    const rowCount = table.getRowModel().rows.length;
 
     return (
         <>
@@ -278,14 +279,10 @@ export const ServiceAccountTokens = ({
                 }
             />
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <VirtualizedTable
-                    rows={rows}
-                    headerGroups={headerGroups}
-                    prepareRow={prepareRow}
-                />
+                <VirtualizedTable tableInstance={table} />
             </SearchHighlightProvider>
             <ConditionallyRender
-                condition={rows.length === 0}
+                condition={rowCount === 0}
                 show={
                     <ConditionallyRender
                         condition={searchValue?.length > 0}

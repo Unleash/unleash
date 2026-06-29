@@ -1,5 +1,5 @@
 import { Box, styled, Tooltip } from '@mui/material';
-import HelpOutline from '@mui/icons-material/HelpOutline';
+import HelpOutline from '@mui/icons-material/HelpOutlineOutlined';
 import type { FC } from 'react';
 import { PageHeader } from '../../../common/PageHeader/PageHeader.tsx';
 

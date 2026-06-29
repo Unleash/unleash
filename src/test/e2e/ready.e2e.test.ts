@@ -9,11 +9,12 @@ describe('DB is up', () => {
     });
 
     test('when checkDb is disabled, returns ready', async () => {
-        const { request } = await setupAppWithCustomConfig(
+        const { request, services } = await setupAppWithCustomConfig(
             db.stores,
             undefined,
             db.rawDatabase,
         );
+        await services.frontendApiService.waitForCacheReady();
         await request
             .get('/ready')
             .expect('Content-Type', /json/)
@@ -22,20 +23,22 @@ describe('DB is up', () => {
     });
 
     test('when checkDb is enabled, returns ready', async () => {
-        const { request } = await setupAppWithCustomConfig(
+        const { request, services } = await setupAppWithCustomConfig(
             db.stores,
             { checkDbOnReady: true },
             db.rawDatabase,
         );
+        await services.frontendApiService.waitForCacheReady();
         await request.get('/ready').expect(200).expect('{"health":"GOOD"}');
     });
 
     test('fails fast when readiness query hangs', async () => {
-        const { request } = await setupAppWithCustomConfig(
+        const { request, services } = await setupAppWithCustomConfig(
             db.stores,
             { checkDbOnReady: true },
             db.rawDatabase,
         );
+        await services.frontendApiService.waitForCacheReady();
 
         const pool = db.rawDatabase.client.pool;
         const originalAcquire = pool.acquire.bind(pool);
@@ -77,11 +80,12 @@ describe('DB is down', () => {
     });
 
     test('when checkDb is disabled, returns readiness good', async () => {
-        const { request } = await setupAppWithCustomConfig(
+        const { request, services } = await setupAppWithCustomConfig(
             db.stores,
             undefined,
             db.rawDatabase,
         );
+        await services.frontendApiService.waitForCacheReady();
         await db.destroy();
         await request
             .get('/ready')
@@ -91,11 +95,12 @@ describe('DB is down', () => {
     });
 
     test('when checkDb is enabled, fails readiness check', async () => {
-        const { request } = await setupAppWithCustomConfig(
+        const { request, services } = await setupAppWithCustomConfig(
             db.stores,
             { checkDbOnReady: true },
             db.rawDatabase,
         );
+        await services.frontendApiService.waitForCacheReady();
         await db.destroy();
         await request.get('/ready').expect(503);
     });

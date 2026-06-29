@@ -3,10 +3,7 @@ import LockRounded from '@mui/icons-material/LockRounded';
 import type { IAuthOptions } from 'hooks/api/getters/useAuth/useAuthEndpoint';
 import { SSO_LOGIN_BUTTON } from 'utils/testIds';
 import useQueryParams from 'hooks/useQueryParams';
-import GoogleIcon from '@mui/icons-material/Google';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import { useFlag } from '@unleash/proxy-client-react';
-import DeprecatedAuthOptions from './DeprecatedAuthOptions';
 
 interface IAuthOptionProps {
     options?: IAuthOptions[];
@@ -30,16 +27,7 @@ const StyledSsoButton = styled(Button)(({ theme }) => ({
 }));
 
 const renderStartIcon = ({ type }: IAuthOptions) => {
-    if (type === 'google') {
-        return (
-            <GoogleIcon
-                style={{
-                    height: '20px',
-                    width: '20px',
-                }}
-            />
-        );
-    } else if (type === 'github') {
+    if (type === 'github') {
         return (
             <GitHubIcon
                 style={{
@@ -66,7 +54,7 @@ const StyledContainer = styled('div')(({ theme }) => ({
     gap: theme.spacing(1.5),
 }));
 
-const NewAuthOptions = ({ options }: IAuthOptionProps) => {
+const AuthOptions = ({ options }: IAuthOptionProps) => {
     const query = useQueryParams();
     const redirectPath = query.get('redirect') || '';
 
@@ -82,7 +70,7 @@ const NewAuthOptions = ({ options }: IAuthOptionProps) => {
                             ? addOrOverwriteRedirect(o.path, redirectPath)
                             : o.path
                     }
-                    size='small'
+                    size='large'
                     data-testid={`${SSO_LOGIN_BUTTON}-${o.type}`}
                     startIcon={renderStartIcon(o)}
                 >
@@ -91,14 +79,6 @@ const NewAuthOptions = ({ options }: IAuthOptionProps) => {
             ))}
         </StyledContainer>
     );
-};
-
-const AuthOptions = (props: IAuthOptionProps) => {
-    const newLogin = useFlag('newLogin');
-    if (newLogin) {
-        return <NewAuthOptions {...props} />;
-    }
-    return <DeprecatedAuthOptions {...props} />;
 };
 
 export default AuthOptions;

@@ -2,7 +2,7 @@ import type { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import type { ChartData } from 'chart.js';
 import type { ILocationSettings } from 'hooks/useLocationSettings';
 import 'chartjs-adapter-date-fns';
-import type { Theme } from '@mui/material/styles/createTheme';
+import type { Theme } from '@mui/material/styles';
 
 export interface IPoint {
     x: string;
@@ -14,52 +14,23 @@ export const createChartData = (
     theme: Theme,
     metrics: IFeatureMetricsRaw[],
     locationSettings: ILocationSettings,
-): ChartData<'line', IPoint[], string> => {
-    const requestsSeries = {
-        label: 'Total requests',
-        borderColor: theme.palette.primary.main,
-        backgroundColor: theme.palette.primary.main,
-        data: createChartPoints(metrics, locationSettings, (m) => m.yes + m.no),
-        elements: {
-            point: {
-                radius: 6,
-                pointStyle: 'circle',
-            },
-            line: {
-                borderDash: [8, 4],
-            },
-        },
-    };
-
+): ChartData<'bar', IPoint[], string> => {
     const yesSeries = {
-        label: 'Exposed',
-        borderColor: theme.palette.success.main,
-        backgroundColor: theme.palette.success.main,
+        label: 'Enabled',
+        borderColor: theme.palette.charts.flagMetrics.enabled,
+        backgroundColor: theme.palette.charts.flagMetrics.enabled,
         data: createChartPoints(metrics, locationSettings, (m) => m.yes),
-        elements: {
-            point: {
-                radius: 6,
-                pointStyle: 'triangle',
-            },
-        },
     };
 
     const noSeries = {
-        label: 'Not exposed',
-        borderColor: theme.palette.error.main,
-        backgroundColor: theme.palette.error.main,
+        label: 'Not enabled',
+        borderColor: theme.palette.charts.flagMetrics.notEnabled,
+        backgroundColor: theme.palette.charts.flagMetrics.notEnabled,
         data: createChartPoints(metrics, locationSettings, (m) => m.no),
-        elements: {
-            point: {
-                radius: 6,
-                pointStyle: 'triangle',
-                pointRotation: 180,
-            },
-        },
     };
 
     return {
-        datasets: [yesSeries, noSeries, requestsSeries],
+        datasets: [yesSeries, noSeries],
     };
 };
 

@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router';
 import useLoading from 'hooks/useLoading';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ReactComponent as ProjectStatusSvg } from 'assets/icons/projectStatus.svg';
+import ProjectStatusSvg from 'assets/icons/projectStatus.svg?react';
 import {
     StyledDiv,
     StyledFavoriteIconButton,
@@ -35,7 +35,7 @@ import {
     Routes,
     useLocation,
     useSearchParams,
-} from 'react-router-dom';
+} from 'react-router';
 import { DeleteProjectDialogue } from './DeleteProject/DeleteProjectDialogue.tsx';
 import { ProjectLog } from './ProjectLog/ProjectLog.tsx';
 import { ChangeRequestOverview } from 'component/changeRequest/ChangeRequestOverview/ChangeRequestOverview';
@@ -51,7 +51,7 @@ import { ChangeRequestPlausibleProvider } from 'component/changeRequest/ChangeRe
 import { ProjectApplications } from '../ProjectApplications/ProjectApplications.tsx';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ProjectArchived } from './ArchiveProject/ProjectArchived.tsx';
-import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker.ts';
+import { useEventTracker } from '../../../hooks/useEventTracker.ts';
 import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
 import { ProjectStatusModal } from './ProjectStatus/ProjectStatusModal.tsx';
 
@@ -153,7 +153,7 @@ const ProjectStatus = () => {
 
 export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const params = useQueryParams();
     const { project, loading, error, refetch } = useProjectOverview(projectId);
     const ref = useLoading(loading, '[data-loading-project=true]');
@@ -287,6 +287,7 @@ export const Project = () => {
                                 <StyledFavoriteIconButton
                                     onClick={onFavorite}
                                     isFavorite={project?.favorite || false}
+                                    size='medium'
                                 />
                             </StyledProjectTitle>
                         </StyledDiv>
@@ -337,7 +338,7 @@ export const Project = () => {
                                         tab.isEnterprise ? 'end' : undefined
                                     }
                                     icon={
-                                        <>
+                                        <div>
                                             <ConditionallyRender
                                                 condition={Boolean(tab.new)}
                                                 show={
@@ -353,7 +354,7 @@ export const Project = () => {
                                                 isPro() &&
                                                 enterpriseIcon) ||
                                                 undefined}
-                                        </>
+                                        </div>
                                     }
                                 />
                             );

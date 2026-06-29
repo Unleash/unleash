@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import Edit from '@mui/icons-material/Edit';
@@ -12,7 +12,7 @@ interface IStrategyEditButtonProps {
     onClick: () => void;
 }
 
-export const StrategyEditButton: VFC<IStrategyEditButtonProps> = ({
+export const StrategyEditButton: FC<IStrategyEditButtonProps> = ({
     strategy,
     onClick,
 }) => {

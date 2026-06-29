@@ -1,5 +1,5 @@
-import type { VFC } from 'react';
-import { useParams } from 'react-router-dom';
+import type { FC } from 'react';
+import { useParams } from 'react-router';
 import type { FeatureTypeSchema } from 'openapi';
 import { FeatureTypeForm } from './FeatureTypeForm/FeatureTypeForm.tsx';
 
@@ -8,7 +8,7 @@ type FeatureTypeEditProps = {
     loading: boolean;
 };
 
-export const FeatureTypeEdit: VFC<FeatureTypeEditProps> = ({
+export const FeatureTypeEdit: FC<FeatureTypeEditProps> = ({
     featureTypes,
     loading,
 }) => {

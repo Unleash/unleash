@@ -59,6 +59,7 @@ class ClientMetricsController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
+                    release: { stable: '4.14.0' },
                     operationId: 'getRawFeatureMetrics',
                     tags: ['Metrics'],
                     summary: 'Get feature metrics',
@@ -79,6 +80,7 @@ class ClientMetricsController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
+                    release: { stable: '4.14.0' },
                     operationId: 'getFeatureUsageSummary',
                     tags: ['Metrics'],
                     summary: `Last hour of usage and a list of applications that have reported seeing this feature flag`,

@@ -1,3 +1,4 @@
+import { expect, it } from 'vitest';
 import { countCombinations, getBucket } from './combinationCounter.js';
 import type {
     AdvancedPlaygroundEnvironmentFeatureSchema,

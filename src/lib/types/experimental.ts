@@ -51,36 +51,41 @@ export type IFlagKey =
     | 'streaming'
     | 'denyStreamingForNonEdge'
     | 'deltaApi'
-    | 'deltaDiff'
     | 'uniqueSdkTracking'
     | 'consumptionModel'
     | 'consumptionModelUI'
     | 'customMetrics'
-    | 'impactMetrics'
+    | 'impactViews'
+    | 'registerImpactMetrics'
+    | 'disableImpactMetrics'
     | 'etagByEnv'
     | 'fetchMode'
     | 'optimizeLifecycle'
-    | 'milestoneProgression'
     | 'plausibleMetrics'
-    | 'safeguards'
     | 'newInUnleash'
     | 'oidcPkceSupport'
-    | 'gtmReleaseManagement'
-    | 'projectContextFields'
-    | 'readOnlyUsersUI'
-    | 'remoteMcpServer'
+    | 'flightRecorderSdk'
+    | 'flightRecorderAdminEvents'
+    | 'flightRecorderFrontend'
     | 'regexConstraintOperator'
     | 'semverGteConstraintOperators'
-    | 'signupDialog'
-    | 'strategyFormConsolidation'
-    | 'updateMilestoneStrategy'
     | 'enterpriseEdgeTokensList'
     | 'impactMetricsFlagPage'
-    | 'featureEnvSafeguards'
-    | 'filterFavorites'
     | 'userTokenWithClientApiLoggingKillSwitch'
-    | 'newSignOut'
-    | 'externalPrometheusImpactMetrics';
+    | 'disableScimAdminGroupGuard'
+    | 'multiMetricChart'
+    | 'elasticEventSync'
+    | 'logRocketEnabled'
+    | 'newProjectList'
+    | 'newModalDesign'
+    | 'archiveInFlagsView'
+    | 'allowDeprecatedApiTokenMiddleware'
+    | 'newProfileDropdown'
+    | 'hideTopmenuDocumentation'
+    | 'serviceNowIntegration'
+    | 'learningLab'
+    | 'accessRequestsNotifications'
+    | 'accessRequestsMenuIndicator';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -243,10 +248,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_DELTA_API,
         false,
     ),
-    deltaDiff: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_DELTA_DIFF,
-        false,
-    ),
     uniqueSdkTracking: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_UNIQUE_SDK_TRACKING,
         false,
@@ -259,8 +260,16 @@ const flags: IFlags = {
         process.env.EXPERIMENTAL_CONSUMPTION_MODEL_UI,
         false,
     ),
-    impactMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_IMPACT_METRICS,
+    impactViews: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_IMPACT_VIEWS,
+        false,
+    ),
+    registerImpactMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_REGISTER_IMPACT_METRICS,
+        false,
+    ),
+    disableImpactMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DISABLE_IMPACT_METRICS,
         false,
     ),
     streaming: {
@@ -281,17 +290,8 @@ const flags: IFlags = {
             false,
         ),
     },
-    milestoneProgression: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_MILESTONE_PROGRESSION,
-        false,
-    ),
-
     plausibleMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PLAUSIBLE_METRICS,
-        false,
-    ),
-    safeguards: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SAFEGUARDS,
         false,
     ),
     oidcPkceSupport: parseEnvVarBoolean(
@@ -302,40 +302,33 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_NEW_IN_UNLEASH,
         false,
     ),
-    gtmReleaseManagement: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_GTM_RELEASE_MANAGEMENT,
+    flightRecorderSdk: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FLIGHT_RECORDER_SDK,
         false,
     ),
-    projectContextFields: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PROJECT_CONTEXT_FIELDS,
+    flightRecorderAdminEvents: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FLIGHT_RECORDER_ADMIN_EVENTS,
         false,
     ),
-    readOnlyUsersUI: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_READ_ONLY_USERS_UI,
-        false,
-    ),
-    remoteMcpServer: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_REMOTE_MCP_SERVER,
-        false,
-    ),
+    flightRecorderFrontend: {
+        name: 'flightRecorderFrontend',
+        enabled: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_FLIGHT_RECORDER_FRONTEND,
+            false,
+        ),
+        payload: {
+            type: PayloadType.STRING,
+            value:
+                process.env.UNLEASH_EXPERIMENTAL_FLIGHT_RECORDER_FRONTEND_URL ??
+                '',
+        },
+    },
     regexConstraintOperator: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_REGEX_CONSTRAINT_OPERATOR,
         false,
     ),
     semverGteConstraintOperators: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SEMVER_GTE_CONSTRAINT_OPERATORS,
-        false,
-    ),
-    signupDialog: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SIGNUP_DIALOG,
-        false,
-    ),
-    updateMilestoneStrategy: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_UPDATE_MILESTONE_STRATEGY,
-        false,
-    ),
-    strategyFormConsolidation: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_STRATEGY_FORM_CONSOLIDATION,
         false,
     ),
     enterpriseEdgeTokensList: parseEnvVarBoolean(
@@ -346,25 +339,68 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_IMPACT_METRICS_FLAG_PAGE,
         false,
     ),
-    featureEnvSafeguards: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FEATURE_ENV_SAFEGUARDS,
-        false,
-    ),
-    filterFavorites: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FILTER_FAVORITES,
-        false,
-    ),
     userTokenWithClientApiLoggingKillSwitch: parseEnvVarBoolean(
         process.env
             .UNLEASH_EXPERIMENTAL_USERTOKEN_WITH_CLIENTAPI_LOGGING_KILL_SWITCH,
         false,
     ),
-    newSignOut: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_SIGN_OUT,
+    disableScimAdminGroupGuard: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DISABLE_SCIM_ADMIN_GROUP_GUARD,
         false,
     ),
-    externalPrometheusImpactMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_EXTERNAL_PROMETHEUS_IMPACT_METRICS,
+    multiMetricChart: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_MULTI_METRIC_CHART,
+        false,
+    ),
+    elasticEventSync: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ELASTIC_EVENT_SYNC,
+        false,
+    ),
+    logRocketEnabled: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_LOGROCKET_ENABLED,
+        false,
+    ),
+    newProjectList: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_NEW_PROJECT_LIST,
+        false,
+    ),
+    newModalDesign: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_NEW_MODAL_DESIGN,
+        false,
+    ),
+    archiveInFlagsView: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ARCHIVE_IN_FLAGS_VIEW,
+        false,
+    ),
+    newProfileDropdown: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_NEW_PROFILE_DROPDOWN,
+        false,
+    ),
+    hideTopmenuDocumentation: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_HIDE_TOPMENU_DOCUMENTATION,
+        false,
+    ),
+    learningLab: {
+        name: 'learningLab',
+        enabled: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_LEARNING_LAB,
+            false,
+        ),
+        payload: {
+            type: PayloadType.JSON,
+            value: process.env.UNLEASH_EXPERIMENTAL_LEARNING_LAB_PAYLOAD ?? '',
+        },
+    },
+    serviceNowIntegration: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SERVICE_NOW_INTEGRATION,
+        false,
+    ),
+    accessRequestsNotifications: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ACCESS_REQUESTS_NOTIFICATIONS,
+        false,
+    ),
+    accessRequestsMenuIndicator: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ACCESS_REQUESTS_MENU_INDICATOR,
         false,
     ),
 };

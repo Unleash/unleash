@@ -54,6 +54,7 @@ export class InactiveUsersController extends Controller {
             permission: ADMIN,
             middleware: [
                 openApiService.validPath({
+                    release: { stable: '5.10.0' },
                     operationId: 'getInactiveUsers',
                     summary: 'Gets inactive users',
                     description: `Gets all inactive users. An inactive user is a user that has not logged in in the last ${this.userInactivityThresholdInDays} days`,
@@ -71,6 +72,7 @@ export class InactiveUsersController extends Controller {
             permission: ADMIN,
             middleware: [
                 openApiService.validPath({
+                    release: { stable: '5.10.0' },
                     operationId: 'deleteInactiveUsers',
                     summary: 'Deletes inactive users',
                     description: `Deletes all inactive users. An inactive user is a user that has not logged in in the last ${this.userInactivityThresholdInDays} days`,

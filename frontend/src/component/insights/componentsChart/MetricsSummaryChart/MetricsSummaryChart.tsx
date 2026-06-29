@@ -1,4 +1,4 @@
-import { useMemo, type VFC } from 'react';
+import { useMemo, type FC } from 'react';
 import 'chartjs-adapter-date-fns';
 
 import type { InstanceInsightsSchema } from 'openapi';
@@ -23,7 +23,7 @@ interface IMetricsSummaryChartProps {
     isLoading?: boolean;
 }
 
-export const MetricsSummaryChart: VFC<IMetricsSummaryChartProps> = ({
+export const MetricsSummaryChart: FC<IMetricsSummaryChartProps> = ({
     metricsSummaryTrends,
     isAggregate,
     allDatapointsSorted,
@@ -56,7 +56,7 @@ export const MetricsSummaryChart: VFC<IMetricsSummaryChartProps> = ({
         return {
             datasets: [
                 {
-                    label: 'Total Requests',
+                    label: 'Total Evaluations',
                     data: data,
                     borderColor: theme.palette.primary.light,
                     backgroundColor: fillGradientPrimary,

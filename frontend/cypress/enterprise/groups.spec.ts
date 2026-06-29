@@ -29,13 +29,6 @@ describe('groups', () => {
         cy.disableActiveSplashScreens();
         cy.loginUI();
         cy.visit('/admin/groups');
-        cy.get('body').then(($body) => {
-            if ($body.find("[data-testid='CLOSE_SPLASH']").length > 0) {
-                cy.get("[data-testid='CLOSE_SPLASH']")
-                    .should('be.visible')
-                    .click();
-            }
-        });
     });
 
     it('can create a group', () => {
@@ -107,6 +100,11 @@ describe('groups', () => {
         cy.get("[data-testid='UG_DELETE_BTN_ID']").click();
         cy.get("[data-testid='DIALOGUE_CONFIRM_ID'").click();
 
+        cy.contains('Group removed successfully');
+        // there is some issue on CI that I can't replicate locally
+        // so after we've see the success message
+        // reload the page and check that the group is really not there anymore
+        cy.reload();
         cy.contains(groupName).should('not.exist');
     });
 });

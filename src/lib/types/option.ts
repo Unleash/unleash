@@ -105,6 +105,7 @@ export interface IServerOption {
     cdnPrefix?: string;
     edgeUrl?: string;
     unleashUrl: string;
+    logRocketAppId?: string;
     serverMetrics: boolean;
     enableHeapSnapshotEnpoint: boolean;
     enableRequestLogger: boolean;
@@ -172,6 +173,7 @@ export interface IUnleashOptions {
     accessControlMaxAge?: number;
     prometheusApi?: string;
     prometheusImpactMetricsApi?: string;
+    externalPrometheusImpactMetricsApi?: string;
     publicFolder?: string;
     disableScheduler?: boolean;
     metricsRateLimiting?: Partial<IMetricsRateLimiting>;
@@ -185,6 +187,8 @@ export interface IUnleashOptions {
     checkDbOnReady?: boolean;
     edgeMasterKey?: string;
     edgeClientSecret?: string;
+    allowPrivateUrlInIntegration?: boolean;
+    allowListIntegration?: string[];
 }
 
 export interface IEmailOption {
@@ -301,6 +305,7 @@ export interface IUnleashConfig {
     accessControlMaxAge: number;
     prometheusApi?: string;
     prometheusImpactMetricsApi?: string;
+    externalPrometheusImpactMetricsApi?: string;
     publicFolder?: string;
     disableScheduler?: boolean;
     isEnterprise: boolean;
@@ -315,4 +320,6 @@ export interface IUnleashConfig {
     checkDbOnReady?: boolean;
     edgeMasterKey?: string;
     edgeClientSecret?: string;
+    allowPrivateUrlInIntegration?: boolean;
+    allowListIntegration?: string[];
 }

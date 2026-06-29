@@ -8,6 +8,7 @@ import {
 import getLogger from '../../../test/fixtures/no-logger.js';
 
 import type { IProjectStore } from '../../types/index.js';
+import { DEFAULT_ENV } from '../../server-impl.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -103,4 +104,37 @@ test('response should include technical debt field', async () => {
     expect(typeof body.projects[0].technicalDebt).toBe('number');
     expect(body.projects[0].technicalDebt).toBeGreaterThanOrEqual(0);
     expect(body.projects[0].technicalDebt).toBeLessThanOrEqual(100);
+});
+
+test('returns sdk-connected when SDK is connected but no flag has been enabled in an environment', async () => {
+    await app.createFeature({ name: 'my-flag' });
+    await db.stores.lastSeenStore.setLastSeen([
+        { environment: DEFAULT_ENV, featureName: 'my-flag' },
+    ]);
+
+    const { body } = await app.request
+        .get('/api/admin/projects/default/overview')
+        .expect(200);
+
+    expect(body.onboardingStatus).toMatchObject({
+        status: 'sdk-connected',
+    });
+});
+
+test('returns onboarded when SDK is connected and a flag has been enabled in an environment', async () => {
+    await app.createFeature({ name: 'my-flag' });
+    await db.stores.lastSeenStore.setLastSeen([
+        { environment: DEFAULT_ENV, featureName: 'my-flag' },
+    ]);
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/my-flag/environments/${DEFAULT_ENV}/on`,
+        )
+        .expect(200);
+
+    const { body } = await app.request
+        .get('/api/admin/projects/default/overview')
+        .expect(200);
+
+    expect(body.onboardingStatus).toMatchObject({ status: 'onboarded' });
 });

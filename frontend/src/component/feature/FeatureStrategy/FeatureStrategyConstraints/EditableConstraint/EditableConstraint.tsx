@@ -36,7 +36,6 @@ import {
     isSingleValueConstraint,
 } from './useEditableConstraint/editable-constraint-type.ts';
 import type { ConstraintValidationResult } from './useEditableConstraint/constraint-validator.ts';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 import { createContextFieldOptions } from './createContextFieldOptions.ts';
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
 import { AddRegexValueChip } from './AddRegexValueChip.tsx';
@@ -107,7 +106,7 @@ const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
         background: 'none',
     },
     ':focus-within fieldset': { borderBottomStyle: 'solid' },
-    'label + &': {
+    '.MuiInputLabel-root + &': {
         // mui adds a margin top to 'standard' selects with labels
         margin: 0,
     },
@@ -143,7 +142,7 @@ const TopRowInput: FC<{
     clearValues: () => void;
     localConstraint: EditableConstraintType;
     validator: (value: string) => ConstraintValidationResult;
-    addValuesButtonRef: React.RefObject<HTMLButtonElement>;
+    addValuesButtonRef: React.RefObject<HTMLDivElement | null>;
     editingOpen: boolean;
     setEditingOpen: (open: boolean) => void;
 }> = ({
@@ -287,7 +286,6 @@ export const EditableConstraint: FC<Props> = ({
     constraint,
     onUpdate,
 }) => {
-    const groupContextFieldOptionsByType = useUiFlag('projectContextFields');
     const {
         constraint: localConstraint,
         updateConstraint,
@@ -353,7 +351,7 @@ export const EditableConstraint: FC<Props> = ({
     const showCaseSensitiveButton =
         isStringOperator(operator) || isRegexOperator(operator);
     const deleteButtonRef = useRef<HTMLButtonElement>(null);
-    const addValuesButtonRef = useRef<HTMLButtonElement>(null);
+    const addValuesButtonRef = useRef<HTMLDivElement>(null);
 
     if (!context) {
         return null;
@@ -362,7 +360,6 @@ export const EditableConstraint: FC<Props> = ({
     const contextFieldOptions = createContextFieldOptions(
         localConstraint,
         context,
-        { groupOptions: groupContextFieldOptionsByType },
     );
 
     return (
@@ -447,11 +444,11 @@ export const EditableConstraint: FC<Props> = ({
                     <StyledIconButton
                         type='button'
                         data-testid='DELETE_CONSTRAINT_BUTTON'
-                        size='small'
+                        size='medium'
                         onClick={onDelete}
                         ref={deleteButtonRef}
                     >
-                        <Delete fontSize='inherit' />
+                        <Delete />
                     </StyledIconButton>
                 </HtmlTooltip>
             </TopRow>

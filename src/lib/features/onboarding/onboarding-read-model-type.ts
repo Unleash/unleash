@@ -1,6 +1,6 @@
-import type { ProjectOverviewSchema } from '../../openapi/index.js';
+import type { OnboardingStatusSchema } from '../../openapi/index.js';
 
-export type OnboardingStatus = ProjectOverviewSchema['onboardingStatus'];
+export type OnboardingStatus = OnboardingStatusSchema;
 
 /**
  * All the values are in seconds
@@ -26,6 +26,9 @@ export type ProjectOnboarding = {
 export interface IOnboardingReadModel {
     getInstanceOnboardingMetrics(): Promise<InstanceOnboarding>;
     getProjectsOnboardingMetrics(): Promise<Array<ProjectOnboarding>>;
+    getOnboardingStatusesForProjects(
+        projectIds: string[],
+    ): Promise<Map<string, OnboardingStatus>>;
     getOnboardingStatusForProject(
         projectId: string,
     ): Promise<OnboardingStatus | null>;

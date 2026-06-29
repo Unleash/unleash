@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Box, Dialog, IconButton, styled, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
@@ -42,7 +42,7 @@ export const FeatureStrategyMenu = ({
     defaultFilter = null,
 }: IFeatureStrategyMenuProps) => {
     const [filter, setFilter] = useState<StrategyFilterValue>(defaultFilter);
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const [selectedTemplate, setSelectedTemplate] =
         useState<IReleasePlanTemplate>();
     const [releasePlanPreview, setReleasePlanPreview] = useState(false);
@@ -129,11 +129,13 @@ export const FeatureStrategyMenu = ({
                 open={isStrategyMenuDialogOpen}
                 onClose={onClose}
                 maxWidth='md'
-                PaperProps={{
-                    sx: {
-                        borderRadius: '12px',
-                        height: '100%',
-                        width: '100%',
+                slotProps={{
+                    paper: {
+                        sx: {
+                            borderRadius: '12px',
+                            height: '100%',
+                            width: '100%',
+                        },
                     },
                 }}
             >
@@ -141,12 +143,12 @@ export const FeatureStrategyMenu = ({
                     <StyledHeader>
                         <Typography variant='h2'>Add strategy</Typography>
                         <IconButton
-                            size='small'
+                            size='medium'
                             onClick={onClose}
                             edge='end'
                             aria-label='close'
                         >
-                            <CloseIcon fontSize='small' />
+                            <CloseIcon />
                         </IconButton>
                     </StyledHeader>
                     {releasePlanPreview && selectedTemplate ? (

@@ -1,4 +1,4 @@
-import { ReactComponent as NoItemsIcon } from 'assets/icons/addfiles.svg';
+import NoItemsIcon from 'assets/icons/addfiles.svg?react';
 import type React from 'react';
 import { styled } from '@mui/material';
 

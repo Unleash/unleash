@@ -59,6 +59,7 @@ class ResetPasswordController extends Controller {
                     description:
                         'If the token is valid returns the user that owns the token',
                     tags: ['Auth'],
+                    release: { stable: '4.14.0' },
                     operationId: 'validateToken',
                     responses: {
                         200: createResponseSchema('tokenUserSchema'),
@@ -78,6 +79,7 @@ class ResetPasswordController extends Controller {
                     summary: `Changes a user password`,
                     description:
                         'Allows users with a valid reset token to reset their password without remembering their old password',
+                    release: { stable: '4.14.0' },
                     operationId: 'changePassword',
                     requestBody: createRequestSchema('changePasswordSchema'),
                     responses: {
@@ -98,6 +100,7 @@ class ResetPasswordController extends Controller {
                     summary: 'Validates password',
                     description:
                         'Verifies that the password adheres to the [Unleash password guidelines](https://docs.getunleash.io/using-unleash/deploy/configuring-unleash#securing-unleash)',
+                    release: { stable: '4.14.0' },
                     operationId: 'validatePassword',
                     requestBody: createRequestSchema('validatePasswordSchema'),
                     responses: {
@@ -118,6 +121,7 @@ class ResetPasswordController extends Controller {
                     summary: 'Reset password',
                     description:
                         'Requests a password reset email for the user. This email can be used to reset the password for a user that has forgotten their password',
+                    release: { stable: '4.14.0' },
                     operationId: 'sendResetPasswordEmail',
                     requestBody: createRequestSchema('emailSchema'),
                     responses: {

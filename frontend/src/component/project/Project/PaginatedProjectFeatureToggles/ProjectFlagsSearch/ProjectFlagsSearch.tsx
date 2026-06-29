@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { Box } from '@mui/material';
 import { Search } from 'component/common/Search/Search';
 import useLoading from 'hooks/useLoading';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 interface IProjectFlagsSearchProps {
     isLoading?: boolean;
@@ -16,7 +16,7 @@ export const ProjectFlagsSearch: FC<IProjectFlagsSearchProps> = ({
     onChangeSearchQuery,
 }) => {
     const headerLoadingRef = useLoading(isLoading || false);
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const handleSearch = (query: string) => {
         onChangeSearchQuery?.(query);
         trackEvent('search-bar', {

@@ -5,11 +5,22 @@
 Before you begin:
 
 - Have you read the [code of conduct](../CODE_OF_CONDUCT.md)?
+- Have you read and agreed to the [Unleash Contributor License Agreement](../CLA.md)?
 - Check out the [existing issues](https://github.com/unleash/Unleash/issues)
 - Browse the [developer-guide](https://docs.getunleash.io/contribute) for tips on environment setup, running the tests, and running Unleash from source.
 - You need
-  - Node 20
+  - Node 22
   - corepack enabled `corepack enable`
+
+### Contributor License Agreement
+
+Before we can merge a pull request, every human contributor must read and agree to the [Unleash Contributor License Agreement](../CLA.md). The CLA keeps ownership of your contribution with you while giving Unleash the rights needed to use, distribute, sublicense, and relicense contributions.
+
+When you open a pull request, the CLA check will ask you to confirm the agreement with your GitHub account. If you are contributing on behalf of your employer or another organization, make sure you are authorized to do so before signing.
+
+Please do not add new individual copyright headers to files. Git history and pull request history record contribution attribution. Preserve existing third-party copyright and license notices when they are already present or when you are explicitly importing third-party work.
+
+If your contribution includes AI-generated code, documentation, or other content, disclose that in the pull request, review the generated content carefully, and make sure the tool terms allow you to contribute it under the CLA and repository license.
 
 ### Don't see your issue? Open one
 
@@ -36,7 +47,7 @@ Follow the steps in [the "how to run the project" section](#how-to-run-the-proje
 
 ### Make your update:
 
-Make your changes to the files you'd like to update. You'll need **Node.js v18.0+** and PostgreSQL v13.0+ to run Unleash locally. [See more details](https://docs.getunleash.io/contribute)
+Make your changes to the files you'd like to update. You'll need **Node.js v22.0+** and PostgreSQL v14.0+ to run Unleash locally. [See more details](https://docs.getunleash.io/contribute)
 
 ### Open a pull request
 
@@ -66,7 +77,7 @@ You'll need:
 - [Docker](https://www.docker.com/) to run the database
 - [Node.js](https://nodejs.org/en/) to run the project. You can install it directly, or use `nvm` (see the next point) to manage it for you.
 - [nvm](https://github.com/nvm-sh/nvm) (optional) to manage your Node.js installation.
-- [Yarn](https://yarnpkg.com/) (optional but recommended; the steps below assume that you have it installed) to install packages and run the project.
+- [pnpm](https://pnpm.io/) (optional but recommended; the steps below assume that you have it installed) to install packages and run the project.
 
 ### How to run Unleash with Node.js
 
@@ -79,7 +90,7 @@ You'll need:
 2. **Install packages**:
 
    ```bash
-   yarn
+   pnpm
    ```
 
 3. **Start a Postgres database** for Unleash via Docker.
@@ -99,6 +110,12 @@ You'll need:
 
    The **connection details** that Unleash will try to use are found in **`src/server-dev.ts`**. The above command works with the current defaults (at the time of writing).
 
+   - Also create the **test database** used by `pnpm test`:
+
+   ```bash
+   docker exec postgres createdb -U unleash_user unleash_test
+   ```
+
    - If you've set up the database previously, you can restart the container by running this (assuming `postgres` is the name you gave the container):
 
    ```bash
@@ -108,7 +125,7 @@ You'll need:
 4. **Start Unleash.** Run the below command and Unleash will start up and try to connect to the database. On a successful connection it will also configure the database.
 
    ```bash
-   yarn dev
+   pnpm dev
    ```
 
 5. **Log into the admin UI**. Use a browser and navigate to `localhost:3000`. Log in using:

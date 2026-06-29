@@ -104,11 +104,13 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                         delete errors.name;
                     }}
                     autoFocus
-                    InputProps={{
-                        style: { fontSize: theme.typography.h1.fontSize },
-                    }}
-                    InputLabelProps={{
-                        style: { fontSize: theme.typography.h1.fontSize },
+                    slotProps={{
+                        input: {
+                            style: { fontSize: theme.typography.h1.fontSize },
+                        },
+                        inputLabel: {
+                            style: { fontSize: theme.typography.h1.fontSize },
+                        },
                     }}
                     size='medium'
                 />
@@ -117,16 +119,18 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                     multiline
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    InputProps={{
-                        style: {
-                            fontSize: theme.typography.h2.fontSize,
-                            padding: 0,
+                    slotProps={{
+                        input: {
+                            style: {
+                                fontSize: theme.typography.h2.fontSize,
+                                padding: 0,
+                            },
                         },
-                    }}
-                    InputLabelProps={{
-                        style: {
-                            fontSize: theme.typography.h2.fontSize,
-                            padding: 0,
+                        inputLabel: {
+                            style: {
+                                fontSize: theme.typography.h2.fontSize,
+                                padding: 0,
+                            },
                         },
                     }}
                     size='small'

@@ -1,3 +1,4 @@
+import { beforeEach, expect, test } from 'vitest';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import type {
@@ -10,7 +11,7 @@ import {
     ADMIN,
     APPLY_CHANGE_REQUEST,
 } from 'component/providers/AccessProvider/permissions';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 const server = testServerSetup();
 const mockChangeRequest = (

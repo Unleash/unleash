@@ -79,6 +79,7 @@ class MetricsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Metrics'],
+                    release: { stable: '4.14.0' },
                     operationId: 'createApplication',
                     summary:
                         'Create an application to connect reported metrics',
@@ -101,6 +102,7 @@ class MetricsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Metrics'],
+                    release: { stable: '4.14.0' },
                     operationId: 'deleteApplication',
                     summary: 'Delete an application',
                     description: `Delete the application specified in the request URL. Returns 200 OK if the application was successfully deleted or if it didn't exist`,
@@ -123,6 +125,7 @@ class MetricsController extends Controller {
                     description:
                         'Returns all applications registered with Unleash. Applications can be created via metrics reporting or manual creation',
                     parameters: [...applicationsQueryParameters],
+                    release: { stable: '4.14.0' },
                     operationId: 'getApplications',
                     responses: {
                         200: createResponseSchema('applicationsSchema'),
@@ -138,6 +141,7 @@ class MetricsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Metrics'],
+                    release: { stable: '4.14.0' },
                     operationId: 'getApplication',
                     summary: 'Get application data',
                     description:
@@ -157,6 +161,7 @@ class MetricsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Metrics'],
+                    release: { stable: '5.10.0' },
                     operationId: 'getApplicationOverview',
                     summary: 'Get application overview',
                     description:
@@ -176,6 +181,7 @@ class MetricsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Metrics'],
+                    release: { stable: '5.10.0' },
                     operationId: 'getApplicationEnvironmentInstances',
                     summary: 'Get application environment instances (Last 24h)',
                     description:
@@ -197,6 +203,7 @@ class MetricsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Metrics'],
+                    release: { stable: '5.11.0' },
                     operationId: 'getOutdatedSdks',
                     summary: 'Get outdated SDKs',
                     description:

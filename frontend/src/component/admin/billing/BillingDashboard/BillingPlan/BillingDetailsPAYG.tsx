@@ -1,5 +1,6 @@
-import { Link } from 'react-router-dom';
-import { Divider, Grid, styled, Typography } from '@mui/material';
+import { Link } from 'react-router';
+import { Divider, styled, Typography } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { GridRow } from 'component/common/GridRow/GridRow';
 import { GridCol } from 'component/common/GridCol/GridCol';
 import { GridColLink } from './GridColLink/GridColLink.tsx';

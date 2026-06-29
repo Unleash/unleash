@@ -1,3 +1,4 @@
+import { createUuid } from 'utils/createUuid';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import {
     UPDATE_PROJECT_SEGMENT,
@@ -11,7 +12,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useToast from 'hooks/useToast';
 import type React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useSegmentForm } from '../hooks/useSegmentForm.ts';
 import { SegmentForm } from '../SegmentForm.tsx';
@@ -36,7 +37,7 @@ const addIdSymbolToConstraints = (segment?: ISegment): ISegment | undefined => {
     if (!segment) return;
 
     const constraints = segment.constraints.map((constraint) => {
-        return { ...constraint, [constraintId]: crypto.randomUUID() };
+        return { ...constraint, [constraintId]: createUuid() };
     });
 
     return { ...segment, constraints };

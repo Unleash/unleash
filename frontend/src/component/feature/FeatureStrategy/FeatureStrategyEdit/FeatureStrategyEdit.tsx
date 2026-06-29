@@ -1,3 +1,4 @@
+import { createUuid } from 'utils/createUuid';
 import { useEffect, useRef, useState } from 'react';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -5,7 +6,7 @@ import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import useToast from 'hooks/useToast';
 import type {
     IFeatureStrategy,
@@ -28,7 +29,7 @@ import { comparisonModerator } from '../featureStrategy.utils';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm.tsx';
 import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 import {
@@ -39,14 +40,12 @@ import { constraintId } from 'constants/constraintId.ts';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 import { createFeatureStrategy } from 'utils/createFeatureStrategy.ts';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
-import { LegacyFeatureStrategyEdit } from './LegacyFeatureStrategyEdit.tsx';
 import { refreshFeatureChangeRequests } from 'utils/refreshAllPendingChangeRequests.ts';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
 
 const useTitleTracking = () => {
     const [previousTitle, setPreviousTitle] = useState<string>('');
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const trackTitle = (title: string = '') => {
         // don't expose the title, just if it was added, removed, or edited
@@ -94,11 +93,11 @@ const addIdSymbolToConstraints = (strategy?: IFeatureStrategy) => {
     if (!strategy) return;
 
     return strategy?.constraints.map((constraint) => {
-        return { ...constraint, [constraintId]: crypto.randomUUID() };
+        return { ...constraint, [constraintId]: createUuid() };
     });
 };
 
-const NewFeatureStrategyEdit = () => {
+export const FeatureStrategyEdit = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const environmentId = useRequiredQueryParam('environmentId');
@@ -155,7 +154,7 @@ const NewFeatureStrategyEdit = () => {
         }
     }, [feature]);
 
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { changeRequests: scheduledChangeRequestThatUseStrategy } =
         useScheduledChangeRequestsWithStrategy(projectId, strategyId);
 
@@ -352,15 +351,6 @@ const NewFeatureStrategyEdit = () => {
             />
             {staleDataNotification}
         </FormTemplate>
-    );
-};
-
-export const FeatureStrategyEdit = () => {
-    const consolidate = useUiFlag('strategyFormConsolidation');
-    return consolidate ? (
-        <NewFeatureStrategyEdit />
-    ) : (
-        <LegacyFeatureStrategyEdit />
     );
 };
 

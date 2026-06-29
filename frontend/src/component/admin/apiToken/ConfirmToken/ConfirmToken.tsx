@@ -1,5 +1,5 @@
 import { Alert, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { UserToken } from './UserToken/UserToken.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

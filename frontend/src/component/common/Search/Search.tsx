@@ -1,6 +1,6 @@
 import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
-import { useAsyncDebounce } from 'react-table';
+import { useDebouncedCallback } from 'hooks/useDebouncedCallback';
 import {
     Box,
     IconButton,
@@ -20,7 +20,7 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import { useSavedQuery } from './useSavedQuery.ts';
 import { useOnBlur } from 'hooks/useOnBlur';
 import { SearchHistory } from './SearchSuggestions/SearchHistory.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 interface ISearchProps {
     id?: string;
@@ -111,7 +111,7 @@ export const Search = ({
     debounceTime = 200,
     ...rest
 }: ISearchProps) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const searchInputRef = useRef<HTMLInputElement>(null);
     const searchContainerRef = useRef<HTMLInputElement>(null);
     const [showSuggestions, setShowSuggestions] = useState(false);
@@ -124,7 +124,7 @@ export const Search = ({
     const { savedQuery, setSavedQuery } = useSavedQuery(id);
 
     const [value, setValue] = useState<string>(initialValue);
-    const debouncedOnChange = useAsyncDebounce(onChange, debounceTime);
+    const debouncedOnChange = useDebouncedCallback(onChange, debounceTime);
 
     const onSearchChange = (value: string) => {
         debouncedOnChange(value);
@@ -201,9 +201,11 @@ export const Search = ({
                 <StyledInputBase
                     inputRef={searchInputRef}
                     placeholder={placeholder}
-                    inputProps={{
-                        'aria-label': placeholder,
-                        'data-testid': SEARCH_INPUT,
+                    slotProps={{
+                        input: {
+                            'aria-label': placeholder,
+                            'data-testid': SEARCH_INPUT,
+                        } as React.InputHTMLAttributes<HTMLInputElement>,
                     }}
                     value={value}
                     onChange={(e) => onSearchChange(e.target.value)}

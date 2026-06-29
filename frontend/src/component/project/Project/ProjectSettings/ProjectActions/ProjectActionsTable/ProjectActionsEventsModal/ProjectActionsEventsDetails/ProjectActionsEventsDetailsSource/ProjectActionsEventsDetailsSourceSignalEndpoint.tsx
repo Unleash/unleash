@@ -9,7 +9,7 @@ import {
 import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
 import type { ISignal } from 'interfaces/signal';
 import { Suspense, lazy, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 const LazyReactJSONEditor = lazy(
     () => import('component/common/ReactJSONEditor/ReactJSONEditor'),

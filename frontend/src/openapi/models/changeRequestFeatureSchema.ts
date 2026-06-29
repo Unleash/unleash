@@ -12,7 +12,7 @@ import type { ChangeRequestDefaultChangeSchema } from './changeRequestDefaultCha
 export interface ChangeRequestFeatureSchema {
     /** List of changes inside change request. This list may be empty when listing all change requests for a project. */
     changes: ChangeRequestChangeSchema[];
-    /** A string describing the conflicts related to this change. Only present if there are any concflicts on the feature level. */
+    /** A string describing the conflicts related to this change. Only present if there are any conflicts on the feature level. */
     conflict?: string;
     defaultChange?: ChangeRequestDefaultChangeSchema;
     /** The name of the feature */

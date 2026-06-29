@@ -1,4 +1,4 @@
-import millify from 'millify';
+import { millify } from 'millify';
 
 export const prettifyLargeNumber =
     (threshold: number = 1_000_000, precision: number = 2) =>

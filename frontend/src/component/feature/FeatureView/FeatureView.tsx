@@ -1,4 +1,4 @@
-import { Link, Route, Routes } from 'react-router-dom';
+import { Link, Route, Routes } from 'react-router';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import FeatureLog from './FeatureLog/FeatureLog.tsx';
 import { FeatureOverview } from './FeatureOverview/FeatureOverview.tsx';
@@ -11,10 +11,10 @@ import { FeatureViewHeader } from './FeatureViewHeader.tsx';
 import { styled } from '@mui/material';
 import { FeatureMetricsOverview } from './FeatureMetrics/FeatureMetricsOverview.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { FeatureImpactHeader } from './FeatureImpactOverview/FeatureImpactHeader';
-import { ChartConfigModal } from '../../impact-metrics/ChartConfigModal/ChartConfigModal';
+import { ImpactMetricModal } from '../../impact-metrics/ImpactMetricModal/ImpactMetricModal';
 import { useFeatureImpactChartActions } from './useFeatureImpactChartActions';
+import { useImpactMetricsEnabled } from 'component/impact-metrics/hooks/useImpactMetricsEnabled.ts';
 
 export const StyledLink = styled(Link)(() => ({
     maxWidth: '100%',
@@ -29,8 +29,8 @@ export const FeatureView = () => {
     const featureId = useRequiredPathParam('featureId');
 
     const impactMetricsFlagPage = useUiFlag('impactMetricsFlagPage');
-    const { isEnterprise } = useUiConfig();
-    const showImpactMetrics = impactMetricsFlagPage && isEnterprise();
+    const impactMetricsEnabled = useImpactMetricsEnabled();
+    const showImpactMetrics = impactMetricsFlagPage && impactMetricsEnabled;
 
     const { feature, loading, error, status } = useFeature(
         projectId,
@@ -85,11 +85,11 @@ export const FeatureView = () => {
                 />
             </Routes>
             {showImpactMetrics && (
-                <ChartConfigModal
+                <ImpactMetricModal
                     open={chartModalOpen}
                     onClose={closeChartModal}
                     onSave={saveChart}
-                    metricSeries={metricOptions}
+                    metrics={metricOptions}
                     loading={metadataLoading}
                 />
             )}

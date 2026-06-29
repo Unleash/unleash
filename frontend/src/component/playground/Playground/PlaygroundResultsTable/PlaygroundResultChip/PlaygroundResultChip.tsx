@@ -1,5 +1,5 @@
-import { ReactComponent as FeatureEnabledIcon } from 'assets/icons/isenabled-true.svg';
-import { ReactComponent as FeatureDisabledIcon } from 'assets/icons/isenabled-false.svg';
+import FeatureEnabledIcon from 'assets/icons/isenabled-true.svg?react';
+import FeatureDisabledIcon from 'assets/icons/isenabled-false.svg?react';
 import { Badge } from 'component/common/Badge/Badge';
 import type { FC } from 'react';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';

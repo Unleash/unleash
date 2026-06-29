@@ -1,6 +1,6 @@
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { Link, styled, Typography } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';

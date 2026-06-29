@@ -1,11 +1,27 @@
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
+import type { MetricSource } from 'component/impact-metrics/types';
 import { useChartData } from 'component/impact-metrics/hooks/useChartData';
 import { useMemo } from 'react';
 import type { FC } from 'react';
+import { Box, styled } from '@mui/material';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutlineOutlined';
+import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 import type { MetricQuerySchemaTimeRange } from 'openapi/models/metricQuerySchemaTimeRange';
 import type { MetricQuerySchemaAggregationMode } from 'openapi/models/metricQuerySchemaAggregationMode';
 import { MiniChartWithData } from './MiniChartWithData.tsx';
 import { MiniChartNoData } from './MiniChartNoData.tsx';
+
+const StyledErrorWrapper = styled(Box)(({ theme }) => ({
+    width: 60,
+    marginRight: theme.spacing(1),
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadius,
+    padding: theme.spacing(0.75),
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: theme.palette.error.main,
+}));
 
 interface MiniMetricsChartWithTooltipProps {
     metricName: string;
@@ -16,6 +32,7 @@ interface MiniMetricsChartWithTooltipProps {
     threshold: number;
     projectId: string;
     featureId: string;
+    source?: MetricSource;
 }
 
 export const MiniMetricsChartWithTooltip: FC<
@@ -29,20 +46,24 @@ export const MiniMetricsChartWithTooltip: FC<
     threshold,
     projectId,
     featureId,
+    source,
 }) => {
     const {
         data: { series: timeSeriesData },
         loading: dataLoading,
+        error: dataError,
     } = useImpactMetricsData(
         metricName
             ? {
-                  series: metricName,
+                  metricName,
                   range: timeRange,
                   aggregationMode,
                   labels:
                       Object.keys(labelSelectors).length > 0
                           ? labelSelectors
                           : undefined,
+                  source,
+                  mode: 'display',
               }
             : undefined,
     );
@@ -62,6 +83,20 @@ export const MiniMetricsChartWithTooltip: FC<
         [data, dataLoading, timeSeriesData],
     );
 
+    if (dataError) {
+        return (
+            <TooltipResolver
+                title='Failed to load impact metrics'
+                placement='top'
+                arrow
+            >
+                <StyledErrorWrapper>
+                    <ErrorOutlineIcon fontSize='small' />
+                </StyledErrorWrapper>
+            </TooltipResolver>
+        );
+    }
+
     if (notEnoughData) {
         return (
             <MiniChartNoData
@@ -70,6 +105,7 @@ export const MiniMetricsChartWithTooltip: FC<
                 labelSelectors={labelSelectors}
                 aggregationMode={aggregationMode}
                 threshold={threshold}
+                source={source}
             />
         );
     }
@@ -84,6 +120,7 @@ export const MiniMetricsChartWithTooltip: FC<
             threshold={threshold}
             projectId={projectId}
             featureId={featureId}
+            source={source}
         />
     );
 };

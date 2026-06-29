@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { Box, TextField, Typography } from '@mui/material';
 import { CREATED, OK } from 'constants/statusCodes';
 import useToast from 'hooks/useToast';
@@ -114,9 +114,18 @@ export const NewUser = () => {
                     </Typography>
                 }
             />
-            <Typography color='text.secondary'>
+            <Typography
+                sx={{
+                    color: 'text.secondary',
+                }}
+            >
                 We suggest using{' '}
-                <Typography component='strong' fontWeight='bold'>
+                <Typography
+                    component='strong'
+                    sx={{
+                        fontWeight: 'bold',
+                    }}
+                >
                     the email you use for work
                 </Typography>
                 .

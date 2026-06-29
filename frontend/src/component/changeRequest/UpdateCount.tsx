@@ -10,8 +10,10 @@ export const UpdateCount: FC<{
         <Typography
             component='span'
             variant='body2'
-            fontWeight='bold'
-            display='inline'
+            sx={{
+                fontWeight: 'bold',
+                display: 'inline',
+            }}
         >
             {featuresCount}{' '}
             {featuresCount === 1 ? 'feature flag' : 'feature flags'}
@@ -26,8 +28,10 @@ export const UpdateCount: FC<{
                     <Typography
                         component='span'
                         variant='body2'
-                        fontWeight='bold'
-                        display='inline'
+                        sx={{
+                            fontWeight: 'bold',
+                            display: 'inline',
+                        }}
                     >
                         {segmentsCount}{' '}
                         {segmentsCount === 1 ? 'segment' : 'segments'}

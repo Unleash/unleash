@@ -1,4 +1,4 @@
-import { useMemo, type VFC } from 'react';
+import { useMemo, type FC } from 'react';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { UPDATE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { Tooltip } from '@mui/material';
@@ -11,7 +11,7 @@ interface IStrategySwitchProps {
     disabled?: boolean;
 }
 
-export const StrategySwitch: VFC<IStrategySwitchProps> = ({
+export const StrategySwitch: FC<IStrategySwitchProps> = ({
     deprecated,
     disabled,
     onToggle,
@@ -44,7 +44,7 @@ export const StrategySwitch: VFC<IStrategySwitchProps> = ({
                     permission={UPDATE_STRATEGY}
                     onClick={onClick}
                     disabled={disabled}
-                    inputProps={{ 'aria-labelledby': id }}
+                    slotProps={{ input: { 'aria-labelledby': id } }}
                 />
             </div>
         </Tooltip>

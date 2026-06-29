@@ -8,7 +8,7 @@ import {
 } from 'component/providers/AccessProvider/permissions';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
 import { ArchivedFeatureDeleteConfirm } from './ArchivedFeatureActionCell/ArchivedFeatureDeleteConfirm/ArchivedFeatureDeleteConfirm.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { ArchivedFeatureReviveConfirm } from './ArchivedFeatureActionCell/ArchivedFeatureReviveConfirm/ArchivedFeatureReviveConfirm.tsx';
 
 interface IArchiveBatchActionsProps {
@@ -24,7 +24,7 @@ export const ArchiveBatchActions: FC<IArchiveBatchActionsProps> = ({
 }) => {
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [reviveModalOpen, setReviveModalOpen] = useState(false);
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const onRevive = async () => {
         setReviveModalOpen(true);
@@ -41,7 +41,7 @@ export const ArchiveBatchActions: FC<IArchiveBatchActionsProps> = ({
                         disabled={!hasAccess}
                         startIcon={<Undo />}
                         variant='outlined'
-                        size='small'
+                        size='medium'
                         onClick={onRevive}
                         date-testid={'batch_revive'}
                     >
@@ -55,7 +55,7 @@ export const ArchiveBatchActions: FC<IArchiveBatchActionsProps> = ({
                         disabled={!hasAccess}
                         startIcon={<Delete />}
                         variant='outlined'
-                        size='small'
+                        size='medium'
                         onClick={onDelete}
                     >
                         Delete

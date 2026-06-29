@@ -33,8 +33,8 @@ import {
     VirtualizedList,
 } from './SharedComponents.tsx';
 import { ContactAdmins, DataError } from './ProjectDetailsError.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { Link } from 'react-router-dom';
+import { useEventTracker } from 'hooks/useEventTracker';
+import { Link } from 'react-router';
 import { ActionBox } from './ActionBox.tsx';
 import useLoading from 'hooks/useLoading';
 import { NoProjectsContactAdmin } from './NoProjectsContactAdmin.tsx';
@@ -50,7 +50,12 @@ const ActiveProjectDetails: FC<{
                 <Typography variant='subtitle2' color='primary'>
                     {project.featureCount}
                 </Typography>
-                <Typography variant='caption' color='text.secondary'>
+                <Typography
+                    variant='caption'
+                    sx={{
+                        color: 'text.secondary',
+                    }}
+                >
                     flags
                 </Typography>
             </Box>
@@ -58,7 +63,12 @@ const ActiveProjectDetails: FC<{
                 <Typography variant='subtitle2' color='primary'>
                     {project.memberCount}
                 </Typography>
-                <Typography variant='caption' color='text.secondary'>
+                <Typography
+                    variant='caption'
+                    sx={{
+                        color: 'text.secondary',
+                    }}
+                >
                     members
                 </Typography>
             </Box>
@@ -66,7 +76,12 @@ const ActiveProjectDetails: FC<{
                 <Typography variant='subtitle2' color='primary'>
                     {techicalDebt}%
                 </Typography>
-                <Typography variant='caption' color='text.secondary'>
+                <Typography
+                    variant='caption'
+                    sx={{
+                        color: 'text.secondary',
+                    }}
+                >
                     technical debt
                 </Typography>
             </Box>
@@ -83,7 +98,7 @@ const ProjectListItem: FC<{
     selected: boolean;
     onClick: () => void;
 }> = ({ project, selected, onClick }) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     return (
         <ListItem disablePadding={true} sx={{ mb: 1 }}>
@@ -97,6 +112,7 @@ const ProjectListItem: FC<{
                     <StyledCardTitle>{project.name}</StyledCardTitle>
                     <IconButton
                         component={Link}
+                        nativeButton={false}
                         to={`/projects/${project.id}`}
                         size='small'
                         sx={{ ml: 'auto' }}

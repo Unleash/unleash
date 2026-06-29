@@ -1,9 +1,12 @@
 import type { FromSchema } from 'json-schema-to-ts';
 
+// TODO: when `newProjectList` is removed and `onboardingStatus` is stable here,
+// declare it as a property ($ref to onboardingStatusSchema) and flip
+// `additionalProperties` back to `false`.
 export const projectSchema = {
     $id: '#/components/schemas/projectSchema',
     type: 'object',
-    additionalProperties: false,
+    additionalProperties: true,
     required: ['id', 'name'],
     description:
         'A definition of the project used for projects listing purposes',

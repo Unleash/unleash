@@ -41,7 +41,6 @@ import type { CreateContextFieldSchema } from '../../openapi/spec/create-context
 import { extractUserIdFromUser } from '../../util/index.js';
 import type { LegalValueSchema } from '../../openapi/index.js';
 import type { WithTransactional } from '../../db/transaction.js';
-import type { IFlagResolver } from '../../types/index.js';
 import {
     type ContextQueryParameters,
     contextQueryParameters,
@@ -63,8 +62,6 @@ export class ContextController extends Controller {
 
     private openApiService: OpenApiService;
 
-    private flagResolver: IFlagResolver;
-
     constructor(
         config: IUnleashConfig,
         {
@@ -80,7 +77,9 @@ export class ContextController extends Controller {
         this.openApiService = openApiService;
         this.transactionalContextService = transactionalContextService;
         const prefix = mode === 'global' ? '' : '/:projectId/context';
-        const rootLevelContextFieldsRelease = undefined; // this represents the legacy behavior
+        const rootLevelContextFieldsRelease = {
+            stable: '7.4.1' as const,
+        };
         const projectLevelContextFieldsRelease = {
             beta: '7.4.0' as const, // project context fields introduced in 7.4.0
         };
@@ -88,8 +87,6 @@ export class ContextController extends Controller {
             mode === 'project'
                 ? projectLevelContextFieldsRelease
                 : rootLevelContextFieldsRelease;
-        this.flagResolver = config.flagResolver;
-
         this.route({
             method: 'get',
             path: prefix,
@@ -305,29 +302,17 @@ export class ContextController extends Controller {
         >,
         res: Response<ContextFieldsSchema>,
     ): Promise<void> {
-        if (this.flagResolver.isEnabled('projectContextFields')) {
-            res.status(200)
-                .json(
-                    serializeDates(
-                        await this.transactionalContextService.getContextFields(
-                            {
-                                projectId: req.params.projectId,
-                                userId: req.user.id,
-                                include: req.query.include,
-                            },
-                        ),
-                    ),
-                )
-                .end();
-        } else {
-            res.status(200)
-                .json(
-                    serializeDates(
-                        await this.transactionalContextService.getAll(),
-                    ),
-                )
-                .end();
-        }
+        res.status(200)
+            .json(
+                serializeDates(
+                    await this.transactionalContextService.getContextFields({
+                        projectId: req.params.projectId,
+                        userId: req.user.id,
+                        include: req.query.include,
+                    }),
+                ),
+            )
+            .end();
     }
 
     async getContextField(

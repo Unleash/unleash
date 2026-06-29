@@ -1,5 +1,6 @@
-import { type FormEventHandler, useState, type VFC } from 'react';
-import { Button, styled, TextField } from '@mui/material';
+import { type FormEventHandler, useState, type FC } from 'react';
+import { Button, styled } from '@mui/material';
+import { StyledAutofillTextField } from './StyledAutofillTextField.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useNavigate } from 'react-router';
 import useQueryParams from 'hooks/useQueryParams';
@@ -17,8 +18,6 @@ import {
     NotFoundError,
 } from 'utils/apiUtils';
 import useToast from 'hooks/useToast';
-import { useFlag } from '@unleash/proxy-client-react';
-import DeprecatedPasswordAuth from './DeprecatedPasswordAuth';
 
 interface IPasswordAuthProps {
     authDetails: IAuthEndpointDetailsResponse;
@@ -40,10 +39,7 @@ const StyledButton = styled(Button)({
     width: '100%',
 });
 
-const NewPasswordAuth: VFC<IPasswordAuthProps> = ({
-    authDetails,
-    redirect,
-}) => {
+const PasswordAuth: FC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
     const navigate = useNavigate();
     const { refetchUser } = useAuthUser();
     const params = useQueryParams();
@@ -133,7 +129,7 @@ const NewPasswordAuth: VFC<IPasswordAuthProps> = ({
                         />
 
                         <StyledDiv>
-                            <TextField
+                            <StyledAutofillTextField
                                 label='Email'
                                 name='username'
                                 id='username'
@@ -198,14 +194,6 @@ const NewPasswordAuth: VFC<IPasswordAuthProps> = ({
             />
         </>
     );
-};
-
-const PasswordAuth: VFC<IPasswordAuthProps> = (props) => {
-    const newLogin = useFlag('newLogin');
-    if (newLogin) {
-        return <NewPasswordAuth {...props} />;
-    }
-    return <DeprecatedPasswordAuth {...props} />;
 };
 
 export default PasswordAuth;

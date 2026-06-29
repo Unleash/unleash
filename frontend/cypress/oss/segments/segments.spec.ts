@@ -11,9 +11,6 @@ describe('segments', () => {
     beforeEach(() => {
         cy.loginUI();
         cy.visit('/segments');
-        if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
-            cy.get("[data-testid='CLOSE_SPLASH']").click();
-        }
     });
 
     it('can create a segment', () => {

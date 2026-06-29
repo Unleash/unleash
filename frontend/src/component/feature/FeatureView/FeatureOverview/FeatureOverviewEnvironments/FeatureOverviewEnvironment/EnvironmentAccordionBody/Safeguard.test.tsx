@@ -1,7 +1,7 @@
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
-import { Route, Routes } from 'react-router-dom';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { Route, Routes } from 'react-router';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { render } from 'utils/testRenderer';
 import {
@@ -9,7 +9,7 @@ import {
     UPDATE_FEATURE_STRATEGY,
 } from 'component/providers/AccessProvider/permissions';
 import { AddSafeguard, Safeguard } from './Safeguard.tsx';
-import type { ISafeguard } from 'interfaces/releasePlans';
+import type { ISafeguard } from 'interfaces/safeguard';
 
 vi.mock(
     '../../../ReleasePlan/SafeguardForm/MiniMetricsChartWithTooltip.tsx',
@@ -90,7 +90,7 @@ const defaultSafeguardPayload = {
         metricName: 'unleash_counter_http_requests_total',
         timeRange: 'day',
         aggregationMode: 'count',
-        labelSelectors: { appName: ['*'] },
+        labelSelectors: {},
     },
     triggerCondition: {
         operator: '>',
@@ -103,7 +103,7 @@ const setupServerRoutes = () => {
         versionInfo: {
             current: { oss: 'version', enterprise: 'version' },
         },
-        flags: { safeguards: true, featureEnvSafeguards: true },
+        impactMetrics: 'internal',
     });
     testServerRoute(server, '/api/admin/user', {
         user: {
@@ -138,13 +138,14 @@ const setupServerRoutes = () => {
         [],
     );
     testServerRoute(server, '/api/admin/impact-metrics/metadata', {
-        series: {
-            unleash_counter_http_requests_total: {
-                type: 'counter',
+        metrics: [
+            {
+                name: 'unleash_counter_http_requests_total',
                 help: 'Total HTTP requests',
                 displayName: 'http_requests_total',
+                source: 'internal',
             },
-        },
+        ],
     });
     testServerRoute(server, '/api/admin/impact-metrics/data', {
         labels: { appName: [] },
@@ -223,7 +224,7 @@ describe('AddSafeguard', () => {
         await user.click(addButton);
 
         await screen.findByText('Disable environment');
-        await screen.findByText('Pause automation');
+        await screen.findByText('Pause release plan automation');
     });
 
     test('should call onSelect with chosen type', async () => {
@@ -256,51 +257,13 @@ describe('AddSafeguard', () => {
         const addButton = await screen.findByText('Add safeguard');
         await user.click(addButton);
 
-        const pauseItem = await screen.findByText('Pause automation');
-        expect(pauseItem.closest('li')).toHaveAttribute(
+        const pauseItem = await screen.findByText(
+            'Pause release plan automation',
+        );
+        expect(pauseItem.closest('[role="menuitem"]')).toHaveAttribute(
             'aria-disabled',
             'true',
         );
-    });
-
-    test('should directly select when featureEnv is not enabled', async () => {
-        const onSelect = vi.fn();
-        const user = userEvent.setup();
-
-        testServerRoute(server, '/api/admin/ui-config', {
-            versionInfo: {
-                current: { oss: 'version', enterprise: 'version' },
-            },
-            flags: { safeguards: true, featureEnvSafeguards: false },
-        });
-
-        render(<AddSafeguard onSelect={onSelect} releasePlan={releasePlan} />, {
-            route: '/',
-            permissions,
-        });
-
-        const addButton = await screen.findByText('Add safeguard');
-        await user.click(addButton);
-
-        expect(onSelect).toHaveBeenCalledWith('releasePlan');
-    });
-
-    test('should hide add button when featureEnv flag is off and no release plan', () => {
-        const onSelect = vi.fn();
-
-        testServerRoute(server, '/api/admin/ui-config', {
-            versionInfo: {
-                current: { oss: 'version', enterprise: 'version' },
-            },
-            flags: { safeguards: true, featureEnvSafeguards: false },
-        });
-
-        render(<AddSafeguard onSelect={onSelect} />, {
-            route: '/',
-            permissions,
-        });
-
-        expect(screen.queryByText('Add safeguard')).not.toBeInTheDocument();
     });
 });
 
@@ -368,17 +331,18 @@ describe('Safeguard', () => {
         );
 
         testServerRoute(server, '/api/admin/impact-metrics/metadata', {
-            series: {
-                my_custom_metric: {
-                    type: 'unknown',
+            metrics: [
+                {
+                    name: 'my_custom_metric',
                     help: 'A custom metric',
                     displayName: 'my_custom_metric',
+                    source: 'external',
                 },
-            },
+            ],
         });
         testServerRoute(server, '/api/admin/impact-metrics/', {
             series: [],
-            labels: { appName: [], type: ['counter'] },
+            labels: { appName: [], metric_type: ['counter'] },
         });
 
         const existingSafeguard: ISafeguard = {
@@ -393,6 +357,7 @@ describe('Safeguard', () => {
                 timeRange: 'hour',
                 aggregationMode: 'rps',
                 labelSelectors: { appName: ['*'] },
+                source: 'external',
             },
             triggerCondition: {
                 operator: '>',
@@ -422,6 +387,7 @@ describe('Safeguard', () => {
                     metricName: 'my_custom_metric',
                     aggregationMode: 'rps',
                     timeRange: 'hour',
+                    source: 'external',
                 },
                 triggerCondition: {
                     threshold: 99,
@@ -440,17 +406,18 @@ describe('Safeguard', () => {
         );
 
         testServerRoute(server, '/api/admin/impact-metrics/metadata', {
-            series: {
-                my_custom_metric: {
-                    type: 'unknown',
+            metrics: [
+                {
+                    name: 'my_custom_metric',
                     help: 'A custom metric',
                     displayName: 'my_custom_metric',
+                    source: 'internal',
                 },
-            },
+            ],
         });
         testServerRoute(server, '/api/admin/impact-metrics/', {
             series: [],
-            labels: { appName: [], type: ['counter'] },
+            labels: { appName: [], metric_type: ['counter'] },
         });
 
         const { onSafeguardChange } = renderSection();
@@ -473,8 +440,14 @@ describe('Safeguard', () => {
         ]);
     });
 
-    test('should add feature env safeguard via API', async () => {
+    const submitFeatureEnvSafeguard = async (
+        metricLabels: Record<string, string[]>,
+    ) => {
         const user = userEvent.setup();
+        testServerRoute(server, '/api/admin/impact-metrics/', {
+            series: [],
+            labels: metricLabels,
+        });
         const { requests } = testServerRoute(
             server,
             '/api/admin/projects/default/features/feature1/environments/production/safeguards',
@@ -493,7 +466,41 @@ describe('Safeguard', () => {
         await waitFor(() => {
             expect(onSafeguardChange).toHaveBeenCalled();
         });
+        return requests as Array<typeof defaultSafeguardPayload>;
+    };
+
+    test('should exclude environment from labelSelectors when metric lacks environment label', async () => {
+        const requests = await submitFeatureEnvSafeguard({
+            appName: [],
+        });
         expect(requests).toMatchObject([defaultSafeguardPayload]);
+        expect(requests[0].impactMetric.labelSelectors).toEqual({});
+    });
+
+    test('should include environment in labelSelectors when metric has matching environment label', async () => {
+        const requests = await submitFeatureEnvSafeguard({
+            appName: [],
+            environment: ['production', 'development'],
+        });
+        expect(requests).toMatchObject([
+            {
+                ...defaultSafeguardPayload,
+                impactMetric: {
+                    ...defaultSafeguardPayload.impactMetric,
+                    labelSelectors: { environment: ['production'] },
+                },
+            },
+        ]);
+    });
+
+    test('should include environment in labelSelectors even when metric environment values do not match current environment', async () => {
+        const requests = await submitFeatureEnvSafeguard({
+            appName: [],
+            environment: ['staging', 'dev'],
+        });
+        expect(requests[0].impactMetric.labelSelectors).toEqual({
+            environment: ['production'],
+        });
     });
 
     test('should add feature env safeguard via change request when enabled', async () => {
@@ -515,10 +522,9 @@ describe('Safeguard', () => {
         await user.click(saveButton);
 
         await screen.findByText('Add suggestion to draft');
-        expect(screen.getByText('http_requests_total')).toBeInTheDocument();
         expect(
-            screen.queryByText('unleash_counter_http_requests_total'),
-        ).not.toBeInTheDocument();
+            screen.getByText('unleash_counter_http_requests_total'),
+        ).toBeInTheDocument();
 
         const confirmButton = await screen.findByRole('button', {
             name: 'Add suggestion to draft',
@@ -576,7 +582,7 @@ describe('Safeguard', () => {
 
         const { onSafeguardChange } = renderSection();
 
-        await selectSafeguardType(user, 'Pause automation');
+        await selectSafeguardType(user, 'Pause release plan automation');
         await screen.findByText('Pause automation when');
 
         const saveButton = await screen.findByText('Save');
@@ -667,7 +673,7 @@ describe('Safeguard', () => {
 
         const { onSafeguardChange } = renderSection();
 
-        await selectSafeguardType(user, 'Pause automation');
+        await selectSafeguardType(user, 'Pause release plan automation');
         await screen.findByText('Pause automation when');
 
         const saveButton = await screen.findByText('Save');

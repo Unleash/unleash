@@ -1,3 +1,4 @@
+import { expect, it } from 'vitest';
 import { IN } from 'constants/operators';
 import { createContextFieldOptions } from './createContextFieldOptions';
 
@@ -23,9 +24,7 @@ it('groups options by project and global', () => {
         contextField('d', 'project1'),
     ];
 
-    const options = createContextFieldOptions(localConstraint, context, {
-        groupOptions: true,
-    });
+    const options = createContextFieldOptions(localConstraint, context);
 
     expect(options).toEqual([
         {
@@ -57,7 +56,6 @@ it('does not include empty groups', () => {
     const onlyGlobalOptions = createContextFieldOptions(
         localConstraint,
         onlyGlobalContext,
-        { groupOptions: true },
     );
 
     expect(onlyGlobalOptions).toEqual([
@@ -70,7 +68,6 @@ it('does not include empty groups', () => {
     const onlyProjectOptions = createContextFieldOptions(
         localConstraint,
         onlyProjectContext,
-        { groupOptions: true },
     );
 
     expect(onlyProjectOptions).toEqual([
@@ -92,7 +89,6 @@ it('puts deleted context fields in its own group', () => {
     const options = createContextFieldOptions(
         localConstraint,
         onlyGlobalContext,
-        { groupOptions: true },
     );
 
     expect(options).toEqual([
@@ -104,22 +100,5 @@ it('puts deleted context fields in its own group', () => {
             groupHeader: 'Deleted context fields',
             options: [{ key: 'a', label: 'a' }],
         },
-    ]);
-});
-it('groups options only when asked', () => {
-    const localConstraint = {
-        contextName: 'a',
-        operator: IN,
-        values: new Set<string>(),
-    };
-    const context = [contextField('a'), contextField('b', 'project1')];
-
-    const options = createContextFieldOptions(localConstraint, context, {
-        groupOptions: false,
-    });
-
-    expect(options).toEqual([
-        { key: 'a', label: 'a' },
-        { key: 'b', label: 'b' },
     ]);
 });

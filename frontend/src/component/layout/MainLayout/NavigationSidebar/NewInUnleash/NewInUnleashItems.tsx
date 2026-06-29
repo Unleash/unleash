@@ -1,6 +1,7 @@
 import { styled } from '@mui/material';
 import { formatAssetPath } from 'utils/formatPath';
 import ReleaseTemplatePreviewImage from 'assets/img/releaseTemplatePreview.png';
+import ImpactMetricsIcon from 'assets/img/impact-metrics-icon.svg';
 import type { Flag } from 'hooks/useUiFlag.ts';
 
 const StyledImg = styled('img')(() => ({
@@ -34,10 +35,28 @@ export const newInUnleashItems: NewInUnleashItem[] = [
             />
         ),
         appLink: '?splash=release-management-v3',
-        docsLink: 'https://docs.getunleash.io/reference/release-templates',
+        docsLink: 'https://docs.getunleash.io/concepts/release-templates',
         filter: {
             enterpriseOnly: true,
             versionLowerThan: '7.5.0',
+        },
+        beta: false,
+        modal: false,
+    },
+    {
+        label: 'Impact metrics + safeguards',
+        summary: 'Stop bad releases automatically',
+        preview: (
+            <StyledImg
+                src={formatAssetPath(ImpactMetricsIcon)}
+                alt='Impact metrics and safeguards preview'
+            />
+        ),
+        appLink: '?splash=impact-metrics-safeguards',
+        docsLink: 'https://docs.getunleash.io/concepts/impact-metrics',
+        filter: {
+            enterpriseOnly: true,
+            versionLowerThan: '7.7.0',
         },
         beta: false,
         modal: false,

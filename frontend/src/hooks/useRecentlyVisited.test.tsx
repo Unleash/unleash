@@ -1,3 +1,4 @@
+import { beforeEach, test } from 'vitest';
 import type { FC } from 'react';
 import { render, screen } from '@testing-library/react';
 import {
@@ -7,7 +8,7 @@ import {
     Navigate,
     RouterProvider,
     createMemoryRouter,
-} from 'react-router-dom';
+} from 'react-router';
 import { useRecentlyVisited } from './useRecentlyVisited.ts';
 import { RecentlyVisitedRecorder } from 'component/commandBar/RecentlyVisitedRecorder';
 

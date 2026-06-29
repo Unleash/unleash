@@ -92,7 +92,7 @@ const renderOption = (
     </StrechedLi>
 );
 
-const renderTags = (value: AvailableReviewerSchema[]) => (
+const renderValue = (value: AvailableReviewerSchema[]) => (
     <StyledTags>
         {value.length > 1
             ? `${value.length} reviewers`
@@ -120,8 +120,10 @@ export const ChangeRequestReviewersHeader: FC<{
                     Reviewers
                     <Typography
                         component='span'
-                        color='text.secondary'
-                        sx={{ ml: 1 }}
+                        sx={{
+                            color: 'text.secondary',
+                            ml: 1,
+                        }}
                     >
                         ({actualApprovals}/{minApprovals} required)
                     </Typography>
@@ -225,7 +227,7 @@ export const ChangeRequestAddRequestedApprovers: FC<{
                         label={`Reviewers (${reviewers.length})`}
                     />
                 )}
-                renderTags={(value) => renderTags(value)}
+                renderValue={(value) => renderValue(value)}
                 noOptionsText={isLoading ? 'Loading…' : 'No options'}
             />
             <Button

@@ -3,8 +3,8 @@ import ErrorOutlineRounded from '@mui/icons-material/ErrorOutlineRounded';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import WarningAmber from '@mui/icons-material/WarningAmber';
 import { styled, Icon, Link } from '@mui/material';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { useNavigate } from 'react-router-dom';
+import { useEventTracker } from 'hooks/useEventTracker';
+import { useNavigate } from 'react-router';
 import { BannerDialog } from './BannerDialog/BannerDialog.tsx';
 import { useState } from 'react';
 import { Markdown } from 'component/common/Markdown/Markdown';
@@ -145,7 +145,7 @@ const BannerButton = ({
     children,
 }: IBannerButtonProps) => {
     const navigate = useNavigate();
-    const tracker = usePlausibleTracker();
+    const tracker = useEventTracker();
 
     if (!link) return null;
 

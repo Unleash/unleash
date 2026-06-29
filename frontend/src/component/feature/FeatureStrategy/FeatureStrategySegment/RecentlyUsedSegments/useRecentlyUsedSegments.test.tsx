@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { useRecentlyUsedSegments } from './useRecentlyUsedSegments.ts';
 import { renderHook, act } from '@testing-library/react';
 

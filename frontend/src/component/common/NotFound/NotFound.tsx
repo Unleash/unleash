@@ -4,7 +4,7 @@ import { Button, styled, Typography } from '@mui/material';
 import { useNavigate } from 'react-router';
 import { useLastViewedPage } from 'component/InitialRedirect';
 
-import { ReactComponent as LogoIcon } from 'assets/icons/logoBg.svg';
+import LogoIcon from 'assets/icons/logoBg.svg?react';
 import { GO_BACK } from 'constants/navigate';
 
 const StyledContainer = styled('div')(({ theme }) => ({

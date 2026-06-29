@@ -1,15 +1,15 @@
 import { formatApiPath } from 'utils/formatPath';
 import { Dialogue } from '../Dialogue/Dialogue';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { useContext, useEffect } from 'react';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import AccessContext from 'contexts/AccessContext';
 import { Alert, styled, Typography } from '@mui/material';
-import { ReactComponent as LenovoLogo } from 'assets/logos/lenovo.svg';
-import { ReactComponent as DockerLogo } from 'assets/logos/docker.svg';
-import { ReactComponent as VisaLogo } from 'assets/logos/visa.svg';
-import { ReactComponent as SamsungLogo } from 'assets/logos/samsung.svg';
-import { ReactComponent as LloydsLogo } from 'assets/logos/lloyds.svg';
+import LenovoLogo from 'assets/logos/lenovo.svg?react';
+import DockerLogo from 'assets/logos/docker.svg?react';
+import VisaLogo from 'assets/logos/visa.svg?react';
+import SamsungLogo from 'assets/logos/samsung.svg?react';
+import LloydsLogo from 'assets/logos/lloyds.svg?react';
 import { useInstancePrices } from 'hooks/api/getters/useInstancePrices/useInstancePrices';
 import { TrialUpsellDescription } from 'component/admin/billing/TrialUpsell/TrialUpsellDescription';
 
@@ -55,7 +55,7 @@ export const UpgradeTrialDialog = ({
     setDialogOpen,
 }: IUpgradeTrialDialogProps) => {
     const { hasAccess } = useContext(AccessContext);
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { instancePrices } = useInstancePrices();
 
     const isAdmin = hasAccess(ADMIN);
@@ -71,7 +71,7 @@ export const UpgradeTrialDialog = ({
                 },
             });
         }
-    }, [dialogOpen]);
+    }, [dialogOpen, isAdmin, trackEvent]);
 
     const onClickUpgrade = () => {
         trackEvent('upgrade_trial_dialog', {
@@ -121,7 +121,11 @@ export const UpgradeTrialDialog = ({
                     Contact your account admin to request an upgrade.
                 </Alert>
             )}
-            <Typography color='text.secondary'>
+            <Typography
+                sx={{
+                    color: 'text.secondary',
+                }}
+            >
                 Trusted by enterprises like
             </Typography>
             <StyledLogoList>

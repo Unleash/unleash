@@ -1,7 +1,7 @@
 import GeneralSelect, {
     type IGeneralSelectProps,
 } from 'component/common/GeneralSelect/GeneralSelect';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { useEffect } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
@@ -19,7 +19,7 @@ export const FeatureMetricsHours = ({
     setHoursBack,
     label = 'Period',
 }: IFeatureMetricsHoursProps) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const onChange: IGeneralSelectProps['onChange'] = (key) => {
         setHoursBack(Number.parseInt(key, 10));

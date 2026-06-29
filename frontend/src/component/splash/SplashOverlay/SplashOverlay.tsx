@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 import { Modal, Backdrop, styled } from '@mui/material';
 import Fade from '@mui/material/Fade';
 import { useFlag } from '@unleash/proxy-client-react';
@@ -8,6 +8,7 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
 import { splashIds, type SplashId } from 'component/splash/splash';
 import { ReleaseManagementSplash } from './ReleaseManagementSplash';
+import { ImpactMetricsSafeguardsSplash } from './ImpactMetricsSafeguardsSplash';
 
 const TRANSITION_DURATION = 250;
 
@@ -83,6 +84,8 @@ export const SplashOverlay = () => {
         switch (splashId) {
             case 'release-management-v3':
                 return <ReleaseManagementSplash onClose={handleClose} />;
+            case 'impact-metrics-safeguards':
+                return <ImpactMetricsSafeguardsSplash onClose={handleClose} />;
             default:
                 return null;
         }

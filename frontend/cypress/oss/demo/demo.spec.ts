@@ -28,9 +28,6 @@ describe.skip('demo', () => {
     beforeEach(() => {
         cy.loginUI();
         cy.visit('/projects');
-        if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
-            cy.get("[data-testid='CLOSE_SPLASH']").click();
-        }
 
         cy.intercept('GET', `${baseUrl}/api/admin/ui-config`, (req) => {
             req.headers['cache-control'] =

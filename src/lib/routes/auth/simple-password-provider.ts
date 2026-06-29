@@ -41,6 +41,7 @@ export class SimplePasswordProvider extends Controller {
                     summary: 'Log in',
                     description:
                         'Logs in the user and creates an active session',
+                    release: { stable: '4.14.0' },
                     operationId: 'login',
                     requestBody: createRequestSchema('loginSchema'),
                     responses: {

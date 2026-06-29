@@ -18,7 +18,7 @@ import ContextFieldStore from '../context/context-field-store.js';
 import GroupStore from '../../db/group-store.js';
 import SegmentStore from '../segment/segment-store.js';
 import RoleStore from '../../db/role-store.js';
-import SettingStore from '../../db/setting-store.js';
+import SettingStore from '../settings/setting-store.js';
 import ClientInstanceStore from '../../db/client-instance-store.js';
 import { EventStore } from '../events/event-store.js';
 import { ApiTokenStore } from '../../db/api-token-store.js';
@@ -36,7 +36,7 @@ import FakeClientInstanceStore from '../../../test/fixtures/fake-client-instance
 import FakeClientMetricsStoreV2 from '../metrics/client-metrics/fake-client-metrics-store-v2.js';
 import FakeApiTokenStore from '../../../test/fixtures/fake-api-token-store.js';
 import FakeEventStore from '../../../test/fixtures/fake-event-store.js';
-import FakeSettingStore from '../../../test/fixtures/fake-setting-store.js';
+import FakeSettingStore from '../settings/fake-setting-store.js';
 import FakeSegmentStore from '../../../test/fixtures/fake-segment-store.js';
 import FakeStrategiesStore from '../../../test/fixtures/fake-strategies-store.js';
 import FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store.js';

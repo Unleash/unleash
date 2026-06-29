@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import useAPI from '../useApi/useApi.js';
 
 export const useFavoriteFeaturesApi = () => {
@@ -9,7 +9,7 @@ export const useFavoriteFeaturesApi = () => {
         propagateErrors: true,
     });
     const { setToastData, setToastApiError } = useToast();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const favorite = useCallback(
         async (projectId: string, featureName: string) => {

@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { FeedbackCESForm } from './FeedbackCESForm.tsx';
 import { ThemeProvider } from 'themes/ThemeProvider';
 import { render } from 'utils/testRenderer';

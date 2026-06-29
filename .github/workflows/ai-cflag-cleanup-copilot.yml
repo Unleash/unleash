@@ -1,0 +1,18 @@
+name: Trigger Copilot on Label
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  assign-copilot:
+    if: github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'issues' && github.event.label.name == 'unleash-flag-completed')
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Assign Copilot Agent
+        run: |
+          gh issue edit ${{ github.event.issue.number }} --repo ${{ github.repository }} --add-assignee "@copilot"
+        env:
+          GH_TOKEN: ${{ secrets.COPILOT_TRIGGER_TOKEN }}

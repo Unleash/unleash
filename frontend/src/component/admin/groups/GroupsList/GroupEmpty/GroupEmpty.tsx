@@ -1,5 +1,5 @@
 import { Button, styled, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 export const GroupEmpty = () => {
     const StyledContainerDiv = styled('div')(({ theme }) => ({
@@ -25,6 +25,7 @@ export const GroupEmpty = () => {
             <Button
                 to='/admin/groups/create-group'
                 component={Link}
+                nativeButton={false}
                 variant='outlined'
                 color='primary'
             >

@@ -40,7 +40,7 @@ const webhookDefinition: IAddonDefinition = {
     displayName: 'Webhook',
     description:
         'A Webhook is a generic way to post messages from Unleash to third party services.',
-    documentationUrl: 'https://docs.getunleash.io/docs/addons/webhook',
+    documentationUrl: 'https://docs.getunleash.io/integrate/webhook',
     howTo: 'The Webhook Addon introduces a generic way to post messages from Unleash to third party services. Unleash allows you to define a webhook which listens for changes in Unleash and posts them to a third party services.',
     parameters: [
         {
@@ -93,7 +93,7 @@ const webhookDefinition: IAddonDefinition = {
   "json": {{{eventJson}}}
 }`,
             description:
-                '(Optional) You may format the body using a mustache template. If you don\'t specify anything, the format will be similar to the [events format](https://docs.getunleash.io/api/events). You can use `{{{eventJson}}}` to include the entire serialized event, or `"{{eventMarkdown}}"` for the formatted description.',
+                '(Optional) You may format the body using a mustache template. If you don\'t specify anything, the format will be similar to the [events format](https://docs.getunleash.io/concepts/events). You can use `{{{eventJson}}}` to include the entire serialized event, or `"{{eventMarkdown}}"` for the formatted description.',
             type: 'textfield',
             required: false,
             sensitive: false,

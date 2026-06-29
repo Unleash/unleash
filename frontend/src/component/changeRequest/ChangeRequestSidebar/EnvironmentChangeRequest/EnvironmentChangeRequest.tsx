@@ -9,7 +9,7 @@ import {
     useTheme,
 } from '@mui/material';
 import type { ChangeRequestType } from '../../changeRequest.types';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { ChangeRequestStatusBadge } from '../../ChangeRequestStatusBadge/ChangeRequestStatusBadge.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
@@ -113,7 +113,9 @@ export const EnvironmentChangeRequest: FC<{
                         <Typography
                             component='span'
                             variant='body2'
-                            color='text.secondary'
+                            sx={{
+                                color: 'text.secondary',
+                            }}
                         >
                             Updates:
                         </Typography>
@@ -196,6 +198,7 @@ export const EnvironmentChangeRequest: FC<{
                                         sx={{ marginLeft: 2 }}
                                         variant='outlined'
                                         component={Link}
+                                        nativeButton={false}
                                         to={`/projects/${environmentChangeRequest.project}/change-requests/${environmentChangeRequest.id}`}
                                         onClick={() => {
                                             onClose();

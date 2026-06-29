@@ -83,7 +83,6 @@ export interface FeatureToggleDTO {
 
 export interface FeatureToggle extends FeatureToggleDTO {
     project: string;
-    lastSeenAt?: Date;
     createdAt?: Date;
 }
 
@@ -292,7 +291,6 @@ export interface IFeatureOverview {
     type: string;
     stale: boolean;
     createdAt: Date;
-    lastSeenAt: Date;
     environments: IEnvironmentOverview[];
     lifecycle?: IFeatureLifecycleStage;
 }
@@ -368,7 +366,7 @@ export interface IProjectHealth {
 
 export type ProjectOnboardingStatus =
     | {
-          status: 'onboarding-started' | 'onboarded';
+          status: 'onboarding-started' | 'sdk-connected' | 'onboarded';
       }
     | { status: 'first-flag-created'; feature: string };
 
@@ -465,6 +463,7 @@ export interface IAddonInstallation {
 export interface IAddonAlert {
     type: 'success' | 'info' | 'warning' | 'error';
     text: string;
+    link?: Omit<IFeatureLink, 'id' | 'feature'>;
 }
 
 export interface IAddonConfig {
@@ -473,6 +472,8 @@ export interface IAddonConfig {
     integrationEventsService: IntegrationEventsService;
     flagResolver: IFlagResolver;
     eventBus: EventEmitter;
+    allowPrivateUrls?: boolean;
+    allowList?: string[];
 }
 
 export interface IUserWithRole {

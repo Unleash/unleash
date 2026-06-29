@@ -5,7 +5,7 @@ import Add from '@mui/icons-material/Add';
 import { SafeguardHelpIcon } from './Safeguard/SafeguardHelpIcon.tsx';
 import { useImpactMetricsOptions } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata.ts';
 import { type FC, useMemo, useState } from 'react';
-import { ChartConfigModal } from '../../../impact-metrics/ChartConfigModal/ChartConfigModal.tsx';
+import { ImpactMetricModal } from '../../../impact-metrics/ImpactMetricModal/ImpactMetricModal.tsx';
 import { useImpactMetricsApi } from 'hooks/api/actions/useImpactMetricsApi/useImpactMetricsApi.ts';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam.ts';
 import { useFeatureImpactMetrics } from 'hooks/api/getters/useFeatureImpactMetrics/useFeatureImpactMetrics.ts';
@@ -19,7 +19,7 @@ import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions.t
 import useToast from 'hooks/useToast.tsx';
 import { formatUnknownError } from 'utils/formatUnknownError.ts';
 import type { ChartConfig } from '../../../impact-metrics/types.ts';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
+import { useEventTracker } from 'hooks/useEventTracker.ts';
 
 const StyledHeaderTitle = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,
@@ -49,7 +49,7 @@ export const FeatureImpactMetrics: FC = () => {
         featureName,
     });
     const { setToastApiError } = useToast();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const {
         metricOptions,
@@ -173,12 +173,12 @@ export const FeatureImpactMetrics: FC = () => {
                 </Box>
             )}
 
-            <ChartConfigModal
+            <ImpactMetricModal
                 open={isModalOpen}
                 onClose={handleCloseModal}
                 onSave={handleSaveChart}
                 initialConfig={editingChart}
-                metricSeries={metricOptions}
+                metrics={metricOptions}
                 loading={metadataLoading}
             />
         </PageContent>

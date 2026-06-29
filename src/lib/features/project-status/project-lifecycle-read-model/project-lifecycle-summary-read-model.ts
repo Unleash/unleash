@@ -98,7 +98,6 @@ export class ProjectLifecycleSummaryReadModel
             })
             .innerJoin('features as f', 'fl.feature', 'f.name')
             .where('f.project', projectId)
-            .whereNot('fl.stage', 'archived')
             .whereNull('f.archived_at')
             .select('fl.stage')
             .count('fl.feature as flag_count')
@@ -113,7 +112,11 @@ export class ProjectLifecycleSummaryReadModel
 
         const lifecycleStages = result.reduce(
             (acc, row) => {
-                acc[row.stage] = Number(row.flag_count);
+                // A non-archived flag whose latest lifecycle stage is
+                // 'archived' has just been revived; the lifecycle event
+                // listener will move it back to 'initial' shortly.
+                const stage = row.stage === 'archived' ? 'initial' : row.stage;
+                acc[stage] += Number(row.flag_count);
                 return acc;
             },
             {

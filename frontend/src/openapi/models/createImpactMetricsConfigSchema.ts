@@ -5,6 +5,7 @@
  */
 import type { CreateImpactMetricsConfigSchemaAggregationMode } from './createImpactMetricsConfigSchemaAggregationMode';
 import type { CreateImpactMetricsConfigSchemaLabelSelectors } from './createImpactMetricsConfigSchemaLabelSelectors';
+import type { CreateImpactMetricsConfigSchemaSource } from './createImpactMetricsConfigSchemaSource';
 import type { CreateImpactMetricsConfigSchemaTimeRange } from './createImpactMetricsConfigSchemaTimeRange';
 import type { CreateImpactMetricsConfigSchemaYAxisMin } from './createImpactMetricsConfigSchemaYAxisMin';
 
@@ -20,6 +21,8 @@ export interface CreateImpactMetricsConfigSchema {
     labelSelectors: CreateImpactMetricsConfigSchemaLabelSelectors;
     /** The Prometheus metric series to query. It includes both unleash prefix and metric type and display name */
     metricName: string;
+    /** The Prometheus data source for this metric. Defaults to internal. */
+    source?: CreateImpactMetricsConfigSchemaSource;
     /** The time range for the metric data. */
     timeRange: CreateImpactMetricsConfigSchemaTimeRange;
     /**

@@ -69,6 +69,7 @@ export default class ProjectEnvironmentsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Projects'],
+                    release: { stable: '4.13.0' },
                     operationId: 'addEnvironmentToProject',
                     summary: 'Add an environment to a project.',
                     description:
@@ -93,6 +94,7 @@ export default class ProjectEnvironmentsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Projects'],
+                    release: { stable: '4.13.0' },
                     operationId: 'removeEnvironmentFromProject',
                     summary: 'Remove an environment from a project.',
                     description:
@@ -113,6 +115,7 @@ export default class ProjectEnvironmentsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Projects'],
+                    release: { stable: '5.1.0' },
                     operationId: 'addDefaultStrategyToProjectEnvironment',
                     summary: 'Set environment-default strategy',
                     description:

@@ -1,10 +1,11 @@
 import type { FC } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { styled, Tooltip, Typography } from '@mui/material';
 import ShieldOutlined from '@mui/icons-material/ShieldOutlined';
 import { ImpactMetricsChart } from 'component/impact-metrics/ImpactMetricsChart';
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import { formatLargeNumbers } from 'component/impact-metrics/metricsFormatters';
+import { Truncator } from 'component/common/Truncator/Truncator';
 import type { ImpactMetricsConfigSchema } from 'openapi';
 
 const StyledCard = styled(Link)(({ theme }) => ({
@@ -90,22 +91,30 @@ export const CompactChartCard: FC<CompactChartCardProps> = ({
     const timeLabel = timeRangeLabels[config.timeRange] ?? config.timeRange;
 
     const { data } = useImpactMetricsData({
-        series: config.metricName,
+        metricName: config.metricName,
         range: config.timeRange,
         aggregationMode: config.aggregationMode,
         labels:
             Object.keys(config.labelSelectors).length > 0
                 ? config.labelSelectors
                 : undefined,
+        source: config.source,
+        mode: 'display',
     });
 
     const currentValue = (() => {
         if (!data.series?.length) return null;
         const seriesData = data.series[0].data;
         if (!seriesData.length) return null;
-        const lastValue = seriesData[seriesData.length - 1][1];
+        const lastValue = Number(seriesData[seriesData.length - 1][1]);
+        const shouldSum =
+            config.aggregationMode === 'count' ||
+            config.aggregationMode === 'sum';
+        const aggregated = shouldSum
+            ? seriesData.reduce((sum, [, v]) => sum + Number(v), 0)
+            : lastValue;
         const suffix = config.aggregationMode === 'rps' ? '/s' : '';
-        return `${formatLargeNumbers(lastValue)}${suffix}`;
+        return `${formatLargeNumbers(aggregated)}${suffix}`;
     })();
 
     return (
@@ -114,7 +123,9 @@ export const CompactChartCard: FC<CompactChartCardProps> = ({
         >
             <StyledHeader>
                 <StyledHeaderLeft>
-                    <StyledTitle>{title}</StyledTitle>
+                    <Truncator title={title} arrow component={StyledTitle}>
+                        {title}
+                    </Truncator>
                     <StyledSubtitle>
                         {timeLabel} &middot; {config.aggregationMode}
                     </StyledSubtitle>
@@ -137,6 +148,7 @@ export const CompactChartCard: FC<CompactChartCardProps> = ({
                     labelSelectors={config.labelSelectors}
                     yAxisMin={config.yAxisMin}
                     aggregationMode={config.aggregationMode}
+                    source={config.source}
                     showComponents={['xAxis', 'yAxis']}
                     overrideOptions={{
                         maintainAspectRatio: false,
@@ -159,7 +171,7 @@ export const CompactChartCard: FC<CompactChartCardProps> = ({
                                     maxTicksLimit: 3,
                                     font: { size: 10 },
                                 },
-                                grid: { drawBorder: false },
+                                border: { display: false },
                             },
                         },
                         plugins: {

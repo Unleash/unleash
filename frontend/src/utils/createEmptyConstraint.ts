@@ -1,3 +1,4 @@
+import { createUuid } from 'utils/createUuid';
 import { constraintId } from 'constants/constraintId';
 import { isDateOperator } from 'constants/operators';
 import type { IConstraintWithId } from 'interfaces/strategy';
@@ -17,6 +18,6 @@ export const createEmptyConstraint = (
         values: [],
         caseInsensitive: false,
         inverted: false,
-        [constraintId]: crypto.randomUUID(),
+        [constraintId]: createUuid(),
     };
 };

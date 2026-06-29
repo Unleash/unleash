@@ -8,10 +8,7 @@ import {
     removeJsonSchemaProps,
     type SchemaId,
 } from '../openapi/index.js';
-import type {
-    ApiOperation,
-    StabilityRelease,
-} from '../openapi/util/api-operation.js';
+import type { ApiOperation } from '../openapi/util/api-operation.js';
 import type { Logger } from '../logger.js';
 import { validateSchema } from '../openapi/validate.js';
 import type { IFlagResolver } from '../types/index.js';
@@ -36,11 +33,6 @@ type OpenApiMiddleware = IExpressOpenApi & {
         router?: unknown,
         basePath?: string,
     ) => OpenApiDocument;
-};
-
-// Allow legacy operations that omit the release field until we backfill them.
-type LegacyApiOperation = Omit<ApiOperation, 'release'> & {
-    release?: StabilityRelease;
 };
 
 export class OpenApiService {
@@ -70,7 +62,7 @@ export class OpenApiService {
         ) as OpenApiMiddleware;
     }
 
-    validPath(op: ApiOperation | LegacyApiOperation): RequestHandler {
+    validPath(op: ApiOperation): RequestHandler {
         // extract enterpriseOnly and release to avoid leaking into the OpenAPI spec
         const { enterpriseOnly, release, ...openapiSpec } = op;
         const { baseUriPath = '' } = this.config.server ?? {};

@@ -64,6 +64,7 @@ async function setup(): Promise<{ app: IUnleashTest; db: ITestDb }> {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
+                    allowDeprecatedApiTokenMiddleware: true,
                 },
             },
         },

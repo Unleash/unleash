@@ -8,6 +8,7 @@ import {
     type IOnboardingStore,
     SYSTEM_USER,
 } from '../../types/index.js';
+import { FEATURE_ENVIRONMENT_ENABLED } from '../../events/index.js';
 import type { IOnboardingReadModel } from './onboarding-read-model-type.js';
 import type ClientInstanceService from '../metrics/instance/instance-service.js';
 import {
@@ -57,6 +58,7 @@ afterAll(async () => {
 
 beforeEach(async () => {
     await featureToggleStore.deleteAll();
+    await db.rawDatabase('events').delete();
 });
 
 test('can get instance onboarding durations', async () => {
@@ -173,6 +175,23 @@ test('can get project onboarding status', async () => {
         },
     ]);
 
+    const sdkConnectedResult =
+        await onboardingReadModel.getOnboardingStatusForProject('default');
+
+    expect(sdkConnectedResult).toMatchObject({
+        status: 'sdk-connected',
+    });
+
+    await db.stores.eventStore.store({
+        type: FEATURE_ENVIRONMENT_ENABLED,
+        createdBy: 'test',
+        createdByUserId: SYSTEM_USER.id,
+        project: 'default',
+        featureName: 'my-flag',
+        environment: DEFAULT_ENV,
+        ip: '127.0.0.1',
+    });
+
     const onboardedResult =
         await onboardingReadModel.getOnboardingStatusForProject('default');
 
@@ -181,7 +200,7 @@ test('can get project onboarding status', async () => {
     });
 });
 
-test('archived feature counts as onboarded', async () => {
+test('archived feature counts as sdk-connected', async () => {
     await featureToggleStore.create('default', {
         name: 'my-flag',
         createdByUserId: SYSTEM_USER.id,
@@ -200,11 +219,11 @@ test('archived feature counts as onboarded', async () => {
         await onboardingReadModel.getOnboardingStatusForProject('default');
 
     expect(onboardedResult).toMatchObject({
-        status: 'onboarded',
+        status: 'sdk-connected',
     });
 });
 
-test('sdk register also onboards a project', async () => {
+test('sdk register sets project as sdk-connected', async () => {
     await featureToggleStore.create('default', {
         name: 'my-flag',
         createdByUserId: SYSTEM_USER.id,
@@ -235,6 +254,48 @@ test('sdk register also onboards a project', async () => {
         await onboardingReadModel.getOnboardingStatusForProject('default');
 
     expect(onboardedResult).toMatchObject({
-        status: 'onboarded',
+        status: 'sdk-connected',
     });
+});
+
+test('bulk method returns a status per project', async () => {
+    const { projectStore } = db.stores;
+    await projectStore.create({ id: 'project-a', name: 'A' });
+    await projectStore.create({ id: 'project-b', name: 'B' });
+    await projectStore.create({ id: 'project-c', name: 'C' });
+
+    await featureToggleStore.create('project-b', {
+        name: 'project-b-flag',
+        createdByUserId: SYSTEM_USER.id,
+    });
+
+    await featureToggleStore.create('project-c', {
+        name: 'project-c-flag',
+        createdByUserId: SYSTEM_USER.id,
+    });
+
+    await lastSeenStore.setLastSeen([
+        { environment: DEFAULT_ENV, featureName: 'project-c-flag' },
+    ]);
+
+    const result = await onboardingReadModel.getOnboardingStatusesForProjects([
+        'project-a',
+        'project-b',
+        'project-c',
+        'does-not-exist',
+    ]);
+
+    expect(result).toEqual(
+        new Map([
+            ['project-a', { status: 'onboarding-started' }],
+            [
+                'project-b',
+                {
+                    status: 'first-flag-created',
+                    feature: 'project-b-flag',
+                },
+            ],
+            ['project-c', { status: 'sdk-connected' }],
+        ]),
+    );
 });

@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { calculateRatio } from './calculate-ratio.ts';
 
 test('A ratio of anything to 0 is N/A', () => {

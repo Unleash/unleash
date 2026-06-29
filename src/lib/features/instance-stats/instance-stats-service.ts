@@ -1,3 +1,4 @@
+import { AUTH_PROVIDERS_CATALOG } from '../../types/settings/auth-settings.js';
 import { sha256 } from 'js-sha256';
 import type { IUnleashConfig } from '../../types/option.js';
 import type {
@@ -19,7 +20,7 @@ import type { IUserStore } from '../../types/stores/user-store.js';
 import type { ISegmentStore } from '../segment/segment-store-type.js';
 import type { IRoleStore } from '../../types/stores/role-store.js';
 import type VersionService from '../../services/version-service.js';
-import type { ISettingStore } from '../../types/stores/settings-store.js';
+import type { ISettingStore } from '../settings/settings-store-type.js';
 import { FEATURES_EXPORTED, FEATURES_IMPORTED } from '../../events/index.js';
 import type { IApiTokenStore, IFlagResolver } from '../../types/index.js';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../../util/index.js';
@@ -276,7 +277,7 @@ export class InstanceStatsService {
     async hasOIDC(): Promise<boolean> {
         return this.memorize('hasOIDC', async () => {
             const settings = await this.settingStore.get<{ enabled: boolean }>(
-                'unleash.enterprise.auth.oidc',
+                AUTH_PROVIDERS_CATALOG.OIDC.configId,
             );
 
             return settings?.enabled || false;
@@ -286,7 +287,7 @@ export class InstanceStatsService {
     async hasSAML(): Promise<boolean> {
         return this.memorize('hasSAML', async () => {
             const settings = await this.settingStore.get<{ enabled: boolean }>(
-                'unleash.enterprise.auth.saml',
+                AUTH_PROVIDERS_CATALOG.SAML.configId,
             );
 
             return settings?.enabled || false;
@@ -296,7 +297,7 @@ export class InstanceStatsService {
     async hasPasswordAuth(): Promise<boolean> {
         return this.memorize('hasPasswordAuth', async () => {
             const settings = await this.settingStore.get<{ disabled: boolean }>(
-                'unleash.auth.simple',
+                AUTH_PROVIDERS_CATALOG.Simple.configId,
             );
 
             return (
@@ -644,9 +645,7 @@ export class InstanceStatsService {
 
     projectContextFieldCount(): Promise<number> {
         return this.memorize('projectContextFieldCount', () =>
-            this.flagResolver.isEnabled('projectContextFields')
-                ? this.contextFieldStore.countProjectFields()
-                : Promise.resolve(0),
+            this.contextFieldStore.countProjectFields(),
         );
     }
 

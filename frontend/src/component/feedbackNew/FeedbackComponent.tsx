@@ -3,6 +3,7 @@ import {
     Button,
     ClickAwayListener,
     IconButton,
+    Rating,
     styled,
     TextField,
     Tooltip,
@@ -19,7 +20,7 @@ import { useUserSubmittedFeedback } from 'hooks/useSubmittedFeedback';
 import type { IToast } from 'interfaces/toast';
 import { useTheme } from '@mui/material/styles';
 import type { FeedbackData, FeedbackMode } from './FeedbackContext.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUserType from './useUserType.ts';
 import { BaseModal } from 'component/common/SidebarModal/SidebarModal';
@@ -105,57 +106,8 @@ export const StyledButton = styled(Button)(() => ({
     width: '100%',
 }));
 
-const StyledScoreContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(1.5),
-    alignItems: 'flex-start',
-}));
-
-const StyledScoreInput = styled('div')(() => ({
-    display: 'flex',
-    width: '100%',
-    justifyContent: 'space-between',
-}));
-
-const StyledScoreHelp = styled('span')(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    fontSize: theme.spacing(1.75),
-}));
-
-const ScoreHelpContainer = styled('span')(() => ({
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-}));
-
-const StyledScoreValue = styled('label')(({ theme }) => ({
-    '& input': {
-        clip: 'rect(0 0 0 0)',
-        position: 'absolute',
-    },
-    '& span': {
-        display: 'grid',
-        justifyContent: 'center',
-        alignItems: 'center',
-        background: theme.palette.background.elevation2,
-        width: theme.spacing(4),
-        height: theme.spacing(4),
-        borderRadius: theme.spacing(12.5),
-        userSelect: 'none',
-        cursor: 'pointer',
-    },
-    '& input:checked + span': {
-        fontWeight: theme.typography.fontWeightBold,
-        background: theme.palette.primary.main,
-        color: theme.palette.primary.contrastText,
-    },
-    '& input:is(:hover, :focus) + span': {
-        outline: '2px solid',
-        outlineOffset: 2,
-        outlineColor: theme.palette.primary.main,
-    },
+const StyledRating = styled(Rating)(({ theme }) => ({
+    fontSize: theme.spacing(5),
 }));
 
 const StyledCloseButton = styled(IconButton)(({ theme }) => ({
@@ -203,7 +155,7 @@ export const FeedbackComponent = ({
 }: IFeedbackComponent) => {
     const { setToastData } = useToast();
     const userType = useUserType();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const theme = useTheme();
 
     const { addFeedback } = useUserFeedbackApi();
@@ -211,19 +163,6 @@ export const FeedbackComponent = ({
         feedbackData.category,
     );
     const feedbackComments = useUiFlag('feedbackComments');
-
-    function isProvideFeedbackSchema(data: any): data is ProvideFeedbackSchema {
-        data.difficultyScore = data.difficultyScore
-            ? Number(data.difficultyScore)
-            : undefined;
-
-        return (
-            typeof data.category === 'string' &&
-            typeof data.userType === 'string' &&
-            (typeof data.difficultyScore === 'number' ||
-                data.difficultyScore === undefined)
-        );
-    }
 
     const dontAskAgain = () => {
         closeFeedback();
@@ -236,28 +175,36 @@ export const FeedbackComponent = ({
         });
     };
 
+    const [selectedScore, setSelectedScore] = useState<number | null>(null);
+
     const onSubmission = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        if (selectedScore == null) return;
         const formData = new FormData(event.currentTarget);
-        const data = Object.fromEntries(formData);
+
+        const payload: ProvideFeedbackSchema = {
+            category: feedbackData.category,
+            userType,
+            difficultyScore: selectedScore,
+            positive: formData.get('positive') as string,
+            areasForImprovement: formData.get('areasForImprovement') as string,
+        };
 
         let toastType: IToast['type'] = 'error';
         let toastTitle = 'Feedback not sent';
 
-        if (isProvideFeedbackSchema(data)) {
-            try {
-                await addFeedback(data as ProvideFeedbackSchema);
-                trackEvent('feedback', {
-                    props: {
-                        eventType: `submitted - ${feedbackData.category}`,
-                        category: feedbackData.category,
-                    },
-                });
-                toastTitle = 'Feedback sent';
-                toastType = 'success';
-                setHasSubmittedFeedback(true);
-            } catch (_e) {}
-        }
+        try {
+            await addFeedback(payload);
+            trackEvent('feedback', {
+                props: {
+                    eventType: `submitted - ${feedbackData.category}`,
+                    category: feedbackData.category,
+                },
+            });
+            toastTitle = 'Feedback sent';
+            toastType = 'success';
+            setHasSubmittedFeedback(true);
+        } catch (_e) {}
 
         setToastData({
             text: toastTitle,
@@ -266,16 +213,14 @@ export const FeedbackComponent = ({
         closeFeedback();
     };
 
-    const [selectedScore, setSelectedScore] = useState<string | null>(null);
-
-    const onScoreChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const onScoreChange = (value: number | null) => {
         trackEvent('feedback', {
             props: {
                 eventType: `score change - ${feedbackData.category}`,
                 category: feedbackData.category,
             },
         });
-        setSelectedScore(event.target.value);
+        setSelectedScore(value);
     };
 
     return (
@@ -294,40 +239,15 @@ export const FeedbackComponent = ({
                         <StyledContent>
                             <StyledTitle>Help us improve Unleash</StyledTitle>
                             <StyledForm onSubmit={onSubmission}>
-                                <input
-                                    type='hidden'
-                                    name='category'
-                                    value={feedbackData.category}
-                                />
-                                <input
-                                    type='hidden'
-                                    name='userType'
-                                    value={userType}
-                                />
                                 <FormTitle>{feedbackData.title}</FormTitle>
-                                <StyledScoreContainer>
-                                    <StyledScoreInput>
-                                        {[1, 2, 3, 4, 5, 6, 7].map((score) => (
-                                            <StyledScoreValue key={score}>
-                                                <input
-                                                    type='radio'
-                                                    name='difficultyScore'
-                                                    value={score}
-                                                    onChange={onScoreChange}
-                                                />
-                                                <span>{score}</span>
-                                            </StyledScoreValue>
-                                        ))}
-                                    </StyledScoreInput>
-                                    <ScoreHelpContainer>
-                                        <StyledScoreHelp>
-                                            Very difficult
-                                        </StyledScoreHelp>
-                                        <StyledScoreHelp>
-                                            Very easy
-                                        </StyledScoreHelp>
-                                    </ScoreHelpContainer>
-                                </StyledScoreContainer>
+                                <StyledRating
+                                    name='difficultyScoreRating'
+                                    max={5}
+                                    value={selectedScore}
+                                    onChange={(_, value) =>
+                                        onScoreChange(value)
+                                    }
+                                />
 
                                 {feedbackComments !== false &&
                                 feedbackComments.enabled &&
@@ -346,11 +266,13 @@ export const FeedbackComponent = ({
                                                 rows={3}
                                                 variant='outlined'
                                                 size='small'
-                                                InputLabelProps={{
-                                                    style: {
-                                                        fontSize:
-                                                            theme.fontSizes
-                                                                .smallBody,
+                                                slotProps={{
+                                                    inputLabel: {
+                                                        style: {
+                                                            fontSize:
+                                                                theme.fontSizes
+                                                                    .smallBody,
+                                                        },
                                                     },
                                                 }}
                                             />
@@ -364,16 +286,18 @@ export const FeedbackComponent = ({
                                                 multiline
                                                 name='areasForImprovement'
                                                 rows={3}
-                                                InputLabelProps={{
-                                                    style: {
-                                                        fontSize:
-                                                            theme.fontSizes
-                                                                .smallBody,
-                                                    },
-                                                }}
                                                 variant='outlined'
                                                 size='small'
                                                 hidden
+                                                slotProps={{
+                                                    inputLabel: {
+                                                        style: {
+                                                            fontSize:
+                                                                theme.fontSizes
+                                                                    .smallBody,
+                                                        },
+                                                    },
+                                                }}
                                             />
                                         </Box>
                                     </>
@@ -393,11 +317,13 @@ export const FeedbackComponent = ({
                                                 rows={3}
                                                 variant='outlined'
                                                 size='small'
-                                                InputLabelProps={{
-                                                    style: {
-                                                        fontSize:
-                                                            theme.fontSizes
-                                                                .smallBody,
+                                                slotProps={{
+                                                    inputLabel: {
+                                                        style: {
+                                                            fontSize:
+                                                                theme.fontSizes
+                                                                    .smallBody,
+                                                        },
                                                     },
                                                 }}
                                             />
@@ -416,15 +342,17 @@ export const FeedbackComponent = ({
                                                 multiline
                                                 name='areasForImprovement'
                                                 rows={3}
-                                                InputLabelProps={{
-                                                    style: {
-                                                        fontSize:
-                                                            theme.fontSizes
-                                                                .smallBody,
-                                                    },
-                                                }}
                                                 variant='outlined'
                                                 size='small'
+                                                slotProps={{
+                                                    inputLabel: {
+                                                        style: {
+                                                            fontSize:
+                                                                theme.fontSizes
+                                                                    .smallBody,
+                                                        },
+                                                    },
+                                                }}
                                             />
                                         </Box>
                                     </>

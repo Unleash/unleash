@@ -1,0 +1,107 @@
+packages:
+  - frontend
+
+allowBuilds:
+  "@parcel/watcher": true
+  "@scarf/scarf": true
+  cpu-features: true
+  cypress: true
+  es5-ext: true
+  esbuild: true
+  msw: true
+  ssh2: true
+
+trustPolicy: no-downgrade
+trustPolicyExclude:
+  - chokidar@4.0.3
+  - reselect@5.1.1
+  - undici-types@6.21.0
+  - '@unleash/proxy-client-react'
+
+# The minimum age of a release to be considered for dependency installation.
+# The value is in minutes (1440 minutes = 1 day).
+# 10 080 minutes = 7 days
+minimumReleaseAge: 10080
+minimumReleaseAgeIgnoreMissingTime: false
+minimumReleaseAgeExclude:
+  - 'unleash-client'
+  - '@unleash/proxy-client-react'
+  - '@unleash/sdk-flight-recorder'
+  # Renovate security update: esbuild@0.28.1
+  - '@esbuild/aix-ppc64@0.28.1'
+  - '@esbuild/android-arm@0.28.1'
+  - '@esbuild/android-arm64@0.28.1'
+  - '@esbuild/android-x64@0.28.1'
+  - '@esbuild/darwin-arm64@0.28.1'
+  - '@esbuild/darwin-x64@0.28.1'
+  - '@esbuild/freebsd-arm64@0.28.1'
+  - '@esbuild/freebsd-x64@0.28.1'
+  - '@esbuild/linux-arm@0.28.1'
+  - '@esbuild/linux-arm64@0.28.1'
+  - '@esbuild/linux-ia32@0.28.1'
+  - '@esbuild/linux-loong64@0.28.1'
+  - '@esbuild/linux-mips64el@0.28.1'
+  - '@esbuild/linux-ppc64@0.28.1'
+  - '@esbuild/linux-riscv64@0.28.1'
+  - '@esbuild/linux-s390x@0.28.1'
+  - '@esbuild/linux-x64@0.28.1'
+  - '@esbuild/netbsd-arm64@0.28.1'
+  - '@esbuild/netbsd-x64@0.28.1'
+  - '@esbuild/openbsd-arm64@0.28.1'
+  - '@esbuild/openbsd-x64@0.28.1'
+  - '@esbuild/openharmony-arm64@0.28.1'
+  - '@esbuild/sunos-x64@0.28.1'
+  - '@esbuild/win32-arm64@0.28.1'
+  - '@esbuild/win32-ia32@0.28.1'
+  - '@esbuild/win32-x64@0.28.1'
+  - esbuild@0.28.1
+  # Renovate security update: form-data@4.0.6
+  - form-data@4.0.6
+  # Renovate security update: js-yaml@4.2.0
+  - js-yaml@4.2.0
+  # Renovate security update: http-proxy-middleware@3.0.7
+  - http-proxy-middleware@3.0.7
+
+patchedDependencies:
+  # Fixes a bug in getAutoSortingFn where `.slice(10)` skips the first 10 rows
+  # instead of sampling them, causing tables with fewer than 11 rows to pick the
+  # wrong sort algorithm (e.g. case-sensitive string sort instead of alphanumeric).
+  # Fixed upstream in TanStack Table v9 — remove this patch when upgrading to v9.
+  # See: https://github.com/TanStack/table/issues/4908
+  '@tanstack/table-core@8.21.3': patches/@tanstack__table-core@8.21.3.patch
+  cypress-vite: .pnpm/patches/cypress-vite-npm-1.8.0-5384b5466c.patch
+overrides:
+  "@codemirror/state": "6.6.0"
+  "@types/express-session>@types/express": "4.17.25"
+  "@types/react": "^19.0.0"
+  "@wesleytodd/openapi>path-to-regexp": "6.3.0"
+  "@xmldom/xmldom": "^0.9.0"
+  ansi-regex: "^5.0.1"
+  async: "^3.2.4"
+  es5-ext: "0.10.64"
+  esbuild: "0.28.1"
+  fast-uri: "3.1.2"
+  form-data: "4.0.6"
+  glob: "^10.5.0"
+  ip-address: "10.2.0"
+  ip: "^2.0.1"
+  json-schema: "^0.4.0"
+  json5: "^2.2.2"
+  jsonpath-plus: "10.4.0"
+  js-yaml: "4.2.0"
+  lodash: ">=4.18.0"
+  markdown-it: "14.2.0"
+  "minimatch@3.1.2": "10.2.5"
+  node-forge: "^1.0.0"
+  nwsapi: "2.2.24"
+  prompt: "link:./node_modules/.cache/null"
+  react: "^19.0.0"
+  react-dom: "^19.0.0"
+  "react-router-dom>react-router": "6.30.4"
+  "router>path-to-regexp": "1.9.0"
+  semver: "7.7.4"
+  set-value: "^4.0.1"
+  ssh2: "^1.4.0"
+  tough-cookie: "4.1.4"
+  vite: "8.0.16"
+  ws: "8.21.0"

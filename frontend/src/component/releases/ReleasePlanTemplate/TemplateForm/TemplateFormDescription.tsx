@@ -1,5 +1,5 @@
 import FactCheckOutlinedIcon from '@mui/icons-material/FactCheckOutlined';
-import { ReactComponent as MilestoneIcon } from 'assets/icons/milestone.svg';
+import MilestoneIcon from 'assets/icons/milestone.svg?react';
 import { styled } from '@mui/material';
 
 const StyledDescription = styled('div')(({ theme }) => ({

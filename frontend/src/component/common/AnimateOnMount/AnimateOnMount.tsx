@@ -36,9 +36,10 @@ const AnimateOnMount: FC<IAnimateOnMountProps> = ({
             if (mounted) {
                 setShow(true);
                 onStart?.();
-                setTimeout(() => {
+                const timeout = setTimeout(() => {
                     setStyles(enter);
                 }, 50);
+                return () => clearTimeout(timeout);
             } else {
                 if (!leave) {
                     setShow(false);

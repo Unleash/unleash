@@ -1,4 +1,4 @@
-import type { VoidFunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 import type { UiFlags, IUiConfig } from 'interfaces/uiConfig';
 
 export interface IRoute {
@@ -12,7 +12,7 @@ export interface IRoute {
     configFlag?: keyof IUiConfig;
     hidden?: boolean;
     enterprise?: boolean;
-    component: VoidFunctionComponent;
+    component: FunctionComponent;
     menu: IRouteMenu;
     isStandalone?: boolean;
 }

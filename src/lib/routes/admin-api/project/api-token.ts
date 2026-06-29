@@ -85,10 +85,11 @@ export class ProjectApiTokenController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Projects'],
+                    release: { stable: '4.21.0' },
                     operationId: 'getProjectApiTokens',
                     summary: 'Get api tokens for project.',
                     description:
-                        'Returns the project-specific [API tokens](https://docs.getunleash.io/concepts/api-tokens) that have been created for this project.',
+                        'Returns the project-specific [API tokens](https://docs.getunleash.io/concepts/api-tokens-and-client-keys) that have been created for this project.',
                     responses: {
                         200: createResponseSchema('apiTokensSchema'),
                         ...getStandardResponses(401, 403, 404),
@@ -105,6 +106,7 @@ export class ProjectApiTokenController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Projects'],
+                    release: { stable: '4.21.0' },
                     operationId: 'createProjectApiToken',
                     requestBody: createRequestSchema(
                         'createProjectApiTokenSchema',
@@ -129,6 +131,7 @@ export class ProjectApiTokenController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Projects'],
+                    release: { stable: '4.21.0' },
                     operationId: 'deleteProjectApiToken',
                     summary: 'Delete a project API token.',
                     description: `This operation deletes the API token specified in the request URL. If the token doesn't exist, returns an OK response (status code 200).`,

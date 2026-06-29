@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 export const useOnBlur = (
-    containerRef: React.RefObject<HTMLElement>,
+    containerRef: React.RefObject<HTMLElement | null>,
     callback: () => void,
 ): void => {
     useEffect(() => {

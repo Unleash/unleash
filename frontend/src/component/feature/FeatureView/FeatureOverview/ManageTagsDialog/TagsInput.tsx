@@ -15,6 +15,8 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import Add from '@mui/icons-material/Add';
 import type { TagSchema } from 'openapi';
 
+import type { JSX } from 'react';
+
 export type TagOption = {
     title: string;
     inputValue?: string;
@@ -134,7 +136,6 @@ export const TagsInput = ({
             getOptionLabel={getOptionLabel}
             renderOption={renderOption}
             filterOptions={filterOptions}
-            ListboxProps={{ style: { maxHeight: 200, overflow: 'auto' } }}
             onChange={onChange}
             renderInput={(params) => (
                 <TextField
@@ -144,6 +145,9 @@ export const TagsInput = ({
                 />
             )}
             disabled={disabled}
+            slotProps={{
+                listbox: { style: { maxHeight: 200, overflow: 'auto' } },
+            }}
         />
     );
 };

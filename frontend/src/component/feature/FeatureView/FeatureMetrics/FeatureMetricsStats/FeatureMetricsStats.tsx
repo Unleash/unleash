@@ -1,5 +1,6 @@
 import { calculatePercentage } from 'utils/calculatePercentage';
-import { Grid, styled } from '@mui/material';
+import { styled } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
 import { daysOrHours } from '../daysOrHours.ts';
 
@@ -64,7 +65,7 @@ export const FeatureMetricsStats = ({
             aria-label='Feature metrics summary'
             component='section'
         >
-            <Grid item xs={12} sm={4}>
+            <Grid size={{ xs: 12, sm: 4 }}>
                 <StyledItem>
                     <StyledTitle>Exposure</StyledTitle>
                     <StyledValue>
@@ -76,7 +77,7 @@ export const FeatureMetricsStats = ({
                     </StyledText>
                 </StyledItem>
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid size={{ xs: 12, sm: 4 }}>
                 <StyledItem>
                     <StyledTitle>Exposure %</StyledTitle>
                     <StyledValue>
@@ -88,14 +89,14 @@ export const FeatureMetricsStats = ({
                     </StyledText>
                 </StyledItem>
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid size={{ xs: 12, sm: 4 }}>
                 <StyledItem>
                     <StyledTitle>Requests</StyledTitle>
                     <StyledValue>
                         <PrettifyLargeNumber value={totalYes + totalNo} />
                     </StyledValue>
                     <StyledText>
-                        Total requests for the feature in the environment{' '}
+                        Total evaluations for the feature in the environment{' '}
                         {hoursSuffix}.
                     </StyledText>
                 </StyledItem>

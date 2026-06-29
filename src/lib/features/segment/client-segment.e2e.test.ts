@@ -202,7 +202,9 @@ beforeAll(async () => {
         db.stores,
         {
             experimental: {
-                flags: {},
+                flags: {
+                    allowDeprecatedApiTokenMiddleware: true,
+                },
             },
         },
         db.rawDatabase,

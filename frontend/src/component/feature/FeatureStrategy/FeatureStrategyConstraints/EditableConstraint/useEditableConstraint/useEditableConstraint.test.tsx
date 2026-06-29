@@ -11,7 +11,7 @@ import {
 } from 'constants/operators';
 import type { IConstraint } from 'interfaces/strategy';
 import { useEditableConstraint } from './useEditableConstraint.js';
-import { vi } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import type { ContextFieldSchema } from 'openapi';
 import { NUM_EQ } from '@server/util/constants';

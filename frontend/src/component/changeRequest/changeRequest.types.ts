@@ -3,7 +3,8 @@ import type { ISegment } from 'interfaces/segment';
 import type { IFeatureStrategy } from '../../interfaces/strategy.js';
 import type { IUser } from '../../interfaces/user.js';
 import type { SetStrategySortOrderSchema } from 'openapi';
-import type { IReleasePlan, ISafeguard } from 'interfaces/releasePlans';
+import type { IReleasePlan } from 'interfaces/releasePlans';
+import type { ISafeguard } from 'interfaces/safeguard';
 
 type BaseChangeRequest = {
     id: number;

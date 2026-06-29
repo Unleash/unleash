@@ -1,4 +1,4 @@
-import { useMemo, useState, type VFC } from 'react';
+import { useMemo, useState, type FC } from 'react';
 import { Button } from '@mui/material';
 import { ManageBulkTagsDialog } from 'component/feature/FeatureView/FeatureOverview/ManageTagsDialog/ManageBulkTagsDialog';
 import type { FeatureSchema, TagSchema } from 'openapi';
@@ -7,7 +7,7 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 interface IManageTagsProps {
     data: FeatureSchema[];
@@ -15,14 +15,14 @@ interface IManageTagsProps {
     onChange?: () => void;
 }
 
-export const ManageTags: VFC<IManageTagsProps> = ({
+export const ManageTags: FC<IManageTagsProps> = ({
     projectId,
     data,
     onChange,
 }) => {
     const { bulkUpdateTags } = useTagApi();
     const { setToastData, setToastApiError } = useToast();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const [isOpen, setIsOpen] = useState(false);
     const [initialValues, indeterminateValues] = useMemo(() => {
         const uniqueTags = data
@@ -96,7 +96,7 @@ export const ManageTags: VFC<IManageTagsProps> = ({
                         <Button
                             disabled={!hasAccess || isOpen}
                             variant='outlined'
-                            size='small'
+                            size='medium'
                             onClick={() => setIsOpen(true)}
                         >
                             Tags

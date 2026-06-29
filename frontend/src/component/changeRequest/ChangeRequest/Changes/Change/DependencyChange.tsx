@@ -4,7 +4,7 @@ import type {
     IChangeRequestAddDependency,
     IChangeRequestDeleteDependency,
 } from 'component/changeRequest/changeRequest.types';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import {
     Added,
     ChangeItemInfo,

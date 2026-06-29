@@ -9,7 +9,7 @@ import { GroupFormUsersSelect } from './GroupFormUsersSelect/GroupFormUsersSelec
 import { GroupFormUsersTable } from './GroupFormUsersTable/GroupFormUsersTable.tsx';
 import { ItemList } from 'component/common/ItemList/ItemList';
 import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import type { IRole } from 'interfaces/role';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
@@ -182,7 +182,7 @@ export const GroupForm: FC<IGroupForm> = ({
                     )}
                 />
                 <StyledInputDescription>
-                    <Box sx={{ display: 'flex' }}>
+                    <Box component='span' sx={{ display: 'flex' }}>
                         Do you want to associate a root role with this group?
                         <HelpIcon tooltip='When you associate a root role with this group, users in this group will automatically inherit the role globally.' />
                     </Box>

@@ -92,8 +92,10 @@ export const ConstraintDateInput = ({
                         }
                     }
                 }}
-                InputLabelProps={{
-                    shrink: true,
+                slotProps={{
+                    inputLabel: {
+                        shrink: true,
+                    },
                 }}
                 error={Boolean(error)}
                 errorText={error}

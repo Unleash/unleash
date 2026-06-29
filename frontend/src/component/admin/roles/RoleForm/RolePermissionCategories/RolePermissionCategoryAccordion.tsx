@@ -111,7 +111,12 @@ export const RolePermissionCategoryAccordion = ({
                             maxWidth='120'
                             maxLength={25}
                         />{' '}
-                        <Typography variant='body2' color='text.secondary'>
+                        <Typography
+                            variant='body2'
+                            sx={{
+                                color: 'text.secondary',
+                            }}
+                        >
                             ({permissionCount} / {permissions?.length}{' '}
                             permissions)
                         </Typography>
@@ -127,7 +132,7 @@ export const RolePermissionCategoryAccordion = ({
                     <Divider sx={{ mb: 1 }} />
                     <Button
                         variant='text'
-                        size='small'
+                        size='medium'
                         onClick={onCheckAll}
                         sx={{
                             fontWeight: (theme) =>

@@ -3,9 +3,9 @@ import 'themes/app.css';
 import 'regenerator-runtime/runtime';
 
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router';
 import { QueryParamProvider } from 'use-query-params';
-import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
+import { ReactRouter7Adapter } from 'utils/ReactRouter7Adapter';
 import { ThemeProvider } from 'themes/ThemeProvider';
 import { App } from 'component/App';
 import { ScrollTop } from 'component/common/ScrollTop/ScrollTop';
@@ -18,6 +18,9 @@ import { UIProviderContainer } from 'component/providers/UIProvider/UIProviderCo
 import { StickyProvider } from 'component/common/Sticky/StickyProvider';
 import { FeedbackProvider } from 'component/feedbackNew/FeedbackProvider';
 import { PlausibleProvider } from 'component/providers/PlausibleProvider/PlausibleProvider';
+import { LogRocketProvider } from 'component/providers/LogRocketProvider/LogRocketProvider';
+import { FlightRecorderProvider } from 'component/providers/FlightRecorderProvider/FlightRecorderProvider';
+import { EventTrackerProvider } from 'component/providers/TrackerProvider/EventTrackerProvider';
 import { LayoutError } from './component/layout/Error/LayoutError.tsx';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useRecordUIErrorApi } from 'hooks/api/actions/useRecordUIErrorApi/useRecordUiErrorApi';
@@ -48,31 +51,39 @@ const ApplicationRoot = () => {
         <UIProviderContainer>
             <AccessProvider>
                 <BrowserRouter basename={basePath}>
-                    <QueryParamProvider adapter={ReactRouter6Adapter}>
+                    <QueryParamProvider adapter={ReactRouter7Adapter}>
                         <ThemeProvider>
                             <AnnouncerProvider>
                                 <PlausibleProvider>
-                                    <UnleashFlagProvider>
-                                        <ErrorBoundary
-                                            FallbackComponent={LayoutError}
-                                            onError={sendErrorToApi}
-                                        >
-                                            <FeedbackProvider>
-                                                <FeedbackCESProvider>
-                                                    <StickyProvider>
-                                                        <HighlightProvider>
-                                                            <WelcomeDialogProvider>
-                                                                <InstanceStatus>
-                                                                    <ScrollTop />
-                                                                    <App />
-                                                                </InstanceStatus>
-                                                            </WelcomeDialogProvider>
-                                                        </HighlightProvider>
-                                                    </StickyProvider>
-                                                </FeedbackCESProvider>
-                                            </FeedbackProvider>
-                                        </ErrorBoundary>
-                                    </UnleashFlagProvider>
+                                    <LogRocketProvider>
+                                        <FlightRecorderProvider>
+                                            <EventTrackerProvider>
+                                                <UnleashFlagProvider>
+                                                    <ErrorBoundary
+                                                        FallbackComponent={
+                                                            LayoutError
+                                                        }
+                                                        onError={sendErrorToApi}
+                                                    >
+                                                        <FeedbackProvider>
+                                                            <FeedbackCESProvider>
+                                                                <StickyProvider>
+                                                                    <HighlightProvider>
+                                                                        <WelcomeDialogProvider>
+                                                                            <InstanceStatus>
+                                                                                <ScrollTop />
+                                                                                <App />
+                                                                            </InstanceStatus>
+                                                                        </WelcomeDialogProvider>
+                                                                    </HighlightProvider>
+                                                                </StickyProvider>
+                                                            </FeedbackCESProvider>
+                                                        </FeedbackProvider>
+                                                    </ErrorBoundary>
+                                                </UnleashFlagProvider>
+                                            </EventTrackerProvider>
+                                        </FlightRecorderProvider>
+                                    </LogRocketProvider>
                                 </PlausibleProvider>
                             </AnnouncerProvider>
                         </ThemeProvider>

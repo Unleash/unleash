@@ -31,7 +31,7 @@ import {
 } from '../types/index.js';
 import type { IUserStore } from '../types/index.js';
 import { RoleName } from '../types/model.js';
-import type SettingService from './setting-service.js';
+import type SettingService from '../features/settings/setting-service.js';
 import {
     type SimpleAuthSettings,
     simpleAuthSettingsKey,
@@ -78,6 +78,21 @@ export interface ILoginUserRequest {
     name?: string;
     rootRole?: number | RoleName;
     autoCreate?: boolean;
+}
+
+export interface ChangePasswordOptions {
+    /**
+     * Opt out of invalidating sessions when changing the password. Defaults to
+     * logging the user out (only set this to `false` for flows like setting an
+     * initial password during signup).
+     */
+    logoutUser?: boolean;
+    /**
+     * When set, keep this session alive and only terminate the user's other
+     * sessions. Used by self-service password changes so the user who performed
+     * the change stays logged in while every other device is signed out.
+     */
+    keepSessionId?: string;
 }
 
 const saltRounds = 10;
@@ -228,12 +243,6 @@ export class UserService {
                 ...u,
                 activeSessions: sessionCounts[u.id] || 0,
             }));
-        }
-
-        const { readOnlyUsers } =
-            await this.resourceLimitsService.getResourceLimits();
-        if (!this.flagResolver.isEnabled('readOnlyUsersUI') || !readOnlyUsers) {
-            users = users.map(({ seatType, ...user }) => user);
         }
 
         return users;
@@ -576,7 +585,7 @@ export class UserService {
     async changePassword(
         userId: number,
         password: string,
-        { logoutUser }: { logoutUser?: boolean } = { logoutUser: true },
+        { logoutUser, keepSessionId }: ChangePasswordOptions = {},
     ): Promise<void> {
         this.validatePassword(password);
         const passwordHash = await bcrypt.hash(password, saltRounds);
@@ -588,14 +597,30 @@ export class UserService {
         );
         await this.resetTokenService.expireExistingTokensForUser(userId);
 
-        if (logoutUser) {
-            await this.sessionService.deleteSessionsForUser(userId);
+        // Invalidate active sessions whenever the password changes so that
+        // other devices/browsers are forced to re-authenticate with the new
+        // credentials (OWASP session management). When `keepSessionId` is
+        // provided we keep that session alive (the one that performed the
+        // change) and only terminate the others. Callers must opt out of
+        // invalidation entirely with `logoutUser: false` (e.g. setting an
+        // initial password during signup); a missing/undefined flag stays
+        // secure.
+        if (logoutUser !== false) {
+            if (keepSessionId) {
+                await this.sessionService.deleteSessionsForUserExcept(
+                    userId,
+                    keepSessionId,
+                );
+            } else {
+                await this.sessionService.deleteSessionsForUser(userId);
+            }
         }
     }
 
     async changePasswordWithPreviouslyUsedPasswordCheck(
         userId: number,
         password: string,
+        options: ChangePasswordOptions = {},
     ): Promise<void> {
         const previouslyUsed =
             await this.store.getPasswordsPreviouslyUsed(userId);
@@ -606,15 +631,22 @@ export class UserService {
             throw new PasswordPreviouslyUsedError();
         }
 
-        await this.changePassword(userId, password);
+        await this.changePassword(userId, password, options);
     }
 
     async changePasswordWithVerification(
         userId: number,
         newPassword: string,
         oldPassword: string,
+        options: ChangePasswordOptions = {},
     ): Promise<void> {
         const currentPasswordHash = await this.store.getPasswordHash(userId);
+        if (!currentPasswordHash) {
+            throw new PasswordMismatch(
+                `The old password you provided is invalid. If you have forgotten your password, visit ${this.baseUriPath}/forgotten-password or get in touch with your instance administrator.`,
+            );
+        }
+
         const match = await bcrypt.compare(oldPassword, currentPasswordHash);
         if (!match) {
             throw new PasswordMismatch(
@@ -625,7 +657,14 @@ export class UserService {
         await this.changePasswordWithPreviouslyUsedPasswordCheck(
             userId,
             newPassword,
+            options,
         );
+    }
+
+    async hasPassword(userId: number): Promise<boolean> {
+        const passwordHash = await this.store.getPasswordHash(userId);
+
+        return Boolean(passwordHash);
     }
 
     async getUserForToken(token: string): Promise<TokenUserSchema> {

@@ -6,7 +6,7 @@ import type { IClientApplicationsStore } from './stores/client-applications-stor
 import type { IClientInstanceStore } from './stores/client-instance-store.js';
 import type { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type.js';
 import type { IContextFieldStore } from '../features/context/context-field-store-type.js';
-import type { ISettingStore } from './stores/settings-store.js';
+import type { ISettingStore } from '../features/settings/settings-store-type.js';
 import type { ISessionStore } from './stores/session-store.js';
 import type { ITagStore } from './stores/tag-store.js';
 import type { ITagTypeStore } from '../features/tag-type/tag-type-store-type.js';

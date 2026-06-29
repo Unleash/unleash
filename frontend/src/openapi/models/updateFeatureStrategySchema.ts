@@ -5,6 +5,7 @@
  */
 import type { ConstraintSchema } from './constraintSchema';
 import type { ParametersSchema } from './parametersSchema';
+import type { StrategyVariantSchema } from './strategyVariantSchema';
 
 /**
  * Update a strategy configuration in a feature
@@ -17,9 +18,14 @@ export interface UpdateFeatureStrategySchema {
      * @nullable
      */
     disabled?: boolean | null;
-    /** The name of the strategy type */
+    /**
+     * The name of the strategy type. This property is deprecated and the ability to change a strategy's type will be removed in a future release.
+     * @deprecated
+     */
     name?: string;
     parameters?: ParametersSchema;
+    /** A list of segment ids attached to the strategy */
+    segments?: number[];
     /** The order of the strategy in the list in feature environment configuration */
     sortOrder?: number;
     /**
@@ -27,4 +33,6 @@ export interface UpdateFeatureStrategySchema {
      * @nullable
      */
     title?: string | null;
+    /** Strategy level variants */
+    variants?: StrategyVariantSchema[];
 }

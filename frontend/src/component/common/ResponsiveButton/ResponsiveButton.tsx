@@ -1,11 +1,9 @@
 import type React from 'react';
-import { useMediaQuery } from '@mui/material';
+import { type ButtonProps, useMediaQuery } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import type { ITooltipResolverProps } from '../TooltipResolver/TooltipResolver.tsx';
-import type { OverridableStringUnion } from '@mui/types';
-import type { ButtonPropsVariantOverrides } from '@mui/material/Button/Button';
 
 interface IResponsiveButtonProps {
     Icon: React.ElementType;
@@ -17,10 +15,7 @@ interface IResponsiveButtonProps {
     projectId?: string;
     environmentId?: string;
     maxWidth: string;
-    variant?: OverridableStringUnion<
-        'text' | 'outlined' | 'contained',
-        ButtonPropsVariantOverrides
-    >;
+    variant?: ButtonProps['variant'];
     className?: string;
     children?: React.ReactNode;
 }

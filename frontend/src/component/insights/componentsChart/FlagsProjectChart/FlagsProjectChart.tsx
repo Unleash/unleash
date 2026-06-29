@@ -1,4 +1,4 @@
-import { useMemo, type VFC } from 'react';
+import { useMemo, type FC } from 'react';
 import 'chartjs-adapter-date-fns';
 import type { InstanceInsightsSchema } from 'openapi';
 import {
@@ -16,7 +16,7 @@ interface IFlagsProjectChartProps {
     isLoading?: boolean;
 }
 
-export const FlagsProjectChart: VFC<IFlagsProjectChartProps> = ({
+export const FlagsProjectChart: FC<IFlagsProjectChartProps> = ({
     projectFlagTrends,
     isLoading,
 }) => {

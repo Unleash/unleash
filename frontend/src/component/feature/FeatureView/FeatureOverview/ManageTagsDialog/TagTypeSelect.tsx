@@ -7,7 +7,7 @@ import {
     useTheme,
 } from '@mui/material';
 import type { ITagType } from 'interfaces/tags';
-import type { HTMLAttributes } from 'react';
+import type { HTMLAttributes, JSX } from 'react';
 
 interface ITagSelect {
     options: ITagType[];
@@ -63,7 +63,9 @@ export const TagTypeSelect = ({
                 <TextField {...params} label='Tag type' value={value} />
             )}
             onChange={onChange}
-            ListboxProps={{ style: { maxHeight: 200, overflow: 'auto' } }}
+            slotProps={{
+                listbox: { style: { maxHeight: 200, overflow: 'auto' } },
+            }}
         />
     );
 };

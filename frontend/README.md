@@ -8,8 +8,8 @@ Refer to the [Contributing to Unleash](../CONTRIBUTING.md#how-to-run-the-project
 The frontend dev server runs (in port 3000) simultaneously with the backend dev server (in port 4242):
 
 ```
-yarn install
-yarn dev
+pnpm install
+pnpm dev
 ```
 
 ## Run with a sandbox instance of the Unleash API
@@ -18,44 +18,43 @@ Alternatively, instead of running unleash-api on localhost, you can use a remote
 
 ```
 cd ./frontend
-yarn install
-yarn run start:sandbox
+pnpm install
+pnpm run start:sandbox
 ```
 
-## Running end-to-end tests against localhost 
+## Running end-to-end tests against localhost
 
 If you need to test against a local server instance,
 you'll need to run in the root directory:
 
-* `yarn build:frontend`
-* `yarn dev:start` 
+* `pnpm build:frontend`
+* `pnpm dev:start`
 
 Then run the e2e tests using:
 
 ```
-yarn run e2e
+pnpm run e2e
 ```
 
 You may also need to test that a feature works against the enterprise version of unleash.
 
 ```
-yarn run start:enterprise
-yarn run e2e:enterprise
+pnpm run start:enterprise
+pnpm run e2e:enterprise
 ```
 
 ### Debugging end-to-end tests
 
-Run backend and frontend in develoment build. In the root of the project run e.g.: `yarn dev`. 
+Run backend and frontend in development build. In the root of the project run e.g.: `pnpm dev`.
 
 Please keep in mind that running tests against dev frontend will be **really** slow (even x5 slower).
-It's best to open cypress UI and pick only the test that you need to work on. 
+It's best to open cypress UI and pick only the test that you need to work on.
 
 In frontend project run:
 
 ```
-yarn e2e:dev:open
+pnpm e2e:dev:open
 ```
-
 
 ## Generating the OpenAPI client
 
@@ -66,7 +65,7 @@ For now we only use generated types (src/openapi/models).
 We will use methods (src/openapi/apis) for new features soon.
 
 ```
-yarn gen:api
+pnpm gen:api
 rm -rf src/openapi/apis
 ```
 

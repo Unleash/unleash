@@ -1,6 +1,6 @@
 import useToast from 'hooks/useToast';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { useState } from 'react';
@@ -12,15 +12,13 @@ import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
 import { useFormErrors } from 'hooks/useFormErrors';
 import { sortStrategyParameters } from 'utils/sortStrategyParameters';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import type { CreateFeatureStrategySchema } from 'openapi';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import {
     PROJECT_DEFAULT_STRATEGY_WRITE,
     UPDATE_PROJECT,
 } from '@server/types/permissions';
-import { useUiFlag } from 'hooks/useUiFlag';
-import { LegacyEditDefaultStrategy } from './LegacyEditDefaultStrategy.tsx';
 import { StrategyFormBody } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormBody.tsx';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
@@ -49,7 +47,7 @@ export const useDefaultStrategy = (
     return { defaultStrategyFallback, strategy, refetch };
 };
 
-const NewEditDefaultStrategy = () => {
+const EditDefaultStrategy = () => {
     const projectId = useRequiredPathParam('projectId');
     const environmentId = useRequiredQueryParam('environmentId');
     const { refetch: refetchProjectOverview } = useProjectOverview(projectId);
@@ -71,7 +69,7 @@ const NewEditDefaultStrategy = () => {
     const { uiConfig } = useUiConfig();
     const { unleashUrl } = uiConfig;
     const navigate = useNavigate();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);
 
     if (!strategyDefinition) return null;
@@ -124,6 +122,7 @@ const NewEditDefaultStrategy = () => {
                 setStrategy={setStrategy}
                 strategyDefinition={strategyDefinition}
                 errors={errors}
+                groupIdTooltip='Defaults to the feature flag name if not set.'
                 onSubmit={onSubmit}
             >
                 <PermissionButton
@@ -157,15 +156,6 @@ const NewEditDefaultStrategy = () => {
                 </Button>
             </StrategyFormBody>
         </FormTemplate>
-    );
-};
-
-const EditDefaultStrategy = () => {
-    const useConsolidated = useUiFlag('strategyFormConsolidation');
-    return useConsolidated ? (
-        <NewEditDefaultStrategy />
-    ) : (
-        <LegacyEditDefaultStrategy />
     );
 };
 

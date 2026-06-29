@@ -2,7 +2,7 @@ version: '3.1'
 
 services:
   postgres:
-    image: postgres:alpine3.15
+    image: postgres:18-alpine
     environment:
       POSTGRES_USER: unleash_user
       POSTGRES_PASSWORD: password
@@ -11,7 +11,7 @@ services:
       - 5432:5432
 
   pgadmin:
-    image: dpage/pgadmin4:9.13
+    image: dpage/pgadmin4:9.15
     environment:
       PGADMIN_DEFAULT_EMAIL: 'admin@admin.com'
       PGADMIN_DEFAULT_PASSWORD: 'admin'

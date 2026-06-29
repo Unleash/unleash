@@ -54,7 +54,7 @@ export const useChartData = ({
             const timestamps = series.data.map(
                 ([epochTimestamp]) => new Date(epochTimestamp * 1000),
             );
-            const values = series.data.map(([, value]) => value);
+            const values = series.data.map(([, value]) => Number(value));
 
             const datasets: ChartDataset<'line', (number | null)[]>[] = [
                 {
@@ -110,9 +110,10 @@ export const useChartData = ({
 
                 const dataMap = new Map(series.data);
 
-                const data = sortedTimestamps.map(
-                    (timestamp) => dataMap.get(timestamp) ?? null,
-                );
+                const data = sortedTimestamps.map((timestamp) => {
+                    const value = dataMap.get(timestamp);
+                    return value !== undefined ? Number(value) : null;
+                });
 
                 return {
                     label: seriesLabel,

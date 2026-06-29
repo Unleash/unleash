@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import UserForm from '../UserForm/UserForm.tsx';
 import useAddUserForm from '../hooks/useAddUserForm.ts';
 import { scrollToTop } from 'component/common/util';

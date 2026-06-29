@@ -9,7 +9,7 @@ echo "export * from './models/index';" > src/openapi/index.ts
 echo '' >> src/openapi/index.ts
 
 echo "Formatting..."
-yarn fmt
+pnpm fmt
 ./node_modules/.bin/biome lint --write --unsafe src/openapi
 
 echo "Done!"

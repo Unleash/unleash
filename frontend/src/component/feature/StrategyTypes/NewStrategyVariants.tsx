@@ -1,3 +1,4 @@
+import { createUuid } from 'utils/createUuid';
 import { VariantForm } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantForm.tsx';
 import { updateWeightEdit } from 'component/common/util';
 import type React from 'react';
@@ -16,7 +17,7 @@ import type { StrategyFormState } from 'interfaces/strategy';
 import { VariantsSplitPreview } from 'component/common/VariantsSplitPreview/VariantsSplitPreview';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { StrategyVariantsUpgradeAlert } from 'component/common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import Add from '@mui/icons-material/Add';
 
 const StyledVariantForms = styled('div')({
@@ -42,12 +43,12 @@ export const NewStrategyVariants = <T extends StrategyFormState>({
     setStrategy,
     canRenamePreexistingVariants,
 }: NewStrategyVariantsProps<T>) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const initialVariants = (strategy.variants || []).map((variant) => ({
         ...variant,
         new: canRenamePreexistingVariants || false,
         isValid: true,
-        id: crypto.randomUUID(),
+        id: createUuid(),
         overrides: [],
     }));
     const [variantsEdit, setVariantsEdit] =
@@ -95,7 +96,7 @@ export const NewStrategyVariants = <T extends StrategyFormState>({
     };
 
     const addVariant = () => {
-        const id = crypto.randomUUID();
+        const id = createUuid();
         setVariantsEdit((variantsEdit) => [
             ...variantsEdit,
             {

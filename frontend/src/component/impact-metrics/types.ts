@@ -1,3 +1,5 @@
+export type MetricSource = 'internal' | 'external';
+
 export type ChartConfig = {
     id: string;
     metricName: string; // e.g. unleash_counter_my_metric
@@ -6,6 +8,7 @@ export type ChartConfig = {
     aggregationMode: AggregationMode;
     labelSelectors: Record<string, string[]>;
     title?: string;
+    source?: MetricSource;
 };
 
 export type AggregationMode =
@@ -18,8 +21,7 @@ export type AggregationMode =
     | 'p99';
 
 export type DisplayChartConfig = ChartConfig & {
-    type: 'counter' | 'gauge' | 'histogram' | 'unknown';
-    displayName: string; // e.g. my_metric with unleash_counter stripped
+    displayName: string;
     mode?: 'read' | 'write';
 };
 

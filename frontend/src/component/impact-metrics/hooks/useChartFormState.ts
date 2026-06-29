@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
-import type { AggregationMode, ChartConfig } from '../types.ts';
+import type { AggregationMode, ChartConfig, MetricSource } from '../types.ts';
 import type { ImpactMetricsLabels } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
+import type { MetricSelection } from '../ImpactMetricModal/ImpactMetricsControls/SeriesSelector/MetricSelector.tsx';
 import {
     getDefaultAggregation,
     getMetricType,
@@ -22,6 +23,7 @@ export type ChartFormState = {
         yAxisMin: 'auto' | 'zero';
         aggregationMode: AggregationMode;
         labelSelectors: Record<string, string[]>;
+        source?: MetricSource;
     };
     actions: {
         setTitle: (title: string) => void;
@@ -30,7 +32,7 @@ export type ChartFormState = {
         setYAxisMin: (yAxisMin: 'auto' | 'zero') => void;
         setAggregationMode: (mode: AggregationMode) => void;
         setLabelSelectors: (labels: Record<string, string[]>) => void;
-        handleSeriesChange: (series: string) => void;
+        handleSeriesChange: (selection: MetricSelection) => void;
         getConfigToSave: () => Omit<ChartConfig, 'id'>;
     };
     isValid: boolean;
@@ -56,15 +58,20 @@ export const useChartFormState = ({
         initialConfig?.aggregationMode ||
             getDefaultAggregation(getMetricType(metricName)),
     );
+    const [source, setSource] = useState<MetricSource | undefined>(
+        initialConfig?.source,
+    );
 
     const {
         data: { labels: currentAvailableLabels },
     } = useImpactMetricsData(
         metricName
             ? {
-                  series: metricName,
+                  metricName,
                   range: timeRange,
                   aggregationMode,
+                  source,
+                  mode: 'edit',
               }
             : undefined,
     );
@@ -82,6 +89,7 @@ export const useChartFormState = ({
                         getMetricType(initialConfig.metricName),
                     ),
             );
+            setSource(initialConfig.source);
         } else if (open && !initialConfig) {
             setTitle('');
             setMetricName('');
@@ -89,13 +97,15 @@ export const useChartFormState = ({
             setYAxisMin('auto');
             setLabelSelectors({});
             setAggregationMode('count');
+            setSource(undefined);
         }
     }, [open, initialConfig]);
 
-    const handleSeriesChange = (series: string) => {
-        setMetricName(series);
+    const handleSeriesChange = (selection: MetricSelection) => {
+        setMetricName(selection.metricName);
+        setSource(selection.source);
         setLabelSelectors({});
-        const metricType = getMetricType(series);
+        const metricType = getMetricType(selection.metricName);
         if (metricType !== 'unknown') {
             setAggregationMode(getDefaultAggregation(metricType));
         }
@@ -108,13 +118,20 @@ export const useChartFormState = ({
         yAxisMin,
         labelSelectors,
         aggregationMode,
+        source,
     });
 
     const isValid = metricName.length > 0;
-    const metricType = getMetricType(metricName, currentAvailableLabels?.type);
+    const metricType = getMetricType(
+        metricName,
+        currentAvailableLabels?.metric_type,
+    );
 
     useEffect(() => {
-        if (!initialConfig && metricType !== 'unknown') {
+        if (
+            metricName !== initialConfig?.metricName &&
+            metricType !== 'unknown'
+        ) {
             setAggregationMode(getDefaultAggregation(metricType));
         }
     }, [metricName, metricType]);
@@ -128,6 +145,7 @@ export const useChartFormState = ({
             yAxisMin,
             aggregationMode,
             labelSelectors,
+            source,
         },
         actions: {
             setTitle,

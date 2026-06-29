@@ -6,7 +6,7 @@ import FakeTagStore from './fake-tag-store.js';
 import FakeTagTypeStore from '../../lib/features/tag-type/fake-tag-type-store.js';
 import FakeEventStore from './fake-event-store.js';
 import FakeContextFieldStore from '../../lib/features/context/fake-context-field-store.js';
-import FakeSettingStore from './fake-setting-store.js';
+import FakeSettingStore from '../../lib/features/settings/fake-setting-store.js';
 import FakeAddonStore from './fake-addon-store.js';
 import FakeProjectStore from './fake-project-store.js';
 import FakeUserStore from './fake-user-store.js';

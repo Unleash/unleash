@@ -1,5 +1,6 @@
+import { expect, test } from 'vitest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import { MemoryRouter, Routes, Route } from 'react-router';
 import { FeatureView } from '../feature/FeatureView/FeatureView.tsx';
 import { ThemeProvider } from 'themes/ThemeProvider';
 import { AccessProvider } from '../providers/AccessProvider/AccessProvider.tsx';
@@ -17,7 +18,10 @@ import { HighlightProvider } from 'component/common/Highlight/HighlightProvider'
 const server = testServerSetup();
 
 const projectWithCollaborationMode = (mode: ProjectMode) =>
-    testServerRoute(server, '/api/admin/projects/default/overview', { mode });
+    testServerRoute(server, '/api/admin/projects/default/overview', {
+        mode,
+        onboardingStatus: { status: 'onboarded' },
+    });
 
 const changeRequestsEnabledIn = (
     env: 'development' | 'production' | 'custom',

@@ -19,7 +19,7 @@ const ApiError: React.FC<IApiErrorProps> = ({
         <Alert
             className={className ? className : ''}
             action={
-                <Button color='inherit' size='small' onClick={onClick}>
+                <Button color='inherit' size='medium' onClick={onClick}>
                     TRY AGAIN
                 </Button>
             }

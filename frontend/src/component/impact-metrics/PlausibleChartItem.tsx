@@ -50,7 +50,12 @@ export const PlausibleChartItem: FC = () => (
         <StyledHeader>
             <StyledChartTitle>
                 <Typography variant='h3'>Plausible Analytics</Typography>
-                <Typography variant='body2' color='text.secondary'>
+                <Typography
+                    variant='body2'
+                    sx={{
+                        color: 'text.secondary',
+                    }}
+                >
                     Favorite events from Plausible analytics
                 </Typography>
             </StyledChartTitle>

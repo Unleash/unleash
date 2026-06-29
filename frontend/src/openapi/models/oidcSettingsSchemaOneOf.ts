@@ -39,4 +39,6 @@ export type OidcSettingsSchemaOneOf = {
     idTokenSigningAlgorithm?: OidcSettingsSchemaOneOfIdTokenSigningAlgorithm;
     /** Shared secret from OpenID server. Used to authenticate login requests */
     secret: string;
+    /** Space-separated list of additional scopes to request during login, beyond the default `openid email profile` and `groups` if group syncing is enabled. */
+    extraScopes?: string;
 };

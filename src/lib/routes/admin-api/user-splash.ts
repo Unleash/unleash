@@ -36,6 +36,7 @@ class UserSplashController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Admin UI'],
+                    release: { stable: '4.13.0' },
                     operationId: 'updateSplashSettings',
                     summary: 'Update splash settings',
                     description:

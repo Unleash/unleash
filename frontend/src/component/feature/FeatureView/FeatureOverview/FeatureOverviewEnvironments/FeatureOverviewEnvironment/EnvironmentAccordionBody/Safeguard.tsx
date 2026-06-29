@@ -1,6 +1,18 @@
-import { useMemo, useState } from 'react';
-import { styled, Menu, MenuItem, Tooltip } from '@mui/material';
+import { useMemo, useState, type ReactNode } from 'react';
+import {
+    Box,
+    IconButton,
+    ListSubheader,
+    menuClasses,
+    styled,
+    Menu,
+    MenuItem,
+    Tooltip,
+    Typography,
+} from '@mui/material';
 import Add from '@mui/icons-material/Add';
+import HelpOutlineOutlined from '@mui/icons-material/HelpOutlineOutlined';
+import { useSearchParams } from 'react-router';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -8,7 +20,7 @@ import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useCh
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import {
-    SafeguardFormDirect,
+    SafeguardForm as SafeguardFormBase,
     type SafeguardType,
 } from '../../../ReleasePlan/SafeguardForm/SafeguardForm.tsx';
 import { SafeguardChangeRequestDialog } from '../../../ReleasePlan/SafeguardForm/SafeguardChangeRequestDialog.tsx';
@@ -24,10 +36,10 @@ import type {
     IChangeRequestDeleteFeatureEnvSafeguard,
 } from 'component/changeRequest/changeRequest.types';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import type { IReleasePlan, ISafeguard } from 'interfaces/releasePlans';
+import type { IReleasePlan } from 'interfaces/releasePlans';
+import type { ISafeguard } from 'interfaces/safeguard';
 import { strategyBackground } from 'component/common/StrategyList/StrategyListItem';
-import { useUiFlag } from 'hooks/useUiFlag';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 const StyledSafeguardContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -44,11 +56,76 @@ const StyledSafeguardContainer = styled('div')(({ theme }) => ({
 const StyledAddSafeguardContent = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    gap: theme.spacing(1),
-    justifyContent: 'space-between',
     width: '100%',
     paddingRight: theme.spacing(2),
 }));
+
+const StyledSafeguardMenu = styled(Menu)(({ theme }) => ({
+    [`& .${menuClasses.paper}`]: {
+        maxWidth: theme.spacing(45),
+    },
+}));
+
+const StyledMenuHeader = styled(ListSubheader)(({ theme }) => ({
+    padding: theme.spacing(1, 2, 0.5, 2),
+    lineHeight: 1.6,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    fontSize: theme.typography.caption.fontSize,
+    fontWeight: theme.typography.fontWeightBold,
+    color: theme.palette.text.secondary,
+    backgroundColor: 'transparent',
+}));
+
+const optionItemSx = {
+    whiteSpace: 'normal',
+    alignItems: 'flex-start',
+    py: 1.25,
+} as const;
+
+const DisabledItemWrapper = styled('li')({
+    listStyle: 'none',
+    padding: 0,
+    margin: 0,
+});
+
+const StyledOptionDescription = styled(Typography)(({ theme }) => ({
+    display: 'block',
+    marginTop: theme.spacing(0.25),
+    color: theme.palette.text.secondary,
+}));
+
+const StyledSplashTriggerButton = styled(IconButton)(({ theme }) => ({
+    color: theme.palette.action.active,
+    padding: theme.spacing(0.5),
+}));
+
+const SafeguardSplashTrigger = () => {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const { trackEvent } = useEventTracker();
+
+    const openSplash = () => {
+        trackEvent('safeguards', {
+            props: {
+                eventType: 'splash opened from feature page',
+            },
+        });
+        searchParams.set('splash', 'impact-metrics-safeguards');
+        setSearchParams(searchParams);
+    };
+
+    return (
+        <Tooltip title='Learn how safeguards work' arrow>
+            <StyledSplashTriggerButton
+                onClick={openSplash}
+                size='medium'
+                aria-label='Learn how safeguards work'
+            >
+                <HelpOutlineOutlined />
+            </StyledSplashTriggerButton>
+        </Tooltip>
+    );
+};
 
 export const AddSafeguard = ({
     onSelect,
@@ -58,46 +135,38 @@ export const AddSafeguard = ({
     releasePlan?: { id: string; name: string };
 }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const featureEnvSafeguardsEnabled = useUiFlag('featureEnvSafeguards');
-    const { trackEvent } = usePlausibleTracker();
-
-    if (!featureEnvSafeguardsEnabled && !releasePlan) return null;
+    const { trackEvent } = useEventTracker();
 
     return (
         <StyledSafeguardContainer>
             <StyledAddSafeguardContent>
                 <StyledActionButton
                     onClick={(e) => {
-                        if (featureEnvSafeguardsEnabled) {
-                            trackEvent('safeguards', {
-                                props: {
-                                    eventType: 'choose safeguard opened',
-                                },
-                            });
-                            setAnchorEl(e.currentTarget);
-                        } else {
-                            trackEvent('safeguards', {
-                                props: {
-                                    eventType: 'form opened',
-                                    safeguardType: 'releasePlan',
-                                },
-                            });
-                            onSelect('releasePlan');
-                        }
+                        trackEvent('safeguards', {
+                            props: {
+                                eventType: 'choose safeguard opened',
+                            },
+                        });
+                        setAnchorEl(e.currentTarget);
                     }}
                     color='primary'
                     startIcon={<Add />}
-                    sx={{ m: 2 }}
+                    sx={{ mt: 2, mb: 2, ml: 2, mr: 0.5 }}
                 >
                     Add safeguard
                 </StyledActionButton>
+                <SafeguardSplashTrigger />
             </StyledAddSafeguardContent>
-            <Menu
+            <StyledSafeguardMenu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={() => setAnchorEl(null)}
             >
+                <StyledMenuHeader disableSticky>
+                    Select safeguard action
+                </StyledMenuHeader>
                 <MenuItem
+                    sx={optionItemSx}
                     onClick={() => {
                         trackEvent('safeguards', {
                             props: {
@@ -109,7 +178,16 @@ export const AddSafeguard = ({
                         setAnchorEl(null);
                     }}
                 >
-                    Disable environment
+                    <Box>
+                        <Typography variant='body2'>
+                            Disable environment
+                        </Typography>
+                        <StyledOptionDescription variant='caption'>
+                            If your chosen metric crosses its threshold, this
+                            flag is turned off in this environment. Existing
+                            users stop seeing the flag immediately.
+                        </StyledOptionDescription>
+                    </Box>
                 </MenuItem>
                 <Tooltip
                     title={
@@ -120,8 +198,10 @@ export const AddSafeguard = ({
                     placement='right'
                     arrow
                 >
-                    <span>
+                    <DisabledItemWrapper>
                         <MenuItem
+                            component='div'
+                            sx={optionItemSx}
                             disabled={!releasePlan}
                             onClick={() => {
                                 trackEvent('safeguards', {
@@ -134,11 +214,20 @@ export const AddSafeguard = ({
                                 setAnchorEl(null);
                             }}
                         >
-                            Pause automation
+                            <Box>
+                                <Typography variant='body2'>
+                                    Pause release plan automation
+                                </Typography>
+                                <StyledOptionDescription variant='caption'>
+                                    If your chosen metric crosses its threshold,
+                                    automatic milestone progression stops. The
+                                    current milestone keeps serving traffic.
+                                </StyledOptionDescription>
+                            </Box>
                         </MenuItem>
-                    </span>
+                    </DisabledItemWrapper>
                 </Tooltip>
-            </Menu>
+            </StyledSafeguardMenu>
         </StyledSafeguardContainer>
     );
 };
@@ -161,7 +250,7 @@ const useSafeguardActions = ({
     onSafeguardChange: () => void;
 }) => {
     const { setToastData, setToastApiError } = useToast();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { addChange } = useChangeRequestApi();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { data: pendingChangeRequests, refetch: refetchChangeRequests } =
@@ -437,6 +526,7 @@ const SafeguardForm = ({
     featureId,
     onSafeguardChange,
     onCancel,
+    headerAction,
 }: {
     safeguardType: SafeguardType;
     releasePlan?: { id: string; name: string };
@@ -445,6 +535,7 @@ const SafeguardForm = ({
     featureId: string;
     onSafeguardChange: () => void;
     onCancel: () => void;
+    headerAction?: ReactNode;
 }) => {
     const projectId = useRequiredPathParam('projectId');
     const {
@@ -479,7 +570,7 @@ const SafeguardForm = ({
 
     return (
         <>
-            <SafeguardFormDirect
+            <SafeguardFormBase
                 safeguard={safeguard}
                 onSubmit={handleSubmit}
                 onCancel={onCancel}
@@ -488,6 +579,7 @@ const SafeguardForm = ({
                 featureId={featureId}
                 badge={safeguardBadge}
                 safeguardType={safeguardType}
+                headerAction={headerAction}
             />
             {submitChangeRequestDialog.data && (
                 <SafeguardChangeRequestDialog
@@ -574,6 +666,7 @@ export const Safeguard = ({
                             featureId={featureId}
                             onSafeguardChange={handleExistingChange}
                             onCancel={() => {}}
+                            headerAction={<SafeguardSplashTrigger />}
                         />
                     </StyledSafeguardContainer>
                 )}
@@ -587,6 +680,7 @@ export const Safeguard = ({
                             featureId={featureId}
                             onSafeguardChange={handleExistingChange}
                             onCancel={() => {}}
+                            headerAction={<SafeguardSplashTrigger />}
                         />
                     </StyledSafeguardContainer>
                 )}
@@ -625,3 +719,5 @@ export const Safeguard = ({
 
     return <AddSafeguard onSelect={setAddingType} releasePlan={releasePlan} />;
 };
+
+export default Safeguard;

@@ -21,6 +21,27 @@ const normalizeSearchValue = (value: string) =>
 const removeQuotes = (value: string) =>
     value.replaceAll("'", '').replaceAll('"', '');
 
+// Cell shape sniffing: v7 columns expose fields at the top level; v8 columns
+// (`@tanstack/react-table`) put accessors under `accessorKey`/`accessorFn` and
+// custom fields under `meta`. These getters read both, so callers can pass
+// either shape during the v7 -> v8 migration.
+const getAccessor = (column: any): unknown =>
+    column.accessorFn ?? column.accessorKey ?? column.accessor;
+const getSearchable = (column: any): boolean | undefined =>
+    column.meta?.searchable ?? column.searchable;
+const getFilterName = (column: any): string | undefined =>
+    column.meta?.filterName ?? column.filterName;
+const getFilterBy = (
+    column: any,
+): ((row: any, values: string[]) => boolean) | undefined =>
+    column.meta?.filterBy ?? column.filterBy;
+const getSearchBy = (
+    column: any,
+): ((row: any, value: string) => boolean) | undefined =>
+    column.meta?.searchBy ?? column.searchBy;
+const getFilterParsing = (column: any): ((value: any) => string) | undefined =>
+    column.meta?.filterParsing ?? column.filterParsing;
+
 export const useSearch = <T>(
     columns: any[],
     searchValue: string,
@@ -59,13 +80,15 @@ export const filter = (columns: any[], searchValue: string, data: any[]) => {
     let filteredDataSet = data;
 
     getFilterableColumns(columns)
-        .filter((column) => isValidFilter(searchValue, column.filterName))
+        .filter((column) => isValidFilter(searchValue, getFilterName(column)!))
         .forEach((column) => {
-            const values = getFilterValues(column.filterName, searchValue);
+            const filterName = getFilterName(column)!;
+            const values = getFilterValues(filterName, searchValue);
 
             filteredDataSet = filteredDataSet.filter((row) => {
-                if (column.filterBy) {
-                    return column.filterBy(row, values);
+                const filterBy = getFilterBy(column);
+                if (filterBy) {
+                    return filterBy.call(column, row, values);
                 }
 
                 return defaultFilter(getColumnValues(column, row), values);
@@ -82,13 +105,14 @@ export const searchInFilteredData = <T>(
 ) => {
     const trimmedSearchValue = searchValue.trim();
     const searchableColumns = columns.filter(
-        (column) => column.searchable && column.accessor,
+        (column) => getSearchable(column) && getAccessor(column),
     );
 
     return filteredData.filter((row) => {
         return searchableColumns.some((column) => {
-            if (column.searchBy) {
-                return column.searchBy(row, trimmedSearchValue);
+            const searchBy = getSearchBy(column);
+            if (searchBy) {
+                return searchBy.call(column, row, trimmedSearchValue);
             }
 
             return defaultSearch(
@@ -112,8 +136,8 @@ const defaultSearch = (fieldValue: string, value: string) =>
 
 export const getSearchTextGenerator = (columns: any[]) => {
     const filters = columns
-        .filter((column) => column.filterName)
-        .map((column) => column.filterName);
+        .map((column) => getFilterName(column))
+        .filter((filterName): filterName is string => Boolean(filterName));
 
     const isValidSearch = (fragment: string) => {
         return filters.some((filter) => isValidFilter(fragment, filter));
@@ -131,20 +155,24 @@ export const isValidFilter = (input: string, match: string) =>
     new RegExp(`${match}:(?:\\w+|["'][^"']+["'])`).test(input);
 
 export const getFilterableColumns = (columns: any[]) =>
-    columns.filter((column) => column.filterName && column.accessor);
+    columns.filter((column) => getFilterName(column) && getAccessor(column));
 
 export const getColumnValues = (column: any, row: any) => {
+    const accessor = getAccessor(column);
     const value =
-        typeof column.accessor === 'function'
-            ? column.accessor(row)
-            : column.accessor.includes('.')
-              ? column.accessor
+        typeof accessor === 'function'
+            ? accessor(row)
+            : typeof accessor === 'string' && accessor.includes('.')
+              ? accessor
                     .split('.')
                     .reduce((object: any, key: string) => object?.[key], row)
-              : row[column.accessor];
+              : typeof accessor === 'string'
+                ? row[accessor]
+                : undefined;
 
-    if (column.filterParsing) {
-        return column.filterParsing(value);
+    const filterParsing = getFilterParsing(column);
+    if (filterParsing) {
+        return filterParsing(value);
     }
 
     return value;

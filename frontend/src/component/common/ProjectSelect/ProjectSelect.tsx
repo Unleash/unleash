@@ -3,7 +3,7 @@ import {
     type ComponentProps,
     type Dispatch,
     type SetStateAction,
-    type VFC,
+    type FC,
 } from 'react';
 import { Autocomplete, Chip, type SxProps, TextField } from '@mui/material';
 import { renderOption } from 'component/playground/Playground/PlaygroundForm/renderOption';
@@ -37,7 +37,7 @@ function findAllIndexes(arr: string[], name: string): number[] {
     return indexes;
 }
 
-export const ProjectSelect: VFC<IProjectSelectProps> = forwardRef(
+export const ProjectSelect: FC<IProjectSelectProps> = forwardRef(
     (
         {
             limitTags,
@@ -125,20 +125,22 @@ export const ProjectSelect: VFC<IProjectSelectProps> = forwardRef(
                 }
                 onChange={onProjectsChange}
                 data-testid={dataTestId ? dataTestId : 'PROJECT_SELECT'}
-                renderTags={(value, getTagProps) => {
+                renderValue={(value, getItemProps) => {
+                    if (!Array.isArray(value)) {
+                        return value.label;
+                    }
                     const numTags = value.length;
 
                     return (
                         <>
                             {value.slice(0, limitTags).map((option, index) => (
                                 <Chip
-                                    {...getTagProps({ index })}
+                                    {...getItemProps({ index })}
                                     size='small'
                                     key={index}
                                     label={option.label}
                                 />
                             ))}
-
                             {numTags > limitTags && ` +${numTags - limitTags}`}
                         </>
                     );

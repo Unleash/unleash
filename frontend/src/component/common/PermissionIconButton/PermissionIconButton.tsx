@@ -1,7 +1,7 @@
 import { IconButton, type IconButtonProps } from '@mui/material';
 import type React from 'react';
 import type { ReactNode } from 'react';
-import type { Link } from 'react-router-dom';
+import type { Link } from 'react-router';
 import {
     type ITooltipResolverProps,
     TooltipResolver,
@@ -26,6 +26,7 @@ interface IPermissionIconButtonProps {
     tooltipProps?: Omit<ITooltipResolverProps, 'children'>;
     sx?: IconButtonProps['sx'];
     size?: 'small' | 'medium' | 'large';
+    nativeButton?: boolean;
 }
 
 interface IButtonProps extends IPermissionIconButtonProps {
@@ -87,7 +88,6 @@ const BasePermissionIconButton = ({
                     {...rest}
                     disabled={!access || disabled}
                     aria-labelledby={id}
-                    size={rest.size || 'large'}
                 >
                     {children}
                 </IconButton>

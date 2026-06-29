@@ -31,6 +31,11 @@ beforeAll(async () => {
     app = await setupAppWithAuth(
         db.stores,
         {
+            experimental: {
+                flags: {
+                    allowDeprecatedApiTokenMiddleware: true,
+                },
+            },
             frontendApiOrigins: ['https://example.com'],
         },
         db.rawDatabase,
@@ -1299,7 +1304,7 @@ test('should accept impact metrics in frontend API metrics endpoint', async () =
             frontendApiOrigins: ['https://example.com'],
             experimental: {
                 flags: {
-                    impactMetrics: true,
+                    disableImpactMetrics: false,
                 },
             },
         },
@@ -1341,7 +1346,7 @@ test('should accept impact metrics in frontend API metrics endpoint', async () =
         .expect(200);
 
     expect(response.text).toMatch(
-        /unleash_counter_frontend_counter{unleash_source="frontend",unleash_origin="sdk"} 5/,
+        /frontend_counter{origin="sdk",metric_type="counter",source="frontend"} 5/,
     );
 
     await localApp.destroy();

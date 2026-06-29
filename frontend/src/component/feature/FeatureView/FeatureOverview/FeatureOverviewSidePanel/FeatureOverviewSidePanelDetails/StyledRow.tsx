@@ -1,6 +1,6 @@
 import { styled } from '@mui/material';
 import { textTruncated } from 'themes/themeStyles';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 export const FlexRow = styled('div')({
     display: 'flex',

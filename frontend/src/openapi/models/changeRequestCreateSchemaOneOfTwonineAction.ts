@@ -12,5 +12,5 @@ export type ChangeRequestCreateSchemaOneOfTwonineAction =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestCreateSchemaOneOfTwonineAction = {
-    startMilestone: 'startMilestone',
+    addReleasePlan: 'addReleasePlan',
 } as const;

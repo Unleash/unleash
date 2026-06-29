@@ -1,0 +1,280 @@
+import { screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
+import { render } from 'utils/testRenderer';
+import { ImpactMetricModal } from './ImpactMetricModal.tsx';
+import type { ChartConfig } from '../types.ts';
+
+vi.mock('../ImpactMetricsChart.tsx', () => ({
+    ImpactMetricsChart: () => null,
+}));
+
+const server = testServerSetup();
+
+const externalMetricSeries = [
+    {
+        name: 'my_external_metric',
+        displayName: 'my_external_metric',
+        help: 'A custom external metric',
+        source: 'external' as const,
+    },
+];
+
+const baseChartConfig: Omit<ChartConfig, 'metricName' | 'source'> = {
+    id: 'chart-1',
+    timeRange: 'day',
+    yAxisMin: 'auto',
+    aggregationMode: 'count',
+    labelSelectors: {},
+};
+
+const mixedMetricSeries = [
+    {
+        name: 'unleash_counter_flag_exposure',
+        displayName: 'unleash_counter_flag_exposure',
+        help: 'A built-in Unleash metric',
+        source: 'internal' as const,
+    },
+    {
+        name: 'shared_metric',
+        displayName: 'shared_metric (internal)',
+        help: 'Internal shared metric',
+        source: 'internal' as const,
+    },
+    {
+        name: 'my_external_metric',
+        displayName: 'my_external_metric',
+        help: 'A custom external metric',
+        source: 'external' as const,
+    },
+    {
+        name: 'shared_metric',
+        displayName: 'shared_metric (external)',
+        help: 'External shared metric',
+        source: 'external' as const,
+    },
+];
+
+const setupServerRoutes = (
+    labels: Record<string, string[]> = {
+        my_custom_label: ['value1', 'value2'],
+        metric_type: ['counter'],
+    },
+) => {
+    testServerRoute(server, '/api/admin/ui-config', {
+        versionInfo: {
+            current: { oss: 'version', enterprise: 'version' },
+        },
+        flags: {},
+    });
+    testServerRoute(server, '/api/admin/impact-metrics/', {
+        series: [],
+        labels,
+    });
+};
+
+beforeEach(() => {
+    setupServerRoutes();
+});
+
+describe('ImpactMetricModal', () => {
+    test('creates a new external metric chart with a custom label selection', async () => {
+        const user = userEvent.setup();
+        const onSave = vi.fn();
+        const onClose = vi.fn();
+
+        render(
+            <ImpactMetricModal
+                open
+                onClose={onClose}
+                onSave={onSave}
+                metrics={externalMetricSeries}
+            />,
+        );
+
+        await screen.findByRole('heading', { name: 'Add impact metric' });
+
+        const metricInput = screen.getByLabelText(/metric name/i);
+        await user.click(metricInput);
+        const metricOption = await screen.findByRole('option', {
+            name: /my_external_metric/i,
+        });
+        await user.click(metricOption);
+
+        const labelInput = await screen.findByLabelText('my_custom_label');
+        await user.click(labelInput);
+        const labelOption = await screen.findByRole('option', {
+            name: 'value1',
+        });
+        await user.click(labelOption);
+
+        const submitButton = await screen.findByRole('button', {
+            name: 'Add impact metric',
+        });
+        await user.click(submitButton);
+
+        await waitFor(() => {
+            expect(onSave).toHaveBeenCalledTimes(1);
+        });
+        expect(onSave).toHaveBeenCalledWith({
+            title: undefined,
+            metricName: 'my_external_metric',
+            timeRange: 'day',
+            yAxisMin: 'auto',
+            aggregationMode: 'count',
+            labelSelectors: { my_custom_label: ['value1'] },
+            source: 'external',
+        });
+        expect(onClose).toHaveBeenCalled();
+    });
+
+    test('groups metric options by source with section headers', async () => {
+        const user = userEvent.setup();
+
+        render(
+            <ImpactMetricModal
+                open
+                onClose={vi.fn()}
+                onSave={vi.fn()}
+                metrics={mixedMetricSeries}
+            />,
+        );
+
+        await screen.findByRole('heading', { name: 'Add impact metric' });
+
+        const metricInput = screen.getByLabelText(/metric name/i);
+        await user.click(metricInput);
+
+        expect(await screen.findByText('Internal metrics')).toBeInTheDocument();
+        expect(await screen.findByText('External metrics')).toBeInTheDocument();
+    });
+
+    test('appends an orphan external metric to the end of the options', async () => {
+        const user = userEvent.setup();
+        const initialConfig: ChartConfig = {
+            ...baseChartConfig,
+            metricName: 'orphan_external_metric',
+            source: 'external',
+        };
+
+        render(
+            <ImpactMetricModal
+                open
+                onClose={vi.fn()}
+                onSave={vi.fn()}
+                metrics={mixedMetricSeries}
+                initialConfig={initialConfig}
+            />,
+        );
+
+        await screen.findByRole('heading', { name: 'Edit impact metric' });
+
+        const metricInput = screen.getByLabelText(/metric name/i);
+        await user.click(metricInput);
+
+        const optionNames = (await screen.findAllByRole('option')).map(
+            (o) => o.textContent,
+        );
+        expect(optionNames[optionNames.length - 1]).toContain(
+            'orphan_external_metric',
+        );
+    });
+
+    test('prepends an orphan internal metric to the beginning of the options', async () => {
+        const user = userEvent.setup();
+        const initialConfig: ChartConfig = {
+            ...baseChartConfig,
+            metricName: 'orphan_internal_metric',
+            source: 'internal',
+        };
+
+        render(
+            <ImpactMetricModal
+                open
+                onClose={vi.fn()}
+                onSave={vi.fn()}
+                metrics={mixedMetricSeries}
+                initialConfig={initialConfig}
+            />,
+        );
+
+        await screen.findByRole('heading', { name: 'Edit impact metric' });
+
+        const metricInput = screen.getByLabelText(/metric name/i);
+        await user.click(metricInput);
+
+        const optionNames = (await screen.findAllByRole('option')).map(
+            (o) => o.textContent,
+        );
+        expect(optionNames[0]).toContain('orphan_internal_metric');
+    });
+
+    test('selects the correct option when name is shared across sources', async () => {
+        const initialConfig: ChartConfig = {
+            ...baseChartConfig,
+            metricName: 'shared_metric',
+            source: 'external',
+        };
+
+        render(
+            <ImpactMetricModal
+                open
+                onClose={vi.fn()}
+                onSave={vi.fn()}
+                metrics={mixedMetricSeries}
+                initialConfig={initialConfig}
+            />,
+        );
+
+        await screen.findByRole('heading', { name: 'Edit impact metric' });
+
+        expect(
+            screen.getByDisplayValue('shared_metric (external)'),
+        ).toBeInTheDocument();
+    });
+
+    test('prefills the form when editing an existing external metric chart', async () => {
+        const initialConfig: ChartConfig = {
+            id: 'chart-1',
+            title: 'My existing chart',
+            metricName: 'my_external_metric',
+            timeRange: 'week',
+            yAxisMin: 'zero',
+            aggregationMode: 'rps',
+            labelSelectors: { my_custom_label: ['value1'] },
+            source: 'external',
+        };
+
+        render(
+            <ImpactMetricModal
+                open
+                onClose={vi.fn()}
+                onSave={vi.fn()}
+                metrics={externalMetricSeries}
+                initialConfig={initialConfig}
+            />,
+        );
+
+        await screen.findByRole('heading', { name: 'Edit impact metric' });
+        await screen.findByRole('button', { name: 'Update' });
+
+        expect(
+            screen.getByDisplayValue('My existing chart'),
+        ).toBeInTheDocument();
+        expect(
+            screen.getByDisplayValue('my_external_metric'),
+        ).toBeInTheDocument();
+
+        await screen.findByLabelText('my_custom_label');
+        expect(screen.getByText('value1')).toBeInTheDocument();
+
+        expect(screen.getByText('Last 7 days')).toBeInTheDocument();
+        expect(screen.getByText('Rate per second')).toBeInTheDocument();
+
+        const beginAtZero = screen.getByRole('checkbox', {
+            name: /begin at zero/i,
+        });
+        expect(beginAtZero).toBeChecked();
+    });
+});

@@ -60,6 +60,7 @@ test('process metrics properly', async () => {
         .fn<() => Promise<string[]>>()
         .mockResolvedValue(['myCoolToggle', 'myOtherToggle']);
 
+    const environment = 'test';
     await clientMetricsService.registerClientMetrics(
         {
             appName: 'test',
@@ -82,9 +83,9 @@ test('process metrics properly', async () => {
                     },
                 },
             },
-            environment: 'test',
         },
         '127.0.0.1',
+        environment,
     );
 
     expect(eventBus.emit).toHaveBeenCalledTimes(1);
@@ -94,6 +95,7 @@ test('process metrics properly', async () => {
 test('process metrics properly even when some names are not url friendly, filtering out invalid names when flag is on', async () => {
     const { clientMetricsService, eventBus, lastSeenService } =
         initClientMetrics();
+    const environment = 'test';
     await clientMetricsService.registerClientMetrics(
         {
             appName: 'test',
@@ -107,9 +109,9 @@ test('process metrics properly even when some names are not url friendly, filter
                     },
                 },
             },
-            environment: 'test',
         },
         '127.0.0.1',
+        environment,
     );
 
     // only toggle with a bad name gets filtered out

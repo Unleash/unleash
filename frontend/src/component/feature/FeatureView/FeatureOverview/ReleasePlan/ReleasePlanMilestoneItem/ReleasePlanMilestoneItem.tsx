@@ -9,10 +9,8 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { calculateMilestoneStatus } from './milestoneStatusUtils.js';
 import { MilestoneAutomation } from './MilestoneAutomation.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { useEventTracker } from 'hooks/useEventTracker.ts';
 import { ProjectEnvironmentStrategyDraggableItem } from '../../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/ProjectEnvironmentStrategyDraggableItem.tsx';
-import { StrategyItem } from '../../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyItem.tsx';
 
 const StyledConnection = styled('div', {
     shouldForwardProp: (prop) => prop !== 'isCompleted',
@@ -39,7 +37,6 @@ export interface IReleasePlanMilestoneItemProps {
     activeIndex: number;
     environmentIsDisabled?: boolean;
     readonly?: boolean;
-    milestoneProgressionsEnabled: boolean;
     progressionFormOpenIndex: number | null;
     onSetProgressionFormOpenIndex: (index: number | null) => void;
     onStartMilestone?: (milestone: IReleasePlanMilestone) => void;
@@ -75,7 +72,6 @@ export const ReleasePlanMilestoneItem = ({
     activeIndex,
     environmentIsDisabled,
     readonly,
-    milestoneProgressionsEnabled,
     progressionFormOpenIndex,
     onSetProgressionFormOpenIndex,
     onStartMilestone,
@@ -90,8 +86,7 @@ export const ReleasePlanMilestoneItem = ({
     const { changeMilestoneProgression } = useMilestoneProgressionsApi();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { setToastData, setToastApiError } = useToast();
-    const { trackEvent } = usePlausibleTracker();
-    const canEditStrategies = useUiFlag('updateMilestoneStrategy');
+    const { trackEvent } = useEventTracker();
 
     const isNotLastMilestone = index < milestones.length - 1;
     const isProgressionFormOpen = progressionFormOpenIndex === index;
@@ -168,15 +163,13 @@ export const ReleasePlanMilestoneItem = ({
     const pendingProgressionChange = getPendingProgressionChange(milestone.id);
     const effectiveTransitionCondition = milestone.transitionCondition;
 
-    const shouldShowAutomation =
-        isNotLastMilestone && milestoneProgressionsEnabled && !readonly;
+    const shouldShowAutomation = isNotLastMilestone && !readonly;
 
     const automationSection = shouldShowAutomation ? (
         <MilestoneAutomation
             milestone={milestone}
             milestones={milestones}
             status={status}
-            milestoneProgressionsEnabled={milestoneProgressionsEnabled}
             readonly={readonly}
             isProgressionFormOpen={isProgressionFormOpen}
             effectiveTransitionCondition={effectiveTransitionCondition}
@@ -189,29 +182,19 @@ export const ReleasePlanMilestoneItem = ({
         />
     ) : undefined;
 
-    const renderStrategy = canEditStrategies
-        ? (strategy, strategyIndex) => (
-              <ProjectEnvironmentStrategyDraggableItem
-                  readonly={readonly}
-                  scope='milestone'
-                  featureId={featureName}
-                  strategy={{
-                      ...strategy,
-                      name: strategy.name || strategy.strategyName || '',
-                  }}
-                  index={strategyIndex}
-                  environmentName={environment}
-              />
-          )
-        : (strategy) => (
-              <StrategyItem
-                  strategyHeaderLevel={4}
-                  strategy={{
-                      ...strategy,
-                      name: strategy.name || strategy.strategyName || '',
-                  }}
-              />
-          );
+    const renderStrategy = (strategy, strategyIndex) => (
+        <ProjectEnvironmentStrategyDraggableItem
+            readonly={readonly}
+            scope='milestone'
+            featureId={featureName}
+            strategy={{
+                ...strategy,
+                name: strategy.name || strategy.strategyName || '',
+            }}
+            index={strategyIndex}
+            environmentName={environment}
+        />
+    );
 
     return (
         <div key={milestone.id}>

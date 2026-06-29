@@ -63,8 +63,13 @@ export const CorsForm = ({ frontendApiOrigins }: ICorsFormProps) => {
                     rows={12}
                     variant='outlined'
                     fullWidth
-                    InputProps={{
-                        style: { fontFamily: 'monospace', fontSize: '0.8em' },
+                    slotProps={{
+                        input: {
+                            style: {
+                                fontFamily: 'monospace',
+                                fontSize: '0.8em',
+                            },
+                        },
                     }}
                 />
                 <UpdateButton permission={[ADMIN, UPDATE_CORS]} />

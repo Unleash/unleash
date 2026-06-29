@@ -55,6 +55,7 @@ class UiConfigController extends Controller {
                     summary: 'Get UI configuration',
                     description:
                         'Retrieves the full configuration used to set up the Unleash Admin UI.',
+                    release: { stable: '4.15.0' },
                     operationId: 'getUiConfig',
                     responses: {
                         200: createResponseSchema('uiConfigSchema'),
@@ -74,6 +75,7 @@ class UiConfigController extends Controller {
                     summary: 'Sets allowed CORS origins',
                     description:
                         'Sets Cross-Origin Resource Sharing headers for Frontend SDK API.',
+                    release: { stable: '6.6.0' },
                     operationId: 'setCors',
                     requestBody: createRequestSchema('setCorsSchema'),
                     responses: { 204: emptyResponse },

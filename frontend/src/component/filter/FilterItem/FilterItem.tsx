@@ -194,12 +194,14 @@ export const FilterItem: FC<IFilterItemProps> = ({
                         onChange={(event) => setSearchText(event.target.value)}
                         placeholder='Search'
                         autoFocus
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position='start'>
-                                    <Search fontSize='small' />
-                                </InputAdornment>
-                            ),
+                        slotProps={{
+                            input: {
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                        <Search fontSize='small' />
+                                    </InputAdornment>
+                                ),
+                            },
                         }}
                         inputRef={(el) => {
                             listRefs.current[0] = el;
@@ -234,11 +236,12 @@ export const FilterItem: FC<IFilterItemProps> = ({
                                             ) ?? false
                                         }
                                         tabIndex={-1}
-                                        inputProps={{
-                                            'aria-labelledby': labelId,
+                                        slotProps={{
+                                            input: {
+                                                'aria-labelledby': labelId,
+                                            },
                                         }}
                                         size='small'
-                                        disableRipple
                                     />
                                     <ListItemText
                                         id={labelId}

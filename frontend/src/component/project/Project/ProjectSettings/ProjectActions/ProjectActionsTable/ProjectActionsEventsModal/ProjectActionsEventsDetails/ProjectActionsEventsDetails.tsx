@@ -2,7 +2,7 @@ import { Alert, styled } from '@mui/material';
 import type { IActionSetEvent } from 'interfaces/action';
 import { ProjectActionsEventsDetailsAction } from './ProjectActionsEventsDetailsAction.tsx';
 import { ProjectActionsEventsDetailsSource } from './ProjectActionsEventsDetailsSource/ProjectActionsEventsDetailsSource.tsx';
-import CheckCircleOutline from '@mui/icons-material/CheckCircleOutline';
+import CheckCircleOutline from '@mui/icons-material/CheckCircleOutlineOutlined';
 
 const StyledDetails = styled('div')(({ theme }) => ({
     display: 'flex',

@@ -12,7 +12,7 @@ import {
 import FileDownload from '@mui/icons-material/FileDownload';
 import type { EventSchema } from 'openapi';
 import { json2csv } from 'json-2-csv';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 const StyledActions = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -30,7 +30,7 @@ interface IEventActions {
 
 export const EventActions: FC<IEventActions> = ({ events }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {

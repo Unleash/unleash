@@ -45,7 +45,7 @@ test('Using custom auth type without defining custom middleware causes default D
         .expect(401)
         .expect((res) => {
             expect(res.body.error).toBe(
-                'You have to configure a custom authentication middleware. Read https://docs.getunleash.io/docs/reference/deploy/configuring-unleash for more details',
+                'You have to configure a custom authentication middleware. Read https://docs.getunleash.io/deploy/configuring-unleash for more details',
             );
         });
     await destroy();

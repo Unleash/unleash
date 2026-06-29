@@ -393,7 +393,7 @@ export default class ExportImportService
                 const feature = dto.data.features.find(
                     (feature) => feature.name === dependency.feature,
                 );
-                if (!feature || !feature.project) {
+                if (!feature?.project) {
                     return [];
                 }
 
@@ -997,7 +997,7 @@ export default class ExportImportService
 
         const result = {
             features: features.map((item) => {
-                const { createdAt, archivedAt, lastSeenAt, ...rest } = item;
+                const { createdAt, archivedAt, ...rest } = item;
                 return rest;
             }),
             featureStrategies: featureStrategies.map((item) => {

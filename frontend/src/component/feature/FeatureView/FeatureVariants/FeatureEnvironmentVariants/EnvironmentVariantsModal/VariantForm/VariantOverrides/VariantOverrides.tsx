@@ -1,4 +1,4 @@
-import type { ChangeEvent, VFC } from 'react';
+import type { ChangeEvent, FC } from 'react';
 import { IconButton, styled, TextField, Tooltip } from '@mui/material';
 import Delete from '@mui/icons-material/Delete';
 import { Autocomplete } from '@mui/material';
@@ -49,7 +49,7 @@ interface IOverrideConfigProps {
     overridesDispatch: OverridesDispatchType;
 }
 
-export const OverrideConfig: VFC<IOverrideConfigProps> = ({
+export const OverrideConfig: FC<IOverrideConfigProps> = ({
     overrides,
     overridesDispatch,
 }) => {

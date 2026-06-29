@@ -1,3 +1,4 @@
+import { expect, it } from 'vitest';
 import { aggregateCreationArchiveData } from './aggregateCreationArchiveData.ts';
 
 it('yields empty weeks as `state: empty`', () => {

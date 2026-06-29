@@ -78,6 +78,14 @@ export class FrontendApiService {
         this.globalFrontendApiCache = globalFrontendApiCache;
     }
 
+    isCacheReady(): boolean {
+        return this.globalFrontendApiCache.isReady();
+    }
+
+    async waitForCacheReady(): Promise<void> {
+        return this.globalFrontendApiCache.readyPromise;
+    }
+
     async getFrontendApiFeatures(
         token: IApiUser,
         context: Context,
@@ -125,15 +133,14 @@ export class FrontendApiService {
         const environment =
             this.services.clientMetricsServiceV2.resolveMetricsEnvironment(
                 token as ApiUser,
-                metrics,
             );
 
         await this.services.clientMetricsServiceV2.registerClientMetrics(
             {
                 ...metrics,
-                environment,
             },
             ip,
+            environment,
         );
 
         // Because we're keeping impact metrics out of the client schema for now,
@@ -143,10 +150,7 @@ export class FrontendApiService {
             impactMetrics?: Metric[];
         };
 
-        if (
-            this.config.flagResolver.isEnabled('impactMetrics') &&
-            impactMetrics
-        ) {
+        if (impactMetrics) {
             await this.services.clientMetricsServiceV2.registerImpactMetrics(
                 impactMetrics as Metric[],
             );

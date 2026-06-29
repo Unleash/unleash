@@ -6,7 +6,7 @@ import useFeatureLifecycleApi from 'hooks/api/actions/useFeatureLifecycleApi/use
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SingleVariantOptions } from './SingleVariantOptions.tsx';
 import { useParentVariantOptions } from 'hooks/api/getters/useFeatureDependencyOptions/useFeatureDependencyOptions';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 interface IMarkCompletedDialogueProps {
     isOpen: boolean;
@@ -33,7 +33,7 @@ export const MarkCompletedDialogue = ({
     const [status, setStatus] = useState<Status>('kept');
     const [variant, setVariant] = useState<string | undefined>(undefined);
 
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const onClick = async () => {
         const sentStatus = status === 'kept-with-variant' ? 'kept' : status;

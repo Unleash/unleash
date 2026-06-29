@@ -3,7 +3,7 @@ import Edit from '@mui/icons-material/Edit';
 import { Box, styled } from '@mui/material';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
-import type { VFC } from 'react';
+import type { FC } from 'react';
 
 const StyledBox = styled(Box)(() => ({
     display: 'flex',
@@ -15,7 +15,7 @@ interface IServiceAccountsActionsCellProps {
     onDelete: (event: React.SyntheticEvent) => void;
 }
 
-export const ServiceAccountsActionsCell: VFC<
+export const ServiceAccountsActionsCell: FC<
     IServiceAccountsActionsCellProps
 > = ({ onEdit, onDelete }) => {
     return (

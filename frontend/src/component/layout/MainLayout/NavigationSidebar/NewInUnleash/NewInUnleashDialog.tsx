@@ -12,7 +12,7 @@ import {
     Typography,
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import type { FC, ReactNode } from 'react';
 import Close from '@mui/icons-material/Close';
 
@@ -193,9 +193,9 @@ export const NewInUnleashDialog: FC<NewInUnleashDialogProps> = ({
                             onClose();
                             e.stopPropagation();
                         }}
-                        size='small'
+                        size='medium'
                     >
-                        <Close fontSize='inherit' />
+                        <Close />
                     </StyledItemButtonClose>
                 </Tooltip>
 

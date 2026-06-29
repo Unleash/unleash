@@ -8,7 +8,7 @@ import { ValuesList } from '../ValuesList/ValuesList.tsx';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatConstraintValue } from 'utils/formatConstraintValue';
 import { useConstraintTooltips } from './hooks/useConstraintTooltips.ts';
-import { ReactComponent as CaseSensitiveIcon } from 'assets/icons/case-sensitive.svg';
+import CaseSensitiveIcon from 'assets/icons/case-sensitive.svg?react';
 import { isCaseSensitive } from './isCaseSensitive.ts';
 import { formatOperatorDescription } from 'utils/formatOperatorDescription.ts';
 

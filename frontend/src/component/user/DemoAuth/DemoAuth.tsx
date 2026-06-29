@@ -2,25 +2,31 @@ import {
     type ChangeEventHandler,
     type FormEventHandler,
     useState,
-    type VFC,
+    type FC,
 } from 'react';
-import { Button, TextField } from '@mui/material';
+import { Button, styled, TextField } from '@mui/material';
 import styles from './DemoAuth.module.scss';
-import { ReactComponent as Logo } from 'assets/img/logo.svg';
+import Logo from 'assets/img/logo.svg?react';
 import { LOGIN_BUTTON, LOGIN_EMAIL_ID } from 'utils/testIds';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useAuthApi } from 'hooks/api/actions/useAuthApi/useAuthApi';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import type { IAuthEndpointDetailsResponse } from 'hooks/api/getters/useAuth/useAuthEndpoint';
 
+const StyledForm = styled('form')({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+});
+
 interface IDemoAuthProps {
     authDetails: IAuthEndpointDetailsResponse;
     redirect: string;
 }
 
-const DemoAuth: VFC<IDemoAuthProps> = ({ authDetails, redirect }) => {
+const DemoAuth: FC<IDemoAuthProps> = ({ authDetails, redirect }) => {
     const [email, setEmail] = useState('');
     const navigate = useNavigate();
     const { refetchUser } = useAuthUser();
@@ -45,7 +51,7 @@ const DemoAuth: VFC<IDemoAuthProps> = ({ authDetails, redirect }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <StyledForm onSubmit={handleSubmit}>
             <Logo className={styles.logo} aria-label='Unleash logo' />
             <div className={styles.container}>
                 <h2>Access the Unleash demo instance</h2>
@@ -59,7 +65,6 @@ const DemoAuth: VFC<IDemoAuthProps> = ({ authDetails, redirect }) => {
                         value={email}
                         className={styles.emailField}
                         onChange={handleChange}
-                        inputProps={{ 'data-testid': 'email-input-field' }}
                         size='small'
                         variant='outlined'
                         label='Email'
@@ -68,6 +73,9 @@ const DemoAuth: VFC<IDemoAuthProps> = ({ authDetails, redirect }) => {
                         data-testid={LOGIN_EMAIL_ID}
                         required
                         type={email === 'admin' ? 'text' : 'email'}
+                        slotProps={{
+                            htmlInput: { 'data-testid': 'email-input-field' },
+                        }}
                     />
 
                     <Button
@@ -100,7 +108,7 @@ const DemoAuth: VFC<IDemoAuthProps> = ({ authDetails, redirect }) => {
                     </a>
                 </p>
             </div>
-        </form>
+        </StyledForm>
     );
 };
 

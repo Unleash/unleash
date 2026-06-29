@@ -12,15 +12,33 @@ interface IStickyProviderProps {
 }
 
 export const StickyProvider = ({ children }: IStickyProviderProps) => {
-    const [stickyItems, setStickyItems] = useState<RefObject<HTMLDivElement>[]>(
+    const [stickyItems, setStickyItems] = useState<
+        RefObject<HTMLDivElement | null>[]
+    >([]);
+    const [resizeListeners, setResizeListeners] = useState(
+        new Set<RefObject<HTMLDivElement | null>>(),
+    );
+
+    const registerResizeListener = useCallback(
+        (ref: RefObject<HTMLDivElement | null>) => {
+            setResizeListeners((prev) => new Set(prev).add(ref));
+        },
         [],
     );
-    const [resizeListeners, setResizeListeners] = useState(
-        new Set<RefObject<HTMLDivElement>>(),
+
+    const unregisterResizeListener = useCallback(
+        (ref: RefObject<HTMLDivElement | null>) => {
+            setResizeListeners((prev) => {
+                const newListeners = new Set(prev);
+                newListeners.delete(ref);
+                return newListeners;
+            });
+        },
+        [],
     );
 
     const registerStickyItem = useCallback(
-        (item: RefObject<HTMLDivElement>) => {
+        (item: RefObject<HTMLDivElement | null>) => {
             setStickyItems((prevItems) => {
                 // We should only register a new item if it is not already registered
                 if (!prevItems.includes(item)) {
@@ -45,37 +63,19 @@ export const StickyProvider = ({ children }: IStickyProviderProps) => {
                 return prevItems;
             });
         },
-        [],
+        [registerResizeListener],
     );
 
     const unregisterStickyItem = useCallback(
-        (ref: RefObject<HTMLDivElement>) => {
+        (ref: RefObject<HTMLDivElement | null>) => {
             unregisterResizeListener(ref);
             setStickyItems((prev) => prev.filter((item) => item !== ref));
         },
-        [],
-    );
-
-    const registerResizeListener = useCallback(
-        (ref: RefObject<HTMLDivElement>) => {
-            setResizeListeners((prev) => new Set(prev).add(ref));
-        },
-        [],
-    );
-
-    const unregisterResizeListener = useCallback(
-        (ref: RefObject<HTMLDivElement>) => {
-            setResizeListeners((prev) => {
-                const newListeners = new Set(prev);
-                newListeners.delete(ref);
-                return newListeners;
-            });
-        },
-        [],
+        [unregisterResizeListener],
     );
 
     const getTopOffset = useCallback(
-        (ref: RefObject<HTMLDivElement>) => {
+        (ref: RefObject<HTMLDivElement | null>) => {
             if (!stickyItems.some((item) => item === ref)) {
                 // Return 0 in case the item is not registered yet
                 return 0;

@@ -16,7 +16,7 @@ import { Alert } from '@mui/material';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { AUTH_PAGE_ID } from 'utils/testIds';
 import { type ReactElement, useEffect } from 'react';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { setSessionStorageItem } from 'utils/storage';
 
 interface IAuthenticationProps {
@@ -31,7 +31,7 @@ const Authentication = ({
     const { authDetails } = useAuthDetails();
     const params = useQueryParams();
     const error = params.get('errorMsg');
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     useEffect(() => {
         if (redirect) {

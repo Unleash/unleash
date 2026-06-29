@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { featureLinkSchema } from './feature-link-schema.js';
+import { linkSchema } from './link-schema.js';
 
 export const featureLinksSchema = {
     $id: '#/components/schemas/featureLinksSchema',
@@ -17,13 +17,13 @@ export const featureLinksSchema = {
             type: 'array',
             description: 'List of feature links',
             items: {
-                $ref: '#/components/schemas/featureLinkSchema',
+                $ref: '#/components/schemas/linkSchema',
             },
         },
     },
     components: {
         schemas: {
-            featureLinkSchema,
+            linkSchema,
         },
     },
 } as const;

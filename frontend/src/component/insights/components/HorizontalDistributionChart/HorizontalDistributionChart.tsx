@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { Box, styled } from '@mui/material';
 
 type DistributionLineTypes = 'default' | 'success' | 'warning' | 'error';
@@ -22,7 +22,7 @@ const StyledDistributionLine = styled(Box)<{
     };
 });
 
-export const HorizontalDistributionChart: VFC<{
+export const HorizontalDistributionChart: FC<{
     sections: Array<{ type: DistributionLineTypes; value: number }>;
     size?: 'large' | 'small';
 }> = ({ sections, size }) => (

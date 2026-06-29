@@ -1,11 +1,20 @@
+import { beforeEach, expect, test } from 'vitest';
 import { render } from 'utils/testRenderer';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import { ProjectFeatureToggles } from './ProjectFeatureToggles.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { BATCH_SELECTED_COUNT } from 'utils/testIds';
+import {
+    DELETE_FEATURE,
+    UPDATE_FEATURE,
+} from 'component/providers/AccessProvider/permissions';
 
 const server = testServerSetup();
+
+beforeEach(() => {
+    localStorage.clear();
+});
 
 const setupApi = () => {
     const features = [
@@ -205,9 +214,7 @@ test('Project is onboarded', async () => {
             route: `/projects/${projectId}`,
         },
     );
-    expect(
-        screen.queryByText('Welcome to your project'),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText('Project setup')).not.toBeInTheDocument();
 }, 10000);
 
 test('Project is not onboarded', async () => {
@@ -229,7 +236,7 @@ test('Project is not onboarded', async () => {
             route: `/projects/${projectId}`,
         },
     );
-    await screen.findByText('Welcome to your project');
+    await screen.findByText('Project setup');
 }, 10000);
 
 test('renders lifecycle quick filters', async () => {
@@ -255,6 +262,27 @@ test('renders lifecycle quick filters', async () => {
     await screen.findByText(/Develop/);
     await screen.findByText(/Rollout production/);
     await screen.findByText(/Cleanup/);
+}, 10000);
+
+test('shows onboarding steps when flag is enabled and project is not onboarded', async () => {
+    const projectId = 'default';
+    setupApi();
+    testServerRoute(server, '/api/admin/ui-config', {
+        flags: { flagCreator: true },
+    });
+    testServerRoute(server, '/api/admin/projects/default/overview', {
+        onboardingStatus: { status: 'onboarding-started' },
+    });
+    render(
+        <Routes>
+            <Route
+                path={'/projects/:projectId'}
+                element={<ProjectFeatureToggles environments={[]} />}
+            />
+        </Routes>,
+        { route: `/projects/${projectId}` },
+    );
+    await screen.findByText('Project setup');
 }, 10000);
 
 test('clears lifecycle filter when switching to archived view', async () => {
@@ -291,4 +319,92 @@ test('clears lifecycle filter when switching to archived view', async () => {
 
     expect(window.location.href).not.toContain('lifecycle=IS%3Alive');
     expect(window.location.href).toContain('archived=IS%3Atrue');
+}, 10000);
+
+test('shows revive and delete actions for archived flags', async () => {
+    setupApi();
+    testServerRoute(server, '/api/admin/search/features', {
+        features: [
+            {
+                name: 'activeFeature',
+                type: 'release',
+                createdBy: { id: 1, name: 'author' },
+            },
+            {
+                name: 'archivedFeature',
+                type: 'release',
+                archivedAt: '2024-01-01T00:00:00.000Z',
+                createdBy: { id: 1, name: 'author' },
+            },
+        ],
+        total: 2,
+    });
+
+    render(
+        <Routes>
+            <Route
+                path={'/projects/:projectId'}
+                element={
+                    <ProjectFeatureToggles
+                        environments={['development', 'production']}
+                    />
+                }
+            />
+        </Routes>,
+        {
+            route: '/projects/default',
+            permissions: [
+                { permission: UPDATE_FEATURE, project: 'default' },
+                { permission: DELETE_FEATURE, project: 'default' },
+            ],
+        },
+    );
+
+    const archivedFeature = await screen.findByText('archivedFeature');
+    const archivedRow = archivedFeature.closest('tr')!;
+
+    fireEvent.click(
+        within(archivedRow).getByRole('button', {
+            name: 'Feature flag actions',
+        }),
+    );
+
+    await screen.findByRole('menuitem', { name: 'Revive feature flag' });
+    screen.getByRole('menuitem', { name: 'Delete feature flag' });
+    expect(
+        screen.queryByRole('menuitem', { name: 'Archive' }),
+    ).not.toBeInTheDocument();
+    expect(
+        screen.queryByRole('menuitem', { name: 'Clone' }),
+    ).not.toBeInTheDocument();
+}, 10000);
+
+test('rewrites legacy archived view URLs to the archived lifecycle filter', async () => {
+    setupApi();
+    testServerRoute(server, '/api/admin/ui-config', {
+        flags: {
+            archiveInFlagsView: true,
+        },
+    });
+
+    render(
+        <Routes>
+            <Route
+                path={'/projects/:projectId'}
+                element={
+                    <ProjectFeatureToggles
+                        environments={['development', 'production']}
+                    />
+                }
+            />
+        </Routes>,
+        {
+            route: '/projects/default?archived=IS%3Atrue',
+        },
+    );
+
+    await waitFor(() => {
+        expect(window.location.href).not.toContain('archived=IS%3Atrue');
+        expect(window.location.href).toContain('lifecycle=IS%3Aarchived');
+    });
 }, 10000);

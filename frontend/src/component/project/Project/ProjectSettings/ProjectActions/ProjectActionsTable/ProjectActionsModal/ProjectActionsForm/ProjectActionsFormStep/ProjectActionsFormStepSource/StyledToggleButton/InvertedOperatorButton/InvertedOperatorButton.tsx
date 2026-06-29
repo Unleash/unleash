@@ -1,6 +1,6 @@
 import { Box, Tooltip } from '@mui/material';
-import { ReactComponent as NegatedOnIcon } from 'assets/icons/not_operator_selected.svg';
-import { ReactComponent as NegatedOffIcon } from 'assets/icons/not_operator_unselected.svg';
+import NegatedOnIcon from 'assets/icons/not_operator_selected.svg?react';
+import NegatedOffIcon from 'assets/icons/not_operator_unselected.svg?react';
 import type { IConstraint } from 'interfaces/strategy';
 import {
     StyledToggleButtonOff,
@@ -28,16 +28,12 @@ export const InvertedOperatorButton = ({
                     <StyledToggleButtonOn
                         className='operator-is-active'
                         onClick={setInvertedOperator}
-                        disableRipple
                     >
                         <NegatedOnIcon />
                     </StyledToggleButtonOn>
                 }
                 elseShow={
-                    <StyledToggleButtonOff
-                        onClick={setInvertedOperator}
-                        disableRipple
-                    >
+                    <StyledToggleButtonOff onClick={setInvertedOperator}>
                         <NegatedOffIcon />
                     </StyledToggleButtonOff>
                 }

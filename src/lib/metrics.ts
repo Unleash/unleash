@@ -43,6 +43,7 @@ import type { IClientMetricsEnv } from './features/metrics/client-metrics/client
 import { DbMetricsMonitor } from './metrics-gauge.js';
 import * as impactMetrics from './features/metrics/impact/define-impact-metrics.js';
 import HyperLogLog from 'hyperloglog-lite';
+import { setupIntegrationMetrics } from './features/metrics/integrations/integration-metrics.js';
 
 const DISTINCT_HLL_REGISTERS_EXPONENT = 14;
 
@@ -730,16 +731,6 @@ export function registerPrometheusMetrics(
         help: 'Number of API tokens without a project',
     });
 
-    const clientFeaturesMemory = createGauge({
-        name: 'client_features_memory',
-        help: 'The amount of memory client features endpoint is using for caching',
-    });
-
-    const clientDeltaMemory = createGauge({
-        name: 'client_delta_memory',
-        help: 'The amount of memory client features delta endpoint is using for caching',
-    });
-
     const orphanedTokensActive = createGauge({
         name: 'orphaned_api_tokens_active',
         help: 'Number of API tokens without a project, last seen within 3 months',
@@ -929,15 +920,6 @@ export function registerPrometheusMetrics(
         },
     );
 
-    eventBus.on(events.CLIENT_FEATURES_MEMORY, (event: { memory: number }) => {
-        clientFeaturesMemory.reset();
-        clientFeaturesMemory.set(event.memory);
-    });
-
-    eventBus.on(events.CLIENT_DELTA_MEMORY, (event: { memory: number }) => {
-        clientDeltaMemory.reset();
-        clientDeltaMemory.set(event.memory);
-    });
     eventBus.on(
         events.CLIENT_REGISTERED,
         ({ appName, environment, interval }) => {
@@ -1220,6 +1202,8 @@ export function registerPrometheusMetrics(
     eventBus.on(events.ADDON_EVENTS_HANDLED, ({ result, destination }) => {
         addonEventsHandledCounter.increment({ result, destination });
     });
+
+    setupIntegrationMetrics({ config, stores, eventBus, dbMetrics });
 
     return {
         collectAggDbMetrics: dbMetrics.refreshMetrics,

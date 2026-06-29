@@ -67,9 +67,6 @@ describe('project-access', () => {
         cy.loginUI();
 
         cy.visit(`/projects/${groupAndProjectName}/settings/access`);
-        if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
-            cy.get("[data-testid='CLOSE_SPLASH']").click();
-        }
     });
 
     it('can assign permissions to user', () => {
@@ -118,9 +115,13 @@ describe('project-access', () => {
             `/api/admin/projects/${groupAndProjectName}/groups/${groupIds[0]}/roles`,
         ).as('editAccess');
 
-        cy.get(`[data-testid='CancelIcon']`).last().click();
-        cy.get(`[data-testid='${PA_ROLE_ID}']`).click();
-        cy.contains('update feature flags within a project').click({
+        cy.get(`[data-testid='${PA_ROLE_ID}']`).click({
+            waitForAnimations: true,
+        });
+        cy.get(`[role='listbox']`).contains('Owner').click({
+            force: true,
+        });
+        cy.get(`[role='listbox']`).contains('Member').click({
             force: true,
         });
 
@@ -139,7 +140,7 @@ describe('project-access', () => {
         ).as('editAccess');
 
         cy.get(`[data-testid='${PA_ROLE_ID}']`).click();
-        cy.contains('full control over the project').click({
+        cy.get(`[role='listbox']`).contains('Owner').click({
             force: true,
         });
 

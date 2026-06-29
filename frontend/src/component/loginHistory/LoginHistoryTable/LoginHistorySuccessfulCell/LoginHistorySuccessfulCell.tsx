@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { Box, styled } from '@mui/material';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
@@ -15,15 +15,17 @@ interface ILoginHistorySuccessfulCellProps {
     row: {
         original: ILoginEvent;
     };
-    value: boolean;
+    value?: boolean;
+    getValue?: () => unknown;
 }
 
-export const LoginHistorySuccessfulCell: VFC<
+export const LoginHistorySuccessfulCell: FC<
     ILoginHistorySuccessfulCellProps
-> = ({ row, value }) => {
+> = ({ row, value, getValue }) => {
     const { searchQuery } = useSearchHighlightContext();
+    const resolved = value ?? Boolean(getValue ? getValue() : false);
 
-    if (value)
+    if (resolved)
         return (
             <StyledBox>
                 <Badge color='success'>True</Badge>

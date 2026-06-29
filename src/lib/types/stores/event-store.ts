@@ -44,10 +44,11 @@ export interface IEventStore
     ): Promise<number>;
     getDeltaRevisionState(
         environment: string,
-        upperBound: number,
+        referencedSegmentIds?: Set<number>,
     ): Promise<{
         projectRevisions: Map<string, number>;
-        globalSegmentRevision: number;
+        maxReferencedSegmentRevision: number;
+        segmentRevisions: Map<number, number>;
     }>;
     getRevisionRange(start: number, end: number): Promise<IEvent[]>;
     query(operations: IQueryOperations[]): Promise<IEvent[]>;

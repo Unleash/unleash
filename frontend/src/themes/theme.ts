@@ -1,5 +1,12 @@
 import { createTheme } from '@mui/material/styles';
 import { colors } from './colors.js';
+import {
+    buttonSizes,
+    controlOverrides,
+    iconButtonRoot,
+    iconButtonSizes,
+    subtleOutlinedButton,
+} from './controls.js';
 import { focusable } from 'themes/themeStyles';
 
 export const baseTheme = {
@@ -65,6 +72,7 @@ export const baseTheme = {
         bold: 700,
     },
     shape: {
+        borderRadiusSmall: 2,
         borderRadius: 4,
         borderRadiusMedium: 8,
         borderRadiusLarge: 12,
@@ -287,11 +295,35 @@ const theme = {
             D1: '#D76500',
             E1: '#68A611',
             series: colors.chartSeries,
+            flagMetrics: {
+                enabled: '#A39EFF',
+                notEnabled: '#D8D6FF',
+            },
         },
 
         inverse: {
             main: '#222130',
             contrastText: '#EEEEFC',
+        },
+
+        /**
+         * Syntax highlighting colors for code examples (e.g. SDK onboarding snippets).
+         */
+        codeHighlighting: {
+            keyword: colors.red[700],
+            selectorTag: colors.red[700],
+            string: colors.blue[500],
+            number: colors.purple[800],
+            literal: colors.purple[800],
+            comment: colors.grey[800],
+            builtIn: colors.orange[800],
+            title: colors.purple[800],
+            class_: colors.green[800],
+            type: colors.blue[500],
+            attr: colors.orange[800],
+            variable: colors.grey[900],
+            tag: colors.green[600],
+            meta: colors.grey[800],
         },
     },
 } as const;
@@ -299,6 +331,9 @@ const theme = {
 export const lightTheme = createTheme({
     ...theme,
     components: {
+        // Shared control sizing + ripple removal (design system v2)
+        ...controlOverrides,
+
         // Skeleton
         MuiCssBaseline: {
             styleOverrides: {
@@ -325,12 +360,32 @@ export const lightTheme = createTheme({
 
         // Buttons
         MuiButton: {
+            defaultProps: {
+                // pre-v2, unsized buttons fell back to MUI's `medium` (~36px);
+                // `large` on the new scale (also 36px) preserves their weight
+                size: 'large',
+                disableElevation: true, // no shadow on contained buttons
+            },
             styleOverrides: {
                 root: ({ theme }) => ({
                     borderRadius: theme.shape.borderRadius,
                     textTransform: 'none',
-                    fontWeight: theme.typography.fontWeightBold,
+                    fontWeight: 600, // semi-bold
+                    ...subtleOutlinedButton(theme),
                 }),
+                ...buttonSizes,
+            },
+        },
+        MuiIconButton: {
+            defaultProps: {
+                // unsized icon buttons keep their pre-v2 weight (~36px) for now
+                size: 'large',
+            },
+            styleOverrides: {
+                root: ({ theme }) => ({
+                    ...iconButtonRoot(theme),
+                }),
+                ...iconButtonSizes,
             },
         },
 
@@ -423,7 +478,7 @@ export const lightTheme = createTheme({
                     '> .MuiAlert-message': {
                         padding: '3px 0 0 0',
                     },
-                    '&.MuiAlert-standardInfo': {
+                    '&.MuiAlert-standard.MuiAlert-colorInfo': {
                         backgroundColor: theme.palette.info.light,
                         color: theme.palette.info.dark,
                         border: `1px solid ${theme.palette.info.border}`,
@@ -431,7 +486,7 @@ export const lightTheme = createTheme({
                             color: theme.palette.info.main,
                         },
                     },
-                    '&.MuiAlert-standardSuccess': {
+                    '&.MuiAlert-standard.MuiAlert-colorSuccess': {
                         backgroundColor: theme.palette.success.light,
                         color: theme.palette.success.dark,
                         border: `1px solid ${theme.palette.success.border}`,
@@ -439,7 +494,7 @@ export const lightTheme = createTheme({
                             color: theme.palette.success.main,
                         },
                     },
-                    '&.MuiAlert-standardWarning': {
+                    '&.MuiAlert-standard.MuiAlert-colorWarning': {
                         backgroundColor: theme.palette.warning.light,
                         color: theme.palette.warning.dark,
                         border: `1px solid ${theme.palette.warning.border}`,
@@ -447,7 +502,7 @@ export const lightTheme = createTheme({
                             color: theme.palette.warning.main,
                         },
                     },
-                    '&.MuiAlert-standardError': {
+                    '&.MuiAlert-standard.MuiAlert-colorError': {
                         backgroundColor: theme.palette.error.light,
                         color: theme.palette.error.dark,
                         border: `1px solid ${theme.palette.error.border}`,
@@ -461,6 +516,9 @@ export const lightTheme = createTheme({
 
         // Horizontal menu tabs
         MuiTabs: {
+            defaultProps: {
+                'data-public': true,
+            } as any,
             styleOverrides: {
                 root: ({ theme }) => ({
                     '& .MuiTabs-indicator': {

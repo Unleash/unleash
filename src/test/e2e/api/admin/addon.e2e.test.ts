@@ -17,6 +17,7 @@ beforeAll(async () => {
                 strictSchemaValidation: true,
             },
         },
+        allowPrivateUrlInIntegration: true,
     });
 });
 
@@ -32,7 +33,7 @@ test('gets all addons', async () => {
         .expect(200)
         .expect((res) => {
             expect(res.body.addons.length).toBe(0);
-            expect(res.body.providers.length).toBe(6);
+            expect(res.body.providers.length).toBe(7);
             expect(res.body.providers[0].name).toBe('webhook');
         });
 });

@@ -8,8 +8,7 @@ import {
     type IFilterItem,
 } from 'component/filter/Filters/Filters';
 import { formatTag } from 'utils/format-tag';
-import { useUiFlag } from 'hooks/useUiFlag';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 type FeaturesOverviewToggleFiltersProps = {
     state: FilterItemParamHolder;
@@ -22,8 +21,7 @@ export const FeaturesOverviewToggleFilters: FC<
     const { projects } = useProjects();
     const { segments } = useSegments();
     const { tags } = useAllTags();
-    const filterFavoritesEnabled = useUiFlag('filterFavorites');
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const onFilterChange = (value: FilterItemParamHolder) => {
         if (value.favorite !== state.favorite) {
@@ -130,29 +128,23 @@ export const FeaturesOverviewToggleFilters: FC<
                     { label: 'Operational', value: 'operational' },
                     { label: 'Kill switch', value: 'kill-switch' },
                     { label: 'Permission', value: 'permission' },
+                    { label: 'Sunset', value: 'sunset' },
                 ],
                 filterKey: 'type',
                 singularOperators: ['IS', 'IS_NOT'],
                 pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
             },
-            ...(filterFavoritesEnabled
-                ? ([
-                      {
-                          label: 'Favorite',
-                          icon: 'star',
-                          options: [
-                              { label: 'True', value: 'true' },
-                              { label: 'False', value: 'false' },
-                          ],
-                          filterKey: 'favorite',
-                          singularOperators: ['IS'] as [string, ...string[]],
-                          pluralOperators: ['IS_ANY_OF'] as [
-                              string,
-                              ...string[],
-                          ],
-                      },
-                  ] as IFilterItem[])
-                : []),
+            {
+                label: 'Favorite',
+                icon: 'star',
+                options: [
+                    { label: 'True', value: 'true' },
+                    { label: 'False', value: 'false' },
+                ],
+                filterKey: 'favorite',
+                singularOperators: ['IS'] as [string, ...string[]],
+                pluralOperators: ['IS_ANY_OF'] as [string, ...string[]],
+            },
         ];
 
         setAvailableFilters(availableFilters);
@@ -160,7 +152,6 @@ export const FeaturesOverviewToggleFilters: FC<
         JSON.stringify(projects),
         JSON.stringify(segments),
         JSON.stringify(tags),
-        filterFavoritesEnabled,
     ]);
 
     return (

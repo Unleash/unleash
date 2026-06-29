@@ -107,8 +107,10 @@ export const PushVariantsButton = ({
                         anchorEl={pushToAnchorEl}
                         open={pushToOpen}
                         onClose={() => setPushToAnchorEl(null)}
-                        MenuListProps={{
-                            'aria-labelledby': `push-to-menu-${current}`,
+                        slotProps={{
+                            list: {
+                                'aria-labelledby': `push-to-menu-${current}`,
+                            },
                         }}
                     >
                         {environments

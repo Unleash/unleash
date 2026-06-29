@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import {
     Box,
     Button,
@@ -10,8 +10,8 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
-import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
+import UnleashLogo from 'assets/img/logoDarkWithText.svg?react';
+import UnleashLogoWhite from 'assets/img/logoWithWhiteText.svg?react';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 
 const VIDEO_URL = 'https://cdn.getunleash.io/impact-metrics.mp4';
@@ -143,7 +143,7 @@ interface ReleaseManagementSplashProps {
 export const ReleaseManagementSplash = ({
     onClose,
 }: ReleaseManagementSplashProps) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const videoRef = useRef<HTMLVideoElement>(null);
     const [isPlaying, setIsPlaying] = useState(false);
 

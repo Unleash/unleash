@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { createEmptyConstraint } from 'utils/createEmptyConstraint';
 import { fromIConstraint, toIConstraint } from './editable-constraint-type.ts';
 import { constraintId } from 'constants/constraintId';

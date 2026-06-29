@@ -110,7 +110,12 @@ export const ChartItem: FC<ChartItemProps> = ({
                 {config.title && (
                     <Typography variant='h3'>{config.title}</Typography>
                 )}
-                <Typography variant='body2' color='text.secondary'>
+                <Typography
+                    variant='body2'
+                    sx={{
+                        color: 'text.secondary',
+                    }}
+                >
                     {getConfigDescription(config)}
                 </Typography>
             </StyledChartTitle>
@@ -149,6 +154,7 @@ export const ChartItem: FC<ChartItemProps> = ({
                     labelSelectors={config.labelSelectors}
                     yAxisMin={config.yAxisMin}
                     aggregationMode={config.aggregationMode}
+                    source={config.source}
                     aspectRatio={1.5}
                     overrideOptions={{ maintainAspectRatio: false }}
                     emptyDataDescription='Send impact metrics using Unleash SDK for this series to view the chart.'

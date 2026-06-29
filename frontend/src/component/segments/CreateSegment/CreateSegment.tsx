@@ -11,7 +11,7 @@ import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValida
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useSegmentForm } from '../hooks/useSegmentForm.ts';
 import { SegmentForm } from '../SegmentForm.tsx';

@@ -2,6 +2,145 @@
 
 All notable changes to this project will be documented in this file.
 
+## [8.0.2] - 2026-06-29
+
+### Bug Fixes
+
+- Json editor cursor color ([#12354](https://github.com/Unleash/unleash/issues/12354))
+
+- Infinite update loop (React error 185) when editing segment constraints with legal values ([#12366](https://github.com/Unleash/unleash/issues/12366))
+
+- Change password should not be available with SSO ([#12376](https://github.com/Unleash/unleash/issues/12376))
+
+- Don't trap curson on profile menu theme selection ([#12393](https://github.com/Unleash/unleash/issues/12393))
+
+- Prevent nested json errors ([#12408](https://github.com/Unleash/unleash/issues/12408))
+
+- Prevent nested json error pt2 ([#12410](https://github.com/Unleash/unleash/issues/12410))
+
+- Make addons accept allowlists and deny private ip by default ([#12419](https://github.com/Unleash/unleash/issues/12419))
+
+
+### Features
+
+- Add top movers modal ([#12326](https://github.com/Unleash/unleash/issues/12326))
+
+- Create teamsworkflowaddon ([#12344](https://github.com/Unleash/unleash/issues/12344))
+
+- Added htmlInput validation extension for joi schemas ([#12377](https://github.com/Unleash/unleash/issues/12377))
+
+- Add flight recorder to event trackers ([#12375](https://github.com/Unleash/unleash/issues/12375))
+
+- Add flightRecorderAdminEvents flag ([#12378](https://github.com/Unleash/unleash/issues/12378))
+
+- Design system improvements — buttons + shared control foundation ([#12294](https://github.com/Unleash/unleash/issues/12294))
+
+- Configure flight recorder url ([#12379](https://github.com/Unleash/unleash/issues/12379))
+
+- Flush events on user leaving the page ([#12381](https://github.com/Unleash/unleash/issues/12381))
+
+- Remove log rocket from event tracker ([#12382](https://github.com/Unleash/unleash/issues/12382))
+
+- Use event tracker for search component ([#12384](https://github.com/Unleash/unleash/issues/12384))
+
+- Allow csp flight recorder ([#12387](https://github.com/Unleash/unleash/issues/12387))
+
+- Add registerProvider to AddonService ([#12383](https://github.com/Unleash/unleash/issues/12383))
+
+- Anonymize flight recorder context ([#12395](https://github.com/Unleash/unleash/issues/12395))
+
+- Gate servicenow addon behind serviceNowIntegration flag ([#12398](https://github.com/Unleash/unleash/issues/12398))
+
+- Hash email context ([#12397](https://github.com/Unleash/unleash/issues/12397))
+
+- Hash email upfront ([#12403](https://github.com/Unleash/unleash/issues/12403))
+
+- Replace plausible tracker with event tracker ([#12402](https://github.com/Unleash/unleash/issues/12402))
+
+- Add servicenow_change_references table ([#12407](https://github.com/Unleash/unleash/issues/12407))
+
+- Add flightRecorderFrontend variant flag ([#12413](https://github.com/Unleash/unleash/issues/12413))
+
+- Drive SDK flight recorder from feature flag ([#12416](https://github.com/Unleash/unleash/issues/12416))
+
+
+### Miscellaneous Tasks
+
+- Simple code highlighting for onboarding ([#12298](https://github.com/Unleash/unleash/issues/12298))
+
+- Onbording wrap your code min height ([#12332](https://github.com/Unleash/unleash/issues/12332))
+
+- Help and resources learning lab variants handling ([#12337](https://github.com/Unleash/unleash/issues/12337))
+
+- Add wrap to our main text element ([#12349](https://github.com/Unleash/unleash/issues/12349))
+
+- Add teams-workflow and update links in schemas ([#12352](https://github.com/Unleash/unleash/issues/12352))
+
+- Show help&resources when flags are enabled ([#12350](https://github.com/Unleash/unleash/issues/12350))
+
+- Help&resources - report flag variant ([#12353](https://github.com/Unleash/unleash/issues/12353))
+
+- Enable COEP for non-api requests ([#12367](https://github.com/Unleash/unleash/issues/12367))
+
+- Update coep header to be credentialless, i.e. not include cooki… ([#12374](https://github.com/Unleash/unleash/issues/12374))
+
+- Update pnpm to 11.8.0 ([#12373](https://github.com/Unleash/unleash/issues/12373))
+
+- Better header for smaller screens ([#12368](https://github.com/Unleash/unleash/issues/12368))
+
+- Fixing feedback list formatting ([#12380](https://github.com/Unleash/unleash/issues/12380))
+
+- Feedback 5 start rating ([#12386](https://github.com/Unleash/unleash/issues/12386))
+
+- New learning lab url ([#12391](https://github.com/Unleash/unleash/issues/12391))
+
+- Fix invite users dropdown position ([#12392](https://github.com/Unleash/unleash/issues/12392))
+
+- Fix help resources icon shape ([#12394](https://github.com/Unleash/unleash/issues/12394))
+
+- Add servicenowintegration flag ([#12396](https://github.com/Unleash/unleash/issues/12396))
+
+- Support arrow keys navigation in user profile theme selection ([#12399](https://github.com/Unleash/unleash/issues/12399))
+
+- Update feature types descriptions ([#12341](https://github.com/Unleash/unleash/issues/12341))
+
+- Cap codebox height ([#12343](https://github.com/Unleash/unleash/issues/12343))
+
+- Use OIDC for static asset publishing ([#12409](https://github.com/Unleash/unleash/issues/12409))
+
+- Access request notifications ([#12406](https://github.com/Unleash/unleash/issues/12406))
+
+- Highlight access request ([#12411](https://github.com/Unleash/unleash/issues/12411))
+
+- Bump @unleash/sdk-flight-recorder to 0.6.0 ([#12418](https://github.com/Unleash/unleash/issues/12418))
+
+- Highlight access request with Highlight component ([#12417](https://github.com/Unleash/unleash/issues/12417))
+
+- Remove highlights from access requests ([#12423](https://github.com/Unleash/unleash/issues/12423))
+
+- Pending access request menu indicator ([#12420](https://github.com/Unleash/unleash/issues/12420))
+
+- Bump flight recorder ([#12424](https://github.com/Unleash/unleash/issues/12424))
+
+- Bump unleash-client to 6.11.1 ([#12429](https://github.com/Unleash/unleash/issues/12429))
+
+- Add access-request-notifications events ([#12430](https://github.com/Unleash/unleash/issues/12430))
+
+- Optimize frontend evaluation ([#12428](https://github.com/Unleash/unleash/issues/12428))
+
+
+### Refactor
+
+- Simplify button ([#12422](https://github.com/Unleash/unleash/issues/12422))
+
+
+### Testing
+
+- E2e groups failure ([#12340](https://github.com/Unleash/unleash/issues/12340))
+
+- Try fixing e2e group deletion test ([#12351](https://github.com/Unleash/unleash/issues/12351))
+
+
 ## [8.0.1] - 2026-06-16
 
 ### Bug Fixes

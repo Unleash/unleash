@@ -7,15 +7,15 @@ import {
 import { useUiFlag } from 'hooks/useUiFlag';
 import { getVariantValue, type Variant } from 'utils/variants';
 import { FlightRecorderContext } from 'contexts/FlightRecorderContext';
+import { usePageViewTracking } from './usePageViewTracking';
 
-// Custom UI events are low-frequency, so the periodic timer does the flushing
-// and the buffer stays small. Keep flushAt low so the keepalive flush on
-// close() stays well under the 64 KB browser limit (~35 KB at 350 bytes/event).
+// A low flushAt keeps the keepalive flush on close() well under the browser's 64 KB limit.
 const BATCH = { flushAt: 100 };
 
-export const FlightRecorderProvider: FC<{ children?: React.ReactNode }> = ({
-    children,
-}) => {
+export const FlightRecorderProvider: FC<{
+    children?: React.ReactNode;
+    createRecorder?: typeof createFlightRecorder;
+}> = ({ children, createRecorder = createFlightRecorder }) => {
     const flag = useUiFlag('flightRecorderFrontend');
     const url = getVariantValue(flag as Variant);
 
@@ -26,7 +26,7 @@ export const FlightRecorderProvider: FC<{ children?: React.ReactNode }> = ({
             return;
         }
         try {
-            const instance = createFlightRecorder({
+            const instance = createRecorder({
                 url,
                 clientKey: '',
                 batch: BATCH,
@@ -41,7 +41,8 @@ export const FlightRecorderProvider: FC<{ children?: React.ReactNode }> = ({
         } catch (error) {
             console.warn(error);
         }
-    }, [url]);
+        // createRecorder is a stable ref (module default or a fixture), so it won't refire.
+    }, [url, createRecorder]);
 
     useEffect(() => {
         if (!recorder) {
@@ -60,6 +61,8 @@ export const FlightRecorderProvider: FC<{ children?: React.ReactNode }> = ({
             window.removeEventListener('pagehide', flush);
         };
     }, [recorder]);
+
+    usePageViewTracking(recorder);
 
     return (
         <FlightRecorderContext.Provider value={recorder}>

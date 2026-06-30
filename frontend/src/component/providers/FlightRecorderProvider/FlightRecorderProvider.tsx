@@ -7,7 +7,6 @@ import {
 import { useUiFlag } from 'hooks/useUiFlag';
 import { getVariantValue, type Variant } from 'utils/variants';
 import { FlightRecorderContext } from 'contexts/FlightRecorderContext';
-import { routes } from 'component/menu/routes';
 import { usePageViewTracking } from './usePageViewTracking';
 
 // A low flushAt keeps the keepalive flush on close() well under the browser's 64 KB limit.
@@ -63,7 +62,7 @@ export const FlightRecorderProvider: FC<{
         };
     }, [recorder]);
 
-    usePageViewTracking(recorder, routes);
+    usePageViewTracking(recorder);
 
     return (
         <FlightRecorderContext.Provider value={recorder}>

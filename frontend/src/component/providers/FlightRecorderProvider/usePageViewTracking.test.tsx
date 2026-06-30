@@ -10,12 +10,6 @@ import { usePageViewTracking } from './usePageViewTracking';
 
 const server = testServerSetup();
 
-// An exact leaf route and a delegating `/*` route, so both resolution paths run.
-const routes = [
-    { path: '/projects/:projectId/features/:featureId/edit' },
-    { path: '/projects/:projectId/*' },
-];
-
 // Renders once ui-config resolves, so a test can wait for the ready gate.
 const ConfigProbe = () => {
     const { uiConfig } = useUiConfig();
@@ -24,8 +18,7 @@ const ConfigProbe = () => {
 
 const Harness = ({ recorder }: { recorder: { record: () => void } | null }) => {
     const [tick, setTick] = useState(0);
-    // Fresh array every render to prove a re-render can't refire the effect.
-    usePageViewTracking(recorder as never, [...routes]);
+    usePageViewTracking(recorder as never);
     const navigate = useNavigate();
     return (
         <>
@@ -60,11 +53,11 @@ const respondWithIdentity = () =>
         unleashContext: { userId: 'u-1' },
     });
 
-it('records a page view for the landing page and for each later navigation, with the previous page as referrer', async () => {
+it('records the full visited path for the landing page and each later navigation, with the previous page as referrer', async () => {
     respondWithIdentity();
     const record = vi.fn();
 
-    // Splat route keeps the 'settings' tail; first view's referrer is external.
+    // First view's referrer is external (document.referrer).
     render(<Harness recorder={{ record }} />, {
         route: '/projects/default/settings',
     });
@@ -76,8 +69,7 @@ it('records a page view for the landing page and for each later navigation, with
         context: { userId: 'u-1' },
         payload: {
             pageviewId: expect.any(String),
-            path: '/projects/:projectId/settings',
-            params: { projectId: 'default' },
+            path: '/projects/default/settings',
             referrer: expect.any(String),
         },
     });
@@ -92,9 +84,8 @@ it('records a page view for the landing page and for each later navigation, with
         context: { userId: 'u-1' },
         payload: {
             pageviewId: expect.any(String),
-            path: '/projects/:projectId/features/:featureId/edit',
-            params: { projectId: 'default', featureId: 'new-onboarding' },
-            referrer: '/projects/:projectId/settings',
+            path: '/projects/default/features/new-onboarding/edit',
+            referrer: '/projects/default/settings',
         },
     });
     expect(record).toHaveBeenCalledTimes(2);
@@ -118,20 +109,6 @@ it('does not record a duplicate page view while the path is unchanged', async ()
     );
 
     expect(record).toHaveBeenCalledTimes(1);
-});
-
-it('does not record a page view for an unrecognized route', async () => {
-    respondWithIdentity();
-    const record = vi.fn();
-
-    // Wait for the gate first, so the skip is provably deliberate rather than the
-    // gate still holding the view back.
-    render(<Harness recorder={{ record }} />, {
-        route: '/nope/nowhere',
-    });
-    await screen.findByText('config-ready');
-
-    expect(record).not.toHaveBeenCalled();
 });
 
 it('keeps the app rendering when no recorder is configured', async () => {

@@ -26,7 +26,7 @@ export const features: Feature[] = [
             'Connect your AI coding assistant to Unleash for safe, structured feature flag management, from flag creation through to cleanup.',
         phase: 'released',
         releasedAt: '2026-05-26',
-        docsLink: 'https://docs.getunleash.io/release-notes/2026/5/26',
+        docsLink: 'https://docs.getunleash.io/integrate/mcp',
     },
     {
         title: 'Service Now integration',

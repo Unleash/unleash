@@ -1,5 +1,7 @@
 import { styled, Typography } from '@mui/material';
 import OpenInNew from '@mui/icons-material/OpenInNew';
+import { useLocationSettings } from 'hooks/useLocationSettings';
+import { formatDateYMD } from 'utils/formatDate';
 import type { Feature, InProgressFeature, ReleasedFeature } from './features';
 
 const ReleasedCard = styled('article', {
@@ -65,13 +67,6 @@ const Preview = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
 }));
 
-const formatReleaseDate = (iso: string) =>
-    new Date(iso).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    });
-
 const phaseLabel = (phase: InProgressFeature['phase']) =>
     phase === 'beta' ? 'Beta' : 'Exploring';
 
@@ -100,36 +95,44 @@ const PhaseBadge = styled('span', {
     };
 });
 
-const ReleasedFeatureCard = ({ feature }: { feature: ReleasedFeature }) => (
-    <ReleasedCard hasPreview={Boolean(feature.preview)}>
-        <div>
-            <CardHeader>
-                <Typography component='h2' variant='h3'>
-                    {feature.title}
+const ReleasedFeatureCard = ({ feature }: { feature: ReleasedFeature }) => {
+    const { locationSettings } = useLocationSettings();
+    return (
+        <ReleasedCard hasPreview={Boolean(feature.preview)}>
+            <div>
+                <CardHeader>
+                    <Typography component='h2' variant='h3'>
+                        {feature.title}
+                    </Typography>
+                </CardHeader>
+                <ReleaseDate>
+                    Released{' '}
+                    {formatDateYMD(
+                        feature.releasedAt,
+                        locationSettings.locale,
+                        'UTC',
+                    )}
+                </ReleaseDate>
+                <Typography variant='body1' color='text.secondary'>
+                    {feature.description}
                 </Typography>
-            </CardHeader>
-            <ReleaseDate>
-                Released {formatReleaseDate(feature.releasedAt)}
-            </ReleaseDate>
-            <Typography variant='body1' color='text.secondary'>
-                {feature.description}
-            </Typography>
-            {feature.docsLink ? (
-                <Actions>
-                    <DocsLink
-                        href={feature.docsLink}
-                        rel='noopener noreferrer'
-                        target='_blank'
-                    >
-                        <OpenInNew fontSize='small' />
-                        Read more in our documentation
-                    </DocsLink>
-                </Actions>
-            ) : null}
-        </div>
-        {feature.preview ? <Preview>{feature.preview}</Preview> : null}
-    </ReleasedCard>
-);
+                {feature.docsLink ? (
+                    <Actions>
+                        <DocsLink
+                            href={feature.docsLink}
+                            rel='noopener noreferrer'
+                            target='_blank'
+                        >
+                            <OpenInNew fontSize='small' />
+                            Read more in our documentation
+                        </DocsLink>
+                    </Actions>
+                ) : null}
+            </div>
+            {feature.preview ? <Preview>{feature.preview}</Preview> : null}
+        </ReleasedCard>
+    );
+};
 
 const InProgressFeatureCard = ({ feature }: { feature: InProgressFeature }) => (
     <InProgressCard>

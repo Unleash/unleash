@@ -65,8 +65,6 @@ const StyledNav = styled('nav')({
 
 const Header = () => {
     const { onSetThemeMode } = useThemeMode();
-    const newProfileDropdown = useUiFlag('newProfileDropdown');
-    const showThemeButton = !newProfileDropdown;
     const theme = useTheme();
 
     const mediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
@@ -87,24 +85,22 @@ const Header = () => {
                 })}
             />
             <InviteLinkButton />
-            {showThemeButton && (
-                <Tooltip
-                    title={
-                        theme.mode === 'dark'
-                            ? 'Switch to light theme'
-                            : 'Switch to dark theme'
-                    }
-                    arrow
-                >
-                    <IconButton onClick={onSetThemeMode} size='large'>
-                        <ConditionallyRender
-                            condition={theme.mode === 'dark'}
-                            show={<DarkModeOutlined />}
-                            elseShow={<LightModeOutlined />}
-                        />
-                    </IconButton>
-                </Tooltip>
-            )}
+            <Tooltip
+                title={
+                    theme.mode === 'dark'
+                        ? 'Switch to light theme'
+                        : 'Switch to dark theme'
+                }
+                arrow
+            >
+                <IconButton onClick={onSetThemeMode} size='large'>
+                    <ConditionallyRender
+                        condition={theme.mode === 'dark'}
+                        show={<DarkModeOutlined />}
+                        elseShow={<LightModeOutlined />}
+                    />
+                </IconButton>
+            </Tooltip>
             {hideTopmenuDocumentation && <HelpResources />}
             {!hideTopmenuDocumentation && (
                 <Tooltip title='Documentation' arrow>

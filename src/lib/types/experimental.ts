@@ -81,7 +81,6 @@ export type IFlagKey =
     | 'newModalDesign'
     | 'archiveInFlagsView'
     | 'allowDeprecatedApiTokenMiddleware'
-    | 'newProfileDropdown'
     | 'hideTopmenuDocumentation'
     | 'serviceNowIntegration'
     | 'learningLab'
@@ -375,10 +374,6 @@ const flags: IFlags = {
     ),
     archiveInFlagsView: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ARCHIVE_IN_FLAGS_VIEW,
-        false,
-    ),
-    newProfileDropdown: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_PROFILE_DROPDOWN,
         false,
     ),
     hideTopmenuDocumentation: parseEnvVarBoolean(

@@ -58,7 +58,6 @@ process.nextTick(async () => {
                         userTokenWithClientApiLoggingKillSwitch: false,
                         allowDeprecatedApiTokenMiddleware: false,
                         archiveInFlagsView: true,
-                        newProfileDropdown: true,
                         hideTopmenuDocumentation: true,
                         learningLab: true,
                         serviceNowIntegration: true,

@@ -44,6 +44,7 @@ export const FlightRecorderProvider: FC<{
         // createRecorder is a stable ref (module default or a fixture), so it won't refire.
     }, [url, createRecorder]);
 
+    // Flush on backgrounding; unload (pagehide) is owned by usePageViewTracking.
     useEffect(() => {
         if (!recorder) {
             return;
@@ -53,13 +54,9 @@ export const FlightRecorderProvider: FC<{
                 void recorder.flush({ keepalive: true });
             }
         };
-        const flush = () => void recorder.flush({ keepalive: true });
         document.addEventListener('visibilitychange', flushIfHidden);
-        window.addEventListener('pagehide', flush);
-        return () => {
+        return () =>
             document.removeEventListener('visibilitychange', flushIfHidden);
-            window.removeEventListener('pagehide', flush);
-        };
     }, [recorder]);
 
     usePageViewTracking(recorder);

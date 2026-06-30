@@ -9,13 +9,14 @@ import { FlightRecorderProvider } from './FlightRecorderProvider';
 
 const server = testServerSetup();
 
-// In-memory stand-in for the SDK, injected via the provider's createRecorder prop.
-// The real recorder gzips and POSTs over the network (jsdom can't); this captures
-// what the provider would have shipped while provider, hook, and routes stay real.
-const recorded: { path: string }[] = [];
+const recorded: { eventName: string; path?: string }[] = [];
 const fakeRecorder = (): FlightRecorder =>
     ({
-        record: (event) => recorded.push(event.payload as { path: string }),
+        record: (event) =>
+            recorded.push({
+                eventName: event.eventName,
+                path: (event.payload as { path?: string }).path,
+            }),
         flush: async () => {},
         close: async () => {},
     }) as unknown as FlightRecorder;
@@ -51,7 +52,10 @@ const NavigateButton = () => {
     );
 };
 
-const recordedPaths = () => recorded.map((payload) => payload.path);
+const recordedPaths = () =>
+    recorded
+        .filter((event) => event.eventName === 'pageview')
+        .map((event) => event.path);
 
 beforeEach(() => {
     recorded.length = 0;

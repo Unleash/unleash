@@ -3,47 +3,102 @@ import { useLocation } from 'react-router';
 import type { FlightRecorder } from '@unleash/sdk-flight-recorder';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { createUuid } from 'utils/createUuid';
+import {
+    type EngagedTimeTracker,
+    startEngagedTimeTracker,
+} from './engagedTime';
 
-// Records a `pageview` on every navigation, storing the full path as-is. Collapsing ids
-// into templates (e.g. /projects/:projectId) is done downstream at query time, so it stays
-// editable and reclassifies history without a frontend deploy.
+// Full path is stored as-is; collapsing ids into templates (/projects/:projectId) is
+// done downstream at query time, so it stays editable without a frontend deploy.
 export const usePageViewTracking = (recorder: FlightRecorder | null): void => {
     const { pathname } = useLocation();
     const { uiConfig } = useUiConfig();
 
     const context = uiConfig?.unleashContext;
     const previousPathRef = useRef<string | null>(null);
+    const currentPageRef = useRef<{
+        pageviewId: string;
+        tracker: EngagedTimeTracker;
+    } | null>(null);
 
-    // Gate on a boolean rather than the context object, so SWR revalidation doesn't
-    // refire the effect. Holds the first pageview until identity loads, so we never
-    // record a landing without a userId.
+    // Boolean gate, not the context object
     const contextReady = context !== undefined;
 
-    // Reads the latest context without making it an effect dependency, so the pageview
-    // fires only on navigation rather than on every render.
-    const recordPageView = useEffectEvent((path: string) => {
-        if (!recorder) {
+    // recorder passed in, not read latest, so teardown flushes the leave into the
+    // instance being closed even after the latest recorder is null.
+    const emitPageLeave = useEffectEvent((recorder: FlightRecorder) => {
+        const page = currentPageRef.current;
+        if (!page) {
+            return;
+        }
+        recorder.record({
+            eventType: 'custom',
+            eventName: 'pageleave',
+            context: { ...context },
+            payload: {
+                pageviewId: page.pageviewId,
+                engagedMs: page.tracker.engagedMs(),
+            },
+        });
+        page.tracker.stop();
+        currentPageRef.current = null;
+    });
+
+    const emitPageView = useEffectEvent((path: string) => {
+        // pageshow path bypasses the navigation effect's identity gate, so re-check here.
+        if (!recorder || !contextReady) {
             return;
         }
         const referrer = previousPathRef.current ?? document.referrer;
         previousPathRef.current = path;
 
+        const pageviewId = createUuid();
         recorder.record({
             eventType: 'custom',
             eventName: 'pageview',
             context: { ...context },
             payload: {
-                pageviewId: createUuid(),
+                pageviewId,
                 path,
                 referrer,
             },
         });
+        currentPageRef.current = {
+            pageviewId,
+            tracker: startEngagedTimeTracker(),
+        };
     });
 
     useEffect(() => {
         if (!recorder || !contextReady) {
             return;
         }
-        recordPageView(pathname);
+        emitPageLeave(recorder);
+        emitPageView(pathname);
     }, [recorder, contextReady, pathname]);
+
+    // This hook owns the unload flush so the provider doesn't also flush on pagehide and
+    // double-flush. Captured recorder lands the closing leave in the torn-down instance.
+    useEffect(() => {
+        if (!recorder) {
+            return;
+        }
+        const leaveAndFlush = () => {
+            emitPageLeave(recorder);
+            void recorder.flush({ keepalive: true });
+        };
+        // bfcache restore fires no SPA navigation, so open a fresh view here.
+        const onPageShow = (event: PageTransitionEvent) => {
+            if (event.persisted) {
+                emitPageView(window.location.pathname);
+            }
+        };
+        window.addEventListener('pagehide', leaveAndFlush);
+        window.addEventListener('pageshow', onPageShow);
+        return () => {
+            window.removeEventListener('pagehide', leaveAndFlush);
+            window.removeEventListener('pageshow', onPageShow);
+            leaveAndFlush();
+        };
+    }, [recorder]);
 };

@@ -1,25 +1,24 @@
 import { useNavigate } from 'react-router';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { beforeEach, expect, it, vi } from 'vitest';
+import { beforeEach, expect, it } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
+import type { FlightRecorder } from '@unleash/sdk-flight-recorder';
 import { FlightRecorderProvider } from './FlightRecorderProvider';
 
-// Stub the third-party SDK at its module boundary: it gzips and POSTs over the
-// network, which jsdom can't do. We capture what the provider would have shipped,
-// while the provider, hook, and route table stay real.
-const { recorded } = vi.hoisted(() => ({ recorded: [] as { path: string }[] }));
-vi.mock('@unleash/sdk-flight-recorder', () => ({
-    createFlightRecorder: () => ({
-        record: (event: { payload: { path: string } }) =>
-            recorded.push(event.payload),
+const server = testServerSetup();
+
+// In-memory stand-in for the SDK, injected via the provider's createRecorder prop.
+// The real recorder gzips and POSTs over the network (jsdom can't); this captures
+// what the provider would have shipped while provider, hook, and routes stay real.
+const recorded: { path: string }[] = [];
+const fakeRecorder = (): FlightRecorder =>
+    ({
+        record: (event) => recorded.push(event.payload as { path: string }),
         flush: async () => {},
         close: async () => {},
-    }),
-}));
-
-const server = testServerSetup();
+    }) as unknown as FlightRecorder;
 
 // The flag payload carries the recorder URL, and the identity opens the gate that
 // holds the first pageview until the userId is known.
@@ -62,7 +61,7 @@ it('records a templated, low-cardinality pageview for each route the user visits
     enableRecorder();
 
     render(
-        <FlightRecorderProvider>
+        <FlightRecorderProvider createRecorder={fakeRecorder}>
             <NavigateButton />
         </FlightRecorderProvider>,
         { route: '/projects/default/settings' },

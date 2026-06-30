@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useEffectEvent, useRef } from 'react';
 import { useLocation } from 'react-router';
 import type { FlightRecorder } from '@unleash/sdk-flight-recorder';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -14,31 +14,21 @@ export const usePageViewTracking = (
     const { uiConfig } = useUiConfig();
 
     const context = uiConfig?.unleashContext;
-    const contextRef = useRef(context);
-    contextRef.current = context;
     const previousPathRef = useRef<string | null>(null);
-
-    // Kept in a ref rather than an effect dependency: an inline array changes identity
-    // on every render, which would refire the effect and record a pageview each render
-    // instead of only on navigation.
-    const routePatternsRef = useRef(routePatterns);
-    routePatternsRef.current = routePatterns;
 
     // Gate on a boolean rather than the context object, so SWR revalidation doesn't
     // refire the effect. This holds the first pageview until identity loads, so we
     // never record a landing without a userId.
     const contextReady = context !== undefined;
 
-    useEffect(() => {
-        if (!recorder || !contextReady) {
-            return;
-        }
-
-        const resolved = resolvePageView(routePatternsRef.current, pathname);
+    // Reads the latest context/routePatterns without making them effect dependencies,
+    // so the pageview fires only on navigation rather than on every render.
+    const recordPageView = useEffectEvent((currentPath: string) => {
+        const resolved = resolvePageView(routePatterns, currentPath);
 
         // Skip unmatched routes, such as redirects through "/", since they would
         // pollute the referrer chain.
-        if (!resolved.matched) {
+        if (!recorder || !resolved.matched) {
             return;
         }
         const { path, params } = resolved;
@@ -49,7 +39,7 @@ export const usePageViewTracking = (
         recorder.record({
             eventType: 'custom',
             eventName: 'pageview',
-            context: { ...contextRef.current },
+            context: { ...context },
             payload: {
                 pageviewId: createUuid(),
                 path,
@@ -57,5 +47,12 @@ export const usePageViewTracking = (
                 referrer,
             },
         });
+    });
+
+    useEffect(() => {
+        if (!recorder || !contextReady) {
+            return;
+        }
+        recordPageView(pathname);
     }, [recorder, contextReady, pathname]);
 };

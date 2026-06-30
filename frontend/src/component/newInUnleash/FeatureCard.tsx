@@ -89,9 +89,7 @@ const PhaseBadge = styled('span', {
         backgroundColor: isBeta
             ? theme.palette.secondary.light
             : theme.palette.success.light,
-        color: isBeta 
-            ? theme.palette.primary.main 
-            : theme.palette.success.main,
+        color: isBeta ? theme.palette.primary.main : theme.palette.success.main,
         '&::before': {
             content: '""',
             width: theme.spacing(1),

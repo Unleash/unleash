@@ -49,6 +49,8 @@ export const usePageViewTracking = (recorder: FlightRecorder | null): void => {
         if (!recorder || !contextReady) {
             return;
         }
+        // Close any still-open page first; the pageshow path has no preceding pageleave.
+        emitPageLeave(recorder);
         const referrer = previousPathRef.current ?? document.referrer;
         previousPathRef.current = path;
 
@@ -73,12 +75,10 @@ export const usePageViewTracking = (recorder: FlightRecorder | null): void => {
         if (!recorder || !contextReady) {
             return;
         }
-        emitPageLeave(recorder);
         emitPageView(pathname);
     }, [recorder, contextReady, pathname]);
 
-    // This hook owns the unload flush so the provider doesn't also flush on pagehide and
-    // double-flush. Captured recorder lands the closing leave in the torn-down instance.
+    // Captured recorder lands the closing leave in the instance being torn down.
     useEffect(() => {
         if (!recorder) {
             return;

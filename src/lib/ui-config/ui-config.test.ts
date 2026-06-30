@@ -12,11 +12,14 @@ import type TestAgent from 'supertest/lib/agent.d.ts';
 import type { IUnleashStores, IUser } from '../types/index.js';
 import { hashValue } from '../util/anonymise.js';
 import { ADMIN } from '../types/permissions.js';
+import type { IAuthRequest } from '../routes/unleash-types.js';
 
 const uiConfig = {
     headerBackground: 'red',
     slogan: 'hello',
 };
+
+const TEST_SESSION_ID = 'test-session-id';
 
 async function getSetup(user?: Partial<IUser>) {
     const base = `/random${Math.round(Math.random() * 1000)}`;
@@ -28,8 +31,10 @@ async function getSetup(user?: Partial<IUser>) {
         ui: uiConfig,
         preHook: user
             ? (app) => {
-                  app.use((req, _res, next) => {
-                      req.user = user;
+                  app.use((req: IAuthRequest, _res, next) => {
+                      req.user = user as IUser;
+                      req.sessionID = TEST_SESSION_ID;
+                      req.session = { user };
                       next();
                   });
               }
@@ -82,6 +87,7 @@ test('should get ui config', async () => {
     expect(body.unleashContext).toMatchObject({
         userId: 7,
         email: hashValue('someone@example.com'),
+        sessionId: hashValue(TEST_SESSION_ID),
     });
 });
 

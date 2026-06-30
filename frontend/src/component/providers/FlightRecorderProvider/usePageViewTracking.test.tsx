@@ -62,6 +62,12 @@ const Harness = ({ recorder }: { recorder: FakeRecorder | null }) => {
             <button type='button' onClick={() => setTick(tick + 1)}>
                 re-render without navigating
             </button>
+            <button
+                type='button'
+                onClick={() => navigate('/projects/default/settings/')}
+            >
+                add a trailing slash
+            </button>
         </>
     );
 };
@@ -234,6 +240,34 @@ it('does not record a duplicate page view while the path is unchanged', async ()
     );
     await userEvent.click(
         screen.getByRole('button', { name: 'change only the query string' }),
+    );
+
+    expect(recorder.record).toHaveBeenCalledTimes(1);
+});
+
+it('records one screen without a trailing slash regardless of how the URL was written', async () => {
+    respondWithIdentity();
+
+    // The same screen reached with a trailing slash must not become a second path.
+    render(<Harness recorder={recorder} />, {
+        route: '/projects/default/settings/',
+    });
+    await screen.findByText('config-ready');
+
+    expect(pageviews()[0].payload.path).toBe('/projects/default/settings');
+});
+
+it('does not record a new page view when only a trailing slash is added to the path', async () => {
+    respondWithIdentity();
+
+    render(<Harness recorder={recorder} />, {
+        route: '/projects/default/settings',
+    });
+    await screen.findByText('config-ready');
+
+    // A trailing slash names the same screen, so it is not a new page.
+    await userEvent.click(
+        screen.getByRole('button', { name: 'add a trailing slash' }),
     );
 
     expect(recorder.record).toHaveBeenCalledTimes(1);

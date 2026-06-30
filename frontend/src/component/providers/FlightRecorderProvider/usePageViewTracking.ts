@@ -8,10 +8,15 @@ import {
     startEngagedTimeTracker,
 } from './engagedTime';
 
-// Full path is stored as-is; collapsing ids into templates (/projects/:projectId) is
-// done downstream at query time, so it stays editable without a frontend deploy.
+// Trailing slashes are the only divergence react-router leaves in pathname (query string
+// and hash are already excluded), so '/x/settings/' and '/x/settings' would otherwise split
+// one screen across two stored paths. Normalize to the slash-free form at record time;
+// id->template collapsing stays downstream at query time so it's editable without a deploy.
+const normalizePath = (path: string): string => path.replace(/\/+$/, '') || '/';
+
 export const usePageViewTracking = (recorder: FlightRecorder | null): void => {
     const { pathname } = useLocation();
+    const normalizedPath = normalizePath(pathname);
     const { uiConfig } = useUiConfig();
 
     const context = uiConfig?.unleashContext;
@@ -44,13 +49,15 @@ export const usePageViewTracking = (recorder: FlightRecorder | null): void => {
         currentPageRef.current = null;
     });
 
-    const emitPageView = useEffectEvent((path: string) => {
+    const emitPageView = useEffectEvent((rawPath: string) => {
         // pageshow path bypasses the navigation effect's identity gate, so re-check here.
         if (!recorder || !contextReady) {
             return;
         }
         // Close any still-open page first; the pageshow path has no preceding pageleave.
         emitPageLeave(recorder);
+        // pageshow passes a raw location.pathname, so normalize here too, not only at the effect.
+        const path = normalizePath(rawPath);
         const referrer = previousPathRef.current ?? document.referrer;
         previousPathRef.current = path;
 
@@ -75,8 +82,8 @@ export const usePageViewTracking = (recorder: FlightRecorder | null): void => {
         if (!recorder || !contextReady) {
             return;
         }
-        emitPageView(pathname);
-    }, [recorder, contextReady, pathname]);
+        emitPageView(normalizedPath);
+    }, [recorder, contextReady, normalizedPath]);
 
     // Captured recorder lands the closing leave in the instance being torn down.
     useEffect(() => {

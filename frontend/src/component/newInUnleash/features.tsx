@@ -1,9 +1,12 @@
-import type { ReactNode } from 'react';
+import { formatAssetPath } from 'utils/formatPath';
+import ImpactMetricsImage from 'assets/img/new-in-unleash/impact-metrics.png';
+import MilestoneImage from 'assets/img/new-in-unleash/milestone.png';
+import McpImage from 'assets/img/new-in-unleash/mcp.png';
 
 type FeatureBase = {
     title: string;
     description: string;
-    preview?: ReactNode;
+    previewImageSrc?: string;
     docsLink?: string;
 };
 
@@ -21,12 +24,32 @@ export type InProgressFeature = Extract<
 
 export const features: Feature[] = [
     {
+        title: 'Impact metrics',
+        description:
+            'Track error rates, latency, and other application signals directly inside Unleash. Use them to automatically advance rollout milestones — or pause when something spikes.',
+        phase: 'released',
+        releasedAt: '2026-06-09',
+        docsLink: 'https://docs.getunleash.io/concepts/impact-metrics',
+        previewImageSrc: formatAssetPath(ImpactMetricsImage),
+    },
+    {
+        title: 'Safeguards and milestone progression',
+        description:
+            'Set conditions to progress rollout in a release template automatically. Safeguards pause the rollout if metrics exceed a threshold, so you can release with confidence.',
+        phase: 'released',
+        releasedAt: '2026-06-09',
+        docsLink:
+            'https://docs.getunleash.io/concepts#automatic-milestone-progression-and-safeguards',
+        previewImageSrc: formatAssetPath(MilestoneImage),
+    },
+    {
         title: 'Unleash MCP server',
         description:
             'Connect your AI coding assistant to Unleash for safe, structured feature flag management, from flag creation through to cleanup.',
         phase: 'released',
         releasedAt: '2026-05-26',
         docsLink: 'https://docs.getunleash.io/integrate/mcp',
+        previewImageSrc: formatAssetPath(McpImage),
     },
     {
         title: 'Service Now integration',

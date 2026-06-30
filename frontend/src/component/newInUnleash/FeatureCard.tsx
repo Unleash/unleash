@@ -4,19 +4,25 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMD } from 'utils/formatDate';
 import type { Feature, InProgressFeature, ReleasedFeature } from './features';
 
+const IMAGE_HEIGHT = 190;
+const IMAGE_WIDTH = 160;
+
 const ReleasedCard = styled('article', {
     shouldForwardProp: (prop) => prop !== 'hasPreview',
 })<{ hasPreview: boolean }>(({ theme, hasPreview }) => ({
     display: 'grid',
-    gridTemplateColumns: hasPreview ? 'minmax(0, 1fr) minmax(0, 280px)' : '1fr',
-    gap: theme.spacing(3),
-    padding: theme.spacing(3),
+    gridTemplateColumns: hasPreview ? `${IMAGE_WIDTH}px minmax(0, 1fr)` : '1fr',
     borderRadius: theme.shape.borderRadiusLarge,
     backgroundColor: theme.palette.background.paper,
     border: `1px solid ${theme.palette.divider}`,
-    [theme.breakpoints.down('md')]: {
+    overflow: 'hidden',
+    [theme.breakpoints.down('sm')]: {
         gridTemplateColumns: '1fr',
     },
+}));
+
+const Content = styled('div')(({ theme }) => ({
+    padding: theme.spacing(3),
 }));
 
 const InProgressCard = styled('article')(({ theme }) => ({
@@ -60,11 +66,14 @@ const DocsLink = styled('a')(({ theme }) => ({
     '&:hover, &:focus': { textDecoration: 'underline' },
 }));
 
-const Preview = styled('div')(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: theme.spacing(2),
+const PreviewImage = styled('img')(({ theme }) => ({
+    width: '100%',
+    height: '100%',
+    minHeight: IMAGE_HEIGHT,
+    objectFit: 'cover',
+    [theme.breakpoints.down('sm')]: {
+        display: 'none',
+    },
 }));
 
 const phaseLabel = (phase: InProgressFeature['phase']) =>
@@ -98,21 +107,23 @@ const PhaseBadge = styled('span', {
 const ReleasedFeatureCard = ({ feature }: { feature: ReleasedFeature }) => {
     const { locationSettings } = useLocationSettings();
     return (
-        <ReleasedCard hasPreview={Boolean(feature.preview)}>
-            <div>
-                <CardHeader>
-                    <Typography component='h2' variant='h3'>
-                        {feature.title}
-                    </Typography>
-                </CardHeader>
+        <ReleasedCard hasPreview={Boolean(feature.previewImageSrc)}>
+            {feature.previewImageSrc ? (
+                <PreviewImage src={feature.previewImageSrc} alt='' />
+            ) : null}
+            <Content>
                 <ReleaseDate>
-                    Released{' '}
                     {formatDateYMD(
                         feature.releasedAt,
                         locationSettings.locale,
                         'UTC',
                     )}
                 </ReleaseDate>
+                <CardHeader>
+                    <Typography component='h2' variant='h3'>
+                        {feature.title}
+                    </Typography>
+                </CardHeader>
                 <Typography variant='body1' color='text.secondary'>
                     {feature.description}
                 </Typography>
@@ -128,8 +139,7 @@ const ReleasedFeatureCard = ({ feature }: { feature: ReleasedFeature }) => {
                         </DocsLink>
                     </Actions>
                 ) : null}
-            </div>
-            {feature.preview ? <Preview>{feature.preview}</Preview> : null}
+            </Content>
         </ReleasedCard>
     );
 };

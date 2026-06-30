@@ -1,6 +1,7 @@
 import { styled } from '@mui/material';
 import type { Story, StoryMeta } from 'component/stories/types';
 import { FeatureCard } from './FeatureCard';
+import { features } from './features';
 
 export const meta: StoryMeta = {
     title: 'NewInUnleash / FeatureCard',
@@ -14,19 +15,20 @@ const Container = styled('div')(({ theme }) => ({
     maxWidth: 760,
 }));
 
-const PreviewPlaceholder = styled('div')(({ theme }) => ({
-    width: '100%',
-    height: 140,
-    borderRadius: theme.shape.borderRadius,
-    background: `linear-gradient(135deg, ${theme.palette.primary.light}, ${theme.palette.secondary.light})`,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: theme.palette.primary.contrastText,
-    fontWeight: 600,
-}));
+const samplePreviewSrc =
+    features.find((f) => f.previewImageSrc)?.previewImageSrc ?? '';
 
-export const Released: Story = () => (
+export const Current: Story = () => (
+    <Container>
+        {features
+            .toSorted((a, b) => a.title.localeCompare(b.title))
+            .map((feature) => (
+                <FeatureCard key={feature.title} feature={feature} />
+            ))}
+    </Container>
+);
+
+export const PhaseReleased: Story = () => (
     <FeatureCard
         feature={{
             phase: 'released',
@@ -39,7 +41,7 @@ export const Released: Story = () => (
     />
 );
 
-export const ReleasedWithPreview: Story = () => (
+export const PhaseReleasedWithPreview: Story = () => (
     <FeatureCard
         feature={{
             phase: 'released',
@@ -48,12 +50,12 @@ export const ReleasedWithPreview: Story = () => (
                 'A redesigned insights surface with faster filters, sharable views, and trend overlays you can pin to your dashboard.',
             releasedAt: '2026-06-12',
             docsLink: 'https://docs.getunleash.io/reference/insights',
-            preview: <PreviewPlaceholder>Preview</PreviewPlaceholder>,
+            previewImageSrc: samplePreviewSrc,
         }}
     />
 );
 
-export const ReleasedWithoutDocs: Story = () => (
+export const PhaseReleasedWithoutDocs: Story = () => (
     <FeatureCard
         feature={{
             phase: 'released',
@@ -65,7 +67,7 @@ export const ReleasedWithoutDocs: Story = () => (
     />
 );
 
-export const ReleasedLongCopy: Story = () => (
+export const PhaseReleasedLongCopy: Story = () => (
     <FeatureCard
         feature={{
             phase: 'released',
@@ -78,7 +80,7 @@ export const ReleasedLongCopy: Story = () => (
     />
 );
 
-export const Beta: Story = () => (
+export const PhaseBeta: Story = () => (
     <FeatureCard
         feature={{
             phase: 'beta',
@@ -90,7 +92,7 @@ export const Beta: Story = () => (
     />
 );
 
-export const BetaWithoutDocs: Story = () => (
+export const PhaseBetaWithoutDocs: Story = () => (
     <FeatureCard
         feature={{
             phase: 'beta',
@@ -122,47 +124,4 @@ export const ExploringWithDocs: Story = () => (
             docsLink: 'https://docs.getunleash.io',
         }}
     />
-);
-
-export const Gallery: Story = () => (
-    <Container>
-        <FeatureCard
-            feature={{
-                phase: 'released',
-                title: 'Unleash MCP server',
-                description:
-                    'Connect your AI coding assistant to Unleash for safe, structured feature flag management.',
-                releasedAt: '2026-05-26',
-                docsLink: 'https://docs.getunleash.io/integrate/mcp',
-            }}
-        />
-        <FeatureCard
-            feature={{
-                phase: 'released',
-                title: 'Insights dashboard refresh',
-                description:
-                    'A redesigned insights surface with faster filters and sharable views.',
-                releasedAt: '2026-06-12',
-                docsLink: 'https://docs.getunleash.io/reference/insights',
-                preview: <PreviewPlaceholder>Preview</PreviewPlaceholder>,
-            }}
-        />
-        <FeatureCard
-            feature={{
-                phase: 'beta',
-                title: 'Release plans',
-                description:
-                    'Coordinate gradual rollouts across environments with a guided plan.',
-                docsLink: 'https://docs.getunleash.io/reference/release-plans',
-            }}
-        />
-        <FeatureCard
-            feature={{
-                phase: 'exploring',
-                title: 'Service Now integration',
-                description:
-                    'We are looking into how a Service Now integration with Unleash could look like.',
-            }}
-        />
-    </Container>
 );

@@ -1,6 +1,11 @@
 name: PR -> Frontend Build & Test
 
 on:
+  workflow_call:
+    inputs:
+      working-directory:
+        type: string
+        default: '.'
   workflow_dispatch:
   pull_request:
     paths:
@@ -13,7 +18,7 @@ jobs:
     name: build
     defaults:
       run:
-        working-directory: frontend
+        working-directory: ${{ inputs.working-directory || '.' }}/frontend
 
     steps:
       - uses: actions/checkout@v6
@@ -23,7 +28,7 @@ jobs:
         with:
           node-version: 22.x
           cache: 'pnpm'
-          cache-dependency-path: pnpm-lock.yaml
+          cache-dependency-path: ${{ inputs.working-directory || '.' }}/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm run lint:material:icons
       - run: pnpm run lint:check

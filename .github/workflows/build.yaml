@@ -1,6 +1,11 @@
 name: Build, Lint & Tests
 
 on:
+  workflow_call:
+    inputs:
+      working-directory:
+        type: string
+        default: '.'
   push:
     branches:
       - main
@@ -19,6 +24,9 @@ jobs:
       contents: read
       # Needed for the github-reporter from vitest to make comments on PRs
       pull-requests: write
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory || '.' }}
     services:
       # Label used to access the service container
       postgres:
@@ -43,7 +51,7 @@ jobs:
         with:
           node-version: 22.x
           cache: 'pnpm'
-          cache-dependency-path: pnpm-lock.yaml
+          cache-dependency-path: ${{ inputs.working-directory || '.' }}/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile --ignore-scripts
       - run: pnpm lint
       - run: pnpm build:backend

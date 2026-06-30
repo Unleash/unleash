@@ -1,5 +1,13 @@
 name: e2e:frontend
 on:
+  workflow_call:
+    inputs:
+      working-directory:
+        type: string
+        default: '.'
+    secrets:
+      FRONTEND_TEST_LICENSE:
+        required: false
   pull_request:
     # paths:
     #   - 'frontend/**'
@@ -11,6 +19,11 @@ concurrency:
 jobs:
   e2e-build:
     runs-on: ubuntu-latest
+    env:
+      WORK_DIR: ${{ inputs.working-directory || '.' }}
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory || '.' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -20,13 +33,13 @@ jobs:
         with:
           node-version: 22.x
           cache: 'pnpm'
-          cache-dependency-path: pnpm-lock.yaml
+          cache-dependency-path: ${{ inputs.working-directory || '.' }}/pnpm-lock.yaml
       - name: Cache Cypress binary
         id: cache-cypress
         uses: actions/cache@v5
         with:
           path: ~/.cache/Cypress
-          key: cypress-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          key: cypress-${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml', inputs.working-directory || '.')) }}
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Build static frontend
@@ -35,13 +48,18 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: frontend-build
-          path: frontend/build
+          path: ${{ env.WORK_DIR }}/frontend/build
           retention-days: 1
 
   e2e:
     needs: e2e-build
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      WORK_DIR: ${{ inputs.working-directory || '.' }}
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory || '.' }}
     strategy:
       matrix:
         test:
@@ -59,17 +77,17 @@ jobs:
         with:
           node-version: 22.x
           cache: 'pnpm'
-          cache-dependency-path: pnpm-lock.yaml
+          cache-dependency-path: ${{ inputs.working-directory || '.' }}/pnpm-lock.yaml
       - name: Download frontend build
         uses: actions/download-artifact@v8
         with:
           name: frontend-build
-          path: frontend/build
+          path: ${{ env.WORK_DIR }}/frontend/build
       - name: Restore Cypress binary
         uses: actions/cache/restore@v5
         with:
           path: ~/.cache/Cypress
-          key: cypress-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          key: cypress-${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml', inputs.working-directory || '.')) }}
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Start Unleash test instance
@@ -80,7 +98,7 @@ jobs:
       - name: Run Cypress
         uses: cypress-io/github-action@v7.4.0
         with:
-          working-directory: frontend
+          working-directory: ${{ env.WORK_DIR }}/frontend
           env: AUTH_USER=admin,AUTH_PASSWORD=unleash4all
           config: baseUrl=http://localhost:3000
           spec: cypress/${{ matrix.test }}
@@ -95,7 +113,7 @@ jobs:
         with:
           name: ${{ steps.artifact-name.outputs.name }}
           path: |
-            frontend/cypress/screenshots
-            frontend/cypress/videos
+            ${{ env.WORK_DIR }}/frontend/cypress/screenshots
+            ${{ env.WORK_DIR }}/frontend/cypress/videos
           if-no-files-found: ignore
           retention-days: 3

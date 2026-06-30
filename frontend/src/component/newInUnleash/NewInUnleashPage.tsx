@@ -68,7 +68,8 @@ export const NewInUnleashPage = () => {
         <PageLayout>
             <PageContent header={<PageHeader title='New in Unleash' />}>
                 <SectionDescription>
-                    These are the latest capabilities we've added to Unleash — explore what's new and start using them today.
+                    These are the latest capabilities we've added to Unleash —
+                    explore what's new and start using them today.
                 </SectionDescription>
                 {released.length === 0 ? (
                     <EmptyState>Nothing new to show right now.</EmptyState>
@@ -91,11 +92,10 @@ export const NewInUnleashPage = () => {
                     <OpenInNew fontSize='small' />
                 </ReleaseNotesLink>
             </PageContent>
-            <PageContent
-                header={<PageHeader title="What we're working on" />}
-            >
+            <PageContent header={<PageHeader title="What we're working on" />}>
                 <SectionDescription>
-                    Try features that are still in development and help us decide what to build next.
+                    Try features that are still in development and help us
+                    decide what to build next.
                 </SectionDescription>
                 {inProgress.length === 0 ? (
                     <EmptyState>Nothing to share yet.</EmptyState>

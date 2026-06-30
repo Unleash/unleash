@@ -1,18 +1,12 @@
 import { styled, Typography } from '@mui/material';
 import OpenInNew from '@mui/icons-material/OpenInNew';
-import type {
-    Feature,
-    InProgressFeature,
-    ReleasedFeature,
-} from './features';
+import type { Feature, InProgressFeature, ReleasedFeature } from './features';
 
 const ReleasedCard = styled('article', {
     shouldForwardProp: (prop) => prop !== 'hasPreview',
 })<{ hasPreview: boolean }>(({ theme, hasPreview }) => ({
     display: 'grid',
-    gridTemplateColumns: hasPreview
-        ? 'minmax(0, 1fr) minmax(0, 280px)'
-        : '1fr',
+    gridTemplateColumns: hasPreview ? 'minmax(0, 1fr) minmax(0, 280px)' : '1fr',
     gap: theme.spacing(3),
     padding: theme.spacing(3),
     borderRadius: theme.shape.borderRadiusLarge,
@@ -95,9 +89,7 @@ const PhaseBadge = styled('span', {
         backgroundColor: isBeta
             ? theme.palette.secondary.light
             : theme.palette.success.light,
-        color: isBeta
-            ? theme.palette.primary.main
-            : theme.palette.success.main,
+        color: isBeta ? theme.palette.primary.main : theme.palette.success.main,
         '&::before': {
             content: '""',
             width: theme.spacing(1),
@@ -139,11 +131,7 @@ const ReleasedFeatureCard = ({ feature }: { feature: ReleasedFeature }) => (
     </ReleasedCard>
 );
 
-const InProgressFeatureCard = ({
-    feature,
-}: {
-    feature: InProgressFeature;
-}) => (
+const InProgressFeatureCard = ({ feature }: { feature: InProgressFeature }) => (
     <InProgressCard>
         <CardHeader>
             <Typography component='h2' variant='h4'>

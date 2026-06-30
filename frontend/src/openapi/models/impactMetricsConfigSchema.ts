@@ -23,7 +23,7 @@ export interface ImpactMetricsConfigSchema {
     id: string;
     /** The selected labels and their values for filtering the metric data. */
     labelSelectors: ImpactMetricsConfigSchemaLabelSelectors;
-    /** The Prometheus metric series to query. It includes both unleash prefix and metric type and display name */
+    /** The Prometheus metric series name to query. */
     metricName: string;
     /** The access mode for this impact metric configuration: "read" when referenced by a safeguard, "write" otherwise. */
     mode?: ImpactMetricsConfigSchemaMode;

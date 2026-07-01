@@ -1,8 +1,16 @@
-import { styled, Typography } from '@mui/material';
+import { Button, styled, Typography } from '@mui/material';
 import OpenInNew from '@mui/icons-material/OpenInNew';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMD } from 'utils/formatDate';
 import type { Feature, InProgressFeature, ReleasedFeature } from './features';
+
+const buildInputMailto = (title: string) => {
+    const subject = encodeURIComponent(`Input on ${title}`);
+    const body = encodeURIComponent(
+        `Hi Unleash team,\n\nI'd like to share some input on ${title}:\n\n`,
+    );
+    return `mailto:beta@getunleash.io?subject=${subject}&body=${body}`;
+};
 
 const IMAGE_HEIGHT = 190;
 const IMAGE_WIDTH = 160;
@@ -28,11 +36,26 @@ const Content = styled('div')(({ theme }) => ({
 const InProgressCard = styled('article')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(1),
-    padding: theme.spacing(2.5),
     borderRadius: theme.shape.borderRadiusLarge,
     backgroundColor: theme.palette.background.paper,
     border: `1px solid ${theme.palette.divider}`,
+    overflow: 'hidden',
+}));
+
+const InProgressBody = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1),
+    padding: theme.spacing(2.5),
+}));
+
+const InProgressFooter = styled('div')(({ theme }) => ({
+    display: 'flex',
+    padding: theme.spacing(1.5, 1),
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    borderTop: `1px solid ${theme.palette.divider}`,
+    backgroundColor: theme.palette.background.elevation1,
 }));
 
 const CardHeader = styled('header')(({ theme }) => ({
@@ -146,29 +169,28 @@ const ReleasedFeatureCard = ({ feature }: { feature: ReleasedFeature }) => {
 
 const InProgressFeatureCard = ({ feature }: { feature: InProgressFeature }) => (
     <InProgressCard>
-        <CardHeader>
-            <Typography component='h2' variant='h4'>
-                {feature.title}
+        <InProgressBody>
+            <CardHeader>
+                <Typography component='h2' variant='h4'>
+                    {feature.title}
+                </Typography>
+                <PhaseBadge phase={feature.phase}>
+                    {phaseLabel(feature.phase)}
+                </PhaseBadge>
+            </CardHeader>
+            <Typography variant='body2' color='text.secondary'>
+                {feature.description}
             </Typography>
-            <PhaseBadge phase={feature.phase}>
-                {phaseLabel(feature.phase)}
-            </PhaseBadge>
-        </CardHeader>
-        <Typography variant='body2' color='text.secondary'>
-            {feature.description}
-        </Typography>
-        {feature.docsLink ? (
-            <Actions>
-                <DocsLink
-                    href={feature.docsLink}
-                    rel='noopener noreferrer'
-                    target='_blank'
-                >
-                    <OpenInNew fontSize='small' />
-                    Docs
-                </DocsLink>
-            </Actions>
-        ) : null}
+        </InProgressBody>
+        <InProgressFooter>
+            <Button
+                color='secondary'
+                variant='outlined'
+                href={buildInputMailto(feature.title)}
+            >
+                Share your input
+            </Button>
+        </InProgressFooter>
     </InProgressCard>
 );
 

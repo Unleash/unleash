@@ -157,6 +157,85 @@ describe('Webhook integration', () => {
         expect(nock.isDone()).toBe(true);
     });
 
+    test('should keep bodyTemplate placeholders JSON safe', async () => {
+        const { addon } = setup();
+        const event: IEvent = {
+            id: 1,
+            createdAt: new Date('2024-07-24T00:00:00.000Z'),
+            createdByUserId: SYSTEM_USER_ID,
+            type: FEATURE_CREATED,
+            createdBy: 'some"user.com',
+            featureName: 'some-toggle',
+            data: {
+                name: 'some-toggle',
+                enabled: false,
+                strategies: [{ name: 'default' }],
+            },
+        };
+
+        const parameters = {
+            url: 'http://test.webhook.com/plain',
+            bodyTemplate:
+                '{\n  "createdBy": "{{event.createdBy}}",\n  "markdown": "{{eventMarkdown}}"\n}',
+            contentType: 'text/plain',
+        };
+        let callBody: any;
+        nock('http://test.webhook.com')
+            .post('/plain')
+            .matchHeader('Content-Type', 'text/plain')
+            .reply(200, (_uri, body) => {
+                callBody = body;
+                return {
+                    status: 200,
+                    body: 'ok',
+                };
+            });
+
+        await addon.handleEvent(event, parameters, INTEGRATION_ID);
+        const parsedBody = JSON.parse(callBody);
+        expect(parsedBody.markdown).toContain('some-toggle');
+        expect(nock.isDone()).toBe(true);
+    });
+
+    test('should preserve replacement tokens in eventMarkdown', async () => {
+        const { addon } = setup();
+        const event: IEvent = {
+            id: 1,
+            createdAt: new Date('2024-07-24T00:00:00.000Z'),
+            createdByUserId: SYSTEM_USER_ID,
+            type: FEATURE_CREATED,
+            createdBy: 'some@user.com',
+            featureName: '$&-toggle',
+            project: 'default',
+            data: {
+                name: '$&-toggle',
+                enabled: false,
+                strategies: [{ name: 'default' }],
+            },
+        };
+
+        const parameters = {
+            url: 'http://test.webhook.com/plain',
+            bodyTemplate: '{{eventMarkdown}}',
+            contentType: 'text/plain',
+        };
+        let callBody: any;
+        nock('http://test.webhook.com')
+            .post('/plain')
+            .matchHeader('Content-Type', 'text/plain')
+            .reply(200, (_uri, body) => {
+                callBody = body;
+                return {
+                    status: 200,
+                    body: 'ok',
+                };
+            });
+
+        await addon.handleEvent(event, parameters, INTEGRATION_ID);
+        expect(callBody).toContain('$&-toggle');
+        expect(nock.isDone()).toBe(true);
+    });
+
     test('Should format event with "authorization"', async () => {
         const { addon } = setup();
         const event: IEvent = {

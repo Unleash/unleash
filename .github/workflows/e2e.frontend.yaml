@@ -6,6 +6,8 @@ on:
         type: string
         default: '.'
     secrets:
+      UNLEASH_TEST_LICENSE:
+        required: false
       FRONTEND_TEST_LICENSE:
         required: false
   pull_request:
@@ -94,6 +96,7 @@ jobs:
         run: |
           docker compose -f .github/docker-compose.test.yml up -d --wait -t 90
         env:
+          UNLEASH_TEST_LICENSE: ${{ secrets.UNLEASH_TEST_LICENSE || secrets.FRONTEND_TEST_LICENSE }}
           FRONTEND_TEST_LICENSE: ${{ secrets.FRONTEND_TEST_LICENSE }}
       - name: Run Cypress
         uses: cypress-io/github-action@v7.4.0

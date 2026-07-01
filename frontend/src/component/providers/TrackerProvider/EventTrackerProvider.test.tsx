@@ -64,6 +64,6 @@ test('trackEvent fans out to Plausible and the flight recorder', async () => {
         eventType: 'custom',
         eventName: 'invite',
         context: { userId: 'u-1', email: 'already-hashed-email' },
-        payload: { eventType: 'test' },
+        payload: { eventType: 'test', path: '/' },
     });
 });

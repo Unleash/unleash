@@ -3,16 +3,12 @@ import { useLocation } from 'react-router';
 import type { FlightRecorder } from '@unleash/sdk-flight-recorder';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { createUuid } from 'utils/createUuid';
+import { normalizePath } from 'utils/normalizePath';
+import { RESERVED_EVENT_NAMES } from 'utils/trackingEvents';
 import {
     type EngagedTimeTracker,
     startEngagedTimeTracker,
 } from './engagedTime';
-
-// Trailing slashes are the only divergence react-router leaves in pathname (query string
-// and hash are already excluded), so '/x/settings/' and '/x/settings' would otherwise split
-// one screen across two stored paths. Normalize to the slash-free form at record time;
-// id->template collapsing stays downstream at query time so it's editable without a deploy.
-const normalizePath = (path: string): string => path.replace(/\/+$/, '') || '/';
 
 export const usePageViewTracking = (recorder: FlightRecorder | null): void => {
     const { pathname } = useLocation();
@@ -38,7 +34,7 @@ export const usePageViewTracking = (recorder: FlightRecorder | null): void => {
         }
         recorder.record({
             eventType: 'custom',
-            eventName: 'pageleave',
+            eventName: RESERVED_EVENT_NAMES.pageLeave,
             context: { ...context },
             payload: {
                 pageviewId: page.pageviewId,
@@ -64,7 +60,7 @@ export const usePageViewTracking = (recorder: FlightRecorder | null): void => {
         const pageviewId = createUuid();
         recorder.record({
             eventType: 'custom',
-            eventName: 'pageview',
+            eventName: RESERVED_EVENT_NAMES.pageView,
             context: { ...context },
             payload: {
                 pageviewId,

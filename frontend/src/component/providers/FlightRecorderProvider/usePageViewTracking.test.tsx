@@ -139,7 +139,11 @@ it('records a page leave carrying engaged time, paired to the page left, before 
             eventType: 'custom',
             eventName: 'pageleave',
             context: { userId: 'u-1' },
-            payload: { pageviewId: landingId, engagedMs: expect.any(Number) },
+            payload: {
+                pageviewId: landingId,
+                path: '/projects/default/settings',
+                engagedMs: expect.any(Number),
+            },
         },
     ]);
 });
@@ -162,7 +166,11 @@ it('records a page leave for the current page when the tab is closed', async () 
             eventType: 'custom',
             eventName: 'pageleave',
             context: { userId: 'u-1' },
-            payload: { pageviewId: landingId, engagedMs: expect.any(Number) },
+            payload: {
+                pageviewId: landingId,
+                path: '/projects/default/settings',
+                engagedMs: expect.any(Number),
+            },
         },
     ]);
     expect(recorder.flush).toHaveBeenCalledWith({ keepalive: true });
@@ -221,7 +229,11 @@ it('records a page leave for the current page when tracking is torn down', async
             eventType: 'custom',
             eventName: 'pageleave',
             context: { userId: 'u-1' },
-            payload: { pageviewId: landingId, engagedMs: expect.any(Number) },
+            payload: {
+                pageviewId: landingId,
+                path: '/projects/default/settings',
+                engagedMs: expect.any(Number),
+            },
         },
     ]);
 });

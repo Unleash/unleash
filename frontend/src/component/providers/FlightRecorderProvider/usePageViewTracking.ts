@@ -19,6 +19,7 @@ export const usePageViewTracking = (recorder: FlightRecorder | null): void => {
     const previousPathRef = useRef<string | null>(null);
     const currentPageRef = useRef<{
         pageviewId: string;
+        path: string;
         tracker: EngagedTimeTracker;
     } | null>(null);
 
@@ -38,6 +39,7 @@ export const usePageViewTracking = (recorder: FlightRecorder | null): void => {
             context: { ...context },
             payload: {
                 pageviewId: page.pageviewId,
+                path: page.path,
                 engagedMs: page.tracker.engagedMs(),
             },
         });
@@ -70,6 +72,7 @@ export const usePageViewTracking = (recorder: FlightRecorder | null): void => {
         });
         currentPageRef.current = {
             pageviewId,
+            path,
             tracker: startEngagedTimeTracker(),
         };
     });

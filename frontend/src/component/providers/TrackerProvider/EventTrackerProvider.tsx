@@ -1,5 +1,7 @@
 import type React from 'react';
 import { type FC, useContext, useMemo, useRef } from 'react';
+import { useLocation } from 'react-router';
+import { normalizePath } from 'utils/normalizePath';
 import { PlausibleContext } from 'contexts/PlausibleContext';
 import { FlightRecorderContext } from 'contexts/FlightRecorderContext';
 import {
@@ -14,6 +16,7 @@ export const EventTrackerProvider: FC<{ children?: React.ReactNode }> = ({
     const plausible = useContext(PlausibleContext);
     const flightRecorder = useContext(FlightRecorderContext);
     const { uiConfig } = useUiConfig();
+    const { pathname } = useLocation();
 
     const plausibleRef = useRef(plausible);
     plausibleRef.current = plausible;
@@ -21,6 +24,8 @@ export const EventTrackerProvider: FC<{ children?: React.ReactNode }> = ({
     flightRecorderRef.current = flightRecorder;
     const unleashContextRef = useRef(uiConfig?.unleashContext);
     unleashContextRef.current = uiConfig?.unleashContext;
+    const pathRef = useRef(pathname);
+    pathRef.current = pathname;
 
     const tracker = useMemo<EventTracker>(
         () => ({
@@ -30,7 +35,10 @@ export const EventTrackerProvider: FC<{ children?: React.ReactNode }> = ({
                     eventType: 'custom',
                     eventName,
                     context: { ...unleashContextRef.current },
-                    payload: options?.props,
+                    payload: {
+                        ...options?.props,
+                        path: normalizePath(pathRef.current),
+                    },
                 });
             },
         }),

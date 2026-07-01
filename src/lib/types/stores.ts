@@ -13,6 +13,7 @@ import type { ITagTypeStore } from '../features/tag-type/tag-type-store-type.js'
 import type { IFeatureTagStore } from './stores/feature-tag-store.js';
 import type { IUserStore } from './stores/user-store.js';
 import type { IAddonStore } from './stores/addon-store.js';
+export type { IAddon } from './stores/addon-store.js';
 import type { IAccessStore } from './stores/access-store.js';
 import type { IApiTokenStore } from './stores/api-token-store.js';
 import type { IResetTokenStore } from './stores/reset-token-store.js';

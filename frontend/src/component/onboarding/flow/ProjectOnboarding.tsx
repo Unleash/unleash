@@ -104,7 +104,7 @@ export const ProjectOnboarding = ({
                 </TitleRow>
             </StyledAccordionSummary>
             <StyledAccordionDetails>
-                <Actions>
+                <Actions data-public>
                     <CreateFlagStep
                         state={stepState(step, 1)}
                         refetchFeatures={refetchFeatures}

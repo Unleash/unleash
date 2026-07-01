@@ -1,7 +1,7 @@
 import { styled } from '@mui/material';
 import type { Story, StoryMeta } from 'component/stories/types';
 import { FeatureCard } from './FeatureCard';
-import { features } from './features';
+import { features, type ReleasedFeature } from './features';
 
 export const meta: StoryMeta = {
     title: 'NewInUnleash / FeatureCard',
@@ -16,7 +16,10 @@ const Container = styled('div')(({ theme }) => ({
 }));
 
 const samplePreviewSrc =
-    features.find((f) => f.previewImageSrc)?.previewImageSrc ?? '';
+    features.find(
+        (f): f is ReleasedFeature =>
+            f.phase === 'released' && Boolean(f.previewImageSrc),
+    )?.previewImageSrc ?? '';
 
 export const Current: Story = () => (
     <Container>
@@ -87,18 +90,6 @@ export const PhaseBeta: Story = () => (
             title: 'Release plans',
             description:
                 'Coordinate gradual rollouts across environments with a guided plan: define milestones, target audiences, and progress automatically.',
-            docsLink: 'https://docs.getunleash.io/reference/release-plans',
-        }}
-    />
-);
-
-export const PhaseBetaWithoutDocs: Story = () => (
-    <FeatureCard
-        feature={{
-            phase: 'beta',
-            title: 'Beta without docs',
-            description:
-                'An early-access feature that has not yet been documented publicly — useful to verify the card renders without an Actions row.',
         }}
     />
 );
@@ -110,18 +101,6 @@ export const Exploring: Story = () => (
             title: 'Service Now integration',
             description:
                 'We are currently looking into how a Service Now integration with Unleash could look like, and we would like to understand the various needs for this.',
-        }}
-    />
-);
-
-export const ExploringWithDocs: Story = () => (
-    <FeatureCard
-        feature={{
-            phase: 'exploring',
-            title: 'Exploring with a feedback link',
-            description:
-                'Some exploration cards link to a discovery doc or a feedback form so customers can opt in to the conversation.',
-            docsLink: 'https://docs.getunleash.io',
         }}
     />
 );

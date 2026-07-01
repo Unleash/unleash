@@ -6,16 +6,13 @@ import McpImage from 'assets/img/new-in-unleash/mcp.png';
 type FeatureBase = {
     title: string;
     description: string;
+    previewImageSrc?: string;
+    docsLink?: string;
 };
 
 export type Feature = FeatureBase &
     (
-        | {
-              phase: 'released';
-              releasedAt: string;
-              docsLink?: string;
-              previewImageSrc?: string;
-          }
+        | { phase: 'released'; releasedAt: string }
         | { phase: 'beta' | 'exploring' }
     );
 

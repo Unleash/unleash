@@ -354,10 +354,11 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
             ...formatting,
         };
 
-        const renderContext = { escape: (text: string) => text };
-        const text = Mustache.render(action, context, undefined, renderContext);
+        Mustache.escape = (text) => text;
+
+        const text = Mustache.render(action, context);
         const url = path
-            ? `${this.unleashUrl}${Mustache.render(path, context, undefined, renderContext)}`
+            ? `${this.unleashUrl}${Mustache.render(path, context)}`
             : undefined;
 
         return {

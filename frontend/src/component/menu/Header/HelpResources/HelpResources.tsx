@@ -25,11 +25,6 @@ import { useVariant } from 'hooks/useVariant';
 const StyledIconButton = styled(IconButton)<{ open?: boolean }>(
     ({ theme, open }) => ({
         color: open ? theme.palette.primary.main : undefined,
-        '&:focus-visible': {
-            outlineStyle: 'solid',
-            outlineWidth: theme.spacing(0.5),
-            outlineColor: theme.palette.primary.main,
-        },
     }),
 );
 

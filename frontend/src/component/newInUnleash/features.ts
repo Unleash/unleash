@@ -25,8 +25,7 @@ export type InProgressFeature = Extract<
     { phase: 'beta' | 'exploring' }
 >;
 
-// we always want at least one released feature to show on the page
-export const features: [ReleasedFeature, ...Feature[]] = [
+export const features: Feature[] = [
     {
         title: 'Impact metrics',
         description:

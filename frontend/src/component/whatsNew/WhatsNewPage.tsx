@@ -1,14 +1,14 @@
 import NotFound from 'component/common/NotFound/NotFound';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { features } from './features';
-import { NewInUnleashLayout } from './NewInUnleashLayout';
+import { WhatsNewLayout } from './WhatsNewLayout';
 
-export const NewInUnleashPage = () => {
+export const WhatsNewPage = () => {
     const enabled = useUiFlag('whatsNewPage');
 
     if (!enabled) {
         return <NotFound />;
     }
 
-    return <NewInUnleashLayout features={features} />;
+    return <WhatsNewLayout features={features} />;
 };

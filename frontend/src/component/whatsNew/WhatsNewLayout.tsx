@@ -74,11 +74,11 @@ const InProgressSection = styled(PageContent)(({ theme }) => ({
     },
 }));
 
-type NewInUnleashLayoutProps = {
+type WhatsNewLayoutProps = {
     features: Feature[];
 };
 
-export const NewInUnleashLayout = ({ features }: NewInUnleashLayoutProps) => {
+export const WhatsNewLayout = ({ features }: WhatsNewLayoutProps) => {
     const released: ReleasedFeature[] = features
         .filter((f): f is ReleasedFeature => f.phase === 'released')
         .toSorted((a, b) => b.releasedAt.localeCompare(a.releasedAt));
@@ -91,7 +91,7 @@ export const NewInUnleashLayout = ({ features }: NewInUnleashLayoutProps) => {
         <PageLayout>
             <ReleasedSection
                 bodyClass='no-padding'
-                header={<PageHeader title='New in Unleash' />}
+                header={<PageHeader title="What's new" />}
             >
                 <SectionDescription variant='body2'>
                     These are the latest capabilities we've added to Unleash —

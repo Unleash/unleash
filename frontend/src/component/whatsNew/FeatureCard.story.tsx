@@ -4,7 +4,7 @@ import { FeatureCard } from './FeatureCard';
 import { features, type ReleasedFeature } from './features';
 
 export const meta: StoryMeta = {
-    title: 'NewInUnleash / FeatureCard',
+    title: 'WhatsNew / FeatureCard',
     background: 'application',
 };
 

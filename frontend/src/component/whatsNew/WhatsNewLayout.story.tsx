@@ -1,26 +1,26 @@
 import type { Story, StoryMeta } from 'component/stories/types';
-import { NewInUnleashLayout } from './NewInUnleashLayout';
+import { WhatsNewLayout } from './WhatsNewLayout';
 import { features, type Feature } from './features';
 
 export const meta: StoryMeta = {
-    title: 'NewInUnleash / NewInUnleashLayout',
+    title: 'WhatsNew / WhatsNewLayout',
     background: 'application',
 };
 
 const releasedOnly = features.filter((f) => f.phase === 'released');
 const inProgressOnly = features.filter((f) => f.phase !== 'released');
 
-export const Current: Story = () => <NewInUnleashLayout features={features} />;
+export const Current: Story = () => <WhatsNewLayout features={features} />;
 
 export const OnlyReleased: Story = () => (
-    <NewInUnleashLayout features={releasedOnly} />
+    <WhatsNewLayout features={releasedOnly} />
 );
 
 export const OnlyInProgress: Story = () => (
-    <NewInUnleashLayout features={inProgressOnly} />
+    <WhatsNewLayout features={inProgressOnly} />
 );
 
-export const Empty: Story = () => <NewInUnleashLayout features={[]} />;
+export const Empty: Story = () => <WhatsNewLayout features={[]} />;
 
 const longCopy: Feature[] = [
     {
@@ -39,4 +39,4 @@ const longCopy: Feature[] = [
     },
 ];
 
-export const LongCopy: Story = () => <NewInUnleashLayout features={longCopy} />;
+export const LongCopy: Story = () => <WhatsNewLayout features={longCopy} />;

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
-import { NewInUnleashLayout } from './NewInUnleashLayout.tsx';
+import { WhatsNewLayout } from './WhatsNewLayout.tsx';
 import type { Feature } from './features.ts';
 
 const released: Feature = {
@@ -17,9 +17,9 @@ const exploring: Feature = {
     description: 'Undo yesterdays deploy before it happened.',
 };
 
-describe('NewInUnleashLayout', () => {
+describe('WhatsNewLayout', () => {
     it('renders a card for each released and in-progress feature', () => {
-        render(<NewInUnleashLayout features={[released, exploring]} />);
+        render(<WhatsNewLayout features={[released, exploring]} />);
 
         expect(
             screen.getByRole('heading', { name: 'Impact metrics' }),
@@ -30,7 +30,7 @@ describe('NewInUnleashLayout', () => {
     });
 
     it('shows the in-progress empty state when no in-progress features are present', () => {
-        render(<NewInUnleashLayout features={[released]} />);
+        render(<WhatsNewLayout features={[released]} />);
 
         expect(
             screen.getByText(/early access features will show up here/i),

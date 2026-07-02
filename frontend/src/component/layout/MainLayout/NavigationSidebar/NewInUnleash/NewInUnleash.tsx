@@ -4,7 +4,7 @@ import {
 } from './NewInUnleashItems.tsx';
 import { NewInUnleashToast } from './NewInUnleashToast.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
-import { useDelayedUiFlagEvaluation } from 'hooks/useUiFlag.ts';
+import { useDelayedUiFlagEvaluation, useUiFlag } from 'hooks/useUiFlag.ts';
 import { shouldBeDisplayed } from './shouldBeDisplayed.ts';
 import { useIsNewUser } from './useIsNewUser.ts';
 
@@ -23,10 +23,12 @@ export const useNewInUnleashItemToShow = (
 };
 
 export const NewInUnleash = () => {
+    const whatsNewPageEnabled = useUiFlag('whatsNewPage');
+
     const isNewUser = useIsNewUser();
     const item = useNewInUnleashItemToShow(newInUnleashItems);
 
-    if (isNewUser || !item) {
+    if (whatsNewPageEnabled || isNewUser || !item) {
         return null;
     }
 

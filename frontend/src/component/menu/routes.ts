@@ -84,7 +84,7 @@ export const routes: IRoute[] = [
         component: NewInUnleashPage,
         type: 'protected',
         enterprise: true,
-        flag: 'newInUnleashPage',
+        flag: 'whatsNewPage',
         hidden: true,
         menu: {},
     },

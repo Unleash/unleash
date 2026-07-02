@@ -63,7 +63,7 @@ export type IFlagKey =
     | 'optimizeLifecycle'
     | 'plausibleMetrics'
     | 'newInUnleash'
-    | 'newInUnleashPage'
+    | 'whatsNewPage'
     | 'oidcPkceSupport'
     | 'flightRecorderSdk'
     | 'flightRecorderAdminEvents'
@@ -265,8 +265,8 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_IMPACT_VIEWS,
         false,
     ),
-    newInUnleashPage: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_IN_UNLEASH_PAGE,
+    whatsNewPage: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_WHATS_NEW_PAGE,
         false,
     ),
     registerImpactMetrics: parseEnvVarBoolean(

@@ -11,7 +11,7 @@ const RELEASE_NOTES_URL = 'https://docs.getunleash.io/release-notes';
 
 const PageLayout = styled('div')(({ theme }) => ({
     display: 'grid',
-    gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 343px)',
+    gridTemplateColumns: `minmax(0, 1fr) minmax(0, ${theme.spacing(43)})`,
     gap: theme.spacing(2),
     alignItems: 'start',
     [theme.breakpoints.down('md')]: {
@@ -60,21 +60,6 @@ const EmptyStateCornerDecoration = styled(EmptyStateCorner)(({ theme }) => ({
     pointerEvents: 'none',
 }));
 
-const ReleasedSection = styled(PageContent)(({ theme }) => ({
-    '& > .body': {
-        padding: theme.spacing(3),
-    },
-}));
-
-const InProgressSection = styled(PageContent)(({ theme }) => ({
-    '& > .body': {
-        padding: theme.spacing(2),
-        [theme.breakpoints.down('md')]: {
-            padding: theme.spacing(3),
-        },
-    },
-}));
-
 type WhatsNewLayoutProps = {
     features: Feature[];
 };
@@ -92,10 +77,7 @@ export const WhatsNewLayout = ({ features }: WhatsNewLayoutProps) => {
 
     return (
         <PageLayout>
-            <ReleasedSection
-                bodyClass='no-padding'
-                header={<PageHeader title="What's new" />}
-            >
+            <PageContent header={<PageHeader title="What's new" />}>
                 <SectionDescription variant='body2'>
                     These are the latest capabilities we've added to Unleash —
                     explore what's new and start using them today.
@@ -123,11 +105,8 @@ export const WhatsNewLayout = ({ features }: WhatsNewLayoutProps) => {
                     View all release notes
                     <OpenInNew fontSize='small' />
                 </ReleaseNotesLink>
-            </ReleasedSection>
-            <InProgressSection
-                bodyClass='no-padding'
-                header={<PageHeader title="What we're working on" />}
-            >
+            </PageContent>
+            <PageContent header={<PageHeader title="What we're working on" />}>
                 {inProgress.length === 0 ? (
                     <InProgressEmptyState variant='body2'>
                         Early access features will show up here when they're
@@ -151,7 +130,7 @@ export const WhatsNewLayout = ({ features }: WhatsNewLayoutProps) => {
                         </ItemList>
                     </>
                 )}
-            </InProgressSection>
+            </PageContent>
         </PageLayout>
     );
 };

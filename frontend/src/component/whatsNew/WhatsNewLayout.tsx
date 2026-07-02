@@ -3,6 +3,7 @@ import OpenInNew from '@mui/icons-material/OpenInNew';
 import EmptyStateCorner from 'assets/img/empty-state-corner.svg?react';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
+import { useEventTracker } from 'hooks/useEventTracker';
 import type { Feature, InProgressFeature, ReleasedFeature } from './features';
 import { FeatureCard } from './FeatureCard';
 
@@ -79,6 +80,8 @@ type WhatsNewLayoutProps = {
 };
 
 export const WhatsNewLayout = ({ features }: WhatsNewLayoutProps) => {
+    const { trackEvent } = useEventTracker();
+
     const released: ReleasedFeature[] = features
         .filter((f): f is ReleasedFeature => f.phase === 'released')
         .toSorted((a, b) => b.releasedAt.localeCompare(a.releasedAt));
@@ -111,6 +114,11 @@ export const WhatsNewLayout = ({ features }: WhatsNewLayoutProps) => {
                     href={RELEASE_NOTES_URL}
                     rel='noopener noreferrer'
                     target='_blank'
+                    onClick={() => {
+                        trackEvent('whats-new-page', {
+                            props: { eventType: 'view-all-release-notes' },
+                        });
+                    }}
                 >
                     View all release notes
                     <OpenInNew fontSize='small' />

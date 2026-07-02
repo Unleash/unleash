@@ -1,5 +1,6 @@
 import { Button, styled, Typography } from '@mui/material';
 import OpenInNew from '@mui/icons-material/OpenInNew';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMD } from 'utils/formatDate';
 import type { Feature, InProgressFeature, ReleasedFeature } from './features';
@@ -148,6 +149,7 @@ const PhaseBadge = styled('span', {
 
 const ReleasedFeatureCard = ({ feature }: { feature: ReleasedFeature }) => {
     const { locationSettings } = useLocationSettings();
+    const { trackEvent } = useEventTracker();
     return (
         <ReleasedCard hasPreview={Boolean(feature.previewImageSrc)}>
             {feature.previewImageSrc ? (
@@ -175,6 +177,14 @@ const ReleasedFeatureCard = ({ feature }: { feature: ReleasedFeature }) => {
                             href={feature.docsLink}
                             rel='noopener noreferrer'
                             target='_blank'
+                            onClick={() => {
+                                trackEvent('whats-new-page', {
+                                    props: {
+                                        eventType: 'read-docs',
+                                        feature: feature.title,
+                                    },
+                                });
+                            }}
                         >
                             Read more in docs
                             <DocsLinkIcon />
@@ -186,33 +196,44 @@ const ReleasedFeatureCard = ({ feature }: { feature: ReleasedFeature }) => {
     );
 };
 
-const InProgressFeatureCard = ({ feature }: { feature: InProgressFeature }) => (
-    <InProgressCard>
-        <InProgressBody>
-            <CardHeader>
-                <FeatureTitle component='h2' variant='body1'>
-                    {feature.title}
-                </FeatureTitle>
-                <PhaseBadge phase={feature.phase}>
-                    {phaseLabel(feature.phase)}
-                </PhaseBadge>
-            </CardHeader>
-            <InProgressDescription variant='body2'>
-                {feature.description}
-            </InProgressDescription>
-        </InProgressBody>
-        <InProgressFooter>
-            <Button
-                size='medium'
-                color='secondary'
-                variant='outlined'
-                href={buildInputMailto(feature.title)}
-            >
-                Share your input
-            </Button>
-        </InProgressFooter>
-    </InProgressCard>
-);
+const InProgressFeatureCard = ({ feature }: { feature: InProgressFeature }) => {
+    const { trackEvent } = useEventTracker();
+    return (
+        <InProgressCard>
+            <InProgressBody>
+                <CardHeader>
+                    <FeatureTitle component='h2' variant='body1'>
+                        {feature.title}
+                    </FeatureTitle>
+                    <PhaseBadge phase={feature.phase}>
+                        {phaseLabel(feature.phase)}
+                    </PhaseBadge>
+                </CardHeader>
+                <InProgressDescription variant='body2'>
+                    {feature.description}
+                </InProgressDescription>
+            </InProgressBody>
+            <InProgressFooter>
+                <Button
+                    size='medium'
+                    color='secondary'
+                    variant='outlined'
+                    href={buildInputMailto(feature.title)}
+                    onClick={() => {
+                        trackEvent('whats-new-page', {
+                            props: {
+                                eventType: 'share-input',
+                                feature: feature.title,
+                            },
+                        });
+                    }}
+                >
+                    Share your input
+                </Button>
+            </InProgressFooter>
+        </InProgressCard>
+    );
+};
 
 export const FeatureCard = ({ feature }: { feature: Feature }) => {
     if (feature.phase === 'released') {

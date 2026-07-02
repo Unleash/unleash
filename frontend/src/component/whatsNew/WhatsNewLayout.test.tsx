@@ -1,6 +1,8 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { EventTrackerContext } from 'contexts/EventTrackerContext';
 import { WhatsNewLayout } from './WhatsNewLayout.tsx';
 import type { Feature } from './features.ts';
 
@@ -9,6 +11,7 @@ const released: Feature = {
     title: 'Impact metrics',
     description: 'Track error rates and latency.',
     releasedAt: '2026-06-09',
+    docsLink: 'https://docs.getunleash.io/impact-metrics',
 };
 
 const exploring: Feature = {
@@ -38,5 +41,39 @@ describe('WhatsNewLayout', () => {
         expect(
             screen.queryByRole('heading', { name: 'Time-travel rollbacks' }),
         ).not.toBeInTheDocument();
+    });
+
+    it('reports engagement for every outbound link on the page', async () => {
+        const trackEvent = vi.fn();
+
+        render(
+            <EventTrackerContext.Provider value={{ trackEvent }}>
+                <WhatsNewLayout features={[released, exploring]} />
+            </EventTrackerContext.Provider>,
+        );
+
+        await userEvent.click(
+            screen.getByRole('link', { name: /read more in docs/i }),
+        );
+        expect(trackEvent).toHaveBeenCalledWith('whats-new-page', {
+            props: { eventType: 'read-docs', feature: 'Impact metrics' },
+        });
+
+        await userEvent.click(
+            screen.getByRole('link', { name: /share your input/i }),
+        );
+        expect(trackEvent).toHaveBeenCalledWith('whats-new-page', {
+            props: {
+                eventType: 'share-input',
+                feature: 'Time-travel rollbacks',
+            },
+        });
+
+        await userEvent.click(
+            screen.getByRole('link', { name: /view all release notes/i }),
+        );
+        expect(trackEvent).toHaveBeenCalledWith('whats-new-page', {
+            props: { eventType: 'view-all-release-notes' },
+        });
     });
 });

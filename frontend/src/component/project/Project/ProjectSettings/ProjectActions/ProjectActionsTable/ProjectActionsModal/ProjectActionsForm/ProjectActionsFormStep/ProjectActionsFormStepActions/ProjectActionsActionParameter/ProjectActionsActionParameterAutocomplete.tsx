@@ -20,7 +20,7 @@ export const ProjectActionsActionParameterAutocomplete = ({
         value={value}
         onInputChange={(_, parameter) => onChange(parameter)}
         renderInput={(params) => (
-            <TextField {...params} size='small' label={label} />
+            <TextField {...params} size='large' label={label} />
         )}
     />
 );

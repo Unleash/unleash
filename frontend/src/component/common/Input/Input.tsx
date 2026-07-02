@@ -29,7 +29,8 @@ const Input = ({
     className,
     value,
     onChange,
-    size = 'small',
+    // old MUI `small` (~40px) maps to `large` (32px) on the v2 control scale
+    size = 'large',
     slotProps,
     ...rest
 }: IInputProps) => {

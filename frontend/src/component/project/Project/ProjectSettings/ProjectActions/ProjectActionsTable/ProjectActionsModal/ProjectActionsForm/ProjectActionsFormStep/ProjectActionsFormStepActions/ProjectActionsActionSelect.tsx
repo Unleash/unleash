@@ -50,7 +50,7 @@ export const ProjectActionsActionSelect = ({
             renderOption={renderActionOption}
             getOptionLabel={({ label }) => label}
             renderInput={(params) => (
-                <TextField {...params} size='small' label='Action' />
+                <TextField {...params} size='large' label='Action' />
             )}
         />
     );

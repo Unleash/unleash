@@ -46,7 +46,7 @@ export const InputListField: FC<IInputListFieldProps> = ({
             onChange={handleChange}
             style={{ width: '100%' }}
             variant='outlined'
-            size='small'
+            size='large'
         />
     );
 };

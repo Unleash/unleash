@@ -239,7 +239,7 @@ export const ProjectActionsFilterItem = ({
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
-                                    size='small'
+                                    size='large'
                                     label='Parameter'
                                 />
                             )}

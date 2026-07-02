@@ -25,7 +25,14 @@ export const IntegrationStateSwitch: FC<IIntegrationStateSwitchProps> = ({
 }) => {
     return (
         <StyledContainer>
-            <Typography component='span'>Integration status</Typography>
+            <Typography
+                component='span'
+                sx={(theme) => ({
+                    fontWeight: theme.typography.fontWeightBold,
+                })}
+            >
+                Integration status
+            </Typography>
             <FormControlLabel
                 control={<Switch checked={checked} onClick={onClick} />}
                 label={

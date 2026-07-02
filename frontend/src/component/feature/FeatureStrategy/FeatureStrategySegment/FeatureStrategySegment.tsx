@@ -64,7 +64,7 @@ export const FeatureStrategySegment = ({
     return (
         <>
             <StyledHelpIconBox>
-                <Typography>Segments</Typography>
+                <Typography sx={{ fontWeight: 'bold' }}>Segments</Typography>
                 <HelpIcon
                     htmlTooltip
                     tooltip={

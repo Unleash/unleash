@@ -64,21 +64,6 @@ export const StyledTitle = forwardRef<
     </Typography>
 ));
 
-export const StyledAddonParameterContainer = styled('div')({
-    marginTop: '25px',
-});
-
-export const StyledConfigurationSection = styled('section')(({ theme }) => ({
-    borderWidth: '1px',
-    borderStyle: 'solid',
-    borderColor: theme.palette.neutral.border,
-    borderRadius: `${theme.shape.borderRadiusLarge}px`,
-    padding: theme.spacing(3),
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(3),
-}));
-
 export const StyledRaisedSection: FC<ComponentProps<typeof Paper>> = ({
     ...props
 }) => (

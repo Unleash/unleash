@@ -277,7 +277,7 @@ const ImpactMetricsPage = () => {
                         }
                         disabled={loading || saving}
                         fullWidth
-                        size='small'
+                        size='large'
                         type={hasCredentials && !showUrl ? 'password' : 'text'}
                         slotProps={{
                             input: {

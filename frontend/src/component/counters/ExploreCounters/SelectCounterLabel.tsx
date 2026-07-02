@@ -49,7 +49,7 @@ export const SelectCounterLabel = ({
     return (
         <>
             <FormControl>
-                <InputLabel id='labels-label' size='small'>
+                <InputLabel id='labels-label' size='large'>
                     Label
                 </InputLabel>
                 <Select
@@ -59,7 +59,7 @@ export const SelectCounterLabel = ({
                     value={label}
                     onChange={labelChanged}
                     variant='outlined'
-                    size='small'
+                    size='large'
                     sx={{ width: 200, maxWidth: '100%' }}
                 >
                     {labels
@@ -73,7 +73,7 @@ export const SelectCounterLabel = ({
             </FormControl>
             {label ? (
                 <FormControl>
-                    <InputLabel id='label-value-label' size='small'>
+                    <InputLabel id='label-value-label' size='large'>
                         Label value
                     </InputLabel>
                     <Select
@@ -83,7 +83,7 @@ export const SelectCounterLabel = ({
                         value={labelValue}
                         onChange={labelValueChanged}
                         variant='outlined'
-                        size='small'
+                        size='large'
                         sx={{ width: 200, maxWidth: '100%' }}
                     >
                         <MenuItem key='all' value=''>

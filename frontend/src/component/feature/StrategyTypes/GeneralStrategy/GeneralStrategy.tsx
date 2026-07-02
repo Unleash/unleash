@@ -15,7 +15,11 @@ interface IGeneralStrategyProps {
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'grid',
-    gap: theme.spacing(4),
+    gap: theme.spacing(2),
+    // Gap owns the spacing; drop members' own bottom margins (FormField's).
+    '&& > *': {
+        marginBottom: 0,
+    },
 }));
 
 const GeneralStrategy = ({
@@ -31,14 +35,13 @@ const GeneralStrategy = ({
     return (
         <StyledContainer>
             {strategyDefinition.parameters.map((definition, index) => (
-                <div key={index}>
-                    <StrategyParameter
-                        definition={definition}
-                        parameters={parameters}
-                        updateParameter={updateParameter}
-                        errors={errors}
-                    />
-                </div>
+                <StrategyParameter
+                    key={index}
+                    definition={definition}
+                    parameters={parameters}
+                    updateParameter={updateParameter}
+                    errors={errors}
+                />
             ))}
         </StyledContainer>
     );

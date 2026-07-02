@@ -15,10 +15,10 @@ const RELEASE_NOTES_URL = 'https://docs.getunleash.io/release-notes';
 
 const PageLayout = styled('div')(({ theme }) => ({
     display: 'grid',
-    gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 360px)',
-    gap: theme.spacing(3),
+    gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 343px)',
+    gap: theme.spacing(2),
     alignItems: 'start',
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down('md')]: {
         gridTemplateColumns: '1fr',
     },
 }));
@@ -31,13 +31,14 @@ const SectionDescription = styled(Typography)(({ theme }) => ({
 const ItemList = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(3),
+    gap: theme.spacing(2),
 }));
 
 const ReleaseNotesLink = styled('a')(({ theme }) => ({
     display: 'inline-flex',
     alignItems: 'center',
     padding: theme.spacing(1.25, 0),
+    marginTop: theme.spacing(1.75),
     gap: theme.spacing(1),
     color: theme.palette.links,
     fontWeight: theme.typography.fontWeightBold,
@@ -45,9 +46,24 @@ const ReleaseNotesLink = styled('a')(({ theme }) => ({
     '&:hover, &:focus': { textDecoration: 'underline' },
 }));
 
-const EmptyState = ({ children }: { children: string }) => (
-    <Typography color='text.secondary'>{children}</Typography>
-);
+const EmptyState = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+}));
+
+const ReleasedSection = styled(PageContent)(({ theme }) => ({
+    '& > .body': {
+        padding: theme.spacing(3),
+    },
+}));
+
+const InProgressSection = styled(PageContent)(({ theme }) => ({
+    '& > .body': {
+        padding: theme.spacing(2),
+        [theme.breakpoints.down('md')]: {
+            padding: theme.spacing(3),
+        },
+    },
+}));
 
 export const NewInUnleashPage = () => {
     const enabled = useUiFlag('newInUnleashPage');
@@ -66,8 +82,11 @@ export const NewInUnleashPage = () => {
 
     return (
         <PageLayout>
-            <PageContent header={<PageHeader title='New in Unleash' />}>
-                <SectionDescription>
+            <ReleasedSection
+                bodyClass='no-padding'
+                header={<PageHeader title='New in Unleash' />}
+            >
+                <SectionDescription variant='body2'>
                     These are the latest capabilities we've added to Unleash —
                     explore what's new and start using them today.
                 </SectionDescription>
@@ -91,9 +110,12 @@ export const NewInUnleashPage = () => {
                     View all release notes
                     <OpenInNew fontSize='small' />
                 </ReleaseNotesLink>
-            </PageContent>
-            <PageContent header={<PageHeader title="What we're working on" />}>
-                <SectionDescription>
+            </ReleasedSection>
+            <InProgressSection
+                bodyClass='no-padding'
+                header={<PageHeader title="What we're working on" />}
+            >
+                <SectionDescription variant='body2'>
                     Try features that are still in development and help us
                     decide what to build next.
                 </SectionDescription>
@@ -109,7 +131,7 @@ export const NewInUnleashPage = () => {
                         ))}
                     </ItemList>
                 )}
-            </PageContent>
+            </InProgressSection>
         </PageLayout>
     );
 };

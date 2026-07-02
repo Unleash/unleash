@@ -46,7 +46,7 @@ const InProgressBody = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1),
-    padding: theme.spacing(2.5),
+    padding: theme.spacing(2),
 }));
 
 const InProgressFooter = styled('div')(({ theme }) => ({
@@ -60,33 +60,49 @@ const InProgressFooter = styled('div')(({ theme }) => ({
 
 const CardHeader = styled('header')(({ theme }) => ({
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     gap: theme.spacing(1),
     marginBottom: theme.spacing(1),
 }));
 
 const ReleaseDate = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
-    fontSize: theme.typography.caption.fontSize,
-    marginBottom: theme.spacing(1),
+    marginBottom: theme.spacing(0.5),
 }));
+
+const InProgressDescription = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+}));
+
+const ReleasedDescription = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.primary,
+}));
+
+const FeatureTitle = styled(Typography)(({ theme }) => ({
+    fontWeight: theme.typography.fontWeightBold,
+})) as typeof Typography;
 
 const Actions = styled('div')(({ theme }) => ({
     display: 'flex',
     flexWrap: 'wrap',
     gap: theme.spacing(2),
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(1),
     alignItems: 'center',
 }));
 
 const DocsLink = styled('a')(({ theme }) => ({
     display: 'inline-flex',
     alignItems: 'center',
-    gap: theme.spacing(0.5),
+    gap: theme.spacing(0.25),
     color: theme.palette.links,
-    fontWeight: theme.typography.fontWeightBold,
+    ...theme.typography.body2,
+    fontWeight: theme.typography.fontWeightMedium,
     textDecoration: 'none',
     '&:hover, &:focus': { textDecoration: 'underline' },
+}));
+
+const DocsLinkIcon = styled(OpenInNew)(({ theme }) => ({
+    fontSize: theme.spacing(2.25),
 }));
 
 const PreviewImage = styled('img')(({ theme }) => ({
@@ -107,6 +123,9 @@ const PhaseBadge = styled('span', {
 })<{ phase: InProgressFeature['phase'] }>(({ theme, phase }) => {
     const isBeta = phase === 'beta';
     return {
+        ...theme.typography.caption,
+        fontWeight: theme.typography.fontWeightBold,
+        lineHeight: theme.spacing(2),
         marginLeft: 'auto',
         display: 'inline-flex',
         alignItems: 'center',
@@ -135,7 +154,7 @@ const ReleasedFeatureCard = ({ feature }: { feature: ReleasedFeature }) => {
                 <PreviewImage src={feature.previewImageSrc} alt='' />
             ) : null}
             <Content>
-                <ReleaseDate>
+                <ReleaseDate variant='body2'>
                     {formatDateYMD(
                         feature.releasedAt,
                         locationSettings.locale,
@@ -143,13 +162,13 @@ const ReleasedFeatureCard = ({ feature }: { feature: ReleasedFeature }) => {
                     )}
                 </ReleaseDate>
                 <CardHeader>
-                    <Typography component='h2' variant='h3'>
+                    <FeatureTitle component='h2' variant='body1'>
                         {feature.title}
-                    </Typography>
+                    </FeatureTitle>
                 </CardHeader>
-                <Typography variant='body1' color='text.secondary'>
+                <ReleasedDescription variant='body2'>
                     {feature.description}
-                </Typography>
+                </ReleasedDescription>
                 {feature.docsLink ? (
                     <Actions>
                         <DocsLink
@@ -157,8 +176,8 @@ const ReleasedFeatureCard = ({ feature }: { feature: ReleasedFeature }) => {
                             rel='noopener noreferrer'
                             target='_blank'
                         >
-                            <OpenInNew fontSize='small' />
-                            Read more in our documentation
+                            Read more in docs
+                            <DocsLinkIcon />
                         </DocsLink>
                     </Actions>
                 ) : null}
@@ -171,19 +190,20 @@ const InProgressFeatureCard = ({ feature }: { feature: InProgressFeature }) => (
     <InProgressCard>
         <InProgressBody>
             <CardHeader>
-                <Typography component='h2' variant='h4'>
+                <FeatureTitle component='h2' variant='body1'>
                     {feature.title}
-                </Typography>
+                </FeatureTitle>
                 <PhaseBadge phase={feature.phase}>
                     {phaseLabel(feature.phase)}
                 </PhaseBadge>
             </CardHeader>
-            <Typography variant='body2' color='text.secondary'>
+            <InProgressDescription variant='body2'>
                 {feature.description}
-            </Typography>
+            </InProgressDescription>
         </InProgressBody>
         <InProgressFooter>
             <Button
+                size='medium'
                 color='secondary'
                 variant='outlined'
                 href={buildInputMailto(feature.title)}

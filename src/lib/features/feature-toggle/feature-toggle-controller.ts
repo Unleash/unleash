@@ -672,6 +672,11 @@ export default class ProjectFeaturesController extends Controller {
     ): Promise<void> {
         const { projectId, featureName } = req.params;
         const { name, replaceGroupId } = req.body;
+        await this.featureService.validateFeatureBelongsToProject(
+            { featureName, projectId },
+            false,
+        );
+
         const created =
             await this.transactionalFeatureToggleService.transactional(
                 (service) =>

@@ -276,18 +276,18 @@ export class FeatureToggleService {
         }
     }
 
-    async validateFeatureBelongsToProject({
-        featureName,
-        projectId,
-    }: IFeatureContext): Promise<void> {
+    async validateFeatureBelongsToProject(
+        { featureName, projectId }: IFeatureContext,
+        exposeExistingFeature: boolean = true,
+    ): Promise<void> {
         const id = await this.featureToggleStore.getProjectId(featureName);
 
         if (id !== projectId) {
             throw new NotFoundError(
                 `There's no feature named "${featureName}" in project "${projectId}"${
-                    id === undefined
-                        ? '.'
-                        : `, but there's a feature with that name in project "${id}"`
+                    id !== undefined && exposeExistingFeature
+                        ? `, but there's a feature with that name in project "${id}"`
+                        : '.'
                 }`,
             );
         }
@@ -1455,7 +1455,6 @@ export class FeatureToggleService {
 
         return created;
     }
-
     private async validateCloneFeaturePermissions(
         projectId: string,
         environments: FeatureToggleWithEnvironment['environments'],

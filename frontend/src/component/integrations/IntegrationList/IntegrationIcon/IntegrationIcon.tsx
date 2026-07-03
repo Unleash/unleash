@@ -13,6 +13,7 @@ import terraformIcon from 'assets/icons/terraform.svg';
 import slackIcon from 'assets/icons/slack.svg';
 import teamsIcon from 'assets/icons/teams.svg';
 import webhooksIcon from 'assets/icons/webhooks.svg';
+import serviceNowIcon from 'assets/icons/servicenow.svg';
 import unleashIcon from 'assets/icons/unleash-integration.svg';
 
 interface IIntegrationIconProps {
@@ -43,6 +44,7 @@ const integrations: Record<
     'slack-app': { title: 'Slack', icon: slackIcon },
     teams: { title: 'Teams', icon: teamsIcon },
     webhook: { title: 'Webhook', icon: webhooksIcon },
+    servicenow: { title: 'ServiceNow', icon: serviceNowIcon },
     unleash: { title: 'Unleash', icon: unleashIcon },
     ...SDK_ICONS,
 };

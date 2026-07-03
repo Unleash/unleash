@@ -70,6 +70,7 @@ import NotFoundError from '../../error/notfound-error.js';
 import type {
     FeatureConfigurationClient,
     IFeatureStrategiesStore,
+    StrategyBelongsToFeatureAndProjectParams,
 } from './types/feature-toggle-strategies-store-type.js';
 import { DEFAULT_ENV } from '../../util/index.js';
 import type { Operation } from 'fast-json-patch';
@@ -1550,7 +1551,13 @@ export class FeatureToggleService {
             environment,
         );
     }
-
+    async strategyBelongsToFeatureAndProject(
+        params: StrategyBelongsToFeatureAndProjectParams,
+    ): Promise<boolean> {
+        return this.featureStrategiesStore.strategyBelongsToFeatureAndProject(
+            params,
+        );
+    }
     async getStrategy(strategyId: string): Promise<Saved<IStrategyConfig>> {
         const strategy =
             await this.featureStrategiesStore.getStrategyById(strategyId);

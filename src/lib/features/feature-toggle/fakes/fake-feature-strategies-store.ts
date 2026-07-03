@@ -8,7 +8,10 @@ import type {
     FeatureToggle,
 } from '../../../types/model.js';
 import NotFoundError from '../../../error/notfound-error.js';
-import type { IFeatureStrategiesStore } from '../types/feature-toggle-strategies-store-type.js';
+import type {
+    IFeatureStrategiesStore,
+    StrategyBelongsToFeatureAndProjectParams,
+} from '../types/feature-toggle-strategies-store-type.js';
 import type { IFeatureProjectUserParams } from '../feature-toggle-controller.js';
 import { ALL_PROJECTS } from '../../../util/index.js';
 
@@ -135,6 +138,21 @@ export default class FakeFeatureStrategiesStore
                 fS.environment === environment,
         );
         return Promise.resolve(rows);
+    }
+
+    async strategyBelongsToFeatureAndProject({
+        strategyId,
+        featureName,
+        project,
+    }: StrategyBelongsToFeatureAndProjectParams): Promise<boolean> {
+        return Promise.resolve(
+            this.featureStrategies.some(
+                (fs) =>
+                    fs.projectId === project &&
+                    fs.featureName === featureName &&
+                    fs.id === strategyId,
+            ),
+        );
     }
 
     async getFeatureToggleForEnvironment(

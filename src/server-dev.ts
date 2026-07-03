@@ -63,6 +63,10 @@ process.nextTick(async () => {
                         serviceNowIntegration: true,
                         accessRequestsNotifications: true,
                         onboardingClosedDemo: true,
+                        onboardingCelebration: true,
+                        personaOnboarding: true,
+                        demoProjectSeeding: true,
+                        gettingStartedChecklist: true,
                     },
                 },
                 authentication: {

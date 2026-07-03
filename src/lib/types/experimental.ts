@@ -84,7 +84,11 @@ export type IFlagKey =
     | 'serviceNowIntegration'
     | 'learningLab'
     | 'accessRequestsNotifications'
-    | 'onboardingClosedDemo';
+    | 'onboardingClosedDemo'
+    | 'onboardingCelebration'
+    | 'personaOnboarding'
+    | 'demoProjectSeeding'
+    | 'gettingStartedChecklist';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -123,6 +127,22 @@ const flags: IFlags = {
     demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
     onboardingClosedDemo: parseEnvVarBoolean(
         process.env.UNLEASH_ONBOARDING_CLOSED_DEMO,
+        false,
+    ),
+    onboardingCelebration: parseEnvVarBoolean(
+        process.env.UNLEASH_ONBOARDING_CELEBRATION,
+        false,
+    ),
+    personaOnboarding: parseEnvVarBoolean(
+        process.env.UNLEASH_PERSONA_ONBOARDING,
+        false,
+    ),
+    demoProjectSeeding: parseEnvVarBoolean(
+        process.env.UNLEASH_DEMO_PROJECT_SEEDING,
+        false,
+    ),
+    gettingStartedChecklist: parseEnvVarBoolean(
+        process.env.UNLEASH_GETTING_STARTED_CHECKLIST,
         false,
     ),
     interactiveDemoKillSwitch: parseEnvVarBoolean(

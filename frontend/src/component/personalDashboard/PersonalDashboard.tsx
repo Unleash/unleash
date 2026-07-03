@@ -23,6 +23,7 @@ import { EventTimeline } from 'component/events/EventTimeline/EventTimeline';
 import { AccordionContent } from './SharedComponents.tsx';
 import { Link } from 'react-router';
 import { useWelcomeDialogContext } from './WelcomeDialogContext.tsx';
+import { PersonaWelcomeCard } from 'component/onboarding/personaWelcome/PersonaWelcomeCard';
 
 const WelcomeSection = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -311,6 +312,8 @@ export const PersonalDashboard = () => {
                     View key concepts
                 </ViewKeyConceptsButton>
             </WelcomeSection>
+
+            <PersonaWelcomeCard />
 
             <EventTimelinePanel />
 

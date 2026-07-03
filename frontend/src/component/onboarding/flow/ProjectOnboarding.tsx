@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import {
     Accordion,
     AccordionDetails,
@@ -9,9 +10,11 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { ConnectSdkStep } from './steps/ConnectSdkStep.tsx';
 import type { StepState } from './steps/StepLayout.tsx';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { OnboardingProgress } from './OnboardingProgress.tsx';
 import { CreateFlagStep } from './steps/CreateFlagStep.tsx';
 import { TurnFlagStep } from './steps/TurnFlagStep.tsx';
+import { OnboardingCelebrationDialog } from '../celebration/OnboardingCelebrationDialog.tsx';
 import { getProjectOnboardingStep } from '../../../utils/getProjectOnboardingStep.ts';
 
 interface IProjectOnboardingProps {
@@ -70,6 +73,24 @@ export const ProjectOnboarding = ({
     refetchFeatures,
 }: IProjectOnboardingProps) => {
     const { project, refetch, loading } = useProjectOverview(projectId);
+    const celebrationEnabled = useUiFlag('onboardingCelebration');
+    const [celebrationOpen, setCelebrationOpen] = useState(false);
+    const previousStatus = useRef<string | undefined>(undefined);
+
+    const status = project.onboardingStatus?.status;
+
+    useEffect(() => {
+        if (loading) return;
+        if (
+            celebrationEnabled &&
+            previousStatus.current !== undefined &&
+            previousStatus.current !== 'onboarded' &&
+            status === 'onboarded'
+        ) {
+            setCelebrationOpen(true);
+        }
+        previousStatus.current = status;
+    }, [loading, status, celebrationEnabled]);
 
     if (loading) return null;
 
@@ -81,46 +102,64 @@ export const ProjectOnboarding = ({
         setOnboardingFlow('closed');
     };
 
+    const onFlagEnabled = () => {
+        refetch();
+        if (celebrationEnabled) {
+            setCelebrationOpen(true);
+        }
+    };
+
     return (
-        <StyledAccordion defaultExpanded>
-            <StyledAccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls='panel1-content'
-                id='panel1-header'
-            >
-                <TitleRow>
-                    <Typography
-                        sx={{
-                            fontWeight: 'bold',
-                        }}
-                    >
-                        Project setup
-                    </Typography>
-                    <OnboardingProgress
-                        step={step}
-                        maxSteps={numberOfSteps}
-                        onDismiss={closeOnboardingFlow}
-                    />
-                </TitleRow>
-            </StyledAccordionSummary>
-            <StyledAccordionDetails>
-                <Actions>
-                    <CreateFlagStep
-                        state={stepState(step, 1)}
-                        refetchFeatures={refetchFeatures}
-                        refetchProject={refetch}
-                    />
-                    <ConnectSdkStep
-                        projectId={projectId}
-                        setConnectSdkOpen={setConnectSdkOpen}
-                        state={stepState(step, 2)}
-                    />
-                    <TurnFlagStep
-                        projectId={projectId}
-                        state={stepState(step, 3)}
-                    />
-                </Actions>
-            </StyledAccordionDetails>
-        </StyledAccordion>
+        <>
+            <StyledAccordion defaultExpanded>
+                <StyledAccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls='panel1-content'
+                    id='panel1-header'
+                >
+                    <TitleRow>
+                        <Typography
+                            sx={{
+                                fontWeight: 'bold',
+                            }}
+                        >
+                            Project setup
+                        </Typography>
+                        <OnboardingProgress
+                            step={step}
+                            maxSteps={numberOfSteps}
+                            onDismiss={closeOnboardingFlow}
+                        />
+                    </TitleRow>
+                </StyledAccordionSummary>
+                <StyledAccordionDetails>
+                    <Actions>
+                        <CreateFlagStep
+                            state={stepState(step, 1)}
+                            refetchFeatures={refetchFeatures}
+                            refetchProject={refetch}
+                        />
+                        <ConnectSdkStep
+                            projectId={projectId}
+                            setConnectSdkOpen={setConnectSdkOpen}
+                            state={stepState(step, 2)}
+                        />
+                        <TurnFlagStep
+                            projectId={projectId}
+                            state={stepState(step, 3)}
+                            onFlagEnabled={onFlagEnabled}
+                        />
+                    </Actions>
+                </StyledAccordionDetails>
+            </StyledAccordion>
+            {celebrationEnabled ? (
+                <OnboardingCelebrationDialog
+                    projectId={projectId}
+                    open={celebrationOpen}
+                    onClose={() => setCelebrationOpen(false)}
+                    onConnectSdk={() => setConnectSdkOpen(true)}
+                />
+            ) : null}
+        </>
     );
 };

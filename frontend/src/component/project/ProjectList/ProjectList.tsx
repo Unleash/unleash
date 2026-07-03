@@ -20,6 +20,7 @@ import { ProjectsListHeader } from './ProjectsListHeader/ProjectsListHeader.tsx'
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { TablePlaceholder } from 'component/common/Table/index.ts';
 import { ProjectsListViewToggle } from './ProjectsListViewToggle/ProjectsListViewToggle.tsx';
+import { CreateDemoProjectButton } from 'component/demoProject/CreateDemoProjectButton.tsx';
 
 const StyledApiError = styled(ApiError)(({ theme }) => ({
     maxWidth: '500px',
@@ -30,6 +31,12 @@ const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(4),
+}));
+
+const StyledEmptyStateActions = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'center',
+    marginTop: theme.spacing(2),
 }));
 
 const projectCardDisplayLimit = 500;
@@ -100,6 +107,7 @@ export const ProjectList = () => {
                             />
 
                             {!isOss() && <ProjectArchiveLink />}
+                            <CreateDemoProjectButton />
                             <ProjectCreationButton
                                 isDialogOpen={Boolean(state.create)}
                                 setIsDialogOpen={(create) =>
@@ -195,9 +203,14 @@ export const ProjectList = () => {
                                         &rdquo;
                                     </TablePlaceholder>
                                 ) : (
-                                    <TablePlaceholder>
-                                        No projects available.
-                                    </TablePlaceholder>
+                                    <>
+                                        <TablePlaceholder>
+                                            No projects available.
+                                        </TablePlaceholder>
+                                        <StyledEmptyStateActions>
+                                            <CreateDemoProjectButton variant='contained' />
+                                        </StyledEmptyStateActions>
+                                    </>
                                 )}
                             </>
                         )}

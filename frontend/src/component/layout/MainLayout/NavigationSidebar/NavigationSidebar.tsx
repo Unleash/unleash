@@ -21,6 +21,7 @@ import LogoOnly from 'assets/img/logoDark.svg?react';
 import { Link } from 'react-router';
 import { useFlag } from '@unleash/proxy-client-react';
 import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
+import { GettingStartedChecklist } from 'component/onboarding/gettingStarted/GettingStartedChecklist';
 
 export const StretchContainer = styled(Box, {
     shouldForwardProp: (propName) =>
@@ -207,6 +208,7 @@ export const NavigationSidebar: FC = () => {
             </MidContainer>
 
             <BottomContainer admin={showOnlyAdminMenu}>
+                <GettingStartedChecklist mode={mode} />
                 <ShowHide
                     mode={mode}
                     onChange={() => {

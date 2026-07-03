@@ -22,6 +22,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton.tsx';
 import { CommandBar } from 'component/commandBar/CommandBar';
 import { HelpResources } from './HelpResources/HelpResources';
+import { QuickTourButton } from './QuickTour/QuickTourButton.tsx';
 
 const HeaderComponent = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.application,
@@ -104,6 +105,7 @@ const Header = () => {
                     </IconButton>
                 </Tooltip>
             )}
+            <QuickTourButton />
             {hideTopmenuDocumentation && <HelpResources />}
             {!hideTopmenuDocumentation && (
                 <Tooltip title='Documentation' arrow>

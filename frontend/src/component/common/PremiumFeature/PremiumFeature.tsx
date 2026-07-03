@@ -83,6 +83,11 @@ const PremiumFeatures = {
         url: 'https://docs.getunleash.io/concepts/login-history',
         label: 'Login history',
     },
+    'active-sessions': {
+        plan: FeaturePlan.ENTERPRISE,
+        url: 'https://docs.getunleash.io/concepts/login-history',
+        label: 'Active sessions',
+    },
     groups: {
         plan: FeaturePlan.ENTERPRISE,
         url: 'https://docs.getunleash.io/concepts/rbac#user-groups',

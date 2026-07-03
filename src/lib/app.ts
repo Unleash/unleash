@@ -23,6 +23,7 @@ import noAuthentication, {
     noApiToken,
 } from './middleware/no-authentication.js';
 import secureHeaders from './middleware/secure-headers.js';
+import { sessionContextMiddleware } from './middleware/session-context.js';
 
 import { loadIndexHTML, findPublicFolder } from './util/index.js';
 import patMiddleware from './middleware/pat-middleware.js';
@@ -169,6 +170,11 @@ export default async function getApp(
     app.use(
         baseUriPath,
         rbacMiddleware(config, stores, services.accessService),
+    );
+
+    app.use(
+        `${baseUriPath}/api/admin`,
+        sessionContextMiddleware(config.flagResolver),
     );
 
     app.use(`${baseUriPath}/api/admin`, originMiddleware(config));

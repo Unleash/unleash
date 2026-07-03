@@ -21,6 +21,7 @@ import { License } from './license/License.tsx';
 import { AdminHome } from './AdminHome.tsx';
 import { RemoteMcpAdmin } from './remote-mcp/RemoteMcpAdmin.tsx';
 import { ImpactMetricsAdmin } from './impact-metrics/ImpactMetricsAdmin.tsx';
+import { ActiveSessions } from 'component/sessions/ActiveSessions.tsx';
 import { lazy } from 'react';
 
 const EnterpriseEdge = lazy(
@@ -56,6 +57,7 @@ export const Admin = () => {
                 <Route path='remote-mcp' element={<RemoteMcpAdmin />} />
                 <Route path='impact-metrics' element={<ImpactMetricsAdmin />} />
                 <Route path='instance-privacy' element={<InstancePrivacy />} />
+                <Route path='sessions' element={<ActiveSessions />} />
                 <Route path='*' element={<NotFound />} />
             </Routes>
         </>

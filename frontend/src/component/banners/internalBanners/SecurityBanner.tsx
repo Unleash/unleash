@@ -8,6 +8,7 @@ import type { BannerVariant } from 'interfaces/banner';
 export const SecurityBanner = () => {
     const { uiConfig } = useUiConfig();
     const showUserDeviceCount = useUiFlag('showUserDeviceCount');
+    const sessionInspector = useUiFlag('sessionInspector');
     const { isAdmin } = useContext(AccessContext);
 
     if (
@@ -19,14 +20,23 @@ export const SecurityBanner = () => {
         return null;
     }
 
-    const banner = {
-        message: `Potential security issue: there are ${uiConfig.maxSessionsCount} parallel sessions for a single user account.`,
-        variant: 'warning' as BannerVariant,
-        sticky: false,
-        link: '/admin/users',
-        plausibleEvent: 'showUserDeviceCount',
-        linkText: 'Review user accounts',
-    };
+    const banner = sessionInspector
+        ? {
+              message: `Potential security issue: there are ${uiConfig.maxSessionsCount} parallel sessions for a single user account.`,
+              variant: 'warning' as BannerVariant,
+              sticky: false,
+              link: '/admin/sessions',
+              plausibleEvent: 'showUserDeviceCount',
+              linkText: 'Inspect active sessions',
+          }
+        : {
+              message: `Potential security issue: there are ${uiConfig.maxSessionsCount} parallel sessions for a single user account.`,
+              variant: 'warning' as BannerVariant,
+              sticky: false,
+              link: '/admin/users',
+              plausibleEvent: 'showUserDeviceCount',
+              linkText: 'Review user accounts',
+          };
 
     return <Banner key='showUserDeviceCount' banner={banner} />;
 };

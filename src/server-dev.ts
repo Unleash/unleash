@@ -46,6 +46,7 @@ process.nextTick(async () => {
                         extendedMetrics: true,
                         webhookDomainLogging: true,
                         showUserDeviceCount: true,
+                        sessionInspector: true,
                         deltaApi: true,
                         uniqueSdkTracking: true,
                         strictSchemaValidation: true,

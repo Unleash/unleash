@@ -86,7 +86,8 @@ export type IFlagKey =
     | 'serviceNowIntegration'
     | 'learningLab'
     | 'accessRequestsNotifications'
-    | 'accessRequestsMenuIndicator';
+    | 'accessRequestsMenuIndicator'
+    | 'onboardingClosedDemo';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -123,6 +124,10 @@ const flags: IFlags = {
     ),
     migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, true),
     demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
+    onboardingClosedDemo: parseEnvVarBoolean(
+        process.env.UNLEASH_ONBOARDING_CLOSED_DEMO,
+        false,
+    ),
     interactiveDemoKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_INTERACTIVE_DEMO_KILL_SWITCH,
         false,

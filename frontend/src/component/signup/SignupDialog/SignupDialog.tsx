@@ -20,6 +20,8 @@ import Heart from 'assets/icons/heart.svg?react';
 import { formatAssetPath } from 'utils/formatPath.ts';
 import { SignupDialogComplete } from './SignupDialogComplete.tsx';
 import { useEventTracker } from 'hooks/useEventTracker.ts';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { ClosedDemo } from 'component/onboarding/closedDemo/ClosedDemo.tsx';
 import {
     DEFAULT_PROJECT_ID,
     useDefaultProjectId,
@@ -226,6 +228,11 @@ export const SignupDialog = () => {
     const { submitSignupData } = useSignupApi();
     const navigate = useNavigate();
     const defaultProjectId = useDefaultProjectId();
+    const closedDemoEnabled = useUiFlag('onboardingClosedDemo');
+    const [showDemo, setShowDemo] = useState(false);
+
+    const goToProject = () =>
+        navigate(`/projects/${defaultProjectId ?? DEFAULT_PROJECT_ID}`);
 
     const [data, setData] = useState<SubmitSignupData>({
         password: '',
@@ -245,6 +252,19 @@ export const SignupDialog = () => {
     const currentStep = steps[safeStep];
 
     const isVisible = signupRequired && steps.length > 0 && currentStep;
+
+    // Once signup succeeds we optionally run the code-less "closed demo" before
+    // sending the user to their (empty) project. Guarded here rather than below
+    // the visibility check because a successful signup flips `signupRequired`
+    // off, which would otherwise unmount the dialog immediately.
+    if (showDemo) {
+        return (
+            <ClosedDemo
+                companyName={data.companyName}
+                onComplete={goToProject}
+            />
+        );
+    }
 
     if (!isVisible) return null;
 
@@ -286,7 +306,11 @@ export const SignupDialog = () => {
             setIsSubmitting(true);
             await submitSignupData(data);
             refetch();
-            navigate(`/projects/${defaultProjectId ?? DEFAULT_PROJECT_ID}`);
+            if (closedDemoEnabled) {
+                setShowDemo(true);
+            } else {
+                goToProject();
+            }
         } catch (e: unknown) {
             const error = formatUnknownError(e);
             setToastApiError(error);

@@ -59,8 +59,20 @@ import { ExploreCounters } from 'component/counters/ExploreCounters/ExploreCount
 import { UnknownFlagsTable } from 'component/unknownFlags/UnknownFlagsTable';
 import { ChangeRequests } from 'component/changeRequest/ChangeRequests/ChangeRequests';
 import { LazyStoriesPage } from 'component/stories/LazyStoriesPage.tsx';
+import { ClosedDemoPreview } from 'component/onboarding/closedDemo/ClosedDemoPreview.tsx';
 
 export const routes: IRoute[] = [
+    // TEMPORARY: preview route for the onboarding closed demo. Unprotected so it
+    // can be viewed without logging in. Remove together with ClosedDemoPreview.tsx
+    // once the demo has been reviewed.
+    {
+        path: '/closed-demo-preview',
+        title: 'Closed demo preview',
+        component: ClosedDemoPreview,
+        type: 'unprotected',
+        menu: {},
+        isStandalone: true,
+    },
     // Splash
     {
         path: '/splash/:splashId',

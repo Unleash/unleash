@@ -11,9 +11,12 @@ const RELEASE_NOTES_URL = 'https://docs.getunleash.io/release-notes';
 
 const PageLayout = styled('div')(({ theme }) => ({
     display: 'grid',
-    gridTemplateColumns: `minmax(0, 1fr) minmax(0, ${theme.spacing(43)})`,
+    gridTemplateColumns: `minmax(0, 1fr) clamp(${theme.spacing(43)}, 28vw, ${theme.spacing(51)})`,
     gap: theme.spacing(2),
     alignItems: 'start',
+    [theme.breakpoints.down('lg')]: {
+        gridTemplateColumns: `minmax(0, 1fr) clamp(${theme.spacing(43)}, 30vw, ${theme.spacing(47.5)})`,
+    },
     [theme.breakpoints.down('md')]: {
         gridTemplateColumns: '1fr',
     },

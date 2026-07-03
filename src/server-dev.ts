@@ -65,6 +65,7 @@ process.nextTick(async () => {
                         accessRequestsNotifications: true,
                         accessRequestsMenuIndicator: true,
                         whatsNewPage: false,
+                        onboardingClosedDemo: true,
                         topLabelInputs: true,
                         flagListCreatedByFilter: false,
                     },

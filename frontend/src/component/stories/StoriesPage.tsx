@@ -1,4 +1,10 @@
-import { Box, IconButton, Tooltip, Typography } from '@mui/material';
+import {
+    Box,
+    CircularProgress,
+    IconButton,
+    Tooltip,
+    Typography,
+} from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import { useEffect, useRef, useState } from 'react';
 import DarkModeOutlined from '@mui/icons-material/DarkModeOutlined';
@@ -13,45 +19,48 @@ interface StoryModule {
     [key: string]: Story | StoryMeta | undefined;
 }
 
-const storyModules = import.meta.glob<StoryModule>('../../**/*.story.tsx', {
-    eager: true,
-});
+const storyLoaders = import.meta.glob<StoryModule>('../../**/*.story.tsx');
 
 interface StoryEntry {
     moduleKey: string;
     meta: StoryMeta;
     category: string;
     name: string;
-    stories: { name: string; component: Story }[];
+    stories: LoadedStory[];
 }
 
-function buildEntries(): StoryEntry[] {
-    const entries: StoryEntry[] = [];
-    for (const [key, mod] of Object.entries(storyModules)) {
-        if (!mod.meta) continue;
-        const stories = Object.entries(mod)
-            .filter(([k, v]) => k !== 'meta' && typeof v === 'function')
-            .map(([k, v]) => ({ name: k, component: v as Story }));
-        if (stories.length === 0) continue;
-        const parts = mod.meta.title.split('/').map((s) => s.trim());
-        const name = parts.pop() ?? mod.meta.title;
-        const category = parts.length > 0 ? parts.join(' / ') : 'General';
-        entries.push({
-            moduleKey: key,
-            meta: mod.meta,
-            category,
-            name,
-            stories,
-        });
-    }
-    return entries.sort(
-        (a, b) =>
-            a.category.localeCompare(b.category) ||
-            a.name.localeCompare(b.name),
+interface LoadedStory {
+    name: string;
+    component: Story;
+}
+
+const buildEntry = (key: string, mod: StoryModule): StoryEntry | null => {
+    if (!mod.meta) return null;
+    const stories = Object.entries(mod)
+        .filter(([k, v]) => k !== 'meta' && typeof v === 'function')
+        .map(([k, v]) => ({ name: k, component: v as Story }));
+    if (stories.length === 0) return null;
+    const parts = mod.meta.title.split('/').map((s) => s.trim());
+    const name = parts.pop() ?? mod.meta.title;
+    const category = parts.length > 0 ? parts.join(' / ') : 'General';
+    return { moduleKey: key, meta: mod.meta, category, name, stories };
+};
+
+const loadAllEntries = async (): Promise<StoryEntry[]> => {
+    const loaded = await Promise.all(
+        Object.entries(storyLoaders).map(async ([key, loader]) => {
+            const mod = await loader();
+            return buildEntry(key, mod);
+        }),
     );
-}
-
-const allEntries = buildEntries();
+    return loaded
+        .filter((e): e is StoryEntry => e !== null)
+        .sort(
+            (a, b) =>
+                a.category.localeCompare(b.category) ||
+                a.name.localeCompare(b.name),
+        );
+};
 
 const toSlug = (s: string) =>
     s
@@ -230,20 +239,35 @@ const StoriesPage = () => {
     const { themeMode, onSetThemeMode } = useThemeMode();
     const theme = useTheme();
     const [searchParams, setSearchParams] = useSearchParams();
-    const [bgKey, setBgKey] = useState<BgKey>(
-        allEntries[0]?.meta.background ?? 'application',
-    );
+    const [entries, setEntries] = useState<StoryEntry[] | null>(null);
+    const [bgKey, setBgKey] = useState<BgKey>('application');
     const canvasRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        let cancelled = false;
+        loadAllEntries()
+            .catch((e) => {
+                console.error('Failed to load stories', e);
+                return [];
+            })
+            .then((loaded) => {
+                if (!cancelled) setEntries(loaded);
+            });
+        return () => {
+            cancelled = true;
+        };
+    }, []);
 
     const cParam = searchParams.get('c');
     const sParam = searchParams.get('s');
 
-    const activeEntry =
-        (cParam ? allEntries.find((e) => entrySlug(e) === cParam) : null) ??
-        allEntries[0];
+    const activeEntry = entries
+        ? ((cParam ? entries.find((e) => entrySlug(e) === cParam) : null) ??
+          entries[0])
+        : undefined;
     const activeAnchor = sParam;
 
-    const grouped = allEntries.reduce<Record<string, StoryEntry[]>>(
+    const grouped = (entries ?? []).reduce<Record<string, StoryEntry[]>>(
         (acc, e) => {
             if (!acc[e.category]) acc[e.category] = [];
             acc[e.category].push(e);
@@ -256,6 +280,7 @@ const StoriesPage = () => {
         setBgKey(activeEntry?.meta.background ?? 'application');
     }, [activeEntry]);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: re-run after activeEntry loads so scroll targets the newly-rendered story elements
     useEffect(() => {
         if (!sParam) {
             canvasRef.current?.scrollTo({ top: 0 });
@@ -274,7 +299,7 @@ const StoriesPage = () => {
                 });
             }
         });
-    }, [sParam]);
+    }, [sParam, activeEntry]);
 
     const handleSelectEntry = (entry: StoryEntry) => {
         setSearchParams({ c: entrySlug(entry) });
@@ -375,7 +400,18 @@ const StoriesPage = () => {
                 </SidebarScroll>
             </Sidebar>
             <Main>
-                {activeEntry ? (
+                {entries === null ? (
+                    <Box
+                        sx={{
+                            flex: 1,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <CircularProgress size={24} />
+                    </Box>
+                ) : activeEntry ? (
                     <>
                         <MainHeader>
                             <Typography

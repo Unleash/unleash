@@ -98,7 +98,7 @@ export const WhatsNewLayout = ({ features }: WhatsNewLayoutProps) => {
                     target='_blank'
                     onClick={() => {
                         trackEvent('whats-new-page', {
-                            props: { eventType: 'view-all-release-notes' },
+                            props: { eventType: 'release-notes-click' },
                         });
                     }}
                 >

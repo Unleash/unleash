@@ -56,16 +56,9 @@ describe('WhatsNewLayout', () => {
             screen.getByRole('link', { name: /read more in docs/i }),
         );
         expect(trackEvent).toHaveBeenCalledWith('whats-new-page', {
-            props: { eventType: 'read-docs', feature: 'Impact metrics' },
-        });
-
-        await userEvent.click(
-            screen.getByRole('link', { name: /share your input/i }),
-        );
-        expect(trackEvent).toHaveBeenCalledWith('whats-new-page', {
             props: {
-                eventType: 'share-input',
-                feature: 'Time-travel rollbacks',
+                eventType: 'feature-docs-click',
+                feature: 'Impact metrics',
             },
         });
 
@@ -73,7 +66,17 @@ describe('WhatsNewLayout', () => {
             screen.getByRole('link', { name: /view all release notes/i }),
         );
         expect(trackEvent).toHaveBeenCalledWith('whats-new-page', {
-            props: { eventType: 'view-all-release-notes' },
+            props: { eventType: 'release-notes-click' },
+        });
+
+        await userEvent.click(
+            screen.getByRole('button', { name: /share your input/i }),
+        );
+        expect(trackEvent).toHaveBeenCalledWith('whats-new-page', {
+            props: {
+                eventType: 'share-input-dialog-open',
+                feature: 'Time-travel rollbacks',
+            },
         });
     });
 });

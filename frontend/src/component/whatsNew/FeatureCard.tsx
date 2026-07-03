@@ -1,17 +1,11 @@
+import { useState } from 'react';
 import { Button, styled, Typography } from '@mui/material';
 import OpenInNew from '@mui/icons-material/OpenInNew';
 import { useEventTracker } from 'hooks/useEventTracker';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMD } from 'utils/formatDate';
 import type { Feature, InProgressFeature, ReleasedFeature } from './features';
-
-const buildInputMailto = (title: string) => {
-    const subject = encodeURIComponent(`Input on ${title}`);
-    const body = encodeURIComponent(
-        `Hi Unleash team,\n\nI'd like to share some input on ${title}:\n\n`,
-    );
-    return `mailto:beta@getunleash.io?subject=${subject}&body=${body}`;
-};
+import { ShareInputDialog } from './ShareInputDialog';
 
 const IMAGE_HEIGHT = 190;
 const IMAGE_WIDTH = 160;
@@ -180,7 +174,7 @@ const ReleasedFeatureCard = ({ feature }: { feature: ReleasedFeature }) => {
                             onClick={() => {
                                 trackEvent('whats-new-page', {
                                     props: {
-                                        eventType: 'read-docs',
+                                        eventType: 'feature-docs-click',
                                         feature: feature.title,
                                     },
                                 });
@@ -198,6 +192,18 @@ const ReleasedFeatureCard = ({ feature }: { feature: ReleasedFeature }) => {
 
 const InProgressFeatureCard = ({ feature }: { feature: InProgressFeature }) => {
     const { trackEvent } = useEventTracker();
+    const [dialogOpen, setDialogOpen] = useState(false);
+
+    const openDialog = () => {
+        trackEvent('whats-new-page', {
+            props: {
+                eventType: 'share-input-dialog-open',
+                feature: feature.title,
+            },
+        });
+        setDialogOpen(true);
+    };
+
     return (
         <InProgressCard>
             <InProgressBody>
@@ -218,19 +224,16 @@ const InProgressFeatureCard = ({ feature }: { feature: InProgressFeature }) => {
                     size='medium'
                     color='secondary'
                     variant='outlined'
-                    href={buildInputMailto(feature.title)}
-                    onClick={() => {
-                        trackEvent('whats-new-page', {
-                            props: {
-                                eventType: 'share-input',
-                                feature: feature.title,
-                            },
-                        });
-                    }}
+                    onClick={openDialog}
                 >
                     Share your input
                 </Button>
             </InProgressFooter>
+            <ShareInputDialog
+                open={dialogOpen}
+                onClose={() => setDialogOpen(false)}
+                featureTitle={feature.title}
+            />
         </InProgressCard>
     );
 };

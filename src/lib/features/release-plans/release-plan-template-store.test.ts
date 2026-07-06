@@ -48,6 +48,58 @@ test('templates can be scoped to a project', async () => {
     });
 });
 
+test('global templates are visible in every project, scoped ones only in their own', async () => {
+    const store = new ReleasePlanTemplateStore(db.rawDatabase, config);
+    await db.rawDatabase('release_plan_definitions').del();
+    await db.stores.projectStore.create({
+        id: 'other-project',
+        name: 'other-project',
+        description: '',
+    });
+
+    await store.insert({
+        name: 'global-template',
+        discriminator: 'template',
+        createdByUserId: 1,
+    });
+    await store.insert({
+        name: 'default-template',
+        discriminator: 'template',
+        createdByUserId: 1,
+        project: 'default',
+    });
+    await store.insert({
+        name: 'other-template',
+        discriminator: 'template',
+        createdByUserId: 1,
+        project: 'other-project',
+    });
+
+    const globalTemplates = await store.getGlobalTemplates();
+    expect(globalTemplates.map(({ name }) => name)).toEqual([
+        'global-template',
+    ]);
+
+    const defaultTemplates = await store.getProjectTemplates('default');
+    expect(defaultTemplates.map(({ name }) => name)).toEqual([
+        'default-template',
+    ]);
+
+    const visibleInDefault =
+        await store.getProjectAndGlobalTemplates('default');
+    expect(visibleInDefault.map(({ name }) => name)).toEqual([
+        'global-template',
+        'default-template',
+    ]);
+
+    const visibleInOther =
+        await store.getProjectAndGlobalTemplates('other-project');
+    expect(visibleInOther.map(({ name }) => name)).toEqual([
+        'global-template',
+        'other-template',
+    ]);
+});
+
 test('updates return exactly the template model fields', async () => {
     const store = new ReleasePlanTemplateStore(db.rawDatabase, config);
     const template = await store.insert({

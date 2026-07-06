@@ -3,6 +3,7 @@ import type { ReleasePlanTemplate } from './release-plan-template.js';
 import type { ReleasePlanMilestone } from './release-plan-milestone.js';
 import { CRUDStore, type CrudStoreConfig } from '../../db/crud/crud-store.js';
 import type { Row } from '../../db/crud/row-type.js';
+import type { Knex } from 'knex';
 import type { Db } from '../../db/db.js';
 import { NotFoundError } from '../../error/index.js';
 
@@ -37,10 +38,40 @@ export class ReleasePlanTemplateStore extends CRUDStore<
     }
 
     override async getAll(): Promise<ReleasePlanTemplate[]> {
-        const endTimer = this.timer('getAll');
+        return this.getGlobalTemplates();
+    }
+
+    async getGlobalTemplates(): Promise<ReleasePlanTemplate[]> {
+        return this.getTemplates('getGlobalTemplates', (query) => {
+            query.whereNull('project');
+        });
+    }
+
+    async getProjectTemplates(project: string): Promise<ReleasePlanTemplate[]> {
+        return this.getTemplates('getProjectTemplates', (query) => {
+            query.where('project', project);
+        });
+    }
+
+    async getProjectAndGlobalTemplates(
+        project: string,
+    ): Promise<ReleasePlanTemplate[]> {
+        return this.getTemplates('getProjectAndGlobalTemplates', (query) => {
+            query.where((qb) =>
+                qb.whereNull('project').orWhere('project', project),
+            );
+        });
+    }
+
+    private async getTemplates(
+        timerName: string,
+        addProjectFilter: (query: Knex.QueryBuilder) => void,
+    ): Promise<ReleasePlanTemplate[]> {
+        const endTimer = this.timer(timerName);
         const templates = await this.db<ReleasePlanTemplate>(TABLE)
             .where('discriminator', 'template')
             .where('archived_at', null)
+            .modify(addProjectFilter)
             .orderBy('created_at');
         endTimer();
         return templates.map(({ milestones, ...template }) =>

@@ -83,7 +83,6 @@ export type IFlagKey =
     | 'archiveInFlagsView'
     | 'allowDeprecatedApiTokenMiddleware'
     | 'newProfileDropdown'
-    | 'hideTopmenuDocumentation'
     | 'serviceNowIntegration'
     | 'learningLab'
     | 'accessRequestsNotifications'
@@ -384,10 +383,6 @@ const flags: IFlags = {
     ),
     newProfileDropdown: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NEW_PROFILE_DROPDOWN,
-        false,
-    ),
-    hideTopmenuDocumentation: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_HIDE_TOPMENU_DOCUMENTATION,
         false,
     ),
     learningLab: {

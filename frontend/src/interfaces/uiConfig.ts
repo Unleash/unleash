@@ -102,7 +102,6 @@ export type UiFlags = {
     newModalDesign?: boolean;
     archiveInFlagsView?: boolean;
     newProfileDropdown?: boolean;
-    hideTopmenuDocumentation?: boolean;
     learningLab?: Variant;
     accessRequestsNotifications?: boolean;
     flightRecorderFrontend?: Variant;

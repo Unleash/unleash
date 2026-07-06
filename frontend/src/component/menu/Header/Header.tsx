@@ -12,7 +12,6 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import UserProfile from 'component/user/UserProfile';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
 
 import { DrawerMenu } from './DrawerMenu/DrawerMenu.tsx';
 import DarkModeOutlined from '@mui/icons-material/DarkModeOutlined';
@@ -72,7 +71,6 @@ const Header = () => {
     const mediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const [openDrawer, setOpenDrawer] = useState(false);
     const toggleDrawer = () => setOpenDrawer((prev) => !prev);
-    const hideTopmenuDocumentation = useUiFlag('hideTopmenuDocumentation');
 
     const headerItems = (
         <StyledUserContainer>
@@ -105,24 +103,7 @@ const Header = () => {
                     </IconButton>
                 </Tooltip>
             )}
-            {hideTopmenuDocumentation && <HelpResources />}
-            {!hideTopmenuDocumentation && (
-                <Tooltip title='Documentation' arrow>
-                    <IconButton
-                        component='a'
-                        nativeButton={false}
-                        href='https://docs.getunleash.io/'
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        size='large'
-                        sx={(theme) => ({
-                            marginRight: theme.spacing(1),
-                        })}
-                    >
-                        <MenuBookIcon />
-                    </IconButton>
-                </Tooltip>
-            )}
+            <HelpResources />
             <Divider
                 orientation='vertical'
                 variant='middle'

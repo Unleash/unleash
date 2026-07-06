@@ -13,6 +13,7 @@ import { UIProviderContainer } from '../providers/UIProvider/UIProviderContainer
 import { StickyProvider } from 'component/common/Sticky/StickyProvider';
 import { HighlightProvider } from 'component/common/Highlight/HighlightProvider';
 import { UnleashFlagProvider } from 'component/providers/UnleashFlagProvider/UnleashFlagProvider.tsx';
+import { FeedbackProvider } from 'component/feedbackNew/FeedbackProvider';
 
 const server = testServerSetup();
 
@@ -238,16 +239,18 @@ const UnleashUiSetup: FC<{
                         <StickyProvider>
                             <HighlightProvider>
                                 <UnleashFlagProvider>
-                                    <Routes>
-                                        <Route
-                                            path={pathTemplate}
-                                            element={
-                                                <MainLayout>
-                                                    {children}
-                                                </MainLayout>
-                                            }
-                                        />
-                                    </Routes>
+                                    <FeedbackProvider>
+                                        <Routes>
+                                            <Route
+                                                path={pathTemplate}
+                                                element={
+                                                    <MainLayout>
+                                                        {children}
+                                                    </MainLayout>
+                                                }
+                                            />
+                                        </Routes>
+                                    </FeedbackProvider>
                                 </UnleashFlagProvider>
                             </HighlightProvider>
                         </StickyProvider>

@@ -87,7 +87,8 @@ export type IFlagKey =
     | 'learningLab'
     | 'accessRequestsNotifications'
     | 'accessRequestsMenuIndicator'
-    | 'projectReleaseTemplates';
+    | 'projectReleaseTemplates'
+    | 'topLabelInputs';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -411,6 +412,10 @@ const flags: IFlags = {
     ),
     projectReleaseTemplates: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_RELEASE_TEMPLATES,
+        false,
+    ),
+    topLabelInputs: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_TOP_LABEL_INPUTS,
         false,
     ),
 };

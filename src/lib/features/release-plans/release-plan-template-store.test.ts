@@ -15,7 +15,7 @@ afterAll(async () => {
     await db.destroy();
 });
 
-test('insert returns createdAt from the database', async () => {
+test('new templates are global by default', async () => {
     const store = new ReleasePlanTemplateStore(db.rawDatabase, config);
     const template = await store.insert({
         name: 'test-template',
@@ -24,13 +24,31 @@ test('insert returns createdAt from the database', async () => {
         createdByUserId: 1,
     });
 
-    expect(template.id).toBeDefined();
-    expect(template.createdAt).toBeDefined();
-    expect(template.createdAt).toBeInstanceOf(Date);
-    expect(template.name).toBe('test-template');
+    expect(template).toMatchObject({
+        id: expect.any(String),
+        name: 'test-template',
+        createdAt: expect.any(Date),
+        project: null,
+    });
 });
 
-test("store updates don't leak column names that don't belong in the model", async () => {
+test('templates can be scoped to a project', async () => {
+    const store = new ReleasePlanTemplateStore(db.rawDatabase, config);
+
+    const projectTemplate = await store.insert({
+        name: 'project-scoped-template',
+        description: 'scoped to a project',
+        discriminator: 'template',
+        createdByUserId: 1,
+        project: 'default',
+    });
+    expect(projectTemplate).toMatchObject({ project: 'default' });
+    expect(await store.getById(projectTemplate.id)).toMatchObject({
+        project: 'default',
+    });
+});
+
+test('updates return exactly the template model fields', async () => {
     const store = new ReleasePlanTemplateStore(db.rawDatabase, config);
     const template = await store.insert({
         name: 'template1',
@@ -43,14 +61,13 @@ test("store updates don't leak column names that don't belong in the model", asy
         description: 'new description',
     });
 
-    // camelCased version of db column names that don't belong in the return type
-    const unmappedColumns = [
-        'featureName',
-        'environment',
-        'activeMilestoneId',
-        'releasePlanTemplateId',
-    ];
-    for (const column of unmappedColumns) {
-        expect(updatedTemplate).not.toHaveProperty(column);
-    }
+    expect(Object.keys(updatedTemplate)).toEqual([
+        'id',
+        'name',
+        'createdAt',
+        'description',
+        'project',
+        'discriminator',
+        'createdByUserId',
+    ]);
 });

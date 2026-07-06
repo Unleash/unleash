@@ -19,6 +19,7 @@ const fromRow = (row: any): ReleasePlanTemplate => {
         name: row.name,
         createdAt: row.created_at,
         description: row.description,
+        project: row.project,
         discriminator: row.discriminator,
         createdByUserId: row.created_by_user_id,
     };
@@ -82,6 +83,7 @@ export class ReleasePlanTemplateStore extends CRUDStore<
             discriminator: templateRows[0].templateDiscriminator,
             name: templateRows[0].templateName,
             description: templateRows[0].templateDescription,
+            project: templateRows[0].templateProject,
             createdByUserId: templateRows[0].templateCreatedByUserId,
             createdAt: templateRows[0].templateCreatedAt,
             milestones: templateRows.reduce(
@@ -163,6 +165,7 @@ export class ReleasePlanTemplateStore extends CRUDStore<
                 'rpd.discriminator AS templateDiscriminator',
                 'rpd.name AS templateName',
                 'rpd.description as templateDescription',
+                'rpd.project as templateProject',
                 'rpd.created_by_user_id as templateCreatedByUserId',
                 'rpd.created_at as templateCreatedAt',
                 'rpd.archived_at AS templateArchivedAt',

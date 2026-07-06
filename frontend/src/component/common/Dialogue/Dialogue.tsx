@@ -135,7 +135,7 @@ export const Dialogue: React.FC<IDialogue> = ({
                     <ConditionallyRender
                         condition={Boolean(onClose)}
                         show={
-                            <Button onClick={onClose}>
+                            <Button variant='outlined' onClick={onClose}>
                                 {secondaryButtonText || 'No, take me back'}
                             </Button>
                         }

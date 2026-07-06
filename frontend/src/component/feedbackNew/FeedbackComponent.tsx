@@ -265,7 +265,7 @@ export const FeedbackComponent = ({
                                                 multiline
                                                 rows={3}
                                                 variant='outlined'
-                                                size='small'
+                                                size='large'
                                                 slotProps={{
                                                     inputLabel: {
                                                         style: {
@@ -287,7 +287,7 @@ export const FeedbackComponent = ({
                                                 name='areasForImprovement'
                                                 rows={3}
                                                 variant='outlined'
-                                                size='small'
+                                                size='large'
                                                 hidden
                                                 slotProps={{
                                                     inputLabel: {
@@ -316,7 +316,7 @@ export const FeedbackComponent = ({
                                                 multiline
                                                 rows={3}
                                                 variant='outlined'
-                                                size='small'
+                                                size='large'
                                                 slotProps={{
                                                     inputLabel: {
                                                         style: {
@@ -343,7 +343,7 @@ export const FeedbackComponent = ({
                                                 name='areasForImprovement'
                                                 rows={3}
                                                 variant='outlined'
-                                                size='small'
+                                                size='large'
                                                 slotProps={{
                                                     inputLabel: {
                                                         style: {

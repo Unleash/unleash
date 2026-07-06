@@ -4,11 +4,11 @@ import { useEffect, useState } from 'react';
 import type { IProjectEnvironment } from 'interfaces/environments';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import Input from 'component/common/Input/Input';
+import { FormField } from 'component/common/FormField/FormField';
 import { ProjectEnvironmentTableSingle } from './ProjectEnvironmentTableSingle/ProjectEnvironmentTableSingle.tsx';
 
-const StyledLabel = styled('p')(({ theme }) => ({
+const StyledFieldContainer = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(1.5),
 }));
 
 const StyledInput = styled(Input)(() => ({
@@ -54,16 +54,24 @@ export const EnvironmentHideDialog = ({
 
             <ProjectEnvironmentTableSingle environment={environment!} />
 
-            <StyledLabel>
-                In order to hide this environment, please enter the id of the
-                environment in the textfield below:{' '}
-                <strong>{environment?.name}</strong>
-            </StyledLabel>
-            <StyledInput
-                label='Environment name'
-                value={confirmName}
-                onChange={(e) => setConfirmName(e.target.value)}
-            />
+            <StyledFieldContainer>
+                <FormField
+                    label='Environment name'
+                    description={
+                        <>
+                            In order to hide this environment, please enter the
+                            id of the environment in the textfield below:{' '}
+                            <strong>{environment?.name}</strong>
+                        </>
+                    }
+                >
+                    <StyledInput
+                        label=''
+                        value={confirmName}
+                        onChange={(e) => setConfirmName(e.target.value)}
+                    />
+                </FormField>
+            </StyledFieldContainer>
         </Dialogue>
     );
 };

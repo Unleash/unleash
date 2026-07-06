@@ -79,7 +79,7 @@ export const SsoGroupSettings = ({
                         disabled={!data.enableGroupSyncing || disabled}
                         style={{ width: '400px' }}
                         variant='outlined'
-                        size='small'
+                        size='large'
                         required
                     />
                 </Grid>

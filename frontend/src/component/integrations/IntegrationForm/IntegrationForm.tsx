@@ -42,10 +42,9 @@ import {
     StyledContainer,
     StyledButtonContainer,
     StyledButtonSection,
-    StyledConfigurationSection,
-    StyledTitle,
-    StyledRaisedSection,
 } from './IntegrationForm.styles';
+import { FormField } from 'component/common/FormField/FormField';
+import { FormGroup } from 'component/common/FormGroup/FormGroup';
 import { GO_BACK } from 'constants/navigate';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { IntegrationDelete } from './IntegrationDelete/IntegrationDelete.tsx';
@@ -61,6 +60,14 @@ const StyledHeader = styled('div')(({ theme }) => ({
     alignItems: 'center',
     width: '100%',
     marginBottom: theme.fontSizes.mainHeader,
+}));
+
+// A section whose title (and optional description) sit outside/above the
+// bordered FormGroup that holds the related controls.
+const StyledTitledGroup = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1.5),
 }));
 
 const StyledHeaderTitle = styled('h1')({
@@ -350,7 +357,7 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                         )}
                     />
                     <StyledTextField
-                        size='small'
+                        size='large'
                         label='Provider'
                         name='provider'
                         value={formValues.provider}
@@ -359,13 +366,13 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                         variant='outlined'
                     />
                     <IntegrationHowToSection provider={provider} />
-                    <StyledRaisedSection>
+                    <FormGroup>
                         <IntegrationStateSwitch
                             checked={formValues.enabled}
                             onClick={onEnabled}
                         />
-                    </StyledRaisedSection>
-                    <StyledRaisedSection>
+                    </FormGroup>
+                    <FormGroup>
                         <ConditionallyRender
                             condition={Boolean(installation)}
                             show={() => (
@@ -383,31 +390,30 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                             editMode={editMode}
                             setParameterValue={setParameterValue}
                         />
-                    </StyledRaisedSection>
-                    <StyledConfigurationSection>
+                    </FormGroup>
+                    <StyledTitledGroup>
                         <Typography component='h3' variant='h3'>
                             Configuration
                         </Typography>
-                        <div>
-                            <StyledTitle>
-                                What is your integration description?
-                            </StyledTitle>
-                            <StyledTextField
-                                size='small'
-                                minRows={1}
-                                multiline
+                        <FormGroup>
+                            <FormField
                                 label='Description'
-                                name='description'
-                                placeholder=''
-                                value={formValues.description}
-                                error={Boolean(errors.description)}
-                                helperText={errors.description}
-                                onChange={setFieldValue('description')}
-                                variant='outlined'
-                            />
-                        </div>
-
-                        <div>
+                                description='What is your integration description?'
+                            >
+                                <StyledTextField
+                                    size='large'
+                                    minRows={1}
+                                    multiline
+                                    label=''
+                                    name='description'
+                                    placeholder=''
+                                    value={formValues.description}
+                                    error={Boolean(errors.description)}
+                                    helperText={errors.description}
+                                    onChange={setFieldValue('description')}
+                                    variant='outlined'
+                                />
+                            </FormField>
                             <IntegrationMultiSelector
                                 options={selectableEvents || []}
                                 selectedItems={formValues.events}
@@ -417,8 +423,6 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                                 description='Select which events you want your integration to be notified about.'
                                 required
                             />
-                        </div>
-                        <div>
                             <IntegrationMultiSelector
                                 options={selectableProjects}
                                 selectedItems={formValues.projects || []}
@@ -427,8 +431,6 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                                 description='Selecting project(s) will filter events, so that your integration only receives events related to those specific projects.'
                                 note='If no projects are selected, the integration will receive events from all projects.'
                             />
-                        </div>
-                        <div>
                             <IntegrationMultiSelector
                                 options={selectableEnvironments}
                                 selectedItems={formValues.environments || []}
@@ -437,8 +439,8 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                                 description='Selecting environment(s) will filter events, so that your integration only receives events related to those specific environments. Global events that are not specific to an environment will still be received.'
                                 note='If no environments are selected, the integration will receive events from all environments.'
                             />
-                        </div>
-                    </StyledConfigurationSection>
+                        </FormGroup>
+                    </StyledTitledGroup>
                     <ConditionallyRender
                         condition={editMode}
                         show={

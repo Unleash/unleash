@@ -9,6 +9,7 @@ import { ProjectActionsFilterItem } from './ProjectActionsFilterItem.tsx';
 import type { ActionsFilterState } from '../../useProjectActionsForm.ts';
 import { ProjectActionsFormStep } from '../ProjectActionsFormStep.tsx';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
+import { FormField } from 'component/common/FormField/FormField';
 import Add from '@mui/icons-material/Add';
 import { ProjectActionsPreviewPayload } from './ProjectActionsPreviewPayload.tsx';
 import { useSignalEndpointSignals } from 'hooks/api/getters/useSignalEndpointSignals/useSignalEndpointSignals';
@@ -102,15 +103,18 @@ export const ProjectActionsFormStepSource = ({
                 </RouterLink>
             }
         >
-            <GeneralSelect
-                label='Source'
-                options={signalEndpointOptions}
-                value={`${sourceId}`}
-                onChange={(v) => {
-                    validateSourceId(Number(v));
-                    setSourceId(Number.parseInt(v, 10));
-                }}
-            />
+            <FormField label='Source'>
+                <GeneralSelect
+                    fullWidth
+                    placeholder='Select'
+                    options={signalEndpointOptions}
+                    value={`${sourceId}`}
+                    onChange={(v) => {
+                        validateSourceId(Number(v));
+                        setSourceId(Number.parseInt(v, 10));
+                    }}
+                />
+            </FormField>
             <ConditionallyRender
                 condition={Boolean(sourceId)}
                 show={

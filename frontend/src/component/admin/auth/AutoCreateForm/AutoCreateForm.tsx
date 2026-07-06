@@ -121,7 +121,7 @@ export const AutoCreateForm = ({
                         style={{ width: '400px' }}
                         rows={2}
                         variant='outlined'
-                        size='small'
+                        size='large'
                     />
                 </Grid>
             </Grid>

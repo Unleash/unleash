@@ -1,0 +1,14 @@
+`const $name = $init` where {
+    $init <: or {
+        `styled($_)($_)`,
+        `styled($_)<$_>($_)`,
+        `styled($_, $_)($_)`,
+        `styled($_, $_)<$_>($_)`,
+        `styled.$_($_)`,
+        `styled.$_<$_>($_)`,
+        `styled($_)`,
+        `styled.$_`
+    },
+    ! $name <: r"_?Styled.*",
+    register_diagnostic(span=$name, message="Components created with styled() should be named with a 'Styled' prefix.", severity="info")
+}

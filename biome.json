@@ -51,6 +51,7 @@
       }
     }
   },
+  "plugins": ["./biome-plugins/enforce-styled-prefix.grit"],
   "assist": { "actions": { "source": { "organizeImports": "off" } } },
   "formatter": {
     "indentStyle": "space",

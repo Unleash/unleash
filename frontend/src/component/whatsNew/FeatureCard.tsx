@@ -10,7 +10,7 @@ import { ShareInputDialog } from './ShareInputDialog';
 const IMAGE_HEIGHT = 190;
 const IMAGE_WIDTH = 160;
 
-const ReleasedCard = styled('article', {
+const StyledReleasedCard = styled('article', {
     shouldForwardProp: (prop) => prop !== 'hasPreview',
 })<{ hasPreview: boolean }>(({ theme, hasPreview }) => ({
     display: 'grid',
@@ -24,11 +24,11 @@ const ReleasedCard = styled('article', {
     },
 }));
 
-const Content = styled('div')(({ theme }) => ({
+const StyledContent = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
 }));
 
-const InProgressCard = styled('article')(({ theme }) => ({
+const StyledInProgressCard = styled('article')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     borderRadius: theme.shape.borderRadiusLarge,
@@ -37,14 +37,14 @@ const InProgressCard = styled('article')(({ theme }) => ({
     overflow: 'hidden',
 }));
 
-const InProgressBody = styled('div')(({ theme }) => ({
+const StyledInProgressBody = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1),
     padding: theme.spacing(2),
 }));
 
-const InProgressFooter = styled('div')(({ theme }) => ({
+const StyledInProgressFooter = styled('div')(({ theme }) => ({
     display: 'flex',
     padding: theme.spacing(1.5, 1),
     justifyContent: 'flex-end',
@@ -53,31 +53,31 @@ const InProgressFooter = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.elevation1,
 }));
 
-const CardHeader = styled('header')(({ theme }) => ({
+const StyledCardHeader = styled('header')(({ theme }) => ({
     display: 'flex',
     alignItems: 'flex-start',
     gap: theme.spacing(1),
     marginBottom: theme.spacing(1),
 }));
 
-const ReleaseDate = styled(Typography)(({ theme }) => ({
+const StyledReleaseDate = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
     marginBottom: theme.spacing(0.5),
 }));
 
-const InProgressDescription = styled(Typography)(({ theme }) => ({
+const StyledInProgressDescription = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const ReleasedDescription = styled(Typography)(({ theme }) => ({
+const StyledReleasedDescription = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.primary,
 }));
 
-const FeatureTitle = styled(Typography)(({ theme }) => ({
+const StyledFeatureTitle = styled(Typography)(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
 })) as typeof Typography;
 
-const Actions = styled('div')(({ theme }) => ({
+const StyledActions = styled('div')(({ theme }) => ({
     display: 'flex',
     flexWrap: 'wrap',
     gap: theme.spacing(2),
@@ -85,7 +85,7 @@ const Actions = styled('div')(({ theme }) => ({
     alignItems: 'center',
 }));
 
-const DocsLink = styled('a')(({ theme }) => ({
+const StyledDocsLink = styled('a')(({ theme }) => ({
     display: 'inline-flex',
     alignItems: 'center',
     gap: theme.spacing(0.25),
@@ -96,11 +96,11 @@ const DocsLink = styled('a')(({ theme }) => ({
     '&:hover, &:focus': { textDecoration: 'underline' },
 }));
 
-const DocsLinkIcon = styled(OpenInNew)(({ theme }) => ({
+const StyledDocsLinkIcon = styled(OpenInNew)(({ theme }) => ({
     fontSize: theme.spacing(2.25),
 }));
 
-const PreviewImage = styled('img')(({ theme }) => ({
+const StyledPreviewImage = styled('img')(({ theme }) => ({
     width: '100%',
     height: '100%',
     minHeight: IMAGE_HEIGHT,
@@ -113,7 +113,7 @@ const PreviewImage = styled('img')(({ theme }) => ({
 const phaseLabel = (phase: InProgressFeature['phase']) =>
     phase === 'beta' ? 'Beta' : 'Exploring';
 
-const PhaseBadge = styled('span', {
+const StyledPhaseBadge = styled('span', {
     shouldForwardProp: (prop) => prop !== 'phase',
 })<{ phase: InProgressFeature['phase'] }>(({ theme, phase }) => {
     const isBeta = phase === 'beta';
@@ -145,29 +145,29 @@ const ReleasedFeatureCard = ({ feature }: { feature: ReleasedFeature }) => {
     const { locationSettings } = useLocationSettings();
     const { trackEvent } = useEventTracker();
     return (
-        <ReleasedCard hasPreview={Boolean(feature.previewImageSrc)}>
+        <StyledReleasedCard hasPreview={Boolean(feature.previewImageSrc)}>
             {feature.previewImageSrc ? (
-                <PreviewImage src={feature.previewImageSrc} alt='' />
+                <StyledPreviewImage src={feature.previewImageSrc} alt='' />
             ) : null}
-            <Content>
-                <ReleaseDate variant='body2'>
+            <StyledContent>
+                <StyledReleaseDate variant='body2'>
                     {formatDateYMD(
                         feature.releasedAt,
                         locationSettings.locale,
                         'UTC',
                     )}
-                </ReleaseDate>
-                <CardHeader>
-                    <FeatureTitle component='h2' variant='body1'>
+                </StyledReleaseDate>
+                <StyledCardHeader>
+                    <StyledFeatureTitle component='h2' variant='body1'>
                         {feature.title}
-                    </FeatureTitle>
-                </CardHeader>
-                <ReleasedDescription variant='body2'>
+                    </StyledFeatureTitle>
+                </StyledCardHeader>
+                <StyledReleasedDescription variant='body2'>
                     {feature.description}
-                </ReleasedDescription>
+                </StyledReleasedDescription>
                 {feature.docsLink ? (
-                    <Actions>
-                        <DocsLink
+                    <StyledActions>
+                        <StyledDocsLink
                             href={feature.docsLink}
                             rel='noopener noreferrer'
                             target='_blank'
@@ -181,12 +181,12 @@ const ReleasedFeatureCard = ({ feature }: { feature: ReleasedFeature }) => {
                             }}
                         >
                             Read more in docs
-                            <DocsLinkIcon />
-                        </DocsLink>
-                    </Actions>
+                            <StyledDocsLinkIcon />
+                        </StyledDocsLink>
+                    </StyledActions>
                 ) : null}
-            </Content>
-        </ReleasedCard>
+            </StyledContent>
+        </StyledReleasedCard>
     );
 };
 
@@ -205,21 +205,21 @@ const InProgressFeatureCard = ({ feature }: { feature: InProgressFeature }) => {
     };
 
     return (
-        <InProgressCard>
-            <InProgressBody>
-                <CardHeader>
-                    <FeatureTitle component='h2' variant='body1'>
+        <StyledInProgressCard>
+            <StyledInProgressBody>
+                <StyledCardHeader>
+                    <StyledFeatureTitle component='h2' variant='body1'>
                         {feature.title}
-                    </FeatureTitle>
-                    <PhaseBadge phase={feature.phase}>
+                    </StyledFeatureTitle>
+                    <StyledPhaseBadge phase={feature.phase}>
                         {phaseLabel(feature.phase)}
-                    </PhaseBadge>
-                </CardHeader>
-                <InProgressDescription variant='body2'>
+                    </StyledPhaseBadge>
+                </StyledCardHeader>
+                <StyledInProgressDescription variant='body2'>
                     {feature.description}
-                </InProgressDescription>
-            </InProgressBody>
-            <InProgressFooter>
+                </StyledInProgressDescription>
+            </StyledInProgressBody>
+            <StyledInProgressFooter>
                 <Button
                     size='medium'
                     color='secondary'
@@ -228,13 +228,13 @@ const InProgressFeatureCard = ({ feature }: { feature: InProgressFeature }) => {
                 >
                     Share your input
                 </Button>
-            </InProgressFooter>
+            </StyledInProgressFooter>
             <ShareInputDialog
                 open={dialogOpen}
                 onClose={() => setDialogOpen(false)}
                 featureTitle={feature.title}
             />
-        </InProgressCard>
+        </StyledInProgressCard>
     );
 };
 

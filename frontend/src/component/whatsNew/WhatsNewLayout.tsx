@@ -9,7 +9,7 @@ import { FeatureCard } from './FeatureCard';
 
 const RELEASE_NOTES_URL = 'https://docs.getunleash.io/release-notes';
 
-const PageLayout = styled('div')(({ theme }) => ({
+const StyledPageLayout = styled('div')(({ theme }) => ({
     display: 'grid',
     gridTemplateColumns: `minmax(0, 1fr) clamp(${theme.spacing(43)}, 28vw, ${theme.spacing(51)})`,
     gap: theme.spacing(2),
@@ -22,18 +22,18 @@ const PageLayout = styled('div')(({ theme }) => ({
     },
 }));
 
-const SectionDescription = styled(Typography)(({ theme }) => ({
+const StyledSectionDescription = styled(Typography)(({ theme }) => ({
     marginBottom: theme.spacing(3),
     color: theme.palette.text.secondary,
 }));
 
-const ItemList = styled('div')(({ theme }) => ({
+const StyledItemList = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(2),
 }));
 
-const ReleaseNotesLink = styled('a')(({ theme }) => ({
+const StyledReleaseNotesLink = styled('a')(({ theme }) => ({
     display: 'inline-flex',
     alignItems: 'center',
     padding: theme.spacing(1.25, 0),
@@ -45,7 +45,7 @@ const ReleaseNotesLink = styled('a')(({ theme }) => ({
     '&:hover, &:focus': { textDecoration: 'underline' },
 }));
 
-const InProgressEmptyState = styled(Typography)(({ theme }) => ({
+const StyledInProgressEmptyState = styled(Typography)(({ theme }) => ({
     position: 'relative',
     overflow: 'hidden',
     borderRadius: theme.shape.borderRadiusLarge,
@@ -54,14 +54,16 @@ const InProgressEmptyState = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.primary,
 }));
 
-const EmptyStateCornerDecoration = styled(EmptyStateCorner)(({ theme }) => ({
-    position: 'absolute',
-    right: theme.spacing(2),
-    bottom: theme.spacing(1.5),
-    width: 63,
-    height: 63,
-    pointerEvents: 'none',
-}));
+const StyledEmptyStateCornerDecoration = styled(EmptyStateCorner)(
+    ({ theme }) => ({
+        position: 'absolute',
+        right: theme.spacing(2),
+        bottom: theme.spacing(1.5),
+        width: 63,
+        height: 63,
+        pointerEvents: 'none',
+    }),
+);
 
 type WhatsNewLayoutProps = {
     features: Feature[];
@@ -79,23 +81,23 @@ export const WhatsNewLayout = ({ features }: WhatsNewLayoutProps) => {
     );
 
     return (
-        <PageLayout>
+        <StyledPageLayout>
             <PageContent header={<PageHeader title="What's new" />}>
-                <SectionDescription variant='body2'>
+                <StyledSectionDescription variant='body2'>
                     These are the latest capabilities we've added to Unleash —
                     explore what's new and start using them today.
-                </SectionDescription>
+                </StyledSectionDescription>
                 {released.length > 0 && (
-                    <ItemList>
+                    <StyledItemList>
                         {released.map((feature) => (
                             <FeatureCard
                                 key={feature.title}
                                 feature={feature}
                             />
                         ))}
-                    </ItemList>
+                    </StyledItemList>
                 )}
-                <ReleaseNotesLink
+                <StyledReleaseNotesLink
                     href={RELEASE_NOTES_URL}
                     rel='noopener noreferrer'
                     target='_blank'
@@ -107,33 +109,33 @@ export const WhatsNewLayout = ({ features }: WhatsNewLayoutProps) => {
                 >
                     View all release notes
                     <OpenInNew fontSize='small' />
-                </ReleaseNotesLink>
+                </StyledReleaseNotesLink>
             </PageContent>
             <PageContent header={<PageHeader title="What we're working on" />}>
                 {inProgress.length === 0 ? (
-                    <InProgressEmptyState variant='body2'>
+                    <StyledInProgressEmptyState variant='body2'>
                         Early access features will show up here when they're
                         ready for testing. When we're running discovery on a
                         topic, you may also see prompts to share your input.
-                        <EmptyStateCornerDecoration aria-hidden='true' />
-                    </InProgressEmptyState>
+                        <StyledEmptyStateCornerDecoration aria-hidden='true' />
+                    </StyledInProgressEmptyState>
                 ) : (
                     <>
-                        <SectionDescription variant='body2'>
+                        <StyledSectionDescription variant='body2'>
                             Try features that are still in development and help
                             us decide what to build next.
-                        </SectionDescription>
-                        <ItemList>
+                        </StyledSectionDescription>
+                        <StyledItemList>
                             {inProgress.map((feature) => (
                                 <FeatureCard
                                     key={feature.title}
                                     feature={feature}
                                 />
                             ))}
-                        </ItemList>
+                        </StyledItemList>
                     </>
                 )}
             </PageContent>
-        </PageLayout>
+        </StyledPageLayout>
     );
 };

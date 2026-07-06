@@ -8,7 +8,7 @@ export const meta: StoryMeta = {
     background: 'application',
 };
 
-const Container = styled('div')(({ theme }) => ({
+const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(3),
@@ -22,13 +22,13 @@ const samplePreviewSrc =
     )?.previewImageSrc ?? '';
 
 export const Current: Story = () => (
-    <Container>
+    <StyledContainer>
         {features
             .toSorted((a, b) => a.title.localeCompare(b.title))
             .map((feature) => (
                 <FeatureCard key={feature.title} feature={feature} />
             ))}
-    </Container>
+    </StyledContainer>
 );
 
 export const PhaseReleased: Story = () => (

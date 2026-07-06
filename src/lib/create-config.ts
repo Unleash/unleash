@@ -301,6 +301,10 @@ const defaultServerOption: IServerOption = {
         process.env.ENABLE_HEAP_SNAPSHOT_ENPOINT,
         false,
     ),
+    enableStoriesPage: parseEnvVarBoolean(
+        process.env.ENABLE_STORIES_PAGE,
+        process.env.NODE_ENV === 'development',
+    ),
     disableCompression: parseEnvVarBoolean(
         process.env.SERVER_DISABLE_COMPRESSION,
         false,

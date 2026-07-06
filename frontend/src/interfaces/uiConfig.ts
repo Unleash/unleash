@@ -41,6 +41,7 @@ export interface IUiConfig {
     samlConfiguredThroughEnv?: boolean;
     maxSessionsCount?: number;
     unleashContext?: IMutableContext;
+    storiesPageEnabled?: boolean;
 }
 
 export type UiFlags = {

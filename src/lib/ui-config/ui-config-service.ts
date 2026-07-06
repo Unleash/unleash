@@ -148,6 +148,7 @@ export class UiConfigService {
             feedbackUriPath: this.config.feedbackUriPath,
             maxSessionsCount,
             unleashContext: unleashContext,
+            storiesPageEnabled: this.config.server.enableStoriesPage,
         };
 
         return uiConfig;

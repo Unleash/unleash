@@ -590,19 +590,16 @@ export const routes: IRoute[] = [
         menu: {},
         isStandalone: true,
     },
-    ...(import.meta.env.DEV
-        ? [
-              {
-                  path: '/_stories',
-                  title: 'Stories',
-                  hidden: true,
-                  component: LazyStoriesPage,
-                  type: 'unprotected' as const,
-                  menu: {},
-                  isStandalone: true,
-              },
-          ]
-        : []),
+    {
+        path: '/_stories',
+        title: 'Stories',
+        hidden: true,
+        component: LazyStoriesPage,
+        type: 'protected',
+        menu: {},
+        isStandalone: true,
+        configFlag: 'storiesPageEnabled',
+    },
 ];
 
 export const getRoute = (path: string) =>

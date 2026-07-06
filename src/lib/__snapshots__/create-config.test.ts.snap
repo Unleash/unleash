@@ -148,6 +148,7 @@ exports[`should create default config 1`] = `
     "enableHeapSnapshotEnpoint": false,
     "enableRequestLogger": false,
     "enableScheduledCreatedByMigration": false,
+    "enableStoriesPage": false,
     "gracefulShutdownEnable": true,
     "gracefulShutdownTimeout": 1000,
     "headersTimeout": 61000,

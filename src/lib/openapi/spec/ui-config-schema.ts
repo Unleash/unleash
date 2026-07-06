@@ -200,6 +200,12 @@ export const uiConfigSchema = {
             description:
                 'The context object used to configure the Unleash instance.',
         },
+        storiesPageEnabled: {
+            type: 'boolean',
+            description:
+                'Whether the internal `/_stories` component gallery route is enabled. Controlled by the `ENABLE_STORIES_PAGE` environment variable.',
+            example: false,
+        },
     },
     components: {
         schemas: {

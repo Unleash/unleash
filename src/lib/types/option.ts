@@ -108,6 +108,7 @@ export interface IServerOption {
     logRocketAppId?: string;
     serverMetrics: boolean;
     enableHeapSnapshotEnpoint: boolean;
+    enableStoriesPage: boolean;
     enableRequestLogger: boolean;
     gracefulShutdownEnable: boolean;
     gracefulShutdownTimeout: number;

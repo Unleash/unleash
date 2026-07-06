@@ -3384,6 +3384,10 @@ test('Updating feature strategy sort-order should trigger a an event', async () 
         sortOrder: strategies[2].sortOrder ?? 0,
     });
     sortOrders.push({
+        id: strategies[1].id!,
+        sortOrder: strategies[1].sortOrder ?? 0,
+    });
+    sortOrders.push({
         id: strategies[2].id!,
         sortOrder: strategies[0].sortOrder ?? 0,
     });

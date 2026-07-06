@@ -548,7 +548,14 @@ export class FeatureToggleService {
             .map((strategy) => strategy.id);
 
         const eventPreData: StrategyIds = { strategyIds: existingOrder };
-
+        const allSortOrdersAreAlreadyKnown = sortOrders.every(({ id }) =>
+            existingOrder.includes(id),
+        );
+        if (!allSortOrdersAreAlreadyKnown) {
+            throw new BadDataError(
+                'trying to change strategies for environment via update sortOrder',
+            );
+        }
         await Promise.all(
             sortOrders.map(({ id, sortOrder }) =>
                 this.featureStrategiesStore.updateSortOrder(id, sortOrder),

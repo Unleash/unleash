@@ -106,6 +106,7 @@ export type UiFlags = {
     accessRequestsNotifications?: boolean;
     flightRecorderFrontend?: Variant;
     accessRequestsMenuIndicator?: boolean;
+    projectReleaseTemplates?: boolean;
 };
 
 export interface IVersionInfo {

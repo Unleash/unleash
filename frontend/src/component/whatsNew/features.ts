@@ -42,7 +42,7 @@ export const features: Feature[] = [
         phase: 'released',
         releasedAt: '2026-06-09',
         docsLink:
-            'https://docs.getunleash.io/concepts#automatic-milestone-progression-and-safeguards',
+            'https://docs.getunleash.io/concepts/impact-metrics#automate-release-progression',
         previewImageSrc: formatAssetPath(MilestoneImage),
     },
     {

@@ -99,7 +99,7 @@ jobs:
           UNLEASH_TEST_LICENSE: ${{ secrets.UNLEASH_TEST_LICENSE || secrets.FRONTEND_TEST_LICENSE }}
           FRONTEND_TEST_LICENSE: ${{ secrets.FRONTEND_TEST_LICENSE }}
       - name: Run Cypress
-        uses: cypress-io/github-action@v7.4.0
+        uses: cypress-io/github-action@v7.4.1
         with:
           working-directory: ${{ env.WORK_DIR }}/frontend
           env: AUTH_USER=admin,AUTH_PASSWORD=unleash4all

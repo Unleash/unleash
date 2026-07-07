@@ -23,8 +23,9 @@ const ProgressTitle = styled(Typography)(({ theme }) => ({
 
 const ProgressBadge = styled('span')(({ theme }) => ({
     fontSize: theme.typography.caption.fontSize,
-    color: theme.palette.text.secondary,
-    backgroundColor: theme.palette.background.elevation1,
+    color: theme.palette.secondary.contrastText,
+    backgroundColor: theme.palette.secondary.light,
+    border: `1px solid ${theme.palette.secondary.border}`,
     borderRadius: theme.shape.borderRadius,
     padding: theme.spacing(0.25, 1),
 }));

@@ -1853,51 +1853,63 @@ export class MilestoneProgressionChangedEvent extends BaseEvent {
 
 export class ReleasePlanTemplateCreatedEvent extends BaseEvent {
     readonly data: any;
+    readonly project?: string;
     constructor(eventData: {
         data: any;
+        project?: string;
         auditUser: IAuditUser;
     }) {
         super(RELEASE_PLAN_TEMPLATE_CREATED, eventData.auditUser);
         this.data = eventData.data;
+        this.project = eventData.project;
     }
 }
 
 export class ReleasePlanTemplateUpdatedEvent extends BaseEvent {
     readonly preData: any;
     readonly data: any;
+    readonly project?: string;
     constructor(eventData: {
         data: any;
         preData: any;
+        project?: string;
         auditUser: IAuditUser;
     }) {
         super(RELEASE_PLAN_TEMPLATE_UPDATED, eventData.auditUser);
         this.data = eventData.data;
         this.preData = eventData.preData;
+        this.project = eventData.project;
     }
 }
 
 export class ReleasePlanTemplateDeletedEvent extends BaseEvent {
     readonly preData: any;
+    readonly project?: string;
     constructor(eventData: {
         preData: any;
+        project?: string;
         auditUser: IAuditUser;
     }) {
         super(RELEASE_PLAN_TEMPLATE_DELETED, eventData.auditUser);
         this.preData = eventData.preData;
+        this.project = eventData.project;
     }
 }
 
 export class ReleasePlanTemplateArchivedEvent extends BaseEvent {
     readonly preData: any;
     readonly data: any;
+    readonly project?: string;
     constructor(eventData: {
         data: any;
         preData: any;
+        project?: string;
         auditUser: IAuditUser;
     }) {
         super(RELEASE_PLAN_TEMPLATE_ARCHIVED, eventData.auditUser);
         this.data = eventData.data;
         this.preData = eventData.preData;
+        this.project = eventData.project;
     }
 }
 

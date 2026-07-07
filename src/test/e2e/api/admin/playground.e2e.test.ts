@@ -1,6 +1,6 @@
 import fc, { type Arbitrary } from 'fast-check';
-import { clientFeature, clientFeatures } from '../../../arbitraries.test.js';
-import { generate as generateRequest } from '../../../../lib/openapi/spec/playground-request-schema.test.js';
+import { clientFeature, clientFeatures } from '../../../arbitraries.js';
+import { generate as generateRequest } from '../../../../lib/openapi/spec/playground-request-schema.arbitraries.js';
 import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 import {
     type IUnleashTest,

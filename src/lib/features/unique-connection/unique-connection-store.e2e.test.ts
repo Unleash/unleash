@@ -71,6 +71,10 @@ test('should update updated_at date', async () => {
     });
     const firstFetch = await uniqueConnectionStore.get('current');
 
+    // updated_at has millisecond precision; back-to-back inserts can land on
+    // the same timestamp and make isAfter() false.
+    await new Promise((resolve) => setTimeout(resolve, 5));
+
     await uniqueConnectionStore.insert({
         id: 'current',
         hll: hll.output().buckets,

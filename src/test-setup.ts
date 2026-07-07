@@ -4,6 +4,7 @@ import { migrateDb } from './migrator.js';
 import { getDbConfig } from './test/e2e/helpers/database-config.js';
 import { testDbPrefix } from './test/e2e/helpers/database-init.js';
 import type { IUnleashConfig } from './lib/types/option.js';
+import { installPromLastWins } from './test/prom-last-wins.js';
 
 let initializationPromise: Promise<void> | null = null;
 
@@ -42,6 +43,9 @@ const initializeTemplateDb = (db: IUnleashConfig['db']): Promise<void> => {
 };
 
 export default async function globalSetup() {
+    // globalSetup runs once per vitest project in the shared main process;
+    // its imports re-execute app modules that register prom-client metrics.
+    installPromLastWins();
     process.env.TZ = 'UTC';
     process.env.TEST_DB_TEMPLATE_NAME = 'unleash_template_db';
     await initializeTemplateDb(getDbConfig());

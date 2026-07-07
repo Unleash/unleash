@@ -13,13 +13,12 @@ on:
       - .github/workflows/**frontend**
 
 jobs:
-  build:
+  checks:
     runs-on: ubuntu-latest
-    name: build
+    name: lint & types
     defaults:
       run:
         working-directory: ${{ inputs.working-directory || '.' }}/frontend
-
     steps:
       - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v5
@@ -32,5 +31,28 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm run lint:material:icons
       - run: pnpm run lint
-      - run: pnpm run test
       - run: pnpm run ts:check # TODO: optimize
+
+  test:
+    runs-on: ubuntu-latest
+    name: test (shard ${{ matrix.shard }})
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ['1/4', '2/4', '3/4', '4/4']
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory || '.' }}/frontend
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v5
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.x
+          cache: 'pnpm'
+          cache-dependency-path: ${{ inputs.working-directory || '.' }}/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      # Invoked via `pnpm exec` because pnpm does not reliably forward CLI
+      # args appended to `pnpm run` scripts.
+      - run: pnpm exec vitest run --shard=${{ matrix.shard }}

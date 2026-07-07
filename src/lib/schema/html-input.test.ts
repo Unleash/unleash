@@ -3,7 +3,7 @@
 import Joibase from 'joi';
 import htmlInput from './html-input.js';
 
-const joi = Joibase.extend(htmlInput);
+const joi = Joibase.extend(htmlInput());
 
 describe('joi.htmlInput', () => {
     describe('joi.htmlInput.allowedTags', () => {

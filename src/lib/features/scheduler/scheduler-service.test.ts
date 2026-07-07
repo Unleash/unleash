@@ -237,6 +237,7 @@ it('should emit scheduler job time event when scheduled function is run', async 
 
     await schedulerService.schedule(mockJob, 50, 'testJobId');
     await eventPromise;
+    schedulerService.stop();
 });
 
 test('Delays initial job execution by jitter duration', async () => {

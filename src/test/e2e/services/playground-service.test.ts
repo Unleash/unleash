@@ -5,8 +5,8 @@ import {
 import {
     clientFeaturesAndSegments,
     commonISOTimestamp,
-} from '../../arbitraries.test.js';
-import { generate as generateContext } from '../../../lib/openapi/spec/sdk-context-schema.test.js';
+} from '../../arbitraries.js';
+import { generate as generateContext } from '../../../lib/openapi/spec/sdk-context-schema.arbitraries.js';
 import fc from 'fast-check';
 import { createTestConfig } from '../../config/test-config.js';
 import dbInit, { type ITestDb } from '../helpers/database-init.js';

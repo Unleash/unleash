@@ -15,6 +15,7 @@ import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar.tsx';
 import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
 import { NewInUnleash } from './NavigationSidebar/NewInUnleash/NewInUnleash.tsx';
+import { FloatingOnboarding } from 'component/onboarding/floating/FloatingOnboarding.tsx';
 import { AccessRequestsNotifications } from 'component/admin/users/AccessRequestsNotifications/AccessRequestsNotifications';
 import { useUiFlag } from 'hooks/useUiFlag';
 
@@ -190,6 +191,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                     </MainLayoutContentWrapper>
                 </MainLayoutContainer>
                 <NewInUnleash />
+                <FloatingOnboarding />
                 {accessRequestsNotificationsEnabled && (
                     <AccessRequestsNotifications />
                 )}

@@ -1,9 +1,12 @@
 import { INPUT_ERROR_TEXT } from 'utils/testIds';
-import { TextField, type OutlinedTextFieldProps, styled } from '@mui/material';
+import { TextField, type OutlinedTextFieldProps } from '@mui/material';
+import type { ReactNode } from 'react';
 import { useStyles } from './Input.styles';
+import { FormField } from '../FormField/FormField';
 
 interface IInputProps extends Omit<OutlinedTextFieldProps, 'variant'> {
     label: string;
+    description?: ReactNode;
     error?: boolean;
     errorText?: string;
     style?: Object;
@@ -16,12 +19,9 @@ interface IInputProps extends Omit<OutlinedTextFieldProps, 'variant'> {
     rows?: number;
 }
 
-const StyledDiv = styled('div')({
-    position: 'relative',
-});
-
 const Input = ({
     label,
+    description,
     placeholder,
     error,
     errorText,
@@ -35,11 +35,11 @@ const Input = ({
 }: IInputProps) => {
     const { classes: styles } = useStyles();
     return (
-        <StyledDiv data-loading>
+        <FormField label={label} description={description}>
             <TextField
+                data-loading
                 size={size}
                 variant='outlined'
-                label={label}
                 placeholder={placeholder}
                 error={error}
                 helperText={errorText}
@@ -59,7 +59,7 @@ const Input = ({
                     ...slotProps,
                 }}
             />
-        </StyledDiv>
+        </FormField>
     );
 };
 

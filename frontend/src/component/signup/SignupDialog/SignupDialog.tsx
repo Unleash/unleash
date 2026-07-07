@@ -6,8 +6,9 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
-import { type ComponentType, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { type ComponentType, useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router';
+import { GridDemo } from 'component/onboarding/closedDemo/ClosedDemo.tsx';
 import { SignupDialogSetPassword } from './SignupDialogSetPassword/SignupDialogSetPassword.tsx';
 import { SignupDialogAccountDetails } from './SignupDialogAccountDetails.tsx';
 import { SignupDialogInviteOthers } from './SignupDialogInviteOthers.tsx';
@@ -20,21 +21,28 @@ import Heart from 'assets/icons/heart.svg?react';
 import { formatAssetPath } from 'utils/formatPath.ts';
 import { SignupDialogComplete } from './SignupDialogComplete.tsx';
 import { useEventTracker } from 'hooks/useEventTracker.ts';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
-import { ClosedDemo } from 'component/onboarding/closedDemo/ClosedDemo.tsx';
 import {
     DEFAULT_PROJECT_ID,
     useDefaultProjectId,
 } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId.ts';
 
-const StyledDialog = styled(Dialog)(({ theme }) => ({
-    '& .MuiDialog-paper': {
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        [theme.breakpoints.down('md')]: {
-            gridTemplateColumns: '1fr',
-        },
-    },
+// `tour` swaps the paper's two-column signup grid for a plain full-height
+// container so the quick tour fills the same inset card without pushing its
+// footer off-screen.
+const StyledDialog = styled(Dialog, {
+    shouldForwardProp: (prop) => prop !== 'tour',
+})<{ tour?: boolean }>(({ theme, tour }) => ({
+    '& .MuiDialog-paper': tour
+        ? {
+              overflow: 'hidden',
+          }
+        : {
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              [theme.breakpoints.down('md')]: {
+                  gridTemplateColumns: '1fr',
+              },
+          },
     padding: theme.spacing(8),
     [theme.breakpoints.down('md')]: {
         padding: 0,
@@ -168,6 +176,12 @@ export const StyledSignupDialogButton = styled(Button)({
     width: '100%',
 });
 
+const StyledTourContainer = styled(Box)({
+    height: '100%',
+    minHeight: 0,
+    overflow: 'hidden',
+});
+
 const getHeartAnimationDelay = (i: number) => {
     const delays = ['0s', '-1.5s', '-3s', '-4.5s'];
     return delays[i % 4];
@@ -224,15 +238,33 @@ const SIGNUP_STEPS: SignupStep[] = [
 export const SignupDialog = () => {
     const { trackEvent } = useEventTracker();
     const { setToastApiError } = useToast();
-    const { signupData, signupRequired, refetch } = useSignup();
+    const {
+        signupData: realSignupData,
+        signupRequired: realSignupRequired,
+        refetch,
+    } = useSignup();
     const { submitSignupData } = useSignupApi();
     const navigate = useNavigate();
     const defaultProjectId = useDefaultProjectId();
-    const closedDemoEnabled = useUiFlag('onboardingClosedDemo');
-    const [showDemo, setShowDemo] = useState(false);
 
-    const goToProject = () =>
-        navigate(`/projects/${defaultProjectId ?? DEFAULT_PROJECT_ID}`);
+    // TEMPORARY demo mode: append ?fake-signup to any URL to walk through the
+    // signup dialog without a pay-as-you-go backend. Nothing is submitted; on
+    // completion the quick tour opens, then you land on the default project.
+    // Sticky state: redirects (e.g. the initial redirect to the last-viewed
+    // page) strip query params, so once the param is seen the flow stays alive
+    // until the tour is closed.
+    const [searchParams] = useSearchParams();
+    const [fakeSignup, setFakeSignup] = useState(false);
+    const [showTour, setShowTour] = useState(false);
+    useEffect(() => {
+        if (searchParams.has('fake-signup')) {
+            setFakeSignup(true);
+        }
+    }, [searchParams]);
+    const signupData = fakeSignup
+        ? { shouldSetPassword: false }
+        : realSignupData;
+    const signupRequired = fakeSignup || realSignupRequired;
 
     const [data, setData] = useState<SubmitSignupData>({
         password: '',
@@ -253,16 +285,25 @@ export const SignupDialog = () => {
 
     const isVisible = signupRequired && steps.length > 0 && currentStep;
 
-    // Once signup succeeds we optionally run the code-less "closed demo" before
-    // sending the user to their (empty) project. Guarded here rather than below
-    // the visibility check because a successful signup flips `signupRequired`
-    // off, which would otherwise unmount the dialog immediately.
-    if (showDemo) {
+    // The quick tour replaces the dialog's content in place: same full-screen
+    // dialog, no second dialog. Checked before `isVisible` because a completed
+    // real signup flips `signupRequired` off, which would otherwise unmount it.
+    if (showTour) {
         return (
-            <ClosedDemo
-                companyName={data.companyName}
-                onComplete={goToProject}
-            />
+            <StyledDialog open fullScreen tour>
+                <StyledTourContainer>
+                    <GridDemo
+                        sampleAppPlacement='left'
+                        onComplete={() => {
+                            setShowTour(false);
+                            setFakeSignup(false);
+                            navigate(
+                                `/projects/${defaultProjectId ?? DEFAULT_PROJECT_ID}`,
+                            );
+                        }}
+                    />
+                </StyledTourContainer>
+            </StyledDialog>
         );
     }
 
@@ -302,14 +343,24 @@ export const SignupDialog = () => {
             return;
         }
 
+        if (fakeSignup) {
+            if (eventType === 'tour') {
+                setShowTour(true);
+            } else {
+                setFakeSignup(false);
+                navigate(`/projects/${defaultProjectId ?? DEFAULT_PROJECT_ID}`);
+            }
+            return;
+        }
+
         try {
             setIsSubmitting(true);
             await submitSignupData(data);
             refetch();
-            if (closedDemoEnabled) {
-                setShowDemo(true);
+            if (eventType === 'tour') {
+                setShowTour(true);
             } else {
-                goToProject();
+                navigate(`/projects/${defaultProjectId ?? DEFAULT_PROJECT_ID}`);
             }
         } catch (e: unknown) {
             const error = formatUnknownError(e);

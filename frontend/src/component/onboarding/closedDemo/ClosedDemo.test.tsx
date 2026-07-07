@@ -1,7 +1,7 @@
 import { vi, expect, test } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { screen, fireEvent } from '@testing-library/react';
-import { ClosedDemo } from './ClosedDemo.tsx';
+import { GridDemo } from './ClosedDemo.tsx';
 
 // react-confetti renders to a canvas, which jsdom doesn't implement.
 vi.mock('react-confetti', () => ({ default: () => null }));
@@ -10,14 +10,14 @@ const next = () =>
     fireEvent.click(screen.getByTestId('CLOSED_DEMO_NEXT_BUTTON'));
 
 test('renders the first (on/off) topic and a live user count', () => {
-    render(<ClosedDemo onComplete={vi.fn()} />);
+    render(<GridDemo onComplete={vi.fn()} />);
     expect(screen.getByText('Flip a feature on and off')).toBeInTheDocument();
     expect(screen.getByText(/users see the feature/)).toBeInTheDocument();
     expect(screen.getByTestId('CLOSED_DEMO_ONOFF_SWITCH')).toBeInTheDocument();
 });
 
 test('walks through all four topics to the finish screen', () => {
-    render(<ClosedDemo onComplete={vi.fn()} />);
+    render(<GridDemo onComplete={vi.fn()} />);
 
     next();
     expect(screen.getByText('Release gradually, safely')).toBeInTheDocument();
@@ -34,7 +34,7 @@ test('walks through all four topics to the finish screen', () => {
 
 test('calls onComplete when finishing', () => {
     const onComplete = vi.fn();
-    render(<ClosedDemo onComplete={onComplete} />);
+    render(<GridDemo onComplete={onComplete} />);
 
     next(); // -> rollout
     next(); // -> target
@@ -47,7 +47,7 @@ test('calls onComplete when finishing', () => {
 
 test('calls onComplete when skipping', () => {
     const onComplete = vi.fn();
-    render(<ClosedDemo onComplete={onComplete} />);
+    render(<GridDemo onComplete={onComplete} />);
 
     fireEvent.click(screen.getByRole('button', { name: 'Skip' }));
     expect(onComplete).toHaveBeenCalledTimes(1);

@@ -3,7 +3,6 @@ import {
     Box,
     Button,
     Chip,
-    Dialog,
     FormControlLabel,
     styled,
     Switch,
@@ -46,7 +45,7 @@ const TOPICS: ITopic[] = [
         key: 'onoff',
         mode: 'onoff',
         title: 'Flip a feature on and off',
-        body: 'Imagine you run the online store on the right, and you just built a new 1-click checkout. A feature flag is a switch that controls it without deploying. Toggle it and watch every user get it instantly, then take it away just as fast.',
+        body: 'Imagine you run the example online store, and you just built a new 1-click checkout. A feature flag is a switch that controls it without deploying. Toggle it and watch every user get it instantly, then take it away just as fast.',
     },
     {
         key: 'rollout',
@@ -189,17 +188,26 @@ const StyledFinish = styled(Box)(({ theme }) => ({
 }));
 
 interface IGridDemoProps {
-    /** In the signup flow this navigates to the project; optional in the lab. */
-    onComplete?: () => void;
-    companyName?: string;
+    /** Called when the user finishes or skips the tour. */
+    onComplete: () => void;
+    /**
+     * Where the example-app preview lives. 'left' pairs it with the controls
+     * (needs a roomy host like the full-screen signup dialog); 'right' stacks
+     * it under the grid so the left column fits in the compact dialog.
+     */
+    sampleAppPlacement?: 'left' | 'right';
 }
 
 /**
- * The "god's-eye grid" demo variant, rendered as a panel that fills its
- * container. Wrapped in a full-screen dialog by `ClosedDemo` for the signup
- * flow, or dropped straight into the comparison lab.
+ * The interactive quick-tour panel: a 4-step feature flag walkthrough (on/off,
+ * gradual rollout, targeting, A/B variants) evaluated against a simulated user
+ * grid. Fills its container; hosted in a dialog by QuickTourDialog and inline
+ * in the signup dialog.
  */
-export const GridDemo = ({ onComplete, companyName }: IGridDemoProps) => {
+export const GridDemo = ({
+    onComplete,
+    sampleAppPlacement = 'right',
+}: IGridDemoProps) => {
     const theme = useTheme();
     const { trackEvent } = useEventTracker();
     const users = useMemo(() => generateDemoUsers(USER_COUNT), []);
@@ -207,9 +215,11 @@ export const GridDemo = ({ onComplete, companyName }: IGridDemoProps) => {
     const [topicIndex, setTopicIndex] = useState(0);
     const [finished, setFinished] = useState(false);
     const [selectedId, setSelectedId] = useState<string | undefined>();
+    // Step 1 starts with the feature OFF: the first impression is a calm grid,
+    // and flipping the switch (the user's own action) causes the fill-in.
     const [config, setConfig] = useState<DemoFlagConfig>({
         flagName: FLAG_NAME,
-        environmentEnabled: true,
+        environmentEnabled: false,
         rollout: 100,
         targetCountryCodes: [],
         variantsEnabled: false,
@@ -245,7 +255,7 @@ export const GridDemo = ({ onComplete, companyName }: IGridDemoProps) => {
         if (key === 'onoff') {
             setConfig((c) => ({
                 ...c,
-                environmentEnabled: true,
+                environmentEnabled: false,
                 rollout: 100,
                 targetCountryCodes: [],
                 variantsEnabled: false,
@@ -295,22 +305,11 @@ export const GridDemo = ({ onComplete, companyName }: IGridDemoProps) => {
         }
     };
 
-    // In the signup flow onComplete navigates away; in the lab there's nowhere
-    // to go, so completing just replays the tour.
-    const complete = () => {
-        if (onComplete) {
-            onComplete();
-        } else {
-            setFinished(false);
-            goToTopic(0);
-        }
-    };
-
     const handleSkip = () => {
         trackEvent('closed-demo', {
             props: { eventType: 'skip', topic: topic.key },
         });
-        complete();
+        onComplete();
     };
 
     const setEnvironmentEnabled = (value: boolean) =>
@@ -377,7 +376,7 @@ export const GridDemo = ({ onComplete, companyName }: IGridDemoProps) => {
                             </Button>
                             <Button
                                 variant='contained'
-                                onClick={complete}
+                                onClick={onComplete}
                                 data-testid='CLOSED_DEMO_FINISH_BUTTON'
                             >
                                 Start using Unleash
@@ -390,10 +389,7 @@ export const GridDemo = ({ onComplete, companyName }: IGridDemoProps) => {
                     <StyledLeft>
                         <StyledScroll>
                             <StyledEyebrow>
-                                {companyName
-                                    ? `${companyName} · quick tour`
-                                    : 'Quick tour'}{' '}
-                                · {topicIndex + 1} of {TOPICS.length}
+                                Quick tour · {topicIndex + 1} of {TOPICS.length}
                             </StyledEyebrow>
                             <StyledTitle>{topic.title}</StyledTitle>
                             <Typography color='textSecondary'>
@@ -499,6 +495,16 @@ export const GridDemo = ({ onComplete, companyName }: IGridDemoProps) => {
                                     </>
                                 )}
                             </StyledControls>
+
+                            {sampleAppPlacement === 'left' && (
+                                <SampleAppPreview
+                                    user={selectedUser}
+                                    evaluation={selectedEvaluation}
+                                    mode={topic.mode}
+                                    variantOrder={variantOrder}
+                                    variantAccent={variantAccent}
+                                />
+                            )}
                         </StyledScroll>
 
                         <StyledFooter>
@@ -551,37 +557,18 @@ export const GridDemo = ({ onComplete, companyName }: IGridDemoProps) => {
                                 setSelectedId(user.id)
                             }
                         />
-                        <SampleAppPreview
-                            user={selectedUser}
-                            evaluation={selectedEvaluation}
-                            mode={topic.mode}
-                            variantOrder={variantOrder}
-                            variantAccent={variantAccent}
-                        />
+                        {sampleAppPlacement === 'right' && (
+                            <SampleAppPreview
+                                user={selectedUser}
+                                evaluation={selectedEvaluation}
+                                mode={topic.mode}
+                                variantOrder={variantOrder}
+                                variantAccent={variantAccent}
+                            />
+                        )}
                     </StyledRight>
                 </>
             )}
         </StyledPanel>
     );
 };
-
-const StyledFullScreenDialog = styled(Dialog)({
-    '& .MuiDialog-paper': {
-        overflow: 'hidden',
-    },
-});
-
-interface IClosedDemoProps {
-    onComplete: () => void;
-    companyName?: string;
-}
-
-/**
- * The closed demo as shown in the real signup flow: the grid variant wrapped in
- * a full-screen dialog.
- */
-export const ClosedDemo = ({ onComplete, companyName }: IClosedDemoProps) => (
-    <StyledFullScreenDialog open fullScreen>
-        <GridDemo onComplete={onComplete} companyName={companyName} />
-    </StyledFullScreenDialog>
-);

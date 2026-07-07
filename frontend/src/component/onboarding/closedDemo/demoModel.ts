@@ -36,14 +36,6 @@ export interface DemoVariant {
     weight: number;
 }
 
-/** Shared constants so every demo variant tells the same story. */
-export const DEMO_FLAG_NAME = 'new-checkout';
-export const DEMO_USER_COUNT = 60;
-export const DEFAULT_VARIANTS: DemoVariant[] = [
-    { name: 'control', weight: 50 },
-    { name: 'treatment', weight: 50 },
-];
-
 export interface DemoFlagConfig {
     /** Used as the hashing groupId, exactly like a real flag name. */
     flagName: string;
@@ -204,19 +196,6 @@ export interface DemoStats {
     percentage: number;
     variantCounts: Record<string, number>;
 }
-
-/** A ready-to-use flag config (everyone on), spread-overridable per variant. */
-export const defaultFlagConfig = (
-    overrides: Partial<DemoFlagConfig> = {},
-): DemoFlagConfig => ({
-    flagName: DEMO_FLAG_NAME,
-    environmentEnabled: true,
-    rollout: 100,
-    targetCountryCodes: [],
-    variantsEnabled: false,
-    variants: DEFAULT_VARIANTS,
-    ...overrides,
-});
 
 export const summarize = (
     users: DemoUser[],

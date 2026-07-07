@@ -31,6 +31,6 @@ jobs:
           cache-dependency-path: ${{ inputs.working-directory || '.' }}/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm run lint:material:icons
-      - run: pnpm run lint:check
+      - run: pnpm run lint
       - run: pnpm run test
       - run: pnpm run ts:check # TODO: optimize

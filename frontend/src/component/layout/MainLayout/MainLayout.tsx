@@ -16,6 +16,7 @@ import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar.tsx';
 import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
 import { NewInUnleash } from './NavigationSidebar/NewInUnleash/NewInUnleash.tsx';
 import { FloatingOnboarding } from 'component/onboarding/floating/FloatingOnboarding.tsx';
+import { FloatingOnboardingProvider } from 'component/onboarding/floating/FloatingOnboardingContext.tsx';
 import { AccessRequestsNotifications } from 'component/admin/users/AccessRequestsNotifications/AccessRequestsNotifications';
 import { useUiFlag } from 'hooks/useUiFlag';
 
@@ -132,70 +133,72 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
         );
 
         return (
-            <EventTimelineProvider>
-                <MainLayoutContainer>
-                    <MainLayoutContentWrapper>
-                        <LayoutFlexContainer>
-                            <ConditionallyRender
-                                condition={!isSmallScreen}
-                                show={<NavigationSidebar />}
-                            />
-
-                            <MainContentWrapper>
+            <FloatingOnboardingProvider>
+                <EventTimelineProvider>
+                    <MainLayoutContainer>
+                        <MainLayoutContentWrapper>
+                            <LayoutFlexContainer>
                                 <ConditionallyRender
-                                    condition={Boolean(
-                                        projectId &&
-                                            isChangeRequestConfiguredInAnyEnv(),
-                                    )}
-                                    show={
-                                        <DraftBanner
-                                            project={projectId || ''}
-                                        />
-                                    }
+                                    condition={!isSmallScreen}
+                                    show={<NavigationSidebar />}
                                 />
-                                <HeaderContentContainer>
-                                    <Header />
 
-                                    <ContentFlexContainer>
-                                        <StyledMainLayoutContent>
-                                            <SkipNavTarget />
-                                            <MainLayoutContentContainer
-                                                ref={ref}
-                                            >
-                                                <BreadcrumbNav />
-                                                {children}
-                                            </MainLayoutContentContainer>
-                                        </StyledMainLayoutContent>
-                                    </ContentFlexContainer>
-                                </HeaderContentContainer>
+                                <MainContentWrapper>
+                                    <ConditionallyRender
+                                        condition={Boolean(
+                                            projectId &&
+                                                isChangeRequestConfiguredInAnyEnv(),
+                                        )}
+                                        show={
+                                            <DraftBanner
+                                                project={projectId || ''}
+                                            />
+                                        }
+                                    />
+                                    <HeaderContentContainer>
+                                        <Header />
 
-                                <Footer />
-                            </MainContentWrapper>
-                        </LayoutFlexContainer>
+                                        <ContentFlexContainer>
+                                            <StyledMainLayoutContent>
+                                                <SkipNavTarget />
+                                                <MainLayoutContentContainer
+                                                    ref={ref}
+                                                >
+                                                    <BreadcrumbNav />
+                                                    {children}
+                                                </MainLayoutContentContainer>
+                                            </StyledMainLayoutContent>
+                                        </ContentFlexContainer>
+                                    </HeaderContentContainer>
 
-                        <ThemeMode
-                            darkmode={
-                                <StyledImg
-                                    style={{ opacity: 0.06 }}
-                                    src={formatAssetPath(textureImage)}
-                                    alt=''
-                                />
-                            }
-                            lightmode={
-                                <StyledImg
-                                    src={formatAssetPath(textureImage)}
-                                    alt=''
-                                />
-                            }
-                        />
-                    </MainLayoutContentWrapper>
-                </MainLayoutContainer>
-                <NewInUnleash />
-                <FloatingOnboarding />
-                {accessRequestsNotificationsEnabled && (
-                    <AccessRequestsNotifications />
-                )}
-            </EventTimelineProvider>
+                                    <Footer />
+                                </MainContentWrapper>
+                            </LayoutFlexContainer>
+
+                            <ThemeMode
+                                darkmode={
+                                    <StyledImg
+                                        style={{ opacity: 0.06 }}
+                                        src={formatAssetPath(textureImage)}
+                                        alt=''
+                                    />
+                                }
+                                lightmode={
+                                    <StyledImg
+                                        src={formatAssetPath(textureImage)}
+                                        alt=''
+                                    />
+                                }
+                            />
+                        </MainLayoutContentWrapper>
+                    </MainLayoutContainer>
+                    <NewInUnleash />
+                    <FloatingOnboarding />
+                    {accessRequestsNotificationsEnabled && (
+                        <AccessRequestsNotifications />
+                    )}
+                </EventTimelineProvider>
+            </FloatingOnboardingProvider>
         );
     },
 );

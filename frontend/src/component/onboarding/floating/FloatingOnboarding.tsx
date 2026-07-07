@@ -4,14 +4,14 @@ import CloseIcon from '@mui/icons-material/Close';
 import RemoveIcon from '@mui/icons-material/Remove';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
-import { getProjectOnboardingStep } from 'utils/getProjectOnboardingStep.ts';
 import { CreateProjectDialog } from 'component/project/Project/CreateProject/CreateProjectForm/CreateProjectDialog.tsx';
 import { CreateFeatureDialog } from 'component/project/Project/PaginatedProjectFeatureToggles/ProjectFeatureTogglesHeader/CreateFeatureDialog.tsx';
 import { ConnectSdkDialog } from 'component/onboarding/dialog/ConnectSdkDialog/ConnectSdkDialog.tsx';
-import { useFloatingOnboardingState } from './floatingOnboardingState.ts';
+import {
+    OnboardingProgressBadge,
+    useFloatingOnboarding,
+} from './FloatingOnboardingContext.tsx';
 import { GetStartedList } from './GetStartedList.tsx';
 import { SetupGuide } from './SetupGuide.tsx';
 
@@ -46,11 +46,18 @@ const Header = styled('div')(({ theme }) => ({
     flexShrink: 0,
 }));
 
-const HeaderTitle = styled(Typography)(({ theme }) => ({
+const TitleRow = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
     flexGrow: 1,
+    minWidth: 0,
+    cursor: 'pointer',
+}));
+
+const HeaderTitle = styled(Typography)(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
     fontWeight: theme.typography.fontWeightBold,
-    cursor: 'pointer',
 }));
 
 const BackButton = styled(IconButton)(({ theme }) => ({
@@ -63,15 +70,21 @@ const Body = styled('div')({
 });
 
 export const FloatingOnboarding = () => {
-    const { state, update, markCompleted, reset } =
-        useFloatingOnboardingState();
-    const { projectId } = state;
-
     const {
-        project,
-        loading,
-        refetch: refetchOverview,
-    } = useProjectOverview(projectId ?? '');
+        state,
+        update,
+        markCompleted,
+        reset,
+        projectId,
+        done,
+        completedCount,
+        totalSteps,
+        environments,
+        goToFlagHref,
+        feature,
+        refetchOverview,
+    } = useFloatingOnboarding();
+
     const { projects, refetch: refetchProjects } = useProjects();
 
     const [createProjectOpen, setCreateProjectOpen] = useState(false);
@@ -99,40 +112,15 @@ export const FloatingOnboarding = () => {
         }
     }, [projects, createProjectOpen, projectId, update, markCompleted]);
 
-    const environments = (project.environments ?? []).map(
-        (environment) => environment.environment,
-    );
-
-    const { features } = useFeatureSearch(
-        projectId
-            ? { project: `IS:${projectId}` }
-            : { project: 'IS:__floating_onboarding_none__' },
-    );
-    const firstFeature = features[0]?.name;
-    const goToFlagHref = firstFeature
-        ? `/projects/${projectId}/features/${firstFeature}`
-        : `/projects/${projectId ?? ''}`;
-
     if (state.dismissed) return null;
-
-    const serverStep =
-        projectId && !loading
-            ? getProjectOnboardingStep(project.onboardingStatus).current
-            : 0;
-
-    const done = {
-        project: Boolean(state.completed.project || projectId),
-        flag: Boolean(state.completed.flag || serverStep >= 1),
-        sdk: Boolean(state.completed.sdk || serverStep >= 2),
-        on: Boolean(state.completed.on || serverStep >= 3),
-    };
-    const completedCount = Object.values(done).filter(Boolean).length;
 
     const openCreateProject = () => {
         projectIdsSnapshot.current = new Set(projects.map((p) => p.id));
         awaitingCreatedProject.current = true;
         setCreateProjectOpen(true);
     };
+
+    const toggleMinimized = () => update({ minimized: !state.minimized });
 
     return (
         <>
@@ -147,11 +135,10 @@ export const FloatingOnboarding = () => {
                             <ArrowBackIcon fontSize='small' />
                         </BackButton>
                     ) : null}
-                    <HeaderTitle
-                        onClick={() => update({ minimized: !state.minimized })}
-                    >
-                        Get started
-                    </HeaderTitle>
+                    <TitleRow onClick={toggleMinimized}>
+                        <HeaderTitle>Get started</HeaderTitle>
+                        {state.minimized ? <OnboardingProgressBadge /> : null}
+                    </TitleRow>
                     {state.minimized ? null : (
                         <Tooltip title='Reset demo' arrow>
                             <IconButton
@@ -172,7 +159,7 @@ export const FloatingOnboarding = () => {
                     <IconButton
                         size='small'
                         aria-label={state.minimized ? 'Expand' : 'Minimize'}
-                        onClick={() => update({ minimized: !state.minimized })}
+                        onClick={toggleMinimized}
                     >
                         <RemoveIcon fontSize='small' />
                     </IconButton>
@@ -200,7 +187,7 @@ export const FloatingOnboarding = () => {
                         ) : (
                             <GetStartedList
                                 completedCount={completedCount}
-                                totalSteps={4}
+                                totalSteps={totalSteps}
                                 onStartSetup={() => update({ view: 'guide' })}
                                 onOpenDemo={() => {
                                     // Demo project link is out of scope.
@@ -236,7 +223,7 @@ export const FloatingOnboarding = () => {
                     }}
                     projectId={projectId}
                     environments={environments}
-                    feature={firstFeature}
+                    feature={feature}
                 />
             ) : null}
         </>

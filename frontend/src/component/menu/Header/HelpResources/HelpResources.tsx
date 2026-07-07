@@ -17,7 +17,12 @@ import SlackIcon from 'assets/icons/menu/slack.svg?react';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import NewReleasesOutlinedIcon from '@mui/icons-material/NewReleasesOutlined';
+import RocketLaunchOutlinedIcon from '@mui/icons-material/RocketLaunchOutlined';
 import LearningLabIcon from 'assets/icons/menu/learning-lab.svg?react';
+import {
+    OnboardingProgressBadge,
+    useOptionalFloatingOnboarding,
+} from 'component/onboarding/floating/FloatingOnboardingContext.tsx';
 import { Link } from 'react-router';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
 import { useEventTracker } from 'hooks/useEventTracker';
@@ -193,6 +198,13 @@ export const HelpResources = () => {
         handleClose();
     };
 
+    const floatingOnboarding = useOptionalFloatingOnboarding();
+
+    const handleGetStarted = () => {
+        handleOptionClick('get-started');
+        floatingOnboarding?.open();
+    };
+
     const { openFeedback } = useFeedback('general', 'automatic');
 
     const handleGiveFeedback = () => {
@@ -250,6 +262,14 @@ export const HelpResources = () => {
                         </StyledVisitLink>
                     </StyledLearningLabContent>
                 </StyledFeaturedMenuItem>
+                {floatingOnboarding && (
+                    <StyledMenuItem onClick={handleGetStarted}>
+                        <RocketLaunchOutlinedIcon fontSize='small' />
+                        Get started
+                        <Box sx={{ flexGrow: 1 }} />
+                        <OnboardingProgressBadge />
+                    </StyledMenuItem>
+                )}
                 {showWhatsNew && (
                     <StyledMenuItem
                         component={Link}

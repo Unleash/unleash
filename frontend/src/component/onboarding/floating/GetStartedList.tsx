@@ -69,7 +69,10 @@ const Row = styled('div')(({ theme }) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: theme.spacing(2),
+    margin: theme.spacing(0, 2, 1, 2),
     padding: theme.spacing(1.5, 2),
+    borderRadius: theme.shape.borderRadiusMedium,
+    border: `1px solid ${theme.palette.divider}`,
 }));
 
 const RowTitle = styled(Typography)(({ theme }) => ({

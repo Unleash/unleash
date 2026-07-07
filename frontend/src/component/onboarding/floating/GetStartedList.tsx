@@ -8,7 +8,8 @@ import {
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleFilledWhiteOutlined';
 
 const SectionLabel = styled(Typography)(({ theme }) => ({
-    fontSize: theme.typography.caption.fontSize,
+    fontSize: theme.typography.body2.fontSize,
+    fontWeight: theme.typography.fontWeightBold,
     color: theme.palette.text.secondary,
     padding: theme.spacing(2, 2, 1, 2),
 }));
@@ -86,6 +87,7 @@ const LearningItem = styled(Link)(({ theme }) => ({
     alignItems: 'center',
     gap: theme.spacing(1.5),
     padding: theme.spacing(1.5, 2),
+    borderTop: `1px solid ${theme.palette.divider}`,
     color: theme.palette.text.primary,
     fontSize: theme.typography.body2.fontSize,
     textDecoration: 'none',

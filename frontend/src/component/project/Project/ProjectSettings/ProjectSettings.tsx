@@ -24,6 +24,11 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { ProjectContextFields } from './ProjectContextFields.tsx';
 import { ProjectReleaseTemplates } from './ProjectReleaseTemplates/ProjectReleaseTemplates.tsx';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam.ts';
+import { useHasRootAccess } from 'hooks/useHasAccess';
+import {
+    RELEASE_PLAN_TEMPLATE_CREATE,
+    UPDATE_PROJECT_RELEASE_TEMPLATE,
+} from '@server/types/permissions';
 
 const StyledBadgeContainer = styled(Box)({
     marginLeft: 'auto',
@@ -41,8 +46,14 @@ export const ProjectSettings = () => {
     const projectReleaseTemplatesFlagEnabled = useUiFlag(
         'projectReleaseTemplates',
     );
-    const projectReleaseTemplatesEnabled =
-        projectReleaseTemplatesFlagEnabled && isEnterprise();
+    const canManageReleaseTemplates = useHasRootAccess(
+        [RELEASE_PLAN_TEMPLATE_CREATE, UPDATE_PROJECT_RELEASE_TEMPLATE],
+        projectId,
+    );
+    const showReleaseTemplatesTab =
+        projectReleaseTemplatesFlagEnabled &&
+        isEnterprise() &&
+        canManageReleaseTemplates;
 
     const paidTabs = (...tabs: ITab[]) =>
         isPro() || isEnterprise() ? tabs : [];
@@ -74,7 +85,7 @@ export const ProjectSettings = () => {
             id: 'environments',
             label: 'Environments',
         },
-        ...(projectReleaseTemplatesEnabled
+        ...(showReleaseTemplatesTab
             ? [
                   {
                       id: 'release-templates',

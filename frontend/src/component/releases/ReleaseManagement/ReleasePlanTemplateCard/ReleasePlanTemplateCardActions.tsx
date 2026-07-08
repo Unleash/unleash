@@ -30,6 +30,8 @@ const StyledActions = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    // Stacks above the card's data-card-action overlay so the menu stays clickable.
+    position: 'relative',
 }));
 
 const StyledPopover = styled(Popover)(({ theme }) => ({
@@ -81,12 +83,7 @@ export const ReleasePlanTemplateCardActions = ({
     const menuId = `${id}-menu`;
 
     return (
-        <StyledActions
-            onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-            }}
-        >
+        <StyledActions>
             <Tooltip title='Release template actions' arrow describeChild>
                 <IconButton
                     id={id}

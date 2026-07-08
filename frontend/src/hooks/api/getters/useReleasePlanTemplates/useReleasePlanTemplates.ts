@@ -3,9 +3,8 @@ import useUiConfig from '../useUiConfig/useUiConfig.js';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR.js';
+import { releaseTemplatesApiPath } from './releaseTemplatesApiPath.js';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
-
-const ENDPOINT = 'api/admin/release-plan-templates';
 
 const DEFAULT_DATA: IReleasePlanTemplate[] = [];
 
@@ -15,7 +14,7 @@ export const useReleasePlanTemplates = () => {
     const { data, error, mutate } = useConditionalSWR<IReleasePlanTemplate[]>(
         isEnterprise(),
         DEFAULT_DATA,
-        formatApiPath(ENDPOINT),
+        formatApiPath(releaseTemplatesApiPath()),
         fetcher,
     );
 

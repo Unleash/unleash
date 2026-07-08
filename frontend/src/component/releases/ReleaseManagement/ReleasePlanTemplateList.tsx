@@ -9,16 +9,21 @@ const StyledGridItem = styled(Grid)({
 
 interface ITemplateList {
     templates: IReleasePlanTemplate[];
+    projectId?: string;
 }
 
 export const ReleasePlanTemplateList: React.FC<ITemplateList> = ({
     templates,
+    projectId,
 }) => {
     return (
         <>
             {templates.map((template) => (
                 <StyledGridItem key={template.id} size={{ xs: 6, md: 4 }}>
-                    <ReleasePlanTemplateCard template={template} />
+                    <ReleasePlanTemplateCard
+                        template={template}
+                        projectId={projectId}
+                    />
                 </StyledGridItem>
             ))}
         </>

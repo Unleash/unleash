@@ -7,16 +7,6 @@ import { Truncator } from 'component/common/Truncator/Truncator';
 import { ReleasePlanTemplateCardActions } from './ReleasePlanTemplateCardActions.tsx';
 import { ReleasePlanTemplateCardFooter } from './ReleasePlanTemplateCardFooter.tsx';
 
-const StyledCardLink = styled(Link)(({ theme }) => ({
-    color: 'inherit',
-    textDecoration: 'none',
-    border: 'none',
-    padding: '0',
-    background: 'transparent',
-    fontFamily: theme.typography.fontFamily,
-    pointer: 'cursor',
-}));
-
 const StyledCardTitle = styled('h3')(({ theme }) => ({
     margin: 0,
     marginRight: 'auto',
@@ -24,33 +14,70 @@ const StyledCardTitle = styled('h3')(({ theme }) => ({
     lineHeight: '1.2',
 }));
 
-export const ReleasePlanTemplateCard = ({
+// Accessible card pattern (https://kittygiraudel.com/2022/04/02/accessible-cards/):
+// the title link's ::before overlay makes the whole card clickable without
+// wrapping the card in a link.
+const StyledCard = styled(Card)({
+    position: 'relative',
+    '& [data-card-action]': {
+        color: 'inherit',
+        textDecoration: 'none',
+        '&::before': {
+            content: '""',
+            position: 'absolute',
+            inset: 0,
+        },
+    },
+});
+
+const TemplateCard = ({
     template,
+    editPath,
+    headerActions,
 }: {
     template: IReleasePlanTemplate;
+    editPath?: string;
+    headerActions?: React.ReactNode;
 }) => (
-    <StyledCardLink to={`/release-templates/edit/${template.id}`}>
-        <Card
-            icon={<ReleaseTemplateIcon />}
-            title={
-                <Truncator
-                    title={template.name}
-                    arrow
-                    component={StyledCardTitle}
-                >
-                    {template.name}
-                </Truncator>
-            }
+    <StyledCard
+        icon={<ReleaseTemplateIcon />}
+        title={
+            <Truncator title={template.name} arrow component={StyledCardTitle}>
+                {editPath ? (
+                    <Link data-card-action to={editPath}>
+                        {template.name}
+                    </Link>
+                ) : (
+                    template.name
+                )}
+            </Truncator>
+        }
+        headerActions={headerActions}
+        footer={<ReleasePlanTemplateCardFooter template={template} />}
+    >
+        {template.description ? (
+            <Truncator lines={2} title={template.description} arrow>
+                {template.description}
+            </Truncator>
+        ) : null}
+    </StyledCard>
+);
+
+export const ReleasePlanTemplateCard = ({
+    template,
+    projectId,
+}: {
+    template: IReleasePlanTemplate;
+    projectId?: string;
+}) =>
+    projectId ? (
+        <TemplateCard template={template} />
+    ) : (
+        <TemplateCard
+            template={template}
+            editPath={`/release-templates/edit/${template.id}`}
             headerActions={
                 <ReleasePlanTemplateCardActions template={template} />
             }
-            footer={<ReleasePlanTemplateCardFooter template={template} />}
-        >
-            {template.description && (
-                <Truncator lines={2} title={template.description} arrow>
-                    {template.description}
-                </Truncator>
-            )}
-        </Card>
-    </StyledCardLink>
-);
+        />
+    );

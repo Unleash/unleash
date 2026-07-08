@@ -55,7 +55,8 @@
     "lint:fix:unsafe": "biome check . --write --error-on-warnings --unsafe",
     "local:package": "del-cli --force build && mkdir build && cp -r dist CHANGELOG.md LICENSE README.md package.json build",
     "build:watch": "tsc -w",
-    "prepare": "husky && if [ ! -d ./dist ]; then pnpm run build; fi",
+    "postinstall": "if command -v husky >/dev/null 2>&1; then husky; fi",
+    "prepare": "test -f ./dist/server.js || pnpm run build",
     "test": "PORT=4243 vitest run",
     "test:unit": "PORT=4243 vitest --exclude src/test/e2e",
     "test:docker": "./scripts/docker-postgres.sh",
@@ -69,7 +70,7 @@
     "seed:setup": "ts-node src/test/e2e/seed/segment.seed.ts",
     "seed:serve": "UNLEASH_DATABASE_NAME=unleash_test UNLEASH_DATABASE_SCHEMA=seed pnpm run start:dev",
     "clean": "del-cli --force dist",
-    "prepack": "./scripts/prepack.sh",
+    "prepack": "pnpm install --frozen-lockfile",
     "schema:update": "node ./.husky/update-openapi-spec-list.js"
   },
   "dependencies": {

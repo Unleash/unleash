@@ -92,6 +92,7 @@ export type UiFlags = {
     extendedUsageMetrics?: boolean;
     newInUnleash?: boolean | Variant;
     whatsNewPage?: boolean;
+    flagListCreatedByFilter?: boolean;
     regexConstraintOperator?: boolean;
     semverGteConstraintOperators?: boolean;
     signupDialog?: boolean;

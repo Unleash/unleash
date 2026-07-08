@@ -88,7 +88,8 @@ export type IFlagKey =
     | 'accessRequestsNotifications'
     | 'accessRequestsMenuIndicator'
     | 'projectReleaseTemplates'
-    | 'topLabelInputs';
+    | 'topLabelInputs'
+    | 'flagListCreatedByFilter';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -273,6 +274,10 @@ const flags: IFlags = {
     ),
     whatsNewPage: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_WHATS_NEW_PAGE,
+        false,
+    ),
+    flagListCreatedByFilter: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FLAG_LIST_CREATED_BY_FILTER,
         false,
     ),
     registerImpactMetrics: parseEnvVarBoolean(

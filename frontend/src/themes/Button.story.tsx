@@ -76,36 +76,3 @@ export const Disabled: Story = () => (
         </Button>
     </Row>
 );
-
-const COLORS = [
-    'primary',
-    'secondary',
-    'error',
-    'warning',
-    'info',
-    'success',
-] as const;
-
-const Stack = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(2),
-}));
-
-export const XLColorsList: Story = () => (
-    <Stack>
-        {COLORS.map((color) => (
-            <Row key={color}>
-                <Button color={color} variant='text'>
-                    {color} text
-                </Button>
-                <Button color={color} variant='outlined'>
-                    {color} outlined
-                </Button>
-                <Button color={color} variant='contained'>
-                    {color} contained
-                </Button>
-            </Row>
-        ))}
-    </Stack>
-);

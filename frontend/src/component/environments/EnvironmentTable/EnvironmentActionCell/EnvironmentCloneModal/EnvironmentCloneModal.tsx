@@ -244,13 +244,15 @@ export const EnvironmentCloneModal = ({
             >
                 <StyledForm onSubmit={handleSubmit}>
                     <div>
-                        <StyledInputDescription>
-                            What is your new environment name? (Can't be changed
-                            later)
-                        </StyledInputDescription>
                         <StyledInput
                             autoFocus
                             label='Environment name'
+                            description={
+                                <StyledInputDescription>
+                                    What to call the new environment. This can't
+                                    be changed later.
+                                </StyledInputDescription>
+                            }
                             error={Boolean(errors.name)}
                             errorText={errors.name}
                             value={name}

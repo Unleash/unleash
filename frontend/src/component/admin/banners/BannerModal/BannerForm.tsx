@@ -15,6 +15,7 @@ import {
 } from 'react';
 import Visibility from '@mui/icons-material/Visibility';
 import { BannerDialog } from 'component/banners/Banner/BannerDialog/BannerDialog';
+import { Link } from 'react-router';
 
 const StyledForm = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -60,7 +61,6 @@ const StyledFieldGroup = styled('div')(({ theme }) => ({
 }));
 
 const StyledInputDescription = styled('p')(({ theme }) => ({
-    display: 'flex',
     color: theme.palette.text.primary,
 }));
 
@@ -230,35 +230,37 @@ export const BannerForm = ({
                     condition={iconOption === 'Custom'}
                     show={
                         <StyledFieldGroup>
-                            <StyledInputDescription>
-                                Which custom icon?
-                                <HelpIcon
-                                    htmlTooltip
-                                    tooltip={
-                                        <StyledTooltip>
-                                            <p>
-                                                Choose an icon from{' '}
-                                                <a
-                                                    href='https://fonts.google.com/icons'
-                                                    target='_blank'
-                                                    rel='noreferrer'
-                                                >
-                                                    Material Symbols
-                                                </a>
-                                                .
-                                            </p>
-                                            <p>
-                                                For example, if you want to
-                                                display the "Rocket Launch"
-                                                icon, you can enter
-                                                "rocket_launch" in the field
-                                                below.
-                                            </p>
-                                        </StyledTooltip>
-                                    }
-                                />
-                            </StyledInputDescription>
                             <StyledInput
+                                description={
+                                    <StyledInputDescription>
+                                        Choose a custom icon
+                                        <HelpIcon
+                                            htmlTooltip
+                                            tooltip={
+                                                <StyledTooltip>
+                                                    <p>
+                                                        Choose an icon from{' '}
+                                                        <a
+                                                            href='https://fonts.google.com/icons'
+                                                            target='_blank'
+                                                            rel='noreferrer'
+                                                        >
+                                                            Material Symbols
+                                                        </a>
+                                                        .
+                                                    </p>
+                                                    <p>
+                                                        For example, if you want
+                                                        to display the "Rocket
+                                                        Launch" icon, you can
+                                                        enter "rocket_launch" in
+                                                        the field below.
+                                                    </p>
+                                                </StyledTooltip>
+                                            }
+                                        />
+                                    </StyledInputDescription>
+                                }
                                 label='Banner icon'
                                 value={icon}
                                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -270,27 +272,19 @@ export const BannerForm = ({
                     }
                 />
                 <StyledFieldGroup>
-                    <StyledInputDescription>
-                        What is your banner message?
-                        <HelpIcon
-                            htmlTooltip
-                            tooltip={
-                                <StyledTooltip>
-                                    <p>
-                                        <a
-                                            href='https://www.markdownguide.org/basic-syntax/'
-                                            target='_blank'
-                                            rel='noreferrer'
-                                        >
-                                            Markdown
-                                        </a>{' '}
-                                        is supported.
-                                    </p>
-                                </StyledTooltip>
-                            }
-                        />
-                    </StyledInputDescription>
                     <StyledInput
+                        description={
+                            <StyledInputDescription>
+                                <Link
+                                    to='https://www.markdownguide.org/basic-syntax/'
+                                    target='_blank'
+                                    rel='noreferrer'
+                                >
+                                    Markdown
+                                </Link>{' '}
+                                is supported.
+                            </StyledInputDescription>
+                        }
                         autoFocus
                         label='Banner message'
                         multiline
@@ -335,10 +329,12 @@ export const BannerForm = ({
                     condition={linkOption === 'Link'}
                     show={
                         <StyledFieldGroup>
-                            <StyledInputDescription>
-                                What URL should be opened?
-                            </StyledInputDescription>
                             <StyledInput
+                                description={
+                                    <StyledInputDescription>
+                                        What URL should be opened?
+                                    </StyledInputDescription>
+                                }
                                 label='URL'
                                 value={link}
                                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -356,9 +352,6 @@ export const BannerForm = ({
                     condition={linkOption !== 'None'}
                     show={
                         <StyledFieldGroup>
-                            <StyledInputDescription>
-                                What is the action text?
-                            </StyledInputDescription>
                             <StyledInput
                                 label='Action text'
                                 value={linkText}
@@ -375,9 +368,6 @@ export const BannerForm = ({
                     show={
                         <>
                             <StyledFieldGroup>
-                                <StyledInputDescription>
-                                    What is the dialog title?
-                                </StyledInputDescription>
                                 <StyledInput
                                     label='Dialog title'
                                     value={dialogTitle}
@@ -388,27 +378,29 @@ export const BannerForm = ({
                                 />
                             </StyledFieldGroup>
                             <StyledFieldGroup>
-                                <StyledInputDescription>
-                                    What is the dialog content?
-                                    <HelpIcon
-                                        htmlTooltip
-                                        tooltip={
-                                            <StyledTooltip>
-                                                <p>
-                                                    <a
-                                                        href='https://www.markdownguide.org/basic-syntax/'
-                                                        target='_blank'
-                                                        rel='noreferrer'
-                                                    >
-                                                        Markdown
-                                                    </a>{' '}
-                                                    is supported.
-                                                </p>
-                                            </StyledTooltip>
-                                        }
-                                    />
-                                </StyledInputDescription>
                                 <StyledInput
+                                    description={
+                                        <StyledInputDescription>
+                                            What is the dialog content?
+                                            <HelpIcon
+                                                htmlTooltip
+                                                tooltip={
+                                                    <StyledTooltip>
+                                                        <p>
+                                                            <a
+                                                                href='https://www.markdownguide.org/basic-syntax/'
+                                                                target='_blank'
+                                                                rel='noreferrer'
+                                                            >
+                                                                Markdown
+                                                            </a>{' '}
+                                                            is supported.
+                                                        </p>
+                                                    </StyledTooltip>
+                                                }
+                                            />
+                                        </StyledInputDescription>
+                                    }
                                     label='Dialog content'
                                     multiline
                                     minRows={4}

@@ -143,9 +143,6 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
     return (
         <StyledForm>
             <StyledContainer>
-                <StyledInputDescription>
-                    What is the segment name?
-                </StyledInputDescription>
                 <StyledInput
                     label='Segment name'
                     value={name}
@@ -156,9 +153,6 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
                     required
                     data-testid={SEGMENT_NAME_ID}
                 />
-                <StyledInputDescription>
-                    What is the segment description?
-                </StyledInputDescription>
                 <StyledInput
                     label='Description (optional)'
                     value={description}

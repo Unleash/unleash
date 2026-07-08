@@ -79,11 +79,13 @@ const EnvironmentForm: React.FC<IEnvironmentForm> = ({
     return (
         <StyledForm onSubmit={handleSubmit}>
             <StyledContainer>
-                <StyledInputDescription>
-                    What is your environment name? (Can't be changed later)
-                </StyledInputDescription>
                 <StyledInput
                     label='Environment name'
+                    description={
+                        <StyledInputDescription>
+                            This can't be changed later
+                        </StyledInputDescription>
+                    }
                     value={name}
                     onChange={(e) => setName(trim(e.target.value))}
                     error={Boolean(errors.name)}

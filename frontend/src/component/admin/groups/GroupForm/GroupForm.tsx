@@ -127,9 +127,6 @@ export const GroupForm: FC<IGroupForm> = ({
     return (
         <StyledForm onSubmit={handleSubmit}>
             <div>
-                <StyledInputDescription>
-                    What would you like to call your group?
-                </StyledInputDescription>
                 <StyledInput
                     autoFocus
                     label='Name'
@@ -142,9 +139,6 @@ export const GroupForm: FC<IGroupForm> = ({
                     required
                     disabled={isScimGroup}
                 />
-                <StyledInputDescription>
-                    How would you describe your group?
-                </StyledInputDescription>
                 <StyledInput
                     multiline
                     rows={4}

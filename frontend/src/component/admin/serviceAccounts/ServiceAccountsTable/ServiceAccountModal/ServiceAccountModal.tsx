@@ -277,9 +277,6 @@ export const ServiceAccountModal = ({
             >
                 <StyledForm onSubmit={handleSubmit}>
                     <div>
-                        <StyledInputDescription>
-                            What is your new service account name?
-                        </StyledInputDescription>
                         <StyledInput
                             autoFocus
                             label='Service account name'
@@ -289,9 +286,6 @@ export const ServiceAccountModal = ({
                             autoComplete='off'
                             required
                         />
-                        <StyledInputDescription>
-                            What is your new service account username?
-                        </StyledInputDescription>
                         <StyledInput
                             label='Service account username'
                             error={Boolean(errors.username)}

@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import Input from 'component/common/Input/Input';
 import type { FC } from 'react';
 
@@ -13,13 +13,6 @@ export const FeatureStrategyTitle: FC<IFeatureStrategyTitleProps> = ({
 }) => {
     return (
         <Box sx={{ paddingBottom: (theme) => theme.spacing(2) }}>
-            <Typography
-                sx={{
-                    paddingBottom: (theme) => theme.spacing(2),
-                }}
-            >
-                What would you like to call this strategy? (optional)
-            </Typography>
             <Input
                 label='Strategy title'
                 id='title-input'

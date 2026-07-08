@@ -62,9 +62,6 @@ export const RoleForm = ({
 
     return (
         <div>
-            <StyledInputDescription>
-                What is your new role name?
-            </StyledInputDescription>
             <StyledInput
                 autoFocus
                 label='Role name *'
@@ -78,9 +75,6 @@ export const RoleForm = ({
                 onBlur={(e) => handleOnBlur(() => validateName(e.target.value))}
                 autoComplete='off'
             />
-            <StyledInputDescription>
-                What is your new role description?
-            </StyledInputDescription>
             <StyledInputFullWidth
                 label='Role description *'
                 error={Boolean(errors.description)}

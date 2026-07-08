@@ -267,31 +267,32 @@ const ProjectEnterpriseSettingsForm: React.FC<
                     <legend>Feature flag naming pattern</legend>
                     <FeatureFlagNamingTooltip />
                 </Box>
-                <StyledSubtitle>
-                    <StyledPatternNamingExplanation id='pattern-naming-description'>
-                        <p>
-                            Define a{' '}
-                            <a
-                                href={`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Cheatsheet`}
-                                target='_blank'
-                                rel='noreferrer'
-                            >
-                                JavaScript RegEx
-                            </a>{' '}
-                            used to enforce feature flag names within this
-                            project. The regex will be surrounded by a leading{' '}
-                            <code>^</code> and a trailing <code>$</code>.
-                        </p>
-                        <p>
-                            Leave it empty if you don’t want to add a naming
-                            pattern.
-                        </p>
-                    </StyledPatternNamingExplanation>
-                </StyledSubtitle>
                 <StyledFlagNamingContainer>
                     <StyledInput
                         label={'Naming Pattern'}
                         name='feature flag naming pattern'
+                        description={
+                            <StyledPatternNamingExplanation id='pattern-naming-description'>
+                                <p>
+                                    Define a{' '}
+                                    <a
+                                        href={`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Cheatsheet`}
+                                        target='_blank'
+                                        rel='noreferrer'
+                                    >
+                                        JavaScript RegEx
+                                    </a>{' '}
+                                    used to enforce feature flag names within
+                                    this project. The regex will be surrounded
+                                    by a leading <code>^</code> and a trailing{' '}
+                                    <code>$</code>.
+                                </p>
+                                <p>
+                                    Leave it empty if you don’t want to add a
+                                    naming pattern.
+                                </p>
+                            </StyledPatternNamingExplanation>
+                        }
                         aria-describedby='pattern-naming-description'
                         placeholder='[A-Za-z]+.[A-Za-z]+.[A-Za-z0-9-]+'
                         slotProps={{

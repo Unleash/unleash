@@ -116,7 +116,6 @@ const ProjectForm: React.FC<IProjectForm> = ({
                 handleSubmit(submitEvent);
             }}
         >
-            <StyledDescription>What is your project Id?</StyledDescription>
             <StyledInput
                 label='Project Id'
                 value={projectId}
@@ -131,7 +130,6 @@ const ProjectForm: React.FC<IProjectForm> = ({
                 required
             />
 
-            <StyledDescription>What is your project name?</StyledDescription>
             <StyledInput
                 label='Project name'
                 value={projectName}

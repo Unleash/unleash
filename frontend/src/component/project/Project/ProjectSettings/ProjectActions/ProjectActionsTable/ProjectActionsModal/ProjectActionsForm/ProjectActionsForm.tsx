@@ -23,15 +23,6 @@ const StyledRaisedSection = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(4),
 }));
 
-const StyledInputDescription = styled('p')(({ theme }) => ({
-    display: 'flex',
-    color: theme.palette.text.primary,
-    marginBottom: theme.spacing(1),
-    '&:not(:first-of-type)': {
-        marginTop: theme.spacing(3),
-    },
-}));
-
 const StyledInput = styled(Input)(() => ({
     width: '100%',
 }));
@@ -115,9 +106,6 @@ export const ProjectActionsForm = ({
                     Action status
                 </FormSwitch>
             </StyledRaisedSection>
-            <StyledInputDescription>
-                What is your new action name?
-            </StyledInputDescription>
             <StyledInput
                 autoFocus
                 label='Action name'
@@ -131,9 +119,6 @@ export const ProjectActionsForm = ({
                 onBlur={(e) => handleOnBlur(() => validateName(e.target.value))}
                 autoComplete='off'
             />
-            <StyledInputDescription>
-                What is your new action description?
-            </StyledInputDescription>
             <StyledInput
                 label='Action description'
                 value={description}

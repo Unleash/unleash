@@ -157,9 +157,6 @@ export const ContextForm: React.FC<IContextForm> = ({
     return (
         <StyledForm onSubmit={onSubmit}>
             <div>
-                <StyledInputDescription>
-                    What is your context name?
-                </StyledInputDescription>
                 <Input
                     sx={styledInput}
                     label='Context name'

@@ -110,9 +110,6 @@ const EditFeatureForm: React.FC<IFeatureToggleForm> = ({
 
     return (
         <StyledForm onSubmit={handleSubmit}>
-            <StyledInputDescription>
-                What would you like to call your flag?
-            </StyledInputDescription>
             <StyledInput
                 autoFocus
                 disabled={true}
@@ -137,9 +134,6 @@ const EditFeatureForm: React.FC<IFeatureToggleForm> = ({
             <StyledTypeDescription>
                 {renderToggleDescription()}
             </StyledTypeDescription>
-            <StyledInputDescription>
-                How would you describe your feature flag?
-            </StyledInputDescription>
             <StyledInput
                 multiline
                 rows={4}

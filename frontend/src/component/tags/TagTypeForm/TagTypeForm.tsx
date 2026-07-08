@@ -73,9 +73,6 @@ const TagTypeForm: React.FC<ITagTypeForm> = ({
     return (
         <StyledForm onSubmit={handleSubmit}>
             <StyledContainer>
-                <StyledInputDescription>
-                    What is your tag name?
-                </StyledInputDescription>
                 <StyledInput
                     label='Tag name'
                     value={tagName}

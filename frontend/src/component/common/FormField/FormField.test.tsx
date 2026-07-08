@@ -95,3 +95,42 @@ test("uses the control's own id rather than overwriting it", async () => {
     const input = await screen.findByLabelText('Change request title');
     expect(input).toHaveAttribute('id', 'group-name');
 });
+
+test('renders a description element unchanged when the flag is off', async () => {
+    setTopLabel(false);
+    render(
+        <FormField
+            label='Project Id'
+            description={
+                <p data-testid='original' style={{ color: 'red' }}>
+                    You can't change this later
+                </p>
+            }
+        >
+            <input />
+        </FormField>,
+    );
+
+    const rendered = await screen.findByTestId('original');
+    expect(rendered).toContainHTML(
+        `<p data-testid="original" style="color: red;">You can't change this later</p>`,
+    );
+});
+
+test('restyles the description text when the flag is on', async () => {
+    setTopLabel(true);
+    render(
+        <FormField
+            label='Project Id'
+            description={
+                <p data-testid='original'>You can't change this later</p>
+            }
+        >
+            <input />
+        </FormField>,
+    );
+
+    await screen.findByText('Project Id');
+    expect(screen.queryByTestId('original')).not.toBeInTheDocument();
+    expect(screen.getByText("You can't change this later")).toBeInTheDocument();
+});

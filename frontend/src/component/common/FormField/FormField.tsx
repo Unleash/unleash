@@ -1,4 +1,4 @@
-import { Children, cloneElement, useId } from 'react';
+import { Children, cloneElement, isValidElement, useId } from 'react';
 import type { ReactElement, ReactNode } from 'react';
 import { styled } from '@mui/material';
 import { useUiFlag } from 'hooks/useUiFlag';
@@ -20,6 +20,9 @@ const StyledDescription = styled('p')(({ theme }) => ({
     margin: 0,
     fontSize: theme.typography.body2.fontSize,
     color: theme.palette.text.secondary,
+    '& span': {
+        verticalAlign: 'bottom',
+    },
 }));
 
 const StyledControl = styled('div')(({ theme }) => ({
@@ -48,8 +51,21 @@ export const FormField = ({
     >;
 
     if (!topLabelInputs) {
-        return cloneElement(child, { label }); // old floating label control
+        const floatingControl = cloneElement(child, { label });
+        if (!description) {
+            return floatingControl;
+        }
+        return (
+            <>
+                {description}
+                {floatingControl}
+            </>
+        );
     }
+
+    const descriptionContent = isValidElement(description)
+        ? (description.props as { children?: ReactNode }).children
+        : description;
 
     const ownId = child.props.id as string | undefined;
     const id = ownId ?? generatedId;
@@ -70,7 +86,7 @@ export const FormField = ({
             <StyledLabel htmlFor={id}>{label}</StyledLabel>
             {description ? (
                 <StyledDescription id={descriptionId}>
-                    {description}
+                    {descriptionContent}
                 </StyledDescription>
             ) : null}
             <StyledControl>{control}</StyledControl>

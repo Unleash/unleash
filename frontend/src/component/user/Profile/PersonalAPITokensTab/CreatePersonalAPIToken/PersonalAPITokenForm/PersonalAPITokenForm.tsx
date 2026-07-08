@@ -168,9 +168,6 @@ export const PersonalAPITokenForm = ({
 
     return (
         <>
-            <StyledInputDescription>
-                Describe what this token will be used for
-            </StyledInputDescription>
             <StyledInput
                 autoFocus
                 label='Description'
@@ -179,6 +176,11 @@ export const PersonalAPITokenForm = ({
                 value={description}
                 onChange={(e) => onSetDescription(e.target.value)}
                 required
+                description={
+                    <StyledInputDescription>
+                        Describe what this token will be used for
+                    </StyledInputDescription>
+                }
             />
             <StyledInputDescription>
                 Token expiration date

@@ -85,9 +85,6 @@ const UserForm: React.FC<IUserForm> = ({
     return (
         <StyledForm onSubmit={handleSubmit}>
             <StyledContainer>
-                <StyledInputDescription>
-                    Who is the new Unleash user?
-                </StyledInputDescription>
                 <StyledInput
                     label='Full name'
                     value={name}
@@ -96,6 +93,11 @@ const UserForm: React.FC<IUserForm> = ({
                     errorText={errors.name}
                     onFocus={() => clearErrors()}
                     autoFocus
+                    description={
+                        <StyledInputDescription>
+                            Who is the new Unleash user?
+                        </StyledInputDescription>
+                    }
                 />
                 <StyledInput
                     label='Email'

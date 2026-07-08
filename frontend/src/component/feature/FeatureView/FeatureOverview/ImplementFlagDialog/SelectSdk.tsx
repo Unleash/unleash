@@ -1,4 +1,5 @@
-import { Autocomplete, TextField, styled } from '@mui/material';
+import { styled } from '@mui/material';
+import { AutocompleteField } from 'component/common/AutocompleteField/AutocompleteField';
 import {
     allSdks,
     serverSdks,
@@ -59,7 +60,9 @@ export const SelectSdk = ({ value, onChange }: SelectSdkProps) => {
 
     return (
         <StyledAutocompleteWrapper>
-            <Autocomplete
+            <AutocompleteField
+                label='SDK'
+                size='small'
                 disableClearable
                 options={options}
                 value={options.find((opt) => opt.name === value)}
@@ -80,25 +83,14 @@ export const SelectSdk = ({ value, onChange }: SelectSdkProps) => {
                         <StyledSdkName>{option.name}</StyledSdkName>
                     </StyledOptionRow>
                 )}
-                renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        label='SDK'
-                        size='small'
-                        slotProps={{
-                            ...params.slotProps,
-                            input: {
-                                ...params.slotProps?.input,
-                                startAdornment: icon && (
-                                    <StyledSdkIcon
-                                        src={formatAssetPath(icon)}
-                                        alt=''
-                                    />
-                                ),
-                            },
-                        }}
-                    />
-                )}
+                startAdornment={
+                    icon && (
+                        <StyledSdkIcon
+                            src={formatAssetPath(icon)}
+                            alt='sdk-icon'
+                        />
+                    )
+                }
             />
         </StyledAutocompleteWrapper>
     );

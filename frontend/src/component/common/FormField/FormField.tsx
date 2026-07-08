@@ -29,7 +29,7 @@ const StyledControl = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(1),
 }));
 
-interface IFormFieldProps {
+interface FormFieldProps {
     /** The field's property name — bold, shown above the control. */
     label: ReactNode;
     /** Optional helper/description text shown under the label, above the control. */
@@ -38,11 +38,7 @@ interface IFormFieldProps {
     children: ReactElement;
 }
 
-export const FormField = ({
-    label,
-    description,
-    children,
-}: IFormFieldProps) => {
+export const FormField = ({ label, description, children }: FormFieldProps) => {
     const topLabelInputs = useUiFlag('topLabelInputs');
     const generatedId = useId();
 

@@ -23,7 +23,11 @@ const Buttons = styled('div')(({ theme }) => ({
     justifyContent: 'center',
 }));
 
-export const EmptyTemplatesListMessage = () => {
+export const EmptyTemplatesListMessage = ({
+    createPath = '/release-templates/create-template',
+}: {
+    createPath?: string;
+}) => {
     const navigate = useNavigate();
     return (
         <Container>
@@ -55,7 +59,7 @@ export const EmptyTemplatesListMessage = () => {
                 <PermissionButton
                     sx={{ whiteSpace: 'nowrap' }}
                     onClick={() => {
-                        navigate('/release-templates/create-template');
+                        navigate(createPath);
                     }}
                     permission={RELEASE_PLAN_TEMPLATE_CREATE}
                 >

@@ -22,6 +22,7 @@ import { Box, styled } from '@mui/material';
 import { ProjectActions } from './ProjectActions/ProjectActions.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ProjectContextFields } from './ProjectContextFields.tsx';
+import { ProjectReleaseTemplates } from './ProjectReleaseTemplates/ProjectReleaseTemplates.tsx';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam.ts';
 
 const StyledBadgeContainer = styled(Box)({
@@ -37,6 +38,11 @@ export const ProjectSettings = () => {
     const projectId = useRequiredPathParam('projectId');
 
     const actionsEnabled = useUiFlag('automatedActions');
+    const projectReleaseTemplatesFlagEnabled = useUiFlag(
+        'projectReleaseTemplates',
+    );
+    const projectReleaseTemplatesEnabled =
+        projectReleaseTemplatesFlagEnabled && isEnterprise();
 
     const paidTabs = (...tabs: ITab[]) =>
         isPro() || isEnterprise() ? tabs : [];
@@ -68,6 +74,14 @@ export const ProjectSettings = () => {
             id: 'environments',
             label: 'Environments',
         },
+        ...(projectReleaseTemplatesEnabled
+            ? [
+                  {
+                      id: 'release-templates',
+                      label: 'Release templates',
+                  },
+              ]
+            : []),
         {
             id: 'default-strategy',
             label: 'Default strategy',
@@ -120,6 +134,10 @@ export const ProjectSettings = () => {
                 <Route path='access/*' element={<ProjectAccess />} />
                 <Route path='context/*' element={<ProjectContextFields />} />
                 <Route path='segments/*' element={<ProjectSegments />} />
+                <Route
+                    path='release-templates/*'
+                    element={<ProjectReleaseTemplates />}
+                />
                 <Route
                     path='change-requests/*'
                     element={<ChangeRequestConfiguration />}

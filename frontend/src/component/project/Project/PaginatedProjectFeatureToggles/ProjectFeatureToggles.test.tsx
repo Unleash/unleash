@@ -90,8 +90,9 @@ test('filters by flag type', async () => {
             route: '/projects/default',
         },
     );
-    await screen.findByText('featureA');
-    const [icon] = await screen.findAllByTestId('feature-type-icon');
+    const featureA = await screen.findByText('featureA');
+    const featureARow = featureA.closest('tr')!;
+    const icon = within(featureARow).getByTestId('feature-type-icon');
 
     fireEvent.click(icon);
 

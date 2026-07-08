@@ -1,4 +1,4 @@
-`const $name = $init` where {
+`const $name = $init` as $decl where {
     $init <: or {
         `styled($_)($_)`,
         `styled($_)<$_>($_)`,
@@ -10,5 +10,6 @@
         `styled.$_`
     },
     ! $name <: r"_?Styled.*",
+    ! $decl <: within `export const $_ = $_` ,
     register_diagnostic(span=$name, message="Components created with styled() should be named with a 'Styled' prefix.", severity="info")
 }

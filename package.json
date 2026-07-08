@@ -183,7 +183,7 @@
     "superagent": "10.3.0",
     "supertest": "7.2.2",
     "ts-node": "10.9.2",
-    "tsc-watch": "7.2.0",
+    "tsc-watch": "7.2.1",
     "typescript": "5.9.3",
     "vite-node": "^6.0.0",
     "vitest": "4.1.9",

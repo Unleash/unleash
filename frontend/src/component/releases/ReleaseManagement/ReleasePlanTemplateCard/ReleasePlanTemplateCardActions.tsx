@@ -51,7 +51,7 @@ export const ReleasePlanTemplateCardActions = ({
     projectId?: string;
 }) => {
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
-    const { archiveReleasePlanTemplate } =
+    const { archiveReleasePlanTemplate, loading } =
         useReleasePlanTemplatesApi(projectId);
     const { refetch } = useReleasePlanTemplates(projectId);
     const { setToastData, setToastApiError } = useToast();
@@ -157,6 +157,7 @@ export const ReleasePlanTemplateCardActions = ({
                 open={archiveOpen}
                 setOpen={setArchiveOpen}
                 onConfirm={archiveReleasePlan}
+                disabled={loading}
             />
         </StyledActions>
     );

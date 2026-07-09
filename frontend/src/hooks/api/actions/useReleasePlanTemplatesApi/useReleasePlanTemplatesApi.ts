@@ -6,7 +6,7 @@ import { releaseTemplatesApiPath } from '../../getters/useReleasePlanTemplates/r
 import useAPI from '../useApi/useApi.js';
 
 export const useReleasePlanTemplatesApi = (projectId?: string) => {
-    const { makeRequest, createRequest } = useAPI({
+    const { makeRequest, createRequest, loading } = useAPI({
         propagateErrors: true,
     });
 
@@ -80,6 +80,7 @@ export const useReleasePlanTemplatesApi = (projectId?: string) => {
         updateReleasePlanTemplate,
         createReleasePlanTemplate,
         archiveReleasePlanTemplate,
+        loading,
     };
 };
 

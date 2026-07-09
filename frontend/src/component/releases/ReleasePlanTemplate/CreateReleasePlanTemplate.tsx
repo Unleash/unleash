@@ -37,7 +37,8 @@ export const CreateReleasePlanTemplate = ({ modal }: { modal?: boolean }) => {
     const { uiConfig, isEnterprise } = useUiConfig();
     const { setToastApiError, setToastData } = useToast();
     const navigate = useNavigate();
-    const { createReleasePlanTemplate } = useReleasePlanTemplatesApi(projectId);
+    const { createReleasePlanTemplate, loading: submitting } =
+        useReleasePlanTemplatesApi(projectId);
     const { trackEvent } = useEventTracker();
     // The release-template limit is a global cap, so the count is unscoped.
     const { templates } = useReleasePlanTemplates();
@@ -150,7 +151,7 @@ export const CreateReleasePlanTemplate = ({ modal }: { modal?: boolean }) => {
                         UPDATE_PROJECT_RELEASE_TEMPLATE,
                     ]}
                     projectId={projectId}
-                    disabled={!canCreateMore}
+                    disabled={submitting || !canCreateMore}
                 >
                     Save template
                 </CreateButton>

@@ -40,7 +40,8 @@ export const EditReleasePlanTemplate = ({ modal }: { modal?: boolean }) => {
     usePageTitle(`Edit release template`);
     const navigate = useNavigate();
     const { setToastApiError, setToastData } = useToast();
-    const { updateReleasePlanTemplate } = useReleasePlanTemplatesApi(projectId);
+    const { updateReleasePlanTemplate, loading: submitting } =
+        useReleasePlanTemplatesApi(projectId);
     const { refetch: refetchTemplates } = useReleasePlanTemplates(projectId);
 
     const backPath = formatReleaseTemplateListPath(projectId);
@@ -139,7 +140,7 @@ export const EditReleasePlanTemplate = ({ modal }: { modal?: boolean }) => {
                         UPDATE_PROJECT_RELEASE_TEMPLATE,
                     ]}
                     projectId={projectId}
-                    disabled={!!template.archivedAt}
+                    disabled={submitting || !!template.archivedAt}
                 >
                     Save changes
                 </UpdateButton>

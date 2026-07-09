@@ -12,6 +12,7 @@ interface ITemplateArchiveDialogProps {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     onConfirm: (template: IReleasePlanTemplate) => void;
+    disabled?: boolean;
 }
 
 export const TemplateArchiveDialog: React.FC<ITemplateArchiveDialogProps> = ({
@@ -20,6 +21,7 @@ export const TemplateArchiveDialog: React.FC<ITemplateArchiveDialogProps> = ({
     open,
     setOpen,
     onConfirm,
+    disabled,
 }) => {
     return (
         <Dialogue
@@ -38,6 +40,7 @@ export const TemplateArchiveDialog: React.FC<ITemplateArchiveDialogProps> = ({
                         UPDATE_PROJECT_RELEASE_TEMPLATE,
                     ]}
                     projectId={projectId}
+                    disabled={disabled}
                 >
                     Archive template
                 </PermissionButton>

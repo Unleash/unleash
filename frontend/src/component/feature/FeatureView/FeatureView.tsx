@@ -35,6 +35,7 @@ export const FeatureView = () => {
     const { feature, loading, error, status } = useFeature(
         projectId,
         featureId,
+        { refreshInterval: 15 * 1000 },
     );
 
     const {

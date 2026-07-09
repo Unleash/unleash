@@ -74,20 +74,79 @@ describe('demoModel', () => {
         }
     });
 
-    it('targets a country at 100% regardless of the rollout percentage', () => {
+    it('ANDs constraints with the rollout, like a real Unleash strategy', () => {
+        const users = generateDemoUsers(60);
+
+        // A constraint alone doesn't enable anyone at 0% rollout.
+        expect(
+            countEnabled(
+                users,
+                baseConfig({ rollout: 0, targetCountryCodes: ['US'] }),
+            ),
+        ).toBe(0);
+
+        // At 100% rollout, exactly the matching users are enabled.
+        const evaluations = computeEvaluations(
+            users,
+            baseConfig({ rollout: 100, targetCountryCodes: ['US'] }),
+        );
+        users.forEach((user, i) => {
+            expect(evaluations[i].enabled).toBe(user.country.code === 'US');
+            expect(evaluations[i].matchesConstraints).toBe(
+                user.country.code === 'US',
+            );
+        });
+    });
+
+    it('spreads the rollout evenly within each country, not just overall', () => {
+        const users = generateDemoUsers(24);
+        const evaluations = computeEvaluations(
+            users,
+            baseConfig({ rollout: 50 }),
+        );
+        const enabledByCountry = new Map<string, number>();
+        users.forEach((user, i) => {
+            if (evaluations[i].enabled) {
+                enabledByCountry.set(
+                    user.country.code,
+                    (enabledByCountry.get(user.country.code) ?? 0) + 1,
+                );
+            }
+        });
+        // 24 users / 6 countries = 4 per country; a 50% rollout hits 2 each.
+        for (const code of ['US', 'GB', 'DE', 'IN', 'BR', 'JP']) {
+            expect(enabledByCountry.get(code)).toBe(2);
+        }
+    });
+
+    it('treats no constraints as matching everyone', () => {
         const users = generateDemoUsers(60);
         const evaluations = computeEvaluations(
             users,
-            baseConfig({ rollout: 0, targetCountryCodes: ['US'] }),
+            baseConfig({ rollout: 50 }),
         );
-        const usIndexes = users
-            .map((u, i) => ({ u, i }))
-            .filter(({ u }) => u.country.code === 'US');
-        expect(usIndexes.length).toBeGreaterThan(0);
-        for (const { i } of usIndexes) {
-            expect(evaluations[i].enabled).toBe(true);
-            expect(evaluations[i].reason).toBe('target');
+        for (const evaluation of evaluations) {
+            expect(evaluation.matchesConstraints).toBe(true);
         }
+    });
+
+    it('keeps variant assignments stable when the rollout changes', () => {
+        const users = generateDemoUsers(60);
+        const config = baseConfig({
+            rollout: 100,
+            variantsEnabled: true,
+            variants: [
+                { name: 'control', weight: 50 },
+                { name: 'treatment', weight: 50 },
+            ],
+        });
+        const at100 = computeEvaluations(users, config);
+        const at40 = computeEvaluations(users, { ...config, rollout: 40 });
+        users.forEach((_, i) => {
+            if (at40[i].enabled) {
+                expect(at40[i].variant).toBe(at100[i].variant);
+            }
+        });
     });
 
     it('splits enabled users into even, sticky variants', () => {

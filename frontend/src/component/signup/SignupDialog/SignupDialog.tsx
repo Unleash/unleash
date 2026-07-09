@@ -293,7 +293,6 @@ export const SignupDialog = () => {
             <StyledDialog open fullScreen tour>
                 <StyledTourContainer>
                     <GridDemo
-                        sampleAppPlacement='left'
                         onComplete={() => {
                             setShowTour(false);
                             setFakeSignup(false);

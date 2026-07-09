@@ -1,42 +1,82 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
+    Alert,
     Box,
     Button,
     Chip,
-    FormControlLabel,
+    Collapse,
     styled,
-    Switch,
     Typography,
     useTheme,
 } from '@mui/material';
 import Confetti from 'react-confetti';
-import RolloutSlider from 'component/feature/StrategyTypes/RolloutSlider/RolloutSlider.tsx';
-import { VariantsSplitPreview } from 'component/common/VariantsSplitPreview/VariantsSplitPreview.tsx';
-import type { StrategyVariantSchema } from 'openapi';
 import { useEventTracker } from 'hooks/useEventTracker.ts';
 import {
     computeEvaluations,
-    DEMO_COUNTRIES,
     type DemoFlagConfig,
     type DemoUser,
+    type DemoVariant,
     generateDemoUsers,
     summarize,
 } from './demoModel.js';
 import { UserGrid, type GridMode } from './UserGrid.tsx';
-import { SampleAppPreview } from './SampleAppPreview.tsx';
+import { DemoFlagView } from './DemoFlagView.tsx';
 
-const USER_COUNT = 60;
+// Small enough that every character stays readable with a name under it; the
+// stat header carries the precise percentage.
+const USER_COUNT = 24;
 const FLAG_NAME = 'new-checkout';
 
-const DEFAULT_VARIANTS = [
-    { name: 'A', weight: 50 },
-    { name: 'B', weight: 50 },
+/**
+ * The pool of variants the user can add from, in order. Each carries a JSON
+ * payload so the demo can show that a variant is more than a name - the app
+ * reads the payload at runtime, and the demo renders exactly what the payload
+ * says (button text and colour).
+ */
+const VARIANT_POOL = [
+    { name: 'A', cta: 'Buy now' },
+    { name: 'B', cta: '⚡ 1-click checkout' },
+    { name: 'C', cta: 'Quick pay' },
+    { name: 'D', cta: 'Express checkout' },
 ];
+
+/** Integer weights summing to 100, like Unleash's automatic even split. */
+const evenWeights = (count: number): number[] =>
+    Array.from(
+        { length: count },
+        (_, i) => Math.floor(100 / count) + (i < 100 % count ? 1 : 0),
+    );
+
+/**
+ * Colours come from the theme's variant palette (by list position, like the
+ * real variant UI) so the demo looks exactly like variants do in the product,
+ * and the payload advertises the very colour being rendered.
+ */
+const makeVariants = (names: string[], palette: string[]): DemoVariant[] => {
+    const weights = evenWeights(names.length);
+    return names.map((name, i) => {
+        const pooled = VARIANT_POOL.find((v) => v.name === name);
+        const color = palette[i % palette.length];
+        return {
+            name,
+            weight: weights[i],
+            payload: pooled
+                ? `{ "cta": "${pooled.cta}", "color": "${color}" }`
+                : undefined,
+            color,
+            cta: pooled?.cta,
+        };
+    });
+};
+
+/** Delay between switching the feature on and the scripted bug report. */
+const BUG_REPORT_DELAY_MS = 1400;
 
 interface ITopic {
     key: string;
     mode: GridMode;
     title: string;
+    valueTag: string;
     body: string;
 }
 
@@ -45,25 +85,29 @@ const TOPICS: ITopic[] = [
         key: 'onoff',
         mode: 'onoff',
         title: 'Flip a feature on and off',
-        body: 'Imagine you run the example online store, and you just built a new 1-click checkout. A feature flag is a switch that controls it without deploying. Toggle it and watch every user get it instantly, then take it away just as fast.',
+        valueTag: 'Runtime control',
+        body: 'Meet your users. You run an online store, and your new 1-click checkout just shipped - dark, behind a feature flag. Flip it on and watch every hand go up. Flip it off and it’s gone. No deploy either way.',
     },
     {
         key: 'rollout',
         mode: 'rollout',
         title: 'Release gradually, safely',
-        body: 'You don’t have to go all-or-nothing. Drag the slider to roll the feature out to a percentage of your users. Watch how the same users stay in as you increase. Nobody flips back off. That’s a consistent, controlled release.',
+        valueTag: 'Progressive delivery',
+        body: 'Going all-in on day one is how outages happen. Drag the slider to release to a small share of users first. The same people stay in as you grow it - nobody flips back off. That’s a controlled, consistent release.',
     },
     {
         key: 'target',
         mode: 'target',
         title: 'Target exactly who you want',
-        body: 'Switch the feature on for whole segments, here by country, no matter the rollout percentage. Perfect for betas, internal users, or a single region.',
+        valueTag: 'Precision targeting',
+        body: 'Constraints narrow who a strategy applies to - and the rollout percentage then applies within that group, exactly like in Unleash. Pick countries in the constraint: matching users light up, and only the rollout’s share of them get the feature.',
     },
     {
         key: 'variants',
         mode: 'variants',
         title: 'Run an A/B test',
-        body: 'The new feature has two versions, A and B. Everyone gets the feature, but each user sees just one version, so you can compare which works better.',
+        valueTag: 'Experimentation',
+        body: 'Everyone gets the new checkout, split into versions - their shirts show which. Each variant carries a JSON payload your app reads at runtime. Add or remove variants below, then click a person to see exactly what their app receives.',
     },
 ];
 
@@ -100,7 +144,7 @@ const StyledScroll = styled(Box)(({ theme }) => ({
     overflowX: 'hidden',
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(2.5),
+    gap: theme.spacing(2),
 }));
 
 const StyledRight = styled(Box)(({ theme }) => ({
@@ -125,17 +169,11 @@ const StyledTitle = styled('h1')(({ theme }) => ({
     fontSize: theme.typography.h1.fontSize,
 }));
 
-const StyledControls = styled(Box)(({ theme }) => ({
-    marginTop: theme.spacing(1),
+const StyledTitleRow = styled(Box)(({ theme }) => ({
     display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(1.5),
-}));
-
-const StyledChips = styled(Box)(({ theme }) => ({
-    display: 'flex',
+    alignItems: 'center',
     flexWrap: 'wrap',
-    gap: theme.spacing(1),
+    gap: theme.spacing(1.5),
 }));
 
 const StyledFooter = styled(Box)(({ theme }) => ({
@@ -187,48 +225,59 @@ const StyledFinish = styled(Box)(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
+/**
+ * The scripted incident in step 1: after the user switches the feature on, a
+ * bug report rolls in and they get to save the day with the kill switch.
+ */
+type BugPhase = 'idle' | 'armed' | 'alert' | 'resolved';
+
 interface IGridDemoProps {
     /** Called when the user finishes or skips the tour. */
     onComplete: () => void;
-    /**
-     * Where the example-app preview lives. 'left' pairs it with the controls
-     * (needs a roomy host like the full-screen signup dialog); 'right' stacks
-     * it under the grid so the left column fits in the compact dialog.
-     */
-    sampleAppPlacement?: 'left' | 'right';
 }
 
 /**
  * The interactive quick-tour panel: a 4-step feature flag walkthrough (on/off,
- * gradual rollout, targeting, A/B variants) evaluated against a simulated user
- * grid. Fills its container; hosted in a dialog by QuickTourDialog and inline
- * in the signup dialog.
+ * gradual rollout, targeting, A/B variants). The left side is a miniature but
+ * real-looking flag page that gains configuration as the tour progresses; the
+ * right side is a crowd of illustrated users who raise their hands when the
+ * flag reaches them. Fills its container; hosted in a dialog by
+ * QuickTourDialog and inline in the signup dialog.
  */
-export const GridDemo = ({
-    onComplete,
-    sampleAppPlacement = 'right',
-}: IGridDemoProps) => {
-    const theme = useTheme();
+export const GridDemo = ({ onComplete }: IGridDemoProps) => {
     const { trackEvent } = useEventTracker();
+    const theme = useTheme();
+    const variantPalette = theme.palette.variants;
     const users = useMemo(() => generateDemoUsers(USER_COUNT), []);
 
     const [topicIndex, setTopicIndex] = useState(0);
     const [finished, setFinished] = useState(false);
     const [selectedId, setSelectedId] = useState<string | undefined>();
-    // Step 1 starts with the feature OFF: the first impression is a calm grid,
-    // and flipping the switch (the user's own action) causes the fill-in.
-    const [config, setConfig] = useState<DemoFlagConfig>({
+    const [bugPhase, setBugPhase] = useState<BugPhase>('idle');
+    // Step 1 starts with the feature OFF: the first impression is a calm,
+    // greyscale crowd, and flipping the switch (the user's own action) raises
+    // the hands.
+    const [config, setConfig] = useState<DemoFlagConfig>(() => ({
         flagName: FLAG_NAME,
         environmentEnabled: false,
         rollout: 100,
         targetCountryCodes: [],
         variantsEnabled: false,
-        variants: DEFAULT_VARIANTS,
-    });
+        variants: makeVariants(['A', 'B'], variantPalette),
+    }));
 
     useEffect(() => {
         trackEvent('closed-demo', { props: { eventType: 'start' } });
     }, [trackEvent]);
+
+    useEffect(() => {
+        if (bugPhase !== 'armed') return;
+        const timer = setTimeout(
+            () => setBugPhase('alert'),
+            BUG_REPORT_DELAY_MS,
+        );
+        return () => clearTimeout(timer);
+    }, [bugPhase]);
 
     const topic = TOPICS[topicIndex];
 
@@ -240,10 +289,6 @@ export const GridDemo = ({
         () => summarize(users, evaluations),
         [users, evaluations],
     );
-
-    const variantOrder = config.variants.map((v) => v.name);
-    const variantAccent = (index: number) =>
-        theme.palette.variants[index % theme.palette.variants.length];
 
     const selectedUser = users.find((u) => u.id === selectedId);
     const selectedEvaluation = selectedUser
@@ -269,10 +314,12 @@ export const GridDemo = ({
                 variantsEnabled: false,
             }));
         } else if (key === 'target') {
+            // Rollout at 50% makes the AND visible: all matching users are
+            // highlighted, but only half of them raise a hand.
             setConfig((c) => ({
                 ...c,
                 environmentEnabled: true,
-                rollout: 10,
+                rollout: 50,
                 targetCountryCodes: ['US'],
                 variantsEnabled: false,
             }));
@@ -283,7 +330,7 @@ export const GridDemo = ({
                 rollout: 100,
                 targetCountryCodes: [],
                 variantsEnabled: true,
-                variants: DEFAULT_VARIANTS,
+                variants: makeVariants(['A', 'B'], variantPalette),
             }));
         }
     };
@@ -312,8 +359,18 @@ export const GridDemo = ({
         onComplete();
     };
 
-    const setEnvironmentEnabled = (value: boolean) =>
+    const setEnvironmentEnabled = (value: boolean) => {
         setConfig((c) => ({ ...c, environmentEnabled: value }));
+        if (topic.key !== 'onoff') return;
+        if (value && bugPhase === 'idle') {
+            setBugPhase('armed');
+        } else if (!value && bugPhase === 'alert') {
+            setBugPhase('resolved');
+            trackEvent('closed-demo', {
+                props: { eventType: 'killswitch' },
+            });
+        }
+    };
 
     const setRollout = (value: number) =>
         setConfig((c) => ({ ...c, rollout: value }));
@@ -326,23 +383,40 @@ export const GridDemo = ({
                 : [...c.targetCountryCodes, code],
         }));
 
-    const setSplit = (value: number) =>
+    const addVariant = () => {
+        setConfig((c) => {
+            const used = c.variants.map((v) => v.name);
+            const nextName = VARIANT_POOL.find(
+                (v) => !used.includes(v.name),
+            )?.name;
+            if (!nextName) return c;
+            return {
+                ...c,
+                variants: makeVariants([...used, nextName], variantPalette),
+            };
+        });
+        trackEvent('closed-demo', {
+            props: { eventType: 'add-variant' },
+        });
+    };
+
+    const removeVariant = (name: string) =>
         setConfig((c) => ({
             ...c,
-            variants: [
-                { name: 'A', weight: 100 - value },
-                { name: 'B', weight: value },
-            ],
+            variants: makeVariants(
+                c.variants.map((v) => v.name).filter((n) => n !== name),
+                variantPalette,
+            ),
         }));
 
-    const previewVariants: StrategyVariantSchema[] = config.variants.map(
-        (v) => ({
-            name: v.name,
-            weight: v.weight * 10,
-            weightType: 'variable',
-            stickiness: 'default',
-        }),
-    );
+    const setVariantWeights = (weights: number[]) =>
+        setConfig((c) => ({
+            ...c,
+            variants: c.variants.map((v, i) => ({
+                ...v,
+                weight: weights[i] ?? v.weight,
+            })),
+        }));
 
     return (
         <StyledPanel>
@@ -360,9 +434,10 @@ export const GridDemo = ({
                             color='textSecondary'
                             sx={{ maxWidth: 520 }}
                         >
-                            You just ran a gradual rollout, targeted a segment,
-                            and split an A/B test, with no deploys and no code.
-                            Ready to do it for real in your project?
+                            You just killed a broken feature in one click, ran a
+                            gradual rollout, targeted a segment, and split an
+                            A/B test - with no deploys and no code. Ready to do
+                            it for real in your project?
                         </Typography>
                         <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
                             <Button
@@ -391,120 +466,71 @@ export const GridDemo = ({
                             <StyledEyebrow>
                                 Quick tour · {topicIndex + 1} of {TOPICS.length}
                             </StyledEyebrow>
-                            <StyledTitle>{topic.title}</StyledTitle>
+                            <StyledTitleRow>
+                                <StyledTitle>{topic.title}</StyledTitle>
+                                <Chip
+                                    label={topic.valueTag}
+                                    size='small'
+                                    color='primary'
+                                    variant='outlined'
+                                />
+                            </StyledTitleRow>
                             <Typography color='textSecondary'>
                                 {topic.body}
                             </Typography>
 
-                            <StyledControls>
-                                {topic.mode === 'onoff' && (
-                                    <FormControlLabel
-                                        control={
-                                            <Switch
-                                                checked={
-                                                    config.environmentEnabled
-                                                }
-                                                onChange={(e) =>
-                                                    setEnvironmentEnabled(
-                                                        e.target.checked,
-                                                    )
-                                                }
-                                                data-testid='CLOSED_DEMO_ONOFF_SWITCH'
-                                            />
-                                        }
-                                        label={
-                                            config.environmentEnabled
-                                                ? 'Feature is ON, everyone sees it'
-                                                : 'Feature is OFF, no one sees it'
-                                        }
-                                    />
-                                )}
+                            <DemoFlagView
+                                config={config}
+                                showStrategy={topicIndex >= 1}
+                                showConstraints={topicIndex >= 2}
+                                showVariants={topic.mode === 'variants'}
+                                selectedVariant={selectedEvaluation?.variant}
+                                onEnvironmentChange={setEnvironmentEnabled}
+                                onRolloutChange={setRollout}
+                                onToggleCountry={toggleCountry}
+                                onAddVariant={addVariant}
+                                onRemoveVariant={removeVariant}
+                                onWeightsChange={setVariantWeights}
+                            />
 
-                                {topic.mode === 'rollout' && (
-                                    <RolloutSlider
-                                        name='Rollout %'
-                                        value={config.rollout}
-                                        onChange={(_, value) =>
-                                            setRollout(value as number)
-                                        }
-                                        hideInput
-                                        hideHelp
-                                    />
-                                )}
-
-                                {topic.mode === 'target' && (
-                                    <>
-                                        <Typography variant='body2'>
-                                            Rollout stays at{' '}
-                                            <strong>{config.rollout}%</strong>.
-                                            Targeted countries are always in:
-                                        </Typography>
-                                        <StyledChips>
-                                            {DEMO_COUNTRIES.map((country) => {
-                                                const active =
-                                                    config.targetCountryCodes.includes(
-                                                        country.code,
-                                                    );
-                                                return (
-                                                    <Chip
-                                                        key={country.code}
-                                                        label={`${country.flag} ${country.code}`}
-                                                        color={
-                                                            active
-                                                                ? 'primary'
-                                                                : 'default'
-                                                        }
-                                                        variant={
-                                                            active
-                                                                ? 'filled'
-                                                                : 'outlined'
-                                                        }
-                                                        onClick={() =>
-                                                            toggleCountry(
-                                                                country.code,
-                                                            )
-                                                        }
-                                                    />
-                                                );
-                                            })}
-                                        </StyledChips>
-                                    </>
-                                )}
-
-                                {topic.mode === 'variants' && (
-                                    <>
-                                        <RolloutSlider
-                                            name='Users on version B'
-                                            value={
-                                                config.variants.find(
-                                                    (v) => v.name === 'B',
-                                                )?.weight ?? 50
-                                            }
-                                            onChange={(_, value) =>
-                                                setSplit(value as number)
-                                            }
-                                            hideInput
-                                            hideHelp
-                                        />
-                                        <VariantsSplitPreview
-                                            variants={previewVariants}
-                                            selected={
-                                                selectedEvaluation?.variant
-                                            }
-                                        />
-                                    </>
-                                )}
-                            </StyledControls>
-
-                            {sampleAppPlacement === 'left' && (
-                                <SampleAppPreview
-                                    user={selectedUser}
-                                    evaluation={selectedEvaluation}
-                                    mode={topic.mode}
-                                    variantOrder={variantOrder}
-                                    variantAccent={variantAccent}
-                                />
-                            )}
+                            {topic.key === 'onoff' ? (
+                                <>
+                                    <Collapse
+                                        in={bugPhase === 'alert'}
+                                        mountOnEnter
+                                        unmountOnExit
+                                    >
+                                        <Alert
+                                            severity='error'
+                                            data-testid='CLOSED_DEMO_BUG_ALERT'
+                                        >
+                                            <strong>
+                                                🐛 Bug report: the new checkout
+                                                is broken!
+                                            </strong>{' '}
+                                            Kill the feature - flip it off. No
+                                            deploy, no rollback pipeline.
+                                        </Alert>
+                                    </Collapse>
+                                    <Collapse
+                                        in={bugPhase === 'resolved'}
+                                        mountOnEnter
+                                        unmountOnExit
+                                    >
+                                        <Alert
+                                            severity='success'
+                                            data-testid='CLOSED_DEMO_BUG_RESOLVED'
+                                        >
+                                            <strong>Fixed in one click.</strong>{' '}
+                                            Everyone is safely back on the old
+                                            checkout - and relieved. That’s your
+                                            fastest incident response; Unleash
+                                            even has a dedicated kill switch
+                                            flag type for exactly this.
+                                        </Alert>
+                                    </Collapse>
+                                </>
+                            ) : null}
                         </StyledScroll>
 
                         <StyledFooter>
@@ -551,21 +577,20 @@ export const GridDemo = ({
                             users={users}
                             evaluations={evaluations}
                             mode={topic.mode}
-                            variantOrder={variantOrder}
+                            variants={config.variants}
+                            constraintsActive={
+                                config.targetCountryCodes.length > 0
+                            }
+                            crowdHappy={
+                                topic.key === 'onoff' &&
+                                bugPhase === 'resolved' &&
+                                !config.environmentEnabled
+                            }
                             selectedId={selectedId}
-                            onSelect={(user: DemoUser) =>
-                                setSelectedId(user.id)
+                            onSelect={(user: DemoUser | undefined) =>
+                                setSelectedId(user?.id)
                             }
                         />
-                        {sampleAppPlacement === 'right' && (
-                            <SampleAppPreview
-                                user={selectedUser}
-                                evaluation={selectedEvaluation}
-                                mode={topic.mode}
-                                variantOrder={variantOrder}
-                                variantAccent={variantAccent}
-                            />
-                        )}
                     </StyledRight>
                 </>
             )}

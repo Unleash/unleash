@@ -2,7 +2,6 @@ import { Button, Checkbox, FormControlLabel, styled } from '@mui/material';
 import { Banner } from 'component/banners/Banner/Banner';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FormSwitch } from 'component/common/FormSwitch/FormSwitch';
-import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import Input from 'component/common/Input/Input';
 import type { BannerVariant } from 'interfaces/banner';
@@ -16,6 +15,7 @@ import {
 import Visibility from '@mui/icons-material/Visibility';
 import { BannerDialog } from 'component/banners/Banner/BannerDialog/BannerDialog';
 import { Link } from 'react-router';
+import { SelectField } from 'component/common/SelectField/SelectField';
 
 const StyledForm = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -73,11 +73,6 @@ const StyledTooltip = styled('div')(({ theme }) => ({
     flexDirection: 'column',
     padding: theme.spacing(0.5),
     gap: theme.spacing(0.5),
-}));
-
-const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
-    width: '100%',
-    maxWidth: theme.spacing(50),
 }));
 
 const StyledPreviewButton = styled(Button)(({ theme }) => ({
@@ -191,10 +186,13 @@ export const BannerForm = ({
             <StyledSection>
                 <StyledSectionLabel>Configuration</StyledSectionLabel>
                 <StyledFieldGroup>
-                    <StyledInputDescription>
-                        What type of banner is it?
-                    </StyledInputDescription>
-                    <StyledSelect
+                    <SelectField
+                        label='Type'
+                        description={
+                            <StyledInputDescription>
+                                Select the type of banner
+                            </StyledInputDescription>
+                        }
                         size='small'
                         value={variant}
                         onChange={(variant) =>
@@ -204,10 +202,14 @@ export const BannerForm = ({
                     />
                 </StyledFieldGroup>
                 <StyledFieldGroup>
-                    <StyledInputDescription>
-                        What icon should be displayed on the banner?
-                    </StyledInputDescription>
-                    <StyledSelect
+                    <SelectField
+                        label='Icon'
+                        description={
+                            <StyledInputDescription>
+                                Select the icon that should be displayed on the
+                                banner
+                            </StyledInputDescription>
+                        }
                         size='small'
                         value={iconOption}
                         onChange={(iconOption) => {
@@ -300,12 +302,9 @@ export const BannerForm = ({
                 </StyledFieldGroup>
             </StyledSection>
             <StyledSection>
-                <StyledSectionLabel>Banner action</StyledSectionLabel>
                 <StyledFieldGroup>
-                    <StyledInputDescription>
-                        What action should be available in the banner?
-                    </StyledInputDescription>
-                    <StyledSelect
+                    <SelectField
+                        label='Banner action'
                         size='small'
                         value={linkOption}
                         onChange={(linkOption) => {

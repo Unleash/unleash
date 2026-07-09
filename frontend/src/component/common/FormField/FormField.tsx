@@ -38,6 +38,8 @@ interface FormFieldProps {
     children: ReactElement;
 }
 
+export const formFieldLabelId = (controlId: string) => `${controlId}-label`;
+
 export const FormField = ({ label, description, children }: FormFieldProps) => {
     const topLabelInputs = useUiFlag('topLabelInputs');
     const generatedId = useId();
@@ -79,7 +81,9 @@ export const FormField = ({ label, description, children }: FormFieldProps) => {
 
     return (
         <StyledFormField>
-            <StyledLabel htmlFor={id}>{label}</StyledLabel>
+            <StyledLabel id={formFieldLabelId(id)} htmlFor={id}>
+                {label}
+            </StyledLabel>
             {description ? (
                 <StyledDescription id={descriptionId}>
                     {descriptionContent}

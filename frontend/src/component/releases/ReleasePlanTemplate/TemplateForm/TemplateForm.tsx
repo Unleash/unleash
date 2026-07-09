@@ -51,6 +51,7 @@ interface ITemplateFormProps {
     formatApiCode: () => string;
     handleSubmit: (e: React.FormEvent) => void;
     loading?: boolean;
+    modal?: boolean;
     Limit?: React.ReactNode;
     children?: React.ReactNode;
 }
@@ -68,6 +69,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
     archived,
     formatApiCode,
     handleSubmit,
+    modal,
     Limit,
     children,
 }) => {
@@ -86,6 +88,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
             title={formTitle}
             description={<TemplateFormDescription />}
             formatApiCode={formatApiCode}
+            modal={modal}
         >
             {archived && (
                 <Alert severity='warning'>

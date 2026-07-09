@@ -1,6 +1,4 @@
 import { createUuid } from 'utils/createUuid';
-import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
-import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import type { IReleasePlanMilestonePayload } from 'interfaces/releasePlans';
 import { useEffect, useState } from 'react';
 
@@ -16,9 +14,6 @@ export const useTemplateForm = (
         { id: createUuid(), name: 'Milestone 1', sortOrder: 0 },
     ],
 ) => {
-    const templateId = useOptionalPathParam('templateId');
-    const { templates } = useReleasePlanTemplates();
-
     const [name, setName] = useState(initialName);
     const [description, setDescription] = useState(initialDescription);
     const [milestones, setMilestones] = useState(initialMilestones);
@@ -41,19 +36,6 @@ export const useTemplateForm = (
 
         if (name.length === 0) {
             setErrors((prev) => ({ ...prev, name: 'Name can not be empty.' }));
-            valid = false;
-        }
-
-        if (
-            templates.some(
-                (template) =>
-                    template.name === name && template.id !== templateId,
-            )
-        ) {
-            setErrors((prev) => ({
-                ...prev,
-                name: 'A template with this name already exists.',
-            }));
             valid = false;
         }
 
@@ -128,6 +110,7 @@ export const useTemplateForm = (
         milestones,
         setMilestones,
         errors,
+        setErrors,
         clearErrors,
         validate,
         getTemplatePayload,

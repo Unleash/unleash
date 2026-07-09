@@ -1,5 +1,6 @@
 import {
     BAD_REQUEST,
+    CONFLICT,
     FORBIDDEN,
     NOT_FOUND,
     UNAUTHORIZED,
@@ -67,6 +68,18 @@ export class NotFoundError extends Error {
         super('The requested resource could not be found.');
         this.name = 'NotFoundError';
         this.statusCode = statusCode;
+    }
+}
+
+export class ConflictError extends Error {
+    statusCode: number;
+    body: IErrorBody;
+
+    constructor(statusCode: number = CONFLICT, body: IErrorBody = {}) {
+        super(getErrorMessage(body) || 'Conflict');
+        this.name = 'ConflictError';
+        this.statusCode = statusCode;
+        this.body = body;
     }
 }
 

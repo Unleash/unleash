@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import { Card } from 'component/common/Card/Card';
 import { Truncator } from 'component/common/Truncator/Truncator';
 import { ReleasePlanTemplateCardActions } from './ReleasePlanTemplateCardActions.tsx';
+import { formatReleaseTemplateEditPath } from 'component/releases/releaseTemplatePaths';
 import { ReleasePlanTemplateCardFooter } from './ReleasePlanTemplateCardFooter.tsx';
 
 const StyledCardTitle = styled('h3')(({ theme }) => ({
@@ -69,15 +70,19 @@ export const ReleasePlanTemplateCard = ({
 }: {
     template: IReleasePlanTemplate;
     projectId?: string;
-}) =>
-    projectId ? (
-        <TemplateCard template={template} />
-    ) : (
+}) => {
+    const editPath = formatReleaseTemplateEditPath(template.id, projectId);
+
+    return (
         <TemplateCard
             template={template}
-            editPath={`/release-templates/edit/${template.id}`}
+            editPath={editPath}
             headerActions={
-                <ReleasePlanTemplateCardActions template={template} />
+                <ReleasePlanTemplateCardActions
+                    template={template}
+                    projectId={projectId}
+                />
             }
         />
     );
+};

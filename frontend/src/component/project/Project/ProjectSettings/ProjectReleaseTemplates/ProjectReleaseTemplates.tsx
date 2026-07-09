@@ -5,12 +5,16 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import Add from '@mui/icons-material/Add';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
-import { useNavigate } from 'react-router';
+import { Route, Routes, useNavigate } from 'react-router';
+import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-import { useProjectReleasePlanTemplates } from 'hooks/api/getters/useProjectReleasePlanTemplates/useProjectReleasePlanTemplates';
+import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
 import { EmptyTemplatesListMessage } from 'component/releases/ReleaseManagement/EmptyTemplatesListMessage';
 import { ReleasePlanTemplateList } from 'component/releases/ReleaseManagement/ReleasePlanTemplateList';
+import { CreateReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/CreateReleasePlanTemplate';
+import { EditReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/EditReleasePlanTemplate';
+import { formatReleaseTemplateListPath } from 'component/releases/releaseTemplatePaths';
 import {
     RELEASE_PLAN_TEMPLATE_CREATE,
     UPDATE_PROJECT_RELEASE_TEMPLATE,
@@ -20,11 +24,13 @@ export const ProjectReleaseTemplates = () => {
     const projectId = useRequiredPathParam('projectId');
     const projectName = useProjectOverviewNameOrId(projectId);
     const navigate = useNavigate();
-    const { templates } = useProjectReleasePlanTemplates(projectId);
+    const { templates } = useReleasePlanTemplates(projectId);
 
     usePageTitle(`Project release templates – ${projectName}`);
 
-    const createPath = `/projects/${projectId}/settings/release-templates/create-template`;
+    const listPath = formatReleaseTemplateListPath(projectId);
+    const createPath = `${listPath}/create-template`;
+    const closeModal = () => navigate(listPath);
 
     return (
         <PageContent
@@ -34,9 +40,7 @@ export const ProjectReleaseTemplates = () => {
                     actions={
                         <ResponsiveButton
                             Icon={Add}
-                            onClick={() => {
-                                navigate(createPath);
-                            }}
+                            onClick={() => navigate(createPath)}
                             maxWidth='700px'
                             permission={[
                                 RELEASE_PLAN_TEMPLATE_CREATE,
@@ -65,6 +69,33 @@ export const ProjectReleaseTemplates = () => {
                     />
                 </div>
             )}
+
+            <Routes>
+                <Route
+                    path='create-template'
+                    element={
+                        <SidebarModal
+                            open
+                            onClose={closeModal}
+                            label='Create release template'
+                        >
+                            <CreateReleasePlanTemplate modal />
+                        </SidebarModal>
+                    }
+                />
+                <Route
+                    path='edit/:templateId'
+                    element={
+                        <SidebarModal
+                            open
+                            onClose={closeModal}
+                            label='Edit release template'
+                        >
+                            <EditReleasePlanTemplate modal />
+                        </SidebarModal>
+                    }
+                />
+            </Routes>
         </PageContent>
     );
 };

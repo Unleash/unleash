@@ -2,8 +2,12 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import { Button, styled } from '@mui/material';
 import { TemplateForm } from './TemplateForm/TemplateForm.tsx';
 import { useTemplateForm } from '../hooks/useTemplateForm.ts';
+import { ConflictError } from 'utils/apiUtils';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
-import { RELEASE_PLAN_TEMPLATE_CREATE } from '@server/types/permissions';
+import {
+    RELEASE_PLAN_TEMPLATE_CREATE,
+    UPDATE_PROJECT_RELEASE_TEMPLATE,
+} from '@server/types/permissions';
 import { useNavigate } from 'react-router';
 import { GO_BACK } from 'constants/navigate';
 import useReleasePlanTemplatesApi from 'hooks/api/actions/useReleasePlanTemplatesApi/useReleasePlanTemplatesApi';
@@ -14,6 +18,9 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useEventTracker } from 'hooks/useEventTracker';
 import { Limit } from 'component/common/Limit/Limit.tsx';
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates.ts';
+import { releaseTemplatesApiPath } from 'hooks/api/getters/useReleasePlanTemplates/releaseTemplatesApiPath';
+import { formatReleaseTemplateListPath } from 'component/releases/releaseTemplatePaths';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 
 const StyledButtonContainer = styled('div')(() => ({
     marginTop: 'auto',
@@ -25,15 +32,20 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
 }));
 
-export const CreateReleasePlanTemplate = () => {
+export const CreateReleasePlanTemplate = ({ modal }: { modal?: boolean }) => {
+    const projectId = useOptionalPathParam('projectId');
     const { uiConfig, isEnterprise } = useUiConfig();
     const { setToastApiError, setToastData } = useToast();
     const navigate = useNavigate();
-    const { createReleasePlanTemplate } = useReleasePlanTemplatesApi();
+    const { createReleasePlanTemplate } = useReleasePlanTemplatesApi(projectId);
     const { trackEvent } = useEventTracker();
+    // The release-template limit is a global cap, so the count is unscoped.
     const { templates } = useReleasePlanTemplates();
+    const { refetch } = useReleasePlanTemplates(projectId);
     const releaseTemplateLimit = uiConfig.resourceLimits.releaseTemplates;
     const canCreateMore = templates.length < releaseTemplateLimit;
+
+    const backPath = formatReleaseTemplateListPath(projectId);
 
     usePageTitle('Create release template');
 
@@ -45,6 +57,7 @@ export const CreateReleasePlanTemplate = () => {
         milestones,
         setMilestones,
         errors,
+        setErrors,
         clearErrors,
         validate,
         getTemplatePayload,
@@ -79,16 +92,24 @@ export const CreateReleasePlanTemplate = () => {
                     },
                 });
 
-                navigate('/release-templates');
+                await refetch();
+                navigate(backPath);
             } catch (error: unknown) {
-                setToastApiError(formatUnknownError(error));
+                if (error instanceof ConflictError) {
+                    setErrors((prev) => ({
+                        ...prev,
+                        name: 'A template with this name already exists.',
+                    }));
+                } else {
+                    setToastApiError(formatUnknownError(error));
+                }
             }
         }
     };
 
     const formatApiCode = () => `curl --location --request POST '${
         uiConfig.unleashUrl
-    }/api/admin/release-plan-templates' \\
+    }/${releaseTemplatesApiPath(projectId)}' \\
     --header 'Authorization: INSERT_API_KEY' \\
     --header 'Content-Type: application/json' \\
     --data-raw '${JSON.stringify(getTemplatePayload(), undefined, 2)}'`;
@@ -110,6 +131,7 @@ export const CreateReleasePlanTemplate = () => {
             formTitle='Create release template'
             formatApiCode={formatApiCode}
             handleSubmit={handleSubmit}
+            modal={modal}
             Limit={
                 !canCreateMore && (
                     <Limit
@@ -123,7 +145,11 @@ export const CreateReleasePlanTemplate = () => {
             <StyledButtonContainer>
                 <CreateButton
                     name='template'
-                    permission={RELEASE_PLAN_TEMPLATE_CREATE}
+                    permission={[
+                        RELEASE_PLAN_TEMPLATE_CREATE,
+                        UPDATE_PROJECT_RELEASE_TEMPLATE,
+                    ]}
+                    projectId={projectId}
                     disabled={!canCreateMore}
                 >
                     Save template

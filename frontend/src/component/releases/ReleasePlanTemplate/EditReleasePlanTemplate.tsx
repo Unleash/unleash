@@ -2,16 +2,24 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useReleasePlanTemplate } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplate';
 import { useTemplateForm } from '../hooks/useTemplateForm.ts';
+import { ConflictError } from 'utils/apiUtils';
 import { TemplateForm } from './TemplateForm/TemplateForm.tsx';
 import { Button, styled } from '@mui/material';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
-import { RELEASE_PLAN_TEMPLATE_UPDATE } from '@server/types/permissions';
+import {
+    RELEASE_PLAN_TEMPLATE_UPDATE,
+    UPDATE_PROJECT_RELEASE_TEMPLATE,
+} from '@server/types/permissions';
 import { useNavigate } from 'react-router';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import useReleasePlanTemplatesApi from 'hooks/api/actions/useReleasePlanTemplatesApi/useReleasePlanTemplatesApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useEventTracker } from 'hooks/useEventTracker';
+import { releaseTemplatesApiPath } from 'hooks/api/getters/useReleasePlanTemplates/releaseTemplatesApiPath';
+import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
+import { formatReleaseTemplateListPath } from 'component/releases/releaseTemplatePaths';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 
 const StyledButtonContainer = styled('div')(() => ({
     marginTop: 'auto',
@@ -23,7 +31,8 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
 }));
 
-export const EditReleasePlanTemplate = () => {
+export const EditReleasePlanTemplate = ({ modal }: { modal?: boolean }) => {
+    const projectId = useOptionalPathParam('projectId');
     const { uiConfig, isEnterprise } = useUiConfig();
     const templateId = useRequiredPathParam('templateId');
     const { template, loading, refetch } = useReleasePlanTemplate(templateId);
@@ -31,13 +40,17 @@ export const EditReleasePlanTemplate = () => {
     usePageTitle(`Edit release template`);
     const navigate = useNavigate();
     const { setToastApiError, setToastData } = useToast();
-    const { updateReleasePlanTemplate } = useReleasePlanTemplatesApi();
+    const { updateReleasePlanTemplate } = useReleasePlanTemplatesApi(projectId);
+    const { refetch: refetchTemplates } = useReleasePlanTemplates(projectId);
+
+    const backPath = formatReleaseTemplateListPath(projectId);
     const {
         name,
         setName,
         description,
         setDescription,
         errors,
+        setErrors,
         clearErrors,
         milestones,
         setMilestones,
@@ -50,7 +63,7 @@ export const EditReleasePlanTemplate = () => {
     );
 
     const handleCancel = () => {
-        navigate('/release-templates');
+        navigate(backPath);
     };
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -75,16 +88,24 @@ export const EditReleasePlanTemplate = () => {
                     },
                 });
 
-                navigate('/release-templates');
+                await refetchTemplates();
+                navigate(backPath);
             } catch (error: unknown) {
-                setToastApiError(formatUnknownError(error));
+                if (error instanceof ConflictError) {
+                    setErrors((prev) => ({
+                        ...prev,
+                        name: 'A template with this name already exists.',
+                    }));
+                } else {
+                    setToastApiError(formatUnknownError(error));
+                }
             }
         }
     };
 
     const formatApiCode = () => `curl --location --request PUT '${
         uiConfig.unleashUrl
-    }/api/admin/release-plan-templates/${templateId}' \\
+    }/${releaseTemplatesApiPath(projectId)}/${templateId}' \\
     --header 'Authorization: INSERT_API_KEY' \\
     --header 'Content-Type: application/json' \\
     --data-raw '${JSON.stringify(getTemplatePayload(), undefined, 2)}'`;
@@ -107,12 +128,17 @@ export const EditReleasePlanTemplate = () => {
             formatApiCode={formatApiCode}
             handleSubmit={handleSubmit}
             loading={loading}
+            modal={modal}
             archived={!!template.archivedAt}
         >
             <StyledButtonContainer>
                 <UpdateButton
                     name='template'
-                    permission={RELEASE_PLAN_TEMPLATE_UPDATE}
+                    permission={[
+                        RELEASE_PLAN_TEMPLATE_UPDATE,
+                        UPDATE_PROJECT_RELEASE_TEMPLATE,
+                    ]}
+                    projectId={projectId}
                     disabled={!!template.archivedAt}
                 >
                     Save changes

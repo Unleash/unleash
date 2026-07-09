@@ -1182,11 +1182,13 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async updateFeaturesTags(
-        req: IAuthRequest<void, void, TagsBulkAddSchema>,
+        req: IAuthRequest<ProjectParam, void, TagsBulkAddSchema>,
         res: Response<TagSchema>,
     ): Promise<void> {
+        const { projectId } = req.params;
         const { features, tags } = req.body;
         await this.featureTagService.updateTags(
+            projectId,
             features,
             tags.addedTags,
             tags.removedTags,

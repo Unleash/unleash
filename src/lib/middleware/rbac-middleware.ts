@@ -118,10 +118,9 @@ const rbacMiddleware = (
                 }
             }
 
-            // DELETE segment does not include information about the segment's project
-            // This is needed to check if the user has the right permissions on a project level
+            // Segment update/delete must be authorized against the segment's
+            // stored project, not a project supplied in the request body.
             if (
-                !projectId &&
                 permissionsArray.includes(UPDATE_PROJECT_SEGMENT) &&
                 params.id
             ) {

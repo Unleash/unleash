@@ -16,6 +16,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import { BannerDialog } from 'component/banners/Banner/BannerDialog/BannerDialog';
 import { Link } from 'react-router';
 import { SelectField } from 'component/common/SelectField/SelectField';
+import { FormGroup } from 'component/common/FormGroup/FormGroup';
 
 const StyledForm = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -44,16 +45,7 @@ const StyledRaisedSection = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
 }));
 
-const StyledSection = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(1.5),
-}));
-
-const StyledSectionLabel = styled('p')(({ theme }) => ({
-    fontWeight: theme.fontWeight.bold,
-}));
-
+// TODO: remove when cleaning up 'topLabelInputs' feature flag
 const StyledFieldGroup = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -183,8 +175,7 @@ export const BannerForm = ({
                     Banner status
                 </FormSwitch>
             </StyledRaisedSection>
-            <StyledSection>
-                <StyledSectionLabel>Configuration</StyledSectionLabel>
+            <FormGroup title='Configuration'>
                 <StyledFieldGroup>
                     <SelectField
                         label='Type'
@@ -300,8 +291,6 @@ export const BannerForm = ({
                         required
                     />
                 </StyledFieldGroup>
-            </StyledSection>
-            <StyledSection>
                 <StyledFieldGroup>
                     <SelectField
                         label='Banner action'
@@ -428,9 +417,8 @@ export const BannerForm = ({
                         </>
                     }
                 />
-            </StyledSection>
-            <StyledSection>
-                <StyledSectionLabel>Sticky banner</StyledSectionLabel>
+            </FormGroup>
+            <FormGroup title='Sticky banner'>
                 <FormControlLabel
                     control={
                         <Checkbox
@@ -440,7 +428,7 @@ export const BannerForm = ({
                     }
                     label='Make the banner sticky on the screen when scrolling'
                 />
-            </StyledSection>
+            </FormGroup>
         </StyledForm>
     );
 };

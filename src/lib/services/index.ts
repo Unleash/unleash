@@ -241,7 +241,9 @@ export const createServices = (
 
     const transactionalContextService = db
         ? withTransactional(createContextService(config), db)
-        : withFakeTransactional(createFakeContextService(config));
+        : withFakeTransactional(
+              createFakeContextService(config).contextService,
+          );
     const contextService = transactionalContextService;
     const emailService = new EmailService(config);
     const featureTypeService = new FeatureTypeService(

@@ -48,6 +48,7 @@ import {
 
 interface ContextParam {
     contextField: string;
+    projectId?: string;
 }
 
 interface DeleteLegalValueParam extends ContextParam {
@@ -372,7 +373,11 @@ export class ContextController extends Controller {
         const contextField = req.body;
 
         await this.transactionalContextService.transactional((service) =>
-            service.updateContextField({ ...contextField, name }, req.audit),
+            service.updateContextField(
+                { ...contextField, name },
+                req.audit,
+                req.params.projectId,
+            ),
         );
         res.status(200).end();
     }
@@ -385,7 +390,11 @@ export class ContextController extends Controller {
         const legalValue = req.body;
 
         await this.transactionalContextService.transactional((service) =>
-            service.updateLegalValue({ name, legalValue }, req.audit),
+            service.updateLegalValue(
+                { name, legalValue },
+                req.audit,
+                req.params.projectId,
+            ),
         );
         res.status(200).end();
     }
@@ -398,7 +407,11 @@ export class ContextController extends Controller {
         const legalValue = req.params.legalValue;
 
         await this.transactionalContextService.transactional((service) =>
-            service.deleteLegalValue({ name, legalValue }, req.audit),
+            service.deleteLegalValue(
+                { name, legalValue },
+                req.audit,
+                req.params.projectId,
+            ),
         );
         res.status(200).end();
     }
@@ -410,7 +423,7 @@ export class ContextController extends Controller {
         const name = req.params.contextField;
 
         await this.transactionalContextService.transactional((service) =>
-            service.deleteContextField(name, req.audit),
+            service.deleteContextField(name, req.audit, req.params.projectId),
         );
         res.status(200).end();
     }

@@ -20,7 +20,7 @@ export const ProjectReleaseTemplates = () => {
     const projectId = useRequiredPathParam('projectId');
     const projectName = useProjectOverviewNameOrId(projectId);
     const navigate = useNavigate();
-    const { projectTemplates } = useProjectReleasePlanTemplates(projectId);
+    const { templates } = useProjectReleasePlanTemplates(projectId);
 
     usePageTitle(`Project release templates – ${projectName}`);
 
@@ -50,10 +50,10 @@ export const ProjectReleaseTemplates = () => {
                 />
             }
         >
-            {projectTemplates.length > 0 ? (
+            {templates.length > 0 ? (
                 <Grid container spacing={2}>
                     <ReleasePlanTemplateList
-                        templates={projectTemplates}
+                        templates={templates}
                         projectId={projectId}
                     />
                 </Grid>

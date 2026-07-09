@@ -20,22 +20,15 @@ export const useProjectReleasePlanTemplates = (projectId: string) => {
         fetcher,
     );
 
-    return useMemo(() => {
-        const templates = data ?? [];
-
-        return {
-            templates,
-            // The endpoint returns global + project templates in one list;
-            // project-only scoping happens client-side.
-            // Will be replaced by server-side scoping in a follow up PR.
-            projectTemplates: templates.filter(
-                (template) => template.project === projectId,
-            ),
+    return useMemo(
+        () => ({
+            templates: data ?? [],
             loading: !error && !data,
             refetch: () => mutate(),
             error,
-        };
-    }, [data, error, mutate, projectId]);
+        }),
+        [data, error, mutate],
+    );
 };
 
 const fetcher = (path: string) => {

@@ -322,10 +322,15 @@ export const ClosedDemo = ({ onComplete }: IClosedDemoProps) => {
         return () => clearTimeout(timer);
     }, [bugPhase]);
 
+    const topic = TOPICS[topicIndex];
+
     // Errors start ticking almost as soon as the feature flips on - well before
     // the scripted bug report shows up. That's the whole point: your users hit
-    // the bug first, and only later does the report land in your inbox.
-    const errorsActive = bugPhase === 'armed' || bugPhase === 'alert';
+    // the bug first, and only later does the report land in your inbox. The
+    // scripted incident is step-1-only, so leaving 'onoff' ends it visually
+    // even if bugPhase was left mid-alert.
+    const errorsActive =
+        topic.key === 'onoff' && (bugPhase === 'armed' || bugPhase === 'alert');
     useEffect(() => {
         if (!errorsActive) {
             setErroredCount(0);
@@ -346,8 +351,6 @@ export const ClosedDemo = ({ onComplete }: IClosedDemoProps) => {
             if (interval) clearInterval(interval);
         };
     }, [errorsActive]);
-
-    const topic = TOPICS[topicIndex];
 
     const evaluations = useMemo(
         () => computeEvaluations(users, config),

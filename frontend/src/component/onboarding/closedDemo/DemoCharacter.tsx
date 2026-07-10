@@ -3,8 +3,9 @@ import type { DemoLook } from './demoModel.js';
 
 const SKIN_TONES = ['#F6C9A0', '#EAB08C', '#C98D64', '#9C6B43', '#6E4A2E'];
 
-// Realistic hair shades: black, dark brown, brown, chestnut, auburn, copper
-// red, blond, grey.
+// Hair is a physical trait, not a decorative accent, so it stays hardcoded
+// with realistic shades (black through blond, plus grey) rather than mapped
+// to a theme palette.
 const HAIR_COLORS = [
     '#26201C',
     '#3B2E25',
@@ -16,17 +17,6 @@ const HAIR_COLORS = [
     '#8A8F98',
 ];
 
-const SHIRT_COLORS = [
-    '#6C65E5',
-    '#4A90D9',
-    '#3DA382',
-    '#E2764C',
-    '#D9558C',
-    '#4FB3BF',
-    '#9A7BD6',
-    '#E0A63F',
-];
-
 /**
  * Cap on the per-character transition delay so the tail of the crowd doesn't
  * lag noticeably behind a slider drag.
@@ -34,21 +24,24 @@ const SHIRT_COLORS = [
 const MAX_STAGGER_MS = 400;
 const STAGGER_STEP_MS = 18;
 
+// Two stacked zero-offset blur drop-shadows compound into a soft ~1px halo
+// around the character. Applied to the HTML wrapper (not the <svg> itself)
+// because CSS filter on <svg> has inconsistent browser support, and the
+// wrapper treats the whole rendered SVG output as one silhouette, so there's
+// no seam at the arm/body join.
+const StyledCharacterWrapper = styled('div')(({ theme }) => ({
+    width: '100%',
+    lineHeight: 0,
+    filter: `drop-shadow(0 0 0.5px ${theme.palette.background.elevation1}) drop-shadow(0 0 0.5px ${theme.palette.background.elevation1})`,
+}));
+
 const StyledSvg = styled('svg', {
-    shouldForwardProp: (prop) =>
-        !['raised', 'delayMs'].includes(prop as string),
-})<{ raised: boolean; delayMs: number }>(({ theme, raised, delayMs }) => ({
+    shouldForwardProp: (prop) => prop !== 'delayMs',
+})<{ delayMs: number }>(({ theme, delayMs }) => ({
     display: 'block',
     width: '100%',
     height: 'auto',
     overflow: 'visible',
-    filter: raised ? 'grayscale(0)' : 'grayscale(0.9)',
-    opacity: raised ? 1 : 0.5,
-    transform: raised ? 'translateY(0)' : 'translateY(2px) scale(0.96)',
-    transition: theme.transitions.create(['filter', 'opacity', 'transform'], {
-        duration: theme.transitions.duration.short,
-    }),
-    transitionDelay: `${delayMs}ms`,
     '& .demo-character-arm': {
         transition: theme.transitions.create(['transform'], {
             duration: theme.transitions.duration.standard,
@@ -56,8 +49,6 @@ const StyledSvg = styled('svg', {
         }),
         transitionDelay: `${delayMs}ms`,
     },
-    // Shirt colours crossfade instead of snapping, so gaining/losing a variant
-    // colour mid-rollout-drag doesn't flicker.
     '& .demo-character-shirt': {
         transition: theme.transitions.create(['fill'], {
             duration: theme.transitions.duration.shorter,
@@ -69,8 +60,6 @@ const StyledSvg = styled('svg', {
         }),
     },
     '@media (prefers-reduced-motion: reduce)': {
-        transition: 'none',
-        transitionDelay: '0ms',
         '& .demo-character-arm, & .demo-character-shirt, & .demo-character-sleeve':
             {
                 transition: 'none',
@@ -148,13 +137,8 @@ const hairFor = (style: number, color: string) => {
 
 interface IDemoCharacterProps {
     look: DemoLook;
-    /** Enabled users raise a hand and get their colours back. */
+    /** Enabled users raise a hand. */
     raised: boolean;
-    /**
-     * Forces a smile even when not raised - e.g. relieved users right after a
-     * buggy feature was killed. By default only raised users smile.
-     */
-    happy?: boolean;
     /** Overrides the user's own shirt colour (used for variant colouring). */
     shirtColor?: string;
     /** Short letter drawn on the shirt (the user's variant). */
@@ -164,109 +148,99 @@ interface IDemoCharacterProps {
 }
 
 /**
- * A small illustrated person for the quick-tour crowd. State is signalled by
- * posture, not colour alone: enabled users raise a hand and smile, disabled
- * users stand arms-down in greyscale.
+ * A small illustrated person for the quick-tour crowd. Enabled users raise a
+ * hand; match state is signalled by the surrounding container's background.
  */
 export const DemoCharacter = ({
     look,
     raised,
-    happy = false,
     shirtColor,
     badge,
     index = 0,
 }: IDemoCharacterProps) => {
     const theme = useTheme();
-    const smiling = raised || happy;
+    const shirtVariants = theme.palette.variants;
     const skin = SKIN_TONES[look.skin % SKIN_TONES.length];
     const hairColor = HAIR_COLORS[look.hairColor % HAIR_COLORS.length];
-    const shirt = shirtColor ?? SHIRT_COLORS[look.shirt % SHIRT_COLORS.length];
+    const shirt =
+        shirtColor ?? shirtVariants[look.shirt % shirtVariants.length];
     const delayMs = Math.min(index * STAGGER_STEP_MS, MAX_STAGGER_MS);
 
     return (
-        <StyledSvg
-            viewBox='0 0 64 64'
-            raised={raised}
-            delayMs={delayMs}
-            aria-hidden
-            focusable='false'
-        >
-            {/* static arm */}
-            <path
-                className='demo-character-sleeve'
-                d='M17 36 L11 50'
-                stroke={shirt}
-                strokeWidth={6}
-                strokeLinecap='round'
-            />
-            <circle cx={11} cy={50} r={2.8} fill={skin} />
-
-            {/* animated arm; pivots at the shoulder to raise the hand */}
-            <g
-                className='demo-character-arm'
-                style={{
-                    transformOrigin: '47px 36px',
-                    transform: raised ? 'rotate(-140deg)' : 'rotate(0deg)',
-                }}
+        <StyledCharacterWrapper>
+            <StyledSvg
+                viewBox='0 0 64 64'
+                delayMs={delayMs}
+                aria-hidden
+                focusable='false'
             >
+                {/* static arm */}
                 <path
                     className='demo-character-sleeve'
-                    d='M47 36 L53 50'
+                    d='M17 36 L11 50'
                     stroke={shirt}
                     strokeWidth={6}
                     strokeLinecap='round'
                 />
-                <circle cx={53} cy={50} r={2.8} fill={skin} />
-            </g>
+                <circle cx={11} cy={50} r={2.8} fill={skin} />
 
-            {/* body */}
-            <rect
-                className='demo-character-shirt'
-                x={19}
-                y={30}
-                width={26}
-                height={32}
-                rx={10}
-                fill={shirt}
-            />
-            {badge ? (
-                <text
-                    x={32}
-                    y={49}
-                    textAnchor='middle'
-                    fontSize={13}
-                    fontWeight={700}
-                    fill={theme.palette.getContrastText(shirt)}
-                    style={{ userSelect: 'none' }}
+                {/* animated arm; pivots at the shoulder to raise the hand */}
+                <g
+                    className='demo-character-arm'
+                    style={{
+                        transformOrigin: '47px 36px',
+                        transform: raised ? 'rotate(-140deg)' : 'rotate(0deg)',
+                    }}
                 >
-                    {badge}
-                </text>
-            ) : null}
+                    <path
+                        className='demo-character-sleeve'
+                        d='M47 36 L53 50'
+                        stroke={shirt}
+                        strokeWidth={6}
+                        strokeLinecap='round'
+                    />
+                    <circle cx={53} cy={50} r={2.8} fill={skin} />
+                </g>
 
-            {/* head */}
-            <circle cx={32} cy={17} r={10} fill={skin} />
-            {hairFor(look.hair, hairColor)}
+                {/* body */}
+                <rect
+                    className='demo-character-shirt'
+                    x={19}
+                    y={30}
+                    width={26}
+                    height={32}
+                    rx={10}
+                    fill={shirt}
+                />
+                {badge ? (
+                    <text
+                        x={32}
+                        y={49}
+                        textAnchor='middle'
+                        fontSize={13}
+                        fontWeight={700}
+                        fill={theme.palette.getContrastText(shirt)}
+                        style={{ userSelect: 'none' }}
+                    >
+                        {badge}
+                    </text>
+                ) : null}
 
-            {/* face */}
-            <circle cx={28} cy={16.5} r={1.3} fill='#1F1F1F' />
-            <circle cx={36} cy={16.5} r={1.3} fill='#1F1F1F' />
-            {smiling ? (
+                {/* head */}
+                <circle cx={32} cy={17} r={10} fill={skin} />
+                {hairFor(look.hair, hairColor)}
+
+                {/* face */}
+                <circle cx={28} cy={16.5} r={1.3} fill='#1F1F1F' />
+                <circle cx={36} cy={16.5} r={1.3} fill='#1F1F1F' />
                 <path
-                    d='M28 20.5 Q32 24 36 20.5'
+                    d='M29.5 21 Q32 22.5 34.5 21'
                     stroke='#1F1F1F'
-                    strokeWidth={1.6}
+                    strokeWidth={1.4}
                     strokeLinecap='round'
                     fill='none'
                 />
-            ) : (
-                <path
-                    d='M29.5 21.5 L34.5 21.5'
-                    stroke='#1F1F1F'
-                    strokeWidth={1.6}
-                    strokeLinecap='round'
-                    fill='none'
-                />
-            )}
-        </StyledSvg>
+            </StyledSvg>
+        </StyledCharacterWrapper>
     );
 };

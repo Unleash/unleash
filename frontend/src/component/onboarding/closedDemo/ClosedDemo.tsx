@@ -70,7 +70,9 @@ const makeVariants = (names: string[], palette: string[]): DemoVariant[] => {
 };
 
 /** Delay between switching the feature on and the scripted bug report. */
-const BUG_REPORT_DELAY_MS = 1400;
+const BUG_REPORT_DELAY_MS = 900;
+/** Delay between switching the feature on and the first user hitting an error. */
+const ERROR_START_DELAY_MS = 250;
 
 interface ITopic {
     key: string;
@@ -116,9 +118,12 @@ const StyledPanel = styled(Box)(({ theme }) => ({
     display: 'grid',
     gridTemplateColumns: 'minmax(340px, 2fr) 3fr',
     background: theme.palette.background.paper,
+    // On smaller screens there's not enough room to fit both columns and the
+    // internal scroll makes each section unusably short - so the panel just
+    // grows to fit content and the dialog's paper handles the scroll.
     [theme.breakpoints.down('md')]: {
         gridTemplateColumns: '1fr',
-        overflowY: 'auto',
+        height: 'auto',
     },
 }));
 
@@ -126,8 +131,6 @@ const StyledLeft = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     minHeight: 0,
-    padding: theme.spacing(5),
-    gap: theme.spacing(2),
     borderRight: `1px solid ${theme.palette.divider}`,
     [theme.breakpoints.down('md')]: {
         borderRight: 'none',
@@ -135,8 +138,23 @@ const StyledLeft = styled(Box)(({ theme }) => ({
     },
 }));
 
+// The step title and counter live in a fixed header so they don't scroll
+// into (or under) the dialog's close button. Only the body, flag view, and
+// alerts scroll below.
+const StyledHeader = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
+    padding: theme.spacing(5, 5, 2),
+    flexShrink: 0,
+}));
+
 // Scrolls when the panel is short (e.g. the over-app dialog) so the pinned
-// footer nav below it never gets clipped.
+// footer nav below it never gets clipped. Padding lives here (not on the
+// parent) so the scrollbar sits at the panel edge; the smaller right padding
+// keeps content away from it. On md-down the panel becomes single-column
+// and StyledPanel takes over scrolling, so the internal scroll is disabled
+// (otherwise flex:1 collapses to a tiny sliver of usable height).
 const StyledScroll = styled(Box)(({ theme }) => ({
     flex: 1,
     minHeight: 0,
@@ -145,6 +163,13 @@ const StyledScroll = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(2),
+    padding: theme.spacing(0, 4, 2, 5),
+    [theme.breakpoints.down('md')]: {
+        flex: 'unset',
+        minHeight: 'auto',
+        overflow: 'visible',
+        padding: theme.spacing(0, 5, 2),
+    },
 }));
 
 const StyledRight = styled(Box)(({ theme }) => ({
@@ -154,6 +179,9 @@ const StyledRight = styled(Box)(({ theme }) => ({
     gap: theme.spacing(2),
     background: theme.palette.background.elevation1,
     overflowY: 'auto',
+    [theme.breakpoints.down('md')]: {
+        overflow: 'visible',
+    },
 }));
 
 const StyledEyebrow = styled(Typography)(({ theme }) => ({
@@ -182,7 +210,7 @@ const StyledFooter = styled(Box)(({ theme }) => ({
     flexWrap: 'wrap',
     gap: theme.spacing(1.5),
     flexShrink: 0,
-    paddingTop: theme.spacing(2),
+    padding: theme.spacing(2, 5, 5),
     borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
@@ -231,7 +259,7 @@ const StyledFinish = styled(Box)(({ theme }) => ({
  */
 type BugPhase = 'idle' | 'armed' | 'alert' | 'resolved';
 
-interface IGridDemoProps {
+interface IClosedDemoProps {
     /** Called when the user finishes or skips the tour. */
     onComplete: () => void;
 }
@@ -244,16 +272,27 @@ interface IGridDemoProps {
  * flag reaches them. Fills its container; hosted in a dialog by
  * QuickTourDialog and inline in the signup dialog.
  */
-export const GridDemo = ({ onComplete }: IGridDemoProps) => {
+export const ClosedDemo = ({ onComplete }: IClosedDemoProps) => {
     const { trackEvent } = useEventTracker();
     const theme = useTheme();
-    const variantPalette = theme.palette.variants;
+    // The demo's variant chips use complementary theme semantic colours so
+    // A/B/C/D read as clearly distinct - and none of them collide with the
+    // green/red exposure/error tints.
+    const variantPalette = [
+        theme.palette.primary.main,
+        theme.palette.warning.main,
+        theme.palette.info.main,
+        theme.palette.error.main,
+    ];
     const users = useMemo(() => generateDemoUsers(USER_COUNT), []);
 
     const [topicIndex, setTopicIndex] = useState(0);
     const [finished, setFinished] = useState(false);
     const [selectedId, setSelectedId] = useState<string | undefined>();
     const [bugPhase, setBugPhase] = useState<BugPhase>('idle');
+    // Bug reports snowball: one user first, then a doubling wave until the
+    // whole affected crowd is red.
+    const [erroredCount, setErroredCount] = useState(0);
     // Step 1 starts with the feature OFF: the first impression is a calm,
     // greyscale crowd, and flipping the switch (the user's own action) raises
     // the hands.
@@ -278,6 +317,31 @@ export const GridDemo = ({ onComplete }: IGridDemoProps) => {
         );
         return () => clearTimeout(timer);
     }, [bugPhase]);
+
+    // Errors start ticking almost as soon as the feature flips on - well before
+    // the scripted bug report shows up. That's the whole point: your users hit
+    // the bug first, and only later does the report land in your inbox.
+    const errorsActive = bugPhase === 'armed' || bugPhase === 'alert';
+    useEffect(() => {
+        if (!errorsActive) {
+            setErroredCount(0);
+            return;
+        }
+        let interval: ReturnType<typeof setInterval> | undefined;
+        const startTimer = setTimeout(() => {
+            let current = 1;
+            setErroredCount(current);
+            interval = setInterval(() => {
+                current = Math.min(USER_COUNT, current * 2);
+                setErroredCount(current);
+                if (current >= USER_COUNT) clearInterval(interval);
+            }, 500);
+        }, ERROR_START_DELAY_MS);
+        return () => {
+            clearTimeout(startTimer);
+            if (interval) clearInterval(interval);
+        };
+    }, [errorsActive]);
 
     const topic = TOPICS[topicIndex];
 
@@ -362,7 +426,9 @@ export const GridDemo = ({ onComplete }: IGridDemoProps) => {
     const setEnvironmentEnabled = (value: boolean) => {
         setConfig((c) => ({ ...c, environmentEnabled: value }));
         if (topic.key !== 'onoff') return;
-        if (value && bugPhase === 'idle') {
+        if (value && (bugPhase === 'idle' || bugPhase === 'resolved')) {
+            // Re-arming from 'resolved' replays the whole incident, so the
+            // user can flip the switch back and forth to inspect any beat.
             setBugPhase('armed');
         } else if (!value && bugPhase === 'alert') {
             setBugPhase('resolved');
@@ -462,7 +528,7 @@ export const GridDemo = ({ onComplete }: IGridDemoProps) => {
             ) : (
                 <>
                     <StyledLeft>
-                        <StyledScroll>
+                        <StyledHeader>
                             <StyledEyebrow>
                                 Quick tour · {topicIndex + 1} of {TOPICS.length}
                             </StyledEyebrow>
@@ -475,6 +541,8 @@ export const GridDemo = ({ onComplete }: IGridDemoProps) => {
                                     variant='outlined'
                                 />
                             </StyledTitleRow>
+                        </StyledHeader>
+                        <StyledScroll>
                             <Typography color='textSecondary'>
                                 {topic.body}
                             </Typography>
@@ -508,8 +576,7 @@ export const GridDemo = ({ onComplete }: IGridDemoProps) => {
                                                 🐛 Bug report: the new checkout
                                                 is broken!
                                             </strong>{' '}
-                                            Kill the feature - flip it off. No
-                                            deploy, no rollback pipeline.
+                                            Quick, turn the feature off.
                                         </Alert>
                                     </Collapse>
                                     <Collapse
@@ -521,12 +588,12 @@ export const GridDemo = ({ onComplete }: IGridDemoProps) => {
                                             severity='success'
                                             data-testid='CLOSED_DEMO_BUG_RESOLVED'
                                         >
-                                            <strong>Fixed in one click.</strong>{' '}
-                                            Everyone is safely back on the old
-                                            checkout - and relieved. That’s your
-                                            fastest incident response; Unleash
-                                            even has a dedicated kill switch
-                                            flag type for exactly this.
+                                            <strong>
+                                                Fixed in one click!{' '}
+                                            </strong>{' '}
+                                            Every one is safely back on the old
+                                            checkout. You didn't even need to
+                                            redeploy.
                                         </Alert>
                                     </Collapse>
                                 </>
@@ -581,10 +648,8 @@ export const GridDemo = ({ onComplete }: IGridDemoProps) => {
                             constraintsActive={
                                 config.targetCountryCodes.length > 0
                             }
-                            crowdHappy={
-                                topic.key === 'onoff' &&
-                                bugPhase === 'resolved' &&
-                                !config.environmentEnabled
+                            erroredCount={
+                                topic.key === 'onoff' ? erroredCount : 0
                             }
                             selectedId={selectedId}
                             onSelect={(user: DemoUser | undefined) =>

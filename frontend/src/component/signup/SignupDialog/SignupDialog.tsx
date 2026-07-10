@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import { type ComponentType, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
-import { GridDemo } from 'component/onboarding/closedDemo/ClosedDemo.tsx';
+import { ClosedDemo } from 'component/onboarding/closedDemo/ClosedDemo.tsx';
 import { SignupDialogSetPassword } from './SignupDialogSetPassword/SignupDialogSetPassword.tsx';
 import { SignupDialogAccountDetails } from './SignupDialogAccountDetails.tsx';
 import { SignupDialogInviteOthers } from './SignupDialogInviteOthers.tsx';
@@ -35,6 +35,11 @@ const StyledDialog = styled(Dialog, {
     '& .MuiDialog-paper': tour
         ? {
               overflow: 'hidden',
+              // On smaller screens the tour panel stacks and grows past the
+              // viewport - let the paper scroll instead of clipping.
+              [theme.breakpoints.down('md')]: {
+                  overflow: 'auto',
+              },
           }
         : {
               display: 'grid',
@@ -176,11 +181,16 @@ export const StyledSignupDialogButton = styled(Button)({
     width: '100%',
 });
 
-const StyledTourContainer = styled(Box)({
+const StyledTourContainer = styled(Box)(({ theme }) => ({
     height: '100%',
     minHeight: 0,
     overflow: 'hidden',
-});
+    [theme.breakpoints.down('md')]: {
+        height: 'auto',
+        minHeight: 'auto',
+        overflow: 'visible',
+    },
+}));
 
 const getHeartAnimationDelay = (i: number) => {
     const delays = ['0s', '-1.5s', '-3s', '-4.5s'];
@@ -292,7 +302,7 @@ export const SignupDialog = () => {
         return (
             <StyledDialog open fullScreen tour>
                 <StyledTourContainer>
-                    <GridDemo
+                    <ClosedDemo
                         onComplete={() => {
                             setShowTour(false);
                             setFakeSignup(false);

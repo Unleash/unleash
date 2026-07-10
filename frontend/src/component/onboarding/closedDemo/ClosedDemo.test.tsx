@@ -1,7 +1,7 @@
 import { vi, expect, test } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { screen, fireEvent, act, within } from '@testing-library/react';
-import { GridDemo } from './ClosedDemo.tsx';
+import { ClosedDemo } from './ClosedDemo.tsx';
 
 // react-confetti renders to a canvas, which jsdom doesn't implement.
 vi.mock('react-confetti', () => ({ default: () => null }));
@@ -10,14 +10,14 @@ const next = () =>
     fireEvent.click(screen.getByTestId('CLOSED_DEMO_NEXT_BUTTON'));
 
 test('renders the first (on/off) topic and a live user count', () => {
-    render(<GridDemo onComplete={vi.fn()} />);
+    render(<ClosedDemo onComplete={vi.fn()} />);
     expect(screen.getByText('Flip a feature on and off')).toBeInTheDocument();
     expect(screen.getByText(/users see the feature/)).toBeInTheDocument();
     expect(screen.getByTestId('CLOSED_DEMO_ONOFF_SWITCH')).toBeInTheDocument();
 });
 
 test('walks through all four topics to the finish screen', () => {
-    render(<GridDemo onComplete={vi.fn()} />);
+    render(<ClosedDemo onComplete={vi.fn()} />);
 
     next();
     expect(screen.getByText('Release gradually, safely')).toBeInTheDocument();
@@ -34,7 +34,7 @@ test('walks through all four topics to the finish screen', () => {
 
 test('calls onComplete when finishing', () => {
     const onComplete = vi.fn();
-    render(<GridDemo onComplete={onComplete} />);
+    render(<ClosedDemo onComplete={onComplete} />);
 
     next(); // -> rollout
     next(); // -> target
@@ -47,7 +47,7 @@ test('calls onComplete when finishing', () => {
 
 test('plays the kill-switch story in the first step', () => {
     vi.useFakeTimers();
-    render(<GridDemo onComplete={vi.fn()} />);
+    render(<ClosedDemo onComplete={vi.fn()} />);
 
     const toggle = screen.getByRole('switch', {
         name: 'Toggle the feature in production',
@@ -64,7 +64,7 @@ test('plays the kill-switch story in the first step', () => {
 });
 
 test('manages variants and shows a user payload in the variants step', () => {
-    render(<GridDemo onComplete={vi.fn()} />);
+    render(<ClosedDemo onComplete={vi.fn()} />);
 
     next(); // -> rollout
     next(); // -> target
@@ -85,7 +85,7 @@ test('manages variants and shows a user payload in the variants step', () => {
 
 test('calls onComplete when skipping', () => {
     const onComplete = vi.fn();
-    render(<GridDemo onComplete={onComplete} />);
+    render(<ClosedDemo onComplete={onComplete} />);
 
     fireEvent.click(screen.getByRole('button', { name: 'Skip' }));
     expect(onComplete).toHaveBeenCalledTimes(1);

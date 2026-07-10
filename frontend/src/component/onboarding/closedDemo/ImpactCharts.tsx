@@ -96,14 +96,20 @@ const totalRevenueFor = (
 ) => {
     if (errorsActive) return REVENUE_INCIDENT;
     if (topicKey === 'variants' && config.variants.length > 0) {
-        // On the variants step, total is the sum of each variant's contribution
-        // (share × uplift × full-exposure baseline) so an A/B winner visibly
-        // moves the top-line number.
-        return config.variants.reduce((sum, v) => {
+        // Non-exposed users stay on the old checkout (baseline), exposed users
+        // contribute their variant's uplifted full-exposure share on top. This
+        // matches the other steps' lerp(baseline, full, exposure) shape, so
+        // turning the flag off falls back to REVENUE_NO_EXPOSURE instead of 0.
+        if (users.length === 0) return REVENUE_NO_EXPOSURE;
+        const nonExposedShare =
+            evaluations.filter((e) => !e.enabled).length / users.length;
+        const baselineContribution = REVENUE_NO_EXPOSURE * nonExposedShare;
+        const variantContribution = config.variants.reduce((sum, v) => {
             const share = variantShareOf(v.name, users, evaluations);
             const uplift = VARIANT_UPLIFTS[v.name] ?? 1;
             return sum + REVENUE_FULL_EXPOSURE * share * uplift;
         }, 0);
+        return baselineContribution + variantContribution;
     }
     // Sum per-country contributions weighted by that country's share of total
     // revenue. This makes targeting a big market (US) move the top-line more

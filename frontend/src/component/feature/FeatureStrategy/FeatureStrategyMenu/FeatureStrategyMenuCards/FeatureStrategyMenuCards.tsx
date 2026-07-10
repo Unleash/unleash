@@ -212,6 +212,7 @@ export const FeatureStrategyMenuCards = ({
             <StyledScrollableContent>
                 {shouldRender('releaseTemplates') && (
                     <FeatureStrategyMenuCardsReleaseTemplates
+                        projectId={projectId}
                         onAddReleasePlan={onAddReleasePlan}
                         onReviewReleasePlan={onReviewReleasePlan}
                         filter={filter}

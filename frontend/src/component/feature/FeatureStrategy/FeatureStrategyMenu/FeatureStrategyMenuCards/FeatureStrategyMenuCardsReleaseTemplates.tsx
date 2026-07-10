@@ -1,5 +1,6 @@
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useUiFlag } from 'hooks/useUiFlag';
 import ReleaseTemplateIcon from 'assets/img/releaseTemplates.svg?react';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans.ts';
 import { Box, Button, styled } from '@mui/material';
@@ -87,6 +88,7 @@ const StyledLink = styled(RouterLink)({
 });
 
 interface IFeatureStrategyMenuCardsReleaseTemplatesProps {
+    projectId: string;
     onAddReleasePlan: (template: IReleasePlanTemplate) => void;
     onReviewReleasePlan: (template: IReleasePlanTemplate) => void;
     filter: StrategyFilterValue;
@@ -94,13 +96,18 @@ interface IFeatureStrategyMenuCardsReleaseTemplatesProps {
 }
 
 export const FeatureStrategyMenuCardsReleaseTemplates = ({
+    projectId,
     onAddReleasePlan,
     onReviewReleasePlan,
     filter,
     setFilter,
 }: IFeatureStrategyMenuCardsReleaseTemplatesProps) => {
     const { isEnterprise } = useUiConfig();
-    const { templates } = useReleasePlanTemplates();
+    const projectReleaseTemplatesEnabled = useUiFlag('projectReleaseTemplates');
+    const { templates } = useReleasePlanTemplates(
+        projectReleaseTemplatesEnabled ? projectId : undefined,
+        { includeRoot: true },
+    );
     const { trackEvent } = useEventTracker();
     const canCreateTemplate = useHasRootAccess(RELEASE_PLAN_TEMPLATE_CREATE);
 

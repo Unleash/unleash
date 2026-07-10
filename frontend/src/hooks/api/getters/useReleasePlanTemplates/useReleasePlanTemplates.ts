@@ -9,14 +9,17 @@ import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 
 const DEFAULT_DATA: IReleasePlanTemplate[] = [];
 
-export const useReleasePlanTemplates = (projectId?: string) => {
+export const useReleasePlanTemplates = (
+    projectId?: string,
+    options?: { includeRoot?: boolean },
+) => {
     const { isEnterprise } = useUiConfig();
     const projectReleaseTemplatesEnabled = useUiFlag('projectReleaseTemplates');
 
     const { data, error, mutate } = useConditionalSWR<IReleasePlanTemplate[]>(
         isEnterprise() && (!projectId || projectReleaseTemplatesEnabled),
         DEFAULT_DATA,
-        formatApiPath(releaseTemplatesApiPath(projectId)),
+        formatApiPath(releaseTemplatesApiPath(projectId, options)),
         fetcher,
     );
 

@@ -15,8 +15,39 @@ const setupApi = () => {
     });
 
     testServerRoute(server, '/api/admin/release-plan-templates', [
-        { id: '1', name: 'Template 1', description: 'Description 1' },
+        { id: '1', name: 'Global template', description: 'Description 1' },
     ]);
+};
+
+const setupProjectReleaseTemplatesApi = () => {
+    testServerRoute(server, '/api/admin/ui-config', {
+        versionInfo: {
+            current: { enterprise: '1.0.0' },
+        },
+        flags: { projectReleaseTemplates: true },
+    });
+
+    testServerRoute(
+        server,
+        '/api/admin/projects/default/release-templates',
+        [
+            {
+                id: '1',
+                name: 'Project template',
+                description: 'Description 1',
+                project: 'default',
+            },
+            {
+                id: '2',
+                name: 'Global template',
+                description: 'Description 2',
+                project: null,
+            },
+        ],
+        'get',
+        200,
+        { include: 'root' },
+    );
 };
 
 describe('FeatureStrategyMenuCardsReleaseTemplates', () => {
@@ -27,6 +58,7 @@ describe('FeatureStrategyMenuCardsReleaseTemplates', () => {
     it('renders new template as a link when user has permission', async () => {
         render(
             <FeatureStrategyMenuCardsReleaseTemplates
+                projectId='default'
                 onAddReleasePlan={() => {}}
                 onReviewReleasePlan={() => {}}
                 filter={null}
@@ -49,6 +81,7 @@ describe('FeatureStrategyMenuCardsReleaseTemplates', () => {
     it('shows no access dialog when user does not have permission', async () => {
         render(
             <FeatureStrategyMenuCardsReleaseTemplates
+                projectId='default'
                 onAddReleasePlan={() => {}}
                 onReviewReleasePlan={() => {}}
                 filter={null}
@@ -70,5 +103,36 @@ describe('FeatureStrategyMenuCardsReleaseTemplates', () => {
                 /you don't have the required permissions to create release templates/i,
             ),
         ).toBeInTheDocument();
+    });
+
+    it('lists global templates while project release templates are disabled', async () => {
+        render(
+            <FeatureStrategyMenuCardsReleaseTemplates
+                projectId='default'
+                onAddReleasePlan={() => {}}
+                onReviewReleasePlan={() => {}}
+                filter={null}
+                setFilter={() => {}}
+            />,
+        );
+
+        await screen.findByText('Global template');
+    });
+
+    it('lists project templates alongside global ones when project release templates are enabled', async () => {
+        setupProjectReleaseTemplatesApi();
+
+        render(
+            <FeatureStrategyMenuCardsReleaseTemplates
+                projectId='default'
+                onAddReleasePlan={() => {}}
+                onReviewReleasePlan={() => {}}
+                filter={null}
+                setFilter={() => {}}
+            />,
+        );
+
+        await screen.findByText('Project template');
+        await screen.findByText('Global template');
     });
 });

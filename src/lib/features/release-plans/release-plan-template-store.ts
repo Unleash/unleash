@@ -57,9 +57,11 @@ export class ReleasePlanTemplateStore extends CRUDStore<
         project: string,
     ): Promise<ReleasePlanTemplate[]> {
         return this.getTemplates('getProjectAndGlobalTemplates', (query) => {
-            query.where((qb) =>
-                qb.whereNull('project').orWhere('project', project),
-            );
+            query
+                .where((qb) =>
+                    qb.whereNull('project').orWhere('project', project),
+                )
+                .orderBy('project', 'asc', 'last');
         });
     }
 

@@ -1,15 +1,19 @@
 import { Dialog, IconButton, styled } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { GridDemo } from 'component/onboarding/closedDemo/ClosedDemo.tsx';
+import { ClosedDemo } from 'component/onboarding/closedDemo/ClosedDemo.tsx';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
-        width: 'min(960px, 94vw)',
-        height: 'min(680px, 92vh)',
-        maxWidth: 'unset',
-        margin: 0,
-        overflow: 'hidden',
         borderRadius: theme.shape.borderRadiusLarge,
+        maxWidth: theme.spacing(180),
+        width: '100%',
+        height: '100%',
+        overflow: 'hidden',
+        // On smaller screens the tour panel drops its two-column layout and
+        // stacks past the viewport - let the paper scroll instead of clipping.
+        [theme.breakpoints.down('md')]: {
+            overflow: 'auto',
+        },
     },
 }));
 
@@ -22,15 +26,14 @@ const StyledClose = styled(IconButton)(({ theme }) => ({
 }));
 
 /**
- * The quick tour as a centered dialog floating over the (dimmed) app - as
- * opposed to the full-screen dialog used in the signup flow. Backdrop click,
- * Escape, the ✕, and the tour's own Skip/Finish all close it.
+ * The quick tour as a large centered dialog floating over the (dimmed) app.
+ * Backdrop click, Escape, the ✕, and the tour's own Skip/Finish all close it.
  */
 export const QuickTourDialog = ({ onClose }: { onClose: () => void }) => (
     <StyledDialog open onClose={onClose}>
         <StyledClose onClick={onClose} aria-label='Close' size='small'>
             <CloseIcon fontSize='small' />
         </StyledClose>
-        <GridDemo onComplete={onClose} />
+        <ClosedDemo onComplete={onClose} />
     </StyledDialog>
 );

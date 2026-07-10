@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import {
     alpha,
     Box,
@@ -24,8 +24,15 @@ const StyledGrid = styled(Box)(({ theme }) => ({
 }));
 
 const StyledPerson = styled('button', {
-    shouldForwardProp: (prop) => prop !== 'selected',
-})<{ selected: boolean }>(({ theme, selected }) => ({
+    shouldForwardProp: (prop) =>
+        !['selected', 'highlightBackground', 'highlightBorder'].includes(
+            prop as string,
+        ),
+})<{
+    selected: boolean;
+    highlightBackground?: string;
+    highlightBorder?: string;
+}>(({ theme, selected, highlightBackground, highlightBorder }) => ({
     all: 'unset',
     boxSizing: 'border-box',
     cursor: 'pointer',
@@ -35,12 +42,17 @@ const StyledPerson = styled('button', {
     gap: theme.spacing(0.5),
     padding: theme.spacing(0.75, 0.5, 0.5),
     borderRadius: theme.shape.borderRadiusMedium,
+    backgroundColor: highlightBackground ?? 'transparent',
+    border: `1px solid ${highlightBorder ?? 'transparent'}`,
     outline: selected
         ? `2px solid ${theme.palette.primary.main}`
         : '2px solid transparent',
-    transition: theme.transitions.create(['transform'], {
-        duration: theme.transitions.duration.shorter,
-    }),
+    transition: theme.transitions.create(
+        ['transform', 'background-color', 'border-color'],
+        {
+            duration: theme.transitions.duration.shorter,
+        },
+    ),
     '&:hover': {
         transform: 'translateY(-2px)',
     },
@@ -75,6 +87,13 @@ const StyledName = styled('span', {
     transition: theme.transitions.create(['background-color', 'color'], {
         duration: theme.transitions.duration.shorter,
     }),
+}));
+
+const StyledFlag = styled('span')(({ theme }) => ({
+    fontSize: '1rem',
+    lineHeight: 1,
+    marginRight: theme.spacing(0.25),
+    verticalAlign: 'middle',
 }));
 
 const StyledPopoverContent = styled(Box)(({ theme }) => ({
@@ -168,8 +187,12 @@ interface IUserGridProps {
     variants?: DemoVariant[];
     /** Whether the strategy currently has active constraints. */
     constraintsActive?: boolean;
-    /** Everyone smiles even while off - the post-kill-switch relief. */
-    crowdHappy?: boolean;
+    /**
+     * How many currently-enabled users are affected by an incident. Their
+     * tiles get an error tint instead of the success one; picked from the
+     * enabled users in grid order so the reports appear to snowball.
+     */
+    erroredCount?: number;
     selectedId?: string;
     /** Called with the clicked user, or undefined when the popover closes. */
     onSelect: (user: DemoUser | undefined) => void;
@@ -181,13 +204,33 @@ export const UserGrid = ({
     mode,
     variants = [],
     constraintsActive = false,
-    crowdHappy = false,
+    erroredCount = 0,
     selectedId,
     onSelect,
 }: IUserGridProps) => {
+    const erroredUserIds = new Set<string>();
+    let taken = 0;
+    for (let i = 0; i < users.length && taken < erroredCount; i++) {
+        if (evaluations[i]?.enabled) {
+            erroredUserIds.add(users[i].id);
+            taken++;
+        }
+    }
     const theme = useTheme();
-    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const isDark = theme.palette.mode === 'dark';
     const [openUserId, setOpenUserId] = useState<string | undefined>();
+    // Ref map (not state) so a layout reflow that remounts the button doesn't
+    // strand a stale DOM node. MUI re-invokes the anchor function whenever it
+    // repositions (including on window resize), so the popover keeps tracking
+    // whichever node is currently in the map for `openUserId`.
+    const buttonRefs = useRef(new Map<string, HTMLButtonElement>());
+    const setButtonRef = useCallback(
+        (userId: string) => (node: HTMLButtonElement | null) => {
+            if (node) buttonRefs.current.set(userId, node);
+            else buttonRefs.current.delete(userId);
+        },
+        [],
+    );
 
     const variantOrder = variants.map((variant) => variant.name);
     const openUser = users.find((user) => user.id === openUserId);
@@ -199,7 +242,6 @@ export const UserGrid = ({
         : undefined;
 
     const closePopover = () => {
-        setAnchorEl(null);
         setOpenUserId(undefined);
         onSelect(undefined);
     };
@@ -214,19 +256,48 @@ export const UserGrid = ({
                     const variantIndex = variant
                         ? Math.max(0, variantOrder.indexOf(variant))
                         : 0;
-                    // In variants mode a shirt is only ever a variant colour
-                    // or neutral - never the user's own colour, which would
-                    // flash through while transitioning out of the rollout.
-                    const shirtColor =
-                        mode === 'variants'
-                            ? variant
-                                ? (variants[variantIndex]?.color ??
-                                  theme.palette.variants[
-                                      variantIndex %
-                                          theme.palette.variants.length
-                                  ])
-                                : theme.palette.neutral.border
-                            : undefined;
+                    const variantColor = variant
+                        ? (variants[variantIndex]?.color ??
+                          theme.palette.variants[
+                              variantIndex % theme.palette.variants.length
+                          ])
+                        : undefined;
+                    const errored = erroredUserIds.has(user.id);
+                    // Light mode uses the theme's Alert-chip pair (.light bg
+                    // + .border). In dark mode that .light surface collapses
+                    // to a muddy near-neutral, so we tint a subtle alpha of
+                    // .main instead and lean on the brighter .main border
+                    // for the pill's identity.
+                    const chip = (
+                        main: string,
+                        lightBg: string,
+                        borderCol: string | undefined,
+                    ) =>
+                        isDark
+                            ? { background: alpha(main, 0.2), border: main }
+                            : {
+                                  background: lightBg,
+                                  border: borderCol ?? main,
+                              };
+                    const highlight =
+                        mode === 'variants' && variantColor
+                            ? {
+                                  background: alpha(variantColor, 0.2),
+                                  border: variantColor,
+                              }
+                            : errored
+                              ? chip(
+                                    theme.palette.error.main,
+                                    theme.palette.error.light,
+                                    theme.palette.error.border,
+                                )
+                              : enabled
+                                ? chip(
+                                      theme.palette.success.main,
+                                      theme.palette.success.light,
+                                      theme.palette.success.border,
+                                  )
+                                : undefined;
                     const highlighted =
                         mode === 'target' &&
                         constraintsActive &&
@@ -243,11 +314,13 @@ export const UserGrid = ({
                     return (
                         <StyledPerson
                             key={user.id}
+                            ref={setButtonRef(user.id)}
                             type='button'
                             aria-label={label}
                             selected={selectedId === user.id}
-                            onClick={(event) => {
-                                setAnchorEl(event.currentTarget);
+                            highlightBackground={highlight?.background}
+                            highlightBorder={highlight?.border}
+                            onClick={() => {
                                 setOpenUserId(user.id);
                                 onSelect(user);
                             }}
@@ -255,23 +328,26 @@ export const UserGrid = ({
                             <DemoCharacter
                                 look={user.look}
                                 raised={enabled}
-                                happy={crowdHappy}
-                                shirtColor={shirtColor}
                                 badge={
                                     mode === 'variants' ? variant : undefined
                                 }
                                 index={i}
                             />
                             <StyledName highlighted={highlighted}>
-                                {user.country.flag} {user.name}
+                                <StyledFlag>{user.country.flag}</StyledFlag>
+                                {user.name}
                             </StyledName>
                         </StyledPerson>
                     );
                 })}
             </StyledGrid>
             <Popover
-                open={Boolean(anchorEl && openUser)}
-                anchorEl={anchorEl}
+                open={Boolean(openUserId && openUser)}
+                anchorEl={
+                    openUserId
+                        ? () => buttonRefs.current.get(openUserId) ?? null
+                        : undefined
+                }
                 onClose={closePopover}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
                 transformOrigin={{ vertical: 'top', horizontal: 'center' }}

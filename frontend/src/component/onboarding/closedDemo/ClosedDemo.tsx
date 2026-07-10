@@ -620,7 +620,6 @@ export const ClosedDemo = ({ onComplete }: IClosedDemoProps) => {
                                 key={topic.key}
                                 topicKey={topic.key}
                                 errorsActive={errorsActive}
-                                exposurePercent={stats.percentage}
                                 config={config}
                                 users={users}
                                 evaluations={evaluations}

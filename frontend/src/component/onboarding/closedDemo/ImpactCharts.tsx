@@ -16,13 +16,25 @@ const REVENUE_FULL_EXPOSURE = 160;
 const REVENUE_INCIDENT = 0;
 const REVENUE_MAX = 260;
 
-// Per-country revenue: a single country contributes roughly its share of total
-// revenue. Baseline and full-exposure values are just the total divided evenly
-// across the demo's countries so the numbers line up with the total chart.
-const COUNTRY_REVENUE_NO_EXPOSURE = REVENUE_NO_EXPOSURE / DEMO_COUNTRIES.length;
-const COUNTRY_REVENUE_FULL_EXPOSURE =
-    REVENUE_FULL_EXPOSURE / DEMO_COUNTRIES.length;
-const COUNTRY_REVENUE_MAX = 32;
+// Share of total revenue each country contributes. Weights sum to 1 so the
+// per-country charts still add up to the total-revenue chart. US is dominant
+// (matching the default target-step preset), the rest are a mix of
+// mid-market and long-tail so targeting choices have visibly different impact.
+const COUNTRY_WEIGHTS: Record<string, number> = {
+    US: 0.3,
+    GB: 0.2,
+    DE: 0.15,
+    IN: 0.15,
+    BR: 0.1,
+    JP: 0.1,
+};
+// Shared across all country charts so relative sizes are directly comparable
+// (US bar is meant to look bigger than JP's). Sized to fit the largest
+// full-exposure value (US: 0.30 × 160 = 48) with headroom.
+const COUNTRY_REVENUE_MAX = 60;
+
+const countryWeight = (code: string) =>
+    COUNTRY_WEIGHTS[code] ?? 1 / DEMO_COUNTRIES.length;
 
 // Per-variant conversion uplift vs. the baseline "new checkout" revenue. Small
 // spread so the A/B chart differences are visible without dominating the story.
@@ -30,7 +42,7 @@ const VARIANT_UPLIFTS: Record<string, number> = {
     A: 0.95,
     B: 1.4,
     C: 0.9,
-    D: 1.05,
+    D: 0.75,
 };
 
 const ERROR_HEALTHY = 1.5;
@@ -58,7 +70,6 @@ interface IImpactChartsProps {
     /** The current topic key from TOPICS - drives which revenue breakdown to show. */
     topicKey: string;
     errorsActive: boolean;
-    exposurePercent: number;
     config: DemoFlagConfig;
     users: DemoUser[];
     evaluations: UserEvaluation[];
@@ -79,7 +90,6 @@ const variantShareOf = (
 const totalRevenueFor = (
     topicKey: string,
     errorsActive: boolean,
-    exposurePercent: number,
     config: DemoFlagConfig,
     users: DemoUser[],
     evaluations: UserEvaluation[],
@@ -95,11 +105,25 @@ const totalRevenueFor = (
             return sum + REVENUE_FULL_EXPOSURE * share * uplift;
         }, 0);
     }
-    return lerp(
-        REVENUE_NO_EXPOSURE,
-        REVENUE_FULL_EXPOSURE,
-        exposurePercent / 100,
-    );
+    // Sum per-country contributions weighted by that country's share of total
+    // revenue. This makes targeting a big market (US) move the top-line more
+    // than targeting a small one (JP) - and keeps the per-country charts
+    // adding up to what the total shows.
+    return DEMO_COUNTRIES.reduce((sum, country) => {
+        const countryUsers = users.filter(
+            (u) => u.country.code === country.code,
+        );
+        const enabledInCountry = countryUsers.filter(
+            (u) => evaluations[users.indexOf(u)]?.enabled,
+        ).length;
+        const exposure = countryUsers.length
+            ? enabledInCountry / countryUsers.length
+            : 0;
+        const weight = countryWeight(country.code);
+        const baseline = REVENUE_NO_EXPOSURE * weight;
+        const full = REVENUE_FULL_EXPOSURE * weight;
+        return sum + lerp(baseline, full, exposure);
+    }, 0);
 };
 
 /**
@@ -114,7 +138,6 @@ const totalRevenueFor = (
 export const ImpactCharts = ({
     topicKey,
     errorsActive,
-    exposurePercent,
     config,
     users,
     evaluations,
@@ -126,7 +149,6 @@ export const ImpactCharts = ({
     const totalTarget = totalRevenueFor(
         topicKey,
         errorsActive,
-        exposurePercent,
         config,
         users,
         evaluations,
@@ -145,11 +167,10 @@ export const ImpactCharts = ({
                 const exposure = countryUsers.length
                     ? enabledInCountry / countryUsers.length
                     : 0;
-                const target = lerp(
-                    COUNTRY_REVENUE_NO_EXPOSURE,
-                    COUNTRY_REVENUE_FULL_EXPOSURE,
-                    exposure,
-                );
+                const weight = countryWeight(country.code);
+                const baseline = REVENUE_NO_EXPOSURE * weight;
+                const full = REVENUE_FULL_EXPOSURE * weight;
+                const target = lerp(baseline, full, exposure);
                 return (
                     <ImpactMetric
                         key={country.code}
@@ -160,7 +181,7 @@ export const ImpactCharts = ({
                             </StyledLabelWithFlag>
                         }
                         target={target}
-                        initialValue={COUNTRY_REVENUE_NO_EXPOSURE}
+                        initialValue={baseline}
                         max={COUNTRY_REVENUE_MAX}
                         color={successColor}
                         formatValue={formatRevenue}

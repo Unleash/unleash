@@ -129,7 +129,14 @@ export const ImpactMetric = ({
               ? 'up'
               : 'down';
 
-    const { linePath, fillPath, width } = buildPaths(history, max);
+    // Render against a max that grows to include any historical peaks. Callers
+    // may drop `max` mid-life (e.g. adding a variant shrinks each per-variant
+    // chart's expected ceiling); without this, older peaks in the buffer would
+    // overflow off the top of the SVG. New values are still clamped to the
+    // caller's `max`, so once the peak scrolls out of history the chart
+    // settles back to the caller-specified range.
+    const renderMax = Math.max(max, ...history);
+    const { linePath, fillPath, width } = buildPaths(history, renderMax);
     const arrow = direction === 'up' ? '↑' : direction === 'down' ? '↓' : '·';
     const valueColor = direction === 'flat' ? undefined : color;
 

@@ -8,13 +8,15 @@ import {
 import { ImpactMetric } from './ImpactMetric.tsx';
 
 // Total-revenue range. 78 at 0% exposure (all users on old checkout), 160 at
-// 100% (all on the new one). Incident crashes it to zero. On the variants step
-// total can climb slightly above 160 when the winning variant lifts the mean,
-// so REVENUE_MAX gives headroom for that.
+// 100% (all on the new one). Incident crashes it to zero. Per-topic max is
+// computed below so the chart y-axis is sized to what that topic can actually
+// reach (variants can push above 160 via uplift; other topics can't).
 const REVENUE_NO_EXPOSURE = 78;
 const REVENUE_FULL_EXPOSURE = 160;
 const REVENUE_INCIDENT = 0;
-const REVENUE_MAX = 260;
+// Headroom multiplier applied to a topic's peak-possible revenue so the chart
+// isn't pinned to the ceiling when the flag is fully exposed.
+const REVENUE_HEADROOM = 1.15;
 
 // Share of total revenue each country contributes. Weights sum to 1 so the
 // per-country charts still add up to the total-revenue chart. US is dominant
@@ -161,6 +163,19 @@ export const ImpactCharts = ({
     );
     const errorTarget = errorsActive ? ERROR_INCIDENT : ERROR_HEALTHY;
 
+    // Peak revenue this topic can produce. Onoff/rollout/target cap at full
+    // exposure (160); variants can push above that via uplift. We scale the
+    // total-revenue chart to this so the flag turning on is a clearly visible
+    // rise, not a small nudge on an over-provisioned y-axis.
+    const topicPeakRevenue =
+        topicKey === 'variants' && config.variants.length > 0
+            ? REVENUE_FULL_EXPOSURE *
+              Math.max(
+                  ...config.variants.map((v) => VARIANT_UPLIFTS[v.name] ?? 1),
+              )
+            : REVENUE_FULL_EXPOSURE;
+    const revenueMax = topicPeakRevenue * REVENUE_HEADROOM;
+
     const breakdowns = (() => {
         if (topicKey === 'target') {
             return DEMO_COUNTRIES.map((country) => {
@@ -246,7 +261,7 @@ export const ImpactCharts = ({
                 label='Revenue / min'
                 target={totalTarget}
                 initialValue={REVENUE_NO_EXPOSURE}
-                max={REVENUE_MAX}
+                max={revenueMax}
                 color={exposureColor}
                 formatValue={formatRevenue}
             />

@@ -143,7 +143,7 @@ export const ImpactCharts = ({
     evaluations,
 }: IImpactChartsProps) => {
     const theme = useTheme();
-    const successColor = theme.palette.success.main;
+    const exposureColor = theme.palette.primary.main;
     const errorColor = theme.palette.error.main;
 
     const totalTarget = totalRevenueFor(
@@ -183,7 +183,7 @@ export const ImpactCharts = ({
                         target={target}
                         initialValue={baseline}
                         max={COUNTRY_REVENUE_MAX}
-                        color={successColor}
+                        color={exposureColor}
                         formatValue={formatRevenue}
                     />
                 );
@@ -215,7 +215,7 @@ export const ImpactCharts = ({
                         target={target}
                         initialValue={uniformSeed}
                         max={variantMax}
-                        color={v.color ?? successColor}
+                        color={v.color ?? exposureColor}
                         formatValue={formatRevenue}
                     />
                 );
@@ -232,7 +232,7 @@ export const ImpactCharts = ({
                 target={totalTarget}
                 initialValue={REVENUE_NO_EXPOSURE}
                 max={REVENUE_MAX}
-                color={successColor}
+                color={exposureColor}
                 formatValue={formatRevenue}
             />
             <ImpactMetric

@@ -32,7 +32,7 @@ const STAGGER_STEP_MS = 18;
 const StyledCharacterWrapper = styled('div')(({ theme }) => ({
     width: '100%',
     lineHeight: 0,
-    filter: `drop-shadow(0 0 0.5px ${theme.palette.background.elevation1}) drop-shadow(0 0 0.5px ${theme.palette.background.elevation1})`,
+    filter: `drop-shadow(0 0 0.5px ${theme.palette.grey[700]}) drop-shadow(0 0 0.5px ${theme.palette.grey[700]})`,
 }));
 
 const StyledSvg = styled('svg', {

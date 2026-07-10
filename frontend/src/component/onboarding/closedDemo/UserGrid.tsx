@@ -217,7 +217,6 @@ export const UserGrid = ({
         }
     }
     const theme = useTheme();
-    const isDark = theme.palette.mode === 'dark';
     const [openUserId, setOpenUserId] = useState<string | undefined>();
     // Ref map (not state) so a layout reflow that remounts the button doesn't
     // strand a stale DOM node. MUI re-invokes the anchor function whenever it
@@ -263,40 +262,22 @@ export const UserGrid = ({
                           ])
                         : undefined;
                     const errored = erroredUserIds.has(user.id);
-                    // Light mode uses the theme's Alert-chip pair (.light bg
-                    // + .border). In dark mode that .light surface collapses
-                    // to a muddy near-neutral, so we tint a subtle alpha of
-                    // .main instead and lean on the brighter .main border
-                    // for the pill's identity.
-                    const chip = (
-                        main: string,
-                        lightBg: string,
-                        borderCol: string | undefined,
-                    ) =>
-                        isDark
-                            ? { background: alpha(main, 0.2), border: main }
-                            : {
-                                  background: lightBg,
-                                  border: borderCol ?? main,
-                              };
+                    // All state pills share the same alpha-tinted background
+                    // + solid border treatment so light/dark modes read the
+                    // same, and the pill's identity comes from its hue rather
+                    // than the theme's Alert-chip surface (which collapses to
+                    // near-neutral in dark mode).
+                    const chip = (main: string, backgroundAlpha = 0.4) => ({
+                        background: alpha(main, backgroundAlpha),
+                        border: main,
+                    });
                     const highlight =
                         mode === 'variants' && variantColor
-                            ? {
-                                  background: alpha(variantColor, 0.2),
-                                  border: variantColor,
-                              }
+                            ? chip(variantColor)
                             : errored
-                              ? chip(
-                                    theme.palette.error.main,
-                                    theme.palette.error.light,
-                                    theme.palette.error.border,
-                                )
+                              ? chip(theme.palette.error.main)
                               : enabled
-                                ? chip(
-                                      theme.palette.success.main,
-                                      theme.palette.success.light,
-                                      theme.palette.success.border,
-                                  )
+                                ? chip(theme.palette.secondary.main, 0.4)
                                 : undefined;
                     const highlighted =
                         mode === 'target' &&

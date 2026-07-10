@@ -2,6 +2,198 @@
 
 All notable changes to this project will be documented in this file.
 
+## [8.0.3] - 2026-07-10
+
+### Bug Fixes
+
+- Linting errors ([#12441](https://github.com/Unleash/unleash/issues/12441))
+
+- Close any open page before opening a new pageview ([#12444](https://github.com/Unleash/unleash/issues/12444))
+
+- Normalize trailing slash in tracked page paths ([#12445](https://github.com/Unleash/unleash/issues/12445))
+
+- Do not pollute global Mustache state ([#1222](https://github.com/Unleash/unleash/issues/1222))
+
+- Do not pollute global Mustache state ([#1222](https://github.com/Unleash/unleash/issues/1222))
+
+- Remove extra thick outline on help button ([#1218](https://github.com/Unleash/unleash/issues/1218))
+
+- Do not pollute global Mustache state ([#1222](https://github.com/Unleash/unleash/issues/1222))
+
+- Remove extra thick outline on help button ([#1218](https://github.com/Unleash/unleash/issues/1218))
+
+- Don't allow cloning features across projects
+
+- Strategy operations have previously only needed id
+
+- Updating sort orders requires strategy to belong to feature
+
+- Since title and display name is user entered have mustache filte…
+
+- Added check that all toggles are part of the project in the url
+
+- Prevent cross project segment update
+
+- Project mode should not allow global access
+
+
+### Features
+
+- Add SEMVER_GTE and SEMVER_LTE constraint operators ([#11708](https://github.com/Unleash/unleash/issues/11708))
+
+- Frontend impression events ([#12435](https://github.com/Unleash/unleash/issues/12435))
+
+- Correlate session id ([#12437](https://github.com/Unleash/unleash/issues/12437))
+
+- Track engaged time per page view
+
+- Remove logrocket event tracking setup ([#12385](https://github.com/Unleash/unleash/issues/12385))
+
+- Add pathname to custom tracking events ([#12452](https://github.com/Unleash/unleash/issues/12452))
+
+- Poll ServiceNow for open mapped change request states ([#1197](https://github.com/Unleash/unleash/issues/1197))
+
+- Make project onboarding steps visible to LogRocket ([#12453](https://github.com/Unleash/unleash/issues/12453))
+
+- Add active sessions inspector
+
+- Project level release templates flag
+
+- Project level release templates migration
+
+- Add optional project to template store
+
+- Specialized queries for release template variants
+
+- Release template events project
+
+- Render inputs with top (instead of floating) label behind flag
+
+- Project release templates screen in project settings
+
+- Add new permission for updating project release templates
+
+- Project release template permission application
+
+- Read-only project release templates list
+
+- Pass `Input` descriptions as a prop, drop redundant ones
+
+- Add custom `AutocompleteField`, migrate `SelectSdk` to it
+
+- Context field cross project hardening
+
+- Refresh feature view on interval
+
+- Include global templates in project template resource
+
+- Create, edit and archive project release templates
+
+- Add custom `SelectField`, migrate `BannerForm` to it
+
+- Disable release template actions while saving
+
+- Add `FormGroup` and use it in BannerForm
+
+- Track release template errors and scope
+
+- List project release templates before global ones
+
+
+### Miscellaneous Tasks
+
+- New in unleash page - groundwork ([#1200](https://github.com/Unleash/unleash/issues/1200))
+
+- Run oss ci checks in enterprise ([#1202](https://github.com/Unleash/unleash/issues/1202))
+
+- Sync OSS subtree from upstream
+
+- New in unleash feature images ([#1208](https://github.com/Unleash/unleash/issues/1208))
+
+- New in unleash feedback follow up ([#1204](https://github.com/Unleash/unleash/issues/1204))
+
+- Update notify_enterprise.yaml ([#12443](https://github.com/Unleash/unleash/issues/12443))
+
+- New in unlash set up last 3 features data
+
+- New in unleash better images ([#1213](https://github.com/Unleash/unleash/issues/1213))
+
+- Import OSS subtree with full history ([#1212](https://github.com/Unleash/unleash/issues/1212))
+
+- New in unleash feature share your input 
+
+- Import OSS subtree with full history ([#1212](https://github.com/Unleash/unleash/issues/1212))
+
+- New in unleash feature share your input 
+
+- Import OSS subtree with full history ([#1212](https://github.com/Unleash/unleash/issues/1212))
+
+- New in unleash feature share your input 
+
+- Add a checked target we can enforce in CI
+
+- New in unlash styling
+
+- No early access features
+
+- Rename flag to whatsNewPage
+
+- Disable old new in unleash when whatsNewPage flag is on
+
+- What's new - rename 
+
+- Add what's new to help & resources
+
+- What's new - add events
+
+- What's new fix inconsistent whitespace
+
+- What's new Share your input - add a popup for showing the email
+
+- What's new page - improve column widths
+
+- Add snow icon
+
+- Clean up flag hideTopmenuDocumentation
+
+- What's new different milestone progression and safegrauds link
+
+- Add `topLabelInputs` feature flag
+
+- Tidy package lifecycle scripts
+
+
+### Refactor
+
+- What's new fix styled component names 
+
+
+### Testing
+
+- Add story file for new in unleash card ([#1207](https://github.com/Unleash/unleash/issues/1207))
+
+- Run OSS unit tests without per-file isolation
+
+- Try fixing operational flaky test
+
+
+### Dev
+
+- Lazy-load story modules in StoriesPage
+
+- Enable _stories page on production with flag
+
+- Lint styled component name
+
+- Unify lint and lint:fix
+
+- Allow exported component names to not have Styled prefix
+
+- Remove not needed button stories
+
+- Flag flagListCreatedByFilter
+
+
 ## [8.0.2] - 2026-06-29
 
 ### Bug Fixes

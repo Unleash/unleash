@@ -198,13 +198,22 @@ export const ImpactCharts = ({
 
         if (topicKey === 'variants' && config.variants.length > 0) {
             // All variant charts share a max so their bar heights are directly
-            // comparable. Peg it to the highest-uplift variant with headroom.
+            // comparable. Baseline it at the even-split-with-headroom case, but
+            // also grow it to fit whichever variant is currently biggest (so a
+            // single variant dragged near 100% doesn't overflow its chart).
             const evenShare = 1 / config.variants.length;
             const maxUplift = Math.max(
                 ...config.variants.map((v) => VARIANT_UPLIFTS[v.name] ?? 1),
             );
-            const variantMax =
-                REVENUE_FULL_EXPOSURE * evenShare * maxUplift * 1.3;
+            const currentTargets = config.variants.map((v) => {
+                const share = variantShareOf(v.name, users, evaluations);
+                const uplift = VARIANT_UPLIFTS[v.name] ?? 1;
+                return REVENUE_FULL_EXPOSURE * share * uplift;
+            });
+            const variantMax = Math.max(
+                REVENUE_FULL_EXPOSURE * evenShare * maxUplift * 1.3,
+                ...currentTargets.map((t) => t * 1.15),
+            );
 
             return config.variants.map((v) => {
                 const share = variantShareOf(v.name, users, evaluations);

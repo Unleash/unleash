@@ -117,6 +117,7 @@ describe('FeatureStrategyMenuCardsReleaseTemplates', () => {
         );
 
         await screen.findByText('Global template');
+        expect(screen.queryByText('Global')).not.toBeInTheDocument();
     });
 
     it('lists project templates alongside global ones when project release templates are enabled', async () => {
@@ -134,5 +135,7 @@ describe('FeatureStrategyMenuCardsReleaseTemplates', () => {
 
         await screen.findByText('Project template');
         await screen.findByText('Global template');
+        expect(screen.getByText('Project')).toBeInTheDocument();
+        expect(screen.getByText('Global')).toBeInTheDocument();
     });
 });

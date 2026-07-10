@@ -19,6 +19,7 @@ import { useEventTracker } from 'hooks/useEventTracker.ts';
 import { useHasRootAccess } from 'hooks/useHasAccess.ts';
 import { RELEASE_PLAN_TEMPLATE_CREATE } from '@server/types/permissions.ts';
 import { Dialogue } from 'component/common/Dialogue/Dialogue.tsx';
+import { Badge } from 'component/common/Badge/Badge.tsx';
 
 const RELEASE_TEMPLATE_DISPLAY_LIMIT = 5;
 
@@ -145,6 +146,13 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
         setNoAccessDialogOpen(false);
     };
 
+    const scopeBadge = (template: IReleasePlanTemplate) =>
+        projectReleaseTemplatesEnabled ? (
+            <Badge color='disabled'>
+                {template.project ? 'Project' : 'Global'}
+            </Badge>
+        ) : undefined;
+
     return (
         <Box>
             {shouldShowHeader && (
@@ -215,6 +223,7 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
                             icon={
                                 <FeatureStrategyMenuCardIcon name='releasePlanTemplate' />
                             }
+                            badge={scopeBadge(template)}
                         >
                             <FeatureStrategyMenuCardAction
                                 onClick={() => onReviewReleasePlan(template)}

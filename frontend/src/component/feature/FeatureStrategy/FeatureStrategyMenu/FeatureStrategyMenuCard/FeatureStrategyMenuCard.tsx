@@ -41,6 +41,9 @@ const StyledCard = styled('div', {
     '&:hover .cardActions, &:focus-within .cardActions': {
         opacity: 1,
     },
+    '&:hover .cardBadge, &:focus-within .cardBadge': {
+        opacity: 0,
+    },
     ...(isDefault && {
         backgroundColor: theme.palette.secondary.light,
         borderColor: theme.palette.secondary.border,
@@ -61,6 +64,13 @@ const StyledCardDescription = styled('div')(({ theme }) => ({
     gap: theme.spacing(0.5),
 }));
 
+const StyledCardBadge = styled('div')(({ theme }) => ({
+    position: 'absolute',
+    top: theme.spacing(1),
+    right: theme.spacing(1),
+    transition: 'opacity 0.2s ease-in-out',
+}));
+
 const StyledCardActions = styled('div')(({ theme }) => ({
     position: 'absolute',
     display: 'flex',
@@ -78,6 +88,7 @@ interface IFeatureStrategyMenuCardProps {
     description: string;
     icon: ReactNode;
     isDefault?: boolean;
+    badge?: ReactNode;
     children: ReactNode;
 }
 
@@ -86,9 +97,13 @@ export const FeatureStrategyMenuCard = ({
     description,
     icon,
     isDefault,
+    badge,
     children,
 }: IFeatureStrategyMenuCardProps) => (
     <StyledCard isDefault={isDefault}>
+        {badge && (
+            <StyledCardBadge className='cardBadge'>{badge}</StyledCardBadge>
+        )}
         <StyledCardContent className='cardContent'>
             <StyledIcon>{icon}</StyledIcon>
             <StyledCardDescription>

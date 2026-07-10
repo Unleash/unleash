@@ -2,7 +2,7 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import { Button, styled } from '@mui/material';
 import { TemplateForm } from './TemplateForm/TemplateForm.tsx';
 import { useTemplateForm } from '../hooks/useTemplateForm.ts';
-import { ConflictError } from 'utils/apiUtils';
+import { apiErrorCategory, ConflictError } from 'utils/apiUtils';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import {
     RELEASE_PLAN_TEMPLATE_CREATE,
@@ -20,6 +20,8 @@ import { Limit } from 'component/common/Limit/Limit.tsx';
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates.ts';
 import { releaseTemplatesApiPath } from 'hooks/api/getters/useReleasePlanTemplates/releaseTemplatesApiPath';
 import { formatReleaseTemplateListPath } from 'component/releases/releaseTemplatePaths';
+import { releaseTemplateScopeProps } from 'component/releases/releaseTemplateScopeProps';
+import { formatValidationErrors } from './formatValidationErrors.ts';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 
 const StyledButtonContainer = styled('div')(() => ({
@@ -68,42 +70,60 @@ export const CreateReleasePlanTemplate = ({ modal }: { modal?: boolean }) => {
         navigate(GO_BACK);
     };
 
+    const scopeProps = releaseTemplateScopeProps(projectId);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         clearErrors();
-        const isValid = validate();
-        if (isValid) {
-            try {
-                const template = await createReleasePlanTemplate(
-                    getTemplatePayload(),
-                );
-                scrollToTop();
-                setToastData({
-                    type: 'success',
-                    text: !canCreateMore
-                        ? 'You have reached the limit of release templates.'
-                        : 'Release template created',
-                    persist: !canCreateMore,
-                });
+        const validationErrors = validate();
+        if (Object.keys(validationErrors).length > 0) {
+            trackEvent('release-management', {
+                props: {
+                    eventType: 'create-template-validation-failed',
+                    errors: formatValidationErrors(validationErrors),
+                    ...scopeProps,
+                },
+            });
+            return;
+        }
+        try {
+            const template = await createReleasePlanTemplate(
+                getTemplatePayload(),
+            );
+            scrollToTop();
+            setToastData({
+                type: 'success',
+                text: !canCreateMore
+                    ? 'You have reached the limit of release templates.'
+                    : 'Release template created',
+                persist: !canCreateMore,
+            });
 
-                trackEvent('release-management', {
-                    props: {
-                        eventType: 'create-template',
-                        template: template.name,
-                    },
-                });
+            trackEvent('release-management', {
+                props: {
+                    eventType: 'create-template',
+                    template: template.name,
+                    ...scopeProps,
+                },
+            });
 
-                await refetch();
-                navigate(backPath);
-            } catch (error: unknown) {
-                if (error instanceof ConflictError) {
-                    setErrors((prev) => ({
-                        ...prev,
-                        name: 'A template with this name already exists.',
-                    }));
-                } else {
-                    setToastApiError(formatUnknownError(error));
-                }
+            await refetch();
+            navigate(backPath);
+        } catch (error: unknown) {
+            trackEvent('release-management', {
+                props: {
+                    eventType: 'create-template-failed',
+                    error: apiErrorCategory(error),
+                    ...scopeProps,
+                },
+            });
+            if (error instanceof ConflictError) {
+                setErrors((prev) => ({
+                    ...prev,
+                    name: 'A template with this name already exists.',
+                }));
+            } else {
+                setToastApiError(formatUnknownError(error));
             }
         }
     };

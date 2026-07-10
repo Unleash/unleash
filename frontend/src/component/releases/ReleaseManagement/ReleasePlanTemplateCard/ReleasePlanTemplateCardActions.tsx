@@ -15,8 +15,10 @@ import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { useReleasePlanTemplatesApi } from 'hooks/api/actions/useReleasePlanTemplatesApi/useReleasePlanTemplatesApi';
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
 import { formatReleaseTemplateEditPath } from 'component/releases/releaseTemplatePaths';
+import { releaseTemplateScopeProps } from 'component/releases/releaseTemplateScopeProps';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { apiErrorCategory } from 'utils/apiUtils';
 import { TemplateArchiveDialog } from '../TemplateArchiveDialog.tsx';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -62,6 +64,7 @@ export const ReleasePlanTemplateCardActions = ({
         projectId,
     );
     const editPath = formatReleaseTemplateEditPath(template.id, projectId);
+    const scopeProps = releaseTemplateScopeProps(template.project);
     const archiveReleasePlan = useCallback(async () => {
         try {
             await archiveReleasePlanTemplate(template.id);
@@ -75,9 +78,17 @@ export const ReleasePlanTemplateCardActions = ({
                 props: {
                     eventType: 'archive-template',
                     template: template.name,
+                    ...scopeProps,
                 },
             });
         } catch (error: unknown) {
+            trackEvent('release-management', {
+                props: {
+                    eventType: 'archive-template-failed',
+                    error: apiErrorCategory(error),
+                    ...scopeProps,
+                },
+            });
             setToastApiError(formatUnknownError(error));
         }
     }, [setToastApiError, setToastData, archiveReleasePlanTemplate, refetch]);

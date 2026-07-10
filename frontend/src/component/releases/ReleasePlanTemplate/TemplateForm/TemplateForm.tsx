@@ -99,6 +99,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                 <StyledInput
                     label='Template name'
                     aria-required
+                    sx={{ marginBottom: 4 }}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     error={Boolean(errors.name)}

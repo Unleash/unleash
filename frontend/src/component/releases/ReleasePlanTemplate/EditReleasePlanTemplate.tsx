@@ -2,7 +2,7 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useReleasePlanTemplate } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplate';
 import { useTemplateForm } from '../hooks/useTemplateForm.ts';
-import { ConflictError } from 'utils/apiUtils';
+import { apiErrorCategory, ConflictError } from 'utils/apiUtils';
 import { TemplateForm } from './TemplateForm/TemplateForm.tsx';
 import { Button, styled } from '@mui/material';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
@@ -19,6 +19,8 @@ import { useEventTracker } from 'hooks/useEventTracker';
 import { releaseTemplatesApiPath } from 'hooks/api/getters/useReleasePlanTemplates/releaseTemplatesApiPath';
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
 import { formatReleaseTemplateListPath } from 'component/releases/releaseTemplatePaths';
+import { releaseTemplateScopeProps } from 'component/releases/releaseTemplateScopeProps';
+import { formatValidationErrors } from './formatValidationErrors.ts';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 
 const StyledButtonContainer = styled('div')(() => ({
@@ -66,40 +68,55 @@ export const EditReleasePlanTemplate = ({ modal }: { modal?: boolean }) => {
     const handleCancel = () => {
         navigate(backPath);
     };
+    const scopeProps = releaseTemplateScopeProps(template.project);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         clearErrors();
-        const isValid = validate();
-        if (isValid) {
-            try {
-                await updateReleasePlanTemplate(
-                    templateId,
-                    getTemplatePayload(),
-                );
-                await refetch();
-                setToastData({
-                    type: 'success',
-                    text: 'Release template updated',
-                });
+        const validationErrors = validate();
+        if (Object.keys(validationErrors).length > 0) {
+            trackEvent('release-management', {
+                props: {
+                    eventType: 'edit-template-validation-failed',
+                    errors: formatValidationErrors(validationErrors),
+                    ...scopeProps,
+                },
+            });
+            return;
+        }
+        try {
+            await updateReleasePlanTemplate(templateId, getTemplatePayload());
+            await refetch();
+            setToastData({
+                type: 'success',
+                text: 'Release template updated',
+            });
 
-                trackEvent('release-management', {
-                    props: {
-                        eventType: 'edit-template',
-                        template: template.name,
-                    },
-                });
+            trackEvent('release-management', {
+                props: {
+                    eventType: 'edit-template',
+                    template: template.name,
+                    ...scopeProps,
+                },
+            });
 
-                await refetchTemplates();
-                navigate(backPath);
-            } catch (error: unknown) {
-                if (error instanceof ConflictError) {
-                    setErrors((prev) => ({
-                        ...prev,
-                        name: 'A template with this name already exists.',
-                    }));
-                } else {
-                    setToastApiError(formatUnknownError(error));
-                }
+            await refetchTemplates();
+            navigate(backPath);
+        } catch (error: unknown) {
+            trackEvent('release-management', {
+                props: {
+                    eventType: 'edit-template-failed',
+                    error: apiErrorCategory(error),
+                    ...scopeProps,
+                },
+            });
+            if (error instanceof ConflictError) {
+                setErrors((prev) => ({
+                    ...prev,
+                    name: 'A template with this name already exists.',
+                }));
+            } else {
+                setToastApiError(formatUnknownError(error));
             }
         }
     };

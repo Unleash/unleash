@@ -31,52 +31,49 @@ export const useTemplateForm = (
         setMilestones(initialMilestones);
     }, [initialMilestones.length]);
 
-    const validate = () => {
-        let valid = true;
+    const validate = (): Record<string, string> => {
+        const validationErrors: Record<string, string> = {};
 
         if (name.length === 0) {
-            setErrors((prev) => ({ ...prev, name: 'Name can not be empty.' }));
-            valid = false;
+            validationErrors.name = 'Name can not be empty.';
         }
 
         if (milestones.length === 0) {
-            setErrors((prev) => ({
-                ...prev,
-                milestones: 'At least one milestone is required.',
-            }));
-            valid = false;
+            validationErrors.milestones = 'At least one milestone is required.';
         }
 
-        const errors: Record<string, string> = {};
+        const milestoneErrors: Record<string, string> = {};
         const nameSet = new Set();
         milestones.forEach((m) => {
             if (!m.name || m.name.length === 0) {
-                errors[m.id] = 'Milestone must have a valid name.';
-                errors[`${m.id}_name`] = 'Milestone must have a valid name.';
+                milestoneErrors[m.id] = 'Milestone must have a valid name.';
+                milestoneErrors[`${m.id}_name`] =
+                    'Milestone must have a valid name.';
             }
 
             if (!m.strategies || m.strategies.length === 0) {
-                errors[m.id] = 'Milestone must have at least one strategy.';
+                milestoneErrors[m.id] =
+                    'Milestone must have at least one strategy.';
             }
 
             if (nameSet.has(m.name)) {
-                errors[m.id] = 'Milestone names must be unique.';
+                milestoneErrors[m.id] = 'Milestone names must be unique.';
             } else if (m.name) {
                 nameSet.add(m.name);
             }
         });
 
-        if (Object.keys(errors).length > 0) {
-            setErrors((prev) => ({
-                ...prev,
-                ...errors,
-                milestones:
-                    'All milestones must have unique names and at least one strategy each.',
-            }));
-            valid = false;
+        if (Object.keys(milestoneErrors).length > 0) {
+            Object.assign(validationErrors, milestoneErrors);
+            validationErrors.milestones =
+                'All milestones must have unique names and at least one strategy each.';
         }
 
-        return valid;
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors((prev) => ({ ...prev, ...validationErrors }));
+        }
+
+        return validationErrors;
     };
 
     const clearErrors = () => {

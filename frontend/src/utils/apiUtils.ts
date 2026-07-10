@@ -99,3 +99,26 @@ export const headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
 };
+
+export type ApiErrorCategory =
+    | 'validation'
+    | 'permission'
+    | 'not-found'
+    | 'conflict'
+    | 'unavailable'
+    | 'server'
+    | 'network'
+    | 'unknown';
+
+// Low-cardinality bucket for analytics props; never expose the error message.
+export const apiErrorCategory = (error: unknown): ApiErrorCategory => {
+    if (error instanceof BadRequestError) return 'validation';
+    if (error instanceof AuthenticationError || error instanceof ForbiddenError)
+        return 'permission';
+    if (error instanceof NotFoundError) return 'not-found';
+    if (error instanceof ConflictError) return 'conflict';
+    if (error instanceof UnavailableError) return 'unavailable';
+    if (error instanceof ResponseError) return 'server';
+    if (error instanceof TypeError) return 'network';
+    return 'unknown';
+};

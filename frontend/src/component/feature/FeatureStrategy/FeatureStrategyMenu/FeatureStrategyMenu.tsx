@@ -3,6 +3,7 @@ import { Box, Dialog, IconButton, styled, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useEventTracker } from 'hooks/useEventTracker';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
+import { releaseTemplateScopeProps } from 'component/releases/releaseTemplateScopeProps';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import useToast from 'hooks/useToast';
@@ -113,6 +114,7 @@ export const FeatureStrategyMenu = ({
                 props: {
                     eventType: 'add-plan',
                     plan: template.name,
+                    ...releaseTemplateScopeProps(template.project),
                 },
             });
             setAddReleasePlanConfirmationOpen(false);

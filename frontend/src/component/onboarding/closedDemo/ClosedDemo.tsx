@@ -13,6 +13,7 @@ import Confetti from 'react-confetti';
 import { useEventTracker } from 'hooks/useEventTracker.ts';
 import {
     computeEvaluations,
+    DEMO_COUNTRIES,
     type DemoFlagConfig,
     type DemoUser,
     type DemoVariant,
@@ -21,6 +22,7 @@ import {
 } from './demoModel.js';
 import { UserGrid, type GridMode } from './UserGrid.tsx';
 import { DemoFlagView } from './DemoFlagView.tsx';
+import { ImpactCharts } from './ImpactCharts.tsx';
 
 // Small enough that every character stays readable with a name under it; the
 // stat header carries the precise percentage.
@@ -73,6 +75,8 @@ const makeVariants = (names: string[], palette: string[]): DemoVariant[] => {
 const BUG_REPORT_DELAY_MS = 900;
 /** Delay between switching the feature on and the first user hitting an error. */
 const ERROR_START_DELAY_MS = 250;
+/** Interval between increasing the errored users. */
+const ERROR_INCREMENT_MS = 1000;
 
 interface ITopic {
     key: string;
@@ -335,7 +339,7 @@ export const ClosedDemo = ({ onComplete }: IClosedDemoProps) => {
                 current = Math.min(USER_COUNT, current * 2);
                 setErroredCount(current);
                 if (current >= USER_COUNT) clearInterval(interval);
-            }, 500);
+            }, ERROR_INCREMENT_MS);
         }, ERROR_START_DELAY_MS);
         return () => {
             clearTimeout(startTimer);
@@ -392,7 +396,9 @@ export const ClosedDemo = ({ onComplete }: IClosedDemoProps) => {
                 ...c,
                 environmentEnabled: true,
                 rollout: 100,
-                targetCountryCodes: [],
+                targetCountryCodes: DEMO_COUNTRIES.map(
+                    (country) => country.code,
+                ),
                 variantsEnabled: true,
                 variants: makeVariants(['A', 'B'], variantPalette),
             }));
@@ -442,12 +448,23 @@ export const ClosedDemo = ({ onComplete }: IClosedDemoProps) => {
         setConfig((c) => ({ ...c, rollout: value }));
 
     const toggleCountry = (code: string) =>
-        setConfig((c) => ({
-            ...c,
-            targetCountryCodes: c.targetCountryCodes.includes(code)
+        setConfig((c) => {
+            const isSelected = c.targetCountryCodes.includes(code);
+            const next = isSelected
                 ? c.targetCountryCodes.filter((x) => x !== code)
-                : [...c.targetCountryCodes, code],
-        }));
+                : [...c.targetCountryCodes, code];
+            // Deselecting the last chip would leave an empty "is any of"
+            // constraint, which reads as "no country matches". Flip it to
+            // every country instead - same effect as no constraint, but the
+            // UI stays coherent.
+            return {
+                ...c,
+                targetCountryCodes:
+                    next.length === 0
+                        ? DEMO_COUNTRIES.map((country) => country.code)
+                        : next,
+            };
+        });
 
     const addVariant = () => {
         setConfig((c) => {
@@ -598,6 +615,16 @@ export const ClosedDemo = ({ onComplete }: IClosedDemoProps) => {
                                     </Collapse>
                                 </>
                             ) : null}
+
+                            <ImpactCharts
+                                key={topic.key}
+                                topicKey={topic.key}
+                                errorsActive={errorsActive}
+                                exposurePercent={stats.percentage}
+                                config={config}
+                                users={users}
+                                evaluations={evaluations}
+                            />
                         </StyledScroll>
 
                         <StyledFooter>

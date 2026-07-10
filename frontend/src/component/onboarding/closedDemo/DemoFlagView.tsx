@@ -89,9 +89,28 @@ const StyledRolloutWrapper = styled(Box)(({ theme }) => ({
 
 const StyledConstraintRow = styled(Box)(({ theme }) => ({
     display: 'flex',
+    alignItems: 'flex-start',
+    gap: theme.spacing(1),
+}));
+
+// Keeps "country" and "is any of" locked together on the left so the chips
+// always start on the same line as the operator and only wrap among
+// themselves - never lifting a lone flag chip off onto a line by itself.
+const StyledConstraintLabel = styled(Box)(({ theme }) => ({
+    display: 'flex',
     alignItems: 'center',
+    gap: theme.spacing(1),
+    flexShrink: 0,
+    // Align with the first row of chips when the chips wrap.
+    minHeight: 24,
+}));
+
+const StyledCountryChips = styled(Box)(({ theme }) => ({
+    display: 'flex',
     flexWrap: 'wrap',
     gap: theme.spacing(1),
+    flex: 1,
+    minWidth: 0,
 }));
 
 const StyledConstraintField = styled('code')(({ theme }) => ({
@@ -239,40 +258,44 @@ export const DemoFlagView = ({
                                     Constraints
                                 </StyledSectionDivider>
                                 <StyledConstraintRow>
-                                    <StyledConstraintField>
-                                        country
-                                    </StyledConstraintField>
-                                    <StyledConstraintOperator>
-                                        is any of
-                                    </StyledConstraintOperator>
-                                    {DEMO_COUNTRIES.map((country) => {
-                                        const active =
-                                            config.targetCountryCodes.includes(
-                                                country.code,
+                                    <StyledConstraintLabel>
+                                        <StyledConstraintField>
+                                            country
+                                        </StyledConstraintField>
+                                        <StyledConstraintOperator>
+                                            is any of
+                                        </StyledConstraintOperator>
+                                    </StyledConstraintLabel>
+                                    <StyledCountryChips>
+                                        {DEMO_COUNTRIES.map((country) => {
+                                            const active =
+                                                config.targetCountryCodes.includes(
+                                                    country.code,
+                                                );
+                                            return (
+                                                <Chip
+                                                    key={country.code}
+                                                    label={`${country.flag} ${country.code}`}
+                                                    size='small'
+                                                    color={
+                                                        active
+                                                            ? 'primary'
+                                                            : 'default'
+                                                    }
+                                                    variant={
+                                                        active
+                                                            ? 'filled'
+                                                            : 'outlined'
+                                                    }
+                                                    onClick={() =>
+                                                        onToggleCountry(
+                                                            country.code,
+                                                        )
+                                                    }
+                                                />
                                             );
-                                        return (
-                                            <Chip
-                                                key={country.code}
-                                                label={`${country.flag} ${country.code}`}
-                                                size='small'
-                                                color={
-                                                    active
-                                                        ? 'primary'
-                                                        : 'default'
-                                                }
-                                                variant={
-                                                    active
-                                                        ? 'filled'
-                                                        : 'outlined'
-                                                }
-                                                onClick={() =>
-                                                    onToggleCountry(
-                                                        country.code,
-                                                    )
-                                                }
-                                            />
-                                        );
-                                    })}
+                                        })}
+                                    </StyledCountryChips>
                                 </StyledConstraintRow>
                             </>
                         ) : null}

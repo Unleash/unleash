@@ -79,6 +79,7 @@ export const AuthPageLayout = ({ children }: AuthPageLayoutProps) => {
                     lightmode={<StyledLogoDark aria-label='Unleash logo' />}
                 />
             </StyledHeader>
+            <div>hello world</div>
             <StyledMain>
                 <StyledCardWrapper>
                     <StyledSquare

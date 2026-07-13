@@ -9,16 +9,21 @@ import {
 } from '@mui/material';
 import { useStickinessOptions } from 'hooks/useStickinessOptions';
 import { SELECT_ITEM_ID } from 'utils/testIds';
-import type { ReactNode } from 'react';
+import { type ReactNode, useId } from 'react';
+import {
+    FormField,
+    formFieldLabelId,
+} from 'component/common/FormField/FormField';
 
 interface IStickinessSelectProps {
     label: string;
+    description?: ReactNode;
     value: string | undefined;
     onChange: (event: SelectChangeEvent<string>) => void;
     dataTestId?: string;
 }
 
-const StyledValueContainer = styled('div')(({ theme }) => ({
+const StyledValueContainer = styled('div')(() => ({
     lineHeight: 1.1,
     marginTop: -2,
     marginBottom: -10,
@@ -44,18 +49,31 @@ const StyledDropdownDescription = styled('p')(({ theme }) => ({
     wordBreak: 'break-word',
 }));
 
-const StyledOptionContainer = styled('div')(({ theme }) => ({
+const StyledOptionContainer = styled('div')(() => ({
     lineHeight: 1.2,
     width: '100%',
 }));
 
-export const StickinessSelect = ({
+type StickinessSelectControlProps = {
+    label?: ReactNode;
+    id?: string;
+    value: string | undefined;
+    onChange: (event: SelectChangeEvent<string>) => void;
+    dataTestId?: string;
+};
+
+const StickinessSelectControl = ({
     label,
+    id: injectedId,
     value,
     onChange,
     dataTestId,
-}: IStickinessSelectProps) => {
+    ...props
+}: StickinessSelectControlProps) => {
     const theme = useTheme();
+    const generatedId = useId();
+    const id = injectedId ?? generatedId;
+    const labelId = formFieldLabelId(id);
     const stickinessOptions = useStickinessOptions(value);
 
     const renderValue = (selected: string): ReactNode => {
@@ -79,11 +97,18 @@ export const StickinessSelect = ({
                 marginBottom: theme.spacing(2),
             }}
         >
-            <InputLabel htmlFor='stickiness-select'>{label}</InputLabel>
+            {/* TODO: remove floating-label branch when cleaning up 'topLabelInputs' flag */}
+            {label ? (
+                <InputLabel id={labelId} htmlFor={id}>
+                    {label}
+                </InputLabel>
+            ) : null}
             <Select
-                id='stickiness-select'
+                {...props}
+                id={id}
+                labelId={labelId}
                 name='stickiness'
-                label={label}
+                label={label ?? undefined}
                 value={value || ''}
                 data-testid={dataTestId}
                 onChange={onChange}
@@ -129,3 +154,19 @@ export const StickinessSelect = ({
         </FormControl>
     );
 };
+
+export const StickinessSelect = ({
+    label,
+    description,
+    value,
+    onChange,
+    dataTestId,
+}: IStickinessSelectProps) => (
+    <FormField label={label} description={description}>
+        <StickinessSelectControl
+            value={value}
+            onChange={onChange}
+            dataTestId={dataTestId}
+        />
+    </FormField>
+);

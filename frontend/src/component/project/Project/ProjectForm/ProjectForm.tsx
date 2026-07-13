@@ -1,14 +1,9 @@
 import type React from 'react';
-import { trim } from 'component/common/util';
 import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Box, styled, TextField } from '@mui/material';
+import { styled } from '@mui/material';
 import Input from 'component/common/Input/Input';
 import { FeatureTogglesLimitTooltip } from './FeatureTogglesLimitTooltip.tsx';
-import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm.ts';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { CollaborationModeTooltip } from '../ProjectEnterpriseSettingsForm/CollaborationModeTooltip.tsx';
-import Select from 'component/common/select';
 
 interface IProjectForm {
     projectId: string;
@@ -16,19 +11,12 @@ interface IProjectForm {
     projectDesc: string;
     projectStickiness?: string;
     featureLimit?: string;
-    featureCount?: number;
-    projectMode?: string;
     setProjectStickiness?: React.Dispatch<React.SetStateAction<string>>;
-    setProjectId: React.Dispatch<React.SetStateAction<string>>;
     setProjectName: React.Dispatch<React.SetStateAction<string>>;
     setProjectDesc: React.Dispatch<React.SetStateAction<string>>;
-    setFeatureLimit?: React.Dispatch<React.SetStateAction<string>>;
-    setProjectMode?: React.Dispatch<React.SetStateAction<ProjectMode>>;
+    setFeatureLimit: React.Dispatch<React.SetStateAction<string>>;
     handleSubmit: (e: any) => void;
     errors: { [key: string]: string };
-    mode: 'Create' | 'Edit';
-    clearErrors: () => void;
-    validateProjectId: () => void;
     children?: React.ReactNode;
 }
 
@@ -42,30 +30,17 @@ const StyledForm = styled('form')(({ theme }) => ({
     paddingBottom: theme.spacing(1),
 }));
 
-const StyledDescription = styled('p')(({ theme }) => ({
-    marginBottom: theme.spacing(1),
-    marginRight: theme.spacing(1),
-}));
-
-const StyledSelect = styled(Select)(({ theme }) => ({
-    marginBottom: theme.spacing(2),
-    minWidth: '200px',
-}));
-
 const StyledSubtitle = styled('div')(({ theme }) => ({
     color: theme.palette.text.secondary,
     fontSize: theme.fontSizes.smallerBody,
     lineHeight: 1.25,
     paddingBottom: theme.spacing(1),
+    '& span': {
+        verticalAlign: 'bottom',
+    },
 }));
 
 const StyledInput = styled(Input)(({ theme }) => ({
-    width: '100%',
-    marginBottom: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-}));
-
-const StyledTextField = styled(TextField)(({ theme }) => ({
     width: '100%',
     marginBottom: theme.spacing(2),
 }));
@@ -76,11 +51,6 @@ const StyledButtonContainer = styled('div')(() => ({
     justifyContent: 'flex-end',
 }));
 
-const StyledInputContainer = styled('div')(() => ({
-    display: 'flex',
-    alignItems: 'center',
-}));
-
 const ProjectForm: React.FC<IProjectForm> = ({
     children,
     handleSubmit,
@@ -89,27 +59,12 @@ const ProjectForm: React.FC<IProjectForm> = ({
     projectDesc,
     projectStickiness,
     featureLimit,
-    featureCount,
-    projectMode,
-    setProjectMode,
-    setProjectId,
     setProjectName,
     setProjectDesc,
     setProjectStickiness,
     setFeatureLimit,
     errors,
-    mode,
-    validateProjectId,
-    clearErrors,
 }) => {
-    const { isEnterprise } = useUiConfig();
-
-    const projectModeOptions = [
-        { key: 'open', label: 'open' },
-        { key: 'protected', label: 'protected' },
-        { key: 'private', label: 'private' },
-    ];
-
     return (
         <StyledForm
             onSubmit={(submitEvent) => {
@@ -119,15 +74,8 @@ const ProjectForm: React.FC<IProjectForm> = ({
             <StyledInput
                 label='Project Id'
                 value={projectId}
-                onChange={(e) => setProjectId(trim(e.target.value))}
-                error={Boolean(errors.id)}
-                errorText={errors.id}
-                onFocus={() => clearErrors()}
-                onBlur={validateProjectId}
-                disabled={mode === 'Edit'}
+                disabled
                 data-testid={PROJECT_ID_INPUT}
-                autoFocus
-                required
             />
 
             <StyledInput
@@ -140,16 +88,14 @@ const ProjectForm: React.FC<IProjectForm> = ({
                     delete errors.name;
                 }}
                 data-testid={PROJECT_NAME_INPUT}
+                autoFocus
                 required
             />
 
-            <StyledDescription>
-                What is your project description?
-            </StyledDescription>
-            <StyledTextField
+            <StyledInput
                 label='Project description'
-                variant='outlined'
                 multiline
+                minRows={3}
                 maxRows={4}
                 value={projectDesc}
                 onChange={(e) => setProjectDesc(e.target.value)}
@@ -160,9 +106,6 @@ const ProjectForm: React.FC<IProjectForm> = ({
                 condition={setProjectStickiness != null}
                 show={
                     <>
-                        <StyledDescription>
-                            What is the default stickiness for the project?
-                        </StyledDescription>
                         <StickinessSelect
                             label='Stickiness'
                             value={projectStickiness}
@@ -174,81 +117,23 @@ const ProjectForm: React.FC<IProjectForm> = ({
                     </>
                 }
             />
-            <ConditionallyRender
-                condition={mode === 'Edit'}
-                show={() => (
-                    <>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                marginBottom: 1,
-                                gap: 1,
-                            }}
-                        >
-                            <p>Feature flag limit?</p>
-                            <FeatureTogglesLimitTooltip />
-                        </Box>
-                        <StyledSubtitle>
-                            Leave it empty if you don’t want to add a limit
-                        </StyledSubtitle>
-                        <StyledInputContainer>
-                            <StyledInput
-                                label={'Limit'}
-                                name='value'
-                                type={'number'}
-                                value={
-                                    featureLimit === 'null' ||
-                                    featureLimit === undefined
-                                        ? ''
-                                        : featureLimit
-                                }
-                                onChange={(e) =>
-                                    setFeatureLimit!(e.target.value)
-                                }
-                            />
-                            <ConditionallyRender
-                                condition={
-                                    featureCount !== undefined &&
-                                    Boolean(featureLimit)
-                                }
-                                show={
-                                    <Box>
-                                        ({featureCount} of {featureLimit} used)
-                                    </Box>
-                                }
-                            />
-                        </StyledInputContainer>
-                    </>
-                )}
-            />
-            <ConditionallyRender
-                condition={mode === 'Create' && isEnterprise()}
-                show={
-                    <>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                marginBottom: 1,
-                                gap: 1,
-                            }}
-                        >
-                            <p>What is your project collaboration mode?</p>
-                            <CollaborationModeTooltip />
-                        </Box>
-                        <StyledSelect
-                            id='project-mode'
-                            value={projectMode}
-                            label='Project collaboration mode'
-                            name='Project collaboration mode'
-                            onChange={(e) => {
-                                setProjectMode?.(e.target.value as ProjectMode);
-                            }}
-                            options={projectModeOptions}
-                        />
-                    </>
+
+            <StyledInput
+                label='Feature flag limit'
+                description={
+                    <StyledSubtitle>
+                        Leave this empty if you don’t want to add a limit{' '}
+                        <FeatureTogglesLimitTooltip />
+                    </StyledSubtitle>
                 }
+                name='value'
+                type='number'
+                value={
+                    featureLimit === 'null' || featureLimit === undefined
+                        ? ''
+                        : featureLimit
+                }
+                onChange={(e) => setFeatureLimit(e.target.value)}
             />
             <StyledButtonContainer>{children}</StyledButtonContainer>
         </StyledForm>

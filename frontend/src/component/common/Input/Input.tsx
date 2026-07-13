@@ -5,14 +5,14 @@ import { useStyles } from './Input.styles';
 import { FormField } from '../FormField/FormField';
 
 interface IInputProps extends Omit<OutlinedTextFieldProps, 'variant'> {
-    label: string;
+    label: ReactNode;
     description?: ReactNode;
     error?: boolean;
     errorText?: string;
     style?: Object;
     className?: string;
     value: string;
-    onChange: (e: any) => any;
+    onChange?: (e: any) => any;
     onFocus?: (e: any) => any;
     onBlur?: (e: any) => any;
     multiline?: boolean;

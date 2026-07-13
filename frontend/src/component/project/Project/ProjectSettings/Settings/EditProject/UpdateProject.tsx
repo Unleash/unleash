@@ -55,13 +55,10 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
         projectStickiness,
         featureLimit,
         setFeatureLimit,
-        setProjectId,
         setProjectName,
         setProjectDesc,
         setProjectStickiness,
         getEditProjectPayload,
-        clearErrors,
-        validateProjectId,
         validateName,
         errors,
     } = useProjectForm(
@@ -130,7 +127,6 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
                         errors={errors}
                         handleSubmit={handleEditProject}
                         projectId={projectId}
-                        setProjectId={setProjectId}
                         projectName={projectName}
                         setProjectName={setProjectName}
                         projectStickiness={projectStickiness}
@@ -139,9 +135,6 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
                         featureLimit={featureLimit}
                         projectDesc={projectDesc}
                         setProjectDesc={setProjectDesc}
-                        mode='Edit'
-                        clearErrors={clearErrors}
-                        validateProjectId={validateProjectId}
                     >
                         <PermissionButton
                             type='submit'

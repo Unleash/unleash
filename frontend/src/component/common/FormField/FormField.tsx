@@ -6,7 +6,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 const StyledFormField = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(1),
     width: '100%',
 }));
 

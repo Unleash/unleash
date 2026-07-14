@@ -79,7 +79,10 @@ import type {
     IProjectQuery,
     IProjectsQuery,
 } from './project-store-type.js';
-import type { IProjectFlagCreatorsReadModel } from './project-flag-creators-read-model.type.js';
+import type {
+    FlagCreatorsSearchResult,
+    IProjectFlagCreatorsReadModel,
+} from './project-flag-creators-read-model.type.js';
 import { throwExceedsLimitError } from '../../error/exceeds-limit-error.js';
 import type EventEmitter from 'events';
 import type { ApiTokenService } from '../../services/index.js';
@@ -1092,6 +1095,18 @@ export default class ProjectService {
 
     async getProjectFlagCreators(projectId: string) {
         return this.projectFlagCreatorsReadModel.getFlagCreators(projectId);
+    }
+
+    async getFlagCreatorsAcrossProjects(
+        userId: number,
+        options: { query?: string; limit: number; offset: number },
+    ): Promise<FlagCreatorsSearchResult> {
+        const accessibleProjects =
+            await this.privateProjectChecker.getUserAccessibleProjects(userId);
+        return this.projectFlagCreatorsReadModel.getFlagCreatorsAcrossProjects(
+            accessibleProjects,
+            options,
+        );
     }
 
     async changeRole(

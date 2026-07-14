@@ -102,6 +102,7 @@ export * from './feature-variants-schema.js';
 export * from './feedback-create-schema.js';
 export * from './feedback-response-schema.js';
 export * from './feedback-update-schema.js';
+export * from './flag-creators-schema.js';
 export * from './frontend-api-client-schema.js';
 export * from './frontend-api-feature-schema.js';
 export * from './frontend-api-features-post-schema.js';

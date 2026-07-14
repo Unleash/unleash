@@ -66,7 +66,7 @@ process.nextTick(async () => {
                         accessRequestsMenuIndicator: true,
                         whatsNewPage: false,
                         topLabelInputs: true,
-                        flagListCreatedByFilter: false,
+                        flagListCreatedByFilter: true,
                     },
                 },
                 authentication: {

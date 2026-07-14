@@ -41,6 +41,8 @@ import {
 } from '../private-project/createPrivateProjectChecker.js';
 import { ProjectOwnersReadModel } from './project-owners-read-model.js';
 import { FakeProjectOwnersReadModel } from './fake-project-owners-read-model.js';
+import { ProjectMembersReadModel } from './project-members-read-model.js';
+import { FakeProjectMembersReadModel } from './fake-project-members-read-model.js';
 import { FakeProjectFlagCreatorsReadModel } from './fake-project-flag-creators-read-model.js';
 import { ProjectFlagCreatorsReadModel } from './project-flag-creators-read-model.js';
 import FakeApiTokenStore from '../../../test/fixtures/fake-api-token-store.js';
@@ -70,6 +72,7 @@ export const createProjectService = (
     const eventStore = new EventStore(db, getLogger);
     const projectStore = new ProjectStore(db, eventBus, config);
     const projectOwnersReadModel = new ProjectOwnersReadModel(db);
+    const projectMembersReadModel = new ProjectMembersReadModel(db);
     const projectFlagCreatorsReadModel = new ProjectFlagCreatorsReadModel(db);
     const groupStore = new GroupStore(db);
     const edgeTokenStore = new EdgeTokenStore(db, eventBus, config);
@@ -152,6 +155,7 @@ export const createProjectService = (
             accountStore,
             projectStatsStore,
             projectOwnersReadModel,
+            projectMembersReadModel,
             projectFlagCreatorsReadModel,
             projectReadModel,
             onboardingReadModel,
@@ -174,6 +178,7 @@ export const createFakeProjectService = (config: IUnleashConfig) => {
     const { getLogger } = config;
     const eventStore = new FakeEventStore();
     const projectOwnersReadModel = new FakeProjectOwnersReadModel();
+    const projectMembersReadModel = new FakeProjectMembersReadModel();
     const projectFlagCreatorsReadModel = new FakeProjectFlagCreatorsReadModel();
     const projectStore = new FakeProjectStore();
     const groupStore = new FakeGroupStore();
@@ -223,6 +228,7 @@ export const createFakeProjectService = (config: IUnleashConfig) => {
         {
             projectStore,
             projectOwnersReadModel,
+            projectMembersReadModel,
             projectFlagCreatorsReadModel,
             eventStore,
             featureToggleStore,

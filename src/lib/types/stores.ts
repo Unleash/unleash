@@ -42,6 +42,7 @@ import type { IInactiveUsersStore } from '../users/inactive/types/inactive-users
 import type { ITrafficDataUsageStore } from '../features/traffic-data-usage/traffic-data-usage-store-type.js';
 import type { ISegmentReadModel } from '../features/segment/segment-read-model-type.js';
 import type { IProjectOwnersReadModel } from '../features/project/project-owners-read-model.type.js';
+import type { IProjectMembersReadModel } from '../features/project/project-members-read-model.type.js';
 import type { IFeatureLifecycleStore } from '../features/feature-lifecycle/feature-lifecycle-store-type.js';
 import type { IProjectFlagCreatorsReadModel } from '../features/project/project-flag-creators-read-model.type.js';
 import type { IFeatureStrategiesReadModel } from '../features/feature-toggle/types/feature-strategies-read-model-type.js';
@@ -114,6 +115,7 @@ export interface IUnleashStores {
     trafficDataUsageStore: ITrafficDataUsageStore;
     segmentReadModel: ISegmentReadModel;
     projectOwnersReadModel: IProjectOwnersReadModel;
+    projectMembersReadModel: IProjectMembersReadModel;
     projectFlagCreatorsReadModel: IProjectFlagCreatorsReadModel;
     featureLifecycleStore: IFeatureLifecycleStore;
     featureStrategiesReadModel: IFeatureStrategiesReadModel;
@@ -180,6 +182,7 @@ export {
     type ITrafficDataUsageStore,
     type ISegmentReadModel,
     type IProjectOwnersReadModel,
+    type IProjectMembersReadModel,
     type IFeatureLifecycleStore,
     type IProjectFlagCreatorsReadModel,
     type IFeatureStrategiesReadModel,

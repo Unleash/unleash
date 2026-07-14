@@ -50,6 +50,7 @@ import { InactiveUsersStore } from '../users/inactive/inactive-users-store.js';
 import { TrafficDataUsageStore } from '../features/traffic-data-usage/traffic-data-usage-store.js';
 import { SegmentReadModel } from '../features/segment/segment-read-model.js';
 import { ProjectOwnersReadModel } from '../features/project/project-owners-read-model.js';
+import { ProjectMembersReadModel } from '../features/project/project-members-read-model.js';
 import { FeatureLifecycleStore } from '../features/feature-lifecycle/feature-lifecycle-store.js';
 import { ProjectFlagCreatorsReadModel } from '../features/project/project-flag-creators-read-model.js';
 import { FeatureStrategiesReadModel } from '../features/feature-toggle/feature-strategies-read-model.js';
@@ -182,6 +183,7 @@ export const createStores = (
         trafficDataUsageStore: new TrafficDataUsageStore(db, getLogger),
         segmentReadModel: new SegmentReadModel(db),
         projectOwnersReadModel: new ProjectOwnersReadModel(db),
+        projectMembersReadModel: new ProjectMembersReadModel(db),
         projectFlagCreatorsReadModel: new ProjectFlagCreatorsReadModel(db),
         featureLifecycleStore: new FeatureLifecycleStore(db, eventBus),
         featureStrategiesReadModel: new FeatureStrategiesReadModel(db),

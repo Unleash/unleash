@@ -22,13 +22,12 @@ import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton.tsx
 import { CommandBar } from 'component/commandBar/CommandBar';
 import { HelpResources } from './HelpResources/HelpResources';
 import { PendingAccessRequestsIndicator } from 'component/admin/users/AccessRequestsNotifications/PendingAccessRequestsIndicator';
-import { QuickTourButton } from './QuickTour/QuickTourButton.tsx';
 
-// Lazy so the demo (and react-confetti) stay out of the header chunk. Lives
-// here rather than inside QuickTourButton because Header switches its JSX
-// tree at the `lg` breakpoint - the button unmounts across that switch, so
-// state and the dialog have to live at Header level (Header itself is a
-// stable instance in MainLayout) to survive resize.
+// Lazy so the demo (and react-confetti) stay out of the header chunk. State
+// lives at Header level (rather than inside HelpResources) because Header
+// switches its JSX tree at the `lg` breakpoint - HelpResources unmounts
+// across that switch, so owning `quickTourOpen` here (Header itself is a
+// stable instance in MainLayout) keeps the tour alive across resize.
 const QuickTourDialog = lazy(() =>
     import('./QuickTour/QuickTourDialog.tsx').then((m) => ({
         default: m.QuickTourDialog,
@@ -116,8 +115,7 @@ const Header = () => {
                     </IconButton>
                 </Tooltip>
             )}
-            <QuickTourButton onOpen={() => setQuickTourOpen(true)} />
-            <HelpResources />
+            <HelpResources onOpenQuickTour={() => setQuickTourOpen(true)} />
             <Divider
                 orientation='vertical'
                 variant='middle'

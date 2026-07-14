@@ -28,7 +28,7 @@ const withLearningLab = () =>
 
 test('opens help menu with all items when clicking the button', async () => {
     withLearningLab();
-    render(<HelpResources />);
+    render(<HelpResources onOpenQuickTour={() => {}} />);
 
     await userEvent.click(
         await screen.findByRole('button', { name: 'Help and resources' }),
@@ -44,9 +44,23 @@ test('opens help menu with all items when clicking the button', async () => {
     expect(screen.getByText('Slack community')).toBeInTheDocument();
 });
 
+test('quick tour item invokes onOpenQuickTour', async () => {
+    withLearningLab();
+    const onOpenQuickTour = vi.fn();
+    render(<HelpResources onOpenQuickTour={onOpenQuickTour} />);
+
+    await userEvent.click(
+        await screen.findByRole('button', { name: 'Help and resources' }),
+    );
+
+    await userEvent.click(screen.getByText('Quick 2-minute tour'));
+
+    expect(onOpenQuickTour).toHaveBeenCalled();
+});
+
 test('external links have correct hrefs', async () => {
     withLearningLab();
-    render(<HelpResources />);
+    render(<HelpResources onOpenQuickTour={() => {}} />);
 
     await userEvent.click(
         await screen.findByRole('button', { name: 'Help and resources' }),
@@ -75,7 +89,7 @@ test('external links have correct hrefs', async () => {
 
 test('give feedback calls openFeedback with the correct title and labels', async () => {
     withLearningLab();
-    render(<HelpResources />);
+    render(<HelpResources onOpenQuickTour={() => {}} />);
 
     await userEvent.click(
         await screen.findByRole('button', { name: 'Help and resources' }),
@@ -96,7 +110,7 @@ test("What's new item shows when enterprise and flag are enabled", async () => {
         flags: { whatsNewPage: true },
         versionInfo: { current: { enterprise: '1.0.0' } },
     });
-    render(<HelpResources />);
+    render(<HelpResources onOpenQuickTour={() => {}} />);
 
     await userEvent.click(
         await screen.findByRole('button', { name: 'Help and resources' }),
@@ -112,7 +126,7 @@ test("What's new item is hidden on enterprise without the flag", async () => {
         flags: { whatsNewPage: false },
         versionInfo: { current: { enterprise: '1.0.0' } },
     });
-    render(<HelpResources />);
+    render(<HelpResources onOpenQuickTour={() => {}} />);
 
     await userEvent.click(
         await screen.findByRole('button', { name: 'Help and resources' }),
@@ -127,7 +141,7 @@ test("What's new item is hidden on non-enterprise even with the flag", async () 
     testServerRoute(server, '/api/admin/ui-config', {
         flags: { whatsNewPage: true },
     });
-    render(<HelpResources />);
+    render(<HelpResources onOpenQuickTour={() => {}} />);
 
     await userEvent.click(
         await screen.findByRole('button', { name: 'Help and resources' }),
@@ -140,7 +154,7 @@ test("What's new item is hidden on non-enterprise even with the flag", async () 
 
 test('tracks menu open and item click', async () => {
     withLearningLab();
-    render(<HelpResources />);
+    render(<HelpResources onOpenQuickTour={() => {}} />);
 
     await userEvent.click(
         await screen.findByRole('button', { name: 'Help and resources' }),

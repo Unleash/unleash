@@ -17,6 +17,7 @@ import SlackIcon from 'assets/icons/menu/slack.svg?react';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import NewReleasesOutlinedIcon from '@mui/icons-material/NewReleasesOutlined';
+import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
 import LearningLabIcon from 'assets/icons/menu/learning-lab.svg?react';
 import { Link } from 'react-router';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
@@ -147,7 +148,11 @@ const LEARNING_LAB_DEFAULTS: Required<ILearningLabVariant> = {
     menuLabel: 'Learning Lab',
 };
 
-export const HelpResources = () => {
+interface IHelpResourcesProps {
+    onOpenQuickTour: () => void;
+}
+
+export const HelpResources = ({ onOpenQuickTour }: IHelpResourcesProps) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const open = Boolean(anchorEl);
     const { trackEvent } = useEventTracker();
@@ -260,6 +265,16 @@ export const HelpResources = () => {
                         What's new
                     </StyledMenuItem>
                 )}
+                <StyledMenuItem
+                    onClick={() => {
+                        handleOptionClick('quick-tour');
+                        onOpenQuickTour();
+                    }}
+                    data-testid='QUICK_TOUR_BUTTON'
+                >
+                    <ExploreOutlinedIcon fontSize='small' />
+                    Quick 2-minute tour
+                </StyledMenuItem>
                 <StyledMenuItem
                     component='a'
                     href={DOCUMENTATION_URL}

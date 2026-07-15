@@ -288,14 +288,9 @@ export const SignupDialog = () => {
             setIsSubmitting(true);
             await submitSignupData(data);
             refetch();
-            const target = `/projects/${defaultProjectId ?? DEFAULT_PROJECT_ID}`;
+            navigate(`/projects/${defaultProjectId ?? DEFAULT_PROJECT_ID}`);
             if (eventType === 'tour') {
-                // Signup dialog unmounts when `signupRequired` flips off after
-                // refetch; the tour opens on top and navigates to the project
-                // once the user closes it.
-                openQuickTour({ onClose: () => navigate(target) });
-            } else {
-                navigate(target);
+                openQuickTour();
             }
         } catch (e: unknown) {
             const error = formatUnknownError(e);

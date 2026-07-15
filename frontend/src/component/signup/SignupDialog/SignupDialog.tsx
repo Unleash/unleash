@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router';
 import { SignupDialogSetPassword } from './SignupDialogSetPassword/SignupDialogSetPassword.tsx';
 import { SignupDialogAccountDetails } from './SignupDialogAccountDetails.tsx';
 import { SignupDialogInviteOthers } from './SignupDialogInviteOthers.tsx';
-import { SignupTourDialog } from './SignupTourDialog.tsx';
+import { useQuickTour } from 'component/onboarding/quickTourDemo/QuickTourProvider.tsx';
 import { type SignupData, useSignup } from '../hooks/useSignup.ts';
 import { type SubmitSignupData, useSignupApi } from '../hooks/useSignupApi.ts';
 import useToast from 'hooks/useToast.tsx';
@@ -227,8 +227,7 @@ export const SignupDialog = () => {
     const { submitSignupData } = useSignupApi();
     const navigate = useNavigate();
     const defaultProjectId = useDefaultProjectId();
-
-    const [showTour, setShowTour] = useState(false);
+    const { open: openQuickTour } = useQuickTour();
 
     const [data, setData] = useState<SubmitSignupData>({
         password: '',
@@ -248,21 +247,6 @@ export const SignupDialog = () => {
     const currentStep = steps[safeStep];
 
     const isVisible = signupRequired && steps.length > 0 && currentStep;
-
-    // Checked before `isVisible` because a completed real signup flips
-    // `signupRequired` off, which would otherwise unmount the dialog.
-    if (showTour) {
-        return (
-            <SignupTourDialog
-                onComplete={() => {
-                    setShowTour(false);
-                    navigate(
-                        `/projects/${defaultProjectId ?? DEFAULT_PROJECT_ID}`,
-                    );
-                }}
-            />
-        );
-    }
 
     if (!isVisible) return null;
 
@@ -304,10 +288,14 @@ export const SignupDialog = () => {
             setIsSubmitting(true);
             await submitSignupData(data);
             refetch();
+            const target = `/projects/${defaultProjectId ?? DEFAULT_PROJECT_ID}`;
             if (eventType === 'tour') {
-                setShowTour(true);
+                // Signup dialog unmounts when `signupRequired` flips off after
+                // refetch; the tour opens on top and navigates to the project
+                // once the user closes it.
+                openQuickTour({ onClose: () => navigate(target) });
             } else {
-                navigate(`/projects/${defaultProjectId ?? DEFAULT_PROJECT_ID}`);
+                navigate(target);
             }
         } catch (e: unknown) {
             const error = formatUnknownError(e);

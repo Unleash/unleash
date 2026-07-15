@@ -25,6 +25,7 @@ import { useEventTracker } from 'hooks/useEventTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useVariant } from 'hooks/useVariant';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useQuickTour } from 'component/onboarding/quickTourDemo/QuickTourProvider.tsx';
 
 const StyledIconButton = styled(IconButton)<{ open?: boolean }>(
     ({ theme, open }) => ({
@@ -148,20 +149,15 @@ const LEARNING_LAB_DEFAULTS: Required<ILearningLabVariant> = {
     menuLabel: 'Learning Lab',
 };
 
-interface IHelpResourcesProps {
-    /** Omit to hide the quick-tour item regardless of the demo flag. */
-    onOpenQuickTour?: () => void;
-}
-
-export const HelpResources = ({ onOpenQuickTour }: IHelpResourcesProps) => {
+export const HelpResources = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const open = Boolean(anchorEl);
     const { trackEvent } = useEventTracker();
     const { isEnterprise } = useUiConfig();
     const whatsNewEnabled = useUiFlag('whatsNewPage');
     const showWhatsNew = isEnterprise() && whatsNewEnabled;
-    const showQuickTour =
-        useUiFlag('quickTourDemo') && Boolean(onOpenQuickTour);
+    const { open: openQuickTour } = useQuickTour();
+    const quickTourEnabled = useUiFlag('quickTourDemo');
     const learningLabFlag = useUiFlag('learningLab');
     const learningLabVariant = useVariant<ILearningLabVariant>(
         learningLabFlag || undefined,
@@ -268,11 +264,11 @@ export const HelpResources = ({ onOpenQuickTour }: IHelpResourcesProps) => {
                         What's new
                     </StyledMenuItem>
                 )}
-                {showQuickTour && (
+                {quickTourEnabled && (
                     <StyledMenuItem
                         onClick={() => {
                             handleOptionClick('quick-tour');
-                            onOpenQuickTour?.();
+                            openQuickTour();
                         }}
                         data-testid='QUICK_TOUR_BUTTON'
                     >

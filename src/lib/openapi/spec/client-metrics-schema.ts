@@ -50,6 +50,20 @@ export const clientMetricsSchema = {
             type: 'string',
             example: '3.0.0',
         },
+        sdkFlavor: {
+            description:
+                'The identifier of an integration built on top of an Unleash SDK (e.g. an OpenFeature provider). Sent so adoption of the integration can be tracked alongside sdkVersion.',
+            type: 'string',
+            maxLength: 256,
+            example: 'unleash-openfeature-node-provider',
+        },
+        sdkFlavorVersion: {
+            description:
+                'The version of the integration identified by sdk flavor, that has been built on top of an Unleash SDK',
+            type: 'string',
+            maxLength: 32,
+            example: '1.0.1',
+        },
         bucket: {
             type: 'object',
             nullable: true,

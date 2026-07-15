@@ -181,7 +181,12 @@ export default class ClientMetricsController extends Controller {
             try {
                 const { body: data, user } = req;
                 const clientIp = extractClientIp(req);
-                const { impactMetrics, ...metricsData } = data;
+                const {
+                    impactMetrics,
+                    sdkFlavor,
+                    sdkFlavorVersion,
+                    ...metricsData
+                } = data;
                 const environment =
                     this.metricsV2.resolveMetricsEnvironment(user);
 
@@ -191,8 +196,14 @@ export default class ClientMetricsController extends Controller {
                     environment,
                 );
 
-                await this.metricsV2.registerClientMetrics(
+                const recordSdkFlavorMetrics = this.getRegisteredMetricsData(
                     metricsData,
+                    sdkFlavor,
+                    sdkFlavorVersion,
+                );
+
+                await this.metricsV2.registerClientMetrics(
+                    recordSdkFlavorMetrics,
                     clientIp,
                     environment,
                 );
@@ -210,6 +221,22 @@ export default class ClientMetricsController extends Controller {
                 res.status(400).end();
             }
         }
+    }
+
+    getRegisteredMetricsData(
+        metricsData: any,
+        sdkFlavor: any,
+        sdkFlavorVersion: any,
+    ) {
+        // sdkFlavor / sdkFlavorVersion are in the metrics PAYLOAD (clientMetricsSchema) same as sdkVersion, not headers.
+        // Recording them is gated by the `recordSdkFlavorMetrics` flag.
+        const recordSdkFlavorMetrics = this.config.flagResolver.isEnabled(
+            'recordSdkFlavorMetrics',
+        );
+        const usageMetricsData = recordSdkFlavorMetrics
+            ? { ...metricsData, sdkFlavor, sdkFlavorVersion }
+            : metricsData;
+        return usageMetricsData;
     }
 
     async customMetrics(

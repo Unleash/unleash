@@ -259,10 +259,10 @@ test('Should collect metrics for client sdk versions', async () => {
         'client_sdk_versions',
     );
     expect(metrics).toMatch(
-        /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5",platform_name="not-set",platform_version="not-set",yggdrasil_version="not-set",spec_version="not-set"} 3/,
+        /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5",platform_name="not-set",platform_version="not-set",yggdrasil_version="not-set",spec_version="not-set",sdk_flavor_name="not-set",sdk_flavor_version="not-set"} 3/,
     );
     expect(metrics).toMatch(
-        /client_sdk_versions\{sdk_name="unleash-client-java",sdk_version="5\.0\.0",platform_name="not-set",platform_version="not-set",yggdrasil_version="not-set",spec_version="not-set"} 3/,
+        /client_sdk_versions\{sdk_name="unleash-client-java",sdk_version="5\.0\.0",platform_name="not-set",platform_version="not-set",yggdrasil_version="not-set",spec_version="not-set",sdk_flavor_name="not-set",sdk_flavor_version="not-set"} 3/,
     );
     eventStore.emit(CLIENT_REGISTER, {
         sdkName: 'unleash-client-node',
@@ -272,7 +272,7 @@ test('Should collect metrics for client sdk versions', async () => {
         'client_sdk_versions',
     );
     expect(newmetrics).toMatch(
-        /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5",platform_name="not-set",platform_version="not-set",yggdrasil_version="not-set",spec_version="not-set"} 4/,
+        /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5",platform_name="not-set",platform_version="not-set",yggdrasil_version="not-set",spec_version="not-set",sdk_flavor_name="not-set",sdk_flavor_version="not-set"} 4/,
     );
 });
 

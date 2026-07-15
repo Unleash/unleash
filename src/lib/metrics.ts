@@ -503,6 +503,8 @@ export function registerPrometheusMetrics(
             'platform_version',
             'yggdrasil_version',
             'spec_version',
+            'sdk_flavor_name',
+            'sdk_flavor_version',
         ],
     });
 
@@ -1182,6 +1184,10 @@ export function registerPrometheusMetrics(
                 yggdrasil_version:
                     heartbeatEvent.metadata?.yggdrasilVersion ?? 'not-set',
                 spec_version: heartbeatEvent.metadata?.specVersion ?? 'not-set',
+                sdk_flavor_name:
+                    heartbeatEvent.metadata?.sdkFlavor ?? 'not-set',
+                sdk_flavor_version:
+                    heartbeatEvent.metadata?.sdkFlavorVersion ?? 'not-set',
             });
         } else {
             clientSdkVersionUsage.increment({
@@ -1191,6 +1197,10 @@ export function registerPrometheusMetrics(
                 platform_version: 'not-set',
                 yggdrasil_version: 'not-set',
                 spec_version: 'not-set',
+                sdk_flavor_name:
+                    heartbeatEvent.metadata?.sdkFlavor ?? 'not-set',
+                sdk_flavor_version:
+                    heartbeatEvent.metadata?.sdkFlavorVersion ?? 'not-set',
             });
         }
     });

@@ -143,6 +143,9 @@ export default class ClientInstanceService {
 
         if (value.sdkVersion && value.sdkVersion.indexOf(':') > -1) {
             const [sdkName, sdkVersion] = value.sdkVersion.split(':');
+            const recordSdkFlavorMetrics = this.flagResolver.isEnabled(
+                'recordSdkFlavorMetrics',
+            );
             const heartbeatEvent: ISdkHeartbeat = {
                 sdkName,
                 sdkVersion,
@@ -151,6 +154,12 @@ export default class ClientInstanceService {
                     platformVersion: data.platformVersion,
                     yggdrasilVersion: data.yggdrasilVersion,
                     specVersion: data.specVersion,
+                    sdkFlavor: recordSdkFlavorMetrics
+                        ? data.sdkFlavor
+                        : undefined,
+                    sdkFlavorVersion: recordSdkFlavorMetrics
+                        ? data.sdkFlavorVersion
+                        : undefined,
                 },
             };
 

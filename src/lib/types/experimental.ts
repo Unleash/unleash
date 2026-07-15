@@ -90,7 +90,8 @@ export type IFlagKey =
     | 'quickTourDemo'
     | 'projectReleaseTemplates'
     | 'topLabelInputs'
-    | 'flagListCreatedByFilter';
+    | 'flagListCreatedByFilter'
+    | 'recordSdkFlavorMetrics';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -426,6 +427,10 @@ const flags: IFlags = {
     ),
     topLabelInputs: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_TOP_LABEL_INPUTS,
+        false,
+    ),
+    recordSdkFlavorMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_RECORD_SDK_FLAVOR_METRICS,
         false,
     ),
 };

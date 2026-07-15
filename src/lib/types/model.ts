@@ -567,6 +567,8 @@ export interface IClientApp {
     specVersion?: string;
     sdkType?: 'frontend' | 'backend' | null;
     sdkVersion?: string;
+    sdkFlavor?: string;
+    sdkFlavorVersion?: string;
 }
 
 export interface IAppFeature {
@@ -719,6 +721,8 @@ export interface ISdkHeartbeatMetadata {
     platformVersion?: string;
     yggdrasilVersion?: string;
     specVersion?: string;
+    sdkFlavor?: string;
+    sdkFlavorVersion?: string;
 }
 
 export interface EnvironmentRevisionId {

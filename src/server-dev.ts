@@ -67,6 +67,7 @@ process.nextTick(async () => {
                         whatsNewPage: false,
                         quickTourDemo: true,
                         topLabelInputs: true,
+                        recordSdkFlavorMetrics: true,
                         flagListCreatedByFilter: true,
                     },
                 },

@@ -57,15 +57,15 @@ export const SignupDialogComplete: SignupStepContent = ({
                     {description}
                 </Typography>
             </StyledHeader>
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: 1.5,
-                }}
-            >
-                {offerTour && (
+            {offerTour ? (
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: 1.5,
+                    }}
+                >
                     <Button
                         variant='contained'
                         onClick={() => onNext('tour')}
@@ -74,18 +74,24 @@ export const SignupDialogComplete: SignupStepContent = ({
                     >
                         Take the 2-minute tour
                     </Button>
-                )}
+                    <Button
+                        variant='text'
+                        onClick={() => onNext('complete')}
+                        disabled={isSubmitting}
+                        data-testid='SIGNUP_SKIP_TOUR_BUTTON'
+                    >
+                        I know Unleash, take me to my project
+                    </Button>
+                </Box>
+            ) : (
                 <Button
-                    variant={offerTour ? 'text' : 'contained'}
+                    variant='contained'
                     onClick={() => onNext('complete')}
                     disabled={isSubmitting}
-                    data-testid='SIGNUP_SKIP_TOUR_BUTTON'
                 >
-                    {offerTour
-                        ? 'I know Unleash, take me to my project'
-                        : 'Start using Unleash'}
+                    Start using Unleash
                 </Button>
-            </Box>
+            )}
             {error && (
                 <Button
                     variant='text'

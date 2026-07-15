@@ -161,7 +161,7 @@ export const HelpResources = ({ onOpenQuickTour }: IHelpResourcesProps) => {
     const whatsNewEnabled = useUiFlag('whatsNewPage');
     const showWhatsNew = isEnterprise() && whatsNewEnabled;
     const showQuickTour =
-        useUiFlag('onboardingClosedDemo') && Boolean(onOpenQuickTour);
+        useUiFlag('quickTourDemo') && Boolean(onOpenQuickTour);
     const learningLabFlag = useUiFlag('learningLab');
     const learningLabVariant = useVariant<ILearningLabVariant>(
         learningLabFlag || undefined,

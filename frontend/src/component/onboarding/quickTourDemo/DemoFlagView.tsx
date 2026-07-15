@@ -231,7 +231,7 @@ export const DemoFlagView = ({
                                     'Toggle the feature in production',
                             },
                         }}
-                        data-testid='CLOSED_DEMO_ONOFF_SWITCH'
+                        data-testid='QUICK_TOUR_DEMO_ONOFF_SWITCH'
                     />
                 </StyledEnvironmentHeader>
 
@@ -351,7 +351,7 @@ export const DemoFlagView = ({
                                             MAX_VARIANTS
                                         }
                                         onClick={onAddVariant}
-                                        data-testid='CLOSED_DEMO_ADD_VARIANT_BUTTON'
+                                        data-testid='QUICK_TOUR_DEMO_ADD_VARIANT_BUTTON'
                                     >
                                         Add variant
                                     </Button>

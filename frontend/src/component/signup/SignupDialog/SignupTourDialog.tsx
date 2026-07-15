@@ -1,5 +1,5 @@
 import { Box, Dialog, styled } from '@mui/material';
-import { ClosedDemo } from 'component/onboarding/closedDemo/ClosedDemo.tsx';
+import { QuickTourDemo } from 'component/onboarding/quickTourDemo/QuickTourDemo.tsx';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -32,14 +32,14 @@ interface ISignupTourDialogProps {
 }
 
 /**
- * Full-screen dialog that hosts the onboarding {@link ClosedDemo}. Split out
- * from `SignupDialog` so the base signup flow doesn't carry a demo-mode
+ * Full-screen dialog that hosts the onboarding {@link QuickTourDemo}. Split
+ * out from `SignupDialog` so the base signup flow doesn't carry a demo-mode
  * `tour` styled-prop or a second render branch.
  */
 export const SignupTourDialog = ({ onComplete }: ISignupTourDialogProps) => (
     <StyledDialog open fullScreen>
         <StyledTourContainer>
-            <ClosedDemo onComplete={onComplete} />
+            <QuickTourDemo onComplete={onComplete} />
         </StyledTourContainer>
     </StyledDialog>
 );

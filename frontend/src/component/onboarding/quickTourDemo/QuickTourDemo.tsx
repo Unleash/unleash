@@ -263,7 +263,7 @@ const StyledFinish = styled(Box)(({ theme }) => ({
  */
 type BugPhase = 'idle' | 'armed' | 'alert' | 'resolved';
 
-interface IClosedDemoProps {
+interface IQuickTourDemoProps {
     /** Called when the user finishes or skips the tour. */
     onComplete: () => void;
 }
@@ -276,7 +276,7 @@ interface IClosedDemoProps {
  * flag reaches them. Fills its container; hosted in a dialog by
  * QuickTourDialog and inline in the signup dialog.
  */
-export const ClosedDemo = ({ onComplete }: IClosedDemoProps) => {
+export const QuickTourDemo = ({ onComplete }: IQuickTourDemoProps) => {
     const { trackEvent } = useEventTracker();
     const theme = useTheme();
     // The demo's variant chips use complementary theme semantic colours so
@@ -310,7 +310,7 @@ export const ClosedDemo = ({ onComplete }: IClosedDemoProps) => {
     }));
 
     useEffect(() => {
-        trackEvent('closed-demo', { props: { eventType: 'start' } });
+        trackEvent('quick-tour-demo', { props: { eventType: 'start' } });
     }, [trackEvent]);
 
     useEffect(() => {
@@ -411,7 +411,7 @@ export const ClosedDemo = ({ onComplete }: IClosedDemoProps) => {
     const goToTopic = (index: number) => {
         setTopicIndex(index);
         applyTopicPreset(index);
-        trackEvent('closed-demo', {
+        trackEvent('quick-tour-demo', {
             props: { eventType: 'topic', topic: TOPICS[index].key },
         });
     };
@@ -421,12 +421,12 @@ export const ClosedDemo = ({ onComplete }: IClosedDemoProps) => {
             goToTopic(topicIndex + 1);
         } else {
             setFinished(true);
-            trackEvent('closed-demo', { props: { eventType: 'finish' } });
+            trackEvent('quick-tour-demo', { props: { eventType: 'finish' } });
         }
     };
 
     const handleSkip = () => {
-        trackEvent('closed-demo', {
+        trackEvent('quick-tour-demo', {
             props: { eventType: 'skip', topic: topic.key },
         });
         onComplete();
@@ -441,7 +441,7 @@ export const ClosedDemo = ({ onComplete }: IClosedDemoProps) => {
             setBugPhase('armed');
         } else if (!value && bugPhase === 'alert') {
             setBugPhase('resolved');
-            trackEvent('closed-demo', {
+            trackEvent('quick-tour-demo', {
                 props: { eventType: 'killswitch' },
             });
         }
@@ -481,7 +481,7 @@ export const ClosedDemo = ({ onComplete }: IClosedDemoProps) => {
                 variants: makeVariants([...used, nextName], variantPalette),
             };
         });
-        trackEvent('closed-demo', {
+        trackEvent('quick-tour-demo', {
             props: { eventType: 'add-variant' },
         });
     };
@@ -538,7 +538,7 @@ export const ClosedDemo = ({ onComplete }: IClosedDemoProps) => {
                             <Button
                                 variant='contained'
                                 onClick={onComplete}
-                                data-testid='CLOSED_DEMO_FINISH_BUTTON'
+                                data-testid='QUICK_TOUR_DEMO_FINISH_BUTTON'
                             >
                                 Start using Unleash
                             </Button>
@@ -590,7 +590,7 @@ export const ClosedDemo = ({ onComplete }: IClosedDemoProps) => {
                                     >
                                         <Alert
                                             severity='error'
-                                            data-testid='CLOSED_DEMO_BUG_ALERT'
+                                            data-testid='QUICK_TOUR_DEMO_BUG_ALERT'
                                         >
                                             <strong>
                                                 🐛 Bug report: the new checkout
@@ -606,7 +606,7 @@ export const ClosedDemo = ({ onComplete }: IClosedDemoProps) => {
                                     >
                                         <Alert
                                             severity='success'
-                                            data-testid='CLOSED_DEMO_BUG_RESOLVED'
+                                            data-testid='QUICK_TOUR_DEMO_BUG_RESOLVED'
                                         >
                                             <strong>
                                                 Fixed in one click!{' '}
@@ -652,7 +652,7 @@ export const ClosedDemo = ({ onComplete }: IClosedDemoProps) => {
                             <Button
                                 variant='contained'
                                 onClick={handleNext}
-                                data-testid='CLOSED_DEMO_NEXT_BUTTON'
+                                data-testid='QUICK_TOUR_DEMO_NEXT_BUTTON'
                             >
                                 {topicIndex < TOPICS.length - 1
                                     ? 'Next'

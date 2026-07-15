@@ -87,7 +87,7 @@ export type IFlagKey =
     | 'learningLab'
     | 'accessRequestsNotifications'
     | 'accessRequestsMenuIndicator'
-    | 'onboardingClosedDemo'
+    | 'quickTourDemo'
     | 'projectReleaseTemplates'
     | 'topLabelInputs'
     | 'flagListCreatedByFilter';
@@ -127,8 +127,8 @@ const flags: IFlags = {
     ),
     migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, true),
     demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
-    onboardingClosedDemo: parseEnvVarBoolean(
-        process.env.UNLEASH_ONBOARDING_CLOSED_DEMO,
+    quickTourDemo: parseEnvVarBoolean(
+        process.env.UNLEASH_QUICK_TOUR_DEMO,
         false,
     ),
     interactiveDemoKillSwitch: parseEnvVarBoolean(

@@ -35,7 +35,7 @@ export const SignupDialogComplete: SignupStepContent = ({
     isSubmitting,
     error,
 }) => {
-    const offerTour = useUiFlag('onboardingClosedDemo');
+    const offerTour = useUiFlag('quickTourDemo');
     const description =
         data.inviteEmails.length === 0
             ? `Lead the way now, bring the team later.\nExplore the features first, then invite your colleagues to experience the full power of working together.`

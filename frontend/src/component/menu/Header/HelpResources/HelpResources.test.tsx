@@ -46,7 +46,7 @@ test('opens help menu with all items when clicking the button', async () => {
 
 test('quick tour item invokes onOpenQuickTour when the flag is on', async () => {
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: { onboardingClosedDemo: true },
+        flags: { quickTourDemo: true },
     });
     const onOpenQuickTour = vi.fn();
     render(<HelpResources onOpenQuickTour={onOpenQuickTour} />);

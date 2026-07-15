@@ -247,7 +247,7 @@ export const UserGrid = ({
 
     return (
         <>
-            <StyledGrid data-testid='CLOSED_DEMO_USER_GRID'>
+            <StyledGrid data-testid='QUICK_TOUR_DEMO_USER_GRID'>
                 {users.map((user, i) => {
                     const evaluation = evaluations[i];
                     const enabled = evaluation?.enabled ?? false;
@@ -357,7 +357,7 @@ export const UserGrid = ({
                         ) : null}
                         {openVariant?.payload ? (
                             <Tooltip title={openVariant.payload} arrow>
-                                <StyledPayload data-testid='CLOSED_DEMO_PAYLOAD'>
+                                <StyledPayload data-testid='QUICK_TOUR_DEMO_PAYLOAD'>
                                     {openVariant.payload}
                                 </StyledPayload>
                             </Tooltip>

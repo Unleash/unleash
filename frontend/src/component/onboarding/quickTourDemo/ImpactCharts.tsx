@@ -256,7 +256,7 @@ export const ImpactCharts = ({
     })();
 
     return (
-        <StyledGrid data-testid='CLOSED_DEMO_IMPACT_CHARTS'>
+        <StyledGrid data-testid='QUICK_TOUR_DEMO_IMPACT_CHARTS'>
             <ImpactMetric
                 label='Revenue / min'
                 target={totalTarget}

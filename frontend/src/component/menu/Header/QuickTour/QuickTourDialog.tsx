@@ -1,6 +1,6 @@
 import { Dialog, IconButton, styled } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { ClosedDemo } from 'component/onboarding/closedDemo/ClosedDemo.tsx';
+import { QuickTourDemo } from 'component/onboarding/quickTourDemo/QuickTourDemo.tsx';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -34,6 +34,6 @@ export const QuickTourDialog = ({ onClose }: { onClose: () => void }) => (
         <StyledClose onClick={onClose} aria-label='Close' size='small'>
             <CloseIcon fontSize='small' />
         </StyledClose>
-        <ClosedDemo onComplete={onClose} />
+        <QuickTourDemo onComplete={onClose} />
     </StyledDialog>
 );

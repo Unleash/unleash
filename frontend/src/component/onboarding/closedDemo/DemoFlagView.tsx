@@ -13,8 +13,8 @@ import OutlinedFlagIcon from '@mui/icons-material/OutlinedFlag';
 import CloudCircleIcon from '@mui/icons-material/CloudCircle';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlined';
-import RolloutSlider from 'component/feature/StrategyTypes/RolloutSlider/RolloutSlider.tsx';
 import { DEMO_COUNTRIES, type DemoFlagConfig } from './demoModel.js';
+import { DemoRolloutSlider } from './DemoRolloutSlider.tsx';
 import { DemoVariantsBar } from './DemoVariantsBar.tsx';
 
 export const MAX_VARIANTS = 4;
@@ -239,16 +239,10 @@ export const DemoFlagView = ({
                     <StyledStrategyBody>
                         <StyledSectionDivider>Rollout</StyledSectionDivider>
                         <StyledRolloutWrapper>
-                            <RolloutSlider
+                            <DemoRolloutSlider
                                 name='Rollout %'
                                 value={config.rollout}
-                                onChange={(_, value) =>
-                                    onRolloutChange(value as number)
-                                }
-                                hideInput
-                                hideHelp
-                                hideLabel
-                                valueLabelDisplay='auto'
+                                onChange={onRolloutChange}
                             />
                         </StyledRolloutWrapper>
 

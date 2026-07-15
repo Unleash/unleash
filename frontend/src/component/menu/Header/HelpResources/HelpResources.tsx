@@ -149,7 +149,8 @@ const LEARNING_LAB_DEFAULTS: Required<ILearningLabVariant> = {
 };
 
 interface IHelpResourcesProps {
-    onOpenQuickTour: () => void;
+    /** Omit to hide the quick-tour item regardless of the demo flag. */
+    onOpenQuickTour?: () => void;
 }
 
 export const HelpResources = ({ onOpenQuickTour }: IHelpResourcesProps) => {
@@ -159,7 +160,8 @@ export const HelpResources = ({ onOpenQuickTour }: IHelpResourcesProps) => {
     const { isEnterprise } = useUiConfig();
     const whatsNewEnabled = useUiFlag('whatsNewPage');
     const showWhatsNew = isEnterprise() && whatsNewEnabled;
-    const showQuickTour = useUiFlag('onboardingClosedDemo');
+    const showQuickTour =
+        useUiFlag('onboardingClosedDemo') && Boolean(onOpenQuickTour);
     const learningLabFlag = useUiFlag('learningLab');
     const learningLabVariant = useVariant<ILearningLabVariant>(
         learningLabFlag || undefined,
@@ -270,7 +272,7 @@ export const HelpResources = ({ onOpenQuickTour }: IHelpResourcesProps) => {
                     <StyledMenuItem
                         onClick={() => {
                             handleOptionClick('quick-tour');
-                            onOpenQuickTour();
+                            onOpenQuickTour?.();
                         }}
                         data-testid='QUICK_TOUR_BUTTON'
                     >

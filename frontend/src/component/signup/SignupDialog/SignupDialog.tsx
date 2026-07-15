@@ -8,10 +8,10 @@ import {
 } from '@mui/material';
 import { type ComponentType, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
-import { ClosedDemo } from 'component/onboarding/closedDemo/ClosedDemo.tsx';
 import { SignupDialogSetPassword } from './SignupDialogSetPassword/SignupDialogSetPassword.tsx';
 import { SignupDialogAccountDetails } from './SignupDialogAccountDetails.tsx';
 import { SignupDialogInviteOthers } from './SignupDialogInviteOthers.tsx';
+import { SignupTourDialog } from './SignupTourDialog.tsx';
 import { type SignupData, useSignup } from '../hooks/useSignup.ts';
 import { type SubmitSignupData, useSignupApi } from '../hooks/useSignupApi.ts';
 import useToast from 'hooks/useToast.tsx';
@@ -21,33 +21,20 @@ import Heart from 'assets/icons/heart.svg?react';
 import { formatAssetPath } from 'utils/formatPath.ts';
 import { SignupDialogComplete } from './SignupDialogComplete.tsx';
 import { useEventTracker } from 'hooks/useEventTracker.ts';
+import { useUiFlag } from 'hooks/useUiFlag';
 import {
     DEFAULT_PROJECT_ID,
     useDefaultProjectId,
 } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId.ts';
 
-// `tour` swaps the paper's two-column signup grid for a plain full-height
-// container so the quick tour fills the same inset card without pushing its
-// footer off-screen.
-const StyledDialog = styled(Dialog, {
-    shouldForwardProp: (prop) => prop !== 'tour',
-})<{ tour?: boolean }>(({ theme, tour }) => ({
-    '& .MuiDialog-paper': tour
-        ? {
-              overflow: 'hidden',
-              // On smaller screens the tour panel stacks and grows past the
-              // viewport - let the paper scroll instead of clipping.
-              [theme.breakpoints.down('md')]: {
-                  overflow: 'auto',
-              },
-          }
-        : {
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              [theme.breakpoints.down('md')]: {
-                  gridTemplateColumns: '1fr',
-              },
-          },
+const StyledDialog = styled(Dialog)(({ theme }) => ({
+    '& .MuiDialog-paper': {
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        [theme.breakpoints.down('md')]: {
+            gridTemplateColumns: '1fr',
+        },
+    },
     padding: theme.spacing(8),
     [theme.breakpoints.down('md')]: {
         padding: 0,
@@ -181,17 +168,6 @@ export const StyledSignupDialogButton = styled(Button)({
     width: '100%',
 });
 
-const StyledTourContainer = styled(Box)(({ theme }) => ({
-    height: '100%',
-    minHeight: 0,
-    overflow: 'hidden',
-    [theme.breakpoints.down('md')]: {
-        height: 'auto',
-        minHeight: 'auto',
-        overflow: 'visible',
-    },
-}));
-
 const getHeartAnimationDelay = (i: number) => {
     const delays = ['0s', '-1.5s', '-3s', '-4.5s'];
     return delays[i % 4];
@@ -257,20 +233,22 @@ export const SignupDialog = () => {
     const navigate = useNavigate();
     const defaultProjectId = useDefaultProjectId();
 
-    // TEMPORARY demo mode: append ?fake-signup to any URL to walk through the
-    // signup dialog without a pay-as-you-go backend. Nothing is submitted; on
-    // completion the quick tour opens, then you land on the default project.
-    // Sticky state: redirects (e.g. the initial redirect to the last-viewed
-    // page) strip query params, so once the param is seen the flow stays alive
-    // until the tour is closed.
+    // Demo mode: with the onboardingClosedDemo flag on, append ?fake-signup to
+    // any URL to walk through the signup dialog without a pay-as-you-go
+    // backend. Nothing is submitted; on completion the quick tour opens, then
+    // you land on the default project. Sticky state: redirects (e.g. the
+    // initial redirect to the last-viewed page) strip query params, so once
+    // the param is seen the flow stays alive until the tour is closed. Gated
+    // by the flag so the URL param is a no-op in environments without it.
+    const demoEnabled = useUiFlag('onboardingClosedDemo');
     const [searchParams] = useSearchParams();
     const [fakeSignup, setFakeSignup] = useState(false);
     const [showTour, setShowTour] = useState(false);
     useEffect(() => {
-        if (searchParams.has('fake-signup')) {
+        if (demoEnabled && searchParams.has('fake-signup')) {
             setFakeSignup(true);
         }
-    }, [searchParams]);
+    }, [demoEnabled, searchParams]);
     const signupData = fakeSignup
         ? { shouldSetPassword: false }
         : realSignupData;
@@ -295,24 +273,19 @@ export const SignupDialog = () => {
 
     const isVisible = signupRequired && steps.length > 0 && currentStep;
 
-    // The quick tour replaces the dialog's content in place: same full-screen
-    // dialog, no second dialog. Checked before `isVisible` because a completed
-    // real signup flips `signupRequired` off, which would otherwise unmount it.
+    // Checked before `isVisible` because a completed real signup flips
+    // `signupRequired` off, which would otherwise unmount the dialog.
     if (showTour) {
         return (
-            <StyledDialog open fullScreen tour>
-                <StyledTourContainer>
-                    <ClosedDemo
-                        onComplete={() => {
-                            setShowTour(false);
-                            setFakeSignup(false);
-                            navigate(
-                                `/projects/${defaultProjectId ?? DEFAULT_PROJECT_ID}`,
-                            );
-                        }}
-                    />
-                </StyledTourContainer>
-            </StyledDialog>
+            <SignupTourDialog
+                onComplete={() => {
+                    setShowTour(false);
+                    setFakeSignup(false);
+                    navigate(
+                        `/projects/${defaultProjectId ?? DEFAULT_PROJECT_ID}`,
+                    );
+                }}
+            />
         );
     }
 

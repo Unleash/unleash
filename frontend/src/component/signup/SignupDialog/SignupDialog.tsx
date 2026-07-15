@@ -6,8 +6,8 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
-import { type ComponentType, useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router';
+import { type ComponentType, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { SignupDialogSetPassword } from './SignupDialogSetPassword/SignupDialogSetPassword.tsx';
 import { SignupDialogAccountDetails } from './SignupDialogAccountDetails.tsx';
 import { SignupDialogInviteOthers } from './SignupDialogInviteOthers.tsx';
@@ -21,7 +21,6 @@ import Heart from 'assets/icons/heart.svg?react';
 import { formatAssetPath } from 'utils/formatPath.ts';
 import { SignupDialogComplete } from './SignupDialogComplete.tsx';
 import { useEventTracker } from 'hooks/useEventTracker.ts';
-import { useUiFlag } from 'hooks/useUiFlag';
 import {
     DEFAULT_PROJECT_ID,
     useDefaultProjectId,
@@ -224,35 +223,12 @@ const SIGNUP_STEPS: SignupStep[] = [
 export const SignupDialog = () => {
     const { trackEvent } = useEventTracker();
     const { setToastApiError } = useToast();
-    const {
-        signupData: realSignupData,
-        signupRequired: realSignupRequired,
-        refetch,
-    } = useSignup();
+    const { signupData, signupRequired, refetch } = useSignup();
     const { submitSignupData } = useSignupApi();
     const navigate = useNavigate();
     const defaultProjectId = useDefaultProjectId();
 
-    // Demo mode: with the onboardingClosedDemo flag on, append ?fake-signup to
-    // any URL to walk through the signup dialog without a pay-as-you-go
-    // backend. Nothing is submitted; on completion the quick tour opens, then
-    // you land on the default project. Sticky state: redirects (e.g. the
-    // initial redirect to the last-viewed page) strip query params, so once
-    // the param is seen the flow stays alive until the tour is closed. Gated
-    // by the flag so the URL param is a no-op in environments without it.
-    const demoEnabled = useUiFlag('onboardingClosedDemo');
-    const [searchParams] = useSearchParams();
-    const [fakeSignup, setFakeSignup] = useState(false);
     const [showTour, setShowTour] = useState(false);
-    useEffect(() => {
-        if (demoEnabled && searchParams.has('fake-signup')) {
-            setFakeSignup(true);
-        }
-    }, [demoEnabled, searchParams]);
-    const signupData = fakeSignup
-        ? { shouldSetPassword: false }
-        : realSignupData;
-    const signupRequired = fakeSignup || realSignupRequired;
 
     const [data, setData] = useState<SubmitSignupData>({
         password: '',
@@ -280,7 +256,6 @@ export const SignupDialog = () => {
             <SignupTourDialog
                 onComplete={() => {
                     setShowTour(false);
-                    setFakeSignup(false);
                     navigate(
                         `/projects/${defaultProjectId ?? DEFAULT_PROJECT_ID}`,
                     );
@@ -322,16 +297,6 @@ export const SignupDialog = () => {
 
         if (safeStep < steps.length - 1) {
             setStep(safeStep + 1);
-            return;
-        }
-
-        if (fakeSignup) {
-            if (eventType === 'tour') {
-                setShowTour(true);
-            } else {
-                setFakeSignup(false);
-                navigate(`/projects/${defaultProjectId ?? DEFAULT_PROJECT_ID}`);
-            }
             return;
         }
 

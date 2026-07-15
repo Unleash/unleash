@@ -1,3 +1,4 @@
+import EventEmitter from 'events';
 import dbInit, {
     type ITestDb,
 } from '../../../test/e2e/helpers/database-init.js';
@@ -39,7 +40,10 @@ const insertFlag = async (
 
 beforeAll(async () => {
     db = await dbInit('project_flag_creators_read_model', getLogger);
-    readModel = new ProjectFlagCreatorsReadModel(db.rawDatabase);
+    readModel = new ProjectFlagCreatorsReadModel(
+        db.rawDatabase,
+        new EventEmitter(),
+    );
 });
 
 afterEach(async () => {

@@ -182,7 +182,10 @@ export const createStores = (
         trafficDataUsageStore: new TrafficDataUsageStore(db, getLogger),
         segmentReadModel: new SegmentReadModel(db),
         projectOwnersReadModel: new ProjectOwnersReadModel(db),
-        projectFlagCreatorsReadModel: new ProjectFlagCreatorsReadModel(db),
+        projectFlagCreatorsReadModel: new ProjectFlagCreatorsReadModel(
+            db,
+            eventBus,
+        ),
         featureLifecycleStore: new FeatureLifecycleStore(db, eventBus),
         featureStrategiesReadModel: new FeatureStrategiesReadModel(db),
         onboardingReadModel: createOnboardingReadModel(db),

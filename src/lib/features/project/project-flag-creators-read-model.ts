@@ -1,4 +1,7 @@
+import type EventEmitter from 'events';
 import type { Db } from '../../db/db.js';
+import { DB_TIME } from '../../metric-events.js';
+import metricsHelper from '../../util/metrics-helper.js';
 import type { ProjectAccess } from '../private-project/privateProjectStore.js';
 import type {
     FlagCreator,
@@ -12,8 +15,15 @@ export class ProjectFlagCreatorsReadModel
 {
     private db: Db;
 
-    constructor(db: Db) {
+    private timer: (action: string) => Function;
+
+    constructor(db: Db, eventBus: EventEmitter) {
         this.db = db;
+        this.timer = (action) =>
+            metricsHelper.wrapTimer(eventBus, DB_TIME, {
+                store: 'project-flag-creators',
+                action,
+            });
     }
 
     async getFlagCreators(project: string): Promise<FlagCreator[]> {
@@ -40,6 +50,7 @@ export class ProjectFlagCreatorsReadModel
         accessibleProjects: ProjectAccess,
         { query, limit, offset }: FlagCreatorsSearchOptions,
     ): Promise<FlagCreatorsSearchResult> {
+        const stopTimer = this.timer('getFlagCreatorsAcrossProjects');
         const buildBaseQuery = () => {
             const qb = this.db('users').whereExists((builder) => {
                 builder
@@ -94,6 +105,7 @@ export class ProjectFlagCreatorsReadModel
             name: String(row.name || row.username || row.email),
         }));
 
+        stopTimer();
         return { flagCreators, total: Number(total) || 0 };
     }
 }

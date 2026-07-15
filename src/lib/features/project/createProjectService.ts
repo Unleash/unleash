@@ -70,7 +70,10 @@ export const createProjectService = (
     const eventStore = new EventStore(db, getLogger);
     const projectStore = new ProjectStore(db, eventBus, config);
     const projectOwnersReadModel = new ProjectOwnersReadModel(db);
-    const projectFlagCreatorsReadModel = new ProjectFlagCreatorsReadModel(db);
+    const projectFlagCreatorsReadModel = new ProjectFlagCreatorsReadModel(
+        db,
+        eventBus,
+    );
     const groupStore = new GroupStore(db);
     const edgeTokenStore = new EdgeTokenStore(db, eventBus, config);
     const featureToggleStore = new FeatureToggleStore(

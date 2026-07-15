@@ -2,6 +2,7 @@ import { type FC, useEffect, useState } from 'react';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import useAllTags from 'hooks/api/getters/useAllTags/useAllTags';
+import { useFlagCreators } from 'hooks/api/getters/useFlagCreators/useFlagCreators';
 import {
     type FilterItemParamHolder,
     Filters,
@@ -9,6 +10,7 @@ import {
 } from 'component/filter/Filters/Filters';
 import { formatTag } from 'utils/format-tag';
 import { useEventTracker } from 'hooks/useEventTracker';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 type FeaturesOverviewToggleFiltersProps = {
     state: FilterItemParamHolder;
@@ -21,6 +23,8 @@ export const FeaturesOverviewToggleFilters: FC<
     const { projects } = useProjects();
     const { segments } = useSegments();
     const { tags } = useAllTags();
+    const { flagCreators } = useFlagCreators();
+    const createdByFilterEnabled = useUiFlag('flagListCreatedByFilter');
     const { trackEvent } = useEventTracker();
 
     const onFilterChange = (value: FilterItemParamHolder) => {
@@ -61,6 +65,10 @@ export const FeaturesOverviewToggleFilters: FC<
         const tagsOptions = (tags || []).map((tag) => ({
             label: formatTag(tag),
             value: formatTag(tag),
+        }));
+        const flagCreatorsOptions = flagCreators.map((creator) => ({
+            label: creator.name,
+            value: String(creator.id),
         }));
 
         const hasMultipleProjects = projectsOptions.length > 1;
@@ -134,6 +142,18 @@ export const FeaturesOverviewToggleFilters: FC<
                 singularOperators: ['IS', 'IS_NOT'],
                 pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
             },
+            ...(createdByFilterEnabled
+                ? ([
+                      {
+                          label: 'Created by',
+                          icon: 'person',
+                          options: flagCreatorsOptions,
+                          filterKey: 'createdBy',
+                          singularOperators: ['IS', 'IS_NOT'],
+                          pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
+                      },
+                  ] as IFilterItem[])
+                : []),
             {
                 label: 'Favorite',
                 icon: 'star',
@@ -152,6 +172,8 @@ export const FeaturesOverviewToggleFilters: FC<
         JSON.stringify(projects),
         JSON.stringify(segments),
         JSON.stringify(tags),
+        JSON.stringify(flagCreators),
+        createdByFilterEnabled,
     ]);
 
     return (

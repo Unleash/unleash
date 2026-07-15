@@ -9,17 +9,24 @@ vi.mock('react-confetti', () => ({ default: () => null }));
 const next = () =>
     fireEvent.click(screen.getByTestId('QUICK_TOUR_DEMO_NEXT_BUTTON'));
 
-test('renders the first (on/off) topic and a live user count', () => {
+test('renders the first (happy on/off) topic and a live user count', () => {
     render(<QuickTourDemo onComplete={vi.fn()} />);
-    expect(screen.getByText('Flip a feature on and off')).toBeInTheDocument();
+    expect(
+        screen.getByText('Ship a feature without a deploy'),
+    ).toBeInTheDocument();
     expect(screen.getByText(/users see the feature/)).toBeInTheDocument();
     expect(
         screen.getByTestId('QUICK_TOUR_DEMO_ONOFF_SWITCH'),
     ).toBeInTheDocument();
 });
 
-test('walks through all four topics to the finish screen', () => {
+test('walks through all topics to the finish screen', () => {
     render(<QuickTourDemo onComplete={vi.fn()} />);
+
+    next();
+    expect(
+        screen.getByText('Roll back a bad release in one click'),
+    ).toBeInTheDocument();
 
     next();
     expect(screen.getByText('Release gradually, safely')).toBeInTheDocument();
@@ -40,6 +47,7 @@ test('calls onComplete when finishing', () => {
     const onComplete = vi.fn();
     render(<QuickTourDemo onComplete={onComplete} />);
 
+    next(); // -> rollback
     next(); // -> rollout
     next(); // -> target
     next(); // -> variants
@@ -49,9 +57,29 @@ test('calls onComplete when finishing', () => {
     expect(onComplete).toHaveBeenCalledTimes(1);
 });
 
-test('plays the kill-switch story in the first step', () => {
+test('does not trigger the bug incident on the happy first step', () => {
     vi.useFakeTimers();
     render(<QuickTourDemo onComplete={vi.fn()} />);
+
+    fireEvent.click(
+        screen.getByRole('switch', {
+            name: 'Toggle the feature in production',
+        }),
+    );
+    act(() => {
+        vi.advanceTimersByTime(2000);
+    });
+    expect(
+        screen.queryByTestId('QUICK_TOUR_DEMO_BUG_ALERT'),
+    ).not.toBeInTheDocument();
+    vi.useRealTimers();
+});
+
+test('plays the rollback story on the second step', () => {
+    vi.useFakeTimers();
+    render(<QuickTourDemo onComplete={vi.fn()} />);
+
+    next(); // -> rollback
 
     const toggle = screen.getByRole('switch', {
         name: 'Toggle the feature in production',
@@ -72,6 +100,7 @@ test('plays the kill-switch story in the first step', () => {
 test('manages variants and shows a user payload in the variants step', () => {
     render(<QuickTourDemo onComplete={vi.fn()} />);
 
+    next(); // -> rollback
     next(); // -> rollout
     next(); // -> target
     next(); // -> variants

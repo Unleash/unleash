@@ -90,9 +90,16 @@ const TOPICS: ITopic[] = [
     {
         key: 'onoff',
         mode: 'onoff',
-        title: 'Flip a feature on and off',
+        title: 'Ship a feature without a deploy',
         valueTag: 'Runtime control',
-        body: 'Meet your users. You run an online store, and your new 1-click checkout just shipped - dark, behind a feature flag. Flip it on and watch every hand go up. Flip it off and it’s gone. No deploy either way.',
+        body: 'Meet your users. Your new 1-click checkout just shipped - dark, behind a feature flag. Flip it on and watch every hand go up. No deploy, no code push - you just released a feature at runtime.',
+    },
+    {
+        key: 'rollback',
+        mode: 'onoff',
+        title: 'Roll back a bad release in one click',
+        valueTag: 'Instant rollback',
+        body: 'Flags are your undo button. Without one, fixing a broken feature means reverting a commit, waiting for CI, and redeploying - all while users hit errors. With one, you flip the switch off and every user is back on the safe path, instantly. Try it: flip on to ship, wait for the bug report to land, then flip off to save the day.',
     },
     {
         key: 'rollout',
@@ -258,8 +265,9 @@ const StyledFinish = styled(Box)(({ theme }) => ({
 }));
 
 /**
- * The scripted incident in step 1: after the user switches the feature on, a
- * bug report rolls in and they get to save the day with the kill switch.
+ * The scripted incident in the rollback step: after the user switches the
+ * feature on, a bug report rolls in and they get to save the day by flipping
+ * it back off.
  */
 type BugPhase = 'idle' | 'armed' | 'alert' | 'resolved';
 
@@ -327,10 +335,11 @@ export const QuickTourDemo = ({ onComplete }: IQuickTourDemoProps) => {
     // Errors start ticking almost as soon as the feature flips on - well before
     // the scripted bug report shows up. That's the whole point: your users hit
     // the bug first, and only later does the report land in your inbox. The
-    // scripted incident is step-1-only, so leaving 'onoff' ends it visually
-    // even if bugPhase was left mid-alert.
+    // scripted incident is scoped to the rollback step, so leaving it ends
+    // the errors visually even if bugPhase was left mid-alert.
     const errorsActive =
-        topic.key === 'onoff' && (bugPhase === 'armed' || bugPhase === 'alert');
+        topic.key === 'rollback' &&
+        (bugPhase === 'armed' || bugPhase === 'alert');
     useEffect(() => {
         if (!errorsActive) {
             setErroredCount(0);
@@ -368,7 +377,10 @@ export const QuickTourDemo = ({ onComplete }: IQuickTourDemoProps) => {
 
     const applyTopicPreset = (index: number) => {
         const key = TOPICS[index].key;
-        if (key === 'onoff') {
+        if (key === 'onoff' || key === 'rollback') {
+            // Both onoff steps start with the flag off so the user's own flip
+            // is the trigger - happy hand-raise in step 1, scripted incident
+            // in step 2.
             setConfig((c) => ({
                 ...c,
                 environmentEnabled: false,
@@ -411,6 +423,9 @@ export const QuickTourDemo = ({ onComplete }: IQuickTourDemoProps) => {
     const goToTopic = (index: number) => {
         setTopicIndex(index);
         applyTopicPreset(index);
+        // Otherwise navigating away mid-alert and back would leave the phase
+        // in 'alert', and the next flip-on wouldn't re-arm the incident.
+        setBugPhase('idle');
         trackEvent('quick-tour-demo', {
             props: { eventType: 'topic', topic: TOPICS[index].key },
         });
@@ -434,7 +449,7 @@ export const QuickTourDemo = ({ onComplete }: IQuickTourDemoProps) => {
 
     const setEnvironmentEnabled = (value: boolean) => {
         setConfig((c) => ({ ...c, environmentEnabled: value }));
-        if (topic.key !== 'onoff') return;
+        if (topic.key !== 'rollback') return;
         if (value && (bugPhase === 'idle' || bugPhase === 'resolved')) {
             // Re-arming from 'resolved' replays the whole incident, so the
             // user can flip the switch back and forth to inspect any beat.
@@ -442,7 +457,7 @@ export const QuickTourDemo = ({ onComplete }: IQuickTourDemoProps) => {
         } else if (!value && bugPhase === 'alert') {
             setBugPhase('resolved');
             trackEvent('quick-tour-demo', {
-                props: { eventType: 'killswitch' },
+                props: { eventType: 'rollback' },
             });
         }
     };
@@ -520,10 +535,11 @@ export const QuickTourDemo = ({ onComplete }: IQuickTourDemoProps) => {
                             color='textSecondary'
                             sx={{ maxWidth: 520 }}
                         >
-                            You just killed a broken feature in one click, ran a
-                            gradual rollout, targeted a segment, and split an
-                            A/B test - with no deploys and no code. Ready to do
-                            it for real in your project?
+                            You just shipped a feature without a deploy, rolled
+                            a broken one back in one click, ran a gradual
+                            rollout, targeted a segment, and split an A/B test -
+                            with no deploys and no code. Ready to do it for real
+                            in your project?
                         </Typography>
                         <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
                             <Button
@@ -569,8 +585,11 @@ export const QuickTourDemo = ({ onComplete }: IQuickTourDemoProps) => {
 
                             <DemoFlagView
                                 config={config}
-                                showStrategy={topicIndex >= 1}
-                                showConstraints={topicIndex >= 2}
+                                showStrategy={topic.mode !== 'onoff'}
+                                showConstraints={
+                                    topic.mode === 'target' ||
+                                    topic.mode === 'variants'
+                                }
                                 showVariants={topic.mode === 'variants'}
                                 selectedVariant={selectedEvaluation?.variant}
                                 onEnvironmentChange={setEnvironmentEnabled}
@@ -581,7 +600,7 @@ export const QuickTourDemo = ({ onComplete }: IQuickTourDemoProps) => {
                                 onWeightsChange={setVariantWeights}
                             />
 
-                            {topic.key === 'onoff' ? (
+                            {topic.key === 'rollback' ? (
                                 <>
                                     <Collapse
                                         in={bugPhase === 'alert'}
@@ -678,7 +697,7 @@ export const QuickTourDemo = ({ onComplete }: IQuickTourDemoProps) => {
                                 config.targetCountryCodes.length > 0
                             }
                             erroredCount={
-                                topic.key === 'onoff' ? erroredCount : 0
+                                topic.key === 'rollback' ? erroredCount : 0
                             }
                             selectedId={selectedId}
                             onSelect={(user: DemoUser | undefined) =>

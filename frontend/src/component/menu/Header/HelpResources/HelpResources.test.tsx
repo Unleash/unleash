@@ -44,6 +44,30 @@ test('opens help menu with all items when clicking the button', async () => {
     expect(screen.getByText('Slack community')).toBeInTheDocument();
 });
 
+test('quick tour item is shown when the flag is on', async () => {
+    testServerRoute(server, '/api/admin/ui-config', {
+        flags: { quickTourDemo: true },
+    });
+    render(<HelpResources />);
+
+    await userEvent.click(
+        await screen.findByRole('button', { name: 'Help and resources' }),
+    );
+
+    expect(screen.getByText('Quick 2-minute tour')).toBeInTheDocument();
+});
+
+test('quick tour item is hidden when the flag is off', async () => {
+    withLearningLab();
+    render(<HelpResources />);
+
+    await userEvent.click(
+        await screen.findByRole('button', { name: 'Help and resources' }),
+    );
+
+    expect(screen.queryByText('Quick 2-minute tour')).not.toBeInTheDocument();
+});
+
 test('external links have correct hrefs', async () => {
     withLearningLab();
     render(<HelpResources />);

@@ -17,6 +17,7 @@ import SlackIcon from 'assets/icons/menu/slack.svg?react';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import NewReleasesOutlinedIcon from '@mui/icons-material/NewReleasesOutlined';
+import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
 import LearningLabIcon from 'assets/icons/menu/learning-lab.svg?react';
 import { Link } from 'react-router';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
@@ -24,6 +25,7 @@ import { useEventTracker } from 'hooks/useEventTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useVariant } from 'hooks/useVariant';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useQuickTour } from 'component/onboarding/quickTourDemo/QuickTourProvider.tsx';
 
 const StyledIconButton = styled(IconButton)<{ open?: boolean }>(
     ({ theme, open }) => ({
@@ -154,6 +156,8 @@ export const HelpResources = () => {
     const { isEnterprise } = useUiConfig();
     const whatsNewEnabled = useUiFlag('whatsNewPage');
     const showWhatsNew = isEnterprise() && whatsNewEnabled;
+    const { open: openQuickTour } = useQuickTour();
+    const quickTourEnabled = useUiFlag('quickTourDemo');
     const learningLabFlag = useUiFlag('learningLab');
     const learningLabVariant = useVariant<ILearningLabVariant>(
         learningLabFlag || undefined,
@@ -258,6 +262,18 @@ export const HelpResources = () => {
                     >
                         <NewReleasesOutlinedIcon fontSize='small' />
                         What's new
+                    </StyledMenuItem>
+                )}
+                {quickTourEnabled && (
+                    <StyledMenuItem
+                        onClick={() => {
+                            handleOptionClick('quick-tour');
+                            openQuickTour();
+                        }}
+                        data-testid='QUICK_TOUR_BUTTON'
+                    >
+                        <ExploreOutlinedIcon fontSize='small' />
+                        Quick 2-minute tour
                     </StyledMenuItem>
                 )}
                 <StyledMenuItem

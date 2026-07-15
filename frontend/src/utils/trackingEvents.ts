@@ -84,6 +84,7 @@ export type CustomEvents =
     | 'flagpage-impact-metrics'
     | 'signup-dialog'
     | 'signup-dialog-error'
+    | 'quick-tour-demo'
     | 'safeguards'
     | 'remote-mcp'
     | 'external-impact-metrics'

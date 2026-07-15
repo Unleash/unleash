@@ -27,6 +27,7 @@ import { MonthsOldVersionBanner } from './banners/internalBanners/MonthsOldVersi
 import { SignupDialog } from './signup/SignupDialog/SignupDialog.tsx';
 import { WelcomeDialog } from './personalDashboard/WelcomeDialog.tsx';
 import { SkipNavLink } from './common/SkipNavLink/SkipNavLink.tsx';
+import { QuickTourProvider } from './onboarding/quickTourDemo/QuickTourProvider.tsx';
 
 const StyledContainer = styled('div')(() => ({
     '& ul': {
@@ -79,49 +80,51 @@ export const App = () => {
                                 <ExternalBanners />
                                 <InternalBanners />
                                 <StyledContainer>
-                                    <ToastRenderer />
-                                    <Routes>
-                                        {availableRoutes.map((route) => (
+                                    <QuickTourProvider>
+                                        <ToastRenderer />
+                                        <Routes>
+                                            {availableRoutes.map((route) => (
+                                                <Route
+                                                    key={route.path}
+                                                    path={route.path}
+                                                    element={
+                                                        <LayoutPicker
+                                                            isStandalone={
+                                                                route.isStandalone ===
+                                                                true
+                                                            }
+                                                        >
+                                                            <ProtectedRoute
+                                                                route={route}
+                                                            />
+                                                        </LayoutPicker>
+                                                    }
+                                                />
+                                            ))}
                                             <Route
-                                                key={route.path}
-                                                path={route.path}
+                                                path='/'
+                                                element={<InitialRedirect />}
+                                            />
+                                            <Route
+                                                path='*'
                                                 element={
-                                                    <LayoutPicker
-                                                        isStandalone={
-                                                            route.isStandalone ===
-                                                            true
-                                                        }
-                                                    >
-                                                        <ProtectedRoute
-                                                            route={route}
-                                                        />
-                                                    </LayoutPicker>
+                                                    isLoggedIn ? (
+                                                        <NotFound />
+                                                    ) : (
+                                                        <LoginRedirect />
+                                                    )
                                                 }
                                             />
-                                        ))}
-                                        <Route
-                                            path='/'
-                                            element={<InitialRedirect />}
-                                        />
-                                        <Route
-                                            path='*'
-                                            element={
-                                                isLoggedIn ? (
-                                                    <NotFound />
-                                                ) : (
-                                                    <LoginRedirect />
-                                                )
-                                            }
-                                        />
-                                    </Routes>
+                                        </Routes>
 
-                                    <FeedbackNPS openUrl='http://feedback.unleash.run' />
+                                        <FeedbackNPS openUrl='http://feedback.unleash.run' />
 
-                                    <SplashOverlay />
+                                        <SplashOverlay />
 
-                                    <WelcomeDialog />
+                                        <WelcomeDialog />
 
-                                    <SignupDialog />
+                                        <SignupDialog />
+                                    </QuickTourProvider>
                                 </StyledContainer>
                             </>
                         </Demo>

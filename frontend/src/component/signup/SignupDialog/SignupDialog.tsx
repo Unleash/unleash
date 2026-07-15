@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router';
 import { SignupDialogSetPassword } from './SignupDialogSetPassword/SignupDialogSetPassword.tsx';
 import { SignupDialogAccountDetails } from './SignupDialogAccountDetails.tsx';
 import { SignupDialogInviteOthers } from './SignupDialogInviteOthers.tsx';
+import { useQuickTour } from 'component/onboarding/quickTourDemo/QuickTourProvider.tsx';
 import { type SignupData, useSignup } from '../hooks/useSignup.ts';
 import { type SubmitSignupData, useSignupApi } from '../hooks/useSignupApi.ts';
 import useToast from 'hooks/useToast.tsx';
@@ -226,6 +227,7 @@ export const SignupDialog = () => {
     const { submitSignupData } = useSignupApi();
     const navigate = useNavigate();
     const defaultProjectId = useDefaultProjectId();
+    const { open: openQuickTour } = useQuickTour();
 
     const [data, setData] = useState<SubmitSignupData>({
         password: '',
@@ -287,6 +289,9 @@ export const SignupDialog = () => {
             await submitSignupData(data);
             refetch();
             navigate(`/projects/${defaultProjectId ?? DEFAULT_PROJECT_ID}`);
+            if (eventType === 'tour') {
+                openQuickTour();
+            }
         } catch (e: unknown) {
             const error = formatUnknownError(e);
             setToastApiError(error);

@@ -1,7 +1,7 @@
 import {
     normalizedStrategyValue,
     normalizedVariantValue,
-} from 'utils/rolloutHash.js';
+} from './rolloutHash.js';
 
 /**
  * A synthetic end-user of the pretend "sample app" shown in the onboarding

@@ -159,6 +159,7 @@ export const HelpResources = ({ onOpenQuickTour }: IHelpResourcesProps) => {
     const { isEnterprise } = useUiConfig();
     const whatsNewEnabled = useUiFlag('whatsNewPage');
     const showWhatsNew = isEnterprise() && whatsNewEnabled;
+    const showQuickTour = useUiFlag('onboardingClosedDemo');
     const learningLabFlag = useUiFlag('learningLab');
     const learningLabVariant = useVariant<ILearningLabVariant>(
         learningLabFlag || undefined,
@@ -265,16 +266,18 @@ export const HelpResources = ({ onOpenQuickTour }: IHelpResourcesProps) => {
                         What's new
                     </StyledMenuItem>
                 )}
-                <StyledMenuItem
-                    onClick={() => {
-                        handleOptionClick('quick-tour');
-                        onOpenQuickTour();
-                    }}
-                    data-testid='QUICK_TOUR_BUTTON'
-                >
-                    <ExploreOutlinedIcon fontSize='small' />
-                    Quick 2-minute tour
-                </StyledMenuItem>
+                {showQuickTour && (
+                    <StyledMenuItem
+                        onClick={() => {
+                            handleOptionClick('quick-tour');
+                            onOpenQuickTour();
+                        }}
+                        data-testid='QUICK_TOUR_BUTTON'
+                    >
+                        <ExploreOutlinedIcon fontSize='small' />
+                        Quick 2-minute tour
+                    </StyledMenuItem>
+                )}
                 <StyledMenuItem
                     component='a'
                     href={DOCUMENTATION_URL}

@@ -143,6 +143,8 @@ export function registerPrometheusMetrics(
         labelNames: ['path', 'method', 'status'],
         buckets: [1, 5, 10, 25, 50, 100, 250, 500, 1000, 2500, 5000],
     });
+    const clientApiPrefix = `${config.server.baseUriPath || ''}/api/client`;
+    const frontendApiPrefix = `${config.server.baseUriPath || ''}/api/frontend`;
     const schedulerDuration = createSummary({
         name: 'scheduler_duration_seconds',
         help: 'Scheduler duration time',
@@ -832,8 +834,8 @@ export function registerPrometheusMetrics(
                 })
                 .observe(time);
             if (
-                path?.startsWith('/api/client') ||
-                path?.startsWith('/api/frontend')
+                path?.startsWith(clientApiPrefix) ||
+                path?.startsWith(frontendApiPrefix)
             ) {
                 sdkRequestDuration
                     .labels({

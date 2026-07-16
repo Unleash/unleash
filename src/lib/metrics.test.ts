@@ -60,6 +60,7 @@ beforeAll(async () => {
     const config = createTestConfig({
         server: {
             serverMetrics: true,
+            baseUriPath: '/demo',
         },
     });
     stores = createStores();
@@ -125,19 +126,19 @@ test('should collect metrics for requests', async () => {
 
 test('SDK API response times are recorded in a histogram, admin traffic is excluded', async () => {
     eventBus.emit(REQUEST_TIME, {
-        path: '/api/client/features',
+        path: '/demo/api/client/features',
         method: 'GET',
         statusCode: 200,
         time: 90,
     });
     eventBus.emit(REQUEST_TIME, {
-        path: '/api/frontend',
+        path: '/demo/api/frontend',
         method: 'GET',
         statusCode: 200,
         time: 30,
     });
     eventBus.emit(REQUEST_TIME, {
-        path: '/api/admin/projects',
+        path: '/demo/api/admin/projects',
         method: 'GET',
         statusCode: 200,
         time: 50,
@@ -145,10 +146,10 @@ test('SDK API response times are recorded in a histogram, admin traffic is exclu
 
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(
-        /http_sdk_request_duration_milliseconds_count\{path="\/api\/client\/features",method="GET",status="200"\} 1/,
+        /http_sdk_request_duration_milliseconds_count\{path="\/demo\/api\/client\/features",method="GET",status="200"\} 1/,
     );
     expect(metrics).toMatch(
-        /http_sdk_request_duration_milliseconds_count\{path="\/api\/frontend",method="GET",status="200"\} 1/,
+        /http_sdk_request_duration_milliseconds_count\{path="\/demo\/api\/frontend",method="GET",status="200"\} 1/,
     );
     expect(metrics).not.toMatch(
         /http_sdk_request_duration_milliseconds[^\n]*\/api\/admin/,

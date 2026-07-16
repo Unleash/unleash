@@ -30,8 +30,13 @@ export const FlightRecorderProvider: FC<{
                 url,
                 clientKey: '',
                 batch: BATCH,
-                onError: (info) =>
-                    console.warn('Flight recorder dropped events', info),
+                // deliveryFailed is retried and routine in browsers
+                // (flaky wifi, adblockers) — warn only on real losses
+                onError: (info) => {
+                    if (info.reason !== 'deliveryFailed') {
+                        console.warn('Flight recorder dropped events', info);
+                    }
+                },
             });
             setRecorder(instance);
             return () => {

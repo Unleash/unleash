@@ -190,6 +190,12 @@ export class ApiTokenService {
         }
     }
 
+    public async markSeenByTokens(tokens: string[]): Promise<void> {
+        tokens.forEach((token) => {
+            this.lastSeenSecrets.add(token);
+        });
+    }
+
     public async getAllTokens(): Promise<IApiToken[]> {
         return this.store.getAll();
     }

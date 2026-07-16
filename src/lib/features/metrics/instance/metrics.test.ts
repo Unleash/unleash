@@ -483,6 +483,51 @@ describe('bulk metrics', () => {
             .expect(202);
     });
 
+    test('should mark seen tokens from bulk metrics', async () => {
+        const authed = await getSetup({
+            authentication: {
+                type: IAuthType.DEMO,
+                enableApiToken: true,
+            },
+            experimental: {
+                flags: {
+                    allowDeprecatedApiTokenMiddleware: true,
+                },
+            },
+        });
+        const upstreamToken =
+            await authed.services.apiTokenService.createApiTokenWithProjects({
+                tokenName: 'edge-upstream-token',
+                type: ApiTokenType.BACKEND,
+                environment: 'development',
+                projects: ['*'],
+            });
+        const sdkToken =
+            await authed.services.apiTokenService.createApiTokenWithProjects({
+                tokenName: 'edge-seen-token',
+                type: ApiTokenType.CLIENT,
+                environment: 'development',
+                projects: ['*'],
+            });
+        await authed.request
+            .post('/api/client/metrics/bulk')
+            .set('Authorization', upstreamToken.secret)
+            .send({
+                applications: [],
+                metrics: [],
+                seenTokens: [sdkToken.secret],
+            })
+            .expect(202);
+
+        await authed.services.apiTokenService.updateLastSeen();
+
+        const updatedToken = await authed.services.apiTokenService.getToken(
+            sdkToken.secret,
+        );
+        expect(updatedToken?.seenAt).toBeInstanceOf(Date);
+        await authed.destroy();
+    });
+
     test('should validate bulk metrics data', async () => {
         await request
             .post('/api/client/metrics/bulk')

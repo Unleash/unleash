@@ -11,6 +11,7 @@ import type {
     IUnleashServices,
     OpenApiService,
 } from '../../../services/index.js';
+import type { ApiTokenService } from '../../../services/api-token-service.js';
 import { createRequestSchema } from '../../../openapi/util/create-request-schema.js';
 import {
     emptyResponse,
@@ -48,18 +49,22 @@ export default class ClientMetricsController extends Controller {
 
     flagResolver: IFlagResolver;
 
+    apiTokenService: ApiTokenService;
+
     constructor(
         {
             clientInstanceService,
             clientMetricsServiceV2,
             openApiService,
             customMetricsService,
+            apiTokenService,
         }: Pick<
             IUnleashServices,
             | 'clientInstanceService'
             | 'clientMetricsServiceV2'
             | 'openApiService'
             | 'customMetricsService'
+            | 'apiTokenService'
         >,
         config: IUnleashConfig,
     ) {
@@ -71,6 +76,7 @@ export default class ClientMetricsController extends Controller {
         this.openApiService = openApiService;
         this.metricsV2 = clientMetricsServiceV2;
         this.customMetricsService = customMetricsService;
+        this.apiTokenService = apiTokenService;
         this.flagResolver = config.flagResolver;
 
         this.route({
@@ -288,7 +294,7 @@ export default class ClientMetricsController extends Controller {
         } else {
             const { body, user } = req;
             const clientIp = extractClientIp(req);
-            const { metrics, applications, impactMetrics } = body;
+            const { metrics, applications, impactMetrics, seenTokens } = body;
             const promises: Promise<void>[] = [];
 
             // when an app omits its `environment` and
@@ -339,6 +345,19 @@ export default class ClientMetricsController extends Controller {
                 if (impactMetrics && impactMetrics.length > 0) {
                     promises.push(
                         this.metricsV2.registerImpactMetrics(impactMetrics),
+                    );
+                }
+
+                if (seenTokens && seenTokens.length > 0) {
+                    promises.push(
+                        this.apiTokenService
+                            .markSeenByTokens(seenTokens)
+                            .catch((error) => {
+                                this.logger.warn(
+                                    'Failed to mark API tokens as seen from bulk metrics',
+                                    error,
+                                );
+                            }),
                     );
                 }
 

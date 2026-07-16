@@ -123,6 +123,38 @@ test('should collect metrics for requests', async () => {
     );
 });
 
+test('SDK API response times are recorded in a histogram, admin traffic is excluded', async () => {
+    eventBus.emit(REQUEST_TIME, {
+        path: '/api/client/features',
+        method: 'GET',
+        statusCode: 200,
+        time: 90,
+    });
+    eventBus.emit(REQUEST_TIME, {
+        path: '/api/frontend',
+        method: 'GET',
+        statusCode: 200,
+        time: 30,
+    });
+    eventBus.emit(REQUEST_TIME, {
+        path: '/api/admin/projects',
+        method: 'GET',
+        statusCode: 200,
+        time: 50,
+    });
+
+    const metrics = await prometheusRegister.metrics();
+    expect(metrics).toMatch(
+        /http_sdk_request_duration_milliseconds_count\{path="\/api\/client\/features",method="GET",status="200"\} 1/,
+    );
+    expect(metrics).toMatch(
+        /http_sdk_request_duration_milliseconds_count\{path="\/api\/frontend",method="GET",status="200"\} 1/,
+    );
+    expect(metrics).not.toMatch(
+        /http_sdk_request_duration_milliseconds[^\n]*\/api\/admin/,
+    );
+});
+
 test('should collect metrics for updated toggles', async () => {
     stores.eventStore.emit(FEATURE_UPDATED, {
         featureName: 'TestToggle',

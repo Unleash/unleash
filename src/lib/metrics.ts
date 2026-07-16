@@ -137,6 +137,12 @@ export function registerPrometheusMetrics(
         maxAgeSeconds: 600,
         ageBuckets: 5,
     });
+    const sdkRequestDuration = createHistogram({
+        name: 'http_sdk_request_duration_milliseconds',
+        help: 'Client and Frontend API response time',
+        labelNames: ['path', 'method', 'status'],
+        buckets: [1, 5, 10, 25, 50, 100, 250, 500, 1000, 2500, 5000],
+    });
     const schedulerDuration = createSummary({
         name: 'scheduler_duration_seconds',
         help: 'Scheduler duration time',
@@ -825,6 +831,18 @@ export function registerPrometheusMetrics(
                     appName,
                 })
                 .observe(time);
+            if (
+                path?.startsWith('/api/client') ||
+                path?.startsWith('/api/frontend')
+            ) {
+                sdkRequestDuration
+                    .labels({
+                        path,
+                        method,
+                        status: statusCode,
+                    })
+                    .observe(time);
+            }
             config.flagResolver.impactMetrics?.incrementCounter(
                 impactMetrics.REQUEST_COUNT,
                 1,

@@ -4,15 +4,16 @@ import React, {
     type SetStateAction,
     useEffect,
 } from 'react';
-import Select from 'component/common/select';
 import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm.ts';
-import { Box, InputAdornment, styled, TextField } from '@mui/material';
+import { InputAdornment, styled } from '@mui/material';
 import { CollaborationModeTooltip } from './CollaborationModeTooltip.tsx';
 import Input from 'component/common/Input/Input';
 import { FeatureFlagNamingTooltip } from './FeatureFlagNamingTooltip.tsx';
 import { useEventTracker } from 'hooks/useEventTracker';
 import type { ProjectLinkTemplateSchema } from 'openapi';
 import ProjectLinkTemplates from './ProjectLinkTemplates/ProjectLinkTemplates.tsx';
+import { SelectField } from 'component/common/SelectField/SelectField.tsx';
+import { FormGroup } from 'component/common/FormGroup/FormGroup.tsx';
 
 interface IProjectEnterpriseSettingsForm {
     projectId: string;
@@ -39,30 +40,21 @@ const StyledForm = styled('form')(({ theme }) => ({
 
 const StyledSubtitle = styled('div')(({ theme }) => ({
     color: theme.palette.text.secondary,
-    fontSize: theme.fontSizes.smallerBody,
-    lineHeight: 1.25,
-    paddingBottom: theme.spacing(1),
+    paddingBottom: theme.spacing(2),
 }));
 
-const StyledInput = styled(Input)(({ theme }) => ({
+const StyledInlineDescription = styled('span')({
+    display: 'inline-flex',
+    alignItems: 'center',
+});
+
+const StyledInput = styled(Input)({
     width: '100%',
-    marginBottom: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-}));
+});
 
-const StyledTextField = styled(TextField)(({ theme }) => ({
-    width: '100%',
+const StyledSelect = styled(SelectField)(({ theme }) => ({
     marginBottom: theme.spacing(2),
-}));
-
-const StyledFieldset = styled('fieldset')(() => ({
-    padding: 0,
-    border: 'none',
-}));
-
-const StyledSelect = styled(Select)(({ theme }) => ({
-    marginBottom: theme.spacing(2),
-    minWidth: '200px',
+    maxWidth: '200px',
 }));
 
 const StyledButtonContainer = styled('div')(() => ({
@@ -75,12 +67,14 @@ const StyledFlagNamingContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
-    gap: theme.spacing(1),
+    gap: theme.spacing(2),
     '& > *': { width: '100%' },
 }));
 
 const StyledPatternNamingExplanation = styled('div')(({ theme }) => ({
     'p + p': { marginTop: theme.spacing(1) },
+    color: theme.palette.text.secondary,
+    marginBottom: theme.spacing(2),
 }));
 
 export const validateFeatureNamingExample = ({
@@ -233,66 +227,53 @@ const ProjectEnterpriseSettingsForm: React.FC<
             }}
         >
             <>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        marginBottom: 1,
-                        gap: 1,
-                    }}
-                >
-                    <p>What is your project collaboration mode?</p>
-                    <CollaborationModeTooltip />
-                </Box>
                 <StyledSelect
-                    id='project-mode'
-                    value={projectMode}
+                    value={projectMode ?? ''}
                     label='Project collaboration mode'
+                    description={
+                        <StyledSubtitle>
+                            <StyledInlineDescription>
+                                Select a collaboration mode
+                                <CollaborationModeTooltip />
+                            </StyledInlineDescription>
+                        </StyledSubtitle>
+                    }
                     name='Project collaboration mode'
-                    onChange={(e) => {
-                        setProjectMode?.(e.target.value as ProjectMode);
-                    }}
+                    onChange={(mode) => setProjectMode?.(mode as ProjectMode)}
                     options={projectModeOptions}
                 />
             </>
-            <StyledFieldset>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        marginBottom: 1,
-                        gap: 1,
-                    }}
-                >
-                    <legend>Feature flag naming pattern</legend>
-                    <FeatureFlagNamingTooltip />
-                </Box>
+            <FormGroup
+                title={
+                    <StyledInlineDescription>
+                        Feature flag naming pattern
+                        <FeatureFlagNamingTooltip />
+                    </StyledInlineDescription>
+                }
+            >
                 <StyledFlagNamingContainer>
+                    <StyledPatternNamingExplanation id='pattern-naming-description'>
+                        <p>
+                            Define a{' '}
+                            <a
+                                href={`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Cheatsheet`}
+                                target='_blank'
+                                rel='noreferrer'
+                            >
+                                JavaScript RegEx
+                            </a>{' '}
+                            used to enforce feature flag names within this
+                            project. The regex will be surrounded by a leading{' '}
+                            <code>^</code> and a trailing <code>$</code>.
+                        </p>
+                        <p>
+                            Leave it empty if you don’t want to add a naming
+                            pattern.
+                        </p>
+                    </StyledPatternNamingExplanation>
                     <StyledInput
                         label={'Naming Pattern'}
                         name='feature flag naming pattern'
-                        description={
-                            <StyledPatternNamingExplanation id='pattern-naming-description'>
-                                <p>
-                                    Define a{' '}
-                                    <a
-                                        href={`https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Cheatsheet`}
-                                        target='_blank'
-                                        rel='noreferrer'
-                                    >
-                                        JavaScript RegEx
-                                    </a>{' '}
-                                    used to enforce feature flag names within
-                                    this project. The regex will be surrounded
-                                    by a leading <code>^</code> and a trailing{' '}
-                                    <code>$</code>.
-                                </p>
-                                <p>
-                                    Leave it empty if you don’t want to add a
-                                    naming pattern.
-                                </p>
-                            </StyledPatternNamingExplanation>
-                        }
                         aria-describedby='pattern-naming-description'
                         placeholder='[A-Za-z]+.[A-Za-z]+.[A-Za-z0-9-]+'
                         slotProps={{
@@ -337,7 +318,7 @@ const ProjectEnterpriseSettingsForm: React.FC<
                             onSetFeatureNamingExample(e.target.value)
                         }
                     />
-                    <StyledTextField
+                    <StyledInput
                         label={'Naming pattern description'}
                         name='feature flag naming description'
                         type={'text'}
@@ -353,12 +334,12 @@ The flag name should contain the project name, the feature name, and the ticket 
                         }
                     />
                 </StyledFlagNamingContainer>
+            </FormGroup>
 
-                <ProjectLinkTemplates
-                    linkTemplates={linkTemplates || []}
-                    setLinkTemplates={setLinkTemplates}
-                />
-            </StyledFieldset>
+            <ProjectLinkTemplates
+                linkTemplates={linkTemplates || []}
+                setLinkTemplates={setLinkTemplates}
+            />
             <StyledButtonContainer>{children}</StyledButtonContainer>
         </StyledForm>
     );

@@ -77,7 +77,7 @@ interface SelectFieldProps
         SelectProps,
         'onChange' | 'value' | 'label' | 'labelId' | 'id'
     > {
-    label: string;
+    label: ReactNode;
     description?: ReactNode;
     options: SelectFieldOption[];
     value: string;

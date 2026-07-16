@@ -32,8 +32,6 @@ const StyledForm = styled('form')(({ theme }) => ({
 
 const StyledSubtitle = styled('div')(({ theme }) => ({
     color: theme.palette.text.secondary,
-    fontSize: theme.fontSizes.smallerBody,
-    lineHeight: 1.25,
     paddingBottom: theme.spacing(1),
     '& span': {
         verticalAlign: 'bottom',

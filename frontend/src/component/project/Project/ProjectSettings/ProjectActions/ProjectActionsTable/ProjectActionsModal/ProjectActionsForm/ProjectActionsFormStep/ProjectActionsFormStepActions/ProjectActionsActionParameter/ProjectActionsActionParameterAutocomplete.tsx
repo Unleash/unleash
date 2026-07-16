@@ -1,4 +1,4 @@
-import { Autocomplete, TextField } from '@mui/material';
+import { AutocompleteField } from 'component/common/AutocompleteField/AutocompleteField';
 
 interface IProjectActionsActionParameterAutocompleteProps {
     label: string;
@@ -13,14 +13,13 @@ export const ProjectActionsActionParameterAutocomplete = ({
     onChange,
     options,
 }: IProjectActionsActionParameterAutocompleteProps) => (
-    <Autocomplete
+    <AutocompleteField
+        label={label}
+        size='small'
         options={options}
         autoHighlight
         autoSelect
         value={value}
         onInputChange={(_, parameter) => onChange(parameter)}
-        renderInput={(params) => (
-            <TextField {...params} size='small' label={label} />
-        )}
     />
 );

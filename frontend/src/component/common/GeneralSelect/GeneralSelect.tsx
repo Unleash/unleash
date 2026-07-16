@@ -8,11 +8,14 @@ import {
     styled,
     ListSubheader,
 } from '@mui/material';
+import { type ReactNode, useId } from 'react';
 import { SELECT_ITEM_ID } from 'utils/testIds';
 import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import type { SxProps } from '@mui/system';
 import type { Theme } from '@mui/material/styles';
 import { visuallyHidden } from '@mui/utils';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { FormField, formFieldLabelId } from '../FormField/FormField';
 
 export interface ISelectOption {
     key: string;
@@ -39,6 +42,7 @@ export interface IGeneralSelectProps<T extends string = string>
     name?: string;
     value?: T;
     label?: string;
+    description?: ReactNode;
     options: ISelectOption[] | SelectOptionGroup[];
     onChange: (key: T) => void;
     disabled?: boolean;
@@ -66,7 +70,7 @@ const toMenuItem = (option: ISelectOption) => (
     </MenuItem>
 );
 
-function GeneralSelect<T extends string = string>({
+function GeneralSelectControl<T extends string = string>({
     variant = 'outlined',
     name,
     value,
@@ -82,6 +86,9 @@ function GeneralSelect<T extends string = string>({
     labelId,
     ...rest
 }: IGeneralSelectProps<T>) {
+    const generatedId = useId();
+    const controlId = id ?? generatedId;
+    const resolvedLabelId = labelId ?? formFieldLabelId(controlId);
     const onSelectChange = (event: SelectChangeEvent) => {
         event.preventDefault();
         onChange(String(event.target.value) as T);
@@ -97,8 +104,8 @@ function GeneralSelect<T extends string = string>({
             {label ? (
                 <InputLabel
                     sx={visuallyHideLabel ? visuallyHidden : null}
-                    htmlFor={id}
-                    id={labelId}
+                    htmlFor={controlId}
+                    id={resolvedLabelId}
                 >
                     {label}
                 </InputLabel>
@@ -109,11 +116,11 @@ function GeneralSelect<T extends string = string>({
                 onChange={onSelectChange}
                 className={className}
                 label={visuallyHideLabel ? '' : label}
-                id={id}
+                id={controlId}
                 value={value ?? ''}
                 autoWidth
                 IconComponent={KeyboardArrowDownOutlined}
-                labelId={labelId}
+                labelId={resolvedLabelId}
                 {...rest}
             >
                 {isSelectOptionGroup(options)
@@ -127,6 +134,27 @@ function GeneralSelect<T extends string = string>({
                     : options.map(toMenuItem)}
             </Select>
         </StyledFormControl>
+    );
+}
+
+function GeneralSelect<T extends string = string>({
+    label = '',
+    description,
+    ...props
+}: IGeneralSelectProps<T>) {
+    const topLabelInputs = useUiFlag('topLabelInputs');
+
+    if (!label || props.visuallyHideLabel) {
+        return <GeneralSelectControl label={label} {...props} />;
+    }
+
+    return (
+        <FormField label={label} description={description}>
+            <GeneralSelectControl
+                {...props}
+                fullWidth={props.fullWidth ?? topLabelInputs}
+            />
+        </FormField>
     );
 }
 

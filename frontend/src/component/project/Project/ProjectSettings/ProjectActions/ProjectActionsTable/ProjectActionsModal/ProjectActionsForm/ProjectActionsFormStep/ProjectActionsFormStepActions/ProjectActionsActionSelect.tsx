@@ -1,4 +1,5 @@
-import { Autocomplete, TextField, styled } from '@mui/material';
+import { styled } from '@mui/material';
+import { AutocompleteField } from 'component/common/AutocompleteField/AutocompleteField';
 import type { ActionConfigurations } from 'interfaces/action';
 
 const StyledActionOption = styled('div')(({ theme }) => ({
@@ -41,7 +42,9 @@ export const ProjectActionsActionSelect = ({
     );
 
     return (
-        <Autocomplete
+        <AutocompleteField
+            label='Action'
+            size='small'
             options={actionOptions}
             autoHighlight
             autoSelect
@@ -49,9 +52,6 @@ export const ProjectActionsActionSelect = ({
             onChange={(_, value) => onChange(value ? value.key : '')}
             renderOption={renderActionOption}
             getOptionLabel={({ label }) => label}
-            renderInput={(params) => (
-                <TextField {...params} size='small' label='Action' />
-            )}
         />
     );
 };

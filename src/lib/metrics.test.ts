@@ -124,7 +124,7 @@ test('should collect metrics for requests', async () => {
     );
 });
 
-test('SDK API response times are recorded in a histogram, admin traffic is excluded', async () => {
+test('SDK histogram strips the base path from path labels', async () => {
     eventBus.emit(REQUEST_TIME, {
         path: '/demo/api/client/features',
         method: 'GET',
@@ -146,13 +146,16 @@ test('SDK API response times are recorded in a histogram, admin traffic is exclu
 
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(
-        /http_sdk_request_duration_milliseconds_count\{path="\/demo\/api\/client\/features",method="GET",status="200"\} 1/,
+        /http_sdk_request_duration_milliseconds_count\{path="\/api\/client\/features",method="GET",status="200"\} 1/,
     );
     expect(metrics).toMatch(
-        /http_sdk_request_duration_milliseconds_count\{path="\/demo\/api\/frontend",method="GET",status="200"\} 1/,
+        /http_sdk_request_duration_milliseconds_count\{path="\/api\/frontend",method="GET",status="200"\} 1/,
     );
     expect(metrics).not.toMatch(
-        /http_sdk_request_duration_milliseconds[^\n]*\/api\/admin/,
+        /http_sdk_request_duration_milliseconds[^\n]*api\/admin/,
+    );
+    expect(metrics).toMatch(
+        /http_request_duration_milliseconds_count\{path="\/demo\/api\/admin\/projects",method="GET",status="200",appName="undefined"\} 1/,
     );
 });
 

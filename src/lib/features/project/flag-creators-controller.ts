@@ -78,7 +78,7 @@ export default class FlagCreatorsController extends Controller {
 
         const { normalizedLimit, normalizedOffset } = normalizeQueryParams(
             req.query,
-            { limitDefault: 50, maxLimit: 100_000 },
+            { limitDefault: 50, maxLimit: 10000 },
         );
 
         const result = await this.projectService.getFlagCreatorsAcrossProjects(

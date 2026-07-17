@@ -2048,28 +2048,12 @@ export class FeatureToggleService {
         );
     }
 
-    // TODO: add project id.
     async deleteFeature(
         featureName: string,
+        projectId: string,
         auditUser: IAuditUser,
     ): Promise<void> {
-        await this.validateNoChildren(featureName);
-        const toggle = await this.featureToggleStore.get(featureName);
-        if (toggle === undefined) {
-            return; /// Do nothing, toggle is already deleted
-        }
-        const tags = await this.tagStore.getAllTagsForFeature(featureName);
-        await this.featureToggleStore.delete(featureName);
-
-        await this.eventService.storeEvent(
-            new FeatureDeletedEvent({
-                featureName,
-                project: toggle.project,
-                auditUser,
-                preData: toggle,
-                tags,
-            }),
-        );
+        await this.deleteFeatures([featureName], projectId, auditUser);
     }
 
     async deleteFeatures(
@@ -2082,9 +2066,7 @@ export class FeatureToggleService {
 
         const features =
             await this.featureToggleStore.getAllByNames(featureNames);
-        const eligibleFeatures = features.filter(
-            (toggle) => toggle.archivedAt !== null,
-        );
+        const eligibleFeatures = features.filter((toggle) => toggle.archived);
         const eligibleFeatureNames = eligibleFeatures.map(
             (toggle) => toggle.name,
         );
@@ -2094,10 +2076,15 @@ export class FeatureToggleService {
         }
 
         const tags = await this.tagStore.getAllByFeatures(eligibleFeatureNames);
-        await this.featureToggleStore.batchDelete(eligibleFeatureNames);
+        const deletedFeatures =
+            await this.featureToggleStore.batchDelete(eligibleFeatureNames);
+
+        if (deletedFeatures.length === 0) {
+            return;
+        }
 
         await this.eventService.storeEvents(
-            eligibleFeatures.map(
+            deletedFeatures.map(
                 (feature) =>
                     new FeatureDeletedEvent({
                         featureName: feature.name,

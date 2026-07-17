@@ -51,11 +51,14 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return features;
     }
 
-    async batchDelete(featureNames: string[]): Promise<void> {
+    async batchDelete(featureNames: string[]): Promise<FeatureToggle[]> {
+        const deletedFeatures = this.features.filter((feature) =>
+            featureNames.includes(feature.name),
+        );
         this.features = this.features.filter(
             (feature) => !featureNames.includes(feature.name),
         );
-        return Promise.resolve();
+        return deletedFeatures;
     }
 
     async batchRevive(featureNames: string[]): Promise<FeatureToggle[]> {

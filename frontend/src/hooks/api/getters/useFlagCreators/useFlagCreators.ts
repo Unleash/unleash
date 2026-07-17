@@ -11,7 +11,7 @@ type FlagCreatorsResponse = {
 
 export const useFlagCreators = () => {
     const enabled = useUiFlag('flagListCreatedByFilter');
-    const url = formatApiPath('api/admin/flag-creators?limit=500');
+    const url = formatApiPath('api/admin/flag-creators?limit=10000');
     const { data } = useConditionalSWR<FlagCreatorsResponse>(
         enabled,
         { total: 0, flagCreators: [] },

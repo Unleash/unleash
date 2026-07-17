@@ -163,7 +163,6 @@
         "frontend/src/component/feature/StrategyTypes/NewStrategyVariants.tsx",
         "frontend/src/component/feature/StrategyTypes/StrategyVariants.tsx",
         "frontend/src/component/feedback/FeedbackCESContext/FeedbackCESProvider.tsx",
-        "frontend/src/component/filter/FilterItem/FilterItem.tsx",
         "frontend/src/component/filter/Filters/Filters.tsx",
         "frontend/src/component/impact-metrics/ImpactMetrics.tsx",
         "frontend/src/component/impact-metrics/MultimetricChart/useChartPlotArea.ts",

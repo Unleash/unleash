@@ -1,14 +1,16 @@
 import Search from '@mui/icons-material/Search';
-import { Box, InputAdornment, List, ListItemText } from '@mui/material';
+import { Box, InputAdornment } from '@mui/material';
 import { type FC, type ReactNode, useEffect, useRef, useState } from 'react';
 import {
-    StyledCheckbox,
     StyledDropdown,
-    StyledListItem,
     StyledPopover,
     StyledTextField,
 } from './FilterItem.styles';
 import { FilterItemChip } from './FilterItemChip/FilterItemChip.tsx';
+import {
+    VirtualizedFilterOptions,
+    type VirtualizedFilterOptionsHandle,
+} from './VirtualizedFilterOptions.tsx';
 
 export interface IFilterItemProps {
     name: string;
@@ -27,51 +29,6 @@ export type FilterItemParams = {
     values: string[];
 };
 
-interface UseSelectionManagementProps {
-    options: Array<{ label: string; value: string }>;
-    handleToggle: (value: string) => () => void;
-}
-
-const useSelectionManagement = ({
-    options,
-    handleToggle,
-}: UseSelectionManagementProps) => {
-    const listRefs = useRef<Array<HTMLInputElement | HTMLLIElement | null>>([]);
-
-    const handleSelection = (event: React.KeyboardEvent, index: number) => {
-        // we have to be careful not to prevent other keys e.g tab
-        if (event.key === 'ArrowDown' && index < listRefs.current.length - 1) {
-            event.preventDefault();
-            listRefs.current[index + 1]?.focus();
-        } else if (event.key === 'ArrowUp' && index > 0) {
-            event.preventDefault();
-            listRefs.current[index - 1]?.focus();
-        } else if (
-            event.key === 'Enter' &&
-            index === 0 &&
-            listRefs.current[0]?.value &&
-            options.length > 0
-        ) {
-            // if the search field is not empty and the user presses
-            // enter from the search field, toggle the topmost item in
-            // the filtered list event.preventDefault();
-            handleToggle(options[0].value)();
-        } else if (
-            event.key === 'Enter' ||
-            // allow selection with space when not in the search field
-            (index !== 0 && event.key === ' ')
-        ) {
-            event.preventDefault();
-            if (index > 0) {
-                const listItemIndex = index - 1;
-                handleToggle(options[listItemIndex].value)();
-            }
-        }
-    };
-
-    return { listRefs, handleSelection };
-};
-
 export const FilterItem: FC<IFilterItemProps> = ({
     name,
     label,
@@ -84,6 +41,8 @@ export const FilterItem: FC<IFilterItemProps> = ({
     initMode = 'auto-open',
 }) => {
     const ref = useRef<HTMLDivElement>(null);
+    const searchRef = useRef<HTMLInputElement>(null);
+    const listRef = useRef<VirtualizedFilterOptionsHandle>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
     const [searchText, setSearchText] = useState('');
 
@@ -94,6 +53,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
         setAnchorEl(ref.current);
     };
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: intentional mount-only effect — popover should open once on mount, not re-open on state changes
     useEffect(() => {
         if (!state && initMode === 'auto-open') {
             open();
@@ -122,33 +82,37 @@ export const FilterItem: FC<IFilterItemProps> = ({
         option.label.toLowerCase().includes(searchText.toLowerCase()),
     );
 
-    const handleToggle = (value: string) => () => {
-        if (
-            selectedOptions?.some((selectedOption) => selectedOption === value)
-        ) {
-            const newOptions = selectedOptions?.filter(
-                (selectedOption) => selectedOption !== value,
-            );
-            onChange({ operator: currentOperator, values: newOptions });
+    const handleToggle = (value: string) => {
+        if (selectedOptions.includes(value)) {
+            onChange({
+                operator: currentOperator,
+                values: selectedOptions.filter(
+                    (selected) => selected !== value,
+                ),
+            });
         } else {
-            const newOptions = [
-                ...(selectedOptions ?? []),
-                (
-                    options.find((option) => option.value === value) ?? {
-                        label: '',
-                        value: '',
-                    }
-                ).value,
-            ];
-            onChange({ operator: currentOperator, values: newOptions });
+            onChange({
+                operator: currentOperator,
+                values: [...selectedOptions, value],
+            });
         }
     };
 
-    const { listRefs, handleSelection } = useSelectionManagement({
-        options: filteredOptions,
-        handleToggle,
-    });
+    const handleSearchKeyDown = (event: React.KeyboardEvent) => {
+        if (event.key === 'ArrowDown' && filteredOptions.length > 0) {
+            event.preventDefault();
+            listRef.current?.focusFirst();
+        } else if (
+            event.key === 'Enter' &&
+            searchRef.current?.value &&
+            filteredOptions.length > 0
+        ) {
+            event.preventDefault();
+            handleToggle(filteredOptions[0].value);
+        }
+    };
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: onChange and currentOperators are unstable inline references from the caller — adding them would cause the effect to run on every render
     useEffect(() => {
         if (state && !currentOperators.includes(state.operator)) {
             onChange({
@@ -157,6 +121,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
             });
         }
     }, [state]);
+
     return (
         <>
             <Box ref={ref}>
@@ -203,54 +168,16 @@ export const FilterItem: FC<IFilterItemProps> = ({
                                 ),
                             },
                         }}
-                        inputRef={(el) => {
-                            listRefs.current[0] = el;
-                        }}
-                        onKeyDown={(event) => handleSelection(event, 0)}
+                        inputRef={searchRef}
+                        onKeyDown={handleSearchKeyDown}
                     />
-                    <List sx={{ overflowY: 'auto' }} disablePadding>
-                        {filteredOptions.map((option, index) => {
-                            const labelId = `checkbox-list-label-${option.value}`;
-
-                            return (
-                                <StyledListItem
-                                    key={option.value}
-                                    dense
-                                    disablePadding
-                                    tabIndex={0}
-                                    onClick={handleToggle(option.value)}
-                                    ref={(el) => {
-                                        listRefs.current[index + 1] = el;
-                                    }}
-                                    onKeyDown={(event) =>
-                                        handleSelection(event, index + 1)
-                                    }
-                                >
-                                    <StyledCheckbox
-                                        edge='start'
-                                        checked={
-                                            selectedOptions?.some(
-                                                (selectedOption) =>
-                                                    selectedOption ===
-                                                    option.value,
-                                            ) ?? false
-                                        }
-                                        tabIndex={-1}
-                                        slotProps={{
-                                            input: {
-                                                'aria-labelledby': labelId,
-                                            },
-                                        }}
-                                        size='small'
-                                    />
-                                    <ListItemText
-                                        id={labelId}
-                                        primary={option.label}
-                                    />
-                                </StyledListItem>
-                            );
-                        })}
-                    </List>
+                    <VirtualizedFilterOptions
+                        ref={listRef}
+                        options={filteredOptions}
+                        selectedValues={selectedOptions}
+                        onToggle={handleToggle}
+                        onEscapeToSearch={() => searchRef.current?.focus()}
+                    />
                 </StyledDropdown>
             </StyledPopover>
         </>

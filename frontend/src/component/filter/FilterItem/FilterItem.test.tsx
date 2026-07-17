@@ -7,28 +7,30 @@ import {
     type IFilterItemProps,
 } from './FilterItem.tsx';
 
-const getOption = (option: string) =>
-    screen.getByText(option).closest('li')!.querySelector('input')!;
+const getOption = (option: string) => {
+    const li = screen
+        .getAllByText(option)
+        .map((el) => el.closest('li'))
+        .find((el): el is HTMLLIElement => el !== null)!;
+    return li.querySelector('input')!;
+};
 
-const setup = (initialState: FilterItemParams | null) => {
+const defaultOptions = [
+    { label: 'Option 1', value: '1' },
+    { label: 'Option 2', value: '2' },
+    { label: 'Option 3', value: '3' },
+];
+
+const setup = (
+    initialState: FilterItemParams | null,
+    options: IFilterItemProps['options'] = defaultOptions,
+    initMode?: IFilterItemProps['initMode'],
+) => {
     const recordedChanges: FilterItemParams[] = [];
     const mockProps: IFilterItemProps = {
         name: 'Test Label',
         label: 'irrelevant',
-        options: [
-            {
-                label: 'Option 1',
-                value: '1',
-            },
-            {
-                label: 'Option 2',
-                value: '2',
-            },
-            {
-                label: 'Option 3',
-                value: '3',
-            },
-        ],
+        options,
         onChange: (value: FilterItemParams) => {
             recordedChanges.push(value);
         },
@@ -36,6 +38,7 @@ const setup = (initialState: FilterItemParams | null) => {
         singularOperators: ['IS', 'IS_NOT'],
         pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
         state: initialState,
+        initMode,
     };
 
     render(<FilterItem {...mockProps} />);
@@ -194,6 +197,95 @@ describe('FilterItem Component', () => {
         expect(recordedChanges).toContainEqual({
             operator: 'IS',
             values: ['1'],
+        });
+    });
+
+    it('filters options case-insensitively', async () => {
+        setup(null);
+
+        const searchInput = await screen.findByPlaceholderText('Search');
+        fireEvent.change(searchInput, { target: { value: 'OPTION 3' } });
+
+        expect(screen.getByText('Option 3')).toBeInTheDocument();
+        expect(screen.queryByText('Option 1')).not.toBeInTheDocument();
+    });
+
+    it('selects the top filtered option on Enter from the search field', async () => {
+        const recordedChanges = setup(null);
+
+        const searchInput = await screen.findByPlaceholderText('Search');
+        fireEvent.change(searchInput, { target: { value: 'Option 3' } });
+        fireEvent.keyDown(searchInput, { key: 'Enter' });
+
+        expect(recordedChanges).toContainEqual({
+            operator: 'IS',
+            values: ['3'],
+        });
+    });
+
+    it('does not select anything on Enter when search matches nothing', async () => {
+        const recordedChanges = setup(null);
+
+        const searchInput = await screen.findByPlaceholderText('Search');
+        fireEvent.change(searchInput, { target: { value: 'no-match' } });
+        fireEvent.keyDown(searchInput, { key: 'Enter' });
+
+        expect(recordedChanges).toEqual([]);
+    });
+
+    it('deselects an already-selected option when clicked', async () => {
+        const recordedChanges = setup({
+            operator: 'IS',
+            values: ['2'],
+        });
+
+        const valuesElement = await screen.findByText('Option 2');
+        valuesElement.click();
+        await screen.findByPlaceholderText('Search');
+
+        getOption('Option 2').click();
+
+        expect(recordedChanges).toContainEqual({
+            operator: 'IS',
+            values: [],
+        });
+    });
+
+    it('reflects the selected checkboxes for the currently visible filtered options', async () => {
+        setup({
+            operator: 'IS_ANY_OF',
+            values: ['1', '3'],
+        });
+
+        (await screen.findByText('Option 1, Option 3')).click();
+
+        const searchInput = await screen.findByPlaceholderText('Search');
+        fireEvent.change(searchInput, { target: { value: 'Option 3' } });
+
+        expect(getOption('Option 3').checked).toBe(true);
+    });
+
+    it('does not auto-open when initMode is manual', () => {
+        setup(null, defaultOptions, 'manual');
+
+        expect(screen.queryByPlaceholderText('Search')).not.toBeInTheDocument();
+    });
+
+    it('unmounted options show up when searched', async () => {
+        const manyOptions = Array.from({ length: 500 }, (_, i) => ({
+            label: `Item ${i + 1}`,
+            value: String(i + 1),
+        }));
+
+        const recordedChanges = setup(null, manyOptions);
+
+        const searchInput = await screen.findByPlaceholderText('Search');
+        fireEvent.change(searchInput, { target: { value: 'Item 250' } });
+        fireEvent.keyDown(searchInput, { key: 'Enter' });
+
+        expect(recordedChanges).toContainEqual({
+            operator: 'IS',
+            values: ['250'],
         });
     });
 });

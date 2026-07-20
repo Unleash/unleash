@@ -40,6 +40,7 @@ class ResizeObserver {
 class IntersectionObserver {
     root: any;
     rootMargin: any;
+    scrollMargin = '0px';
     thresholds: any;
 
     observe() {}

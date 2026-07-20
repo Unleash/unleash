@@ -2,6 +2,20 @@
 import { FormHelperTextOwnProps } from '@mui/material/FormHelperText';
 
 declare module '@mui/material/styles' {
+    interface Shape {
+        borderRadiusSmall: number;
+        borderRadiusMedium: number;
+        borderRadiusLarge: number;
+        borderRadiusExtraLarge: number;
+        tableRowHeight: number;
+        tableRowHeightCompact: number;
+        tableRowHeightDense: number;
+    }
+
+    interface ZIndex {
+        sticky: number;
+    }
+
     interface CustomTheme {
         mode: 'light' | 'dark';
         /**
@@ -214,22 +228,6 @@ declare module '@mui/material/styles' {
     interface TypeAction extends CustomTypeAction {}
 }
 
-declare module '@mui/system/createTheme/shape' {
-    interface Shape {
-        borderRadiusSmall: number;
-        borderRadiusMedium: number;
-        borderRadiusLarge: number;
-        borderRadiusExtraLarge: number;
-        tableRowHeight: number;
-        tableRowHeightCompact: number;
-        tableRowHeightDense: number;
-    }
-}
-declare module '@mui/material/styles/zIndex' {
-    interface ZIndex {
-        sticky: number;
-    }
-}
 declare module '@mui/material' {
     interface ButtonPropsColorOverrides {
         web: true;

@@ -1,6 +1,6 @@
 import { useMemo, type ComponentProps, type FC } from 'react';
 import EmptyIcon from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
-import type SvgIcon from '@mui/material/SvgIcon/SvgIcon';
+import type SvgIcon from '@mui/material/SvgIcon';
 import ApplicationsIcon from '@mui/icons-material/AppsOutlined';
 import ContextFieldsIcon from '@mui/icons-material/AccountTreeOutlined';
 import FlagTypesIcon from '@mui/icons-material/OutlinedFlag';

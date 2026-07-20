@@ -1,6 +1,9 @@
 import { expect, test } from 'vitest';
 import type { Row } from '@tanstack/react-table';
-import { sortingFnsWithFavorites } from './usePinnedFavorites.js';
+import {
+    sortingFnsWithFavorites,
+    type WithFavorite,
+} from './usePinnedFavorites.js';
 
 type Datum = { id: number; favorite: boolean };
 
@@ -15,7 +18,7 @@ const data: Datum[] = [
 const rows = data.map((datum) => ({
     original: datum,
     getValue: (key: string) => (datum as Record<string, unknown>)[key],
-})) as unknown as Row<Datum>[];
+})) as unknown as Row<WithFavorite>[];
 
 test('puts favorite items first', () => {
     const output = rows.sort((rowA, rowB) =>

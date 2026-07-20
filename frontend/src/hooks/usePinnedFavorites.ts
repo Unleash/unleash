@@ -3,7 +3,7 @@ import { sortingFns } from 'utils/sortingFns';
 import type { Row, SortingFn } from '@tanstack/react-table';
 import { useEventTracker } from './useEventTracker.js';
 
-type WithFavorite = {
+export type WithFavorite = {
     favorite: boolean;
     [key: string]: unknown;
 };

@@ -132,8 +132,8 @@ const StrategyInputList = ({
                     onKeyDown={onKeyDown}
                     data-testid={STRATEGY_INPUT_LIST}
                 />
-                {/* @ts-expect-error */}
                 <Button
+                    // @ts-expect-error -- handler accepts the shared input change event shape
                     onClick={setValue}
                     data-testid={ADD_TO_STRATEGY_INPUT_LIST}
                     variant='outlined'

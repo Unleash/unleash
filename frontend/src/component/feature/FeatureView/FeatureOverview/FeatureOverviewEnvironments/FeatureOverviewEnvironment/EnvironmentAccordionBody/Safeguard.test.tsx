@@ -8,8 +8,9 @@ import {
     UPDATE_FEATURE_ENVIRONMENT,
     UPDATE_FEATURE_STRATEGY,
 } from 'component/providers/AccessProvider/permissions';
-import { AddSafeguard, Safeguard } from './Safeguard.tsx';
+import { Safeguard } from './Safeguard.tsx';
 import type { ISafeguard } from 'interfaces/safeguard';
+import type { IReleasePlan } from 'interfaces/releasePlans';
 
 vi.mock(
     '../../../ReleasePlan/SafeguardForm/MiniMetricsChartWithTooltip.tsx',
@@ -184,15 +185,37 @@ const enableChangeRequests = () => {
     );
 };
 
-const selectSafeguardType = async (
-    user: ReturnType<typeof userEvent.setup>,
-    menuLabel: string,
-) => {
+const openSafeguardForm = async (user: ReturnType<typeof userEvent.setup>) => {
     const addButton = await screen.findByText('Add safeguard');
     await user.click(addButton);
 
-    const menuItem = await screen.findByText(menuLabel);
-    await user.click(menuItem);
+    return await screen.findByRole('combobox', { name: 'Safeguard action' });
+};
+
+const switchSafeguardType = async (
+    user: ReturnType<typeof userEvent.setup>,
+    optionLabel: string,
+) => {
+    const typeSelect = await screen.findByRole('combobox', {
+        name: 'Safeguard action',
+    });
+    await user.click(typeSelect);
+    const option = await screen.findByText(optionLabel);
+    await user.click(option);
+
+    await waitFor(() => {
+        expect(typeSelect).toHaveTextContent(optionLabel);
+    });
+};
+
+const selectSafeguardType = async (
+    user: ReturnType<typeof userEvent.setup>,
+    optionLabel: string,
+) => {
+    await openSafeguardForm(user);
+    if (optionLabel === 'Disable environment') return;
+
+    await switchSafeguardType(user, optionLabel);
 };
 
 const deleteSafeguard = async (
@@ -210,67 +233,10 @@ const deleteSafeguard = async (
     await user.click(confirmButton);
 };
 
-describe('AddSafeguard', () => {
-    test('should show type menu when featureEnv is enabled', async () => {
-        const user = userEvent.setup();
-        const onSelect = vi.fn();
-
-        render(<AddSafeguard onSelect={onSelect} releasePlan={releasePlan} />, {
-            route: '/',
-            permissions,
-        });
-
-        const addButton = await screen.findByText('Add safeguard');
-        await user.click(addButton);
-
-        await screen.findByText('Disable environment');
-        await screen.findByText('Pause release plan automation');
-    });
-
-    test('should call onSelect with chosen type', async () => {
-        const user = userEvent.setup();
-        const onSelect = vi.fn();
-
-        render(<AddSafeguard onSelect={onSelect} releasePlan={releasePlan} />, {
-            route: '/',
-            permissions,
-        });
-
-        const addButton = await screen.findByText('Add safeguard');
-        await user.click(addButton);
-
-        const menuItem = await screen.findByText('Disable environment');
-        await user.click(menuItem);
-
-        expect(onSelect).toHaveBeenCalledWith('featureEnvironment');
-    });
-
-    test('should disable pause automation when no release plan', async () => {
-        const user = userEvent.setup();
-        const onSelect = vi.fn();
-
-        render(<AddSafeguard onSelect={onSelect} />, {
-            route: '/',
-            permissions,
-        });
-
-        const addButton = await screen.findByText('Add safeguard');
-        await user.click(addButton);
-
-        const pauseItem = await screen.findByText(
-            'Pause release plan automation',
-        );
-        expect(pauseItem.closest('[role="menuitem"]')).toHaveAttribute(
-            'aria-disabled',
-            'true',
-        );
-    });
-});
-
 describe('Safeguard', () => {
     const renderSection = (props?: {
         featureEnvSafeguard?: ISafeguard;
-        releasePlanSafeguard?: ISafeguard;
+        releasePlan?: IReleasePlan;
     }) => {
         const onSafeguardChange = vi.fn();
         render(
@@ -280,11 +246,7 @@ describe('Safeguard', () => {
                     element={
                         <Safeguard
                             featureEnvSafeguard={props?.featureEnvSafeguard}
-                            releasePlan={
-                                props?.releasePlanSafeguard
-                                    ? releasePlanWithSafeguard
-                                    : releasePlan
-                            }
+                            releasePlan={props?.releasePlan}
                             environmentName='production'
                             featureId='feature1'
                             onSafeguardChange={onSafeguardChange}
@@ -301,21 +263,48 @@ describe('Safeguard', () => {
     };
 
     test('should show one Add safeguard button when no safeguards exist', async () => {
-        renderSection();
+        renderSection({ releasePlan });
 
         const buttons = await screen.findAllByText('Add safeguard');
         expect(buttons).toHaveLength(1);
     });
 
+    test('should open the form with disable environment preselected and explained', async () => {
+        const user = userEvent.setup();
+        renderSection({ releasePlan });
+
+        const typeSelect = await openSafeguardForm(user);
+        expect(typeSelect).toHaveTextContent('Disable environment');
+
+        await user.click(typeSelect);
+        await screen.findByText(
+            'If your chosen metric crosses its threshold, this flag is turned off in this environment. Existing users stop seeing the flag immediately.',
+        );
+    });
+
+    test('should require a release plan for the pause automation safeguard', async () => {
+        const user = userEvent.setup();
+        renderSection();
+
+        const typeSelect = await openSafeguardForm(user);
+        await user.click(typeSelect);
+
+        const pauseOption = await screen.findByRole('option', {
+            name: /Pause release plan automation/,
+        });
+        expect(pauseOption).toHaveAttribute('aria-disabled', 'true');
+        await screen.findByText('Add a release plan to use this option');
+    });
+
     test('should show existing feature env safeguard', async () => {
-        renderSection({ featureEnvSafeguard });
+        renderSection({ featureEnvSafeguard, releasePlan });
 
         await screen.findByText('Disable environment when');
         expect(screen.queryByText('Add safeguard')).not.toBeInTheDocument();
     });
 
     test('should show existing release plan safeguard', async () => {
-        renderSection({ releasePlanSafeguard });
+        renderSection({ releasePlan: releasePlanWithSafeguard });
 
         await screen.findByText('Pause automation when');
         expect(screen.queryByText('Add safeguard')).not.toBeInTheDocument();
@@ -420,10 +409,9 @@ describe('Safeguard', () => {
             labels: { appName: [], metric_type: ['counter'] },
         });
 
-        const { onSafeguardChange } = renderSection();
+        const { onSafeguardChange } = renderSection({ releasePlan });
 
         await selectSafeguardType(user, 'Disable environment');
-        await screen.findByText('Disable environment when');
         const saveButton = await screen.findByText('Save');
         await user.click(saveButton);
 
@@ -455,10 +443,9 @@ describe('Safeguard', () => {
             'put',
         );
 
-        const { onSafeguardChange } = renderSection();
+        const { onSafeguardChange } = renderSection({ releasePlan });
 
         await selectSafeguardType(user, 'Disable environment');
-        await screen.findByText('Disable environment when');
 
         const saveButton = await screen.findByText('Save');
         await user.click(saveButton);
@@ -513,10 +500,9 @@ describe('Safeguard', () => {
             'post',
         );
 
-        const { onSafeguardChange } = renderSection();
+        const { onSafeguardChange } = renderSection({ releasePlan });
 
         await selectSafeguardType(user, 'Disable environment');
-        await screen.findByText('Disable environment when');
 
         const saveButton = await screen.findByText('Save');
         await user.click(saveButton);
@@ -549,10 +535,9 @@ describe('Safeguard', () => {
         const user = userEvent.setup();
         enableChangeRequests();
 
-        renderSection();
+        renderSection({ releasePlan });
 
         await selectSafeguardType(user, 'Disable environment');
-        await screen.findByText('Disable environment when');
 
         const saveButton = await screen.findByText('Save');
         await user.click(saveButton);
@@ -565,13 +550,13 @@ describe('Safeguard', () => {
 
         await waitFor(() => {
             expect(
-                screen.queryByText('Disable environment when'),
+                screen.queryByRole('combobox', { name: 'Safeguard action' }),
             ).not.toBeInTheDocument();
         });
         await screen.findByText('Add safeguard');
     });
 
-    test('should add release plan safeguard via API', async () => {
+    test('should add release plan safeguard via API, keeping values entered before the type switch', async () => {
         const user = userEvent.setup();
         const { requests } = testServerRoute(
             server,
@@ -580,10 +565,14 @@ describe('Safeguard', () => {
             'put',
         );
 
-        const { onSafeguardChange } = renderSection();
+        const { onSafeguardChange } = renderSection({ releasePlan });
 
-        await selectSafeguardType(user, 'Pause release plan automation');
-        await screen.findByText('Pause automation when');
+        await openSafeguardForm(user);
+        const thresholdInput = screen.getByDisplayValue('0');
+        await user.clear(thresholdInput);
+        await user.type(thresholdInput, '42');
+
+        await switchSafeguardType(user, 'Pause release plan automation');
 
         const saveButton = await screen.findByText('Save');
         await user.click(saveButton);
@@ -591,7 +580,15 @@ describe('Safeguard', () => {
         await waitFor(() => {
             expect(onSafeguardChange).toHaveBeenCalled();
         });
-        expect(requests).toMatchObject([defaultSafeguardPayload]);
+        expect(requests).toMatchObject([
+            {
+                ...defaultSafeguardPayload,
+                triggerCondition: {
+                    operator: '>',
+                    threshold: 42,
+                },
+            },
+        ]);
     });
 
     test('should delete existing release plan safeguard', async () => {
@@ -603,7 +600,9 @@ describe('Safeguard', () => {
             'delete',
         );
 
-        const { onSafeguardChange } = renderSection({ releasePlanSafeguard });
+        const { onSafeguardChange } = renderSection({
+            releasePlan: releasePlanWithSafeguard,
+        });
 
         await screen.findByText('Pause automation when');
         await deleteSafeguard(user);
@@ -623,7 +622,10 @@ describe('Safeguard', () => {
             'post',
         );
 
-        const { onSafeguardChange } = renderSection({ featureEnvSafeguard });
+        const { onSafeguardChange } = renderSection({
+            featureEnvSafeguard,
+            releasePlan,
+        });
 
         await screen.findByText('Disable environment when');
         await deleteSafeguard(user, 'Add suggestion to draft');
@@ -651,7 +653,10 @@ describe('Safeguard', () => {
             'delete',
         );
 
-        const { onSafeguardChange } = renderSection({ featureEnvSafeguard });
+        const { onSafeguardChange } = renderSection({
+            featureEnvSafeguard,
+            releasePlan,
+        });
 
         await screen.findByText('Disable environment when');
         await deleteSafeguard(user);
@@ -671,10 +676,9 @@ describe('Safeguard', () => {
             'post',
         );
 
-        const { onSafeguardChange } = renderSection();
+        const { onSafeguardChange } = renderSection({ releasePlan });
 
         await selectSafeguardType(user, 'Pause release plan automation');
-        await screen.findByText('Pause automation when');
 
         const saveButton = await screen.findByText('Save');
         await user.click(saveButton);
@@ -710,7 +714,9 @@ describe('Safeguard', () => {
             'post',
         );
 
-        const { onSafeguardChange } = renderSection({ releasePlanSafeguard });
+        const { onSafeguardChange } = renderSection({
+            releasePlan: releasePlanWithSafeguard,
+        });
 
         await screen.findByText('Pause automation when');
         await deleteSafeguard(user, 'Add suggestion to draft');

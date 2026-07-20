@@ -1,6 +1,10 @@
 import Input from 'component/common/Input/Input';
 import {
-    TextField,
+    FormField,
+    FormFieldControlAligner,
+} from 'component/common/FormField/FormField';
+import { FormGroup } from 'component/common/FormGroup/FormGroup';
+import {
     Button,
     Switch,
     Typography,
@@ -43,24 +47,31 @@ const StyledForm = styled('form')({
     height: '100%',
 });
 
-const StyledInputDescription = styled('p')(({ theme }) => ({
-    marginBottom: theme.spacing(1),
-}));
-
 const styledInput = (theme: Theme) => ({
     width: '100%',
     marginBottom: theme.spacing(2),
 });
 
-const StyledTagContainer = styled('div')(({ theme }) => ({
+const StyledValueRow = styled('div')(({ theme }) => ({
     display: 'grid',
-    gridTemplateColumns: '1fr auto',
+    gridTemplateColumns: '1fr 2fr auto',
     gap: theme.spacing(1),
-    marginBottom: theme.spacing(2),
+    alignItems: 'start',
+    paddingBottom: theme.spacing(1),
+    '&& > *': {
+        marginBottom: 0,
+    },
 }));
 
 const StyledInputHeader = styled('p')(({ theme }) => ({
     marginBottom: theme.spacing(0.5),
+    marginTop: theme.spacing(2),
+    fontWeight: theme.typography.fontWeightBold,
+    color: theme.palette.text.primary,
+}));
+
+const StyledHelpText = styled('p')(({ theme }) => ({
+    color: theme.palette.text.secondary,
 }));
 
 const StyledSwitchContainer = styled('div')({
@@ -169,79 +180,79 @@ export const ContextForm: React.FC<IContextForm> = ({
                     onBlur={validateContext}
                     autoFocus
                 />
-                <StyledInputDescription>
-                    What is this context for?
-                </StyledInputDescription>
-                <TextField
+                <Input
                     sx={styledInput}
                     label='Context description (optional)'
-                    variant='outlined'
                     multiline
+                    minRows={3}
                     maxRows={4}
                     value={contextDesc}
                     size='small'
                     onChange={(e) => setContextDesc(e.target.value)}
                 />
-                <StyledInputDescription>
-                    Which values do you want to allow?
-                </StyledInputDescription>
-                <StyledTagContainer>
-                    <TextField
-                        label='Legal value (optional)'
-                        name='value'
-                        sx={{ gridColumn: 1 }}
-                        value={value}
-                        error={Boolean(errors.tag)}
-                        helperText={errors.tag}
-                        variant='outlined'
-                        size='small'
-                        onChange={(e) => setValue(e.target.value)}
-                        onKeyPress={(e) => onKeyDown(e)}
-                        onBlur={() => setValueFocused(false)}
-                        onFocus={() => setValueFocused(true)}
-                        slotProps={{
-                            htmlInput: { maxLength: 100 },
-                        }}
-                    />
-                    <TextField
-                        label='Value description (optional)'
-                        sx={{ gridColumn: 1 }}
-                        value={valueDesc}
-                        variant='outlined'
-                        size='small'
-                        onChange={(e) => setValueDesc(e.target.value)}
-                        onKeyPress={(e) => onKeyDown(e)}
-                        onBlur={() => setValueFocused(false)}
-                        onFocus={() => setValueFocused(true)}
-                        slotProps={{
-                            htmlInput: { maxLength: 100 },
-                        }}
-                    />
-                    <Button
-                        sx={{ gridColumn: 2 }}
-                        startIcon={<Add />}
-                        onClick={addLegalValue}
-                        variant='outlined'
-                        color='primary'
-                        disabled={!value.trim() || isDuplicateValue}
-                    >
-                        Add
-                    </Button>
-                </StyledTagContainer>
-                <ContextFormChipList>
-                    {legalValues.map((legalValue) => {
-                        return (
-                            <ContextFormChip
-                                key={legalValue.value}
-                                label={legalValue.value}
-                                description={legalValue.description}
-                                onRemove={() => removeLegalValue(legalValue)}
+                <FormField
+                    label='Legal values (optional)'
+                    description='Which values do you want to allow?'
+                >
+                    <FormGroup>
+                        <StyledValueRow>
+                            <Input
+                                fullWidth
+                                label='Legal value'
+                                name='value'
+                                value={value}
+                                error={Boolean(errors.tag)}
+                                errorText={errors.tag}
+                                onChange={(e) => setValue(e.target.value)}
+                                onKeyPress={(e) => onKeyDown(e)}
+                                onBlur={() => setValueFocused(false)}
+                                onFocus={() => setValueFocused(true)}
+                                slotProps={{
+                                    htmlInput: { maxLength: 100 },
+                                }}
                             />
-                        );
-                    })}
-                </ContextFormChipList>
+                            <Input
+                                fullWidth
+                                label='Value description'
+                                value={valueDesc}
+                                onChange={(e) => setValueDesc(e.target.value)}
+                                onKeyPress={(e) => onKeyDown(e)}
+                                onBlur={() => setValueFocused(false)}
+                                onFocus={() => setValueFocused(true)}
+                                slotProps={{
+                                    htmlInput: { maxLength: 100 },
+                                }}
+                            />
+                            <FormFieldControlAligner>
+                                <Button
+                                    startIcon={<Add />}
+                                    onClick={addLegalValue}
+                                    variant='outlined'
+                                    color='primary'
+                                    disabled={!value.trim() || isDuplicateValue}
+                                >
+                                    Add
+                                </Button>
+                            </FormFieldControlAligner>
+                        </StyledValueRow>
+                        {legalValues.length > 0 ? (
+                            <ContextFormChipList>
+                                {legalValues.map((legalValue) => (
+                                    <ContextFormChip
+                                        key={legalValue.value}
+                                        label={legalValue.value}
+                                        description={legalValue.description}
+                                        onRemove={() =>
+                                            removeLegalValue(legalValue)
+                                        }
+                                    />
+                                ))}
+                            </ContextFormChipList>
+                        ) : null}
+                    </FormGroup>
+                </FormField>
                 <StyledInputHeader>Custom stickiness</StyledInputHeader>
-                <p>
+                <StyledHelpText>
                     By enabling stickiness on this context field you can use it
                     together with the flexible-rollout strategy. This will
                     guarantee a consistent behavior for specific values of this
@@ -254,7 +265,7 @@ export const ContextForm: React.FC<IContextForm> = ({
                     >
                         Read more
                     </Link>
-                </p>
+                </StyledHelpText>
                 <StyledSwitchContainer>
                     <Switch
                         checked={stickiness}

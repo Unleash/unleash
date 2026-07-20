@@ -29,6 +29,10 @@ const StyledControl = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(1),
 }));
 
+const StyledControlAligner = styled('div')(({ theme }) => ({
+    marginTop: theme.spacing(3.5),
+}));
+
 interface FormFieldProps {
     /** The field's property name — bold, shown above the control. */
     label: ReactNode;
@@ -92,4 +96,20 @@ export const FormField = ({ label, description, children }: FormFieldProps) => {
             <StyledControl>{control}</StyledControl>
         </StyledFormField>
     );
+};
+
+interface FormFieldControlAlignerProps {
+    children: ReactNode;
+}
+
+export const FormFieldControlAligner = ({
+    children,
+}: FormFieldControlAlignerProps) => {
+    const topLabelInputs = useUiFlag('topLabelInputs');
+
+    if (!topLabelInputs) {
+        return <>{children}</>;
+    }
+
+    return <StyledControlAligner>{children}</StyledControlAligner>;
 };

@@ -1,14 +1,13 @@
 import { useEffect, useId, useState } from 'react';
 import {
     Box,
-    FormControl,
-    InputLabel,
-    Select,
     type SelectChangeEvent,
     styled,
     Tooltip,
     Typography,
 } from '@mui/material';
+import SelectMenu from 'component/common/select';
+import { FormFieldControlAligner } from 'component/common/FormField/FormField';
 import { Badge } from 'component/common/Badge/Badge';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
@@ -94,12 +93,8 @@ const StyledDivider = styled('div')(({ theme }) => ({
     margin: theme.spacing(3, 0),
 }));
 
-const StyledFormControl = styled(FormControl)(({ theme }) => ({
-    width: theme.spacing(30),
-}));
-
-const StyledInputLabel = styled(InputLabel)(({ theme }) => ({
-    backgroundColor: theme.palette.background.paper,
+const StyledSelectMenu = styled(SelectMenu)(({ theme }) => ({
+    minWidth: theme.spacing(30),
 }));
 
 interface IProfileTabProps {
@@ -139,6 +134,11 @@ const LocaleSelector = styled('div')(({ theme }) => ({
     flexFlow: 'row wrap',
     gap: theme.spacing(1),
     alignItems: 'center',
+    '& > :first-child': {
+        flex: '0 0 auto',
+        width: 'auto',
+        marginBottom: 0,
+    },
 }));
 
 export const ProfileTab = ({ user }: IProfileTabProps) => {
@@ -305,37 +305,26 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
                     This is the format used across the system for time and date
                 </Typography>
                 <LocaleSelector>
-                    <StyledFormControl variant='outlined' size='small'>
-                        <StyledInputLabel htmlFor='locale-select'>
-                            Date/Time formatting
-                        </StyledInputLabel>
-                        <Select
-                            aria-details={exampleDateId}
-                            id='locale-select'
-                            value={currentLocale || ''}
-                            native
-                            onChange={changeLocale}
-                            MenuProps={{
-                                style: {
-                                    zIndex: 9999,
-                                },
-                            }}
-                        >
-                            {possibleLocales.map((locale) => {
-                                return (
-                                    <option key={locale} value={locale}>
-                                        {locale}
-                                    </option>
-                                );
-                            })}
-                        </Select>
-                    </StyledFormControl>
-                    <Typography id={exampleDateId}>
-                        Example:{' '}
-                        <time dateTime={exampleDateString}>
-                            {formatDateYMDHM(exampleDate, currentLocale)}
-                        </time>
-                    </Typography>
+                    <StyledSelectMenu
+                        id='locale-select'
+                        name='locale'
+                        label='Date/Time formatting'
+                        aria-details={exampleDateId}
+                        value={currentLocale || ''}
+                        onChange={changeLocale}
+                        options={possibleLocales.map((locale) => ({
+                            key: locale,
+                            label: locale,
+                        }))}
+                    />
+                    <FormFieldControlAligner>
+                        <Typography id={exampleDateId}>
+                            Example:{' '}
+                            <time dateTime={exampleDateString}>
+                                {formatDateYMDHM(exampleDate, currentLocale)}
+                            </time>
+                        </Typography>
+                    </FormFieldControlAligner>
                 </LocaleSelector>
                 {productivityReportEmailEnabled ? (
                     <>

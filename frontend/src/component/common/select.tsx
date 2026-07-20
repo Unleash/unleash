@@ -1,4 +1,5 @@
 import type React from 'react';
+import { useId } from 'react';
 import {
     FormControl,
     InputLabel,
@@ -7,6 +8,7 @@ import {
     type SelectChangeEvent,
 } from '@mui/material';
 import { SELECT_ITEM_ID } from 'utils/testIds';
+import { FormField, formFieldLabelId } from './FormField/FormField';
 
 export interface ISelectOption {
     key: string;
@@ -27,7 +29,7 @@ export interface ISelectMenuProps {
     formControlStyles?: React.CSSProperties;
 }
 
-const SelectMenu: React.FC<ISelectMenuProps> = ({
+const SelectMenuControl: React.FC<ISelectMenuProps> = ({
     name,
     value = '',
     label = '',
@@ -40,6 +42,10 @@ const SelectMenu: React.FC<ISelectMenuProps> = ({
     formControlStyles = {},
     ...rest
 }) => {
+    const generatedId = useId();
+    const controlId = id ?? generatedId;
+    const labelId = formFieldLabelId(controlId);
+
     const renderSelectItems = () =>
         options.map((option) => (
             <MenuItem
@@ -59,20 +65,37 @@ const SelectMenu: React.FC<ISelectMenuProps> = ({
             classes={classes}
             style={formControlStyles}
         >
-            <InputLabel htmlFor={id}>{label}</InputLabel>
+            {label ? (
+                <InputLabel id={labelId} htmlFor={controlId}>
+                    {label}
+                </InputLabel>
+            ) : null}
             <Select
                 name={name}
                 disabled={disabled}
                 onChange={onChange}
                 className={className}
-                label={label}
-                id={id}
+                label={label || undefined}
+                id={controlId}
+                labelId={labelId}
                 value={value}
                 {...rest}
             >
                 {renderSelectItems()}
             </Select>
         </FormControl>
+    );
+};
+
+const SelectMenu: React.FC<ISelectMenuProps> = ({ label = '', ...props }) => {
+    if (!label) {
+        return <SelectMenuControl label={label} {...props} />;
+    }
+
+    return (
+        <FormField label={label}>
+            <SelectMenuControl {...props} />
+        </FormField>
     );
 };
 

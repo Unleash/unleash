@@ -24,6 +24,10 @@ const StyledExpirationPicker = styled('div')<{ custom?: boolean }>(
         alignItems: custom ? 'start' : 'center',
         gap: theme.spacing(1.5),
         marginBottom: theme.spacing(2),
+        '& > :first-child': {
+            flex: '0 0 auto',
+            width: 'auto',
+        },
         [theme.breakpoints.down('sm')]: {
             flexDirection: 'column',
             alignItems: 'flex-start',
@@ -182,9 +186,6 @@ export const PersonalAPITokenForm = ({
                     </StyledInputDescription>
                 }
             />
-            <StyledInputDescription>
-                Token expiration date
-            </StyledInputDescription>
             <StyledExpirationPicker custom={customExpiration}>
                 <StyledSelectMenu
                     name='expiration'

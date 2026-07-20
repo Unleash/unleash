@@ -1,10 +1,7 @@
 import { TokenType } from '../../../../../interfaces/token.ts';
 import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import type React from 'react';
-import {
-    StyledInputDescription,
-    StyledSelectInput,
-} from '../ApiTokenForm.styles';
+import { StyledSelectInput } from '../ApiTokenForm.styles';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 
 interface IEnvironmentSelectorProps {
@@ -32,9 +29,6 @@ export const EnvironmentSelector = ({
 
     return (
         <>
-            <StyledInputDescription>
-                Which environment should the token have access to?
-            </StyledInputDescription>
             <StyledSelectInput
                 disabled={type === TokenType.ADMIN}
                 options={selectableEnvs}

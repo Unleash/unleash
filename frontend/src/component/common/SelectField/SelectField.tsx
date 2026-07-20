@@ -73,10 +73,7 @@ const SelectControl = ({
 };
 
 interface SelectFieldProps
-    extends Omit<
-        SelectProps,
-        'onChange' | 'value' | 'label' | 'labelId' | 'id'
-    > {
+    extends Omit<SelectProps, 'onChange' | 'value' | 'label' | 'labelId'> {
     label: ReactNode;
     description?: ReactNode;
     options: SelectFieldOption[];

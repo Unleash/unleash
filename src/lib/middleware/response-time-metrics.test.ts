@@ -20,6 +20,7 @@ const isDefined = async (timeInfo: any, limit = 10) => {
 };
 
 const flagResolver = {
+    ready: Promise.resolve(),
     isEnabled: vi.fn(),
     getAll: vi.fn(),
     getVariant: vi.fn(),

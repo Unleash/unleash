@@ -258,6 +258,17 @@ export type UnleashFactoryMethods = {
     createSessionDb: (config: IUnleashConfig, db: Db) => RequestHandler;
     createMetricsMonitor: () => MetricsMonitor;
 };
+
+async function waitForFlagResolverReady(
+    config: IUnleashConfig,
+    logger: Logger,
+) {
+    logger.info('Waiting for flag resolver to be ready...');
+    const start = Date.now();
+    await config.flagResolver.ready;
+    logger.info(`Flag resolver is ready after ${Date.now() - start}ms`);
+}
+
 export async function createApp(
     config: IUnleashConfig,
     startApp: boolean,
@@ -270,6 +281,7 @@ export async function createApp(
     },
 ): Promise<IUnleash> {
     const logger = config.getLogger('server-impl.js');
+    await waitForFlagResolverReady(config, logger);
 
     // Surface unhandled promise rejections to logs so they don't crash the process
     process.on('unhandledRejection', (reason: unknown) => {
@@ -396,6 +408,8 @@ async function start(
     const logger = config.getLogger('server-impl.js');
 
     try {
+        await waitForFlagResolverReady(config, logger);
+
         if (config.db.disableMigration) {
             logger.info('DB migration: disabled');
         } else {
@@ -445,6 +459,8 @@ async function create(
     const logger = config.getLogger('server-impl.js');
 
     try {
+        await waitForFlagResolverReady(config, logger);
+
         if (config.db.disableMigration) {
             logger.info('DB migrations disabled');
         } else {

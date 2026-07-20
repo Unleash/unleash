@@ -438,6 +438,7 @@ const flags: IFlags = {
 export const defaultExperimentalOptions: IExperimentalOptions = {
     flags,
     externalResolver: {
+        ready: Promise.resolve(),
         isEnabled: (): boolean => false,
         getVariant: () => defaultVariant,
         getStaticContext: () => ({}),
@@ -452,6 +453,7 @@ export interface IExperimentalOptions {
 export interface IFlagContext extends Context {}
 
 export interface IFlagResolver {
+    ready: Promise<void>;
     getAll: (context?: IFlagContext) => IFlags;
     isEnabled: (expName: IFlagKey, context?: IFlagContext) => boolean;
     getVariant: (expName: IFlagKey, context?: IFlagContext) => Variant;
@@ -460,6 +462,7 @@ export interface IFlagResolver {
 }
 
 export interface IExternalFlagResolver {
+    ready?: Promise<void>;
     isEnabled: (flagName: IFlagKey, context?: IFlagContext) => boolean;
     getVariant: (flagName: IFlagKey, context?: IFlagContext) => Variant;
     getStaticContext: () => IFlagContext;

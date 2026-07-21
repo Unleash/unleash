@@ -42,10 +42,12 @@ export const ApiTokenPage = () => {
 
             return (
                 <ActionCell>
-                    <CopyApiTokenButton
-                        token={props.row.original}
-                        permission={READ_PERMISSION}
-                    />
+                    {!props.row.original.secure ? (
+                        <CopyApiTokenButton
+                            token={props.row.original}
+                            permission={READ_PERMISSION}
+                        />
+                    ) : null}
                     <RemoveApiTokenButton
                         token={props.row.original}
                         permission={DELETE_PERMISSION}

@@ -4,6 +4,7 @@ import { vi } from 'vitest';
 import type { ApiTokenService } from '../services/index.js';
 import backendApiAccessMiddleware from './backend-token-middleware.js';
 import { IAuthType } from '../server-impl.js';
+import type { ApiTokenV2Service } from '../features/apitokensv2/index.js';
 
 test('with flag set client api should return 403 if user object is set and token is PAT', async () => {
     const localConfig = createTestConfig({
@@ -22,8 +23,13 @@ test('with flag set client api should return 403 if user object is set and token
     const apiTokenService = {
         getUserForToken: vi.fn(),
     } as unknown as ApiTokenService;
-
-    const func = backendApiAccessMiddleware(localConfig, { apiTokenService });
+    const apiTokenV2Service = {
+        getUserForToken: vi.fn(),
+    } as unknown as ApiTokenV2Service;
+    const func = backendApiAccessMiddleware(localConfig, {
+        apiTokenService,
+        apiTokenV2Service,
+    });
 
     const cb = vi.fn();
     const user = { accountType: 'User', id: 1, username: 'PAT-Owner' };
@@ -67,8 +73,14 @@ test.each([
     const apiTokenService = {
         getUserForToken: vi.fn(),
     } as unknown as ApiTokenService;
+    const apiTokenV2Service = {
+        getUserForToken: vi.fn(),
+    } as unknown as ApiTokenV2Service;
 
-    const func = backendApiAccessMiddleware(localConfig, { apiTokenService });
+    const func = backendApiAccessMiddleware(localConfig, {
+        apiTokenService,
+        apiTokenV2Service,
+    });
 
     const cb = vi.fn();
     const res = {

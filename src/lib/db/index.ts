@@ -70,6 +70,7 @@ import { FeatureLinksReadModel } from '../features/feature-links/feature-links-r
 import { UserUpdatesReadModel } from '../features/users/user-updates-read-model.js';
 import { EdgeTokenStore } from '../features/edgetokens/edge-token-store.js';
 import { ReleasePlanMilestoneStrategyStore } from '../features/release-plans/release-plan-milestone-strategy-store.js';
+import { ApiTokenV2Store } from '../features/apitokensv2/api-token-v2-store.js';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -121,6 +122,7 @@ export const createStores = (
             getLogger,
             config.flagResolver,
         ),
+        apiTokenV2Store: new ApiTokenV2Store(db),
         resetTokenStore: new ResetTokenStore(db, eventBus, getLogger),
         sessionStore: new SessionStore(db, eventBus, getLogger),
         userFeedbackStore: new UserFeedbackStore(db, eventBus, getLogger),

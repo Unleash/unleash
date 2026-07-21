@@ -6,9 +6,9 @@ exports[`apiTokenSchema empty 1`] = `
     {
       "instancePath": "",
       "keyword": "required",
-      "message": "must have required property 'secret'",
+      "message": "must have required property 'tokenName'",
       "params": {
-        "missingProperty": "secret",
+        "missingProperty": "tokenName",
       },
       "schemaPath": "#/required",
     },

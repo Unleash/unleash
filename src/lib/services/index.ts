@@ -189,6 +189,11 @@ import {
     createReleasePlanMilestoneStrategyService,
 } from '../features/release-plans/createReleasePlanMilestoneStrategyService.js';
 import type { ReleasePlanMilestoneStrategyService } from '../features/release-plans/release-plan-milestone-strategy-service.js';
+import {
+    ApiTokenV2Service,
+    FakeApiTokenV2Store,
+} from '../features/apitokensv2/index.js';
+import FakeEnvironmentStore from '../features/project-environments/fake-environment-store.js';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -224,6 +229,17 @@ export const createServices = (
     const unknownFlagsService = new UnknownFlagsService(stores, config);
 
     const resourceLimitsService = new ResourceLimitsService(config);
+
+    const apiTokenV2Service = new ApiTokenV2Service(
+        db
+            ? stores
+            : {
+                  apiTokenV2Store: new FakeApiTokenV2Store(),
+                  environmentStore: new FakeEnvironmentStore(),
+              },
+        config,
+        { eventService, resourceLimitsService },
+    );
 
     // Initialize custom metrics service
     const customMetricsService = new CustomMetricsService(config);
@@ -522,6 +538,7 @@ export const createServices = (
         transactionalContextService,
         versionService,
         apiTokenService,
+        apiTokenV2Service,
         emailService,
         userService,
         resetTokenService,
@@ -646,6 +663,7 @@ export interface IUnleashServices {
     accountService: AccountService;
     addonService: AddonService;
     apiTokenService: ApiTokenService;
+    apiTokenV2Service: ApiTokenV2Service;
     clientInstanceService: ClientInstanceService;
     clientMetricsServiceV2: ClientMetricsServiceV2;
     customMetricsService: CustomMetricsService;

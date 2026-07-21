@@ -8,6 +8,7 @@ import apiTokenMiddleware, {
     TOKEN_TYPE_ERROR_MESSAGE,
 } from './api-token-middleware.js';
 import type { ApiTokenService } from '../services/index.js';
+import type { ApiTokenV2Service } from '../features/apitokensv2/api-token-v2-service.js';
 import type { IUnleashConfig } from '../types/index.js';
 import { vi } from 'vitest';
 
@@ -18,6 +19,11 @@ beforeEach(() => {
         getLogger,
         authentication: {
             enableApiToken: true,
+        },
+        experimental: {
+            flags: {
+                secureTokenStorage: true,
+            },
         },
     });
 });
@@ -111,6 +117,44 @@ test('should add user if known token', async () => {
 
     expect(cb).toHaveBeenCalled();
     expect(req.header).toHaveBeenCalled();
+    expect(req.user).toBe(apiUser);
+});
+
+test('uses the V2 verifier for V2 token format', async () => {
+    const apiUser = new ApiUser({
+        tokenName: 'default',
+        permissions: [CLIENT],
+        project: ALL,
+        environment: ALL,
+        type: ApiTokenType.BACKEND,
+        secret: 'selector',
+    });
+    const apiTokenService = {
+        getUserForToken: vi.fn(),
+    } as unknown as ApiTokenService;
+    const apiTokenV2Service = {
+        getUserForToken: vi.fn().mockResolvedValue(apiUser),
+    } as unknown as ApiTokenV2Service;
+
+    const func = apiTokenMiddleware(config, {
+        apiTokenService,
+        apiTokenV2Service,
+    });
+    const cb = vi.fn();
+    const req = {
+        header: vi
+            .fn()
+            .mockReturnValue(
+                'default:production.v2_abcdefghijklmnopqrstuv_abcdefghijklmnopqrstuvwxyzaBCDEFGHIJKLMNO',
+            ),
+        user: undefined,
+        path: '/api/client',
+    };
+
+    await func(req, undefined, cb);
+
+    expect(apiTokenV2Service.getUserForToken).toHaveBeenCalledTimes(1);
+    expect(apiTokenService.getUserForToken).not.toHaveBeenCalled();
     expect(req.user).toBe(apiUser);
 });
 

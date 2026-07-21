@@ -226,6 +226,7 @@ export interface IApiToken
     environment: string;
     project: string;
     alias?: string | null;
+    secure: boolean;
 }
 
 export interface IEnvironment {

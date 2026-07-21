@@ -55,7 +55,7 @@ test('Access to /api/client/features are refused no matter how many leading slas
     await app.request.get('//api/client/features').expect(401);
 });
 
-test('multiple slashes after base path is also rejected with 404', async () => {
+test('multiple slashes after base path is also rejected with 401', async () => {
     await appWithBaseUrl.request.get('/demo///api/client/features').expect(401);
     await appWithBaseUrl.request.get('/demo//api/client/features').expect(401);
     await appWithBaseUrl.request.get('/demo/api/client/features').expect(401);

@@ -68,12 +68,14 @@ import type { IUnknownFlagsStore } from '../features/metrics/unknown-flags/unkno
 import type { IFeatureLinksReadModel } from '../features/feature-links/feature-links-read-model-type.js';
 import type { UserUpdatesReadModel } from '../features/users/user-updates-read-model.js';
 import type { IEdgeTokenStore } from './stores/edge-store.js';
+import type { IApiTokenV2Store } from '../features/apitokensv2/api-token-v2-types.js';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
     accountStore: IAccountStore;
     addonStore: IAddonStore;
     apiTokenStore: IApiTokenStore;
+    apiTokenV2Store: IApiTokenV2Store;
     clientApplicationsStore: IClientApplicationsStore;
     clientInstanceStore: IClientInstanceStore;
     clientMetricsStoreV2: IClientMetricsStoreV2;
@@ -143,6 +145,7 @@ export {
     type IAccountStore,
     type IAddonStore,
     type IApiTokenStore,
+    type IApiTokenV2Store,
     type IClientApplicationsStore,
     type IClientInstanceStore,
     type IClientMetricsStoreV2,

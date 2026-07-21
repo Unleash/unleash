@@ -6,6 +6,7 @@ import {
     NO_TOKEN_WHERE_TOKEN_WAS_REQUIRED,
     TOKEN_TYPE_ERROR_MESSAGE,
 } from './api-token-middleware.js';
+import type { IApiUser } from '../types/index.js';
 
 export const frontendApiAccessMiddleware = (
     {
@@ -13,7 +14,10 @@ export const frontendApiAccessMiddleware = (
         authentication,
         flagResolver,
     }: Pick<IUnleashConfig, 'getLogger' | 'authentication' | 'flagResolver'>,
-    { apiTokenService }: Pick<IUnleashServices, 'apiTokenService'>,
+    {
+        apiTokenService,
+        apiTokenV2Service,
+    }: Pick<IUnleashServices, 'apiTokenService' | 'apiTokenV2Service'>,
 ): any => {
     const logger = getLogger('/middleware/frontend-token-middleware.ts');
     logger.debug('Enabling frontend-token middleware');
@@ -50,9 +54,15 @@ export const frontendApiAccessMiddleware = (
                 return;
             }
 
-            const apiUser = apiToken
-                ? await apiTokenService.getUserForToken(apiToken)
-                : undefined;
+            let apiUser: IApiUser | undefined;
+            if (
+                flagResolver.isEnabled('secureTokenStorage') &&
+                apiToken.indexOf('.v2_') > -1
+            ) {
+                apiUser = await apiTokenV2Service.getUserForToken(apiToken);
+            } else {
+                apiUser = await apiTokenService.getUserForToken(apiToken);
+            }
             const { FRONTEND } = ApiTokenType;
 
             if (apiUser) {

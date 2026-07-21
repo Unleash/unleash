@@ -1,4 +1,4 @@
-import { Alert, Typography } from '@mui/material';
+import { Alert, styled, Typography } from '@mui/material';
 import { Link } from 'react-router';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { UserToken } from './UserToken/UserToken.tsx';
@@ -11,7 +11,12 @@ interface IConfirmUserLink {
     closeConfirm: () => void;
     token: string;
     type?: string;
+    secure: boolean;
 }
+
+const StyledAlert = styled(Alert)(({ theme }) => ({
+    marginBottom: theme.spacing(3),
+}));
 
 export const ConfirmToken = ({
     open,
@@ -19,6 +24,7 @@ export const ConfirmToken = ({
     closeConfirm,
     token,
     type,
+    secure,
 }: IConfirmUserLink) => {
     return (
         <Dialogue
@@ -32,6 +38,15 @@ export const ConfirmToken = ({
                 Your new token has been created successfully.
             </Typography>
             <UserToken token={token} />
+            <ConditionallyRender
+                condition={secure}
+                show={
+                    <StyledAlert severity='info'>
+                        Make sure to copy your API token now. You won't be able
+                        to see it again!
+                    </StyledAlert>
+                }
+            />
             <ConditionallyRender
                 condition={type === TokenType.FRONTEND}
                 show={

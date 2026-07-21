@@ -91,6 +91,7 @@ export type IFlagKey =
     | 'projectReleaseTemplates'
     | 'topLabelInputs'
     | 'flagListCreatedByFilter'
+    | 'secureTokenStorage'
     | 'recordSdkFlavorMetrics';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -431,6 +432,10 @@ const flags: IFlags = {
     ),
     recordSdkFlavorMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_RECORD_SDK_FLAVOR_METRICS,
+        false,
+    ),
+    secureTokenStorage: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SECURE_TOKEN,
         false,
     ),
 };

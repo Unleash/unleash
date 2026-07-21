@@ -103,6 +103,7 @@ export class EdgeTokenStore implements IEdgeTokenStore {
                 secret: token.token_value,
                 type: ApiTokenType.BACKEND,
                 tokenName: token.token_name,
+                secure: false,
             };
         }
         return undefined;

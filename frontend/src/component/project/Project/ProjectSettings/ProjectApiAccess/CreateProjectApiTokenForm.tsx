@@ -31,6 +31,7 @@ export const CreateProjectApiTokenForm = () => {
     const navigate = useNavigate();
     const [showConfirm, setShowConfirm] = useState(false);
     const [token, setToken] = useState('');
+    const [secure, setSecure] = useState(false);
 
     const {
         getApiTokenPayload,
@@ -69,6 +70,7 @@ export const CreateProjectApiTokenForm = () => {
                 .then((api) => {
                     scrollToTop();
                     setToken(api.secret);
+                    setSecure(api.secure);
                     setShowConfirm(true);
                     trackEvent('project_api_tokens', {
                         props: { eventType: 'api_key_created' },
@@ -142,6 +144,7 @@ export const CreateProjectApiTokenForm = () => {
                 closeConfirm={closeConfirm}
                 token={token}
                 type={type}
+                secure={secure}
             />
         </FormTemplate>
     );

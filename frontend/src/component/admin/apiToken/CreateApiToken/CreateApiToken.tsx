@@ -53,6 +53,7 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
     const navigate = useNavigate();
     const [showConfirm, setShowConfirm] = useState(false);
     const [token, setToken] = useState('');
+    const [secure, setSecure] = useState(false);
     const {
         limit,
         currentValue,
@@ -96,6 +97,7 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
                 .then((api) => {
                     scrollToTop();
                     setToken(api.secret);
+                    setSecure(api.secure);
                     setShowConfirm(true);
                     refetch();
                 });
@@ -184,6 +186,7 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
                 closeConfirm={closeConfirm}
                 token={token}
                 type={type}
+                secure={secure}
             />
         </FormTemplate>
     );

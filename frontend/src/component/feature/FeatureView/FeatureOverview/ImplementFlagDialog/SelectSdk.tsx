@@ -20,6 +20,25 @@ type SdkOption = {
     group: string;
 };
 
+const options: SdkOption[] = allSdks
+    .map((sdk) => ({
+        ...sdk,
+        group: backendNames.has(sdk.name) ? 'Backend SDKs' : 'Frontend SDKs',
+    }))
+    .sort(
+        (a, b) =>
+            a.group.localeCompare(b.group) || a.name.localeCompare(b.name),
+    );
+
+const optionsByName = new Map<SdkName, SdkOption>(
+    options.map((option) => [option.name, option]),
+);
+
+const getOptionLabel = (option: SdkOption) => option.name;
+const getOptionGroup = (option: SdkOption) => option.group;
+const isOptionEqualToValue = (option: SdkOption, value: SdkOption) =>
+    option.name === value.name;
+
 const StyledAutocompleteWrapper = styled('div')(({ theme }) => ({
     minWidth: theme.spacing(20),
     maxWidth: theme.spacing(32.5),
@@ -44,19 +63,8 @@ const StyledSdkName = styled('span')({
 });
 
 export const SelectSdk = ({ value, onChange }: SelectSdkProps) => {
-    const options: SdkOption[] = allSdks
-        .map((sdk) => ({
-            ...sdk,
-            group: backendNames.has(sdk.name)
-                ? 'Backend SDKs'
-                : 'Frontend SDKs',
-        }))
-        .sort(
-            (a, b) =>
-                a.group.localeCompare(b.group) || a.name.localeCompare(b.name),
-        );
-
-    const icon = options.find((opt) => opt.name === value)?.icon;
+    const selectedOption = optionsByName.get(value);
+    const icon = selectedOption?.icon;
 
     return (
         <StyledAutocompleteWrapper>
@@ -65,10 +73,10 @@ export const SelectSdk = ({ value, onChange }: SelectSdkProps) => {
                 size='small'
                 disableClearable
                 options={options}
-                value={options.find((opt) => opt.name === value)}
-                groupBy={(option) => option.group}
-                getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option, val) => option.name === val.name}
+                value={selectedOption}
+                groupBy={getOptionGroup}
+                getOptionLabel={getOptionLabel}
+                isOptionEqualToValue={isOptionEqualToValue}
                 onChange={(_, newValue) => {
                     if (newValue?.name) {
                         onChange(newValue.name);

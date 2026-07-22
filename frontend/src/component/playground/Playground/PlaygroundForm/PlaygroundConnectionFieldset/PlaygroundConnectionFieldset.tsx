@@ -13,8 +13,6 @@ import {
     styled,
     type TextField,
     Tooltip,
-    Typography,
-    useTheme,
 } from '@mui/material';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import {
@@ -31,6 +29,7 @@ import { ProjectSelect } from '../../../../common/ProjectSelect/ProjectSelect.ts
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { EnvironmentsField } from './EnvironmentsField/EnvironmentsField.tsx';
 import { Link } from 'react-router';
+import { FormGroup } from 'component/common/FormGroup/FormGroup.tsx';
 
 interface IPlaygroundConnectionFieldsetProps {
     environments: string[];
@@ -92,7 +91,6 @@ export const PlaygroundConnectionFieldset: FC<
     changeRequest,
     onClearChangeRequest,
 }) => {
-    const theme = useTheme();
     const { tokens } = useApiTokens();
     const [tokenError, setTokenError] = useState<string | undefined>();
 
@@ -189,131 +187,126 @@ export const PlaygroundConnectionFieldset: FC<
 
     return (
         <Box sx={{ pb: 2 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <Typography
-                    variant='body2'
-                    color={theme.palette.text.primary}
-                    sx={{ ml: 1 }}
-                >
-                    Access configuration
-                </Typography>
-            </Box>
-            <StyledGrid>
-                <Box>
-                    <Tooltip
-                        arrow
-                        title={
-                            token
-                                ? 'Environment is automatically selected because you are using a token'
-                                : 'Select environments to use in the playground'
-                        }
-                    >
-                        <Box>
-                            <EnvironmentsField
-                                environments={environments}
-                                setEnvironments={setEnvironments}
-                                availableEnvironments={availableEnvironments}
-                                disabled={Boolean(token || changeRequest)}
-                            />
-                        </Box>
-                    </Tooltip>
-                </Box>
-                <Box>
-                    <Tooltip
-                        arrow
-                        title={
-                            token
-                                ? 'Project is automatically selected because you are using a token'
-                                : 'Select projects to use in the playground'
-                        }
-                    >
-                        <ProjectSelect
-                            selectedProjects={projects}
-                            onChange={setProjects}
-                            dataTestId={'PLAYGROUND_PROJECT_SELECT'}
-                            disabled={Boolean(token || changeRequest)}
-                            limitTags={3}
-                        />
-                    </Tooltip>
-                </Box>
-                <Box>
-                    <StyledInput
-                        label='API token'
-                        value={token || (changeRequest ? ' ' : '')}
-                        onChange={onSetToken}
-                        type={'text'}
-                        error={Boolean(tokenError)}
-                        errorText={tokenError}
-                        placeholder={'Enter your API token'}
-                        data-testid={'PLAYGROUND_TOKEN_INPUT'}
-                        slotProps={{
-                            input: {
-                                endAdornment: token ? (
-                                    <InputAdornment
-                                        position='end'
-                                        data-testid='TOKEN_INPUT_CLEAR_BTN'
-                                    >
-                                        <IconButton
-                                            aria-label='clear API token'
-                                            onClick={clearToken}
-                                            edge='end'
-                                        >
-                                            <SmallClear />
-                                        </IconButton>
-                                    </InputAdornment>
-                                ) : null,
-                            },
-                        }}
-                        disabled={Boolean(changeRequest)}
-                    />
-                </Box>
-                <ConditionallyRender
-                    condition={Boolean(changeRequest)}
-                    show={
-                        <Box sx={{ display: 'flex', gap: 2 }}>
-                            <Box sx={{ flex: 1 }}>
-                                <StyledChangeRequestInput
-                                    label='Change request'
-                                    value={
-                                        changeRequest
-                                            ? `Change request #${changeRequest}`
-                                            : ''
+            <FormGroup title='Access configuration'>
+                <StyledGrid>
+                    <Box>
+                        <Tooltip
+                            arrow
+                            title={
+                                token
+                                    ? 'Environment is automatically selected because you are using a token'
+                                    : 'Select environments to use in the playground'
+                            }
+                        >
+                            <Box>
+                                <EnvironmentsField
+                                    environments={environments}
+                                    setEnvironments={setEnvironments}
+                                    availableEnvironments={
+                                        availableEnvironments
                                     }
-                                    onChange={() => {}}
-                                    type={'text'}
-                                    disabled
-                                    slotProps={{
-                                        input: {
-                                            endAdornment: (
-                                                <InputAdornment position='end'>
-                                                    <IconButton
-                                                        aria-label='clear Change request results'
-                                                        onClick={
-                                                            onClearChangeRequest
-                                                        }
-                                                        edge='end'
-                                                    >
-                                                        <SmallClear />
-                                                    </IconButton>
-                                                </InputAdornment>
-                                            ),
-                                        },
-                                    }}
+                                    disabled={Boolean(token || changeRequest)}
                                 />
                             </Box>
-                            <Button
-                                variant='outlined'
-                                size='medium'
-                                to={`/projects/${projects[0]}/change-requests/${changeRequest}`}
-                                component={Link}
-                                nativeButton={false}
-                            >
-                                View change request
-                            </Button>
-                        </Box>
-                    }
-                />
-            </StyledGrid>
+                        </Tooltip>
+                    </Box>
+                    <Box>
+                        <Tooltip
+                            arrow
+                            title={
+                                token
+                                    ? 'Project is automatically selected because you are using a token'
+                                    : 'Select projects to use in the playground'
+                            }
+                        >
+                            <ProjectSelect
+                                selectedProjects={projects}
+                                onChange={setProjects}
+                                dataTestId={'PLAYGROUND_PROJECT_SELECT'}
+                                disabled={Boolean(token || changeRequest)}
+                                limitTags={3}
+                            />
+                        </Tooltip>
+                    </Box>
+                    <Box>
+                        <StyledInput
+                            label='API token'
+                            value={token || (changeRequest ? ' ' : '')}
+                            onChange={onSetToken}
+                            type={'text'}
+                            error={Boolean(tokenError)}
+                            errorText={tokenError}
+                            placeholder={'Enter your API token'}
+                            data-testid={'PLAYGROUND_TOKEN_INPUT'}
+                            slotProps={{
+                                input: {
+                                    endAdornment: token ? (
+                                        <InputAdornment
+                                            position='end'
+                                            data-testid='TOKEN_INPUT_CLEAR_BTN'
+                                        >
+                                            <IconButton
+                                                aria-label='clear API token'
+                                                onClick={clearToken}
+                                                edge='end'
+                                            >
+                                                <SmallClear />
+                                            </IconButton>
+                                        </InputAdornment>
+                                    ) : null,
+                                },
+                            }}
+                            disabled={Boolean(changeRequest)}
+                        />
+                    </Box>
+                    <ConditionallyRender
+                        condition={Boolean(changeRequest)}
+                        show={
+                            <Box sx={{ display: 'flex', gap: 2 }}>
+                                <Box sx={{ flex: 1 }}>
+                                    <StyledChangeRequestInput
+                                        label='Change request'
+                                        value={
+                                            changeRequest
+                                                ? `Change request #${changeRequest}`
+                                                : ''
+                                        }
+                                        onChange={() => {}}
+                                        type={'text'}
+                                        disabled
+                                        slotProps={{
+                                            input: {
+                                                endAdornment: (
+                                                    <InputAdornment position='end'>
+                                                        <IconButton
+                                                            aria-label='clear Change request results'
+                                                            onClick={
+                                                                onClearChangeRequest
+                                                            }
+                                                            edge='end'
+                                                        >
+                                                            <SmallClear />
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                ),
+                                            },
+                                        }}
+                                    />
+                                </Box>
+                                <Button
+                                    variant='outlined'
+                                    size='medium'
+                                    to={`/projects/${projects[0]}/change-requests/${changeRequest}`}
+                                    component={Link}
+                                    nativeButton={false}
+                                >
+                                    View change request
+                                </Button>
+                            </Box>
+                        }
+                    />
+                </StyledGrid>
+            </FormGroup>
         </Box>
     );
 };

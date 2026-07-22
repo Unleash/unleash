@@ -1,7 +1,6 @@
 import { INPUT_ERROR_TEXT } from 'utils/testIds';
 import { TextField, type OutlinedTextFieldProps } from '@mui/material';
 import type { ReactNode } from 'react';
-import { useStyles } from './Input.styles';
 import { FormField } from '../FormField/FormField';
 
 interface IInputProps extends Omit<OutlinedTextFieldProps, 'variant'> {
@@ -33,7 +32,6 @@ const Input = ({
     slotProps,
     ...rest
 }: IInputProps) => {
-    const { classes: styles } = useStyles();
     return (
         <FormField label={label} description={description}>
             <TextField
@@ -52,9 +50,6 @@ const Input = ({
                     formHelperText: {
                         'data-testid': INPUT_ERROR_TEXT,
                         title: errorText,
-                        classes: {
-                            root: styles.helperText,
-                        },
                     },
                     ...slotProps,
                 }}

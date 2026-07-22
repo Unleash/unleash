@@ -7,14 +7,7 @@ import {
     useState,
     type FC,
 } from 'react';
-import {
-    Alert,
-    Button,
-    Divider,
-    Link,
-    styled,
-    Typography,
-} from '@mui/material';
+import { Alert, Button, Divider, Link, styled } from '@mui/material';
 import produce from 'immer';
 import { trim } from 'component/common/util';
 import type { AddonSchema, AddonTypeSchema } from 'openapi';
@@ -38,11 +31,10 @@ import {
 import {
     StyledForm,
     StyledAlerts,
-    StyledTextField,
+    StyledInput,
     StyledContainer,
     StyledButtonContainer,
     StyledButtonSection,
-    StyledConfigurationSection,
     StyledTitle,
     StyledRaisedSection,
 } from './IntegrationForm.styles';
@@ -54,6 +46,7 @@ import { capitalizeFirst } from 'utils/capitalizeFirst';
 import { IntegrationHowToSection } from '../IntegrationHowToSection/IntegrationHowToSection.tsx';
 import { IntegrationEventsModal } from '../IntegrationEvents/IntegrationEventsModal.tsx';
 import AccessContext from 'contexts/AccessContext';
+import { FormGroup } from 'component/common/FormGroup/FormGroup.tsx';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -349,15 +342,6 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                             </StyledAlerts>
                         )}
                     />
-                    <StyledTextField
-                        size='small'
-                        label='Provider'
-                        name='provider'
-                        value={formValues.provider}
-                        disabled
-                        hidden={true}
-                        variant='outlined'
-                    />
                     <IntegrationHowToSection provider={provider} />
                     <StyledRaisedSection>
                         <IntegrationStateSwitch
@@ -384,26 +368,22 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                             setParameterValue={setParameterValue}
                         />
                     </StyledRaisedSection>
-                    <StyledConfigurationSection>
-                        <Typography component='h3' variant='h3'>
-                            Configuration
-                        </Typography>
+                    <FormGroup title='Configuration'>
                         <div>
                             <StyledTitle>
                                 What is your integration description?
                             </StyledTitle>
-                            <StyledTextField
+                            <StyledInput
                                 size='small'
                                 minRows={1}
                                 multiline
                                 label='Description'
                                 name='description'
                                 placeholder=''
-                                value={formValues.description}
+                                value={formValues.description ?? ''}
                                 error={Boolean(errors.description)}
-                                helperText={errors.description}
+                                errorText={errors.description}
                                 onChange={setFieldValue('description')}
-                                variant='outlined'
                             />
                         </div>
 
@@ -438,7 +418,7 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                                 note='If no environments are selected, the integration will receive events from all environments.'
                             />
                         </div>
-                    </StyledConfigurationSection>
+                    </FormGroup>
                     <ConditionallyRender
                         condition={editMode}
                         show={

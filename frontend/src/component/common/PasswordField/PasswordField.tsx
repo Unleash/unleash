@@ -4,8 +4,9 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import type React from 'react';
 import { useState, type FC } from 'react';
+import { FormField } from 'component/common/FormField/FormField';
 
-const PasswordField: FC<TextFieldProps> = ({ ...rest }) => {
+const PasswordField: FC<TextFieldProps> = ({ label, value, ...rest }) => {
     const [showPassword, setShowPassword] = useState(false);
 
     const handleClickShowPassword = () => {
@@ -21,10 +22,12 @@ const PasswordField: FC<TextFieldProps> = ({ ...rest }) => {
     const IconComponent = showPassword ? Visibility : VisibilityOff;
     const iconTitle = 'Toggle password visibility';
 
-    return (
+    const field = (
         <StyledAutofillTextField
             variant='outlined'
             size='small'
+            fullWidth={Boolean(label)}
+            value={value}
             type={showPassword ? 'text' : 'password'}
             slotProps={{
                 input: {
@@ -47,6 +50,12 @@ const PasswordField: FC<TextFieldProps> = ({ ...rest }) => {
             {...rest}
         />
     );
+
+    if (!label) {
+        return field;
+    }
+
+    return <FormField label={label}>{field}</FormField>;
 };
 
 export default PasswordField;

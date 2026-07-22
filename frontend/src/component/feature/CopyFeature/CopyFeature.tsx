@@ -6,7 +6,6 @@ import {
 import { Link, useNavigate } from 'react-router';
 import {
     Button,
-    TextField,
     Switch,
     Paper,
     FormControlLabel,
@@ -24,6 +23,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { FeatureNamingPatternInfo } from '../FeatureNamingPatternInfo/FeatureNamingPatternInfo.tsx';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import Input from 'component/common/Input/Input.tsx';
 
 const StyledPage = styled(Paper)(({ theme }) => ({
     overflow: 'visible',
@@ -179,7 +179,8 @@ export const CopyFeatureToggle = () => {
                     }
                 />
                 <StyledForm onSubmit={onSubmit}>
-                    <TextField
+                    <Input
+                        fullWidth
                         label='Name'
                         name='name'
                         value={newToggleName || ''}
@@ -187,7 +188,6 @@ export const CopyFeatureToggle = () => {
                         onChange={setValue}
                         error={nameError !== undefined}
                         helperText={nameError}
-                        variant='outlined'
                         size='small'
                         aria-required
                         aria-details={

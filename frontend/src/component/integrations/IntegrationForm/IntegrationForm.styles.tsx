@@ -1,5 +1,6 @@
 import { Paper, styled } from '@mui/material';
-import { TextField, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
+import Input from 'component/common/Input/Input';
 import {
     forwardRef,
     type FC,
@@ -44,7 +45,7 @@ export const StyledButtonSection = styled('section')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-export const StyledTextField = styled(TextField)(({ theme }) => ({
+export const StyledInput = styled(Input)(({ theme }) => ({
     width: '100%',
 }));
 
@@ -64,19 +65,8 @@ export const StyledTitle = forwardRef<
     </Typography>
 ));
 
-export const StyledAddonParameterContainer = styled('div')({
-    marginTop: '25px',
-});
-
-export const StyledConfigurationSection = styled('section')(({ theme }) => ({
-    borderWidth: '1px',
-    borderStyle: 'solid',
-    borderColor: theme.palette.neutral.border,
-    borderRadius: `${theme.shape.borderRadiusLarge}px`,
-    padding: theme.spacing(3),
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(3),
+export const StyledAddonParameterContainer = styled('div')(({ theme }) => ({
+    marginTop: theme.spacing(2),
 }));
 
 export const StyledRaisedSection: FC<ComponentProps<typeof Paper>> = ({

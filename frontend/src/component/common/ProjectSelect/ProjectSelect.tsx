@@ -5,9 +5,10 @@ import {
     type SetStateAction,
     type FC,
 } from 'react';
-import { Autocomplete, Chip, type SxProps, TextField } from '@mui/material';
+import { Chip, type SxProps } from '@mui/material';
 import { renderOption } from 'component/playground/Playground/PlaygroundForm/renderOption';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
+import { AutocompleteField } from '../AutocompleteField/AutocompleteField';
 
 interface IOption {
     label: string;
@@ -73,7 +74,7 @@ export const ProjectSelect: FC<IProjectSelectProps> = forwardRef(
                 (selectedProjects.length === 1 && selectedProjects[0] === '*'));
 
         const onProjectsChange: ComponentProps<
-            typeof Autocomplete
+            typeof AutocompleteField
         >['onChange'] = (_event, value, reason) => {
             const newProjects = value as IOption | IOption[];
             if (reason === 'clear' || newProjects === null) {
@@ -99,7 +100,7 @@ export const ProjectSelect: FC<IProjectSelectProps> = forwardRef(
         };
 
         return (
-            <Autocomplete
+            <AutocompleteField
                 {...props}
                 ref={ref}
                 disablePortal
@@ -108,9 +109,7 @@ export const ProjectSelect: FC<IProjectSelectProps> = forwardRef(
                 multiple={!isAllProjects}
                 options={projectsOptions}
                 sx={sx}
-                renderInput={(params) => (
-                    <TextField {...params} label='Projects' />
-                )}
+                label='Projects'
                 renderOption={renderOption}
                 getOptionLabel={({ label }) => label}
                 disableCloseOnSelect

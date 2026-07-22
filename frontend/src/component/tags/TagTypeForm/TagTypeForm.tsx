@@ -1,5 +1,5 @@
 import Input from 'component/common/Input/Input';
-import { TextField, Button, styled, Typography } from '@mui/material';
+import { Button, styled, Typography } from '@mui/material';
 import { TagTypeColorPicker } from './TagTypeColorPicker.tsx';
 import type React from 'react';
 import { trim } from 'component/common/util';
@@ -36,11 +36,6 @@ const StyledInputDescription = styled('p')(({ theme }) => ({
 }));
 
 const StyledInput = styled(Input)(({ theme }) => ({
-    width: '100%',
-    marginBottom: theme.spacing(2),
-}));
-
-const StyledTextField = styled(TextField)(({ theme }) => ({
     width: '100%',
     marginBottom: theme.spacing(2),
 }));
@@ -85,13 +80,15 @@ const TagTypeForm: React.FC<ITagTypeForm> = ({
                     autoFocus
                 />
 
-                <StyledInputDescription>
-                    What is this tag for?
-                </StyledInputDescription>
-                <StyledTextField
+                <StyledInput
                     label='Tag description'
-                    variant='outlined'
+                    description={
+                        <StyledInputDescription>
+                            What is this tag for?
+                        </StyledInputDescription>
+                    }
                     multiline
+                    minRows={3}
                     maxRows={4}
                     value={tagDesc}
                     onChange={(e) => setTagDesc(e.target.value)}

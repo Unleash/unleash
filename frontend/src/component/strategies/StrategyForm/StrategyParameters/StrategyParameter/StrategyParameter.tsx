@@ -66,10 +66,10 @@ const StyledParagraph = styled('p')(({ theme }) => ({
 const StyledNameContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(1),
 }));
 
-const StyledNameInput = styled(Input)(({ theme }) => ({
+const StyledNameInput = styled(Input)(() => ({
     minWidth: '365px',
     width: '100%',
 }));
@@ -77,12 +77,12 @@ const StyledNameInput = styled(Input)(({ theme }) => ({
 const StyledGeneralSelect = styled(GeneralSelect)(({ theme }) => ({
     minWidth: '365px',
     width: '100%',
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(1),
 }));
 
 const StyledDescriptionInput = styled(Input)(({ theme }) => ({
     minWidth: '365px',
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(1),
 }));
 
 const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
@@ -148,6 +148,7 @@ export const StrategyParameter = ({
                 value={input.type}
                 onChange={onTypeChange}
                 id={`prop-type-${index}-select`}
+                fullWidth={false}
             />
             <StyledDescriptionInput
                 rows={2}

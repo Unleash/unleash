@@ -56,7 +56,9 @@ const ApplicationRoot = () => {
                             <AnnouncerProvider>
                                 <PlausibleProvider>
                                     <LogRocketProvider>
-                                        <FlightRecorderProvider>
+                                        <FlightRecorderProvider
+                                            hostname={window.location.hostname}
+                                        >
                                             <EventTrackerProvider>
                                                 <UnleashFlagProvider>
                                                     <ErrorBoundary

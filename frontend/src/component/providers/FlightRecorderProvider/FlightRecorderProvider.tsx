@@ -7,22 +7,29 @@ import {
 import { useUiFlag } from 'hooks/useUiFlag';
 import { getVariantValue, type Variant } from 'utils/variants';
 import { FlightRecorderContext } from 'contexts/FlightRecorderContext';
+import { isLocalhostDomain } from 'utils/env';
 import { usePageViewTracking } from './usePageViewTracking';
 
 // A low flushAt keeps the keepalive flush on close() well under the browser's 64 KB limit.
 const BATCH = { flushAt: 100 };
 
+// Flip to record from localhost, e.g. when working on the ingestion pipeline.
+const LOCAL_TESTING = false;
+
 export const FlightRecorderProvider: FC<{
     children?: React.ReactNode;
     createRecorder?: typeof createFlightRecorder;
-}> = ({ children, createRecorder = createFlightRecorder }) => {
+    hostname: string;
+}> = ({ children, createRecorder = createFlightRecorder, hostname }) => {
     const flag = useUiFlag('flightRecorderFrontend');
     const url = getVariantValue(flag as Variant);
 
     const [recorder, setRecorder] = useState<FlightRecorder | null>(null);
 
     useEffect(() => {
-        if (!url) {
+        // Local dev against a hosted backend still receives the flag with the
+        // production ingestion URL; dev traffic must not pollute production data.
+        if (!url || (isLocalhostDomain(hostname) && !LOCAL_TESTING)) {
             return;
         }
         try {
@@ -47,7 +54,7 @@ export const FlightRecorderProvider: FC<{
             console.warn(error);
         }
         // createRecorder is a stable ref (module default or a fixture), so it won't refire.
-    }, [url, createRecorder]);
+    }, [url, createRecorder, hostname]);
 
     // Flush on backgrounding; unload (pagehide) is owned by usePageViewTracking.
     useEffect(() => {

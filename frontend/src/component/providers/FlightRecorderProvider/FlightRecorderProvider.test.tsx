@@ -65,7 +65,10 @@ it('records the full visited path as a pageview for each route the user visits',
     enableRecorder();
 
     render(
-        <FlightRecorderProvider createRecorder={fakeRecorder}>
+        <FlightRecorderProvider
+            createRecorder={fakeRecorder}
+            hostname='app.unleash-hosted.com'
+        >
             <NavigateButton />
         </FlightRecorderProvider>,
         { route: '/projects/default/settings' },

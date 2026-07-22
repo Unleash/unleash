@@ -7,7 +7,11 @@ import {
 
 test('isLocalhostDomain', () => {
     expect(isLocalhostDomain()).toEqual(true);
+    expect(isLocalhostDomain('127.0.0.1')).toEqual(true);
+    expect(isLocalhostDomain('127.1.2.3')).toEqual(true);
+    expect(isLocalhostDomain('[::1]')).toEqual(true);
     expect(isLocalhostDomain('unleash-hosted.com')).toEqual(false);
+    expect(isLocalhostDomain('app.unleash-hosted.com')).toEqual(false);
 });
 
 test('isUnleashDomain', () => {

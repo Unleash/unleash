@@ -1,7 +1,6 @@
 import type { FC } from 'react';
 import {
     Button,
-    TextField,
     Box,
     styled,
     useTheme,
@@ -18,6 +17,7 @@ import { LabelsFilter } from './LabelFilter/LabelsFilter.tsx';
 import { ImpactMetricsChart } from '../ImpactMetricsChart.tsx';
 import { useEventTracker } from 'hooks/useEventTracker.ts';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import Input from 'component/common/Input/Input.tsx';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -191,12 +191,11 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
                                 : 'Add impact metric'}
                         </StyledTitle>
 
-                        <TextField
+                        <Input
                             label='Chart Title (optional)'
                             value={formData.title}
                             onChange={(e) => actions.setTitle(e.target.value)}
                             fullWidth
-                            variant='outlined'
                             size='small'
                         />
 

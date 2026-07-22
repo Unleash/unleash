@@ -1,5 +1,6 @@
 import type { FC } from 'react';
-import { TextField, type TextFieldProps } from '@mui/material';
+import type { TextFieldProps } from '@mui/material';
+import Input from '../Input/Input';
 
 interface IInputListFieldProps {
     label: string;
@@ -37,7 +38,7 @@ export const InputListField: FC<IInputListFieldProps> = ({
     };
 
     return (
-        <TextField
+        <Input
             {...rest}
             error={error}
             placeholder={placeholder}
@@ -45,7 +46,6 @@ export const InputListField: FC<IInputListFieldProps> = ({
             onKeyDown={handleKeyDown}
             onChange={handleChange}
             style={{ width: '100%' }}
-            variant='outlined'
             size='small'
         />
     );

@@ -117,7 +117,7 @@ test('renders a description element unchanged when the flag is off', async () =>
     );
 });
 
-test('restyles the description text when the flag is on', async () => {
+test('restyles the description text but keeps its data-testid when the flag is on', async () => {
     setTopLabel(true);
     render(
         <FormField
@@ -131,6 +131,6 @@ test('restyles the description text when the flag is on', async () => {
     );
 
     await screen.findByText('Project Id');
-    expect(screen.queryByTestId('original')).not.toBeInTheDocument();
-    expect(screen.getByText("You can't change this later")).toBeInTheDocument();
+    const description = screen.getByTestId('original');
+    expect(description).toHaveTextContent("You can't change this later");
 });

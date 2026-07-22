@@ -1,17 +1,16 @@
 import { useCallback, useMemo, useState, type FC, type ReactNode } from 'react';
 import {
-    Autocomplete,
     Box,
     Checkbox,
     Divider,
     FormControlLabel,
     Paper,
     type PaperProps,
-    TextField,
     Typography,
     debounce,
 } from '@mui/material';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
+import { AutocompleteField } from 'component/common/AutocompleteField/AutocompleteField';
 
 type FeatureOption = {
     name: string;
@@ -105,7 +104,15 @@ export const FeaturePicker: FC<FeaturePickerProps> = ({
     );
 
     return (
-        <Autocomplete
+        <AutocompleteField
+            label='Features to follow'
+            helperText='Toggle events for these features will be drawn over the chart.'
+            size='small'
+            placeholder={
+                value.length === 0
+                    ? 'Search for features…'
+                    : 'Add another feature…'
+            }
             multiple
             disableCloseOnSelect
             disabled={disabled}
@@ -130,20 +137,6 @@ export const FeaturePicker: FC<FeaturePickerProps> = ({
                 <Box component='li' {...props} key={option.name}>
                     <FeatureOptionRow option={option} />
                 </Box>
-            )}
-            renderInput={(params) => (
-                <TextField
-                    {...params}
-                    label='Features to follow'
-                    placeholder={
-                        value.length === 0
-                            ? 'Search for features…'
-                            : 'Add another feature…'
-                    }
-                    size='small'
-                    variant='outlined'
-                    helperText='Toggle events for these features will be drawn over the chart.'
-                />
             )}
         />
     );

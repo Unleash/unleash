@@ -4,7 +4,7 @@ import {
     useState,
     type FC,
 } from 'react';
-import { Button, TextField } from '@mui/material';
+import { Button } from '@mui/material';
 import styles from './SimpleAuth.module.scss';
 import { useNavigate } from 'react-router';
 import { useAuthApi } from 'hooks/api/actions/useAuthApi/useAuthApi';
@@ -13,6 +13,7 @@ import { LOGIN_BUTTON, LOGIN_EMAIL_ID } from 'utils/testIds';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import type { IAuthEndpointDetailsResponse } from 'hooks/api/getters/useAuth/useAuthEndpoint';
+import Input from 'component/common/Input/Input';
 
 interface ISimpleAuthProps {
     authDetails: IAuthEndpointDetailsResponse;
@@ -61,11 +62,11 @@ const SimpleAuth: FC<ISimpleAuthProps> = ({ authDetails, redirect }) => {
                         securing Unleash on GitHub
                     </a>
                 </p>
-                <TextField
+                <Input
                     value={email}
                     onChange={handleChange}
                     size='small'
-                    variant='outlined'
+                    fullWidth
                     label='Email'
                     name='email'
                     id='email'

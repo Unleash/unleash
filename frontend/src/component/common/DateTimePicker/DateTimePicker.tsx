@@ -1,9 +1,11 @@
 import { INPUT_ERROR_TEXT } from 'utils/testIds';
-import { TextField, type OutlinedTextFieldProps } from '@mui/material';
+import type { OutlinedTextFieldProps } from '@mui/material';
 import { parseValidDate } from '../util.ts';
 import { format } from 'date-fns';
+import Input from '../Input/Input';
 
-interface IDateTimePickerProps extends Omit<OutlinedTextFieldProps, 'variant'> {
+interface IDateTimePickerProps
+    extends Omit<OutlinedTextFieldProps, 'variant' | 'rows'> {
     label: string;
     type?: 'date' | 'datetime';
     error?: boolean;
@@ -40,13 +42,12 @@ export const DateTimePicker = ({
     const inputType = type === 'datetime' ? 'datetime-local' : 'date';
 
     return (
-        <TextField
+        <Input
+            label={label}
             type={inputType}
             size='small'
-            variant='outlined'
-            label={label}
             error={error}
-            helperText={errorText}
+            errorText={errorText}
             value={getDate(value.toISOString())}
             onChange={(e) => {
                 const parsedDate = parseValidDate(e.target.value);

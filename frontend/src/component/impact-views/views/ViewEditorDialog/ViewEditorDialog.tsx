@@ -1,6 +1,5 @@
 import { useEffect, useReducer, type FC } from 'react';
 import {
-    Autocomplete,
     Box,
     FormControlLabel,
     IconButton,
@@ -29,6 +28,8 @@ import type { AvailableImpactMetricsSchemaMetricsItem } from 'openapi';
 import { FeaturePicker } from '../FeaturePicker/FeaturePicker';
 import type { MetricView, ViewMetricConfig } from '../types';
 import { TIME_RANGE_OPTIONS } from '../../constants';
+import Input from 'component/common/Input/Input';
+import { AutocompleteField } from 'component/common/AutocompleteField/AutocompleteField';
 
 type ViewInput = Omit<MetricView, 'id' | 'createdAt' | 'updatedAt'>;
 
@@ -42,12 +43,6 @@ const StyledFieldGroup = styled('div')(({ theme }) => ({
     gap: theme.spacing(0.5),
     flex: 1,
     minWidth: 220,
-}));
-
-const StyledFieldLabel = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
-    fontWeight: theme.typography.fontWeightBold,
-    color: theme.palette.text.primary,
 }));
 
 const StyledHelper = styled(Typography)(({ theme }) => ({
@@ -415,8 +410,9 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
                     pt: 1,
                 }}
             >
-                <TextField
+                <Input
                     label='View title'
+                    fullWidth
                     value={form.title}
                     onChange={(event) =>
                         dispatch({
@@ -431,8 +427,16 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
                 />
 
                 <StyledFieldGroup>
-                    <StyledFieldLabel>Metrics</StyledFieldLabel>
-                    <Autocomplete
+                    <AutocompleteField
+                        label='Metrics'
+                        helperText='All selected metrics are drawn together on a
+                                single chart.'
+                        size='small'
+                        placeholder={
+                            form.metrics.length === 0
+                                ? 'Pick one or more metrics…'
+                                : 'Add another metric…'
+                        }
                         multiple
                         disableCloseOnSelect
                         loading={metricsLoading}
@@ -461,23 +465,7 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
                                 <MetricOptionRow option={option} />
                             </Box>
                         )}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                placeholder={
-                                    form.metrics.length === 0
-                                        ? 'Pick one or more metrics…'
-                                        : 'Add another metric…'
-                                }
-                                size='small'
-                                variant='outlined'
-                            />
-                        )}
                     />
-                    <StyledHelper>
-                        All selected metrics are drawn together on a single
-                        chart.
-                    </StyledHelper>
                     {form.metrics.length > 0 ? (
                         <Box
                             sx={{
@@ -523,6 +511,7 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
                             id='view-aggregation'
                             labelId='view-aggregation-label'
                             label='Aggregation'
+                            fullWidth
                             value={form.aggregationMode}
                             options={AGGREGATION_OPTIONS}
                             onChange={(aggregationMode) =>
@@ -541,6 +530,7 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
                             id='view-time-range'
                             labelId='view-time-range-label'
                             label='Time range'
+                            fullWidth
                             value={form.timeRange}
                             options={TIME_RANGE_OPTIONS}
                             onChange={(timeRange) =>
@@ -553,6 +543,7 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
                             id='view-environment'
                             labelId='view-environment-label'
                             label='Environment'
+                            fullWidth
                             value={form.environment}
                             options={environmentOptions}
                             disabled={envLoading}

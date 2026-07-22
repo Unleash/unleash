@@ -28,6 +28,7 @@ interface IMultipleRoleSelectProps
     value: IRole[];
     setValue: (role: IRole[]) => void;
     required?: boolean;
+    label?: string;
 }
 
 function sortItems<T extends { name: string; type: string }>(items: T[]): T[] {
@@ -54,6 +55,7 @@ export const MultipleRoleSelect = ({
     value,
     setValue,
     required,
+    label = 'Role',
     slotProps,
     ...rest
 }: IMultipleRoleSelectProps) => {
@@ -108,7 +110,11 @@ export const MultipleRoleSelect = ({
                 renderOption={renderRoleOption}
                 getOptionLabel={(option) => option.name}
                 renderInput={(params) => (
-                    <TextField {...params} label='Role' required={required} />
+                    <TextField
+                        {...params}
+                        label={label || undefined}
+                        required={required}
+                    />
                 )}
                 {...rest}
             />

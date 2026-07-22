@@ -4,7 +4,6 @@ import {
     TextField,
     Box,
     styled,
-    MenuItem,
     Select,
     Typography,
 } from '@mui/material';
@@ -716,12 +715,13 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                                 value={timeRange}
                                 onChange={handleTimeRangeChange}
                                 label=''
-                            >
-                                <MenuItem value='hour'>Last minute</MenuItem>
-                                <MenuItem value='day'>Last 15 minutes</MenuItem>
-                                <MenuItem value='week'>Last 3 hours</MenuItem>
-                                <MenuItem value='month'>Last day</MenuItem>
-                            </RangeSelector>
+                                options={[
+                                    { key: 'hour', label: 'Last minute' },
+                                    { key: 'day', label: 'Last 15 minutes' },
+                                    { key: 'week', label: 'Last 3 hours' },
+                                    { key: 'month', label: 'Last day' },
+                                ]}
+                            />
                         </StyledTopRow>
                     </StyledTopRow>
                 </SafeguardConfigurationSection>

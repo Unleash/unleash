@@ -1,5 +1,6 @@
 import type React from 'react';
-import { FormControlLabel, Switch, TextField } from '@mui/material';
+import { FormControlLabel, Switch } from '@mui/material';
+import Input from 'component/common/Input/Input';
 import StrategyInputList from '../StrategyInputList/StrategyInputList.tsx';
 import ConditionalRolloutSlider from '../RolloutSlider/ConditionalRolloutSlider.tsx';
 import type {
@@ -84,16 +85,15 @@ export const StrategyParameter = ({
     if (type === 'number') {
         return (
             <div>
-                <TextField
+                <Input
                     error={Boolean(error)}
                     helperText={error}
-                    variant='outlined'
                     size='small'
                     aria-required={required}
                     style={{ width: '100%' }}
                     label={label}
                     onChange={onChange}
-                    value={value}
+                    value={value ?? ''}
                 />
                 <InputCaption text={description} />
             </div>
@@ -122,10 +122,9 @@ export const StrategyParameter = ({
 
     return (
         <div>
-            <TextField
+            <Input
                 rows={1}
                 placeholder=''
-                variant='outlined'
                 size='small'
                 style={{ width: '100%' }}
                 aria-required={required}

@@ -1,13 +1,6 @@
 import type React from 'react';
 import { type FormEvent, useState } from 'react';
-import {
-    Button,
-    capitalize,
-    Checkbox,
-    Chip,
-    styled,
-    TextField,
-} from '@mui/material';
+import { Button, capitalize, Checkbox, Chip, styled } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
@@ -40,6 +33,7 @@ import type { IUserProjectRole } from '../../../../interfaces/userProjectRoles.t
 import { useCheckProjectPermissions } from 'hooks/useHasAccess';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import AutocompleteVirtual from 'component/common/AutocompleteVirtual/AutcompleteVirtual';
+import { FormField } from 'component/common/FormField/FormField';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -357,13 +351,16 @@ export const ProjectAccessAssign = ({
             >
                 <StyledForm onSubmit={handleSubmit}>
                     <div>
-                        <StyledInputDescription
-                            data-testid={PA_USERS_GROUPS_TITLE_ID}
-                        >
-                            Select the {entityType}
-                        </StyledInputDescription>
                         <StyledAutocompleteWrapper>
                             <AutocompleteVirtual
+                                label={capitalize(entityType)}
+                                description={
+                                    <StyledInputDescription
+                                        data-testid={PA_USERS_GROUPS_TITLE_ID}
+                                    >
+                                        Select the {entityType}
+                                    </StyledInputDescription>
+                                }
                                 data-testid={PA_USERS_GROUPS_ID}
                                 size={autocompleteSize}
                                 multiple
@@ -435,24 +432,26 @@ export const ProjectAccessAssign = ({
                                     option.type === value.type &&
                                     option.entity.id === value.entity.id
                                 }
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        label={capitalize(entityType)}
-                                    />
-                                )}
                             />
                         </StyledAutocompleteWrapper>
-                        <StyledInputDescription>
-                            Select the role to assign for this project
-                        </StyledInputDescription>
                         <StyledAutocompleteWrapper>
-                            <MultipleRoleSelect
-                                data-testid={PA_ROLE_ID}
-                                roles={filteredRoles}
-                                value={selectedRoles}
-                                setValue={setRoles}
-                            />
+                            <FormField
+                                label='Role'
+                                description={
+                                    <StyledInputDescription>
+                                        Select the role to assign for this
+                                        project
+                                    </StyledInputDescription>
+                                }
+                            >
+                                <MultipleRoleSelect
+                                    label=''
+                                    data-testid={PA_ROLE_ID}
+                                    roles={filteredRoles}
+                                    value={selectedRoles}
+                                    setValue={setRoles}
+                                />
+                            </FormField>
                         </StyledAutocompleteWrapper>
                     </div>
 

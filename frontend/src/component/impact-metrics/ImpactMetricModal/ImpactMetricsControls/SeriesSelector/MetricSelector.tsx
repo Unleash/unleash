@@ -1,11 +1,6 @@
 import { useState } from 'react';
-import {
-    Autocomplete,
-    TextField,
-    Typography,
-    Box,
-    Button,
-} from '@mui/material';
+import { Typography, Box, Button } from '@mui/material';
+import { AutocompleteField } from 'component/common/AutocompleteField/AutocompleteField';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useEventTracker } from 'hooks/useEventTracker';
 import type { MetricSource } from 'component/impact-metrics/types';
@@ -150,7 +145,11 @@ export const MetricSelector = ({
 
     return (
         <>
-            <Autocomplete
+            <AutocompleteField
+                label={label}
+                placeholder='Search for a metric…'
+                size='small'
+                required
                 options={allOptions}
                 groupBy={(option) => groupLabel(option.source)}
                 getOptionLabel={(option) => option.displayName}
@@ -191,16 +190,6 @@ export const MetricSelector = ({
                             </Typography>
                         </Box>
                     </Box>
-                )}
-                renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        label={label}
-                        placeholder='Search for a metric…'
-                        variant='outlined'
-                        size='small'
-                        required
-                    />
                 )}
                 noOptionsText={
                     <NoOptionsMessage

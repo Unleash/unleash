@@ -2,7 +2,6 @@ import { type ChangeEvent, useState } from 'react';
 import {
     Button,
     Chip,
-    TextField,
     Typography,
     styled,
     type TextFieldProps,
@@ -12,6 +11,8 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { ADD_TO_STRATEGY_INPUT_LIST, STRATEGY_INPUT_LIST } from 'utils/testIds';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import type { IFormErrors } from 'hooks/useFormErrors';
+import Input from 'component/common/Input/Input';
+import { FormFieldControlAligner } from 'component/common/FormField/FormField';
 
 interface IStrategyInputList {
     name: string;
@@ -35,6 +36,11 @@ const InputContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
     alignItems: 'start',
+    '& > :first-child': {
+        flex: '0 0 auto',
+        width: 'auto',
+        marginBottom: 0,
+    },
 }));
 
 const StrategyInputList = ({
@@ -116,7 +122,7 @@ const StrategyInputList = ({
                 }
             />
             <InputContainer>
-                <TextField
+                <Input
                     error={Boolean(errors.getFormError(name))}
                     helperText={errors.getFormError(name)}
                     name={`input_field`}
@@ -132,16 +138,18 @@ const StrategyInputList = ({
                     onKeyDown={onKeyDown}
                     data-testid={STRATEGY_INPUT_LIST}
                 />
-                <Button
-                    // @ts-expect-error -- handler accepts the shared input change event shape
-                    onClick={setValue}
-                    data-testid={ADD_TO_STRATEGY_INPUT_LIST}
-                    variant='outlined'
-                    color='secondary'
-                    startIcon={<Add />}
-                >
-                    Add
-                </Button>
+                <FormFieldControlAligner>
+                    <Button
+                        // @ts-expect-error -- handler accepts the shared input change event shape
+                        onClick={setValue}
+                        data-testid={ADD_TO_STRATEGY_INPUT_LIST}
+                        variant='outlined'
+                        color='secondary'
+                        startIcon={<Add />}
+                    >
+                        Add
+                    </Button>
+                </FormFieldControlAligner>
             </InputContainer>
         </Container>
     );

@@ -1,17 +1,16 @@
 import {
-    Autocomplete,
     type AutocompleteRenderGroupParams,
     Checkbox,
     styled,
-    TextField,
 } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { caseInsensitiveSearch } from 'utils/search';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import { Fragment } from 'react';
+import { Fragment, type ReactNode } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SelectAllButton } from 'component/admin/apiToken/ApiTokenForm/ProjectSelector/SelectProjectInput/SelectAllButton/SelectAllButton';
+import { AutocompleteField } from 'component/common/AutocompleteField/AutocompleteField';
 
 const StyledOption = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -70,11 +69,15 @@ interface IProjectBase {
 interface IEnvironmentProjectSelectProps {
     projects: string[];
     setProjects: React.Dispatch<React.SetStateAction<string[]>>;
+    description?: ReactNode;
+    className?: string;
 }
 
 export const EnvironmentProjectSelect = ({
     projects,
     setProjects,
+    description,
+    className,
 }: IEnvironmentProjectSelectProps) => {
     const { projects: projectsAll } = useProjects();
 
@@ -116,8 +119,10 @@ export const EnvironmentProjectSelect = ({
     );
 
     return (
-        <StyledGroupFormUsersSelect>
-            <Autocomplete
+        <StyledGroupFormUsersSelect className={className}>
+            <AutocompleteField
+                label='Projects'
+                description={description}
                 size='small'
                 multiple
                 limitTags={1}
@@ -149,9 +154,6 @@ export const EnvironmentProjectSelect = ({
                 getOptionLabel={(option) =>
                     option.name || option.description || ''
                 }
-                renderInput={(params) => (
-                    <TextField {...params} label='Projects' />
-                )}
                 renderValue={(value) => renderTags(value)}
                 groupBy={() => 'Select/Deselect all'}
                 renderGroup={renderGroup}

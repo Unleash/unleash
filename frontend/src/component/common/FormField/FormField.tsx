@@ -14,6 +14,7 @@ const StyledLabel = styled('label')(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
     fontWeight: theme.typography.fontWeightBold,
     color: theme.palette.text.primary,
+    textAlign: 'left',
 }));
 
 const StyledDescription = styled('p')(({ theme }) => ({
@@ -68,6 +69,9 @@ export const FormField = ({ label, description, children }: FormFieldProps) => {
     const descriptionContent = isValidElement(description)
         ? (description.props as { children?: ReactNode }).children
         : description;
+    const descriptionTestId = isValidElement(description)
+        ? (description.props as { 'data-testid'?: string })['data-testid']
+        : undefined;
 
     const ownId = child.props.id as string | undefined;
     const id = ownId ?? generatedId;
@@ -89,7 +93,10 @@ export const FormField = ({ label, description, children }: FormFieldProps) => {
                 {label}
             </StyledLabel>
             {description ? (
-                <StyledDescription id={descriptionId}>
+                <StyledDescription
+                    id={descriptionId}
+                    data-testid={descriptionTestId}
+                >
                     {descriptionContent}
                 </StyledDescription>
             ) : null}

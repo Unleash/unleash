@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { FormField } from '../FormField/FormField';
 
-interface AutocompleteFieldProps<
+export interface AutocompleteFieldProps<
     Value,
     Multiple extends boolean | undefined,
     DisableClearable extends boolean | undefined,
@@ -14,8 +14,10 @@ interface AutocompleteFieldProps<
     > {
     label: string;
     description?: ReactNode;
+    helperText?: ReactNode;
     placeholder?: string;
     startAdornment?: ReactNode;
+    required?: boolean;
 }
 
 export function AutocompleteField<
@@ -26,8 +28,10 @@ export function AutocompleteField<
 >({
     label,
     description,
+    helperText,
     placeholder,
     startAdornment,
+    required,
     size,
     ...props
 }: AutocompleteFieldProps<Value, Multiple, DisableClearable, FreeSolo>) {
@@ -62,8 +66,10 @@ export function AutocompleteField<
                         <TextField
                             {...params}
                             size={size}
+                            required={required}
                             label={topLabelInputs ? undefined : label}
                             placeholder={placeholder}
+                            helperText={helperText}
                             slotProps={slotProps}
                         />
                     );

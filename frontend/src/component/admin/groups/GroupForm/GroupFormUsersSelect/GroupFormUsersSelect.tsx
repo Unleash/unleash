@@ -1,4 +1,4 @@
-import { Checkbox, styled, TextField } from '@mui/material';
+import { Checkbox, styled } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import type { IUser } from 'interfaces/user';
@@ -111,6 +111,7 @@ export const GroupFormUsersSelect: FC<IGroupFormUsersSelectProps> = ({
     return (
         <StyledGroupFormUsersSelect>
             <AutocompleteVirtual
+                label='Select users'
                 data-testid={UG_USERS_ID}
                 size='small'
                 limitTags={1}
@@ -143,9 +144,6 @@ export const GroupFormUsersSelect: FC<IGroupFormUsersSelectProps> = ({
                 getOptionLabel={(option: UserOption) =>
                     option.email || option.name || option.username || ''
                 }
-                renderInput={(params) => (
-                    <TextField {...params} label='Select users' />
-                )}
                 renderValue={(value) => renderValue(value)}
                 noOptionsText={isLoading ? 'Loading…' : 'No options'}
             />

@@ -7,6 +7,9 @@ import {
 import type { MetricFlagContext } from 'unleash-client/lib/impact-metrics/metric-types.js';
 import type { Context } from '../features/playground/feature-evaluator/index.js';
 
+// biome-ignore lint/suspicious/noEmptyInterface: extension point for packages that embed unleash-server.
+export interface IFlagKeyOverrides {}
+
 export type IFlagKey =
     | 'accessLogs'
     | 'anonymiseEventLog'
@@ -23,14 +26,10 @@ export type IFlagKey =
     | 'advancedPlayground'
     | 'filterInvalidClientMetrics'
     | 'disableMetrics'
-    | 'signals'
-    | 'automatedActions'
     | 'celebrateUnleash'
     | 'feedbackPosting'
     | 'extendedUsageMetrics'
     | 'feedbackComments'
-    | 'killScheduledChangeRequestCache'
-    | 'estimateTrafficDataCost'
     | 'useMemoizedActiveTokens'
     | 'queryMissingTokens'
     | 'disableUpdateMaxRevisionId'
@@ -49,34 +48,24 @@ export type IFlagKey =
     | 'showUserDeviceCount'
     | 'sessionInspector'
     | 'memorizeStats'
-    | 'streaming'
-    | 'denyStreamingForNonEdge'
     | 'deltaApi'
     | 'uniqueSdkTracking'
     | 'consumptionModel'
-    | 'consumptionModelUI'
     | 'customMetrics'
     | 'impactViews'
-    | 'registerImpactMetrics'
     | 'disableImpactMetrics'
     | 'etagByEnv'
-    | 'fetchMode'
     | 'optimizeLifecycle'
     | 'plausibleMetrics'
     | 'newInUnleash'
     | 'whatsNewPage'
-    | 'oidcPkceSupport'
     | 'flightRecorderSdk'
     | 'flightRecorderAdminEvents'
     | 'flightRecorderFrontend'
     | 'regexConstraintOperator'
     | 'semverGteConstraintOperators'
-    | 'enterpriseEdgeTokensList'
-    | 'impactMetricsFlagPage'
     | 'userTokenWithClientApiLoggingKillSwitch'
-    | 'disableScimAdminGroupGuard'
     | 'multiMetricChart'
-    | 'elasticEventSync'
     | 'logRocketEnabled'
     | 'newProjectList'
     | 'newModalDesign'
@@ -85,15 +74,13 @@ export type IFlagKey =
     | 'newProfileDropdown'
     | 'serviceNowIntegration'
     | 'learningLab'
-    | 'accessRequestsNotifications'
-    | 'accessRequestsMenuIndicator'
     | 'quickTourDemo'
-    | 'projectReleaseTemplates'
     | 'topLabelInputs'
     | 'flagListCreatedByFilter'
     | 'secureTokenStorage'
     | 'recordSdkFlavorMetrics'
-    | 'searchDocsWidget';
+    | 'searchDocsWidget'
+    | keyof IFlagKeyOverrides;
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -146,14 +133,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_METRICS,
         false,
     ),
-    signals: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SIGNALS,
-        false,
-    ),
-    automatedActions: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_AUTOMATED_ACTIONS,
-        false,
-    ),
     celebrateUnleash: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CELEBRATE_UNLEASH,
         false,
@@ -189,14 +168,6 @@ const flags: IFlags = {
     },
     useMemoizedActiveTokens: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_MEMOIZED_ACTIVE_TOKENS,
-        false,
-    ),
-    killScheduledChangeRequestCache: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_KILL_SCHEDULED_CHANGE_REQUEST_CACHE,
-        false,
-    ),
-    estimateTrafficDataCost: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ESTIMATE_TRAFFIC_DATA_COST,
         false,
     ),
     disableUpdateMaxRevisionId: parseEnvVarBoolean(
@@ -272,10 +243,6 @@ const flags: IFlags = {
         process.env.EXPERIMENTAL_CONSUMPTION_MODEL,
         false,
     ),
-    consumptionModelUI: parseEnvVarBoolean(
-        process.env.EXPERIMENTAL_CONSUMPTION_MODEL_UI,
-        false,
-    ),
     impactViews: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_IMPACT_VIEWS,
         false,
@@ -288,38 +255,12 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_FLAG_LIST_CREATED_BY_FILTER,
         false,
     ),
-    registerImpactMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_REGISTER_IMPACT_METRICS,
-        false,
-    ),
     disableImpactMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_IMPACT_METRICS,
         false,
     ),
-    streaming: {
-        name: 'disabled',
-        enabled: parseEnvVarBoolean(
-            process.env.UNLEASH_EXPERIMENTAL_STREAMING,
-            false,
-        ),
-    },
-    denyStreamingForNonEdge: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_STREAMING_DENY_STREAMING_FOR_NON_EDGE,
-        false,
-    ),
-    fetchMode: {
-        name: 'disabled',
-        enabled: parseEnvVarBoolean(
-            process.env.UNLEASH_EXPERIMENTAL_FETCH_MODE,
-            false,
-        ),
-    },
     plausibleMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PLAUSIBLE_METRICS,
-        false,
-    ),
-    oidcPkceSupport: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_OIDC_PKCE_SUPPORT,
         false,
     ),
     newInUnleash: parseEnvVarBooleanOrStringVariant(
@@ -355,29 +296,13 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_SEMVER_GTE_CONSTRAINT_OPERATORS,
         false,
     ),
-    enterpriseEdgeTokensList: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ENTERPRISE_EDGE_TOKENS_LIST,
-        false,
-    ),
-    impactMetricsFlagPage: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_IMPACT_METRICS_FLAG_PAGE,
-        false,
-    ),
     userTokenWithClientApiLoggingKillSwitch: parseEnvVarBoolean(
         process.env
             .UNLEASH_EXPERIMENTAL_USERTOKEN_WITH_CLIENTAPI_LOGGING_KILL_SWITCH,
         false,
     ),
-    disableScimAdminGroupGuard: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_DISABLE_SCIM_ADMIN_GROUP_GUARD,
-        false,
-    ),
     multiMetricChart: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_MULTI_METRIC_CHART,
-        false,
-    ),
-    elasticEventSync: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ELASTIC_EVENT_SYNC,
         false,
     ),
     logRocketEnabled: parseEnvVarBoolean(
@@ -413,18 +338,6 @@ const flags: IFlags = {
     },
     serviceNowIntegration: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SERVICE_NOW_INTEGRATION,
-        false,
-    ),
-    accessRequestsNotifications: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ACCESS_REQUESTS_NOTIFICATIONS,
-        false,
-    ),
-    accessRequestsMenuIndicator: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ACCESS_REQUESTS_MENU_INDICATOR,
-        false,
-    ),
-    projectReleaseTemplates: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PROJECT_RELEASE_TEMPLATES,
         false,
     ),
     topLabelInputs: parseEnvVarBoolean(

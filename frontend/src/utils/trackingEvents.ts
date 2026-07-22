@@ -90,7 +90,8 @@ export type CustomEvents =
     | 'external-impact-metrics'
     | 'help-resources'
     | 'access-requests-notification'
-    | 'whats-new-page';
+    | 'whats-new-page'
+    | 'search-docs';
 
 // Flight recorder uses these reserved names internally; they are not available for custom events.
 export const RESERVED_EVENT_NAMES = {

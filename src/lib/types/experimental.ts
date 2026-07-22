@@ -92,7 +92,8 @@ export type IFlagKey =
     | 'topLabelInputs'
     | 'flagListCreatedByFilter'
     | 'secureTokenStorage'
-    | 'recordSdkFlavorMetrics';
+    | 'recordSdkFlavorMetrics'
+    | 'searchDocsWidget';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -436,6 +437,10 @@ const flags: IFlags = {
     ),
     secureTokenStorage: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SECURE_TOKEN,
+        false,
+    ),
+    searchDocsWidget: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SEARCH_DOCS_WIDGET,
         false,
     ),
 };

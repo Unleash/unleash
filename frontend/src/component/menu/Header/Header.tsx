@@ -21,6 +21,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton.tsx';
 import { CommandBar } from 'component/commandBar/CommandBar';
 import { HelpResources } from './HelpResources/HelpResources';
+import { SearchDocsButton } from './SearchDocs/SearchDocsButton.tsx';
 import { PendingAccessRequestsIndicator } from 'component/admin/users/AccessRequestsNotifications/PendingAccessRequestsIndicator';
 
 const HeaderComponent = styled(AppBar)(({ theme }) => ({
@@ -75,6 +76,7 @@ const Header = () => {
     const headerItems = (
         <StyledUserContainer>
             <CommandBar />
+            <SearchDocsButton />
             <Divider
                 orientation='vertical'
                 variant='middle'

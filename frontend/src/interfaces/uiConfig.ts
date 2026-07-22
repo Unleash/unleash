@@ -111,6 +111,7 @@ export type UiFlags = {
     accessRequestsMenuIndicator?: boolean;
     projectReleaseTemplates?: boolean;
     topLabelInputs?: boolean;
+    searchDocsWidget?: boolean;
 };
 
 export interface IVersionInfo {

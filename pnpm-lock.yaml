@@ -22,7 +22,7 @@ overrides:
   json-schema: ^0.4.0
   json5: ^2.2.2
   jsonpath-plus: 10.4.0
-  js-yaml: 4.2.0
+  js-yaml: 4.3.0
   lodash: '>=4.18.0'
   markdown-it: 14.2.0
   minimatch@3.1.2: 10.2.5
@@ -139,8 +139,8 @@ importers:
         specifier: ^0.11.1
         version: 0.11.1
       js-yaml:
-        specifier: 4.2.0
-        version: 4.2.0
+        specifier: 4.3.0
+        version: 4.3.0
       json-diff:
         specifier: ^1.0.6
         version: 1.0.6
@@ -4339,8 +4339,8 @@ packages:
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
-  js-yaml@4.2.0:
-    resolution: {integrity: sha512-ePWsvanv0DWuDRsW8dnt+R4jQ31SCRCQ7hhNcPXZPsoBZiemuZNYGf7adZdqX2D86j6rvKp3RpCxVTSb8WQlOw==}
+  js-yaml@4.3.0:
+    resolution: {integrity: sha512-1td788aAnnZ5qs7V2QIRl1owjtYpbKt749Y3xauqQgwIIGF/xXWz1wMTEBx5O3LK3lXLVuqXPdPxj2BoFHaW9Q==}
     hasBin: true
 
   jsbn@0.1.1:
@@ -6852,14 +6852,14 @@ snapshots:
   '@apidevtools/json-schema-ref-parser@14.0.1':
     dependencies:
       '@types/json-schema': 7.0.15
-      js-yaml: 4.2.0
+      js-yaml: 4.3.0
 
   '@apidevtools/json-schema-ref-parser@9.1.2':
     dependencies:
       '@jsdevtools/ono': 7.1.3
       '@types/json-schema': 7.0.15
       call-me-maybe: 1.0.2
-      js-yaml: 4.2.0
+      js-yaml: 4.3.0
 
   '@apidevtools/openapi-schemas@2.1.0': {}
 
@@ -9408,7 +9408,7 @@ snapshots:
   cosmiconfig@8.3.6(typescript@7.0.2):
     dependencies:
       import-fresh: 3.3.1
-      js-yaml: 4.2.0
+      js-yaml: 4.3.0
       parse-json: 5.2.0
       path-type: 4.0.0
     optionalDependencies:
@@ -10806,7 +10806,7 @@ snapshots:
 
   js-tokens@4.0.0: {}
 
-  js-yaml@4.2.0:
+  js-yaml@4.3.0:
     dependencies:
       argparse: 2.0.1
 
@@ -11734,7 +11734,7 @@ snapshots:
 
   openapi-enforcer@1.23.0:
     dependencies:
-      js-yaml: 4.2.0
+      js-yaml: 4.3.0
       randexp: 0.5.3
 
   openapi-types@12.1.3: {}
@@ -11765,7 +11765,7 @@ snapshots:
       find-up: 5.0.0
       fs-extra: 11.3.4
       jiti: 2.6.1
-      js-yaml: 4.2.0
+      js-yaml: 4.3.0
       lodash.uniq: 4.5.0
       openapi3-ts: 4.5.0
       string-argv: 0.3.2

@@ -74,7 +74,7 @@ patchedDependencies:
   '@tanstack/table-core@8.21.3': patches/@tanstack__table-core@8.21.3.patch
   cypress-vite: .pnpm/patches/cypress-vite-npm-1.8.0-5384b5466c.patch
 overrides:
-  "@codemirror/state": "6.7.0"
+  "@codemirror/state": "6.7.1"
   "@types/express-session>@types/express": "4.17.25"
   "@types/react": "^19.0.0"
   "@wesleytodd/openapi>path-to-regexp": "6.3.0"

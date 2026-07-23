@@ -11,8 +11,8 @@ export const metricQuerySchema = {
         metricName: {
             type: 'string',
             description:
-                'The Prometheus metric series to query. It includes both unleash prefix and metric type and display name',
-            example: 'unleash_counter_feature_toggle_usage_total',
+                'The Prometheus metric series name to query.',
+            example: 'feature_toggle_usage_total',
         },
         timeRange: {
             type: 'string',

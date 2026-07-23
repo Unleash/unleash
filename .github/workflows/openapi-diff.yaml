@@ -242,7 +242,7 @@ jobs:
 
       - name: Download Edge OpenAPI spec
         run: |
-          curl -fsSL -o edge-openapi.json https://unleashsbx.edge.getunleash.io/docs/openapi.json
+          curl -fsSL -o edge-openapi.json https://hosted.edge.getunleash.io/docs/openapi.json
 
           jq empty openapi-current.json
           jq empty edge-openapi.json

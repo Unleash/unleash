@@ -10,6 +10,7 @@ export const clientApplicationSchema = {
             description:
                 'An identifier for the app that uses the sdk, should be static across SDK restarts',
             type: 'string',
+            minLength: 1,
             example: 'example-app',
         },
         instanceId: {

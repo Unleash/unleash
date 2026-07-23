@@ -232,7 +232,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
             return !!(
                 queryModifiers.range &&
                 featureDate >= new Date(queryModifiers.range[0]).getTime() &&
-                featureDate <= new Date(queryModifiers.range[1]).getTime()
+                featureDate < new Date(queryModifiers.range[1]).getTime()
             );
         }).length;
     }

@@ -478,10 +478,9 @@ export class EventStore implements IEventStore {
         parameters: { dateAccessor: string; range: string[] },
     ): Knex.QueryBuilder {
         if (parameters.range && parameters.range.length === 2) {
-            return query.andWhereBetween(parameters.dateAccessor, [
-                parameters.range[0],
-                parameters.range[1],
-            ]);
+            return query
+                .andWhere(parameters.dateAccessor, '>=', parameters.range[0])
+                .andWhere(parameters.dateAccessor, '<', parameters.range[1]);
         }
 
         return query;

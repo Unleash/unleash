@@ -304,10 +304,9 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         }
 
         if (queryModifiers.range && queryModifiers.range.length === 2) {
-            query.andWhereBetween(dateAccessor, [
-                queryModifiers.range[0],
-                queryModifiers.range[1],
-            ]);
+            query
+                .andWhere(dateAccessor, '>=', queryModifiers.range[0])
+                .andWhere(dateAccessor, '<', queryModifiers.range[1]);
         }
 
         const queryResult = await query.first();

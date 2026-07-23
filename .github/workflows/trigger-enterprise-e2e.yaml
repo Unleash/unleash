@@ -1,0 +1,47 @@
+name: Trigger Enterprise E2E Tests
+
+on:
+  pull_request:
+    types: [labeled]
+
+jobs:
+  check-label:
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'test-enterprise')
+    outputs:
+      should-test: ${{ steps.check.outputs.should-test }}
+    steps:
+      - id: check
+        run: echo "should-test=true" >> $GITHUB_OUTPUT
+
+  test-enterprise-e2e:
+    needs: check-label
+    if: needs.check-label.outputs.should-test == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout OSS
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.x
+
+      - name: Enable corepack
+        run: corepack enable
+
+      - name: Install and build OSS
+        run: |
+          yarn install --immutable
+          yarn build:backend
+        env:
+          YARN_ENABLE_SCRIPTS: false
+
+      - name: Trigger Enterprise E2E Tests
+        run: |
+          gh workflow run cicd.yml \
+            --repo bricks-software/unleash-enterprise \
+            --ref main \
+            -f commit=${{ github.event.pull_request.head.sha }}
+        env:
+          GH_TOKEN: ${{ secrets.ENTERPRISE_REPO_TOKEN }}

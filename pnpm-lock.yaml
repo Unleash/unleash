@@ -397,8 +397,8 @@ importers:
   frontend:
     dependencies:
       '@fern-api/search-widget':
-        specifier: 0.2.1
-        version: 0.2.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: 0.2.2
+        version: 0.2.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       chartjs-plugin-datalabels:
         specifier: ^2.2.0
         version: 2.2.0(chart.js@4.5.1)
@@ -1250,8 +1250,8 @@ packages:
     peerDependencies:
       vitest: ^4.1.0
 
-  '@fern-api/search-widget@0.2.1':
-    resolution: {integrity: sha512-2BWcFeGBM7Ug8OxycLrUMdJExg+MEMhsheWWdbL6x2zn/FuuUKiU8oiLY7+5FrPF/Kes0cTvNUDxRpQqYFjUZQ==}
+  '@fern-api/search-widget@0.2.2':
+    resolution: {integrity: sha512-2vm2C4PVlFkOBsStbjBUZhYzFGKxymbWMH4sY8/rhaL/gGpQQR2s8qtTuaUN24veTYv+C0N/rLuCQ3xNh7u0bg==}
     peerDependencies:
       react: ^19.0.0
       react-dom: ^19.0.0
@@ -7403,7 +7403,7 @@ snapshots:
       fast-check: 4.7.0
       vitest: 4.1.9(@opentelemetry/api@1.9.1)(@types/node@22.20.0)(@vitest/coverage-v8@4.1.9)(@vitest/ui@4.1.9)(jsdom@25.0.1(supports-color@10.2.2))(msw@2.14.6(@types/node@22.20.0)(typescript@7.0.2))(vite@8.1.3(@types/node@22.20.0)(esbuild@0.28.1)(jiti@2.6.1)(sass@1.101.0)(yaml@2.8.4))
 
-  '@fern-api/search-widget@0.2.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@fern-api/search-widget@0.2.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
       es-toolkit: 1.49.0
       react: 19.2.7

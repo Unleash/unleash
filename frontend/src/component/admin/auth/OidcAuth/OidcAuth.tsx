@@ -1,17 +1,10 @@
 import type React from 'react';
 import { useEffect, useState } from 'react';
-import {
-    Button,
-    FormControl,
-    FormControlLabel,
-    InputLabel,
-    MenuItem,
-    Select,
-    Switch,
-    TextField,
-} from '@mui/material';
+import { Button, FormControlLabel, Switch } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { Alert } from '@mui/material';
+import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
+import ArrowDropDown from '@mui/icons-material/ArrowDropDown';
 import { AutoCreateForm } from '../AutoCreateForm/AutoCreateForm.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useAuthSettingsApi from 'hooks/api/actions/useAuthSettingsApi/useAuthSettingsApi';
@@ -22,6 +15,12 @@ import { removeEmptyStringFields } from 'utils/removeEmptyStringFields';
 import { SsoGroupSettings } from '../SsoGroupSettings.tsx';
 import type { IRole } from 'interfaces/role';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import Input from 'component/common/Input/Input.tsx';
+
+const idTokenSigningAlgorithms = ['RS256', 'RS384', 'RS512'].map((key) => ({
+    key,
+    label: key,
+}));
 
 const initialState = {
     enabled: false,
@@ -173,14 +172,13 @@ export const OidcAuth = () => {
                         <p>(Required) Issuer discover metadata URL</p>
                     </Grid>
                     <Grid size={{ md: 6 }}>
-                        <TextField
+                        <Input
                             onChange={trimAndUpdateField}
                             label='Discover URL'
                             name='discoverUrl'
                             value={data.discoverUrl}
                             disabled={!data.enabled || oidcConfiguredThroughEnv}
                             style={{ width: '400px' }}
-                            variant='outlined'
                             size='small'
                         />
                     </Grid>
@@ -191,14 +189,13 @@ export const OidcAuth = () => {
                         <p>(Required) Client ID of your OpenID application</p>
                     </Grid>
                     <Grid size={{ md: 6 }}>
-                        <TextField
+                        <Input
                             onChange={trimAndUpdateField}
                             label='Client ID'
                             name='clientId'
                             value={data.clientId}
                             disabled={!data.enabled || oidcConfiguredThroughEnv}
                             style={{ width: '400px' }}
-                            variant='outlined'
                             size='small'
                             required
                         />
@@ -212,14 +209,13 @@ export const OidcAuth = () => {
                         </p>
                     </Grid>
                     <Grid size={{ md: 6 }}>
-                        <TextField
+                        <Input
                             onChange={trimAndUpdateField}
                             label='Client Secret'
                             name='secret'
                             value={data.secret}
                             disabled={!data.enabled || oidcConfiguredThroughEnv}
                             style={{ width: '400px' }}
-                            variant='outlined'
                             size='small'
                             required
                         />
@@ -307,14 +303,13 @@ export const OidcAuth = () => {
                         </p>
                     </Grid>
                     <Grid size={{ md: 6 }}>
-                        <TextField
+                        <Input
                             onChange={updateField}
                             label='ACR Values'
                             name='acrValues'
                             value={data.acrValues}
                             disabled={!data.enabled || oidcConfiguredThroughEnv}
                             style={{ width: '400px' }}
-                            variant='outlined'
                             size='small'
                         />
                     </Grid>
@@ -330,14 +325,13 @@ export const OidcAuth = () => {
                         </p>
                     </Grid>
                     <Grid size={{ md: 6 }}>
-                        <TextField
+                        <Input
                             onChange={updateField}
                             label='Extra Scopes'
                             name='extraScopes'
                             value={data.extraScopes}
                             disabled={!data.enabled}
                             style={{ width: '400px' }}
-                            variant='outlined'
                             size='small'
                             placeholder='custom_scope1 custom_scope2'
                         />
@@ -367,30 +361,19 @@ export const OidcAuth = () => {
                         </p>
                     </Grid>
                     <Grid size={{ md: 6 }}>
-                        <FormControl style={{ minWidth: '200px' }}>
-                            <InputLabel id='defaultRootRole-label'>
-                                Signing algorithm
-                            </InputLabel>
-                            <Select
-                                label='Signing algorithm'
-                                labelId='idTokenSigningAlgorithm-label'
-                                id='idTokenSigningAlgorithm'
-                                name='idTokenSigningAlgorithm'
-                                value={data.idTokenSigningAlgorithm || 'RS256'}
-                                onChange={(e) =>
-                                    setValue(
-                                        'idTokenSigningAlgorithm',
-                                        e.target.value,
-                                    )
-                                }
-                                disabled={oidcConfiguredThroughEnv}
-                            >
-                                {/*consider these from API or constants. */}
-                                <MenuItem value='RS256'>RS256</MenuItem>
-                                <MenuItem value='RS384'>RS384</MenuItem>
-                                <MenuItem value='RS512'>RS512</MenuItem>
-                            </Select>
-                        </FormControl>
+                        <GeneralSelect
+                            label='Signing algorithm'
+                            id='idTokenSigningAlgorithm'
+                            name='idTokenSigningAlgorithm'
+                            value={data.idTokenSigningAlgorithm || 'RS256'}
+                            options={idTokenSigningAlgorithms}
+                            onChange={(value) =>
+                                setValue('idTokenSigningAlgorithm', value)
+                            }
+                            disabled={oidcConfiguredThroughEnv}
+                            IconComponent={ArrowDropDown}
+                            sx={{ maxWidth: '400px' }}
+                        />
                     </Grid>
                 </Grid>
 

@@ -18,6 +18,7 @@ export interface AutocompleteFieldProps<
     placeholder?: string;
     startAdornment?: ReactNode;
     required?: boolean;
+    error?: boolean;
 }
 
 export function AutocompleteField<
@@ -32,6 +33,7 @@ export function AutocompleteField<
     placeholder,
     startAdornment,
     required,
+    error,
     size,
     ...props
 }: AutocompleteFieldProps<Value, Multiple, DisableClearable, FreeSolo>) {
@@ -67,6 +69,7 @@ export function AutocompleteField<
                             {...params}
                             size={size}
                             required={required}
+                            error={error}
                             label={topLabelInputs ? undefined : label}
                             placeholder={placeholder}
                             helperText={helperText}

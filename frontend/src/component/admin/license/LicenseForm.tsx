@@ -1,6 +1,6 @@
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { Box, Button, TextField, styled } from '@mui/material';
+import { Box, Button, styled } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import {
@@ -14,6 +14,7 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useLicenseKeyApi from 'hooks/api/actions/useLicenseAPI/useLicenseApi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import Input from 'component/common/Input/Input';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -141,13 +142,12 @@ export const LicenseForm = () => {
                 />
 
                 <form onSubmit={onSubmit}>
-                    <TextField
+                    <Input
                         onChange={updateToken}
                         label='New license key'
                         name='licenseKey'
                         value={token}
                         style={{ width: '100%' }}
-                        variant='outlined'
                         size='small'
                         multiline
                         rows={6}

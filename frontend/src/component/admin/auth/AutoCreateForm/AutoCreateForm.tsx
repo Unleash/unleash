@@ -1,14 +1,10 @@
 import { type ChangeEvent, Fragment } from 'react';
-import {
-    FormControl,
-    FormControlLabel,
-    Switch,
-    TextField,
-} from '@mui/material';
+import { FormControl, FormControlLabel, Switch } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { RoleSelect } from 'component/common/RoleSelect/RoleSelect';
 import { useRoles } from 'hooks/api/getters/useRoles/useRoles';
 import type { IRole } from 'interfaces/role';
+import Input from 'component/common/Input/Input';
 
 interface IAutoCreateFormProps {
     data?: {
@@ -110,7 +106,7 @@ export const AutoCreateForm = ({
                     </p>
                 </Grid>
                 <Grid size={{ md: 6 }}>
-                    <TextField
+                    <Input
                         onChange={updateField}
                         label='Email domains'
                         name='emailDomains'
@@ -120,7 +116,6 @@ export const AutoCreateForm = ({
                         placeholder='@company.com, @anotherCompany.com'
                         style={{ width: '400px' }}
                         rows={2}
-                        variant='outlined'
                         size='small'
                     />
                 </Grid>

@@ -15,6 +15,7 @@ import type { IAuthEndpointDetailsResponse } from 'hooks/api/getters/useAuth/use
 import { BadRequestError, NotFoundError } from 'utils/apiUtils';
 import { contentSpacingY } from 'themes/themeStyles';
 import useToast from 'hooks/useToast';
+import { FormField } from 'component/common/FormField/FormField';
 
 interface IHostedAuthProps {
     authDetails: IAuthEndpointDetailsResponse;
@@ -128,21 +129,23 @@ const HostedAuth: FC<IHostedAuthProps> = ({ authDetails, redirect }) => {
                             {apiError}
                         </StyledTypography>
                         <StyledDiv>
-                            <StyledAutofillTextField
-                                label='Username or email'
-                                name='username'
-                                id='username'
-                                type='text'
-                                onChange={(evt) =>
-                                    setUsername(evt.target.value)
-                                }
-                                value={username}
-                                error={Boolean(usernameError)}
-                                helperText={usernameError}
-                                variant='outlined'
-                                size='small'
-                                data-testid={LOGIN_EMAIL_ID}
-                            />
+                            <FormField label='Username or email'>
+                                <StyledAutofillTextField
+                                    name='username'
+                                    id='username'
+                                    type='text'
+                                    onChange={(evt) =>
+                                        setUsername(evt.target.value)
+                                    }
+                                    value={username}
+                                    error={Boolean(usernameError)}
+                                    helperText={usernameError}
+                                    variant='outlined'
+                                    size='small'
+                                    data-testid={LOGIN_EMAIL_ID}
+                                    fullWidth
+                                />
+                            </FormField>
                             <PasswordField
                                 label='Password'
                                 onChange={(evt) =>

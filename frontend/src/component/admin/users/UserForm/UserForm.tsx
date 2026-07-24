@@ -108,14 +108,16 @@ const UserForm: React.FC<IUserForm> = ({
                     errorText={errors.email}
                     onFocus={() => clearErrors()}
                 />
-                <StyledRoleSubtitle variant='subtitle1' data-loading>
-                    What is your team member allowed to do?
-                </StyledRoleSubtitle>
                 <RoleSelect
                     roles={roles}
                     value={rootRole}
                     setValue={setRootRole}
                     required
+                    description={
+                        <StyledRoleSubtitle variant='subtitle1' data-loading>
+                            What is your team member allowed to do?
+                        </StyledRoleSubtitle>
+                    }
                 />
                 <ConditionallyRender
                     condition={mode !== EDIT && Boolean(uiConfig?.emailEnabled)}

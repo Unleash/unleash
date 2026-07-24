@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useState } from 'react';
 import classnames from 'classnames';
-import { styled, TextField, Typography } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 import { trim } from 'component/common/util';
 import { modalStyles } from 'component/admin/users/util';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
@@ -15,6 +15,7 @@ import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersAp
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import Input from 'component/common/Input/Input';
 
 const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({
     width: theme.spacing(5),
@@ -113,7 +114,7 @@ const ChangePassword = ({
                     password={data.password}
                     callback={setValidPassword}
                 />
-                <TextField
+                <Input
                     label='New password'
                     name='password'
                     type='password'
@@ -121,17 +122,17 @@ const ChangePassword = ({
                     error={Boolean(error)}
                     helperText={error}
                     onChange={updateField}
-                    variant='outlined'
                     size='small'
+                    fullWidth
                 />
-                <TextField
+                <Input
                     label='Confirm password'
                     name='confirm'
                     type='password'
                     value={data.confirm}
                     onChange={updateField}
-                    variant='outlined'
                     size='small'
+                    fullWidth
                 />
                 <PasswordMatcher
                     started={Boolean(data.password && data.confirm)}

@@ -1,6 +1,6 @@
 import type React from 'react';
 import { useEffect, useState } from 'react';
-import { Button, FormControlLabel, Switch, TextField } from '@mui/material';
+import { Button, FormControlLabel, Switch } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { Alert } from '@mui/material';
 import { AutoCreateForm } from '../AutoCreateForm/AutoCreateForm.tsx';
@@ -13,6 +13,7 @@ import { removeEmptyStringFields } from 'utils/removeEmptyStringFields';
 import { SsoGroupSettings } from '../SsoGroupSettings.tsx';
 import type { IRole } from 'interfaces/role';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import Input from 'component/common/Input/Input.tsx';
 
 const initialState = {
     enabled: false,
@@ -157,14 +158,13 @@ export const SamlAuth = () => {
                         <p>(Required) The Entity Identity provider issuer.</p>
                     </Grid>
                     <Grid size={{ md: 6 }}>
-                        <TextField
+                        <Input
                             onChange={trimAndUpdateField}
                             label='Entity ID'
                             name='entityId'
                             value={data.entityId}
                             disabled={!data.enabled || samlConfiguredThroughEnv}
                             style={{ width: '400px' }}
-                            variant='outlined'
                             size='small'
                             required
                         />
@@ -179,14 +179,13 @@ export const SamlAuth = () => {
                         </p>
                     </Grid>
                     <Grid size={{ md: 6 }}>
-                        <TextField
+                        <Input
                             onChange={trimAndUpdateField}
                             label='Single Sign-On URL'
                             name='signOnUrl'
                             value={data.signOnUrl}
                             disabled={!data.enabled || samlConfiguredThroughEnv}
                             style={{ width: '400px' }}
-                            variant='outlined'
                             size='small'
                             required
                         />
@@ -201,7 +200,7 @@ export const SamlAuth = () => {
                         </p>
                     </Grid>
                     <Grid size={{ md: 7 }}>
-                        <TextField
+                        <Input
                             onChange={updateField}
                             label='X.509 Certificate'
                             name='certificate'
@@ -211,7 +210,6 @@ export const SamlAuth = () => {
                             multiline
                             rows={14}
                             maxRows={14}
-                            variant='outlined'
                             size='small'
                             required
                             slotProps={{
@@ -235,14 +233,13 @@ export const SamlAuth = () => {
                         </p>
                     </Grid>
                     <Grid size={{ md: 6 }}>
-                        <TextField
+                        <Input
                             onChange={trimAndUpdateField}
                             label='Single Sign-out URL'
                             name='signOutUrl'
                             value={data.signOutUrl}
                             disabled={!data.enabled || samlConfiguredThroughEnv}
                             style={{ width: '400px' }}
-                            variant='outlined'
                             size='small'
                         />
                     </Grid>
@@ -258,7 +255,7 @@ export const SamlAuth = () => {
                         </p>
                     </Grid>
                     <Grid size={{ md: 7 }}>
-                        <TextField
+                        <Input
                             onChange={updateField}
                             label='X.509 Certificate'
                             name='spCertificate'
@@ -268,7 +265,6 @@ export const SamlAuth = () => {
                             multiline
                             rows={14}
                             maxRows={14}
-                            variant='outlined'
                             size='small'
                             slotProps={{
                                 input: {

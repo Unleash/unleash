@@ -296,13 +296,15 @@ export const ServiceAccountModal = ({
                             required
                             disabled={editing}
                         />
-                        <StyledInputDescription>
-                            What is your service account allowed to do?
-                        </StyledInputDescription>
                         <StyledRoleSelect
                             roles={roles}
                             value={rootRole}
                             setValue={setRootRole}
+                            description={
+                                <StyledInputDescription>
+                                    What is your service account allowed to do?
+                                </StyledInputDescription>
+                            }
                             required
                         />
                         <ConditionallyRender

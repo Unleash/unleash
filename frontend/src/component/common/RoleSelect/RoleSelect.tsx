@@ -1,12 +1,9 @@
-import {
-    Autocomplete,
-    type AutocompleteProps,
-    TextField,
-    styled,
-} from '@mui/material';
+import { type AutocompleteProps, styled } from '@mui/material';
 import type { IRole } from 'interfaces/role';
 import { RoleDescription } from '../RoleDescription/RoleDescription.tsx';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender.tsx';
+import { AutocompleteField } from '../AutocompleteField/AutocompleteField';
+import type { ReactNode } from 'react';
 
 const StyledRoleOption = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -18,12 +15,15 @@ const StyledRoleOption = styled('div')(({ theme }) => ({
 }));
 
 interface IRoleSelectProps
-    extends Partial<AutocompleteProps<IRole, false, false, false>> {
+    extends Partial<
+        Omit<AutocompleteProps<IRole, false, false, false>, 'renderInput'>
+    > {
     roles: IRole[];
     value: IRole | null;
     setValue: (role: IRole | null) => void;
     required?: boolean;
     hideDescription?: boolean;
+    description?: ReactNode;
 }
 
 export const RoleSelect = ({
@@ -32,6 +32,7 @@ export const RoleSelect = ({
     setValue,
     required,
     hideDescription,
+    description,
     ...rest
 }: IRoleSelectProps) => {
     const renderRoleOption = (
@@ -48,7 +49,10 @@ export const RoleSelect = ({
 
     return (
         <>
-            <Autocomplete
+            <AutocompleteField
+                label='Role'
+                description={description}
+                required={required}
                 openOnFocus
                 size='small'
                 value={value}
@@ -56,9 +60,6 @@ export const RoleSelect = ({
                 options={roles}
                 renderOption={renderRoleOption}
                 getOptionLabel={(option) => option.name}
-                renderInput={(params) => (
-                    <TextField {...params} label='Role' required={required} />
-                )}
                 {...rest}
             />
             <ConditionallyRender

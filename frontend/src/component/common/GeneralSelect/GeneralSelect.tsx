@@ -153,6 +153,7 @@ function GeneralSelect<T extends string = string>({
             <GeneralSelectControl
                 {...props}
                 fullWidth={props.fullWidth ?? topLabelInputs}
+                autoWidth={props.autoWidth ?? !topLabelInputs}
             />
         </FormField>
     );

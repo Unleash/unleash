@@ -45,14 +45,12 @@ const StyledFilterHeader = styled('div', {
     },
 }));
 
-const StyledOperatorOptions = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'topLabel',
-})<{ topLabel: boolean }>(({ theme, topLabel }) => ({
+const StyledOperatorOptions = styled('div')(({ theme }) => ({
     width: '100%',
     display: 'inline-flex',
     flex: 1,
     gap: theme.spacing(1),
-    alignItems: topLabel ? 'flex-end' : undefined,
+    alignItems: 'flex-end',
 }));
 
 const StyledOperatorSelectWrapper = styled('div')(({ theme }) => ({
@@ -62,12 +60,9 @@ const StyledOperatorSelectWrapper = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledOperatorButtonWrapper = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'topLabel',
-})<{ topLabel: boolean }>(({ theme, topLabel }) => ({
+const StyledOperatorButtonWrapper = styled('div')(({ theme }) => ({
     display: 'inline-flex',
     flex: 1,
-    marginBottom: topLabel ? theme.spacing(2) : 0,
     '&&& button': {
         marginRight: 0,
         '&:not(.operator-is-active)': {
@@ -239,8 +234,8 @@ export const ProjectActionsFilterItem = ({
                             }
                         />
                     </StyledInputContainer>
-                    <StyledOperatorOptions topLabel={topLabelInputs}>
-                        <StyledOperatorButtonWrapper topLabel={topLabelInputs}>
+                    <StyledOperatorOptions>
+                        <StyledOperatorButtonWrapper>
                             <InvertedOperatorButton
                                 localConstraint={{ inverted }}
                                 setInvertedOperator={() =>
@@ -261,9 +256,7 @@ export const ProjectActionsFilterItem = ({
                         <ConditionallyRender
                             condition={showCaseSensitiveButton}
                             show={
-                                <StyledOperatorButtonWrapper
-                                    topLabel={topLabelInputs}
-                                >
+                                <StyledOperatorButtonWrapper>
                                     <CaseSensitiveButton
                                         localConstraint={{ caseInsensitive }}
                                         setCaseInsensitive={() =>

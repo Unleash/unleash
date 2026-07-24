@@ -6,6 +6,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { DateTimePicker } from 'component/common/DateTimePicker/DateTimePicker';
 import { Alert, styled, Typography } from '@mui/material';
 import { useEffect } from 'react';
+import { FormFieldControlAligner } from 'component/common/FormField/FormField';
 
 const StyledInputDescription = styled('p')(({ theme }) => ({
     color: theme.palette.text.secondary,
@@ -18,22 +19,22 @@ const StyledInput = styled(Input)(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
-const StyledExpirationPicker = styled('div')<{ custom?: boolean }>(
-    ({ theme, custom }) => ({
-        display: 'flex',
-        alignItems: custom ? 'start' : 'center',
-        gap: theme.spacing(1.5),
-        marginBottom: theme.spacing(2),
-        '& > :first-child': {
-            flex: '0 0 auto',
-            width: 'auto',
-        },
-        [theme.breakpoints.down('sm')]: {
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-        },
-    }),
-);
+const StyledExpirationPicker = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'custom',
+})<{ custom?: boolean }>(({ theme, custom }) => ({
+    display: 'flex',
+    alignItems: custom ? 'flex-start' : 'center',
+    gap: theme.spacing(1.5),
+    marginBottom: theme.spacing(2),
+    '& > :first-child': {
+        flex: '0 0 auto',
+        width: 'auto',
+    },
+    [theme.breakpoints.down('sm')]: {
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+    },
+}));
 
 const StyledSelectMenu = styled(SelectMenu)(({ theme }) => ({
     minWidth: theme.spacing(20),
@@ -220,26 +221,28 @@ export const PersonalAPITokenForm = ({
                         />
                     )}
                     elseShow={
-                        <ConditionallyRender
-                            condition={neverExpires}
-                            show={
-                                <Typography variant='body2'>
-                                    The token will <strong>never</strong>{' '}
-                                    expire!
-                                </Typography>
-                            }
-                            elseShow={() => (
-                                <Typography variant='body2'>
-                                    Token will expire on{' '}
-                                    <strong>
-                                        {formatDateYMD(
-                                            expiresAt!,
-                                            locationSettings.locale,
-                                        )}
-                                    </strong>
-                                </Typography>
-                            )}
-                        />
+                        <FormFieldControlAligner>
+                            <ConditionallyRender
+                                condition={neverExpires}
+                                show={
+                                    <Typography variant='body2'>
+                                        The token will <strong>never</strong>{' '}
+                                        expire!
+                                    </Typography>
+                                }
+                                elseShow={() => (
+                                    <Typography variant='body2'>
+                                        Token will expire on{' '}
+                                        <strong>
+                                            {formatDateYMD(
+                                                expiresAt!,
+                                                locationSettings.locale,
+                                            )}
+                                        </strong>
+                                    </Typography>
+                                )}
+                            />
+                        </FormFieldControlAligner>
                     }
                 />
             </StyledExpirationPicker>

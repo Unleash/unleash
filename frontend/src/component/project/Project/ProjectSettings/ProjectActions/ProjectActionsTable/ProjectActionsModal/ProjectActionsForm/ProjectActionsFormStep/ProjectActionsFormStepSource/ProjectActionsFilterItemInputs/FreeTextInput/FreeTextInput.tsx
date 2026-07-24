@@ -43,11 +43,10 @@ const useStyles = makeStyles<{ topLabel: boolean }>()(
         },
         input: {
             width: '100%',
-            margin: topLabel ? '1rem 0 0' : '1rem 0',
+            margin: '1rem 0',
         },
         button: {
             marginLeft: '1rem',
-            marginBottom: topLabel ? theme.spacing(2) : 0,
             [theme.breakpoints.down(700)]: {
                 marginLeft: 0,
                 marginBottom: '0.5rem',

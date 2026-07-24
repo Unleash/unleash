@@ -25,7 +25,7 @@ const StyledRaisedSection = styled('div')(({ theme }) => ({
 
 const StyledInput = styled(Input)(({ theme }) => ({
     width: '100%',
-    marginBottom: theme.spacing(3), //TODO: remove when cleaning up 'topLabelInputs' feature flag
+    marginBottom: theme.spacing(3),
 }));
 
 const StyledAlert = styled(Alert)(({ theme }) => ({

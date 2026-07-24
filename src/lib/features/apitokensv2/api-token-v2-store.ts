@@ -7,6 +7,7 @@ import type {
 import { inTransaction } from '../../db/transaction.js';
 import { ALL_PROJECTS } from '../../util/index.js';
 import { ALL, isAllProjects } from '../../types/models/api-token.js';
+import { subMinutes } from 'date-fns';
 
 const TABLE = 'api_tokens_v2';
 const API_V2_LINK_TABLE = 'api_tokens_v2_project';
@@ -68,6 +69,7 @@ export class ApiTokenV2Store implements IApiTokenV2Store {
                     type: newApiToken.type,
                     environment: newApiToken.environment,
                     expires_at: newApiToken.expiresAt,
+                    user_created: newApiToken.userCreated,
                 })
                 .returning('*');
             const updateProjectTask = newApiToken.projects
@@ -77,7 +79,7 @@ export class ApiTokenV2Store implements IApiTokenV2Store {
                 .map((project) => {
                     return tx.raw(
                         `INSERT INTO ${API_V2_LINK_TABLE}
-                               VALUES (?, ?)`,
+                         VALUES (?, ?)`,
                         [selector, project],
                     );
                 });
@@ -119,7 +121,10 @@ export class ApiTokenV2Store implements IApiTokenV2Store {
     }
 
     async getUserDefinedTokens(): Promise<ApiTokenV2[]> {
-        const rows = await this.makeTokenProjectQuery();
+        const rows = await this.makeTokenProjectQuery().where(
+            'user_created',
+            true,
+        );
         return toTokens(rows);
     }
 
@@ -141,5 +146,18 @@ export class ApiTokenV2Store implements IApiTokenV2Store {
         await this.db(TABLE)
             .where({ selector })
             .update({ seen_at: new Date() });
+    }
+
+    async deleteSystemCreatedTokensNotSeen(
+        minutesSinceLastSeen: number,
+    ): Promise<void> {
+        await this.db(TABLE)
+            .where('user_created', false)
+            .andWhere(
+                'seen_at',
+                '<',
+                subMinutes(new Date(), minutesSinceLastSeen),
+            )
+            .delete();
     }
 }

@@ -32,6 +32,12 @@ export class FakeApiTokenV2Store implements IApiTokenV2Store {
         return publicToken;
     }
 
+    async deleteSystemCreatedTokensNotSeen(
+        minutesSinceLastSeen: number,
+    ): Promise<void> {
+        return Promise.resolve();
+    }
+
     async getBySelector(selector: string) {
         return this.tokens.get(selector);
     }

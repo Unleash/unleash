@@ -5,8 +5,14 @@ import { ApiTokenType, type IApiToken } from '../../../lib/types/model.js';
 import { DEFAULT_ENV } from '../../../lib/util/constants.js';
 import { addDays, subDays } from 'date-fns';
 import type ProjectService from '../../../lib/features/project/project-service.js';
-import { createProjectService } from '../../../lib/features/index.js';
-import { EdgeService } from '../../../lib/services/index.js';
+import {
+    createEventsService,
+    createProjectService,
+} from '../../../lib/features/index.js';
+import {
+    EdgeService,
+    ResourceLimitsService,
+} from '../../../lib/services/index.js';
 import {
     type IUnleashStores,
     type IUser,
@@ -16,6 +22,7 @@ import {
 } from '../../../lib/types/index.js';
 import { createApiTokenService } from '../../../lib/features/api-tokens/createApiTokenService.js';
 import { randomBytes } from 'node:crypto';
+import { createApiTokenV2Service } from '../../../lib/features/apitokensv2/api-token-v2-service.js';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -51,10 +58,16 @@ beforeAll(async () => {
     await projectService.createProject(project, user, TEST_AUDIT_USER);
 
     const apiTokenService = createApiTokenService(db.rawDatabase, config);
+    const eventService = createEventsService(db.rawDatabase, db.config);
+    const resourceLimitsService = new ResourceLimitsService(db.config);
+    const apiTokenV2Service = createApiTokenV2Service(db.stores, db.config, {
+        eventService,
+        resourceLimitsService,
+    });
 
     edgeService = new EdgeService(
         { edgeTokenStore: db.stores.edgeTokenStore },
-        { apiTokenService },
+        { apiTokenService, apiTokenV2Service },
         config,
     );
 });

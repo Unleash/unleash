@@ -18,6 +18,7 @@ export interface CreateApiTokenV2 {
     projects: string[];
     environment: string;
     expiresAt?: Date;
+    userCreated: boolean;
 }
 
 export interface ApiTokenV2WithSecret extends ApiTokenV2 {
@@ -41,4 +42,7 @@ export interface IApiTokenV2Store {
     delete(selector: string): Promise<void>;
     markSeenAt(selector: string): Promise<void>;
     count(): Promise<number>;
+    deleteSystemCreatedTokensNotSeen(
+        minutesSinceLastSeen: number,
+    ): Promise<void>;
 }

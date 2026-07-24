@@ -328,7 +328,7 @@ export class ApiTokenController extends Controller {
             let token: IApiToken;
             if (this.flagResolver.isEnabled('secureTokenStorage')) {
                 const tokenV2 = await this.apiTokenV2Service.create(
-                    createToken,
+                    { userCreated: true, ...createToken },
                     req.audit,
                 );
                 const { selector: _selector, ...tokenWithSecret } = tokenV2;

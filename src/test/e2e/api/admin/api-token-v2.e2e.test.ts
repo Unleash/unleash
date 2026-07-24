@@ -51,6 +51,7 @@ test('lists, updates, and deletes tokens across both token stores', async () => 
             tokenName: 'secure-token',
             type: ApiTokenType.BACKEND,
             environment: 'development',
+            userCreated: true,
         },
         SYSTEM_USER_AUDIT,
     );

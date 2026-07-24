@@ -14,6 +14,7 @@ import type {
 import type { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
 import EventEmitter from 'events';
 import FakeEnvironmentStore from '../project-environments/fake-environment-store.js';
+import noLogger from '../../../test/fixtures/no-logger.js';
 
 class FakeApiTokenV2Store implements IApiTokenV2Store {
     stored?: ApiTokenV2 & { verifier: string };
@@ -76,6 +77,12 @@ class FakeApiTokenV2Store implements IApiTokenV2Store {
     async markSeenAt(): Promise<void> {
         this.markedSeen = true;
     }
+
+    deleteSystemCreatedTokensNotSeen(
+        minutesSinceLastSeen: number,
+    ): Promise<void> {
+        return Promise.resolve(undefined);
+    }
 }
 
 const tokenInput: CreateApiTokenV2 = {
@@ -83,6 +90,7 @@ const tokenInput: CreateApiTokenV2 = {
     type: ApiTokenType.BACKEND,
     projects: ['default'],
     environment: 'production',
+    userCreated: true,
 };
 
 const createService = (
@@ -101,6 +109,7 @@ const createService = (
             { apiTokenV2Store: store, environmentStore },
             {
                 eventBus: new EventEmitter(),
+                getLogger: noLogger,
             },
             { eventService, resourceLimitsService },
         ),

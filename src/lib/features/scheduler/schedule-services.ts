@@ -37,6 +37,7 @@ export const scheduleServices = (
         uniqueConnectionService,
         unknownFlagsService,
         edgeService,
+        apiTokenV2Service,
     } = services;
 
     schedulerService.schedule(
@@ -212,5 +213,12 @@ export const scheduleServices = (
         edgeService.deleteExpiredNonces.bind(edgeService),
         hoursToMilliseconds(1),
         'clearExpiredEdgeNonces',
+    );
+    schedulerService.schedule(
+        apiTokenV2Service.deleteSystemCreatedTokensNotSeen.bind(
+            apiTokenV2Service,
+        ),
+        minutesToMilliseconds(10),
+        'deleteSystemCreatedTokensNotSeen',
     );
 };

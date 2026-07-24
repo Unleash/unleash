@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-import { isPast } from 'date-fns';
+import { addMinutes, isPast } from 'date-fns';
 import ApiUser, { type IApiUser } from '../../types/api-user.js';
 import { ApiTokenType, type IApiToken } from '../../types/model.js';
 import {
@@ -16,15 +16,16 @@ import type {
     IApiTokenV2Store,
 } from './api-token-v2-types.js';
 import type EventService from '../events/event-service.js';
-import { omitKeys } from '../../util/index.js';
+import { constantTimeCompare, omitKeys } from '../../util/index.js';
 import { BadDataError, throwExceedsLimitError } from '../../error/index.js';
-import type {
-    IEnvironmentStore,
-    IUnleashConfig,
-    IUnleashStores,
+import {
+    type IEnvironmentStore,
+    type IUnleashConfig,
+    type IUnleashStores,
+    SYSTEM_USER_AUDIT,
 } from '../../types/index.js';
-import type {
-    IUnleashServices,
+import {
+    type IUnleashServices,
     ResourceLimitsService,
 } from '../../services/index.js';
 import {
@@ -32,10 +33,46 @@ import {
     validateApiToken,
 } from '../../types/models/api-token.js';
 import type EventEmitter from 'events';
+import { FakeApiTokenV2Store } from './fake-api-token-v2-store.js';
+import FakeEnvironmentStore from '../project-environments/fake-environment-store.js';
+import {
+    createFakeEventsService,
+    type EdgeEnvironmentsProjectsListSchema,
+    type EdgeTokenSchema,
+    type Logger,
+} from '../../server-impl.js';
+import FakeEventStore from '../../../test/fixtures/fake-event-store.js';
+import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store.js';
+import metricsHelper from '../../util/metrics-helper.js';
+import { FUNCTION_TIME } from '../../metric-events.js';
 
 const SELECTOR_BYTES = 16;
 const SECRET_BYTES = 32;
 const TOKEN_PATTERN = /\.v2_([A-Za-z0-9_-]{22})_([A-Za-z0-9_-]{43})$/;
+
+export const createApiTokenV2Service: (
+    {
+        apiTokenV2Store,
+        environmentStore,
+    }: Pick<IUnleashStores, 'apiTokenV2Store' | 'environmentStore'>,
+    { eventBus, getLogger }: Pick<IUnleashConfig, 'eventBus' | 'getLogger'>,
+    {
+        eventService,
+        resourceLimitsService,
+    }: Pick<IUnleashServices, 'eventService' | 'resourceLimitsService'>,
+) => ApiTokenV2Service = (
+    { apiTokenV2Store, environmentStore },
+    { eventBus, getLogger },
+    { eventService, resourceLimitsService },
+) => {
+    return new ApiTokenV2Service(
+        { apiTokenV2Store, environmentStore },
+        { eventBus, getLogger },
+        { eventService, resourceLimitsService },
+    );
+};
+
+const TOKEN_LIFETIME_AFTER_LAST_SEEN_IN_MINUTES = 7 * 24 * 60;
 
 const resolveTokenPermissions = (tokenType: ApiTokenType) => {
     if (tokenType === ApiTokenType.ADMIN) {
@@ -50,19 +87,40 @@ const resolveTokenPermissions = (tokenType: ApiTokenType) => {
     return tokenType === ApiTokenType.FRONTEND ? [FRONTEND] : [];
 };
 
+export const createFakeApiTokenV2Service = (config: IUnleashConfig) => {
+    const apiTokenV2Store = new FakeApiTokenV2Store();
+    const environmentStore = new FakeEnvironmentStore();
+    const fakeEventStore = new FakeEventStore();
+    const featureTagStore = new FakeFeatureTagStore();
+    const eventService = createFakeEventsService(config, {
+        eventStore: fakeEventStore,
+        featureTagStore: featureTagStore,
+    });
+    const resourceLimitsService = new ResourceLimitsService(config);
+    return new ApiTokenV2Service(
+        { apiTokenV2Store, environmentStore },
+        config,
+        { eventService, resourceLimitsService },
+    );
+};
+
 export class ApiTokenV2Service {
     private apiTokenV2Store: IApiTokenV2Store;
     private eventService: EventService;
     private environmentStore: IEnvironmentStore;
     private resourceLimitsService: ResourceLimitsService;
     private eventBus: EventEmitter;
+    private logger: Logger;
+    private activeTokens: IApiToken[] = [];
+    private queryAfter = new Map<string, Date>();
+    private timer: Function;
 
     constructor(
         {
             apiTokenV2Store,
             environmentStore,
         }: Pick<IUnleashStores, 'apiTokenV2Store' | 'environmentStore'>,
-        { eventBus }: Pick<IUnleashConfig, 'eventBus'>,
+        { eventBus, getLogger }: Pick<IUnleashConfig, 'eventBus' | 'getLogger'>,
         {
             eventService,
             resourceLimitsService,
@@ -73,6 +131,12 @@ export class ApiTokenV2Service {
         this.environmentStore = environmentStore;
         this.resourceLimitsService = resourceLimitsService;
         this.eventBus = eventBus;
+        this.logger = getLogger('features/apitokensv2/api-token-v2-service.ts');
+        this.timer = (functionName: string) =>
+            metricsHelper.wrapTimer(eventBus, FUNCTION_TIME, {
+                className: 'ApiTokenV2Service',
+                functionName,
+            });
     }
 
     async create(
@@ -86,6 +150,33 @@ export class ApiTokenV2Service {
             },
             auditUser,
         );
+    }
+
+    async createTokensFromEdgeIssue(
+        tokenRequests: EdgeEnvironmentsProjectsListSchema,
+    ): Promise<EdgeTokenSchema[]> {
+        const tokens: EdgeTokenSchema[] = [];
+        for (const tokenReq of tokenRequests.tokens) {
+            if (tokenReq.environment && tokenReq.projects) {
+                const newToken = await this.create(
+                    {
+                        environment: tokenReq.environment,
+                        projects: tokenReq.projects,
+                        tokenName: `enterprise_edge_${tokenReq.environment}_${truncate(tokenReq.projects, 3)}`,
+                        type: ApiTokenType.BACKEND,
+                        userCreated: false,
+                    },
+                    SYSTEM_USER_AUDIT,
+                );
+                tokens.push({
+                    token: newToken.secret,
+                    environment: newToken.environment,
+                    projects: newToken.projects,
+                    type: ApiTokenType.BACKEND,
+                });
+            }
+        }
+        return tokens;
     }
 
     private async internalCreateApiTokenWithProjects(
@@ -148,6 +239,39 @@ export class ApiTokenV2Service {
             return undefined;
         }
         return this.toApiToken(token);
+    }
+    async getTokenWithCache(secret: string): Promise<IApiToken | undefined> {
+        if (!secret) {
+            return undefined;
+        }
+
+        let token = this.activeTokens.find(
+            (activeToken) =>
+                Boolean(activeToken.secret) &&
+                constantTimeCompare(activeToken.secret, secret),
+        );
+        const nextAllowedQuery = this.queryAfter.get(secret) ?? 0;
+        if (!token) {
+            if (isPast(nextAllowedQuery)) {
+                if (this.queryAfter.size > 1000) {
+                    this.queryAfter.clear();
+                }
+                const stopCacheTimer = this.timer('getTokenWithCache.query');
+                token = await this.getToken(secret);
+                if (token) {
+                    if (token.expiresAt && isPast(token.expiresAt)) {
+                        this.queryAfter.set(secret, addMinutes(new Date(), 5));
+                        token = undefined;
+                    } else {
+                        this.activeTokens.push(token);
+                    }
+                } else {
+                    this.queryAfter.set(secret, addMinutes(new Date(), 5));
+                }
+                stopCacheTimer();
+            }
+        }
+        return token;
     }
 
     async getUserDefinedTokens(): Promise<IApiToken[]> {
@@ -227,6 +351,13 @@ export class ApiTokenV2Service {
         return apiUser;
     }
 
+    async deleteSystemCreatedTokensNotSeen(): Promise<void> {
+        this.logger.info('Cleaning unseen system created tokens');
+        await this.apiTokenV2Store.deleteSystemCreatedTokensNotSeen(
+            TOKEN_LIFETIME_AFTER_LAST_SEEN_IN_MINUTES,
+        );
+    }
+
     private parse(token: string): { selector: string } | undefined {
         const match = TOKEN_PATTERN.exec(token);
         return match ? { selector: match[1] } : undefined;
@@ -274,3 +405,6 @@ const toProjectPart = (projects: string[]): string => {
         return '[]';
     }
 };
+
+const truncate = (projects: string[], max_length: number) =>
+    projects.length > max_length ? `[]` : projects.join('_');

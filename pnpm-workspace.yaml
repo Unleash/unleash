@@ -64,6 +64,8 @@ minimumReleaseAgeExclude:
   - http-proxy-middleware@3.0.7
   # Renovate security update: fast-uri@3.1.4
   - fast-uri@3.1.4
+  # Renovate security update: react-router@7.18.0
+  - react-router@7.18.0
 
 patchedDependencies:
   # Fixes a bug in getAutoSortingFn where `.slice(10)` skips the first 10 rows
@@ -106,7 +108,7 @@ overrides:
   prompt: "link:./node_modules/.cache/null"
   react: "^19.0.0"
   react-dom: "^19.0.0"
-  "react-router-dom>react-router": "6.30.4"
+  "react-router-dom>react-router": "7.18.0"
   "router>path-to-regexp": "1.9.0"
   semver: "7.7.4"
   set-value: "^4.0.1"

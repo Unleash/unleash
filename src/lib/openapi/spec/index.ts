@@ -110,6 +110,7 @@ export * from './frontend-api-features-schema.js';
 export * from './group-item-schema.js';
 export * from './group-schema.js';
 export * from './group-user-model-schema.js';
+export * from './group-write-response-schema.js';
 export * from './groups-schema.js';
 export * from './health-check-schema.js';
 export * from './health-overview-schema.js';

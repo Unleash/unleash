@@ -14,7 +14,10 @@ import { EmptyTemplatesListMessage } from 'component/releases/ReleaseManagement/
 import { ReleasePlanTemplateList } from 'component/releases/ReleaseManagement/ReleasePlanTemplateList';
 import { CreateReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/CreateReleasePlanTemplate';
 import { EditReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/EditReleasePlanTemplate';
-import { formatReleaseTemplateListPath } from 'component/releases/releaseTemplatePaths';
+import {
+    formatReleaseTemplateCreatePath,
+    formatReleaseTemplateListPath,
+} from 'component/releases/releaseTemplatePaths';
 import {
     RELEASE_PLAN_TEMPLATE_CREATE,
     UPDATE_PROJECT_RELEASE_TEMPLATE,
@@ -29,7 +32,7 @@ export const ProjectReleaseTemplates = () => {
     usePageTitle(`Project release templates – ${projectName}`);
 
     const listPath = formatReleaseTemplateListPath(projectId);
-    const createPath = `${listPath}/create-template`;
+    const createPath = formatReleaseTemplateCreatePath(projectId);
     const closeModal = () => navigate(listPath);
 
     return (

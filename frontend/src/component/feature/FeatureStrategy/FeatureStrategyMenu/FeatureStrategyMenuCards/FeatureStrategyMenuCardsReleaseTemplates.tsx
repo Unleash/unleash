@@ -3,8 +3,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
 import ReleaseTemplateIcon from 'assets/img/releaseTemplates.svg?react';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans.ts';
-import { Box, Button, styled } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
+import { Box, styled } from '@mui/material';
 import type { StrategyFilterValue } from './FeatureStrategyMenuCards.tsx';
 import { useState, type Dispatch, type SetStateAction } from 'react';
 import { Link as RouterLink } from 'react-router';
@@ -16,10 +15,9 @@ import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrat
 import { FeatureStrategyMenuCardAction } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardAction.tsx';
 import { FeatureStrategyMenuCardIcon } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardIcon.tsx';
 import { useEventTracker } from 'hooks/useEventTracker.ts';
-import { useHasRootAccess } from 'hooks/useHasAccess.ts';
-import { RELEASE_PLAN_TEMPLATE_CREATE } from '@server/types/permissions.ts';
 import { Dialogue } from 'component/common/Dialogue/Dialogue.tsx';
 import { Badge } from 'component/common/Badge/Badge.tsx';
+import { NewReleaseTemplateButton } from './NewReleaseTemplateButton.tsx';
 
 const RELEASE_TEMPLATE_DISPLAY_LIMIT = 5;
 
@@ -110,7 +108,6 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
         { includeRoot: true },
     );
     const { trackEvent } = useEventTracker();
-    const canCreateTemplate = useHasRootAccess(RELEASE_PLAN_TEMPLATE_CREATE);
 
     const [noAccessDialogOpen, setNoAccessDialogOpen] =
         useState<boolean>(false);
@@ -124,14 +121,6 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
     const releaseTemplatesDisplayLimit = isFiltered
         ? 0
         : RELEASE_TEMPLATE_DISPLAY_LIMIT;
-
-    const handleLinkClick = () => {
-        trackEvent('new-template-from-add-strategy', {
-            props: {
-                eventType: 'navigate-to-create-template',
-            },
-        });
-    };
 
     const handleNoAccessClick = () => {
         setNoAccessDialogOpen(true);
@@ -160,26 +149,10 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
                     sx={{ justifyContent: 'space-between' }}
                 >
                     Release templates
-                    {canCreateTemplate ? (
-                        <Button
-                            component={RouterLink}
-                            nativeButton={false}
-                            to='/release-templates/create-template'
-                            startIcon={<AddIcon />}
-                            onClick={handleLinkClick}
-                            size='medium'
-                        >
-                            New template
-                        </Button>
-                    ) : (
-                        <Button
-                            startIcon={<AddIcon />}
-                            onClick={handleNoAccessClick}
-                            size='medium'
-                        >
-                            New template
-                        </Button>
-                    )}
+                    <NewReleaseTemplateButton
+                        projectId={projectId}
+                        onNoAccess={handleNoAccessClick}
+                    />
                 </StyledStrategyModalSectionHeader>
             )}
             {!templates.length ? (

@@ -5,6 +5,7 @@ import {
 } from '@server/types/permissions';
 import ReleaseTemplateIcon from 'assets/img/releaseTemplates.svg?react';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import { formatReleaseTemplateCreatePath } from 'component/releases/releaseTemplatePaths';
 import { Link, useNavigate } from 'react-router';
 
 const Container = styled('article')(({ theme }) => ({
@@ -27,7 +28,7 @@ const Buttons = styled('div')(({ theme }) => ({
 }));
 
 export const EmptyTemplatesListMessage = ({
-    createPath = '/release-templates/create-template',
+    createPath = formatReleaseTemplateCreatePath(),
     projectId,
 }: {
     createPath?: string;

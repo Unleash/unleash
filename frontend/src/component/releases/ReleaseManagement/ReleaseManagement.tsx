@@ -23,6 +23,7 @@ import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { RELEASE_PLAN_TEMPLATE_CREATE } from '@server/types/permissions';
 import MenuBook from '@mui/icons-material/MenuBook';
 import { useLocalStorageState } from 'hooks/useLocalStorageState.ts';
+import { formatReleaseTemplateCreatePath } from 'component/releases/releaseTemplatePaths';
 
 const StyledLink = styled(Link)(({ theme }) => ({
     display: 'flex',
@@ -128,9 +129,7 @@ export const ReleaseManagement = () => {
                             <ResponsiveButton
                                 Icon={Add}
                                 onClick={() => {
-                                    navigate(
-                                        '/release-templates/create-template',
-                                    );
+                                    navigate(formatReleaseTemplateCreatePath());
                                 }}
                                 maxWidth='700px'
                                 permission={RELEASE_PLAN_TEMPLATE_CREATE}

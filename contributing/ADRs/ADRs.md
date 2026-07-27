@@ -25,6 +25,7 @@ We are in the process of defining ADRs for the back end. At the time of writing 
 * [Naming](/contributing/ADRs/back-end/naming)
 * [Preferred export](/contributing/ADRs/back-end/preferred-export)
 * [Breaking DB changes](/contributing/ADRs/back-end/breaking-db-changes)
+* [SQL and migration standards](/contributing/ADRs/back-end/sql-standards)
 * [POST/PUT API payload](/contributing/ADRs/back-end/POST-PUT-api-payload)
 * [Specificity in database column references](/contributing/ADRs/back-end/specificity-db-columns)
 * [Write model vs Read models](/contributing/ADRs/back-end/write-model-vs-read-models)

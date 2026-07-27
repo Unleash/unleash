@@ -306,7 +306,6 @@ const ChangeRequestCheckbox: FC<ChangeRequestCheckboxProps> = ({
             {showConfig ? (
                 <InlineChangeRequestConfig>
                     <TableSearchInput
-                        variant='outlined'
                         size='small'
                         value={searchText}
                         onChange={(event) => setSearchText(event.target.value)}

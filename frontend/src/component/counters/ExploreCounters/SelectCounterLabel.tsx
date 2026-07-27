@@ -1,10 +1,4 @@
-import {
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Select,
-    type SelectChangeEvent,
-} from '@mui/material';
+import { SelectField } from 'component/common/SelectField/SelectField';
 import { useState } from 'react';
 
 const getLabelNames = (labels: Record<string, string[]>) => {
@@ -30,15 +24,15 @@ export const SelectCounterLabel = ({
 }) => {
     const [label, setLabel] = useState<string | undefined>(undefined);
     const [labelValue, setLabelValue] = useState<string | undefined>(undefined);
-    const labelChanged = (event: SelectChangeEvent<string>) => {
+
+    const labelChanged = (selectedLabel: string) => {
         unselectLabel(label as string);
-        selectLabel(event.target.value as string);
-        const selectedLabel = event.target.value as string;
+        selectLabel(selectedLabel);
         setLabel(selectedLabel);
     };
-    const labelValueChanged = (event: SelectChangeEvent<string>) => {
+
+    const labelValueChanged = (newValue: string) => {
         unselectLabelValue(labelValue as string);
-        const newValue = event.target.value as string;
         if (newValue === '') {
             setLabelValue(undefined);
             return;
@@ -46,61 +40,45 @@ export const SelectCounterLabel = ({
         selectLabelValue(newValue);
         setLabelValue(newValue);
     };
+
     return (
         <>
-            <FormControl>
-                <InputLabel id='labels-label' size='small'>
-                    Label
-                </InputLabel>
-                <Select
-                    label='Label'
-                    labelId='labels-label'
-                    id='label-select'
-                    value={label}
-                    onChange={labelChanged}
-                    variant='outlined'
+            <SelectField
+                label='Label'
+                id='label-select'
+                value={label ?? ''}
+                onChange={labelChanged}
+                options={
+                    labels
+                        ? getLabelNames(labels).map((option) => ({
+                              key: option,
+                              label: option,
+                          }))
+                        : []
+                }
+                size='small'
+                sx={{ width: 200, maxWidth: '100%' }}
+            />
+            {label ? (
+                <SelectField
+                    label='Label value'
+                    id='label-value-select'
+                    value={labelValue ?? ''}
+                    onChange={labelValueChanged}
+                    options={[
+                        { key: '', label: 'All' },
+                        ...(labels
+                            ? (getLabelValues(label, labels) ?? []).map(
+                                  (option) => ({
+                                      key: `${label}::${option}`,
+                                      label: option,
+                                  }),
+                              )
+                            : []),
+                    ]}
                     size='small'
                     sx={{ width: 200, maxWidth: '100%' }}
-                >
-                    {labels
-                        ? getLabelNames(labels)?.map((option) => (
-                              <MenuItem key={option} value={option}>
-                                  {option}
-                              </MenuItem>
-                          ))
-                        : null}
-                </Select>
-            </FormControl>
-            {label ? (
-                <FormControl>
-                    <InputLabel id='label-value-label' size='small'>
-                        Label value
-                    </InputLabel>
-                    <Select
-                        label='Label value'
-                        labelId='label-value-label'
-                        id='label-value-select'
-                        value={labelValue}
-                        onChange={labelValueChanged}
-                        variant='outlined'
-                        size='small'
-                        sx={{ width: 200, maxWidth: '100%' }}
-                    >
-                        <MenuItem key='all' value=''>
-                            All
-                        </MenuItem>
-                        {labels
-                            ? getLabelValues(label, labels)?.map((option) => (
-                                  <MenuItem
-                                      key={option}
-                                      value={`${label}::${option}`}
-                                  >
-                                      {option}
-                                  </MenuItem>
-                              ))
-                            : null}
-                    </Select>
-                </FormControl>
+                />
             ) : null}
         </>
     );

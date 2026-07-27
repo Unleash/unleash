@@ -107,7 +107,6 @@ export const ChangeRequestTableConfigButton: FC<
             setAnchorEl={setAnchorEl}
         >
             <TableSearchInput
-                variant='outlined'
                 size='small'
                 value={searchText}
                 onChange={(event) => setSearchText(event.target.value)}

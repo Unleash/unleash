@@ -1,12 +1,6 @@
-import {
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Select,
-    type SelectChangeEvent,
-} from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { SelectCounterLabel } from './SelectCounterLabel.js';
+import { SelectField } from 'component/common/SelectField/SelectField.js';
 
 interface IExploreCounterFilter {
     counter: string | undefined;
@@ -29,36 +23,22 @@ export const ExploreCounterFilter = ({
     selectLabelValue,
     unselectLabelValue,
 }: IExploreCounterFilter) => {
-    const counterChanged = (event: SelectChangeEvent<string>) => {
-        const selectedCounter = event.target.value as string;
-        setCounter(selectedCounter);
-    };
-
     return (
         <Grid container spacing={2}>
             <Grid size={{ xs: 12, md: 6 }}>
                 <Grid container spacing={2}>
-                    <FormControl>
-                        <InputLabel id='counter-label' size='small'>
-                            Counter
-                        </InputLabel>
-                        <Select
-                            label='Counter'
-                            labelId='counter-label'
-                            id='counter-select'
-                            value={counter}
-                            onChange={counterChanged}
-                            variant='outlined'
-                            size='small'
-                            sx={{ width: 200, maxWidth: '100%' }}
-                        >
-                            {counterNames?.map((option) => (
-                                <MenuItem key={option} value={option}>
-                                    {option}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+                    <SelectField
+                        label='Counter'
+                        id='counter-select'
+                        value={counter ?? ''}
+                        onChange={setCounter}
+                        options={(counterNames ?? []).map((option) => ({
+                            key: option,
+                            label: option,
+                        }))}
+                        size='small'
+                        sx={{ width: 200, maxWidth: '100%' }}
+                    />
                     <SelectCounterLabel
                         labels={labels}
                         selectLabel={selectLabel}

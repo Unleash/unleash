@@ -108,7 +108,6 @@ export function DropdownList<T = string>({
             ) : null}
             {hideSearch ? null : (
                 <StyledDropdownSearch
-                    variant='outlined'
                     size='small'
                     value={searchText}
                     onChange={(event) => setSearchText(event.target.value)}

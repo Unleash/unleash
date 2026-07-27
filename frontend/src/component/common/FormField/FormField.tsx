@@ -45,7 +45,7 @@ interface FormFieldProps {
 export const formFieldLabelId = (controlId: string) => `${controlId}-label`;
 
 export const FormField = ({ label, description, children }: FormFieldProps) => {
-    const topLabelInputs = useUiFlag('topLabelInputs');
+    const topLabelInputs = useUiFlag('topLabelInputs'); // TODO on topLabelInputs cleanup: also prune the whitelist in oss/biome.json
     const generatedId = useId();
 
     const child = Children.only(children) as ReactElement<

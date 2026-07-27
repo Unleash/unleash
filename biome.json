@@ -91,6 +91,21 @@
     },
     {
       "includes": [
+        "frontend/src/**",
+        "!frontend/src/component/common/AutocompleteField/**",
+        "!frontend/src/component/common/GeneralSelect/**",
+        "!frontend/src/component/common/SelectField/**",
+        "!frontend/src/component/common/select.tsx",
+        "!frontend/src/component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/**",
+        "!frontend/src/component/integrations/IntegrationForm/IntegrationMultiSelector/**",
+        "!frontend/src/component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/ConstraintOperatorSelect.tsx",
+        "!frontend/src/component/project/Project/ProjectSettings/ProjectActions/ProjectActionsTable/ProjectActionsModal/ProjectActionsForm/ProjectActionsFormStep/ProjectActionsFormStepSource/ConstraintOperatorSelect.tsx",
+        "!frontend/src/component/admin/users/AccessOverview/AccessOverviewSelect.tsx"
+      ],
+      "plugins": ["./floating-label.grit"]
+    },
+    {
+      "includes": [
         "frontend/src/component/App.tsx",
         "frontend/src/component/InitialRedirect.tsx",
         "frontend/src/component/admin/banners/BannerModal/BannerModal.tsx",

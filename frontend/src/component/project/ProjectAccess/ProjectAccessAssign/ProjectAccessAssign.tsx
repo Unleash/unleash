@@ -33,7 +33,6 @@ import type { IUserProjectRole } from '../../../../interfaces/userProjectRoles.t
 import { useCheckProjectPermissions } from 'hooks/useHasAccess';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import AutocompleteVirtual from 'component/common/AutocompleteVirtual/AutcompleteVirtual';
-import { FormField } from 'component/common/FormField/FormField';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -435,7 +434,7 @@ export const ProjectAccessAssign = ({
                             />
                         </StyledAutocompleteWrapper>
                         <StyledAutocompleteWrapper>
-                            <FormField
+                            <MultipleRoleSelect
                                 label='Role'
                                 description={
                                     <StyledInputDescription>
@@ -443,15 +442,11 @@ export const ProjectAccessAssign = ({
                                         project
                                     </StyledInputDescription>
                                 }
-                            >
-                                <MultipleRoleSelect
-                                    label=''
-                                    data-testid={PA_ROLE_ID}
-                                    roles={filteredRoles}
-                                    value={selectedRoles}
-                                    setValue={setRoles}
-                                />
-                            </FormField>
+                                data-testid={PA_ROLE_ID}
+                                roles={filteredRoles}
+                                value={selectedRoles}
+                                setValue={setRoles}
+                            />
                         </StyledAutocompleteWrapper>
                     </div>
 

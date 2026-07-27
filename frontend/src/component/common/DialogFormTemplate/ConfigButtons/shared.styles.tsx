@@ -1,4 +1,5 @@
-import { Popover, TextField, styled } from '@mui/material';
+import { Popover, styled } from '@mui/material';
+import Input from 'component/common/Input/Input';
 
 const visuallyHiddenStyles = {
     border: 0,
@@ -28,7 +29,7 @@ export const StyledPopover = styled(Popover)(({ theme }) => ({
     },
 }));
 
-export const StyledDropdownSearch = styled(TextField, {
+export const StyledDropdownSearch = styled(Input, {
     shouldForwardProp: (prop) => prop !== 'hideLabel',
 })<{ hideLabel?: boolean }>(({ theme, hideLabel }) => ({
     paddingInline: theme.spacing(dropdownPadding),

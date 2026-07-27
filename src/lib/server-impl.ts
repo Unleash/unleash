@@ -25,7 +25,7 @@ import {
     type IUnleashServices,
     type PatService,
 } from './services/index.js';
-import { defaultLockKey, defaultTimeout, withDbLock } from './util/db-lock.js';
+import { withDbLock } from './util/db-lock.js';
 import { scheduleServices } from './features/scheduler/schedule-services.js';
 import { compareAndLogPostgresVersion } from './util/postgres-version-checker.js';
 import {
@@ -417,11 +417,7 @@ async function start(
                 logger.info('DB migration: start');
                 if (config.flagResolver.isEnabled('migrationLock')) {
                     logger.info('Running migration with lock');
-                    const lock = withDbLock(config.db, {
-                        lockKey: defaultLockKey,
-                        timeout: defaultTimeout,
-                        logger,
-                    });
+                    const lock = withDbLock(config.db, { logger });
                     await lock(migrateDb)(config);
                 } else {
                     logger.info('Running migration without lock');

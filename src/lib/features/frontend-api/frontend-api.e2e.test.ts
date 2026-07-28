@@ -22,6 +22,7 @@ import {
 import type { FrontendApiService } from './frontend-api-service.js';
 
 import { vi } from 'vitest';
+import { CLIENT_REGISTER } from '../../events/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -1395,4 +1396,76 @@ test('should return enabled feature flags based on context using POST', async ()
         .expect((res) => {
             expect(res.body.toggles).toHaveLength(0);
         });
+});
+
+describe('SDK flavor metrics', () => {
+    let flavorApp: IUnleashTest;
+    let flavorDb: ITestDb;
+
+    beforeAll(async () => {
+        flavorDb = await dbInit('frontend_api_flavor', getLogger);
+        flavorApp = await setupAppWithAuth(
+            flavorDb.stores,
+            {
+                experimental: {
+                    flags: {
+                        recordSdkFlavorMetrics: true,
+                    },
+                },
+                frontendApiOrigins: ['https://example.com'],
+            },
+            flavorDb.rawDatabase,
+        );
+    });
+
+    afterAll(async () => {
+        flavorApp.services.frontendApiService.stopAll();
+        await flavorApp.destroy();
+        await flavorDb.destroy();
+    });
+
+    test('records the sdk flavor from frontend metrics headers when the flag is enabled', async () => {
+        const frontendToken =
+            await flavorApp.services.apiTokenService.createApiTokenWithProjects(
+                {
+                    type: ApiTokenType.FRONTEND,
+                    projects: ['*'],
+                    environment: DEFAULT_ENV,
+                    tokenName: `frontend-flavor-${randomId()}`,
+                },
+            );
+
+        // The CLIENT_REGISTER heartbeat is what feeds the `client_sdk_versions`
+        // Prometheus counter — its sdkFlavor/sdkFlavorVersion become the sdk_flavor_name/sdk_flavor_version labels
+        const heartbeats: any[] = [];
+        flavorDb.stores.eventStore.on(CLIENT_REGISTER, (event) =>
+            heartbeats.push(event),
+        );
+
+        await flavorApp.request
+            .post('/api/frontend/client/metrics')
+            .set('Authorization', frontendToken.secret)
+            .set('unleash-sdk', 'unleash-ios-sdk:2.5.0')
+            .set('unleash-sdk-flavor', 'unleash-openfeature-swift-provider')
+            .set('unleash-sdk-flavor-version', '1.2.3')
+            .send({
+                appName: 'flavor-app',
+                instanceId: 'flavor-instance',
+                bucket: {
+                    start: new Date(),
+                    stop: new Date(),
+                    toggles: {},
+                },
+            })
+            .expect(200);
+
+        expect(heartbeats).toContainEqual({
+            sdkName: 'unleash-ios-sdk',
+            sdkVersion: '2.5.0',
+            metadata: {
+                sdkFlavor: 'unleash-openfeature-swift-provider',
+                sdkFlavorVersion: '1.2.3',
+            },
+        });
+    });
 });

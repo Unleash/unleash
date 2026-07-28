@@ -123,6 +123,26 @@ export default class ClientInstanceService {
         data.createdBy = SYSTEM_USER.username!;
 
         this.updateSeenClient(data);
+
+        // feed client_sdk_versions for frontend SDKs
+        const recordSdkFlavorMetrics = this.flagResolver.isEnabled(
+            'recordSdkFlavorMetrics',
+        );
+
+        if (recordSdkFlavorMetrics && data.sdkVersion?.indexOf(':') > -1) {
+            const [sdkName, sdkVersion] = data.sdkVersion.split(':');
+
+            // gate the whole frontend heartbeat (backend gates only the flavor fields and always emits)
+            const heartbeatEvent: ISdkHeartbeat = {
+                sdkName,
+                sdkVersion,
+                metadata: {
+                    sdkFlavor: data.sdkFlavor,
+                    sdkFlavorVersion: data.sdkFlavorVersion,
+                },
+            };
+            this.eventStore.emit(CLIENT_REGISTER, heartbeatEvent);
+        }
     }
 
     public async registerBackendClient(

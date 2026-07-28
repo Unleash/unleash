@@ -13,6 +13,7 @@ import FakeFeatureToggleStore from '../../feature-toggle/fakes/fake-feature-togg
 import type { IApplicationOverview } from './models.js';
 
 import { vi } from 'vitest';
+import { CLIENT_REGISTER } from '../../../events/index.js';
 
 let config: IUnleashConfig;
 beforeAll(() => {
@@ -394,5 +395,62 @@ describe('upserting into `seenClients`', () => {
             environment: 'black',
             metricsCount: 10,
         });
+    });
+
+    test('registerFrontendClient emits an sdk heartbeat with flavor metadata when the flag is enabled', () => {
+        const eventStore = new FakeEventStore();
+        const emitSpy = vi.spyOn(eventStore, 'emit');
+        const flavorConfig = createTestConfig({
+            experimental: { flags: { recordSdkFlavorMetrics: true } },
+        });
+        const instanceService = new ClientInstanceService(
+            { eventStore } as any,
+            flavorConfig,
+            {} as any,
+        );
+
+        instanceService.registerFrontendClient({
+            appName: 'appName',
+            instanceId: 'instanceId',
+            sdkVersion: 'unleash-ios-sdk:2.5.0',
+            sdkType: 'frontend',
+            environment: 'development',
+            sdkFlavor: 'unleash-openfeature-swift-provider',
+            sdkFlavorVersion: '1.2.3',
+        });
+
+        expect(emitSpy).toHaveBeenCalledWith(CLIENT_REGISTER, {
+            sdkName: 'unleash-ios-sdk',
+            sdkVersion: '2.5.0',
+            metadata: {
+                sdkFlavor: 'unleash-openfeature-swift-provider',
+                sdkFlavorVersion: '1.2.3',
+            },
+        });
+    });
+
+    test('registerFrontendClient does not emit a heartbeat when the flag is disabled', () => {
+        const eventStore = new FakeEventStore();
+        const emitSpy = vi.spyOn(eventStore, 'emit');
+        const instanceService = new ClientInstanceService(
+            { eventStore } as any,
+            config, // default config: recordSdkFlavorMetrics is off
+            {} as any,
+        );
+
+        instanceService.registerFrontendClient({
+            appName: 'appName',
+            instanceId: 'instanceId',
+            sdkVersion: 'unleash-ios-sdk:2.5.0',
+            sdkType: 'frontend',
+            environment: 'development',
+            sdkFlavor: 'unleash-openfeature-swift-provider',
+            sdkFlavorVersion: '1.2.3',
+        });
+
+        expect(emitSpy).not.toHaveBeenCalledWith(
+            CLIENT_REGISTER,
+            expect.anything(),
+        );
     });
 });

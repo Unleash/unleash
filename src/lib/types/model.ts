@@ -545,6 +545,8 @@ export interface IFrontendClientApp {
     environment: string;
     projects?: string[];
     createdBy?: string;
+    sdkFlavor?: string;
+    sdkFlavorVersion?: string;
 }
 
 export interface IClientApp {

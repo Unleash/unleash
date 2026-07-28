@@ -127,6 +127,8 @@ export class FrontendApiService {
         metrics: ClientMetricsSchema,
         ip: string,
         sdkVersion?: string | string[],
+        sdkFlavor?: string | string[],
+        sdkFlavorVersion?: string | string[],
     ): Promise<void> {
         FrontendApiService.assertExpectedTokenType(token);
 
@@ -162,6 +164,12 @@ export class FrontendApiService {
                 sdkType: 'frontend' as const,
                 environment: environment,
                 projects: this.resolveProject(token),
+                sdkFlavor:
+                    typeof sdkFlavor === 'string' ? sdkFlavor : undefined,
+                sdkFlavorVersion:
+                    typeof sdkFlavorVersion === 'string'
+                        ? sdkFlavorVersion
+                        : undefined,
             };
             this.services.clientInstanceService.registerFrontendClient(client);
         }

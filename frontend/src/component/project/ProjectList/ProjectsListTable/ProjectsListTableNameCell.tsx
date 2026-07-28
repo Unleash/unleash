@@ -3,8 +3,9 @@ import { FavoriteButton } from 'component/common/FavoriteButton/FavoriteButton';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Truncator } from 'component/common/Truncator/Truncator';
+import { OnboardingStatusBadge } from 'component/project/ProjectCard/OnboardingStatusBadge/OnboardingStatusBadge';
 import { ProjectModeBadge } from 'component/project/ProjectCard/ProjectModeBadge/ProjectModeBadge';
-import type { ProjectSchema } from 'openapi';
+import type { ProjectListItem } from 'hooks/api/getters/useProjects/useProjects';
 import { Link } from 'react-router';
 
 const StyledCellContainer = styled('div')(({ theme }) => ({
@@ -24,7 +25,7 @@ const StyledFeatureLink = styled(Link)(({ theme }) => ({
 
 type ProjectsListTableNameCellProps = {
     row: {
-        original: ProjectSchema;
+        original: ProjectListItem;
     };
     isFavorite: boolean;
     onFavorite: () => void;
@@ -36,6 +37,9 @@ export const ProjectsListTableNameCell = ({
     onFavorite,
 }: ProjectsListTableNameCellProps) => {
     const { searchQuery } = useSearchHighlightContext();
+    const { onboardingStatus } = row.original;
+    const isOnboardingInProgress =
+        onboardingStatus && onboardingStatus.status !== 'onboarded';
 
     return (
         <StyledCellContainer>
@@ -47,6 +51,9 @@ export const ProjectsListTableNameCell = ({
                     </Highlighter>
                 </Truncator>
             </StyledFeatureLink>
+            {isOnboardingInProgress ? (
+                <OnboardingStatusBadge onboardingStatus={onboardingStatus} />
+            ) : null}
             <FavoriteButton
                 isFavorite={Boolean(isFavorite)}
                 onClick={onFavorite}

@@ -2,10 +2,10 @@ import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/Virtua
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
-import { ProjectOwners } from 'component/project/ProjectCard/ProjectCardFooter/ProjectOwners/ProjectOwners';
 import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
-import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import type { ProjectSchema, ProjectSchemaOwners } from 'openapi';
+import useProjects, {
+    type ProjectListItem,
+} from 'hooks/api/getters/useProjects/useProjects';
 import { useCallback, useMemo } from 'react';
 import {
     type ColumnDef,
@@ -19,7 +19,7 @@ import theme from 'themes/theme.ts';
 import { ProjectListTableLastSeenCell } from './ProjectListTableLastSeenCell.tsx';
 
 type ProjectsListTableProps = {
-    projects: ProjectSchema[];
+    projects: ProjectListItem[];
 };
 
 export const ProjectsListTable = ({ projects }: ProjectsListTableProps) => {
@@ -28,7 +28,7 @@ export const ProjectsListTable = ({ projects }: ProjectsListTableProps) => {
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
 
     const onFavorite = useCallback(
-        async (project: ProjectSchema) => {
+        async (project: ProjectListItem) => {
             if (project?.favorite) {
                 await unfavorite(project.id);
             } else {
@@ -39,7 +39,7 @@ export const ProjectsListTable = ({ projects }: ProjectsListTableProps) => {
         [refetch, favorite, unfavorite],
     );
 
-    const columns = useMemo<ColumnDef<ProjectSchema, unknown>[]>(
+    const columns = useMemo<ColumnDef<ProjectListItem, unknown>[]>(
         () => [
             {
                 id: 'name',
@@ -82,13 +82,18 @@ export const ProjectsListTable = ({ projects }: ProjectsListTableProps) => {
                 meta: { width: 90 },
             },
             {
-                id: 'technicalDebt',
-                header: 'Technical debt',
-                accessorKey: 'technicalDebt',
-                cell: ({ getValue }) => (
-                    <TextCell>{`${getValue() as number}%`}</TextCell>
-                ),
-                meta: { width: 130 },
+                id: 'cleanupCount',
+                header: 'Flags in cleanup',
+                accessorFn: (row) => row.cleanupCount ?? 0,
+                cell: ({ getValue }) => {
+                    const value = getValue() as number;
+                    return (
+                        <TextCell>
+                            {value} flag{value === 1 ? '' : 's'}
+                        </TextCell>
+                    );
+                },
+                meta: { width: 140 },
             },
             {
                 id: 'lastReportedFlagUsage',
@@ -101,24 +106,6 @@ export const ProjectsListTable = ({ projects }: ProjectsListTableProps) => {
                     />
                 ),
                 meta: { width: isMediumScreen ? 100 : 140 },
-            },
-            {
-                id: 'owners',
-                header: 'Owner',
-                accessorKey: 'owners',
-                cell: ({ getValue }) => {
-                    const value = getValue() as ProjectSchemaOwners | undefined;
-                    return (
-                        <TextCell>
-                            <ProjectOwners
-                                owners={value?.filter(
-                                    (owner) => owner.ownerType !== 'system',
-                                )}
-                            />
-                        </TextCell>
-                    );
-                },
-                meta: { width: 150 },
             },
             {
                 id: 'memberCount',

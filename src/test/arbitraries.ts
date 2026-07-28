@@ -1,11 +1,26 @@
 import fc, { type Arbitrary } from 'fast-check';
 
-import { ALL_OPERATORS } from '../lib/util/constants.js';
+import {
+    DATE_OPERATORS,
+    NUM_OPERATORS,
+    REGEX,
+    SEMVER_OPERATORS,
+    STRING_OPERATORS,
+} from '../lib/util/constants.js';
 import type { ClientFeatureSchema } from '../lib/openapi/spec/client-feature-schema.js';
 import { type IVariant, WeightType } from '../lib/types/model.js';
 import type { FeatureStrategySchema } from '../lib/openapi/spec/feature-strategy-schema.js';
 import type { ConstraintSchema } from '../lib/openapi/spec/constraint-schema.js';
 import type { SegmentSchema } from '../lib/openapi/spec/segment-schema.js';
+
+type ConstraintOperator = ConstraintSchema['operator'];
+
+const constraintOperator = (
+    operators: readonly string[],
+): Arbitrary<ConstraintOperator> =>
+    fc.constantFrom(...(operators as ConstraintOperator[]));
+
+const emptyValues = (): Arbitrary<string[]> => fc.constant([] as string[]);
 
 export const urlFriendlyString = (): Arbitrary<string> =>
     fc
@@ -32,15 +47,59 @@ export const commonISOTimestamp = (): Arbitrary<string> =>
         })
         .map((timestamp) => timestamp.toISOString());
 
+const nonEmptyString = (): Arbitrary<string> =>
+    fc.string({ minLength: 1, maxLength: 100 });
+
+const semverString = (): Arbitrary<string> =>
+    fc
+        .tuple(fc.nat({ max: 999 }), fc.nat({ max: 999 }), fc.nat({ max: 999 }))
+        .map(([major, minor, patch]) => `${major}.${minor}.${patch}`);
+
+const regexString = (): Arbitrary<string> =>
+    fc.constantFrom('.*', 'a', '[a-z]+', '^test$');
+
 export const strategyConstraint = (): Arbitrary<ConstraintSchema> =>
-    fc.record({
-        contextName: urlFriendlyString(),
-        operator: fc.constantFrom(...ALL_OPERATORS),
-        caseInsensitive: fc.boolean(),
-        inverted: fc.boolean(),
-        values: fc.array(fc.string(), { minLength: 1 }),
-        value: fc.string(),
-    });
+    fc.oneof(
+        fc.record({
+            contextName: urlFriendlyString(),
+            operator: constraintOperator(STRING_OPERATORS),
+            caseInsensitive: fc.boolean(),
+            inverted: fc.boolean(),
+            values: fc.array(nonEmptyString(), { minLength: 1 }),
+        }),
+        fc.record({
+            contextName: urlFriendlyString(),
+            operator: constraintOperator(NUM_OPERATORS),
+            caseInsensitive: fc.boolean(),
+            inverted: fc.boolean(),
+            values: emptyValues(),
+            value: fc.integer().map(String),
+        }),
+        fc.record({
+            contextName: urlFriendlyString(),
+            operator: constraintOperator(DATE_OPERATORS),
+            caseInsensitive: fc.boolean(),
+            inverted: fc.boolean(),
+            values: emptyValues(),
+            value: commonISOTimestamp(),
+        }),
+        fc.record({
+            contextName: urlFriendlyString(),
+            operator: constraintOperator(SEMVER_OPERATORS),
+            caseInsensitive: fc.boolean(),
+            inverted: fc.boolean(),
+            values: emptyValues(),
+            value: semverString(),
+        }),
+        fc.record({
+            contextName: urlFriendlyString(),
+            operator: fc.constant(REGEX as ConstraintOperator),
+            caseInsensitive: fc.boolean(),
+            inverted: fc.constant(false),
+            values: emptyValues(),
+            value: regexString(),
+        }),
+    );
 
 const strategyConstraints = (): Arbitrary<ConstraintSchema[]> =>
     fc.array(strategyConstraint());

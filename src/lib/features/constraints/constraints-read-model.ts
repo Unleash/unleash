@@ -16,9 +16,24 @@ import {
     validateRegex,
 } from '../../util/validators/constraint-types.js';
 import type { IConstraintsReadModel } from './constraints-read-model-type.js';
+import BadDataError from '../../error/bad-data-error.js';
 
 const oneOf = (values: string[], match: string) => {
     return values.some((value) => value === match);
+};
+
+const SINGLE_VALUE_OPERATORS = [
+    ...NUM_OPERATORS,
+    ...DATE_OPERATORS,
+    ...SEMVER_OPERATORS,
+];
+
+const validateSingleValue = (value: unknown): void => {
+    if (value === undefined || value === null || value === '') {
+        throw new BadDataError(
+            'Single-value constraint operators require a non-empty value.',
+        );
+    }
 };
 
 type IContextFieldStoreReadModel = Pick<IContextFieldStore, 'get' | 'exists'>;
@@ -42,6 +57,10 @@ export class ConstraintsReadModel implements IConstraintsReadModel {
     async validateConstraint(input: IConstraint): Promise<IConstraint> {
         const constraint = await constraintSchema.validateAsync(input);
         const { operator } = constraint;
+        if (oneOf(SINGLE_VALUE_OPERATORS, operator)) {
+            validateSingleValue(constraint.value);
+        }
+
         if (oneOf(NUM_OPERATORS, operator)) {
             await validateNumber(constraint.value);
         }

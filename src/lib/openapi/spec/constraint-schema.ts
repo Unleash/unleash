@@ -45,6 +45,7 @@ export const constraintSchemaBase = {
             description:
                 'The context value that should be used for constraint evaluation. Use this property instead of `values` for properties that only accept single values.',
             type: 'string',
+            minLength: 1,
             example: 'my-app',
         },
     },

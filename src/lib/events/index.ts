@@ -182,6 +182,7 @@ export const BANNER_DELETED = 'banner-deleted' as const;
 
 export const SAFEGUARD_CHANGED = 'safeguard-changed' as const;
 export const SAFEGUARD_DELETED = 'safeguard-deleted' as const;
+export const SAFEGUARD_TRIGGERED = 'safeguard-triggered' as const;
 export const RELEASE_PLAN_PROGRESSIONS_RESUMED =
     'release-plan-progressions-resumed' as const;
 export const RELEASE_PLAN_PROGRESSIONS_PAUSED =
@@ -382,6 +383,7 @@ export const IEventTypes = [
     BANNER_DELETED,
     SAFEGUARD_CHANGED,
     SAFEGUARD_DELETED,
+    SAFEGUARD_TRIGGERED,
     RELEASE_PLAN_PROGRESSIONS_RESUMED,
     RELEASE_PLAN_PROGRESSIONS_PAUSED,
     PROJECT_ENVIRONMENT_ADDED,

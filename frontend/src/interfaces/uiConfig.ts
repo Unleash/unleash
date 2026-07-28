@@ -103,7 +103,6 @@ export type UiFlags = {
     logRocketEnabled?: boolean;
     newProjectList?: boolean;
     newModalDesign?: boolean;
-    archiveInFlagsView?: boolean;
     newProfileDropdown?: boolean;
     learningLab?: Variant;
     accessRequestsNotifications?: boolean;

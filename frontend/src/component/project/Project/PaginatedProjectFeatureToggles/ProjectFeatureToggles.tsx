@@ -46,15 +46,12 @@ import { ConnectSdkDialog } from '../../../onboarding/dialog/ConnectSdkDialog/Co
 import { ProjectOnboarding } from '../../../onboarding/flow/ProjectOnboarding.tsx';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { useEventTracker } from 'hooks/useEventTracker';
-import { ArchivedFeatureActionCell } from '../../../archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureActionCell.tsx';
-import { ArchiveBatchActions } from '../../../archive/ArchiveTable/ArchiveBatchActions.tsx';
 import { ImportModal } from '../Import/ImportModal.tsx';
 import { ProjectCleanupReminder } from './ProjectCleanupReminder/ProjectCleanupReminder.tsx';
 import { formatEnvironmentColumnId } from './formatEnvironmentColumnId.ts';
 import { ProjectFeaturesColumnsMenu } from './ProjectFeaturesColumnsMenu/ProjectFeaturesColumnsMenu.tsx';
 import { ProjectFeatureTogglesHeader } from './ProjectFeatureTogglesHeader/ProjectFeatureTogglesHeader.tsx';
 import { ProjectFlagsSearch } from './ProjectFlagsSearch/ProjectFlagsSearch.tsx';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 type ProjectFeatureTogglesProps = {
     environments: string[];
@@ -84,24 +81,6 @@ const FilterRow = styled('div')({
     alignItems: 'center',
 });
 
-const LinkToggle = styled('button')(({ theme }) => ({
-    background: 'none',
-    border: 'none',
-    padding: 0,
-    margin: theme.spacing(0, 1.5),
-    marginLeft: 'auto',
-    cursor: 'pointer',
-    color: theme.palette.primary.main,
-    textDecoration: 'underline',
-    fontSize: theme.typography.body2.fontSize,
-    fontWeight: theme.typography.fontWeightMedium,
-    display: 'inline-flex',
-    alignItems: 'center',
-    '&:hover': {
-        textDecoration: 'none',
-    },
-}));
-
 export const ProjectFeatureToggles = ({
     environments: availableEnvironments,
 }: ProjectFeatureTogglesProps) => {
@@ -112,8 +91,6 @@ export const ProjectFeatureToggles = ({
     const [modalOpen, setModalOpen] = useState(false);
     const theme = useTheme();
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('xl'));
-    const archiveInFlagsView = useUiFlag('archiveInFlagsView');
-    const showArchivedLink = !archiveInFlagsView;
 
     const {
         features,
@@ -124,17 +101,6 @@ export const ProjectFeatureToggles = ({
         tableState,
         setTableState,
     } = useProjectFeatureSearch(projectId);
-
-    // The legacy archived view can still be reached through old URLs;
-    // rewrite them to the archived lifecycle filter, which has replaced it.
-    useEffect(() => {
-        if (archiveInFlagsView && tableState.archived) {
-            setTableState({
-                archived: undefined,
-                lifecycle: { operator: 'IS', values: ['archived'] },
-            });
-        }
-    }, [archiveInFlagsView, tableState.archived, setTableState]);
 
     const { onFlagTypeClick, onTagClick, onAvatarClick } =
         useProjectFeatureSearchActions(tableState, setTableState);
@@ -151,7 +117,6 @@ export const ProjectFeatureToggles = ({
         type: tableState.type,
         state: tableState.state,
         createdBy: tableState.createdBy,
-        archived: tableState.archived,
         lifecycle: tableState.lifecycle,
         lastSeenAt: tableState.lastSeenAt,
         favorite: tableState.favorite,
@@ -209,18 +174,7 @@ export const ProjectFeatureToggles = ({
     const showNewOnboarding = onboardingFlow === 'visible';
 
     const showCleanupReminder = !tableState.lastSeenAt && !tableState.lifecycle;
-    const showArchived = Boolean(tableState.archived);
-    const toggleArchived = () => {
-        if (showArchived) {
-            setTableState({ archived: undefined });
-        } else {
-            setTableState({
-                archived: { operator: 'IS', values: ['true'] },
-                lifecycle: undefined,
-            });
-        }
-    };
-    const environments = showArchived ? [] : availableEnvironments;
+    const environments = availableEnvironments;
 
     const columns = useMemo(
         () => [
@@ -380,23 +334,7 @@ export const ProjectFeatureToggles = ({
                 id: 'actions',
                 header: '',
                 cell: ({ row }) =>
-                    tableState.archived ? (
-                        <ArchivedFeatureActionCell
-                            project={projectId}
-                            onRevive={() => {
-                                setShowFeatureReviveDialogue({
-                                    featureId: row.id,
-                                    open: true,
-                                });
-                            }}
-                            onDelete={() => {
-                                setShowFeatureDeleteDialogue({
-                                    featureId: row.id,
-                                    open: true,
-                                });
-                            }}
-                        />
-                    ) : row.original.archivedAt ? (
+                    row.original.archivedAt ? (
                         <ArchivedActionsCell
                             projectId={projectId}
                             onRevive={() => {
@@ -549,23 +487,7 @@ export const ProjectFeatureToggles = ({
                         isLoading={initialLoad}
                         totalItems={total}
                         environmentsToExport={environments}
-                        actions={
-                            showArchivedLink && (
-                                <LinkToggle
-                                    type='button'
-                                    onClick={toggleArchived}
-                                >
-                                    {showArchived
-                                        ? 'View active flags'
-                                        : 'View archived flags'}
-                                </LinkToggle>
-                            )
-                        }
-                        title={
-                            showArchived
-                                ? 'Archived feature flags'
-                                : 'Feature flags'
-                        }
+                        title='Feature flags'
                     />
                 }
                 bodyClass='noop'
@@ -578,22 +500,12 @@ export const ProjectFeatureToggles = ({
                 >
                     <FiltersContainer>
                         <FilterRow>
-                            {showArchived ? (
-                                <Box sx={{ marginRight: 'auto' }}>
-                                    <ProjectOverviewFilters
-                                        project={projectId}
-                                        onChange={setTableState}
-                                        state={filterState}
-                                    />
-                                </Box>
-                            ) : (
-                                <ProjectLifecycleFilters
-                                    projectId={projectId}
-                                    state={filterState}
-                                    onChange={setTableState}
-                                    total={loading ? undefined : total}
-                                />
-                            )}
+                            <ProjectLifecycleFilters
+                                projectId={projectId}
+                                state={filterState}
+                                onChange={setTableState}
+                                total={loading ? undefined : total}
+                            />
                             {isMediumScreen ? null : (
                                 <ProjectFlagsSearch
                                     searchQuery={tableState.query || ''}
@@ -609,31 +521,29 @@ export const ProjectFeatureToggles = ({
                                 onToggle={onToggleColumnVisibility}
                             />
                         </FilterRow>
-                        {showArchived ? null : (
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <FilterRow>
-                                    <ProjectOverviewFilters
-                                        project={projectId}
-                                        onChange={setTableState}
-                                        state={filterState}
-                                    />
-                                </FilterRow>
-                                <FavoriteIconHeader
-                                    isActive={tableState.favoritesFirst}
-                                    onClick={() =>
-                                        setTableState({
-                                            favoritesFirst:
-                                                !tableState.favoritesFirst,
-                                        })
-                                    }
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <FilterRow>
+                                <ProjectOverviewFilters
+                                    project={projectId}
+                                    onChange={setTableState}
+                                    state={filterState}
                                 />
-                            </Box>
-                        )}
+                            </FilterRow>
+                            <FavoriteIconHeader
+                                isActive={tableState.favoritesFirst}
+                                onClick={() =>
+                                    setTableState({
+                                        favoritesFirst:
+                                            !tableState.favoritesFirst,
+                                    })
+                                }
+                            />
+                        </Box>
                         {isMediumScreen ? (
                             <ProjectFlagsSearch
                                 searchQuery={tableState.query || ''}
@@ -674,25 +584,13 @@ export const ProjectFeatureToggles = ({
                 }
             />
             <BatchSelectionActionsBar count={selectedData.length}>
-                {tableState.archived ? (
-                    <ArchiveBatchActions
-                        selectedIds={Object.keys(rowSelection)}
-                        projectId={projectId}
-                        onConfirm={() => {
-                            refetchWithLifecycleCounts();
-                            table.resetRowSelection();
-                            trackArchiveAction('bulk archived');
-                        }}
-                    />
-                ) : (
-                    <ProjectFeaturesBatchActions
-                        selectedIds={Object.keys(rowSelection)}
-                        data={selectedData}
-                        projectId={projectId}
-                        onResetSelection={table.resetRowSelection}
-                        onChange={refetchWithLifecycleCounts}
-                    />
-                )}
+                <ProjectFeaturesBatchActions
+                    selectedIds={Object.keys(rowSelection)}
+                    data={selectedData}
+                    projectId={projectId}
+                    onResetSelection={table.resetRowSelection}
+                    onChange={refetchWithLifecycleCounts}
+                />
             </BatchSelectionActionsBar>
             <ImportModal
                 open={modalOpen}

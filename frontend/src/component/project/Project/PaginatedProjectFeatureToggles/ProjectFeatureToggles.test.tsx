@@ -292,7 +292,7 @@ test('renders lifecycle quick filters', async () => {
         },
     );
 
-    await screen.findByText(/All lifecycles/);
+    await screen.findByText(/Active flags/);
     await screen.findByText(/Develop/);
     await screen.findByText(/Rollout production/);
     await screen.findByText(/Cleanup/);
@@ -317,42 +317,6 @@ test('shows onboarding steps when flag is enabled and project is not onboarded',
         { route: `/projects/${projectId}` },
     );
     await screen.findByText('Project setup');
-}, 10000);
-
-test('clears lifecycle filter when switching to archived view', async () => {
-    setupApi();
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: {
-            flagCreator: true,
-        },
-    });
-
-    render(
-        <Routes>
-            <Route
-                path={'/projects/:projectId'}
-                element={
-                    <ProjectFeatureToggles
-                        environments={['development', 'production']}
-                    />
-                }
-            />
-        </Routes>,
-        {
-            route: '/projects/default?lifecycle=IS%3Alive',
-        },
-    );
-
-    expect(window.location.href).toContain('lifecycle=IS%3Alive');
-
-    await screen.findByText('featureA');
-    const viewArchived = await screen.findByRole('button', {
-        name: /View archived flags/i,
-    });
-    fireEvent.click(viewArchived);
-
-    expect(window.location.href).not.toContain('lifecycle=IS%3Alive');
-    expect(window.location.href).toContain('archived=IS%3Atrue');
 }, 10000);
 
 test('shows revive and delete actions for archived flags', async () => {
@@ -415,11 +379,6 @@ test('shows revive and delete actions for archived flags', async () => {
 
 test('rewrites legacy archived view URLs to the archived lifecycle filter', async () => {
     setupApi();
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: {
-            archiveInFlagsView: true,
-        },
-    });
 
     render(
         <Routes>

@@ -14,6 +14,9 @@ import mapValues from 'lodash.mapvalues';
 import type { SearchFeaturesParams } from 'openapi';
 import { SafeNumberParam } from 'utils/safeNumberParam';
 import { DEFAULT_PAGE_LIMIT } from 'utils/paginationConfig';
+import { useEffect } from 'react';
+
+const ARCHIVED = { operator: 'IS', values: ['archived'] };
 
 type Attribute =
     | { key: 'tag'; operator: 'INCLUDE' }
@@ -43,10 +46,24 @@ export const useProjectFeatureSearch = (
         lifecycle: FilterItemParam,
         favorite: FilterItemParam,
     };
-    const [tableState, setTableState] = usePersistentTableState(
+    const [persistedState, setTableState] = usePersistentTableState(
         `${storageKey}-${projectId}`,
         stateConfig,
     );
+
+    // The archived view predates the archived lifecycle filter that replaced
+    // it. Old links and stored table state still carry `archived`, so map it
+    // onto the lifecycle filter on read and clear it from the stored state.
+    const legacyArchivedView = Boolean(persistedState.archived);
+    const tableState = legacyArchivedView
+        ? { ...persistedState, archived: undefined, lifecycle: ARCHIVED }
+        : persistedState;
+
+    useEffect(() => {
+        if (legacyArchivedView) {
+            setTableState({ archived: undefined, lifecycle: ARCHIVED });
+        }
+    }, [legacyArchivedView, setTableState]);
 
     const apiTableState = tableState;
     const { features, total, refetch, loading, initialLoad } = useFeatureSearch(

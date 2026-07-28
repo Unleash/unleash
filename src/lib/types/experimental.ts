@@ -69,7 +69,6 @@ export type IFlagKey =
     | 'logRocketEnabled'
     | 'newProjectList'
     | 'newModalDesign'
-    | 'archiveInFlagsView'
     | 'allowDeprecatedApiTokenMiddleware'
     | 'newProfileDropdown'
     | 'serviceNowIntegration'
@@ -315,10 +314,6 @@ const flags: IFlags = {
     ),
     newModalDesign: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NEW_MODAL_DESIGN,
-        false,
-    ),
-    archiveInFlagsView: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ARCHIVE_IN_FLAGS_VIEW,
         false,
     ),
     newProfileDropdown: parseEnvVarBoolean(

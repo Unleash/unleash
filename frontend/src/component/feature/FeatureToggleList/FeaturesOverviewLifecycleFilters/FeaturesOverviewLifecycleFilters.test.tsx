@@ -43,7 +43,7 @@ describe('LifecycleFilters', () => {
             <FeaturesOverviewLifecycleFilters state={{}} onChange={vi.fn()} />,
         );
 
-        expect(getByText('All lifecycles')).toBeInTheDocument();
+        expect(getByText('Active flags')).toBeInTheDocument();
         expect(getByText('Develop')).toBeInTheDocument();
         expect(getByText('Rollout production')).toBeInTheDocument();
         expect(getByText('Cleanup')).toBeInTheDocument();
@@ -54,7 +54,7 @@ describe('LifecycleFilters', () => {
             <FeaturesOverviewLifecycleFilters state={{}} onChange={vi.fn()} />,
         );
 
-        expect(getByText('All lifecycles')).toBeInTheDocument();
+        expect(getByText('Active flags')).toBeInTheDocument();
         expect(getByText('10')).toBeInTheDocument();
         expect(getByText('Develop')).toBeInTheDocument();
         expect(getByText('2')).toBeInTheDocument();
@@ -85,7 +85,7 @@ describe('LifecycleFilters', () => {
             lifecycle: { operator: 'IS', values: ['completed'] },
         });
 
-        await userEvent.click(getByText('All lifecycles'));
+        await userEvent.click(getByText('Active flags'));
         expect(onChange).toHaveBeenCalledWith({ lifecycle: null });
     });
 });

@@ -16,7 +16,6 @@ import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/Fa
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { ExportDialog } from './ExportDialog.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { focusable } from 'themes/themeStyles';
 import { FeatureLifecycleCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import useToast from 'hooks/useToast';
@@ -92,7 +91,6 @@ export const FeatureToggleListTable: FC = () => {
     const showArchived = Boolean(
         filterState.lifecycle?.values?.includes('archived'),
     );
-    const archiveInFlagsView = useUiFlag('archiveInFlagsView');
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [deletedFeature, setDeletedFeature] =
         useState<FeatureSearchResponseSchema>();
@@ -286,28 +284,6 @@ export const FeatureToggleListTable: FC = () => {
                             >
                                 Unknown flags
                             </Link>
-                            {!archiveInFlagsView && (
-                                <Link
-                                    component={RouterLink}
-                                    to='/archive'
-                                    underline='always'
-                                    sx={{
-                                        marginRight: 2,
-                                        fontSize:
-                                            theme.typography.body2.fontSize,
-                                        ...focusable(theme),
-                                    }}
-                                    onClick={() => {
-                                        trackEvent('search-feature-buttons', {
-                                            props: {
-                                                action: 'archive',
-                                            },
-                                        });
-                                    }}
-                                >
-                                    Archived flags
-                                </Link>
-                            )}
                             <ExportFlags
                                 onClick={() => setShowExportDialog(true)}
                             />

@@ -142,6 +142,39 @@ test('selects project features', async () => {
     expect(screen.queryByTestId(BATCH_SELECTED_COUNT)).not.toBeInTheDocument();
 }, 10000);
 
+test('clears the selection when the filters change', async () => {
+    setupApi();
+    render(
+        <Routes>
+            <Route
+                path={'/projects/:projectId'}
+                element={
+                    <ProjectFeatureToggles
+                        environments={['development', 'production']}
+                    />
+                }
+            />
+        </Routes>,
+        {
+            route: '/projects/default',
+        },
+    );
+
+    const featureRow = await screen.findByRole('row', { name: /featureA/ });
+    fireEvent.click(within(featureRow).getByRole('checkbox'));
+    expect((await screen.findByTestId(BATCH_SELECTED_COUNT)).textContent).toBe(
+        '1',
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: /Cleanup/ }));
+
+    await waitFor(() => {
+        expect(
+            screen.queryByTestId(BATCH_SELECTED_COUNT),
+        ).not.toBeInTheDocument();
+    });
+}, 10000);
+
 test('filters by tag', async () => {
     setupApi();
     render(

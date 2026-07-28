@@ -504,6 +504,11 @@ export const ProjectFeatureToggles = ({
     );
 
     const { columnVisibility, rowSelection } = table.getState();
+
+    const activeFilters = JSON.stringify([filterState, tableState.query]);
+    // reset flag selection on filter changes
+    useEffect(() => table.resetRowSelection(), [activeFilters, table]);
+
     const onToggleColumnVisibility = useCallback(
         (columnId: string) => {
             const isVisible = columnVisibility[columnId];

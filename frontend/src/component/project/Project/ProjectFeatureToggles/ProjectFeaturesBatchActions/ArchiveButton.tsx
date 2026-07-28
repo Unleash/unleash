@@ -1,6 +1,5 @@
 import { useMemo, useState, type FC } from 'react';
-import { Button } from '@mui/material';
-import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { DELETE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { useEventTracker } from 'hooks/useEventTracker';
@@ -51,20 +50,16 @@ export const ArchiveButton: FC<IArchiveButtonProps> = ({
 
     return (
         <>
-            <PermissionHOC projectId={projectId} permission={DELETE_FEATURE}>
-                {({ hasAccess }) => (
-                    <span>
-                        <Button
-                            disabled={!hasAccess || isDialogOpen}
-                            variant='outlined'
-                            size='medium'
-                            onClick={() => setIsDialogOpen(true)}
-                        >
-                            Archive
-                        </Button>
-                    </span>
-                )}
-            </PermissionHOC>
+            <PermissionButton
+                permission={DELETE_FEATURE}
+                projectId={projectId}
+                disabled={isDialogOpen}
+                variant='outlined'
+                size='medium'
+                onClick={() => setIsDialogOpen(true)}
+            >
+                Archive
+            </PermissionButton>
             <FeatureArchiveDialog
                 projectId={projectId}
                 featureIds={featureIds}

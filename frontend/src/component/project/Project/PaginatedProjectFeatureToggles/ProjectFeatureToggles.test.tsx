@@ -377,6 +377,65 @@ test('shows revive and delete actions for archived flags', async () => {
     ).not.toBeInTheDocument();
 }, 10000);
 
+test('shows archived batch actions when every selected flag is archived', async () => {
+    setupApi();
+    testServerRoute(server, '/api/admin/search/features', {
+        features: [
+            {
+                name: 'activeFeature',
+                type: 'release',
+                createdBy: { id: 1, name: 'author' },
+            },
+            {
+                name: 'archivedFeature',
+                type: 'release',
+                archivedAt: '2024-01-01T00:00:00.000Z',
+                createdBy: { id: 1, name: 'author' },
+            },
+        ],
+        total: 2,
+    });
+
+    render(
+        <Routes>
+            <Route
+                path={'/projects/:projectId'}
+                element={
+                    <ProjectFeatureToggles
+                        environments={['development', 'production']}
+                    />
+                }
+            />
+        </Routes>,
+        {
+            route: '/projects/default',
+            permissions: [
+                { permission: UPDATE_FEATURE, project: 'default' },
+                { permission: DELETE_FEATURE, project: 'default' },
+            ],
+        },
+    );
+
+    const archivedRow = await screen.findByRole('row', {
+        name: /archivedFeature/,
+    });
+    fireEvent.click(within(archivedRow).getByRole('checkbox'));
+
+    await screen.findByRole('button', { name: 'Revive' });
+    screen.getByRole('button', { name: 'Delete' });
+    expect(
+        screen.queryByRole('button', { name: 'Archive' }),
+    ).not.toBeInTheDocument();
+
+    const activeRow = screen.getByRole('row', { name: /activeFeature/ });
+    fireEvent.click(within(activeRow).getByRole('checkbox'));
+
+    await screen.findByRole('button', { name: 'Archive' });
+    expect(
+        screen.queryByRole('button', { name: 'Revive' }),
+    ).not.toBeInTheDocument();
+}, 10000);
+
 test('rewrites legacy archived view URLs to the archived lifecycle filter', async () => {
     setupApi();
 

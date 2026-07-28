@@ -12,6 +12,7 @@ import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi
 import { MemoizedRowSelectCell } from '../ProjectFeatureToggles/RowSelectCell/RowSelectCell.tsx';
 import { BatchSelectionActionsBar } from 'component/common/BatchSelectionActionsBar/BatchSelectionActionsBar';
 import { ProjectFeaturesBatchActions } from '../ProjectFeatureToggles/ProjectFeaturesBatchActions/ProjectFeaturesBatchActions.tsx';
+import { ArchiveBatchActions } from '../../../archive/ArchiveTable/ArchiveBatchActions.tsx';
 import {
     FeatureLifecycleCell,
     MemoizedFeatureEnvironmentSeenCell,
@@ -466,6 +467,9 @@ export const ProjectFeatureToggles = ({
     );
 
     const selectedData = useSelectedData(features, rowSelection);
+    const allSelectedAreArchived =
+        selectedData.length > 0 &&
+        selectedData.every((feature) => feature.archivedAt);
 
     return (
         <Container>
@@ -584,13 +588,24 @@ export const ProjectFeatureToggles = ({
                 }
             />
             <BatchSelectionActionsBar count={selectedData.length}>
-                <ProjectFeaturesBatchActions
-                    selectedIds={Object.keys(rowSelection)}
-                    data={selectedData}
-                    projectId={projectId}
-                    onResetSelection={table.resetRowSelection}
-                    onChange={refetchWithLifecycleCounts}
-                />
+                {allSelectedAreArchived ? (
+                    <ArchiveBatchActions
+                        selectedIds={Object.keys(rowSelection)}
+                        projectId={projectId}
+                        onConfirm={() => {
+                            refetchWithLifecycleCounts();
+                            table.resetRowSelection();
+                        }}
+                    />
+                ) : (
+                    <ProjectFeaturesBatchActions
+                        selectedIds={Object.keys(rowSelection)}
+                        data={selectedData}
+                        projectId={projectId}
+                        onResetSelection={table.resetRowSelection}
+                        onChange={refetchWithLifecycleCounts}
+                    />
+                )}
             </BatchSelectionActionsBar>
             <ImportModal
                 open={modalOpen}

@@ -227,6 +227,26 @@ test('can bulk revive features', async () => {
     }
 });
 
+test('bulk revive does not disable environments for flags that are not archived', async () => {
+    const activeFeature = 'activeFeature';
+    await app.createFeature(activeFeature);
+    await app.enableFeature(activeFeature, 'development');
+
+    await app.request
+        .post('/api/admin/projects/default/revive')
+        .send({ features: [activeFeature] })
+        .expect(200);
+
+    const { body } = await app.request
+        .get(`/api/admin/projects/default/features/${activeFeature}`)
+        .expect(200);
+
+    const environment = body.environments.find(
+        (env) => env.name === 'development',
+    );
+    expect(environment?.enabled).toBe(true);
+});
+
 test('Should be able to bulk archive features', async () => {
     const featureName1 = 'archivedFeature1';
     const featureName2 = 'archivedFeature2';

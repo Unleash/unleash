@@ -2113,7 +2113,7 @@ export class FeatureToggleService {
         const features =
             await this.featureToggleStore.getAllByNames(featureNames);
         const eligibleFeatures = features.filter(
-            (toggle) => toggle.archivedAt !== null,
+            (toggle) => toggle.archived || toggle.archivedAt,
         );
         const eligibleFeatureNames = eligibleFeatures.map(
             (toggle) => toggle.name,

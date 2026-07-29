@@ -64,6 +64,46 @@ const searchContextWithoutFilters = {
     ],
 };
 
+// `@tanstack/react-table` (v8) columns keep custom fields under `meta`
+const searchContextWithV8Columns = {
+    ...searchContext,
+    columns: [
+        {
+            id: 'Title',
+            header: 'Title',
+            accessorKey: 'title',
+            meta: { searchable: true },
+        },
+        {
+            id: 'environment',
+            header: 'Environment',
+            accessorKey: 'environment',
+            meta: { searchable: false, filterName: 'environment' },
+        },
+    ],
+};
+
+test('displays search and filter instructions for v8 columns', () => {
+    let recordedSuggestion = '';
+    render(
+        <SearchSuggestions
+            onSuggestion={(suggestion) => {
+                recordedSuggestion = suggestion;
+            }}
+            getSearchContext={() => searchContextWithV8Columns}
+        />,
+    );
+
+    expect(screen.getByText(/Filter your results by:/i)).toBeInTheDocument();
+    expect(screen.getByText(/Environment:/)).toBeInTheDocument();
+    expect(
+        screen.getByText(/environment:"dev env",pre-prod/i),
+    ).toBeInTheDocument();
+
+    screen.getByText(/environment:"dev env",pre-prod/i).click();
+    expect(recordedSuggestion).toBe('environment:"dev env",pre-prod');
+});
+
 test('displays search and filter instructions when no search value is provided', () => {
     let recordedSuggestion = '';
     render(

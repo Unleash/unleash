@@ -236,12 +236,24 @@ Note: passing \`null\` as a value for the description property will set it to an
         );
     }
 
+    private conditionalServiceNowBlock = (data: AddonCreateUpdateSchema) => {
+        if (
+            data.provider === 'servicenow' &&
+            !this.flagResolver.isEnabled('serviceNowIntegration')
+        ) {
+            throw new BadDataError(
+                'The ServiceNow integration is disabled because the controlling feature flag is turned off.',
+            );
+        }
+    };
+
     async updateAddon(
         req: IAuthRequest<{ id: number }, any, AddonCreateUpdateSchema, any>,
         res: Response<AddonSchema>,
     ): Promise<void> {
         const { id } = req.params;
         const data = req.body;
+        this.conditionalServiceNowBlock(data);
 
         const addon = await this.addonService.updateAddon(id, data, req.audit);
 
@@ -254,10 +266,11 @@ Note: passing \`null\` as a value for the description property will set it to an
     }
 
     async createAddon(
-        req: IAuthRequest<AddonCreateUpdateSchema, any, any, any>,
+        req: IAuthRequest<unknown, any, AddonCreateUpdateSchema, any>,
         res: Response<AddonSchema>,
     ): Promise<void> {
         const data = req.body;
+        this.conditionalServiceNowBlock(data);
         const addon = await this.addonService.createAddon(data, req.audit);
 
         this.openApiService.respondWithValidation(

@@ -10,6 +10,7 @@ import {
 import Delete from '@mui/icons-material/Delete';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import Input from 'component/common/Input/Input';
+import { FormFieldControlAligner } from 'component/common/FormField/FormField';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type React from 'react';
 import type { IStrategyParameter } from 'interfaces/strategy';
@@ -130,16 +131,20 @@ export const StrategyParameter = ({
                     error={Boolean(errors?.[`paramName${index}`])}
                     errorText={errors?.[`paramName${index}`]}
                 />
-                <Tooltip title='Remove parameter' arrow>
-                    <IconButton
-                        onClick={() => {
-                            setParams(params.filter((_e, i) => i !== index));
-                        }}
-                        size='large'
-                    >
-                        <Delete />
-                    </IconButton>
-                </Tooltip>
+                <FormFieldControlAligner>
+                    <Tooltip title='Remove parameter' arrow>
+                        <IconButton
+                            onClick={() => {
+                                setParams(
+                                    params.filter((_e, i) => i !== index),
+                                );
+                            }}
+                            size='large'
+                        >
+                            <Delete />
+                        </IconButton>
+                    </Tooltip>
+                </FormFieldControlAligner>
             </StyledNameContainer>
             <StyledGeneralSelect
                 label='Type*'

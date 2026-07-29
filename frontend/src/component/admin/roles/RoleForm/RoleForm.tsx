@@ -6,6 +6,7 @@ import type { PredefinedRoleType } from 'interfaces/role';
 import { ROOT_ROLE_TYPE } from '@server/util/constants';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { RolePermissionCategories } from './RolePermissionCategories/RolePermissionCategories.tsx';
+import { FormGroup } from 'component/common/FormGroup/FormGroup.tsx';
 
 const StyledInputDescription = styled('p')(({ theme }) => ({
     display: 'flex',
@@ -19,11 +20,13 @@ const StyledInputDescription = styled('p')(({ theme }) => ({
 const StyledInput = styled(Input)(({ theme }) => ({
     width: '100%',
     maxWidth: theme.spacing(50),
+    marginBottom: theme.spacing(2),
 }));
 
-const StyledInputFullWidth = styled(Input)({
+const StyledInputFullWidth = styled(Input)(({ theme }) => ({
     width: '100%',
-});
+    marginBottom: theme.spacing(4),
+}));
 
 interface IRoleFormProps {
     type?: PredefinedRoleType;
@@ -89,32 +92,37 @@ export const RoleForm = ({
                 }
                 autoComplete='off'
             />
-            <StyledInputDescription>
-                What is your role allowed to do?
-            </StyledInputDescription>
-            <Alert severity='info'>
-                You must select at least one permission.
-            </Alert>
-            <RolePermissionCategories
-                type={type}
-                checkedPermissions={checkedPermissions}
-                setCheckedPermissions={setCheckedPermissions}
-                validatePermissions={validatePermissions}
-            />
-            <ConditionallyRender
-                condition={showErrors}
-                show={() => (
-                    <Alert severity='error' icon={false}>
-                        <ul>
-                            {Object.values(errors)
-                                .filter(Boolean)
-                                .map((error) => (
-                                    <li key={error}>{error}</li>
-                                ))}
-                        </ul>
-                    </Alert>
-                )}
-            />
+            <FormGroup
+                title={
+                    <StyledInputDescription>
+                        What is your role allowed to do?
+                    </StyledInputDescription>
+                }
+            >
+                <Alert severity='info'>
+                    You must select at least one permission.
+                </Alert>
+                <RolePermissionCategories
+                    type={type}
+                    checkedPermissions={checkedPermissions}
+                    setCheckedPermissions={setCheckedPermissions}
+                    validatePermissions={validatePermissions}
+                />
+                <ConditionallyRender
+                    condition={showErrors}
+                    show={() => (
+                        <Alert severity='error' icon={false}>
+                            <ul>
+                                {Object.values(errors)
+                                    .filter(Boolean)
+                                    .map((error) => (
+                                        <li key={error}>{error}</li>
+                                    ))}
+                            </ul>
+                        </Alert>
+                    )}
+                />
+            </FormGroup>
         </div>
     );
 };

@@ -152,11 +152,14 @@ export const GroupForm: FC<IGroupForm> = ({
                     condition={isGroupSyncingEnabled && !isScimGroup}
                     show={
                         <>
-                            <StyledInputDescription>
-                                Is this group associated with SSO groups?
-                            </StyledInputDescription>
                             <StyledItemList
                                 label='SSO group ID / name'
+                                description={
+                                    <StyledInputDescription>
+                                        Is this group associated with SSO
+                                        groups?
+                                    </StyledInputDescription>
+                                }
                                 value={mappingsSSO}
                                 onChange={setMappingsSSO}
                             />
@@ -175,16 +178,20 @@ export const GroupForm: FC<IGroupForm> = ({
                         </StyledDescriptionBlock>
                     )}
                 />
-                <StyledInputDescription>
-                    <Box component='span' sx={{ display: 'flex' }}>
-                        Do you want to associate a root role with this group?
-                        <HelpIcon tooltip='When you associate a root role with this group, users in this group will automatically inherit the role globally.' />
-                    </Box>
-                </StyledInputDescription>
+
                 <StyledAutocompleteWrapper>
                     <RoleSelect
                         data-testid='GROUP_ROOT_ROLE'
                         roles={roles}
+                        description={
+                            <StyledInputDescription>
+                                <Box component='span' sx={{ display: 'flex' }}>
+                                    Do you want to associate a root role with
+                                    this group?
+                                    <HelpIcon tooltip='When you associate a root role with this group, users in this group will automatically inherit the role globally.' />
+                                </Box>
+                            </StyledInputDescription>
+                        }
                         value={roleIdToRole(rootRole)}
                         setValue={(role) => setRootRole(role?.id || null)}
                     />
@@ -193,12 +200,14 @@ export const GroupForm: FC<IGroupForm> = ({
                     condition={mode === 'Create'}
                     show={
                         <>
-                            <StyledInputDescription>
-                                Add users to this group
-                            </StyledInputDescription>
                             <GroupFormUsersSelect
                                 users={users}
                                 setUsers={setUsers}
+                                description={
+                                    <StyledInputDescription>
+                                        Add users to this group
+                                    </StyledInputDescription>
+                                }
                             />
                             <StyledGroupFormUsersTableWrapper>
                                 <GroupFormUsersTable

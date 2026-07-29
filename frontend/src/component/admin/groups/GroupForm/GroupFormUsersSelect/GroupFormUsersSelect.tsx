@@ -2,7 +2,7 @@ import { Checkbox, styled } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import type { IUser } from 'interfaces/user';
-import type { FC } from 'react';
+import type { FC, ReactNode } from 'react';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import type { IGroupUser } from 'interfaces/group';
 import { UG_USERS_ID } from 'utils/testIds';
@@ -24,12 +24,10 @@ const StyledTags = styled('div')(({ theme }) => ({
 }));
 
 const StyledGroupFormUsersSelect = styled('div')(({ theme }) => ({
-    display: 'flex',
     marginBottom: theme.spacing(3),
     '& > div:first-of-type': {
         width: '100%',
         maxWidth: theme.spacing(50),
-        marginRight: theme.spacing(1),
     },
 }));
 
@@ -73,11 +71,13 @@ type UserOption = IUser & {
 interface IGroupFormUsersSelectProps {
     users: IGroupUser[];
     setUsers: React.Dispatch<React.SetStateAction<IGroupUser[]>>;
+    description?: ReactNode;
 }
 
 export const GroupFormUsersSelect: FC<IGroupFormUsersSelectProps> = ({
     users,
     setUsers,
+    description,
 }) => {
     const { users: usersAll, loading: isUsersLoading } = useUsers();
     const { serviceAccounts, loading: isServiceAccountsLoading } =
@@ -112,6 +112,7 @@ export const GroupFormUsersSelect: FC<IGroupFormUsersSelectProps> = ({
         <StyledGroupFormUsersSelect>
             <AutocompleteVirtual
                 label='Select users'
+                description={description}
                 data-testid={UG_USERS_ID}
                 size='small'
                 limitTags={1}

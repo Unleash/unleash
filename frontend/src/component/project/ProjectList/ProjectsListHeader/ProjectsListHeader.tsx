@@ -29,7 +29,7 @@ const StyledHeaderTitle = styled('div')(({ theme }) => ({
 
 const StyledHeaderActions = styled('div')(({ theme }) => ({
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     marginLeft: 'auto',
     gap: theme.spacing(2),
 }));

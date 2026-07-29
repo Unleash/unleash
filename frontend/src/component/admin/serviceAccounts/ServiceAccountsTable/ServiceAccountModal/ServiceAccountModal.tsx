@@ -58,6 +58,7 @@ const StyledInputSecondaryDescription = styled('p')(({ theme }) => ({
 const StyledInput = styled(Input)(({ theme }) => ({
     width: '100%',
     maxWidth: theme.spacing(50),
+    marginBottom: theme.spacing(2),
 }));
 
 const StyledRoleSelect = styled(RoleSelect)(({ theme }) => ({

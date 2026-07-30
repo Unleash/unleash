@@ -27,6 +27,7 @@ import { CreateStrategy } from 'component/strategies/CreateStrategy/CreateStrate
 import { EditStrategy } from 'component/strategies/EditStrategy/EditStrategy';
 import { SplashPage } from 'component/splash/SplashPage/SplashPage';
 import { CreateUnleashContextPage } from 'component/context/CreateUnleashContext/CreateUnleashContextPage';
+import { CloneContextPage } from 'component/context/CloneContext/CloneContextPage';
 import { CreateSegment } from 'component/segments/CreateSegment/CreateSegment';
 import { EditSegment } from 'component/segments/EditSegment/EditSegment';
 import type { INavigationMenuItem, IRoute } from 'interfaces/route';
@@ -242,6 +243,14 @@ export const routes: IRoute[] = [
         parent: '/context',
         title: 'Create',
         component: CreateUnleashContextPage,
+        type: 'protected',
+        menu: {},
+    },
+    {
+        path: '/context/clone/:name',
+        parent: '/context',
+        title: 'Clone',
+        component: CloneContextPage,
         type: 'protected',
         menu: {},
     },

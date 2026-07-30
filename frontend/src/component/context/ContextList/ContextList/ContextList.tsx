@@ -140,7 +140,7 @@ const ContextList: FC = () => {
                 ),
                 enableSorting: false,
                 enableGlobalFilter: false,
-                meta: { width: 150, align: 'center' },
+                meta: { width: 200, align: 'center' },
             },
             {
                 id: 'description',

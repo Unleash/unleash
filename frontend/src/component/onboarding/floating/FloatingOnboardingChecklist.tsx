@@ -10,8 +10,8 @@ import { CreateFeatureDialog } from 'component/project/Project/PaginatedProjectF
 import { ConnectSdkDialog } from 'component/onboarding/dialog/ConnectSdkDialog/ConnectSdkDialog.tsx';
 import {
     OnboardingProgressBadge,
-    useFloatingOnboarding,
-} from './FloatingOnboardingContext.tsx';
+    useFloatingOnboardingChecklist,
+} from './FloatingOnboardingChecklistContext.tsx';
 import { GetStartedList } from './GetStartedList.tsx';
 import { SetupGuide } from './SetupGuide.tsx';
 
@@ -69,7 +69,7 @@ const Body = styled('div')({
     overflowY: 'auto',
 });
 
-export const FloatingOnboarding = () => {
+export const FloatingOnboardingChecklist = () => {
     const {
         state,
         update,
@@ -83,7 +83,7 @@ export const FloatingOnboarding = () => {
         goToFlagHref,
         feature,
         refetchOverview,
-    } = useFloatingOnboarding();
+    } = useFloatingOnboardingChecklist();
 
     const { projects, refetch: refetchProjects } = useProjects();
 

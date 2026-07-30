@@ -10,17 +10,17 @@ import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectO
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import { getProjectOnboardingStep } from 'utils/getProjectOnboardingStep.ts';
 import {
-    type FloatingOnboardingCompleted,
-    type FloatingOnboardingState,
-    useFloatingOnboardingState,
-} from './floatingOnboardingState.ts';
+    type FloatingOnboardingChecklistCompleted,
+    type FloatingOnboardingChecklistState,
+    useFloatingOnboardingChecklistState,
+} from './floatingOnboardingChecklistState.ts';
 
 export const TOTAL_STEPS = 4;
 
-interface FloatingOnboardingContextValue {
-    state: FloatingOnboardingState;
-    update: (patch: Partial<FloatingOnboardingState>) => void;
-    markCompleted: (step: keyof FloatingOnboardingCompleted) => void;
+interface FloatingOnboardingChecklistContextValue {
+    state: FloatingOnboardingChecklistState;
+    update: (patch: Partial<FloatingOnboardingChecklistState>) => void;
+    markCompleted: (step: keyof FloatingOnboardingChecklistCompleted) => void;
     reset: () => void;
     /** Bring the helper back into view (used from the header menu). */
     open: () => void;
@@ -35,14 +35,14 @@ interface FloatingOnboardingContextValue {
     refetchOverview: () => void;
 }
 
-const FloatingOnboardingContext =
-    createContext<FloatingOnboardingContextValue | null>(null);
+const FloatingOnboardingChecklistContext =
+    createContext<FloatingOnboardingChecklistContextValue | null>(null);
 
-export const FloatingOnboardingProvider: FC<{ children: ReactNode }> = ({
-    children,
-}) => {
+export const FloatingOnboardingChecklistProvider: FC<{
+    children: ReactNode;
+}> = ({ children }) => {
     const { state, update, markCompleted, reset } =
-        useFloatingOnboardingState();
+        useFloatingOnboardingChecklistState();
     const { projectId } = state;
 
     const {
@@ -79,7 +79,7 @@ export const FloatingOnboardingProvider: FC<{ children: ReactNode }> = ({
     };
     const completedCount = Object.values(done).filter(Boolean).length;
 
-    const value: FloatingOnboardingContextValue = {
+    const value: FloatingOnboardingChecklistContextValue = {
         state,
         update,
         markCompleted,
@@ -96,17 +96,17 @@ export const FloatingOnboardingProvider: FC<{ children: ReactNode }> = ({
     };
 
     return (
-        <FloatingOnboardingContext.Provider value={value}>
+        <FloatingOnboardingChecklistContext.Provider value={value}>
             {children}
-        </FloatingOnboardingContext.Provider>
+        </FloatingOnboardingChecklistContext.Provider>
     );
 };
 
-export const useFloatingOnboarding = () => {
-    const context = useContext(FloatingOnboardingContext);
+export const useFloatingOnboardingChecklist = () => {
+    const context = useContext(FloatingOnboardingChecklistContext);
     if (!context) {
         throw new Error(
-            'useFloatingOnboarding must be used within a FloatingOnboardingProvider',
+            'useFloatingOnboardingChecklist must be used within a FloatingOnboardingChecklistProvider',
         );
     }
     return context;
@@ -116,8 +116,8 @@ export const useFloatingOnboarding = () => {
  * Returns the context or null when rendered outside the provider (e.g. the
  * help menu on pages without MainLayout, or in isolated tests/stories).
  */
-export const useOptionalFloatingOnboarding = () =>
-    useContext(FloatingOnboardingContext);
+export const useOptionalFloatingOnboardingChecklist = () =>
+    useContext(FloatingOnboardingChecklistContext);
 
 const StyledBadge = styled('span')(({ theme }) => ({
     fontSize: theme.typography.caption.fontSize,
@@ -137,7 +137,7 @@ export const OnboardingProgressBadge = ({
 }: {
     className?: string;
 }) => {
-    const { completedCount, totalSteps } = useFloatingOnboarding();
+    const { completedCount, totalSteps } = useFloatingOnboardingChecklist();
     return (
         <StyledBadge className={className}>
             {completedCount}/{totalSteps}

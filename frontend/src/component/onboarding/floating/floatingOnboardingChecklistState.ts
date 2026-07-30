@@ -1,27 +1,27 @@
 import { useLocalStorageState } from 'hooks/useLocalStorageState.ts';
 
-export type FloatingOnboardingView = 'list' | 'guide';
+export type FloatingOnboardingChecklistView = 'list' | 'guide';
 
 /** Which of the guided steps the user has completed (locally captured). */
-export interface FloatingOnboardingCompleted {
+export interface FloatingOnboardingChecklistCompleted {
     project?: boolean;
     flag?: boolean;
     sdk?: boolean;
     on?: boolean;
 }
 
-export interface FloatingOnboardingState {
+export interface FloatingOnboardingChecklistState {
     /** Closed for good (until localStorage is cleared). */
     dismissed: boolean;
     /** Collapsed to just the header bar. */
     minimized: boolean;
-    view: FloatingOnboardingView;
+    view: FloatingOnboardingChecklistView;
     /** The project the user is setting up via the guide. */
     projectId?: string;
-    completed: FloatingOnboardingCompleted;
+    completed: FloatingOnboardingChecklistCompleted;
 }
 
-const DEFAULT_STATE: FloatingOnboardingState = {
+const DEFAULT_STATE: FloatingOnboardingChecklistState = {
     dismissed: false,
     minimized: false,
     view: 'list',
@@ -32,16 +32,17 @@ const DEFAULT_STATE: FloatingOnboardingState = {
  * Persisted state for the floating "Get started" helper. It survives route
  * changes and reloads so the helper can follow the user around Unleash.
  */
-export const useFloatingOnboardingState = () => {
-    const [state, setState] = useLocalStorageState<FloatingOnboardingState>(
-        'floating-onboarding:v1',
-        DEFAULT_STATE,
-    );
+export const useFloatingOnboardingChecklistState = () => {
+    const [state, setState] =
+        useLocalStorageState<FloatingOnboardingChecklistState>(
+            'floating-onboarding:v1',
+            DEFAULT_STATE,
+        );
 
-    const update = (patch: Partial<FloatingOnboardingState>) =>
+    const update = (patch: Partial<FloatingOnboardingChecklistState>) =>
         setState((prev) => ({ ...prev, ...patch }));
 
-    const markCompleted = (step: keyof FloatingOnboardingCompleted) =>
+    const markCompleted = (step: keyof FloatingOnboardingChecklistCompleted) =>
         setState((prev) => ({
             ...prev,
             completed: { ...prev.completed, [step]: true },

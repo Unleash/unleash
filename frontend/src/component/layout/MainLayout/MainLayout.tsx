@@ -15,8 +15,8 @@ import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar.tsx';
 import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
 import { NewInUnleash } from './NavigationSidebar/NewInUnleash/NewInUnleash.tsx';
-import { FloatingOnboarding } from 'component/onboarding/floating/FloatingOnboarding.tsx';
-import { FloatingOnboardingProvider } from 'component/onboarding/floating/FloatingOnboardingContext.tsx';
+import { FloatingOnboardingChecklist } from 'component/onboarding/floating/FloatingOnboardingChecklist.tsx';
+import { FloatingOnboardingChecklistProvider } from 'component/onboarding/floating/FloatingOnboardingChecklistContext.tsx';
 import { AccessRequestsNotifications } from 'component/admin/users/AccessRequestsNotifications/AccessRequestsNotifications';
 import { useUiFlag } from 'hooks/useUiFlag';
 
@@ -133,7 +133,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
         );
 
         return (
-            <FloatingOnboardingProvider>
+            <FloatingOnboardingChecklistProvider>
                 <EventTimelineProvider>
                     <MainLayoutContainer>
                         <MainLayoutContentWrapper>
@@ -193,12 +193,12 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                         </MainLayoutContentWrapper>
                     </MainLayoutContainer>
                     <NewInUnleash />
-                    <FloatingOnboarding />
+                    <FloatingOnboardingChecklist />
                     {accessRequestsNotificationsEnabled && (
                         <AccessRequestsNotifications />
                     )}
                 </EventTimelineProvider>
-            </FloatingOnboardingProvider>
+            </FloatingOnboardingChecklistProvider>
         );
     },
 );

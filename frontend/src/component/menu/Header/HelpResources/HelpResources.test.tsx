@@ -54,7 +54,7 @@ test('quick tour item is shown when the flag is on', async () => {
         await screen.findByRole('button', { name: 'Help and resources' }),
     );
 
-    expect(screen.getByText('Quick 2-minute tour')).toBeInTheDocument();
+    expect(screen.getByText('Unleash Intro')).toBeInTheDocument();
 });
 
 test('quick tour item is hidden when the flag is off', async () => {
@@ -65,7 +65,7 @@ test('quick tour item is hidden when the flag is off', async () => {
         await screen.findByRole('button', { name: 'Help and resources' }),
     );
 
-    expect(screen.queryByText('Quick 2-minute tour')).not.toBeInTheDocument();
+    expect(screen.queryByText('Unleash Intro')).not.toBeInTheDocument();
 });
 
 test('external links have correct hrefs', async () => {

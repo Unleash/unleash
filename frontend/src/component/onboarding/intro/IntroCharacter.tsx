@@ -1,5 +1,5 @@
-import { styled, useTheme } from '@mui/material';
-import type { DemoLook } from './demoModel.js';
+import { alpha, styled, useTheme } from '@mui/material';
+import type { IntroLook } from './introModel.js';
 
 const SKIN_TONES = ['#F6C9A0', '#EAB08C', '#C98D64', '#9C6B43', '#6E4A2E'];
 
@@ -15,6 +15,19 @@ const HAIR_COLORS = [
     '#B04A2A',
     '#C9A227',
     '#8A8F98',
+];
+
+// Brighter than the chart-oriented variant palette so the crowd stays playful
+// and legible on both light and dark surfaces.
+const SHIRT_COLORS = [
+    '#3B82F6',
+    '#E85D75',
+    '#F59E0B',
+    '#10B981',
+    '#8B5CF6',
+    '#06B6D4',
+    '#F97316',
+    '#EC4899',
 ];
 
 /**
@@ -66,6 +79,20 @@ const StyledSvg = styled('svg', {
                 transitionDelay: '0ms',
             },
     },
+}));
+
+const StyledAvatar = styled('span', {
+    shouldForwardProp: (prop) => prop !== 'shirtColor',
+})<{ shirtColor: string }>(({ theme, shirtColor }) => ({
+    width: 30,
+    height: 30,
+    display: 'inline-flex',
+    flexShrink: 0,
+    overflow: 'hidden',
+    borderRadius: '50%',
+    background: alpha(shirtColor, 0.2),
+    border: `1px solid ${alpha(shirtColor, 0.55)}`,
+    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
 }));
 
 const hairFor = (style: number, color: string) => {
@@ -135,8 +162,8 @@ const hairFor = (style: number, color: string) => {
     }
 };
 
-interface IDemoCharacterProps {
-    look: DemoLook;
+interface IIntroCharacterProps {
+    look: IntroLook;
     /** Enabled users raise a hand. */
     raised: boolean;
     /** Overrides the user's own shirt colour (used for variant colouring). */
@@ -148,22 +175,20 @@ interface IDemoCharacterProps {
 }
 
 /**
- * A small illustrated person for the quick-tour crowd. Enabled users raise a
+ * A small illustrated person for the intro crowd. Enabled users raise a
  * hand; match state is signalled by the surrounding container's background.
  */
-export const DemoCharacter = ({
+export const IntroCharacter = ({
     look,
     raised,
     shirtColor,
     badge,
     index = 0,
-}: IDemoCharacterProps) => {
+}: IIntroCharacterProps) => {
     const theme = useTheme();
-    const shirtVariants = theme.palette.variants;
     const skin = SKIN_TONES[look.skin % SKIN_TONES.length];
     const hairColor = HAIR_COLORS[look.hairColor % HAIR_COLORS.length];
-    const shirt =
-        shirtColor ?? shirtVariants[look.shirt % shirtVariants.length];
+    const shirt = shirtColor ?? SHIRT_COLORS[look.shirt % SHIRT_COLORS.length];
     const delayMs = Math.min(index * STAGGER_STEP_MS, MAX_STAGGER_MS);
 
     return (
@@ -242,5 +267,41 @@ export const DemoCharacter = ({
                 />
             </StyledSvg>
         </StyledCharacterWrapper>
+    );
+};
+
+/**
+ * A compact portrait of the same synthetic person used on the audience card.
+ * It deliberately shares their generated features rather than inventing a
+ * second avatar identity.
+ */
+export const IntroAvatar = ({ look }: { look: IntroLook }) => {
+    const skin = SKIN_TONES[look.skin % SKIN_TONES.length];
+    const hairColor = HAIR_COLORS[look.hairColor % HAIR_COLORS.length];
+    const shirt = SHIRT_COLORS[look.shirt % SHIRT_COLORS.length];
+
+    return (
+        <StyledAvatar shirtColor={shirt}>
+            <svg
+                viewBox='16 1 32 32'
+                width='100%'
+                height='100%'
+                aria-hidden
+                focusable='false'
+            >
+                <title>Character portrait</title>
+                <circle cx={32} cy={17} r={10} fill={skin} />
+                {hairFor(look.hair, hairColor)}
+                <circle cx={28} cy={16.5} r={1.3} fill='#1F1F1F' />
+                <circle cx={36} cy={16.5} r={1.3} fill='#1F1F1F' />
+                <path
+                    d='M29.5 21 Q32 22.5 34.5 21'
+                    stroke='#1F1F1F'
+                    strokeWidth={1.4}
+                    strokeLinecap='round'
+                    fill='none'
+                />
+            </svg>
+        </StyledAvatar>
     );
 };

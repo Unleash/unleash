@@ -27,7 +27,7 @@ import { MonthsOldVersionBanner } from './banners/internalBanners/MonthsOldVersi
 import { SignupDialog } from './signup/SignupDialog/SignupDialog.tsx';
 import { WelcomeDialog } from './personalDashboard/WelcomeDialog.tsx';
 import { SkipNavLink } from './common/SkipNavLink/SkipNavLink.tsx';
-import { QuickTourProvider } from './onboarding/quickTourDemo/QuickTourProvider.tsx';
+import { IntroProvider } from './onboarding/intro/IntroProvider.tsx';
 
 const StyledContainer = styled('div')(() => ({
     '& ul': {
@@ -80,7 +80,7 @@ export const App = () => {
                                 <ExternalBanners />
                                 <InternalBanners />
                                 <StyledContainer>
-                                    <QuickTourProvider>
+                                    <IntroProvider>
                                         <ToastRenderer />
                                         <Routes>
                                             {availableRoutes.map((route) => (
@@ -124,7 +124,7 @@ export const App = () => {
                                         <WelcomeDialog />
 
                                         <SignupDialog />
-                                    </QuickTourProvider>
+                                    </IntroProvider>
                                 </StyledContainer>
                             </>
                         </Demo>

@@ -9,29 +9,30 @@ const marks = [
 ];
 
 const StyledSlider = styled(Slider)(({ theme }) => ({
-    height: 8,
+    height: 5,
+    padding: '8px 0 16px',
     '& .MuiSlider-thumb': {
-        height: 24,
-        width: 24,
+        height: 18,
+        width: 18,
         backgroundColor: theme.palette.background.paper,
         border: '2px solid currentColor',
     },
     '& .MuiSlider-track': {
-        height: 8,
+        height: 5,
         borderRadius: theme.shape.borderRadius,
     },
     '& .MuiSlider-rail': {
-        height: 8,
+        height: 5,
         borderRadius: theme.shape.borderRadius,
     },
 }));
 
 const StyledSliderBox = styled(Box)(({ theme }) => ({
     width: '100%',
-    padding: theme.spacing(0, 2.5),
+    padding: theme.spacing(0, 1.25),
 }));
 
-interface IDemoRolloutSliderProps {
+interface IIntroRolloutSliderProps {
     /** A11y label - not rendered as a visible title. */
     name: string;
     value: number;
@@ -39,16 +40,16 @@ interface IDemoRolloutSliderProps {
 }
 
 /**
- * Demo-only slim rollout slider. Mirrors the visual shape of the real
+ * Intro-only slim rollout slider. Mirrors the visual shape of the real
  * {@link RolloutSlider} but skips the help tooltip, the numeric input box, and
- * the visible title so the tour panel stays compact. Deliberately isolated
+ * the visible title so the intro panel stays compact. Deliberately isolated
  * from the shared component so demo tweaks don't creep into its API.
  */
-export const DemoRolloutSlider = ({
+export const IntroRolloutSlider = ({
     name,
     value,
     onChange,
-}: IDemoRolloutSliderProps) => (
+}: IIntroRolloutSliderProps) => (
     <StyledSliderBox>
         <StyledSlider
             min={0}

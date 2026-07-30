@@ -8,42 +8,64 @@ import {
  * closed demo. These are not real Unleash users - they exist only so a rollout
  * percentage / targeting rule / variant split becomes something you can watch.
  */
-export interface DemoUser {
+export interface IntroUser {
     id: string;
     name: string;
-    country: DemoCountry;
-    plan: 'free' | 'pro';
-    look: DemoLook;
+    country: IntroCountry;
+    plan: IntroPlan;
+    device: IntroDevice;
+    look: IntroLook;
 }
+
+export type IntroPlan = 'free' | 'pro' | 'enterprise';
+export type IntroDevice = 'desktop' | 'mobile';
+
+export const INTRO_PLANS: Array<{
+    value: IntroPlan;
+    label: string;
+    emoji: string;
+}> = [
+    { value: 'free', label: 'Free', emoji: '🥉' },
+    { value: 'pro', label: 'Pro', emoji: '🥈' },
+    { value: 'enterprise', label: 'Enterprise', emoji: '🥇' },
+];
+
+export const INTRO_DEVICES: Array<{
+    value: IntroDevice;
+    label: string;
+    emoji: string;
+}> = [
+    { value: 'desktop', label: 'Desktop', emoji: '🖥️' },
+    { value: 'mobile', label: 'Mobile', emoji: '📱' },
+];
 
 /**
  * Palette indices for the character illustration. Which palettes they index
- * into is owned by DemoCharacter; the model only guarantees the indices are
+ * into is owned by IntroCharacter; the model only guarantees the indices are
  * deterministic per user, so the crowd never reshuffles.
  */
-export interface DemoLook {
+export interface IntroLook {
     skin: number;
     hair: number;
     hairColor: number;
     shirt: number;
 }
 
-export interface DemoCountry {
+export interface IntroCountry {
     code: string;
     label: string;
     flag: string;
 }
 
-export const DEMO_COUNTRIES: DemoCountry[] = [
+export const INTRO_COUNTRIES: IntroCountry[] = [
+    { code: 'NO', label: 'Norway', flag: '🇳🇴' },
     { code: 'US', label: 'United States', flag: '🇺🇸' },
+    { code: 'CA', label: 'Canada', flag: '🇨🇦' },
     { code: 'GB', label: 'United Kingdom', flag: '🇬🇧' },
-    { code: 'DE', label: 'Germany', flag: '🇩🇪' },
-    { code: 'IN', label: 'India', flag: '🇮🇳' },
-    { code: 'BR', label: 'Brazil', flag: '🇧🇷' },
     { code: 'JP', label: 'Japan', flag: '🇯🇵' },
 ];
 
-export interface DemoVariant {
+export interface IntroVariant {
     name: string;
     /** Weight out of the sum of all variant weights (matches Unleash semantics). */
     weight: number;
@@ -51,11 +73,13 @@ export interface DemoVariant {
     payload?: string;
     /** The payload's colour, extracted for rendering (shirts, bar, preview). */
     color?: string;
-    /** The payload's call-to-action text, shown in the app preview. */
-    cta?: string;
+    /** Human-readable name for the experience this variant delivers. */
+    label?: string;
+    /** Search input placeholder delivered by this variant's payload. */
+    placeholder?: string;
 }
 
-export interface DemoFlagConfig {
+export interface IntroFlagConfig {
     /** Used as the hashing groupId, exactly like a real flag name. */
     flagName: string;
     /** The environment master switch - gates every strategy below it. */
@@ -67,8 +91,10 @@ export interface DemoFlagConfig {
      * only within the users who match. Empty means unconstrained.
      */
     targetCountryCodes: string[];
+    targetPlans?: IntroUser['plan'][];
+    targetDevices?: IntroUser['device'][];
     variantsEnabled: boolean;
-    variants: DemoVariant[];
+    variants: IntroVariant[];
 }
 
 export interface UserEvaluation {
@@ -77,6 +103,7 @@ export interface UserEvaluation {
     matchesConstraints: boolean;
     /** The user's 1-100 rollout bucket; stable across slider changes. */
     rolloutBucket: number;
+    inGradualRollout: boolean;
     variant?: string;
 }
 
@@ -109,22 +136,33 @@ const FIRST_NAMES = [
     'Zoe',
 ];
 
+// Avoid making synthetic context values line up with grid columns. These
+// patterns deliberately scatter plan and device across each set of 15 users.
+const PRO_POSITIONS = new Set([0, 4, 5, 7, 9]);
+const ENTERPRISE_POSITIONS = new Set([2, 6, 10, 14]);
+const MOBILE_POSITIONS = new Set([1, 3, 5, 8, 10, 12]);
+
 /**
  * Deterministically generate a stable set of synthetic users. The same index
  * always yields the same identity, so re-generating never reshuffles the grid.
  */
-export const generateDemoUsers = (count: number): DemoUser[] =>
+export const generateIntroUsers = (count: number): IntroUser[] =>
     Array.from({ length: count }, (_, i) => {
-        const country = DEMO_COUNTRIES[i % DEMO_COUNTRIES.length];
+        const country = INTRO_COUNTRIES[i % INTRO_COUNTRIES.length];
         const name = `${FIRST_NAMES[i % FIRST_NAMES.length]}`;
         return {
             id: `user-${i + 1}`,
             name,
             country,
-            plan: i % 3 === 0 ? 'pro' : 'free',
+            plan: ENTERPRISE_POSITIONS.has(i % 15)
+                ? 'enterprise'
+                : PRO_POSITIONS.has(i % 15)
+                  ? 'pro'
+                  : 'free',
+            device: MOBILE_POSITIONS.has(i % 15) ? 'mobile' : 'desktop',
             // Multipliers co-prime with each palette size cycle through every
             // palette entry and scatter the combinations so neighbouring users
-            // don't look like siblings. Country repeats with period 6, so the
+            // don't look like siblings. Country repeats with period 5, so the
             // hair formula (also mod 6) mixes in a floor(i/6) term - a plain
             // linear formula would give every compatriot the same haircut.
             look: {
@@ -152,8 +190,8 @@ export const generateDemoUsers = (count: number): DemoUser[] =>
  * switch gates every strategy, exactly like a real flag.
  */
 export const computeEvaluations = (
-    users: DemoUser[],
-    config: DemoFlagConfig,
+    users: IntroUser[],
+    config: IntroFlagConfig,
 ): UserEvaluation[] => {
     const n = users.length;
     if (n === 0) {
@@ -198,15 +236,24 @@ export const computeEvaluations = (
         const inRollout = threshold[index] <= config.rollout;
         // Constraints AND with the rollout, like a real Unleash strategy: the
         // rollout percentage applies within the matching users only.
-        const matchesConstraints =
+        const matchesCountry =
             config.targetCountryCodes.length === 0 ||
             config.targetCountryCodes.includes(user.country.code);
+        const matchesPlan =
+            !config.targetPlans?.length ||
+            config.targetPlans.includes(user.plan);
+        const matchesDevice =
+            !config.targetDevices?.length ||
+            config.targetDevices.includes(user.device);
+        const matchesConstraints =
+            matchesCountry && matchesPlan && matchesDevice;
         const enabled =
             config.environmentEnabled && matchesConstraints && inRollout;
         return {
             user,
             enabled,
             matchesConstraints,
+            inGradualRollout: matchesConstraints && inRollout,
             rolloutBucket: threshold[index],
         };
     });
@@ -243,12 +290,13 @@ export const computeEvaluations = (
     return base.map((entry) => ({
         enabled: entry.enabled,
         matchesConstraints: entry.matchesConstraints,
+        inGradualRollout: entry.inGradualRollout,
         rolloutBucket: entry.rolloutBucket,
         variant: entry.enabled ? variantByUserId.get(entry.user.id) : undefined,
     }));
 };
 
-export interface DemoStats {
+export interface IntroStats {
     total: number;
     enabled: number;
     percentage: number;
@@ -256,9 +304,9 @@ export interface DemoStats {
 }
 
 export const summarize = (
-    users: DemoUser[],
+    users: IntroUser[],
     evaluations: UserEvaluation[],
-): DemoStats => {
+): IntroStats => {
     const enabled = evaluations.filter((e) => e.enabled).length;
     const variantCounts: Record<string, number> = {};
     for (const evaluation of evaluations) {

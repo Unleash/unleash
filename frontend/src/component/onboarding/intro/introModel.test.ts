@@ -1,39 +1,41 @@
 import { describe, expect, it } from 'vitest';
 import {
     computeEvaluations,
-    type DemoFlagConfig,
-    generateDemoUsers,
+    type IntroFlagConfig,
+    generateIntroUsers,
     summarize,
-} from './demoModel.js';
+} from './introModel.js';
 
 const baseConfig = (
-    overrides: Partial<DemoFlagConfig> = {},
-): DemoFlagConfig => ({
+    overrides: Partial<IntroFlagConfig> = {},
+): IntroFlagConfig => ({
     flagName: 'new-checkout',
     environmentEnabled: true,
     rollout: 0,
     targetCountryCodes: [],
+    targetPlans: [],
+    targetDevices: [],
     variantsEnabled: false,
     variants: [],
     ...overrides,
 });
 
 const countEnabled = (
-    users: ReturnType<typeof generateDemoUsers>,
-    config: DemoFlagConfig,
+    users: ReturnType<typeof generateIntroUsers>,
+    config: IntroFlagConfig,
 ) => computeEvaluations(users, config).filter((e) => e.enabled).length;
 
-describe('demoModel', () => {
+describe('introModel', () => {
     it('generates stable users', () => {
-        const a = generateDemoUsers(60);
-        const b = generateDemoUsers(60);
+        const a = generateIntroUsers(60);
+        const b = generateIntroUsers(60);
         expect(a).toEqual(b);
         expect(a).toHaveLength(60);
         expect(a[0].id).toBe('user-1');
     });
 
     it('spreads the rollout evenly: an N% rollout enables ~N% of users', () => {
-        const users = generateDemoUsers(60);
+        const users = generateIntroUsers(60);
         expect(countEnabled(users, baseConfig({ rollout: 0 }))).toBe(0);
         expect(countEnabled(users, baseConfig({ rollout: 25 }))).toBe(15);
         expect(countEnabled(users, baseConfig({ rollout: 50 }))).toBe(30);
@@ -41,7 +43,7 @@ describe('demoModel', () => {
     });
 
     it('gates everything behind the environment master switch', () => {
-        const users = generateDemoUsers(60);
+        const users = generateIntroUsers(60);
         expect(
             countEnabled(
                 users,
@@ -55,7 +57,7 @@ describe('demoModel', () => {
     });
 
     it('is monotonic: a user enabled at X% stays enabled as the rollout grows', () => {
-        const users = generateDemoUsers(60);
+        const users = generateIntroUsers(60);
         const enabledIdsAt = (rollout: number) => {
             const evaluations = computeEvaluations(
                 users,
@@ -76,7 +78,7 @@ describe('demoModel', () => {
     });
 
     it('ANDs constraints with the rollout, like a real Unleash strategy', () => {
-        const users = generateDemoUsers(60);
+        const users = generateIntroUsers(60);
 
         // A constraint alone doesn't enable anyone at 0% rollout.
         expect(
@@ -100,7 +102,7 @@ describe('demoModel', () => {
     });
 
     it('spreads the rollout evenly within each country, not just overall', () => {
-        const users = generateDemoUsers(24);
+        const users = generateIntroUsers(20);
         const evaluations = computeEvaluations(
             users,
             baseConfig({ rollout: 50 }),
@@ -114,14 +116,14 @@ describe('demoModel', () => {
                 );
             }
         });
-        // 24 users / 6 countries = 4 per country; a 50% rollout hits 2 each.
-        for (const code of ['US', 'GB', 'DE', 'IN', 'BR', 'JP']) {
+        // 20 users / 5 countries = 4 per country; a 50% rollout hits 2 each.
+        for (const code of ['NO', 'US', 'CA', 'GB', 'JP']) {
             expect(enabledByCountry.get(code)).toBe(2);
         }
     });
 
     it('treats no constraints as matching everyone', () => {
-        const users = generateDemoUsers(60);
+        const users = generateIntroUsers(60);
         const evaluations = computeEvaluations(
             users,
             baseConfig({ rollout: 50 }),
@@ -131,8 +133,29 @@ describe('demoModel', () => {
         }
     });
 
+    it('ANDs country, plan, and device constraints', () => {
+        const users = generateIntroUsers(50);
+        const evaluations = computeEvaluations(
+            users,
+            baseConfig({
+                rollout: 100,
+                targetCountryCodes: ['NO'],
+                targetPlans: ['pro'],
+                targetDevices: ['desktop'],
+            }),
+        );
+
+        users.forEach((user, index) => {
+            expect(evaluations[index].enabled).toBe(
+                user.country.code === 'NO' &&
+                    user.plan === 'pro' &&
+                    user.device === 'desktop',
+            );
+        });
+    });
+
     it('keeps variant assignments stable when the rollout changes', () => {
-        const users = generateDemoUsers(60);
+        const users = generateIntroUsers(60);
         const config = baseConfig({
             rollout: 100,
             variantsEnabled: true,
@@ -151,7 +174,7 @@ describe('demoModel', () => {
     });
 
     it('splits enabled users into even, sticky variants', () => {
-        const users = generateDemoUsers(60);
+        const users = generateIntroUsers(60);
         const config = baseConfig({
             rollout: 100,
             variantsEnabled: true,

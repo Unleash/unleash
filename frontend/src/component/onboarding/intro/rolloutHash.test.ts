@@ -4,7 +4,7 @@ import {
     normalizedVariantValue,
 } from './rolloutHash.js';
 
-describe('rolloutHash', () => {
+describe('intro rollout hashing', () => {
     it('matches golden values from the murmurhash3js reference used by the server SDK', () => {
         // Golden values produced by the `murmurhash3js` package (x86.hash32),
         // the same library the Unleash feature-evaluator uses.

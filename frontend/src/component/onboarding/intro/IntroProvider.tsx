@@ -7,26 +7,26 @@ import {
     useState,
 } from 'react';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { QuickTourDialog } from './QuickTourDialog.tsx';
+import { IntroDialog } from './IntroDialog.tsx';
 
 interface OpenOptions {
-    /** Runs after the tour closes (via ✕, backdrop, Escape, Skip, or Finish). */
+    /** Runs after the intro closes (via close, backdrop, Escape, Skip, or Finish). */
     onClose?: () => void;
 }
 
-interface QuickTourContextValue {
+interface IntroContextValue {
     open: (options?: OpenOptions) => void;
 }
 
-const QuickTourContext = createContext<QuickTourContextValue | null>(null);
+const IntroContext = createContext<IntroContextValue | null>(null);
 
 /**
- * Renders {@link QuickTourDialog} once at App level and exposes an `open()`
- * function via context so any component (help menu, signup completion, …)
- * can trigger the same tour instance. Only one dialog lifecycle to reason
+ * Renders {@link IntroDialog} once at App level and exposes an `open()`
+ * function via context so any component (help menu, signup completion, etc.)
+ * can trigger the same intro instance. Only one dialog lifecycle to reason
  * about; new call sites don't have to plumb state through the tree.
  */
-export const QuickTourProvider = ({ children }: { children: ReactNode }) => {
+export const IntroProvider = ({ children }: { children: ReactNode }) => {
     const enabled = useUiFlag('quickTourDemo');
     const [isOpen, setIsOpen] = useState(false);
     // Held in a ref so re-renders don't clear a pending onClose between the
@@ -50,19 +50,19 @@ export const QuickTourProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     return (
-        <QuickTourContext.Provider value={{ open }}>
+        <IntroContext.Provider value={{ open }}>
             {children}
-            {enabled && <QuickTourDialog open={isOpen} onClose={handleClose} />}
-        </QuickTourContext.Provider>
+            {enabled && <IntroDialog open={isOpen} onClose={handleClose} />}
+        </IntroContext.Provider>
     );
 };
 
-const NOOP_VALUE: QuickTourContextValue = { open: () => {} };
+const NOOP_VALUE: IntroContextValue = { open: () => {} };
 
 /**
- * Access the shared quick-tour controls. When no {@link QuickTourProvider} is
+ * Access the shared intro controls. When no {@link IntroProvider} is
  * mounted (e.g. isolated tests or stories), returns a disabled no-op so
  * consumers can render safely without wrapping every test.
  */
-export const useQuickTour = (): QuickTourContextValue =>
-    useContext(QuickTourContext) ?? NOOP_VALUE;
+export const useIntro = (): IntroContextValue =>
+    useContext(IntroContext) ?? NOOP_VALUE;

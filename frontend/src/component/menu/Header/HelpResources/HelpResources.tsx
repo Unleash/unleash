@@ -25,7 +25,7 @@ import { useEventTracker } from 'hooks/useEventTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useVariant } from 'hooks/useVariant';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useQuickTour } from 'component/onboarding/quickTourDemo/QuickTourProvider.tsx';
+import { useIntro } from 'component/onboarding/intro/IntroProvider.tsx';
 
 const StyledIconButton = styled(IconButton)<{ open?: boolean }>(
     ({ theme, open }) => ({
@@ -156,8 +156,8 @@ export const HelpResources = () => {
     const { isEnterprise } = useUiConfig();
     const whatsNewEnabled = useUiFlag('whatsNewPage');
     const showWhatsNew = isEnterprise() && whatsNewEnabled;
-    const { open: openQuickTour } = useQuickTour();
-    const quickTourEnabled = useUiFlag('quickTourDemo');
+    const { open: openIntro } = useIntro();
+    const introEnabled = useUiFlag('quickTourDemo');
     const learningLabFlag = useUiFlag('learningLab');
     const learningLabVariant = useVariant<ILearningLabVariant>(
         learningLabFlag || undefined,
@@ -264,16 +264,16 @@ export const HelpResources = () => {
                         What's new
                     </StyledMenuItem>
                 )}
-                {quickTourEnabled && (
+                {introEnabled && (
                     <StyledMenuItem
                         onClick={() => {
                             handleOptionClick('quick-tour');
-                            openQuickTour();
+                            openIntro();
                         }}
                         data-testid='QUICK_TOUR_BUTTON'
                     >
                         <ExploreOutlinedIcon fontSize='small' />
-                        Quick 2-minute tour
+                        Unleash Intro
                     </StyledMenuItem>
                 )}
                 <StyledMenuItem

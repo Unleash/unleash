@@ -4,7 +4,7 @@
  * This is verified byte-identical to the `murmurhash3js` package that the
  * Unleash server SDK / feature-evaluator uses (see
  * `src/lib/features/playground/feature-evaluator/strategy/util.ts`). Keeping it
- * identical means the onboarding "closed demo" distributes users across a
+ * identical means the interactive intro distributes users across a
  * gradual rollout / variant split exactly the way real evaluation would, so the
  * simulation is faithful rather than merely plausible.
  */

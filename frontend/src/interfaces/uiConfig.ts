@@ -103,6 +103,7 @@ export type UiFlags = {
     logRocketEnabled?: boolean;
     newProjectList?: boolean;
     newModalDesign?: boolean;
+    newProfileDropdown?: boolean;
     learningLab?: Variant;
     accessRequestsNotifications?: boolean;
     flightRecorderFrontend?: Variant;

@@ -1,34 +1,8 @@
 import { type ReactNode, useEffect, useState } from 'react';
 import { Button, Collapse, styled, Typography } from '@mui/material';
-import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';
-import OutlinedFlagIcon from '@mui/icons-material/OutlinedFlag';
-import CodeIcon from '@mui/icons-material/Code';
-import ToggleOnIcon from '@mui/icons-material/ToggleOn';
 import { Link } from 'react-router';
-
-const ProgressHeader = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-    padding: theme.spacing(2, 2, 1, 2),
-}));
-
-const ProgressTitle = styled(Typography)(({ theme }) => ({
-    fontSize: theme.typography.body2.fontSize,
-    fontWeight: theme.typography.fontWeightBold,
-}));
-
-const ProgressBadge = styled('span')(({ theme }) => ({
-    fontSize: theme.typography.caption.fontSize,
-    color: theme.palette.secondary.contrastText,
-    backgroundColor: theme.palette.secondary.light,
-    border: `1px solid ${theme.palette.secondary.border}`,
-    borderRadius: theme.shape.borderRadius,
-    padding: theme.spacing(0.25, 1),
-}));
 
 const StepContainer = styled('div')(({ theme }) => ({
     borderTop: `1px solid ${theme.palette.divider}`,
@@ -48,12 +22,24 @@ const StepHeader = styled('button')(({ theme }) => ({
     },
 }));
 
-const StepIcon = styled('span', {
+const StepIndicator = styled('span', {
     shouldForwardProp: (prop) => prop !== 'done',
 })<{ done?: boolean }>(({ theme, done }) => ({
-    display: 'flex',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 20,
+    height: 20,
+    flexShrink: 0,
     color: done ? theme.palette.success.main : theme.palette.text.secondary,
     '& svg': { fontSize: 20 },
+}));
+
+const DashedCircle = styled('span')(({ theme }) => ({
+    width: 16,
+    height: 16,
+    borderRadius: '50%',
+    border: `1.5px dashed ${theme.palette.text.secondary}`,
 }));
 
 const StepTitle = styled(Typography, {
@@ -86,22 +72,19 @@ const StepBodyText = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-export interface SetupStep {
+interface ChecklistStep {
     key: string;
     title: string;
     body: string;
-    icon: ReactNode;
     done: boolean;
-    enabled: boolean;
-    /** Action rendered inside the expanded body. */
     action: ReactNode;
 }
 
-interface ISetupGuideProps {
-    projectId?: string;
-    done: { project: boolean; flag: boolean; sdk: boolean; on: boolean };
+interface IChecklistStepsProps {
+    quickTourEnabled: boolean;
+    done: { tour: boolean; flag: boolean; sdk: boolean; on: boolean };
     goToFlagHref: string;
-    onCreateProject: () => void;
+    onTakeTour: () => void;
     onCreateFlag: () => void;
     onConnectSdk: () => void;
     onGoToFlag: () => void;
@@ -134,54 +117,55 @@ const ActionButton = ({
         </Button>
     );
 
-export const SetupGuide = ({
+export const ChecklistSteps = ({
+    quickTourEnabled,
     done,
     goToFlagHref,
-    onCreateProject,
+    onTakeTour,
     onCreateFlag,
     onConnectSdk,
     onGoToFlag,
-}: ISetupGuideProps) => {
-    const steps: SetupStep[] = [
-        {
-            key: 'project',
-            title: 'Create a project',
-            body: 'The first thing you must do is to create a project.',
-            icon: <CreateNewFolderOutlinedIcon />,
-            done: done.project,
-            enabled: true,
-            action: (
-                <ActionButton
-                    label='New project'
-                    onClick={onCreateProject}
-                    disabled={false}
-                    done={done.project}
-                />
-            ),
-        },
+}: IChecklistStepsProps) => {
+    const steps: ChecklistStep[] = [
+        ...(quickTourEnabled
+            ? [
+                  {
+                      key: 'tour',
+                      title: 'Take the two-minute tour',
+                      body: 'A quick walkthrough of Unleash — see feature flags in action in under two minutes.',
+                      done: done.tour,
+                      action: (
+                          <ActionButton
+                              label='Start tour'
+                              onClick={onTakeTour}
+                              disabled={false}
+                              done={done.tour}
+                          />
+                      ),
+                  },
+              ]
+            : []),
         {
             key: 'flag',
             title: 'Create a feature flag',
-            body: 'You must create a feature flag before you can connect an SDK.',
-            icon: <OutlinedFlagIcon />,
+            body: 'You must create a feature flag before you can connect a SDK.',
             done: done.flag,
-            enabled: done.project,
             action: (
                 <ActionButton
                     label='New feature flag'
                     onClick={onCreateFlag}
-                    disabled={!done.project}
+                    disabled={false}
                     done={done.flag}
                 />
             ),
         },
         {
             key: 'sdk',
-            title: 'Connect SDK and wrap your code',
-            body: 'To start using your feature flag, connect an SDK to the project.',
-            icon: <CodeIcon />,
+            title: done.sdk ? 'Connect SDK' : 'Connect SDKs',
+            body: done.sdk
+                ? 'You can connect as many SDKs as you need.'
+                : 'To start using your feature flag, connect an SDK to the project.',
             done: done.sdk,
-            enabled: done.flag,
             action: (
                 <ActionButton
                     label='Connect SDK'
@@ -193,11 +177,9 @@ export const SetupGuide = ({
         },
         {
             key: 'on',
-            title: 'Turn flag on/off',
+            title: 'Turn flag on',
             body: 'Check that the flag is working by turning it on.',
-            icon: <ToggleOnIcon />,
             done: done.on,
-            enabled: done.sdk,
             action: done.on ? (
                 <Button
                     variant='outlined'
@@ -231,9 +213,7 @@ export const SetupGuide = ({
         },
     ];
 
-    const completedCount = steps.filter((step) => step.done).length;
     const firstIncomplete = steps.findIndex((step) => !step.done);
-
     const [expanded, setExpanded] = useState(firstIncomplete);
 
     // Auto-advance: whenever the set of completed steps changes, jump the
@@ -244,13 +224,6 @@ export const SetupGuide = ({
 
     return (
         <div>
-            <ProgressHeader>
-                <ProgressTitle>Set up your own project</ProgressTitle>
-                <ProgressBadge>
-                    {completedCount}/{steps.length} Completed
-                </ProgressBadge>
-            </ProgressHeader>
-
             {steps.map((step, index) => {
                 const isExpanded = expanded === index;
                 return (
@@ -260,13 +233,13 @@ export const SetupGuide = ({
                             onClick={() => setExpanded(isExpanded ? -1 : index)}
                             aria-expanded={isExpanded}
                         >
-                            <StepIcon done={step.done}>
+                            <StepIndicator done={step.done}>
                                 {step.done ? (
                                     <CheckCircleIcon />
                                 ) : (
-                                    <RadioButtonUncheckedIcon />
+                                    <DashedCircle />
                                 )}
-                            </StepIcon>
+                            </StepIndicator>
                             <StepTitle done={step.done}>{step.title}</StepTitle>
                             <Chevron expanded={isExpanded} />
                         </StepHeader>

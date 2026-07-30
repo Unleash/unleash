@@ -1,10 +1,8 @@
 import { useLocalStorageState } from 'hooks/useLocalStorageState.ts';
 
-export type FloatingOnboardingChecklistView = 'list' | 'guide';
-
 /** Which of the guided steps the user has completed (locally captured). */
 export interface FloatingOnboardingChecklistCompleted {
-    project?: boolean;
+    tour?: boolean;
     flag?: boolean;
     sdk?: boolean;
     on?: boolean;
@@ -15,8 +13,7 @@ export interface FloatingOnboardingChecklistState {
     dismissed: boolean;
     /** Collapsed to just the header bar. */
     minimized: boolean;
-    view: FloatingOnboardingChecklistView;
-    /** The project the user is setting up via the guide. */
+    /** The project the checklist is targeting (auto-adopted from the user's projects). */
     projectId?: string;
     completed: FloatingOnboardingChecklistCompleted;
 }
@@ -24,7 +21,6 @@ export interface FloatingOnboardingChecklistState {
 const DEFAULT_STATE: FloatingOnboardingChecklistState = {
     dismissed: false,
     minimized: false,
-    view: 'list',
     completed: {},
 };
 
@@ -48,8 +44,5 @@ export const useFloatingOnboardingChecklistState = () => {
             completed: { ...prev.completed, [step]: true },
         }));
 
-    /** Reset back to a fresh first-run state — handy for demoing the flow. */
-    const reset = () => setState(DEFAULT_STATE);
-
-    return { state, update, markCompleted, reset };
+    return { state, update, markCompleted };
 };

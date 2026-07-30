@@ -1,19 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
-import { IconButton, styled, Tooltip, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { IconButton, styled, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import RemoveIcon from '@mui/icons-material/Remove';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import { CreateProjectDialog } from 'component/project/Project/CreateProject/CreateProjectForm/CreateProjectDialog.tsx';
 import { CreateFeatureDialog } from 'component/project/Project/PaginatedProjectFeatureToggles/ProjectFeatureTogglesHeader/CreateFeatureDialog.tsx';
 import { ConnectSdkDialog } from 'component/onboarding/dialog/ConnectSdkDialog/ConnectSdkDialog.tsx';
+import { useQuickTour } from 'component/onboarding/quickTourDemo/QuickTourProvider.tsx';
 import {
     OnboardingProgressBadge,
     useFloatingOnboardingChecklist,
 } from './FloatingOnboardingChecklistContext.tsx';
-import { GetStartedList } from './GetStartedList.tsx';
-import { SetupGuide } from './SetupGuide.tsx';
+import { ChecklistSteps } from './ChecklistSteps.tsx';
 
 const Window = styled('aside')(({ theme }) => ({
     position: 'fixed',
@@ -60,11 +57,6 @@ const HeaderTitle = styled(Typography)(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
 }));
 
-const BackButton = styled(IconButton)(({ theme }) => ({
-    color: theme.palette.primary.main,
-    padding: theme.spacing(0.5),
-}));
-
 const Body = styled('div')({
     overflowY: 'auto',
 });
@@ -74,88 +66,45 @@ export const FloatingOnboardingChecklist = () => {
         state,
         update,
         markCompleted,
-        reset,
         projectId,
+        quickTourEnabled,
         done,
-        completedCount,
-        totalSteps,
         environments,
         goToFlagHref,
         feature,
         refetchOverview,
     } = useFloatingOnboardingChecklist();
 
-    const { projects, refetch: refetchProjects } = useProjects();
+    const { projects } = useProjects();
+    const { open: openQuickTour } = useQuickTour();
 
-    const [createProjectOpen, setCreateProjectOpen] = useState(false);
     const [createFlagOpen, setCreateFlagOpen] = useState(false);
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
 
-    // Project ids present when the create-project dialog was opened, so we can
-    // detect which project the user just created (the dialog gives us no id).
-    const projectIdsSnapshot = useRef<Set<string>>(new Set());
-    // Only adopt a "new" project while we're actually expecting one from the
-    // create-project dialog — otherwise we'd grab a pre-existing project on mount.
-    const awaitingCreatedProject = useRef(false);
-
-    // Adopt the newly created project once it shows up in the project list.
+    // Auto-adopt the first available project so the flag/sdk/on actions have
+    // something to work against. Project creation is no longer a step, but the
+    // rest of the flow still needs a project id.
     useEffect(() => {
-        if (!awaitingCreatedProject.current || createProjectOpen || projectId)
-            return;
-        const created = projects.find(
-            (candidate) => !projectIdsSnapshot.current.has(candidate.id),
-        );
-        if (created) {
-            awaitingCreatedProject.current = false;
-            update({ projectId: created.id });
-            markCompleted('project');
-        }
-    }, [projects, createProjectOpen, projectId, update, markCompleted]);
+        if (projectId) return;
+        const firstProject = projects[0];
+        if (firstProject) update({ projectId: firstProject.id });
+    }, [projectId, projects, update]);
 
     if (state.dismissed) return null;
 
-    const openCreateProject = () => {
-        projectIdsSnapshot.current = new Set(projects.map((p) => p.id));
-        awaitingCreatedProject.current = true;
-        setCreateProjectOpen(true);
-    };
-
     const toggleMinimized = () => update({ minimized: !state.minimized });
+
+    const handleTakeTour = () =>
+        openQuickTour({ onClose: () => markCompleted('tour') });
 
     return (
         <>
             <Window aria-label='Get started'>
                 <Header>
-                    {state.view === 'guide' && !state.minimized ? (
-                        <BackButton
-                            size='small'
-                            aria-label='Back'
-                            onClick={() => update({ view: 'list' })}
-                        >
-                            <ArrowBackIcon fontSize='small' />
-                        </BackButton>
-                    ) : null}
                     <TitleRow onClick={toggleMinimized}>
                         <HeaderTitle>Get started</HeaderTitle>
-                        {state.minimized ? <OnboardingProgressBadge /> : null}
+                        <OnboardingProgressBadge showLabel />
                     </TitleRow>
-                    {state.minimized ? null : (
-                        <Tooltip title='Reset demo' arrow>
-                            <IconButton
-                                size='small'
-                                aria-label='Reset demo'
-                                onClick={() => {
-                                    setCreateProjectOpen(false);
-                                    setCreateFlagOpen(false);
-                                    setConnectSdkOpen(false);
-                                    awaitingCreatedProject.current = false;
-                                    reset();
-                                }}
-                            >
-                                <RestartAltIcon fontSize='small' />
-                            </IconButton>
-                        </Tooltip>
-                    )}
                     <IconButton
                         size='small'
                         aria-label={state.minimized ? 'Expand' : 'Minimize'}
@@ -174,37 +123,19 @@ export const FloatingOnboardingChecklist = () => {
 
                 {state.minimized ? null : (
                     <Body>
-                        {state.view === 'guide' ? (
-                            <SetupGuide
-                                projectId={projectId}
-                                done={done}
-                                goToFlagHref={goToFlagHref}
-                                onCreateProject={openCreateProject}
-                                onCreateFlag={() => setCreateFlagOpen(true)}
-                                onConnectSdk={() => setConnectSdkOpen(true)}
-                                onGoToFlag={() => markCompleted('on')}
-                            />
-                        ) : (
-                            <GetStartedList
-                                completedCount={completedCount}
-                                totalSteps={totalSteps}
-                                onStartSetup={() => update({ view: 'guide' })}
-                                onOpenDemo={() => {
-                                    // Demo project link is out of scope.
-                                }}
-                            />
-                        )}
+                        <ChecklistSteps
+                            quickTourEnabled={quickTourEnabled}
+                            done={done}
+                            goToFlagHref={goToFlagHref}
+                            onTakeTour={handleTakeTour}
+                            onCreateFlag={() => setCreateFlagOpen(true)}
+                            onConnectSdk={() => setConnectSdkOpen(true)}
+                            onGoToFlag={() => markCompleted('on')}
+                        />
                     </Body>
                 )}
             </Window>
 
-            <CreateProjectDialog
-                open={createProjectOpen}
-                onClose={() => {
-                    setCreateProjectOpen(false);
-                    refetchProjects();
-                }}
-            />
             <CreateFeatureDialog
                 open={createFlagOpen}
                 onClose={() => setCreateFlagOpen(false)}

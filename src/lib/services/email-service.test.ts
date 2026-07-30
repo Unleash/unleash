@@ -190,6 +190,83 @@ test('Sets correct color for technical debt', async () => {
     );
 });
 
+test('warns the token owner before their personal API token expires', async () => {
+    const emailService = new EmailService({
+        server: {
+            unleashUrl: 'http://localhost',
+        },
+        email: {
+            host: 'test',
+            port: 587,
+            secure: false,
+            smtpuser: '',
+            smtppass: '',
+            sender: 'noreply@getunleash.ai',
+        },
+        getLogger: noLoggerProvider,
+    } as unknown as IUnleashConfig);
+
+    const content = await emailService.sendPersonalApiTokenExpiryEmail({
+        recipientEmail: 'owner@example.com',
+        recipientName: 'Token Owner',
+        tokenDescription: 'ci-pipeline',
+        daysUntilExpiry: 14,
+    });
+
+    expect(content.from).toBe('noreply@getunleash.ai');
+    expect(content.to).toBe('owner@example.com');
+    expect(content.subject).toBe(
+        'Unleash - your personal API token expires in 14 days',
+    );
+    expect(content.html).toContain(
+        'Your personal API token <strong>ci-pipeline</strong> will expire in <strong>14 days</strong>.',
+    );
+    expect(content.text).toContain(
+        'Your personal API token ci-pipeline will expire in 14 days.',
+    );
+    expect(content.text).toContain(
+        'Manage tokens in Unleash: http://localhost/profile/personal-api-tokens',
+    );
+});
+
+test('points admins at the service account whose token is about to expire', async () => {
+    const emailService = new EmailService({
+        server: {
+            unleashUrl: 'http://localhost',
+        },
+        email: {
+            host: 'test',
+            port: 587,
+            secure: false,
+            smtpuser: '',
+            smtppass: '',
+            sender: 'noreply@getunleash.ai',
+        },
+        getLogger: noLoggerProvider,
+    } as unknown as IUnleashConfig);
+
+    const content = await emailService.sendServiceAccountTokenExpiryEmail({
+        recipientEmail: 'admin@example.com',
+        tokenDescription: 'R&D deploy-token',
+        daysUntilExpiry: 1,
+        serviceAccountName: 'deploy-bot',
+    });
+
+    expect(content.to).toBe('admin@example.com');
+    expect(content.subject).toBe(
+        'Unleash - a service account token expires in 1 day',
+    );
+    expect(content.html).toContain(
+        'The token <strong>R&amp;D deploy-token</strong> of service account <strong>deploy-bot</strong> will expire in <strong>1 day</strong>.',
+    );
+    expect(content.text).toContain(
+        'The token R&D deploy-token of service account deploy-bot will expire in 1 day.',
+    );
+    expect(content.text).toContain(
+        'Manage service accounts in Unleash: http://localhost/admin/service-accounts',
+    );
+});
+
 test('Should add optional headers to productivity email', async () => {
     const emailService = new EmailService({
         server: {

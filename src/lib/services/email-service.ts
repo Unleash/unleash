@@ -547,6 +547,113 @@ export class EmailService {
         });
     }
 
+    async sendPersonalApiTokenExpiryEmail({
+        recipientEmail,
+        recipientName,
+        tokenDescription,
+        daysUntilExpiry,
+    }: {
+        recipientEmail: string;
+        recipientName: string;
+        tokenDescription: string;
+        daysUntilExpiry: number;
+    }): Promise<IEmailEnvelope> {
+        const dayWord = daysUntilExpiry === 1 ? 'day' : 'days';
+        return this.sendTokenExpiryEmail({
+            template: 'personal-api-token-expiry',
+            subject: `Unleash - your personal API token expires in ${daysUntilExpiry} ${dayWord}`,
+            recipientEmail,
+            context: {
+                recipientName,
+                recipientEmail,
+                tokenDescription,
+                daysUntilExpiry,
+                dayWord,
+                tokensUrl: `${this.config.server.unleashUrl}/profile/personal-api-tokens`,
+            },
+        });
+    }
+
+    async sendServiceAccountTokenExpiryEmail({
+        recipientEmail,
+        serviceAccountName,
+        tokenDescription,
+        daysUntilExpiry,
+    }: {
+        recipientEmail: string;
+        serviceAccountName: string;
+        tokenDescription: string;
+        daysUntilExpiry: number;
+    }): Promise<IEmailEnvelope> {
+        const dayWord = daysUntilExpiry === 1 ? 'day' : 'days';
+        return this.sendTokenExpiryEmail({
+            template: 'service-account-token-expiry',
+            subject: `Unleash - a service account token expires in ${daysUntilExpiry} ${dayWord}`,
+            recipientEmail,
+            context: {
+                serviceAccountName,
+                recipientEmail,
+                tokenDescription,
+                daysUntilExpiry,
+                dayWord,
+                tokensUrl: `${this.config.server.unleashUrl}/admin/service-accounts`,
+            },
+        });
+    }
+
+    private async sendTokenExpiryEmail({
+        template,
+        subject,
+        recipientEmail,
+        context,
+    }: {
+        template: string;
+        subject: string;
+        recipientEmail: string;
+        context: Record<string, string | number>;
+    }): Promise<IEmailEnvelope> {
+        if (this.configured()) {
+            const bodyHtml = await this.compileTemplate(
+                template,
+                TemplateFormat.HTML,
+                context,
+            );
+            const bodyText = await this.compileTemplate(
+                template,
+                TemplateFormat.PLAIN,
+                context,
+            );
+            const email = {
+                from: this.sender,
+                to: recipientEmail,
+                subject,
+                html: bodyHtml,
+                text: bodyText,
+            };
+            process.nextTick(() => {
+                this.mailer!.sendMail(email).then(
+                    () =>
+                        this.logger.info(`Successfully sent ${template} email`),
+                    (e) =>
+                        this.logger.warn(`Failed to send ${template} email`, e),
+                );
+            });
+            return Promise.resolve(email);
+        }
+        return new Promise((res) => {
+            this.logger.warn(
+                'No mailer is configured. Please read the docs on how to configure an EmailService',
+            );
+            res({
+                from: this.sender,
+                to: recipientEmail,
+                subject,
+                html: '',
+                text: '',
+            });
+        });
+    }
+
     async sendProductivityReportEmail(
         userEmail: string,
         userName: string,

@@ -45,6 +45,7 @@ export type IFlagKey =
     | 'webhookDomainLogging'
     | 'productivityReportEmail'
     | 'productivityReportUnsubscribers'
+    | 'tokenExpiryNotifications'
     | 'showUserDeviceCount'
     | 'sessionInspector'
     | 'memorizeStats'
@@ -219,6 +220,10 @@ const flags: IFlags = {
     ),
     productivityReportUnsubscribers: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PRODUCTIVITY_REPORT_UNSUBSCRIBERS,
+        false,
+    ),
+    tokenExpiryNotifications: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_TOKEN_EXPIRY_NOTIFICATIONS,
         false,
     ),
     showUserDeviceCount: parseEnvVarBoolean(

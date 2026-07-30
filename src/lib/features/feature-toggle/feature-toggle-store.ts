@@ -515,6 +515,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         const now = new Date();
         const rows = await this.db(TABLE)
             .whereIn('name', names)
+            .whereNull('archived_at')
             .update({ archived_at: now })
             .returning(FEATURE_COLUMNS);
         return rows.map((row) => this.rowToFeature(row));

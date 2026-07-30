@@ -1790,17 +1790,17 @@ export class FeatureToggleService {
             this.validateNoOrphanParents(featureNames),
         ]);
 
-        const features =
-            await this.featureToggleStore.getAllByNames(featureNames);
-        await this.featureToggleStore.batchArchive(featureNames);
+        const archivedFeatures =
+            await this.featureToggleStore.batchArchive(featureNames);
+
         await this.dependentFeaturesService.unprotectedDeleteFeaturesDependencies(
-            featureNames,
+            archivedFeatures.map((feature) => feature.name),
             projectId,
             auditUser,
         );
 
         await this.eventService.storeEvents(
-            features.map(
+            archivedFeatures.map(
                 (feature) =>
                     new FeatureArchivedEvent({
                         featureName: feature.name,

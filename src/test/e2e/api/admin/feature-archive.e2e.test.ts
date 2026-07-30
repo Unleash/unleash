@@ -274,6 +274,41 @@ test('Should be able to bulk archive features', async () => {
     expect(archivedFeatures).toHaveLength(2);
 });
 
+test('Should ignore features that are already archived when bulk archiving', async () => {
+    const featureName = 'alreadyArchivedFeature';
+    await app.createFeature(featureName);
+
+    const archive = () =>
+        app.request
+            .post(`/api/admin/projects/${DEFAULT_PROJECT}/archive`)
+            .send({ features: [featureName] })
+            .expect(202);
+
+    const archivedAt = async () => {
+        const { body } = await app.request
+            .get(
+                `/api/admin/search/features?project=IS%3A${DEFAULT_PROJECT}&archived=IS%3Atrue`,
+            )
+            .expect(200);
+        return body.features.find((feature) => feature.name === featureName)
+            .archivedAt;
+    };
+
+    await archive();
+    const firstArchivedAt = await archivedAt();
+
+    await archive();
+
+    expect(await archivedAt()).toBe(firstArchivedAt);
+
+    const { body: events } = await app.request
+        .get(`/api/admin/events/${featureName}`)
+        .expect(200);
+    expect(
+        events.events.filter((event) => event.type === 'feature-archived'),
+    ).toHaveLength(1);
+});
+
 test('Should validate if a list of features with dependencies can be archived', async () => {
     const child1 = 'child1Feature';
     const child2 = 'child2Feature';

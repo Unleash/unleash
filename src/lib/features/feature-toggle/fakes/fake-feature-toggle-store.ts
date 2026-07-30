@@ -29,8 +29,9 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     }
 
     async batchArchive(featureNames: string[]): Promise<FeatureToggle[]> {
-        const features = this.features.filter((feature) =>
-            featureNames.includes(feature.name),
+        const features = this.features.filter(
+            (feature) =>
+                featureNames.includes(feature.name) && !feature.archived,
         );
         for (const feature of features) {
             feature.archived = true;

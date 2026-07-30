@@ -17,6 +17,7 @@ import SlackIcon from 'assets/icons/menu/slack.svg?react';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import NewReleasesOutlinedIcon from '@mui/icons-material/NewReleasesOutlined';
+import RocketLaunchOutlinedIcon from '@mui/icons-material/RocketLaunchOutlined';
 import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
 import LearningLabIcon from 'assets/icons/menu/learning-lab.svg?react';
 import {

@@ -58,6 +58,7 @@ process.nextTick(async () => {
                         allowDeprecatedApiTokenMiddleware: false,
                         newProfileDropdown: true,
                         learningLab: true,
+                        floatingOnboardingChecklist: true,
                         serviceNowIntegration: true,
                         whatsNewPage: false,
                         quickTourDemo: true,

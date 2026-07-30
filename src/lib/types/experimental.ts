@@ -74,6 +74,7 @@ export type IFlagKey =
     | 'newProfileDropdown'
     | 'serviceNowIntegration'
     | 'learningLab'
+    | 'floatingOnboardingChecklist'
     | 'quickTourDemo'
     | 'topLabelInputs'
     | 'flagListCreatedByFilter'
@@ -336,6 +337,10 @@ const flags: IFlags = {
             value: process.env.UNLEASH_EXPERIMENTAL_LEARNING_LAB_PAYLOAD ?? '',
         },
     },
+    floatingOnboardingChecklist: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FLOATING_ONBOARDING_CHECKLIST,
+        false,
+    ),
     serviceNowIntegration: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SERVICE_NOW_INTEGRATION,
         false,

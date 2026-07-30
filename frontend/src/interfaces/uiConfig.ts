@@ -105,6 +105,7 @@ export type UiFlags = {
     newModalDesign?: boolean;
     newProfileDropdown?: boolean;
     learningLab?: Variant;
+    floatingOnboardingChecklist?: boolean;
     accessRequestsNotifications?: boolean;
     flightRecorderFrontend?: Variant;
     accessRequestsMenuIndicator?: boolean;

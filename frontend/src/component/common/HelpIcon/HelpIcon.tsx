@@ -63,6 +63,22 @@ export const HelpIcon = ({
                 placement={placement}
                 arrow
                 maxWidth={htmlTooltipMaxWidth}
+                slotProps={{
+                    tooltip: {
+                        onMouseDown: (event) => {
+                            const link = (event.target as Element).closest(
+                                'a[href]',
+                            );
+                            if (
+                                event.button === 0 &&
+                                link &&
+                                event.currentTarget.contains(link)
+                            ) {
+                                event.preventDefault();
+                            }
+                        },
+                    },
+                }}
             >
                 <StyledContainer size={size} tabIndex={0} aria-label='Help'>
                     {children ?? <HelpOutline />}

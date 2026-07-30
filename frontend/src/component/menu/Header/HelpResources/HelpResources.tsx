@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import {
     Box,
     IconButton,
@@ -20,10 +20,8 @@ import NewReleasesOutlinedIcon from '@mui/icons-material/NewReleasesOutlined';
 import RocketLaunchOutlinedIcon from '@mui/icons-material/RocketLaunchOutlined';
 import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
 import LearningLabIcon from 'assets/icons/menu/learning-lab.svg?react';
-import {
-    OnboardingProgressBadge,
-    useOptionalFloatingOnboardingChecklist,
-} from 'component/onboarding/floating/FloatingOnboardingChecklistContext.tsx';
+import { FloatingOnboardingChecklistContext } from 'component/onboarding/floating/FloatingOnboardingChecklistContext.tsx';
+import { OnboardingProgressBadge } from 'component/onboarding/floating/OnboardingProgressBadge.tsx';
 import { Link } from 'react-router';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
 import { useEventTracker } from 'hooks/useEventTracker';
@@ -202,8 +200,9 @@ export const HelpResources = () => {
         handleClose();
     };
 
-    const floatingOnboardingChecklist =
-        useOptionalFloatingOnboardingChecklist();
+    const floatingOnboardingChecklist = useContext(
+        FloatingOnboardingChecklistContext,
+    );
 
     const handleGetStarted = () => {
         handleOptionClick('get-started');

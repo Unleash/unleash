@@ -1,16 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { IconButton, styled, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import RemoveIcon from '@mui/icons-material/Remove';
-import useProjects from 'hooks/api/getters/useProjects/useProjects';
+import { useLocation, useNavigate } from 'react-router';
 import { CreateFeatureDialog } from 'component/project/Project/PaginatedProjectFeatureToggles/ProjectFeatureTogglesHeader/CreateFeatureDialog.tsx';
 import { ConnectSdkDialog } from 'component/onboarding/dialog/ConnectSdkDialog/ConnectSdkDialog.tsx';
 import { useQuickTour } from 'component/onboarding/quickTourDemo/QuickTourProvider.tsx';
-import {
-    OnboardingProgressBadge,
-    useFloatingOnboardingChecklist,
-} from './FloatingOnboardingChecklistContext.tsx';
+import { FloatingOnboardingChecklistContext } from './FloatingOnboardingChecklistContext.tsx';
+import { OnboardingProgressBadge } from './OnboardingProgressBadge.tsx';
+import { useFloatingOnboardingChecklist } from './useFloatingOnboardingChecklist.ts';
+import { useFirstProjectFeature } from './useFirstProjectFeature.ts';
 import { ChecklistSteps } from './ChecklistSteps.tsx';
+import { isPendingActionExpired } from './floatingOnboardingChecklistState.ts';
 
 const Window = styled('aside')(({ theme }) => ({
     position: 'fixed',
@@ -61,7 +62,23 @@ const Body = styled('div')({
     overflowY: 'auto',
 });
 
+// Segment-aware prefix match: avoids `/projects/default` matching
+// `/projects/default-team` (a real project slug) or `/features/foo` matching
+// `/features/foobar`.
+const isOnOrUnder = (pathname: string, prefix: string) =>
+    pathname === prefix || pathname.startsWith(`${prefix}/`);
+
+/**
+ * Wrapper: renders nothing when the user isn't eligible (context is null).
+ * Keeps the inner component free of null checks.
+ */
 export const FloatingOnboardingChecklist = () => {
+    const context = useContext(FloatingOnboardingChecklistContext);
+    if (!context) return null;
+    return <EligibleFloatingOnboardingChecklist />;
+};
+
+const EligibleFloatingOnboardingChecklist = () => {
     const {
         state,
         update,
@@ -70,25 +87,37 @@ export const FloatingOnboardingChecklist = () => {
         quickTourEnabled,
         done,
         environments,
-        goToFlagHref,
-        feature,
         refetchOverview,
     } = useFloatingOnboardingChecklist();
+    const { feature, goToFlagHref } = useFirstProjectFeature(projectId);
 
-    const { projects } = useProjects();
     const { open: openQuickTour } = useQuickTour();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const [createFlagOpen, setCreateFlagOpen] = useState(false);
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
 
-    // Auto-adopt the first available project so the flag/sdk/on actions have
-    // something to work against. Project creation is no longer a step, but the
-    // rest of the flow still needs a project id.
+    // MainLayout re-mounts on cross-route navigation, which wipes local
+    // dialog state. `pendingAction` lives in localStorage so a click on
+    // "New feature flag" from any route survives the navigation and pops
+    // the right dialog once we've landed on the project route.
+    const onProjectRoute = isOnOrUnder(
+        location.pathname,
+        `/projects/${projectId}`,
+    );
     useEffect(() => {
-        if (projectId) return;
-        const firstProject = projects[0];
-        if (firstProject) update({ projectId: firstProject.id });
-    }, [projectId, projects, update]);
+        const pending = state.pendingAction;
+        if (!pending) return;
+        if (isPendingActionExpired(pending, Date.now())) {
+            update({ pendingAction: undefined });
+            return;
+        }
+        if (!onProjectRoute) return;
+        if (pending.type === 'flag') setCreateFlagOpen(true);
+        if (pending.type === 'sdk') setConnectSdkOpen(true);
+        update({ pendingAction: undefined });
+    }, [state.pendingAction, onProjectRoute, update]);
 
     if (state.dismissed) return null;
 
@@ -96,6 +125,27 @@ export const FloatingOnboardingChecklist = () => {
 
     const handleTakeTour = () =>
         openQuickTour({ onClose: () => markCompleted('tour') });
+
+    const handleCreateFlag = () => {
+        if (onProjectRoute) {
+            setCreateFlagOpen(true);
+        } else {
+            update({ pendingAction: { type: 'flag', setAt: Date.now() } });
+            navigate(`/projects/${projectId}`);
+        }
+    };
+
+    const handleConnectSdk = () => {
+        const targetHref = feature
+            ? `/projects/${projectId}/features/${feature}`
+            : `/projects/${projectId}`;
+        if (isOnOrUnder(location.pathname, targetHref)) {
+            setConnectSdkOpen(true);
+        } else {
+            update({ pendingAction: { type: 'sdk', setAt: Date.now() } });
+            navigate(targetHref);
+        }
+    };
 
     return (
         <>
@@ -128,8 +178,8 @@ export const FloatingOnboardingChecklist = () => {
                             done={done}
                             goToFlagHref={goToFlagHref}
                             onTakeTour={handleTakeTour}
-                            onCreateFlag={() => setCreateFlagOpen(true)}
-                            onConnectSdk={() => setConnectSdkOpen(true)}
+                            onCreateFlag={handleCreateFlag}
+                            onConnectSdk={handleConnectSdk}
                             onGoToFlag={() => markCompleted('on')}
                         />
                     </Body>
@@ -144,19 +194,17 @@ export const FloatingOnboardingChecklist = () => {
                     refetchOverview();
                 }}
             />
-            {projectId ? (
-                <ConnectSdkDialog
-                    open={connectSdkOpen}
-                    onClose={() => {
-                        setConnectSdkOpen(false);
-                        markCompleted('sdk');
-                        refetchOverview();
-                    }}
-                    projectId={projectId}
-                    environments={environments}
-                    feature={feature}
-                />
-            ) : null}
+            <ConnectSdkDialog
+                open={connectSdkOpen}
+                onClose={() => {
+                    setConnectSdkOpen(false);
+                    markCompleted('sdk');
+                    refetchOverview();
+                }}
+                projectId={projectId}
+                environments={environments}
+                feature={feature}
+            />
         </>
     );
 };

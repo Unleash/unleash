@@ -1,5 +1,6 @@
 import { type ReactNode, useEffect, useState } from 'react';
 import { Button, Collapse, styled, Typography } from '@mui/material';
+import CheckIcon from '@mui/icons-material/Check';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Link } from 'react-router';
@@ -102,7 +103,13 @@ const ActionButton = ({
     done: boolean;
 }) =>
     done ? (
-        <Button variant='outlined' color='inherit' size='small' disabled>
+        <Button
+            variant='outlined'
+            color='inherit'
+            size='small'
+            disabled
+            startIcon={<CheckIcon />}
+        >
             Done
         </Button>
     ) : (
@@ -116,6 +123,33 @@ const ActionButton = ({
             {label}
         </Button>
     );
+
+type GoToFlagButtonProps =
+    | { variant: 'disabled' }
+    | { variant: 'active'; goToFlagHref: string; onClick?: () => void }
+    | { variant: 'completed'; goToFlagHref: string };
+
+const GoToFlagButton = (props: GoToFlagButtonProps) => {
+    if (props.variant === 'disabled') {
+        return (
+            <Button variant='contained' color='primary' size='small' disabled>
+                Go to flag
+            </Button>
+        );
+    }
+    return (
+        <Button
+            variant={props.variant === 'completed' ? 'outlined' : 'contained'}
+            color='primary'
+            size='small'
+            component={Link}
+            to={props.goToFlagHref}
+            onClick={props.variant === 'active' ? props.onClick : undefined}
+        >
+            Go to flag
+        </Button>
+    );
+};
 
 export const ChecklistSteps = ({
     quickTourEnabled,
@@ -150,7 +184,12 @@ export const ChecklistSteps = ({
             title: 'Create a feature flag',
             body: 'You must create a feature flag before you can connect a SDK.',
             done: done.flag,
-            action: (
+            action: done.flag ? (
+                <GoToFlagButton
+                    variant='completed'
+                    goToFlagHref={goToFlagHref}
+                />
+            ) : (
                 <ActionButton
                     label='New feature flag'
                     onClick={onCreateFlag}
@@ -181,34 +220,18 @@ export const ChecklistSteps = ({
             body: 'Check that the flag is working by turning it on.',
             done: done.on,
             action: done.on ? (
-                <Button
-                    variant='outlined'
-                    color='inherit'
-                    size='small'
-                    disabled
-                >
-                    Done
-                </Button>
+                <GoToFlagButton
+                    variant='completed'
+                    goToFlagHref={goToFlagHref}
+                />
             ) : done.sdk ? (
-                <Button
-                    variant='contained'
-                    color='primary'
-                    size='small'
-                    component={Link}
-                    to={goToFlagHref}
+                <GoToFlagButton
+                    variant='active'
+                    goToFlagHref={goToFlagHref}
                     onClick={onGoToFlag}
-                >
-                    Go to flag
-                </Button>
+                />
             ) : (
-                <Button
-                    variant='contained'
-                    color='primary'
-                    size='small'
-                    disabled
-                >
-                    Go to flag
-                </Button>
+                <GoToFlagButton variant='disabled' />
             ),
         },
     ];

@@ -1,3 +1,4 @@
+import { useCallback, useRef } from 'react';
 import { useLocalStorageState } from 'hooks/useLocalStorageState.ts';
 
 /** Which of the guided steps the user has completed (locally captured). */
@@ -8,13 +9,29 @@ export interface FloatingOnboardingChecklistCompleted {
     on?: boolean;
 }
 
+export type PendingAction = { type: 'flag' | 'sdk'; setAt: number };
+
+export const PENDING_ACTION_TTL_MS = 60_000;
+
+export const isPendingActionExpired = (
+    action: PendingAction | undefined,
+    nowMs: number,
+): boolean =>
+    action !== undefined && nowMs - action.setAt > PENDING_ACTION_TTL_MS;
+
 export interface FloatingOnboardingChecklistState {
     /** Closed for good (until localStorage is cleared). */
     dismissed: boolean;
     /** Collapsed to just the header bar. */
     minimized: boolean;
-    /** The project the checklist is targeting (auto-adopted from the user's projects). */
-    projectId?: string;
+    /**
+     * Dialog to open once we've navigated to a route where it can render
+     * safely (e.g. `CreateFeatureDialog` needs `:projectId` in the URL).
+     * Persisted so it survives MainLayout re-mount on route change; the
+     * `setAt` timestamp guards against a stale value opening a dialog on
+     * an unrelated visit days later (see PENDING_ACTION_TTL_MS).
+     */
+    pendingAction?: PendingAction;
     completed: FloatingOnboardingChecklistCompleted;
 }
 
@@ -35,14 +52,26 @@ export const useFloatingOnboardingChecklistState = () => {
             DEFAULT_STATE,
         );
 
-    const update = (patch: Partial<FloatingOnboardingChecklistState>) =>
-        setState((prev) => ({ ...prev, ...patch }));
+    // `useLocalStorageState` returns a fresh setter each render, so route
+    // it through a ref to give consumers stable `update`/`markCompleted`
+    // identities — safe to list in useEffect deps without re-firing.
+    const setStateRef = useRef(setState);
+    setStateRef.current = setState;
 
-    const markCompleted = (step: keyof FloatingOnboardingChecklistCompleted) =>
-        setState((prev) => ({
-            ...prev,
-            completed: { ...prev.completed, [step]: true },
-        }));
+    const update = useCallback(
+        (patch: Partial<FloatingOnboardingChecklistState>) =>
+            setStateRef.current((prev) => ({ ...prev, ...patch })),
+        [],
+    );
+
+    const markCompleted = useCallback(
+        (step: keyof FloatingOnboardingChecklistCompleted) =>
+            setStateRef.current((prev) => ({
+                ...prev,
+                completed: { ...prev.completed, [step]: true },
+            })),
+        [],
+    );
 
     return { state, update, markCompleted };
 };

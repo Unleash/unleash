@@ -5,7 +5,7 @@ import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useEventTracker } from 'hooks/useEventTracker';
 import type { MetricSource } from 'component/impact-metrics/types';
 import { useTrackFlagpageImpactMetrics } from 'component/impact-metrics/useImpactMetricsFunnel';
-import { useUiFlag } from 'hooks/useUiFlag';
+import { useImpactMetricsEnabled } from 'component/impact-metrics/hooks/useImpactMetricsEnabled';
 import { RegisterMetricDialog } from 'component/impact-metrics/RegisterMetricDialog/RegisterMetricDialog';
 import { useTrackRegisterImpactMetrics } from 'component/impact-metrics/RegisterMetricDialog/useTrackRegisterImpactMetrics';
 
@@ -139,7 +139,7 @@ export const MetricSelector = ({
     entryPoint,
 }: MetricSelectorProps) => {
     const allOptions = withSelectedValue(options, value, valueSource);
-    const registerImpactMetricsEnabled = useUiFlag('registerImpactMetrics');
+    const registerImpactMetricsEnabled = useImpactMetricsEnabled('internal');
     const [registerDialogOpen, setRegisterDialogOpen] = useState(false);
     const { trackFormOpened } = useTrackRegisterImpactMetrics(entryPoint);
 

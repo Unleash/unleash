@@ -87,7 +87,6 @@ export type UiFlags = {
     customMetrics?: boolean;
     disableImpactMetrics?: boolean;
     impactViews?: boolean;
-    registerImpactMetrics?: boolean;
     plausibleMetrics?: boolean;
     oidcPkceSupport?: boolean;
     extendedUsageMetrics?: boolean;

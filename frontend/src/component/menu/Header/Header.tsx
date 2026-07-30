@@ -11,13 +11,7 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import UserProfile from 'component/user/UserProfile';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-
 import { DrawerMenu } from './DrawerMenu/DrawerMenu.tsx';
-import DarkModeOutlined from '@mui/icons-material/DarkModeOutlined';
-import LightModeOutlined from '@mui/icons-material/LightModeOutlined';
-import { useThemeMode } from 'hooks/useThemeMode';
-import { useUiFlag } from 'hooks/useUiFlag';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton.tsx';
 import { CommandBar } from 'component/commandBar/CommandBar';
 import { HelpResources } from './HelpResources/HelpResources';
@@ -64,11 +58,7 @@ const StyledNav = styled('nav')({
 });
 
 const Header = () => {
-    const { onSetThemeMode } = useThemeMode();
-    const newProfileDropdown = useUiFlag('newProfileDropdown');
-    const showThemeButton = !newProfileDropdown;
     const theme = useTheme();
-
     const mediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const [openDrawer, setOpenDrawer] = useState(false);
     const toggleDrawer = () => setOpenDrawer((prev) => !prev);
@@ -87,24 +77,6 @@ const Header = () => {
                 })}
             />
             <InviteLinkButton />
-            {showThemeButton && (
-                <Tooltip
-                    title={
-                        theme.mode === 'dark'
-                            ? 'Switch to light theme'
-                            : 'Switch to dark theme'
-                    }
-                    arrow
-                >
-                    <IconButton onClick={onSetThemeMode} size='large'>
-                        <ConditionallyRender
-                            condition={theme.mode === 'dark'}
-                            show={<DarkModeOutlined />}
-                            elseShow={<LightModeOutlined />}
-                        />
-                    </IconButton>
-                </Tooltip>
-            )}
             <HelpResources />
             <Divider
                 orientation='vertical'

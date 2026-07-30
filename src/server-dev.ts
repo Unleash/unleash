@@ -56,7 +56,6 @@ process.nextTick(async () => {
                         semverGteConstraintOperators: true,
                         userTokenWithClientApiLoggingKillSwitch: false,
                         allowDeprecatedApiTokenMiddleware: false,
-                        newProfileDropdown: true,
                         learningLab: true,
                         serviceNowIntegration: true,
                         whatsNewPage: false,

@@ -9,7 +9,10 @@ import {
     CHECKLIST_PROJECT_ID,
     useChecklistContextValue,
 } from './useChecklistContextValue.ts';
-import { ONBOARDING_CHECKLIST_SPLASH_ID } from './useOnboardingChecklistEligibility.ts';
+import {
+    ONBOARDING_CHECKLIST_SPLASH_ID,
+    ONBOARDING_TOUR_SPLASH_ID,
+} from './useOnboardingChecklistEligibility.ts';
 import type { FloatingOnboardingChecklistState } from './floatingOnboardingChecklistState.ts';
 
 const server = testServerSetup();
@@ -24,6 +27,7 @@ const TestComponent: FC = () => {
             <span data-testid='count'>
                 {completedCount}/{totalSteps}
             </span>
+            <span data-testid='tour'>{done.tour ? 'y' : 'n'}</span>
             <span data-testid='flag'>{done.flag ? 'y' : 'n'}</span>
             <span data-testid='sdk'>{done.sdk ? 'y' : 'n'}</span>
             <span data-testid='on'>{done.on ? 'y' : 'n'}</span>
@@ -115,6 +119,15 @@ test('server splash keeps checklist dismissed after a fresh login', async () => 
     render(<TestComponent />, { permissions: [{ permission: ADMIN }] });
 
     expect(await screen.findByTestId('dismissed')).toHaveTextContent('y');
+});
+
+test('server tour splash keeps tour step done after fresh login', async () => {
+    mockEligibleUser({ [ONBOARDING_TOUR_SPLASH_ID]: true });
+    mockProjectOverview('onboarding-started');
+
+    render(<TestComponent />, { permissions: [{ permission: ADMIN }] });
+
+    expect(await screen.findByTestId('tour')).toHaveTextContent('y');
 });
 
 test('local dismissed=false overrides server splash (post-reopen)', async () => {

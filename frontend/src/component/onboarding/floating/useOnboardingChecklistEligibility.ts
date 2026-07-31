@@ -12,6 +12,13 @@ import { useUiFlag } from 'hooks/useUiFlag';
 export const ONBOARDING_CHECKLIST_SPLASH_ID = 'onboarding-checklist';
 
 /**
+ * Per-user splash key for the intro tour completion. Same server-persist
+ * pattern as the dismissal splash: once the user has seen the tour,
+ * that fact survives logout so the step stays ticked off.
+ */
+export const ONBOARDING_TOUR_SPLASH_ID = 'onboarding-tour';
+
+/**
  * Whether the current user should see the floating onboarding checklist.
  *
  * Signal today: **current user is admin AND has `id === 1`** — the initial

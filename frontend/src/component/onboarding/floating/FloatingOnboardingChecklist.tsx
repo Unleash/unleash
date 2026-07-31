@@ -16,7 +16,10 @@ import { useChecklistRouteMatch } from './useChecklistRouteMatch.ts';
 import { ChecklistSteps, type ChecklistStep } from './ChecklistSteps.tsx';
 import { isPendingActionExpired } from './floatingOnboardingChecklistState.ts';
 import type { ChecklistStepKey } from './useChecklistContextValue.ts';
-import { ONBOARDING_CHECKLIST_SPLASH_ID } from './useOnboardingChecklistEligibility.ts';
+import {
+    ONBOARDING_CHECKLIST_SPLASH_ID,
+    ONBOARDING_TOUR_SPLASH_ID,
+} from './useOnboardingChecklistEligibility.ts';
 
 const Window = styled('aside')(({ theme }) => ({
     position: 'fixed',
@@ -204,7 +207,14 @@ const EligibleFloatingOnboardingChecklist = () => {
     };
 
     const handleTakeTour = () =>
-        openIntro({ onClose: () => markCompleted('tour') });
+        openIntro({
+            onClose: () => {
+                // Bridge tick for the visible checkmark; splash is the
+                // durable, server-persisted signal that survives logout.
+                markCompleted('tour');
+                setSplashSeen(ONBOARDING_TOUR_SPLASH_ID);
+            },
+        });
 
     const handleCreateFlag = () => {
         if (onProjectRoute) {

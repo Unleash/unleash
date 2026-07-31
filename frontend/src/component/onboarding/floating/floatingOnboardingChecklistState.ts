@@ -2,14 +2,14 @@ import { useCallback, useRef } from 'react';
 import { useLocalStorageState } from 'hooks/useLocalStorageState.ts';
 
 /**
- * Locally captured completions.
- * - `tour` has no server signal — resets on logout, cheap to redo.
- * - `flag` is a bridge tick: `CreateFeatureDialog.onSuccess` fires only
- *   after a 2xx, so we know a flag exists — but `onboardingStatus` is
- *   event-driven and can lag the refetch. The server remains the source
- *   of truth (merged as `local || server`), the local bit just keeps
- *   the checkmark from flickering off between the refetch and the event
- *   landing.
+ * Locally captured completions — bridge ticks that keep a step's
+ * checkmark stable while the durable server signal catches up. Server
+ * remains the source of truth (merged as `local || server`).
+ * - `tour`: server signal is the `onboarding-tour` splash, written on
+ *   intro close and read back through `useAuthSplash`.
+ * - `flag`: server signal is `onboardingStatus`. `CreateFeatureDialog`
+ *   fires `onSuccess` on 2xx so we know a flag exists, but the status
+ *   event can lag the refetch — the local bit prevents flicker.
  * - `sdk`/`on` are deliberately not tracked here: closing the SDK
  *   dialog isn't proof anyone actually connected, and turning a flag on
  *   happens outside our flow. Both come from `onboardingStatus`.

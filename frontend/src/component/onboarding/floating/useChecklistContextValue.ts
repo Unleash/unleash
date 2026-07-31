@@ -10,6 +10,7 @@ import {
 } from './floatingOnboardingChecklistState.ts';
 import {
     ONBOARDING_CHECKLIST_SPLASH_ID,
+    ONBOARDING_TOUR_SPLASH_ID,
     useOnboardingChecklistEligibility,
 } from './useOnboardingChecklistEligibility.ts';
 
@@ -82,16 +83,18 @@ export const useChecklistContextValue =
             [project.environments],
         );
 
-        // `flag` merges a local bridge tick with the server so a fresh
-        // creation doesn't flicker while `onboardingStatus` catches up.
+        // `tour` and `flag` merge a local bridge tick with the server so
+        // a fresh completion doesn't flicker while the server state
+        // (splash for tour, `onboardingStatus` for flag) catches up.
         // `sdk`/`on` are server-only — no reliable local proof (closing
         // the SDK dialog isn't evidence anyone connected, and turning a
-        // flag on happens outside our flow). `tour` has no server signal.
+        // flag on happens outside our flow).
         const serverStep = getProjectOnboardingStep(
             project.onboardingStatus,
         ).current;
+        const tourSplashSeen = Boolean(splash?.[ONBOARDING_TOUR_SPLASH_ID]);
         const done: Record<ChecklistStepKey, boolean> = {
-            tour: Boolean(state.completed.tour),
+            tour: Boolean(state.completed.tour) || tourSplashSeen,
             flag: Boolean(state.completed.flag) || serverStep >= 1,
             sdk: serverStep >= 2,
             on: serverStep >= 3,

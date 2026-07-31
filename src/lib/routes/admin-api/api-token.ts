@@ -46,6 +46,7 @@ import { OperationDeniedError } from '../../error/index.js';
 import type { CreateApiTokenSchema } from '../../internals.js';
 import type { IUserPermission } from '../../server-impl.js';
 import type { ApiTokenV2Service } from '../../features/apitokensv2/index.js';
+import { isApiTokenV2OrSelector } from '../../features/apitokensv2/api-token-v2-token.js';
 
 interface TokenParam {
     token: string;
@@ -386,10 +387,7 @@ export class ApiTokenController extends Controller {
         }
 
         const expiry = new Date(expiresAt);
-        if (
-            this.flagResolver.isEnabled('secureTokenStorage') &&
-            token.indexOf(':') === -1
-        ) {
+        if (isApiTokenV2OrSelector(token)) {
             try {
                 await this.apiTokenV2Service.updateExpiry(
                     token,
@@ -428,10 +426,7 @@ export class ApiTokenController extends Controller {
                 `You do not have the required access [${permissionRequired}] to perform this operation`,
             );
         }
-        if (
-            this.flagResolver.isEnabled('secureTokenStorage') &&
-            token.indexOf(':') === -1 // legacy tokens contain the project:environment combo, identifiers do not
-        ) {
+        if (isApiTokenV2OrSelector(token)) {
             try {
                 await this.apiTokenV2Service.delete(token, req.audit);
             } catch (_error) {
@@ -455,14 +450,12 @@ export class ApiTokenController extends Controller {
     }
 
     private async accessibleTokens(user: IUser): Promise<IApiToken[]> {
-        const allTokens = this.flagResolver.isEnabled('secureTokenStorage')
-            ? (
-                  await Promise.all([
-                      this.apiTokenService.getUserDefinedTokens(),
-                      this.apiTokenV2Service.getUserDefinedTokens(),
-                  ])
-              ).flat()
-            : await this.apiTokenService.getUserDefinedTokens();
+        const allTokens = (
+            await Promise.all([
+                this.apiTokenService.getUserDefinedTokens(),
+                this.apiTokenV2Service.getUserDefinedTokens(),
+            ])
+        ).flat();
         if (user.isAPI && user.permissions.includes(ADMIN)) {
             return allTokens;
         }
@@ -479,10 +472,7 @@ export class ApiTokenController extends Controller {
     }
 
     private async getToken(token: string): Promise<IApiToken | undefined> {
-        if (
-            this.flagResolver.isEnabled('secureTokenStorage') &&
-            token.indexOf(':') === -1
-        ) {
+        if (isApiTokenV2OrSelector(token)) {
             try {
                 const tokenV2 = await this.apiTokenV2Service.getToken(token);
                 if (tokenV2) {

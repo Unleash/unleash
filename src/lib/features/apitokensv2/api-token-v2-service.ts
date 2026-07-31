@@ -45,10 +45,10 @@ import FakeEventStore from '../../../test/fixtures/fake-event-store.js';
 import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store.js';
 import metricsHelper from '../../util/metrics-helper.js';
 import { FUNCTION_TIME } from '../../metric-events.js';
+import { parseApiTokenV2 } from './api-token-v2-token.js';
 
 const SELECTOR_BYTES = 16;
 const SECRET_BYTES = 32;
-const TOKEN_PATTERN = /\.v2_([A-Za-z0-9_-]{22})_([A-Za-z0-9_-]{43})$/;
 
 export const createApiTokenV2Service: (
     {
@@ -325,7 +325,7 @@ export class ApiTokenV2Service {
     }
 
     async getUserForToken(secret: string): Promise<IApiUser | undefined> {
-        const parsed = this.parse(secret);
+        const parsed = ApiTokenV2Service.parse(secret);
         if (!parsed) {
             return undefined;
         }
@@ -358,13 +358,15 @@ export class ApiTokenV2Service {
         );
     }
 
-    private parse(token: string): { selector: string } | undefined {
-        const match = TOKEN_PATTERN.exec(token);
-        return match ? { selector: match[1] } : undefined;
+    private static parse(token: string): { selector: string } | undefined {
+        return parseApiTokenV2(token);
     }
 
     private getSelector(secretOrSelector: string): string | undefined {
-        return this.parse(secretOrSelector)?.selector || secretOrSelector;
+        return (
+            ApiTokenV2Service.parse(secretOrSelector)?.selector ||
+            secretOrSelector
+        );
     }
 
     private toApiToken(token: ApiTokenV2): IApiToken {

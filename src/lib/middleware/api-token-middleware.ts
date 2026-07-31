@@ -3,6 +3,7 @@ import type { IUnleashConfig } from '../types/option.js';
 import type { IApiRequest, IAuthRequest } from '../routes/unleash-types.js';
 import type { IUnleashServices } from '../services/index.js';
 import type { IApiUser } from '../types/index.js';
+import { isApiTokenV2 } from '../features/apitokensv2/api-token-v2-token.js';
 
 const isClientApi = ({ path }) => {
     return path && path.indexOf('/api/client') > -1;
@@ -33,8 +34,7 @@ export const apiAccessMiddleware = (
     {
         getLogger,
         authentication,
-        flagResolver,
-    }: Pick<IUnleashConfig, 'getLogger' | 'authentication' | 'flagResolver'>,
+    }: Pick<IUnleashConfig, 'getLogger' | 'authentication'>,
     {
         apiTokenService,
         apiTokenV2Service,
@@ -56,11 +56,7 @@ export const apiAccessMiddleware = (
             const apiToken = req.header('authorization');
             if (!apiToken?.startsWith('user:')) {
                 let apiUser: IApiUser | undefined;
-                if (
-                    flagResolver.isEnabled('secureTokenStorage') &&
-                    apiToken &&
-                    apiToken.indexOf('.v2_') > -1
-                ) {
+                if (isApiTokenV2(apiToken)) {
                     apiUser =
                         await apiTokenV2Service?.getUserForToken(apiToken);
                 } else {

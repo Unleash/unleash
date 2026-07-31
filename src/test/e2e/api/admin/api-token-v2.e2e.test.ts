@@ -106,3 +106,69 @@ test('lists, updates, and deletes tokens across both token stores', async () => 
         .expect(200);
     expect(emptyResponse.body.tokens).toEqual([]);
 });
+
+test('lists, updates, and deletes secure tokens when secure token storage is disabled', async () => {
+    const created = await app.services.apiTokenV2Service.create(
+        {
+            projects: ['default'],
+            tokenName: 'secure-token-after-rollback',
+            type: ApiTokenType.BACKEND,
+            environment: 'development',
+            userCreated: true,
+        },
+        SYSTEM_USER_AUDIT,
+    );
+
+    const experiments = (
+        app.config.flagResolver as unknown as {
+            experiments: { secureTokenStorage: boolean };
+        }
+    ).experiments;
+    const previousSecureTokenStorage = experiments.secureTokenStorage;
+    experiments.secureTokenStorage = false;
+
+    try {
+        const listResponse = await app.request
+            .get('/api/admin/api-tokens')
+            .expect(200);
+
+        expect(listResponse.body.tokens).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    tokenName: 'secure-token-after-rollback',
+                    secret: created.selector,
+                    secure: true,
+                }),
+            ]),
+        );
+
+        const expiresAt = new Date(Date.now() + 60_000).toISOString();
+        await app.request
+            .put(`/api/admin/api-tokens/${created.selector}`)
+            .send({ expiresAt })
+            .expect(200);
+
+        const updatedResponse = await app.request
+            .get('/api/admin/api-tokens')
+            .expect(200);
+        expect(updatedResponse.body.tokens).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    tokenName: 'secure-token-after-rollback',
+                    expiresAt,
+                }),
+            ]),
+        );
+
+        await app.request
+            .delete(`/api/admin/api-tokens/${created.selector}`)
+            .expect(200);
+
+        const emptyResponse = await app.request
+            .get('/api/admin/api-tokens')
+            .expect(200);
+        expect(emptyResponse.body.tokens).toEqual([]);
+    } finally {
+        experiments.secureTokenStorage = previousSecureTokenStorage;
+    }
+});

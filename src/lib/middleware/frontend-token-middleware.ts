@@ -7,6 +7,7 @@ import {
     TOKEN_TYPE_ERROR_MESSAGE,
 } from './api-token-middleware.js';
 import type { IApiUser } from '../types/index.js';
+import { isApiTokenV2 } from '../features/apitokensv2/api-token-v2-token.js';
 
 export const frontendApiAccessMiddleware = (
     {
@@ -55,10 +56,7 @@ export const frontendApiAccessMiddleware = (
             }
 
             let apiUser: IApiUser | undefined;
-            if (
-                flagResolver.isEnabled('secureTokenStorage') &&
-                apiToken.indexOf('.v2_') > -1
-            ) {
+            if (isApiTokenV2(apiToken)) {
                 apiUser = await apiTokenV2Service.getUserForToken(apiToken);
             } else {
                 apiUser = await apiTokenService.getUserForToken(apiToken);

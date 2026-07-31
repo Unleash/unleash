@@ -11,9 +11,13 @@ import SelectMenu from 'component/common/select';
 
 const StyledRow = styled('div')(({ theme }) => ({
     display: 'flex',
-    alignItems: 'center',
-    rowGap: theme.spacing(1.5),
+    alignItems: 'flex-end',
+    gap: theme.spacing(2),
     marginBottom: theme.spacing(2),
+    '& > :first-child': {
+        flex: '0 0 auto',
+        width: 'auto',
+    },
     [theme.breakpoints.down('sm')]: {
         flexDirection: 'column',
         '& > div, .MuiInputBase-root': {
@@ -24,16 +28,20 @@ const StyledRow = styled('div')(({ theme }) => ({
 }));
 
 const StyledSelectMenu = styled(SelectMenu)(({ theme }) => ({
-    marginRight: theme.spacing(10),
     [theme.breakpoints.up('sm')]: {
         minWidth: theme.spacing(20),
     },
 }));
 
 const StyledFieldColumn = styled('div')(({ theme }) => ({
-    width: '100%',
+    flex: 1,
+    minWidth: 0,
     gap: theme.spacing(1.5),
     display: 'flex',
+    alignItems: 'flex-end',
+    '& > div': {
+        width: '100%',
+    },
 }));
 
 const StyledInputListField = styled(InputListField)(() => ({
@@ -111,6 +119,7 @@ export const OverrideConfig: FC<IOverrideConfigProps> = ({
                                 show={
                                     <Autocomplete
                                         multiple
+                                        fullWidth
                                         id={`override-select-${index}`}
                                         isOptionEqualToValue={(
                                             option,

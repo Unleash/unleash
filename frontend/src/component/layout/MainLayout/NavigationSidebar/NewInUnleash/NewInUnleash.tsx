@@ -4,7 +4,7 @@ import {
 } from './NewInUnleashItems.tsx';
 import { NewInUnleashToast } from './NewInUnleashToast.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
-import { useDelayedUiFlagEvaluation, useUiFlag } from 'hooks/useUiFlag.ts';
+import { useUiFlagEvaluator, useUiFlag } from 'hooks/useUiFlag.ts';
 import { shouldBeDisplayed } from './shouldBeDisplayed.ts';
 import { useIsNewUser } from './useIsNewUser.ts';
 
@@ -15,7 +15,7 @@ export const useNewInUnleashItemToShow = (
         isEnterprise,
         uiConfig: { version },
     } = useUiConfig();
-    const isEnabled = useDelayedUiFlagEvaluation();
+    const isEnabled = useUiFlagEvaluator();
 
     return items
         .toReversed()

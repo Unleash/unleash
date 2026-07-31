@@ -3,12 +3,12 @@ import { adminRoutes } from './adminRoutes.js';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 import { filterRoutesByPlanData } from './filterRoutesByPlanData.js';
 import { filterByConfig, normalizeRoutePath } from 'component/common/util';
-import { useDelayedUiFlagEvaluation } from 'hooks/useUiFlag';
+import { useUiFlagEvaluator } from 'hooks/useUiFlag';
 
 export const useAdminRoutes = () => {
     const { uiConfig, isPro, isEnterprise } = useUiConfig();
     const { isBilling } = useInstanceStatus();
-    const evaluateFlag = useDelayedUiFlagEvaluation();
+    const evaluateFlag = useUiFlagEvaluator();
     const routes = [...adminRoutes];
 
     if (evaluateFlag('UNLEASH_CLOUD')) {

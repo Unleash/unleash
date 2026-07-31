@@ -5,9 +5,9 @@ import type { IFeatureVariant } from 'interfaces/featureToggle';
 import { format, isValid, parseISO } from 'date-fns';
 import type { IFeatureVariantEdit } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal';
 import { formatDateYMD } from '../../utils/formatDate.js';
-import type { useDelayedUiFlagEvaluation } from 'hooks/useUiFlag';
+import type { useUiFlagEvaluator } from 'hooks/useUiFlag';
 
-type FlagEvaluator = ReturnType<typeof useDelayedUiFlagEvaluation>;
+type FlagEvaluator = ReturnType<typeof useUiFlagEvaluator>;
 
 /**
  * Handle feature flags and configuration for different plans.

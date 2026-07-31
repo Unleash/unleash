@@ -27,7 +27,7 @@ import type { INavigationMenuItem } from 'interfaces/route';
 import { useShowBadge } from 'component/layout/components/EnterprisePlanBadge/useShowBadge';
 import { EnterprisePlanBadge } from 'component/layout/components/EnterprisePlanBadge/EnterprisePlanBadge';
 import { PendingAccessRequestsIndicator } from 'component/admin/users/AccessRequestsNotifications/PendingAccessRequestsIndicator';
-import { useDelayedUiFlagEvaluation } from 'hooks/useUiFlag';
+import { useUiFlagEvaluator } from 'hooks/useUiFlag';
 
 interface IMenuLinkItem {
     href: string;
@@ -159,7 +159,7 @@ export const AdminNavigationItems = ({
     const { isBilling } = useInstanceStatus();
     const location = useLocation();
     const showBadge = useShowBadge();
-    const evaluateFlag = useDelayedUiFlagEvaluation();
+    const evaluateFlag = useUiFlagEvaluator();
 
     const routes = adminRoutes
         .filter(filterByConfig(uiConfig, evaluateFlag))

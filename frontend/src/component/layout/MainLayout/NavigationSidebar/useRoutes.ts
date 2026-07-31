@@ -9,7 +9,7 @@ import {
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 import type { INavigationMenuItem } from 'interfaces/route';
 import type { IUiConfig } from 'interfaces/uiConfig';
-import { useDelayedUiFlagEvaluation, useUiFlag } from 'hooks/useUiFlag';
+import { useUiFlagEvaluator, useUiFlag } from 'hooks/useUiFlag';
 import { useVariant } from 'hooks/useVariant';
 import type { Variant } from 'utils/variants';
 
@@ -31,7 +31,7 @@ const markRouteIfNew = (
 const filterMapRoutes =
     (
         uiConfig: IUiConfig,
-        evaluateFlag: ReturnType<typeof useDelayedUiFlagEvaluation>,
+        evaluateFlag: ReturnType<typeof useUiFlagEvaluator>,
         planData: PlanData,
         newRouteTitle?: string,
     ) =>
@@ -52,7 +52,7 @@ export const useRoutes = () => {
     const adminRoutes = useAdminRoutes();
     const primaryRoutes = getPrimaryRoutes();
     const newRoute = useNewRoute();
-    const evaluateFlag = useDelayedUiFlagEvaluation();
+    const evaluateFlag = useUiFlagEvaluator();
 
     const planData: PlanData = {
         enterprise: isEnterprise(),

@@ -43,7 +43,7 @@ export const IntegrationParameterTextField = ({
 
     return (
         <StyledInput
-            size='small'
+            size='large'
             minRows={definition.type === 'textfield' ? 5 : 0}
             multiline={definition.type === 'textfield'}
             type={type}

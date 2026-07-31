@@ -65,7 +65,7 @@ const SimpleAuth: FC<ISimpleAuthProps> = ({ authDetails, redirect }) => {
                 <Input
                     value={email}
                     onChange={handleChange}
-                    size='small'
+                    size='large'
                     fullWidth
                     label='Email'
                     name='email'

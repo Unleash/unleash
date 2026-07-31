@@ -148,7 +148,7 @@ export const MetricSelector = ({
             <AutocompleteField
                 label={label}
                 placeholder='Search for a metric…'
-                size='small'
+                size='large'
                 required
                 options={allOptions}
                 groupBy={(option) => groupLabel(option.source)}

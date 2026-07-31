@@ -97,7 +97,7 @@ function GeneralSelectControl<T extends string = string>({
     return (
         <StyledFormControl
             variant={variant}
-            size='small'
+            size='large'
             classes={classes}
             fullWidth={fullWidth}
         >

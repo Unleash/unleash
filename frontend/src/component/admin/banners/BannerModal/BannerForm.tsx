@@ -294,7 +294,7 @@ export const BannerForm = ({
                 <StyledFieldGroup>
                     <SelectField
                         label='Banner action'
-                        size='small'
+                        size='large'
                         value={linkOption}
                         onChange={(linkOption) => {
                             setLinkOption(linkOption as LinkOption);

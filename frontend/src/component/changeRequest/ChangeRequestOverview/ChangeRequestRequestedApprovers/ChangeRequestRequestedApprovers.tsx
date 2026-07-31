@@ -202,7 +202,7 @@ export const ChangeRequestAddRequestedApprovers: FC<{
             <AutocompleteVirtual
                 label={`Reviewers (${reviewers.length})`}
                 sx={{ ml: 'auto', width: theme.spacing(40) }}
-                size='small'
+                size='large'
                 limitTags={3}
                 openOnFocus
                 multiple

@@ -7,9 +7,20 @@ import {
     controlOverrides,
     iconButtonRoot,
     iconButtonSizes,
+    outlinedInputSizing,
     subtleOutlinedButton,
 } from './controls.js';
 import { baseTheme } from './theme.js';
+
+// Redefining `MuiOutlinedInput` (at the time of writing this for border colors) fully replaces the shared
+// one from `controlOverrides`, dropping its input sizing. This bakes the sizing
+// back in so a border override can't lose it.
+const withInputSizing =
+    (theme: object) =>
+    ({ ownerState }: { ownerState?: { size?: string } }) => ({
+        ...outlinedInputSizing(ownerState),
+        ...theme,
+    });
 
 const actionColors = {
     0.54: 'rgba(223, 222, 255, 0.54)',
@@ -603,7 +614,7 @@ export const darkTheme = createTheme({
         // Inputs
         MuiOutlinedInput: {
             styleOverrides: {
-                root: ({ theme }) => ({
+                root: withInputSizing({
                     fieldset: {
                         borderColor: '#646382',
                     },

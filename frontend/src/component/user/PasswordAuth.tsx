@@ -144,7 +144,7 @@ const PasswordAuth: FC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
                                     autoComplete='username'
                                     data-testid={LOGIN_EMAIL_ID}
                                     variant='outlined'
-                                    size='small'
+                                    size='large'
                                     fullWidth
                                     autoFocus
                                 />

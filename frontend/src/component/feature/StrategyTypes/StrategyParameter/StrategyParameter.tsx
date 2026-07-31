@@ -88,7 +88,7 @@ export const StrategyParameter = ({
                 <Input
                     error={Boolean(error)}
                     helperText={error}
-                    size='small'
+                    size='large'
                     aria-required={required}
                     style={{ width: '100%' }}
                     label={label}
@@ -125,7 +125,7 @@ export const StrategyParameter = ({
             <Input
                 rows={1}
                 placeholder=''
-                size='small'
+                size='large'
                 style={{ width: '100%' }}
                 aria-required={required}
                 error={Boolean(error)}

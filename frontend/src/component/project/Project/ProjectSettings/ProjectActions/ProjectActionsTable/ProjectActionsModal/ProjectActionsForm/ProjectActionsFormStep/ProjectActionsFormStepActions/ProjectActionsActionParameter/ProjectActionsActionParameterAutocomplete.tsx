@@ -15,7 +15,7 @@ export const ProjectActionsActionParameterAutocomplete = ({
 }: IProjectActionsActionParameterAutocompleteProps) => (
     <AutocompleteField
         label={label}
-        size='small'
+        size='large'
         options={options}
         autoHighlight
         autoSelect

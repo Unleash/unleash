@@ -70,7 +70,7 @@ export const SelectSdk = ({ value, onChange }: SelectSdkProps) => {
         <StyledAutocompleteWrapper>
             <AutocompleteField
                 label='SDK'
-                size='small'
+                size='large'
                 disableClearable
                 options={options}
                 value={selectedOption}

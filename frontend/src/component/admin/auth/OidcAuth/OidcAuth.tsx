@@ -179,7 +179,7 @@ export const OidcAuth = () => {
                             value={data.discoverUrl}
                             disabled={!data.enabled || oidcConfiguredThroughEnv}
                             style={{ width: '400px' }}
-                            size='small'
+                            size='large'
                         />
                     </Grid>
                 </Grid>
@@ -196,7 +196,7 @@ export const OidcAuth = () => {
                             value={data.clientId}
                             disabled={!data.enabled || oidcConfiguredThroughEnv}
                             style={{ width: '400px' }}
-                            size='small'
+                            size='large'
                             required
                         />
                     </Grid>
@@ -216,7 +216,7 @@ export const OidcAuth = () => {
                             value={data.secret}
                             disabled={!data.enabled || oidcConfiguredThroughEnv}
                             style={{ width: '400px' }}
-                            size='small'
+                            size='large'
                             required
                         />
                     </Grid>
@@ -310,7 +310,7 @@ export const OidcAuth = () => {
                             value={data.acrValues}
                             disabled={!data.enabled || oidcConfiguredThroughEnv}
                             style={{ width: '400px' }}
-                            size='small'
+                            size='large'
                         />
                     </Grid>
                 </Grid>
@@ -332,7 +332,7 @@ export const OidcAuth = () => {
                             value={data.extraScopes}
                             disabled={!data.enabled}
                             style={{ width: '400px' }}
-                            size='small'
+                            size='large'
                             placeholder='custom_scope1 custom_scope2'
                         />
                     </Grid>

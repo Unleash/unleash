@@ -46,7 +46,7 @@ export const InputListField: FC<IInputListFieldProps> = ({
             onKeyDown={handleKeyDown}
             onChange={handleChange}
             style={{ width: '100%' }}
-            size='small'
+            size='large'
         />
     );
 };

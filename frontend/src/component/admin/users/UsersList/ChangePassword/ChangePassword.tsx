@@ -122,7 +122,7 @@ const ChangePassword = ({
                     error={Boolean(error)}
                     helperText={error}
                     onChange={updateField}
-                    size='small'
+                    size='large'
                     fullWidth
                 />
                 <Input
@@ -131,7 +131,7 @@ const ChangePassword = ({
                     type='password'
                     value={data.confirm}
                     onChange={updateField}
-                    size='small'
+                    size='large'
                     fullWidth
                 />
                 <PasswordMatcher

@@ -180,7 +180,7 @@ const RegexTestInputItem: FC<RegexTestInputItemProps> = memo(
                     <StyledTextField
                         type='text'
                         placeholder='Enter test value'
-                        size='small'
+                        size='large'
                         fullWidth
                         value={input.testString}
                         id={`test-input-${input.id}`}
@@ -435,7 +435,7 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
                         value={inputValue}
                         onChange={handleRegexInputChange}
                         onKeyDown={handleRegexKeyDown}
-                        size='small'
+                        size='large'
                         variant='outlined'
                         fullWidth
                         autoFocus

@@ -54,7 +54,7 @@ export const RoleSelect = ({
                 description={description}
                 required={required}
                 openOnFocus
-                size='small'
+                size='large'
                 value={value}
                 onChange={(_, role) => setValue(role || null)}
                 options={roles}

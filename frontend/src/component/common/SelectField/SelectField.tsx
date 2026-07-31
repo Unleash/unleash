@@ -33,7 +33,7 @@ const SelectControl = ({
     onChange,
     label,
     id: injectedId,
-    size = 'small',
+    size = 'large',
     fullWidth = true,
     ...props
 }: SelectControlProps) => {

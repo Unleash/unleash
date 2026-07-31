@@ -116,7 +116,7 @@ export const AutoCreateForm = ({
                         placeholder='@company.com, @anotherCompany.com'
                         style={{ width: '400px' }}
                         rows={2}
-                        size='small'
+                        size='large'
                     />
                 </Grid>
             </Grid>

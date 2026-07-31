@@ -114,7 +114,7 @@ export const GroupFormUsersSelect: FC<IGroupFormUsersSelectProps> = ({
                 label='Select users'
                 description={description}
                 data-testid={UG_USERS_ID}
-                size='small'
+                size='large'
                 limitTags={1}
                 openOnFocus
                 multiple

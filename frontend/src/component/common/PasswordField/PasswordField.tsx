@@ -25,7 +25,7 @@ const PasswordField: FC<TextFieldProps> = ({ label, value, ...rest }) => {
     const field = (
         <StyledAutofillTextField
             variant='outlined'
-            size='small'
+            size='large'
             fullWidth={Boolean(label)}
             value={value}
             type={showPassword ? 'text' : 'password'}

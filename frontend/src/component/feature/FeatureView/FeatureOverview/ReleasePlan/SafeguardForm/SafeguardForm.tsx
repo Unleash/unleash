@@ -466,7 +466,7 @@ export const SafeguardTypeSelect: FC<{
     onChange: (type: SafeguardType) => void;
     children: ReactNode;
 }> = ({ value, onChange, children }) => (
-    <FormControl variant='outlined' size='small'>
+    <FormControl variant='outlined' size='large'>
         <StyledTypeSelect
             value={value}
             onChange={(e) => {
@@ -476,7 +476,7 @@ export const SafeguardTypeSelect: FC<{
                 }
             }}
             variant='outlined'
-            size='small'
+            size='large'
             SelectDisplayProps={{ 'aria-label': 'Safeguard action' }}
             renderValue={(selected) =>
                 safeguardTypeOptionLabel[selected as SafeguardType]
@@ -633,7 +633,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
 
                         <StyledTopRow>
                             <StyledLabel>filtered by</StyledLabel>
-                            <FormControl variant='outlined' size='small'>
+                            <FormControl variant='outlined' size='large'>
                                 <StyledSelect
                                     value={appName}
                                     onChange={(e) =>
@@ -642,7 +642,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                                         )
                                     }
                                     variant='outlined'
-                                    size='small'
+                                    size='large'
                                 >
                                     {applicationNames.map((app) => (
                                         <StyledMenuItem key={app} value={app}>
@@ -666,7 +666,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                     <StyledTopRow sx={{ ml: 0.75 }}>
                         <StyledTopRow>
                             <StyledLabel sx={{ ml: 2.5 }}>is</StyledLabel>
-                            <FormControl variant='outlined' size='small'>
+                            <FormControl variant='outlined' size='large'>
                                 <StyledSelect
                                     value={operator}
                                     onChange={(e) =>
@@ -676,7 +676,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                                         )
                                     }
                                     variant='outlined'
-                                    size='small'
+                                    size='large'
                                 >
                                     <StyledMenuItem value='>'>
                                         More than
@@ -687,7 +687,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                                 </StyledSelect>
                             </FormControl>
 
-                            <FormControl variant='outlined' size='small'>
+                            <FormControl variant='outlined' size='large'>
                                 <TextField
                                     type='number'
                                     value={thresholdInputValue}
@@ -697,7 +697,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                                     onKeyDown={handleThresholdKeyDown}
                                     placeholder='Value'
                                     variant='outlined'
-                                    size='small'
+                                    size='large'
                                     required
                                     slotProps={{
                                         htmlInput: {

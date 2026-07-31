@@ -72,7 +72,7 @@ const ProjectLinkTemplateEditor = ({
                 value={templateTitle}
                 onChange={(e) => setTemplateTitle(e.target.value)}
                 placeholder='e.g., GitHub Issue, Ticket number'
-                size='small'
+                size='large'
             />
             <Input
                 label='URL Template'
@@ -85,7 +85,7 @@ const ProjectLinkTemplateEditor = ({
                 value={templateUrl}
                 onChange={(e) => setTemplateUrl(e.target.value)}
                 placeholder='https://github.com/{{project}}/{{feature}}'
-                size='small'
+                size='large'
                 error={Boolean(templateErrors.url)}
             />
             <StyledDialogActions>

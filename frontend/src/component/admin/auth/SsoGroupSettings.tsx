@@ -79,7 +79,7 @@ export const SsoGroupSettings = ({
                         value={data.groupJsonPath}
                         disabled={!data.enableGroupSyncing || disabled}
                         style={{ width: '400px' }}
-                        size='small'
+                        size='large'
                         required
                     />
                 </Grid>

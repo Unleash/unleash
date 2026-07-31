@@ -238,3 +238,31 @@ declare module '@mui/material/FormHelperText' {
         'data-testid'?: string;
     }
 }
+
+// Design system v2 adds a third input size ("large") on top of MUI's
+// built-in "small"/"medium". Sizing lives in themes/controls.ts.
+declare module '@mui/material/InputBase' {
+    interface InputBasePropsSizeOverrides {
+        large: true;
+    }
+}
+declare module '@mui/material/TextField' {
+    interface TextFieldPropsSizeOverrides {
+        large: true;
+    }
+}
+declare module '@mui/material/FormControl' {
+    interface FormControlPropsSizeOverrides {
+        large: true;
+    }
+}
+declare module '@mui/material/Autocomplete' {
+    interface AutocompletePropsSizeOverrides {
+        large: true;
+    }
+}
+declare module '@mui/material/InputLabel' {
+    interface InputLabelPropsSizeOverrides {
+        large: true;
+    }
+}

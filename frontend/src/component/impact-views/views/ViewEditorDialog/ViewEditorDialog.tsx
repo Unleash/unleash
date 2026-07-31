@@ -173,7 +173,7 @@ const MetricGoalRow: FC<{
                         onRename(metric.id, event.target.value)
                     }
                     placeholder={metric.metricName}
-                    size='small'
+                    size='large'
                     variant='outlined'
                     fullWidth
                 />
@@ -421,7 +421,7 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
                         })
                     }
                     placeholder='e.g. Checkout funnel'
-                    size='small'
+                    size='large'
                     autoFocus
                     required
                 />
@@ -431,7 +431,7 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
                         label='Metrics'
                         helperText='All selected metrics are drawn together on a
                                 single chart.'
-                        size='small'
+                        size='large'
                         placeholder={
                             form.metrics.length === 0
                                 ? 'Pick one or more metrics…'

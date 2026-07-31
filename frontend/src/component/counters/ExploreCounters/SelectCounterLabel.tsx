@@ -56,7 +56,7 @@ export const SelectCounterLabel = ({
                           }))
                         : []
                 }
-                size='small'
+                size='large'
                 sx={{ width: 200, maxWidth: '100%' }}
             />
             {label ? (
@@ -76,7 +76,7 @@ export const SelectCounterLabel = ({
                               )
                             : []),
                     ]}
-                    size='small'
+                    size='large'
                     sx={{ width: 200, maxWidth: '100%' }}
                 />
             ) : null}

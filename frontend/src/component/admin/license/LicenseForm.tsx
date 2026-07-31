@@ -148,7 +148,7 @@ export const LicenseForm = () => {
                         name='licenseKey'
                         value={token}
                         style={{ width: '100%' }}
-                        size='small'
+                        size='large'
                         multiline
                         rows={6}
                         required

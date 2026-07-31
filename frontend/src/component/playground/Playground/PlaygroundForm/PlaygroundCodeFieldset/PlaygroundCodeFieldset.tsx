@@ -201,7 +201,7 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
                 <Input
                     id='date'
                     label='Date'
-                    size='small'
+                    size='large'
                     type='datetime-local'
                     value={value}
                     sx={{ width: 200, maxWidth: '100%' }}
@@ -234,7 +234,7 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
                     multiple={true}
                     options={options}
                     disableCloseOnSelect
-                    size='small'
+                    size='large'
                     fullWidth={false}
                     value={resolveAutocompleteValue()}
                     onChange={changeContextValue}
@@ -269,7 +269,7 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
                 id='context-value'
                 sx={{ width: 370, maxWidth: '100%' }}
                 placeholder={'value1,value2,value3'}
-                size='small'
+                size='large'
                 value={contextValue}
                 onChange={(event) => setContextValue(event.target.value || '')}
             />
@@ -307,7 +307,7 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
                     value={contextField}
                     onChange={changeContextField}
                     variant='outlined'
-                    size='small'
+                    size='large'
                     fullWidth={false}
                     sx={{ width: 200, maxWidth: '100%' }}
                     options={contextOptions}

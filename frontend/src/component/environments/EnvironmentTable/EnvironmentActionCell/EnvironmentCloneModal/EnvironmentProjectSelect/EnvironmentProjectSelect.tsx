@@ -123,7 +123,7 @@ export const EnvironmentProjectSelect = ({
             <AutocompleteField
                 label='Projects'
                 description={description}
-                size='small'
+                size='large'
                 multiple
                 limitTags={1}
                 openOnFocus

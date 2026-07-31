@@ -61,7 +61,7 @@ const SelectMenuControl: React.FC<ISelectMenuProps> = ({
     return (
         <FormControl
             variant='outlined'
-            size='small'
+            size='large'
             classes={classes}
             style={formControlStyles}
         >

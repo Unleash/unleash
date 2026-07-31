@@ -36,7 +36,7 @@ export const ExploreCounterFilter = ({
                             key: option,
                             label: option,
                         }))}
-                        size='small'
+                        size='large'
                         sx={{ width: 200, maxWidth: '100%' }}
                     />
                     <SelectCounterLabel

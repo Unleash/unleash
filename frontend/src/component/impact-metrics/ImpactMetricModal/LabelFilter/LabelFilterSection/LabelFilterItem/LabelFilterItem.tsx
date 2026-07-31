@@ -28,7 +28,7 @@ export const LabelFilterItem: FC<LabelFilterItemProps> = ({
             <AutocompleteField
                 label={labelKey}
                 placeholder={isAllSelected ? undefined : 'Select values…'}
-                size='small'
+                size='large'
                 multiple
                 disableCloseOnSelect
                 id={autocompleteId}

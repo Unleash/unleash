@@ -187,7 +187,7 @@ export const ContextForm: React.FC<IContextForm> = ({
                     minRows={3}
                     maxRows={4}
                     value={contextDesc}
-                    size='small'
+                    size='large'
                     onChange={(e) => setContextDesc(e.target.value)}
                 />
                 <FormField

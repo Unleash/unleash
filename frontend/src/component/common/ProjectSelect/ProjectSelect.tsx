@@ -113,7 +113,7 @@ export const ProjectSelect: FC<IProjectSelectProps> = forwardRef(
                 renderOption={renderOption}
                 getOptionLabel={({ label }) => label}
                 disableCloseOnSelect
-                size='small'
+                size='large'
                 disabled={disabled}
                 value={
                     isAllProjects

@@ -28,7 +28,7 @@ const Input = ({
     className,
     value,
     onChange,
-    size = 'small',
+    size = 'large',
     slotProps,
     ...rest
 }: IInputProps) => {

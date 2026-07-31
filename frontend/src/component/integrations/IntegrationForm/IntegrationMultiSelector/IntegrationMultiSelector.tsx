@@ -89,7 +89,7 @@ export const IntegrationMultiSelector = ({
 
     const control = (
         <Autocomplete
-            size='small'
+            size='large'
             multiple
             limitTags={2}
             options={options}

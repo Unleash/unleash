@@ -107,7 +107,7 @@ export const FeaturePicker: FC<FeaturePickerProps> = ({
         <AutocompleteField
             label='Features to follow'
             helperText='Toggle events for these features will be drawn over the chart.'
-            size='small'
+            size='large'
             placeholder={
                 value.length === 0
                     ? 'Search for features…'

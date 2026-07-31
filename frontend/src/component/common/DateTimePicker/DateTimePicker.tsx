@@ -45,7 +45,7 @@ export const DateTimePicker = ({
         <Input
             label={label}
             type={inputType}
-            size='small'
+            size='large'
             error={error}
             errorText={errorText}
             value={getDate(value.toISOString())}

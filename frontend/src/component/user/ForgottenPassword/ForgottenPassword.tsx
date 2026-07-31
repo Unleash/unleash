@@ -146,7 +146,7 @@ const ForgottenPassword = () => {
                     />
                     <Input
                         label='Email'
-                        size='small'
+                        size='large'
                         fullWidth
                         type='email'
                         data-testid={FORGOTTEN_PASSWORD_FIELD}

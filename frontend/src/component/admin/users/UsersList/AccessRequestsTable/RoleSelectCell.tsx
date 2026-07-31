@@ -21,7 +21,7 @@ export const RoleSelectCell = ({
 }: IRoleSelectCellProps) => (
     <TextCell>
         <StyledSelect
-            size='small'
+            size='large'
             value={selectedRoleId}
             onChange={(e) => onChange(e.target.value as number)}
             variant='outlined'

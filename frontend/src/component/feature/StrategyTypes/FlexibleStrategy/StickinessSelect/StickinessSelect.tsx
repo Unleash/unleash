@@ -23,17 +23,21 @@ interface IStickinessSelectProps {
     dataTestId?: string;
 }
 
-const StyledValueContainer = styled('div')(() => ({
-    lineHeight: 1.1,
-    marginTop: -2,
-    marginBottom: -10,
+const StyledValueContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'baseline',
+    gap: theme.spacing(1),
+    overflow: 'hidden',
 }));
 
 const StyledLabel = styled('div')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
+    flexShrink: 0,
 }));
 
 const StyledDescription = styled('p')(({ theme }) => ({
+    margin: 0,
+    minWidth: 0,
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.neutral.main,
     overflow: 'hidden',
@@ -52,6 +56,11 @@ const StyledDropdownDescription = styled('p')(({ theme }) => ({
 const StyledOptionContainer = styled('div')(() => ({
     lineHeight: 1.2,
     width: '100%',
+}));
+
+const StyledFormControl = styled(FormControl)(({ theme }) => ({
+    width: '100%',
+    marginBottom: theme.spacing(2),
 }));
 
 type StickinessSelectControlProps = {
@@ -89,14 +98,7 @@ const StickinessSelectControl = ({
     };
 
     return (
-        <FormControl
-            variant='outlined'
-            size='small'
-            sx={{
-                width: '100%',
-                marginBottom: theme.spacing(2),
-            }}
-        >
+        <StyledFormControl variant='outlined' size='large'>
             {/* TODO: remove floating-label branch when cleaning up 'topLabelInputs' flag */}
             {label ? (
                 <InputLabel id={labelId} htmlFor={id}>
@@ -151,7 +153,7 @@ const StickinessSelectControl = ({
                     </MenuItem>
                 ))}
             </Select>
-        </FormControl>
+        </StyledFormControl>
     );
 };
 

@@ -374,7 +374,7 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                                 What is your integration description?
                             </StyledTitle>
                             <StyledInput
-                                size='small'
+                                size='large'
                                 minRows={1}
                                 multiline
                                 label='Description'

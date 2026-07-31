@@ -167,7 +167,7 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
                     show={
                         <>
                             <AutocompleteField
-                                size='small'
+                                size='large'
                                 value={selectedProject}
                                 onChange={(_, newValue) => {
                                     setProject(newValue?.id);

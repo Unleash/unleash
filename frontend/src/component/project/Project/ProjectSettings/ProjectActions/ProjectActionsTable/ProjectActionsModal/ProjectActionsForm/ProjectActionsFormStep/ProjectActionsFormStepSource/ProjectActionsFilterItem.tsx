@@ -223,7 +223,7 @@ export const ProjectActionsFilterItem = ({
                         <AutocompleteField
                             freeSolo
                             label='Parameter'
-                            size='small'
+                            size='large'
                             options={suggestions}
                             value={parameter}
                             onInputChange={(_, parameter) =>

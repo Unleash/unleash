@@ -165,7 +165,7 @@ export const SamlAuth = () => {
                             value={data.entityId}
                             disabled={!data.enabled || samlConfiguredThroughEnv}
                             style={{ width: '400px' }}
-                            size='small'
+                            size='large'
                             required
                         />
                     </Grid>
@@ -186,7 +186,7 @@ export const SamlAuth = () => {
                             value={data.signOnUrl}
                             disabled={!data.enabled || samlConfiguredThroughEnv}
                             style={{ width: '400px' }}
-                            size='small'
+                            size='large'
                             required
                         />
                     </Grid>
@@ -210,7 +210,7 @@ export const SamlAuth = () => {
                             multiline
                             rows={14}
                             maxRows={14}
-                            size='small'
+                            size='large'
                             required
                             slotProps={{
                                 input: {
@@ -240,7 +240,7 @@ export const SamlAuth = () => {
                             value={data.signOutUrl}
                             disabled={!data.enabled || samlConfiguredThroughEnv}
                             style={{ width: '400px' }}
-                            size='small'
+                            size='large'
                         />
                     </Grid>
                 </Grid>
@@ -265,7 +265,7 @@ export const SamlAuth = () => {
                             multiline
                             rows={14}
                             maxRows={14}
-                            size='small'
+                            size='large'
                             slotProps={{
                                 input: {
                                     style: {

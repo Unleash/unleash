@@ -44,7 +44,7 @@ export const ProjectActionsActionSelect = ({
     return (
         <AutocompleteField
             label='Action'
-            size='small'
+            size='large'
             options={actionOptions}
             autoHighlight
             autoSelect

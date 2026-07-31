@@ -196,7 +196,7 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
                             value={formData.title}
                             onChange={(e) => actions.setTitle(e.target.value)}
                             fullWidth
-                            size='small'
+                            size='large'
                         />
 
                         <ImpactMetricsControls

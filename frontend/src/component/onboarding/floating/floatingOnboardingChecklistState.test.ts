@@ -7,11 +7,7 @@ import {
 describe('isPendingActionExpired', () => {
     const now = 1_000_000_000_000;
 
-    it('returns false when no pending action is set', () => {
-        expect(isPendingActionExpired(undefined, now)).toBe(false);
-    });
-
-    it('returns false while still within the TTL window', () => {
+    it('stays valid within the TTL window', () => {
         const action = { type: 'flag' as const, setAt: now };
 
         expect(
@@ -19,7 +15,7 @@ describe('isPendingActionExpired', () => {
         ).toBe(false);
     });
 
-    it('returns true once the TTL has elapsed', () => {
+    it('expires once the TTL elapses', () => {
         const action = { type: 'sdk' as const, setAt: now };
 
         expect(

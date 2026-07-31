@@ -24,10 +24,9 @@ export type PendingAction = { type: 'flag' | 'sdk'; setAt: number };
 export const PENDING_ACTION_TTL_MS = 60_000;
 
 export const isPendingActionExpired = (
-    action: PendingAction | undefined,
+    action: PendingAction,
     nowMs: number,
-): boolean =>
-    action !== undefined && nowMs - action.setAt > PENDING_ACTION_TTL_MS;
+): boolean => nowMs - action.setAt > PENDING_ACTION_TTL_MS;
 
 export interface FloatingOnboardingChecklistState {
     /**

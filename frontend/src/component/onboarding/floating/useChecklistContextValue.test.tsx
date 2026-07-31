@@ -44,6 +44,19 @@ const mockEligibleUser = (splash: Record<string, boolean> = {}) => {
     });
 };
 
+const defaultProjectOverview = {
+    featureTypeCounts: [],
+    environments: [],
+    name: 'Default',
+    health: 0,
+    members: 0,
+    version: 1,
+    description: 'Default',
+    favorite: false,
+    mode: 'open',
+    defaultStickiness: 'default',
+};
+
 const mockProjectOverview = (
     onboardingStatus: 'onboarding-started' | 'sdk-connected' | 'onboarded',
 ) =>
@@ -51,16 +64,7 @@ const mockProjectOverview = (
         server,
         `/api/admin/projects/${CHECKLIST_PROJECT_ID}/overview`,
         {
-            featureTypeCounts: [],
-            environments: [],
-            name: 'Default',
-            health: 0,
-            members: 0,
-            version: 1,
-            description: 'Default',
-            favorite: false,
-            mode: 'open',
-            defaultStickiness: 'default',
+            ...defaultProjectOverview,
             onboardingStatus: { status: onboardingStatus },
         },
     );

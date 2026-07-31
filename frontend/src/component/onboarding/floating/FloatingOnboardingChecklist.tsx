@@ -208,6 +208,7 @@ const EligibleFloatingOnboardingChecklist = () => {
 
     const handleTakeTour = () =>
         openIntro({
+            // fires for any close (Skip, Escape, backdrop, Finish, ×)
             onClose: () => {
                 // Bridge tick for the visible checkmark; splash is the
                 // durable, server-persisted signal that survives logout.

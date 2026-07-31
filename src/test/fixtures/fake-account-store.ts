@@ -1,4 +1,4 @@
-import type { IUser } from '../../lib/types/user.js';
+import type { IUser, MinimalUser } from '../../lib/types/user.js';
 import type {
     // ICreateUser,
     IUserLookup,
@@ -9,11 +9,14 @@ import type {
 export class FakeAccountStore implements IAccountStore {
     data: IUser[];
 
+    admins: MinimalUser[];
+
     idSeq: number;
 
     constructor() {
         this.idSeq = 1;
         this.data = [];
+        this.admins = [];
     }
     async hasAccount({
         id,
@@ -100,7 +103,11 @@ export class FakeAccountStore implements IAccountStore {
         throw new Error('Not implemented');
     }
 
-    async getAdmins(): Promise<IUser[]> {
-        return [];
+    setAdmins(admins: MinimalUser[]): void {
+        this.admins = admins;
+    }
+
+    async getAdmins(): Promise<MinimalUser[]> {
+        return this.admins;
     }
 }

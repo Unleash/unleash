@@ -163,6 +163,7 @@ import {
     createHistogram,
 } from './util/metrics/index.js';
 import FakeEventStore from '../test/fixtures/fake-event-store.js';
+import { FakeAccountStore } from '../test/fixtures/fake-account-store.js';
 import type { Subscriber } from './features/user-subscriptions/user-subscriptions-read-model-type.js';
 import { UserSubscriptionsReadModel } from './features/user-subscriptions/user-subscriptions-read-model.js';
 import { FakeUserSubscriptionsReadModel } from './features/user-subscriptions/fake-user-subscriptions-read-model.js';
@@ -535,6 +536,7 @@ export {
     createHistogram,
     UserSubscriptionsReadModel,
     FakeUserSubscriptionsReadModel,
+    FakeAccountStore,
     FakePrivateProjectChecker,
     FakeChangeRequestAccessReadModel,
     createFakeProjectReadModel,

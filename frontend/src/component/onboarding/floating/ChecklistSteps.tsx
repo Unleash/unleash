@@ -165,12 +165,12 @@ export const ChecklistSteps = ({
     const stepDefinitions: Record<ChecklistStepKey, ChecklistStep> = {
         tour: {
             key: 'tour',
-            title: 'Take the two-minute tour',
-            body: 'A quick walkthrough of Unleash — see feature flags in action in under two minutes.',
+            title: 'Unleash Intro',
+            body: 'Learn the key concepts of rolling out a flag in Unleash.',
             done: done.tour,
             action: (
                 <ActionButton
-                    label='Start tour'
+                    label='Take the tour'
                     onClick={onTakeTour}
                     disabled={false}
                     done={done.tour}

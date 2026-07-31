@@ -259,7 +259,7 @@ const EligibleFloatingOnboardingChecklist = () => {
         },
         flag: {
             title: 'Create a feature flag',
-            body: 'You must create a feature flag before you can connect a SDK.',
+            body: 'You must create a feature flag before you can connect an SDK.',
             done: done.flag,
             action: done.flag ? (
                 <GoToFlag href={goToFlagHref} />

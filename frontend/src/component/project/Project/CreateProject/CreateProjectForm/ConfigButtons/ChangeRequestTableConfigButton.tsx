@@ -10,6 +10,7 @@ import {
     ConfigButton,
     type ConfigButtonProps,
 } from 'component/common/DialogFormTemplate/ConfigButtons/ConfigButton';
+import { StyledDropdownSearchContainer } from 'component/common/DialogFormTemplate/ConfigButtons/shared.styles';
 
 type ChangeRequestTableConfigButtonProps = Pick<
     ConfigButtonProps,
@@ -106,25 +107,27 @@ export const ChangeRequestTableConfigButton: FC<
             anchorEl={anchorEl}
             setAnchorEl={setAnchorEl}
         >
-            <TableSearchInput
-                size='small'
-                value={searchText}
-                onChange={(event) => setSearchText(event.target.value)}
-                hideLabel
-                label={search.label}
-                placeholder={search.placeholder}
-                autoFocus
-                slotProps={{
-                    input: {
-                        startAdornment: (
-                            <InputAdornment position='start'>
-                                <Search fontSize='small' />
-                            </InputAdornment>
-                        ),
-                    },
-                }}
-                onKeyDown={toggleTopItem}
-            />
+            <StyledDropdownSearchContainer>
+                <TableSearchInput
+                    size='small'
+                    value={searchText}
+                    onChange={(event) => setSearchText(event.target.value)}
+                    hideLabel
+                    label={search.label}
+                    placeholder={search.placeholder}
+                    autoFocus
+                    slotProps={{
+                        input: {
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                    <Search fontSize='small' />
+                                </InputAdornment>
+                            ),
+                        },
+                    }}
+                    onKeyDown={toggleTopItem}
+                />
+            </StyledDropdownSearchContainer>
             <ScrollContainer>
                 <ChangeRequestTable
                     environments={filteredEnvs}

@@ -6,7 +6,10 @@ import {
     ListItemIcon,
     ListItemText,
 } from '@mui/material';
-import { StyledDropdownSearch } from './shared.styles';
+import {
+    StyledDropdownSearch,
+    StyledDropdownSearchContainer,
+} from './shared.styles';
 import {
     StyledCheckbox,
     StyledHeader,
@@ -107,30 +110,32 @@ export function DropdownList<T = string>({
                 </StyledHeader>
             ) : null}
             {hideSearch ? null : (
-                <StyledDropdownSearch
-                    size='small'
-                    value={searchText}
-                    onChange={(event) => setSearchText(event.target.value)}
-                    label={search.label}
-                    hideLabel
-                    placeholder={search.placeholder}
-                    autoFocus
-                    slotProps={{
-                        input: {
-                            startAdornment: (
-                                <InputAdornment position='start'>
-                                    <Search fontSize='small' />
-                                </InputAdornment>
-                            ),
-                        },
-                    }}
-                    inputRef={(el) => {
-                        listRefs.current[0] = el;
-                    }}
-                    onKeyDown={(event) =>
-                        handleSelection(event, 0, filteredOptions)
-                    }
-                />
+                <StyledDropdownSearchContainer>
+                    <StyledDropdownSearch
+                        size='small'
+                        value={searchText}
+                        onChange={(event) => setSearchText(event.target.value)}
+                        label={search.label}
+                        hideLabel
+                        placeholder={search.placeholder}
+                        autoFocus
+                        slotProps={{
+                            input: {
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                        <Search fontSize='small' />
+                                    </InputAdornment>
+                                ),
+                            },
+                        }}
+                        inputRef={(el) => {
+                            listRefs.current[0] = el;
+                        }}
+                        onKeyDown={(event) =>
+                            handleSelection(event, 0, filteredOptions)
+                        }
+                    />
+                </StyledDropdownSearchContainer>
             )}
             <List sx={{ overflowY: 'auto' }} disablePadding>
                 {filteredOptions.map((option, index) => {

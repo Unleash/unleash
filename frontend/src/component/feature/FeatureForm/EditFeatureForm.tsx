@@ -118,12 +118,14 @@ const EditFeatureForm: React.FC<IFeatureToggleForm> = ({
                 value={name}
                 onChange={() => {}}
             />
-            <StyledInputDescription>
-                What kind of feature flag do you want?
-            </StyledInputDescription>
             <FeatureTypeSelect
                 sx={styledSelectInput}
                 value={type}
+                description={
+                    <StyledInputDescription>
+                        What kind of feature flag do you want?
+                    </StyledInputDescription>
+                }
                 onChange={setType}
                 label={'Flag type'}
                 id='feature-type-select'

@@ -18,6 +18,7 @@ import type { CreateFeatureNamingPatternSchema } from 'openapi';
 import { HeaderBreadcrumb } from './HeaderBreadcrumb.tsx';
 import { DropdownList } from './ConfigButtons/DropdownList.tsx';
 import { StyledPopover } from './ConfigButtons/shared.styles';
+import { capitalizeFirst } from 'utils/capitalizeFirst';
 
 export type ProjectOption = { label: string; value: string };
 
@@ -75,7 +76,7 @@ export const nameInputSlotProps = (theme: Theme) =>
         '&::placeholder': {
             color: theme.palette.text.primary,
             opacity: 0.55,
-            fontWeight: theme.fontWeight.bold,
+            fontWeight: theme.typography.fontWeightRegular,
         },
     });
 
@@ -290,7 +291,7 @@ export const NewDialogFormTemplate: React.FC<Props> = ({
 
             <Section sx={{ pt: 4, pb: 3, width: '100%' }}>
                 <Input
-                    label={`${resource} name`}
+                    label={`${capitalizeFirst(resource)} name`}
                     placeholder='Feature-flag-name'
                     aria-required
                     aria-details={

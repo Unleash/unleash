@@ -29,10 +29,15 @@ export const StyledPopover = styled(Popover)(({ theme }) => ({
     },
 }));
 
+// The label renders outside the TextField that `styled(Input)` targets, so the
+// inset lives here instead of on the field to keep the two left-aligned.
+export const StyledDropdownSearchContainer = styled('div')(({ theme }) => ({
+    paddingInline: theme.spacing(dropdownPadding),
+}));
+
 export const StyledDropdownSearch = styled(Input, {
     shouldForwardProp: (prop) => prop !== 'hideLabel',
 })<{ hideLabel?: boolean }>(({ theme, hideLabel }) => ({
-    paddingInline: theme.spacing(dropdownPadding),
     '& .MuiInputBase-root': {
         paddingInline: theme.spacing(1.5),
         borderRadius: `${theme.shape.borderRadiusMedium}px`,
@@ -46,7 +51,11 @@ export const StyledDropdownSearch = styled(Input, {
         ? {
               label: visuallyHiddenStyles,
 
-              'fieldset > legend > span': visuallyHiddenStyles,
+              // MUI's label-less legend holds the outline's top edge with a
+              // `notranslate` spacer span; only collapse the notch when the
+              // legend carries an actual floating label.
+              'fieldset > legend > span:not(.notranslate)':
+                  visuallyHiddenStyles,
           }
         : {}),
 }));

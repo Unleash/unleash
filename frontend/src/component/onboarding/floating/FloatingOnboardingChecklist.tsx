@@ -5,13 +5,15 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import { useLocation, useNavigate } from 'react-router';
 import { CreateFeatureDialog } from 'component/project/Project/PaginatedProjectFeatureToggles/ProjectFeatureTogglesHeader/CreateFeatureDialog.tsx';
 import { ConnectSdkDialog } from 'component/onboarding/dialog/ConnectSdkDialog/ConnectSdkDialog.tsx';
-import { useQuickTour } from 'component/onboarding/quickTourDemo/QuickTourProvider.tsx';
+import { useIntro } from 'component/onboarding/intro/IntroProvider.tsx';
+import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi.ts';
 import { FloatingOnboardingChecklistContext } from './FloatingOnboardingChecklistContext.tsx';
 import { OnboardingProgressBadge } from './OnboardingProgressBadge.tsx';
 import { useFloatingOnboardingChecklist } from './useFloatingOnboardingChecklist.ts';
 import { useFirstProjectFeature } from './useFirstProjectFeature.ts';
 import { ChecklistSteps } from './ChecklistSteps.tsx';
 import { isPendingActionExpired } from './floatingOnboardingChecklistState.ts';
+import { ONBOARDING_CHECKLIST_SPLASH_ID } from './useOnboardingChecklistEligibility.ts';
 
 const Window = styled('aside')(({ theme }) => ({
     position: 'fixed',
@@ -83,6 +85,7 @@ const EligibleFloatingOnboardingChecklist = () => {
         state,
         update,
         markCompleted,
+        dismissed,
         projectId,
         quickTourEnabled,
         done,
@@ -91,7 +94,8 @@ const EligibleFloatingOnboardingChecklist = () => {
     } = useFloatingOnboardingChecklist();
     const { feature, goToFlagHref } = useFirstProjectFeature(projectId);
 
-    const { open: openQuickTour } = useQuickTour();
+    const { open: openIntro } = useIntro();
+    const { setSplashSeen } = useSplashApi();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -119,12 +123,18 @@ const EligibleFloatingOnboardingChecklist = () => {
         update({ pendingAction: undefined });
     }, [state.pendingAction, onProjectRoute, update]);
 
-    if (state.dismissed) return null;
+    if (dismissed) return null;
 
     const toggleMinimized = () => update({ minimized: !state.minimized });
 
+    const handleDismiss = () => {
+        update({ dismissed: true });
+        // Persist server-side so dismissal survives a localStorage reset.
+        setSplashSeen(ONBOARDING_CHECKLIST_SPLASH_ID);
+    };
+
     const handleTakeTour = () =>
-        openQuickTour({ onClose: () => markCompleted('tour') });
+        openIntro({ onClose: () => markCompleted('tour') });
 
     const handleCreateFlag = () => {
         if (onProjectRoute) {
@@ -165,7 +175,7 @@ const EligibleFloatingOnboardingChecklist = () => {
                     <IconButton
                         size='small'
                         aria-label='Close'
-                        onClick={() => update({ dismissed: true })}
+                        onClick={handleDismiss}
                     >
                         <CloseIcon fontSize='small' />
                     </IconButton>

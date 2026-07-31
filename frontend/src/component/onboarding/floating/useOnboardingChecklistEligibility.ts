@@ -3,6 +3,14 @@ import AccessContext from 'contexts/AccessContext';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 
 /**
+ * Per-user splash key used to remember that the checklist has been
+ * dismissed. Persisted server-side via `setSplashSeen` so the "don't
+ * open by default" preference survives logout; the header menu still
+ * lets the user manually reopen.
+ */
+export const ONBOARDING_CHECKLIST_SPLASH_ID = 'onboarding-checklist';
+
+/**
  * Whether the current user should see the floating onboarding checklist.
  *
  * Signal today: **current user is admin AND has `id === 1`** — the initial
@@ -12,8 +20,7 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
  *
  * Known limitation: if the id-1 admin was ever deleted, no one else will
  * ever have id 1 and the checklist won't show on that instance. Acceptable
- * because (a) the checklist is dismissable and (b) mature instances that
- * lost user 1 are past onboarding anyway.
+ * because mature instances that lost user 1 are past onboarding anyway.
  *
  * When we outgrow this heuristic (e.g. gate on instance age, an
  * `isNewInstance` flag from `ui-config`, or `first_seen_at` from the auth

@@ -6,17 +6,15 @@ import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { ADMIN } from 'component/providers/AccessProvider/permissions.ts';
 import { createLocalStorage } from 'utils/createLocalStorage.ts';
 import { useChecklistContextValue } from './useChecklistContextValue.ts';
-import type {
-    FloatingOnboardingChecklistCompleted,
-    FloatingOnboardingChecklistState,
-} from './floatingOnboardingChecklistState.ts';
+import { ONBOARDING_CHECKLIST_SPLASH_ID } from './useOnboardingChecklistEligibility.ts';
+import type { FloatingOnboardingChecklistState } from './floatingOnboardingChecklistState.ts';
 
 const server = testServerSetup();
 
 const TestComponent: FC = () => {
     const value = useChecklistContextValue();
     if (!value) return <div>null</div>;
-    const { done, completedCount, totalSteps } = value;
+    const { done, completedCount, totalSteps, dismissed } = value;
 
     return (
         <div>
@@ -26,16 +24,17 @@ const TestComponent: FC = () => {
             <span data-testid='flag'>{done.flag ? 'y' : 'n'}</span>
             <span data-testid='sdk'>{done.sdk ? 'y' : 'n'}</span>
             <span data-testid='on'>{done.on ? 'y' : 'n'}</span>
+            <span data-testid='dismissed'>{dismissed ? 'y' : 'n'}</span>
         </div>
     );
 };
 
-const mockEligibleUser = () =>
+const mockEligibleUser = (splash: Record<string, boolean> = {}) =>
     testServerRoute(server, '/api/admin/user', {
         user: { id: 1 },
         permissions: [],
         feedback: [],
-        splash: {},
+        splash,
     });
 
 const mockProjectOverview = (
@@ -55,11 +54,15 @@ const mockProjectOverview = (
         onboardingStatus: { status: onboardingStatus },
     });
 
-const seedCompleted = (completed: FloatingOnboardingChecklistCompleted) => {
+const seedState = (patch: Partial<FloatingOnboardingChecklistState>) => {
+    const base: FloatingOnboardingChecklistState = {
+        minimized: false,
+        completed: {},
+    };
     createLocalStorage<FloatingOnboardingChecklistState>(
         'floating-onboarding:v1',
-        { dismissed: false, minimized: false, completed: {} },
-    ).setValue({ dismissed: false, minimized: false, completed });
+        base,
+    ).setValue({ ...base, ...patch });
 };
 
 beforeEach(() => {
@@ -79,7 +82,7 @@ test('done and completedCount derive from server onboardingStatus', async () => 
 });
 
 test('local completed state marks steps done even when server says otherwise', async () => {
-    seedCompleted({ flag: true, sdk: true, on: true });
+    seedState({ completed: { flag: true, sdk: true, on: true } });
     mockEligibleUser();
     mockProjectOverview('onboarding-started');
 
@@ -89,4 +92,23 @@ test('local completed state marks steps done even when server says otherwise', a
     expect(await screen.findByTestId('sdk')).toHaveTextContent('y');
     expect(await screen.findByTestId('on')).toHaveTextContent('y');
     expect(await screen.findByTestId('count')).toHaveTextContent('3/3');
+});
+
+test('server splash keeps checklist dismissed after a fresh login', async () => {
+    mockEligibleUser({ [ONBOARDING_CHECKLIST_SPLASH_ID]: true });
+    mockProjectOverview('onboarding-started');
+
+    render(<TestComponent />, { permissions: [{ permission: ADMIN }] });
+
+    expect(await screen.findByTestId('dismissed')).toHaveTextContent('y');
+});
+
+test('local dismissed=false overrides server splash (post-reopen)', async () => {
+    seedState({ dismissed: false });
+    mockEligibleUser({ [ONBOARDING_CHECKLIST_SPLASH_ID]: true });
+    mockProjectOverview('onboarding-started');
+
+    render(<TestComponent />, { permissions: [{ permission: ADMIN }] });
+
+    expect(await screen.findByTestId('dismissed')).toHaveTextContent('n');
 });

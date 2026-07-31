@@ -20,8 +20,13 @@ export const isPendingActionExpired = (
     action !== undefined && nowMs - action.setAt > PENDING_ACTION_TTL_MS;
 
 export interface FloatingOnboardingChecklistState {
-    /** Closed for good (until localStorage is cleared). */
-    dismissed: boolean;
+    /**
+     * Local override for the server-persisted "previously dismissed" splash.
+     * `undefined` = no local preference (fall back to splash); `true` = user
+     * dismissed; `false` = user re-opened via header menu (overrides splash
+     * for as long as localStorage sticks around).
+     */
+    dismissed?: boolean;
     /** Collapsed to just the header bar. */
     minimized: boolean;
     /**
@@ -36,7 +41,6 @@ export interface FloatingOnboardingChecklistState {
 }
 
 const DEFAULT_STATE: FloatingOnboardingChecklistState = {
-    dismissed: false,
     minimized: false,
     completed: {},
 };

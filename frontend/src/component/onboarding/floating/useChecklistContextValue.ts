@@ -1,13 +1,17 @@
 import { useMemo } from 'react';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash.ts';
 import { getProjectOnboardingStep } from 'utils/getProjectOnboardingStep.ts';
 import {
     type FloatingOnboardingChecklistCompleted,
     type FloatingOnboardingChecklistState,
     useFloatingOnboardingChecklistState,
 } from './floatingOnboardingChecklistState.ts';
-import { useOnboardingChecklistEligibility } from './useOnboardingChecklistEligibility.ts';
+import {
+    ONBOARDING_CHECKLIST_SPLASH_ID,
+    useOnboardingChecklistEligibility,
+} from './useOnboardingChecklistEligibility.ts';
 
 /**
  * The checklist targets the `default` project — created for every new
@@ -22,6 +26,12 @@ export interface FloatingOnboardingChecklistContextValue {
     markCompleted: (step: keyof FloatingOnboardingChecklistCompleted) => void;
     /** Bring the helper back into view (used from the header menu). */
     open: () => void;
+    /**
+     * Whether the checklist should stay hidden. The local `state.dismissed`
+     * (this session) wins if set; otherwise falls back to the server-
+     * persisted splash so dismissal survives a localStorage reset.
+     */
+    dismissed: boolean;
     projectId: string;
     quickTourEnabled: boolean;
     done: { tour: boolean; flag: boolean; sdk: boolean; on: boolean };
@@ -45,8 +55,14 @@ export const useChecklistContextValue =
         const eligible = useOnboardingChecklistEligibility();
         const { state, update, markCompleted } =
             useFloatingOnboardingChecklistState();
+        const { splash } = useAuthSplash();
         const quickTourEnabled = useUiFlag('quickTourDemo');
         const projectId = CHECKLIST_PROJECT_ID;
+
+        const splashDismissed = Boolean(
+            splash?.[ONBOARDING_CHECKLIST_SPLASH_ID],
+        );
+        const dismissed = state.dismissed ?? splashDismissed;
 
         const {
             project,
@@ -88,6 +104,7 @@ export const useChecklistContextValue =
             update,
             markCompleted,
             open: () => update({ dismissed: false, minimized: false }),
+            dismissed,
             projectId,
             quickTourEnabled,
             done,

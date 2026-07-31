@@ -4,6 +4,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Link } from 'react-router';
+import type { ChecklistStepKey } from './useChecklistContextValue.ts';
 
 const StepContainer = styled('div')(({ theme }) => ({
     borderTop: `1px solid ${theme.palette.divider}`,
@@ -74,7 +75,7 @@ const StepBodyText = styled(Typography)(({ theme }) => ({
 }));
 
 interface ChecklistStep {
-    key: string;
+    key: ChecklistStepKey;
     title: string;
     body: string;
     done: boolean;
@@ -82,9 +83,9 @@ interface ChecklistStep {
 }
 
 interface IChecklistStepsProps {
-    quickTourEnabled: boolean;
-    done: { tour: boolean; flag: boolean; sdk: boolean; on: boolean };
-    goToFlagHref: string;
+    visibleSteps: ChecklistStepKey[];
+    done: Record<ChecklistStepKey, boolean>;
+    goToFlagHref: string | null;
     onTakeTour: () => void;
     onCreateFlag: () => void;
     onConnectSdk: () => void;
@@ -150,52 +151,53 @@ const GoToFlagButton = (props: GoToFlagButtonProps) => {
 };
 
 export const ChecklistSteps = ({
-    quickTourEnabled,
+    visibleSteps,
     done,
     goToFlagHref,
     onTakeTour,
     onCreateFlag,
     onConnectSdk,
 }: IChecklistStepsProps) => {
-    const steps: ChecklistStep[] = [
-        ...(quickTourEnabled
-            ? [
-                  {
-                      key: 'tour',
-                      title: 'Take the two-minute tour',
-                      body: 'A quick walkthrough of Unleash — see feature flags in action in under two minutes.',
-                      done: done.tour,
-                      action: (
-                          <ActionButton
-                              label='Start tour'
-                              onClick={onTakeTour}
-                              disabled={false}
-                              done={done.tour}
-                          />
-                      ),
-                  },
-              ]
-            : []),
-        {
+    // Any "Go to flag" affordance needs a real flag target. Server state
+    // (`first-flag-created`, `sdk-connected`, `onboarded`) is one-way, so
+    // `done.flag` can stay true after the user's only flag is deleted;
+    // fall back to disabled instead of linking to the project page.
+    const stepDefinitions: Record<ChecklistStepKey, ChecklistStep> = {
+        tour: {
+            key: 'tour',
+            title: 'Take the two-minute tour',
+            body: 'A quick walkthrough of Unleash — see feature flags in action in under two minutes.',
+            done: done.tour,
+            action: (
+                <ActionButton
+                    label='Start tour'
+                    onClick={onTakeTour}
+                    disabled={false}
+                    done={done.tour}
+                />
+            ),
+        },
+        flag: {
             key: 'flag',
             title: 'Create a feature flag',
             body: 'You must create a feature flag before you can connect a SDK.',
             done: done.flag,
-            action: done.flag ? (
-                <GoToFlagButton
-                    variant='completed'
-                    goToFlagHref={goToFlagHref}
-                />
-            ) : (
-                <ActionButton
-                    label='New feature flag'
-                    onClick={onCreateFlag}
-                    disabled={false}
-                    done={done.flag}
-                />
-            ),
+            action:
+                done.flag && goToFlagHref ? (
+                    <GoToFlagButton
+                        variant='completed'
+                        goToFlagHref={goToFlagHref}
+                    />
+                ) : (
+                    <ActionButton
+                        label='New feature flag'
+                        onClick={onCreateFlag}
+                        disabled={false}
+                        done={done.flag}
+                    />
+                ),
         },
-        {
+        sdk: {
             key: 'sdk',
             title: done.sdk ? 'Connect SDK' : 'Connect SDKs',
             body: done.sdk
@@ -211,23 +213,30 @@ export const ChecklistSteps = ({
                 />
             ),
         },
-        {
+        on: {
             key: 'on',
             title: 'Turn flag on',
             body: 'Check that the flag is working by turning it on.',
             done: done.on,
-            action: done.on ? (
-                <GoToFlagButton
-                    variant='completed'
-                    goToFlagHref={goToFlagHref}
-                />
-            ) : done.sdk ? (
-                <GoToFlagButton variant='active' goToFlagHref={goToFlagHref} />
-            ) : (
-                <GoToFlagButton variant='disabled' />
-            ),
+            action:
+                done.on && goToFlagHref ? (
+                    <GoToFlagButton
+                        variant='completed'
+                        goToFlagHref={goToFlagHref}
+                    />
+                ) : done.sdk && goToFlagHref ? (
+                    <GoToFlagButton
+                        variant='active'
+                        goToFlagHref={goToFlagHref}
+                    />
+                ) : (
+                    <GoToFlagButton variant='disabled' />
+                ),
         },
-    ];
+    };
+    const steps: ChecklistStep[] = visibleSteps.map(
+        (key) => stepDefinitions[key],
+    );
 
     const firstIncomplete = steps.findIndex((step) => !step.done);
     const [expanded, setExpanded] = useState(firstIncomplete);

@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { IconButton, styled, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import { CreateFeatureDialog } from 'component/project/Project/PaginatedProjectFeatureToggles/ProjectFeatureTogglesHeader/CreateFeatureDialog.tsx';
 import { ConnectSdkDialog } from 'component/onboarding/dialog/ConnectSdkDialog/ConnectSdkDialog.tsx';
 import { useIntro } from 'component/onboarding/intro/IntroProvider.tsx';
@@ -11,6 +11,7 @@ import { FloatingOnboardingChecklistContext } from './FloatingOnboardingChecklis
 import { OnboardingProgressBadge } from './OnboardingProgressBadge.tsx';
 import { useFloatingOnboardingChecklist } from './useFloatingOnboardingChecklist.ts';
 import { useFirstProjectFeature } from './useFirstProjectFeature.ts';
+import { useChecklistRouteMatch } from './useChecklistRouteMatch.ts';
 import { ChecklistSteps } from './ChecklistSteps.tsx';
 import { isPendingActionExpired } from './floatingOnboardingChecklistState.ts';
 import { ONBOARDING_CHECKLIST_SPLASH_ID } from './useOnboardingChecklistEligibility.ts';
@@ -52,7 +53,6 @@ const TitleRow = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
     flexGrow: 1,
     minWidth: 0,
-    cursor: 'pointer',
 }));
 
 const HeaderTitle = styled(Typography)(({ theme }) => ({
@@ -63,12 +63,6 @@ const HeaderTitle = styled(Typography)(({ theme }) => ({
 const Body = styled('div')({
     overflowY: 'auto',
 });
-
-// Segment-aware prefix match: avoids `/projects/default` matching
-// `/projects/default-team` (a real project slug) or `/features/foo` matching
-// `/features/foobar`.
-const isOnOrUnder = (pathname: string, prefix: string) =>
-    pathname === prefix || pathname.startsWith(`${prefix}/`);
 
 /**
  * Wrapper: renders nothing when the user isn't eligible (context is null).
@@ -87,7 +81,7 @@ const EligibleFloatingOnboardingChecklist = () => {
         markCompleted,
         dismissed,
         projectId,
-        quickTourEnabled,
+        visibleSteps,
         done,
         environments,
         refetchOverview,
@@ -97,7 +91,10 @@ const EligibleFloatingOnboardingChecklist = () => {
     const { open: openIntro } = useIntro();
     const { setSplashSeen } = useSplashApi();
     const navigate = useNavigate();
-    const location = useLocation();
+    const { onProjectRoute, onSdkTargetRoute } = useChecklistRouteMatch({
+        projectId,
+        feature,
+    });
 
     const [createFlagOpen, setCreateFlagOpen] = useState(false);
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
@@ -105,30 +102,39 @@ const EligibleFloatingOnboardingChecklist = () => {
     // MainLayout re-mounts on cross-route navigation, which wipes local
     // dialog state. `pendingAction` lives in localStorage so a click on
     // "New feature flag" from any route survives the navigation and pops
-    // the right dialog once we've landed on the project route.
-    const onProjectRoute = isOnOrUnder(
-        location.pathname,
-        `/projects/${projectId}`,
-    );
+    // the right dialog once we've landed on the target route.
     useEffect(() => {
+        if (dismissed) return;
         const pending = state.pendingAction;
         if (!pending) return;
         if (isPendingActionExpired(pending, Date.now())) {
             update({ pendingAction: undefined });
             return;
         }
-        if (!onProjectRoute) return;
+        const readyForPending =
+            (pending.type === 'flag' && onProjectRoute) ||
+            (pending.type === 'sdk' && onSdkTargetRoute);
+        if (!readyForPending) return;
         if (pending.type === 'flag') setCreateFlagOpen(true);
         if (pending.type === 'sdk') setConnectSdkOpen(true);
         update({ pendingAction: undefined });
-    }, [state.pendingAction, onProjectRoute, update]);
+    }, [
+        state.pendingAction,
+        onProjectRoute,
+        onSdkTargetRoute,
+        dismissed,
+        update,
+    ]);
 
     if (dismissed) return null;
 
     const toggleMinimized = () => update({ minimized: !state.minimized });
 
     const handleDismiss = () => {
-        update({ dismissed: true });
+        // Also clear `pendingAction` so a dialog scheduled just before the
+        // dismiss (or one that's been sitting in localStorage) doesn't pop
+        // up right after the user closed the helper.
+        update({ dismissed: true, pendingAction: undefined });
         // Persist server-side so dismissal survives a localStorage reset.
         setSplashSeen(ONBOARDING_CHECKLIST_SPLASH_ID);
     };
@@ -140,20 +146,25 @@ const EligibleFloatingOnboardingChecklist = () => {
         if (onProjectRoute) {
             setCreateFlagOpen(true);
         } else {
-            update({ pendingAction: { type: 'flag', setAt: Date.now() } });
+            update({
+                pendingAction: { type: 'flag', setAt: Date.now() },
+            });
             navigate(`/projects/${projectId}`);
         }
     };
 
     const handleConnectSdk = () => {
-        const targetHref = feature
-            ? `/projects/${projectId}/features/${feature}`
-            : `/projects/${projectId}`;
-        if (isOnOrUnder(location.pathname, targetHref)) {
+        if (onSdkTargetRoute) {
             setConnectSdkOpen(true);
         } else {
-            update({ pendingAction: { type: 'sdk', setAt: Date.now() } });
-            navigate(targetHref);
+            update({
+                pendingAction: { type: 'sdk', setAt: Date.now() },
+            });
+            navigate(
+                feature
+                    ? `/projects/${projectId}/features/${feature}`
+                    : `/projects/${projectId}`,
+            );
         }
     };
 
@@ -184,7 +195,7 @@ const EligibleFloatingOnboardingChecklist = () => {
                 {state.minimized ? null : (
                     <Body>
                         <ChecklistSteps
-                            quickTourEnabled={quickTourEnabled}
+                            visibleSteps={visibleSteps}
                             done={done}
                             goToFlagHref={goToFlagHref}
                             onTakeTour={handleTakeTour}

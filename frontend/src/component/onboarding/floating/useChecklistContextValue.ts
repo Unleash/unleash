@@ -20,6 +20,8 @@ import {
  */
 export const CHECKLIST_PROJECT_ID = 'default';
 
+export type ChecklistStepKey = 'tour' | 'flag' | 'sdk' | 'on';
+
 export interface FloatingOnboardingChecklistContextValue {
     state: FloatingOnboardingChecklistState;
     update: (patch: Partial<FloatingOnboardingChecklistState>) => void;
@@ -33,8 +35,13 @@ export interface FloatingOnboardingChecklistContextValue {
      */
     dismissed: boolean;
     projectId: string;
-    quickTourEnabled: boolean;
-    done: { tour: boolean; flag: boolean; sdk: boolean; on: boolean };
+    /**
+     * Ordered list of step keys that should be shown and counted for this
+     * user (e.g. `tour` is opt-in behind a flag). Single source of truth so
+     * the badge and the step list can't disagree on how many steps exist.
+     */
+    visibleSteps: ChecklistStepKey[];
+    done: Record<ChecklistStepKey, boolean>;
     completedCount: number;
     totalSteps: number;
     environments: string[];
@@ -83,17 +90,17 @@ export const useChecklistContextValue =
         const serverStep = getProjectOnboardingStep(
             project.onboardingStatus,
         ).current;
-        const done = {
+        const done: Record<ChecklistStepKey, boolean> = {
             tour: Boolean(state.completed.tour),
             flag: Boolean(state.completed.flag) || serverStep >= 1,
             sdk: serverStep >= 2,
             on: serverStep >= 3,
         };
-        const totalSteps = quickTourEnabled ? 4 : 3;
-        const trackedDone = quickTourEnabled
-            ? [done.tour, done.flag, done.sdk, done.on]
-            : [done.flag, done.sdk, done.on];
-        const completedCount = trackedDone.filter(Boolean).length;
+        const visibleSteps: ChecklistStepKey[] = quickTourEnabled
+            ? ['tour', 'flag', 'sdk', 'on']
+            : ['flag', 'sdk', 'on'];
+        const totalSteps = visibleSteps.length;
+        const completedCount = visibleSteps.filter((key) => done[key]).length;
 
         // If the `default` project can't be loaded (deleted/renamed on this
         // instance), treat as ineligible — we'd otherwise render dead links
@@ -107,7 +114,7 @@ export const useChecklistContextValue =
             open: () => update({ dismissed: false, minimized: false }),
             dismissed,
             projectId,
-            quickTourEnabled,
+            visibleSteps,
             done,
             completedCount,
             totalSteps,

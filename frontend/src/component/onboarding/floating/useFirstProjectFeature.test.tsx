@@ -12,7 +12,7 @@ const TestComponent: FC<{ projectId: string }> = ({ projectId }) => {
     return (
         <div>
             <span data-testid='feature'>{feature ?? 'none'}</span>
-            <span data-testid='href'>{goToFlagHref}</span>
+            <span data-testid='href'>{goToFlagHref ?? 'no-href'}</span>
         </div>
     );
 };
@@ -33,7 +33,7 @@ test('picks the first feature and links to its flag page', async () => {
     );
 });
 
-test('falls back to the project page when the project has no features', async () => {
+test('returns no href when the project has no features', async () => {
     testServerRoute(server, '/api/admin/search/features', {
         features: [],
         total: 0,
@@ -41,8 +41,6 @@ test('falls back to the project page when the project has no features', async ()
 
     render(<TestComponent projectId='default' />);
 
-    expect(await screen.findByTestId('href')).toHaveTextContent(
-        '/projects/default',
-    );
+    expect(await screen.findByTestId('href')).toHaveTextContent('no-href');
     expect(screen.getByTestId('feature')).toHaveTextContent('none');
 });

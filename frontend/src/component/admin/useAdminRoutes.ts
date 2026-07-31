@@ -3,13 +3,15 @@ import { adminRoutes } from './adminRoutes.js';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 import { filterRoutesByPlanData } from './filterRoutesByPlanData.js';
 import { filterByConfig, normalizeRoutePath } from 'component/common/util';
+import { useDelayedUiFlagEvaluation } from 'hooks/useUiFlag';
 
 export const useAdminRoutes = () => {
     const { uiConfig, isPro, isEnterprise } = useUiConfig();
     const { isBilling } = useInstanceStatus();
+    const evaluateFlag = useDelayedUiFlagEvaluation();
     const routes = [...adminRoutes];
 
-    if (uiConfig.flags.UNLEASH_CLOUD) {
+    if (evaluateFlag('UNLEASH_CLOUD')) {
         const adminBillingMenuItem = routes.findIndex(
             (route) => route.title === 'Billing & invoices',
         );
@@ -20,7 +22,7 @@ export const useAdminRoutes = () => {
     }
 
     return routes
-        .filter(filterByConfig(uiConfig))
+        .filter(filterByConfig(uiConfig, evaluateFlag))
         .filter((route) =>
             filterRoutesByPlanData(route?.menu, {
                 enterprise: isEnterprise(),

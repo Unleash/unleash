@@ -9,7 +9,7 @@ import {
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 import type { INavigationMenuItem } from 'interfaces/route';
 import type { IUiConfig } from 'interfaces/uiConfig';
-import { useUiFlag } from 'hooks/useUiFlag';
+import { useDelayedUiFlagEvaluation, useUiFlag } from 'hooks/useUiFlag';
 import { useVariant } from 'hooks/useVariant';
 import type { Variant } from 'utils/variants';
 
@@ -29,10 +29,15 @@ const markRouteIfNew = (
 };
 
 const filterMapRoutes =
-    (uiConfig: IUiConfig, planData: PlanData, newRouteTitle?: string) =>
+    (
+        uiConfig: IUiConfig,
+        evaluateFlag: ReturnType<typeof useDelayedUiFlagEvaluation>,
+        planData: PlanData,
+        newRouteTitle?: string,
+    ) =>
     (routes: INavigationMenuItem[]) => {
         return routes
-            .filter(filterByConfig(uiConfig))
+            .filter(filterByConfig(uiConfig, evaluateFlag))
             .filter((route) => filterRoutesByPlanData(route?.menu, planData))
             .map((route) => {
                 const normalized = normalizeRoutePath(route);
@@ -47,6 +52,7 @@ export const useRoutes = () => {
     const adminRoutes = useAdminRoutes();
     const primaryRoutes = getPrimaryRoutes();
     const newRoute = useNewRoute();
+    const evaluateFlag = useDelayedUiFlagEvaluation();
 
     const planData: PlanData = {
         enterprise: isEnterprise(),
@@ -54,7 +60,12 @@ export const useRoutes = () => {
         billing: isBilling,
     };
 
-    const processRoutes = filterMapRoutes(uiConfig, planData, newRoute);
+    const processRoutes = filterMapRoutes(
+        uiConfig,
+        evaluateFlag,
+        planData,
+        newRoute,
+    );
 
     const filteredMainRoutes = {
         mainNavRoutes: processRoutes(routes),

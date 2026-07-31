@@ -5,21 +5,25 @@ import type { IFeatureVariant } from 'interfaces/featureToggle';
 import { format, isValid, parseISO } from 'date-fns';
 import type { IFeatureVariantEdit } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal';
 import { formatDateYMD } from '../../utils/formatDate.js';
+import type { useDelayedUiFlagEvaluation } from 'hooks/useUiFlag';
+
+type FlagEvaluator = ReturnType<typeof useDelayedUiFlagEvaluation>;
 
 /**
  * Handle feature flags and configuration for different plans.
+ *
+ * Takes an evaluator rather than reading `config.flags`, so routes respond to
+ * the same flag values as `useUiFlag` — including dev-time toolbar overrides.
  */
 export const filterByConfig =
-    (config: IUiConfig) => (r: INavigationMenuItem) => {
-        const flags = config.flags as unknown as Record<string, boolean>;
-
-        if (r.notFlag && flags[r.notFlag] === true) {
+    (config: IUiConfig, evaluateFlag: FlagEvaluator) =>
+    (r: INavigationMenuItem) => {
+        if (r.notFlag && evaluateFlag(r.notFlag) === true) {
             return false;
         }
 
         if (r.flag) {
-            // Check if the route's `flag` is enabled in IUiConfig.flags.
-            return Boolean(flags[r.flag]);
+            return Boolean(evaluateFlag(r.flag));
         }
 
         if (r.configFlag) {

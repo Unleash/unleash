@@ -29,13 +29,17 @@ const TestComponent: FC = () => {
     );
 };
 
-const mockEligibleUser = (splash: Record<string, boolean> = {}) =>
+const mockEligibleUser = (splash: Record<string, boolean> = {}) => {
+    testServerRoute(server, '/api/admin/ui-config', {
+        flags: { floatingOnboardingChecklist: true },
+    });
     testServerRoute(server, '/api/admin/user', {
         user: { id: 1 },
         permissions: [],
         feedback: [],
         splash,
     });
+};
 
 const mockProjectOverview = (
     onboardingStatus: 'onboarding-started' | 'sdk-connected' | 'onboarded',

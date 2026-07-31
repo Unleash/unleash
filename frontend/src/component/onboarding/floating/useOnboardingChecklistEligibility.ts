@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import AccessContext from 'contexts/AccessContext';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 /**
  * Per-user splash key used to remember that the checklist has been
@@ -28,8 +29,10 @@ export const ONBOARDING_CHECKLIST_SPLASH_ID = 'onboarding-checklist';
  * change.
  */
 export const useOnboardingChecklistEligibility = (): boolean => {
+    const flagEnabled = useUiFlag('floatingOnboardingChecklist');
     const { isAdmin } = useContext(AccessContext);
     const { user, loading } = useAuthUser();
+    if (!flagEnabled) return false;
     if (loading || user === undefined) return false;
     return isAdmin && user.id === 1;
 };

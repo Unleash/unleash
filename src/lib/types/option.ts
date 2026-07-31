@@ -162,6 +162,7 @@ export interface IUnleashOptions {
     import?: Partial<IImportOption>;
     experimental?: Partial<IExperimentalOptions>;
     email?: Partial<IEmailOption>;
+    tokenExpiryNotificationDays?: number[];
     secureHeaders?: boolean;
     additionalCspAllowedDomains?: ICspDomainOptions;
     frontendApiOrigins?: string[];
@@ -283,6 +284,7 @@ export interface IUnleashConfig {
     experimental?: IExperimentalOptions;
     flagResolver: IFlagResolver;
     email: IEmailOption;
+    tokenExpiryNotificationDays: number[];
     secureHeaders: boolean;
     additionalCspAllowedDomains: ICspDomainConfig;
     frontendApiOrigins: string[];

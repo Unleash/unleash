@@ -166,6 +166,7 @@ import FakeEventStore from '../test/fixtures/fake-event-store.js';
 import { FakeAccountStore } from '../test/fixtures/fake-account-store.js';
 import type { Subscriber } from './features/user-subscriptions/user-subscriptions-read-model-type.js';
 import { UserSubscriptionsReadModel } from './features/user-subscriptions/user-subscriptions-read-model.js';
+import { AccountStore } from './db/account-store.js';
 import { FakeUserSubscriptionsReadModel } from './features/user-subscriptions/fake-user-subscriptions-read-model.js';
 import type { IPrivateProjectChecker } from './features/private-project/privateProjectCheckerType.js';
 import type { ProjectAccess } from './features/private-project/privateProjectStore.js';
@@ -536,6 +537,7 @@ export {
     createHistogram,
     UserSubscriptionsReadModel,
     FakeUserSubscriptionsReadModel,
+    AccountStore,
     FakeAccountStore,
     FakePrivateProjectChecker,
     FakeChangeRequestAccessReadModel,

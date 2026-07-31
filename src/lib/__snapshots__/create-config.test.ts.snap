@@ -170,6 +170,10 @@ exports[`should create default config 1`] = `
   },
   "strategySegmentsLimit": 5,
   "telemetry": true,
+  "tokenExpiryNotificationDays": [
+    14,
+    3,
+  ],
   "ui": {
     "environment": "Open Source",
   },

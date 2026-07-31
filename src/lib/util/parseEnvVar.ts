@@ -27,6 +27,22 @@ export function parseEnvVarBoolean(
     return defaultVal;
 }
 
+export function parseEnvVarNumbers(
+    envVar: string | undefined,
+    defaultVal: number[],
+): number[] {
+    if (!envVar) {
+        return defaultVal;
+    }
+
+    const parsed = envVar
+        .split(',')
+        .map((item) => Number.parseInt(item.trim(), 10))
+        .filter((item) => !Number.isNaN(item));
+
+    return parsed.length > 0 ? parsed : defaultVal;
+}
+
 export function parseEnvVarStrings(
     envVar: string | undefined,
     defaultVal: string[],

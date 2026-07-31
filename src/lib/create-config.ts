@@ -42,6 +42,7 @@ import {
     parseEnvVarBoolean,
     parseEnvVarJSON,
     parseEnvVarNumber,
+    parseEnvVarNumbers,
     parseEnvVarStrings,
 } from './util/parseEnvVar.js';
 import {
@@ -629,6 +630,10 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
 
     const email: IEmailOption = mergeAll([defaultEmail, options.email || {}]);
 
+    const tokenExpiryNotificationDays =
+        options.tokenExpiryNotificationDays ??
+        parseEnvVarNumbers(process.env.TOKEN_EXPIRY_NOTIFICATION_DAYS, [14, 3]);
+
     let listen: IListeningPipe | IListeningHost;
     if (server.pipe) {
         listen = { path: server.pipe };
@@ -842,6 +847,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         flagResolver,
         frontendApi,
         email,
+        tokenExpiryNotificationDays,
         secureHeaders,
         enableOAS,
         preHook: options.preHook,

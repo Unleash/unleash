@@ -190,7 +190,6 @@ const EligibleFloatingOnboardingChecklist = () => {
                             onTakeTour={handleTakeTour}
                             onCreateFlag={handleCreateFlag}
                             onConnectSdk={handleConnectSdk}
-                            onGoToFlag={() => markCompleted('on')}
                         />
                     </Body>
                 )}
@@ -200,6 +199,10 @@ const EligibleFloatingOnboardingChecklist = () => {
                 open={createFlagOpen}
                 onClose={() => setCreateFlagOpen(false)}
                 onSuccess={() => {
+                    // `onSuccess` only fires on 2xx, so we know a flag
+                    // exists — tick locally to bridge the lag before
+                    // `onboardingStatus` catches up. Server remains the
+                    // source of truth via the merge in the context hook.
                     markCompleted('flag');
                     refetchOverview();
                 }}
@@ -208,7 +211,10 @@ const EligibleFloatingOnboardingChecklist = () => {
                 open={connectSdkOpen}
                 onClose={() => {
                     setConnectSdkOpen(false);
-                    markCompleted('sdk');
+                    // No local `markCompleted('sdk')`: closing this dialog
+                    // isn't proof an SDK actually registered. The server
+                    // reports `sdk-connected` when a real SDK checks in, so
+                    // we just refetch and let that flip the step to done.
                     refetchOverview();
                 }}
                 projectId={projectId}

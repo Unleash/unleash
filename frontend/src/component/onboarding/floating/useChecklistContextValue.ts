@@ -75,18 +75,19 @@ export const useChecklistContextValue =
             [project.environments],
         );
 
-        // Local `completed` is the fast/optimistic path, but localStorage is
-        // cleared on logout — fall back to the server's onboardingStatus so a
-        // user who logs back in doesn't have to redo flag/sdk/on. Tour has no
-        // server signal, so it resets on logout (acceptable — cheap to redo).
+        // `flag` merges a local bridge tick with the server so a fresh
+        // creation doesn't flicker while `onboardingStatus` catches up.
+        // `sdk`/`on` are server-only — no reliable local proof (closing
+        // the SDK dialog isn't evidence anyone connected, and turning a
+        // flag on happens outside our flow). `tour` has no server signal.
         const serverStep = getProjectOnboardingStep(
             project.onboardingStatus,
         ).current;
         const done = {
             tour: Boolean(state.completed.tour),
             flag: Boolean(state.completed.flag) || serverStep >= 1,
-            sdk: Boolean(state.completed.sdk) || serverStep >= 2,
-            on: Boolean(state.completed.on) || serverStep >= 3,
+            sdk: serverStep >= 2,
+            on: serverStep >= 3,
         };
         const totalSteps = quickTourEnabled ? 4 : 3;
         const trackedDone = quickTourEnabled

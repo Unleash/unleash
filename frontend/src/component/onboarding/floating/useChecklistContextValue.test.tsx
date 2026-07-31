@@ -5,7 +5,10 @@ import { screen } from '@testing-library/react';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { ADMIN } from 'component/providers/AccessProvider/permissions.ts';
 import { createLocalStorage } from 'utils/createLocalStorage.ts';
-import { useChecklistContextValue } from './useChecklistContextValue.ts';
+import {
+    CHECKLIST_PROJECT_ID,
+    useChecklistContextValue,
+} from './useChecklistContextValue.ts';
 import { ONBOARDING_CHECKLIST_SPLASH_ID } from './useOnboardingChecklistEligibility.ts';
 import type { FloatingOnboardingChecklistState } from './floatingOnboardingChecklistState.ts';
 
@@ -44,19 +47,23 @@ const mockEligibleUser = (splash: Record<string, boolean> = {}) => {
 const mockProjectOverview = (
     onboardingStatus: 'onboarding-started' | 'sdk-connected' | 'onboarded',
 ) =>
-    testServerRoute(server, '/api/admin/projects/default/overview', {
-        featureTypeCounts: [],
-        environments: [],
-        name: 'Default',
-        health: 0,
-        members: 0,
-        version: 1,
-        description: 'Default',
-        favorite: false,
-        mode: 'open',
-        defaultStickiness: 'default',
-        onboardingStatus: { status: onboardingStatus },
-    });
+    testServerRoute(
+        server,
+        `/api/admin/projects/${CHECKLIST_PROJECT_ID}/overview`,
+        {
+            featureTypeCounts: [],
+            environments: [],
+            name: 'Default',
+            health: 0,
+            members: 0,
+            version: 1,
+            description: 'Default',
+            favorite: false,
+            mode: 'open',
+            defaultStickiness: 'default',
+            onboardingStatus: { status: onboardingStatus },
+        },
+    );
 
 const seedState = (patch: Partial<FloatingOnboardingChecklistState>) => {
     const base: FloatingOnboardingChecklistState = {
@@ -85,17 +92,16 @@ test('done and completedCount derive from server onboardingStatus', async () => 
     expect(await screen.findByTestId('count')).toHaveTextContent('2/3');
 });
 
-test('local completed state marks steps done even when server says otherwise', async () => {
-    seedState({ completed: { flag: true, sdk: true, on: true } });
+test('local flag tick bridges lag before onboardingStatus catches up', async () => {
+    seedState({ completed: { flag: true } });
     mockEligibleUser();
     mockProjectOverview('onboarding-started');
 
     render(<TestComponent />, { permissions: [{ permission: ADMIN }] });
 
     expect(await screen.findByTestId('flag')).toHaveTextContent('y');
-    expect(await screen.findByTestId('sdk')).toHaveTextContent('y');
-    expect(await screen.findByTestId('on')).toHaveTextContent('y');
-    expect(await screen.findByTestId('count')).toHaveTextContent('3/3');
+    expect(await screen.findByTestId('sdk')).toHaveTextContent('n');
+    expect(await screen.findByTestId('on')).toHaveTextContent('n');
 });
 
 test('server splash keeps checklist dismissed after a fresh login', async () => {

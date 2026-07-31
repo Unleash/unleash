@@ -88,7 +88,6 @@ interface IChecklistStepsProps {
     onTakeTour: () => void;
     onCreateFlag: () => void;
     onConnectSdk: () => void;
-    onGoToFlag: () => void;
 }
 
 const ActionButton = ({
@@ -126,7 +125,7 @@ const ActionButton = ({
 
 type GoToFlagButtonProps =
     | { variant: 'disabled' }
-    | { variant: 'active'; goToFlagHref: string; onClick?: () => void }
+    | { variant: 'active'; goToFlagHref: string }
     | { variant: 'completed'; goToFlagHref: string };
 
 const GoToFlagButton = (props: GoToFlagButtonProps) => {
@@ -144,7 +143,6 @@ const GoToFlagButton = (props: GoToFlagButtonProps) => {
             size='small'
             component={Link}
             to={props.goToFlagHref}
-            onClick={props.variant === 'active' ? props.onClick : undefined}
         >
             Go to flag
         </Button>
@@ -158,7 +156,6 @@ export const ChecklistSteps = ({
     onTakeTour,
     onCreateFlag,
     onConnectSdk,
-    onGoToFlag,
 }: IChecklistStepsProps) => {
     const steps: ChecklistStep[] = [
         ...(quickTourEnabled
@@ -225,11 +222,7 @@ export const ChecklistSteps = ({
                     goToFlagHref={goToFlagHref}
                 />
             ) : done.sdk ? (
-                <GoToFlagButton
-                    variant='active'
-                    goToFlagHref={goToFlagHref}
-                    onClick={onGoToFlag}
-                />
+                <GoToFlagButton variant='active' goToFlagHref={goToFlagHref} />
             ) : (
                 <GoToFlagButton variant='disabled' />
             ),

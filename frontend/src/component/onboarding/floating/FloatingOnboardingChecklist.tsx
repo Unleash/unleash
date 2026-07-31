@@ -1,8 +1,9 @@
-import { useContext, useEffect, useState } from 'react';
-import { IconButton, styled, Typography } from '@mui/material';
+import { type ReactNode, useContext, useEffect, useState } from 'react';
+import { Button, IconButton, styled, Typography } from '@mui/material';
+import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { CreateFeatureDialog } from 'component/project/Project/PaginatedProjectFeatureToggles/ProjectFeatureTogglesHeader/CreateFeatureDialog.tsx';
 import { ConnectSdkDialog } from 'component/onboarding/dialog/ConnectSdkDialog/ConnectSdkDialog.tsx';
 import { useIntro } from 'component/onboarding/intro/IntroProvider.tsx';
@@ -12,8 +13,9 @@ import { OnboardingProgressBadge } from './OnboardingProgressBadge.tsx';
 import { useFloatingOnboardingChecklist } from './useFloatingOnboardingChecklist.ts';
 import { useFirstProjectFeature } from './useFirstProjectFeature.ts';
 import { useChecklistRouteMatch } from './useChecklistRouteMatch.ts';
-import { ChecklistSteps } from './ChecklistSteps.tsx';
+import { ChecklistSteps, type ChecklistStep } from './ChecklistSteps.tsx';
 import { isPendingActionExpired } from './floatingOnboardingChecklistState.ts';
+import type { ChecklistStepKey } from './useChecklistContextValue.ts';
 import { ONBOARDING_CHECKLIST_SPLASH_ID } from './useOnboardingChecklistEligibility.ts';
 
 const Window = styled('aside')(({ theme }) => ({
@@ -63,6 +65,68 @@ const HeaderTitle = styled(Typography)(({ theme }) => ({
 const Body = styled('div')({
     overflowY: 'auto',
 });
+
+const Primary = ({
+    onClick,
+    disabled = false,
+    children,
+}: {
+    onClick: () => void;
+    disabled?: boolean;
+    children: ReactNode;
+}) => (
+    <Button
+        variant='contained'
+        color='primary'
+        size='small'
+        onClick={onClick}
+        disabled={disabled}
+    >
+        {children}
+    </Button>
+);
+
+const Done = () => (
+    <Button
+        variant='outlined'
+        color='inherit'
+        size='small'
+        disabled
+        startIcon={<CheckIcon />}
+    >
+        Done
+    </Button>
+);
+
+/**
+ * `href` null / `disabled` collapses to a non-interactive button so we
+ * don't send the user to `/projects/default` when there's no flag to
+ * inspect.
+ */
+const GoToFlag = ({
+    href,
+    variant = 'outlined',
+    disabled = false,
+}: {
+    href: string | null;
+    variant?: 'outlined' | 'contained';
+    disabled?: boolean;
+}) =>
+    href && !disabled ? (
+        <Button
+            variant={variant}
+            color='primary'
+            size='small'
+            component={Link}
+            to={href}
+        >
+            Go to flag
+        </Button>
+    ) : (
+        <Button variant='contained' color='primary' size='small' disabled>
+            Go to flag
+        </Button>
+    );
 
 /**
  * Wrapper: renders nothing when the user isn't eligible (context is null).
@@ -168,11 +232,69 @@ const EligibleFloatingOnboardingChecklist = () => {
         }
     };
 
+    const stepDefinitions: Record<
+        ChecklistStepKey,
+        Omit<ChecklistStep, 'key'>
+    > = {
+        tour: {
+            title: 'Unleash Intro',
+            body: 'Learn the key concepts of rolling out a flag in Unleash.',
+            done: done.tour,
+            action: done.tour ? (
+                <Done />
+            ) : (
+                <Primary onClick={handleTakeTour}>Take the tour</Primary>
+            ),
+        },
+        flag: {
+            title: 'Create a feature flag',
+            body: 'You must create a feature flag before you can connect a SDK.',
+            done: done.flag,
+            action: done.flag ? (
+                <GoToFlag href={goToFlagHref} />
+            ) : (
+                <Primary onClick={handleCreateFlag}>New feature flag</Primary>
+            ),
+        },
+        sdk: {
+            title: done.sdk ? 'Connect SDK' : 'Connect SDKs',
+            body: done.sdk
+                ? 'You can connect as many SDKs as you need.'
+                : 'To start using your feature flag, connect an SDK to the project.',
+            done: done.sdk,
+            action: done.sdk ? (
+                <Done />
+            ) : (
+                <Primary onClick={handleConnectSdk} disabled={!done.flag}>
+                    Connect SDK
+                </Primary>
+            ),
+        },
+        on: {
+            title: 'Turn flag on',
+            body: 'Check that the flag is working by turning it on.',
+            done: done.on,
+            action: done.on ? (
+                <GoToFlag href={goToFlagHref} />
+            ) : (
+                <GoToFlag
+                    href={goToFlagHref}
+                    variant='contained'
+                    disabled={!done.sdk}
+                />
+            ),
+        },
+    };
+    const steps: ChecklistStep[] = visibleSteps.map((key) => ({
+        key,
+        ...stepDefinitions[key],
+    }));
+
     return (
         <>
             <Window aria-label='Get started'>
                 <Header>
-                    <TitleRow onClick={toggleMinimized}>
+                    <TitleRow>
                         <HeaderTitle>Get started</HeaderTitle>
                         <OnboardingProgressBadge showLabel />
                     </TitleRow>
@@ -194,14 +316,7 @@ const EligibleFloatingOnboardingChecklist = () => {
 
                 {state.minimized ? null : (
                     <Body>
-                        <ChecklistSteps
-                            visibleSteps={visibleSteps}
-                            done={done}
-                            goToFlagHref={goToFlagHref}
-                            onTakeTour={handleTakeTour}
-                            onCreateFlag={handleCreateFlag}
-                            onConnectSdk={handleConnectSdk}
-                        />
+                        <ChecklistSteps steps={steps} />
                     </Body>
                 )}
             </Window>

@@ -1,10 +1,7 @@
 import { type ReactNode, useEffect, useState } from 'react';
-import { Button, Collapse, styled, Typography } from '@mui/material';
-import CheckIcon from '@mui/icons-material/Check';
+import { Collapse, styled, Typography } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { Link } from 'react-router';
-import type { ChecklistStepKey } from './useChecklistContextValue.ts';
 
 const StepContainer = styled('div')(({ theme }) => ({
     borderTop: `1px solid ${theme.palette.divider}`,
@@ -74,175 +71,23 @@ const StepBodyText = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-interface ChecklistStep {
-    key: ChecklistStepKey;
+export interface ChecklistStep {
+    key: string;
     title: string;
     body: string;
     done: boolean;
     action: ReactNode;
 }
 
-interface IChecklistStepsProps {
-    visibleSteps: ChecklistStepKey[];
-    done: Record<ChecklistStepKey, boolean>;
-    goToFlagHref: string | null;
-    onTakeTour: () => void;
-    onCreateFlag: () => void;
-    onConnectSdk: () => void;
-}
-
-const ActionButton = ({
-    label,
-    onClick,
-    disabled,
-    done,
-}: {
-    label: string;
-    onClick: () => void;
-    disabled: boolean;
-    done: boolean;
-}) =>
-    done ? (
-        <Button
-            variant='outlined'
-            color='inherit'
-            size='small'
-            disabled
-            startIcon={<CheckIcon />}
-        >
-            Done
-        </Button>
-    ) : (
-        <Button
-            variant='contained'
-            color='primary'
-            size='small'
-            onClick={onClick}
-            disabled={disabled}
-        >
-            {label}
-        </Button>
-    );
-
-type GoToFlagButtonProps =
-    | { variant: 'disabled' }
-    | { variant: 'active'; goToFlagHref: string }
-    | { variant: 'completed'; goToFlagHref: string };
-
-const GoToFlagButton = (props: GoToFlagButtonProps) => {
-    if (props.variant === 'disabled') {
-        return (
-            <Button variant='contained' color='primary' size='small' disabled>
-                Go to flag
-            </Button>
-        );
-    }
-    return (
-        <Button
-            variant={props.variant === 'completed' ? 'outlined' : 'contained'}
-            color='primary'
-            size='small'
-            component={Link}
-            to={props.goToFlagHref}
-        >
-            Go to flag
-        </Button>
-    );
-};
-
-export const ChecklistSteps = ({
-    visibleSteps,
-    done,
-    goToFlagHref,
-    onTakeTour,
-    onCreateFlag,
-    onConnectSdk,
-}: IChecklistStepsProps) => {
-    // Any "Go to flag" affordance needs a real flag target. Server state
-    // (`first-flag-created`, `sdk-connected`, `onboarded`) is one-way, so
-    // `done.flag` can stay true after the user's only flag is deleted;
-    // fall back to disabled instead of linking to the project page.
-    const stepDefinitions: Record<ChecklistStepKey, ChecklistStep> = {
-        tour: {
-            key: 'tour',
-            title: 'Unleash Intro',
-            body: 'Learn the key concepts of rolling out a flag in Unleash.',
-            done: done.tour,
-            action: (
-                <ActionButton
-                    label='Take the tour'
-                    onClick={onTakeTour}
-                    disabled={false}
-                    done={done.tour}
-                />
-            ),
-        },
-        flag: {
-            key: 'flag',
-            title: 'Create a feature flag',
-            body: 'You must create a feature flag before you can connect a SDK.',
-            done: done.flag,
-            action:
-                done.flag && goToFlagHref ? (
-                    <GoToFlagButton
-                        variant='completed'
-                        goToFlagHref={goToFlagHref}
-                    />
-                ) : (
-                    <ActionButton
-                        label='New feature flag'
-                        onClick={onCreateFlag}
-                        disabled={false}
-                        done={done.flag}
-                    />
-                ),
-        },
-        sdk: {
-            key: 'sdk',
-            title: done.sdk ? 'Connect SDK' : 'Connect SDKs',
-            body: done.sdk
-                ? 'You can connect as many SDKs as you need.'
-                : 'To start using your feature flag, connect an SDK to the project.',
-            done: done.sdk,
-            action: (
-                <ActionButton
-                    label='Connect SDK'
-                    onClick={onConnectSdk}
-                    disabled={!done.flag}
-                    done={done.sdk}
-                />
-            ),
-        },
-        on: {
-            key: 'on',
-            title: 'Turn flag on',
-            body: 'Check that the flag is working by turning it on.',
-            done: done.on,
-            action:
-                done.on && goToFlagHref ? (
-                    <GoToFlagButton
-                        variant='completed'
-                        goToFlagHref={goToFlagHref}
-                    />
-                ) : done.sdk && goToFlagHref ? (
-                    <GoToFlagButton
-                        variant='active'
-                        goToFlagHref={goToFlagHref}
-                    />
-                ) : (
-                    <GoToFlagButton variant='disabled' />
-                ),
-        },
-    };
-    const steps: ChecklistStep[] = visibleSteps.map(
-        (key) => stepDefinitions[key],
-    );
-
+/**
+ * Presentation-only accordion. Knows nothing about the onboarding domain
+ * (steps, copy, actions) — the caller passes those in. Auto-expands the
+ * first incomplete step and re-advances whenever completion changes.
+ */
+export const ChecklistSteps = ({ steps }: { steps: ChecklistStep[] }) => {
     const firstIncomplete = steps.findIndex((step) => !step.done);
     const [expanded, setExpanded] = useState(firstIncomplete);
 
-    // Auto-advance: whenever the set of completed steps changes, jump the
-    // open accordion to the first step that still needs doing.
     useEffect(() => {
         setExpanded(firstIncomplete);
     }, [firstIncomplete]);

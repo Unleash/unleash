@@ -84,6 +84,7 @@
     "@uiw/react-codemirror": "4.25.10",
     "@unleash/proxy-client-react": "5.1.0",
     "@unleash/sdk-flight-recorder": "^0.8.0",
+    "@unleash/toolbar": "1.1.1",
     "@vitejs/plugin-react": "6.0.3",
     "cartesian": "^1.0.1",
     "chart.js": "^4.1.1",

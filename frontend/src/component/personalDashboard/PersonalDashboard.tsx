@@ -23,6 +23,7 @@ import { EventTimeline } from 'component/events/EventTimeline/EventTimeline';
 import { AccordionContent } from './SharedComponents.tsx';
 import { Link } from 'react-router';
 import { useWelcomeDialogContext } from './WelcomeDialogContext.tsx';
+import { Banner } from 'component/banners/Banner/Banner.tsx';
 
 const WelcomeSection = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -287,6 +288,17 @@ export const PersonalDashboard = () => {
     return (
         <MainContent>
             {isOss() && <InfoSection />}
+
+            <Banner
+                inline
+                banner={{
+                    message:
+                        'Measure the real-world effect of your feature flags with **impact metrics** — track how changes affect performance, conversion, and usage.',
+                    variant: 'info',
+                    link: '/impact-metrics',
+                    linkText: 'Explore impact metrics',
+                }}
+            />
 
             <WelcomeSection>
                 <Typography component='h2' variant='h2'>

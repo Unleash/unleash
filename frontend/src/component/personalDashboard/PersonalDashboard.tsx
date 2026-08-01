@@ -94,6 +94,53 @@ const MainContent = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
+const ImpactMetricsBanner = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: theme.spacing(2),
+    flexFlow: 'row wrap',
+    padding: theme.spacing(2, 4),
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadiusMedium,
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: 'none',
+}));
+
+const ImpactMetricsBannerText = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(0.5),
+}));
+
+const ImpactMetricsBannerTitle = styled('h3')(({ theme }) => ({
+    color: theme.palette.text.primary,
+    fontSize: theme.typography.body1.fontSize,
+    fontWeight: theme.typography.fontWeightBold,
+    margin: 0,
+}));
+
+const ImpactMetricsBannerSubtitle = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: theme.typography.body2.fontSize,
+    fontWeight: theme.typography.body2.fontWeight,
+}));
+
+const ImpactMetricsPromoBanner = () => (
+    <ImpactMetricsBanner>
+        <ImpactMetricsBannerText>
+            <ImpactMetricsBannerTitle>Impact metrics</ImpactMetricsBannerTitle>
+            <ImpactMetricsBannerSubtitle>
+                Measure the real-world impact of your feature flags by tracking
+                custom metrics over time.
+            </ImpactMetricsBannerSubtitle>
+        </ImpactMetricsBannerText>
+        <Button variant='outlined' component={Link} to='/impact-metrics'>
+            Explore impact metrics
+        </Button>
+    </ImpactMetricsBanner>
+);
+
 const AccordionSummaryText = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -287,6 +334,8 @@ export const PersonalDashboard = () => {
     return (
         <MainContent>
             {isOss() && <InfoSection />}
+
+            <ImpactMetricsPromoBanner />
 
             <WelcomeSection>
                 <Typography component='h2' variant='h2'>

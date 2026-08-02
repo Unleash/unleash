@@ -188,7 +188,11 @@ const PasswordAuth: FC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
                         <AuthOptions options={options} />
                         <ConditionallyRender
                             condition={!authDetails.defaultHidden}
-                            show={<OrDivider />}
+                            show={
+                                <OrDivider
+                                    sx={{ transform: 'translate(0px, -4px)' }}
+                                />
+                            }
                         />
                         {renderLoginForm()}
                     </StyledDiv>

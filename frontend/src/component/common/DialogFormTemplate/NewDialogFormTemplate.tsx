@@ -6,6 +6,7 @@ import {
     Switch,
     styled,
     useTheme,
+    type SxProps,
     type Theme,
 } from '@mui/material';
 import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
@@ -125,18 +126,25 @@ export const PillTrigger = ({
     label,
     onClick,
     buttonRef,
+    sx,
+    labelSx,
 }: {
     label: string;
     onClick: () => void;
     buttonRef: React.RefObject<HTMLButtonElement | null>;
+    sx?: SxProps<Theme>;
+    labelSx?: SxProps<Theme>;
 }) => (
     <PillButton
         ref={buttonRef}
         variant='outlined'
         color='inherit'
         onClick={onClick}
+        sx={sx}
     >
-        <span>{label}</span>
+        <Box component='span' sx={labelSx}>
+            {label}
+        </Box>
         <KeyboardArrowDownOutlined />
     </PillButton>
 );
@@ -150,6 +158,8 @@ type SinglePillProps<T> = {
     searchPlaceholder: string;
     selectedValue?: T;
     hideSearch?: boolean;
+    buttonSx?: SxProps<Theme>;
+    labelSx?: SxProps<Theme>;
 };
 
 export function SinglePillDropdown<T = string>({
@@ -161,6 +171,8 @@ export function SinglePillDropdown<T = string>({
     searchPlaceholder,
     selectedValue,
     hideSearch,
+    buttonSx,
+    labelSx,
 }: SinglePillProps<T>) {
     const ref = useRef<HTMLButtonElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -170,6 +182,8 @@ export function SinglePillDropdown<T = string>({
                 label={label}
                 buttonRef={ref}
                 onClick={() => setAnchorEl(ref.current)}
+                sx={buttonSx}
+                labelSx={labelSx}
             />
             <StyledPopover
                 open={Boolean(anchorEl)}
@@ -205,6 +219,8 @@ type MultiPillProps<T> = {
     onChange: (values: Set<T>) => void;
     searchLabel: string;
     searchPlaceholder: string;
+    buttonSx?: SxProps<Theme>;
+    labelSx?: SxProps<Theme>;
 };
 
 export function MultiPillDropdown<T = string>({
@@ -215,6 +231,8 @@ export function MultiPillDropdown<T = string>({
     onChange,
     searchLabel,
     searchPlaceholder,
+    buttonSx,
+    labelSx,
 }: MultiPillProps<T>) {
     const ref = useRef<HTMLButtonElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -230,6 +248,8 @@ export function MultiPillDropdown<T = string>({
                 label={label}
                 buttonRef={ref}
                 onClick={() => setAnchorEl(ref.current)}
+                sx={buttonSx}
+                labelSx={labelSx}
             />
             <StyledPopover
                 open={Boolean(anchorEl)}
@@ -289,7 +309,14 @@ export const NewDialogFormTemplate: React.FC<Props> = ({
                 title={title}
             />
 
-            <Section sx={{ pt: 4, pb: 3, width: '100%' }}>
+            <Section
+                sx={{
+                    pt: 4,
+                    pb: 3,
+                    width: '100%',
+                    transform: 'translate(3px, -2px)',
+                }}
+            >
                 <Input
                     label={`${capitalizeFirst(resource)} name`}
                     placeholder='Feature-flag-name'
@@ -310,7 +337,26 @@ export const NewDialogFormTemplate: React.FC<Props> = ({
                         delete errors.name;
                     }}
                     autoFocus
-                    slotProps={nameInputSlotProps(theme)}
+                    slotProps={(() => {
+                        const base = nameInputSlotProps(theme);
+                        return {
+                            ...base,
+                            input: {
+                                ...base.input,
+                                sx: {
+                                    ...base.input.sx,
+                                    transform: 'translate(-9px, 0px)',
+                                },
+                            },
+                            htmlInput: {
+                                ...base.htmlInput,
+                                sx: {
+                                    ...base.htmlInput.sx,
+                                    transform: 'translate(-8px, 0px)',
+                                },
+                            },
+                        };
+                    })()}
                     data-testid='FORM_NAME_INPUT'
                     size='medium'
                     fullWidth
@@ -328,7 +374,19 @@ export const NewDialogFormTemplate: React.FC<Props> = ({
                     maxRows={3}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    slotProps={descriptionInputSlotProps(theme)}
+                    slotProps={(() => {
+                        const base = descriptionInputSlotProps(theme);
+                        return {
+                            ...base,
+                            htmlInput: {
+                                ...base.htmlInput,
+                                sx: {
+                                    ...base.htmlInput.sx,
+                                    transform: 'translate(-10px, 0px)',
+                                },
+                            },
+                        };
+                    })()}
                     data-testid='FORM_DESCRIPTION_INPUT'
                     size='medium'
                     fullWidth
@@ -342,13 +400,14 @@ export const NewDialogFormTemplate: React.FC<Props> = ({
                     flexFlow: 'row wrap',
                     pt: 2,
                     pb: 3,
+                    transform: 'translate(0px, -70px)',
                 }}
             >
                 {configButtons}
             </Section>
 
             <Section sx={{ pb: 4 }}>
-                <ToggleWrapper>
+                <ToggleWrapper sx={{ transform: 'translate(6px, -73px)' }}>
                     <FormControlLabel
                         sx={{ m: 0 }}
                         control={

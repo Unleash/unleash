@@ -72,7 +72,11 @@ interface AuthPageLayoutProps {
 export const AuthPageLayout = ({ children }: AuthPageLayoutProps) => {
     return (
         <StyledPage>
-            <StyledBackground src={formatAssetPath(loginBackground)} alt='' />
+            <StyledBackground
+                src={formatAssetPath(loginBackground)}
+                alt=''
+                sx={{ transform: 'translate(0px, 0px)' }}
+            />
             <StyledHeader>
                 <ThemeMode
                     darkmode={<StyledLogoWhite aria-label='Unleash logo' />}

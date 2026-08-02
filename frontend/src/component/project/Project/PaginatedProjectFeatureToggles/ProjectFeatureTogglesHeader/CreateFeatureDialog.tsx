@@ -378,6 +378,9 @@ const CreateFeatureDialogContent = ({
                         configButtons={
                             <>
                                 <SinglePillDropdown<string>
+                                    buttonSx={{
+                                        transform: 'translate(-2px, -52px)',
+                                    }}
                                     label={
                                         featureTypes.find(
                                             (featureType) =>
@@ -404,6 +407,12 @@ const CreateFeatureDialogContent = ({
                                     searchPlaceholder='Select flag type'
                                 />
                                 <MultiPillDropdown<string>
+                                    buttonSx={{
+                                        transform: 'translate(0px, -52px)',
+                                    }}
+                                    labelSx={{
+                                        transform: 'translate(-1px, -2px)',
+                                    }}
                                     label={
                                         tags.size > 0
                                             ? `${tags.size} tag${tags.size > 1 ? 's' : ''} selected`

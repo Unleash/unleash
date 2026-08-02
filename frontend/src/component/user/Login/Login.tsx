@@ -15,6 +15,7 @@ const StyledTitle = styled(Typography)(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
     lineHeight: '28px',
     marginBottom: theme.spacing(3),
+    transform: 'translate(0px, -11px)',
 }));
 
 const Login = () => {

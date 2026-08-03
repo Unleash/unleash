@@ -79,11 +79,7 @@ export interface ChecklistStep {
     action: ReactNode;
 }
 
-/**
- * Presentation-only accordion. Knows nothing about the onboarding domain
- * (steps, copy, actions) — the caller passes those in. Auto-expands the
- * first incomplete step and re-advances whenever completion changes.
- */
+// Auto-expands the first incomplete step, re-advancing on completion.
 export const ChecklistSteps = ({ steps }: { steps: ChecklistStep[] }) => {
     const firstIncomplete = steps.findIndex((step) => !step.done);
     const [expanded, setExpanded] = useState(firstIncomplete);

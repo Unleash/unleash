@@ -14,11 +14,7 @@ import {
     useOnboardingChecklistEligibility,
 } from './useOnboardingChecklistEligibility.ts';
 
-/**
- * The checklist targets the `default` project — created for every new
- * instance. Users on invited instances / multi-project setups are out of
- * scope for the onboarding checklist.
- */
+// Targets the `default` project — the one every fresh instance ships with.
 export const CHECKLIST_PROJECT_ID = 'default';
 
 export type ChecklistStepKey = 'tour' | 'flag' | 'sdk' | 'on';
@@ -27,20 +23,11 @@ export interface FloatingOnboardingChecklistContextValue {
     state: FloatingOnboardingChecklistState;
     update: (patch: Partial<FloatingOnboardingChecklistState>) => void;
     markCompleted: (step: keyof FloatingOnboardingChecklistCompleted) => void;
-    /** Bring the helper back into view (used from the header menu). */
     open: () => void;
-    /**
-     * Whether the checklist should stay hidden. The local `state.dismissed`
-     * (this session) wins if set; otherwise falls back to the server-
-     * persisted splash so dismissal survives a localStorage reset.
-     */
     dismissed: boolean;
     projectId: string;
-    /**
-     * Ordered list of step keys that should be shown and counted for this
-     * user (e.g. `tour` is opt-in behind a flag). Single source of truth so
-     * the badge and the step list can't disagree on how many steps exist.
-     */
+    // Single source of truth for how many steps exist, so the badge and the
+    // step list can't disagree (e.g. `tour` is opt-in behind a flag).
     visibleSteps: ChecklistStepKey[];
     done: Record<ChecklistStepKey, boolean>;
     completedCount: number;
@@ -49,15 +36,9 @@ export interface FloatingOnboardingChecklistContextValue {
     refetchOverview: () => void;
 }
 
-/**
- * Builds the context value for eligible users, or returns `null` for
- * everyone else. Only cheap data is fetched here: `useProjectOverview` uses
- * `useConditionalSWR` and skips fetching when we pass an empty id, so
- * ineligible users pay nothing. The feature list (needed to build the
- * "Go to flag" link and pre-fill the SDK dialog) is fetched inside the
- * eligible-only component to keep this global provider zero-cost for
- * everyone else.
- */
+// Returns `null` for ineligible users. `useProjectOverview` is skipped via
+// empty-id short-circuit so ineligible users pay nothing; the feature list is
+// fetched deeper in the tree for the same reason.
 export const useChecklistContextValue =
     (): FloatingOnboardingChecklistContextValue | null => {
         const eligible = useOnboardingChecklistEligibility();
@@ -84,12 +65,10 @@ export const useChecklistContextValue =
             [project.environments],
         );
 
-        // `tour` and `flag` merge a local bridge tick with the server so
-        // a fresh completion doesn't flicker while the server state
-        // (splash for tour, `onboardingStatus` for flag) catches up.
-        // `sdk`/`on` are server-only — no reliable local proof (closing
-        // the SDK dialog isn't evidence anyone connected, and turning a
-        // flag on happens outside our flow).
+        // `tour`/`flag` merge a local bridge tick with the server signal so
+        // a fresh completion doesn't flicker while the server catches up.
+        // `sdk`/`on` are server-only — closing the SDK dialog isn't proof
+        // anyone connected, and turning a flag on happens outside our flow.
         const serverStep = getProjectOnboardingStep(
             project.onboardingStatus,
         ).current;
@@ -106,11 +85,10 @@ export const useChecklistContextValue =
         const totalSteps = visibleSteps.length;
         const completedCount = visibleSteps.filter((key) => done[key]).length;
 
-        // If the `default` project can't be loaded (deleted/renamed on this
-        // instance), treat as ineligible — we'd otherwise render dead links
-        // to `/projects/default/...`. While the first fetch is in flight,
-        // hide too: `useProjectOverview`'s fallback status is `'onboarded'`,
-        // which would flash the checklist as fully complete.
+        // Hide while loading — `useProjectOverview`'s fallback status is
+        // `'onboarded'`, which would flash the checklist as fully complete.
+        // Hide on error too: the `default` project may be gone on this
+        // instance, and we'd otherwise render dead links.
         if (!eligible || projectError || loading) return null;
 
         return {

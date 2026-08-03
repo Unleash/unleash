@@ -3,38 +3,17 @@ import AccessContext from 'contexts/AccessContext';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { useUiFlag } from 'hooks/useUiFlag';
 
-/**
- * Per-user splash key used to remember that the checklist has been
- * dismissed. Persisted server-side via `setSplashSeen` so the "don't
- * open by default" preference survives logout; the header menu still
- * lets the user manually reopen.
- */
+// Server-persisted splash key: user has dismissed the checklist.
 export const ONBOARDING_CHECKLIST_SPLASH_ID = 'onboarding-checklist';
 
-/**
- * Per-user splash key for the intro tour completion. Same server-persist
- * pattern as the dismissal splash: once the user has seen the tour,
- * that fact survives logout so the step stays ticked off.
- */
+// Server-persisted splash key: user has completed the intro tour.
 export const ONBOARDING_TOUR_SPLASH_ID = 'onboarding-tour';
 
-/**
- * Whether the current user should see the floating onboarding checklist.
- *
- * Signal today: **current user is admin AND has `id === 1`** — the initial
- * admin auto-created by `initAdminUser` on a fresh install. Both signals
- * are already loaded on app boot (permissions + auth user), so this hook
- * makes no additional network calls.
- *
- * Known limitation: if the id-1 admin was ever deleted, no one else will
- * ever have id 1 and the checklist won't show on that instance. Acceptable
- * because mature instances that lost user 1 are past onboarding anyway.
- *
- * When we outgrow this heuristic (e.g. gate on instance age, an
- * `isNewInstance` flag from `ui-config`, or `first_seen_at` from the auth
- * user), swap the implementation of THIS hook — no call sites need to
- * change.
- */
+// Heuristic: admin AND `id === 1` — the initial admin auto-created by
+// `initAdminUser` on a fresh install. Cheap: both signals are already loaded
+// on app boot. Limitation: if that user was deleted, the checklist stops
+// showing on the instance; acceptable because mature instances are past
+// onboarding. Swap this hook when the heuristic outgrows itself.
 export const useOnboardingChecklistEligibility = (): boolean => {
     const flagEnabled = useUiFlag('floatingOnboardingChecklist');
     const { isAdmin } = useContext(AccessContext);

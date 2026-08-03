@@ -14,13 +14,6 @@ const StyledBadge = styled('span')(({ theme }) => ({
     whiteSpace: 'nowrap',
 }));
 
-/**
- * Small progress badge shared by the header menu and the checklist window.
- * Defaults to a compact "X/Y" for tight spots; pass `showLabel` for the
- * "X/Y Completed" form used inside the checklist header. Renders nothing
- * when the checklist context isn't available so callers don't need to
- * guard the render.
- */
 export const OnboardingProgressBadge = ({
     showLabel = false,
 }: {

@@ -101,11 +101,6 @@ const Done = () => (
     </Button>
 );
 
-/**
- * `href` null / `disabled` collapses to a non-interactive button so we
- * don't send the user to `/projects/default` when there's no flag to
- * inspect.
- */
 const GoToFlag = ({
     href,
     variant = 'outlined',
@@ -131,10 +126,6 @@ const GoToFlag = ({
         </Button>
     );
 
-/**
- * Wrapper: renders nothing when the user isn't eligible (context is null).
- * Keeps the inner component free of null checks.
- */
 export const FloatingOnboardingChecklist = () => {
     const context = useContext(FloatingOnboardingChecklistContext);
     if (!context) return null;
@@ -166,10 +157,9 @@ const EligibleFloatingOnboardingChecklist = () => {
     const [createFlagOpen, setCreateFlagOpen] = useState(false);
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
 
-    // MainLayout re-mounts on cross-route navigation, which wipes local
-    // dialog state. `pendingAction` lives in localStorage so a click on
-    // "New feature flag" from any route survives the navigation and pops
-    // the right dialog once we've landed on the target route.
+    // `pendingAction` is persisted so a "New feature flag" / "Connect SDK"
+    // click survives the MainLayout re-mount on route change, then pops the
+    // dialog once we've landed on the target route.
     useEffect(() => {
         if (dismissed) return;
         const pending = state.pendingAction;
@@ -198,20 +188,17 @@ const EligibleFloatingOnboardingChecklist = () => {
     const toggleMinimized = () => update({ minimized: !state.minimized });
 
     const handleDismiss = () => {
-        // Also clear `pendingAction` so a dialog scheduled just before the
-        // dismiss (or one that's been sitting in localStorage) doesn't pop
-        // up right after the user closed the helper.
+        // Clear `pendingAction` too so a queued dialog doesn't pop up right
+        // after the user dismissed the helper. Splash persists dismissal
+        // server-side, surviving a localStorage reset.
         update({ dismissed: true, pendingAction: undefined });
-        // Persist server-side so dismissal survives a localStorage reset.
         setSplashSeen(ONBOARDING_CHECKLIST_SPLASH_ID);
     };
 
     const handleTakeTour = () =>
         openIntro({
-            // fires for any close (Skip, Escape, backdrop, Finish, ×)
+            // `onClose` fires for any exit (Skip, Escape, backdrop, Finish, ×).
             onClose: () => {
-                // Bridge tick for the visible checkmark; splash is the
-                // durable, server-persisted signal that survives logout.
                 markCompleted('tour');
                 setSplashSeen(ONBOARDING_TOUR_SPLASH_ID);
             },
@@ -332,10 +319,7 @@ const EligibleFloatingOnboardingChecklist = () => {
                 open={createFlagOpen}
                 onClose={() => setCreateFlagOpen(false)}
                 onSuccess={() => {
-                    // `onSuccess` only fires on 2xx, so we know a flag
-                    // exists — tick locally to bridge the lag before
-                    // `onboardingStatus` catches up. Server remains the
-                    // source of truth via the merge in the context hook.
+                    // Bridge tick: `onboardingStatus` can lag the refetch.
                     markCompleted('flag');
                     refetchOverview();
                 }}
@@ -343,11 +327,9 @@ const EligibleFloatingOnboardingChecklist = () => {
             <ConnectSdkDialog
                 open={connectSdkOpen}
                 onClose={() => {
+                    // No local `markCompleted('sdk')` — closing the dialog
+                    // isn't proof an SDK actually registered.
                     setConnectSdkOpen(false);
-                    // No local `markCompleted('sdk')`: closing this dialog
-                    // isn't proof an SDK actually registered. The server
-                    // reports `sdk-connected` when a real SDK checks in, so
-                    // we just refetch and let that flip the step to done.
                     refetchOverview();
                 }}
                 projectId={projectId}

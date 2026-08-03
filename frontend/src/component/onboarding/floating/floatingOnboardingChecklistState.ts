@@ -1,19 +1,9 @@
 import { useCallback, useRef } from 'react';
 import { useLocalStorageState } from 'hooks/useLocalStorageState.ts';
 
-/**
- * Locally captured completions — bridge ticks that keep a step's
- * checkmark stable while the durable server signal catches up. Server
- * remains the source of truth (merged as `local || server`).
- * - `tour`: server signal is the `onboarding-tour` splash, written on
- *   intro close and read back through `useAuthSplash`.
- * - `flag`: server signal is `onboardingStatus`. `CreateFeatureDialog`
- *   fires `onSuccess` on 2xx so we know a flag exists, but the status
- *   event can lag the refetch — the local bit prevents flicker.
- * - `sdk`/`on` are deliberately not tracked here: closing the SDK
- *   dialog isn't proof anyone actually connected, and turning a flag on
- *   happens outside our flow. Both come from `onboardingStatus`.
- */
+// Local bridge ticks — kept until the server signal catches up (`local ||
+// server` in the context). Only `tour` and `flag` have a reliable client-side
+// completion event; `sdk`/`on` come from `onboardingStatus` only.
 export interface FloatingOnboardingChecklistCompleted {
     tour?: boolean;
     flag?: boolean;
@@ -29,22 +19,12 @@ export const isPendingActionExpired = (
 ): boolean => nowMs - action.setAt > PENDING_ACTION_TTL_MS;
 
 export interface FloatingOnboardingChecklistState {
-    /**
-     * Local override for the server-persisted "previously dismissed" splash.
-     * `undefined` = no local preference (fall back to splash); `true` = user
-     * dismissed; `false` = user re-opened via header menu (overrides splash
-     * for as long as localStorage sticks around).
-     */
+    // `undefined` = fall back to server splash; `true`/`false` overrides it.
     dismissed?: boolean;
-    /** Collapsed to just the header bar. */
     minimized: boolean;
-    /**
-     * Dialog to open once we've navigated to a route where it can render
-     * safely (e.g. `CreateFeatureDialog` needs `:projectId` in the URL).
-     * Persisted so it survives MainLayout re-mount on route change; the
-     * `setAt` timestamp guards against a stale value opening a dialog on
-     * an unrelated visit days later (see PENDING_ACTION_TTL_MS).
-     */
+    // Dialog to open once we land on a route where it can render safely
+    // (e.g. `CreateFeatureDialog` needs `:projectId`). `setAt` guards against
+    // a stale entry firing a dialog days later — see `PENDING_ACTION_TTL_MS`.
     pendingAction?: PendingAction;
     completed: FloatingOnboardingChecklistCompleted;
 }
@@ -54,10 +34,6 @@ const DEFAULT_STATE: FloatingOnboardingChecklistState = {
     completed: {},
 };
 
-/**
- * Persisted state for the floating "Get started" helper. It survives route
- * changes and reloads so the helper can follow the user around Unleash.
- */
 export const useFloatingOnboardingChecklistState = () => {
     const [state, setState] =
         useLocalStorageState<FloatingOnboardingChecklistState>(
@@ -65,9 +41,8 @@ export const useFloatingOnboardingChecklistState = () => {
             DEFAULT_STATE,
         );
 
-    // `useLocalStorageState` returns a fresh setter each render, so route
-    // it through a ref to give consumers stable `update`/`markCompleted`
-    // identities — safe to list in useEffect deps without re-firing.
+    // Route the setter through a ref so `update`/`markCompleted` have stable
+    // identities — safe to list in `useEffect` deps without re-firing.
     const setStateRef = useRef(setState);
     setStateRef.current = setState;
 

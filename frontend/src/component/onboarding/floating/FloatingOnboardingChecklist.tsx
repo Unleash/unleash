@@ -235,11 +235,7 @@ const EligibleFloatingOnboardingChecklist = () => {
             update({
                 pendingAction: { type: 'sdk', setAt: Date.now() },
             });
-            navigate(
-                feature
-                    ? `/projects/${projectId}/features/${feature}`
-                    : `/projects/${projectId}`,
-            );
+            navigate(goToFlagHref ?? `/projects/${projectId}`);
         }
     };
 

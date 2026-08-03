@@ -31,8 +31,8 @@ const baseChartConfig: Omit<ChartConfig, 'metricName' | 'source'> = {
 
 const mixedMetricSeries = [
     {
-        name: 'unleash_counter_flag_exposure',
-        displayName: 'unleash_counter_flag_exposure',
+        name: 'flag_exposure',
+        displayName: 'flag_exposure',
         help: 'A built-in Unleash metric',
         source: 'internal' as const,
     },

@@ -16,7 +16,7 @@ export type CreateSafeguardSchemaImpactMetric = {
     aggregationMode: CreateSafeguardSchemaImpactMetricAggregationMode;
     /** The selected labels and their values for filtering the metric data. */
     labelSelectors: CreateSafeguardSchemaImpactMetricLabelSelectors;
-    /** The Prometheus metric series to query. It includes both unleash prefix and metric type and display name */
+    /** The Prometheus metric series name to query. */
     metricName: string;
     /** The Prometheus data source for this metric. Internal is the Unleash-managed Prometheus, external is a customer-provided Prometheus instance. Defaults to internal if not specified. */
     source?: CreateSafeguardSchemaImpactMetricSource;

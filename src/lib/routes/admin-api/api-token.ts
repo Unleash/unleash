@@ -46,7 +46,7 @@ import { OperationDeniedError } from '../../error/index.js';
 import type { CreateApiTokenSchema } from '../../internals.js';
 import type { IUserPermission } from '../../server-impl.js';
 import type { ApiTokenV2Service } from '../../features/apitokensv2/index.js';
-import { isApiTokenV2OrSelector } from '../../features/apitokensv2/api-token-v2-token.js';
+import { parseApiTokenV2Identifier } from '../../authentication/authorization-token.js';
 
 interface TokenParam {
     token: string;
@@ -387,10 +387,11 @@ export class ApiTokenController extends Controller {
         }
 
         const expiry = new Date(expiresAt);
-        if (isApiTokenV2OrSelector(token)) {
+        const v2Identifier = parseApiTokenV2Identifier(token);
+        if (v2Identifier) {
             try {
                 await this.apiTokenV2Service.updateExpiry(
-                    token,
+                    v2Identifier,
                     expiry,
                     req.audit,
                 );
@@ -426,9 +427,10 @@ export class ApiTokenController extends Controller {
                 `You do not have the required access [${permissionRequired}] to perform this operation`,
             );
         }
-        if (isApiTokenV2OrSelector(token)) {
+        const v2Identifier = parseApiTokenV2Identifier(token);
+        if (v2Identifier) {
             try {
-                await this.apiTokenV2Service.delete(token, req.audit);
+                await this.apiTokenV2Service.delete(v2Identifier, req.audit);
             } catch (_error) {
                 // Fall through to legacy storage during the migration period.
             }
@@ -472,9 +474,11 @@ export class ApiTokenController extends Controller {
     }
 
     private async getToken(token: string): Promise<IApiToken | undefined> {
-        if (isApiTokenV2OrSelector(token)) {
+        const v2Identifier = parseApiTokenV2Identifier(token);
+        if (v2Identifier) {
             try {
-                const tokenV2 = await this.apiTokenV2Service.getToken(token);
+                const tokenV2 =
+                    await this.apiTokenV2Service.getToken(v2Identifier);
                 if (tokenV2) {
                     return tokenV2;
                 }

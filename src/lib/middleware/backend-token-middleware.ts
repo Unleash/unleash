@@ -7,7 +7,10 @@ import {
     TOKEN_TYPE_ERROR_MESSAGE,
 } from './api-token-middleware.js';
 import type { IApiUser } from '../types/index.js';
-import { isApiTokenV2 } from '../features/apitokensv2/api-token-v2-token.js';
+import {
+    AuthorizationTokenKind,
+    parseAuthorizationToken,
+} from '../authentication/authorization-token.js';
 
 export const backendApiAccessMiddleware = (
     {
@@ -47,18 +50,21 @@ export const backendApiAccessMiddleware = (
                 return;
             }
 
-            // Disallow PAT/Service account tokens and admin tokens
-            if (apiToken.startsWith('user:') || apiToken.startsWith('*:*')) {
+            // Feature APIs only accept backend or frontend API tokens.
+            const parsedToken = parseAuthorizationToken(apiToken);
+            if (parsedToken?.kind !== AuthorizationTokenKind.API_TOKEN) {
                 res.status(403).send({
                     message: TOKEN_TYPE_ERROR_MESSAGE,
                 });
                 return;
             }
             let apiUser: IApiUser | undefined;
-            if (isApiTokenV2(apiToken)) {
-                apiUser = await apiTokenV2Service.getUserForToken(apiToken);
-            } else {
-                apiUser = await apiTokenService.getUserForToken(apiToken);
+            if (parsedToken?.version === 'v2') {
+                apiUser = await apiTokenV2Service.getUserForToken(parsedToken);
+            } else if (parsedToken) {
+                apiUser = await apiTokenService.getUserForToken(
+                    parsedToken.secret,
+                );
             }
             const { CLIENT, BACKEND } = ApiTokenType;
 

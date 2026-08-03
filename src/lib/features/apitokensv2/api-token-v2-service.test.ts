@@ -12,10 +12,10 @@ import type {
     IApiTokenV2Store,
 } from './api-token-v2-types.js';
 import type { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
+import { AuthorizationTokenKind } from '../../authentication/authorization-token.js';
 import EventEmitter from 'events';
 import FakeEnvironmentStore from '../project-environments/fake-environment-store.js';
 import noLogger from '../../../test/fixtures/no-logger.js';
-import { isApiTokenV2, isApiTokenV2OrSelector } from './api-token-v2-token.js';
 
 class FakeApiTokenV2Store implements IApiTokenV2Store {
     stored?: ApiTokenV2 & { verifier: string };
@@ -93,9 +93,6 @@ const tokenInput: CreateApiTokenV2 = {
     environment: 'production',
     userCreated: true,
 };
-const validApiTokenV2 = `default:production.v2_${'a'.repeat(22)}_${'b'.repeat(
-    43,
-)}`;
 
 const createService = (
     store: FakeApiTokenV2Store,
@@ -121,20 +118,6 @@ const createService = (
 };
 
 describe('ApiTokenV2Service', () => {
-    test('identifies V2 token credentials', () => {
-        expect(isApiTokenV2(validApiTokenV2)).toBe(true);
-        expect(isApiTokenV2('default:production')).toBe(false);
-        expect(isApiTokenV2('not-a-v2-token')).toBe(false);
-        expect(isApiTokenV2('not-a-complete.v2_token')).toBe(false);
-    });
-
-    test('identifies V2 token credentials and selectors', () => {
-        expect(isApiTokenV2OrSelector(validApiTokenV2)).toBe(true);
-        expect(isApiTokenV2OrSelector('abcdefghijklmnopqrstuv')).toBe(true);
-        expect(isApiTokenV2OrSelector('selector')).toBe(false);
-        expect(isApiTokenV2OrSelector('default:production')).toBe(false);
-    });
-
     test('stores a verifier rather than the generated credential', async () => {
         const store = new FakeApiTokenV2Store();
         const environmentStore = new FakeEnvironmentStore();
@@ -169,8 +152,12 @@ describe('ApiTokenV2Service', () => {
         });
         const { service } = createService(store, environmentStore);
         const token = await service.create(tokenInput, SYSTEM_USER_AUDIT);
-
-        const user = await service.getUserForToken(token.secret);
+        const user = await service.getUserForToken({
+            kind: AuthorizationTokenKind.API_TOKEN,
+            version: 'v2',
+            secret: token.secret,
+            selector: token.selector,
+        });
 
         expect(user).toMatchObject({
             username: 'backend token',
@@ -194,8 +181,14 @@ describe('ApiTokenV2Service', () => {
         const { service } = createService(store, environmentStore);
         const token = await service.create(tokenInput, SYSTEM_USER_AUDIT);
         const altered = `${token.secret.slice(0, -1)}x`;
-
-        await expect(service.getUserForToken(altered)).resolves.toBeUndefined();
+        await expect(
+            service.getUserForToken({
+                kind: AuthorizationTokenKind.API_TOKEN,
+                version: 'v2',
+                secret: altered,
+                selector: token.selector,
+            }),
+        ).resolves.toBeUndefined();
         expect(store.markedSeen).toBe(false);
     });
 
@@ -217,9 +210,13 @@ describe('ApiTokenV2Service', () => {
             },
             SYSTEM_USER_AUDIT,
         );
-
         await expect(
-            service.getUserForToken(token.secret),
+            service.getUserForToken({
+                kind: AuthorizationTokenKind.API_TOKEN,
+                version: 'v2',
+                secret: token.secret,
+                selector: token.selector,
+            }),
         ).resolves.toBeUndefined();
     });
 
@@ -261,20 +258,19 @@ describe('ApiTokenV2Service', () => {
         );
         const created = await service.create(tokenInput, SYSTEM_USER_AUDIT);
         const expiresAt = new Date(Date.now() + 60_000);
+        const reference = {
+            kind: AuthorizationTokenKind.API_TOKEN,
+            version: 'v2',
+            selector: created.selector,
+        } as const;
 
-        await service.updateExpiry(
-            created.selector,
-            expiresAt,
-            SYSTEM_USER_AUDIT,
-        );
-        expect((await service.getToken(created.selector))?.expiresAt).toEqual(
+        await service.updateExpiry(reference, expiresAt, SYSTEM_USER_AUDIT);
+        expect((await service.getToken(reference))?.expiresAt).toEqual(
             expiresAt,
         );
 
-        await service.delete(created.selector, SYSTEM_USER_AUDIT);
-        await expect(
-            service.getToken(created.selector),
-        ).resolves.toBeUndefined();
+        await service.delete(reference, SYSTEM_USER_AUDIT);
+        await expect(service.getToken(reference)).resolves.toBeUndefined();
         expect(eventService.storeEvent).toHaveBeenCalledTimes(3);
     });
 });

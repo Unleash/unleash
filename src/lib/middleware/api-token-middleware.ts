@@ -3,7 +3,10 @@ import type { IUnleashConfig } from '../types/option.js';
 import type { IApiRequest, IAuthRequest } from '../routes/unleash-types.js';
 import type { IUnleashServices } from '../services/index.js';
 import type { IApiUser } from '../types/index.js';
-import { isApiTokenV2 } from '../features/apitokensv2/api-token-v2-token.js';
+import {
+    AuthorizationTokenKind,
+    parseAuthorizationToken,
+} from '../authentication/authorization-token.js';
 
 const isClientApi = ({ path }) => {
     return path && path.indexOf('/api/client') > -1;
@@ -54,16 +57,16 @@ export const apiAccessMiddleware = (
         }
         try {
             const apiToken = req.header('authorization');
-            if (!apiToken?.startsWith('user:')) {
+            const parsedToken = parseAuthorizationToken(apiToken);
+            if (parsedToken?.kind !== AuthorizationTokenKind.USER_ACCESS) {
                 let apiUser: IApiUser | undefined;
-                if (isApiTokenV2(apiToken)) {
+                if (parsedToken?.version === 'v2') {
                     apiUser =
-                        await apiTokenV2Service?.getUserForToken(apiToken);
-                } else {
-                    if (apiToken) {
-                        apiUser =
-                            await apiTokenService.getUserForToken(apiToken);
-                    }
+                        await apiTokenV2Service?.getUserForToken(parsedToken);
+                } else if (parsedToken) {
+                    apiUser = await apiTokenService.getUserForToken(
+                        parsedToken.secret,
+                    );
                 }
                 const { CLIENT, BACKEND, FRONTEND } = ApiTokenType;
 

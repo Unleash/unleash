@@ -45,7 +45,10 @@ import FakeEventStore from '../../../test/fixtures/fake-event-store.js';
 import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store.js';
 import metricsHelper from '../../util/metrics-helper.js';
 import { FUNCTION_TIME } from '../../metric-events.js';
-import { parseApiTokenV2 } from './api-token-v2-token.js';
+import type {
+    ApiTokenV2Credential,
+    ApiTokenV2Identifier,
+} from '../../authentication/authorization-token.js';
 
 const SELECTOR_BYTES = 16;
 const SECRET_BYTES = 32;
@@ -229,18 +232,21 @@ export class ApiTokenV2Service {
         }
     }
 
-    async getToken(secretOrSelector: string): Promise<IApiToken | undefined> {
-        const selector = this.getSelector(secretOrSelector);
-        if (!selector) {
-            return undefined;
-        }
-        const token = await this.apiTokenV2Store.getBySelector(selector);
+    async getToken(
+        identifier: ApiTokenV2Identifier,
+    ): Promise<IApiToken | undefined> {
+        const token = await this.apiTokenV2Store.getBySelector(
+            identifier.selector,
+        );
         if (!token) {
             return undefined;
         }
         return this.toApiToken(token);
     }
-    async getTokenWithCache(secret: string): Promise<IApiToken | undefined> {
+    async getTokenWithCache(
+        credential: ApiTokenV2Credential,
+    ): Promise<IApiToken | undefined> {
+        const { secret } = credential;
         if (!secret) {
             return undefined;
         }
@@ -257,7 +263,7 @@ export class ApiTokenV2Service {
                     this.queryAfter.clear();
                 }
                 const stopCacheTimer = this.timer('getTokenWithCache.query');
-                token = await this.getToken(secret);
+                token = await this.getToken(credential);
                 if (token) {
                     if (token.expiresAt && isPast(token.expiresAt)) {
                         this.queryAfter.set(secret, addMinutes(new Date(), 5));
@@ -280,11 +286,11 @@ export class ApiTokenV2Service {
     }
 
     async updateExpiry(
-        secretOrSelector: string,
+        identifier: ApiTokenV2Identifier,
         expiresAt: Date,
         auditUser: IAuditUser,
     ): Promise<IApiToken | undefined> {
-        const previous = await this.getToken(secretOrSelector);
+        const previous = await this.getToken(identifier);
         if (!previous) {
             return undefined;
         }
@@ -307,10 +313,10 @@ export class ApiTokenV2Service {
     }
 
     async delete(
-        secretOrSelector: string,
+        identifier: ApiTokenV2Identifier,
         auditUser: IAuditUser,
     ): Promise<boolean> {
-        const token = await this.getToken(secretOrSelector);
+        const token = await this.getToken(identifier);
         if (!token) {
             return false;
         }
@@ -324,13 +330,11 @@ export class ApiTokenV2Service {
         return true;
     }
 
-    async getUserForToken(secret: string): Promise<IApiUser | undefined> {
-        const parsed = ApiTokenV2Service.parse(secret);
-        if (!parsed) {
-            return undefined;
-        }
-
-        const token = await this.apiTokenV2Store.getBySelector(parsed.selector);
+    async getUserForToken({
+        secret,
+        selector,
+    }: ApiTokenV2Credential): Promise<IApiUser | undefined> {
+        const token = await this.apiTokenV2Store.getBySelector(selector);
         if (
             !token ||
             !this.verify(secret, token.verifier) ||
@@ -355,17 +359,6 @@ export class ApiTokenV2Service {
         this.logger.info('Cleaning unseen system created tokens');
         await this.apiTokenV2Store.deleteSystemCreatedTokensNotSeen(
             TOKEN_LIFETIME_AFTER_LAST_SEEN_IN_MINUTES,
-        );
-    }
-
-    private static parse(token: string): { selector: string } | undefined {
-        return parseApiTokenV2(token);
-    }
-
-    private getSelector(secretOrSelector: string): string | undefined {
-        return (
-            ApiTokenV2Service.parse(secretOrSelector)?.selector ||
-            secretOrSelector
         );
     }
 

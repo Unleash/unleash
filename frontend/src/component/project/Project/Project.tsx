@@ -54,6 +54,7 @@ import { ProjectArchived } from './ArchiveProject/ProjectArchived.tsx';
 import { useEventTracker } from '../../../hooks/useEventTracker.ts';
 import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
 import { ProjectStatusModal } from './ProjectStatus/ProjectStatusModal.tsx';
+import { ProjectMembers } from './ProjectMembers/ProjectMembers.tsx';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -195,6 +196,11 @@ export const Project = () => {
             title: 'Event log',
             path: `${basePath}/logs`,
             name: 'logs',
+        },
+        {
+            title: 'Members',
+            path: `${basePath}/members`,
+            name: 'members',
         },
         {
             title: 'Settings',
@@ -402,6 +408,7 @@ export const Project = () => {
                         </ChangeRequestPlausibleProvider>
                     }
                 />
+                <Route path='members' element={<ProjectMembers />} />
                 <Route path='settings/*' element={<ProjectSettings />} />
                 <Route path='applications' element={<ProjectApplications />} />
                 <Route path='*' element={<ProjectFlags />} />

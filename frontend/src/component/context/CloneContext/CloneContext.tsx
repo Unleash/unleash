@@ -17,14 +17,22 @@ export const CloneContext: FC<CloneContextProps> = ({
 }) => {
     const projectId = useOptionalPathParam('projectId');
     const name = useRequiredPathParam('name');
-    const { context } = useContext({ name, project: projectId });
+    const { context, loading, error } = useContext({ name, project: projectId });
+
+    if (loading) {
+        return null;
+    }
+
+    if (error) {
+        return <div role='alert'>Failed to load context field "{name}".</div>;
+    }
 
     return (
         <CreateUnleashContext
             modal={modal}
             onSubmit={onSubmit}
             onCancel={onCancel}
-            cloneFrom={context.name ? context : undefined}
+            cloneFrom={context}
         />
     );
 };

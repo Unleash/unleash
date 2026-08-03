@@ -4,6 +4,7 @@
  * See `gen:api` script in package.json
  */
 import type { ProjectSchemaMode } from './projectSchemaMode';
+import type { OnboardingStatusSchema } from './onboardingStatusSchema';
 import type { ProjectSchemaOwners } from './projectSchemaOwners';
 
 /**
@@ -20,6 +21,8 @@ export interface ProjectSchema {
      * @deprecated
      */
     avgTimeToProduction?: number;
+    /** The number of features in this project that have completed their lifecycle and are ready for cleanup */
+    cleanupCount?: number;
     /** When this project was created. */
     createdAt?: string;
     /**
@@ -60,6 +63,7 @@ export interface ProjectSchema {
     mode?: ProjectSchemaMode;
     /** The name of this project */
     name: string;
+    onboardingStatus?: OnboardingStatusSchema;
     /** The users and/or groups that have the "owner" role in this project. If no such users or groups exist, the list will contain the "system" owner instead. */
     owners?: ProjectSchemaOwners;
     /**

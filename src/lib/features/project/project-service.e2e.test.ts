@@ -12,10 +12,7 @@ import { randomId } from '../../util/index.js';
 import EnvironmentService from '../project-environments/environment-service.js';
 import IncompatibleProjectError from '../../error/incompatible-project-error.js';
 import type { ApiTokenService, EventService } from '../../services/index.js';
-import {
-    FeatureEnvironmentEvent,
-    type IUnleashConfig,
-} from '../../types/index.js';
+import { FeatureEnvironmentEvent } from '../../types/index.js';
 import { addDays, subDays } from 'date-fns';
 import {
     createAccessService,
@@ -142,77 +139,53 @@ describe('should list all projects', () => {
         );
     });
 
-    describe("with 'newProjectList' flag enabled", () => {
-        let flagEnabledConfig: IUnleashConfig;
-        let projectServiceWithFlag: ProjectService;
-        beforeAll(() => {
-            flagEnabledConfig = createTestConfig({
-                getLogger,
-                experimental: { flags: { newProjectList: true } },
-            });
+    test('includes onboarding status', async () => {
+        const project = {
+            id: 'onboarding-status',
+            name: 'Onboarding status project',
+            description: 'Blah',
+            mode: 'open' as const,
+            defaultStickiness: 'default',
+        };
 
-            projectServiceWithFlag = createProjectService(
-                db.rawDatabase,
-                flagEnabledConfig,
-            );
+        await projectService.createProject(project, user, auditUser);
+        const projects = await projectService.getProjects();
+        const projectOnboardingStatus = projects.find(
+            (p) => p.id === project.id,
+        )?.onboardingStatus;
+
+        expect(projectOnboardingStatus).toMatchObject({
+            status: 'onboarding-started',
+        });
+    });
+
+    test('includes cleanupCount', async () => {
+        const project = {
+            id: 'cleanup-count',
+            name: 'Cleanup count project',
+            description: 'Blah',
+            mode: 'open' as const,
+            defaultStickiness: 'default',
+        };
+
+        await projectService.createProject(project, user, auditUser);
+
+        await stores.featureToggleStore.create(project.id, {
+            name: 'cleanup-feature',
+            createdByUserId: user.id,
         });
 
-        test('includes onboarding status', async () => {
-            const project = {
-                id: 'onboarding-status',
-                name: 'Onboarding status project',
-                description: 'Blah',
-                mode: 'open' as const,
-                defaultStickiness: 'default',
-            };
+        await stores.featureLifecycleStore.insert([
+            { feature: 'cleanup-feature', stage: 'initial' },
+            { feature: 'cleanup-feature', stage: 'completed' },
+        ]);
 
-            await projectServiceWithFlag.createProject(
-                project,
-                user,
-                auditUser,
-            );
-            const projects = await projectServiceWithFlag.getProjects();
-            const projectOnboardingStatus = projects.find(
-                (p) => p.id === project.id,
-            )?.onboardingStatus;
+        const projects = await projectService.getProjects();
+        const projectCleanupCount = projects.find(
+            (p) => p.id === project.id,
+        )?.cleanupCount;
 
-            expect(projectOnboardingStatus).toMatchObject({
-                status: 'onboarding-started',
-            });
-        });
-
-        test('includes cleanupCount', async () => {
-            const project = {
-                id: 'cleanup-count',
-                name: 'Cleanup count project',
-                description: 'Blah',
-                mode: 'open' as const,
-                defaultStickiness: 'default',
-            };
-
-            await projectServiceWithFlag.createProject(
-                project,
-                user,
-                auditUser,
-            );
-
-            await stores.featureToggleStore.create(project.id, {
-                name: 'cleanup-feature',
-                createdByUserId: user.id,
-            });
-
-            await stores.featureLifecycleStore.insert([
-                { feature: 'cleanup-feature', stage: 'initial' },
-                { feature: 'cleanup-feature', stage: 'completed' },
-            ]);
-
-            const projects = await projectServiceWithFlag.getProjects();
-            const projectCleanupCount = projects.find(
-                (p) => p.id === project.id,
-            )?.cleanupCount;
-
-            expect(projectCleanupCount).toBe(1);
-        });
+        expect(projectCleanupCount).toBe(1);
     });
 });
 

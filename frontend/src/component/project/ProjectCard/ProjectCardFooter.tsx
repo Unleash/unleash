@@ -1,23 +1,12 @@
-import { Box, styled } from '@mui/material';
+import { styled } from '@mui/material';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo.tsx';
-import { StyledSubtitle } from './ProjectCard.styles';
+import { StyledProjectCardFooter, StyledSubtitle } from './ProjectCard.styles';
 
-type NewProjectCardFooterProps = {
+type ProjectCardFooterProps = {
     lastUpdatedAt?: string | null;
     createdAt?: string;
     memberCount: number;
 };
-
-const StyledFooter = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    background: theme.palette.background.elevation1,
-    boxShadow: theme.boxShadows.accordionFooter,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderTop: `1px solid ${theme.palette.divider}`,
-    paddingInline: theme.spacing(2),
-    paddingBlock: theme.spacing(1.5),
-}));
 
 const StyledRightGroup = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -26,13 +15,13 @@ const StyledRightGroup = styled('div')(({ theme }) => ({
     marginLeft: 'auto',
 }));
 
-export const NewProjectCardFooter = ({
+export const ProjectCardFooter = ({
     lastUpdatedAt,
     createdAt,
     memberCount,
-}: NewProjectCardFooterProps) => {
+}: ProjectCardFooterProps) => {
     return (
-        <StyledFooter>
+        <StyledProjectCardFooter>
             {lastUpdatedAt ? (
                 <StyledSubtitle>
                     Updated <TimeAgo date={lastUpdatedAt} />
@@ -48,6 +37,6 @@ export const NewProjectCardFooter = ({
                     {memberCount === 1 ? '' : 's'}
                 </StyledSubtitle>
             </StyledRightGroup>
-        </StyledFooter>
+        </StyledProjectCardFooter>
     );
 };

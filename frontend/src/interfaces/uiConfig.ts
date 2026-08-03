@@ -100,7 +100,6 @@ export type UiFlags = {
     impactMetricsFlagPage?: boolean;
     multiMetricChart?: boolean;
     logRocketEnabled?: boolean;
-    newProjectList?: boolean;
     newModalDesign?: boolean;
     newProfileDropdown?: boolean;
     learningLab?: Variant;

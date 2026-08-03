@@ -243,7 +243,6 @@ export default class ProjectService {
         query?: IProjectQuery & IProjectsQuery,
         userId?: number,
     ): Promise<ProjectForUi[]> {
-        const stopTimer = this.timer('oldProjectListFields');
         const allProjects = await this.projectReadModel.getProjectsForAdminUi(
             query,
             userId,
@@ -262,36 +261,29 @@ export default class ProjectService {
                 );
             }
         }
-        stopTimer();
 
-        if (this.flagResolver.isEnabled('newProjectList')) {
-            //TODO: update project-schema when removing this flag
-            const stopTimer = this.timer('newProjectListFields');
-            const projectIds = projects.map((p) => p.id);
-            const [onboardingStatuses, cleanupByProject] = await Promise.all([
-                this.onboardingReadModel
-                    .getOnboardingStatusesForProjects(projectIds)
-                    .catch(() => new Map<string, OnboardingStatus>()),
-                this.featureLifecycleReadModel
-                    .getStageCountByProject()
-                    .then((rows) => {
-                        const map = new Map<string, number>();
-                        for (const row of rows) {
-                            if (row.stage === 'completed') {
-                                map.set(row.project, row.count);
-                            }
+        const projectIds = projects.map((p) => p.id);
+        const [onboardingStatuses, cleanupByProject] = await Promise.all([
+            this.onboardingReadModel
+                .getOnboardingStatusesForProjects(projectIds)
+                .catch(() => new Map<string, OnboardingStatus>()),
+            this.featureLifecycleReadModel
+                .getStageCountByProject()
+                .then((rows) => {
+                    const map = new Map<string, number>();
+                    for (const row of rows) {
+                        if (row.stage === 'completed') {
+                            map.set(row.project, row.count);
                         }
-                        return map;
-                    })
-                    .catch(() => new Map<string, number>()),
-            ]);
+                    }
+                    return map;
+                })
+                .catch(() => new Map<string, number>()),
+        ]);
 
-            stopTimer();
-
-            for (const project of projects) {
-                project.onboardingStatus = onboardingStatuses.get(project.id);
-                project.cleanupCount = cleanupByProject.get(project.id);
-            }
+        for (const project of projects) {
+            project.onboardingStatus = onboardingStatuses.get(project.id);
+            project.cleanupCount = cleanupByProject.get(project.id);
         }
 
         return projects;

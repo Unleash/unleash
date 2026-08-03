@@ -3,9 +3,8 @@ import { HighlightCell } from 'component/common/Table/cells/HighlightCell/Highli
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
-import useProjects, {
-    type ProjectListItem,
-} from 'hooks/api/getters/useProjects/useProjects';
+import useProjects from 'hooks/api/getters/useProjects/useProjects';
+import type { ProjectSchema } from 'openapi';
 import { useCallback, useMemo } from 'react';
 import {
     type ColumnDef,
@@ -19,7 +18,7 @@ import theme from 'themes/theme.ts';
 import { ProjectListTableLastSeenCell } from './ProjectListTableLastSeenCell.tsx';
 
 type ProjectsListTableProps = {
-    projects: ProjectListItem[];
+    projects: ProjectSchema[];
 };
 
 export const ProjectsListTable = ({ projects }: ProjectsListTableProps) => {
@@ -28,7 +27,7 @@ export const ProjectsListTable = ({ projects }: ProjectsListTableProps) => {
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
 
     const onFavorite = useCallback(
-        async (project: ProjectListItem) => {
+        async (project: ProjectSchema) => {
             if (project?.favorite) {
                 await unfavorite(project.id);
             } else {
@@ -39,7 +38,7 @@ export const ProjectsListTable = ({ projects }: ProjectsListTableProps) => {
         [refetch, favorite, unfavorite],
     );
 
-    const columns = useMemo<ColumnDef<ProjectListItem, unknown>[]>(
+    const columns = useMemo<ColumnDef<ProjectSchema, unknown>[]>(
         () => [
             {
                 id: 'name',

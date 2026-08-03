@@ -5,7 +5,7 @@ import { useSearchHighlightContext } from 'component/common/Table/SearchHighligh
 import { Truncator } from 'component/common/Truncator/Truncator';
 import { OnboardingStatusBadge } from 'component/project/ProjectCard/OnboardingStatusBadge/OnboardingStatusBadge';
 import { ProjectModeBadge } from 'component/project/ProjectCard/ProjectModeBadge/ProjectModeBadge';
-import type { ProjectListItem } from 'hooks/api/getters/useProjects/useProjects';
+import type { ProjectSchema } from 'openapi';
 import { Link } from 'react-router';
 
 const StyledCellContainer = styled('div')(({ theme }) => ({
@@ -25,7 +25,7 @@ const StyledFeatureLink = styled(Link)(({ theme }) => ({
 
 type ProjectsListTableNameCellProps = {
     row: {
-        original: ProjectListItem;
+        original: ProjectSchema;
     };
     isFavorite: boolean;
     onFavorite: () => void;

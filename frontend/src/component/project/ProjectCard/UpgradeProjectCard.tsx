@@ -1,8 +1,11 @@
 import { IconButton, styled, Tooltip, Typography } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CloseIcon from '@mui/icons-material/Close';
-import { StyledProjectCard, StyledProjectCardBody } from './ProjectCard.styles';
-import { ProjectCardFooter } from './ProjectCardFooter/ProjectCardFooter.tsx';
+import {
+    StyledProjectCard,
+    StyledProjectCardBody,
+    StyledProjectCardFooter,
+} from './ProjectCard.styles';
 import upgradeProjects from 'assets/img/upgradeProjects.png';
 import { formatAssetPath } from 'utils/formatPath';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
@@ -93,7 +96,7 @@ export const UpgradeProjectCard = () => {
                     />
                 </StyledInfo>
             </StyledProjectCardBody>
-            <ProjectCardFooter>
+            <StyledProjectCardFooter>
                 <StyledFooter>
                     <Typography
                         variant='body2'
@@ -113,7 +116,7 @@ export const UpgradeProjectCard = () => {
                         <ArrowForwardIcon />
                     </IconButton>
                 </StyledFooter>
-            </ProjectCardFooter>
+            </StyledProjectCardFooter>
         </StyledProjectCard>
     );
 };

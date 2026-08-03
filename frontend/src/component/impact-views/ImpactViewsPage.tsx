@@ -12,6 +12,7 @@ import { ViewEditorDialog } from './views/ViewEditorDialog/ViewEditorDialog';
 import { ImpactMetricViewsEmptyState } from './views/ImpactMetricViewsEmptyState/ImpactMetricViewsEmptyState';
 import { useGoalViewData } from './hooks/useGoalViewData';
 import { useImpactMetricViews } from './hooks/useImpactMetricViews';
+import { useImpactViewsTracking } from './hooks/useImpactViewsTracking';
 import { TIME_RANGE_LABELS } from './constants';
 import type { MetricView } from './views/types';
 
@@ -79,6 +80,8 @@ export const ImpactViewsPage: FC = () => {
         deleteView,
         duplicateView,
     } = useImpactMetricViews();
+    const { trackViewCreated, trackViewUpdated, trackViewDeleted } =
+        useImpactViewsTracking();
     const [editor, setEditor] = useState<EditorState>({ type: 'closed' });
     const [pendingDelete, setPendingDelete] = useState<MetricView | null>(null);
 
@@ -89,14 +92,24 @@ export const ImpactViewsPage: FC = () => {
     const saveView = (input: ViewInput) => {
         if (editor.type === 'edit') {
             updateView(editor.view.id, input);
+            trackViewUpdated();
         } else {
             addView(input);
+            trackViewCreated();
         }
         closeEditor();
     };
 
+    const handleDuplicate = (view: MetricView) => {
+        const duplicated = duplicateView(view.id);
+        if (duplicated) trackViewCreated();
+    };
+
     const confirmDelete = () => {
-        if (pendingDelete) deleteView(pendingDelete.id);
+        if (pendingDelete) {
+            deleteView(pendingDelete.id);
+            trackViewDeleted();
+        }
         setPendingDelete(null);
     };
 
@@ -122,7 +135,7 @@ export const ImpactViewsPage: FC = () => {
                         onSelect={setActiveViewId}
                         onCreate={openCreate}
                         onEdit={openEdit}
-                        onDuplicate={(view) => duplicateView(view.id)}
+                        onDuplicate={handleDuplicate}
                         onDelete={setPendingDelete}
                     />
                     {activeView ? <ActiveView view={activeView} /> : null}

@@ -19,7 +19,7 @@ import {
  * instance. Users on invited instances / multi-project setups are out of
  * scope for the onboarding checklist.
  */
-export const CHECKLIST_PROJECT_ID = 'demo';
+export const CHECKLIST_PROJECT_ID = 'default';
 
 export type ChecklistStepKey = 'tour' | 'flag' | 'sdk' | 'on';
 

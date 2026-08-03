@@ -59,6 +59,7 @@ import { ExploreCounters } from 'component/counters/ExploreCounters/ExploreCount
 import { UnknownFlagsTable } from 'component/unknownFlags/UnknownFlagsTable';
 import { ChangeRequests } from 'component/changeRequest/ChangeRequests/ChangeRequests';
 import { LazyStoriesPage } from 'component/stories/LazyStoriesPage.tsx';
+import { Gallery } from 'component/proto/Gallery.tsx';
 
 export const routes: IRoute[] = [
     // Splash
@@ -600,6 +601,22 @@ export const routes: IRoute[] = [
         isStandalone: true,
         configFlag: 'storiesPageEnabled',
     },
+    // Dev-only component gallery. `import.meta.env.DEV` is a build-time define,
+    // so in a production build this folds to `false` and the entry (plus the
+    // Gallery import) is tree-shaken out — the route never ships to production.
+    ...(import.meta.env.DEV
+        ? [
+              {
+                  path: '/proto/gallery',
+                  title: 'Component gallery',
+                  hidden: true,
+                  component: Gallery,
+                  type: 'protected',
+                  menu: {},
+                  isStandalone: true,
+              } satisfies IRoute,
+          ]
+        : []),
 ];
 
 export const getRoute = (path: string) =>

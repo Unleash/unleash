@@ -33,7 +33,7 @@ test('picks the first feature and links to its flag page', async () => {
     );
 });
 
-test('returns no href when the project has no features', async () => {
+test('has no flag link when the project is empty', async () => {
     testServerRoute(server, '/api/admin/search/features', {
         features: [],
         total: 0,

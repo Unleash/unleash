@@ -36,9 +36,18 @@ const TestComponent: FC = () => {
     );
 };
 
-const mockEligibleUser = (splash: Record<string, boolean> = {}) => {
+const mockEligibleUser = ({
+    splash = {},
+    quickTour = false,
+}: {
+    splash?: Record<string, boolean>;
+    quickTour?: boolean;
+} = {}) => {
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: { floatingOnboardingChecklist: true },
+        flags: {
+            floatingOnboardingChecklist: true,
+            quickTourDemo: quickTour,
+        },
     });
     testServerRoute(server, '/api/admin/user', {
         user: { id: 1 },
@@ -88,7 +97,7 @@ beforeEach(() => {
     window.localStorage.clear();
 });
 
-test('done and completedCount derive from server onboardingStatus', async () => {
+test('shows completed count matching the server progress', async () => {
     mockEligibleUser();
     mockProjectOverview('sdk-connected');
 
@@ -100,7 +109,7 @@ test('done and completedCount derive from server onboardingStatus', async () => 
     expect(await screen.findByTestId('count')).toHaveTextContent('2/3');
 });
 
-test('local flag tick bridges lag before onboardingStatus catches up', async () => {
+test('keeps the flag step ticked while the server still reports it incomplete', async () => {
     seedState({ completed: { flag: true } });
     mockEligibleUser();
     mockProjectOverview('onboarding-started');
@@ -112,8 +121,8 @@ test('local flag tick bridges lag before onboardingStatus catches up', async () 
     expect(await screen.findByTestId('on')).toHaveTextContent('n');
 });
 
-test('server splash keeps checklist dismissed after a fresh login', async () => {
-    mockEligibleUser({ [ONBOARDING_CHECKLIST_SPLASH_ID]: true });
+test('stays dismissed for a returning user whose dismissal is persisted server-side', async () => {
+    mockEligibleUser({ splash: { [ONBOARDING_CHECKLIST_SPLASH_ID]: true } });
     mockProjectOverview('onboarding-started');
 
     render(<TestComponent />, { permissions: [{ permission: ADMIN }] });
@@ -121,8 +130,8 @@ test('server splash keeps checklist dismissed after a fresh login', async () => 
     expect(await screen.findByTestId('dismissed')).toHaveTextContent('y');
 });
 
-test('server tour splash keeps tour step done after fresh login', async () => {
-    mockEligibleUser({ [ONBOARDING_TOUR_SPLASH_ID]: true });
+test('keeps the tour step ticked for a returning user who already finished it', async () => {
+    mockEligibleUser({ splash: { [ONBOARDING_TOUR_SPLASH_ID]: true } });
     mockProjectOverview('onboarding-started');
 
     render(<TestComponent />, { permissions: [{ permission: ADMIN }] });
@@ -130,12 +139,36 @@ test('server tour splash keeps tour step done after fresh login', async () => {
     expect(await screen.findByTestId('tour')).toHaveTextContent('y');
 });
 
-test('local dismissed=false overrides server splash (post-reopen)', async () => {
+test('stays visible on next load after the user reopens a dismissed checklist', async () => {
     seedState({ dismissed: false });
-    mockEligibleUser({ [ONBOARDING_CHECKLIST_SPLASH_ID]: true });
+    mockEligibleUser({ splash: { [ONBOARDING_CHECKLIST_SPLASH_ID]: true } });
     mockProjectOverview('onboarding-started');
 
     render(<TestComponent />, { permissions: [{ permission: ADMIN }] });
 
     expect(await screen.findByTestId('dismissed')).toHaveTextContent('n');
+});
+
+test('shows the tour step alongside the other three when the quick tour flag is on', async () => {
+    mockEligibleUser({ quickTour: true });
+    mockProjectOverview('onboarding-started');
+
+    render(<TestComponent />, { permissions: [{ permission: ADMIN }] });
+
+    expect(await screen.findByTestId('count')).toHaveTextContent('0/4');
+});
+
+test('stays hidden when the default project cannot be loaded', async () => {
+    mockEligibleUser();
+    testServerRoute(
+        server,
+        `/api/admin/projects/${CHECKLIST_PROJECT_ID}/overview`,
+        { message: 'not found' },
+        'get',
+        404,
+    );
+
+    render(<TestComponent />, { permissions: [{ permission: ADMIN }] });
+
+    expect(await screen.findByText('null')).toBeInTheDocument();
 });

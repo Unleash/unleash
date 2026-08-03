@@ -79,7 +79,6 @@ export interface ChecklistStep {
     action: ReactNode;
 }
 
-// Auto-expands the first incomplete step, re-advancing on completion.
 export const ChecklistSteps = ({ steps }: { steps: ChecklistStep[] }) => {
     const firstIncomplete = steps.findIndex((step) => !step.done);
     const [expanded, setExpanded] = useState(firstIncomplete);

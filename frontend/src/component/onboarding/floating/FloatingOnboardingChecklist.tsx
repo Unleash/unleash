@@ -157,9 +157,8 @@ const EligibleFloatingOnboardingChecklist = () => {
     const [createFlagOpen, setCreateFlagOpen] = useState(false);
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
 
-    // `pendingAction` is persisted so a "New feature flag" / "Connect SDK"
-    // click survives the MainLayout re-mount on route change, then pops the
-    // dialog once we've landed on the target route.
+    // `pendingAction` is persisted because MainLayout re-mounts on route
+    // change, wiping in-memory dialog state.
     useEffect(() => {
         if (dismissed) return;
         const pending = state.pendingAction;
@@ -188,16 +187,12 @@ const EligibleFloatingOnboardingChecklist = () => {
     const toggleMinimized = () => update({ minimized: !state.minimized });
 
     const handleDismiss = () => {
-        // Clear `pendingAction` too so a queued dialog doesn't pop up right
-        // after the user dismissed the helper. Splash persists dismissal
-        // server-side, surviving a localStorage reset.
         update({ dismissed: true, pendingAction: undefined });
         setSplashSeen(ONBOARDING_CHECKLIST_SPLASH_ID);
     };
 
     const handleTakeTour = () =>
         openIntro({
-            // `onClose` fires for any exit (Skip, Escape, backdrop, Finish, ×).
             onClose: () => {
                 markCompleted('tour');
                 setSplashSeen(ONBOARDING_TOUR_SPLASH_ID);
@@ -327,8 +322,8 @@ const EligibleFloatingOnboardingChecklist = () => {
             <ConnectSdkDialog
                 open={connectSdkOpen}
                 onClose={() => {
-                    // No local `markCompleted('sdk')` — closing the dialog
-                    // isn't proof an SDK actually registered.
+                    // No local tick — closing the dialog isn't proof an SDK
+                    // actually registered.
                     setConnectSdkOpen(false);
                     refetchOverview();
                 }}

@@ -1,9 +1,7 @@
 import { useCallback, useRef } from 'react';
 import { useLocalStorageState } from 'hooks/useLocalStorageState.ts';
 
-// Local bridge ticks — kept until the server signal catches up (`local ||
-// server` in the context). Only `tour` and `flag` have a reliable client-side
-// completion event; `sdk`/`on` come from `onboardingStatus` only.
+// Only `tour` and `flag` have a reliable client-side completion event.
 export interface FloatingOnboardingChecklistCompleted {
     tour?: boolean;
     flag?: boolean;
@@ -22,9 +20,7 @@ export interface FloatingOnboardingChecklistState {
     // `undefined` = fall back to server splash; `true`/`false` overrides it.
     dismissed?: boolean;
     minimized: boolean;
-    // Dialog to open once we land on a route where it can render safely
-    // (e.g. `CreateFeatureDialog` needs `:projectId`). `setAt` guards against
-    // a stale entry firing a dialog days later — see `PENDING_ACTION_TTL_MS`.
+    // Dialog queued to open once we land on a route where it can render.
     pendingAction?: PendingAction;
     completed: FloatingOnboardingChecklistCompleted;
 }
@@ -41,8 +37,8 @@ export const useFloatingOnboardingChecklistState = () => {
             DEFAULT_STATE,
         );
 
-    // Route the setter through a ref so `update`/`markCompleted` have stable
-    // identities — safe to list in `useEffect` deps without re-firing.
+    // `useLocalStorageState` returns a fresh setter each render; route
+    // through a ref so `update`/`markCompleted` stay referentially stable.
     const setStateRef = useRef(setState);
     setStateRef.current = setState;
 

@@ -261,30 +261,27 @@ export const filterAccessibleProjects = (
     projectParam: string | undefined,
     projectAccess: ProjectAccess,
 ): string | undefined => {
-    if (projectAccess.mode !== 'all') {
-        const allowedProjects = projectAccess.projects;
-
-        if (!projectParam) {
-            return `IS_ANY_OF:${allowedProjects.join(',')}`;
-        } else {
-            const searchProjectList = projectParam.split(',');
-            const filteredProjects = searchProjectList
-                .filter((proj) =>
-                    allowedProjects.includes(
-                        proj.replace(/^(IS|IS_ANY_OF):/, ''),
-                    ),
-                )
-                .join(',');
-
-            if (!filteredProjects) {
-                throw new Error(
-                    'No accessible projects in the search parameters',
-                );
-            }
-
-            return filteredProjects;
-        }
+    if (projectAccess.mode === 'all') {
+        return projectParam;
     }
 
-    return projectParam;
+    const allowedProjects = projectAccess.projects;
+
+    if (!projectParam) {
+        return `IS_ANY_OF:${allowedProjects.join(',')}`;
+    }
+
+    // Parse the operator-prefixed value so we can scope the projects to the
+    // accessible ones without losing the operator (it only rides on the first
+    // value, so naive sstring splitting drops it when the first project is filtered out).
+    const parsed = parseSearchOperatorValue('project', projectParam);
+    const filteredProjects = parsed?.values.filter((project) =>
+        allowedProjects.includes(project),
+    );
+
+    if (!parsed || !filteredProjects?.length) {
+        throw new Error('No accessible projects in the search parameters');
+    }
+
+    return `${parsed.operator}:${filteredProjects.join(',')}`;
 };

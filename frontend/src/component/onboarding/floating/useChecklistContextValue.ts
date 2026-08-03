@@ -19,7 +19,7 @@ import {
  * instance. Users on invited instances / multi-project setups are out of
  * scope for the onboarding checklist.
  */
-export const CHECKLIST_PROJECT_ID = 'default';
+export const CHECKLIST_PROJECT_ID = 'demo';
 
 export type ChecklistStepKey = 'tour' | 'flag' | 'sdk' | 'on';
 
@@ -74,6 +74,7 @@ export const useChecklistContextValue =
 
         const {
             project,
+            loading,
             error: projectError,
             refetch: refetchOverview,
         } = useProjectOverview(eligible ? projectId : '');
@@ -107,8 +108,10 @@ export const useChecklistContextValue =
 
         // If the `default` project can't be loaded (deleted/renamed on this
         // instance), treat as ineligible — we'd otherwise render dead links
-        // to `/projects/default/...`.
-        if (!eligible || projectError) return null;
+        // to `/projects/default/...`. While the first fetch is in flight,
+        // hide too: `useProjectOverview`'s fallback status is `'onboarded'`,
+        // which would flash the checklist as fully complete.
+        if (!eligible || projectError || loading) return null;
 
         return {
             state,

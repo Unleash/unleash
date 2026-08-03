@@ -3,6 +3,7 @@ import { createConfig } from './lib/create-config.js';
 import { LogLevel } from './lib/logger.js';
 import { ApiTokenType } from './lib/types/model.js';
 
+// local server configuraion for development purposes.
 process.nextTick(async () => {
     try {
         await start(

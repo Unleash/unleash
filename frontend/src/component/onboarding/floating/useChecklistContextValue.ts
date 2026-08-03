@@ -33,7 +33,6 @@ export interface FloatingOnboardingChecklistContextValue {
     refetchOverview: () => void;
 }
 
-// Returns `null` for ineligible users.
 export const useChecklistContextValue =
     (): FloatingOnboardingChecklistContextValue | null => {
         const eligible = useOnboardingChecklistEligibility();

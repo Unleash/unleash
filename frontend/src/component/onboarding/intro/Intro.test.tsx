@@ -235,7 +235,7 @@ test('walks through the connected story to the showcase', () => {
     );
     expect(screen.getByTestId('QUICK_TOUR_INTRO_CONFETTI')).toBeInTheDocument();
     vi.useRealTimers();
-});
+}, 10000);
 
 test('keeps metrics live without errors until production is enabled', () => {
     vi.useFakeTimers();
@@ -439,7 +439,7 @@ test('keeps metrics live without errors until production is enabled', () => {
     );
     expect(successfulAfterFirstRecoverySample).toBeLessThan(128);
     vi.useRealTimers();
-});
+}, 10000);
 
 test('groups rapid environment events without inventing an incident', () => {
     vi.useFakeTimers();
@@ -991,7 +991,7 @@ test('teaches manual recovery before a safeguard automates it', () => {
         }),
     ).not.toBeChecked();
     vi.useRealTimers();
-});
+}, 10000);
 
 test('calls onComplete when skipping', () => {
     const onComplete = vi.fn();

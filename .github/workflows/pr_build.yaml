@@ -1,0 +1,53 @@
+name: PR Build
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+    steps:
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            backend:
+              - '**'
+              - '!frontend/**'
+              - '!coverage/**'
+            frontend:
+              - 'frontend/**'
+              - '.github/workflows/**frontend**'
+
+  backend:
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
+    uses: ./.github/workflows/build.yaml
+
+  frontend:
+    needs: changes
+    if: needs.changes.outputs.frontend == 'true'
+    uses: ./.github/workflows/build_frontend_prs.yml
+
+  build:
+    needs: [backend, frontend]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check results
+        run: |
+          if [[ "${{ needs.backend.result }}" == "failure" || "${{ needs.backend.result }}" == "cancelled" ]]; then
+            echo "Backend build failed"
+            exit 1
+          fi
+          if [[ "${{ needs.frontend.result }}" == "failure" || "${{ needs.frontend.result }}" == "cancelled" ]]; then
+            echo "Frontend build failed"
+            exit 1
+          fi

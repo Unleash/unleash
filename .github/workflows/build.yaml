@@ -13,7 +13,6 @@ on:
       - coverage/**
   pull_request:
     paths-ignore:
-      - frontend/**
       - coverage/**
 
 jobs:

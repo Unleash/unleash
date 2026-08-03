@@ -387,6 +387,7 @@ interface IIntroProps {
     onComplete: () => void;
 }
 
+// Unleash Intro
 export const Intro = ({ onComplete }: IIntroProps) => {
     const { trackEvent } = useEventTracker();
     const theme = useTheme();

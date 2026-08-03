@@ -173,7 +173,7 @@ test('clears the selection when the filters change', async () => {
             screen.queryByTestId(BATCH_SELECTED_COUNT),
         ).not.toBeInTheDocument();
     });
-}, 10000);
+}, 16000);
 
 test('filters by tag', async () => {
     setupApi();

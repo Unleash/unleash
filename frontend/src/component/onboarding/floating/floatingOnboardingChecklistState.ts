@@ -7,21 +7,10 @@ export interface FloatingOnboardingChecklistCompleted {
     flag?: boolean;
 }
 
-export type PendingAction = { type: 'flag' | 'sdk'; setAt: number };
-
-export const PENDING_ACTION_TTL_MS = 60_000;
-
-export const isPendingActionExpired = (
-    action: PendingAction,
-    nowMs: number,
-): boolean => nowMs - action.setAt > PENDING_ACTION_TTL_MS;
-
 export interface FloatingOnboardingChecklistState {
     // `undefined` = fall back to server splash; `true`/`false` overrides it.
     dismissed?: boolean;
     minimized: boolean;
-    // Dialog queued to open once we land on a route where it can render.
-    pendingAction?: PendingAction;
     completed: FloatingOnboardingChecklistCompleted;
 }
 

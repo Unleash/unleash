@@ -1,9 +1,9 @@
-import { type ReactNode, useContext, useEffect, useState } from 'react';
+import { type ReactNode, useContext, useState } from 'react';
 import { Button, IconButton, styled, Typography } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { Link, useNavigate } from 'react-router';
+import { Link } from 'react-router';
 import { CreateFeatureDialog } from 'component/project/Project/PaginatedProjectFeatureToggles/ProjectFeatureTogglesHeader/CreateFeatureDialog.tsx';
 import { ConnectSdkDialog } from 'component/onboarding/dialog/ConnectSdkDialog/ConnectSdkDialog.tsx';
 import { useIntro } from 'component/onboarding/intro/IntroProvider.tsx';
@@ -14,7 +14,7 @@ import { useFloatingOnboardingChecklist } from './useFloatingOnboardingChecklist
 import { useFirstProjectFeature } from './useFirstProjectFeature.ts';
 import { useChecklistRouteMatch } from './useChecklistRouteMatch.ts';
 import { ChecklistSteps, type ChecklistStep } from './ChecklistSteps.tsx';
-import { isPendingActionExpired } from './floatingOnboardingChecklistState.ts';
+import { usePendingAction } from './usePendingAction.ts';
 import type { ChecklistStepKey } from './useChecklistContextValue.ts';
 import {
     ONBOARDING_CHECKLIST_SPLASH_ID,
@@ -148,7 +148,6 @@ const EligibleFloatingOnboardingChecklist = () => {
 
     const { open: openIntro } = useIntro();
     const { setSplashSeen } = useSplashApi();
-    const navigate = useNavigate();
     const { onProjectRoute, onSdkTargetRoute } = useChecklistRouteMatch({
         projectId,
         feature,
@@ -157,37 +156,29 @@ const EligibleFloatingOnboardingChecklist = () => {
     const [createFlagOpen, setCreateFlagOpen] = useState(false);
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
 
-    // `pendingAction` is persisted because MainLayout re-mounts on route
-    // change, wiping in-memory dialog state.
-    useEffect(() => {
-        if (dismissed) return;
-        const pending = state.pendingAction;
-        if (!pending) return;
-        if (isPendingActionExpired(pending, Date.now())) {
-            update({ pendingAction: undefined });
-            return;
-        }
-        const readyForPending =
-            (pending.type === 'flag' && onProjectRoute) ||
-            (pending.type === 'sdk' && onSdkTargetRoute);
-        if (!readyForPending) return;
-        if (pending.type === 'flag') setCreateFlagOpen(true);
-        if (pending.type === 'sdk') setConnectSdkOpen(true);
-        update({ pendingAction: undefined });
-    }, [
-        state.pendingAction,
-        onProjectRoute,
-        onSdkTargetRoute,
-        dismissed,
-        update,
-    ]);
+    // Persisted across the MainLayout re-mount that happens on route change.
+    const { runOnPage, cancelPendingAction } = usePendingAction({
+        actions: {
+            flag: {
+                atPage: onProjectRoute,
+                page: `/projects/${projectId}`,
+                action: () => setCreateFlagOpen(true),
+            },
+            sdk: {
+                atPage: onSdkTargetRoute,
+                page: goToFlagHref ?? `/projects/${projectId}`,
+                action: () => setConnectSdkOpen(true),
+            },
+        },
+    });
 
     if (dismissed) return null;
 
     const toggleMinimized = () => update({ minimized: !state.minimized });
 
     const handleDismiss = () => {
-        update({ dismissed: true, pendingAction: undefined });
+        cancelPendingAction();
+        update({ dismissed: true });
         setSplashSeen(ONBOARDING_CHECKLIST_SPLASH_ID);
     };
 
@@ -199,27 +190,8 @@ const EligibleFloatingOnboardingChecklist = () => {
             },
         });
 
-    const handleCreateFlag = () => {
-        if (onProjectRoute) {
-            setCreateFlagOpen(true);
-        } else {
-            update({
-                pendingAction: { type: 'flag', setAt: Date.now() },
-            });
-            navigate(`/projects/${projectId}`);
-        }
-    };
-
-    const handleConnectSdk = () => {
-        if (onSdkTargetRoute) {
-            setConnectSdkOpen(true);
-        } else {
-            update({
-                pendingAction: { type: 'sdk', setAt: Date.now() },
-            });
-            navigate(goToFlagHref ?? `/projects/${projectId}`);
-        }
-    };
+    const handleCreateFlag = () => runOnPage('flag');
+    const handleConnectSdk = () => runOnPage('sdk');
 
     const stepDefinitions: Record<
         ChecklistStepKey,

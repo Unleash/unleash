@@ -29,6 +29,7 @@ import { DeleteProgressionDialog } from './DeleteProgressionDialog.tsx';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import { ReleasePlanMilestoneItem } from './ReleasePlanMilestoneItem/ReleasePlanMilestoneItem.tsx';
 import { formatDateYMDHMS } from 'utils/formatDate';
+import { useLocationSettings } from 'hooks/useLocationSettings';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
@@ -112,6 +113,7 @@ export const ReleasePlan = ({
     } = plan;
 
     const projectId = useRequiredPathParam('projectId');
+    const { locationSettings } = useLocationSettings();
     const { removeReleasePlanFromFeature, startReleasePlanMilestone } =
         useReleasePlansApi();
     const {
@@ -453,7 +455,10 @@ export const ReleasePlan = ({
                 >
                     <b>
                         Automation paused by safeguard
-                        {pausedAt ? ` at ${formatDateYMDHMS(pausedAt)}` : ''}.
+                        {pausedAt
+                            ? ` at ${formatDateYMDHMS(pausedAt, locationSettings.locale)}`
+                            : ''}
+                        .
                     </b>{' '}
                     Existing users on this release plan can still access the
                     feature.

@@ -20,6 +20,7 @@ import { StrategySeparator } from 'component/common/StrategySeparator/StrategySe
 import { StrategyList } from 'component/common/StrategyList/StrategyList';
 import { StrategyListItem } from 'component/common/StrategyList/StrategyListItem';
 import { formatDateYMDHMS } from 'utils/formatDate';
+import { useLocationSettings } from 'hooks/useLocationSettings';
 
 const StyledAccordion = styled(Accordion, {
     shouldForwardProp: (prop) => prop !== 'status' && prop !== 'hasAutomation',
@@ -130,6 +131,7 @@ export const ReleasePlanMilestone = ({
     renderStrategy,
 }: IReleasePlanMilestoneProps) => {
     const [expanded, setExpanded] = useState(defaultExpanded);
+    const { locationSettings } = useLocationSettings();
     const hasAutomation = Boolean(automationSection);
     const isPreviousMilestonePaused =
         previousMilestoneStatus?.type === 'paused' ||
@@ -173,6 +175,7 @@ export const ReleasePlanMilestone = ({
                                                 Started{' '}
                                                 {formatDateYMDHMS(
                                                     milestone.startedAt,
+                                                    locationSettings.locale,
                                                 )}
                                             </StyledStartedAt>
                                         )}
@@ -225,6 +228,7 @@ export const ReleasePlanMilestone = ({
                                             Started{' '}
                                             {formatDateYMDHMS(
                                                 milestone.startedAt,
+                                                locationSettings.locale,
                                             )}
                                         </StyledStartedAt>
                                     )}

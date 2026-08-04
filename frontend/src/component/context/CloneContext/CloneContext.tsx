@@ -17,7 +17,10 @@ export const CloneContext: FC<CloneContextProps> = ({
 }) => {
     const projectId = useOptionalPathParam('projectId');
     const name = useRequiredPathParam('name');
-    const { context, loading, error } = useContext({ name, project: projectId });
+    const { context, loading, error } = useContext({
+        name,
+        project: projectId,
+    });
 
     if (loading) {
         return null;

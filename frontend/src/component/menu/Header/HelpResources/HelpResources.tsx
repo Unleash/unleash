@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import {
     Box,
     IconButton,
@@ -17,8 +17,11 @@ import SlackIcon from 'assets/icons/menu/slack.svg?react';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import NewReleasesOutlinedIcon from '@mui/icons-material/NewReleasesOutlined';
+import RocketLaunchOutlinedIcon from '@mui/icons-material/RocketLaunchOutlined';
 import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
 import LearningLabIcon from 'assets/icons/menu/learning-lab.svg?react';
+import { FloatingOnboardingChecklistContext } from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklistContext.tsx';
+import { OnboardingProgressBadge } from 'component/onboarding/floatingChecklist/OnboardingProgressBadge.tsx';
 import { Link } from 'react-router';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
 import { useEventTracker } from 'hooks/useEventTracker';
@@ -197,6 +200,15 @@ export const HelpResources = () => {
         handleClose();
     };
 
+    const floatingOnboardingChecklist = useContext(
+        FloatingOnboardingChecklistContext,
+    );
+
+    const handleGetStarted = () => {
+        handleOptionClick('get-started');
+        floatingOnboardingChecklist?.open();
+    };
+
     const { openFeedback } = useFeedback('general', 'automatic');
 
     const handleGiveFeedback = () => {
@@ -254,6 +266,14 @@ export const HelpResources = () => {
                         </StyledVisitLink>
                     </StyledLearningLabContent>
                 </StyledFeaturedMenuItem>
+                {floatingOnboardingChecklist && (
+                    <StyledMenuItem onClick={handleGetStarted}>
+                        <RocketLaunchOutlinedIcon fontSize='small' />
+                        Get started
+                        <Box sx={{ flexGrow: 1 }} />
+                        <OnboardingProgressBadge />
+                    </StyledMenuItem>
+                )}
                 {showWhatsNew && (
                     <StyledMenuItem
                         component={Link}

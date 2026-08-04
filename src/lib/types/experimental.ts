@@ -52,7 +52,6 @@ export type IFlagKey =
     | 'deltaApi'
     | 'uniqueSdkTracking'
     | 'consumptionModel'
-    | 'customMetrics'
     | 'impactViews'
     | 'disableImpactMetrics'
     | 'etagByEnv'

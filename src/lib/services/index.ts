@@ -6,7 +6,6 @@ import HealthService from './health-service.js';
 import ProjectService from '../features/project/project-service.js';
 import ClientInstanceService from '../features/metrics/instance/instance-service.js';
 import ClientMetricsServiceV2 from '../features/metrics/client-metrics/metrics-service-v2.js';
-import { CustomMetricsService } from '../features/metrics/custom/custom-metrics-service.js';
 import TagTypeService from '../features/tag-type/tag-type-service.js';
 import TagService from './tag-service.js';
 import StrategyService from './strategy-service.js';
@@ -240,9 +239,6 @@ export const createServices = (
         config,
         { eventService, resourceLimitsService },
     );
-
-    // Initialize custom metrics service
-    const customMetricsService = new CustomMetricsService(config);
 
     const clientMetricsServiceV2 = new ClientMetricsServiceV2(
         stores,
@@ -533,7 +529,6 @@ export const createServices = (
         tagService,
         clientInstanceService,
         clientMetricsServiceV2,
-        customMetricsService,
         contextService,
         transactionalContextService,
         versionService,
@@ -666,7 +661,6 @@ export interface IUnleashServices {
     apiTokenV2Service: ApiTokenV2Service;
     clientInstanceService: ClientInstanceService;
     clientMetricsServiceV2: ClientMetricsServiceV2;
-    customMetricsService: CustomMetricsService;
     contextService: ContextService;
     transactionalContextService: WithTransactional<ContextService>;
     emailService: EmailService;

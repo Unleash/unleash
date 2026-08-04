@@ -84,7 +84,6 @@ export type UiFlags = {
     sessionInspector?: boolean;
     consumptionModel?: boolean;
     consumptionModelUI?: boolean;
-    customMetrics?: boolean;
     disableImpactMetrics?: boolean;
     impactViews?: boolean;
     plausibleMetrics?: boolean;

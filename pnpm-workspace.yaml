@@ -4,8 +4,8 @@ packages:
 allowBuilds:
   "@parcel/watcher": true
   "@scarf/scarf": true
-  cpu-features: true
-  cypress: true
+  cpu-features: false
+  cypress: false
   es5-ext: true
   esbuild: true
   msw: true

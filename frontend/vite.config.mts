@@ -12,6 +12,18 @@ const UNLEASH_API = process.env.UNLEASH_API || 'http://localhost:4242';
 const UNLEASH_BASE_PATH = process.env.UNLEASH_BASE_PATH || '/';
 const UNLEASH_FRONTEND_TOKEN = process.env.UNLEASH_FRONTEND_TOKEN || '';
 
+// Allow the dev server to be reached through a proxied preview host (e.g. UX
+// Tweak's UXTWEAK_PUBLIC_URL subdomain). Vite 8 blocks unknown hosts unless
+// they're allowlisted. VITE_ALLOWED_HOSTS may be "all" (allow any host) or a
+// comma-separated list; unset keeps Vite's localhost-friendly default.
+const ALLOWED_HOSTS_ENV = process.env.VITE_ALLOWED_HOSTS;
+const allowedHosts =
+    ALLOWED_HOSTS_ENV === 'all'
+        ? true
+        : ALLOWED_HOSTS_ENV
+          ? ALLOWED_HOSTS_ENV.split(',').map((h) => h.trim()).filter(Boolean)
+          : undefined;
+
 if (!UNLEASH_BASE_PATH.startsWith('/') || !UNLEASH_BASE_PATH.endsWith('/')) {
     console.error('UNLEASH_BASE_PATH must both start and end with /');
     process.exit(1);
@@ -70,6 +82,7 @@ export default defineConfig(({ mode }) => {
                 open: true,
                 host: true,
                 port: 3000,
+                ...(allowedHosts !== undefined ? { allowedHosts } : {}),
                 proxy: {
                     [`${UNLEASH_BASE_PATH}api`]: {
                         target: UNLEASH_API,

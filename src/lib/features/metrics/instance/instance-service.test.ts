@@ -453,4 +453,83 @@ describe('upserting into `seenClients`', () => {
             expect.anything(),
         );
     });
+
+    test('registerBackendClient still emits its version heartbeat but strips flavor when the flag is disabled', async () => {
+        const eventStore = new FakeEventStore();
+        const emitSpy = vi.spyOn(eventStore, 'emit');
+        const instanceService = new ClientInstanceService(
+            { eventStore } as any,
+            config, // default config: recordSdkFlavorMetrics is off
+            {} as any,
+        );
+
+        await instanceService.registerBackendClient(
+            {
+                appName: 'appName',
+                instanceId: 'instanceId',
+                sdkVersion: 'unleash-client-node:6.7.0',
+                sdkFlavor: 'unleash-openfeature-node-provider',
+                sdkFlavorVersion: '1.0.1',
+                strategies: ['default'],
+                started: new Date(),
+                interval: 10000,
+            } as any,
+            '127.0.0.1',
+            'development',
+        );
+
+        // Backend always emits the version heartbeat (existing behaviour); only
+        // the flavour fields are gated off.
+        expect(emitSpy).toHaveBeenCalledWith(
+            CLIENT_REGISTER,
+            expect.objectContaining({
+                sdkName: 'unleash-client-node',
+                sdkVersion: '6.7.0',
+                metadata: expect.objectContaining({
+                    sdkFlavor: undefined,
+                    sdkFlavorVersion: undefined,
+                }),
+            }),
+        );
+    });
+
+    test('registerBackendClient includes flavor in the heartbeat when the flag is enabled', async () => {
+        const eventStore = new FakeEventStore();
+        const emitSpy = vi.spyOn(eventStore, 'emit');
+        const flavorConfig = createTestConfig({
+            experimental: { flags: { recordSdkFlavorMetrics: true } },
+        });
+        const instanceService = new ClientInstanceService(
+            { eventStore } as any,
+            flavorConfig,
+            {} as any,
+        );
+
+        await instanceService.registerBackendClient(
+            {
+                appName: 'appName',
+                instanceId: 'instanceId',
+                sdkVersion: 'unleash-client-node:6.7.0',
+                sdkFlavor: 'unleash-openfeature-node-provider',
+                sdkFlavorVersion: '1.0.1',
+                strategies: ['default'],
+                started: new Date(),
+                interval: 10000,
+            } as any,
+            '127.0.0.1',
+            'development',
+        );
+
+        expect(emitSpy).toHaveBeenCalledWith(
+            CLIENT_REGISTER,
+            expect.objectContaining({
+                sdkName: 'unleash-client-node',
+                sdkVersion: '6.7.0',
+                metadata: expect.objectContaining({
+                    sdkFlavor: 'unleash-openfeature-node-provider',
+                    sdkFlavorVersion: '1.0.1',
+                }),
+            }),
+        );
+    });
 });

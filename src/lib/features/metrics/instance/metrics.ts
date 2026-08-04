@@ -320,6 +320,9 @@ export default class ClientMetricsController extends Controller {
                             sdkType: app.sdkType,
                             sdkVersion: app.sdkVersion,
                             projects: app.projects,
+                            // forwarded by Edge for frontend SDKs - backend path already passes `app`
+                            sdkFlavor: app.sdkFlavor,
+                            sdkFlavorVersion: app.sdkFlavorVersion,
                         });
                     } else {
                         promises.push(

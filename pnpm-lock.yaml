@@ -22,7 +22,7 @@ overrides:
   fast-uri: 3.1.5
   form-data: 4.0.6
   glob: ^10.5.0
-  ip-address: 10.2.1
+  ip-address: 10.3.1
   ip: ^2.0.1
   json-schema: ^0.4.0
   json5: ^2.2.2
@@ -137,8 +137,8 @@ importers:
         specifier: ^1.0.2
         version: 1.0.2
       ip-address:
-        specifier: 10.2.1
-        version: 10.2.1
+        specifier: 10.3.1
+        version: 10.3.1
       joi:
         specifier: ^18.1.2
         version: 18.2.3
@@ -4113,8 +4113,8 @@ packages:
     resolution: {integrity: sha512-Ju0Bz/cEia55xDwUWEa8+olFpCiQoypjnQySseKtmjNrnps3P+xfpUmGr90T7yjlVJmOtybRvPXhKMbHr+fWnw==}
     engines: {node: '>= 0.10'}
 
-  ip-address@10.2.1:
-    resolution: {integrity: sha512-O81l1g31PlH55F7AChkGM3sdWZX+1KDLnhesJ/V9Ziug5nIOnEPaVb2jLWAo1TbCOSeZPeNbxX4v/ywTuKSn9A==}
+  ip-address@10.3.1:
+    resolution: {integrity: sha512-1e9d3kb97NHJTIJDZW9rKqW2h6+dFa50Dy0fpPSMQp2ADje5gvKsXmdiK6dwY5t76TaTt5+P5N1Y/LoToIxP6g==}
     engines: {node: '>= 12'}
 
   ipaddr.js@1.9.1:
@@ -10046,7 +10046,7 @@ snapshots:
   express-rate-limit@8.5.2(express@4.22.2(supports-color@10.2.2)):
     dependencies:
       express: 4.22.2(supports-color@10.2.2)
-      ip-address: 10.2.1
+      ip-address: 10.3.1
 
   express-session@1.19.0(supports-color@10.2.2):
     dependencies:
@@ -10617,7 +10617,7 @@ snapshots:
 
   interpret@2.2.0: {}
 
-  ip-address@10.2.1: {}
+  ip-address@10.3.1: {}
 
   ipaddr.js@1.9.1: {}
 
@@ -12716,7 +12716,7 @@ snapshots:
 
   socks@2.8.9:
     dependencies:
-      ip-address: 10.2.1
+      ip-address: 10.3.1
       smart-buffer: 4.2.0
 
   source-map-js@1.2.1: {}
@@ -13268,7 +13268,7 @@ snapshots:
     dependencies:
       http-proxy-agent: 7.0.2(supports-color@10.2.2)
       https-proxy-agent: 7.0.6(supports-color@10.2.2)
-      ip-address: 10.2.1
+      ip-address: 10.3.1
       launchdarkly-eventsource: 2.2.0
       lru-cache: 11.5.1
       make-fetch-happen: 15.0.6(supports-color@8.1.1)

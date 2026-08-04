@@ -66,8 +66,8 @@ minimumReleaseAgeExclude:
   - fast-uri@3.1.4 || 3.1.5
   # Security update: brace-expansion@1.1.18 || 2.1.4 || 5.0.9
   - brace-expansion@1.1.18 || 2.1.4 || 5.0.9
-  # Renovate security update: ip-address@10.2.1
-  - ip-address@10.2.1
+  # Renovate security update: ip-address@10.2.1 || 10.3.1
+  - ip-address@10.2.1 || 10.3.1
 
 patchedDependencies:
   # Fixes a bug in getAutoSortingFn where `.slice(10)` skips the first 10 rows
@@ -95,7 +95,7 @@ overrides:
   fast-uri: "3.1.5"
   form-data: "4.0.6"
   glob: "^10.5.0"
-  ip-address: "10.2.1"
+  ip-address: "10.3.1"
   ip: "^2.0.1"
   json-schema: "^0.4.0"
   json5: "^2.2.2"

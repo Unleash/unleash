@@ -387,7 +387,9 @@ export const ServiceAccountModal = ({
                             }
                             elseShow={
                                 <>
-                                    <StyledInputDescription>
+                                    <StyledInputDescription
+                                        sx={{ marginTop: 4 }}
+                                    >
                                         Service account tokens
                                     </StyledInputDescription>
                                     <ServiceAccountTokens

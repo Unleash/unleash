@@ -1243,6 +1243,7 @@ export * from './parentVariantOptionsSchema';
 export * from './passwordAuthSchema';
 export * from './passwordSchema';
 export * from './patSchema';
+export * from './patSchemaExpiryWarning';
 export * from './patchEnvironmentsFeatureVariants400';
 export * from './patchEnvironmentsFeatureVariants401';
 export * from './patchEnvironmentsFeatureVariants403';

@@ -4,6 +4,8 @@
  * See `gen:api` script in package.json
  */
 
+import type { PatSchemaExpiryWarning } from './patSchemaExpiryWarning';
+
 /**
  * Describes a [personal access token](https://docs.getunleash.io/concepts/api-tokens-and-client-keys#personal-access-tokens), or PAT. PATs are automatically scoped to the authenticated user.
  */
@@ -14,6 +16,8 @@ export interface PatSchema {
     description: string;
     /** The PAT's expiration date. */
     expiresAt: string;
+    /** A warning about the expiration of this PAT, absent when there is nothing to warn about. `expires-soon` means the PAT is past the middle of its lifetime and expires within one of the configured `tokenExpiryNotificationDays` lead times; `expired` means it is no longer usable. */
+    expiryWarning?: PatSchemaExpiryWarning;
     /**
      * The PAT's ID. PAT IDs are incrementing integers. In other words, a more recently created PAT will always have a higher ID than an older one.
      * @minimum 1

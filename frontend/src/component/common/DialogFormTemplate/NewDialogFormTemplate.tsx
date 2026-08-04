@@ -71,7 +71,7 @@ const inlineFieldSlotProps = (htmlInputSx: Record<string, unknown>) => ({
 export const nameInputSlotProps = (theme: Theme) =>
     inlineFieldSlotProps({
         fontSize: theme.typography.body1.fontSize,
-        fontWeight: theme.fontWeight.bold,
+        fontWeight: theme.typography.fontWeightRegular,
         lineHeight: 1.4,
         '&::placeholder': {
             color: theme.palette.text.primary,

@@ -2,10 +2,12 @@ import type { FC } from 'react';
 import { useNavigate } from 'react-router';
 import Delete from '@mui/icons-material/Delete';
 import Edit from '@mui/icons-material/Edit';
+import FileCopy from '@mui/icons-material/FileCopy';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
 import {
+    CREATE_CONTEXT_FIELD,
     DELETE_CONTEXT_FIELD,
     UPDATE_CONTEXT_FIELD,
     UPDATE_PROJECT_CONTEXT,
@@ -27,9 +29,24 @@ export const ContextActionsCell: FC<IContextActionsCellProps> = ({
     const updateLocation = projectId
         ? `/projects/${projectId}/settings/context/edit/${name}`
         : `/context/edit/${name}`;
+    const cloneLocation = projectId
+        ? `/projects/${projectId}/settings/context/clone/${name}`
+        : `/context/clone/${name}`;
 
     return (
         <ActionCell>
+            <PermissionIconButton
+                permission={[CREATE_CONTEXT_FIELD, UPDATE_PROJECT_CONTEXT]}
+                projectId={projectId}
+                onClick={() => navigate(cloneLocation)}
+                data-loading
+                aria-label='clone'
+                tooltipProps={{
+                    title: 'Clone context field',
+                }}
+            >
+                <FileCopy />
+            </PermissionIconButton>
             <PermissionIconButton
                 permission={[UPDATE_CONTEXT_FIELD, UPDATE_PROJECT_CONTEXT]}
                 projectId={projectId}

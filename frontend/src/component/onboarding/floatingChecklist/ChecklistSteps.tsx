@@ -2,6 +2,7 @@ import { type ReactNode, useEffect, useState } from 'react';
 import { Collapse, styled, Typography } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { focusOutline } from 'themes/themeStyles.ts';
 
 const StepContainer = styled('div')(({ theme }) => ({
     borderTop: `1px solid ${theme.palette.divider}`,
@@ -18,6 +19,10 @@ const StepHeader = styled('button')(({ theme }) => ({
     cursor: 'pointer',
     '&:hover': {
         backgroundColor: theme.palette.action.hover,
+    },
+    '&:focus-visible': {
+        ...focusOutline(theme),
+        outlineOffset: -2,
     },
 }));
 

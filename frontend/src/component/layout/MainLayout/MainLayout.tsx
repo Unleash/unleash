@@ -171,6 +171,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                         </ContentFlexContainer>
                                     </HeaderContentContainer>
 
+                                    <FloatingOnboardingChecklist />
                                     <Footer />
                                 </MainContentWrapper>
                             </LayoutFlexContainer>
@@ -193,7 +194,6 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                         </MainLayoutContentWrapper>
                     </MainLayoutContainer>
                     <NewInUnleash />
-                    <FloatingOnboardingChecklist />
                     {accessRequestsNotificationsEnabled && (
                         <AccessRequestsNotifications />
                     )}

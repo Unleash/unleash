@@ -79,6 +79,9 @@ const StyledTitle = styled('span', {
 const StyledSecondaryLabel = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
     fontSize: theme.fontSizes.smallBody,
+    [theme.breakpoints.down(450)]: {
+        display: 'none',
+    },
 }));
 
 const StyledStartedAt = styled('span')(({ theme }) => ({

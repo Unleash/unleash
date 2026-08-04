@@ -49,6 +49,9 @@ const StyledContentGroup = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
+    [theme.breakpoints.down(600)]: {
+        flexWrap: 'wrap',
+    },
 }));
 
 const StyledIcon = styled(BoltIcon, {

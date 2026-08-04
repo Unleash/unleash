@@ -7,6 +7,7 @@ import {
 } from '../../types/index.js';
 import type { Logger } from '../../logger.js';
 import type { IPatStore } from './pat-store-type.js';
+import { getTokenExpiryWarning } from './token-expiry-warning.js';
 import crypto from 'crypto';
 import BadDataError from '../../error/bad-data-error.js';
 import NameExistsError from '../../error/name-exists-error.js';
@@ -55,8 +56,23 @@ export default class PatService {
         return { ...newPat, secret };
     }
 
-    async getAll(userId: number): Promise<PatSchema[]> {
-        return this.patStore.getAllByUser(userId);
+    async getAll(
+        userId: number,
+        clockOverride: Date = new Date(),
+    ): Promise<PatSchema[]> {
+        const tokens = await this.patStore.getAllByUser(userId);
+        if (!this.config.flagResolver.isEnabled('tokenExpiryNotifications')) {
+            return tokens;
+        }
+        return tokens.map((token) => ({
+            ...token,
+            expiryWarning: getTokenExpiryWarning({
+                createdAt: new Date(token.createdAt),
+                expiresAt: new Date(token.expiresAt),
+                leadTimeDays: this.config.tokenExpiryNotificationDays,
+                now: clockOverride,
+            }),
+        }));
     }
 
     async deletePat(

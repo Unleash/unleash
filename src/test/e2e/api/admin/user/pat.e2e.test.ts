@@ -19,7 +19,17 @@ beforeAll(async () => {
     getLogger.setMuteError(true);
     db = await dbInit('user_pat', getLogger);
     patStore = db.stores.patStore;
-    app = await setupAppWithAuth(db.stores, {}, db.rawDatabase);
+    app = await setupAppWithAuth(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    tokenExpiryNotifications: true,
+                },
+            },
+        },
+        db.rawDatabase,
+    );
 
     await app.request
         .post(`/auth/demo/login`)
@@ -90,6 +100,7 @@ test('should get all PATs', async () => {
     expect(body.pats).toHaveLength(1);
     expect(body.pats[0].secret).toBeUndefined();
     expect(body.pats[0].id).toBeDefined();
+    expect(body.pats[0].expiryWarning).toBeUndefined();
 });
 
 test('should not allow deletion of other users PAT', async () => {

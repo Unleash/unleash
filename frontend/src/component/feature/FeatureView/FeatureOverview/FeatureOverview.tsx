@@ -27,7 +27,7 @@ const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     width: '100%',
     gap: theme.spacing(2),
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down(1350)]: {
         flexDirection: 'column',
     },
 }));

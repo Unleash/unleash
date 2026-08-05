@@ -2,6 +2,223 @@
 
 All notable changes to this project will be documented in this file.
 
+## [8.1.0] - 2026-08-05
+
+### Bug Fixes
+
+- No phantom feature delete events
+
+- Align OSS frontend pnpm version
+
+- Keep typed text in the SDK selector while filtering ([#12480](https://github.com/Unleash/unleash/issues/12480))
+
+- Resolve Dependabot npm vulnerabilities
+
+- Do not post frontend flight recorder data from localhost
+
+- Hmr double react root
+
+- Move api build check to hosted edge - sandbox is has been torn down
+
+- Update fern widget with recent fixes
+
+- Give user_created a default value of true
+
+- Do not release lock when migration is stuck
+
+- Align schema to actual response body
+
+- Don't persist flag table selection when changing filters
+
+- Batch archived flag dialog
+
+- Force validation of single valued constraints
+
+- Multiple virtualized tables on same page work
+
+- Adjust some controls layout after top-label migration
+
+- Don't disable environments when reviving unarchived flags
+
+- Search suggestions crash on v8 table columns
+
+- Don't double archive 
+
+- Keep HelpIcon tooltip links interactive
+
+- Merge conflict
+
+- Top-label input layout issues and CR timeline alignment
+
+- Aligns the variant overrides and change request title rows
+
+- Display dates in user's locale in release plan milestones
+
+- Update dependency ip-address to v10.2.1 [security] ([#12511](https://github.com/Unleash/unleash/issues/12511))
+
+- Update dependency ip-address to v10.3.1 [security] ([#12513](https://github.com/Unleash/unleash/issues/12513))
+
+
+### Documentation
+
+- Sql standards adr
+
+
+### Features
+
+- Apply project release templates UI
+
+- Release plan scope badge
+
+- Sdk flavour metrics and custom headers
+
+- Report network errors flight recorder
+
+- Measure sdk timing
+
+- Measure sdk timing base path
+
+- Normalize sdk paths for metrics
+
+- Track edge-observed API token usage
+
+- Await for feature resolver readiness
+
+- In product docs widget
+
+- Add docs to connectSrc
+
+- Add fern algolia to connectSrc
+
+- Add userCreated to tokens and make edge-service create v2 token…
+
+- Conditional new release plan template when applying
+
+- Emit safeguard-triggered event when a safeguard fires
+
+- Align project list view information with project cards
+
+- Emit SDK flavor metadata from frontend client
+
+- Expiring token email sending
+
+- Add unleash toolbar in dev
+
+- Wire up expiry notifications
+
+- Ability to disable v2 tokens safely
+
+- Clone context field definitions ([#12498](https://github.com/Unleash/unleash/issues/12498))
+
+- Pass sdkFlavor through the bulk (Edge) metrics registration path
+
+- Expiry warnings for PATs and service account tokens in token APIs
+
+- Token expiry warning icons in PAT and service account token tables
+
+- Enable v2 tokens for project level tokens
+
+
+### Fix
+
+- Align archive button
+
+
+### Miscellaneous Tasks
+
+- New alpha UI endpoint /api/admin/flag-creators?q=k 
+
+- Flag creators DB query timer
+
+- Simple filter flags by creator (max 500)
+
+- Use smaller maxLimit for flag-creators
+
+- Virtualized filter for flag-creators 
+
+- Upgrade to Typescript 7
+
+- Add @fern-api/search-widget dependency
+
+- Register and oss extension point
+
+- Remove unused sync workflow cache setup ([#12488](https://github.com/Unleash/unleash/issues/12488))
+
+- Adjust search docs button
+
+- Remove workspace pin for package we don't use anymore
+
+- Flag new raw MUI floating labels via Biome plugin
+
+- Orval flag-creators
+
+- Use correct type for flag creators hook 
+
+- Remove the `archiveInFlagsView` flag
+
+- Make snow integration fully runtime-controllable
+
+- Clean up 'newProfileDropdown' feature flag
+
+- New iteration of the quick tour demo
+
+- Setup flag floatingOnboardingChecklist
+
+- Remove `registerImpactMetrics` flag
+
+- Use delayed flag eval in nav
+
+- Rename useDelayedUiFlagEvaluation to useUiFlagEvaluator
+
+- Introduce 2 more sizes to controls
+
+- Remove newProjectList flag
+
+- Run backend and frontend builds as needed ([#12505](https://github.com/Unleash/unleash/issues/12505))
+
+- Create the onboarding checklist dialog ([#12499](https://github.com/Unleash/unleash/issues/12499))
+
+- Floating onboarding checklist keyboard navigation
+
+- Sec vulnerabilities cleanup
+
+- Remove custom metrics POC ([#12517](https://github.com/Unleash/unleash/issues/12517))
+
+- Fiixing how onbording checklist looks
+
+- Sec vulnerabilities cleanup
+
+
+### Refactor
+
+- Project general settings form
+
+- Project enterprise settings + actions form
+
+- Migrate forms to top label components + use FormGroup
+
+- Ui refactor to remove intermediate step in add safeguard
+
+- Migrate more forms to top-label inputs
+
+- Migrate more controls to top label
+
+- Use right hand exclusive range
+
+- Migrate rest of controls to top label
+
+- Drop margin bottom from FormField, own spacing at call sites
+
+- Cleanup token expiry notifications
+
+- Parse authorization tokens on the boundary
+
+
+### Dev
+
+- It's not longer recommended to use Styled name prefix
+
+
 ## [8.0.3] - 2026-07-10
 
 ### Bug Fixes

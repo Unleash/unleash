@@ -68,6 +68,8 @@ minimumReleaseAgeExclude:
   - brace-expansion@1.1.18 || 2.1.4 || 5.0.9
   # Renovate security update: ip-address@10.2.1 || 10.3.1
   - ip-address@10.2.1 || 10.3.1
+  # Renovate security update: react-router@8.3.0
+  - react-router@8.3.0
 
 patchedDependencies:
   # Fixes a bug in getAutoSortingFn where `.slice(10)` skips the first 10 rows

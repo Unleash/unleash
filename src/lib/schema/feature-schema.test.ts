@@ -4,7 +4,7 @@ import {
     querySchema,
 } from './feature-schema.js';
 
-test('should require URL firendly name', () => {
+test('should require URL friendly name', () => {
     const toggle = {
         name: 'io`dasd',
         enabled: false,

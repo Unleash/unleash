@@ -27,6 +27,8 @@ import type {
     FrontendApiService,
     IUnleashServices,
 } from '../../../services/index.js';
+import { parseApiTokenV2Identifier } from '../../../authentication/authorization-token.js';
+import type { ApiTokenV2Service } from '../../../features/apitokensv2/index.js';
 import type { IAuthRequest } from '../../unleash-types.js';
 import Controller from '../../controller.js';
 import type { Response } from 'express';
@@ -45,6 +47,8 @@ const PATH_TOKEN = `${PATH}/:token`;
 export class ProjectApiTokenController extends Controller {
     private apiTokenService: ApiTokenService;
 
+    private apiTokenV2Service: ApiTokenV2Service;
+
     private accessService: AccessService;
 
     private frontendApiService: FrontendApiService;
@@ -57,6 +61,7 @@ export class ProjectApiTokenController extends Controller {
         config: IUnleashConfig,
         {
             apiTokenService,
+            apiTokenV2Service,
             accessService,
             frontendApiService,
             openApiService,
@@ -64,6 +69,7 @@ export class ProjectApiTokenController extends Controller {
         }: Pick<
             IUnleashServices,
             | 'apiTokenService'
+            | 'apiTokenV2Service'
             | 'accessService'
             | 'frontendApiService'
             | 'openApiService'
@@ -72,6 +78,7 @@ export class ProjectApiTokenController extends Controller {
     ) {
         super(config);
         this.apiTokenService = apiTokenService;
+        this.apiTokenV2Service = apiTokenV2Service;
         this.accessService = accessService;
         this.frontendApiService = frontendApiService;
         this.openApiService = openApiService;
@@ -180,10 +187,24 @@ export class ProjectApiTokenController extends Controller {
                 `You don't have the necessary access [${permissionRequired}] to perform this operation]`,
             );
         }
-        const token = await this.apiTokenService.createApiTokenWithProjects(
-            { ...createToken, projects: [projectId] },
-            req.audit,
-        );
+        const tokenData = { ...createToken, projects: [projectId] };
+        let token: IApiToken;
+        if (this.config.flagResolver.isEnabled('secureTokenStorage')) {
+            const tokenV2 = await this.apiTokenV2Service.create(
+                { ...tokenData, userCreated: true },
+                req.audit,
+            );
+            const { selector: _selector, ...tokenWithSecret } = tokenV2;
+            token = {
+                ...tokenWithSecret,
+                project: tokenV2.projects.join(','),
+            };
+        } else {
+            token = await this.apiTokenService.createApiTokenWithProjects(
+                tokenData,
+                req.audit,
+            );
+        }
         this.openApiService.respondWithValidation(
             201,
             res,
@@ -199,18 +220,27 @@ export class ProjectApiTokenController extends Controller {
     ): Promise<void> {
         const { user } = req;
         const { projectId, token } = req.params;
+        const v2Identifier = parseApiTokenV2Identifier(token);
         const storedToken = (await this.accessibleTokens(user, projectId)).find(
-            (currentToken) => this.tokenEquals(currentToken.secret, token),
+            (currentToken) =>
+                this.tokenEquals(
+                    currentToken.secret,
+                    v2Identifier?.selector ?? token,
+                ),
         );
         if (
             storedToken &&
             (storedToken.project === projectId ||
                 (storedToken.projects.length === 1 &&
-                    storedToken.project[0] === projectId))
+                    storedToken.projects[0] === projectId))
         ) {
-            await this.apiTokenService.delete(token, req.audit);
+            if (v2Identifier) {
+                await this.apiTokenV2Service.delete(v2Identifier, req.audit);
+            } else {
+                await this.apiTokenService.delete(token, req.audit);
+            }
             await this.frontendApiService.deleteClientForFrontendApiToken(
-                token,
+                v2Identifier?.selector ?? token,
             );
             res.status(200).end();
         } else if (!storedToken) {
@@ -231,7 +261,12 @@ export class ProjectApiTokenController extends Controller {
         user: IUser,
         project: string,
     ): Promise<IApiToken[]> {
-        const allTokens = await this.apiTokenService.getUserDefinedTokens();
+        const allTokens = (
+            await Promise.all([
+                this.apiTokenService.getUserDefinedTokens(),
+                this.apiTokenV2Service.getUserDefinedTokens(),
+            ])
+        ).flat();
 
         if (user.isAPI && user.permissions.includes(ADMIN)) {
             return allTokens;

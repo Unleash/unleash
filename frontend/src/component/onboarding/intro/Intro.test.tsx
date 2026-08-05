@@ -666,10 +666,11 @@ test('starts the release plan from the environment and supports manual milestone
     vi.useRealTimers();
 });
 
-test('calls onComplete from Create your first flag', () => {
+test('marks the tour finished on reaching the showcase and closes it on Finish', () => {
     vi.useFakeTimers();
     const onComplete = vi.fn();
-    render(<Intro onComplete={onComplete} />);
+    const onFinish = vi.fn();
+    render(<Intro onComplete={onComplete} onFinish={onFinish} />);
 
     next(); // target
     next(); // variants
@@ -680,9 +681,12 @@ test('calls onComplete from Create your first flag', () => {
     next(); // safeguard
     retryWithSafeguard();
     next(); // showcase
-    fireEvent.click(screen.getByTestId('QUICK_TOUR_INTRO_FINISH_BUTTON'));
+    expect(onFinish).toHaveBeenCalledTimes(1);
+    expect(onComplete).not.toHaveBeenCalled();
 
+    fireEvent.click(screen.getByTestId('QUICK_TOUR_INTRO_FINISH_BUTTON'));
     expect(onComplete).toHaveBeenCalledTimes(1);
+    expect(onFinish).toHaveBeenCalledTimes(1);
     vi.useRealTimers();
 });
 
@@ -993,10 +997,12 @@ test('teaches manual recovery before a safeguard automates it', () => {
     vi.useRealTimers();
 }, 10000);
 
-test('calls onComplete when skipping', () => {
+test('closes the tour on Skip without marking it finished', () => {
     const onComplete = vi.fn();
-    render(<Intro onComplete={onComplete} />);
+    const onFinish = vi.fn();
+    render(<Intro onComplete={onComplete} onFinish={onFinish} />);
 
     fireEvent.click(screen.getByRole('button', { name: 'Skip' }));
     expect(onComplete).toHaveBeenCalledTimes(1);
+    expect(onFinish).not.toHaveBeenCalled();
 });

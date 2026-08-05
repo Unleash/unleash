@@ -10,10 +10,8 @@ import {
     CHECKLIST_PROJECT_ID,
     useChecklistContextValue,
 } from './useChecklistContextValue.ts';
-import {
-    ONBOARDING_CHECKLIST_SPLASH_ID,
-    ONBOARDING_TOUR_SPLASH_ID,
-} from './useOnboardingChecklistEligibility.ts';
+import { ONBOARDING_INTRO_FINISHED_SPLASH_ID } from 'component/onboarding/intro/IntroProvider.tsx';
+import { ONBOARDING_CHECKLIST_SPLASH_ID } from './useOnboardingChecklistEligibility.ts';
 import type { FloatingOnboardingChecklistState } from './floatingOnboardingChecklistState.ts';
 
 const server = testServerSetup();
@@ -132,7 +130,9 @@ test('stays dismissed for a returning user whose dismissal is persisted server-s
 });
 
 test('keeps the tour step ticked for a returning user who already finished it', async () => {
-    mockEligibleUser({ splash: { [ONBOARDING_TOUR_SPLASH_ID]: true } });
+    mockEligibleUser({
+        splash: { [ONBOARDING_INTRO_FINISHED_SPLASH_ID]: true },
+    });
     mockProjectOverview('onboarding-started');
 
     render(<TestComponent />, { permissions: [{ permission: ADMIN }] });

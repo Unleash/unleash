@@ -22,10 +22,7 @@ import { useChecklistRouteMatch } from './useChecklistRouteMatch.ts';
 import { ChecklistSteps, type ChecklistStep } from './ChecklistSteps.tsx';
 import { usePendingAction } from './usePendingAction.ts';
 import type { ChecklistStepKey } from './useChecklistContextValue.ts';
-import {
-    ONBOARDING_CHECKLIST_SPLASH_ID,
-    ONBOARDING_TOUR_SPLASH_ID,
-} from './useOnboardingChecklistEligibility.ts';
+import { ONBOARDING_CHECKLIST_SPLASH_ID } from './useOnboardingChecklistEligibility.ts';
 
 const PULSE_DURATION_MS = 900;
 
@@ -241,10 +238,7 @@ const EligibleFloatingOnboardingChecklist = () => {
 
     const handleTakeTour = () =>
         openIntro({
-            onClose: () => {
-                markCompleted('tour');
-                setSplashSeen(ONBOARDING_TOUR_SPLASH_ID);
-            },
+            onFinish: () => markCompleted('tour'),
         });
 
     const handleCreateFlag = () => runOnPage('flag');

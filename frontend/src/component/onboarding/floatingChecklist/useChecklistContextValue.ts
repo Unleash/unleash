@@ -9,9 +9,9 @@ import {
     type FloatingOnboardingChecklistState,
     useFloatingOnboardingChecklistState,
 } from './floatingOnboardingChecklistState.ts';
+import { ONBOARDING_INTRO_FINISHED_SPLASH_ID } from 'component/onboarding/intro/IntroProvider.tsx';
 import {
     ONBOARDING_CHECKLIST_SPLASH_ID,
-    ONBOARDING_TOUR_SPLASH_ID,
     useOnboardingChecklistEligibility,
 } from './useOnboardingChecklistEligibility.ts';
 
@@ -81,7 +81,9 @@ export const useChecklistContextValue =
         const serverStep = getProjectOnboardingStep(
             project.onboardingStatus,
         ).current;
-        const tourSplashSeen = Boolean(splash?.[ONBOARDING_TOUR_SPLASH_ID]);
+        const tourSplashSeen = Boolean(
+            splash?.[ONBOARDING_INTRO_FINISHED_SPLASH_ID],
+        );
         const done: Record<ChecklistStepKey, boolean> = {
             tour: Boolean(state.completed.tour) || tourSplashSeen,
             flag: Boolean(state.completed.flag) || serverStep >= 1,

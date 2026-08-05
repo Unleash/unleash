@@ -4,7 +4,6 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 export const ONBOARDING_CHECKLIST_SPLASH_ID = 'onboarding-checklist';
-export const ONBOARDING_TOUR_SPLASH_ID = 'onboarding-tour';
 
 // `id === 1` is the initial admin from `initAdminUser` on a fresh install —
 // a "new instance" proxy.

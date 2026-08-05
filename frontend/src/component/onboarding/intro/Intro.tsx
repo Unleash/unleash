@@ -385,10 +385,12 @@ const StyledOutcomeCopy = styled(Box)(({ theme }) => ({
 
 interface IIntroProps {
     onComplete: () => void;
+    /** Fires when the user reaches the end of the tour (after the last topic), not on Skip or backdrop close. The showcase that follows is an optional victory-lap step. */
+    onFinish?: () => void;
 }
 
 // Unleash Intro
-export const Intro = ({ onComplete }: IIntroProps) => {
+export const Intro = ({ onComplete, onFinish }: IIntroProps) => {
     const { trackEvent } = useEventTracker();
     const theme = useTheme();
     const variantPalette = [
@@ -666,6 +668,7 @@ export const Intro = ({ onComplete }: IIntroProps) => {
             goToTopic(topicIndex + 1);
         } else {
             setFinished(true);
+            onFinish?.();
             trackEvent('quick-tour-demo', { props: { eventType: 'finish' } });
         }
     };

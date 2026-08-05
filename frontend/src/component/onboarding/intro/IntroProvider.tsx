@@ -7,11 +7,16 @@ import {
     useState,
 } from 'react';
 import { useUiFlag } from 'hooks/useUiFlag';
+import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi.ts';
 import { IntroDialog } from './IntroDialog.tsx';
+
+export const ONBOARDING_INTRO_FINISHED_SPLASH_ID = 'onboarding-intro-finished';
 
 interface OpenOptions {
     /** Runs after the intro closes (via close, backdrop, Escape, Skip, or Finish). */
     onClose?: () => void;
+    /** Runs only when the user completes the intro (Finish button). */
+    onFinish?: () => void;
 }
 
 interface IntroContextValue {
@@ -28,15 +33,18 @@ const IntroContext = createContext<IntroContextValue | null>(null);
  */
 export const IntroProvider = ({ children }: { children: ReactNode }) => {
     const enabled = useUiFlag('quickTourDemo');
+    const { setSplashSeen } = useSplashApi();
     const [isOpen, setIsOpen] = useState(false);
-    // Held in a ref so re-renders don't clear a pending onClose between the
-    // open() call and the eventual close.
+    // Held in refs so re-renders don't clear pending callbacks between the
+    // open() call and the eventual close/finish.
     const onCloseRef = useRef<(() => void) | undefined>(undefined);
+    const onFinishRef = useRef<(() => void) | undefined>(undefined);
 
     const open = useCallback(
         (options?: OpenOptions) => {
             if (!enabled) return;
             onCloseRef.current = options?.onClose;
+            onFinishRef.current = options?.onFinish;
             setIsOpen(true);
         },
         [enabled],
@@ -46,13 +54,25 @@ export const IntroProvider = ({ children }: { children: ReactNode }) => {
         setIsOpen(false);
         const onClose = onCloseRef.current;
         onCloseRef.current = undefined;
+        onFinishRef.current = undefined;
         onClose?.();
     }, []);
+
+    const handleFinish = useCallback(() => {
+        setSplashSeen(ONBOARDING_INTRO_FINISHED_SPLASH_ID);
+        onFinishRef.current?.();
+    }, [setSplashSeen]);
 
     return (
         <IntroContext.Provider value={{ open }}>
             {children}
-            {enabled && <IntroDialog open={isOpen} onClose={handleClose} />}
+            {enabled && (
+                <IntroDialog
+                    open={isOpen}
+                    onClose={handleClose}
+                    onFinish={handleFinish}
+                />
+            )}
         </IntroContext.Provider>
     );
 };

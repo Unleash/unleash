@@ -186,6 +186,7 @@ const EligibleFloatingOnboardingChecklist = () => {
         environments,
         refetchOverview,
         openRequestCounter,
+        showHelpHint,
     } = useFloatingOnboardingChecklist();
     const { feature, goToFlagHref } = useFirstProjectFeature(projectId);
 
@@ -235,6 +236,7 @@ const EligibleFloatingOnboardingChecklist = () => {
         cancelPendingAction();
         update({ dismissed: true });
         setSplashSeen(ONBOARDING_CHECKLIST_SPLASH_ID);
+        showHelpHint();
     };
 
     const handleTakeTour = () =>

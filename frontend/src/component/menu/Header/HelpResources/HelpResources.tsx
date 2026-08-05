@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import {
     Box,
     IconButton,
@@ -20,6 +20,7 @@ import NewReleasesOutlinedIcon from '@mui/icons-material/NewReleasesOutlined';
 import RocketLaunchOutlinedIcon from '@mui/icons-material/RocketLaunchOutlined';
 import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
 import LearningLabIcon from 'assets/icons/menu/learning-lab.svg?react';
+import { HelpMenuHint } from './HelpMenuHint.tsx';
 import { FloatingOnboardingChecklistContext } from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklistContext.tsx';
 import { OnboardingProgressBadge } from 'component/onboarding/floatingChecklist/OnboardingProgressBadge.tsx';
 import { Link } from 'react-router';
@@ -154,6 +155,7 @@ const LEARNING_LAB_DEFAULTS: Required<ILearningLabVariant> = {
 
 export const HelpResources = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const buttonRef = useRef<HTMLButtonElement | null>(null);
     const open = Boolean(anchorEl);
     const { trackEvent } = useEventTracker();
     const { isEnterprise } = useUiConfig();
@@ -177,8 +179,15 @@ export const HelpResources = () => {
         learningLabVariant?.menuLabel ?? LEARNING_LAB_DEFAULTS.menuLabel;
     const variant = learningLabFlag ? learningLabFlag.name : 'default';
 
+    const floatingOnboardingChecklist = useContext(
+        FloatingOnboardingChecklistContext,
+    );
+
+    const hintOpen = Boolean(floatingOnboardingChecklist?.helpHintVisible);
+
     const handleOpen = (e: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(e.currentTarget);
+        if (hintOpen) floatingOnboardingChecklist?.dismissHelpHint();
         trackEvent(EVENT_NAME, {
             props: {
                 eventType: 'opened',
@@ -199,10 +208,6 @@ export const HelpResources = () => {
         });
         handleClose();
     };
-
-    const floatingOnboardingChecklist = useContext(
-        FloatingOnboardingChecklistContext,
-    );
 
     const handleGetStarted = () => {
         handleOptionClick('get-started');
@@ -225,8 +230,9 @@ export const HelpResources = () => {
         <>
             <Tooltip title='Help & Resources' arrow>
                 <StyledIconButton
+                    ref={buttonRef}
                     size='large'
-                    open={open}
+                    open={open || hintOpen}
                     onClick={handleOpen}
                     aria-haspopup='true'
                     aria-expanded={open}
@@ -235,6 +241,13 @@ export const HelpResources = () => {
                     <HelpOutlineOutlinedIcon />
                 </StyledIconButton>
             </Tooltip>
+            <HelpMenuHint
+                open={hintOpen}
+                anchorEl={buttonRef.current}
+                onClose={() => floatingOnboardingChecklist?.dismissHelpHint()}
+            >
+                You can reopen the Get started checklist from here anytime
+            </HelpMenuHint>
             <StyledMenu
                 anchorEl={anchorEl}
                 open={open}

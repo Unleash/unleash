@@ -4,6 +4,21 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { HelpResources } from './HelpResources';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
+import { FloatingOnboardingChecklistContext } from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklistContext.tsx';
+import type { FloatingOnboardingChecklistContextValue } from 'component/onboarding/floatingChecklist/useChecklistContextValue.ts';
+
+const HINT_TEXT = 'You can reopen the Get started checklist from here anytime';
+
+const renderWithChecklistContext = (
+    value: Partial<FloatingOnboardingChecklistContextValue>,
+) =>
+    render(
+        <FloatingOnboardingChecklistContext.Provider
+            value={value as FloatingOnboardingChecklistContextValue}
+        >
+            <HelpResources />
+        </FloatingOnboardingChecklistContext.Provider>,
+    );
 
 const server = testServerSetup();
 
@@ -179,4 +194,25 @@ test('tracks menu open and item click', async () => {
     expect(trackEvent).toHaveBeenCalledWith('help-resources', {
         props: { eventType: 'click', option: 'github' },
     });
+});
+
+test('shows the help hint pointing at the button when the context flags it visible', async () => {
+    withLearningLab();
+
+    renderWithChecklistContext({ helpHintVisible: true });
+
+    expect(await screen.findByText(HINT_TEXT)).toBeInTheDocument();
+});
+
+test('dismisses the help hint when the user opens the menu', async () => {
+    withLearningLab();
+    const dismissHelpHint = vi.fn();
+
+    renderWithChecklistContext({ helpHintVisible: true, dismissHelpHint });
+
+    await userEvent.click(
+        await screen.findByRole('button', { name: 'Help and resources' }),
+    );
+
+    expect(dismissHelpHint).toHaveBeenCalled();
 });

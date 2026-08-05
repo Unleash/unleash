@@ -51,7 +51,6 @@ process.nextTick(async () => {
                         deltaApi: true,
                         uniqueSdkTracking: true,
                         strictSchemaValidation: true,
-                        customMetrics: true,
                         disableImpactMetrics: false,
                         regexConstraintOperator: true,
                         semverGteConstraintOperators: true,

@@ -673,7 +673,7 @@ importers:
         specifier: ^3.1.3
         version: 3.2.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       react-router:
-        specifier: ^7.16.0
+        specifier: ^7.18.0
         version: 7.18.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       regenerator-runtime:
         specifier: 0.14.1

@@ -17,6 +17,10 @@ import { CommandBar } from 'component/commandBar/CommandBar';
 import { HelpResources } from './HelpResources/HelpResources';
 import { SearchDocsButton } from './SearchDocs/SearchDocsButton.tsx';
 import { PendingAccessRequestsIndicator } from 'component/admin/users/AccessRequestsNotifications/PendingAccessRequestsIndicator';
+import { Link } from 'react-router';
+import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
+import UnleashLogo from 'assets/img/logoDarkWithText.svg?react';
+import UnleashLogoWhite from 'assets/img/logoWithWhiteText.svg?react';
 
 const HeaderComponent = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.application,
@@ -56,6 +60,16 @@ const StyledNav = styled('nav')({
     alignItems: 'center',
     flexGrow: 1,
 });
+
+const StyledLogoLink = styled(Link)(({ theme }) => ({
+    display: 'inline-flex',
+    alignItems: 'center',
+    marginLeft: theme.spacing(1),
+}));
+
+const StyledUnleashLogo = styled(UnleashLogo)({ width: '120px' });
+
+const StyledUnleashLogoWhite = styled(UnleashLogoWhite)({ width: '120px' });
 
 const Header = () => {
     const theme = useTheme();
@@ -125,6 +139,16 @@ const Header = () => {
                             />
                         </Box>
                     </Box>
+                    <StyledLogoLink to='/' aria-label='Home'>
+                        <ThemeMode
+                            darkmode={
+                                <StyledUnleashLogoWhite aria-label='Unleash logo' />
+                            }
+                            lightmode={
+                                <StyledUnleashLogo aria-label='Unleash logo' />
+                            }
+                        />
+                    </StyledLogoLink>
                     <DrawerMenu open={openDrawer} toggleDrawer={toggleDrawer} />
                     {headerItems}
                 </ContainerComponent>

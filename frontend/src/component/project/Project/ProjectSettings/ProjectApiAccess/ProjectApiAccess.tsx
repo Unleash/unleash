@@ -43,16 +43,18 @@ export const ProjectApiAccess = () => {
         tokens,
         (props) => (
             <ActionCell>
-                <CopyApiTokenButton
-                    token={props.row.original}
-                    permission={READ_PROJECT_API_TOKEN}
-                    project={projectId}
-                    track={() =>
-                        trackEvent('project_api_tokens', {
-                            props: { eventType: 'api_key_copied' },
-                        })
-                    }
-                />
+                {!props.row.original.secure ? (
+                    <CopyApiTokenButton
+                        token={props.row.original}
+                        permission={READ_PROJECT_API_TOKEN}
+                        project={projectId}
+                        track={() =>
+                            trackEvent('project_api_tokens', {
+                                props: { eventType: 'api_key_copied' },
+                            })
+                        }
+                    />
+                ) : null}
                 <RemoveApiTokenButton
                     token={props.row.original}
                     permission={DELETE_PROJECT_API_TOKEN}

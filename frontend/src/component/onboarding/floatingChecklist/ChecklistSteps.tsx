@@ -1,11 +1,15 @@
 import { type ReactNode, useEffect, useState } from 'react';
 import { Collapse, styled, Typography } from '@mui/material';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CheckIcon from '@mui/icons-material/Check';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { focusOutline } from 'themes/themeStyles.ts';
 
 const StepContainer = styled('div')(({ theme }) => ({
     borderTop: `1px solid ${theme.palette.divider}`,
+    '&:last-child, &:last-child > button': {
+        borderBottomLeftRadius: theme.shape.borderRadiusLarge,
+        borderBottomRightRadius: theme.shape.borderRadiusLarge,
+    },
 }));
 
 const StepHeader = styled('button')(({ theme }) => ({
@@ -15,7 +19,7 @@ const StepHeader = styled('button')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1.5),
-    padding: theme.spacing(1.5, 2),
+    padding: theme.spacing(1.5),
     cursor: 'pointer',
     '&:hover': {
         backgroundColor: theme.palette.action.hover,
@@ -36,12 +40,18 @@ const StepIndicator = styled('span', {
     height: 20,
     flexShrink: 0,
     color: done ? theme.palette.success.main : theme.palette.text.secondary,
-    '& svg': { fontSize: 20 },
+    ...(done && {
+        borderRadius: theme.shape.borderRadiusMedium,
+        border: `1.25px solid ${theme.palette.success.border}`,
+        backgroundColor: theme.palette.success.light,
+    }),
+    '& svg': { fontSize: done ? 14 : 20 },
 }));
 
 const DashedCircle = styled('span')(({ theme }) => ({
     width: 16,
     height: 16,
+    flexShrink: 0,
     borderRadius: '50%',
     border: `1.5px dashed ${theme.palette.text.secondary}`,
 }));
@@ -68,11 +78,12 @@ const StepBody = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1.5),
-    padding: theme.spacing(0, 2, 2, 6),
+    padding: theme.spacing(0, 2, 2, 5.5),
 }));
 
 const StepBodyText = styled(Typography)(({ theme }) => ({
-    fontSize: theme.typography.body2.fontSize,
+    ...theme.typography.body2,
+    fontWeight: theme.typography.fontWeightRegular,
     color: theme.palette.text.secondary,
 }));
 
@@ -104,11 +115,7 @@ export const ChecklistSteps = ({ steps }: { steps: ChecklistStep[] }) => {
                             aria-expanded={isExpanded}
                         >
                             <StepIndicator done={step.done}>
-                                {step.done ? (
-                                    <CheckCircleIcon />
-                                ) : (
-                                    <DashedCircle />
-                                )}
+                                {step.done ? <CheckIcon /> : <DashedCircle />}
                             </StepIndicator>
                             <StepTitle done={step.done}>{step.title}</StepTitle>
                             <Chevron expanded={isExpanded} />

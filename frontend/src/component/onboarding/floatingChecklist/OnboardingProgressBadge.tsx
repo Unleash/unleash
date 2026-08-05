@@ -2,13 +2,23 @@ import { useContext } from 'react';
 import { styled } from '@mui/material';
 import { FloatingOnboardingChecklistContext } from './FloatingOnboardingChecklistContext.tsx';
 
-const StyledBadge = styled('span')(({ theme }) => ({
-    fontSize: theme.typography.caption.fontSize,
-    fontWeight: theme.typography.fontWeightBold,
+const StyledBadge = styled('span', {
+    shouldForwardProp: (prop) => prop !== 'completed',
+})<{ completed?: boolean }>(({ theme, completed }) => ({
+    ...theme.typography.caption,
+    fontWeight: theme.typography.fontWeightRegular,
     lineHeight: 1,
-    color: theme.palette.secondary.contrastText,
-    backgroundColor: theme.palette.secondary.light,
-    border: `1px solid ${theme.palette.secondary.border}`,
+    color: completed
+        ? theme.palette.success.contrastText
+        : theme.palette.secondary.dark,
+    backgroundColor: completed
+        ? theme.palette.success.light
+        : theme.palette.secondary.light,
+    border: `1px solid ${
+        completed
+            ? theme.palette.success.border
+            : theme.palette.secondary.border
+    }`,
     borderRadius: theme.shape.borderRadius,
     padding: theme.spacing(0.25, 0.75),
     whiteSpace: 'nowrap',
@@ -22,8 +32,9 @@ export const OnboardingProgressBadge = ({
     const context = useContext(FloatingOnboardingChecklistContext);
     if (!context) return null;
     const { completedCount, totalSteps } = context;
+    const completed = completedCount === totalSteps;
     return (
-        <StyledBadge>
+        <StyledBadge completed={completed}>
             {completedCount}/{totalSteps}
             {showLabel ? ' Completed' : null}
         </StyledBadge>

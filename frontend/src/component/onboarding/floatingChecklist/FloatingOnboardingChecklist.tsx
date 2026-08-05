@@ -1,8 +1,14 @@
-import { type ReactNode, useContext, useState } from 'react';
-import { Button, IconButton, styled, Typography } from '@mui/material';
+import { type ReactNode, useContext, useEffect, useRef, useState } from 'react';
+import {
+    Button,
+    IconButton,
+    keyframes,
+    styled,
+    Typography,
+} from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import RemoveIcon from '@mui/icons-material/Remove';
+import MinimizeIcon from '@mui/icons-material/Minimize';
 import { Link } from 'react-router';
 import { CreateFeatureDialog } from 'component/project/Project/PaginatedProjectFeatureToggles/ProjectFeatureTogglesHeader/CreateFeatureDialog.tsx';
 import { ConnectSdkDialog } from 'component/onboarding/dialog/ConnectSdkDialog/ConnectSdkDialog.tsx';
@@ -21,7 +27,16 @@ import {
     ONBOARDING_TOUR_SPLASH_ID,
 } from './useOnboardingChecklistEligibility.ts';
 
-const Window = styled('aside')(({ theme }) => ({
+const PULSE_DURATION_MS = 900;
+
+const pulse = keyframes`
+    0%   { outline-color: var(--pulse-color); outline-offset: 0px; }
+    100% { outline-color: transparent;         outline-offset: 8px; }
+`;
+
+const Window = styled('aside', {
+    shouldForwardProp: (prop) => prop !== 'pulsing',
+})<{ pulsing?: boolean }>(({ theme, pulsing }) => ({
     position: 'fixed',
     bottom: theme.spacing(3),
     right: theme.spacing(3),
@@ -31,7 +46,7 @@ const Window = styled('aside')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     overflow: 'hidden',
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: theme.palette.background.default,
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusLarge,
     boxShadow: theme.boxShadows.popup,
@@ -41,21 +56,26 @@ const Window = styled('aside')(({ theme }) => ({
         right: theme.spacing(2),
         width: 'auto',
     },
+    ...(pulsing && {
+        '--pulse-color': theme.palette.primary.main,
+        outline: '3px solid transparent',
+        animation: `${pulse} ${PULSE_DURATION_MS}ms ease-out`,
+    }),
 }));
 
 const Header = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
-    padding: theme.spacing(1, 1, 1, 2),
-    borderBottom: `1px solid ${theme.palette.divider}`,
+    padding: theme.spacing(1, 1.5, 1, 1.5),
+    background: theme.palette.background.elevation1,
     flexShrink: 0,
 }));
 
 const TitleRow = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    gap: theme.spacing(1),
+    gap: theme.spacing(1.5),
     flexGrow: 1,
     minWidth: 0,
 }));
@@ -81,10 +101,22 @@ const Primary = ({
     <Button
         variant='contained'
         color='primary'
-        size='small'
+        size='medium'
         onClick={onClick}
         disabled={disabled}
     >
+        {children}
+    </Button>
+);
+
+const Secondary = ({
+    onClick,
+    children,
+}: {
+    onClick: () => void;
+    children: ReactNode;
+}) => (
+    <Button variant='outlined' color='primary' size='medium' onClick={onClick}>
         {children}
     </Button>
 );
@@ -93,7 +125,7 @@ const Done = () => (
     <Button
         variant='outlined'
         color='inherit'
-        size='small'
+        size='medium'
         disabled
         startIcon={<CheckIcon />}
     >
@@ -105,26 +137,36 @@ const GoToFlag = ({
     href,
     variant = 'outlined',
     disabled = false,
+    onFlagPage = false,
 }: {
     href: string | null;
     variant?: 'outlined' | 'contained';
     disabled?: boolean;
-}) =>
-    href && !disabled ? (
+    onFlagPage?: boolean;
+}) => {
+    if (onFlagPage) {
+        return (
+            <Button variant='outlined' color='inherit' size='medium' disabled>
+                Viewing this flag
+            </Button>
+        );
+    }
+    return href && !disabled ? (
         <Button
             variant={variant}
             color='primary'
-            size='small'
+            size='medium'
             component={Link}
             to={href}
         >
             Go to flag
         </Button>
     ) : (
-        <Button variant='contained' color='primary' size='small' disabled>
+        <Button variant='contained' color='primary' size='medium' disabled>
             Go to flag
         </Button>
     );
+};
 
 export const FloatingOnboardingChecklist = () => {
     const context = useContext(FloatingOnboardingChecklistContext);
@@ -143,18 +185,31 @@ const EligibleFloatingOnboardingChecklist = () => {
         done,
         environments,
         refetchOverview,
+        openRequestCounter,
     } = useFloatingOnboardingChecklist();
     const { feature, goToFlagHref } = useFirstProjectFeature(projectId);
 
     const { open: openIntro } = useIntro();
     const { setSplashSeen } = useSplashApi();
-    const { onProjectRoute, onSdkTargetRoute } = useChecklistRouteMatch({
-        projectId,
-        feature,
-    });
+    const { onProjectRoute, onSdkTargetRoute, onFlagPage } =
+        useChecklistRouteMatch({
+            projectId,
+            feature,
+        });
 
     const [createFlagOpen, setCreateFlagOpen] = useState(false);
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
+    const [pulsing, setPulsing] = useState(false);
+    const initialCounterRef = useRef(openRequestCounter);
+    useEffect(() => {
+        if (openRequestCounter === initialCounterRef.current) return;
+        setPulsing(true);
+        const timeout = window.setTimeout(
+            () => setPulsing(false),
+            PULSE_DURATION_MS,
+        );
+        return () => window.clearTimeout(timeout);
+    }, [openRequestCounter]);
 
     // Persisted across the MainLayout re-mount that happens on route change.
     const { runOnPage, cancelPendingAction } = usePendingAction({
@@ -202,7 +257,7 @@ const EligibleFloatingOnboardingChecklist = () => {
             body: 'Learn the key concepts of rolling out a flag in Unleash.',
             done: done.tour,
             action: done.tour ? (
-                <Done />
+                <Secondary onClick={handleTakeTour}>Take the tour</Secondary>
             ) : (
                 <Primary onClick={handleTakeTour}>Take the tour</Primary>
             ),
@@ -212,7 +267,7 @@ const EligibleFloatingOnboardingChecklist = () => {
             body: 'You must create a feature flag before you can connect an SDK.',
             done: done.flag,
             action: done.flag ? (
-                <GoToFlag href={goToFlagHref} />
+                <GoToFlag href={goToFlagHref} onFlagPage={onFlagPage} />
             ) : (
                 <Primary onClick={handleCreateFlag}>New feature flag</Primary>
             ),
@@ -236,12 +291,13 @@ const EligibleFloatingOnboardingChecklist = () => {
             body: 'Check that the flag is working by turning it on.',
             done: done.on,
             action: done.on ? (
-                <GoToFlag href={goToFlagHref} />
+                <GoToFlag href={goToFlagHref} onFlagPage={onFlagPage} />
             ) : (
                 <GoToFlag
                     href={goToFlagHref}
                     variant='contained'
                     disabled={!done.sdk}
+                    onFlagPage={onFlagPage}
                 />
             ),
         },
@@ -253,7 +309,7 @@ const EligibleFloatingOnboardingChecklist = () => {
 
     return (
         <>
-            <Window aria-label='Get started'>
+            <Window aria-label='Get started' pulsing={pulsing}>
                 <Header>
                     <TitleRow>
                         <HeaderTitle>Get started</HeaderTitle>
@@ -264,7 +320,7 @@ const EligibleFloatingOnboardingChecklist = () => {
                         aria-label={state.minimized ? 'Expand' : 'Minimize'}
                         onClick={toggleMinimized}
                     >
-                        <RemoveIcon fontSize='small' />
+                        <MinimizeIcon fontSize='small' />
                     </IconButton>
                     <IconButton
                         size='small'

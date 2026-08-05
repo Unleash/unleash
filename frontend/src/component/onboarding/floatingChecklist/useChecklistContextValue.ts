@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash.ts';
@@ -23,6 +23,7 @@ export interface FloatingOnboardingChecklistContextValue {
     update: (patch: Partial<FloatingOnboardingChecklistState>) => void;
     markCompleted: (step: keyof FloatingOnboardingChecklistCompleted) => void;
     open: () => void;
+    openRequestCounter: number;
     dismissed: boolean;
     projectId: string;
     visibleSteps: ChecklistStepKey[];
@@ -38,6 +39,7 @@ export const useChecklistContextValue =
         const eligible = useOnboardingChecklistEligibility();
         const { state, update, markCompleted } =
             useFloatingOnboardingChecklistState();
+        const [openRequestCounter, setOpenRequestCounter] = useState(0);
         const { splash } = useAuthSplash();
         const quickTourEnabled = useUiFlag('quickTourDemo');
         const projectId = CHECKLIST_PROJECT_ID;
@@ -81,7 +83,11 @@ export const useChecklistContextValue =
             state,
             update,
             markCompleted,
-            open: () => update({ dismissed: false, minimized: false }),
+            open: () => {
+                update({ dismissed: false, minimized: false });
+                setOpenRequestCounter((n) => n + 1);
+            },
+            openRequestCounter,
             dismissed,
             projectId,
             visibleSteps,

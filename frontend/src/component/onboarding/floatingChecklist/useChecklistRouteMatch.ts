@@ -12,5 +12,7 @@ export const useChecklistRouteMatch = ({
     const onProjectRoute = pathProjectId === projectId;
     const onSdkTargetRoute =
         onProjectRoute && (feature ? pathFeatureId === feature : true);
-    return { onProjectRoute, onSdkTargetRoute };
+    const onFlagPage =
+        onProjectRoute && Boolean(feature) && pathFeatureId === feature;
+    return { onProjectRoute, onSdkTargetRoute, onFlagPage };
 };

@@ -102,7 +102,9 @@ export const useChecklistContextValue =
             markCompleted,
             open: () => {
                 update({ dismissed: false, minimized: false });
-                setOpenRequestCounter((n) => n + 1);
+                if (!dismissed) {
+                    setOpenRequestCounter((n) => n + 1);
+                }
             },
             openRequestCounter,
             dismissed,

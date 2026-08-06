@@ -13,6 +13,7 @@ import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/Feat
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 import { FeatureCopyName } from './FeatureCopyName/FeatureCopyName.tsx';
 import { FeatureHeaderActionsKebab } from './FeatureHeaderActionsKebab';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     backgroundColor: 'none',
@@ -85,6 +86,7 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const { refetchFeature } = useFeature(projectId, featureId);
     const { setToastApiError } = useToast();
+    const { trackEvent } = useEventTracker();
 
     const [showDelDialog, setShowDelDialog] = useState(false);
     const [openStaleDialog, setOpenStaleDialog] = useState(false);
@@ -188,6 +190,9 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
                 <FeatureArchiveDialog
                     isOpen={showDelDialog}
                     onConfirm={() => {
+                        trackEvent('flag-actions', {
+                            props: { eventType: 'archived' },
+                        });
                         navigate(`/projects/${projectId}`);
                     }}
                     onClose={() => setShowDelDialog(false)}
@@ -198,6 +203,14 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
             <FeatureStaleDialog
                 isStale={feature.stale}
                 isOpen={openStaleDialog}
+                onSuccess={() =>
+                    trackEvent('flag-actions', {
+                        props: {
+                            eventType: 'stale-toggled',
+                            newState: feature.stale ? 'active' : 'stale',
+                        },
+                    })
+                }
                 onClose={() => {
                     setOpenStaleDialog(false);
                     refetchFeature();

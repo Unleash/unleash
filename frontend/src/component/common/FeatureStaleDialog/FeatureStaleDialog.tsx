@@ -12,6 +12,7 @@ interface IFeatureStaleDialogProps {
     projectId: string;
     featureId: string;
     onClose: () => void;
+    onSuccess?: () => void;
 }
 
 export const FeatureStaleDialog = ({
@@ -20,6 +21,7 @@ export const FeatureStaleDialog = ({
     projectId,
     featureId,
     onClose,
+    onSuccess,
 }: IFeatureStaleDialogProps) => {
     const { setToastData, setToastApiError } = useToast();
     const { patchFeatureToggle } = useFeatureApi();
@@ -42,6 +44,7 @@ export const FeatureStaleDialog = ({
         try {
             const patch = [{ op: 'replace', path: '/stale', value: !isStale }];
             await patchFeatureToggle(projectId, featureId, patch);
+            onSuccess?.();
             onClose();
         } catch (err: unknown) {
             setToastApiError(formatUnknownError(err));

@@ -80,6 +80,7 @@ export type IFlagKey =
     | 'secureTokenStorage'
     | 'recordSdkFlavorMetrics'
     | 'searchDocsWidget'
+    | 'usersTabsUI'
     | keyof IFlagKeyOverrides;
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -358,6 +359,10 @@ const flags: IFlags = {
     ),
     searchDocsWidget: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SEARCH_DOCS_WIDGET,
+        false,
+    ),
+    usersTabsUI: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_USERS_TABS_UI,
         false,
     ),
 };

@@ -65,6 +65,7 @@ process.nextTick(async () => {
                         topLabelInputs: true,
                         recordSdkFlavorMetrics: true,
                         flagListCreatedByFilter: true,
+                        usersTabsUI: true,
                     },
                 },
                 authentication: {

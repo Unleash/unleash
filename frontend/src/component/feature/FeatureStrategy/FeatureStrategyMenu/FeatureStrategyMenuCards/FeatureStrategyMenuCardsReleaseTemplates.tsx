@@ -1,6 +1,5 @@
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useUiFlag } from 'hooks/useUiFlag';
 import ReleaseTemplateIcon from 'assets/img/releaseTemplates.svg?react';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans.ts';
 import { Box, styled } from '@mui/material';
@@ -102,11 +101,9 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
     setFilter,
 }: IFeatureStrategyMenuCardsReleaseTemplatesProps) => {
     const { isEnterprise } = useUiConfig();
-    const projectReleaseTemplatesEnabled = useUiFlag('projectReleaseTemplates');
-    const { templates } = useReleasePlanTemplates(
-        projectReleaseTemplatesEnabled ? projectId : undefined,
-        { includeRoot: true },
-    );
+    const { templates } = useReleasePlanTemplates(projectId, {
+        includeRoot: true,
+    });
     const { trackEvent } = useEventTracker();
 
     const [noAccessDialogOpen, setNoAccessDialogOpen] =
@@ -135,12 +132,11 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
         setNoAccessDialogOpen(false);
     };
 
-    const scopeBadge = (template: IReleasePlanTemplate) =>
-        projectReleaseTemplatesEnabled ? (
-            <Badge color='disabled'>
-                {template.project ? 'Project' : 'Global'}
-            </Badge>
-        ) : undefined;
+    const scopeBadge = (template: IReleasePlanTemplate) => (
+        <Badge color='disabled'>
+            {template.project ? 'Project' : 'Global'}
+        </Badge>
+    );
 
     return (
         <Box>

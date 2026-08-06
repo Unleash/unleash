@@ -3,7 +3,6 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { Button, Menu, MenuItem } from '@mui/material';
 import { useState } from 'react';
 import { Link as RouterLink } from 'react-router';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { useHasRootAccess } from 'hooks/useHasAccess.ts';
 import {
     RELEASE_PLAN_TEMPLATE_CREATE,
@@ -22,7 +21,6 @@ export const NewReleaseTemplateButton = ({
     projectId,
     onNoAccess,
 }: INewReleaseTemplateButtonProps) => {
-    const projectReleaseTemplatesEnabled = useUiFlag('projectReleaseTemplates');
     const { trackEvent } = useEventTracker();
     const canCreateGlobalTemplate = useHasRootAccess(
         RELEASE_PLAN_TEMPLATE_CREATE,
@@ -43,10 +41,7 @@ export const NewReleaseTemplateButton = ({
         });
     };
 
-    const canCreateInProject =
-        projectReleaseTemplatesEnabled && canCreateProjectTemplate;
-
-    if (!canCreateGlobalTemplate && !canCreateInProject) {
+    if (!canCreateGlobalTemplate && !canCreateProjectTemplate) {
         return (
             <Button startIcon={<AddIcon />} onClick={onNoAccess} size='medium'>
                 New template
@@ -54,7 +49,7 @@ export const NewReleaseTemplateButton = ({
         );
     }
 
-    if (canCreateGlobalTemplate && canCreateInProject) {
+    if (canCreateGlobalTemplate && canCreateProjectTemplate) {
         return (
             <>
                 <Button
@@ -92,7 +87,7 @@ export const NewReleaseTemplateButton = ({
         );
     }
 
-    const project = canCreateInProject ? projectId : undefined;
+    const project = canCreateProjectTemplate ? projectId : undefined;
     return (
         <Button
             component={RouterLink}

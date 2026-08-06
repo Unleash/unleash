@@ -43,17 +43,11 @@ export const ProjectSettings = () => {
     const projectId = useRequiredPathParam('projectId');
 
     const actionsEnabled = useUiFlag('automatedActions');
-    const projectReleaseTemplatesFlagEnabled = useUiFlag(
-        'projectReleaseTemplates',
-    );
     const canManageReleaseTemplates = useHasRootAccess(
         [RELEASE_PLAN_TEMPLATE_CREATE, UPDATE_PROJECT_RELEASE_TEMPLATE],
         projectId,
     );
-    const showReleaseTemplatesTab =
-        projectReleaseTemplatesFlagEnabled &&
-        isEnterprise() &&
-        canManageReleaseTemplates;
+    const showReleaseTemplatesTab = isEnterprise() && canManageReleaseTemplates;
 
     const paidTabs = (...tabs: ITab[]) =>
         isPro() || isEnterprise() ? tabs : [];

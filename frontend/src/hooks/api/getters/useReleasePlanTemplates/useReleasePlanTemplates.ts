@@ -3,7 +3,6 @@ import useUiConfig from '../useUiConfig/useUiConfig.js';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR.js';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { releaseTemplatesApiPath } from './releaseTemplatesApiPath.js';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 
@@ -14,10 +13,9 @@ export const useReleasePlanTemplates = (
     options?: { includeRoot?: boolean },
 ) => {
     const { isEnterprise } = useUiConfig();
-    const projectReleaseTemplatesEnabled = useUiFlag('projectReleaseTemplates');
 
     const { data, error, mutate } = useConditionalSWR<IReleasePlanTemplate[]>(
-        isEnterprise() && (!projectId || projectReleaseTemplatesEnabled),
+        isEnterprise(),
         DEFAULT_DATA,
         formatApiPath(releaseTemplatesApiPath(projectId, options)),
         fetcher,

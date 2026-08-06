@@ -10,7 +10,6 @@ const server = testServerSetup();
 test('renders the templates returned for the project', async () => {
     testServerRoute(server, '/api/admin/ui-config', {
         versionInfo: { current: { enterprise: '1.0.0' } },
-        flags: { projectReleaseTemplates: true },
     });
     testServerRoute(
         server,

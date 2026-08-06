@@ -17,19 +17,6 @@ const setupApi = () => {
         },
     });
 
-    testServerRoute(server, '/api/admin/release-plan-templates', [
-        { id: '1', name: 'Global template', description: 'Description 1' },
-    ]);
-};
-
-const setupProjectReleaseTemplatesApi = () => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        versionInfo: {
-            current: { enterprise: '1.0.0' },
-        },
-        flags: { projectReleaseTemplates: true },
-    });
-
     testServerRoute(
         server,
         '/api/admin/projects/default/release-templates',
@@ -56,29 +43,6 @@ const setupProjectReleaseTemplatesApi = () => {
 describe('FeatureStrategyMenuCardsReleaseTemplates', () => {
     beforeEach(() => {
         setupApi();
-    });
-
-    it('renders new template as a link when user has permission', async () => {
-        render(
-            <FeatureStrategyMenuCardsReleaseTemplates
-                projectId='default'
-                onAddReleasePlan={() => {}}
-                onReviewReleasePlan={() => {}}
-                filter={null}
-                setFilter={() => {}}
-            />,
-            {
-                permissions: [{ permission: RELEASE_PLAN_TEMPLATE_CREATE }],
-            },
-        );
-
-        const link = await screen.findByRole('link', {
-            name: /new template/i,
-        });
-        expect(link).toHaveAttribute(
-            'href',
-            '/release-templates/create-template',
-        );
     });
 
     it('shows no access dialog when user does not have permission', async () => {
@@ -108,24 +72,7 @@ describe('FeatureStrategyMenuCardsReleaseTemplates', () => {
         ).toBeInTheDocument();
     });
 
-    it('lists global templates while project release templates are disabled', async () => {
-        render(
-            <FeatureStrategyMenuCardsReleaseTemplates
-                projectId='default'
-                onAddReleasePlan={() => {}}
-                onReviewReleasePlan={() => {}}
-                filter={null}
-                setFilter={() => {}}
-            />,
-        );
-
-        await screen.findByText('Global template');
-        expect(screen.queryByText('Global')).not.toBeInTheDocument();
-    });
-
-    it('lists project templates alongside global ones when project release templates are enabled', async () => {
-        setupProjectReleaseTemplatesApi();
-
+    it('lists project templates alongside global ones', async () => {
         render(
             <FeatureStrategyMenuCardsReleaseTemplates
                 projectId='default'
@@ -143,8 +90,6 @@ describe('FeatureStrategyMenuCardsReleaseTemplates', () => {
     });
 
     it('offers a choice between global and project template creation when user holds both permissions', async () => {
-        setupProjectReleaseTemplatesApi();
-
         render(
             <FeatureStrategyMenuCardsReleaseTemplates
                 projectId='default'
@@ -184,9 +129,41 @@ describe('FeatureStrategyMenuCardsReleaseTemplates', () => {
         );
     });
 
-    it('links straight to project template creation for users without the root permission', async () => {
-        setupProjectReleaseTemplatesApi();
+    it('offers a choice between global and project template creation when user holds only the root permission', async () => {
+        render(
+            <FeatureStrategyMenuCardsReleaseTemplates
+                projectId='default'
+                onAddReleasePlan={() => {}}
+                onReviewReleasePlan={() => {}}
+                filter={null}
+                setFilter={() => {}}
+            />,
+            {
+                permissions: [{ permission: RELEASE_PLAN_TEMPLATE_CREATE }],
+            },
+        );
 
+        fireEvent.click(
+            await screen.findByRole('button', { name: /new template/i }),
+        );
+
+        const globalItem = await screen.findByRole('menuitem', {
+            name: 'Global template',
+        });
+        expect(globalItem).toHaveAttribute(
+            'href',
+            '/release-templates/create-template',
+        );
+        const projectItem = screen.getByRole('menuitem', {
+            name: 'Project template',
+        });
+        expect(projectItem).toHaveAttribute(
+            'href',
+            '/projects/default/settings/release-templates/create-template',
+        );
+    });
+
+    it('links straight to project template creation for users without the root permission', async () => {
         render(
             <FeatureStrategyMenuCardsReleaseTemplates
                 projectId='default'
@@ -212,28 +189,5 @@ describe('FeatureStrategyMenuCardsReleaseTemplates', () => {
             'href',
             '/projects/default/settings/release-templates/create-template',
         );
-    });
-
-    it('shows no access dialog when user can create neither global nor project templates', async () => {
-        setupProjectReleaseTemplatesApi();
-
-        render(
-            <FeatureStrategyMenuCardsReleaseTemplates
-                projectId='default'
-                onAddReleasePlan={() => {}}
-                onReviewReleasePlan={() => {}}
-                filter={null}
-                setFilter={() => {}}
-            />,
-            {
-                permissions: [],
-            },
-        );
-
-        fireEvent.click(
-            await screen.findByRole('button', { name: /new template/i }),
-        );
-
-        await screen.findByText(/contact admin to create release templates/i);
     });
 });

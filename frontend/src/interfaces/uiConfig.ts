@@ -109,6 +109,7 @@ export type UiFlags = {
     accessRequestsMenuIndicator?: boolean;
     topLabelInputs?: boolean;
     searchDocsWidget?: boolean;
+    usersTabsUI?: boolean;
 };
 
 export interface IVersionInfo {

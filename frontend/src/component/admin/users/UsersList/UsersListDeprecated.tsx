@@ -8,12 +8,15 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import ConfirmUserAdded from '../ConfirmUserAdded/ConfirmUserAdded.tsx';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
+import { useAccessOverviewApi } from 'hooks/api/actions/useAccessOverviewApi/useAccessOverviewApi';
 import type { IUser } from 'interfaces/user';
 import type { IRole } from 'interfaces/role';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useUsersPlan } from 'hooks/useUsersPlan';
-import { useMediaQuery } from '@mui/material';
+import { PageContent } from 'component/common/PageContent/PageContent';
+import { PageHeader } from 'component/common/PageHeader/PageHeader';
+import { Button, IconButton, Tooltip, useMediaQuery } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { UserTypeCell } from './UserTypeCell/UserTypeCell.tsx';
 import {
@@ -25,34 +28,34 @@ import {
 import { sortingFns } from 'utils/sortingFns';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import theme from 'themes/theme';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { UsersActionsCell } from './UsersActionsCell/UsersActionsCell.tsx';
+import { Search } from 'component/common/Search/Search';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { UserLimitWarning } from './UserLimitWarning/UserLimitWarning.tsx';
 import { RoleCell } from 'component/common/Table/cells/RoleCell/RoleCell';
 import { useSearch } from 'hooks/useSearch';
+import Download from '@mui/icons-material/Download';
+import { StyledUsersLinkDiv } from '../Users.styles';
 import { useUiFlag } from 'hooks/useUiFlag';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig.ts';
 import { useScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettings';
 import { UserSessionsCell } from './UserSessionsCell/UserSessionsCell.tsx';
 import { UsersHeader } from '../UsersHeader/UsersHeader.tsx';
 import { UpgradeSSO } from './UpgradeSSO.tsx';
 import { AccessRequestsTable } from './AccessRequestsTable/AccessRequestsTable.tsx';
 
-interface IUsersListProps {
-    searchValue: string;
-}
-
-const UsersList = ({ searchValue }: IUsersListProps) => {
+const UsersListDeprecated = () => {
     const navigate = useNavigate();
-    const { isOss } = useUiConfig();
-    const { users, roles, refetch } = useUsers();
+    const { isEnterprise, isOss } = useUiConfig();
+    const { users, roles, refetch, loading } = useUsers();
     const { setToastData, setToastApiError } = useToast();
     const { removeUser, userLoading, userApiErrors } = useAdminUsersApi();
+    const { downloadCSV } = useAccessOverviewApi();
     const [pwDialog, setPwDialog] = useState<{ open: boolean; user?: IUser }>({
         open: false,
     });
@@ -74,6 +77,8 @@ const UsersList = ({ searchValue }: IUsersListProps) => {
     const [inviteLink, setInviteLink] = useState('');
     const [delUser, setDelUser] = useState<IUser>();
     const { planUsers, isBillingUsers } = useUsersPlan(users);
+
+    const [searchValue, setSearchValue] = useState('');
 
     const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -299,8 +304,50 @@ const UsersList = ({ searchValue }: IUsersListProps) => {
     const rowCount = table.getRowModel().rows.length;
 
     return (
-        <>
+        <PageContent
+            isLoading={loading}
+            header={
+                <PageHeader
+                    title={`Users (${rowCount})`}
+                    actions={
+                        <>
+                            <Search
+                                initialValue={searchValue}
+                                onChange={setSearchValue}
+                            />
+                            <PageHeader.Divider />
+                            <Tooltip
+                                title='Exports user access information'
+                                arrow
+                                describeChild
+                            >
+                                <IconButton onClick={downloadCSV}>
+                                    <Download />
+                                </IconButton>
+                            </Tooltip>
+                            <Button
+                                variant='contained'
+                                color='primary'
+                                onClick={() => navigate('/admin/create-user')}
+                            >
+                                Add new user
+                            </Button>
+                        </>
+                    }
+                />
+            }
+        >
             <UserLimitWarning />
+            <ConditionallyRender
+                condition={isEnterprise()}
+                show={
+                    <StyledUsersLinkDiv>
+                        <Link to='/admin/users/inactive'>
+                            View inactive users
+                        </Link>
+                    </StyledUsersLinkDiv>
+                }
+            />
             <UsersHeader />
             <AccessRequestsTable />
             <SearchHighlightProvider value={getSearchText(searchValue)}>
@@ -375,8 +422,8 @@ const UsersList = ({ searchValue }: IUsersListProps) => {
             />
 
             {showSSOUpgrade ? <UpgradeSSO /> : null}
-        </>
+        </PageContent>
     );
 };
 
-export default UsersList;
+export default UsersListDeprecated;

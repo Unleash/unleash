@@ -2,6 +2,7 @@ import { Dialog, IconButton, styled } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { Intro } from './Intro.tsx';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
@@ -52,6 +53,7 @@ interface IIntroDialogProps {
  */
 export const IntroDialog = ({ open, onClose, onFinish }: IIntroDialogProps) => {
     const navigate = useNavigate();
+    const advancedStepsEnabled = useUiFlag('introAdvancedSteps');
     const { projects } = useProjects({ isPaused: () => !open });
 
     const handleComplete = () => {
@@ -66,7 +68,11 @@ export const IntroDialog = ({ open, onClose, onFinish }: IIntroDialogProps) => {
             <StyledClose onClick={onClose} aria-label='Close' size='small'>
                 <CloseIcon fontSize='small' />
             </StyledClose>
-            <Intro onComplete={handleComplete} onFinish={onFinish} />
+            <Intro
+                onComplete={handleComplete}
+                onFinish={onFinish}
+                advancedStepsEnabled={advancedStepsEnabled}
+            />
         </StyledDialog>
     );
 };

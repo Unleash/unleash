@@ -74,6 +74,7 @@ export type IFlagKey =
     | 'learningLab'
     | 'floatingOnboardingChecklist'
     | 'quickTourDemo'
+    | 'introAdvancedSteps'
     | 'topLabelInputs'
     | 'flagListCreatedByFilter'
     | 'secureTokenStorage'
@@ -118,6 +119,10 @@ const flags: IFlags = {
     demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
     quickTourDemo: parseEnvVarBoolean(
         process.env.UNLEASH_QUICK_TOUR_DEMO,
+        false,
+    ),
+    introAdvancedSteps: parseEnvVarBoolean(
+        process.env.UNLEASH_INTRO_ADVANCED_STEPS,
         false,
     ),
     interactiveDemoKillSwitch: parseEnvVarBoolean(

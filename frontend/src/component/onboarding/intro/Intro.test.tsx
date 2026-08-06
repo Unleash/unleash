@@ -6,6 +6,21 @@ import { Intro } from './Intro.tsx';
 const next = () =>
     fireEvent.click(screen.getByTestId('QUICK_TOUR_INTRO_NEXT_BUTTON'));
 
+const renderAdvancedIntro = ({
+    onComplete = vi.fn(),
+    onFinish,
+}: {
+    onComplete?: () => void;
+    onFinish?: () => void;
+} = {}) =>
+    render(
+        <Intro
+            onComplete={onComplete}
+            onFinish={onFinish}
+            advancedStepsEnabled
+        />,
+    );
+
 const completeReleasePlan = () => {
     fireEvent.click(
         screen.getByRole('switch', {
@@ -53,7 +68,7 @@ const retryWithSafeguard = () => {
 };
 
 test('starts with a gradual Smart Search rollout and context cards', () => {
-    render(<Intro onComplete={vi.fn()} />);
+    renderAdvancedIntro();
 
     expect(screen.getByText('Release Smart Search')).toBeInTheDocument();
     expect(screen.getByText(/people get Smart Search/)).toBeInTheDocument();
@@ -123,7 +138,7 @@ test('starts with a gradual Smart Search rollout and context cards', () => {
 });
 
 test('explains gradual rollout using the Unleash documentation', async () => {
-    render(<Intro onComplete={vi.fn()} />);
+    renderAdvancedIntro();
 
     fireEvent.mouseOver(screen.getByLabelText('Help'));
     expect(
@@ -141,7 +156,7 @@ test('explains gradual rollout using the Unleash documentation', async () => {
 
 test('walks through the connected story to the showcase', () => {
     vi.useFakeTimers();
-    render(<Intro onComplete={vi.fn()} />);
+    renderAdvancedIntro();
 
     next();
     expect(screen.getByText('Target the right audience')).toBeInTheDocument();
@@ -237,9 +252,33 @@ test('walks through the connected story to the showcase', () => {
     vi.useRealTimers();
 }, 10000);
 
+test('finishes after the three core steps when advanced steps are disabled', () => {
+    const onFinish = vi.fn();
+    render(
+        <Intro
+            onComplete={vi.fn()}
+            onFinish={onFinish}
+            advancedStepsEnabled={false}
+        />,
+    );
+
+    expect(screen.getByText('Unleash Intro · 1 of 3')).toBeInTheDocument();
+    next();
+    next();
+    expect(screen.getByText('Compare experiences')).toBeInTheDocument();
+    expect(
+        screen.getByTestId('QUICK_TOUR_INTRO_NEXT_BUTTON'),
+    ).toHaveTextContent('Finish');
+
+    next();
+    expect(onFinish).toHaveBeenCalledTimes(1);
+    expect(screen.getByTestId('QUICK_TOUR_INTRO_SHOWCASE')).toBeInTheDocument();
+    expect(screen.queryByText('Automate the rollout')).not.toBeInTheDocument();
+});
+
 test('keeps metrics live without errors until production is enabled', () => {
     vi.useFakeTimers();
-    render(<Intro onComplete={vi.fn()} />);
+    renderAdvancedIntro();
 
     next();
     next();
@@ -443,7 +482,7 @@ test('keeps metrics live without errors until production is enabled', () => {
 
 test('groups rapid environment events without inventing an incident', () => {
     vi.useFakeTimers();
-    render(<Intro onComplete={vi.fn()} />);
+    renderAdvancedIntro();
 
     next();
     next();
@@ -507,7 +546,7 @@ test('groups rapid environment events without inventing an incident', () => {
 
 test('starts the release plan from the environment and supports manual milestones', () => {
     vi.useFakeTimers();
-    render(<Intro onComplete={vi.fn()} />);
+    renderAdvancedIntro();
 
     next();
     next();
@@ -670,7 +709,7 @@ test('marks the tour finished on reaching the showcase and closes it on Finish',
     vi.useFakeTimers();
     const onComplete = vi.fn();
     const onFinish = vi.fn();
-    render(<Intro onComplete={onComplete} onFinish={onFinish} />);
+    renderAdvancedIntro({ onComplete, onFinish });
 
     next(); // target
     next(); // variants
@@ -691,7 +730,7 @@ test('marks the tour finished on reaching the showcase and closes it on Finish',
 });
 
 test('targets with product-like country, plan, and device constraints', () => {
-    render(<Intro onComplete={vi.fn()} />);
+    renderAdvancedIntro();
     next();
 
     expect(screen.getByText('Country')).toBeInTheDocument();
@@ -708,7 +747,7 @@ test('targets with product-like country, plan, and device constraints', () => {
 });
 
 test('explains targeting from the matching context values', () => {
-    render(<Intro onComplete={vi.fn()} />);
+    renderAdvancedIntro();
     next();
 
     const grid = screen.getByTestId('QUICK_TOUR_INTRO_USER_GRID');
@@ -730,7 +769,7 @@ test('explains targeting from the matching context values', () => {
 });
 
 test('links constraints to the activation strategy documentation', async () => {
-    render(<Intro onComplete={vi.fn()} />);
+    renderAdvancedIntro();
     next();
 
     const title = screen.getByTestId('QUICK_TOUR_INTRO_CONSTRAINTS_TITLE');
@@ -749,7 +788,7 @@ test('links constraints to the activation strategy documentation', async () => {
 });
 
 test('links variants to the strategy variants documentation', async () => {
-    render(<Intro onComplete={vi.fn()} />);
+    renderAdvancedIntro();
     next();
     next();
 
@@ -770,7 +809,7 @@ test('links variants to the strategy variants documentation', async () => {
 
 test('names Impact Metrics and links to its documentation', async () => {
     vi.useFakeTimers();
-    render(<Intro onComplete={vi.fn()} />);
+    renderAdvancedIntro();
     next();
     next();
     next();
@@ -795,7 +834,7 @@ test('names Impact Metrics and links to its documentation', async () => {
 });
 
 test('manages variants and previews the exact assigned experience', async () => {
-    render(<Intro onComplete={vi.fn()} />);
+    renderAdvancedIntro();
     next();
     next();
 
@@ -847,7 +886,7 @@ test('manages variants and previews the exact assigned experience', async () => 
 
 test('teaches manual recovery before a safeguard automates it', () => {
     vi.useFakeTimers();
-    render(<Intro onComplete={vi.fn()} />);
+    renderAdvancedIntro();
 
     next();
     next();
@@ -1000,7 +1039,7 @@ test('teaches manual recovery before a safeguard automates it', () => {
 test('closes the tour on Skip without marking it finished', () => {
     const onComplete = vi.fn();
     const onFinish = vi.fn();
-    render(<Intro onComplete={onComplete} onFinish={onFinish} />);
+    renderAdvancedIntro({ onComplete, onFinish });
 
     fireEvent.click(screen.getByRole('button', { name: 'Skip' }));
     expect(onComplete).toHaveBeenCalledTimes(1);

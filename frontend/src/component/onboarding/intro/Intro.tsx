@@ -206,6 +206,8 @@ const TOPICS: ITopic[] = [
     },
 ];
 
+const CORE_TOPICS = TOPICS.slice(0, 3);
+
 const StyledPanel = styled(Box)(({ theme }) => ({
     height: '100%',
     display: 'grid',
@@ -387,10 +389,15 @@ interface IIntroProps {
     onComplete: () => void;
     /** Fires when the user reaches the end of the tour (after the last topic), not on Skip or backdrop close. The showcase that follows is an optional victory-lap step. */
     onFinish?: () => void;
+    advancedStepsEnabled: boolean;
 }
 
 // Unleash Intro
-export const Intro = ({ onComplete, onFinish }: IIntroProps) => {
+export const Intro = ({
+    onComplete,
+    onFinish,
+    advancedStepsEnabled,
+}: IIntroProps) => {
     const { trackEvent } = useEventTracker();
     const theme = useTheme();
     const variantPalette = [
@@ -400,6 +407,7 @@ export const Intro = ({ onComplete, onFinish }: IIntroProps) => {
         theme.palette.charts.C1,
     ];
     const users = useMemo(() => generateIntroUsers(USER_COUNT), []);
+    const topics = advancedStepsEnabled ? TOPICS : CORE_TOPICS;
 
     const [topicIndex, setTopicIndex] = useState(0);
     const [finished, setFinished] = useState(false);
@@ -425,7 +433,7 @@ export const Intro = ({ onComplete, onFinish }: IIntroProps) => {
         variants: makeVariants(['A', 'B'], variantPalette),
     }));
 
-    const topic = TOPICS[topicIndex];
+    const topic = topics[topicIndex];
     const evaluations = useMemo(
         () => computeEvaluations(users, config),
         [users, config],
@@ -568,7 +576,7 @@ export const Intro = ({ onComplete, onFinish }: IIntroProps) => {
         : undefined;
 
     const applyTopicPreset = (index: number) => {
-        const key = TOPICS[index].key;
+        const key = topics[index].key;
         setConfig((current) => {
             if (key === 'rollout') {
                 return {
@@ -649,22 +657,22 @@ export const Intro = ({ onComplete, onFinish }: IIntroProps) => {
         setMetricSampleIndex(0);
         setReleaseMilestoneIndex(0);
         setReleasePlanState(
-            TOPICS[index].key === 'releasePlan'
+            topics[index].key === 'releasePlan'
                 ? 'ready'
-                : TOPICS[index].key === 'impact'
+                : topics[index].key === 'impact'
                   ? 'ready'
-                  : TOPICS[index].key === 'safeguard'
+                  : topics[index].key === 'safeguard'
                     ? 'ready'
                     : 'ready',
         );
         setSafeguardState('ready');
         trackEvent('quick-tour-demo', {
-            props: { eventType: 'topic', topic: TOPICS[index].key },
+            props: { eventType: 'topic', topic: topics[index].key },
         });
     };
 
     const handleNext = () => {
-        if (topicIndex < TOPICS.length - 1) {
+        if (topicIndex < topics.length - 1) {
             goToTopic(topicIndex + 1);
         } else {
             setFinished(true);
@@ -849,7 +857,7 @@ export const Intro = ({ onComplete, onFinish }: IIntroProps) => {
             <StyledLeft>
                 <StyledHeader>
                     <StyledEyebrow>
-                        Unleash Intro · {topicIndex + 1} of {TOPICS.length}
+                        Unleash Intro · {topicIndex + 1} of {topics.length}
                     </StyledEyebrow>
                     <StyledTitleRow>
                         <StyledTitle>{topic.title}</StyledTitle>
@@ -961,7 +969,7 @@ export const Intro = ({ onComplete, onFinish }: IIntroProps) => {
 
                 <StyledFooter>
                     <StyledDots>
-                        {TOPICS.map((item, index) => (
+                        {topics.map((item, index) => (
                             <StyledDot
                                 key={item.key}
                                 active={index === topicIndex}
@@ -985,7 +993,7 @@ export const Intro = ({ onComplete, onFinish }: IIntroProps) => {
                         disabled={!canContinue}
                         data-testid='QUICK_TOUR_INTRO_NEXT_BUTTON'
                     >
-                        {topicIndex < TOPICS.length - 1 ? 'Next' : 'Finish'}
+                        {topicIndex < topics.length - 1 ? 'Next' : 'Finish'}
                     </Button>
                 </StyledFooter>
             </StyledLeft>

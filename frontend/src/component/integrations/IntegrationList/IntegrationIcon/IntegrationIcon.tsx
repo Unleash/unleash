@@ -43,6 +43,7 @@ const integrations: Record<
     slack: { title: 'Slack', icon: slackIcon }, // TODO: remove this when all clients migrate to Slack App
     'slack-app': { title: 'Slack', icon: slackIcon },
     teams: { title: 'Teams', icon: teamsIcon },
+    teamsworkflow: { title: 'Teams', icon: teamsIcon },
     webhook: { title: 'Webhook', icon: webhooksIcon },
     servicenow: { title: 'ServiceNow', icon: serviceNowIcon },
     unleash: { title: 'Unleash', icon: unleashIcon },

@@ -44,22 +44,16 @@ export const FeatureStaleDialog = ({
         try {
             const patch = [{ op: 'replace', path: '/stale', value: !isStale }];
             await patchFeatureToggle(projectId, featureId, patch);
+            setToastData({
+                type: 'success',
+                text: isStale
+                    ? 'The flag is no longer marked as stale'
+                    : 'The flag has been marked as stale',
+            });
             onSuccess?.();
             onClose();
         } catch (err: unknown) {
             setToastApiError(formatUnknownError(err));
-        }
-
-        if (isStale) {
-            setToastData({
-                type: 'success',
-                text: 'The flag is no longer marked as stale',
-            });
-        } else {
-            setToastData({
-                type: 'success',
-                text: 'The flag has been marked as stale',
-            });
         }
     };
 

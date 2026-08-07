@@ -89,6 +89,7 @@ export type CustomEvents =
     | 'remote-mcp'
     | 'external-impact-metrics'
     | 'help-resources'
+    | 'onboarding-checklist'
     | 'access-requests-notification'
     | 'whats-new-page'
     | 'search-docs'

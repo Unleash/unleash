@@ -1,4 +1,11 @@
-import { type ReactNode, useContext, useEffect, useRef, useState } from 'react';
+import {
+    type ReactNode,
+    useCallback,
+    useContext,
+    useEffect,
+    useRef,
+    useState,
+} from 'react';
 import {
     Button,
     IconButton,
@@ -14,6 +21,8 @@ import { CreateFeatureDialog } from 'component/project/Project/PaginatedProjectF
 import { ConnectSdkDialog } from 'component/onboarding/dialog/ConnectSdkDialog/ConnectSdkDialog.tsx';
 import { useIntro } from 'component/onboarding/intro/IntroProvider.tsx';
 import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi.ts';
+import { useEventTracker } from 'hooks/useEventTracker.ts';
+import { getSessionStorageItem, setSessionStorageItem } from 'utils/storage.ts';
 import { FloatingOnboardingChecklistContext } from './FloatingOnboardingChecklistContext.tsx';
 import { OnboardingProgressBadge } from './OnboardingProgressBadge.tsx';
 import { useFloatingOnboardingChecklist } from './useFloatingOnboardingChecklist.ts';
@@ -23,6 +32,24 @@ import { ChecklistSteps, type ChecklistStep } from './ChecklistSteps.tsx';
 import { usePendingAction } from './usePendingAction.ts';
 import type { ChecklistStepKey } from './useChecklistContextValue.ts';
 import { ONBOARDING_CHECKLIST_SPLASH_ID } from './useOnboardingChecklistEligibility.ts';
+
+const CHECKLIST_SHOWN_TRACKED_KEY = 'floating-onboarding:shown-tracked:v1';
+
+type ChecklistClickAction =
+    | 'close'
+    | 'minimize'
+    | 'expand'
+    | 'take-tour'
+    | 'retake-tour'
+    | 'create-flag'
+    | 'view-created-flag'
+    | 'connect-sdk'
+    | 'enable-flag'
+    | 'view-enabled-flag';
+
+type ChecklistEvent =
+    | { eventType: 'shown' }
+    | { eventType: 'click'; action: ChecklistClickAction };
 
 const PULSE_DURATION_MS = 900;
 
@@ -135,11 +162,13 @@ const GoToFlag = ({
     variant = 'outlined',
     disabled = false,
     onFlagPage = false,
+    onClick,
 }: {
     href: string | null;
     variant?: 'outlined' | 'contained';
     disabled?: boolean;
     onFlagPage?: boolean;
+    onClick?: () => void;
 }) => {
     if (onFlagPage) {
         return (
@@ -155,6 +184,7 @@ const GoToFlag = ({
             size='medium'
             component={Link}
             to={href}
+            onClick={onClick}
         >
             Go to flag
         </Button>
@@ -195,6 +225,14 @@ const EligibleFloatingOnboardingChecklist = () => {
             feature,
         });
 
+    const { trackEvent } = useEventTracker();
+    const trackChecklistEvent = useCallback(
+        (event: ChecklistEvent) => {
+            trackEvent('onboarding-checklist', { props: event });
+        },
+        [trackEvent],
+    );
+
     const [createFlagOpen, setCreateFlagOpen] = useState(false);
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
     const [pulsing, setPulsing] = useState(false);
@@ -208,6 +246,15 @@ const EligibleFloatingOnboardingChecklist = () => {
         );
         return () => window.clearTimeout(timeout);
     }, [openRequestCounter]);
+
+    useEffect(() => {
+        if (dismissed) return;
+        // The checklist mounts on every page, so gate the 'shown' event on
+        // sessionStorage — one impression per session, not per navigation.
+        if (getSessionStorageItem<boolean>(CHECKLIST_SHOWN_TRACKED_KEY)) return;
+        setSessionStorageItem(CHECKLIST_SHOWN_TRACKED_KEY, true);
+        trackChecklistEvent({ eventType: 'shown' });
+    }, [dismissed, trackChecklistEvent]);
 
     // Persisted across the MainLayout re-mount that happens on route change.
     const { runOnPage, cancelPendingAction } = usePendingAction({
@@ -227,22 +274,41 @@ const EligibleFloatingOnboardingChecklist = () => {
 
     if (dismissed) return null;
 
-    const toggleMinimized = () => update({ minimized: !state.minimized });
+    const toggleMinimized = () => {
+        const willBeMinimized = !state.minimized;
+        trackChecklistEvent({
+            eventType: 'click',
+            action: willBeMinimized ? 'minimize' : 'expand',
+        });
+        update({ minimized: willBeMinimized });
+    };
 
     const handleDismiss = () => {
+        trackChecklistEvent({ eventType: 'click', action: 'close' });
         cancelPendingAction();
         update({ dismissed: true });
         setSplashSeen(ONBOARDING_CHECKLIST_SPLASH_ID);
         showHelpHint();
     };
 
-    const handleTakeTour = () =>
+    const handleTakeTour = () => {
+        trackChecklistEvent({
+            eventType: 'click',
+            action: done.tour ? 'retake-tour' : 'take-tour',
+        });
         openIntro({
             onFinish: () => markCompleted('tour'),
         });
+    };
 
-    const handleCreateFlag = () => runOnPage('flag');
-    const handleConnectSdk = () => runOnPage('sdk');
+    const handleCreateFlag = () => {
+        trackChecklistEvent({ eventType: 'click', action: 'create-flag' });
+        runOnPage('flag');
+    };
+    const handleConnectSdk = () => {
+        trackChecklistEvent({ eventType: 'click', action: 'connect-sdk' });
+        runOnPage('sdk');
+    };
 
     const stepDefinitions: Record<
         ChecklistStepKey,
@@ -263,7 +329,16 @@ const EligibleFloatingOnboardingChecklist = () => {
             body: 'You must create a feature flag before you can connect an SDK.',
             done: done.flag,
             action: done.flag ? (
-                <GoToFlag href={goToFlagHref} onFlagPage={onFlagPage} />
+                <GoToFlag
+                    href={goToFlagHref}
+                    onFlagPage={onFlagPage}
+                    onClick={() =>
+                        trackChecklistEvent({
+                            eventType: 'click',
+                            action: 'view-created-flag',
+                        })
+                    }
+                />
             ) : (
                 <Primary onClick={handleCreateFlag}>New feature flag</Primary>
             ),
@@ -287,13 +362,28 @@ const EligibleFloatingOnboardingChecklist = () => {
             body: 'Check that the flag is working by turning it on.',
             done: done.on,
             action: done.on ? (
-                <GoToFlag href={goToFlagHref} onFlagPage={onFlagPage} />
+                <GoToFlag
+                    href={goToFlagHref}
+                    onFlagPage={onFlagPage}
+                    onClick={() =>
+                        trackChecklistEvent({
+                            eventType: 'click',
+                            action: 'view-enabled-flag',
+                        })
+                    }
+                />
             ) : (
                 <GoToFlag
                     href={goToFlagHref}
                     variant='contained'
                     disabled={!done.sdk}
                     onFlagPage={onFlagPage}
+                    onClick={() =>
+                        trackChecklistEvent({
+                            eventType: 'click',
+                            action: 'enable-flag',
+                        })
+                    }
                 />
             ),
         },

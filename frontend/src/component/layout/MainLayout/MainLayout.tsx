@@ -15,7 +15,7 @@ import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar.tsx';
 import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
 import { NewInUnleash } from './NavigationSidebar/NewInUnleash/NewInUnleash.tsx';
-import { FloatingOnboardingChecklist } from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklist.tsx';
+import { FloatingOnboardingChecklistVisibilityGate } from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklistVisibilityGate.tsx';
 import { FloatingOnboardingChecklistProvider } from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklistContext.tsx';
 import { AccessRequestsNotifications } from 'component/admin/users/AccessRequestsNotifications/AccessRequestsNotifications';
 import { useUiFlag } from 'hooks/useUiFlag';
@@ -171,7 +171,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                         </ContentFlexContainer>
                                     </HeaderContentContainer>
 
-                                    <FloatingOnboardingChecklist />
+                                    <FloatingOnboardingChecklistVisibilityGate />
                                     <Footer />
                                 </MainContentWrapper>
                             </LayoutFlexContainer>

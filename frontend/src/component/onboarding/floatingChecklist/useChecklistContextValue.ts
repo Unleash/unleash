@@ -10,10 +10,8 @@ import {
     useFloatingOnboardingChecklistState,
 } from './floatingOnboardingChecklistState.ts';
 import { ONBOARDING_INTRO_FINISHED_SPLASH_ID } from 'component/onboarding/intro/IntroProvider.tsx';
-import {
-    ONBOARDING_CHECKLIST_SPLASH_ID,
-    useOnboardingChecklistEligibility,
-} from './useOnboardingChecklistEligibility.ts';
+import { ONBOARDING_CHECKLIST_SPLASH_ID } from './useOnboardingChecklistEligibility.ts';
+import { useOnboardingChecklistVisibility } from './useOnboardingChecklistVisibility.ts';
 
 export const CHECKLIST_PROJECT_ID = 'default';
 
@@ -42,7 +40,7 @@ export interface FloatingOnboardingChecklistContextValue {
 
 export const useChecklistContextValue =
     (): FloatingOnboardingChecklistContextValue | null => {
-        const eligible = useOnboardingChecklistEligibility();
+        const visibility = useOnboardingChecklistVisibility();
         const { state, update, markCompleted } =
             useFloatingOnboardingChecklistState();
         const [openRequestCounter, setOpenRequestCounter] = useState(0);
@@ -71,7 +69,7 @@ export const useChecklistContextValue =
             loading,
             error: projectError,
             refetch: refetchOverview,
-        } = useProjectOverview(eligible ? projectId : '');
+        } = useProjectOverview(visibility === 'visible' ? projectId : '');
 
         const environments = useMemo(
             () => (project.environments ?? []).map((env) => env.environment),
@@ -96,7 +94,8 @@ export const useChecklistContextValue =
         const totalSteps = visibleSteps.length;
         const completedCount = visibleSteps.filter((key) => done[key]).length;
 
-        if (!eligible || projectError || loading) return null;
+        if (visibility === 'hidden') return null;
+        if (visibility === 'visible' && (projectError || loading)) return null;
 
         return {
             state,

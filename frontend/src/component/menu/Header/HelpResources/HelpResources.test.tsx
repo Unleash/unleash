@@ -6,18 +6,47 @@ import { HelpResources } from './HelpResources';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { FloatingOnboardingChecklistContext } from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklistContext.tsx';
 import type { FloatingOnboardingChecklistContextValue } from 'component/onboarding/floatingChecklist/useChecklistContextValue.ts';
+import {
+    ONBOARDING_CHECKLIST_ELIGIBILITY_DECIDED_SPLASH_ID,
+    ONBOARDING_CHECKLIST_ELIGIBLE_SPLASH_ID,
+} from 'component/onboarding/floatingChecklist/useOnboardingChecklistVisibility.ts';
+import { ADMIN } from 'component/providers/AccessProvider/permissions.ts';
 
 const HINT_TEXT = 'You can reopen the Get started checklist from here anytime';
 
+const baseChecklistContext = (
+    overrides: Partial<FloatingOnboardingChecklistContextValue> = {},
+): FloatingOnboardingChecklistContextValue => ({
+    state: { minimized: false, dismissed: false, completed: {} },
+    update: vi.fn(),
+    markCompleted: vi.fn(),
+    open: vi.fn(),
+    openRequestCounter: 0,
+    dismissed: false,
+    projectId: 'default',
+    visibleSteps: ['flag', 'sdk', 'on'],
+    done: { tour: false, flag: false, sdk: false, on: false },
+    completedCount: 0,
+    totalSteps: 3,
+    environments: [],
+    refetchOverview: vi.fn(),
+    helpHintVisible: false,
+    showHelpHint: vi.fn(),
+    dismissHelpHint: vi.fn(),
+    ...overrides,
+});
+
 const renderWithChecklistContext = (
-    value: Partial<FloatingOnboardingChecklistContextValue>,
+    overrides: Partial<FloatingOnboardingChecklistContextValue> = {},
+    options?: Parameters<typeof render>[1],
 ) =>
     render(
         <FloatingOnboardingChecklistContext.Provider
-            value={value as FloatingOnboardingChecklistContextValue}
+            value={baseChecklistContext(overrides)}
         >
             <HelpResources />
         </FloatingOnboardingChecklistContext.Provider>,
+        options,
     );
 
 const server = testServerSetup();
@@ -194,6 +223,68 @@ test('tracks menu open and item click', async () => {
     expect(trackEvent).toHaveBeenCalledWith('help-resources', {
         props: { eventType: 'click', option: 'github' },
     });
+});
+
+const mockCheapGatePassingWithSplash = (splash: Record<string, boolean>) => {
+    testServerRoute(server, '/api/admin/ui-config', {
+        flags: { floatingOnboardingChecklist: true },
+    });
+    testServerRoute(server, '/api/admin/user', {
+        user: { id: 1 },
+        permissions: [],
+        feedback: [],
+        splash,
+    });
+};
+
+test('hides Get started when the user is already known to be not eligible', async () => {
+    mockCheapGatePassingWithSplash({
+        [ONBOARDING_CHECKLIST_ELIGIBILITY_DECIDED_SPLASH_ID]: true,
+    });
+
+    renderWithChecklistContext({}, { permissions: [{ permission: ADMIN }] });
+
+    await userEvent.click(
+        await screen.findByRole('button', { name: 'Help and resources' }),
+    );
+
+    expect(
+        screen.queryByRole('menuitem', { name: /Get started/ }),
+    ).not.toBeInTheDocument();
+});
+
+test('shows Get started with progress badge when the user is already known to be eligible', async () => {
+    mockCheapGatePassingWithSplash({
+        [ONBOARDING_CHECKLIST_ELIGIBILITY_DECIDED_SPLASH_ID]: true,
+        [ONBOARDING_CHECKLIST_ELIGIBLE_SPLASH_ID]: true,
+    });
+
+    renderWithChecklistContext(
+        { completedCount: 1, totalSteps: 3 },
+        { permissions: [{ permission: ADMIN }] },
+    );
+
+    await userEvent.click(
+        await screen.findByRole('button', { name: 'Help and resources' }),
+    );
+
+    const item = await screen.findByRole('menuitem', { name: /Get started/ });
+    expect(item).toBeInTheDocument();
+    expect(item).toHaveTextContent('1/3');
+});
+
+test("hides Get started until the user's eligibility is known", async () => {
+    mockCheapGatePassingWithSplash({});
+
+    renderWithChecklistContext({}, { permissions: [{ permission: ADMIN }] });
+
+    await userEvent.click(
+        await screen.findByRole('button', { name: 'Help and resources' }),
+    );
+
+    expect(
+        screen.queryByRole('menuitem', { name: /Get started/ }),
+    ).not.toBeInTheDocument();
 });
 
 test('shows the help hint pointing at the button when the context flags it visible', async () => {

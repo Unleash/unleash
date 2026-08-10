@@ -12,6 +12,10 @@ import {
 } from './useChecklistContextValue.ts';
 import { ONBOARDING_INTRO_FINISHED_SPLASH_ID } from 'component/onboarding/intro/IntroProvider.tsx';
 import { ONBOARDING_CHECKLIST_SPLASH_ID } from './useOnboardingChecklistEligibility.ts';
+import {
+    ONBOARDING_CHECKLIST_ELIGIBILITY_DECIDED_SPLASH_ID,
+    ONBOARDING_CHECKLIST_ELIGIBLE_SPLASH_ID,
+} from './useOnboardingChecklistVisibility.ts';
 import type { FloatingOnboardingChecklistState } from './floatingOnboardingChecklistState.ts';
 
 const server = testServerSetup();
@@ -52,7 +56,11 @@ const mockEligibleUser = ({
         user: { id: 1 },
         permissions: [],
         feedback: [],
-        splash,
+        splash: {
+            [ONBOARDING_CHECKLIST_ELIGIBILITY_DECIDED_SPLASH_ID]: true,
+            [ONBOARDING_CHECKLIST_ELIGIBLE_SPLASH_ID]: true,
+            ...splash,
+        },
     });
 };
 

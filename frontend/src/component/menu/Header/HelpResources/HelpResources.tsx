@@ -22,6 +22,7 @@ import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
 import LearningLabIcon from 'assets/icons/menu/learning-lab.svg?react';
 import { HelpMenuHint } from './HelpMenuHint.tsx';
 import { FloatingOnboardingChecklistContext } from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklistContext.tsx';
+import { useOnboardingChecklistVisibility } from 'component/onboarding/floatingChecklist/useOnboardingChecklistVisibility.ts';
 import { OnboardingProgressBadge } from 'component/onboarding/floatingChecklist/OnboardingProgressBadge.tsx';
 import { Link } from 'react-router';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
@@ -182,6 +183,10 @@ export const HelpResources = () => {
     const floatingOnboardingChecklist = useContext(
         FloatingOnboardingChecklistContext,
     );
+    const checklistVisibility = useOnboardingChecklistVisibility();
+    const showGetStarted = Boolean(
+        floatingOnboardingChecklist && checklistVisibility === 'visible',
+    );
 
     const hintOpen = Boolean(floatingOnboardingChecklist?.helpHintVisible);
 
@@ -279,7 +284,7 @@ export const HelpResources = () => {
                         </StyledVisitLink>
                     </StyledLearningLabContent>
                 </StyledFeaturedMenuItem>
-                {floatingOnboardingChecklist && (
+                {showGetStarted && (
                     <StyledMenuItem onClick={handleGetStarted}>
                         <RocketLaunchOutlinedIcon fontSize='small' />
                         Get started

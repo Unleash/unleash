@@ -138,6 +138,11 @@ const PremiumFeatures = {
         url: '',
         label: 'Release templates',
     },
+    'remote-mcp': {
+        plan: FeaturePlan.ENTERPRISE,
+        url: 'https://docs.getunleash.io/integrate/mcp#remote-mcp-server',
+        label: 'Remote MCP server',
+    },
 };
 
 type PremiumFeatureType = keyof typeof PremiumFeatures;

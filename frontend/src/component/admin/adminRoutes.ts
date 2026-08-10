@@ -166,7 +166,7 @@ export const adminRoutes: INavigationMenuItem[] = [
     {
         path: '/admin/remote-mcp',
         title: 'Remote MCP server',
-        menu: { adminSettings: true },
+        menu: { adminSettings: true, mode: ['enterprise'] },
     },
 
     // Impact Metrics

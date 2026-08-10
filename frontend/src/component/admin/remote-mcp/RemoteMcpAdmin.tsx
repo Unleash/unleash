@@ -2,13 +2,14 @@ import { Alert, Box, styled, Typography } from '@mui/material';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { RemoteMcpToggle } from './RemoteMcpToggle.tsx';
 
-const DOCS_URL =
-    'https://github.com/Unleash/unleash-mcp#remote-agent-setup-experimental';
+const DOCS_URL = 'https://docs.getunleash.io/integrate/mcp#remote-mcp-server';
 
 const StyledTitleRow = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -35,6 +36,12 @@ const StyledDocsLink = styled('a')(({ theme }) => ({
 }));
 
 export const RemoteMcpAdmin = () => {
+    const { isEnterprise } = useUiConfig();
+
+    if (!isEnterprise()) {
+        return <PremiumFeature feature='remote-mcp' page />;
+    }
+
     return (
         <div>
             <PermissionGuard permissions={[ADMIN]}>

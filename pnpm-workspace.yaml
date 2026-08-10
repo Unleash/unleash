@@ -68,6 +68,8 @@ minimumReleaseAgeExclude:
   - brace-expansion@1.1.18 || 2.1.4 || 5.0.9
   # Renovate security update: ip-address@10.2.1 || 10.3.1
   - ip-address@10.2.1 || 10.3.1
+  # Renovate security update: js-yaml@4.3.1
+  - js-yaml@4.3.1
 
 patchedDependencies:
   # Fixes a bug in getAutoSortingFn where `.slice(10)` skips the first 10 rows
@@ -100,7 +102,7 @@ overrides:
   json-schema: "^0.4.0"
   json5: "^2.2.2"
   jsonpath-plus: "10.4.0"
-  js-yaml: "4.3.0"
+  js-yaml: "4.3.1"
   linkify-it: "5.0.2"
   lodash: ">=4.18.0"
   markdown-it: "14.2.0"

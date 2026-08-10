@@ -9,6 +9,7 @@ import UIContext from 'contexts/UIContext';
 import AnimateOnMount from '../AnimateOnMount/AnimateOnMount.tsx';
 import Toast from './Toast/Toast.tsx';
 import type { IToast } from 'interfaces/toast';
+import { TOAST_LIVE_REGION_TEST_ID } from 'utils/testIds';
 
 const ToastRenderer = () => {
     const { toastData, setToast } = useContext(UIContext);
@@ -45,14 +46,20 @@ const ToastRenderer = () => {
 
     return (
         <Portal>
-            <AnimateOnMount
-                mounted={Boolean(toastData?.show)}
-                start={animations.start}
-                enter={animations.enter}
-                leave={animations.leave}
+            <div
+                role='status'
+                aria-live='polite'
+                data-testid={TOAST_LIVE_REGION_TEST_ID}
             >
-                <Toast {...toastData} />
-            </AnimateOnMount>
+                <AnimateOnMount
+                    mounted={Boolean(toastData?.show)}
+                    start={animations.start}
+                    enter={animations.enter}
+                    leave={animations.leave}
+                >
+                    <Toast {...toastData} />
+                </AnimateOnMount>
+            </div>
         </Portal>
     );
 };

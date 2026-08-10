@@ -5,7 +5,6 @@ import {
     NONE,
     serializeDates,
 } from '../../types/index.js';
-import type { IFlagResolver } from '../../types/experimental.js';
 import type { IUnleashServices, OpenApiService } from '../../services/index.js';
 import type { IAuthRequest } from '../../routes/unleash-types.js';
 import {
@@ -21,7 +20,6 @@ import {
     flagCreatorsQueryParameters,
 } from '../../openapi/spec/flag-creators-query-parameters.js';
 import { normalizeQueryParams } from '../feature-search/search-utils.js';
-import { NotFoundError } from '../../error/index.js';
 import { extractUserId } from '../../util/index.js';
 import type ProjectService from './project-service.js';
 
@@ -30,8 +28,6 @@ export default class FlagCreatorsController extends Controller {
 
     private openApiService: OpenApiService;
 
-    private flagResolver: IFlagResolver;
-
     constructor(
         config: IUnleashConfig,
         { projectService, openApiService }: IUnleashServices,
@@ -39,7 +35,6 @@ export default class FlagCreatorsController extends Controller {
         super(config);
         this.projectService = projectService;
         this.openApiService = openApiService;
-        this.flagResolver = config.flagResolver;
 
         this.route({
             method: 'get',
@@ -69,10 +64,6 @@ export default class FlagCreatorsController extends Controller {
         req: IAuthRequest<any, any, any, FlagCreatorsQueryParameters>,
         res: Response<FlagCreatorsSchema>,
     ): Promise<void> {
-        if (!this.flagResolver.isEnabled('flagListCreatedByFilter')) {
-            throw new NotFoundError();
-        }
-
         const { q } = req.query;
         const query = typeof q === 'string' ? q.trim() || undefined : undefined;
 

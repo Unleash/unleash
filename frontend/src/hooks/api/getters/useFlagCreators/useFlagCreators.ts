@@ -1,17 +1,12 @@
+import useSWR from 'swr';
 import { fetcher } from '../useApiGetter/useApiGetter.js';
-import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR.js';
 import { formatApiPath } from 'utils/formatPath';
 import type { FlagCreatorsSchema } from 'openapi';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 export const useFlagCreators = () => {
-    const enabled = useUiFlag('flagListCreatedByFilter');
     const url = formatApiPath('api/admin/flag-creators?limit=10000');
-    const { data } = useConditionalSWR<FlagCreatorsSchema>(
-        enabled,
-        { total: 0, flagCreators: [] },
-        url,
-        () => fetcher(url, 'Flag creators'),
+    const { data } = useSWR<FlagCreatorsSchema>(url, () =>
+        fetcher(url, 'Flag creators'),
     );
 
     return { flagCreators: data?.flagCreators ?? [] };

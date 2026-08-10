@@ -64,7 +64,6 @@ process.nextTick(async () => {
                         quickTourDemo: true,
                         topLabelInputs: true,
                         recordSdkFlavorMetrics: true,
-                        flagListCreatedByFilter: true,
                     },
                 },
                 authentication: {

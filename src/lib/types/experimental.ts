@@ -76,7 +76,6 @@ export type IFlagKey =
     | 'quickTourDemo'
     | 'introAdvancedSteps'
     | 'topLabelInputs'
-    | 'flagListCreatedByFilter'
     | 'secureTokenStorage'
     | 'recordSdkFlavorMetrics'
     | 'searchDocsWidget'
@@ -257,10 +256,6 @@ const flags: IFlags = {
     ),
     whatsNewPage: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_WHATS_NEW_PAGE,
-        false,
-    ),
-    flagListCreatedByFilter: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FLAG_LIST_CREATED_BY_FILTER,
         false,
     ),
     disableImpactMetrics: parseEnvVarBoolean(

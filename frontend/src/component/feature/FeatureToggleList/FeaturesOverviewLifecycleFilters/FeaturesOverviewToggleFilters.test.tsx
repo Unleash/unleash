@@ -40,10 +40,7 @@ test('should not render projects filters when less than two project', async () =
     expect(screen.queryByText('Projects')).not.toBeInTheDocument();
 });
 
-test('shows Created by filter when flagListCreatedByFilter is enabled', async () => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: { flagListCreatedByFilter: true },
-    });
+test('shows Created by filter', async () => {
     testServerRoute(server, '/api/admin/flag-creators', {
         total: 1,
         flagCreators: [{ id: 1, name: 'AuthorA' }],
@@ -54,16 +51,4 @@ test('shows Created by filter when flagListCreatedByFilter is enabled', async ()
     const addFilter = await screen.findByText('Add filter');
     fireEvent.click(addFilter);
     await screen.findByText('Created by');
-});
-
-test('hides Created by filter when flagListCreatedByFilter is disabled', async () => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: { flagListCreatedByFilter: false },
-    });
-
-    render(<FeaturesOverviewToggleFilters onChange={() => {}} state={{}} />);
-
-    const addFilter = await screen.findByText('Add filter');
-    fireEvent.click(addFilter);
-    expect(screen.queryByText('Created by')).not.toBeInTheDocument();
 });

@@ -10,7 +10,6 @@ import {
 } from 'component/filter/Filters/Filters';
 import { formatTag } from 'utils/format-tag';
 import { useEventTracker } from 'hooks/useEventTracker';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 type FeaturesOverviewToggleFiltersProps = {
     state: FilterItemParamHolder;
@@ -24,7 +23,6 @@ export const FeaturesOverviewToggleFilters: FC<
     const { segments } = useSegments();
     const { tags } = useAllTags();
     const { flagCreators } = useFlagCreators();
-    const createdByFilterEnabled = useUiFlag('flagListCreatedByFilter');
     const { trackEvent } = useEventTracker();
 
     const onFilterChange = (value: FilterItemParamHolder) => {
@@ -142,18 +140,14 @@ export const FeaturesOverviewToggleFilters: FC<
                 singularOperators: ['IS', 'IS_NOT'],
                 pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
             },
-            ...(createdByFilterEnabled
-                ? ([
-                      {
-                          label: 'Created by',
-                          icon: 'person',
-                          options: flagCreatorsOptions,
-                          filterKey: 'createdBy',
-                          singularOperators: ['IS', 'IS_NOT'],
-                          pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
-                      },
-                  ] as IFilterItem[])
-                : []),
+            {
+                label: 'Created by',
+                icon: 'person',
+                options: flagCreatorsOptions,
+                filterKey: 'createdBy',
+                singularOperators: ['IS', 'IS_NOT'],
+                pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
+            },
             {
                 label: 'Favorite',
                 icon: 'star',
@@ -173,7 +167,6 @@ export const FeaturesOverviewToggleFilters: FC<
         JSON.stringify(segments),
         JSON.stringify(tags),
         JSON.stringify(flagCreators),
-        createdByFilterEnabled,
     ]);
 
     return (

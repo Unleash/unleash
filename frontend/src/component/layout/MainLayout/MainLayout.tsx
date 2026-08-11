@@ -18,7 +18,6 @@ import { NewInUnleash } from './NavigationSidebar/NewInUnleash/NewInUnleash.tsx'
 import { FloatingOnboardingChecklistVisibilityGate } from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklistVisibilityGate.tsx';
 import { FloatingOnboardingChecklistProvider } from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklistContext.tsx';
 import { AccessRequestsNotifications } from 'component/admin/users/AccessRequestsNotifications/AccessRequestsNotifications';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -128,9 +127,6 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
         );
         const theme = useTheme();
         const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
-        const accessRequestsNotificationsEnabled = useUiFlag(
-            'accessRequestsNotifications',
-        );
 
         return (
             <FloatingOnboardingChecklistProvider>
@@ -194,9 +190,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                         </MainLayoutContentWrapper>
                     </MainLayoutContainer>
                     <NewInUnleash />
-                    {accessRequestsNotificationsEnabled && (
-                        <AccessRequestsNotifications />
-                    )}
+                    <AccessRequestsNotifications />
                 </EventTimelineProvider>
             </FloatingOnboardingChecklistProvider>
         );

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { screen, waitFor } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
@@ -7,9 +7,8 @@ import { PendingAccessRequestsIndicator } from './PendingAccessRequestsIndicator
 
 const server = testServerSetup();
 
-const setupApi = ({ flag, requests }: { flag: boolean; requests: number }) => {
+const setupApi = ({ requests }: { requests: number }) => {
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: { accessRequestsMenuIndicator: flag },
         versionInfo: { current: { enterprise: '1.0.0' } },
     });
     testServerRoute(server, '/api/admin/user-access-requests', {
@@ -22,8 +21,8 @@ const setupApi = ({ flag, requests }: { flag: boolean; requests: number }) => {
 };
 
 describe('PendingAccessRequestsIndicator', () => {
-    test('shows the dot when admin, flag enabled, and there are pending requests', async () => {
-        setupApi({ flag: true, requests: 1 });
+    test('shows the dot for admins with pending requests', async () => {
+        setupApi({ requests: 1 });
 
         render(<PendingAccessRequestsIndicator />, {
             permissions: [{ permission: ADMIN }],
@@ -34,32 +33,15 @@ describe('PendingAccessRequestsIndicator', () => {
         ).toBeInTheDocument();
     });
 
-    test('renders nothing when the flag is disabled', async () => {
-        setupApi({ flag: false, requests: 1 });
-
-        render(<PendingAccessRequestsIndicator />, {
-            permissions: [{ permission: ADMIN }],
-        });
-
-        // SWR resolves async; assert the dot never appears.
-        await waitFor(() =>
-            expect(
-                screen.queryByLabelText('Pending access requests'),
-            ).not.toBeInTheDocument(),
-        );
-    });
-
-    test('renders nothing for non-admin users', async () => {
-        setupApi({ flag: true, requests: 1 });
+    test('renders nothing for non-admin users even when requests exist', () => {
+        setupApi({ requests: 1 });
 
         render(<PendingAccessRequestsIndicator />, {
             permissions: [],
         });
 
-        await waitFor(() =>
-            expect(
-                screen.queryByLabelText('Pending access requests'),
-            ).not.toBeInTheDocument(),
-        );
+        expect(
+            screen.queryByLabelText('Pending access requests'),
+        ).not.toBeInTheDocument();
     });
 });

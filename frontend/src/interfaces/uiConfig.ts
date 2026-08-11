@@ -103,9 +103,7 @@ export type UiFlags = {
     newProfileDropdown?: boolean;
     learningLab?: Variant;
     floatingOnboardingChecklist?: boolean;
-    accessRequestsNotifications?: boolean;
     flightRecorderFrontend?: Variant;
-    accessRequestsMenuIndicator?: boolean;
     topLabelInputs?: boolean;
     searchDocsWidget?: boolean;
 };

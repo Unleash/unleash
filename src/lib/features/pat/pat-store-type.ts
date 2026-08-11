@@ -1,10 +1,14 @@
 import type { Store } from '../../types/stores/store.js';
 import type { CreatePatSchema, PatSchema } from '../../openapi/index.js';
 
+export type PersistedAccountTokenCredential =
+    | { secret: string; selector?: never; verifier?: never }
+    | { secret?: never; selector: string; verifier: string };
+
 export interface IPatStore extends Store<PatSchema, number> {
     create(
         pat: CreatePatSchema,
-        secret: string,
+        credential: PersistedAccountTokenCredential,
         userId: number,
     ): Promise<PatSchema>;
     getAllByUser(userId: number): Promise<PatSchema[]>;

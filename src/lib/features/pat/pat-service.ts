@@ -15,6 +15,11 @@ import { OperationDeniedError } from '../../error/operation-denied-error.js';
 import { PAT_LIMIT } from '../../util/constants.js';
 import type EventService from '../events/event-service.js';
 import type { CreatePatSchema, PatSchema } from '../../openapi/index.js';
+import type { PersistedAccountTokenCredential } from './pat-store-type.js';
+import {
+    AuthorizationTokenKind,
+    createTokenV2Credential,
+} from '../../authentication/authorization-token.js';
 
 export default class PatService {
     private config: IUnleashConfig;
@@ -43,8 +48,11 @@ export default class PatService {
     ): Promise<PatSchema> {
         await this.validatePat(pat, forUserId);
 
-        const secret = this.generateSecretKey();
-        const newPat = await this.patStore.create(pat, secret, forUserId);
+        const secure = this.config.flagResolver.isEnabled(
+            'secureAccountTokenStorage',
+        );
+        const { credential, secret } = this.generateToken(secure);
+        const newPat = await this.patStore.create(pat, credential, forUserId);
 
         await this.eventService.storeEvent(
             new PatCreatedEvent({
@@ -117,8 +125,28 @@ export default class PatService {
         }
     }
 
-    private generateSecretKey() {
+    private generateToken(secure: boolean): {
+        secret: string;
+        credential: PersistedAccountTokenCredential;
+    } {
+        if (secure) {
+            const credential = createTokenV2Credential({
+                kind: AuthorizationTokenKind.ACCOUNT_ACCESS,
+            });
+            return {
+                secret: credential.secret,
+                credential: {
+                    selector: credential.selector,
+                    verifier: credential.verifier,
+                },
+            };
+        }
+
         const randomStr = crypto.randomBytes(28).toString('hex');
-        return `user:${randomStr}`;
+        const secret = `user:${randomStr}`;
+        return {
+            secret,
+            credential: { secret },
+        };
     }
 }

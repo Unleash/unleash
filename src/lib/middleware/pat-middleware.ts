@@ -20,11 +20,10 @@ const patMiddleware = (
             const parsedToken = parseAuthorizationToken(apiToken);
             if (parsedToken?.kind === AuthorizationTokenKind.ACCOUNT_ACCESS) {
                 const user =
-                    await accountService.getAccountByPersonalAccessToken(
-                        parsedToken.secret,
+                    await accountService.authenticateAccountByToken(
+                        parsedToken,
                     );
                 req.user = user;
-                accountService.addPATSeen(parsedToken.secret);
             }
         } catch (error) {
             if (error instanceof NotFoundError) {

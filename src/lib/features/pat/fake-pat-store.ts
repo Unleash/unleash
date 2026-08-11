@@ -1,4 +1,7 @@
-import type { IPatStore } from './pat-store-type.js';
+import type {
+    IPatStore,
+    PersistedAccountTokenCredential,
+} from './pat-store-type.js';
 import type { CreatePatSchema, PatSchema } from '../../openapi/index.js';
 import NotFoundError from '../../error/notfound-error.js';
 
@@ -9,7 +12,7 @@ export default class FakePatStore implements IPatStore {
 
     async create(
         pat: CreatePatSchema,
-        secret: string,
+        _credential: PersistedAccountTokenCredential,
         userId: number,
     ): Promise<PatSchema> {
         const newPat: PatSchema = {

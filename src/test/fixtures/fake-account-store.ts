@@ -1,9 +1,10 @@
 import type { IUser, MinimalUser } from '../../lib/types/user.js';
 import type {
-    // ICreateUser,
-    IUserLookup,
-    IAccountStore,
     IAdminCount,
+    IAccountStore,
+    IUserLookup,
+    AccountTokenReference,
+    AccountTokenWithVerifier,
 } from '../../lib/types/stores/account-store.js';
 
 export class FakeAccountStore implements IAccountStore {
@@ -94,8 +95,14 @@ export class FakeAccountStore implements IAccountStore {
         return Promise.resolve(undefined);
     }
 
+    getAccountByTokenSelector(
+        _selector: string,
+    ): Promise<AccountTokenWithVerifier | undefined> {
+        return Promise.resolve(undefined);
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async markSeenAt(_secrets: string[]): Promise<void> {
+    async markSeenAt(_tokens: AccountTokenReference[]): Promise<void> {
         throw new Error('Not implemented');
     }
 

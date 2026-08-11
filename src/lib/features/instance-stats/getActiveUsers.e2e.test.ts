@@ -23,7 +23,7 @@ const mockTokenDaysAgo = (userId: number, days: number) => {
     return {
         user_id: userId,
         seen_at: result,
-        secret: 'secret',
+        secret: `secret-${userId}-${days}`,
         expires_at: new Date('2031-12-31'),
     };
 };

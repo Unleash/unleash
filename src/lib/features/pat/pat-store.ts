@@ -1,5 +1,8 @@
 import type { Logger, LogProvider } from '../../logger.js';
-import type { IPatStore } from './pat-store-type.js';
+import type {
+    IPatStore,
+    PersistedAccountTokenCredential,
+} from './pat-store-type.js';
 import NotFoundError from '../../error/notfound-error.js';
 import type { Db } from '../../db/db.js';
 import type { CreatePatSchema, PatSchema } from '../../openapi/index.js';
@@ -48,11 +51,15 @@ export default class PatStore implements IPatStore {
 
     async create(
         pat: CreatePatSchema,
-        secret: string,
+        credential: PersistedAccountTokenCredential,
         userId: number,
     ): Promise<PatSchema> {
         const rows = await this.db(TABLE)
-            .insert({ ...patToRow(pat), secret, user_id: userId })
+            .insert({
+                ...patToRow(pat),
+                ...credential,
+                user_id: userId,
+            })
             .returning('*');
         return rowToPat(rows[0]);
     }

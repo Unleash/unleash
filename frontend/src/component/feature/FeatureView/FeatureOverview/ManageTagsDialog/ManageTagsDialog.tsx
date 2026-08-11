@@ -132,11 +132,13 @@ export const ManageTagsDialog = ({ open, setOpen }: IManageTagsProps) => {
                 removedTags: removed,
             });
             await refetch();
+            return true;
         } catch (_error: unknown) {
             setToastData({
                 type: 'error',
-                text: 'Failed to add tag',
+                text: 'Failed to update tags',
             });
+            return false;
         }
     };
 
@@ -167,15 +169,22 @@ export const ManageTagsDialog = ({ open, setOpen }: IManageTagsProps) => {
         );
         const { added, removed } = difference(selectedTags, tags);
         if (differenceCount > 0) {
-            await updateTags(added, removed);
-            differenceCount > 1 &&
-                trackEvent('suggest_tags', {
-                    props: { eventType: 'multiple_tags_added' },
+            const updated = await updateTags(added, removed);
+            if (updated) {
+                trackEvent('flag-tags', {
+                    props: {
+                        eventType: 'tags-updated',
+                        tagType: tagType.name,
+                        addedCount: added.length,
+                        removedCount: removed.length,
+                        totalTags: tags.length + added.length - removed.length,
+                    },
                 });
+            }
             differenceCount > 0 &&
                 setToastData({
                     type: 'success',
-                    text: `Updated tag${added.length > 1 ? 's' : ''} to flag`,
+                    text: `Updated flag tags`,
                 });
         }
         setDifferenceCount(0);
@@ -218,8 +227,11 @@ export const ManageTagsDialog = ({ open, setOpen }: IManageTagsProps) => {
                         type: tagType.name,
                     };
                     createTag(payload).then(() => {
-                        trackEvent('suggest_tags', {
-                            props: { eventType: 'tag_created' },
+                        trackEvent('flag-tags', {
+                            props: {
+                                eventType: 'tag-created',
+                                tagType: tagType.name,
+                            },
                         });
                         refetchAllTags();
                     });

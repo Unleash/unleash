@@ -15,6 +15,7 @@ import { StyledMetaDataItem } from './FeatureOverviewMetaData.tsx';
 import { AddTagButton } from './AddTagButton.tsx';
 import { Tag } from 'component/common/Tag/Tag';
 import { formatTag } from 'utils/format-tag';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 const StyledLabel = styled('span')(({ theme }) => ({
     marginTop: theme.spacing(1),
@@ -63,6 +64,7 @@ export const TagRow = ({ feature }: IFeatureOverviewSidePanelTagsProps) => {
     const [selectedTag, setSelectedTag] = useState<ITag>();
 
     const { setToastData, setToastApiError } = useToast();
+    const { trackEvent } = useEventTracker();
     const { hasAccess } = useContext(AccessContext);
     const canUpdateTags = hasAccess(UPDATE_FEATURE, feature.project);
 
@@ -79,6 +81,13 @@ export const TagRow = ({ feature }: IFeatureOverviewSidePanelTagsProps) => {
                 selectedTag.value,
             );
             refetch();
+            trackEvent('flag-tags', {
+                props: {
+                    eventType: 'tag-removed',
+                    tagType: selectedTag.type,
+                    totalTags: tags.length - 1,
+                },
+            });
             setToastData({
                 type: 'success',
                 text: 'Tag removed',

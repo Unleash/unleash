@@ -51,7 +51,7 @@ export const App = () => {
         if (hasFetchedAuth && user?.id) {
             refetchUiConfig();
         }
-    }, [authDetails, user]);
+    }, [user, hasFetchedAuth, refetchUiConfig]);
 
     const isLoggedIn = Boolean(user?.id);
 

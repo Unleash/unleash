@@ -106,7 +106,6 @@
     },
     {
       "includes": [
-        "frontend/src/component/App.tsx",
         "frontend/src/component/InitialRedirect.tsx",
         "frontend/src/component/admin/banners/BannerModal/BannerModal.tsx",
         "frontend/src/component/admin/banners/BannersTable/BannersTable.tsx",

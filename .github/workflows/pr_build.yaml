@@ -30,6 +30,8 @@ jobs:
     needs: changes
     if: needs.changes.outputs.backend == 'true'
     uses: ./.github/workflows/build.yaml
+    with:
+      shards: '["1/4", "2/4", "3/4", "4/4"]'
 
   frontend:
     needs: changes

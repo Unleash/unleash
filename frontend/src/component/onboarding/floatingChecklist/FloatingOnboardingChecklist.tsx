@@ -402,18 +402,18 @@ const EligibleFloatingOnboardingChecklist = () => {
                         <OnboardingProgressBadge showLabel />
                     </TitleRow>
                     <IconButton
-                        size='small'
+                        size='medium'
                         aria-label={state.minimized ? 'Expand' : 'Minimize'}
                         onClick={toggleMinimized}
                     >
-                        <MinimizeIcon fontSize='small' />
+                        <MinimizeIcon fontSize='medium' />
                     </IconButton>
                     <IconButton
-                        size='small'
+                        size='medium'
                         aria-label='Close'
                         onClick={handleDismiss}
                     >
-                        <CloseIcon fontSize='small' />
+                        <CloseIcon fontSize='medium' />
                     </IconButton>
                 </Header>
 

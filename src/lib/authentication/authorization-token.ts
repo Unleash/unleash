@@ -1,20 +1,29 @@
+import crypto from 'node:crypto';
+import { createTokenVerifier } from './token-verifier.js';
+
+const SELECTOR_BYTES = 16;
+const SECRET_BYTES = 32;
 const SELECTOR_PATTERN = '[A-Za-z0-9_-]{22}';
 const TOKEN_PATTERN = new RegExp(
     `\\.v2_(${SELECTOR_PATTERN})_([A-Za-z0-9_-]{43})$`,
 );
 const SELECTOR_ID_PATTERN = new RegExp(`^${SELECTOR_PATTERN}$`);
+const ACCOUNT_ACCESS_TOKEN_PATTERN = new RegExp(
+    `^user:v2_(${SELECTOR_PATTERN})_([A-Za-z0-9_-]{43})$`,
+);
 
 /**
  * Credential families that can be determined from an authorization value.
  * Permissions and project scope are resolved separately from storage.
  */
 export enum AuthorizationTokenKind {
-    USER_ACCESS = 'user-access', // either a user or a service account
+    ACCOUNT_ACCESS = 'account-access', // either a user or a service account
     API_TOKEN = 'api-token', // either a v1 or v2 API token
+    /** @deprecated Create a personal access token or service account token instead. */
     ADMIN_API_TOKEN = 'admin-api-token', // this is deprecated but still supported
 }
 
-type ApiTokenKind =
+type ApiAuthorizationTokenKind =
     | AuthorizationTokenKind.API_TOKEN
     | AuthorizationTokenKind.ADMIN_API_TOKEN;
 
@@ -24,7 +33,7 @@ type ApiTokenKind =
  * The secret is never stored in the database.
  */
 export type ApiTokenV2Credential = {
-    kind: ApiTokenKind;
+    kind: ApiAuthorizationTokenKind;
     version: 'v2';
     secret: string;
     selector: string;
@@ -35,14 +44,14 @@ export type ApiTokenV2Credential = {
  * It identifies a token but cannot authenticate a request.
  */
 export type ApiTokenV2Identifier = {
-    kind: ApiTokenKind;
+    kind: ApiAuthorizationTokenKind;
     version: 'v2';
     selector: string;
 };
 
 /** A V1 API-token credential; identified from its secret which is stored in the db. */
 export type LegacyApiToken = {
-    kind: ApiTokenKind;
+    kind: ApiAuthorizationTokenKind;
     version: 'v1';
     secret: string;
 };
@@ -51,14 +60,60 @@ export type LegacyApiToken = {
 export type ApiTokenCredential = LegacyApiToken | ApiTokenV2Credential;
 
 /** A V1 user credential for a person or service account. */
-export type UserAccessCredential = {
-    kind: AuthorizationTokenKind.USER_ACCESS;
+export type LegacyAccountAccessToken = {
+    kind: AuthorizationTokenKind.ACCOUNT_ACCESS;
     version: 'v1';
     secret: string;
 };
 
+/** A V2 user credential for a person or service account. */
+export type AccountAccessTokenV2Credential = {
+    kind: AuthorizationTokenKind.ACCOUNT_ACCESS;
+    version: 'v2';
+    secret: string;
+    selector: string;
+};
+
+export type AccountAccessCredential =
+    | LegacyAccountAccessToken
+    | AccountAccessTokenV2Credential;
+
 /** A credential parsed from an Authorization header. */
-export type AuthorizationCredential = UserAccessCredential | ApiTokenCredential;
+export type AuthorizationCredential =
+    | AccountAccessCredential
+    | ApiTokenCredential;
+
+export type TokenV2Credential = {
+    kind: AuthorizationTokenKind;
+    version: 'v2';
+    secret: string;
+    selector: string;
+    verifier: string;
+};
+
+export type CreateTokenV2CredentialOptions =
+    | { kind: AuthorizationTokenKind.ACCOUNT_ACCESS }
+    | { kind: ApiAuthorizationTokenKind; tokenPrefix: string };
+
+export const createTokenV2Credential = (
+    options: CreateTokenV2CredentialOptions,
+): TokenV2Credential => {
+    const { kind } = options;
+    const selector = crypto.randomBytes(SELECTOR_BYTES).toString('base64url');
+    const secretPart = crypto.randomBytes(SECRET_BYTES).toString('base64url');
+    const prefix =
+        kind === AuthorizationTokenKind.ACCOUNT_ACCESS
+            ? 'user:'
+            : `${options.tokenPrefix}.`;
+    const secret = `${prefix}v2_${selector}_${secretPart}`;
+    return {
+        kind,
+        version: 'v2',
+        secret,
+        selector,
+        verifier: createTokenVerifier(secret),
+    };
+};
 
 const parseApiTokenV2Credential = (
     secret: string,
@@ -98,8 +153,17 @@ export const parseAuthorizationToken = (
     }
 
     if (secret.startsWith('user:')) {
+        const match = ACCOUNT_ACCESS_TOKEN_PATTERN.exec(secret);
+        if (match) {
+            return {
+                kind: AuthorizationTokenKind.ACCOUNT_ACCESS,
+                version: 'v2',
+                secret,
+                selector: match[1],
+            };
+        }
         return {
-            kind: AuthorizationTokenKind.USER_ACCESS,
+            kind: AuthorizationTokenKind.ACCOUNT_ACCESS,
             version: 'v1',
             secret,
         };
@@ -131,7 +195,7 @@ export const parseApiTokenV2Identifier = (
         : undefined;
 };
 
-const getApiTokenKind = (secret: string): ApiTokenKind =>
+const getApiTokenKind = (secret: string): ApiAuthorizationTokenKind =>
     secret.startsWith('*:*')
         ? AuthorizationTokenKind.ADMIN_API_TOKEN
         : AuthorizationTokenKind.API_TOKEN;

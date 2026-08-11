@@ -19,7 +19,7 @@ export const userTokenClientApiLogger = ({
         const apiToken = req.header('authorization');
         const parsedToken = parseAuthorizationToken(apiToken);
         if (
-            (parsedToken?.kind === AuthorizationTokenKind.USER_ACCESS ||
+            (parsedToken?.kind === AuthorizationTokenKind.ACCOUNT_ACCESS ||
                 parsedToken?.kind === AuthorizationTokenKind.ADMIN_API_TOKEN) &&
             !flagResolver.isEnabled('userTokenWithClientApiLoggingKillSwitch')
         ) {

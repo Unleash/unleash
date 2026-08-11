@@ -1,4 +1,3 @@
-import crypto from 'node:crypto';
 import { addMinutes, isPast } from 'date-fns';
 import ApiUser, { type IApiUser } from '../../types/api-user.js';
 import { ApiTokenType, type IApiToken } from '../../types/model.js';
@@ -11,12 +10,13 @@ import type { IAuditUser } from '../../types/user.js';
 import { ADMIN, CLIENT, FRONTEND } from '../../types/permissions.js';
 import type {
     ApiTokenV2,
+    ApiTokenV2WithVerifier,
     ApiTokenV2WithSecret,
     CreateApiTokenV2,
     IApiTokenV2Store,
 } from './api-token-v2-types.js';
 import type EventService from '../events/event-service.js';
-import { constantTimeCompare, omitKeys } from '../../util/index.js';
+import { omitKeys } from '../../util/index.js';
 import { BadDataError, throwExceedsLimitError } from '../../error/index.js';
 import {
     type IEnvironmentStore,
@@ -45,13 +45,13 @@ import FakeEventStore from '../../../test/fixtures/fake-event-store.js';
 import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store.js';
 import metricsHelper from '../../util/metrics-helper.js';
 import { FUNCTION_TIME } from '../../metric-events.js';
-import type {
-    ApiTokenV2Credential,
-    ApiTokenV2Identifier,
+import {
+    AuthorizationTokenKind,
+    createTokenV2Credential,
+    type ApiTokenV2Credential,
+    type ApiTokenV2Identifier,
 } from '../../authentication/authorization-token.js';
-
-const SELECTOR_BYTES = 16;
-const SECRET_BYTES = 32;
+import { verifyToken } from '../../authentication/token-verifier.js';
 
 export const createApiTokenV2Service: (
     {
@@ -114,7 +114,7 @@ export class ApiTokenV2Service {
     private resourceLimitsService: ResourceLimitsService;
     private eventBus: EventEmitter;
     private logger: Logger;
-    private activeTokens: IApiToken[] = [];
+    private activeTokens = new Map<string, ApiTokenV2WithVerifier>();
     private queryAfter = new Map<string, Date>();
     private timer: Function;
 
@@ -140,6 +140,13 @@ export class ApiTokenV2Service {
                 className: 'ApiTokenV2Service',
                 functionName,
             });
+    }
+
+    async fetchActiveTokens(): Promise<void> {
+        const tokens = await this.apiTokenV2Store.getAllActive();
+        this.activeTokens = new Map(
+            tokens.map((token) => [token.selector, token] as const),
+        );
     }
 
     async create(
@@ -190,17 +197,17 @@ export class ApiTokenV2Service {
         await this.validateApiTokenEnvironment(token);
         await this.validateApiTokenLimit();
 
-        const selector = crypto
-            .randomBytes(SELECTOR_BYTES)
-            .toString('base64url');
-        const secretPart = crypto
-            .randomBytes(SECRET_BYTES)
-            .toString('base64url');
-        const secret = `${toProjectPart(token.projects)}:${token.environment}.v2_${selector}_${secretPart}`;
+        const credential = createTokenV2Credential({
+            kind:
+                token.type === ApiTokenType.ADMIN
+                    ? AuthorizationTokenKind.ADMIN_API_TOKEN
+                    : AuthorizationTokenKind.API_TOKEN,
+            tokenPrefix: `${toProjectPart(token.projects)}:${token.environment}`,
+        });
         const created = await this.apiTokenV2Store.create(
             token,
-            selector,
-            this.createVerifier(secret),
+            credential.selector,
+            credential.verifier,
         );
         await this.eventService.storeEvent(
             new ApiTokenCreatedEvent({
@@ -208,7 +215,7 @@ export class ApiTokenV2Service {
                 apiToken: omitKeys(this.toApiToken(created), 'secret'),
             }),
         );
-        return { ...created, secret };
+        return { ...created, secret: credential.secret };
     }
 
     private async validateApiTokenLimit() {
@@ -251,33 +258,37 @@ export class ApiTokenV2Service {
             return undefined;
         }
 
-        let token = this.activeTokens.find(
-            (activeToken) =>
-                Boolean(activeToken.secret) &&
-                constantTimeCompare(activeToken.secret, secret),
-        );
-        const nextAllowedQuery = this.queryAfter.get(secret) ?? 0;
-        if (!token) {
-            if (isPast(nextAllowedQuery)) {
-                if (this.queryAfter.size > 1000) {
-                    this.queryAfter.clear();
-                }
-                const stopCacheTimer = this.timer('getTokenWithCache.query');
-                token = await this.getToken(credential);
-                if (token) {
-                    if (token.expiresAt && isPast(token.expiresAt)) {
-                        this.queryAfter.set(secret, addMinutes(new Date(), 5));
-                        token = undefined;
-                    } else {
-                        this.activeTokens.push(token);
-                    }
-                } else {
-                    this.queryAfter.set(secret, addMinutes(new Date(), 5));
-                }
-                stopCacheTimer();
-            }
+        let cachedToken = this.activeTokens.get(credential.selector);
+        if (cachedToken?.expiresAt && isPast(cachedToken.expiresAt)) {
+            this.activeTokens.delete(credential.selector);
+            cachedToken = undefined;
         }
-        return token;
+        if (cachedToken && !verifyToken(secret, cachedToken.verifier)) {
+            cachedToken = undefined;
+        }
+
+        const nextAllowedQuery = this.queryAfter.get(secret) ?? 0;
+        if (!cachedToken && isPast(nextAllowedQuery)) {
+            if (this.queryAfter.size > 1000) {
+                this.queryAfter.clear();
+            }
+            const stopCacheTimer = this.timer('getTokenWithCache.query');
+            const storedToken = await this.apiTokenV2Store.getBySelector(
+                credential.selector,
+            );
+            if (storedToken && verifyToken(secret, storedToken.verifier)) {
+                if (storedToken.expiresAt && isPast(storedToken.expiresAt)) {
+                    this.queryAfter.set(secret, addMinutes(new Date(), 5));
+                } else {
+                    this.activeTokens.set(storedToken.selector, storedToken);
+                    cachedToken = storedToken;
+                }
+            } else {
+                this.queryAfter.set(secret, addMinutes(new Date(), 5));
+            }
+            stopCacheTimer();
+        }
+        return cachedToken && this.toApiToken(cachedToken);
     }
 
     async getUserDefinedTokens(): Promise<IApiToken[]> {
@@ -294,14 +305,21 @@ export class ApiTokenV2Service {
         if (!previous) {
             return undefined;
         }
-        const token = await this.apiTokenV2Store.setExpiry(
+        const updatedStoreToken = await this.apiTokenV2Store.setExpiry(
             previous.secret,
             expiresAt,
         );
-        if (!token) {
+        if (!updatedStoreToken) {
             return undefined;
         }
-        const updated = this.toApiToken(token);
+        const cachedToken = this.activeTokens.get(previous.secret);
+        if (cachedToken) {
+            this.activeTokens.set(cachedToken.selector, {
+                ...cachedToken,
+                expiresAt: updatedStoreToken.expiresAt,
+            });
+        }
+        const updated = this.toApiToken(updatedStoreToken);
         await this.eventService.storeEvent(
             new ApiTokenUpdatedEvent({
                 auditUser,
@@ -321,6 +339,7 @@ export class ApiTokenV2Service {
             return false;
         }
         await this.apiTokenV2Store.delete(token.secret);
+        this.activeTokens.delete(token.secret);
         await this.eventService.storeEvent(
             new ApiTokenDeletedEvent({
                 auditUser,
@@ -337,7 +356,7 @@ export class ApiTokenV2Service {
         const token = await this.apiTokenV2Store.getBySelector(selector);
         if (
             !token ||
-            !this.verify(secret, token.verifier) ||
+            !verifyToken(secret, token.verifier) ||
             (token.expiresAt && isPast(token.expiresAt))
         ) {
             return undefined;
@@ -375,19 +394,6 @@ export class ApiTokenV2Service {
             seenAt: token.seenAt,
             secure: true,
         };
-    }
-
-    private createVerifier(token: string): string {
-        return crypto.createHash('sha256').update(token).digest('base64url');
-    }
-
-    private verify(token: string, verifier: string): boolean {
-        const expected = Buffer.from(this.createVerifier(token));
-        const actual = Buffer.from(verifier);
-        return (
-            expected.length === actual.length &&
-            crypto.timingSafeEqual(expected, actual)
-        );
     }
 }
 

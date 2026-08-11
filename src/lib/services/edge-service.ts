@@ -33,7 +33,10 @@ import {
     type ApiTokenV2Service,
     ApiTokenV2Store,
 } from '../features/apitokensv2/index.js';
-import { parseAuthorizationToken } from '../authentication/authorization-token.js';
+import {
+    AuthorizationTokenKind,
+    parseAuthorizationToken,
+} from '../authentication/authorization-token.js';
 import {
     createApiTokenV2Service,
     createFakeApiTokenV2Service,
@@ -125,23 +128,22 @@ export default class EdgeService {
 
     async getValidTokens(tokens: string[]): Promise<ValidatedEdgeTokensSchema> {
         const validatedTokens: EdgeTokenSchema[] = [];
-        if (this.flagResolver.isEnabled('secureTokenStorage')) {
-            for (const token of tokens) {
-                const parsedToken = parseAuthorizationToken(token);
-                const found =
-                    parsedToken?.version === 'v2'
-                        ? await this.apiTokenV2Service.getTokenWithCache(
-                              parsedToken,
-                          )
-                        : undefined;
-                if (found) {
-                    validatedTokens.push({
-                        token: token,
-                        type: found.type,
-                        projects: found.projects,
-                        environment: found.environment,
-                    });
-                }
+        for (const token of tokens) {
+            const parsedToken = parseAuthorizationToken(token);
+            const found =
+                parsedToken?.kind === AuthorizationTokenKind.API_TOKEN &&
+                parsedToken.version === 'v2'
+                    ? await this.apiTokenV2Service.getTokenWithCache(
+                          parsedToken,
+                      )
+                    : undefined;
+            if (found) {
+                validatedTokens.push({
+                    token: token,
+                    type: found.type,
+                    projects: found.projects,
+                    environment: found.environment,
+                });
             }
         }
         for (const token of tokens) {

@@ -23,12 +23,15 @@ import {
 import { createApiTokenService } from '../../../lib/features/api-tokens/createApiTokenService.js';
 import { randomBytes } from 'node:crypto';
 import { createApiTokenV2Service } from '../../../lib/features/apitokensv2/api-token-v2-service.js';
+import type { ApiTokenV2WithSecret } from '../../../lib/features/apitokensv2/index.js';
+import { AuthorizationTokenKind } from '../../../lib/authentication/authorization-token.js';
 
 let db: ITestDb;
 let stores: IUnleashStores;
 let edgeService: EdgeService;
 let projectService: ProjectService;
 let user: IUser;
+let apiTokenV2Service: ReturnType<typeof createApiTokenV2Service>;
 
 beforeAll(async () => {
     const config = createTestConfig({
@@ -60,7 +63,7 @@ beforeAll(async () => {
     const apiTokenService = createApiTokenService(db.rawDatabase, config);
     const eventService = createEventsService(db.rawDatabase, db.config);
     const resourceLimitsService = new ResourceLimitsService(db.config);
-    const apiTokenV2Service = createApiTokenV2Service(db.stores, db.config, {
+    apiTokenV2Service = createApiTokenV2Service(db.stores, db.config, {
         eventService,
         resourceLimitsService,
     });
@@ -122,6 +125,37 @@ test('should only return valid tokens', async () => {
 
     expect(response.tokens.length).toBe(1);
     expect(activeToken.secret).toBe(response.tokens[0].token);
+});
+
+test('validates previously issued v2 tokens when secure token storage is disabled', async () => {
+    const token: ApiTokenV2WithSecret = await apiTokenV2Service.create(
+        {
+            tokenName: 'v2 edge token',
+            type: ApiTokenType.BACKEND,
+            projects: ['*'],
+            environment: DEFAULT_ENV,
+            userCreated: false,
+        },
+        SYSTEM_USER_AUDIT,
+    );
+
+    const response = await edgeService.getValidTokens([token.secret]);
+
+    expect(response.tokens).toHaveLength(1);
+    expect(response.tokens[0].token).toBe(token.secret);
+
+    await apiTokenV2Service.delete(
+        {
+            kind: AuthorizationTokenKind.API_TOKEN,
+            version: 'v2',
+            selector: token.selector,
+        },
+        SYSTEM_USER_AUDIT,
+    );
+
+    await expect(edgeService.getValidTokens([token.secret])).resolves.toEqual({
+        tokens: [],
+    });
 });
 
 describe('Enterprise Edge - Generated tokens', () => {

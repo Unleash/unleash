@@ -18,7 +18,7 @@ const patMiddleware = (
         try {
             const apiToken = req.header('authorization');
             const parsedToken = parseAuthorizationToken(apiToken);
-            if (parsedToken?.kind === AuthorizationTokenKind.USER_ACCESS) {
+            if (parsedToken?.kind === AuthorizationTokenKind.ACCOUNT_ACCESS) {
                 const user =
                     await accountService.getAccountByPersonalAccessToken(
                         parsedToken.secret,

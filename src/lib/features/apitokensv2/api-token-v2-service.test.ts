@@ -8,18 +8,23 @@ import type EventService from '../events/event-service.js';
 import { ApiTokenV2Service } from './api-token-v2-service.js';
 import type {
     ApiTokenV2,
+    ApiTokenV2WithVerifier,
     CreateApiTokenV2,
     IApiTokenV2Store,
 } from './api-token-v2-types.js';
 import type { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
-import { AuthorizationTokenKind } from '../../authentication/authorization-token.js';
+import {
+    AuthorizationTokenKind,
+    type ApiTokenV2Credential,
+} from '../../authentication/authorization-token.js';
 import EventEmitter from 'events';
 import FakeEnvironmentStore from '../project-environments/fake-environment-store.js';
 import noLogger from '../../../test/fixtures/no-logger.js';
 
 class FakeApiTokenV2Store implements IApiTokenV2Store {
-    stored?: ApiTokenV2 & { verifier: string };
+    stored?: ApiTokenV2WithVerifier;
     markedSeen = false;
+    getBySelectorCalls = 0;
 
     async create(
         token: CreateApiTokenV2,
@@ -46,7 +51,12 @@ class FakeApiTokenV2Store implements IApiTokenV2Store {
     }
 
     async getBySelector(selector: string) {
+        this.getBySelectorCalls += 1;
         return this.stored?.selector === selector ? this.stored : undefined;
+    }
+
+    async getAllActive(): Promise<ApiTokenV2WithVerifier[]> {
+        return this.stored ? [this.stored] : [];
     }
 
     async getUserDefinedTokens(): Promise<ApiTokenV2[]> {
@@ -80,7 +90,7 @@ class FakeApiTokenV2Store implements IApiTokenV2Store {
     }
 
     deleteSystemCreatedTokensNotSeen(
-        minutesSinceLastSeen: number,
+        _minutesSinceLastSeen: number,
     ): Promise<void> {
         return Promise.resolve(undefined);
     }
@@ -192,6 +202,65 @@ describe('ApiTokenV2Service', () => {
         expect(store.markedSeen).toBe(false);
     });
 
+    test('rejects an altered credential in the token cache', async () => {
+        const store = new FakeApiTokenV2Store();
+        const environmentStore = new FakeEnvironmentStore();
+        await environmentStore.create({
+            enabled: true,
+            protected: false,
+            sortOrder: 0,
+            type: 'production',
+            name: 'production',
+        });
+        const { service } = createService(store, environmentStore);
+        const token = await service.create(tokenInput, SYSTEM_USER_AUDIT);
+        const credential: ApiTokenV2Credential = {
+            kind: AuthorizationTokenKind.API_TOKEN,
+            version: 'v2' as const,
+            secret: token.secret,
+            selector: token.selector,
+        };
+
+        await expect(
+            service.getTokenWithCache(credential),
+        ).resolves.toMatchObject({
+            secret: token.selector,
+        });
+
+        await expect(
+            service.getTokenWithCache({
+                ...credential,
+                secret: `${token.secret.slice(0, -1)}x`,
+            }),
+        ).resolves.toBeUndefined();
+    });
+
+    test('warms the token cache with active tokens', async () => {
+        const store = new FakeApiTokenV2Store();
+        const environmentStore = new FakeEnvironmentStore();
+        await environmentStore.create({
+            enabled: true,
+            protected: false,
+            sortOrder: 0,
+            type: 'production',
+            name: 'production',
+        });
+        const { service } = createService(store, environmentStore);
+        const token = await service.create(tokenInput, SYSTEM_USER_AUDIT);
+
+        await service.fetchActiveTokens();
+
+        await expect(
+            service.getTokenWithCache({
+                kind: AuthorizationTokenKind.API_TOKEN,
+                version: 'v2',
+                secret: token.secret,
+                selector: token.selector,
+            }),
+        ).resolves.toMatchObject({ secret: token.selector });
+        expect(store.getBySelectorCalls).toBe(0);
+    });
+
     test('rejects expired credentials', async () => {
         const store = new FakeApiTokenV2Store();
         const environmentStore = new FakeEnvironmentStore();
@@ -272,5 +341,50 @@ describe('ApiTokenV2Service', () => {
         await service.delete(reference, SYSTEM_USER_AUDIT);
         await expect(service.getToken(reference)).resolves.toBeUndefined();
         expect(eventService.storeEvent).toHaveBeenCalledTimes(3);
+    });
+
+    test('refreshes the cached token after updateExpiry', async () => {
+        const store = new FakeApiTokenV2Store();
+        const environmentStore = new FakeEnvironmentStore();
+        await environmentStore.create({
+            enabled: true,
+            protected: false,
+            sortOrder: 0,
+            type: 'production',
+            name: 'production',
+        });
+        const { service } = createService(store, environmentStore);
+        const created = await service.create(tokenInput, SYSTEM_USER_AUDIT);
+        const credential: ApiTokenV2Credential = {
+            kind: AuthorizationTokenKind.API_TOKEN,
+            version: 'v2' as const,
+            secret: created.secret,
+            selector: created.selector,
+        };
+
+        await expect(
+            service.getTokenWithCache(credential),
+        ).resolves.toMatchObject({
+            secret: created.selector,
+        });
+
+        const updatedExpiry = new Date(Date.now() + 120_000);
+        await service.updateExpiry(
+            {
+                kind: AuthorizationTokenKind.API_TOKEN,
+                version: 'v2',
+                selector: created.selector,
+            },
+            updatedExpiry,
+            SYSTEM_USER_AUDIT,
+        );
+
+        await expect(
+            service.getTokenWithCache(credential),
+        ).resolves.toMatchObject({
+            secret: created.selector,
+            expiresAt: updatedExpiry,
+        });
+        expect(store.getBySelectorCalls).toBe(2);
     });
 });

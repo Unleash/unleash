@@ -1,6 +1,7 @@
 import type { Db } from '../../db/db.js';
 import type {
     ApiTokenV2,
+    ApiTokenV2WithVerifier,
     CreateApiTokenV2,
     IApiTokenV2Store,
 } from './api-token-v2-types.js';
@@ -23,7 +24,7 @@ const toToken = (row: any): Omit<ApiTokenV2, 'projects'> => ({
     secure: true,
 });
 
-const toTokens = (rows: any[]): (ApiTokenV2 & { verifier: string })[] => {
+const toTokens = (rows: any[]): ApiTokenV2WithVerifier[] => {
     const tokens = rows.reduce(tokenRowReducer, {});
     return Object.values(tokens);
 };
@@ -111,13 +112,22 @@ export class ApiTokenV2Store implements IApiTokenV2Store {
 
     async getBySelector(
         selector: string,
-    ): Promise<(ApiTokenV2 & { verifier: string }) | undefined> {
+    ): Promise<ApiTokenV2WithVerifier | undefined> {
         const sql = this.makeTokenProjectQuery().where(
             'tokens.selector',
             selector,
         );
         const rows = await sql;
         return toTokens(rows)[0];
+    }
+
+    async getAllActive(): Promise<ApiTokenV2WithVerifier[]> {
+        const rows = await this.makeTokenProjectQuery().where((builder) =>
+            builder
+                .whereNull('tokens.expires_at')
+                .orWhere('tokens.expires_at', '>', 'now()'),
+        );
+        return toTokens(rows);
     }
 
     async getUserDefinedTokens(): Promise<ApiTokenV2[]> {

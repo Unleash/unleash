@@ -3,12 +3,14 @@ import {
     SYSTEM_USER_AUDIT,
     SYSTEM_USER_ID,
 } from '../../../../lib/types/index.js';
+import { AuthorizationTokenKind } from '../../../../lib/authentication/authorization-token.js';
 import getLogger from '../../../fixtures/no-logger.js';
 import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
 } from '../../helpers/test-helper.js';
+import { vi } from 'vitest';
 
 let db: ITestDb;
 let app: IUnleashTest;
@@ -171,4 +173,51 @@ test('lists, updates, and deletes secure tokens when secure token storage is dis
     } finally {
         experiments.secureTokenStorage = previousSecureTokenStorage;
     }
+});
+
+test('only warms the cache with non-expired secure tokens', async () => {
+    const active = await app.services.apiTokenV2Service.create(
+        {
+            projects: ['default'],
+            tokenName: 'active-secure-token',
+            type: ApiTokenType.BACKEND,
+            environment: 'development',
+            userCreated: true,
+        },
+        SYSTEM_USER_AUDIT,
+    );
+    const expired = await app.services.apiTokenV2Service.create(
+        {
+            projects: ['default'],
+            tokenName: 'expired-secure-token',
+            type: ApiTokenType.BACKEND,
+            environment: 'development',
+            userCreated: true,
+            expiresAt: new Date(Date.now() - 60_000),
+        },
+        SYSTEM_USER_AUDIT,
+    );
+    const getBySelector = vi.spyOn(db.stores.apiTokenV2Store, 'getBySelector');
+
+    await app.services.apiTokenV2Service.fetchActiveTokens();
+
+    await expect(
+        app.services.apiTokenV2Service.getTokenWithCache({
+            kind: AuthorizationTokenKind.API_TOKEN,
+            version: 'v2',
+            secret: active.secret,
+            selector: active.selector,
+        }),
+    ).resolves.toMatchObject({ secret: active.selector });
+    expect(getBySelector).not.toHaveBeenCalled();
+
+    await expect(
+        app.services.apiTokenV2Service.getTokenWithCache({
+            kind: AuthorizationTokenKind.API_TOKEN,
+            version: 'v2',
+            secret: expired.secret,
+            selector: expired.selector,
+        }),
+    ).resolves.toBeUndefined();
+    expect(getBySelector).toHaveBeenCalledWith(expired.selector);
 });

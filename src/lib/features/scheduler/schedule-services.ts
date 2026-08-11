@@ -53,7 +53,12 @@ export const scheduleServices = (
     );
 
     schedulerService.schedule(
-        apiTokenService.fetchActiveTokens.bind(apiTokenService),
+        async () => {
+            await Promise.all([
+                apiTokenService.fetchActiveTokens(),
+                apiTokenV2Service.fetchActiveTokens(),
+            ]);
+        },
         minutesToMilliseconds(1),
         'fetchActiveTokens',
         0, // no jitter, we need tokens at startup

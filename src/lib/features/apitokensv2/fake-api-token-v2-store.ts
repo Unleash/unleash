@@ -1,14 +1,12 @@
 import type {
     ApiTokenV2,
+    ApiTokenV2WithVerifier,
     CreateApiTokenV2,
     IApiTokenV2Store,
 } from './api-token-v2-types.js';
 
 export class FakeApiTokenV2Store implements IApiTokenV2Store {
-    private readonly tokens = new Map<
-        string,
-        ApiTokenV2 & { verifier: string }
-    >();
+    private readonly tokens = new Map<string, ApiTokenV2WithVerifier>();
 
     count(): Promise<number> {
         return Promise.resolve(this.tokens.size);
@@ -40,6 +38,12 @@ export class FakeApiTokenV2Store implements IApiTokenV2Store {
 
     async getBySelector(selector: string) {
         return this.tokens.get(selector);
+    }
+
+    async getAllActive(): Promise<ApiTokenV2WithVerifier[]> {
+        return [...this.tokens.values()].filter(
+            (token) => !token.expiresAt || token.expiresAt > new Date(),
+        );
     }
 
     async getUserDefinedTokens(): Promise<ApiTokenV2[]> {

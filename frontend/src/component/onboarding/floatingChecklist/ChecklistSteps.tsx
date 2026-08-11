@@ -15,14 +15,10 @@ const StepContainer = styled('div')(({ theme }) => ({
 const Chevron = styled(KeyboardArrowDownIcon, {
     shouldForwardProp: (prop) => prop !== 'expanded',
 })<{ expanded?: boolean }>(({ theme, expanded }) => ({
-    // Styled to mirror the header's `IconButton size='medium'` (close/minimize):
-    // a 30px square with a 20px glyph. Kept a decorative icon rather than a real
-    // IconButton because the row (`StepHeader`) is itself a <button> and nesting
-    // buttons is invalid — the hover highlight is driven by `StepHeader:hover`.
     boxSizing: 'content-box',
     flexShrink: 0,
     fontSize: 20,
-    padding: theme.spacing(0.625), // 20px glyph + 5px*2 = 30px box
+    padding: theme.spacing(0.625),
     borderRadius: theme.shape.borderRadius,
     color: theme.palette.text.secondary,
     transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',

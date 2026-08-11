@@ -21,11 +21,10 @@ exports[`renders correctly with empty version 1`] = `
       <br />
     </section>
     <div
-      aria-atomic="true"
       aria-live="polite"
-      class="mui-17ts3s9"
+      class="mui-raue2m"
       data-testid="ANNOUNCER_ELEMENT_TEST_ID"
-      role="status"
+      role="log"
     />
   </div>
 </body>
@@ -53,11 +52,10 @@ exports[`renders correctly with ui-config 1`] = `
       <br />
     </section>
     <div
-      aria-atomic="true"
       aria-live="polite"
-      class="mui-17ts3s9"
+      class="mui-raue2m"
       data-testid="ANNOUNCER_ELEMENT_TEST_ID"
-      role="status"
+      role="log"
     />
   </div>
 </body>
@@ -89,11 +87,10 @@ exports[`renders correctly with versionInfo 1`] = `
       </small>
     </section>
     <div
-      aria-atomic="true"
       aria-live="polite"
-      class="mui-17ts3s9"
+      class="mui-raue2m"
       data-testid="ANNOUNCER_ELEMENT_TEST_ID"
-      role="status"
+      role="log"
     />
   </div>
 </body>
@@ -118,11 +115,10 @@ exports[`renders correctly without uiConfig 1`] = `
       <br />
     </section>
     <div
-      aria-atomic="true"
       aria-live="polite"
-      class="mui-17ts3s9"
+      class="mui-raue2m"
       data-testid="ANNOUNCER_ELEMENT_TEST_ID"
-      role="status"
+      role="log"
     />
   </div>
 </body>

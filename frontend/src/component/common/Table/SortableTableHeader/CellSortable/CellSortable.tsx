@@ -50,7 +50,7 @@ export const CellSortable: FC<ICellSortableProps> = ({
     onClick = () => {},
     styles,
 }) => {
-    const { setAnnouncement } = useContext(AnnouncerContext);
+    const { announce } = useContext(AnnouncerContext);
     const [tooltipTitle, setTooltipTitle] = useState('');
     const ref = useRef<HTMLSpanElement>(null);
 
@@ -62,7 +62,7 @@ export const CellSortable: FC<ICellSortableProps> = ({
 
     const onSortClick: MouseEventHandler<HTMLButtonElement> = (event) => {
         onClick(event);
-        setAnnouncement(
+        announce(
             `Sorted${ariaTitle ? ` by ${ariaTitle} ` : ''}, ${
                 isDescending ? 'ascending' : 'descending'
             }`,

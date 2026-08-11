@@ -493,11 +493,10 @@ exports[`should render DrawerMenu 1`] = `
     </div>
   </footer>
   <div
-    aria-atomic="true"
     aria-live="polite"
-    class="mui-17ts3s9"
+    class="mui-raue2m"
     data-testid="ANNOUNCER_ELEMENT_TEST_ID"
-    role="status"
+    role="log"
   />
 </DocumentFragment>
 `;
@@ -995,11 +994,10 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
     </div>
   </footer>
   <div
-    aria-atomic="true"
     aria-live="polite"
-    class="mui-17ts3s9"
+    class="mui-raue2m"
     data-testid="ANNOUNCER_ELEMENT_TEST_ID"
-    role="status"
+    role="log"
   />
 </DocumentFragment>
 `;

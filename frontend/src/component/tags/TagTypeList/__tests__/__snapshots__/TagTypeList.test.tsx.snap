@@ -768,13 +768,14 @@ exports[`renders an empty list correctly 1`] = `
     </div>
   </div>
   <div
-    aria-atomic="true"
     aria-live="polite"
-    class="mui-17ts3s9"
+    class="mui-raue2m"
     data-testid="ANNOUNCER_ELEMENT_TEST_ID"
-    role="status"
+    role="log"
   >
-    Navigated to Tag types (5)
+    <div>
+      Navigated to Tag types (5)
+    </div>
   </div>
 </DocumentFragment>
 `;

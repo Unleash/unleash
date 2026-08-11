@@ -19,11 +19,11 @@ const StepHeader = styled('button')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1.5),
-    padding: theme.spacing(1.5),
+    padding: theme.spacing(1, 1.5),
     cursor: 'pointer',
-    '&:hover': {
-        backgroundColor: theme.palette.action.hover,
-    },
+    // '&:hover': {
+    //     backgroundColor: theme.palette.action.hover,
+    // },
     '&:focus-visible': {
         ...focusOutline(theme),
         outlineOffset: -2,
@@ -77,8 +77,8 @@ const Chevron = styled(KeyboardArrowDownIcon, {
 const StepBody = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(1.5),
-    padding: theme.spacing(0, 2, 2, 5.5),
+    gap: theme.spacing(2),
+    padding: theme.spacing(0.25, 2, 3, 5.5),
 }));
 
 const StepBodyText = styled(Typography)(({ theme }) => ({

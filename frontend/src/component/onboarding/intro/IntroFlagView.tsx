@@ -9,7 +9,6 @@ import {
     Typography,
 } from '@mui/material';
 import OutlinedFlagIcon from '@mui/icons-material/OutlinedFlag';
-import CloudCircleIcon from '@mui/icons-material/CloudCircle';
 import AddIcon from '@mui/icons-material/Add';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { StrategyEvaluationChip } from 'component/common/ConstraintsList/StrategyEvaluationChip/StrategyEvaluationChip';
@@ -46,13 +45,12 @@ const StyledEnvironmentHeader = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     gap: theme.spacing(1),
     padding: theme.spacing(1, 1.5),
-    background: theme.palette.background.elevation1,
+    background: theme.palette.background.paper,
 }));
 
 const StyledEnvironmentName = styled('span')(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
     fontSize: theme.typography.body2.fontSize,
-    marginRight: 'auto',
 }));
 
 const StyledStrategyBody = styled(Box)(({ theme }) => ({
@@ -60,6 +58,7 @@ const StyledStrategyBody = styled(Box)(({ theme }) => ({
     flexDirection: 'column',
     gap: theme.spacing(2),
     padding: theme.spacing(1.5),
+    background: theme.palette.background.elevation2,
 }));
 
 const StyledSectionTitle = styled(Box)(({ theme }) => ({
@@ -74,6 +73,10 @@ const StyledConfigurationSection = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1),
+    padding: theme.spacing(1.5),
+    background: theme.palette.background.paper,
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadiusMedium,
 }));
 
 const StyledVariantsControl = styled(Box)(({ theme }) => ({
@@ -228,14 +231,11 @@ export const IntroFlagView = ({
 
             <StyledEnvironmentCard>
                 <StyledEnvironmentHeader>
-                    <CloudCircleIcon fontSize='small' color='disabled' />
-                    <StyledEnvironmentName>production</StyledEnvironmentName>
                     <Switch
                         checked={config.environmentEnabled}
                         onChange={(event) =>
                             onEnvironmentChange(event.target.checked)
                         }
-                        size='small'
                         slotProps={{
                             input: {
                                 'aria-label':
@@ -244,6 +244,7 @@ export const IntroFlagView = ({
                         }}
                         data-testid='QUICK_TOUR_INTRO_ONOFF_SWITCH'
                     />
+                    <StyledEnvironmentName>production</StyledEnvironmentName>
                 </StyledEnvironmentHeader>
 
                 <StyledStrategyBody>

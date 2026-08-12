@@ -165,23 +165,30 @@ const TOPICS: ITopic[] = [
     {
         key: 'rollout',
         mode: 'rollout',
-        title: 'Release Smart Search',
+        title: 'Start by toggling the flag in production',
         valueTag: 'Gradual rollout',
-        body: 'The code is already deployed, but nobody receives Smart Search yet. Choose how much of the production audience should receive it. The same people stay included as you expand.',
+        body: 'When you have toggled a flag on, you can decide how many will see the feature by dragging the rollout slider.',
     },
+    // {
+    //     key: 'target',
+    //     mode: 'target',
+    //     title: 'Target the right audience',
+    //     valueTag: 'Targeting',
+    //     body: 'Constraints narrow a rollout to the audience you intend. Combine country, plan, and device just as you would in an Unleash activation strategy.',
+    // },
     {
         key: 'target',
         mode: 'target',
-        title: 'Target the right audience',
+        title: 'Target who can see your feature',
         valueTag: 'Targeting',
-        body: 'Constraints narrow a rollout to the audience you intend. Combine country, plan, and device just as you would in an Unleash activation strategy.',
+        body: 'Use constraints to narrow down who can see your feature. Experiment with the controls below.',
     },
     {
         key: 'variants',
         mode: 'variants',
-        title: 'Compare experiences',
+        title: 'Run experiments',
         valueTag: 'Variants',
-        body: 'Offer different versions of Smart Search to the same audience. Adjust how traffic is split between them. Each person keeps the same variant, giving you a reliable way to compare what works best.',
+        body: 'Add variants to run experiments where each user gets one version, and you control how traffic is split between them.',
     },
     {
         key: 'releasePlan',
@@ -223,6 +230,7 @@ const StyledLeft = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     minHeight: 0,
+    background: theme.palette.background.paper,
     borderRight: `1px solid ${theme.palette.divider}`,
     [theme.breakpoints.down('md')]: {
         borderRight: 'none',
@@ -424,8 +432,8 @@ export const Intro = ({
         useState<SafeguardState>('ready');
     const [config, setConfig] = useState<IntroFlagConfig>(() => ({
         flagName: FLAG_NAME,
-        environmentEnabled: true,
-        rollout: 0,
+        environmentEnabled: false,
+        rollout: 50,
         targetCountryCodes: [],
         targetPlans: [],
         targetDevices: [],
@@ -581,8 +589,8 @@ export const Intro = ({
             if (key === 'rollout') {
                 return {
                     ...current,
-                    environmentEnabled: true,
-                    rollout: 0,
+                    environmentEnabled: false,
+                    rollout: 50,
                     targetCountryCodes: [],
                     targetPlans: [],
                     targetDevices: [],

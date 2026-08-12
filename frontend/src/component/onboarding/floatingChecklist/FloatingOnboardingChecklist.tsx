@@ -90,7 +90,7 @@ const Window = styled('aside', {
 const Header = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    gap: theme.spacing(1),
+    gap: theme.spacing(0.125),
     padding: theme.spacing(1, 1.5, 1, 1.5),
     background: theme.palette.background.elevation1,
     flexShrink: 0,
@@ -402,18 +402,18 @@ const EligibleFloatingOnboardingChecklist = () => {
                         <OnboardingProgressBadge showLabel />
                     </TitleRow>
                     <IconButton
-                        size='small'
+                        size='medium'
                         aria-label={state.minimized ? 'Expand' : 'Minimize'}
                         onClick={toggleMinimized}
                     >
-                        <MinimizeIcon fontSize='small' />
+                        <MinimizeIcon fontSize='medium' />
                     </IconButton>
                     <IconButton
-                        size='small'
+                        size='medium'
                         aria-label='Close'
                         onClick={handleDismiss}
                     >
-                        <CloseIcon fontSize='small' />
+                        <CloseIcon fontSize='medium' />
                     </IconButton>
                 </Header>
 

@@ -12,6 +12,18 @@ const StepContainer = styled('div')(({ theme }) => ({
     },
 }));
 
+const Chevron = styled(KeyboardArrowDownIcon, {
+    shouldForwardProp: (prop) => prop !== 'expanded',
+})<{ expanded?: boolean }>(({ theme, expanded }) => ({
+    boxSizing: 'content-box',
+    flexShrink: 0,
+    fontSize: 20,
+    padding: theme.spacing(0.625),
+    borderRadius: theme.shape.borderRadius,
+    color: theme.palette.text.secondary,
+    transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+}));
+
 const StepHeader = styled('button')(({ theme }) => ({
     all: 'unset',
     boxSizing: 'border-box',
@@ -19,10 +31,11 @@ const StepHeader = styled('button')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1.5),
-    padding: theme.spacing(1.5),
+    padding: theme.spacing(1, 1.5),
     cursor: 'pointer',
-    '&:hover': {
+    [`&:hover ${Chevron}`]: {
         backgroundColor: theme.palette.action.hover,
+        color: theme.palette.text.primary,
     },
     '&:focus-visible': {
         ...focusOutline(theme),
@@ -66,19 +79,11 @@ const StepTitle = styled(Typography, {
     textDecoration: done ? 'line-through' : 'none',
 }));
 
-const Chevron = styled(KeyboardArrowDownIcon, {
-    shouldForwardProp: (prop) => prop !== 'expanded',
-})<{ expanded?: boolean }>(({ theme, expanded }) => ({
-    color: theme.palette.text.secondary,
-    transition: theme.transitions.create('transform'),
-    transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
-}));
-
 const StepBody = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(1.5),
-    padding: theme.spacing(0, 2, 2, 5.5),
+    gap: theme.spacing(2),
+    padding: theme.spacing(0, 2, 3, 5.5),
 }));
 
 const StepBodyText = styled(Typography)(({ theme }) => ({

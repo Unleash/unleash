@@ -1,7 +1,7 @@
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { styled, Typography, useTheme } from '@mui/material';
-import { Link } from 'react-router';
+import { QuietLink } from 'component/common/QuietLink';
 import type { ApplicationUsageSchema } from 'openapi';
 
 export interface IApplicationUsageCellProps {
@@ -12,15 +12,11 @@ export interface IApplicationUsage {
     environments: string[];
 }
 
-const StyledLink = styled(Link)(() => ({
+const StyledLink = styled(QuietLink)({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
-    textDecoration: 'none',
-    '&:hover, &:focus': {
-        textDecoration: 'underline',
-    },
-}));
+});
 
 const formatProject = (projectInfo: IApplicationUsage, index: number) => {
     const separator = index !== 0 ? ', ' : '';

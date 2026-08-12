@@ -1,7 +1,7 @@
 import { AddDependencyDialogue } from 'component/feature/Dependencies/AddDependencyDialogue';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { useState } from 'react';
-import { StyledLink } from '../FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/StyledRow.tsx';
+import { QuietLink } from 'component/common/QuietLink';
 import { ExtraActions } from './ExtraActions.tsx';
 import { useDependentFeaturesApi } from 'hooks/api/actions/useDependentFeaturesApi/useDependentFeaturesApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
@@ -135,13 +135,13 @@ export const DependencyRow = ({ feature }: IDependencyRowProps) => {
                         Dependency:
                     </StyledMetaDataItemLabel>
                     <StyledMetaDataItemValue>
-                        <StyledLink
+                        <QuietLink
                             to={`/projects/${feature.project}/features/${feature.dependencies[0]?.feature}`}
                         >
                             <Truncator title={feature.dependencies[0]?.feature}>
                                 {feature.dependencies[0]?.feature}
                             </Truncator>
-                        </StyledLink>
+                        </QuietLink>
                         {checkAccess(UPDATE_FEATURE_DEPENDENCY, environment) ? (
                             <ExtraActions
                                 capabilityId='dependency'

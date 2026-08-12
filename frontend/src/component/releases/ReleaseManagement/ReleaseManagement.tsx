@@ -15,6 +15,7 @@ import Add from '@mui/icons-material/Add';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router';
+import { QuietLink } from 'component/common/QuietLink';
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
 import { EmptyTemplatesListMessage } from './EmptyTemplatesListMessage.tsx';
 import { ReleasePlanTemplateList } from './ReleasePlanTemplateList.tsx';
@@ -25,17 +26,13 @@ import MenuBook from '@mui/icons-material/MenuBook';
 import { useLocalStorageState } from 'hooks/useLocalStorageState.ts';
 import { formatReleaseTemplateCreatePath } from 'component/releases/releaseTemplatePaths';
 
-const StyledLink = styled(Link)(({ theme }) => ({
+const StyledLink = styled(QuietLink)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
     padding: 0,
     color: theme.palette.links,
     fontWeight: theme.fontWeight.medium,
-    textDecoration: 'none',
-    '&:hover, &:focus': {
-        textDecoration: 'underline',
-    },
     width: 'max-content',
 }));
 

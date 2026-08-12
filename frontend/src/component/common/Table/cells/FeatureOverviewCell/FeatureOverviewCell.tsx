@@ -15,6 +15,7 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { Tag } from 'component/common/Tag/Tag';
 import { formatTag } from 'utils/format-tag';
 import { Truncator } from 'component/common/Truncator/Truncator';
+import { QuietLink } from 'component/common/QuietLink';
 
 interface IFeatureNameCellProps {
     row: {
@@ -33,12 +34,8 @@ interface IFeatureNameCellProps {
     onFavorite?: (feature: FeatureSearchResponseSchema) => void;
 }
 
-const StyledFeatureLink = styled(Link)(({ theme }) => ({
-    textDecoration: 'none',
+const StyledFeatureLink = styled(QuietLink)(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
-    '&:hover, &:focus': {
-        textDecoration: 'underline',
-    },
 }));
 
 const CustomTagButton = styled('button')(({ theme }) => ({

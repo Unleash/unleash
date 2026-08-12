@@ -5,7 +5,7 @@ import type { IReleasePlanTemplate } from 'interfaces/releasePlans.ts';
 import { Box, styled } from '@mui/material';
 import type { StrategyFilterValue } from './FeatureStrategyMenuCards.tsx';
 import { useState, type Dispatch, type SetStateAction } from 'react';
-import { Link as RouterLink } from 'react-router';
+import { QuietLink } from 'component/common/QuietLink';
 import {
     FeatureStrategyMenuCardsSection,
     StyledStrategyModalSectionHeader,
@@ -77,13 +77,6 @@ const StyledNoTemplatesTitle = styled('p')(({ theme }) => ({
 const StyledNoTemplatesDescription = styled('p')(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
-
-const StyledLink = styled(RouterLink)({
-    textDecoration: 'none',
-    '&:hover': {
-        textDecoration: 'underline',
-    },
-});
 
 interface IFeatureStrategyMenuCardsReleaseTemplatesProps {
     projectId: string;
@@ -162,18 +155,18 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
                         </StyledNoTemplatesTitle>
                         <StyledNoTemplatesDescription>
                             Go to{' '}
-                            <StyledLink to='/release-templates'>
+                            <QuietLink to='/release-templates'>
                                 Configure &gt; Release templates
-                            </StyledLink>{' '}
+                            </QuietLink>{' '}
                             in the side menu to make your rollouts more
                             efficient and streamlined. Read more in our{' '}
-                            <StyledLink
+                            <QuietLink
                                 to='https://docs.getunleash.io/concepts/release-templates'
                                 target='_blank'
                                 rel='noreferrer'
                             >
                                 documentation
-                            </StyledLink>
+                            </QuietLink>
                             .
                         </StyledNoTemplatesDescription>
                     </StyledNoTemplatesBody>

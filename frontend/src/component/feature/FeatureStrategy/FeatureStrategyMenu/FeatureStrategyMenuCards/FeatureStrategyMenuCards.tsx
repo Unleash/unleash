@@ -2,7 +2,8 @@ import { styled, Box } from '@mui/material';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard.tsx';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
-import { Link as RouterLink, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
+import { QuietLink } from 'component/common/QuietLink';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon.tsx';
 import { type Dispatch, type SetStateAction, useContext, useMemo } from 'react';
@@ -56,13 +57,6 @@ const StyledFiltersContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     padding: theme.spacing(0, 4, 3, 4),
 }));
-
-const StyledLink = styled(RouterLink)({
-    textDecoration: 'none',
-    '&:hover': {
-        textDecoration: 'underline',
-    },
-});
 
 interface IFeatureStrategyMenuCardsProps {
     projectId: string;
@@ -138,9 +132,9 @@ export const FeatureStrategyMenuCards = ({
     const projectDefaultTooltip = hasAccessToDefaultStrategyConfig ? (
         <>
             This is set per project, per environment, and can be configured{' '}
-            <StyledLink to={`/projects/${projectId}/settings/default-strategy`}>
+            <QuietLink to={`/projects/${projectId}/settings/default-strategy`}>
                 here
-            </StyledLink>
+            </QuietLink>
         </>
     ) : (
         <>

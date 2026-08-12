@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Link } from 'react-router';
+import { QuietLink } from 'component/common/QuietLink';
 import type { FC, ReactNode } from 'react';
 import Close from '@mui/icons-material/Close';
 
@@ -46,17 +47,13 @@ const StyledMainTitle = styled('div')(({ theme }) => ({
     lineHeight: 1.2,
 }));
 
-const StyledLink = styled(Link)(({ theme }) => ({
+const StyledLink = styled(QuietLink)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
     padding: 0,
     color: theme.palette.links,
     fontWeight: theme.typography.fontWeightBold,
-    textDecoration: 'none',
-    '&:hover, &:focus': {
-        textDecoration: 'underline',
-    },
 }));
 
 const StyledOpenInNew = styled(OpenInNew)(({ theme }) => ({

@@ -74,9 +74,9 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
     minHeight: '60px',
 }));
 
-const StyledTab = styled(Tab)(({ theme }) => ({
+const StyledTab = styled(Tab)({
     width: '100px',
-}));
+});
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     marginLeft: theme.spacing(1),
@@ -88,9 +88,9 @@ const StyledBox = styled(Box)(({ theme }) => ({
     marginTop: theme.spacing(3.5),
 }));
 
-const StyledDivider = styled(Divider)(({ theme }) => ({
+const StyledDivider = styled(Divider)({
     width: '100%',
-}));
+});
 
 const StyledConstraintSeparator = styled(ConstraintSeparator)({
     top: '-10px',

@@ -1,7 +1,8 @@
 import { Box, styled, Typography } from '@mui/material';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import type * as React from 'react';
-import type { FC } from 'react';
+import { type FC, useRef } from 'react';
+import { useEventTracker } from 'hooks/useEventTracker';
 import CloudCircle from '@mui/icons-material/CloudCircle';
 import UsageRate from 'assets/icons/usage-rate.svg?react';
 import { FeatureLifecycleStageIcon } from 'component/common/FeatureLifecycle/FeatureLifecycleStageIcon';
@@ -371,6 +372,9 @@ const EnvironmentsInfo: FC<{
     </>
 );
 
+// A view that outlasts this counts; anything shorter is a pointer passing over the icon.
+const VIEW_THRESHOLD_MS = 750;
+
 export const FeatureLifecycleTooltip: FC<{
     children: React.ReactElement<any, any>;
     stage: LifecycleStage;
@@ -387,81 +391,104 @@ export const FeatureLifecycleTooltip: FC<{
     onComplete,
     onUncomplete,
     loading,
-}) => (
-    <HtmlTooltip
-        maxHeight={800}
-        maxWidth={350}
-        arrow
-        tabIndex={0}
-        title={
-            <Box>
-                <Box sx={(theme) => ({ padding: theme.spacing(2) })}>
-                    <MainLifecycleRow>
-                        <Typography variant='h3'>Lifecycle</Typography>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 1,
-                            }}
-                        >
-                            <Typography variant='body2'>
-                                {getFeatureLifecycleName(stage.name)}
-                            </Typography>
-                            <FeatureLifecycleStageIcon stage={stage} />
-                        </Box>
-                    </MainLifecycleRow>
-
-                    <StageInfo stage={stage.name} />
-
-                    <TimeLifecycleRow>
-                        <TimeLabel>Stage entered at</TimeLabel>
-                        <FormatTime time={stage.enteredStageAt} />
-                    </TimeLifecycleRow>
-                    <TimeLifecycleRow>
-                        <TimeLabel>Time spent in stage</TimeLabel>
-                        <FormatElapsedTime time={stage.enteredStageAt} />
-                    </TimeLifecycleRow>
-                </Box>
-                {stage.name !== 'archived' ? (
-                    <StyledFooter>
-                        <EnvironmentsInfo stage={stage} />
-                        {stage.name === 'live' && onComplete ? (
-                            <LiveStageAction
-                                onComplete={onComplete}
-                                loading={loading}
-                                project={project}
-                            >
-                                <Environments
-                                    environments={stage.environments!}
-                                />
-                            </LiveStageAction>
-                        ) : null}
-                        {stage.name === 'completed' &&
-                        onArchive &&
-                        onUncomplete ? (
-                            <CompletedStageDescription
-                                environments={stage.environments!}
-                                onArchive={onArchive}
-                                onUncomplete={onUncomplete}
-                                loading={loading}
-                                project={project}
-                            />
-                        ) : null}
-                        {(stage.name === 'initial' ||
-                            stage.name === 'pre-live') &&
-                        onComplete ? (
-                            <ReadyForCleanupAction
-                                onComplete={onComplete}
-                                loading={loading}
-                                project={project}
-                            />
-                        ) : null}
-                    </StyledFooter>
-                ) : null}
-            </Box>
+}) => {
+    const { trackEvent } = useEventTracker();
+    const openedAt = useRef<number | null>(null);
+    const handleOpen = () => {
+        openedAt.current = Date.now();
+    };
+    const handleClose = () => {
+        const openDuration = Date.now() - (openedAt.current ?? Date.now());
+        openedAt.current = null;
+        if (openDuration >= VIEW_THRESHOLD_MS) {
+            trackEvent('feature-lifecycle', {
+                props: {
+                    eventType: 'tooltip-viewed',
+                    stage: stage.name,
+                    thresholdMs: VIEW_THRESHOLD_MS,
+                },
+            });
         }
-    >
-        <CenteredBox>{children}</CenteredBox>
-    </HtmlTooltip>
-);
+    };
+
+    return (
+        <HtmlTooltip
+            maxHeight={800}
+            maxWidth={350}
+            arrow
+            tabIndex={0}
+            onOpen={handleOpen}
+            onClose={handleClose}
+            title={
+                <Box>
+                    <Box sx={(theme) => ({ padding: theme.spacing(2) })}>
+                        <MainLifecycleRow>
+                            <Typography variant='h3'>Lifecycle</Typography>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 1,
+                                }}
+                            >
+                                <Typography variant='body2'>
+                                    {getFeatureLifecycleName(stage.name)}
+                                </Typography>
+                                <FeatureLifecycleStageIcon stage={stage} />
+                            </Box>
+                        </MainLifecycleRow>
+
+                        <StageInfo stage={stage.name} />
+
+                        <TimeLifecycleRow>
+                            <TimeLabel>Stage entered at</TimeLabel>
+                            <FormatTime time={stage.enteredStageAt} />
+                        </TimeLifecycleRow>
+                        <TimeLifecycleRow>
+                            <TimeLabel>Time spent in stage</TimeLabel>
+                            <FormatElapsedTime time={stage.enteredStageAt} />
+                        </TimeLifecycleRow>
+                    </Box>
+                    {stage.name !== 'archived' ? (
+                        <StyledFooter>
+                            <EnvironmentsInfo stage={stage} />
+                            {stage.name === 'live' && onComplete ? (
+                                <LiveStageAction
+                                    onComplete={onComplete}
+                                    loading={loading}
+                                    project={project}
+                                >
+                                    <Environments
+                                        environments={stage.environments!}
+                                    />
+                                </LiveStageAction>
+                            ) : null}
+                            {stage.name === 'completed' &&
+                            onArchive &&
+                            onUncomplete ? (
+                                <CompletedStageDescription
+                                    environments={stage.environments!}
+                                    onArchive={onArchive}
+                                    onUncomplete={onUncomplete}
+                                    loading={loading}
+                                    project={project}
+                                />
+                            ) : null}
+                            {(stage.name === 'initial' ||
+                                stage.name === 'pre-live') &&
+                            onComplete ? (
+                                <ReadyForCleanupAction
+                                    onComplete={onComplete}
+                                    loading={loading}
+                                    project={project}
+                                />
+                            ) : null}
+                        </StyledFooter>
+                    ) : null}
+                </Box>
+            }
+        >
+            <CenteredBox>{children}</CenteredBox>
+        </HtmlTooltip>
+    );
+};

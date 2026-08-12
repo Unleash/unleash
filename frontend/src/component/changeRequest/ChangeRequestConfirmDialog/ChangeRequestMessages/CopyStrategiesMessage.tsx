@@ -25,7 +25,7 @@ export const CopyStrategiesMessage: FC<ICopyStrategiesMessageProps> = ({
             <strong>Copy: </strong>
         </Typography>
         {payload?.map((strategy) => (
-            <Typography>
+            <Typography key={strategy.id}>
                 <strong>
                     {formatStrategyName(strategy?.name || '')} strategy{' '}
                 </strong>{' '}

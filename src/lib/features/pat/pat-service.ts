@@ -6,7 +6,7 @@ import {
     PatDeletedEvent,
 } from '../../types/index.js';
 import type { Logger } from '../../logger.js';
-import type { IPatStore } from './pat-store-type.js';
+import type { AccountTokenForAudit, IPatStore } from './pat-store-type.js';
 import { getTokenExpiryWarning } from './token-expiry-warning.js';
 import crypto from 'crypto';
 import BadDataError from '../../error/bad-data-error.js';
@@ -20,6 +20,10 @@ import {
     AuthorizationTokenKind,
     createTokenV2Credential,
 } from '../../authentication/authorization-token.js';
+
+export type CreatedAccountToken = AccountTokenForAudit & {
+    secret: string;
+};
 
 export default class PatService {
     private config: IUnleashConfig;
@@ -43,32 +47,53 @@ export default class PatService {
 
     async createPat(
         pat: CreatePatSchema,
-        forUserId: number,
+        ownerId: number,
         auditUser: IAuditUser,
     ): Promise<PatSchema> {
-        await this.validatePat(pat, forUserId);
+        const createdToken = await this.createAccountToken(pat, ownerId);
+
+        await this.eventService.storeEvent(
+            new PatCreatedEvent({
+                data: this.toAuditData(createdToken),
+                auditUser,
+            }),
+        );
+
+        const {
+            selector: _selector,
+            secure: _secure,
+            ...publicToken
+        } = createdToken;
+        return publicToken;
+    }
+
+    async createAccountToken(
+        token: CreatePatSchema,
+        ownerId: number,
+    ): Promise<CreatedAccountToken> {
+        await this.validatePat(token, ownerId);
 
         const secure = this.config.flagResolver.isEnabled(
             'secureAccountTokenStorage',
         );
         const { credential, secret } = this.generateToken(secure);
-        const newPat = await this.patStore.create(pat, credential, forUserId);
+        const newPat = await this.patStore.create(token, credential, ownerId);
 
-        await this.eventService.storeEvent(
-            new PatCreatedEvent({
-                data: { ...pat, secret: '***' },
-                auditUser,
-            }),
-        );
-
-        return { ...newPat, secret };
+        return credential.selector
+            ? {
+                  ...newPat,
+                  secret,
+                  secure: true,
+                  selector: credential.selector,
+              }
+            : { ...newPat, secret, secure: false };
     }
 
     async getAll(
-        userId: number,
+        ownerId: number,
         clockOverride: Date = new Date(),
     ): Promise<PatSchema[]> {
-        const tokens = await this.patStore.getAllByUser(userId);
+        const tokens = await this.patStore.getAllByUser(ownerId);
         if (!this.config.flagResolver.isEnabled('tokenExpiryNotifications')) {
             return tokens;
         }
@@ -85,24 +110,32 @@ export default class PatService {
 
     async deletePat(
         id: number,
-        forUserId: number,
+        ownerId: number,
         auditUser: IAuditUser,
     ): Promise<void> {
-        const pat = await this.patStore.get(id);
+        const deletedToken = await this.deleteAccountToken(id, ownerId);
+        if (!deletedToken) {
+            return;
+        }
 
         await this.eventService.storeEvent(
             new PatDeletedEvent({
-                data: { ...pat, secret: '***' },
+                data: deletedToken,
                 auditUser,
             }),
         );
+    }
 
-        return this.patStore.deleteForUser(id, forUserId);
+    async deleteAccountToken(
+        id: number,
+        ownerId: number,
+    ): Promise<AccountTokenForAudit | undefined> {
+        return this.patStore.deleteForUser(id, ownerId);
     }
 
     async validatePat(
         { description, expiresAt }: CreatePatSchema,
-        userId: number,
+        ownerId: number,
     ): Promise<void> {
         if (!description) {
             throw new BadDataError('PAT description cannot be empty.');
@@ -112,14 +145,17 @@ export default class PatService {
             throw new BadDataError('The expiry date should be in future.');
         }
 
-        if ((await this.patStore.countByUser(userId)) >= PAT_LIMIT) {
+        if ((await this.patStore.countByUser(ownerId)) >= PAT_LIMIT) {
             throw new OperationDeniedError(
                 `Too many PATs (${PAT_LIMIT}) already exist for this user.`,
             );
         }
 
         if (
-            await this.patStore.existsWithDescriptionByUser(description, userId)
+            await this.patStore.existsWithDescriptionByUser(
+                description,
+                ownerId,
+            )
         ) {
             throw new NameExistsError('PAT description already exists.');
         }
@@ -148,5 +184,10 @@ export default class PatService {
             secret,
             credential: { secret },
         };
+    }
+
+    private toAuditData(token: CreatedAccountToken): AccountTokenForAudit {
+        const { secret: _secret, ...tokenData } = token;
+        return tokenData;
     }
 }

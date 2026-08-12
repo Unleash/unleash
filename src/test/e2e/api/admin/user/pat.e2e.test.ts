@@ -63,6 +63,18 @@ test('should create a PAT', async () => {
     firstSecret = body.secret;
     firstId = body.id;
 
+    const events = await db.stores.eventStore.getEvents();
+    const event = events.find(
+        (event) => event.type === 'pat-created' && event.data.id === body.id,
+    );
+    expect(event?.data).toMatchObject({
+        id: body.id,
+        description,
+        expiresAt: body.expiresAt,
+        secure: false,
+    });
+    expect(event?.data.selector).toBeUndefined();
+
     const response = await request
         .get('/api/admin/user/tokens')
         .expect('Content-Type', /json/)
@@ -107,6 +119,19 @@ test('should authenticate a securely stored PAT after secure token storage is di
         expect(storedToken.secret).toBeNull();
         expect(storedToken.selector).toHaveLength(22);
         expect(storedToken.verifier).toBeDefined();
+
+        const events = await db.stores.eventStore.getEvents();
+        const event = events.find(
+            (event) =>
+                event.type === 'pat-created' && event.data.id === body.id,
+        );
+        expect(event?.data).toMatchObject({
+            id: body.id,
+            secure: true,
+            selector: storedToken.selector,
+        });
+        expect(event?.data.verifier).toBeUndefined();
+        expect(event?.data.secret).toBeUndefined();
 
         experiments.secureAccountTokenStorage = false;
 
@@ -162,6 +187,12 @@ test('should get all PATs', async () => {
 test('should not allow deletion of other users PAT', async () => {
     const { request } = app;
 
+    const deletionEventsBefore = (
+        await db.stores.eventStore.getEvents()
+    ).filter(
+        (event) => event.type === 'pat-deleted' && event.data.id === firstId,
+    );
+
     await app.request
         .post(`/auth/demo/login`)
         .send({
@@ -170,6 +201,11 @@ test('should not allow deletion of other users PAT', async () => {
         .expect(200);
 
     await request.delete(`/api/admin/user/tokens/${firstId}`).expect(200);
+
+    const deletionEventsAfter = (await db.stores.eventStore.getEvents()).filter(
+        (event) => event.type === 'pat-deleted' && event.data.id === firstId,
+    );
+    expect(deletionEventsAfter).toHaveLength(deletionEventsBefore.length);
 
     await app.request
         .post(`/auth/demo/login`)

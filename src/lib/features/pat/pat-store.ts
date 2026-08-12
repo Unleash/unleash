@@ -1,6 +1,7 @@
 import type { Logger, LogProvider } from '../../logger.js';
 import type {
     IPatStore,
+    AccountTokenForAudit,
     PersistedAccountTokenCredential,
 } from './pat-store-type.js';
 import NotFoundError from '../../error/notfound-error.js';
@@ -18,6 +19,8 @@ const PAT_PUBLIC_COLUMNS = [
     'seen_at',
 ];
 
+const PAT_AUDIT_COLUMNS = [...PAT_PUBLIC_COLUMNS, 'selector'];
+
 const rowToPat = ({
     id,
     description,
@@ -33,6 +36,13 @@ const rowToPat = ({
     createdAt: created_at,
     seenAt: seen_at,
 });
+
+const rowToAccountTokenForAudit = (row): AccountTokenForAudit => {
+    const pat = rowToPat(row);
+    return row.selector
+        ? { ...pat, secure: true, selector: row.selector }
+        : { ...pat, secure: false };
+};
 
 const patToRow = ({ description, expiresAt }: CreatePatSchema) => ({
     description,
@@ -68,8 +78,15 @@ export default class PatStore implements IPatStore {
         return this.db(TABLE).where({ id: id }).del();
     }
 
-    async deleteForUser(id: number, userId: number): Promise<void> {
-        return this.db(TABLE).where({ id: id, user_id: userId }).del();
+    async deleteForUser(
+        id: number,
+        userId: number,
+    ): Promise<AccountTokenForAudit | undefined> {
+        const rows = await this.db(TABLE)
+            .where({ id, user_id: userId })
+            .delete()
+            .returning(PAT_AUDIT_COLUMNS);
+        return rows[0] ? rowToAccountTokenForAudit(rows[0]) : undefined;
     }
 
     async deleteAll(): Promise<void> {

@@ -39,7 +39,9 @@ test('trackEvent fans out to Plausible and the flight recorder', async () => {
     });
 
     const plausibleTrack = vi.fn();
-    const record = vi.fn();
+    const recordedEvents: Array<{ payload: { eventId: string } }> = [];
+    const record = (event: (typeof recordedEvents)[number]) =>
+        recordedEvents.push(event);
 
     render(
         <PlausibleContext.Provider
@@ -60,10 +62,21 @@ test('trackEvent fans out to Plausible and the flight recorder', async () => {
     expect(plausibleTrack).toHaveBeenCalledWith('invite', {
         props: { eventType: 'test' },
     });
-    expect(record).toHaveBeenCalledWith({
-        eventType: 'custom',
-        eventName: 'invite',
-        context: { userId: 'u-1', email: 'already-hashed-email' },
-        payload: { eventType: 'test', path: '/' },
-    });
+    expect(recordedEvents).toEqual([
+        {
+            eventType: 'custom',
+            eventName: 'invite',
+            context: { userId: 'u-1', email: 'already-hashed-email' },
+            payload: {
+                eventType: 'test',
+                path: '/',
+                eventId: expect.any(String),
+            },
+        },
+    ]);
+
+    await userEvent.click(screen.getByRole('button', { name: 'track' }));
+
+    const eventIds = recordedEvents.map((event) => event.payload.eventId);
+    expect(new Set(eventIds).size).toBe(2);
 });

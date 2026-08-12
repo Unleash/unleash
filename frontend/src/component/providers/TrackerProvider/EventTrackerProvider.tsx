@@ -1,6 +1,7 @@
 import type React from 'react';
 import { type FC, useContext, useMemo, useRef } from 'react';
 import { useLocation } from 'react-router';
+import { createUuid } from 'utils/createUuid';
 import { normalizePath } from 'utils/normalizePath';
 import { PlausibleContext } from 'contexts/PlausibleContext';
 import { FlightRecorderContext } from 'contexts/FlightRecorderContext';
@@ -38,6 +39,9 @@ export const EventTrackerProvider: FC<{ children?: React.ReactNode }> = ({
                     payload: {
                         ...options?.props,
                         path: normalizePath(pathRef.current),
+                        // Unique per call: repeated user actions must not fold into
+                        // one row via SDK dedupe; impressions still dedupe.
+                        eventId: createUuid(),
                     },
                 });
             },

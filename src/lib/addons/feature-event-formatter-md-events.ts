@@ -48,6 +48,8 @@ import {
     SEGMENT_UPDATED,
     SERVICE_ACCOUNT_CREATED,
     SERVICE_ACCOUNT_DELETED,
+    SERVICE_ACCOUNT_TOKEN_CREATED,
+    SERVICE_ACCOUNT_TOKEN_DELETED,
     SERVICE_ACCOUNT_UPDATED,
     USER_CREATED,
     USER_DELETED,
@@ -343,6 +345,16 @@ export const EVENT_MAP: Record<string, IEventData> = {
     [SERVICE_ACCOUNT_CREATED]: {
         label: 'Service account created',
         action: '{{b}}{{user}}{{b}} created service account {{b}}{{event.data.name}}{{b}}',
+        path: '/admin/service-accounts',
+    },
+    [SERVICE_ACCOUNT_TOKEN_CREATED]: {
+        label: 'Service account token created',
+        action: '{{b}}{{user}}{{b}} created a token for service account {{b}}{{event.data.ownerId}}{{b}}',
+        path: '/admin/service-accounts',
+    },
+    [SERVICE_ACCOUNT_TOKEN_DELETED]: {
+        label: 'Service account token deleted',
+        action: '{{b}}{{user}}{{b}} deleted a token for service account {{b}}{{event.data.ownerId}}{{b}}',
         path: '/admin/service-accounts',
     },
     [SERVICE_ACCOUNT_DELETED]: {

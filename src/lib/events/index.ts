@@ -125,6 +125,10 @@ export const CLIENT_REGISTER = 'client-register' as const;
 
 export const PAT_CREATED = 'pat-created' as const;
 export const PAT_DELETED = 'pat-deleted' as const;
+export const SERVICE_ACCOUNT_TOKEN_CREATED =
+    'service-account-token-created' as const;
+export const SERVICE_ACCOUNT_TOKEN_DELETED =
+    'service-account-token-deleted' as const;
 
 export const PUBLIC_SIGNUP_TOKEN_CREATED =
     'public-signup-token-created' as const;
@@ -343,6 +347,8 @@ export const IEventTypes = [
     CLIENT_REGISTER,
     PAT_CREATED,
     PAT_DELETED,
+    SERVICE_ACCOUNT_TOKEN_CREATED,
+    SERVICE_ACCOUNT_TOKEN_DELETED,
     PUBLIC_SIGNUP_TOKEN_CREATED,
     PUBLIC_SIGNUP_TOKEN_USER_ADDED,
     PUBLIC_SIGNUP_TOKEN_TOKEN_UPDATED,

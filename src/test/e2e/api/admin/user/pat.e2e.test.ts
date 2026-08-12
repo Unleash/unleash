@@ -74,6 +74,7 @@ test('should create a PAT', async () => {
         secure: false,
     });
     expect(event?.data.selector).toBeUndefined();
+    expect(event?.data.seenAt).toBeUndefined();
 
     const response = await request
         .get('/api/admin/user/tokens')
@@ -132,6 +133,7 @@ test('should authenticate a securely stored PAT after secure token storage is di
         });
         expect(event?.data.verifier).toBeUndefined();
         expect(event?.data.secret).toBeUndefined();
+        expect(event?.data.seenAt).toBeUndefined();
 
         experiments.secureAccountTokenStorage = false;
 
@@ -168,6 +170,18 @@ test('should delete the PAT', async () => {
     const createdId = body.id;
 
     await request.delete(`/api/admin/user/tokens/${createdId}`).expect(200);
+
+    const events = await db.stores.eventStore.getEvents();
+    const event = events.find(
+        (event) => event.type === 'pat-deleted' && event.data.id === createdId,
+    );
+    expect(event?.data).toMatchObject({
+        id: createdId,
+        description,
+        expiresAt: body.expiresAt,
+        secure: false,
+    });
+    expect(event?.data.seenAt).toBeUndefined();
 });
 
 test('should get all PATs', async () => {

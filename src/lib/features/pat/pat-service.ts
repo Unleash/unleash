@@ -25,6 +25,11 @@ export type CreatedAccountToken = AccountTokenForAudit & {
     secret: string;
 };
 
+type PatAuditData = Pick<PatSchema, 'id' | 'description' | 'expiresAt'> & {
+    secure: boolean;
+    selector?: string;
+};
+
 export default class PatService {
     private config: IUnleashConfig;
 
@@ -120,7 +125,7 @@ export default class PatService {
 
         await this.eventService.storeEvent(
             new PatDeletedEvent({
-                data: deletedToken,
+                data: this.toAuditData(deletedToken),
                 auditUser,
             }),
         );
@@ -186,8 +191,15 @@ export default class PatService {
         };
     }
 
-    private toAuditData(token: CreatedAccountToken): AccountTokenForAudit {
-        const { secret: _secret, ...tokenData } = token;
-        return tokenData;
+    private toAuditData(
+        token: AccountTokenForAudit | CreatedAccountToken,
+    ): PatAuditData {
+        return {
+            id: token.id,
+            description: token.description,
+            expiresAt: token.expiresAt,
+            secure: token.secure,
+            ...(token.selector ? { selector: token.selector } : {}),
+        };
     }
 }

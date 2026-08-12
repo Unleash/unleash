@@ -80,7 +80,7 @@ describe('NewFeatureStrategyCreate', () => {
                 'projectId',
                 'featureId',
                 'environmentId',
-                { id: 'strategyId' },
+                { name: 'flexibleRollout' },
                 'unleashUrl',
             ),
         ).toMatchInlineSnapshot(`
@@ -88,7 +88,7 @@ describe('NewFeatureStrategyCreate', () => {
               --header 'Authorization: INSERT_API_KEY' \\
               --header 'Content-Type: application/json' \\
               --data-raw '{
-            "id": "strategyId"
+            "name": "flexibleRollout"
           }'"
         `);
     });

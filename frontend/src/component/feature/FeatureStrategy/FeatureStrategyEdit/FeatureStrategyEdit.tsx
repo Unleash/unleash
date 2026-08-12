@@ -10,7 +10,6 @@ import { useNavigate } from 'react-router';
 import useToast from 'hooks/useToast';
 import type {
     IFeatureStrategy,
-    IFeatureStrategyPayload,
     IStrategy,
     StrategyFormState,
 } from 'interfaces/strategy';
@@ -25,7 +24,10 @@ import type {
     IFeatureEnvironment,
     IFeatureToggle,
 } from 'interfaces/featureToggle';
-import { comparisonModerator } from '../featureStrategy.utils';
+import {
+    comparisonModerator,
+    createStrategyPayload,
+} from '../featureStrategy.utils';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
@@ -42,6 +44,7 @@ import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 import { createFeatureStrategy } from 'utils/createFeatureStrategy.ts';
 import { refreshFeatureChangeRequests } from 'utils/refreshAllPendingChangeRequests.ts';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
+import type { UpdateFeatureStrategySchema } from 'openapi/index.ts';
 
 const useTitleTracking = () => {
     const [previousTitle, setPreviousTitle] = useState<string>('');
@@ -247,7 +250,7 @@ export const FeatureStrategyEdit = () => {
 
     const payload = createStrategyPayload(strategy);
 
-    const onStrategyEdit = async (payload: IFeatureStrategyPayload) => {
+    const onStrategyEdit = async (payload: UpdateFeatureStrategySchema) => {
         const updateFn =
             strategyScope === 'milestone'
                 ? updateMilestoneStrategyOnFeature
@@ -267,7 +270,9 @@ export const FeatureStrategyEdit = () => {
         });
     };
 
-    const onStrategyRequestEdit = async (payload: IFeatureStrategyPayload) => {
+    const onStrategyRequestEdit = async (
+        payload: UpdateFeatureStrategySchema,
+    ) => {
         await addChange(projectId, environmentId, {
             action:
                 strategyScope === 'milestone'
@@ -354,18 +359,6 @@ export const FeatureStrategyEdit = () => {
     );
 };
 
-export const createStrategyPayload = (
-    strategy: Partial<IFeatureStrategy>,
-): IFeatureStrategyPayload => ({
-    name: strategy.name,
-    title: strategy.title,
-    constraints: strategy.constraints ?? [],
-    parameters: strategy.parameters ?? {},
-    variants: strategy.variants ?? [],
-    segments: strategy.segments ?? [],
-    disabled: strategy.disabled ?? false,
-});
-
 export const formatFeaturePath = (
     projectId: string,
     featureId: string,
@@ -392,7 +385,7 @@ type FormatUpdateStrategyApiCodeProps = {
     featureId: string;
     environmentId: string;
     strategyId: string;
-    strategy: Partial<IFeatureStrategy>;
+    strategy: UpdateFeatureStrategySchema;
     strategyDefinition: IStrategy;
     unleashUrl?: string;
 };

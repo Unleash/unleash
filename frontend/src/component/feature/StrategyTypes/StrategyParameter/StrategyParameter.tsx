@@ -4,7 +4,7 @@ import Input from 'component/common/Input/Input';
 import StrategyInputList from '../StrategyInputList/StrategyInputList.tsx';
 import ConditionalRolloutSlider from '../RolloutSlider/ConditionalRolloutSlider.tsx';
 import type {
-    IFeatureStrategyParameters,
+    StrategyFormParameters,
     IStrategyParameter,
 } from 'interfaces/strategy';
 import {
@@ -17,7 +17,7 @@ import type { IFormErrors } from 'hooks/useFormErrors';
 
 interface IStrategyParameterProps {
     definition: IStrategyParameter;
-    parameters: IFeatureStrategyParameters;
+    parameters: StrategyFormParameters;
     updateParameter: (field: string, value: string) => void;
     errors: IFormErrors;
 }

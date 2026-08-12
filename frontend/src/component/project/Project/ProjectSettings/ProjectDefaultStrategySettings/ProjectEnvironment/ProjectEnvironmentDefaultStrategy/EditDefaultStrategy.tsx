@@ -20,6 +20,7 @@ import {
     UPDATE_PROJECT,
 } from '@server/types/permissions';
 import { StrategyFormBody } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormBody.tsx';
+import { createStrategyPayload } from 'component/feature/FeatureStrategy/featureStrategy.utils';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
@@ -42,7 +43,7 @@ export const useDefaultStrategy = (
 
     const strategy = project.environments?.find(
         (env) => env.environment === environmentId,
-    )?.defaultStrategy;
+    )?.defaultStrategy as StrategyFormState;
 
     return { defaultStrategyFallback, strategy, refetch };
 };
@@ -158,22 +159,6 @@ const EditDefaultStrategy = () => {
         </FormTemplate>
     );
 };
-
-export const createStrategyPayload = (
-    strategy: StrategyFormState,
-): CreateFeatureStrategySchema => ({
-    name: strategy.name,
-    title: strategy.title,
-    constraints: strategy.constraints ?? [],
-    parameters: Object.fromEntries(
-        Object.entries(strategy.parameters ?? {})
-            .filter(([, value]) => value !== undefined)
-            .map(([key, value]) => [key, String(value)]),
-    ),
-    variants: strategy.variants ?? [],
-    segments: strategy.segments ?? [],
-    disabled: strategy.disabled ?? false,
-});
 
 const formatUpdateStrategyApiCode = (
     projectId: string,

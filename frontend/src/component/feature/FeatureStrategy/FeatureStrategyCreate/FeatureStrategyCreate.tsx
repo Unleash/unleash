@@ -7,18 +7,14 @@ import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFe
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useNavigate } from 'react-router';
 import useToast from 'hooks/useToast';
-import type {
-    IFeatureStrategy,
-    IFeatureStrategyPayload,
-    StrategyFormState,
-} from 'interfaces/strategy';
+import type { StrategyFormState } from 'interfaces/strategy';
 import {
-    createStrategyPayload,
     featureStrategyDocsLink,
     featureStrategyDocsLinkLabel,
     featureStrategyHelp,
     formatFeaturePath,
 } from '../FeatureStrategyEdit/FeatureStrategyEdit.tsx';
+import { createStrategyPayload } from '../featureStrategy.utils';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { useFormErrors } from 'hooks/useFormErrors';
 import { createFeatureStrategy } from 'utils/createFeatureStrategy';
@@ -36,6 +32,7 @@ import { useDefaultStrategy } from '../../../project/Project/ProjectSettings/Pro
 import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm.tsx';
 import { Limit } from 'component/common/Limit/Limit';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
+import type { CreateFeatureStrategySchema } from 'openapi/index.ts';
 
 const useStrategyLimit = (strategyCount: number) => {
     const { uiConfig } = useUiConfig();
@@ -119,9 +116,9 @@ export const FeatureStrategyCreate = () => {
                         ...strategyTemplate.parameters,
                         groupId: featureId,
                     },
-                } as any);
+                });
             } else {
-                setStrategy(strategyTemplate as any);
+                setStrategy(strategyTemplate);
             }
         } else if (strategyDefinition) {
             setStrategy(
@@ -139,7 +136,7 @@ export const FeatureStrategyCreate = () => {
         shouldUseDefaultStrategy,
     ]);
 
-    const onAddStrategy = async (payload: IFeatureStrategyPayload) => {
+    const onAddStrategy = async (payload: CreateFeatureStrategySchema) => {
         await addStrategyToFeature(
             projectId,
             featureId,
@@ -153,7 +150,9 @@ export const FeatureStrategyCreate = () => {
         });
     };
 
-    const onStrategyRequestAdd = async (payload: IFeatureStrategyPayload) => {
+    const onStrategyRequestAdd = async (
+        payload: CreateFeatureStrategySchema,
+    ) => {
         await addChange(projectId, environmentId, {
             action: 'addStrategy',
             feature: featureId,
@@ -256,7 +255,7 @@ export const formatAddStrategyApiCode = (
     projectId: string,
     featureId: string,
     environmentId: string,
-    strategy: Partial<IFeatureStrategy>,
+    strategy: CreateFeatureStrategySchema,
     unleashUrl?: string,
 ): string => {
     if (!unleashUrl) {

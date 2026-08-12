@@ -126,7 +126,7 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
 
     const validateParameter = (
         name: string,
-        value: IFeatureStrategyParameters[string],
+        value?: IFeatureStrategyParameters[string],
     ): boolean => {
         const parameterValueError = validateParameterValue(
             findParameterDefinition(name),

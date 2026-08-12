@@ -6,6 +6,10 @@ import type {
 import useAPI from '../useApi/useApi.js';
 import { useRecentlyUsedConstraints } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/RecentlyUsedConstraints/useRecentlyUsedConstraints';
 import { useRecentlyUsedSegments } from 'component/feature/FeatureStrategy/FeatureStrategySegment/RecentlyUsedSegments/useRecentlyUsedSegments';
+import type {
+    CreateFeatureStrategySchema,
+    UpdateFeatureStrategySchema,
+} from 'openapi/index.js';
 
 const useFeatureStrategyApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
@@ -20,7 +24,7 @@ const useFeatureStrategyApi = () => {
         projectId: string,
         featureId: string,
         environmentId: string,
-        payload: IFeatureStrategyPayload,
+        payload: IFeatureStrategyPayload | CreateFeatureStrategySchema,
     ): Promise<IFeatureStrategy> => {
         if (payload.constraints && payload.constraints.length > 0) {
             addToRecentlyUsedConstraints(payload.constraints);
@@ -61,7 +65,7 @@ const useFeatureStrategyApi = () => {
         featureId: string,
         environmentId: string,
         strategyId: string,
-        payload: IFeatureStrategyPayload,
+        payload: UpdateFeatureStrategySchema,
     ): Promise<void> => {
         if (payload.constraints && payload.constraints.length > 0) {
             addToRecentlyUsedConstraints(payload.constraints);
@@ -85,7 +89,7 @@ const useFeatureStrategyApi = () => {
         featureId: string,
         environmentId: string,
         strategyId: string,
-        payload: IFeatureStrategyPayload,
+        payload: IFeatureStrategyPayload | UpdateFeatureStrategySchema,
     ): Promise<void> => {
         if (payload.constraints && payload.constraints.length > 0) {
             addToRecentlyUsedConstraints(payload.constraints);

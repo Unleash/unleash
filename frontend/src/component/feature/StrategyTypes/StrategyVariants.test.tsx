@@ -4,14 +4,11 @@ import { render } from 'utils/testRenderer';
 import { StrategyVariants } from './StrategyVariants.tsx';
 import { Route, Routes } from 'react-router';
 import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvider/permissions.ts';
-import type {
-    IFeatureStrategy,
-    StrategyFormState,
-} from '../../../interfaces/strategy.ts';
+import type { StrategyFormState } from '../../../interfaces/strategy.ts';
 import { useState } from 'react';
 
 test('should render variants', async () => {
-    let currentStrategy: Partial<IFeatureStrategy> = {};
+    let currentStrategy: StrategyFormState | undefined;
     const initialStrategy = {
         name: '',
         constraints: [],

@@ -79,9 +79,9 @@ describe('NewFeatureStrategyEdit', () => {
             id: 'a',
             name: 'b',
             parameters: {
-                c: 1,
-                b: 2,
-                a: 3,
+                c: '1',
+                b: '2',
+                a: '3',
             },
             constraints: [],
         };
@@ -117,9 +117,9 @@ describe('NewFeatureStrategyEdit', () => {
         "id": "a",
         "name": "b",
         "parameters": {
-          "a": 3,
-          "b": 2,
-          "c": 1
+          "a": "3",
+          "b": "2",
+          "c": "1"
         },
         "constraints": []
       }'"

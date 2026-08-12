@@ -56,7 +56,7 @@ export const useChecklistContextValue =
             setLocalStorageItem(HELP_HINT_STORAGE_KEY, true);
         }, []);
         const { splash } = useAuthSplash();
-        const quickTourEnabled = useUiFlag('quickTourDemo');
+        const quickTourEnabled = useUiFlag('onboardingIntroTour');
         const projectId = CHECKLIST_PROJECT_ID;
 
         const splashDismissed = Boolean(

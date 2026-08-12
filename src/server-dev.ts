@@ -61,7 +61,7 @@ process.nextTick(async () => {
                         floatingOnboardingChecklist: true,
                         serviceNowIntegration: true,
                         whatsNewPage: false,
-                        quickTourDemo: true,
+                        onboardingIntroTour: true,
                         topLabelInputs: true,
                         recordSdkFlavorMetrics: true,
                     },

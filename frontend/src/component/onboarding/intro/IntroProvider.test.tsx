@@ -38,7 +38,7 @@ const Consumer = () => {
 
 test('remembers the intro as finished for returning users', async () => {
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: { quickTourDemo: true },
+        flags: { onboardingIntroTour: true },
     });
     const splashCalls: string[] = [];
     server.use(

@@ -32,7 +32,7 @@ const IntroContext = createContext<IntroContextValue | null>(null);
  * about; new call sites don't have to plumb state through the tree.
  */
 export const IntroProvider = ({ children }: { children: ReactNode }) => {
-    const enabled = useUiFlag('quickTourDemo');
+    const enabled = useUiFlag('onboardingIntroTour');
     const { setSplashSeen } = useSplashApi();
     const [isOpen, setIsOpen] = useState(false);
     // Held in refs so re-renders don't clear pending callbacks between the

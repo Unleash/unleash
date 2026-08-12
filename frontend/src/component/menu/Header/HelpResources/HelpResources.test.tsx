@@ -90,7 +90,7 @@ test('opens help menu with all items when clicking the button', async () => {
 
 test('quick tour item is shown when the flag is on', async () => {
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: { quickTourDemo: true },
+        flags: { onboardingIntroTour: true },
     });
     render(<HelpResources />);
 

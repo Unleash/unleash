@@ -121,7 +121,7 @@ export const SignupDialogComplete: SignupStepContent = ({
     isSubmitting,
     error,
 }) => {
-    const offerTour = useUiFlag('quickTourDemo');
+    const offerTour = useUiFlag('onboardingIntroTour');
     const description =
         data.inviteEmails.length === 0
             ? "Choose how you'd like to get started."

@@ -53,7 +53,7 @@ interface IIntroDialogProps {
  */
 export const IntroDialog = ({ open, onClose, onFinish }: IIntroDialogProps) => {
     const navigate = useNavigate();
-    const advancedStepsEnabled = useUiFlag('introAdvancedSteps');
+    const advancedStepsEnabled = useUiFlag('onboardingIntroTourAdvancedTopics');
     const { projects } = useProjects({ isPaused: () => !open });
 
     const handleComplete = () => {

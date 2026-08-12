@@ -163,7 +163,7 @@ export const HelpResources = () => {
     const whatsNewEnabled = useUiFlag('whatsNewPage');
     const showWhatsNew = isEnterprise() && whatsNewEnabled;
     const { open: openIntro } = useIntro();
-    const introEnabled = useUiFlag('quickTourDemo');
+    const introEnabled = useUiFlag('onboardingIntroTour');
     const learningLabFlag = useUiFlag('learningLab');
     const learningLabVariant = useVariant<ILearningLabVariant>(
         learningLabFlag || undefined,

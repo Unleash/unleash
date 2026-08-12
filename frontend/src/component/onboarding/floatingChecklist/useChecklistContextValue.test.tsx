@@ -49,7 +49,7 @@ const mockEligibleUser = ({
     testServerRoute(server, '/api/admin/ui-config', {
         flags: {
             floatingOnboardingChecklist: true,
-            quickTourDemo: quickTour,
+            onboardingIntroTour: quickTour,
         },
     });
     testServerRoute(server, '/api/admin/user', {

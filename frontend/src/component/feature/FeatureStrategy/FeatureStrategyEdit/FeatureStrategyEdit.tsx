@@ -46,52 +46,6 @@ import { refreshFeatureChangeRequests } from 'utils/refreshAllPendingChangeReque
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
 import type { UpdateFeatureStrategySchema } from 'openapi/index.ts';
 
-const useTitleTracking = () => {
-    const [previousTitle, setPreviousTitle] = useState<string>('');
-    const { trackEvent } = useEventTracker();
-
-    const trackTitle = (title: string = '') => {
-        // don't expose the title, just if it was added, removed, or edited
-        if (title === previousTitle) {
-            trackEvent('strategyTitle', {
-                props: {
-                    action: 'none',
-                    on: 'edit',
-                },
-            });
-        }
-        if (previousTitle === '' && title !== '') {
-            trackEvent('strategyTitle', {
-                props: {
-                    action: 'added',
-                    on: 'edit',
-                },
-            });
-        }
-        if (previousTitle !== '' && title === '') {
-            trackEvent('strategyTitle', {
-                props: {
-                    action: 'removed',
-                    on: 'edit',
-                },
-            });
-        }
-        if (previousTitle !== '' && title !== '' && title !== previousTitle) {
-            trackEvent('strategyTitle', {
-                props: {
-                    action: 'edited',
-                    on: 'edit',
-                },
-            });
-        }
-    };
-
-    return {
-        setPreviousTitle,
-        trackTitle,
-    };
-};
-
 const addIdSymbolToConstraints = (strategy?: IFeatureStrategy) => {
     if (!strategy) return;
 
@@ -128,7 +82,6 @@ export const FeatureStrategyEdit = () => {
     const { refetch: refetchChangeRequests, data: pendingChangeRequests } =
         usePendingChangeRequests(projectId);
     const featureName = useOptionalPathParam('featureId');
-    const { setPreviousTitle } = useTitleTracking();
 
     const { feature, refetchFeature } = useFeature(projectId, featureId);
 
@@ -223,7 +176,6 @@ export const FeatureStrategyEdit = () => {
         };
 
         setStrategy((prev) => ({ ...prev, ...formattedStrategy }));
-        setPreviousTitle(savedStrategy?.title || '');
     }, [strategyId, data]);
 
     useEffect(() => {

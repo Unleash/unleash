@@ -251,45 +251,6 @@ export const IntroFlagView = ({
                 </StyledEnvironmentHeader>
 
                 <StyledStrategyBody dimmed={!config.environmentEnabled}>
-                    <StyledConfigurationSection>
-                        <StyledSectionTitle>
-                            <span>Gradual rollout</span>
-                            <HelpIcon
-                                htmlTooltip
-                                tooltip={
-                                    <>
-                                        <Typography
-                                            variant='body2'
-                                            component='p'
-                                            sx={{ mb: 1 }}
-                                        >
-                                            Release a feature to a percentage of
-                                            your audience and increase it over
-                                            time. Unleash keeps each person's
-                                            experience consistent as the rollout
-                                            changes.
-                                        </Typography>
-                                        <Link
-                                            href='https://docs.getunleash.io/guides/gradual-rollout'
-                                            target='_blank'
-                                            rel='noopener noreferrer'
-                                            variant='body2'
-                                        >
-                                            Read more in the documentation
-                                        </Link>
-                                    </>
-                                }
-                            />
-                        </StyledSectionTitle>
-                        <StyledRolloutWrapper>
-                            <IntroRolloutSlider
-                                name='Rollout %'
-                                value={config.rollout}
-                                onChange={onRolloutChange}
-                            />
-                        </StyledRolloutWrapper>
-                    </StyledConfigurationSection>
-
                     {showConstraints ? (
                         <StyledConfigurationSection>
                             <StyledSectionTitle data-testid='QUICK_TOUR_INTRO_CONSTRAINTS_TITLE'>
@@ -363,6 +324,45 @@ export const IntroFlagView = ({
                             </StyledConstraintRow>
                         </StyledConfigurationSection>
                     ) : null}
+
+                    <StyledConfigurationSection>
+                        <StyledSectionTitle>
+                            <span>Gradual rollout</span>
+                            <HelpIcon
+                                htmlTooltip
+                                tooltip={
+                                    <>
+                                        <Typography
+                                            variant='body2'
+                                            component='p'
+                                            sx={{ mb: 1 }}
+                                        >
+                                            Release a feature to a percentage of
+                                            your audience and increase it over
+                                            time. Unleash keeps each person's
+                                            experience consistent as the rollout
+                                            changes.
+                                        </Typography>
+                                        <Link
+                                            href='https://docs.getunleash.io/guides/gradual-rollout'
+                                            target='_blank'
+                                            rel='noopener noreferrer'
+                                            variant='body2'
+                                        >
+                                            Read more in the documentation
+                                        </Link>
+                                    </>
+                                }
+                            />
+                        </StyledSectionTitle>
+                        <StyledRolloutWrapper>
+                            <IntroRolloutSlider
+                                name='Rollout %'
+                                value={config.rollout}
+                                onChange={onRolloutChange}
+                            />
+                        </StyledRolloutWrapper>
+                    </StyledConfigurationSection>
 
                     {showVariants ? (
                         <StyledConfigurationSection>

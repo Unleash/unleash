@@ -894,7 +894,9 @@ export const IntroUserGrid = ({
                             configuredVariant?.color ??
                             theme.palette.primary.main;
                         const tooltipLabel = smart
-                            ? 'Feature enabled'
+                            ? configuredVariant
+                                ? `Variant ${configuredVariant.name} enabled`
+                                : 'Feature enabled'
                             : errored
                               ? 'Search error'
                               : 'Feature disabled';
@@ -1032,7 +1034,9 @@ export const IntroUserGrid = ({
                             sx={{ alignSelf: 'flex-start' }}
                         >
                             {openState === 'smart'
-                                ? 'Feature enabled'
+                                ? openVariant
+                                    ? `Variant ${openVariant.name} enabled`
+                                    : 'Feature enabled'
                                 : openState === 'error'
                                   ? 'Search error'
                                   : 'Feature disabled'}

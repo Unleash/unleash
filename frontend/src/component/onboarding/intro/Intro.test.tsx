@@ -883,7 +883,7 @@ test('manages variants and previews the exact assigned experience', async () => 
 
     const grid = screen.getByTestId('QUICK_TOUR_INTRO_USER_GRID');
     fireEvent.click(within(grid).getAllByRole('button')[0]);
-    expect(screen.getByText('Feature enabled')).toBeInTheDocument();
+    expect(screen.getByText(/Variant [ABCD] enabled/)).toBeInTheDocument();
     expect(
         screen.getByText(/Ada gets the .+ variant \([ABCD]\) because/),
     ).toBeInTheDocument();

@@ -73,15 +73,10 @@ test('starts with a gradual Smart Search rollout and context cards', () => {
     expect(
         screen.getByText('Start by toggling the flag in production'),
     ).toBeInTheDocument();
-    expect(screen.getByText(/people get Smart Search/)).toBeInTheDocument();
     expect(
-        screen.getByText(
-            /Each card previews the experience that person receives in real time/,
-        ),
-    ).toBeInTheDocument();
-    expect(
-        screen.getByText('of 15 people get Smart Search'),
+        screen.getByText(/of 15 users see Smart Search/),
     ).not.toHaveTextContent('%');
+    expect(screen.getByText('Click any user for details.')).toBeInTheDocument();
     expect(screen.queryByText('Controlled release')).not.toBeInTheDocument();
     expect(screen.queryByText('Release')).not.toBeInTheDocument();
     expect(
@@ -99,10 +94,7 @@ test('starts with a gradual Smart Search rollout and context cards', () => {
     const grid = screen.getByTestId('QUICK_TOUR_INTRO_USER_GRID');
     fireEvent.click(within(grid).getAllByRole('button')[0]);
     const popover = screen.getByTestId('QUICK_TOUR_INTRO_POPOVER');
-    expect(popover).toHaveStyle({ overflow: 'hidden' });
-    expect(screen.getByTestId('QUICK_TOUR_INTRO_POPOVER_BODY')).toHaveStyle({
-        overflowY: 'auto',
-    });
+    expect(popover).toHaveStyle({ overflowY: 'auto' });
     expect(screen.getByText('Feature disabled')).toBeInTheDocument();
     expect(screen.getByText('Context')).toBeInTheDocument();
     expect(

@@ -283,21 +283,25 @@ const StyledFooter = styled(Box)(({ theme }) => ({
     borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
-const StyledStat = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'baseline',
-    gap: theme.spacing(1),
-}));
-
 const StyledAudienceHeader = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(0.35),
+    gap: theme.spacing(0.5),
+    flexShrink: 0,
+}));
+
+const StyledAudienceTitle = styled(Typography)(({ theme }) => ({
+    fontSize: theme.typography.body1.fontSize,
+    fontWeight: theme.typography.fontWeightBold,
+    color: theme.palette.text.primary,
+}));
+
+const StyledAudienceHint = styled(Typography)(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
+    color: theme.palette.text.secondary,
 }));
 
 const StyledStatValue = styled('span')(({ theme }) => ({
-    fontSize: theme.typography.h1.fontSize,
-    fontWeight: theme.typography.fontWeightBold,
     color: theme.palette.primary.main,
     fontVariantNumeric: 'tabular-nums',
 }));
@@ -945,18 +949,15 @@ export const Intro = ({
 
             <StyledRight>
                 <StyledAudienceHeader>
-                    <StyledStat>
+                    <StyledAudienceTitle>
                         <StyledStatValue data-testid='QUICK_TOUR_INTRO_ENABLED_COUNT'>
                             {stats.enabled}
-                        </StyledStatValue>
-                        <Typography color='textSecondary'>
-                            of {stats.total} people get Smart Search
-                        </Typography>
-                    </StyledStat>
-                    <Typography variant='body2' color='textSecondary'>
-                        Each card previews the experience that person receives
-                        in real time. Select one for more details.
-                    </Typography>
+                        </StyledStatValue>{' '}
+                        of {stats.total} users see Smart Search
+                    </StyledAudienceTitle>
+                    <StyledAudienceHint>
+                        Click any user for details.
+                    </StyledAudienceHint>
                 </StyledAudienceHeader>
                 <IntroUserGrid
                     users={users}

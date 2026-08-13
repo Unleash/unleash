@@ -196,7 +196,9 @@ const StyledPreviewPanel = styled(Box)(({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
     boxShadow: theme.shadows[8],
-    overflow: 'hidden',
+    overflowY: 'auto',
+    overflowX: 'hidden',
+    overscrollBehavior: 'contain',
     animation: `${slideInPanel} 0.24s ${theme.transitions.easing.easeOut}`,
     [theme.breakpoints.down('md')]: {
         position: 'static',
@@ -290,13 +292,10 @@ const StyledVersionChip = styled('span', {
 });
 
 const StyledPopoverBody = styled(Box)(({ theme }) => ({
-    minHeight: 0,
-    overflowY: 'auto',
-    overscrollBehavior: 'contain',
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1.5),
-    padding: theme.spacing(0, 2, 2),
+    padding: theme.spacing(1.5, 2, 2),
     '& > *': {
         flexShrink: 0,
     },

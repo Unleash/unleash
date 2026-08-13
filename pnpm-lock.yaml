@@ -57,7 +57,7 @@ importers:
     dependencies:
       '@json2csv/plainjs':
         specifier: ^7.0.6
-        version: 7.0.7
+        version: 7.0.8
       '@slack/web-api':
         specifier: ^7.15.1
         version: 7.18.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
@@ -1390,11 +1390,11 @@ packages:
     peerDependencies:
       jsep: ^0.4.0||^1.0.0
 
-  '@json2csv/formatters@7.0.7':
-    resolution: {integrity: sha512-Sm0F11FKnTouBVYqW0Sp+/P7ECapfAEw0p0L6lz0z6q3I6CVQjFnQ8m20g3KlJvYq+y4G9m56QZHAWiUxIJlRA==}
+  '@json2csv/formatters@7.0.8':
+    resolution: {integrity: sha512-YYpeZF7qKSX55FMYEl0m7Hn188l050k171/KwDHSMPHLHvWxDbzjmH1qVfXyV7XO7MMpDx1P7xksd/jXqlLxDw==}
 
-  '@json2csv/plainjs@7.0.7':
-    resolution: {integrity: sha512-aJWN+HrOp1YQaA/fnYtTDlc24ZNRfUlu5ercUPyggxE8tq90Pd88dCdX/aj+BRiLB+/6UZyRbCIkFj0/iBPMgw==}
+  '@json2csv/plainjs@7.0.8':
+    resolution: {integrity: sha512-bxsdb7tcHFyq6SGvDdHrxgSLxc8ScNyX+6B1aT+Anp8PEieZIenf6lPIJ2CnB4MQkrNANfFj6mXJlK9f8Bh5wg==}
 
   '@kurkle/color@0.3.4':
     resolution: {integrity: sha512-M5UknZPHRu3DEDWoipU6sE8PdkZ6Z/S+v4dD+Ke8IaNlpdSQah50lz1KtcFBa2vsdOnwbbnxJwVM4wty6udA5w==}
@@ -2021,8 +2021,8 @@ packages:
     resolution: {integrity: sha512-JZlVFE6/dYpP9tQmV0/ADfn32L9uFarHWxfcRhReKUnljz1ZiUM5zpX+PH8h5CJs6lao3TuFqnPm9IJJCEkE2w==}
     engines: {node: '>=10.8'}
 
-  '@streamparser/json@0.0.22':
-    resolution: {integrity: sha512-b6gTSBjJ8G8SuO3Gbbj+zXbVx8NSs1EbpbMKpzGLWMdkR+98McH9bEjSz3+0mPJf68c5nxa3CrJHp5EQNXM6zQ==}
+  '@streamparser/json@0.0.23':
+    resolution: {integrity: sha512-givIVGxVGwP2oh5wiGdjQBKLZAS6LMkvnOxKybKTZDWP9LCO20eAzAL8OkUg8iR7u28cB2Ti7lFfLHnAAZGN6A==}
 
   '@svgr/babel-plugin-add-jsx-attribute@8.0.0':
     resolution: {integrity: sha512-b9MIk7yhdS1pMCZM8VeNfUlSKVRhsHZNMl5O9SfaX0l0t5wjdgu4IDzGB8bpnGBBOjGST3rRFVsaaEtI4W6f7g==}
@@ -7545,12 +7545,12 @@ snapshots:
     dependencies:
       jsep: 1.4.0
 
-  '@json2csv/formatters@7.0.7': {}
+  '@json2csv/formatters@7.0.8': {}
 
-  '@json2csv/plainjs@7.0.7':
+  '@json2csv/plainjs@7.0.8':
     dependencies:
-      '@json2csv/formatters': 7.0.7
-      '@streamparser/json': 0.0.22
+      '@json2csv/formatters': 7.0.8
+      '@streamparser/json': 0.0.23
 
   '@kurkle/color@0.3.4': {}
 
@@ -8276,7 +8276,7 @@ snapshots:
       '@stoplight/yaml-ast-parser': 0.0.50
       tslib: 2.8.1
 
-  '@streamparser/json@0.0.22': {}
+  '@streamparser/json@0.0.23': {}
 
   '@svgr/babel-plugin-add-jsx-attribute@8.0.0(@babel/core@7.29.7(supports-color@8.1.1))':
     dependencies:

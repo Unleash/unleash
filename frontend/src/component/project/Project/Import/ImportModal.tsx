@@ -1,5 +1,6 @@
 import { styled } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
+import { useDialogDismissTracking } from 'hooks/useTrackDialogDismissed';
 import { useEffect, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ImportTimeline } from './ImportTimeline.tsx';
@@ -55,8 +56,15 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
     const [importPayload, setImportPayload] = useState('');
     const [activeTab, setActiveTab] = useState<ImportMode>('file');
 
+    const emitDismissed = useDialogDismissTracking(open, 'import-flags');
+
     const close = () => {
         setOpen(false);
+    };
+
+    const cancel = () => {
+        emitDismissed('cancel-button');
+        close();
     };
 
     useEffect(() => {
@@ -73,7 +81,12 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
     };
 
     return (
-        <SidebarModal open={open} onClose={close} label='Import flags'>
+        <SidebarModal
+            open={open}
+            onClose={close}
+            label='Import flags'
+            trackingId='import-flags'
+        >
             <ModalContentContainer>
                 <TimelineContainer>
                     <TimelineHeader>Process</TimelineHeader>
@@ -108,7 +121,7 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
                                 <Actions
                                     disabled={!isValidJSON(importPayload)}
                                     onSubmit={() => setImportStage('validate')}
-                                    onClose={close}
+                                    onClose={cancel}
                                 />
                             }
                         />
@@ -123,7 +136,7 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
                             payload={importPayload}
                             onBack={() => setImportStage('configure')}
                             onSubmit={() => setImportStage('import')}
-                            onClose={close}
+                            onClose={cancel}
                         />
                     }
                 />

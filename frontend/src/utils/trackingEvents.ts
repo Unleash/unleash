@@ -94,7 +94,22 @@ export type CustomEvents =
     | 'whats-new-page'
     | 'search-docs'
     | 'flag-actions'
-    | 'flag-tags';
+    | 'flag-tags'
+    | 'dialog-dismissed';
+
+export type DialogTrackingId =
+    | 'toggle-prod-guard'
+    | 'toggle-enable-strategies'
+    | 'toggle-change-request'
+    | 'create-feature'
+    | 'import-flags'
+    | 'feedback';
+
+export type DialogDismissMethod =
+    | 'cancel-button'
+    | 'backdrop'
+    | 'escape'
+    | 'close-icon';
 
 // Flight recorder uses these reserved names internally; they are not available for custom events.
 export const RESERVED_EVENT_NAMES = {

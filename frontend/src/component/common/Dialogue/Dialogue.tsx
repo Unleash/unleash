@@ -10,7 +10,12 @@ import {
 } from '@mui/material';
 
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import {
+    dismissMethodFromCloseReason,
+    useDialogDismissTracking,
+} from 'hooks/useTrackDialogDismissed';
 import { DIALOGUE_CONFIRM_ID } from 'utils/testIds';
+import type { DialogTrackingId } from 'utils/trackingEvents';
 
 const StyledDialog = styled(Dialog)(({ theme, maxWidth }) => ({
     '& .MuiDialog-paper': {
@@ -58,6 +63,7 @@ interface IDialogue {
     permissionButton?: React.JSX.Element;
     customButton?: React.JSX.Element;
     children?: React.ReactNode;
+    trackingId?: DialogTrackingId;
 }
 
 export const Dialogue: React.FC<IDialogue> = ({
@@ -75,7 +81,10 @@ export const Dialogue: React.FC<IDialogue> = ({
     formId,
     permissionButton,
     customButton,
+    trackingId,
 }) => {
+    const emitDismissed = useDialogDismissTracking(open, trackingId);
+
     const handleClick = formId
         ? (e: React.SyntheticEvent) => {
               e.preventDefault();
@@ -85,15 +94,24 @@ export const Dialogue: React.FC<IDialogue> = ({
           }
         : onClick;
 
+    // Legacy escape path for consumers wired via setOpen instead of onClose;
+    // it bypasses MUI's onClose, so the dismissal is emitted here too (deduped).
     const onKeyDown = (event: KeyboardEvent) => {
-        if (event.key === 'Escape') {
-            setOpen?.(false);
+        if (event.key === 'Escape' && setOpen) {
+            emitDismissed('escape');
+            setOpen(false);
         }
     };
+
+    const handleMuiClose = (e: React.SyntheticEvent, reason?: string) => {
+        emitDismissed(dismissMethodFromCloseReason(reason));
+        onClose?.(e, reason);
+    };
+
     return (
         <StyledDialog
             open={open}
-            onClose={onClose}
+            onClose={onClose ? handleMuiClose : undefined}
             onKeyDown={onKeyDown}
             role={'dialog'}
             fullWidth={fullWidth}
@@ -135,7 +153,12 @@ export const Dialogue: React.FC<IDialogue> = ({
                     <ConditionallyRender
                         condition={Boolean(onClose)}
                         show={
-                            <Button onClick={onClose}>
+                            <Button
+                                onClick={(e) => {
+                                    emitDismissed('cancel-button');
+                                    onClose?.(e);
+                                }}
+                            >
                                 {secondaryButtonText || 'No, take me back'}
                             </Button>
                         }

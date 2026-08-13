@@ -43,6 +43,11 @@ import { useFlagLimits } from './useFlagLimits.tsx';
 import { useFeatureCreatedFeedback } from './hooks/useFeatureCreatedFeedback.ts';
 import { formatTag } from 'utils/format-tag';
 import { useLocalStorageState } from 'hooks/useLocalStorageState.ts';
+import {
+    dismissMethodFromCloseReason,
+    useDialogDismissTracking,
+} from 'hooks/useTrackDialogDismissed';
+import type { DialogDismissMethod } from 'utils/trackingEvents';
 
 interface ICreateFeatureDialogProps {
     open: boolean;
@@ -145,6 +150,7 @@ const CreateFeatureDialogContent = ({
     onSuccess,
 }: ICreateFeatureDialogProps) => {
     const useNewDesign = useUiFlag('newModalDesign');
+    const emitDismissed = useDialogDismissTracking(open, 'create-feature');
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig, isOss } = useUiConfig();
     const navigate = useNavigate();
@@ -267,7 +273,8 @@ const CreateFeatureDialogContent = ({
         return projectObject?.name;
     }, [project, projects]);
 
-    const onDialogClose = () => {
+    const onDialogClose = (method: DialogDismissMethod) => {
+        emitDismissed(method);
         setStoredFlagConfig({
             name,
             tags,
@@ -309,7 +316,7 @@ const CreateFeatureDialogContent = ({
         <>
             <StyledNewSidebarHeader>
                 <StyledNewSidebarCloseButton
-                    onClick={onDialogClose}
+                    onClick={() => onDialogClose('close-icon')}
                     size='small'
                     aria-label='Close'
                 >
@@ -335,7 +342,12 @@ const CreateFeatureDialogContent = ({
     );
 
     return (
-        <StyledDialog open={open} onClose={onDialogClose}>
+        <StyledDialog
+            open={open}
+            onClose={(_, reason) =>
+                onDialogClose(dismissMethodFromCloseReason(reason))
+            }
+        >
             <FormTemplate
                 compact
                 disablePadding
@@ -372,7 +384,7 @@ const CreateFeatureDialogContent = ({
                             configButtonData.impressionData.text
                         }
                         handleSubmit={handleSubmit}
-                        onClose={onDialogClose}
+                        onClose={() => onDialogClose('cancel-button')}
                         createButtonProps={createButtonProps}
                         Limit={limitNode}
                         configButtons={
@@ -452,7 +464,10 @@ const CreateFeatureDialogContent = ({
                         validateName={validateToggleName}
                         Limit={limitNode}
                         name={name}
-                        onClose={onClose}
+                        onClose={() => {
+                            emitDismissed('cancel-button');
+                            onClose();
+                        }}
                         resource={'feature flag'}
                         setDescription={setDescription}
                         setName={setName}

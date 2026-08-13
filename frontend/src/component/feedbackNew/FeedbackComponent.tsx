@@ -21,6 +21,7 @@ import type { IToast } from 'interfaces/toast';
 import { useTheme } from '@mui/material/styles';
 import type { FeedbackData, FeedbackMode } from './FeedbackContext.tsx';
 import { useEventTracker } from 'hooks/useEventTracker';
+import { useDialogDismissTracking } from 'hooks/useTrackDialogDismissed';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUserType from './useUserType.ts';
 import { BaseModal } from 'component/common/SidebarModal/SidebarModal';
@@ -158,6 +159,8 @@ export const FeedbackComponent = ({
     const { trackEvent } = useEventTracker();
     const theme = useTheme();
 
+    const emitDismissed = useDialogDismissTracking(showFeedback, 'feedback');
+
     const { addFeedback } = useUserFeedbackApi();
     const { setHasSubmittedFeedback } = useUserSubmittedFeedback(
         feedbackData.category,
@@ -224,13 +227,26 @@ export const FeedbackComponent = ({
     };
 
     return (
-        <BaseModal open={showFeedback} onClose={closeFeedback} label='Feedback'>
+        <BaseModal
+            open={showFeedback}
+            onClose={closeFeedback}
+            onDismiss={emitDismissed}
+            label='Feedback'
+        >
             <ParentContainer>
-                <ClickAwayListener onClickAway={() => closeFeedback()}>
+                <ClickAwayListener
+                    onClickAway={() => {
+                        emitDismissed('backdrop');
+                        closeFeedback();
+                    }}
+                >
                     <StyledContainer>
                         <Tooltip title='Close' arrow>
                             <StyledCloseButton
-                                onClick={closeFeedback}
+                                onClick={() => {
+                                    emitDismissed('close-icon');
+                                    closeFeedback();
+                                }}
                                 size='large'
                             >
                                 <CloseIcon />

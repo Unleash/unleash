@@ -35,8 +35,29 @@ import {
     CLIENT_METRICS_TAGS,
 } from '../../internals.js';
 import type { IUnleashServices } from '../../services/index.js';
+import {
+    Gauge as PromGauge,
+    register as prometheusRegister,
+} from 'prom-client';
 
 const version = 2;
+
+const clientFeaturesCacheSizeMetricName = 'client_features_response_cache_size';
+
+const getClientFeaturesCacheSizeGauge = (): PromGauge => {
+    const existing = prometheusRegister.getSingleMetric(
+        clientFeaturesCacheSizeMetricName,
+    );
+    if (existing instanceof PromGauge) {
+        return existing;
+    }
+    return new PromGauge({
+        name: clientFeaturesCacheSizeMetricName,
+        help: 'Number of entries currently held in the client features response cache (keyed by query hash and revision id)',
+    });
+};
+
+const clientFeaturesCacheSizeGauge = getClientFeaturesCacheSizeGauge();
 
 export interface QueryOverride {
     project?: string[];
@@ -137,14 +158,20 @@ export default class FeatureController extends Controller {
         });
 
         if (clientFeatureCaching.enabled) {
+            clientFeaturesCacheSizeGauge.set(0);
             this.featuresAndSegments = memoizee(
-                (query: IFeatureToggleQuery, _etag: string) =>
-                    this.resolveFeaturesAndSegments(query),
+                (query: IFeatureToggleQuery, _etag: string) => {
+                    clientFeaturesCacheSizeGauge.inc();
+                    return this.resolveFeaturesAndSegments(query);
+                },
                 {
                     promise: true,
                     maxAge: clientFeatureCaching.maxAge,
                     normalizer([_query, etag]) {
                         return etag;
+                    },
+                    dispose() {
+                        clientFeaturesCacheSizeGauge.dec();
                     },
                 },
             );

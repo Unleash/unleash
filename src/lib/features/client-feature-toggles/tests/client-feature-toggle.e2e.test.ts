@@ -10,6 +10,7 @@ import { ClientSpecService } from '../../../services/client-spec-service.js';
 import type { Application } from 'express';
 import type { IFlagResolver } from '../../../types/index.js';
 import type TestAgent from 'supertest/lib/agent.d.ts';
+import { register } from 'prom-client';
 
 import { vi } from 'vitest';
 
@@ -121,6 +122,51 @@ test('if caching is enabled should memoize', async () => {
     await callGetAll(controller);
     await callGetAll(controller);
     expect(getClientFeatures).toHaveBeenCalledTimes(1);
+});
+
+test('reports the client features cache size via a prometheus gauge', async () => {
+    const getClientFeatures = vi.fn().mockReturnValue([]);
+    const getActiveSegmentsForClient = vi.fn().mockReturnValue([]);
+    const respondWithValidation = vi.fn().mockReturnValue({});
+    const validPath = vi.fn().mockReturnValue(vi.fn());
+    const clientSpecService = new ClientSpecService({ getLogger });
+    const openApiService = { respondWithValidation, validPath };
+    const clientFeatureToggleService = {
+        getClientFeatures,
+        getActiveSegmentsForClient,
+    };
+    const featureToggleService = { getClientFeatures };
+    const configurationRevisionService = { getMaxRevisionId: () => 1 };
+
+    const controller = new FeatureController(
+        {
+            clientSpecService,
+            // @ts-expect-error due to partial implementation
+            openApiService,
+            // @ts-expect-error due to partial implementation
+            clientFeatureToggleService,
+            // @ts-expect-error due to partial implementation
+            featureToggleService,
+            // @ts-expect-error due to partial implementation
+            configurationRevisionService,
+        },
+        {
+            getLogger,
+            clientFeatureCaching: {
+                enabled: true,
+                maxAge: secondsToMilliseconds(10),
+            },
+            flagResolver,
+        },
+    );
+
+    await callGetAll(controller);
+
+    const metrics = await register.getMetricsAsJSON();
+    const cacheSize = metrics.find(
+        ({ name }) => name === 'client_features_response_cache_size',
+    );
+    expect(cacheSize?.values?.[0]?.value).toBe(1);
 });
 
 test('if caching is not enabled all calls goes to service', async () => {

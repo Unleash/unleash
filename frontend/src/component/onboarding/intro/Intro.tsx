@@ -96,7 +96,7 @@ const RELEASE_PLAN_MILESTONES: IReleasePlanMilestone[] = [
         rollout: 40,
         constraints: [
             { field: 'Country', values: ['🇳🇴 NO'] },
-            { field: 'Plan', values: ['🥈 Pro'] },
+            { field: 'Plan', values: ['Pro'] },
         ],
         targetCountryCodes: ['NO'],
         targetPlans: ['pro'],
@@ -106,7 +106,7 @@ const RELEASE_PLAN_MILESTONES: IReleasePlanMilestone[] = [
         rollout: 60,
         constraints: [
             { field: 'Country', values: ['🇳🇴 NO', '🇺🇸 US'] },
-            { field: 'Plan', values: ['🥈 Pro', '🥇 Enterprise'] },
+            { field: 'Plan', values: ['Pro', 'Enterprise'] },
         ],
         targetCountryCodes: ['NO', 'US'],
         targetPlans: ['pro', 'enterprise'],

@@ -620,7 +620,7 @@ test('starts the release plan from the environment and supports manual milestone
     });
     expect(strategyButton).toHaveAttribute('aria-expanded', 'true');
     expect(within(firstMilestone).getByText('Plan')).toBeInTheDocument();
-    expect(within(firstMilestone).getByText('🥈 Pro')).toBeInTheDocument();
+    expect(within(firstMilestone).getByText('Pro')).toBeInTheDocument();
     fireEvent.click(
         within(firstMilestone).getByText(
             'Preview with 40% of Pro users in Norway',
@@ -743,7 +743,7 @@ test('targets with product-like country and plan constraints', () => {
     fireEvent.click(norwayConstraint);
     expect(norwayConstraint).toHaveAttribute('aria-pressed', 'false');
     expect(
-        screen.getByRole('button', { name: '🥇 Enterprise' }),
+        screen.getByRole('button', { name: 'Enterprise' }),
     ).toBeInTheDocument();
     expect(screen.getAllByText('is one of').length).toBeGreaterThanOrEqual(2);
 });
@@ -759,7 +759,7 @@ test('explains targeting from the matching context values', () => {
     expect(explanation).toHaveTextContent(/Norway and the Pro plan/);
     expect(explanation).toHaveTextContent(/both constraints/);
     expect(screen.getByText('"🇳🇴 NO"')).toBeInTheDocument();
-    expect(screen.getByText('"🥈 Pro"')).toBeInTheDocument();
+    expect(screen.getByText('"Pro"')).toBeInTheDocument();
 
     fireEvent.click(within(grid).getByRole('button', { name: /Cara/ }));
     expect(

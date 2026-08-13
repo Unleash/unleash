@@ -350,7 +350,7 @@ export const IntroFlagView = ({
                                 <StyledConstraintValues>
                                     {INTRO_PLANS.map((plan) =>
                                         selectableChip(
-                                            `${plan.emoji} ${plan.label}`,
+                                            plan.label,
                                             Boolean(
                                                 config.targetPlans?.includes(
                                                     plan.value,

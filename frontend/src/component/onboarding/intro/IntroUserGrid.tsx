@@ -1320,7 +1320,7 @@ export const IntroUserGrid = ({
                                                 {': '}
                                             </span>
                                             <span className='json-string'>
-                                                {`"${openPlan?.emoji} ${openPlan?.label}"`}
+                                                {`"${openPlan?.label}"`}
                                             </span>
                                             <span className='json-punctuation'>
                                                 {'\n}'}

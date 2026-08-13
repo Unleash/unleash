@@ -1100,8 +1100,8 @@ const SegmentsPreview = () => (
                 }}
             />
             <StyledSegmentValues>
-                <StyledSegmentValue>🥈 Pro</StyledSegmentValue>
-                <StyledSegmentValue>🥇 Enterprise</StyledSegmentValue>
+                <StyledSegmentValue>Pro</StyledSegmentValue>
+                <StyledSegmentValue>Enterprise</StyledSegmentValue>
             </StyledSegmentValues>
         </StyledConstraintRow>
     </StyledSegmentPreview>

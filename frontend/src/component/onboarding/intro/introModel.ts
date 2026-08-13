@@ -21,10 +21,9 @@ export type IntroPlan = 'pro' | 'enterprise';
 export const INTRO_PLANS: Array<{
     value: IntroPlan;
     label: string;
-    emoji: string;
 }> = [
-    { value: 'pro', label: 'Pro', emoji: '🥈' },
-    { value: 'enterprise', label: 'Enterprise', emoji: '🥇' },
+    { value: 'pro', label: 'Pro' },
+    { value: 'enterprise', label: 'Enterprise' },
 ];
 
 /**

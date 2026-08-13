@@ -1,8 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import {
     alpha,
     Box,
-    Chip,
     IconButton,
     keyframes,
     styled,
@@ -20,7 +19,6 @@ import {
     type UserEvaluation,
 } from './introModel.js';
 import { avatarForIndex } from './introAvatars.ts';
-import { getVariantSolidFill } from './introVariantColor.js';
 
 export type GridMode =
     | 'rollout'
@@ -168,39 +166,42 @@ const StyledMeta = styled(Typography)(({ theme }) => ({
 }));
 
 const slideInPanel = keyframes({
-    from: { opacity: 0, transform: 'translateX(12px)' },
+    from: { opacity: 0, transform: 'translateX(24px)' },
     to: { opacity: 1, transform: 'translateX(0)' },
 });
 
-const StyledContentRow = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'stretch',
-    gap: theme.spacing(2),
+// The grid keeps its full width; the preview panel floats over its right edge
+// (like the prototype) instead of displacing the people.
+const StyledContentRow = styled(Box)({
+    position: 'relative',
+    flex: 1,
     minHeight: 0,
-    [theme.breakpoints.down('md')]: {
-        flexDirection: 'column',
-    },
-}));
+});
 
 const StyledGridWrap = styled(Box)({
-    flex: 1,
     minWidth: 0,
 });
 
 const StyledPreviewPanel = styled(Box)(({ theme }) => ({
-    flex: 'none',
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1,
     width: theme.spacing(38),
-    maxWidth: '100%',
+    maxWidth: 'calc(100% - 24px)',
     display: 'flex',
     flexDirection: 'column',
     background: theme.palette.background.paper,
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
-    boxShadow: theme.shadows[6],
+    boxShadow: theme.shadows[8],
     overflow: 'hidden',
     animation: `${slideInPanel} 0.24s ${theme.transitions.easing.easeOut}`,
     [theme.breakpoints.down('md')]: {
+        position: 'static',
         width: '100%',
+        marginTop: theme.spacing(2),
     },
     '@media (prefers-reduced-motion: reduce)': {
         animation: 'none',
@@ -256,22 +257,37 @@ const StyledTraceChip = styled('span', {
 }));
 
 const StyledVersionChip = styled('span', {
-    shouldForwardProp: (prop) => prop !== 'enabled',
-})<{ enabled: boolean }>(({ theme, enabled }) => ({
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: theme.spacing(0.5),
-    alignSelf: 'flex-start',
-    fontSize: theme.fontSizes.smallBody,
-    fontWeight: theme.typography.fontWeightBold,
-    borderRadius: 999,
-    padding: theme.spacing(0.5, 1.25),
-    background: enabled
-        ? theme.palette.success.light
-        : theme.palette.background.elevation2,
-    color: enabled ? theme.palette.success.main : theme.palette.text.secondary,
-    '& svg': { fontSize: 14 },
-}));
+    shouldForwardProp: (prop) => prop !== 'state',
+})<{ state: 'smart' | 'classic' | 'error' }>(({ theme, state }) => {
+    const palette =
+        state === 'smart'
+            ? {
+                  bg: theme.palette.success.light,
+                  fg: theme.palette.success.main,
+              }
+            : state === 'error'
+              ? {
+                    bg: theme.palette.error.light,
+                    fg: theme.palette.error.main,
+                }
+              : {
+                    bg: theme.palette.background.elevation2,
+                    fg: theme.palette.text.secondary,
+                };
+    return {
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: theme.spacing(0.5),
+        alignSelf: 'flex-start',
+        fontSize: theme.fontSizes.smallBody,
+        fontWeight: theme.typography.fontWeightBold,
+        borderRadius: 999,
+        padding: theme.spacing(0.5, 1.25),
+        background: palette.bg,
+        color: palette.fg,
+        '& svg': { fontSize: 14 },
+    };
+});
 
 const StyledPopoverBody = styled(Box)(({ theme }) => ({
     minHeight: 0,
@@ -353,319 +369,124 @@ const StyledContextJson = styled('pre')(({ theme }) => ({
     },
 }));
 
-const StyledSearchPreview = styled(Box, {
-    shouldForwardProp: (prop) =>
-        !['smart', 'errored', 'restored', 'accent'].includes(String(prop)),
-})<{ smart: boolean; errored: boolean; restored: boolean; accent: string }>(
-    ({ theme, smart, errored, restored, accent }) => {
-        const activeColor = errored ? theme.palette.error.main : accent;
-        const enhanced = smart || errored;
-
-        return {
-            position: 'relative',
-            overflow: 'hidden',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: theme.spacing(1),
-            padding: theme.spacing(1.5),
-            borderRadius: theme.shape.borderRadiusLarge,
-            border: `1px solid ${
-                enhanced ? activeColor : theme.palette.divider
-            }`,
-            backgroundColor: enhanced
-                ? alpha(activeColor, 0.06)
-                : theme.palette.background.elevation1,
-            transition: theme.transitions.create(
-                ['background-color', 'border-color'],
-                {
-                    duration: errored
-                        ? theme.transitions.duration.shorter
-                        : 480,
-                    easing: theme.transitions.easing.easeOut,
-                },
-            ),
-            '& > *': {
-                position: 'relative',
-                zIndex: 1,
-            },
-            '&::after': {
-                content: '""',
-                position: 'absolute',
-                zIndex: 2,
-                inset: 0,
-                width: '38%',
-                pointerEvents: 'none',
-                opacity: smart ? 0.65 : 0,
-                transform:
-                    smart || errored ? 'translateX(300%)' : 'translateX(-120%)',
-                background: `linear-gradient(90deg, transparent, ${alpha(
-                    theme.palette.common.white,
-                    0.35,
-                )}, transparent)`,
-                animation: restored
-                    ? `intro-popover-restore-sweep 650ms ${theme.transitions.easing.easeOut}`
-                    : 'none',
-                transition: theme.transitions.create(['transform', 'opacity'], {
-                    duration: 650,
-                    easing: theme.transitions.easing.easeOut,
-                }),
-            },
-            '@keyframes intro-popover-restore-sweep': {
-                '0%': {
-                    opacity: 0,
-                    transform: 'translateX(300%)',
-                },
-                '20%': {
-                    opacity: 0.65,
-                },
-                '100%': {
-                    opacity: 0,
-                    transform: 'translateX(-120%)',
-                },
-            },
-            '@media (prefers-reduced-motion: reduce)': {
-                transition: 'none',
-                '& *': {
-                    transition: 'none !important',
-                },
-                '&::after': {
-                    display: 'none',
-                },
-            },
-        };
-    },
-);
-
-const StyledPreviewHeader = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: theme.spacing(1),
-}));
-
-const StyledPreviewActions = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(0.5),
-}));
-
-const StyledExperienceChip = styled(Chip, {
-    shouldForwardProp: (prop) =>
-        !['smart', 'errored', 'accent'].includes(String(prop)),
-})<{ smart: boolean; errored: boolean; accent: string }>(
-    ({ theme, smart, errored, accent }) => ({
-        minWidth: 118,
-        transition: theme.transitions.create(
-            ['background-color', 'border-color', 'color'],
-            {
-                duration: errored
-                    ? theme.transitions.duration.shorter
-                    : theme.transitions.duration.standard,
-                easing: theme.transitions.easing.easeOut,
-            },
-        ),
-        ...(smart || errored
-            ? {
-                  backgroundColor: errored
-                      ? theme.palette.error.main
-                      : getVariantSolidFill(accent),
-                  color: theme.palette.common.white,
-                  '&:hover': {
-                      backgroundColor: errored
-                          ? theme.palette.error.main
-                          : getVariantSolidFill(accent),
-                  },
-              }
-            : {}),
-    }),
-);
-
-const StyledSearchInput = styled(Box, {
-    shouldForwardProp: (prop) =>
-        !['smart', 'errored', 'accent'].includes(String(prop)),
-})<{ smart: boolean; errored: boolean; accent: string }>(
-    ({ theme, smart, errored, accent }) => {
-        const activeColor = errored ? theme.palette.error.main : accent;
-        const enhanced = smart || errored;
-
-        return {
-            display: 'flex',
-            alignItems: 'center',
-            gap: theme.spacing(0.75),
-            padding: theme.spacing(0.85, 1.1),
-            borderRadius: 999,
-            border: `1px solid ${
-                enhanced ? alpha(activeColor, 0.65) : theme.palette.divider
-            }`,
-            background: theme.palette.background.paper,
-            color: theme.palette.text.primary,
-            fontSize: theme.fontSizes.smallBody,
-            transition: theme.transitions.create(
-                ['border-color', 'background-color'],
-                {
-                    duration: errored
-                        ? theme.transitions.duration.shorter
-                        : 480,
-                    easing: theme.transitions.easing.easeOut,
-                },
-            ),
-        };
-    },
-);
-
-const StyledFullSparkle = styled('span', {
-    shouldForwardProp: (prop) => !['visible', 'accent'].includes(String(prop)),
-})<{ visible: boolean; accent: string }>(({ theme, visible, accent }) => ({
-    marginLeft: 'auto',
-    opacity: visible ? 1 : 0,
-    color: accent,
-    transition: theme.transitions.create(['opacity', 'color'], {
-        duration: 420,
-        easing: theme.transitions.easing.easeOut,
-    }),
-}));
-
-const StyledPreviewBody = styled(Box)({
+const StyledMockFrame = styled(Box)(({ theme }) => ({
     position: 'relative',
-    height: 240,
+    borderRadius: theme.shape.borderRadiusMedium,
     overflow: 'hidden',
-});
+    border: `1px solid ${theme.palette.divider}`,
+    background: theme.palette.background.paper,
+    boxShadow: theme.shadows[1],
+}));
 
-const StyledPreviewState = styled(Box, {
-    shouldForwardProp: (prop) => !['visible', 'animate'].includes(String(prop)),
-})<{ visible: boolean; animate: boolean }>(({ theme, visible, animate }) => ({
-    position: 'absolute',
-    inset: 0,
+const StyledMockChrome = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.75),
+    padding: theme.spacing(1.1, 1.5),
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    background: theme.palette.background.elevation1,
+}));
+
+const StyledMockDot = styled('span')(({ theme }) => ({
+    width: 8,
+    height: 8,
+    borderRadius: '50%',
+    background: theme.palette.divider,
+}));
+
+const StyledMockUrl = styled(Box)(({ theme }) => ({
+    flex: 1,
+    marginLeft: theme.spacing(0.75),
+    height: 20,
+    borderRadius: theme.shape.borderRadius,
+    background: theme.palette.background.paper,
+    border: `1px solid ${theme.palette.divider}`,
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(0, 1),
+    fontSize: theme.fontSizes.smallerBody,
+    color: theme.palette.text.disabled,
+}));
+
+const StyledMockContent = styled(Box)(({ theme }) => ({
+    padding: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'flex-start',
-    gap: theme.spacing(1),
-    opacity: visible ? 1 : 0,
-    pointerEvents: visible ? 'auto' : 'none',
-    transition: animate
-        ? theme.transitions.create('opacity', {
-              duration: 420,
-              easing: theme.transitions.easing.easeOut,
-          })
-        : 'none',
+    gap: theme.spacing(1.75),
 }));
 
-const StyledClassicMeta = styled(Box)(({ theme }) => ({
+const StyledFeatureCard = styled(Box)(({ theme }) => ({
     display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    height: 33,
-    padding: '7px 0',
-    color: theme.palette.text.secondary,
-    fontSize: theme.fontSizes.smallerBody,
-}));
-
-const StyledAiSummary = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'accent',
-})<{ accent: string }>(({ theme, accent }) => ({
-    display: 'flex',
-    gap: theme.spacing(1),
-    boxSizing: 'border-box',
-    height: 52,
-    padding: theme.spacing(1),
+    flexDirection: 'column',
+    gap: theme.spacing(1.25),
+    padding: theme.spacing(1.75),
     borderRadius: theme.shape.borderRadiusMedium,
-    color: theme.palette.text.primary,
-    background: alpha(accent, 0.14),
-    border: `1px solid ${alpha(accent, 0.45)}`,
-    fontSize: theme.fontSizes.smallerBody,
-    lineHeight: 1.45,
-    transition: theme.transitions.create(['background-color', 'border-color'], {
-        duration: 480,
-        easing: theme.transitions.easing.easeOut,
-    }),
+    border: `1px solid ${theme.palette.warning.border}`,
+    background: theme.palette.warning.light,
 }));
 
-const StyledSuggestionRow = styled(Box)(({ theme }) => ({
+const StyledBaselineCard = styled(Box)(({ theme }) => ({
     display: 'flex',
-    flexWrap: 'wrap',
-    gap: theme.spacing(0.5),
+    alignItems: 'center',
+    gap: theme.spacing(1.75),
+    padding: theme.spacing(1.75),
+    borderRadius: theme.shape.borderRadiusMedium,
+    border: `1px solid ${theme.palette.divider}`,
+    background: theme.palette.background.elevation2,
 }));
 
-const StyledErrorSummary = styled(Box)(({ theme }) => ({
-    boxSizing: 'border-box',
-    minHeight: 84,
+const StyledErrorCard = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
-    padding: theme.spacing(1.25),
+    padding: theme.spacing(1.75),
     borderRadius: theme.shape.borderRadiusMedium,
+    border: `1px solid ${theme.palette.error.border}`,
+    background: theme.palette.error.light,
     color: theme.palette.error.main,
-    background: alpha(theme.palette.error.main, 0.1),
-    border: `1px solid ${alpha(theme.palette.error.main, 0.5)}`,
-    fontSize: theme.fontSizes.smallerBody,
-    lineHeight: 1.45,
-    '& svg': {
-        flexShrink: 0,
-    },
+    fontSize: theme.fontSizes.smallBody,
+    fontWeight: theme.typography.fontWeightBold,
+    '& svg': { flex: 'none', fontSize: 18 },
 }));
 
-const StyledErroredResults = styled(Box)({
-    opacity: 0.42,
-    filter: 'saturate(0.35)',
-});
-
-const StyledResults = styled(Box)(({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: '1fr',
-    gap: theme.spacing(0.75),
+const StyledBar = styled('span', {
+    shouldForwardProp: (prop) => !['w', 'h', 'tone'].includes(String(prop)),
+})<{
+    w: number | string;
+    h: number;
+    tone: 'strong' | 'mid' | 'weak' | 'warn' | 'warnSoft';
+}>(({ theme, w, h, tone }) => ({
+    display: 'block',
+    width: w,
+    height: h,
+    borderRadius: 999,
+    flex: 'none',
+    background:
+        tone === 'strong'
+            ? theme.palette.text.secondary
+            : tone === 'mid'
+              ? theme.palette.text.disabled
+              : tone === 'warn'
+                ? theme.palette.warning.main
+                : tone === 'warnSoft'
+                  ? alpha(theme.palette.warning.main, 0.4)
+                  : theme.palette.divider,
 }));
 
-const StyledResult = styled(Box, {
-    shouldForwardProp: (prop) => !['smart', 'accent'].includes(String(prop)),
-})<{ smart: boolean; accent: string }>(({ theme, smart, accent }) => ({
-    display: 'grid',
-    gridTemplateColumns: '38px 1fr',
-    gap: theme.spacing(0.75),
-    minWidth: 0,
-    padding: theme.spacing(0.7),
-    borderRadius: theme.shape.borderRadius,
-    border: `1px solid ${smart ? alpha(accent, 0.35) : theme.palette.divider}`,
-    backgroundColor: theme.palette.background.paper,
-    transition: theme.transitions.create('border-color', {
-        duration: 480,
-        easing: theme.transitions.easing.easeOut,
-    }),
+const StyledMockRow = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: theme.spacing(1.25),
+    padding: theme.spacing(1.1, 0),
+    borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
-const StyledResultImage = styled(Box, {
-    shouldForwardProp: (prop) => !['smart', 'accent'].includes(String(prop)),
-})<{ smart: boolean; accent: string }>(({ theme, smart, accent }) => ({
-    height: 34,
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: smart ? alpha(accent, 0.5) : theme.palette.divider,
-    transition: theme.transitions.create('background-color', {
-        duration: 480,
-        easing: theme.transitions.easing.easeOut,
-    }),
-}));
-
-const StyledResultCopy = styled(Box)(({ theme }) => ({
+const StyledMockRowCopy = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center',
     gap: theme.spacing(0.5),
 }));
-
-const StyledResultLine = styled(Box, {
-    shouldForwardProp: (prop) =>
-        !['width', 'smart', 'accent'].includes(String(prop)),
-})<{ width: string; smart: boolean; accent: string }>(
-    ({ theme, width, smart, accent }) => ({
-        width,
-        height: 5,
-        borderRadius: 999,
-        backgroundColor: smart ? alpha(accent, 0.5) : theme.palette.divider,
-        transition: theme.transitions.create('background-color', {
-            duration: 480,
-            easing: theme.transitions.easing.easeOut,
-        }),
-    }),
-);
 
 type TargetingConfig = Pick<
     IntroFlagConfig,
@@ -801,33 +622,6 @@ export const IntroUserGrid = ({
 
     const theme = useTheme();
     const [openUserId, setOpenUserId] = useState<string | undefined>();
-    const [restoredUserIds, setRestoredUserIds] = useState<Set<string>>(
-        () => new Set(),
-    );
-    const previousErroredUserIds = useRef<Set<string>>(new Set());
-    const restoreAnimationTimer = useRef<number | undefined>(undefined);
-
-    useEffect(() => {
-        const currentErroredUserIds = new Set(erroredUserIds);
-        const restored = [...previousErroredUserIds.current].filter(
-            (userId) => !currentErroredUserIds.has(userId),
-        );
-        previousErroredUserIds.current = currentErroredUserIds;
-
-        if (restored.length > 0) {
-            window.clearTimeout(restoreAnimationTimer.current);
-            setRestoredUserIds(new Set(restored));
-            restoreAnimationTimer.current = window.setTimeout(
-                () => setRestoredUserIds(new Set()),
-                700,
-            );
-        }
-    }, [erroredUserIds]);
-
-    useEffect(
-        () => () => window.clearTimeout(restoreAnimationTimer.current),
-        [],
-    );
 
     const openUser = users.find((user) => user.id === openUserId);
     const openEvaluation = openUser
@@ -843,7 +637,11 @@ export const IntroUserGrid = ({
         Boolean(environmentEnabled && openEvaluation?.enabled) &&
         !erroredUserIdSet.has(openUser?.id ?? '');
     const openErrored = erroredUserIdSet.has(openUser?.id ?? '');
-    const openRestored = restoredUserIds.has(openUser?.id ?? '');
+    const openState: 'smart' | 'classic' | 'error' = openErrored
+        ? 'error'
+        : openSmart
+          ? 'smart'
+          : 'classic';
     const openIndex = openUser ? users.indexOf(openUser) : -1;
 
     const openTrace = openUser
@@ -880,140 +678,104 @@ export const IntroUserGrid = ({
         onSelect(undefined);
     };
 
-    const preview = (
-        smart: boolean,
-        variant: IntroVariant | undefined,
-        errored: boolean,
-        restored: boolean,
-    ) => {
-        const accent = variant?.color ?? theme.palette.primary.main;
-        const renderResults = (count: number, resultSmart: boolean) => (
-            <StyledResults>
-                {Array.from({ length: count }, (_, index) => (
-                    <StyledResult
-                        key={index}
-                        smart={resultSmart}
-                        accent={accent}
-                    >
-                        <StyledResultImage
-                            smart={resultSmart}
-                            accent={accent}
-                        />
-                        <StyledResultCopy>
-                            <StyledResultLine
-                                width='62%'
-                                smart={resultSmart}
-                                accent={accent}
-                            />
-                            <StyledResultLine
-                                width='88%'
-                                smart={resultSmart}
-                                accent={accent}
-                            />
-                        </StyledResultCopy>
-                    </StyledResult>
-                ))}
-            </StyledResults>
-        );
+    const renderMockList = () =>
+        [
+            { name: 92, sub: 52 },
+            { name: 74, sub: 44 },
+            { name: 84, sub: 58 },
+            { name: 66, sub: 40 },
+        ].map((row, index) => (
+            <StyledMockRow key={index}>
+                <StyledMockRowCopy>
+                    <StyledBar w={row.name} h={7} tone='mid' />
+                    <StyledBar w={row.sub} h={6} tone='weak' />
+                </StyledMockRowCopy>
+                <StyledBar w={34} h={7} tone='strong' />
+            </StyledMockRow>
+        ));
 
-        return (
-            <StyledSearchPreview
-                smart={smart}
-                errored={errored}
-                restored={restored}
-                accent={accent}
-            >
-                <StyledPreviewHeader>
-                    <Typography variant='body2' sx={{ fontWeight: 'bold' }}>
-                        {smart || errored ? '✦ Smart Search' : 'Classic Search'}
-                    </Typography>
-                    <StyledPreviewActions>
-                        <StyledExperienceChip
-                            label={
-                                errored
-                                    ? 'Search error'
-                                    : smart
-                                      ? variant?.label
-                                          ? `${variant.name} · ${variant.label}`
-                                          : 'AI-powered'
-                                      : 'Current experience'
-                            }
-                            size='small'
-                            smart={smart}
-                            errored={errored}
-                            accent={accent}
-                            variant={smart || errored ? 'filled' : 'outlined'}
-                        />
-                    </StyledPreviewActions>
-                </StyledPreviewHeader>
-                <StyledSearchInput
-                    smart={smart}
-                    errored={errored}
-                    accent={accent}
-                    data-testid='QUICK_TOUR_INTRO_SEARCH_INPUT'
-                >
-                    <span>⌕</span>
-                    <span>
-                        {smart ? (variant?.placeholder ?? 'Search') : 'Search'}
-                    </span>
-                    <StyledFullSparkle
-                        visible={smart && !errored}
-                        accent={accent}
-                    >
-                        ✦
-                    </StyledFullSparkle>
-                </StyledSearchInput>
-                <StyledPreviewBody>
-                    <StyledPreviewState
-                        visible={!smart && !errored}
-                        animate={!errored}
-                        aria-hidden={smart || errored}
-                    >
-                        <StyledClassicMeta>
-                            <span>128 results</span>
-                            <span>Sorted by relevance</span>
-                        </StyledClassicMeta>
-                        {renderResults(4, false)}
-                    </StyledPreviewState>
-                    <StyledPreviewState
-                        visible={smart}
-                        animate={!errored}
-                        aria-hidden={!smart}
-                    >
-                        <StyledAiSummary accent={accent}>
-                            <span>✦</span>
-                            <span>
-                                An instant answer generated from the most
-                                relevant results.
-                            </span>
-                        </StyledAiSummary>
-                        <StyledSuggestionRow>
-                            <Chip label='Top match' size='small' />
-                            <Chip label='Suggested' size='small' />
-                            <Chip label='Recent' size='small' />
-                        </StyledSuggestionRow>
-                        {renderResults(3, true)}
-                    </StyledPreviewState>
-                    <StyledPreviewState
-                        visible={errored}
-                        animate={!errored}
-                        aria-hidden={!errored}
-                    >
-                        <StyledErrorSummary data-testid='QUICK_TOUR_INTRO_ERROR_PREVIEW'>
-                            <ErrorOutlineIcon />
-                            <span>
-                                Smart Search returned an error. The rest of the
-                                application is still working.
-                            </span>
-                        </StyledErrorSummary>
-                        <StyledErroredResults>
-                            {renderResults(3, false)}
-                        </StyledErroredResults>
-                    </StyledPreviewState>
-                </StyledPreviewBody>
-            </StyledSearchPreview>
-        );
-    };
+    const renderMock = (state: 'smart' | 'classic' | 'error') => (
+        <StyledMockFrame
+            data-testid='QUICK_TOUR_INTRO_MOCK_FRAME'
+            data-experience={state}
+        >
+            <StyledMockChrome>
+                <StyledMockDot />
+                <StyledMockDot />
+                <StyledMockDot />
+                <StyledMockUrl>app.acme.io/accounts</StyledMockUrl>
+            </StyledMockChrome>
+            <StyledMockContent>
+                {state === 'smart' ? (
+                    <StyledFeatureCard>
+                        <StyledBar w={52} h={6} tone='warnSoft' />
+                        <StyledBar w={104} h={16} tone='warn' />
+                        <Box
+                            component='svg'
+                            viewBox='0 0 240 40'
+                            preserveAspectRatio='none'
+                            sx={{ display: 'block', width: '100%', height: 36 }}
+                        >
+                            <path
+                                d='M4 32 L40 22 L72 27 L112 11 L152 19 L196 5 L236 11'
+                                fill='none'
+                                stroke={theme.palette.warning.main}
+                                strokeWidth={3}
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                            />
+                        </Box>
+                    </StyledFeatureCard>
+                ) : state === 'error' ? (
+                    <StyledErrorCard data-testid='QUICK_TOUR_INTRO_ERROR_PREVIEW'>
+                        <ErrorOutlineIcon />
+                        <StyledMockRowCopy>
+                            <StyledBar w={104} h={16} tone='strong' />
+                            <StyledBar w={64} h={6} tone='weak' />
+                        </StyledMockRowCopy>
+                    </StyledErrorCard>
+                ) : (
+                    <StyledBaselineCard>
+                        <Box
+                            component='svg'
+                            viewBox='0 0 80 80'
+                            sx={{
+                                display: 'block',
+                                width: 56,
+                                height: 56,
+                                flex: 'none',
+                            }}
+                        >
+                            <circle
+                                cx={40}
+                                cy={40}
+                                r={30}
+                                fill='none'
+                                stroke={theme.palette.divider}
+                                strokeWidth={10}
+                            />
+                            <circle
+                                cx={40}
+                                cy={40}
+                                r={30}
+                                fill='none'
+                                stroke={alpha(theme.palette.primary.main, 0.5)}
+                                strokeWidth={10}
+                                strokeLinecap='round'
+                                strokeDasharray='130 59'
+                                transform='rotate(-90 40 40)'
+                            />
+                        </Box>
+                        <StyledMockRowCopy>
+                            <StyledBar w={104} h={16} tone='strong' />
+                            <StyledBar w={64} h={6} tone='weak' />
+                        </StyledMockRowCopy>
+                    </StyledBaselineCard>
+                )}
+                {renderMockList()}
+            </StyledMockContent>
+        </StyledMockFrame>
+    );
 
     return (
         <StyledContentRow>
@@ -1124,9 +886,19 @@ export const IntroUserGrid = ({
                     </StyledPanelHeader>
 
                     <StyledPopoverBody data-testid='QUICK_TOUR_INTRO_POPOVER_BODY'>
-                        <StyledVersionChip enabled={openSmart}>
-                            {openSmart ? <CheckIcon /> : <CloseIcon />}
-                            {openSmart ? 'Feature enabled' : 'Feature disabled'}
+                        <StyledVersionChip state={openState}>
+                            {openState === 'smart' ? (
+                                <CheckIcon />
+                            ) : openState === 'error' ? (
+                                <ErrorOutlineIcon />
+                            ) : (
+                                <CloseIcon />
+                            )}
+                            {openState === 'smart'
+                                ? 'Feature enabled'
+                                : openState === 'error'
+                                  ? 'Search error'
+                                  : 'Feature disabled'}
                         </StyledVersionChip>
 
                         <StyledTrace>
@@ -1138,12 +910,7 @@ export const IntroUserGrid = ({
                             ))}
                         </StyledTrace>
 
-                        {preview(
-                            openSmart,
-                            openVariant,
-                            openErrored,
-                            openRestored,
-                        )}
+                        {renderMock(openState)}
 
                         <StyledEvaluationPanel>
                             <StyledExplanation>

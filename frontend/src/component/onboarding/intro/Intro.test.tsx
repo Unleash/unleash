@@ -103,8 +103,7 @@ test('starts with a gradual Smart Search rollout and context cards', () => {
     expect(screen.getByTestId('QUICK_TOUR_INTRO_POPOVER_BODY')).toHaveStyle({
         overflowY: 'auto',
     });
-    expect(screen.getByText('Classic Search')).toBeInTheDocument();
-    expect(screen.getByText('Current experience')).toBeInTheDocument();
+    expect(screen.getByText('Feature disabled')).toBeInTheDocument();
     expect(screen.getByText('Context')).toBeInTheDocument();
     expect(
         screen.getByText(
@@ -120,7 +119,7 @@ test('starts with a gradual Smart Search rollout and context cards', () => {
     fireEvent.change(screen.getByRole('slider', { name: 'Rollout %' }), {
         target: { value: '100' },
     });
-    expect(screen.getByText('✦ Smart Search')).toBeInTheDocument();
+    expect(screen.getByText('Feature enabled')).toBeInTheDocument();
     expect(
         screen
             .getAllByTestId('QUICK_TOUR_INTRO_USER_STATUS')
@@ -428,14 +427,11 @@ test('keeps metrics live without errors until production is enabled', () => {
     expect(
         within(popover).getByTestId('QUICK_TOUR_INTRO_ERROR_PREVIEW'),
     ).toBeInTheDocument();
-    expect(within(popover).getByText('✦ Smart Search')).toBeInTheDocument();
+    expect(
+        within(popover).getByTestId('QUICK_TOUR_INTRO_MOCK_FRAME'),
+    ).toHaveAttribute('data-experience', 'error');
     expect(within(popover).getByText('Search error')).toBeInTheDocument();
-    expect(
-        within(popover).getByText(/Smart Search returned an error/),
-    ).toBeInTheDocument();
-    expect(
-        within(popover).queryByText('Current experience'),
-    ).not.toBeInTheDocument();
+    expect(within(popover).getByText(/returned an error/)).toBeInTheDocument();
 
     advanceLiveTraffic(18_000);
     expect(
@@ -895,13 +891,7 @@ test('manages variants and previews the exact assigned experience', async () => 
 
     const grid = screen.getByTestId('QUICK_TOUR_INTRO_USER_GRID');
     fireEvent.click(within(grid).getAllByRole('button')[0]);
-    expect(screen.getByText('✦ Smart Search')).toBeInTheDocument();
-    const searchInput = screen.getByTestId('QUICK_TOUR_INTRO_SEARCH_INPUT');
-    expect(
-        within(searchInput).getByText(
-            /Search by keyword|Ask any question|Find products, docs, or people|What would you like to find?/,
-        ),
-    ).toBeInTheDocument();
+    expect(screen.getByText('Feature enabled')).toBeInTheDocument();
     expect(
         screen.getByText(/Ada gets the .+ variant \([ABCD]\) because/),
     ).toBeInTheDocument();
@@ -1048,7 +1038,7 @@ test('teaches manual recovery before a safeguard automates it', () => {
     ).toBe(true);
     const recoveredPopover = screen.getByTestId('QUICK_TOUR_INTRO_POPOVER');
     expect(
-        within(recoveredPopover).getByText('Classic Search'),
+        within(recoveredPopover).getByText('Feature disabled'),
     ).toBeInTheDocument();
     expect(
         within(recoveredPopover).queryByText('Search error'),

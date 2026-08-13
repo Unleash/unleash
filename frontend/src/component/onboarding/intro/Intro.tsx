@@ -23,6 +23,7 @@ import { IntroUserGrid, type GridMode } from './IntroUserGrid.tsx';
 import { IntroFlagView } from './IntroFlagView.tsx';
 import { IntroImpactCharts } from './IntroImpactCharts.tsx';
 import { IntroShowcase } from './IntroShowcase.tsx';
+import { IntroStepper } from './IntroStepper.tsx';
 import {
     INTRO_RELEASE_PLAN_MILESTONE_MS,
     IntroReleasePlan,
@@ -154,6 +155,8 @@ type IncidentState = 'idle' | 'observing' | 'alert' | 'resolved';
 interface ITopic {
     key: TopicKey;
     mode: GridMode;
+    /** Short label shown in the top stepper. */
+    stepLabel: string;
     title: string;
     body: string;
 }
@@ -162,36 +165,42 @@ const TOPICS: ITopic[] = [
     {
         key: 'rollout',
         mode: 'rollout',
+        stepLabel: 'Rollout',
         title: 'Start by toggling the flag in production',
         body: 'When you have toggled a flag on, you can decide how many will see the feature by dragging the rollout slider.',
     },
     {
         key: 'target',
         mode: 'target',
+        stepLabel: 'Targeting',
         title: 'Target who can see your feature',
         body: 'Use constraints to narrow down who can see your feature. Experiment with the controls below.',
     },
     {
         key: 'variants',
         mode: 'variants',
+        stepLabel: 'Experiments',
         title: 'Run experiments',
         body: 'Add variants to run experiments where each user gets one version, and you control how traffic is split between them.',
     },
     {
         key: 'releasePlan',
         mode: 'impact',
+        stepLabel: 'Automation',
         title: 'Automate the rollout',
         body: 'You have configured rollout, targeting, and variants by hand. A release plan saves those choices as reusable milestones, then advances them automatically or whenever your team is ready.',
     },
     {
         key: 'impact',
         mode: 'impact',
+        stepLabel: 'Impact',
         title: 'Observe the release',
         body: 'Releases can fail in production. Impact metrics let you watch reliability as Smart Search reaches each audience. Enable production and follow the live signals.',
     },
     {
         key: 'safeguard',
         mode: 'safeguard',
+        stepLabel: 'Safeguards',
         title: 'Automate the response',
         body: 'You disabled Smart Search manually when errors rose. This time, a safeguard is watching the same impact metric. Re-enable production and see how Unleash responds automatically.',
     },
@@ -259,14 +268,6 @@ const StyledRight = styled(Box)(({ theme }) => ({
     },
 }));
 
-const StyledEyebrow = styled(Typography)(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    textTransform: 'uppercase',
-    letterSpacing: '0.08em',
-    fontSize: theme.fontSizes.smallerBody,
-    fontWeight: theme.typography.fontWeightBold,
-}));
-
 const StyledTitle = styled('h1')(({ theme }) => ({
     margin: 0,
     fontSize: theme.typography.h1.fontSize,
@@ -280,21 +281,6 @@ const StyledFooter = styled(Box)(({ theme }) => ({
     flexShrink: 0,
     padding: theme.spacing(2, 4, 4),
     borderTop: `1px solid ${theme.palette.divider}`,
-}));
-
-const StyledDots = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    gap: theme.spacing(1),
-    marginRight: 'auto',
-}));
-
-const StyledDot = styled('span', {
-    shouldForwardProp: (prop) => prop !== 'active',
-})<{ active: boolean }>(({ theme, active }) => ({
-    width: theme.spacing(1),
-    height: theme.spacing(1),
-    borderRadius: '50%',
-    background: active ? theme.palette.primary.main : theme.palette.divider,
 }));
 
 const StyledStat = styled(Box)(({ theme }) => ({
@@ -826,9 +812,14 @@ export const Intro = ({
         <StyledPanel>
             <StyledLeft>
                 <StyledHeader>
-                    <StyledEyebrow>
-                        Unleash Intro · {topicIndex + 1} of {topics.length}
-                    </StyledEyebrow>
+                    <IntroStepper
+                        steps={topics.map((item, index) => ({
+                            label: item.stepLabel,
+                            clickable: index <= topicIndex,
+                        }))}
+                        activeIndex={topicIndex}
+                        onStepClick={goToTopic}
+                    />
                     <StyledTitle>{topic.title}</StyledTitle>
                 </StyledHeader>
 
@@ -929,14 +920,7 @@ export const Intro = ({
                 </StyledScroll>
 
                 <StyledFooter>
-                    <StyledDots>
-                        {topics.map((item, index) => (
-                            <StyledDot
-                                key={item.key}
-                                active={index === topicIndex}
-                            />
-                        ))}
-                    </StyledDots>
+                    <Box sx={{ flexGrow: 1 }} />
                     <Button onClick={handleSkip} color='inherit'>
                         Skip
                     </Button>

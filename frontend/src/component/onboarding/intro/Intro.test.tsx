@@ -264,7 +264,11 @@ test('finishes after the three core steps when advanced steps are disabled', () 
         />,
     );
 
-    expect(screen.getByText('Unleash Intro · 1 of 3')).toBeInTheDocument();
+    const stepper = screen.getByTestId('QUICK_TOUR_INTRO_STEPPER');
+    expect(within(stepper).getByText('Rollout')).toBeInTheDocument();
+    expect(within(stepper).getByText('Targeting')).toBeInTheDocument();
+    expect(within(stepper).getByText('Experiments')).toBeInTheDocument();
+    expect(within(stepper).queryByText('Automation')).not.toBeInTheDocument();
     next();
     next();
     expect(screen.getByText('Run experiments')).toBeInTheDocument();
@@ -276,6 +280,19 @@ test('finishes after the three core steps when advanced steps are disabled', () 
     expect(onFinish).toHaveBeenCalledTimes(1);
     expect(screen.getByTestId('QUICK_TOUR_INTRO_SHOWCASE')).toBeInTheDocument();
     expect(screen.queryByText('Automate the rollout')).not.toBeInTheDocument();
+});
+
+test('navigates back to a completed step from the stepper', () => {
+    renderAdvancedIntro();
+    next();
+    next();
+    expect(screen.getByText('Run experiments')).toBeInTheDocument();
+
+    const stepper = screen.getByTestId('QUICK_TOUR_INTRO_STEPPER');
+    fireEvent.click(within(stepper).getByText('Rollout'));
+    expect(
+        screen.getByText('Start by toggling the flag in production'),
+    ).toBeInTheDocument();
 });
 
 test('keeps metrics live without errors until production is enabled', () => {

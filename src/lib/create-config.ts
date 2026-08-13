@@ -88,6 +88,7 @@ function loadExperimental(options: IUnleashOptions): IExperimentalOptions {
 const defaultClientCachingOptions: IClientCachingOption = {
     enabled: true,
     maxAge: hoursToMilliseconds(1),
+    max: 100,
 };
 
 function loadClientCachingOptions(
@@ -104,6 +105,12 @@ function loadClientCachingOptions(
         envs.enabled = parseEnvVarBoolean(
             process.env.CLIENT_FEATURE_CACHING_ENABLED,
             true,
+        );
+    }
+    if (process.env.CLIENT_FEATURE_CACHING_MAX) {
+        envs.max = parseEnvVarNumber(
+            process.env.CLIENT_FEATURE_CACHING_MAX,
+            100,
         );
     }
 

@@ -392,6 +392,7 @@ test('Should enable client feature caching with .6 seconds max age by default', 
     const config = createConfig({});
     expect(config.clientFeatureCaching.enabled).toBe(true);
     expect(config.clientFeatureCaching.maxAge).toBe(3600000);
+    expect(config.clientFeatureCaching.max).toBe(100);
 });
 
 test('Should use overrides from options for client feature caching', () => {
@@ -399,20 +400,25 @@ test('Should use overrides from options for client feature caching', () => {
         clientFeatureCaching: {
             enabled: false,
             maxAge: 120,
+            max: 20,
         },
     });
     expect(config.clientFeatureCaching.enabled).toBe(false);
     expect(config.clientFeatureCaching.maxAge).toBe(120);
+    expect(config.clientFeatureCaching.max).toBe(20);
 });
 
 test('Should be able to set client features caching using environment variables', () => {
     process.env.CLIENT_FEATURE_CACHING_ENABLED = 'false';
     process.env.CLIENT_FEATURE_CACHING_MAXAGE = '120';
+    process.env.CLIENT_FEATURE_CACHING_MAX = '20';
     const config = createConfig({});
     expect(config.clientFeatureCaching.enabled).toBe(false);
     expect(config.clientFeatureCaching.maxAge).toBe(120);
+    expect(config.clientFeatureCaching.max).toBe(20);
     delete process.env.CLIENT_FEATURE_CACHING_ENABLED;
     delete process.env.CLIENT_FEATURE_CACHING_MAXAGE;
+    delete process.env.CLIENT_FEATURE_CACHING_MAX;
 });
 
 test('Environment variables for client features caching takes priority over options', () => {

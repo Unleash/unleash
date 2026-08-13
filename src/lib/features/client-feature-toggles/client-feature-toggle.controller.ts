@@ -143,6 +143,7 @@ export default class FeatureController extends Controller {
                 {
                     promise: true,
                     maxAge: clientFeatureCaching.maxAge,
+                    max: clientFeatureCaching.max,
                     normalizer([_query, etag]) {
                         return etag;
                     },

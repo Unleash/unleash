@@ -119,6 +119,7 @@ export interface IServerOption {
 export interface IClientCachingOption {
     enabled: boolean;
     maxAge: number;
+    max: number;
 }
 
 export interface ICustomStrategySettings {

@@ -460,14 +460,16 @@ const StyledMockContent = styled(Box)(({ theme }) => ({
     gap: theme.spacing(1.75),
 }));
 
-const StyledFeatureCard = styled(Box)(({ theme }) => ({
+const StyledFeatureCard = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'accent',
+})<{ accent: string }>(({ theme, accent }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1.25),
     padding: theme.spacing(1.75),
     borderRadius: theme.shape.borderRadiusMedium,
-    border: `1px solid ${theme.palette.warning.border}`,
-    background: theme.palette.warning.light,
+    border: `1px solid ${alpha(accent, 0.35)}`,
+    background: alpha(accent, 0.08),
 }));
 
 const StyledBaselineCard = styled(Box)(({ theme }) => ({
@@ -495,27 +497,26 @@ const StyledErrorCard = styled(Box)(({ theme }) => ({
 }));
 
 const StyledBar = styled('span', {
-    shouldForwardProp: (prop) => !['w', 'h', 'tone'].includes(String(prop)),
+    shouldForwardProp: (prop) =>
+        !['w', 'h', 'tone', 'barColor'].includes(String(prop)),
 })<{
     w: number | string;
     h: number;
-    tone: 'strong' | 'mid' | 'weak' | 'warn' | 'warnSoft';
-}>(({ theme, w, h, tone }) => ({
+    tone?: 'strong' | 'mid' | 'weak';
+    barColor?: string;
+}>(({ theme, w, h, tone, barColor }) => ({
     display: 'block',
     width: w,
     height: h,
     borderRadius: 999,
     flex: 'none',
     background:
-        tone === 'strong'
+        barColor ??
+        (tone === 'strong'
             ? theme.palette.text.secondary
             : tone === 'mid'
               ? theme.palette.text.disabled
-              : tone === 'warn'
-                ? theme.palette.warning.main
-                : tone === 'warnSoft'
-                  ? alpha(theme.palette.warning.main, 0.4)
-                  : theme.palette.divider,
+              : theme.palette.divider),
 }));
 
 const StyledMockRow = styled(Box)(({ theme }) => ({
@@ -774,7 +775,10 @@ export const IntroUserGrid = ({
             </StyledMockRow>
         ));
 
-    const renderMock = (state: 'smart' | 'classic' | 'error') => (
+    const renderMock = (
+        state: 'smart' | 'classic' | 'error',
+        accent: string,
+    ) => (
         <StyledMockFrame
             data-testid='QUICK_TOUR_INTRO_MOCK_FRAME'
             data-experience={state}
@@ -787,9 +791,9 @@ export const IntroUserGrid = ({
             </StyledMockChrome>
             <StyledMockContent>
                 {state === 'smart' ? (
-                    <StyledFeatureCard>
-                        <StyledBar w={52} h={6} tone='warnSoft' />
-                        <StyledBar w={104} h={16} tone='warn' />
+                    <StyledFeatureCard accent={accent}>
+                        <StyledBar w={52} h={6} barColor={alpha(accent, 0.4)} />
+                        <StyledBar w={104} h={16} barColor={accent} />
                         <Box
                             component='svg'
                             viewBox='0 0 240 40'
@@ -799,7 +803,7 @@ export const IntroUserGrid = ({
                             <path
                                 d='M4 32 L40 22 L72 27 L112 11 L152 19 L196 5 L236 11'
                                 fill='none'
-                                stroke={theme.palette.warning.main}
+                                stroke={accent}
                                 strokeWidth={3}
                                 strokeLinecap='round'
                                 strokeLinejoin='round'
@@ -1034,7 +1038,10 @@ export const IntroUserGrid = ({
                                   : 'Feature disabled'}
                         </Badge>
 
-                        {renderMock(openState)}
+                        {renderMock(
+                            openState,
+                            openVariant?.color ?? theme.palette.primary.main,
+                        )}
 
                         <StyledEvaluationPanel>
                             <StyledExplanation>

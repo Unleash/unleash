@@ -6,6 +6,7 @@ export * from './segments.js';
 export * from './anonymise.js';
 export * from './constants.js';
 export * from './isDefined.js';
+export * from './intern-string.js';
 export * from './omit-keys.js';
 export * from './random-id.js';
 export * from './snakeCase.js';

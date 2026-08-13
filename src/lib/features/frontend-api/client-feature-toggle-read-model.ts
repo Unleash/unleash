@@ -4,7 +4,11 @@ import type {
     IStrategyConfig,
     PartialDeep,
 } from '../../types/index.js';
-import { ensureStringValue, mapValues } from '../../util/index.js';
+import {
+    ensureStringValue,
+    internString,
+    mapValues,
+} from '../../util/index.js';
 import type { Db } from '../../db/db.js';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store.js';
 type Raw<T = any> = Knex.Raw<T>;
@@ -119,9 +123,9 @@ export default class ClientFeatureToggleReadModel
                     impressionData: row.impression_data,
                     enabled: !!row.enabled,
                     description: row.description,
-                    project: row.project,
+                    project: internString(row.project),
                     stale: row.stale,
-                    type: row.type,
+                    type: internString(row.type),
                 };
             }
 
@@ -183,7 +187,7 @@ export default class ClientFeatureToggleReadModel
     private rowToStrategy(row: Record<string, any>): IStrategyConfig {
         const strategy: IStrategyConfig = {
             id: row.strategy_id,
-            name: row.strategy_name,
+            name: internString(row.strategy_name),
             title: row.strategy_title,
             constraints: row.constraints || [],
             parameters: mapValues(row.parameters || {}, ensureStringValue),

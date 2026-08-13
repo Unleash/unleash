@@ -15,6 +15,7 @@ import {
     ALL_PROJECTS,
     DEFAULT_ENV,
     ensureStringValue,
+    internString,
     mapValues,
 } from '../../util/index.js';
 import type EventEmitter from 'events';
@@ -218,12 +219,12 @@ export default class FeatureToggleClientStore
             feature.enabled = !!r.enabled;
             feature.name = r.name;
             feature.description = r.description;
-            feature.project = r.project;
+            feature.project = internString(r.project);
             feature.stale = r.stale;
-            feature.type = r.type;
+            feature.type = internString(r.type);
             feature.lastSeenAt = r.last_seen_at;
             feature.variants = r.variants || [];
-            feature.project = r.project;
+            feature.project = internString(r.project);
             if (isAdmin) {
                 feature.favorite = r.favorite;
                 feature.lastSeenAt = r.last_seen_at;
@@ -265,7 +266,7 @@ export default class FeatureToggleClientStore
     private rowToStrategy(row: Record<string, any>): IStrategyConfig {
         const strategy: IStrategyConfig = {
             id: row.strategy_id,
-            name: row.strategy_name,
+            name: internString(row.strategy_name),
             title: row.strategy_title,
             constraints: row.constraints || [],
             parameters: mapValues(row.parameters || {}, ensureStringValue),

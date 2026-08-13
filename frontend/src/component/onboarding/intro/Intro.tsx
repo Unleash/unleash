@@ -234,7 +234,7 @@ const StyledLeft = styled(Box)(({ theme }) => ({
 const StyledHeader = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(2),
+    gap: theme.spacing(3),
     padding: theme.spacing(4, 4, 2),
     flexShrink: 0,
 }));

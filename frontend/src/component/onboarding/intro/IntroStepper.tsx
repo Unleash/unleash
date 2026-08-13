@@ -19,7 +19,7 @@ const StyledStepper = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     flexWrap: 'wrap',
-    gap: theme.spacing(1),
+    gap: theme.spacing(0.5),
 }));
 
 const StyledStep = styled('button', {

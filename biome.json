@@ -119,6 +119,7 @@
         "frontend/src/component/admin/users/UsersList/AccessRequestsTable/AccessRequestsTable.tsx",
         "frontend/src/component/admin/users/hooks/useAddUserForm.ts",
         "frontend/src/component/admin/users/UsersList/UsersList.tsx",
+        "frontend/src/component/admin/users/UsersList/UsersListDeprecated.tsx",
         "frontend/src/component/application/ConnectedInstances/ConnectedInstances.tsx",
         "frontend/src/component/changeRequest/ChangeRequest/Changes/Change/EditChange.tsx",
         "frontend/src/component/commandBar/RecentlyVisitedRecorder.tsx",

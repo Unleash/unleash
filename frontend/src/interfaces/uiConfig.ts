@@ -106,6 +106,7 @@ export type UiFlags = {
     flightRecorderFrontend?: Variant;
     topLabelInputs?: boolean;
     searchDocsWidget?: boolean;
+    usersTabsUI?: boolean;
 };
 
 export interface IVersionInfo {

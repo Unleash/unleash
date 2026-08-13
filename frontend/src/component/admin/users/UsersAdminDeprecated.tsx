@@ -1,4 +1,4 @@
-import UsersList from './UsersList/UsersList.tsx';
+import UsersList from './UsersList/UsersListDeprecated.tsx';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 import { Route, Routes } from 'react-router';
@@ -10,7 +10,7 @@ import { PremiumFeature } from '../../common/PremiumFeature/PremiumFeature.tsx';
 import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
-export const UsersAdmin = () => {
+export const UsersAdminDeprecated = () => {
     const { isEnterprise } = useUiConfig();
     return (
         <div>
@@ -48,4 +48,4 @@ export const UsersAdmin = () => {
     );
 };
 
-export default UsersAdmin;
+export default UsersAdminDeprecated;

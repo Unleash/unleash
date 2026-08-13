@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
     alpha,
     Box,
     IconButton,
     keyframes,
     styled,
+    Tooltip,
     Typography,
     useTheme,
 } from '@mui/material';
@@ -28,12 +29,82 @@ export type GridMode =
     | 'impact'
     | 'safeguard';
 
-const StyledGrid = styled(Box)(({ theme }) => ({
+const GRID_COL_GAP = 8;
+const GRID_ROW_GAP = 10;
+
+interface GridFit {
+    cols: number;
+    avatar: number;
+    showMeta: boolean;
+    tileH: number;
+}
+
+// Port of the prototype's density-aware grid: pick the column count + avatar
+// size (and whether there is room for the meta line) that best fills the
+// available box without overflowing, so the people scale to the space.
+const gridFit = (n: number, width: number, height: number): GridFit => {
+    const PAD = 14;
+    let best: (GridFit & { score: number }) | null = null;
+    for (let cols = 1; cols <= n; cols++) {
+        const tileW = (width - GRID_COL_GAP * (cols - 1)) / cols;
+        if (tileW < 46) continue;
+        const rows = Math.ceil(n / cols);
+        const budget = (height - GRID_ROW_GAP * (rows - 1)) / rows;
+        if (budget < 34) continue;
+        const modes = [
+            { showMeta: true, textH: 15 + 13 + 10, minW: 56 },
+            { showMeta: false, textH: 15 + 4, minW: 0 },
+        ];
+        for (const mode of modes) {
+            if (tileW < mode.minW) continue;
+            const cellH = Math.min(budget, tileW * 1.45);
+            const avatar = Math.min(
+                Math.round(tileW - 12),
+                Math.round(cellH - mode.textH - PAD),
+                64,
+            );
+            if (avatar < 20) continue;
+            const orphans = (cols - (n % cols)) % cols;
+            const score = avatar * 10 + (mode.showMeta ? 3 : 0) - orphans * 14;
+            if (!best || score > best.score) {
+                best = {
+                    cols,
+                    avatar,
+                    showMeta: mode.showMeta,
+                    tileH: Math.floor(cellH),
+                    score,
+                };
+            }
+            break;
+        }
+    }
+    if (best) return best;
+    const cols = Math.max(
+        1,
+        Math.ceil(Math.sqrt((n * width) / Math.max(height, 1))),
+    );
+    const rows = Math.ceil(n / cols);
+    const budget = Math.max(24, (height - GRID_ROW_GAP * (rows - 1)) / rows);
+    const tileW = (width - GRID_COL_GAP * (cols - 1)) / cols;
+    return {
+        cols,
+        avatar: Math.max(
+            16,
+            Math.min(Math.round(tileW - 8), Math.round(budget - 19)),
+        ),
+        showMeta: false,
+        tileH: Math.floor(budget),
+    };
+};
+
+const StyledGrid = styled(Box)({
+    flex: 1,
+    minHeight: 0,
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(92px, 1fr))',
-    gap: theme.spacing(1),
-    alignContent: 'start',
-}));
+    alignContent: 'space-evenly',
+    columnGap: `${GRID_COL_GAP}px`,
+    rowGap: `${GRID_ROW_GAP}px`,
+});
 
 const StyledPerson = styled('button', {
     shouldForwardProp: (prop) =>
@@ -46,13 +117,14 @@ const StyledPerson = styled('button', {
     all: 'unset',
     boxSizing: 'border-box',
     cursor: 'pointer',
+    height: '100%',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: theme.spacing(0.5),
+    gap: theme.spacing(0.25),
     minWidth: 0,
-    padding: theme.spacing(1, 0.5),
+    padding: theme.spacing(0.5),
     borderRadius: theme.shape.borderRadiusMedium,
     backgroundColor: enabled
         ? theme.palette.background.paper
@@ -88,11 +160,24 @@ const StyledAvatarWrap = styled(Box)({
 
 const StyledAvatarImg = styled(Box, {
     shouldForwardProp: (prop) =>
-        !['avatarUrl', 'hue', 'accent', 'enabled'].includes(prop as string),
-})<{ avatarUrl: string; hue: number; accent: string; enabled: boolean }>(
-    ({ theme, avatarUrl, hue, accent, enabled }) => ({
-        width: 52,
-        height: 52,
+        !['avatarUrl', 'hue', 'accent', 'enabled', 'size'].includes(
+            prop as string,
+        ),
+})<{
+    avatarUrl: string;
+    hue: number;
+    accent: string;
+    enabled: boolean;
+    size: number;
+}>(({ theme, avatarUrl, hue, accent, enabled, size }) => {
+    // Pulse the ring from solid to its resting opacity when a user turns on.
+    const ringPulse = keyframes({
+        from: { boxShadow: `0 0 0 2px ${alpha(accent, 1)}` },
+        to: { boxShadow: `0 0 0 2px ${alpha(accent, 0.5)}` },
+    });
+    return {
+        width: size,
+        height: size,
         borderRadius: '50%',
         backgroundColor: enabled
             ? `hsl(${hue}, 55%, 92%)`
@@ -105,13 +190,11 @@ const StyledAvatarImg = styled(Box, {
             : `0 0 0 1px ${theme.palette.divider}`,
         filter: enabled ? 'none' : 'grayscale(0.85)',
         opacity: enabled ? 1 : 0.5,
-        transition: theme.transitions.create([
-            'filter',
-            'opacity',
-            'box-shadow',
-        ]),
-    }),
-);
+        transition: theme.transitions.create(['filter', 'opacity']),
+        ...(enabled && { animation: `${ringPulse} 0.55s ease-out` }),
+        '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
+    };
+});
 
 const StyledStatusBadge = styled('span', {
     shouldForwardProp: (prop) => prop !== 'experience',
@@ -121,15 +204,18 @@ const StyledStatusBadge = styled('span', {
             ? {
                   bg: theme.palette.success.light,
                   fg: theme.palette.success.main,
+                  ring: theme.palette.success.border,
               }
             : experience === 'error'
               ? {
                     bg: theme.palette.error.light,
                     fg: theme.palette.error.main,
+                    ring: theme.palette.error.border,
                 }
               : {
                     bg: theme.palette.background.elevation2,
                     fg: theme.palette.text.secondary,
+                    ring: theme.palette.background.paper,
                 };
     return {
         position: 'absolute',
@@ -143,7 +229,7 @@ const StyledStatusBadge = styled('span', {
         justifyContent: 'center',
         backgroundColor: palette.bg,
         color: palette.fg,
-        boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+        boxShadow: `0 0 0 1.5px ${palette.ring}`,
         '& svg': { fontSize: 11 },
     };
 });
@@ -177,10 +263,15 @@ const StyledContentRow = styled(Box)({
     position: 'relative',
     flex: 1,
     minHeight: 0,
+    display: 'flex',
 });
 
 const StyledGridWrap = styled(Box)({
+    flex: 1,
     minWidth: 0,
+    minHeight: 0,
+    display: 'flex',
+    flexDirection: 'column',
 });
 
 const StyledPreviewPanel = styled(Box)(({ theme }) => ({
@@ -575,6 +666,41 @@ export const IntroUserGrid = ({
     const theme = useTheme();
     const [openUserId, setOpenUserId] = useState<string | undefined>();
 
+    // Measure the grid area so the tiles can scale to fill it (see gridFit).
+    const [gridSize, setGridSize] = useState({ width: 0, height: 0 });
+    const resizeObserver = useRef<ResizeObserver>(undefined);
+    const setGridWrapRef = useCallback((node: HTMLDivElement | null) => {
+        resizeObserver.current?.disconnect();
+        if (!node || typeof ResizeObserver === 'undefined') return;
+        resizeObserver.current = new ResizeObserver(([entry]) => {
+            const { width, height } = entry.contentRect;
+            setGridSize((current) =>
+                Math.abs(current.width - width) > 2 ||
+                Math.abs(current.height - height) > 2
+                    ? { width, height }
+                    : current,
+            );
+        });
+        resizeObserver.current.observe(node);
+    }, []);
+    useEffect(() => () => resizeObserver.current?.disconnect(), []);
+
+    const fit =
+        gridSize.width > 0 && gridSize.height > 0
+            ? gridFit(users.length, gridSize.width, gridSize.height)
+            : null;
+    const avatarSize = fit?.avatar ?? 44;
+    const showMeta = fit?.showMeta ?? true;
+    const gridStyle = fit
+        ? {
+              gridTemplateColumns: `repeat(${fit.cols}, minmax(0, 1fr))`,
+              gridAutoRows: `${fit.tileH}px`,
+          }
+        : {
+              gridTemplateColumns: 'repeat(auto-fill, minmax(84px, 1fr))',
+              gridAutoRows: '96px',
+          };
+
     const openUser = users.find((user) => user.id === openUserId);
     const openEvaluation = openUser
         ? evaluations[users.indexOf(openUser)]
@@ -731,8 +857,11 @@ export const IntroUserGrid = ({
 
     return (
         <StyledContentRow>
-            <StyledGridWrap>
-                <StyledGrid data-testid='QUICK_TOUR_INTRO_USER_GRID'>
+            <StyledGridWrap ref={setGridWrapRef}>
+                <StyledGrid
+                    data-testid='QUICK_TOUR_INTRO_USER_GRID'
+                    style={gridStyle}
+                >
                     {users.map((user, index) => {
                         const evaluation = evaluations[index];
                         const plan =
@@ -758,53 +887,71 @@ export const IntroUserGrid = ({
                         const accent =
                             configuredVariant?.color ??
                             theme.palette.primary.main;
+                        const tooltipLabel = smart
+                            ? 'Feature enabled'
+                            : errored
+                              ? 'Search error'
+                              : 'Feature disabled';
 
                         return (
-                            <StyledPerson
+                            <Tooltip
                                 key={user.id}
-                                type='button'
-                                aria-label={`${user.name}, ${user.country.label}: ${experienceLabel}`}
-                                selected={selectedId === user.id}
-                                enabled={smart}
-                                dimmed={
-                                    selectedId !== undefined &&
-                                    selectedId !== user.id
-                                }
-                                onClick={() => {
-                                    setOpenUserId(user.id);
-                                    onSelect(user);
-                                }}
+                                title={tooltipLabel}
+                                arrow
+                                enterDelay={200}
                             >
-                                <StyledAvatarWrap>
-                                    <StyledAvatarImg
-                                        avatarUrl={avatarForIndex(index)}
-                                        hue={(index * 47) % 360}
-                                        accent={accent}
-                                        enabled={smart}
-                                    />
-                                    <StyledStatusBadge
-                                        experience={experience}
-                                        data-testid='QUICK_TOUR_INTRO_USER_STATUS'
-                                        data-experience={experience}
-                                        title={experienceLabel}
-                                    >
-                                        {experience === 'smart' ? (
-                                            <CheckIcon />
-                                        ) : experience === 'error' ? (
-                                            <ErrorOutlineIcon />
-                                        ) : (
-                                            <CloseIcon />
-                                        )}
-                                    </StyledStatusBadge>
-                                </StyledAvatarWrap>
-                                <StyledName variant='body2'>
-                                    {user.name}
-                                </StyledName>
-                                <StyledMeta>
-                                    {user.country.flag} {user.country.code} ·{' '}
-                                    {plan.label}
-                                </StyledMeta>
-                            </StyledPerson>
+                                <StyledPerson
+                                    type='button'
+                                    aria-label={`${user.name}, ${user.country.label}: ${experienceLabel}`}
+                                    selected={selectedId === user.id}
+                                    enabled={smart}
+                                    dimmed={
+                                        selectedId !== undefined &&
+                                        selectedId !== user.id
+                                    }
+                                    onClick={() => {
+                                        if (openUserId === user.id) {
+                                            setOpenUserId(undefined);
+                                            onSelect(undefined);
+                                        } else {
+                                            setOpenUserId(user.id);
+                                            onSelect(user);
+                                        }
+                                    }}
+                                >
+                                    <StyledAvatarWrap>
+                                        <StyledAvatarImg
+                                            avatarUrl={avatarForIndex(index)}
+                                            hue={(index * 47) % 360}
+                                            accent={accent}
+                                            enabled={smart}
+                                            size={avatarSize}
+                                        />
+                                        <StyledStatusBadge
+                                            experience={experience}
+                                            data-testid='QUICK_TOUR_INTRO_USER_STATUS'
+                                            data-experience={experience}
+                                        >
+                                            {experience === 'smart' ? (
+                                                <CheckIcon />
+                                            ) : experience === 'error' ? (
+                                                <ErrorOutlineIcon />
+                                            ) : (
+                                                <CloseIcon />
+                                            )}
+                                        </StyledStatusBadge>
+                                    </StyledAvatarWrap>
+                                    <StyledName variant='body2'>
+                                        {user.name}
+                                    </StyledName>
+                                    {showMeta ? (
+                                        <StyledMeta>
+                                            {user.country.flag}{' '}
+                                            {user.country.code} · {plan.label}
+                                        </StyledMeta>
+                                    ) : null}
+                                </StyledPerson>
+                            </Tooltip>
                         );
                     })}
                 </StyledGrid>

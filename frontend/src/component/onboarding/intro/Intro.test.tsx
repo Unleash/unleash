@@ -74,7 +74,7 @@ test('starts with a gradual Smart Search rollout and context cards', () => {
         screen.getByText('Start by toggling the flag in production'),
     ).toBeInTheDocument();
     expect(
-        screen.getByText(/of 15 users see Smart Search/),
+        screen.getByText(/of 20 users see Smart Search/),
     ).not.toHaveTextContent('%');
     expect(screen.getByText('Click any user for details.')).toBeInTheDocument();
     expect(screen.queryByText('Controlled release')).not.toBeInTheDocument();
@@ -394,7 +394,7 @@ test('keeps metrics live without errors until production is enabled', () => {
     ).toHaveTextContent(`${errorPreviews.length}`);
     expect(screen.getByTestId('QUICK_TOUR_INTRO_ERROR_METRIC')).toHaveAttribute(
         'data-max',
-        '15',
+        '20',
     );
 
     const firstErroredCard = errorPreviews[0].closest('button')!;
@@ -425,7 +425,7 @@ test('keeps metrics live without errors until production is enabled', () => {
     expect(within(popover).getByText('Search error')).toBeInTheDocument();
     expect(within(popover).getByText(/returned an error/)).toBeInTheDocument();
 
-    advanceLiveTraffic(18_000);
+    advanceLiveTraffic(30_000);
     expect(
         screen
             .getAllByTestId('QUICK_TOUR_INTRO_USER_STATUS')
@@ -433,10 +433,10 @@ test('keeps metrics live without errors until production is enabled', () => {
                 (preview) =>
                     preview.getAttribute('data-experience') === 'error',
             ),
-    ).toHaveLength(15);
+    ).toHaveLength(20);
     expect(
         screen.getByTestId('QUICK_TOUR_INTRO_ERROR_METRIC_VALUE'),
-    ).toHaveTextContent('15');
+    ).toHaveTextContent('20');
     expect(
         screen.getByTestId('QUICK_TOUR_INTRO_SUCCESS_METRIC_VALUE'),
     ).toHaveTextContent('0');
@@ -651,7 +651,7 @@ test('starts the release plan from the environment and supports manual milestone
     ).toBeInTheDocument();
     expect(
         screen.getByTestId('QUICK_TOUR_INTRO_ENABLED_COUNT'),
-    ).toHaveTextContent('3');
+    ).toHaveTextContent('4');
     expect(
         within(screen.getByTestId('QUICK_TOUR_INTRO_MILESTONE_1')).getByRole(
             'button',
@@ -688,8 +688,8 @@ test('starts the release plan from the environment and supports manual milestone
     );
 
     for (const [milestone, audience] of [
-        [3, 13],
-        [4, 15],
+        [3, 18],
+        [4, 20],
     ]) {
         act(() => {
             vi.advanceTimersByTime(6600);

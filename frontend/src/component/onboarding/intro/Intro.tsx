@@ -36,7 +36,7 @@ import {
     type SafeguardState,
 } from './IntroSafeguard.tsx';
 
-const USER_COUNT = 15;
+const USER_COUNT = 20;
 const FLAG_NAME = 'smart-search';
 
 const VARIANT_POOL = [
@@ -259,10 +259,13 @@ const StyledScroll = styled(Box)(({ theme }) => ({
 const StyledRight = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
+    minHeight: 0,
     padding: theme.spacing(4),
     gap: theme.spacing(2),
     background: theme.palette.background.elevation1,
-    overflowY: 'auto',
+    // Keep the audience grid within the panel so it can scale to fill the
+    // available space (see gridFit); only allow scrolling once stacked.
+    overflow: 'hidden',
     [theme.breakpoints.down('md')]: {
         overflow: 'visible',
     },

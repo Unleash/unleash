@@ -72,7 +72,7 @@ export const IntroImpactCharts = ({
     const theme = useTheme();
     const isImpact = topicKey === 'impact';
     const successMax = 140;
-    const errorMax = isImpact ? 15 : 8;
+    const errorMax = isImpact ? 20 : 8;
     const [timeline, setTimeline] = useState<IMetricTimeline>(() => ({
         successfulSearches: buildInitialSeries(128, successMax),
         searchErrors: buildInitialSeries(0, errorMax),

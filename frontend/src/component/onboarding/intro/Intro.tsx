@@ -246,7 +246,7 @@ const StyledScroll = styled(Box)(({ theme }) => ({
     overflowX: 'hidden',
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(4),
+    gap: theme.spacing(2),
     padding: theme.spacing(0, 3, 2, 4),
     [theme.breakpoints.down('md')]: {
         flex: 'unset',

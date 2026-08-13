@@ -3,7 +3,6 @@ import {
     alpha,
     Box,
     Button,
-    Chip,
     styled,
     Typography,
     useTheme,
@@ -157,7 +156,6 @@ interface ITopic {
     key: TopicKey;
     mode: GridMode;
     title: string;
-    valueTag: string;
     body: string;
 }
 
@@ -166,49 +164,42 @@ const TOPICS: ITopic[] = [
         key: 'rollout',
         mode: 'rollout',
         title: 'Start by toggling the flag in production',
-        valueTag: 'Gradual rollout',
         body: 'When you have toggled a flag on, you can decide how many will see the feature by dragging the rollout slider.',
     },
     // {
     //     key: 'target',
     //     mode: 'target',
     //     title: 'Target the right audience',
-    //     valueTag: 'Targeting',
     //     body: 'Constraints narrow a rollout to the audience you intend. Combine country, plan, and device just as you would in an Unleash activation strategy.',
     // },
     {
         key: 'target',
         mode: 'target',
         title: 'Target who can see your feature',
-        valueTag: 'Targeting',
         body: 'Use constraints to narrow down who can see your feature. Experiment with the controls below.',
     },
     {
         key: 'variants',
         mode: 'variants',
         title: 'Run experiments',
-        valueTag: 'Variants',
         body: 'Add variants to run experiments where each user gets one version, and you control how traffic is split between them.',
     },
     {
         key: 'releasePlan',
         mode: 'impact',
         title: 'Automate the rollout',
-        valueTag: 'Release plan',
         body: 'You have configured rollout, targeting, and variants by hand. A release plan saves those choices as reusable milestones, then advances them automatically or whenever your team is ready.',
     },
     {
         key: 'impact',
         mode: 'impact',
         title: 'Observe the release',
-        valueTag: 'Impact metrics',
         body: 'Releases can fail in production. Impact metrics let you watch reliability as Smart Search reaches each audience. Enable production and follow the live signals.',
     },
     {
         key: 'safeguard',
         mode: 'safeguard',
         title: 'Automate the response',
-        valueTag: 'Safeguards',
         body: 'You disabled Smart Search manually when errors rose. This time, a safeguard is watching the same impact metric. Re-enable production and see how Unleash responds automatically.',
     },
 ];
@@ -286,13 +277,6 @@ const StyledEyebrow = styled(Typography)(({ theme }) => ({
 const StyledTitle = styled('h1')(({ theme }) => ({
     margin: 0,
     fontSize: theme.typography.h1.fontSize,
-}));
-
-const StyledTitleRow = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    gap: theme.spacing(1.5),
 }));
 
 const StyledFooter = styled(Box)(({ theme }) => ({
@@ -867,15 +851,7 @@ export const Intro = ({
                     <StyledEyebrow>
                         Unleash Intro · {topicIndex + 1} of {topics.length}
                     </StyledEyebrow>
-                    <StyledTitleRow>
-                        <StyledTitle>{topic.title}</StyledTitle>
-                        <Chip
-                            label={topic.valueTag}
-                            size='small'
-                            color='primary'
-                            variant='outlined'
-                        />
-                    </StyledTitleRow>
+                    <StyledTitle>{topic.title}</StyledTitle>
                 </StyledHeader>
 
                 <StyledScroll>

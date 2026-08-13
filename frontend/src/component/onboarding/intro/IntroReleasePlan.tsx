@@ -394,7 +394,9 @@ export const IntroReleasePlan = ({
             <StyledCard>
                 <StyledEnvironmentHeader>
                     <CloudCircleIcon fontSize='small' color='disabled' />
-                    <StyledEnvironmentName>production</StyledEnvironmentName>
+                    <StyledEnvironmentName>
+                        Production environment
+                    </StyledEnvironmentName>
                     <Switch
                         checked={environmentEnabled}
                         onChange={(event) =>

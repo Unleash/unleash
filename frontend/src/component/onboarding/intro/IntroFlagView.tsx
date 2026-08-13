@@ -53,12 +53,16 @@ const StyledEnvironmentName = styled('span')(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
 }));
 
-const StyledStrategyBody = styled(Box)(({ theme }) => ({
+const StyledStrategyBody = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'dimmed',
+})<{ dimmed?: boolean }>(({ theme, dimmed }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(2),
     padding: theme.spacing(1.5),
     background: theme.palette.background.elevation2,
+    opacity: dimmed ? 0.6 : 1,
+    transition: theme.transitions.create('opacity'),
 }));
 
 const StyledSectionTitle = styled(Box)(({ theme }) => ({
@@ -244,10 +248,12 @@ export const IntroFlagView = ({
                         }}
                         data-testid='QUICK_TOUR_INTRO_ONOFF_SWITCH'
                     />
-                    <StyledEnvironmentName>production</StyledEnvironmentName>
+                    <StyledEnvironmentName>
+                        Production environment
+                    </StyledEnvironmentName>
                 </StyledEnvironmentHeader>
 
-                <StyledStrategyBody>
+                <StyledStrategyBody dimmed={!config.environmentEnabled}>
                     <StyledConfigurationSection>
                         <StyledSectionTitle>
                             <span>Gradual rollout</span>

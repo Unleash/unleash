@@ -14,6 +14,10 @@ import { useChartFormState } from '../hooks/useChartFormState.ts';
 import type { ChartConfig } from '../types.ts';
 import type { ImpactMetric } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { LabelsFilter } from './LabelFilter/LabelsFilter.tsx';
+import {
+    LabelDiscoveryError,
+    LabelDiscoveryLoading,
+} from './LabelFilter/LabelDiscoveryStatus.tsx';
 import { ImpactMetricsChart } from '../ImpactMetricsChart.tsx';
 import { useEventTracker } from 'hooks/useEventTracker.ts';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
@@ -130,6 +134,19 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
         onClose();
     };
 
+    const labelsFilter =
+        currentAvailableLabels.status === 'loading' ? (
+            <LabelDiscoveryLoading />
+        ) : currentAvailableLabels.status === 'error' ? (
+            <LabelDiscoveryError />
+        ) : (
+            <LabelsFilter
+                labelSelectors={formData.labelSelectors}
+                onChange={actions.setLabelSelectors}
+                availableLabels={currentAvailableLabels.labels}
+            />
+        );
+
     const sidebarDescription = (
         <>
             <StyledSidebarHeading>Did you know?</StyledSidebarHeading>
@@ -204,15 +221,7 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
                             actions={actions}
                             metrics={metrics}
                             loading={loading}
-                            labelsFilter={
-                                currentAvailableLabels ? (
-                                    <LabelsFilter
-                                        labelSelectors={formData.labelSelectors}
-                                        onChange={actions.setLabelSelectors}
-                                        availableLabels={currentAvailableLabels}
-                                    />
-                                ) : null
-                            }
+                            labelsFilter={labelsFilter}
                         />
                     </StyledFormContent>
                     <StyledButtonContainer>

@@ -3,6 +3,11 @@ import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/use
 import type { AggregationMode, ChartConfig, MetricSource } from '../types.ts';
 import type { ImpactMetricsLabels } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import type { MetricSelection } from '../ImpactMetricModal/ImpactMetricsControls/SeriesSelector/MetricSelector.tsx';
+
+export type AvailableLabels =
+    | { status: 'loading' }
+    | { status: 'error' }
+    | { status: 'ready'; labels: ImpactMetricsLabels };
 import {
     getDefaultAggregation,
     getMetricType,
@@ -36,7 +41,7 @@ export type ChartFormState = {
         getConfigToSave: () => Omit<ChartConfig, 'id'>;
     };
     isValid: boolean;
-    currentAvailableLabels: ImpactMetricsLabels | undefined;
+    currentAvailableLabels: AvailableLabels;
 };
 
 export const useChartFormState = ({
@@ -63,7 +68,9 @@ export const useChartFormState = ({
     );
 
     const {
-        data: { labels: currentAvailableLabels },
+        data: { labels: fetchedLabels },
+        loading: fetchingLabels,
+        error: labelsFetchError,
     } = useImpactMetricsData(
         metricName
             ? {
@@ -122,10 +129,14 @@ export const useChartFormState = ({
     });
 
     const isValid = metricName.length > 0;
-    const metricType = getMetricType(
-        metricName,
-        currentAvailableLabels?.metric_type,
-    );
+    const metricType = getMetricType(metricName, fetchedLabels?.metric_type);
+    const hasFetchedLabels = Object.keys(fetchedLabels).length > 0;
+    const currentAvailableLabels: AvailableLabels =
+        labelsFetchError && !hasFetchedLabels
+            ? { status: 'error' }
+            : fetchingLabels
+              ? { status: 'loading' }
+              : { status: 'ready', labels: fetchedLabels };
 
     useEffect(() => {
         if (

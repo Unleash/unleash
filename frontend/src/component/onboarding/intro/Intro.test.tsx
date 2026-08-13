@@ -103,7 +103,6 @@ test('starts with a gradual Smart Search rollout and context cards', () => {
     expect(screen.getByTestId('QUICK_TOUR_INTRO_POPOVER_BODY')).toHaveStyle({
         overflowY: 'auto',
     });
-    expect(Number(popover.dataset.maxHeight)).toBeLessThan(window.innerHeight);
     expect(screen.getByText('Classic Search')).toBeInTheDocument();
     expect(screen.getByText('Current experience')).toBeInTheDocument();
     expect(screen.getByText('Context')).toBeInTheDocument();
@@ -784,6 +783,21 @@ test('explains targeting from the matching context values', () => {
             /Cara sees Classic Search because Canada is not one of the targeted countries/,
         ),
     ).toBeInTheDocument();
+});
+
+test('shows the constraint trace in the preview panel', () => {
+    renderAdvancedIntro();
+    next();
+
+    const grid = screen.getByTestId('QUICK_TOUR_INTRO_USER_GRID');
+    fireEvent.click(within(grid).getByRole('button', { name: /Ada/ }));
+
+    const panel = screen.getByTestId('QUICK_TOUR_INTRO_POPOVER');
+    expect(within(panel).getByText('Feature enabled')).toBeInTheDocument();
+    expect(within(panel).getByText('Production on')).toBeInTheDocument();
+    expect(within(panel).getByText('Country NO')).toBeInTheDocument();
+    expect(within(panel).getByText('Plan Pro')).toBeInTheDocument();
+    expect(within(panel).getByText('Rollout 100%')).toBeInTheDocument();
 });
 
 test('links constraints to the activation strategy documentation', async () => {

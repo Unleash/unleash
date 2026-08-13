@@ -1,11 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
     alpha,
     Box,
     Chip,
     IconButton,
-    Paper,
-    Popper,
+    keyframes,
     styled,
     Typography,
     useTheme,
@@ -20,7 +19,6 @@ import {
     type IntroVariant,
     type UserEvaluation,
 } from './introModel.js';
-import { IntroAvatar } from './IntroCharacter.tsx';
 import { avatarForIndex } from './introAvatars.ts';
 import { getVariantSolidFill } from './introVariantColor.js';
 
@@ -169,25 +167,110 @@ const StyledMeta = styled(Typography)(({ theme }) => ({
     whiteSpace: 'nowrap',
 }));
 
-const POPOVER_OFFSET = 8;
-const POPOVER_VIEWPORT_PADDING = 16;
+const slideInPanel = keyframes({
+    from: { opacity: 0, transform: 'translateX(12px)' },
+    to: { opacity: 1, transform: 'translateX(0)' },
+});
 
-const StyledPopoverContent = styled(Box)(({ theme }) => ({
-    boxSizing: 'border-box',
-    width: theme.spacing(50),
-    maxWidth: 'calc(100vw - 32px)',
-    maxHeight: 'inherit',
+const StyledContentRow = styled(Box)(({ theme }) => ({
     display: 'flex',
-    flexDirection: 'column',
+    alignItems: 'stretch',
+    gap: theme.spacing(2),
+    minHeight: 0,
+    [theme.breakpoints.down('md')]: {
+        flexDirection: 'column',
+    },
 }));
 
-const StyledPopoverHeader = styled(Box)(({ theme }) => ({
-    flexShrink: 0,
+const StyledGridWrap = styled(Box)({
+    flex: 1,
+    minWidth: 0,
+});
+
+const StyledPreviewPanel = styled(Box)(({ theme }) => ({
+    flex: 'none',
+    width: theme.spacing(38),
+    maxWidth: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    background: theme.palette.background.paper,
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadiusMedium,
+    boxShadow: theme.shadows[6],
+    overflow: 'hidden',
+    animation: `${slideInPanel} 0.24s ${theme.transitions.easing.easeOut}`,
+    [theme.breakpoints.down('md')]: {
+        width: '100%',
+    },
+    '@media (prefers-reduced-motion: reduce)': {
+        animation: 'none',
+    },
+}));
+
+const StyledPanelHeader = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    minHeight: theme.spacing(3.5),
-    padding: theme.spacing(2, 2, 1.5),
+    gap: theme.spacing(1.5),
+    padding: theme.spacing(2),
+    borderBottom: `1px solid ${theme.palette.divider}`,
+}));
+
+const StyledPanelAvatar = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'avatarUrl',
+})<{ avatarUrl: string }>(({ theme, avatarUrl }) => ({
+    width: 40,
+    height: 40,
+    flex: 'none',
+    borderRadius: '50%',
+    backgroundColor: theme.palette.background.elevation2,
+    backgroundImage: `url('${avatarUrl}')`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center top',
+}));
+
+const StyledTrace = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: theme.spacing(0.75),
+}));
+
+const StyledTraceChip = styled('span', {
+    shouldForwardProp: (prop) => prop !== 'ok',
+})<{ ok: boolean }>(({ theme, ok }) => ({
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.5),
+    fontSize: theme.fontSizes.smallerBody,
+    borderRadius: 999,
+    padding: theme.spacing(0.25, 1),
+    whiteSpace: 'nowrap',
+    border: `1px solid ${
+        ok ? theme.palette.success.border : theme.palette.warning.border
+    }`,
+    background: ok ? theme.palette.success.light : theme.palette.warning.light,
+    color: theme.palette.text.primary,
+    '& svg': {
+        fontSize: 12,
+        color: ok ? theme.palette.success.main : theme.palette.warning.main,
+    },
+}));
+
+const StyledVersionChip = styled('span', {
+    shouldForwardProp: (prop) => prop !== 'enabled',
+})<{ enabled: boolean }>(({ theme, enabled }) => ({
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.5),
+    alignSelf: 'flex-start',
+    fontSize: theme.fontSizes.smallBody,
+    fontWeight: theme.typography.fontWeightBold,
+    borderRadius: 999,
+    padding: theme.spacing(0.5, 1.25),
+    background: enabled
+        ? theme.palette.success.light
+        : theme.palette.background.elevation2,
+    color: enabled ? theme.palette.success.main : theme.palette.text.secondary,
+    '& svg': { fontSize: 14 },
 }));
 
 const StyledPopoverBody = styled(Box)(({ theme }) => ({
@@ -721,19 +804,8 @@ export const IntroUserGrid = ({
     const [restoredUserIds, setRestoredUserIds] = useState<Set<string>>(
         () => new Set(),
     );
-    const [popoverMaxHeight, setPopoverMaxHeight] = useState<
-        number | undefined
-    >();
     const previousErroredUserIds = useRef<Set<string>>(new Set());
     const restoreAnimationTimer = useRef<number | undefined>(undefined);
-    const buttonRefs = useRef(new Map<string, HTMLButtonElement>());
-    const setButtonRef = useCallback(
-        (userId: string) => (node: HTMLButtonElement | null) => {
-            if (node) buttonRefs.current.set(userId, node);
-            else buttonRefs.current.delete(userId);
-        },
-        [],
-    );
 
     useEffect(() => {
         const currentErroredUserIds = new Set(erroredUserIds);
@@ -772,6 +844,36 @@ export const IntroUserGrid = ({
         !erroredUserIdSet.has(openUser?.id ?? '');
     const openErrored = erroredUserIdSet.has(openUser?.id ?? '');
     const openRestored = restoredUserIds.has(openUser?.id ?? '');
+    const openIndex = openUser ? users.indexOf(openUser) : -1;
+
+    const openTrace = openUser
+        ? [
+              {
+                  label: environmentEnabled
+                      ? 'Production on'
+                      : 'Production off',
+                  ok: environmentEnabled,
+              },
+              {
+                  label: `Country ${openUser.country.code}`,
+                  ok:
+                      targeting.targetCountryCodes.length === 0 ||
+                      targeting.targetCountryCodes.includes(
+                          openUser.country.code,
+                      ),
+              },
+              {
+                  label: `Plan ${openPlan?.label ?? openUser.plan}`,
+                  ok:
+                      !targeting.targetPlans?.length ||
+                      targeting.targetPlans.includes(openUser.plan),
+              },
+              {
+                  label: `Rollout ${rollout}%`,
+                  ok: (openEvaluation?.rolloutBucket ?? 101) <= rollout,
+              },
+          ]
+        : [];
 
     const closePreview = () => {
         setOpenUserId(undefined);
@@ -914,205 +1016,186 @@ export const IntroUserGrid = ({
     };
 
     return (
-        <>
-            <StyledGrid data-testid='QUICK_TOUR_INTRO_USER_GRID'>
-                {users.map((user, index) => {
-                    const evaluation = evaluations[index];
-                    const plan =
-                        INTRO_PLANS.find(
-                            (option) => option.value === user.plan,
-                        ) ?? INTRO_PLANS[0];
-                    const enabled = evaluation?.enabled ?? false;
-                    const variant = evaluation?.variant;
-                    const configuredVariant = variant
-                        ? variants.find((item) => item.name === variant)
-                        : undefined;
-                    const errored = erroredUserIdSet.has(user.id);
-                    const experienceLabel = errored
-                        ? 'Search unavailable'
-                        : !environmentEnabled || !enabled
-                          ? 'Classic Search'
-                          : configuredVariant?.label
-                            ? `${configuredVariant.name} · ${configuredVariant.label}`
-                            : 'Smart Search';
-                    const smart = environmentEnabled && enabled && !errored;
-                    const experience: 'smart' | 'classic' | 'error' = errored
-                        ? 'error'
-                        : smart
-                          ? 'smart'
-                          : 'classic';
-                    const accent =
-                        configuredVariant?.color ?? theme.palette.primary.main;
+        <StyledContentRow>
+            <StyledGridWrap>
+                <StyledGrid data-testid='QUICK_TOUR_INTRO_USER_GRID'>
+                    {users.map((user, index) => {
+                        const evaluation = evaluations[index];
+                        const plan =
+                            INTRO_PLANS.find(
+                                (option) => option.value === user.plan,
+                            ) ?? INTRO_PLANS[0];
+                        const enabled = evaluation?.enabled ?? false;
+                        const variant = evaluation?.variant;
+                        const configuredVariant = variant
+                            ? variants.find((item) => item.name === variant)
+                            : undefined;
+                        const errored = erroredUserIdSet.has(user.id);
+                        const experienceLabel = errored
+                            ? 'Search unavailable'
+                            : !environmentEnabled || !enabled
+                              ? 'Classic Search'
+                              : configuredVariant?.label
+                                ? `${configuredVariant.name} · ${configuredVariant.label}`
+                                : 'Smart Search';
+                        const smart = environmentEnabled && enabled && !errored;
+                        const experience: 'smart' | 'classic' | 'error' =
+                            errored ? 'error' : smart ? 'smart' : 'classic';
+                        const accent =
+                            configuredVariant?.color ??
+                            theme.palette.primary.main;
 
-                    return (
-                        <StyledPerson
-                            key={user.id}
-                            ref={setButtonRef(user.id)}
-                            type='button'
-                            aria-label={`${user.name}, ${user.country.label}: ${experienceLabel}`}
-                            selected={selectedId === user.id}
-                            enabled={smart}
-                            dimmed={
-                                selectedId !== undefined &&
-                                selectedId !== user.id
-                            }
-                            onClick={(event) => {
-                                const anchorBottom =
-                                    event.currentTarget.getBoundingClientRect()
-                                        .bottom;
-                                setPopoverMaxHeight(
-                                    Math.max(
-                                        0,
-                                        window.innerHeight -
-                                            anchorBottom -
-                                            POPOVER_OFFSET -
-                                            POPOVER_VIEWPORT_PADDING,
-                                    ),
-                                );
-                                setOpenUserId(user.id);
-                                onSelect(user);
-                            }}
-                        >
-                            <StyledAvatarWrap>
-                                <StyledAvatarImg
-                                    avatarUrl={avatarForIndex(index)}
-                                    hue={(index * 47) % 360}
-                                    accent={accent}
-                                    enabled={smart}
-                                />
-                                <StyledStatusBadge
-                                    experience={experience}
-                                    data-testid='QUICK_TOUR_INTRO_USER_STATUS'
-                                    data-experience={experience}
-                                    title={experienceLabel}
-                                >
-                                    {experience === 'smart' ? (
-                                        <CheckIcon />
-                                    ) : experience === 'error' ? (
-                                        <ErrorOutlineIcon />
-                                    ) : (
-                                        <CloseIcon />
-                                    )}
-                                </StyledStatusBadge>
-                            </StyledAvatarWrap>
-                            <StyledName variant='body2'>{user.name}</StyledName>
+                        return (
+                            <StyledPerson
+                                key={user.id}
+                                type='button'
+                                aria-label={`${user.name}, ${user.country.label}: ${experienceLabel}`}
+                                selected={selectedId === user.id}
+                                enabled={smart}
+                                dimmed={
+                                    selectedId !== undefined &&
+                                    selectedId !== user.id
+                                }
+                                onClick={() => {
+                                    setOpenUserId(user.id);
+                                    onSelect(user);
+                                }}
+                            >
+                                <StyledAvatarWrap>
+                                    <StyledAvatarImg
+                                        avatarUrl={avatarForIndex(index)}
+                                        hue={(index * 47) % 360}
+                                        accent={accent}
+                                        enabled={smart}
+                                    />
+                                    <StyledStatusBadge
+                                        experience={experience}
+                                        data-testid='QUICK_TOUR_INTRO_USER_STATUS'
+                                        data-experience={experience}
+                                        title={experienceLabel}
+                                    >
+                                        {experience === 'smart' ? (
+                                            <CheckIcon />
+                                        ) : experience === 'error' ? (
+                                            <ErrorOutlineIcon />
+                                        ) : (
+                                            <CloseIcon />
+                                        )}
+                                    </StyledStatusBadge>
+                                </StyledAvatarWrap>
+                                <StyledName variant='body2'>
+                                    {user.name}
+                                </StyledName>
+                                <StyledMeta>
+                                    {user.country.flag} {user.country.code} ·{' '}
+                                    {plan.label}
+                                </StyledMeta>
+                            </StyledPerson>
+                        );
+                    })}
+                </StyledGrid>
+            </StyledGridWrap>
+
+            {openUser ? (
+                <StyledPreviewPanel data-testid='QUICK_TOUR_INTRO_POPOVER'>
+                    <StyledPanelHeader>
+                        <StyledPanelAvatar
+                            avatarUrl={avatarForIndex(openIndex)}
+                        />
+                        <Box sx={{ flex: 1, minWidth: 0 }}>
+                            <StyledPopoverTitle
+                                variant='subtitle2'
+                                sx={{ color: 'text.primary' }}
+                            >
+                                {openUser.name}
+                            </StyledPopoverTitle>
                             <StyledMeta>
-                                {user.country.flag} {user.country.code} ·{' '}
-                                {plan.label}
+                                {openUser.country.flag} {openUser.country.label}{' '}
+                                · {openPlan?.label}
                             </StyledMeta>
-                        </StyledPerson>
-                    );
-                })}
-            </StyledGrid>
+                        </Box>
+                        <StyledPopoverClose
+                            size='small'
+                            aria-label='Close full preview'
+                            onClick={closePreview}
+                        >
+                            <CloseIcon fontSize='small' />
+                        </StyledPopoverClose>
+                    </StyledPanelHeader>
 
-            <Popper
-                open={Boolean(openUserId && openUser)}
-                anchorEl={
-                    openUserId ? buttonRefs.current.get(openUserId) : undefined
-                }
-                placement='bottom'
-                sx={{ zIndex: (theme) => theme.zIndex.modal }}
-                modifiers={[
-                    {
-                        name: 'offset',
-                        options: { offset: [0, 8] },
-                    },
-                    {
-                        name: 'preventOverflow',
-                        options: { padding: 16 },
-                    },
-                ]}
-            >
-                {openUser ? (
-                    <Paper
-                        elevation={8}
-                        data-testid='QUICK_TOUR_INTRO_POPOVER'
-                        data-max-height={popoverMaxHeight}
-                        sx={{
-                            maxHeight: popoverMaxHeight,
-                            overflow: 'hidden',
-                        }}
-                    >
-                        <StyledPopoverContent>
-                            <StyledPopoverHeader>
-                                <StyledPopoverTitle variant='caption'>
-                                    Experience details
-                                </StyledPopoverTitle>
-                                <StyledPopoverClose
-                                    size='small'
-                                    aria-label='Close full preview'
-                                    onClick={closePreview}
-                                >
-                                    <CloseIcon fontSize='small' />
-                                </StyledPopoverClose>
-                            </StyledPopoverHeader>
+                    <StyledPopoverBody data-testid='QUICK_TOUR_INTRO_POPOVER_BODY'>
+                        <StyledVersionChip enabled={openSmart}>
+                            {openSmart ? <CheckIcon /> : <CloseIcon />}
+                            {openSmart ? 'Feature enabled' : 'Feature disabled'}
+                        </StyledVersionChip>
 
-                            <StyledPopoverBody data-testid='QUICK_TOUR_INTRO_POPOVER_BODY'>
-                                {preview(
-                                    openSmart,
-                                    openVariant,
-                                    openErrored,
-                                    openRestored,
-                                )}
+                        <StyledTrace>
+                            {openTrace.map((item) => (
+                                <StyledTraceChip key={item.label} ok={item.ok}>
+                                    {item.ok ? <CheckIcon /> : <CloseIcon />}
+                                    {item.label}
+                                </StyledTraceChip>
+                            ))}
+                        </StyledTrace>
 
-                                <StyledEvaluationPanel>
-                                    <StyledExplanation>
-                                        <IntroAvatar look={openUser.look} />
-                                        <span>
-                                            {evaluationReason(
-                                                openUser,
-                                                openEvaluation,
-                                                rollout,
-                                                environmentEnabled,
-                                                openErrored,
-                                                targeting,
-                                                openVariant,
-                                                mode === 'variants',
-                                            )}
-                                        </span>
-                                    </StyledExplanation>
-                                    <StyledContext>
-                                        <StyledContextLabel variant='caption'>
-                                            Context
-                                        </StyledContextLabel>
-                                        <StyledContextJson>
-                                            <span className='json-punctuation'>
-                                                {'{\n'}
-                                            </span>
-                                            {'  '}
-                                            <span className='json-key'>
-                                                "Country"
-                                            </span>
-                                            <span className='json-punctuation'>
-                                                {': '}
-                                            </span>
-                                            <span className='json-string'>
-                                                {`"${openUser.country.flag} ${openUser.country.code}"`}
-                                            </span>
-                                            <span className='json-punctuation'>
-                                                {',\n'}
-                                            </span>
-                                            {'  '}
-                                            <span className='json-key'>
-                                                "Plan"
-                                            </span>
-                                            <span className='json-punctuation'>
-                                                {': '}
-                                            </span>
-                                            <span className='json-string'>
-                                                {`"${openPlan?.label}"`}
-                                            </span>
-                                            <span className='json-punctuation'>
-                                                {'\n}'}
-                                            </span>
-                                        </StyledContextJson>
-                                    </StyledContext>
-                                </StyledEvaluationPanel>
-                            </StyledPopoverBody>
-                        </StyledPopoverContent>
-                    </Paper>
-                ) : null}
-            </Popper>
-        </>
+                        {preview(
+                            openSmart,
+                            openVariant,
+                            openErrored,
+                            openRestored,
+                        )}
+
+                        <StyledEvaluationPanel>
+                            <StyledExplanation>
+                                <span>
+                                    {evaluationReason(
+                                        openUser,
+                                        openEvaluation,
+                                        rollout,
+                                        environmentEnabled,
+                                        openErrored,
+                                        targeting,
+                                        openVariant,
+                                        mode === 'variants',
+                                    )}
+                                </span>
+                            </StyledExplanation>
+                            <StyledContext>
+                                <StyledContextLabel variant='caption'>
+                                    Context
+                                </StyledContextLabel>
+                                <StyledContextJson>
+                                    <span className='json-punctuation'>
+                                        {'{\n'}
+                                    </span>
+                                    {'  '}
+                                    <span className='json-key'>"Country"</span>
+                                    <span className='json-punctuation'>
+                                        {': '}
+                                    </span>
+                                    <span className='json-string'>
+                                        {`"${openUser.country.flag} ${openUser.country.code}"`}
+                                    </span>
+                                    <span className='json-punctuation'>
+                                        {',\n'}
+                                    </span>
+                                    {'  '}
+                                    <span className='json-key'>"Plan"</span>
+                                    <span className='json-punctuation'>
+                                        {': '}
+                                    </span>
+                                    <span className='json-string'>
+                                        {`"${openPlan?.label}"`}
+                                    </span>
+                                    <span className='json-punctuation'>
+                                        {'\n}'}
+                                    </span>
+                                </StyledContextJson>
+                            </StyledContext>
+                        </StyledEvaluationPanel>
+                    </StyledPopoverBody>
+                </StyledPreviewPanel>
+            ) : null}
+        </StyledContentRow>
     );
 };

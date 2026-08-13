@@ -86,44 +86,44 @@ const MILESTONE_ERROR_GRACE_MS = 2_000;
 const PROTECTED_RELEASE_MILESTONE_MS = 5_400;
 
 interface IReleasePlanMilestone extends IIntroReleaseMilestone {
+    targetCountryCodes: string[];
     targetPlans: IntroUser['plan'][];
-    targetDevices: IntroUser['device'][];
 }
 
 const RELEASE_PLAN_MILESTONES: IReleasePlanMilestone[] = [
     {
-        name: 'Preview with 40% of Free desktop users',
+        name: 'Preview with 40% of Pro users in Norway',
         rollout: 40,
         constraints: [
-            { field: 'Plan', values: ['🥉 Free'] },
-            { field: 'Device', values: ['🖥️ Desktop'] },
+            { field: 'Country', values: ['🇳🇴 NO'] },
+            { field: 'Plan', values: ['🥈 Pro'] },
         ],
-        targetPlans: ['free'],
-        targetDevices: ['desktop'],
+        targetCountryCodes: ['NO'],
+        targetPlans: ['pro'],
     },
     {
-        name: 'Expand to 60% of Free + Pro desktop users',
+        name: 'Expand to 60% of Pro + Enterprise in Norway + US',
         rollout: 60,
         constraints: [
-            { field: 'Plan', values: ['🥉 Free', '🥈 Pro'] },
-            { field: 'Device', values: ['🖥️ Desktop'] },
+            { field: 'Country', values: ['🇳🇴 NO', '🇺🇸 US'] },
+            { field: 'Plan', values: ['🥈 Pro', '🥇 Enterprise'] },
         ],
-        targetPlans: ['free', 'pro'],
-        targetDevices: ['desktop'],
+        targetCountryCodes: ['NO', 'US'],
+        targetPlans: ['pro', 'enterprise'],
     },
     {
-        name: 'Reach 90% of all desktop users',
+        name: 'Reach 90% of all users',
         rollout: 90,
-        constraints: [{ field: 'Device', values: ['🖥️ Desktop'] }],
+        constraints: [],
+        targetCountryCodes: [],
         targetPlans: [],
-        targetDevices: ['desktop'],
     },
     {
         name: 'Release to everyone',
         rollout: 100,
         constraints: [],
+        targetCountryCodes: [],
         targetPlans: [],
-        targetDevices: [],
     },
 ];
 
@@ -136,9 +136,8 @@ const withReleaseMilestone = (
         ...current,
         environmentEnabled: true,
         rollout: milestone.rollout,
-        targetCountryCodes: [],
+        targetCountryCodes: milestone.targetCountryCodes,
         targetPlans: milestone.targetPlans,
-        targetDevices: milestone.targetDevices,
         variantsEnabled: false,
     };
 };
@@ -166,12 +165,6 @@ const TOPICS: ITopic[] = [
         title: 'Start by toggling the flag in production',
         body: 'When you have toggled a flag on, you can decide how many will see the feature by dragging the rollout slider.',
     },
-    // {
-    //     key: 'target',
-    //     mode: 'target',
-    //     title: 'Target the right audience',
-    //     body: 'Constraints narrow a rollout to the audience you intend. Combine country, plan, and device just as you would in an Unleash activation strategy.',
-    // },
     {
         key: 'target',
         mode: 'target',
@@ -420,7 +413,6 @@ export const Intro = ({
         rollout: 50,
         targetCountryCodes: [],
         targetPlans: [],
-        targetDevices: [],
         variantsEnabled: false,
         variants: makeVariants(['A', 'B'], variantPalette),
     }));
@@ -488,8 +480,8 @@ export const Intro = ({
                     setConfig((current) => ({
                         ...current,
                         rollout: nextMilestone.rollout,
+                        targetCountryCodes: nextMilestone.targetCountryCodes,
                         targetPlans: nextMilestone.targetPlans,
-                        targetDevices: nextMilestone.targetDevices,
                     }));
                     if (nextIndex === RELEASE_PLAN_MILESTONES.length - 1) {
                         setReleasePlanState('advanced');
@@ -577,7 +569,6 @@ export const Intro = ({
                     rollout: 50,
                     targetCountryCodes: [],
                     targetPlans: [],
-                    targetDevices: [],
                     variantsEnabled: false,
                 };
             }
@@ -588,7 +579,6 @@ export const Intro = ({
                     rollout: 100,
                     targetCountryCodes: ['NO', 'US'],
                     targetPlans: ['pro', 'enterprise'],
-                    targetDevices: ['desktop'],
                     variantsEnabled: false,
                 };
             }
@@ -599,7 +589,6 @@ export const Intro = ({
                     rollout: 100,
                     targetCountryCodes: [],
                     targetPlans: [],
-                    targetDevices: [],
                     variantsEnabled: true,
                     variants: makeVariants(['A', 'B'], variantPalette),
                 };
@@ -611,7 +600,6 @@ export const Intro = ({
                     rollout: 0,
                     targetCountryCodes: [],
                     targetPlans: [],
-                    targetDevices: [],
                     variantsEnabled: false,
                 };
             }
@@ -633,7 +621,6 @@ export const Intro = ({
                 rollout: 100,
                 targetCountryCodes: [],
                 targetPlans: [],
-                targetDevices: [],
                 variantsEnabled: true,
             };
         });
@@ -797,15 +784,6 @@ export const Intro = ({
         }));
     };
 
-    const toggleDevice = (device: IntroUser['device']) => {
-        setConfig((current) => ({
-            ...current,
-            targetDevices: current.targetDevices?.includes(device)
-                ? current.targetDevices.filter((item) => item !== device)
-                : [...(current.targetDevices ?? []), device],
-        }));
-    };
-
     const addVariant = () => {
         setConfig((current) => {
             const used = current.variants.map((variant) => variant.name);
@@ -944,7 +922,6 @@ export const Intro = ({
                             onRolloutChange={setRollout}
                             onToggleCountry={toggleCountry}
                             onTogglePlan={togglePlan}
-                            onToggleDevice={toggleDevice}
                             onAddVariant={addVariant}
                             onWeightsChange={setVariantWeights}
                         />
@@ -1007,7 +984,6 @@ export const Intro = ({
                     targeting={{
                         targetCountryCodes: config.targetCountryCodes,
                         targetPlans: config.targetPlans,
-                        targetDevices: config.targetDevices,
                     }}
                     erroredUserIds={
                         config.environmentEnabled &&

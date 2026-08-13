@@ -70,7 +70,9 @@ const retryWithSafeguard = () => {
 test('starts with a gradual Smart Search rollout and context cards', () => {
     renderAdvancedIntro();
 
-    expect(screen.getByText('Release Smart Search')).toBeInTheDocument();
+    expect(
+        screen.getByText('Start by toggling the flag in production'),
+    ).toBeInTheDocument();
     expect(screen.getByText(/people get Smart Search/)).toBeInTheDocument();
     expect(
         screen.getByText(
@@ -93,13 +95,6 @@ test('starts with a gradual Smart Search rollout and context cards', () => {
                     preview.getAttribute('data-experience') === 'classic',
             ),
     ).toBe(true);
-    expect(
-        screen
-            .getAllByTestId('QUICK_TOUR_INTRO_MINI_PREVIEW')
-            .filter(
-                (preview) => preview.getAttribute('data-device') === 'mobile',
-            ),
-    ).toHaveLength(6);
 
     const grid = screen.getByTestId('QUICK_TOUR_INTRO_USER_GRID');
     fireEvent.click(within(grid).getAllByRole('button')[0]);
@@ -114,10 +109,15 @@ test('starts with a gradual Smart Search rollout and context cards', () => {
     expect(screen.getByText('Context')).toBeInTheDocument();
     expect(
         screen.getByText(
-            /Ada sees Classic Search because the rollout does not include their bucket \(0 < \d+\)/,
+            /Ada sees Classic Search because production is disabled/,
         ),
     ).toBeInTheDocument();
 
+    fireEvent.click(
+        screen.getByRole('switch', {
+            name: 'Toggle Smart Search in production',
+        }),
+    );
     fireEvent.change(screen.getByRole('slider', { name: 'Rollout %' }), {
         target: { value: '100' },
     });
@@ -159,10 +159,12 @@ test('walks through the connected story to the showcase', () => {
     renderAdvancedIntro();
 
     next();
-    expect(screen.getByText('Target the right audience')).toBeInTheDocument();
+    expect(
+        screen.getByText('Target who can see your feature'),
+    ).toBeInTheDocument();
 
     next();
-    expect(screen.getByText('Compare experiences')).toBeInTheDocument();
+    expect(screen.getByText('Run experiments')).toBeInTheDocument();
 
     next();
     expect(screen.getByText('Automate the rollout')).toBeInTheDocument();
@@ -265,7 +267,7 @@ test('finishes after the three core steps when advanced steps are disabled', () 
     expect(screen.getByText('Unleash Intro · 1 of 3')).toBeInTheDocument();
     next();
     next();
-    expect(screen.getByText('Compare experiences')).toBeInTheDocument();
+    expect(screen.getByText('Run experiments')).toBeInTheDocument();
     expect(
         screen.getByTestId('QUICK_TOUR_INTRO_NEXT_BUTTON'),
     ).toHaveTextContent('Finish');
@@ -400,7 +402,7 @@ test('keeps metrics live without errors until production is enabled', () => {
     milestoneEvents.forEach((event) => {
         expect(event).toHaveAttribute(
             'aria-label',
-            'Milestone started: Expand to 60% of Free + Pro desktop users',
+            'Milestone started: Expand to 60% of Pro + Enterprise in Norway + US',
         );
     });
     expect(within(charts).getAllByTestId('FlagOutlinedIcon')).toHaveLength(2);
@@ -618,16 +620,16 @@ test('starts the release plan from the environment and supports manual milestone
     });
     expect(strategyButton).toHaveAttribute('aria-expanded', 'true');
     expect(within(firstMilestone).getByText('Plan')).toBeInTheDocument();
-    expect(within(firstMilestone).getByText('🥉 Free')).toBeInTheDocument();
+    expect(within(firstMilestone).getByText('🥈 Pro')).toBeInTheDocument();
     fireEvent.click(
         within(firstMilestone).getByText(
-            'Preview with 40% of Free desktop users',
+            'Preview with 40% of Pro users in Norway',
         ),
     );
     expect(strategyButton).toHaveAttribute('aria-expanded', 'false');
     fireEvent.click(
         within(firstMilestone).getByText(
-            'Preview with 40% of Free desktop users',
+            'Preview with 40% of Pro users in Norway',
         ),
     );
     expect(strategyButton).toHaveAttribute('aria-expanded', 'true');
@@ -645,7 +647,7 @@ test('starts the release plan from the environment and supports manual milestone
     ).toBeInTheDocument();
     expect(
         screen.getByTestId('QUICK_TOUR_INTRO_ENABLED_COUNT'),
-    ).toHaveTextContent('4');
+    ).toHaveTextContent('3');
     expect(
         within(screen.getByTestId('QUICK_TOUR_INTRO_MILESTONE_1')).getByRole(
             'button',
@@ -682,7 +684,7 @@ test('starts the release plan from the environment and supports manual milestone
     );
 
     for (const [milestone, audience] of [
-        [3, 7],
+        [3, 13],
         [4, 15],
     ]) {
         act(() => {
@@ -729,13 +731,13 @@ test('marks the tour finished on reaching the showcase and closes it on Finish',
     vi.useRealTimers();
 });
 
-test('targets with product-like country, plan, and device constraints', () => {
+test('targets with product-like country and plan constraints', () => {
     renderAdvancedIntro();
     next();
 
     expect(screen.getByText('Country')).toBeInTheDocument();
     expect(screen.getByText('Plan')).toBeInTheDocument();
-    expect(screen.getByText('Device')).toBeInTheDocument();
+    expect(screen.queryByText('Device')).not.toBeInTheDocument();
     const norwayConstraint = screen.getByRole('button', { name: '🇳🇴 NO' });
     expect(norwayConstraint).toHaveAttribute('aria-pressed', 'true');
     fireEvent.click(norwayConstraint);
@@ -743,7 +745,7 @@ test('targets with product-like country, plan, and device constraints', () => {
     expect(
         screen.getByRole('button', { name: '🥇 Enterprise' }),
     ).toBeInTheDocument();
-    expect(screen.getAllByText('is one of').length).toBeGreaterThanOrEqual(3);
+    expect(screen.getAllByText('is one of').length).toBeGreaterThanOrEqual(2);
 });
 
 test('explains targeting from the matching context values', () => {
@@ -754,16 +756,15 @@ test('explains targeting from the matching context values', () => {
     fireEvent.click(within(grid).getByRole('button', { name: /Ada/ }));
 
     const explanation = screen.getByText(/Ada (gets|matches)/);
-    expect(explanation).toHaveTextContent(/Norway, the Pro plan, and desktop/);
-    expect(explanation).toHaveTextContent(/all three constraints/);
+    expect(explanation).toHaveTextContent(/Norway and the Pro plan/);
+    expect(explanation).toHaveTextContent(/both constraints/);
     expect(screen.getByText('"🇳🇴 NO"')).toBeInTheDocument();
     expect(screen.getByText('"🥈 Pro"')).toBeInTheDocument();
-    expect(screen.getByText('"🖥️ Desktop"')).toBeInTheDocument();
 
-    fireEvent.click(within(grid).getByRole('button', { name: /Ben/ }));
+    fireEvent.click(within(grid).getByRole('button', { name: /Cara/ }));
     expect(
         screen.getByText(
-            /Ben sees Classic Search because Free is not one of the targeted plans/,
+            /Cara sees Classic Search because Canada is not one of the targeted countries/,
         ),
     ).toBeInTheDocument();
 });
@@ -817,7 +818,7 @@ test('names Impact Metrics and links to its documentation', async () => {
     next();
     vi.useRealTimers();
 
-    expect(screen.getAllByText('Impact metrics')).toHaveLength(2);
+    expect(screen.getAllByText('Impact metrics')).toHaveLength(1);
     const charts = screen.getByTestId('QUICK_TOUR_INTRO_IMPACT_CHARTS');
     fireEvent.mouseOver(within(charts).getByLabelText('Help'));
     expect(

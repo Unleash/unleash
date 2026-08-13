@@ -13,30 +13,18 @@ export interface IntroUser {
     name: string;
     country: IntroCountry;
     plan: IntroPlan;
-    device: IntroDevice;
     look: IntroLook;
 }
 
-export type IntroPlan = 'free' | 'pro' | 'enterprise';
-export type IntroDevice = 'desktop' | 'mobile';
+export type IntroPlan = 'pro' | 'enterprise';
 
 export const INTRO_PLANS: Array<{
     value: IntroPlan;
     label: string;
     emoji: string;
 }> = [
-    { value: 'free', label: 'Free', emoji: '🥉' },
     { value: 'pro', label: 'Pro', emoji: '🥈' },
     { value: 'enterprise', label: 'Enterprise', emoji: '🥇' },
-];
-
-export const INTRO_DEVICES: Array<{
-    value: IntroDevice;
-    label: string;
-    emoji: string;
-}> = [
-    { value: 'desktop', label: 'Desktop', emoji: '🖥️' },
-    { value: 'mobile', label: 'Mobile', emoji: '📱' },
 ];
 
 /**
@@ -92,7 +80,6 @@ export interface IntroFlagConfig {
      */
     targetCountryCodes: string[];
     targetPlans?: IntroUser['plan'][];
-    targetDevices?: IntroUser['device'][];
     variantsEnabled: boolean;
     variants: IntroVariant[];
 }
@@ -136,11 +123,9 @@ const FIRST_NAMES = [
     'Zoe',
 ];
 
-// Avoid making synthetic context values line up with grid columns. These
-// patterns deliberately scatter plan and device across each set of 15 users.
-const PRO_POSITIONS = new Set([0, 4, 5, 7, 9]);
+// Avoid making synthetic context values line up with grid columns. This
+// pattern deliberately scatters the plan across each set of 15 users.
 const ENTERPRISE_POSITIONS = new Set([2, 6, 10, 14]);
-const MOBILE_POSITIONS = new Set([1, 3, 5, 8, 10, 12]);
 
 /**
  * Deterministically generate a stable set of synthetic users. The same index
@@ -154,12 +139,7 @@ export const generateIntroUsers = (count: number): IntroUser[] =>
             id: `user-${i + 1}`,
             name,
             country,
-            plan: ENTERPRISE_POSITIONS.has(i % 15)
-                ? 'enterprise'
-                : PRO_POSITIONS.has(i % 15)
-                  ? 'pro'
-                  : 'free',
-            device: MOBILE_POSITIONS.has(i % 15) ? 'mobile' : 'desktop',
+            plan: ENTERPRISE_POSITIONS.has(i % 15) ? 'enterprise' : 'pro',
             // Multipliers co-prime with each palette size cycle through every
             // palette entry and scatter the combinations so neighbouring users
             // don't look like siblings. Country repeats with period 5, so the
@@ -242,11 +222,7 @@ export const computeEvaluations = (
         const matchesPlan =
             !config.targetPlans?.length ||
             config.targetPlans.includes(user.plan);
-        const matchesDevice =
-            !config.targetDevices?.length ||
-            config.targetDevices.includes(user.device);
-        const matchesConstraints =
-            matchesCountry && matchesPlan && matchesDevice;
+        const matchesConstraints = matchesCountry && matchesPlan;
         const enabled =
             config.environmentEnabled && matchesConstraints && inRollout;
         return {

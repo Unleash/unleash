@@ -14,7 +14,6 @@ const baseConfig = (
     rollout: 0,
     targetCountryCodes: [],
     targetPlans: [],
-    targetDevices: [],
     variantsEnabled: false,
     variants: [],
     ...overrides,
@@ -133,7 +132,7 @@ describe('introModel', () => {
         }
     });
 
-    it('ANDs country, plan, and device constraints', () => {
+    it('ANDs country and plan constraints', () => {
         const users = generateIntroUsers(50);
         const evaluations = computeEvaluations(
             users,
@@ -141,15 +140,12 @@ describe('introModel', () => {
                 rollout: 100,
                 targetCountryCodes: ['NO'],
                 targetPlans: ['pro'],
-                targetDevices: ['desktop'],
             }),
         );
 
         users.forEach((user, index) => {
             expect(evaluations[index].enabled).toBe(
-                user.country.code === 'NO' &&
-                    user.plan === 'pro' &&
-                    user.device === 'desktop',
+                user.country.code === 'NO' && user.plan === 'pro',
             );
         });
     });

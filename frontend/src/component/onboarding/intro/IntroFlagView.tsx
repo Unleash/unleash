@@ -14,7 +14,6 @@ import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { StrategyEvaluationChip } from 'component/common/ConstraintsList/StrategyEvaluationChip/StrategyEvaluationChip';
 import {
     INTRO_COUNTRIES,
-    INTRO_DEVICES,
     INTRO_PLANS,
     type IntroFlagConfig,
     type IntroUser,
@@ -188,7 +187,6 @@ interface IIntroFlagViewProps {
     onRolloutChange: (value: number) => void;
     onToggleCountry: (code: string) => void;
     onTogglePlan: (plan: IntroUser['plan']) => void;
-    onToggleDevice: (device: IntroUser['device']) => void;
     onAddVariant: () => void;
     onWeightsChange: (weights: number[]) => void;
 }
@@ -222,7 +220,6 @@ export const IntroFlagView = ({
     onRolloutChange,
     onToggleCountry,
     onTogglePlan,
-    onToggleDevice,
     onAddVariant,
     onWeightsChange,
 }: IIntroFlagViewProps) => {
@@ -360,27 +357,6 @@ export const IntroFlagView = ({
                                                 ),
                                             ),
                                             () => onTogglePlan(plan.value),
-                                        ),
-                                    )}
-                                </StyledConstraintValues>
-                            </StyledConstraintRow>
-                            <StyledConstraintRow>
-                                <StyledConstraintField>
-                                    Device
-                                </StyledConstraintField>
-                                <StyledConstraintOperatorGroup>
-                                    <StrategyEvaluationChip label='is one of' />
-                                </StyledConstraintOperatorGroup>
-                                <StyledConstraintValues>
-                                    {INTRO_DEVICES.map((device) =>
-                                        selectableChip(
-                                            `${device.emoji} ${device.label}`,
-                                            Boolean(
-                                                config.targetDevices?.includes(
-                                                    device.value,
-                                                ),
-                                            ),
-                                            () => onToggleDevice(device.value),
                                         ),
                                     )}
                                 </StyledConstraintValues>

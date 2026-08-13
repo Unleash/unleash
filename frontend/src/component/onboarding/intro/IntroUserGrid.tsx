@@ -13,7 +13,6 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import {
-    INTRO_DEVICES,
     INTRO_PLANS,
     type IntroFlagConfig,
     type IntroUser,
@@ -756,7 +755,7 @@ const StyledResultLine = styled(Box, {
 
 type TargetingConfig = Pick<
     IntroFlagConfig,
-    'targetCountryCodes' | 'targetPlans' | 'targetDevices'
+    'targetCountryCodes' | 'targetPlans'
 >;
 
 const naturalList = (items: string[]): string => {
@@ -781,16 +780,12 @@ const constraintExplanation = (
     const activeCount = [
         targeting.targetCountryCodes.length > 0,
         Boolean(targeting.targetPlans?.length),
-        Boolean(targeting.targetDevices?.length),
     ].filter(Boolean).length;
     const values: string[] = [];
     const failures: string[] = [];
     const plan =
         INTRO_PLANS.find((option) => option.value === user.plan)?.label ??
         user.plan;
-    const device =
-        INTRO_DEVICES.find((option) => option.value === user.device)?.label ??
-        user.device;
 
     if (targeting.targetCountryCodes.length > 0) {
         if (targeting.targetCountryCodes.includes(user.country.code)) {
@@ -806,13 +801,6 @@ const constraintExplanation = (
             values.push(`the ${plan} plan`);
         } else {
             failures.push(`${plan} is not one of the targeted plans`);
-        }
-    }
-    if (targeting.targetDevices?.length) {
-        if (targeting.targetDevices.includes(user.device)) {
-            values.push(device.toLowerCase());
-        } else {
-            failures.push(`${device} is not one of the targeted device types`);
         }
     }
 
@@ -944,9 +932,6 @@ export const IntroUserGrid = ({
         : undefined;
     const openPlan = openUser
         ? INTRO_PLANS.find((option) => option.value === openUser.plan)
-        : undefined;
-    const openDevice = openUser
-        ? INTRO_DEVICES.find((option) => option.value === openUser.device)
         : undefined;
     const openVariant = openEvaluation?.variant
         ? variants.find((variant) => variant.name === openEvaluation.variant)
@@ -1106,10 +1091,6 @@ export const IntroUserGrid = ({
                         INTRO_PLANS.find(
                             (option) => option.value === user.plan,
                         ) ?? INTRO_PLANS[0];
-                    const device =
-                        INTRO_DEVICES.find(
-                            (option) => option.value === user.device,
-                        ) ?? INTRO_DEVICES[0];
                     const enabled = evaluation?.enabled ?? false;
                     const variant = evaluation?.variant;
                     const configuredVariant = variant
@@ -1180,9 +1161,7 @@ export const IntroUserGrid = ({
                                 <StyledCountry>
                                     {user.country.flag} {user.country.label}
                                 </StyledCountry>
-                                <StyledMeta>
-                                    {plan.label} · {device.label}
-                                </StyledMeta>
+                                <StyledMeta>{plan.label}</StyledMeta>
                             </StyledIdentity>
                             <StyledMiniPreview
                                 smart={smart}
@@ -1192,7 +1171,6 @@ export const IntroUserGrid = ({
                                 delayMs={previewDelayMs}
                                 aria-hidden
                                 data-testid='QUICK_TOUR_INTRO_MINI_PREVIEW'
-                                data-device={user.device}
                                 data-experience={
                                     errored
                                         ? 'error'
@@ -1343,19 +1321,6 @@ export const IntroUserGrid = ({
                                             </span>
                                             <span className='json-string'>
                                                 {`"${openPlan?.emoji} ${openPlan?.label}"`}
-                                            </span>
-                                            <span className='json-punctuation'>
-                                                {',\n'}
-                                            </span>
-                                            {'  '}
-                                            <span className='json-key'>
-                                                "Device"
-                                            </span>
-                                            <span className='json-punctuation'>
-                                                {': '}
-                                            </span>
-                                            <span className='json-string'>
-                                                {`"${openDevice?.emoji} ${openDevice?.label}"`}
                                             </span>
                                             <span className='json-punctuation'>
                                                 {'\n}'}

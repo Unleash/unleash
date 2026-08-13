@@ -2,6 +2,7 @@ import { useState } from 'react';
 import {
     alpha,
     Box,
+    Chip,
     IconButton,
     keyframes,
     styled,
@@ -212,10 +213,16 @@ const StyledPreviewPanel = styled(Box)(({ theme }) => ({
 
 const StyledPanelHeader = styled(Box)(({ theme }) => ({
     display: 'flex',
-    alignItems: 'center',
+    flexDirection: 'column',
     gap: theme.spacing(1.5),
     padding: theme.spacing(2),
     borderBottom: `1px solid ${theme.palette.divider}`,
+}));
+
+const StyledPanelHeaderRow = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1.5),
 }));
 
 const StyledPanelAvatar = styled(Box, {
@@ -234,62 +241,8 @@ const StyledPanelAvatar = styled(Box, {
 const StyledTrace = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexWrap: 'wrap',
-    gap: theme.spacing(0.75),
-}));
-
-const StyledTraceChip = styled('span', {
-    shouldForwardProp: (prop) => prop !== 'ok',
-})<{ ok: boolean }>(({ theme, ok }) => ({
-    display: 'inline-flex',
-    alignItems: 'center',
     gap: theme.spacing(0.5),
-    fontSize: theme.fontSizes.smallerBody,
-    borderRadius: 999,
-    padding: theme.spacing(0.25, 1),
-    whiteSpace: 'nowrap',
-    border: `1px solid ${
-        ok ? theme.palette.success.border : theme.palette.warning.border
-    }`,
-    background: ok ? theme.palette.success.light : theme.palette.warning.light,
-    color: theme.palette.text.primary,
-    '& svg': {
-        fontSize: 12,
-        color: ok ? theme.palette.success.main : theme.palette.warning.main,
-    },
 }));
-
-const StyledVersionChip = styled('span', {
-    shouldForwardProp: (prop) => prop !== 'state',
-})<{ state: 'smart' | 'classic' | 'error' }>(({ theme, state }) => {
-    const palette =
-        state === 'smart'
-            ? {
-                  bg: theme.palette.success.light,
-                  fg: theme.palette.success.main,
-              }
-            : state === 'error'
-              ? {
-                    bg: theme.palette.error.light,
-                    fg: theme.palette.error.main,
-                }
-              : {
-                    bg: theme.palette.background.elevation2,
-                    fg: theme.palette.text.secondary,
-                };
-    return {
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: theme.spacing(0.5),
-        alignSelf: 'flex-start',
-        fontSize: theme.fontSizes.smallBody,
-        fontWeight: theme.typography.fontWeightBold,
-        borderRadius: 999,
-        padding: theme.spacing(0.5, 1.25),
-        background: palette.bg,
-        color: palette.fg,
-        '& svg': { fontSize: 14 },
-    };
-});
 
 const StyledPopoverBody = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -860,54 +813,80 @@ export const IntroUserGrid = ({
             {openUser ? (
                 <StyledPreviewPanel data-testid='QUICK_TOUR_INTRO_POPOVER'>
                     <StyledPanelHeader>
-                        <StyledPanelAvatar
-                            avatarUrl={avatarForIndex(openIndex)}
-                        />
-                        <Box sx={{ flex: 1, minWidth: 0 }}>
-                            <StyledPopoverTitle
-                                variant='subtitle2'
-                                sx={{ color: 'text.primary' }}
+                        <StyledPanelHeaderRow>
+                            <StyledPanelAvatar
+                                avatarUrl={avatarForIndex(openIndex)}
+                            />
+                            <Box sx={{ flex: 1, minWidth: 0 }}>
+                                <StyledPopoverTitle
+                                    variant='subtitle2'
+                                    sx={{ color: 'text.primary' }}
+                                >
+                                    {openUser.name}
+                                </StyledPopoverTitle>
+                                <StyledMeta
+                                    sx={{
+                                        whiteSpace: 'normal',
+                                        overflow: 'visible',
+                                    }}
+                                >
+                                    {openUser.country.flag}{' '}
+                                    {openUser.country.label} · {openPlan?.label}{' '}
+                                    · bucket {openEvaluation?.rolloutBucket}
+                                </StyledMeta>
+                            </Box>
+                            <StyledPopoverClose
+                                size='small'
+                                aria-label='Close full preview'
+                                onClick={closePreview}
                             >
-                                {openUser.name}
-                            </StyledPopoverTitle>
-                            <StyledMeta>
-                                {openUser.country.flag} {openUser.country.label}{' '}
-                                · {openPlan?.label}
-                            </StyledMeta>
-                        </Box>
-                        <StyledPopoverClose
-                            size='small'
-                            aria-label='Close full preview'
-                            onClick={closePreview}
-                        >
-                            <CloseIcon fontSize='small' />
-                        </StyledPopoverClose>
+                                <CloseIcon fontSize='small' />
+                            </StyledPopoverClose>
+                        </StyledPanelHeaderRow>
+                        <StyledTrace>
+                            {openTrace.map((item) => (
+                                <Chip
+                                    key={item.label}
+                                    size='small'
+                                    variant='outlined'
+                                    color={item.ok ? 'success' : 'warning'}
+                                    icon={
+                                        item.ok ? <CheckIcon /> : <CloseIcon />
+                                    }
+                                    label={item.label}
+                                />
+                            ))}
+                        </StyledTrace>
                     </StyledPanelHeader>
 
                     <StyledPopoverBody data-testid='QUICK_TOUR_INTRO_POPOVER_BODY'>
-                        <StyledVersionChip state={openState}>
-                            {openState === 'smart' ? (
-                                <CheckIcon />
-                            ) : openState === 'error' ? (
-                                <ErrorOutlineIcon />
-                            ) : (
-                                <CloseIcon />
-                            )}
-                            {openState === 'smart'
-                                ? 'Feature enabled'
-                                : openState === 'error'
-                                  ? 'Search error'
-                                  : 'Feature disabled'}
-                        </StyledVersionChip>
-
-                        <StyledTrace>
-                            {openTrace.map((item) => (
-                                <StyledTraceChip key={item.label} ok={item.ok}>
-                                    {item.ok ? <CheckIcon /> : <CloseIcon />}
-                                    {item.label}
-                                </StyledTraceChip>
-                            ))}
-                        </StyledTrace>
+                        <Chip
+                            size='small'
+                            color={
+                                openState === 'smart'
+                                    ? 'success'
+                                    : openState === 'error'
+                                      ? 'error'
+                                      : 'default'
+                            }
+                            icon={
+                                openState === 'smart' ? (
+                                    <CheckIcon />
+                                ) : openState === 'error' ? (
+                                    <ErrorOutlineIcon />
+                                ) : (
+                                    <CloseIcon />
+                                )
+                            }
+                            label={
+                                openState === 'smart'
+                                    ? 'Feature enabled'
+                                    : openState === 'error'
+                                      ? 'Search error'
+                                      : 'Feature disabled'
+                            }
+                            sx={{ alignSelf: 'flex-start', fontWeight: 'bold' }}
+                        />
 
                         {renderMock(openState)}
 

@@ -301,10 +301,9 @@ const StyledAudienceHint = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const StyledStatValue = styled('span')(({ theme }) => ({
-    color: theme.palette.primary.main,
+const StyledStatValue = styled('span')({
     fontVariantNumeric: 'tabular-nums',
-}));
+});
 
 const StyledOutcome = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'severity',

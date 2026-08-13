@@ -2,13 +2,13 @@ import { useState } from 'react';
 import {
     alpha,
     Box,
-    Chip,
     IconButton,
     keyframes,
     styled,
     Typography,
     useTheme,
 } from '@mui/material';
+import { Badge } from 'component/common/Badge/Badge';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutlineOutlined';
@@ -845,29 +845,27 @@ export const IntroUserGrid = ({
                         </StyledPanelHeaderRow>
                         <StyledTrace>
                             {openTrace.map((item) => (
-                                <Chip
+                                <Badge
                                     key={item.label}
-                                    size='small'
-                                    variant='outlined'
                                     color={item.ok ? 'success' : 'warning'}
                                     icon={
                                         item.ok ? <CheckIcon /> : <CloseIcon />
                                     }
-                                    label={item.label}
-                                />
+                                >
+                                    {item.label}
+                                </Badge>
                             ))}
                         </StyledTrace>
                     </StyledPanelHeader>
 
                     <StyledPopoverBody data-testid='QUICK_TOUR_INTRO_POPOVER_BODY'>
-                        <Chip
-                            size='small'
+                        <Badge
                             color={
                                 openState === 'smart'
                                     ? 'success'
                                     : openState === 'error'
                                       ? 'error'
-                                      : 'default'
+                                      : 'neutral'
                             }
                             icon={
                                 openState === 'smart' ? (
@@ -878,15 +876,14 @@ export const IntroUserGrid = ({
                                     <CloseIcon />
                                 )
                             }
-                            label={
-                                openState === 'smart'
-                                    ? 'Feature enabled'
-                                    : openState === 'error'
-                                      ? 'Search error'
-                                      : 'Feature disabled'
-                            }
-                            sx={{ alignSelf: 'flex-start', fontWeight: 'bold' }}
-                        />
+                            sx={{ alignSelf: 'flex-start' }}
+                        >
+                            {openState === 'smart'
+                                ? 'Feature enabled'
+                                : openState === 'error'
+                                  ? 'Search error'
+                                  : 'Feature disabled'}
+                        </Badge>
 
                         {renderMock(openState)}
 

@@ -89,7 +89,7 @@ test('starts with a gradual Smart Search rollout and context cards', () => {
     ).toBeInTheDocument();
     expect(
         screen
-            .getAllByTestId('QUICK_TOUR_INTRO_MINI_PREVIEW')
+            .getAllByTestId('QUICK_TOUR_INTRO_USER_STATUS')
             .every(
                 (preview) =>
                     preview.getAttribute('data-experience') === 'classic',
@@ -124,7 +124,7 @@ test('starts with a gradual Smart Search rollout and context cards', () => {
     expect(screen.getByText('✦ Smart Search')).toBeInTheDocument();
     expect(
         screen
-            .getAllByTestId('QUICK_TOUR_INTRO_MINI_PREVIEW')
+            .getAllByTestId('QUICK_TOUR_INTRO_USER_STATUS')
             .every(
                 (preview) =>
                     preview.getAttribute('data-experience') === 'smart',
@@ -336,7 +336,7 @@ test('keeps metrics live without errors until production is enabled', () => {
     expect(screen.getByText('Search errors')).toBeInTheDocument();
     expect(
         screen
-            .getAllByTestId('QUICK_TOUR_INTRO_MINI_PREVIEW')
+            .getAllByTestId('QUICK_TOUR_INTRO_USER_STATUS')
             .every(
                 (preview) =>
                     preview.getAttribute('data-experience') === 'classic',
@@ -385,7 +385,7 @@ test('keeps metrics live without errors until production is enabled', () => {
     });
     expect(
         screen
-            .getAllByTestId('QUICK_TOUR_INTRO_MINI_PREVIEW')
+            .getAllByTestId('QUICK_TOUR_INTRO_USER_STATUS')
             .filter(
                 (preview) =>
                     preview.getAttribute('data-experience') === 'error',
@@ -394,7 +394,7 @@ test('keeps metrics live without errors until production is enabled', () => {
 
     advanceLiveTraffic(1700);
     const errorPreviews = screen
-        .getAllByTestId('QUICK_TOUR_INTRO_MINI_PREVIEW')
+        .getAllByTestId('QUICK_TOUR_INTRO_USER_STATUS')
         .filter(
             (preview) => preview.getAttribute('data-experience') === 'error',
         );
@@ -410,7 +410,7 @@ test('keeps metrics live without errors until production is enabled', () => {
     const firstErroredCard = errorPreviews[0].closest('button')!;
     advanceLiveTraffic(5400);
     expect(
-        within(firstErroredCard).getByTestId('QUICK_TOUR_INTRO_MINI_PREVIEW'),
+        within(firstErroredCard).getByTestId('QUICK_TOUR_INTRO_USER_STATUS'),
     ).toHaveAttribute('data-experience', 'error');
     const milestoneEvents = within(charts).getAllByTestId(
         'QUICK_TOUR_INTRO_EVENT_MILESTONE',
@@ -441,7 +441,7 @@ test('keeps metrics live without errors until production is enabled', () => {
     advanceLiveTraffic(18_000);
     expect(
         screen
-            .getAllByTestId('QUICK_TOUR_INTRO_MINI_PREVIEW')
+            .getAllByTestId('QUICK_TOUR_INTRO_USER_STATUS')
             .filter(
                 (preview) =>
                     preview.getAttribute('data-experience') === 'error',
@@ -923,7 +923,7 @@ test('teaches manual recovery before a safeguard automates it', () => {
     ).toBeInTheDocument();
     expect(
         screen
-            .getAllByTestId('QUICK_TOUR_INTRO_MINI_PREVIEW')
+            .getAllByTestId('QUICK_TOUR_INTRO_USER_STATUS')
             .every(
                 (preview) =>
                     preview.getAttribute('data-experience') === 'classic',
@@ -994,7 +994,7 @@ test('teaches manual recovery before a safeguard automates it', () => {
         }),
     ).toBeChecked();
     const erroredPreview = screen
-        .getAllByTestId('QUICK_TOUR_INTRO_MINI_PREVIEW')
+        .getAllByTestId('QUICK_TOUR_INTRO_USER_STATUS')
         .find((preview) => preview.getAttribute('data-experience') === 'error');
     expect(erroredPreview).toBeDefined();
     fireEvent.click(erroredPreview!.closest('button')!);
@@ -1026,7 +1026,7 @@ test('teaches manual recovery before a safeguard automates it', () => {
     ).toHaveLength(2);
     expect(
         screen
-            .getAllByTestId('QUICK_TOUR_INTRO_MINI_PREVIEW')
+            .getAllByTestId('QUICK_TOUR_INTRO_USER_STATUS')
             .every(
                 (preview) =>
                     preview.getAttribute('data-experience') === 'classic',

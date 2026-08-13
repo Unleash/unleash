@@ -10,6 +10,7 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
+import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import {
@@ -19,7 +20,8 @@ import {
     type IntroVariant,
     type UserEvaluation,
 } from './introModel.js';
-import { IntroAvatar, IntroCharacter } from './IntroCharacter.tsx';
+import { IntroAvatar } from './IntroCharacter.tsx';
+import { avatarForIndex } from './introAvatars.ts';
 import { getVariantSolidFill } from './introVariantColor.js';
 
 export type GridMode =
@@ -31,85 +33,128 @@ export type GridMode =
 
 const StyledGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
-    gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-    gap: theme.spacing(1.25),
-    [theme.breakpoints.down('sm')]: {
-        gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-    },
+    gridTemplateColumns: 'repeat(auto-fill, minmax(92px, 1fr))',
+    gap: theme.spacing(1),
+    alignContent: 'start',
 }));
 
 const StyledPerson = styled('button', {
     shouldForwardProp: (prop) =>
-        ![
-            'selected',
-            'stateColor',
-            'stateBackground',
-            'activationDelayMs',
-            'errored',
-        ].includes(prop as string),
+        !['selected', 'dimmed', 'enabled'].includes(prop as string),
 })<{
     selected: boolean;
-    stateColor?: string;
-    stateBackground?: string;
-    activationDelayMs: number;
-    errored: boolean;
-}>(
-    ({
-        theme,
-        selected,
-        stateColor,
-        stateBackground,
-        activationDelayMs,
-        errored,
-    }) => ({
-        all: 'unset',
-        boxSizing: 'border-box',
-        cursor: 'pointer',
-        display: 'grid',
-        gridTemplateColumns: '48px minmax(0, 1fr) 54px',
-        alignItems: 'center',
-        gap: theme.spacing(1),
-        minWidth: 0,
-        padding: theme.spacing(0.9),
-        borderRadius: theme.shape.borderRadiusMedium,
-        backgroundColor: stateBackground ?? theme.palette.background.paper,
-        border: `1px solid ${stateColor ?? theme.palette.divider}`,
-        outline: selected
-            ? `2px solid ${stateColor ?? theme.palette.primary.main}`
-            : '2px solid transparent',
-        outlineOffset: 1,
-        transition: theme.transitions.create(
-            ['background-color', 'border-color', 'outline-color'],
-            {
-                duration: theme.transitions.duration.standard,
-                easing: theme.transitions.easing.easeOut,
-                delay: errored ? 0 : activationDelayMs,
-            },
-        ),
-        '&:hover': {
-            borderColor: stateColor ?? theme.palette.primary.main,
-        },
-        '&:focus-visible': {
-            outline: `2px solid ${theme.palette.primary.main}`,
-        },
-        '@media (prefers-reduced-motion: reduce)': {
-            transition: 'none',
-            animation: 'none',
-        },
+    dimmed: boolean;
+    enabled: boolean;
+}>(({ theme, selected, dimmed, enabled }) => ({
+    all: 'unset',
+    boxSizing: 'border-box',
+    cursor: 'pointer',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: theme.spacing(0.5),
+    minWidth: 0,
+    padding: theme.spacing(1, 0.5),
+    borderRadius: theme.shape.borderRadiusMedium,
+    backgroundColor: enabled
+        ? theme.palette.background.paper
+        : theme.palette.background.elevation2,
+    boxShadow: `inset 0 0 0 1.5px ${
+        selected ? theme.palette.primary.main : theme.palette.divider
+    }`,
+    opacity: dimmed ? 0.6 : 1,
+    transition: theme.transitions.create(
+        ['opacity', 'box-shadow', 'transform', 'background-color'],
+        { duration: theme.transitions.duration.shorter },
+    ),
+    '&:hover': {
+        backgroundColor: theme.palette.background.paper,
+        boxShadow: `inset 0 0 0 1.5px ${theme.palette.neutral.border}`,
+        transform: 'translateY(-1px)',
+        opacity: 1,
+    },
+    '&:focus-visible': {
+        boxShadow: `inset 0 0 0 2px ${theme.palette.primary.main}`,
+        opacity: 1,
+    },
+    '@media (prefers-reduced-motion: reduce)': {
+        transition: 'none',
+    },
+}));
+
+const StyledAvatarWrap = styled(Box)({
+    position: 'relative',
+    lineHeight: 0,
+    flex: 'none',
+});
+
+const StyledAvatarImg = styled(Box, {
+    shouldForwardProp: (prop) =>
+        !['avatarUrl', 'hue', 'accent', 'enabled'].includes(prop as string),
+})<{ avatarUrl: string; hue: number; accent: string; enabled: boolean }>(
+    ({ theme, avatarUrl, hue, accent, enabled }) => ({
+        width: 52,
+        height: 52,
+        borderRadius: '50%',
+        backgroundColor: enabled
+            ? `hsl(${hue}, 55%, 92%)`
+            : theme.palette.background.elevation1,
+        backgroundImage: `url('${avatarUrl}')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center top',
+        boxShadow: enabled
+            ? `0 0 0 2px ${alpha(accent, 0.5)}`
+            : `0 0 0 1px ${theme.palette.divider}`,
+        filter: enabled ? 'none' : 'grayscale(0.85)',
+        opacity: enabled ? 1 : 0.5,
+        transition: theme.transitions.create([
+            'filter',
+            'opacity',
+            'box-shadow',
+        ]),
     }),
 );
 
-const StyledAvatar = styled(Box)({
-    width: 48,
-    alignSelf: 'start',
-});
-
-const StyledIdentity = styled(Box)({
-    minWidth: 0,
+const StyledStatusBadge = styled('span', {
+    shouldForwardProp: (prop) => prop !== 'experience',
+})<{ experience: 'smart' | 'classic' | 'error' }>(({ theme, experience }) => {
+    const palette =
+        experience === 'smart'
+            ? {
+                  bg: theme.palette.success.light,
+                  fg: theme.palette.success.main,
+              }
+            : experience === 'error'
+              ? {
+                    bg: theme.palette.error.light,
+                    fg: theme.palette.error.main,
+                }
+              : {
+                    bg: theme.palette.background.elevation2,
+                    fg: theme.palette.text.secondary,
+                };
+    return {
+        position: 'absolute',
+        right: -2,
+        top: -2,
+        width: 16,
+        height: 16,
+        borderRadius: '50%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: palette.bg,
+        color: palette.fg,
+        boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+        '& svg': { fontSize: 11 },
+    };
 });
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.fontSizes.smallBody,
+    maxWidth: '100%',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
@@ -118,224 +163,10 @@ const StyledName = styled(Typography)(({ theme }) => ({
 const StyledMeta = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
     fontSize: theme.fontSizes.smallerBody,
+    maxWidth: '100%',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
-}));
-
-const StyledCountry = styled(StyledMeta)(({ theme }) => ({
-    color: theme.palette.text.primary,
-    marginTop: theme.spacing(0.125),
-}));
-
-const StyledMiniPreview = styled(Box, {
-    shouldForwardProp: (prop) =>
-        !['smart', 'errored', 'restored', 'accent', 'delayMs'].includes(
-            String(prop),
-        ),
-})<{
-    smart: boolean;
-    errored: boolean;
-    restored: boolean;
-    accent: string;
-    delayMs: number;
-}>(({ theme, smart, errored, restored, accent, delayMs }) => ({
-    width: 56,
-    height: 46,
-    position: 'relative',
-    overflow: 'hidden',
-    justifySelf: 'center',
-    alignSelf: 'center',
-    padding: 3,
-    borderRadius: theme.shape.borderRadius,
-    border: `1px solid ${
-        errored
-            ? theme.palette.error.main
-            : smart
-              ? alpha(accent, 0.75)
-              : theme.palette.divider
-    }`,
-    backgroundColor: errored
-        ? alpha(theme.palette.error.main, 0.12)
-        : smart
-          ? alpha(accent, 0.14)
-          : theme.palette.background.elevation1,
-    '&::after': {
-        content: '""',
-        position: 'absolute',
-        zIndex: 2,
-        inset: 0,
-        width: '38%',
-        pointerEvents: 'none',
-        opacity: smart ? 0.65 : 0,
-        transform: smart || errored ? 'translateX(300%)' : 'translateX(-120%)',
-        background: `linear-gradient(90deg, transparent, ${alpha(
-            theme.palette.common.white,
-            0.45,
-        )}, transparent)`,
-        animation: restored
-            ? `intro-restore-sweep 650ms ${theme.transitions.easing.easeOut}`
-            : 'none',
-        transition: theme.transitions.create(['transform', 'opacity'], {
-            duration: 650,
-            easing: theme.transitions.easing.easeOut,
-            delay: errored ? 0 : delayMs,
-        }),
-    },
-    '@keyframes intro-restore-sweep': {
-        '0%': {
-            opacity: 0,
-            transform: 'translateX(300%)',
-        },
-        '20%': {
-            opacity: 0.65,
-        },
-        '100%': {
-            opacity: 0,
-            transform: 'translateX(-120%)',
-        },
-    },
-    transition: theme.transitions.create(['background-color', 'border-color'], {
-        duration: theme.transitions.duration.standard,
-        easing: theme.transitions.easing.easeOut,
-        delay: errored ? 0 : delayMs,
-    }),
-    '@media (prefers-reduced-motion: reduce)': {
-        transition: 'none',
-    },
-}));
-
-const StyledMiniContent = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'visible' && prop !== 'delayMs',
-})<{ visible: boolean; delayMs: number }>(({ theme, visible, delayMs }) => ({
-    position: 'absolute',
-    zIndex: 1,
-    inset: 3,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 3,
-    opacity: visible ? 1 : 0,
-    transition: theme.transitions.create('opacity', {
-        duration: theme.transitions.duration.shorter,
-        easing: theme.transitions.easing.easeOut,
-        delay: visible ? delayMs : 0,
-    }),
-    '@media (prefers-reduced-motion: reduce)': {
-        transition: 'none',
-    },
-}));
-
-const StyledMiniChrome = styled(Box)(({ theme }) => ({
-    height: 5,
-    display: 'flex',
-    justifyContent: 'flex-start',
-    gap: 2,
-    '& span': {
-        width: 3,
-        height: 3,
-        borderRadius: 999,
-        background: theme.palette.text.secondary,
-        opacity: 0.55,
-    },
-}));
-
-const StyledMiniSearch = styled(Box, {
-    shouldForwardProp: (prop) =>
-        !['smart', 'accent', 'delayMs'].includes(String(prop)),
-})<{ smart: boolean; accent: string; delayMs: number }>(
-    ({ theme, smart, accent, delayMs }) => ({
-        height: 8,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '0 3px',
-        borderRadius: 999,
-        color: smart ? accent : theme.palette.text.secondary,
-        backgroundColor: smart
-            ? alpha(accent, 0.22)
-            : alpha(theme.palette.text.secondary, 0.1),
-        fontSize: 6,
-        lineHeight: 1,
-        transition: theme.transitions.create(['background-color', 'color'], {
-            duration: theme.transitions.duration.standard,
-            easing: theme.transitions.easing.easeOut,
-            delay: delayMs,
-        }),
-        '@media (prefers-reduced-motion: reduce)': {
-            transition: 'none',
-        },
-    }),
-);
-
-const StyledMiniResults = styled(Box)({
-    flex: 1,
-    alignSelf: 'center',
-    width: '100%',
-    display: 'grid',
-    gridTemplateColumns: '1fr',
-    gridTemplateRows: 'repeat(3, 1fr)',
-    gap: 2,
-});
-
-const StyledMiniSparkle = styled('span', {
-    shouldForwardProp: (prop) =>
-        !['visible', 'accent', 'delayMs'].includes(String(prop)),
-})<{ visible: boolean; accent: string; delayMs: number }>(
-    ({ theme, visible, accent, delayMs }) => ({
-        opacity: visible ? 1 : 0,
-        color: accent,
-        transition: theme.transitions.create(['opacity', 'color'], {
-            duration: theme.transitions.duration.standard,
-            easing: theme.transitions.easing.easeOut,
-            delay: delayMs,
-        }),
-        '@media (prefers-reduced-motion: reduce)': {
-            transition: 'none',
-        },
-    }),
-);
-
-const StyledMiniResult = styled('span', {
-    shouldForwardProp: (prop) =>
-        !['smart', 'accent', 'delayMs'].includes(String(prop)),
-})<{ smart: boolean; accent: string; delayMs: number }>(
-    ({ theme, smart, accent, delayMs }) => ({
-        display: 'block',
-        minWidth: 0,
-        borderRadius: 2,
-        backgroundColor: smart
-            ? alpha(accent, 0.48)
-            : alpha(theme.palette.text.secondary, 0.22),
-        transition: theme.transitions.create('background-color', {
-            duration: theme.transitions.duration.standard,
-            easing: theme.transitions.easing.easeOut,
-            delay: delayMs,
-        }),
-        '@media (prefers-reduced-motion: reduce)': {
-            transition: 'none',
-        },
-    }),
-);
-
-const StyledMiniError = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'visible',
-})<{ visible: boolean }>(({ theme, visible }) => ({
-    position: 'absolute',
-    zIndex: 1,
-    inset: 0,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    opacity: visible ? 1 : 0,
-    color: theme.palette.error.main,
-    fontWeight: theme.typography.fontWeightBold,
-    transition: theme.transitions.create('opacity', {
-        duration: theme.transitions.duration.shorter,
-        easing: theme.transitions.easing.easeOut,
-    }),
-    '@media (prefers-reduced-motion: reduce)': {
-        transition: 'none',
-    },
 }));
 
 const POPOVER_OFFSET = 8;
@@ -1097,14 +928,6 @@ export const IntroUserGrid = ({
                         ? variants.find((item) => item.name === variant)
                         : undefined;
                     const errored = erroredUserIdSet.has(user.id);
-                    const stateColor = errored
-                        ? theme.palette.error.main
-                        : (configuredVariant?.color ??
-                          (enabled ? theme.palette.primary.main : undefined));
-                    const stateBackground = stateColor
-                        ? alpha(stateColor, errored ? 0.12 : 0.08)
-                        : undefined;
-
                     const experienceLabel = errored
                         ? 'Search unavailable'
                         : !environmentEnabled || !enabled
@@ -1113,11 +936,13 @@ export const IntroUserGrid = ({
                             ? `${configuredVariant.name} · ${configuredVariant.label}`
                             : 'Smart Search';
                     const smart = environmentEnabled && enabled && !errored;
-                    const previewAccent =
+                    const experience: 'smart' | 'classic' | 'error' = errored
+                        ? 'error'
+                        : smart
+                          ? 'smart'
+                          : 'classic';
+                    const accent =
                         configuredVariant?.color ?? theme.palette.primary.main;
-                    const activationDelayMs = Math.min(index * 18, 400);
-                    const restored = restoredUserIds.has(user.id);
-                    const previewDelayMs = restored ? 0 : activationDelayMs;
 
                     return (
                         <StyledPerson
@@ -1126,10 +951,11 @@ export const IntroUserGrid = ({
                             type='button'
                             aria-label={`${user.name}, ${user.country.label}: ${experienceLabel}`}
                             selected={selectedId === user.id}
-                            stateColor={stateColor}
-                            stateBackground={stateBackground}
-                            activationDelayMs={activationDelayMs}
-                            errored={errored}
+                            enabled={smart}
+                            dimmed={
+                                selectedId !== undefined &&
+                                selectedId !== user.id
+                            }
                             onClick={(event) => {
                                 const anchorBottom =
                                     event.currentTarget.getBoundingClientRect()
@@ -1147,79 +973,33 @@ export const IntroUserGrid = ({
                                 onSelect(user);
                             }}
                         >
-                            <StyledAvatar>
-                                <IntroCharacter
-                                    look={user.look}
-                                    raised={enabled && environmentEnabled}
-                                    index={index}
+                            <StyledAvatarWrap>
+                                <StyledAvatarImg
+                                    avatarUrl={avatarForIndex(index)}
+                                    hue={(index * 47) % 360}
+                                    accent={accent}
+                                    enabled={smart}
                                 />
-                            </StyledAvatar>
-                            <StyledIdentity>
-                                <StyledName variant='body2'>
-                                    {user.name}
-                                </StyledName>
-                                <StyledCountry>
-                                    {user.country.flag} {user.country.label}
-                                </StyledCountry>
-                                <StyledMeta>{plan.label}</StyledMeta>
-                            </StyledIdentity>
-                            <StyledMiniPreview
-                                smart={smart}
-                                errored={errored}
-                                restored={restored}
-                                accent={previewAccent}
-                                delayMs={previewDelayMs}
-                                aria-hidden
-                                data-testid='QUICK_TOUR_INTRO_MINI_PREVIEW'
-                                data-experience={
-                                    errored
-                                        ? 'error'
-                                        : smart
-                                          ? 'smart'
-                                          : 'classic'
-                                }
-                            >
-                                <StyledMiniContent
-                                    visible={!errored}
-                                    delayMs={previewDelayMs}
+                                <StyledStatusBadge
+                                    experience={experience}
+                                    data-testid='QUICK_TOUR_INTRO_USER_STATUS'
+                                    data-experience={experience}
+                                    title={experienceLabel}
                                 >
-                                    <StyledMiniChrome>
-                                        <span />
-                                        <span />
-                                        <span />
-                                    </StyledMiniChrome>
-                                    <StyledMiniSearch
-                                        smart={smart}
-                                        accent={previewAccent}
-                                        delayMs={previewDelayMs}
-                                    >
-                                        <span>⌕</span>
-                                        <StyledMiniSparkle
-                                            visible={smart}
-                                            accent={previewAccent}
-                                            delayMs={previewDelayMs}
-                                        >
-                                            ✦
-                                        </StyledMiniSparkle>
-                                    </StyledMiniSearch>
-                                    <StyledMiniResults>
-                                        {Array.from(
-                                            { length: 3 },
-                                            (_, resultIndex) => (
-                                                <StyledMiniResult
-                                                    key={resultIndex}
-                                                    smart={smart}
-                                                    accent={previewAccent}
-                                                    delayMs={previewDelayMs}
-                                                />
-                                            ),
-                                        )}
-                                    </StyledMiniResults>
-                                </StyledMiniContent>
-                                <StyledMiniError visible={errored}>
-                                    !
-                                </StyledMiniError>
-                            </StyledMiniPreview>
+                                    {experience === 'smart' ? (
+                                        <CheckIcon />
+                                    ) : experience === 'error' ? (
+                                        <ErrorOutlineIcon />
+                                    ) : (
+                                        <CloseIcon />
+                                    )}
+                                </StyledStatusBadge>
+                            </StyledAvatarWrap>
+                            <StyledName variant='body2'>{user.name}</StyledName>
+                            <StyledMeta>
+                                {user.country.flag} {user.country.code} ·{' '}
+                                {plan.label}
+                            </StyledMeta>
                         </StyledPerson>
                     );
                 })}

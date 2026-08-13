@@ -108,49 +108,65 @@ const StyledGrid = styled(Box)({
 
 const StyledPerson = styled('button', {
     shouldForwardProp: (prop) =>
-        !['selected', 'dimmed', 'enabled'].includes(prop as string),
+        !['selected', 'dimmed', 'enabled', 'accent'].includes(prop as string),
 })<{
     selected: boolean;
     dimmed: boolean;
     enabled: boolean;
-}>(({ theme, selected, dimmed, enabled }) => ({
-    all: 'unset',
-    boxSizing: 'border-box',
-    cursor: 'pointer',
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: theme.spacing(0.25),
-    minWidth: 0,
-    padding: theme.spacing(0.5),
-    borderRadius: theme.shape.borderRadiusMedium,
-    backgroundColor: enabled
-        ? theme.palette.background.paper
-        : theme.palette.background.elevation2,
-    boxShadow: `inset 0 0 0 1.5px ${
-        selected ? theme.palette.primary.main : theme.palette.divider
-    }`,
-    opacity: dimmed ? 0.6 : 1,
-    transition: theme.transitions.create(
-        ['opacity', 'box-shadow', 'transform', 'background-color'],
-        { duration: theme.transitions.duration.shorter },
-    ),
-    '&:hover': {
-        backgroundColor: theme.palette.background.paper,
-        boxShadow: `inset 0 0 0 1.5px ${theme.palette.neutral.border}`,
-        transform: 'translateY(-1px)',
-        opacity: 1,
-    },
-    '&:focus-visible': {
-        boxShadow: `inset 0 0 0 2px ${theme.palette.primary.main}`,
-        opacity: 1,
-    },
-    '@media (prefers-reduced-motion: reduce)': {
-        transition: 'none',
-    },
-}));
+    accent: string;
+}>(({ theme, selected, dimmed, enabled, accent }) => {
+    // Pulse the card's coloured ring when a user turns on.
+    const ringPulse = keyframes({
+        from: { boxShadow: `inset 0 0 0 3px ${accent}` },
+        to: { boxShadow: `inset 0 0 0 1.5px ${accent}` },
+    });
+    const ring = selected
+        ? `inset 0 0 0 2px ${theme.palette.primary.main}`
+        : `inset 0 0 0 1.5px ${enabled ? accent : theme.palette.divider}`;
+    return {
+        all: 'unset',
+        boxSizing: 'border-box',
+        cursor: 'pointer',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: theme.spacing(0.25),
+        minWidth: 0,
+        padding: theme.spacing(0.5),
+        borderRadius: theme.shape.borderRadiusMedium,
+        backgroundColor: enabled
+            ? theme.palette.background.paper
+            : theme.palette.background.elevation2,
+        boxShadow: ring,
+        opacity: dimmed ? 0.6 : 1,
+        transition: theme.transitions.create(
+            ['opacity', 'box-shadow', 'transform', 'background-color'],
+            { duration: theme.transitions.duration.shorter },
+        ),
+        ...(enabled &&
+            !selected && { animation: `${ringPulse} 0.55s ease-out` }),
+        '&:hover': {
+            backgroundColor: theme.palette.background.paper,
+            boxShadow: selected
+                ? `inset 0 0 0 2px ${theme.palette.primary.main}`
+                : `inset 0 0 0 1.5px ${
+                      enabled ? accent : theme.palette.neutral.border
+                  }`,
+            transform: 'translateY(-1px)',
+            opacity: 1,
+        },
+        '&:focus-visible': {
+            boxShadow: `inset 0 0 0 2px ${theme.palette.primary.main}`,
+            opacity: 1,
+        },
+        '@media (prefers-reduced-motion: reduce)': {
+            transition: 'none',
+            animation: 'none',
+        },
+    };
+});
 
 const StyledAvatarWrap = styled(Box)({
     position: 'relative',
@@ -160,41 +176,27 @@ const StyledAvatarWrap = styled(Box)({
 
 const StyledAvatarImg = styled(Box, {
     shouldForwardProp: (prop) =>
-        !['avatarUrl', 'hue', 'accent', 'enabled', 'size'].includes(
-            prop as string,
-        ),
+        !['avatarUrl', 'hue', 'enabled', 'size'].includes(prop as string),
 })<{
     avatarUrl: string;
     hue: number;
-    accent: string;
     enabled: boolean;
     size: number;
-}>(({ theme, avatarUrl, hue, accent, enabled, size }) => {
-    // Pulse the ring from solid to its resting opacity when a user turns on.
-    const ringPulse = keyframes({
-        from: { boxShadow: `0 0 0 2px ${alpha(accent, 1)}` },
-        to: { boxShadow: `0 0 0 2px ${alpha(accent, 0.5)}` },
-    });
-    return {
-        width: size,
-        height: size,
-        borderRadius: '50%',
-        backgroundColor: enabled
-            ? `hsl(${hue}, 55%, 92%)`
-            : theme.palette.background.elevation1,
-        backgroundImage: `url('${avatarUrl}')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center top',
-        boxShadow: enabled
-            ? `0 0 0 2px ${alpha(accent, 0.5)}`
-            : `0 0 0 1px ${theme.palette.divider}`,
-        filter: enabled ? 'none' : 'grayscale(0.85)',
-        opacity: enabled ? 1 : 0.5,
-        transition: theme.transitions.create(['filter', 'opacity']),
-        ...(enabled && { animation: `${ringPulse} 0.55s ease-out` }),
-        '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
-    };
-});
+}>(({ theme, avatarUrl, hue, enabled, size }) => ({
+    width: size,
+    height: size,
+    borderRadius: '50%',
+    backgroundColor: enabled
+        ? `hsl(${hue}, 55%, 92%)`
+        : theme.palette.background.elevation1,
+    backgroundImage: `url('${avatarUrl}')`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center top',
+    boxShadow: `0 0 0 1px ${theme.palette.divider}`,
+    filter: enabled ? 'none' : 'grayscale(0.85)',
+    opacity: enabled ? 1 : 0.5,
+    transition: theme.transitions.create(['filter', 'opacity']),
+}));
 
 const StyledStatusBadge = styled('span', {
     shouldForwardProp: (prop) => prop !== 'experience',
@@ -215,7 +217,7 @@ const StyledStatusBadge = styled('span', {
               : {
                     bg: theme.palette.background.elevation2,
                     fg: theme.palette.text.secondary,
-                    ring: theme.palette.background.paper,
+                    ring: theme.palette.neutral.border,
                 };
     return {
         position: 'absolute',
@@ -905,6 +907,7 @@ export const IntroUserGrid = ({
                                     aria-label={`${user.name}, ${user.country.label}: ${experienceLabel}`}
                                     selected={selectedId === user.id}
                                     enabled={smart}
+                                    accent={accent}
                                     dimmed={
                                         selectedId !== undefined &&
                                         selectedId !== user.id
@@ -923,7 +926,6 @@ export const IntroUserGrid = ({
                                         <StyledAvatarImg
                                             avatarUrl={avatarForIndex(index)}
                                             hue={(index * 47) % 360}
-                                            accent={accent}
                                             enabled={smart}
                                             size={avatarSize}
                                         />

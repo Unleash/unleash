@@ -37,7 +37,7 @@ import {
 } from './IntroSafeguard.tsx';
 
 const USER_COUNT = 20;
-const FLAG_NAME = 'smart-search';
+const FLAG_NAME = 'my-feature';
 
 const VARIANT_POOL = [
     {
@@ -195,14 +195,14 @@ const TOPICS: ITopic[] = [
         mode: 'impact',
         stepLabel: 'Impact',
         title: 'Observe the release',
-        body: 'Releases can fail in production. Impact metrics let you watch reliability as Smart Search reaches each audience. Enable production and follow the live signals.',
+        body: 'Releases can fail in production. Impact metrics let you watch reliability as my-feature reaches each audience. Enable production and follow the live signals.',
     },
     {
         key: 'safeguard',
         mode: 'safeguard',
         stepLabel: 'Safeguards',
         title: 'Automate the response',
-        body: 'You disabled Smart Search manually when errors rose. This time, a safeguard is watching the same impact metric. Re-enable production and see how Unleash responds automatically.',
+        body: 'You disabled my-feature manually when errors rose. This time, a safeguard is watching the same impact metric. Re-enable production and see how Unleash responds automatically.',
     },
 ];
 
@@ -955,7 +955,7 @@ export const Intro = ({
                         <StyledStatValue data-testid='QUICK_TOUR_INTRO_ENABLED_COUNT'>
                             {stats.enabled}
                         </StyledStatValue>{' '}
-                        of {stats.total} users see Smart Search
+                        of {stats.total} users see my-feature
                     </StyledAudienceTitle>
                     <StyledAudienceHint>
                         Click any user for details.

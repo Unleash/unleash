@@ -618,12 +618,12 @@ const evaluationReason = (
     if (errored) {
         const experience = variant?.label
             ? `the ${variant.label} variant (${variant.name})`
-            : 'Smart Search';
+            : 'my-feature';
         return `${user.name} gets ${experience}, but their search request returned an error.`;
     }
     const experience = variant?.label
         ? `the ${variant.label} variant (${variant.name})`
-        : 'Smart Search';
+        : 'my-feature';
     const allocation =
         variant && explainVariantAllocation
             ? ` Variant ${variant.name} has a ${Math.round(variant.weight)}% allocation, and ${user.name}'s assignment stays sticky.`
@@ -886,7 +886,7 @@ export const IntroUserGrid = ({
                               ? 'Classic Search'
                               : configuredVariant?.label
                                 ? `${configuredVariant.name} · ${configuredVariant.label}`
-                                : 'Smart Search';
+                                : 'my-feature';
                         const smart = environmentEnabled && enabled && !errored;
                         const experience: 'smart' | 'classic' | 'error' =
                             errored ? 'error' : smart ? 'smart' : 'classic';

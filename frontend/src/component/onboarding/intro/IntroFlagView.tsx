@@ -239,8 +239,7 @@ export const IntroFlagView = ({
                         }
                         slotProps={{
                             input: {
-                                'aria-label':
-                                    'Toggle Smart Search in production',
+                                'aria-label': 'Toggle my-feature in production',
                             },
                         }}
                         data-testid='QUICK_TOUR_INTRO_ONOFF_SWITCH'

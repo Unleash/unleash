@@ -24,7 +24,7 @@ const renderAdvancedIntro = ({
 const completeReleasePlan = () => {
     fireEvent.click(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     );
     for (let milestone = 0; milestone < 3; milestone++) {
@@ -37,7 +37,7 @@ const completeReleasePlan = () => {
 const observeAndRecoverManually = () => {
     fireEvent.click(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     );
     act(() => {
@@ -45,7 +45,7 @@ const observeAndRecoverManually = () => {
     });
     fireEvent.click(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     );
 };
@@ -61,20 +61,20 @@ const advanceLiveTraffic = (duration: number) => {
 const retryWithSafeguard = () => {
     fireEvent.click(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     );
     advanceLiveTraffic(9_500);
 };
 
-test('starts with a gradual Smart Search rollout and context cards', () => {
+test('starts with a gradual my-feature rollout and context cards', () => {
     renderAdvancedIntro();
 
     expect(
         screen.getByText('Start by toggling the flag in production'),
     ).toBeInTheDocument();
     expect(
-        screen.getByText(/of 20 users see Smart Search/),
+        screen.getByText(/of 20 users see my-feature/),
     ).not.toHaveTextContent('%');
     expect(screen.getByText('Click any user for details.')).toBeInTheDocument();
     expect(screen.queryByText('Controlled release')).not.toBeInTheDocument();
@@ -105,7 +105,7 @@ test('starts with a gradual Smart Search rollout and context cards', () => {
 
     fireEvent.click(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     );
     fireEvent.change(screen.getByRole('slider', { name: 'Rollout %' }), {
@@ -122,7 +122,7 @@ test('starts with a gradual Smart Search rollout and context cards', () => {
     ).toBe(true);
     expect(
         screen.getByText(
-            /Ada gets Smart Search because the rollout includes their bucket \(100 ≥ \d+\)/,
+            /Ada gets my-feature because the rollout includes their bucket \(100 ≥ \d+\)/,
         ),
     ).toBeInTheDocument();
 });
@@ -172,7 +172,7 @@ test('walks through the connected story to the showcase', () => {
     });
     expect(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     ).not.toBeChecked();
     expect(
@@ -338,7 +338,7 @@ test('keeps metrics live without errors until production is enabled', () => {
 
     fireEvent.click(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     );
     expect(
@@ -456,7 +456,7 @@ test('keeps metrics live without errors until production is enabled', () => {
     );
     fireEvent.click(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     );
     expect(
@@ -505,13 +505,13 @@ test('groups rapid environment events without inventing an incident', () => {
     expect(within(secondMilestone).getByText('Running')).toBeInTheDocument();
     expect(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     ).toBeChecked();
 
     fireEvent.click(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     );
 
@@ -568,7 +568,7 @@ test('starts the release plan from the environment and supports manual milestone
 
     fireEvent.click(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     );
 
@@ -598,7 +598,7 @@ test('starts the release plan from the environment and supports manual milestone
 
     fireEvent.click(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     );
     expect(
@@ -614,7 +614,7 @@ test('starts the release plan from the environment and supports manual milestone
     ).toBeInTheDocument();
     fireEvent.click(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     );
 
@@ -972,7 +972,7 @@ test('teaches manual recovery before a safeguard automates it', () => {
     );
     fireEvent.click(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     );
     expect(screen.queryByText('Monitoring')).not.toBeInTheDocument();
@@ -986,7 +986,7 @@ test('teaches manual recovery before a safeguard automates it', () => {
     expect(screen.queryByText('Monitoring')).not.toBeInTheDocument();
     expect(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     ).toBeChecked();
     const erroredPreview = screen
@@ -1044,7 +1044,7 @@ test('teaches manual recovery before a safeguard automates it', () => {
     ).toBeTruthy();
     expect(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     ).not.toBeChecked();
     vi.useRealTimers();

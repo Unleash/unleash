@@ -980,7 +980,7 @@ const ChangeRequestPreview = () => (
 const LifecyclePreview = () => (
     <StyledLifecycle>
         {[
-            ['smart-search', 'live', 'Live'],
+            ['my-feature', 'live', 'Live'],
             ['recommendations', 'pre-live', 'Pre-live'],
             ['legacy-checkout', 'completed', 'Completed'],
         ].map(([name, stage, label]) => (
@@ -1030,7 +1030,7 @@ const PlaygroundPreview = () => (
             </StyledPlaygroundRow>
             <StyledPlaygroundRow>
                 <span>
-                    <strong>smart-search</strong>
+                    <strong>my-feature</strong>
                 </span>
                 <span>A</span>
                 <StyledPlaygroundResult>
@@ -1170,7 +1170,7 @@ const EnterpriseAccessPreview = () => (
         <StyledAccessSectionLabel>Project access</StyledAccessSectionLabel>
         <StyledAccessRow>
             <StyledAccessProjectIcon />
-            <StyledAccessName>Smart Search</StyledAccessName>
+            <StyledAccessName>my-feature</StyledAccessName>
             <StyledAccessRole color='secondary'>Member</StyledAccessRole>
             <StyledAccessPermissionCount>
                 18 / 20 permissions

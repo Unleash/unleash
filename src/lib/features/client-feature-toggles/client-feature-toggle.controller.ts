@@ -28,6 +28,7 @@ import {
     type ClientFeaturesSchema,
 } from '../../openapi/spec/client-features-schema.js';
 import type ConfigurationRevisionService from '../feature-toggle/configuration-revision-service.js';
+import { UPDATE_REVISION } from '../feature-toggle/configuration-revision-service.js';
 import type { ClientFeatureToggleService } from './client-feature-toggle-service.js';
 import {
     CLIENT_METRICS_NAMEPREFIX,
@@ -137,7 +138,7 @@ export default class FeatureController extends Controller {
         });
 
         if (clientFeatureCaching.enabled) {
-            this.featuresAndSegments = memoizee(
+            const cachedFeaturesAndSegments = memoizee(
                 (query: IFeatureToggleQuery, _etag: string) =>
                     this.resolveFeaturesAndSegments(query),
                 {
@@ -149,6 +150,10 @@ export default class FeatureController extends Controller {
                     },
                 },
             );
+            this.configurationRevisionService.on(UPDATE_REVISION, () => {
+                cachedFeaturesAndSegments.clear();
+            });
+            this.featuresAndSegments = cachedFeaturesAndSegments;
         } else {
             this.featuresAndSegments = this.resolveFeaturesAndSegments;
         }

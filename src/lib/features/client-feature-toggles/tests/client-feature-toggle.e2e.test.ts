@@ -10,6 +10,8 @@ import { ClientSpecService } from '../../../services/client-spec-service.js';
 import type { Application } from 'express';
 import type { IFlagResolver } from '../../../types/index.js';
 import type TestAgent from 'supertest/lib/agent.d.ts';
+import EventEmitter from 'events';
+import { UPDATE_REVISION } from '../../feature-toggle/configuration-revision-service.js';
 
 import { vi } from 'vitest';
 
@@ -94,7 +96,9 @@ test('if caching is enabled should memoize', async () => {
         getActiveSegmentsForClient,
     };
     const featureToggleService = { getClientFeatures };
-    const configurationRevisionService = { getMaxRevisionId: () => 1 };
+    const configurationRevisionService = Object.assign(new EventEmitter(), {
+        getMaxRevisionId: () => 1,
+    });
 
     const controller = new FeatureController(
         {
@@ -121,6 +125,54 @@ test('if caching is enabled should memoize', async () => {
     await callGetAll(controller);
     await callGetAll(controller);
     expect(getClientFeatures).toHaveBeenCalledTimes(1);
+});
+
+test('cache is cleared when the revision updates', async () => {
+    const getClientFeatures = vi.fn().mockReturnValue([]);
+    const getActiveSegmentsForClient = vi.fn().mockReturnValue([]);
+    const respondWithValidation = vi.fn().mockReturnValue({});
+    const validPath = vi.fn().mockReturnValue(vi.fn());
+    const clientSpecService = new ClientSpecService({ getLogger });
+    const openApiService = { respondWithValidation, validPath };
+    const clientFeatureToggleService = {
+        getClientFeatures,
+        getActiveSegmentsForClient,
+    };
+    const featureToggleService = { getClientFeatures };
+    const configurationRevisionService = Object.assign(new EventEmitter(), {
+        getMaxRevisionId: () => 1,
+    });
+
+    const controller = new FeatureController(
+        {
+            clientSpecService,
+            // @ts-expect-error due to partial implementation
+            openApiService,
+            // @ts-expect-error due to partial implementation
+            clientFeatureToggleService,
+            // @ts-expect-error due to partial implementation
+            featureToggleService,
+            // @ts-expect-error due to partial implementation
+            configurationRevisionService,
+        },
+        {
+            getLogger,
+            clientFeatureCaching: {
+                enabled: true,
+                maxAge: secondsToMilliseconds(10),
+            },
+            flagResolver,
+        },
+    );
+
+    await callGetAll(controller);
+    await callGetAll(controller);
+    expect(getClientFeatures).toHaveBeenCalledTimes(1);
+
+    configurationRevisionService.emit(UPDATE_REVISION);
+
+    await callGetAll(controller);
+    expect(getClientFeatures).toHaveBeenCalledTimes(2);
 });
 
 test('if caching is not enabled all calls goes to service', async () => {

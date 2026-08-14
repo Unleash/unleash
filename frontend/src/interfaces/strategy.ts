@@ -10,7 +10,7 @@ export interface IFeatureStrategy {
     name: string;
     title?: string;
     constraints: IConstraint[];
-    parameters: IFeatureStrategyParameters;
+    parameters: ParametersSchema;
     variants?: IFeatureVariant[];
     featureName?: string;
     projectId?: string;
@@ -25,8 +25,6 @@ export type StrategyFormState = Omit<Partial<IFeatureStrategy>, 'parameters'> &
     Required<Pick<IFeatureStrategy, 'name'>> & {
         parameters?: StrategyFormParameters;
     };
-
-export type IFeatureStrategyParameters = ParametersSchema;
 
 export interface IStrategy {
     name: string;

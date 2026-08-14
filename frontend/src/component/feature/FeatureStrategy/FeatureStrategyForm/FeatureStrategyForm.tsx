@@ -3,7 +3,6 @@ import { useEffect, useState, type JSX } from 'react';
 import { useNavigate } from 'react-router';
 import { Button, styled, Box } from '@mui/material';
 import type {
-    IFeatureStrategyParameters,
     IStrategyParameter,
     StrategyFormState,
 } from 'interfaces/strategy';
@@ -30,6 +29,7 @@ import { useEventTracker } from 'hooks/useEventTracker';
 import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/UpgradeChangeRequests/UpgradeChangeRequests.tsx';
 
 import { StrategyFormBody } from './StrategyFormBody.tsx';
+import type { ParametersSchema } from 'openapi/index.ts';
 
 export interface IFeatureStrategyFormProps<T extends StrategyFormState> {
     feature: IFeatureToggle;
@@ -126,7 +126,7 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
 
     const validateParameter = (
         name: string,
-        value?: IFeatureStrategyParameters[string],
+        value?: ParametersSchema[string],
     ): boolean => {
         const parameterValueError = validateParameterValue(
             findParameterDefinition(name),

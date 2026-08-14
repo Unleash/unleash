@@ -290,7 +290,7 @@ const StyledPreviewPanel = styled(Box)(({ theme }) => ({
     background: theme.palette.background.paper,
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
-    boxShadow: theme.shadows[8],
+    boxShadow: theme.boxShadows.popup,
     overflowY: 'auto',
     overflowX: 'hidden',
     overscrollBehavior: 'contain',

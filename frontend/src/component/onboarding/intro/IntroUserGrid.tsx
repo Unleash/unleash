@@ -281,10 +281,10 @@ const StyledPreviewPanel = styled(Box)(({ theme }) => ({
     position: 'absolute',
     top: 0,
     right: 0,
-    bottom: 0,
     zIndex: 1,
     width: theme.spacing(38),
     maxWidth: 'calc(100% - 24px)',
+    maxHeight: '100%',
     display: 'flex',
     flexDirection: 'column',
     background: theme.palette.background.paper,
@@ -309,7 +309,7 @@ const StyledPanelHeader = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1.5),
-    padding: theme.spacing(2),
+    padding: theme.spacing(2, 2, 1),
 }));
 
 const StyledPanelHeaderRow = styled(Box)(({ theme }) => ({
@@ -329,13 +329,14 @@ const StyledPanelAvatar = styled(Box, {
     backgroundImage: `url('${avatarUrl}')`,
     backgroundSize: 'cover',
     backgroundPosition: 'center top',
+    boxShadow: `0 0 0 1px ${alpha(theme.palette.common.black, 0.2)}`,
 }));
 
 const StyledPopoverBody = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1.5),
-    padding: theme.spacing(1.5, 2, 2),
+    padding: theme.spacing(1, 2, 2),
     '& > *': {
         flexShrink: 0,
     },

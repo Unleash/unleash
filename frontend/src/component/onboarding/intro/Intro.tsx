@@ -654,13 +654,6 @@ export const Intro = ({
         }
     };
 
-    const handleSkip = () => {
-        trackEvent('quick-tour-demo', {
-            props: { eventType: 'skip', topic: topic.key },
-        });
-        onComplete();
-    };
-
     const setEnvironmentEnabled = (enabled: boolean) => {
         setConfig((current) => ({
             ...current,
@@ -929,9 +922,6 @@ export const Intro = ({
 
                 <StyledFooter>
                     <Box sx={{ flexGrow: 1 }} />
-                    <Button onClick={handleSkip} color='inherit'>
-                        Skip
-                    </Button>
                     {topicIndex > 0 ? (
                         <Button
                             variant='outlined'

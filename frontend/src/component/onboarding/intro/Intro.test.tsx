@@ -1017,13 +1017,3 @@ test('teaches manual recovery before a safeguard automates it', () => {
     ).not.toBeChecked();
     vi.useRealTimers();
 }, 10000);
-
-test('closes the tour on Skip without marking it finished', () => {
-    const onComplete = vi.fn();
-    const onFinish = vi.fn();
-    renderAdvancedIntro({ onComplete, onFinish });
-
-    fireEvent.click(screen.getByRole('button', { name: 'Skip' }));
-    expect(onComplete).toHaveBeenCalledTimes(1);
-    expect(onFinish).not.toHaveBeenCalled();
-});

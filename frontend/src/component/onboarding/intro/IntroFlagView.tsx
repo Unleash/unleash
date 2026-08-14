@@ -123,7 +123,7 @@ const StyledRolloutWrapper = styled(Box)(({ theme }) => ({
 const StyledConstraintRow = styled(Box)(({ theme }) => ({
     display: 'grid',
     gridTemplateColumns: `${theme.spacing(8)} auto minmax(0, 1fr)`,
-    alignItems: 'center',
+    alignItems: 'start',
     gap: theme.spacing(1),
     minHeight: theme.spacing(3.5),
 }));

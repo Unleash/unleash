@@ -1,6 +1,5 @@
 import type { FC } from 'react';
 import type { FeatureStrategySchema } from 'openapi';
-import type { IFeatureStrategyPayload } from 'interfaces/strategy';
 import { ConstraintAccordionView } from 'component/common/NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { objectId } from 'utils/objectId';
@@ -15,7 +14,7 @@ import {
 import { RolloutVariants } from './RolloutVariants/RolloutVariants.tsx';
 
 type StrategyExecutionProps = {
-    strategy: IFeatureStrategyPayload | FeatureStrategySchema;
+    strategy: FeatureStrategySchema;
     displayGroupId?: boolean;
 };
 
@@ -27,10 +26,7 @@ export const StrategyExecution: FC<StrategyExecutionProps> = ({
     const { segments } = useSegments();
     const { isCustomStrategy, customStrategyParameters: customStrategyItems } =
         useCustomStrategyParameters(strategy, strategies);
-    const strategyParameters = useStrategyParameters(
-        strategy as FeatureStrategySchema,
-        displayGroupId,
-    );
+    const strategyParameters = useStrategyParameters(strategy, displayGroupId);
     const { constraints } = strategy;
     const strategySegments = segments?.filter((segment) =>
         strategy.segments?.includes(segment.id),

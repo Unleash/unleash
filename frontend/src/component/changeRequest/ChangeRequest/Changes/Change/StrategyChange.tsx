@@ -191,9 +191,14 @@ const StrategyChangeDetails: FC<{
         change.payload.variants || [],
     );
 
+    const name =
+        'name' in change.payload
+            ? change.payload.name
+            : (referenceStrategy?.name ?? '');
+
     return (
         <>
-            <StrategyExecution strategy={change.payload} />
+            <StrategyExecution strategy={{ ...change.payload, name }} />
             {hasVariantDiff ? (
                 <StyledBox>
                     {change.payload.variants?.length ? (

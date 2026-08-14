@@ -98,7 +98,7 @@ const RELEASE_PLAN_MILESTONES: IReleasePlanMilestone[] = [
         name: 'Preview with 40% of Pro users in Norway',
         rollout: 40,
         constraints: [
-            { field: 'Country', values: ['🇳🇴 NO'] },
+            { field: 'Country', values: ['Norway'] },
             { field: 'Plan', values: ['Pro'] },
         ],
         targetCountryCodes: ['NO'],
@@ -108,7 +108,7 @@ const RELEASE_PLAN_MILESTONES: IReleasePlanMilestone[] = [
         name: 'Expand to 60% of Pro + Enterprise in Norway + US',
         rollout: 60,
         constraints: [
-            { field: 'Country', values: ['🇳🇴 NO', '🇺🇸 US'] },
+            { field: 'Country', values: ['Norway', 'United States'] },
             { field: 'Plan', values: ['Pro', 'Enterprise'] },
         ],
         targetCountryCodes: ['NO', 'US'],

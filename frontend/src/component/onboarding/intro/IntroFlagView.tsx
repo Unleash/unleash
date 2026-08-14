@@ -291,7 +291,7 @@ export const IntroFlagView = ({
                                 <StyledConstraintValues>
                                     {INTRO_COUNTRIES.map((country) =>
                                         selectableChip(
-                                            `${country.flag} ${country.code}`,
+                                            country.label,
                                             config.targetCountryCodes.includes(
                                                 country.code,
                                             ),

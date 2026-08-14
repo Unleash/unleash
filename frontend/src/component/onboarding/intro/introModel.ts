@@ -41,15 +41,14 @@ export interface IntroLook {
 export interface IntroCountry {
     code: string;
     label: string;
-    flag: string;
 }
 
 export const INTRO_COUNTRIES: IntroCountry[] = [
-    { code: 'NO', label: 'Norway', flag: '🇳🇴' },
-    { code: 'US', label: 'United States', flag: '🇺🇸' },
-    { code: 'CA', label: 'Canada', flag: '🇨🇦' },
-    { code: 'GB', label: 'United Kingdom', flag: '🇬🇧' },
-    { code: 'JP', label: 'Japan', flag: '🇯🇵' },
+    { code: 'NO', label: 'Norway' },
+    { code: 'US', label: 'United States' },
+    { code: 'CA', label: 'Canada' },
+    { code: 'GB', label: 'United Kingdom' },
+    { code: 'JP', label: 'Japan' },
 ];
 
 export interface IntroVariant {

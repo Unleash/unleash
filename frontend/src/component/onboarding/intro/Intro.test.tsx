@@ -710,7 +710,7 @@ test('targets with product-like country and plan constraints', () => {
     expect(screen.getByText('Country')).toBeInTheDocument();
     expect(screen.getByText('Plan')).toBeInTheDocument();
     expect(screen.queryByText('Device')).not.toBeInTheDocument();
-    const norwayConstraint = screen.getByRole('button', { name: '🇳🇴 NO' });
+    const norwayConstraint = screen.getByRole('button', { name: 'Norway' });
     expect(norwayConstraint).toHaveAttribute('aria-pressed', 'true');
     fireEvent.click(norwayConstraint);
     expect(norwayConstraint).toHaveAttribute('aria-pressed', 'false');
@@ -730,7 +730,7 @@ test('explains targeting from the matching context values', () => {
     const explanation = screen.getByText(/Ada (gets|matches)/);
     expect(explanation).toHaveTextContent(/Norway and the Pro plan/);
     expect(explanation).toHaveTextContent(/both constraints/);
-    expect(screen.getByText('"🇳🇴 NO"')).toBeInTheDocument();
+    expect(screen.getByText('"NO"')).toBeInTheDocument();
     expect(screen.getByText('"Pro"')).toBeInTheDocument();
 
     fireEvent.click(within(grid).getByRole('button', { name: /Cara/ }));

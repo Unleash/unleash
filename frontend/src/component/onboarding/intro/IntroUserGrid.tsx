@@ -962,7 +962,6 @@ export const IntroUserGrid = ({
                                     </StyledName>
                                     {showMeta ? (
                                         <StyledMeta>
-                                            {user.country.flag}{' '}
                                             {user.country.code} · {plan.label}
                                         </StyledMeta>
                                     ) : null}
@@ -993,7 +992,6 @@ export const IntroUserGrid = ({
                                         overflow: 'visible',
                                     }}
                                 >
-                                    {openUser.country.flag}{' '}
                                     {openUser.country.label} · {openPlan?.label}{' '}
                                     · bucket {openEvaluation?.rolloutBucket}
                                 </StyledMeta>
@@ -1084,7 +1082,7 @@ export const IntroUserGrid = ({
                                         {': '}
                                     </span>
                                     <span className='json-string'>
-                                        {`"${openUser.country.flag} ${openUser.country.code}"`}
+                                        {`"${openUser.country.code}"`}
                                     </span>
                                     <span className='json-punctuation'>
                                         {',\n'}

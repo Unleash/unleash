@@ -47,9 +47,19 @@ const StyledEnvironmentHeader = styled(Box)(({ theme }) => ({
     background: theme.palette.background.paper,
 }));
 
+const StyledEnvironmentText = styled(Box)({
+    display: 'flex',
+    flexDirection: 'column',
+});
+
 const StyledEnvironmentName = styled('span')(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
     fontSize: theme.typography.body2.fontSize,
+}));
+
+const StyledEnvironmentStatus = styled('span')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: theme.fontSizes.smallerBody,
 }));
 
 const StyledStrategyBody = styled(Box, {
@@ -244,9 +254,16 @@ export const IntroFlagView = ({
                         }}
                         data-testid='QUICK_TOUR_INTRO_ONOFF_SWITCH'
                     />
-                    <StyledEnvironmentName>
-                        Production environment
-                    </StyledEnvironmentName>
+                    <StyledEnvironmentText>
+                        <StyledEnvironmentName>
+                            Production environment
+                        </StyledEnvironmentName>
+                        <StyledEnvironmentStatus>
+                            {config.environmentEnabled
+                                ? `On for ${config.rollout}% of all users`
+                                : 'Off for all users'}
+                        </StyledEnvironmentStatus>
+                    </StyledEnvironmentText>
                 </StyledEnvironmentHeader>
 
                 <StyledStrategyBody dimmed={!config.environmentEnabled}>

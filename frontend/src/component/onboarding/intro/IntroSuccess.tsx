@@ -19,6 +19,7 @@ const StyledRoot = styled(Box)(({ theme }) => ({
     textAlign: 'center',
 }));
 
+// Matches the enabled status badge over the people (IntroUserGrid).
 const StyledCheck = styled(Box)(({ theme }) => ({
     width: theme.spacing(9),
     height: theme.spacing(9),
@@ -27,8 +28,9 @@ const StyledCheck = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    background: theme.palette.success.main,
-    color: theme.palette.common.white,
+    background: theme.palette.success.light,
+    border: `1.5px solid ${theme.palette.success.border}`,
+    color: theme.palette.success.main,
     '& svg': { fontSize: theme.spacing(5) },
 }));
 

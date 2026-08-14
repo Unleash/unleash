@@ -122,7 +122,7 @@ test('starts with a gradual my-feature rollout and context cards', () => {
     ).toBe(true);
     expect(
         screen.getByText(
-            /Ada gets my-feature because the rollout includes their bucket \(100 ≥ \d+\)/,
+            /Ada gets my-feature because the 100% rollout covers buckets 1–100 \(theirs is \d+\)/,
         ),
     ).toBeInTheDocument();
 });

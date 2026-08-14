@@ -624,6 +624,15 @@ const evaluationReason = (
     if (!environmentEnabled) {
         return `${user.name} sees Classic Search because production is disabled.`;
     }
+    // Each user has a stable rollout bucket (1-100). A rollout of N% turns the
+    // flag on for buckets 1-N, so spelling out the covered range - rather than a
+    // bare "40 < 55" - makes it clear which number is the percentage and which
+    // is the user's bucket.
+    const bucket = evaluation.rolloutBucket;
+    const rolloutCoverage =
+        rollout <= 0
+            ? 'the rollout is at 0%, so it covers no buckets'
+            : `the ${rollout}% rollout covers buckets 1–${rollout}`;
     const constraints = constraintExplanation(user, targeting);
     if (!constraints.matches) {
         return `${user.name} sees Classic Search because ${naturalList(constraints.failures)}.`;
@@ -631,9 +640,9 @@ const evaluationReason = (
     if (!evaluation.enabled) {
         if (constraints.activeCount > 0) {
             const count = constraintCountLabel(constraints.activeCount);
-            return `${user.name} matches ${count}: ${naturalList(constraints.values)}, but sees Classic Search because the rollout does not include their bucket (${rollout} < ${evaluation.rolloutBucket}).`;
+            return `${user.name} matches ${count}: ${naturalList(constraints.values)}, but sees Classic Search because ${rolloutCoverage} (theirs is ${bucket}).`;
         }
-        return `${user.name} sees Classic Search because the rollout does not include their bucket (${rollout} < ${evaluation.rolloutBucket}).`;
+        return `${user.name} sees Classic Search because ${rolloutCoverage} (theirs is ${bucket}).`;
     }
     if (errored) {
         const experience = variant?.label
@@ -650,9 +659,9 @@ const evaluationReason = (
             : '';
     if (constraints.activeCount > 0) {
         const count = constraintCountLabel(constraints.activeCount);
-        return `${user.name} gets ${experience} because ${naturalList(constraints.values)} match ${count}, and the rollout includes their bucket (${rollout} ≥ ${evaluation.rolloutBucket}).${allocation}`;
+        return `${user.name} gets ${experience} because ${naturalList(constraints.values)} match ${count}, and ${rolloutCoverage} (theirs is ${bucket}).${allocation}`;
     }
-    return `${user.name} gets ${experience} because the rollout includes their bucket (${rollout} ≥ ${evaluation.rolloutBucket}).${allocation}`;
+    return `${user.name} gets ${experience} because ${rolloutCoverage} (theirs is ${bucket}).${allocation}`;
 };
 
 interface IIntroUserGridProps {

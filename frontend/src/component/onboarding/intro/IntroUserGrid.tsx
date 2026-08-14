@@ -9,7 +9,6 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
-import { Badge } from 'component/common/Badge/Badge';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutlineOutlined';
@@ -358,16 +357,31 @@ const StyledPopoverClose = styled(IconButton)(({ theme }) => ({
     },
 }));
 
-const StyledEvaluationPanel = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(1),
-    padding: theme.spacing(1.25),
-    borderRadius: theme.shape.borderRadius,
-    border: `1px solid ${theme.palette.divider}`,
-    background: theme.palette.background.elevation1,
-    fontSize: theme.fontSizes.smallBody,
-    lineHeight: 1.45,
+const StyledEvaluationPanel = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'state',
+})<{ state: 'smart' | 'classic' | 'error' }>(({ theme, state }) => {
+    const color =
+        state === 'smart' ? 'success' : state === 'error' ? 'error' : 'neutral';
+    return {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: theme.spacing(1),
+        padding: theme.spacing(1.25),
+        borderRadius: theme.shape.borderRadius,
+        border: `1px solid ${theme.palette[color].border ?? theme.palette.divider}`,
+        background: theme.palette[color].light,
+        color: theme.palette[color].contrastText,
+        fontSize: theme.fontSizes.smallBody,
+        lineHeight: 1.45,
+    };
+});
+
+const StyledEvalHeadline = styled('span')(({ theme }) => ({
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.5),
+    fontWeight: theme.typography.fontWeightBold,
+    '& svg': { fontSize: 15 },
 }));
 
 const StyledExplanation = styled(Box)(({ theme }) => ({
@@ -385,6 +399,12 @@ const StyledContext = styled(Box)(({ theme }) => ({
 const StyledContextLabel = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
     fontWeight: theme.typography.fontWeightBold,
+}));
+
+const StyledPreviewLabel = styled('span')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.fontSizes.smallBody,
 }));
 
 const StyledContextJson = styled('pre')(({ theme }) => ({
@@ -417,14 +437,13 @@ const StyledMockFrame = styled(Box)(({ theme }) => ({
     overflow: 'hidden',
     border: `1px solid ${theme.palette.divider}`,
     background: theme.palette.background.paper,
-    boxShadow: theme.shadows[1],
 }));
 
 const StyledMockChrome = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(0.75),
-    padding: theme.spacing(1.1, 1.5),
+    padding: theme.spacing(0.5, 1.5),
     borderBottom: `1px solid ${theme.palette.divider}`,
     background: theme.palette.background.elevation1,
 }));
@@ -724,6 +743,20 @@ export const IntroUserGrid = ({
           ? 'smart'
           : 'classic';
     const openIndex = openUser ? users.indexOf(openUser) : -1;
+    const openStateColor =
+        openState === 'smart'
+            ? 'success'
+            : openState === 'error'
+              ? 'error'
+              : 'neutral';
+    const openStateLabel =
+        openState === 'smart'
+            ? openVariant
+                ? `Variant ${openVariant.name} enabled`
+                : 'Feature enabled'
+            : openState === 'error'
+              ? 'Search error'
+              : 'Feature disabled';
 
     const closePreview = () => {
         setOpenUserId(undefined);
@@ -967,7 +1000,23 @@ export const IntroUserGrid = ({
                                 <CloseIcon fontSize='small' />
                             </StyledPopoverClose>
                         </StyledPanelHeaderRow>
-                        <StyledEvaluationPanel>
+                        <StyledEvaluationPanel state={openState}>
+                            <StyledEvalHeadline>
+                                {openState === 'smart' ? (
+                                    <CheckIcon
+                                        sx={{ color: `${openStateColor}.main` }}
+                                    />
+                                ) : openState === 'error' ? (
+                                    <ErrorOutlineIcon
+                                        sx={{ color: `${openStateColor}.main` }}
+                                    />
+                                ) : (
+                                    <CloseIcon
+                                        sx={{ color: `${openStateColor}.main` }}
+                                    />
+                                )}
+                                {openStateLabel}
+                            </StyledEvalHeadline>
                             <StyledExplanation>
                                 <span>
                                     {evaluationReason(
@@ -1018,33 +1067,7 @@ export const IntroUserGrid = ({
                     </StyledPanelHeader>
 
                     <StyledPopoverBody data-testid='QUICK_TOUR_INTRO_POPOVER_BODY'>
-                        <Badge
-                            color={
-                                openState === 'smart'
-                                    ? 'success'
-                                    : openState === 'error'
-                                      ? 'error'
-                                      : 'neutral'
-                            }
-                            icon={
-                                openState === 'smart' ? (
-                                    <CheckIcon />
-                                ) : openState === 'error' ? (
-                                    <ErrorOutlineIcon />
-                                ) : (
-                                    <CloseIcon />
-                                )
-                            }
-                            sx={{ alignSelf: 'flex-start' }}
-                        >
-                            {openState === 'smart'
-                                ? openVariant
-                                    ? `Variant ${openVariant.name} enabled`
-                                    : 'Feature enabled'
-                                : openState === 'error'
-                                  ? 'Search error'
-                                  : 'Feature disabled'}
-                        </Badge>
+                        <StyledPreviewLabel>Preview</StyledPreviewLabel>
 
                         {renderMock(
                             openState,

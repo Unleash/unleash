@@ -1008,8 +1008,8 @@ export const Intro = ({
                             </strong>
                             <span>
                                 {incidentState === 'alert'
-                                    ? 'Disable production to stop the release and return affected users to Classic Search in real time.'
-                                    : 'Users return to a working Classic Search in real time without waiting for a fix or redeployment, giving your team space to investigate and resolve the issue properly.'}
+                                    ? 'Disable production to stop the release and return affected users to the previous experience in real time.'
+                                    : 'Users return to the previous, working experience in real time without waiting for a fix or redeployment, giving your team space to investigate and resolve the issue properly.'}
                             </span>
                         </StyledOutcomeCopy>
                     </StyledOutcome>
@@ -1026,9 +1026,9 @@ export const Intro = ({
                             <strong>Issue contained automatically</strong>
                             <span>
                                 The safeguard disabled production when errors
-                                crossed the threshold. Users return to a working
-                                Classic Search in real time without waiting for
-                                a fix or redeployment.
+                                crossed the threshold. Users return to the
+                                previous, working experience in real time
+                                without waiting for a fix or redeployment.
                             </span>
                         </StyledOutcomeCopy>
                     </StyledOutcome>

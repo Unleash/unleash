@@ -99,7 +99,7 @@ test('starts with a gradual my-feature rollout and context cards', () => {
     expect(screen.getByText('Context')).toBeInTheDocument();
     expect(
         screen.getByText(
-            /Ada sees Classic Search because production is disabled/,
+            /Ada doesn't see my-feature because production is disabled/,
         ),
     ).toBeInTheDocument();
 
@@ -122,7 +122,7 @@ test('starts with a gradual my-feature rollout and context cards', () => {
     ).toBe(true);
     expect(
         screen.getByText(
-            /Ada gets my-feature because the 100% rollout covers buckets 1–100 \(theirs is \d+\)/,
+            /Ada sees my-feature because the 100% rollout covers buckets 1–100 \(theirs is \d+\)/,
         ),
     ).toBeInTheDocument();
 });
@@ -390,7 +390,7 @@ test('keeps metrics live without errors until production is enabled', () => {
     expect(
         within(popover).getByTestId('QUICK_TOUR_INTRO_MOCK_FRAME'),
     ).toHaveAttribute('data-experience', 'error');
-    expect(within(popover).getByText('Search error')).toBeInTheDocument();
+    expect(within(popover).getByText('Feature error')).toBeInTheDocument();
     expect(within(popover).getByText(/returned an error/)).toBeInTheDocument();
 
     advanceLiveTraffic(30_000);
@@ -727,7 +727,7 @@ test('explains targeting from the matching context values', () => {
     const grid = screen.getByTestId('QUICK_TOUR_INTRO_USER_GRID');
     fireEvent.click(within(grid).getByRole('button', { name: /Ada/ }));
 
-    const explanation = screen.getByText(/Ada (gets|matches)/);
+    const explanation = screen.getByText(/Ada (sees|matches)/);
     expect(explanation).toHaveTextContent(/Norway and the Pro plan/);
     expect(explanation).toHaveTextContent(/both constraints/);
     expect(screen.getByText('"NO"')).toBeInTheDocument();
@@ -736,7 +736,7 @@ test('explains targeting from the matching context values', () => {
     fireEvent.click(within(grid).getByRole('button', { name: /Cara/ }));
     expect(
         screen.getByText(
-            /Cara sees Classic Search because Canada is not one of the targeted countries/,
+            /Cara doesn't see my-feature because Canada is not one of the targeted countries/,
         ),
     ).toBeInTheDocument();
 });
@@ -851,7 +851,7 @@ test('manages variants and previews the exact assigned experience', async () => 
     fireEvent.click(within(grid).getAllByRole('button')[0]);
     expect(screen.getByText(/Variant [ABCD] enabled/)).toBeInTheDocument();
     expect(
-        screen.getByText(/Ada gets the .+ variant \([ABCD]\) because/),
+        screen.getByText(/Ada sees my-feature variant [ABCD] because/),
     ).toBeInTheDocument();
     expect(
         screen.getByText(/Variant [ABCD] has a 25% allocation/),
@@ -999,7 +999,7 @@ test('teaches manual recovery before a safeguard automates it', () => {
         within(recoveredPopover).getByText('Feature disabled'),
     ).toBeInTheDocument();
     expect(
-        within(recoveredPopover).queryByText('Search error'),
+        within(recoveredPopover).queryByText('Feature error'),
     ).not.toBeInTheDocument();
     expect(
         screen

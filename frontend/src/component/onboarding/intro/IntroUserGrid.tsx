@@ -622,7 +622,7 @@ const evaluationReason = (
 ): string => {
     if (!evaluation) return `${user.name} has not been evaluated.`;
     if (!environmentEnabled) {
-        return `${user.name} sees Classic Search because production is disabled.`;
+        return `${user.name} doesn't see my-feature because production is disabled.`;
     }
     // Each user has a stable rollout bucket (1-100). A rollout of N% turns the
     // flag on for buckets 1-N, so spelling out the covered range - rather than a
@@ -635,23 +635,23 @@ const evaluationReason = (
             : `the ${rollout}% rollout covers buckets 1–${rollout}`;
     const constraints = constraintExplanation(user, targeting);
     if (!constraints.matches) {
-        return `${user.name} sees Classic Search because ${naturalList(constraints.failures)}.`;
+        return `${user.name} doesn't see my-feature because ${naturalList(constraints.failures)}.`;
     }
     if (!evaluation.enabled) {
         if (constraints.activeCount > 0) {
             const count = constraintCountLabel(constraints.activeCount);
-            return `${user.name} matches ${count}: ${naturalList(constraints.values)}, but sees Classic Search because ${rolloutCoverage} (theirs is ${bucket}).`;
+            return `${user.name} matches ${count}: ${naturalList(constraints.values)}, but doesn't see my-feature because ${rolloutCoverage} (theirs is ${bucket}).`;
         }
-        return `${user.name} sees Classic Search because ${rolloutCoverage} (theirs is ${bucket}).`;
+        return `${user.name} doesn't see my-feature because ${rolloutCoverage} (theirs is ${bucket}).`;
     }
     if (errored) {
-        const experience = variant?.label
-            ? `the ${variant.label} variant (${variant.name})`
+        const experience = variant
+            ? `my-feature variant ${variant.name}`
             : 'my-feature';
-        return `${user.name} gets ${experience}, but their search request returned an error.`;
+        return `${user.name} sees ${experience}, but their request returned an error.`;
     }
-    const experience = variant?.label
-        ? `the ${variant.label} variant (${variant.name})`
+    const experience = variant
+        ? `my-feature variant ${variant.name}`
         : 'my-feature';
     const allocation =
         variant && explainVariantAllocation
@@ -659,9 +659,9 @@ const evaluationReason = (
             : '';
     if (constraints.activeCount > 0) {
         const count = constraintCountLabel(constraints.activeCount);
-        return `${user.name} gets ${experience} because ${naturalList(constraints.values)} match ${count}, and ${rolloutCoverage} (theirs is ${bucket}).${allocation}`;
+        return `${user.name} sees ${experience} because ${naturalList(constraints.values)} match ${count}, and ${rolloutCoverage} (theirs is ${bucket}).${allocation}`;
     }
-    return `${user.name} gets ${experience} because ${rolloutCoverage} (theirs is ${bucket}).${allocation}`;
+    return `${user.name} sees ${experience} because ${rolloutCoverage} (theirs is ${bucket}).${allocation}`;
 };
 
 interface IIntroUserGridProps {
@@ -759,7 +759,7 @@ export const IntroUserGrid = ({
                 ? `Variant ${openVariant.name} enabled`
                 : 'Feature enabled'
             : openState === 'error'
-              ? 'Search error'
+              ? 'Feature error'
               : 'Feature disabled';
 
     const closePreview = () => {
@@ -889,12 +889,12 @@ export const IntroUserGrid = ({
                             : undefined;
                         const errored = erroredUserIdSet.has(user.id);
                         const experienceLabel = errored
-                            ? 'Search unavailable'
+                            ? 'my-feature error'
                             : !environmentEnabled || !enabled
-                              ? 'Classic Search'
-                              : configuredVariant?.label
-                                ? `${configuredVariant.name} · ${configuredVariant.label}`
-                                : 'my-feature';
+                              ? 'my-feature off'
+                              : configuredVariant
+                                ? `my-feature variant ${configuredVariant.name}`
+                                : 'my-feature on';
                         const smart = environmentEnabled && enabled && !errored;
                         const experience: 'smart' | 'classic' | 'error' =
                             errored ? 'error' : smart ? 'smart' : 'classic';
@@ -906,7 +906,7 @@ export const IntroUserGrid = ({
                                 ? `Variant ${configuredVariant.name} enabled`
                                 : 'Feature enabled'
                             : errored
-                              ? 'Search error'
+                              ? 'Feature error'
                               : 'Feature disabled';
 
                         return (

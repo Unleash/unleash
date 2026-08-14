@@ -76,6 +76,11 @@ const commonSelectColumns = [
 const TABLE = 'features';
 const FEATURE_ENVIRONMENTS_TABLE = 'feature_environments';
 
+// knex throws this when a query runs on a transaction that already committed/rolled back
+const isTransactionAlreadyCompleteError = (e: unknown): boolean =>
+    e instanceof Error &&
+    e.message.includes('Transaction query already complete');
+
 export default class FeatureToggleStore implements IFeatureToggleStore {
     private db: Db;
 
@@ -325,7 +330,17 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .where({ name })
             .then((r) => (r ? r.project : undefined))
             .catch((e) => {
-                this.logger.error(e);
+                // This best-effort lookup can run on a transactional store (e.g.
+                // during an import); if that transaction has already completed,
+                // knex throws and undefined is the correct fallback. Don't flood
+                // error logs with that benign race, but still surface real failures.
+                if (isTransactionAlreadyCompleteError(e)) {
+                    this.logger.debug(
+                        'getProjectId query ran after its transaction completed; returning undefined',
+                    );
+                } else {
+                    this.logger.error(e);
+                }
                 return undefined;
             });
     }

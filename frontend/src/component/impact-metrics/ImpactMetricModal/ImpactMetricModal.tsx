@@ -32,7 +32,12 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     },
     padding: 0,
     '& .MuiPaper-root > section': {
-        overflowX: 'hidden',
+        overflow: 'hidden',
+        // scroll the form column instead of the whole section, so the
+        // sidebar always spans the full visible height of the modal
+        '& > div': {
+            overflowY: 'auto',
+        },
     },
 }));
 

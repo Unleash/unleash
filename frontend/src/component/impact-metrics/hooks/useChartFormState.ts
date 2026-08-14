@@ -74,9 +74,10 @@ export const useChartFormState = ({
     } = useImpactMetricsData(
         metricName
             ? {
+                  // labels only depend on metric and source; the backend
+                  // always discovers them from a month-wide window
                   metricName,
-                  range: timeRange,
-                  aggregationMode,
+                  range: 'hour',
                   source,
                   mode: 'edit',
               }

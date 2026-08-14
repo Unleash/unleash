@@ -137,7 +137,7 @@ const StyledPerson = styled('button', {
         padding: theme.spacing(0.5),
         borderRadius: theme.shape.borderRadiusMedium,
         backgroundColor: enabled
-            ? alpha(accent, 0.08)
+            ? alpha(accent, 0.05)
             : theme.palette.background.elevation2,
         boxShadow: ring,
         opacity: dimmed ? 0.6 : 1,
@@ -149,7 +149,7 @@ const StyledPerson = styled('button', {
             !selected && { animation: `${ringPulse} 0.55s ease-out` }),
         '&:hover': {
             backgroundColor: enabled
-                ? alpha(accent, 0.14)
+                ? alpha(accent, 0.1)
                 : theme.palette.background.paper,
             boxShadow: selected
                 ? `inset 0 0 0 2px ${theme.palette.primary.main}`
@@ -194,7 +194,7 @@ const StyledAvatarImg = styled(Box, {
     backgroundImage: `url('${avatarUrl}')`,
     backgroundSize: 'cover',
     backgroundPosition: 'center top',
-    boxShadow: `0 0 0 1px ${theme.palette.divider}`,
+    boxShadow: `0 0 0 1px ${alpha(theme.palette.common.black, 0.2)}`,
     filter: enabled ? 'none' : 'grayscale(0.85)',
     opacity: enabled ? 1 : 0.5,
     transition: theme.transitions.create(['filter', 'opacity']),

@@ -10,10 +10,9 @@ import {
 } from '@mui/material';
 import OutlinedFlagIcon from '@mui/icons-material/OutlinedFlag';
 import AddIcon from '@mui/icons-material/Add';
-import { useState } from 'react';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { StrategyEvaluationChip } from 'component/common/ConstraintsList/StrategyEvaluationChip/StrategyEvaluationChip';
-import { HintDot } from './introHints.tsx';
+import { HintBadge } from './introHints.tsx';
 import {
     INTRO_COUNTRIES,
     INTRO_PLANS,
@@ -244,10 +243,6 @@ export const IntroFlagView = ({
     highlightConstraints,
     highlightVariants,
 }: IIntroFlagViewProps) => {
-    // Keep the add-variant tooltip fully controlled (MUI locks controlled vs.
-    // uncontrolled on first render), so the guidance hint can force it open
-    // while still showing the plain label on hover.
-    const [addVariantHovered, setAddVariantHovered] = useState(false);
     // "all users" only when nothing narrows the audience (every country and
     // plan selected, or no constraint at all); otherwise "targeted users".
     const allCountriesSelected =
@@ -284,9 +279,12 @@ export const IntroFlagView = ({
                             }}
                             data-testid='QUICK_TOUR_INTRO_ONOFF_SWITCH'
                         />
-                        {highlightEnvironment ? (
-                            <HintDot sx={{ top: 8, right: 10 }} />
-                        ) : null}
+                        <HintBadge
+                            active={Boolean(highlightEnvironment)}
+                            title='Turn on my-feature in production'
+                            placement='top'
+                            sx={{ top: 2, right: 4 }}
+                        />
                     </Box>
                     <StyledEnvironmentText>
                         <StyledEnvironmentName>
@@ -302,16 +300,17 @@ export const IntroFlagView = ({
 
                 <StyledStrategyBody dimmed={!config.environmentEnabled}>
                     {showConstraints ? (
-                        <StyledConfigurationSection>
+                        <StyledConfigurationSection
+                            sx={{ position: 'relative' }}
+                        >
+                            <HintBadge
+                                active={Boolean(highlightConstraints)}
+                                title='Try targeting by country or plan'
+                                placement='top'
+                                sx={{ top: 12, right: 12 }}
+                            />
                             <StyledSectionTitle data-testid='QUICK_TOUR_INTRO_CONSTRAINTS_TITLE'>
-                                <Tooltip
-                                    open={Boolean(highlightConstraints)}
-                                    arrow
-                                    placement='right'
-                                    title='Try targeting by country or plan'
-                                >
-                                    <span>Constraints</span>
-                                </Tooltip>
+                                <span>Constraints</span>
                                 <HelpIcon
                                     htmlTooltip
                                     tooltip={
@@ -462,33 +461,29 @@ export const IntroFlagView = ({
                                     />
                                 </StyledVariantsBarWrapper>
                                 {config.variants.length < 4 ? (
-                                    <Tooltip
-                                        title={
-                                            highlightVariants
-                                                ? 'Add a variant or drag the slider to split traffic'
-                                                : 'Add variant'
-                                        }
-                                        open={Boolean(
-                                            highlightVariants ||
-                                                addVariantHovered,
-                                        )}
-                                        onOpen={() =>
-                                            setAddVariantHovered(true)
-                                        }
-                                        onClose={() =>
-                                            setAddVariantHovered(false)
-                                        }
-                                        arrow
+                                    <Box
+                                        sx={{
+                                            position: 'relative',
+                                            display: 'inline-flex',
+                                        }}
                                     >
-                                        <StyledAddVariantButton
-                                            size='small'
-                                            aria-label='Add variant'
-                                            onClick={onAddVariant}
-                                            data-testid='QUICK_TOUR_INTRO_ADD_VARIANT_BUTTON'
-                                        >
-                                            <AddIcon fontSize='small' />
-                                        </StyledAddVariantButton>
-                                    </Tooltip>
+                                        <Tooltip title='Add variant' arrow>
+                                            <StyledAddVariantButton
+                                                size='small'
+                                                aria-label='Add variant'
+                                                onClick={onAddVariant}
+                                                data-testid='QUICK_TOUR_INTRO_ADD_VARIANT_BUTTON'
+                                            >
+                                                <AddIcon fontSize='small' />
+                                            </StyledAddVariantButton>
+                                        </Tooltip>
+                                        <HintBadge
+                                            active={Boolean(highlightVariants)}
+                                            title='Add a variant or drag the slider to split traffic'
+                                            placement='top'
+                                            sx={{ top: -6, right: -6 }}
+                                        />
+                                    </Box>
                                 ) : null}
                             </StyledVariantsControl>
                         </StyledConfigurationSection>

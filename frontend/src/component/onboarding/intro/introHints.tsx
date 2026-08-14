@@ -1,7 +1,14 @@
 import { useCallback, useEffect, useState } from 'react';
-import { keyframes, styled } from '@mui/material';
+import {
+    keyframes,
+    styled,
+    Tooltip,
+    type SxProps,
+    type Theme,
+    type TooltipProps,
+} from '@mui/material';
 
-const HINT_DELAY_MS = 4000;
+const HINT_DELAY_MS = 3000;
 
 /**
  * Show a subtle nudge once the user has sat idle on a step's control for a few
@@ -30,23 +37,23 @@ export const useIdleHint = (active: boolean, delayMs = HINT_DELAY_MS) => {
 
 const ping = keyframes`
   0% { transform: scale(1); opacity: 0.45; }
-  70% { transform: scale(2.6); opacity: 0; }
-  100% { transform: scale(2.6); opacity: 0; }
+  70% { transform: scale(2.4); opacity: 0; }
+  100% { transform: scale(2.4); opacity: 0; }
 `;
 
 /**
- * A small pulsing dot that draws attention to a control the user hasn't touched
- * yet. Render it inside a relatively-positioned parent and place it with
- * `sx`/`style`; it never intercepts pointer events.
+ * A pulsing dot that draws attention to a control the user hasn't touched yet.
+ * Render it inside a relatively-positioned parent and place it with `sx`; it
+ * never intercepts pointer events.
  */
-export const HintDot = styled('span')(({ theme }) => ({
+const HintDot = styled('span')(({ theme }) => ({
     position: 'absolute',
-    width: theme.spacing(1),
-    height: theme.spacing(1),
+    width: theme.spacing(2),
+    height: theme.spacing(2),
     borderRadius: '50%',
     background: theme.palette.primary.main,
     pointerEvents: 'none',
-    zIndex: 1,
+    zIndex: 2,
     '&::before': {
         content: '""',
         position: 'absolute',
@@ -59,3 +66,31 @@ export const HintDot = styled('span')(({ theme }) => ({
         '&::before': { animation: 'none' },
     },
 }));
+
+/**
+ * A guidance nudge: a pulsing dot with a tooltip emanating from it, explaining
+ * which control to use. Render it unconditionally inside a relatively-positioned
+ * parent and toggle it with `active`; the dot stays mounted (just hidden) while
+ * inactive so the tooltip's anchor is ready and the popper positions correctly
+ * the instant it opens. Place the dot with `sx`.
+ */
+export const HintBadge = ({
+    active,
+    title,
+    placement = 'top',
+    sx,
+}: {
+    active: boolean;
+    title: string;
+    placement?: TooltipProps['placement'];
+    sx?: SxProps<Theme>;
+}) => (
+    <Tooltip open={active} arrow title={title} placement={placement}>
+        <HintDot
+            sx={[
+                { visibility: active ? 'visible' : 'hidden' },
+                ...(Array.isArray(sx) ? sx : [sx]),
+            ]}
+        />
+    </Tooltip>
+);

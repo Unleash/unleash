@@ -26,7 +26,7 @@ import { IntroImpactCharts } from './IntroImpactCharts.tsx';
 // the import + usage below back to it to restore it.
 import { IntroSuccess } from './IntroSuccess.tsx';
 import { IntroStepper } from './IntroStepper.tsx';
-import { HintDot, useIdleHint } from './introHints.tsx';
+import { HintBadge, useIdleHint } from './introHints.tsx';
 import {
     INTRO_RELEASE_PLAN_MILESTONE_MS,
     IntroReleasePlan,
@@ -998,9 +998,12 @@ export const Intro = ({
                         >
                             {topicIndex < topics.length - 1 ? 'Next' : 'Finish'}
                         </Button>
-                        {hintNext ? (
-                            <HintDot sx={{ top: -3, right: -3 }} />
-                        ) : null}
+                        <HintBadge
+                            active={hintNext}
+                            title='Click Next to continue'
+                            placement='top'
+                            sx={{ top: -6, right: -6 }}
+                        />
                     </Box>
                 </StyledFooter>
             </StyledLeft>

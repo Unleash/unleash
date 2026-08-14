@@ -233,6 +233,19 @@ export const IntroFlagView = ({
     onAddVariant,
     onWeightsChange,
 }: IIntroFlagViewProps) => {
+    // "all users" only when nothing narrows the audience (every country and
+    // plan selected, or no constraint at all); otherwise "targeted users".
+    const allCountriesSelected =
+        config.targetCountryCodes.length === 0 ||
+        config.targetCountryCodes.length === INTRO_COUNTRIES.length;
+    const allPlansSelected =
+        !config.targetPlans?.length ||
+        config.targetPlans.length === INTRO_PLANS.length;
+    const audienceScope =
+        allCountriesSelected && allPlansSelected
+            ? 'all users'
+            : 'targeted users';
+
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             <StyledFlagHeader>
@@ -260,7 +273,7 @@ export const IntroFlagView = ({
                         </StyledEnvironmentName>
                         <StyledEnvironmentStatus>
                             {config.environmentEnabled
-                                ? `On for ${config.rollout}% of all users`
+                                ? `On for ${config.rollout}% of ${audienceScope}`
                                 : 'Off for all users'}
                         </StyledEnvironmentStatus>
                     </StyledEnvironmentText>

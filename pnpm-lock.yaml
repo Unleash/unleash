@@ -251,8 +251,8 @@ importers:
         specifier: ^2.4.1
         version: 2.4.1
       unleash-client:
-        specifier: ^6.11.1
-        version: 6.11.1(supports-color@10.2.2)
+        specifier: ^6.12.1
+        version: 6.12.1(supports-color@10.2.2)
     devDependencies:
       '@apidevtools/swagger-parser':
         specifier: 12.1.0
@@ -5507,10 +5507,6 @@ packages:
     resolution: {integrity: sha512-y3bGgqKj3QBdxLbLkomlohkvsA8gdAiUQlSBJnBhfn+BPxg4bc62d8TcBW15wavDfgexCgccckhcZvywyQYPOw==}
     hasBin: true
 
-  re2js@1.4.0:
-    resolution: {integrity: sha512-KTOIcZTSOpOxbu3i0+T6mFQ6tkxXKlTxfcMFs1trQbsMnG84qNq+DjXr8Afu+FEFjvF1NNlldpC7roPyazFI8g==}
-    deprecated: Accidental publish of breaking changes. Please downgrade to 1.3.3 or upgrade to the latest version.
-
   re2js@2.3.2:
     resolution: {integrity: sha512-Y7oXKIPeei9mNLgi0kCbFrE3w+3sybHFh8UD3hE1EKU3/eY1ODjb4EBHUnZGL2TG3rnmqCex81Cevoy3wf8wEg==}
 
@@ -6456,8 +6452,8 @@ packages:
     resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
     engines: {node: '>= 10.0.0'}
 
-  unleash-client@6.11.1:
-    resolution: {integrity: sha512-D7SrMcQGFkVZScpTWe5QeA95sXg70ujlEdZ2j+7KBmMjkBOwniLb+EZ/LFYm2iAue1TXFAqNMwqlBt/8c/D6ew==}
+  unleash-client@6.12.1:
+    resolution: {integrity: sha512-xeojMfPZynteI2fqGW70po23Nd588MKSv9cv5dH3BOfQmsVE0jcvypLl7a4/NfrAgmMKOpZ48N4TtnGd7klJDQ==}
     engines: {node: '>=20'}
 
   unleash-proxy-client@3.8.0:
@@ -12080,8 +12076,6 @@ snapshots:
       minimist: 1.2.8
       strip-json-comments: 2.0.1
 
-  re2js@1.4.0: {}
-
   re2js@2.3.2: {}
 
   react-activity-calendar@2.7.15(react@19.2.7):
@@ -13189,7 +13183,7 @@ snapshots:
 
   universalify@2.0.1: {}
 
-  unleash-client@6.11.1(supports-color@10.2.2):
+  unleash-client@6.12.1(supports-color@10.2.2):
     dependencies:
       http-proxy-agent: 7.0.2(supports-color@10.2.2)
       https-proxy-agent: 7.0.6(supports-color@10.2.2)
@@ -13199,7 +13193,7 @@ snapshots:
       make-fetch-happen: 15.0.6(supports-color@10.2.2)
       murmurhash3js: 3.0.1
       proxy-from-env: 1.1.0
-      re2js: 1.4.0
+      re2js: 2.3.2
       semver: 7.7.4
     transitivePeerDependencies:
       - supports-color

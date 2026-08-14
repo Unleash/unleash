@@ -284,7 +284,7 @@ const StyledFooter = styled(Box)(({ theme }) => ({
     flexWrap: 'wrap',
     gap: theme.spacing(1.5),
     flexShrink: 0,
-    padding: theme.spacing(2, 4, 4),
+    padding: theme.spacing(3, 4),
     borderTop: `1px solid ${theme.palette.divider}`,
 }));
 

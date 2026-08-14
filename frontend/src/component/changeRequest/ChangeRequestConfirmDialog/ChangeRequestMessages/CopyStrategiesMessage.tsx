@@ -1,10 +1,10 @@
 import type { FC } from 'react';
 import { styled, Typography } from '@mui/material';
 import { formatStrategyName } from 'utils/strategyNames';
-import type { IFeatureStrategyPayload } from 'interfaces/strategy';
+import type { FeatureStrategySchema } from 'openapi';
 
 interface ICopyStrategiesMessageProps {
-    payload?: IFeatureStrategyPayload[];
+    payload?: FeatureStrategySchema[];
     fromEnvironment?: string;
     environment?: string;
 }

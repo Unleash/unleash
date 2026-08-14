@@ -9,7 +9,6 @@ import {
 } from '@mui/material';
 import CopyIcon from '@mui/icons-material/AddToPhotos';
 import Lock from '@mui/icons-material/Lock';
-import type { IFeatureStrategyPayload } from 'interfaces/strategy';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
@@ -25,11 +24,12 @@ import { CopyStrategyMessage } from 'component/changeRequest/ChangeRequestConfir
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useCheckProjectAccess } from 'hooks/useHasAccess';
 import { STRATEGY_FORM_COPY_ID } from 'utils/testIds';
+import type { FeatureStrategySchema } from 'openapi';
 
 interface ICopyStrategyIconMenuProps {
     environmentId: string;
     environments: IFeatureEnvironment['name'][];
-    strategy: IFeatureStrategyPayload;
+    strategy: FeatureStrategySchema;
 }
 
 export const CopyStrategyIconMenu: FC<ICopyStrategyIconMenuProps> = ({

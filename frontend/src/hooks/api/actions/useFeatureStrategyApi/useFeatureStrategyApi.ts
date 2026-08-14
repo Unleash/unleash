@@ -1,5 +1,4 @@
 import type {
-    IFeatureStrategyPayload,
     IFeatureStrategy,
     IFeatureStrategySortOrder,
 } from 'interfaces/strategy';
@@ -24,7 +23,7 @@ const useFeatureStrategyApi = () => {
         projectId: string,
         featureId: string,
         environmentId: string,
-        payload: IFeatureStrategyPayload | CreateFeatureStrategySchema,
+        payload: CreateFeatureStrategySchema,
     ): Promise<IFeatureStrategy> => {
         if (payload.constraints && payload.constraints.length > 0) {
             addToRecentlyUsedConstraints(payload.constraints);
@@ -89,7 +88,7 @@ const useFeatureStrategyApi = () => {
         featureId: string,
         environmentId: string,
         strategyId: string,
-        payload: IFeatureStrategyPayload | UpdateFeatureStrategySchema,
+        payload: UpdateFeatureStrategySchema,
     ): Promise<void> => {
         if (payload.constraints && payload.constraints.length > 0) {
             addToRecentlyUsedConstraints(payload.constraints);

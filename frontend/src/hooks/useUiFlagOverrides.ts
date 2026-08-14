@@ -63,6 +63,9 @@ const TOOLBAR_ENABLED =
     import.meta.env.MODE !== 'test' &&
     Boolean(import.meta.hot);
 
+export const changesFlagValues = (event: { type: string }) =>
+    event.type !== 'sdk_updated';
+
 const listeners = new Set<() => void>();
 let version = 0;
 let flags: UiFlags = {} as UiFlags;
@@ -93,7 +96,11 @@ const initToolbar = async () => {
         createFlagSource(() => flags),
         manager,
     );
-    manager.subscribe(notify);
+    manager.subscribe((event) => {
+        if (changesFlagValues(event)) {
+            notify();
+        }
+    });
     client = wrapped;
 
     new UnleashToolbar(manager, wrapped, {

@@ -2,7 +2,11 @@ import { expect, test } from 'vitest';
 import { ToolbarStateManager, wrapUnleashClient } from '@unleash/toolbar';
 import type { UiFlags } from 'interfaces/uiConfig';
 import { PayloadType } from 'utils/variants';
-import { applyOverrides, createFlagSource } from './useUiFlagOverrides.js';
+import {
+    applyOverrides,
+    changesFlagValues,
+    createFlagSource,
+} from './useUiFlagOverrides.js';
 
 const disabledVariant = {
     name: 'disabled',
@@ -100,6 +104,23 @@ test('a flag-type override on a variant flag returns the plain boolean', () => {
     manager.setFlagOverride('banner', { type: 'flag', value: false });
 
     expect(applyOverrides(flags.banner, 'banner', client)).toBe(false);
+});
+
+test('evaluating a flag does not notify React, but overriding it does', () => {
+    const { manager, client } = wrapped(() => flagsWith());
+    let notified = 0;
+    manager.subscribe((event) => {
+        if (changesFlagValues(event)) notified++;
+    });
+
+    // Evaluation happens during render: a notification here would be a
+    // setState on mounted consumers while another one is still rendering.
+    client.isEnabled('demo');
+    client.getVariant('banner');
+    expect(notified).toBe(0);
+
+    manager.setFlagOverride('demo', { type: 'flag', value: false });
+    expect(notified).toBe(1);
 });
 
 test('without the toolbar, values pass through untouched', () => {

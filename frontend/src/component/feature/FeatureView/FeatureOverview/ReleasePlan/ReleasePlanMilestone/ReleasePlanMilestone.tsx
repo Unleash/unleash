@@ -144,7 +144,9 @@ export const ReleasePlanMilestone = ({
         return (
             <StyledMilestoneContainer>
                 <StyledAccordion status={status} hasAutomation={hasAutomation}>
-                    <StyledAccordionSummary>
+                    <StyledAccordionSummary
+                        slotProps={{ root: { component: 'div' } }}
+                    >
                         <StyledTitleContainer>
                             <StyledMilestoneLabel>
                                 Milestone
@@ -203,7 +205,10 @@ export const ReleasePlanMilestone = ({
                 defaultExpanded={defaultExpanded}
                 onChange={(_evt, expanded) => setExpanded(expanded)}
             >
-                <StyledAccordionSummary expandIcon={<ExpandMore />}>
+                <StyledAccordionSummary
+                    slotProps={{ root: { component: 'div' } }}
+                    expandIcon={<ExpandMore />}
+                >
                     <StyledTitleContainer>
                         <StyledMilestoneLabel>Milestone</StyledMilestoneLabel>
                         <StyledTitle status={status}>

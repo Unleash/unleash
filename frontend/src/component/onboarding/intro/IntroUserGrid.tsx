@@ -311,7 +311,6 @@ const StyledPanelHeader = styled(Box)(({ theme }) => ({
     flexDirection: 'column',
     gap: theme.spacing(1.5),
     padding: theme.spacing(2),
-    borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
 const StyledPanelHeaderRow = styled(Box)(({ theme }) => ({
@@ -331,12 +330,6 @@ const StyledPanelAvatar = styled(Box, {
     backgroundImage: `url('${avatarUrl}')`,
     backgroundSize: 'cover',
     backgroundPosition: 'center top',
-}));
-
-const StyledTrace = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: theme.spacing(0.5),
 }));
 
 const StyledPopoverBody = styled(Box)(({ theme }) => ({
@@ -371,6 +364,7 @@ const StyledEvaluationPanel = styled(Box)(({ theme }) => ({
     gap: theme.spacing(1),
     padding: theme.spacing(1.25),
     borderRadius: theme.shape.borderRadius,
+    border: `1px solid ${theme.palette.divider}`,
     background: theme.palette.background.elevation1,
     fontSize: theme.fontSizes.smallBody,
     lineHeight: 1.45,
@@ -386,8 +380,6 @@ const StyledContext = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(0.5),
-    paddingTop: theme.spacing(1),
-    borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
 const StyledContextLabel = styled(Typography)(({ theme }) => ({
@@ -733,35 +725,6 @@ export const IntroUserGrid = ({
           : 'classic';
     const openIndex = openUser ? users.indexOf(openUser) : -1;
 
-    const openTrace = openUser
-        ? [
-              {
-                  label: environmentEnabled
-                      ? 'Production on'
-                      : 'Production off',
-                  ok: environmentEnabled,
-              },
-              {
-                  label: `Country ${openUser.country.code}`,
-                  ok:
-                      targeting.targetCountryCodes.length === 0 ||
-                      targeting.targetCountryCodes.includes(
-                          openUser.country.code,
-                      ),
-              },
-              {
-                  label: `Plan ${openPlan?.label ?? openUser.plan}`,
-                  ok:
-                      !targeting.targetPlans?.length ||
-                      targeting.targetPlans.includes(openUser.plan),
-              },
-              {
-                  label: `Rollout ${rollout}%`,
-                  ok: (openEvaluation?.rolloutBucket ?? 101) <= rollout,
-              },
-          ]
-        : [];
-
     const closePreview = () => {
         setOpenUserId(undefined);
         onSelect(undefined);
@@ -1004,55 +967,6 @@ export const IntroUserGrid = ({
                                 <CloseIcon fontSize='small' />
                             </StyledPopoverClose>
                         </StyledPanelHeaderRow>
-                        <StyledTrace>
-                            {openTrace.map((item) => (
-                                <Badge
-                                    key={item.label}
-                                    color={item.ok ? 'success' : 'warning'}
-                                    icon={
-                                        item.ok ? <CheckIcon /> : <CloseIcon />
-                                    }
-                                >
-                                    {item.label}
-                                </Badge>
-                            ))}
-                        </StyledTrace>
-                    </StyledPanelHeader>
-
-                    <StyledPopoverBody data-testid='QUICK_TOUR_INTRO_POPOVER_BODY'>
-                        <Badge
-                            color={
-                                openState === 'smart'
-                                    ? 'success'
-                                    : openState === 'error'
-                                      ? 'error'
-                                      : 'neutral'
-                            }
-                            icon={
-                                openState === 'smart' ? (
-                                    <CheckIcon />
-                                ) : openState === 'error' ? (
-                                    <ErrorOutlineIcon />
-                                ) : (
-                                    <CloseIcon />
-                                )
-                            }
-                            sx={{ alignSelf: 'flex-start' }}
-                        >
-                            {openState === 'smart'
-                                ? openVariant
-                                    ? `Variant ${openVariant.name} enabled`
-                                    : 'Feature enabled'
-                                : openState === 'error'
-                                  ? 'Search error'
-                                  : 'Feature disabled'}
-                        </Badge>
-
-                        {renderMock(
-                            openState,
-                            openVariant?.color ?? theme.palette.primary.main,
-                        )}
-
                         <StyledEvaluationPanel>
                             <StyledExplanation>
                                 <span>
@@ -1101,6 +1015,41 @@ export const IntroUserGrid = ({
                                 </StyledContextJson>
                             </StyledContext>
                         </StyledEvaluationPanel>
+                    </StyledPanelHeader>
+
+                    <StyledPopoverBody data-testid='QUICK_TOUR_INTRO_POPOVER_BODY'>
+                        <Badge
+                            color={
+                                openState === 'smart'
+                                    ? 'success'
+                                    : openState === 'error'
+                                      ? 'error'
+                                      : 'neutral'
+                            }
+                            icon={
+                                openState === 'smart' ? (
+                                    <CheckIcon />
+                                ) : openState === 'error' ? (
+                                    <ErrorOutlineIcon />
+                                ) : (
+                                    <CloseIcon />
+                                )
+                            }
+                            sx={{ alignSelf: 'flex-start' }}
+                        >
+                            {openState === 'smart'
+                                ? openVariant
+                                    ? `Variant ${openVariant.name} enabled`
+                                    : 'Feature enabled'
+                                : openState === 'error'
+                                  ? 'Search error'
+                                  : 'Feature disabled'}
+                        </Badge>
+
+                        {renderMock(
+                            openState,
+                            openVariant?.color ?? theme.palette.primary.main,
+                        )}
                     </StyledPopoverBody>
                 </StyledPreviewPanel>
             ) : null}

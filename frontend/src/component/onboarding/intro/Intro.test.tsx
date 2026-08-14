@@ -741,7 +741,7 @@ test('explains targeting from the matching context values', () => {
     ).toBeInTheDocument();
 });
 
-test('shows the constraint trace in the preview panel', () => {
+test('shows the evaluation details in the preview panel', () => {
     renderAdvancedIntro();
     next();
 
@@ -750,10 +750,8 @@ test('shows the constraint trace in the preview panel', () => {
 
     const panel = screen.getByTestId('QUICK_TOUR_INTRO_POPOVER');
     expect(within(panel).getByText('Feature enabled')).toBeInTheDocument();
-    expect(within(panel).getByText('Production on')).toBeInTheDocument();
-    expect(within(panel).getByText('Country NO')).toBeInTheDocument();
-    expect(within(panel).getByText('Plan Pro')).toBeInTheDocument();
-    expect(within(panel).getByText('Rollout 100%')).toBeInTheDocument();
+    expect(within(panel).getByText('Context')).toBeInTheDocument();
+    expect(within(panel).getByText('"NO"')).toBeInTheDocument();
 });
 
 test('links constraints to the activation strategy documentation', async () => {

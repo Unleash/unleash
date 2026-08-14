@@ -384,7 +384,9 @@ export const Intro = ({
     const theme = useTheme();
     const variantPalette = [
         theme.palette.primary.main,
-        theme.palette.warning.main,
+        // A golden yellow (rather than orange) so it stays distinct from the
+        // pink/red variant accent.
+        theme.palette.charts.series[1],
         theme.palette.success.main,
         theme.palette.charts.C1,
     ];

@@ -22,7 +22,9 @@ import {
 import { IntroUserGrid, type GridMode } from './IntroUserGrid.tsx';
 import { IntroFlagView } from './IntroFlagView.tsx';
 import { IntroImpactCharts } from './IntroImpactCharts.tsx';
-import { IntroShowcase } from './IntroShowcase.tsx';
+// The richer victory-lap screen (IntroShowcase) is kept for reference; swap
+// the import + usage below back to it to restore it.
+import { IntroSuccess } from './IntroSuccess.tsx';
 import { IntroStepper } from './IntroStepper.tsx';
 import {
     INTRO_RELEASE_PLAN_MILESTONE_MS,
@@ -804,7 +806,7 @@ export const Intro = ({
 
     if (finished) {
         return (
-            <IntroShowcase
+            <IntroSuccess
                 onComplete={onComplete}
                 onReplay={() => {
                     setFinished(false);

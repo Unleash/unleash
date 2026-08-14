@@ -199,48 +199,16 @@ test('walks through the connected story to the showcase', () => {
 
     next();
     expect(screen.getByTestId('QUICK_TOUR_INTRO_SHOWCASE')).toBeInTheDocument();
-    expect(screen.getByText('This was just a glimpse')).toBeInTheDocument();
+    expect(screen.getByText('Tour complete!')).toBeInTheDocument();
     expect(
-        screen.getAllByTestId('QUICK_TOUR_INTRO_SHOWCASE_CARD'),
-    ).toHaveLength(9);
+        screen.getByText('What do you want to do next?'),
+    ).toBeInTheDocument();
     expect(
-        screen.getByRole('link', {
-            name: 'Change requests documentation',
-        }),
-    ).toHaveAttribute(
-        'href',
-        'https://docs.getunleash.io/concepts/change-requests',
-    );
+        screen.getByRole('button', { name: 'Replay intro' }),
+    ).toBeInTheDocument();
     expect(
-        screen.getByRole('link', {
-            name: 'Feature lifecycle documentation',
-        }),
-    ).toHaveAttribute(
-        'href',
-        'https://docs.getunleash.io/concepts/feature-flags#feature-flag-lifecycle',
-    );
-    expect(
-        screen.getByRole('link', {
-            name: 'Enterprise Edge documentation',
-        }),
-    ).toHaveAttribute('href', 'https://docs.getunleash.io/unleash-edge');
-    expect(
-        screen.getByRole('link', {
-            name: 'Access management documentation',
-        }),
-    ).toHaveAttribute(
-        'href',
-        'https://docs.getunleash.io/guides/user-management-access-controls',
-    );
-    expect(
-        screen.getByRole('link', {
-            name: 'Impact metrics & safeguards documentation',
-        }),
-    ).toHaveAttribute(
-        'href',
-        'https://docs.getunleash.io/concepts/impact-metrics',
-    );
-    expect(screen.getByTestId('QUICK_TOUR_INTRO_CONFETTI')).toBeInTheDocument();
+        screen.getByRole('button', { name: 'Create feature flag' }),
+    ).toBeInTheDocument();
     vi.useRealTimers();
 }, 10000);
 

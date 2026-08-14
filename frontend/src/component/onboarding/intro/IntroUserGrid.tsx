@@ -418,6 +418,9 @@ const StyledContextJson = styled('pre')(({ theme }) => ({
 
 const StyledMockFrame = styled(Box)(({ theme }) => ({
     position: 'relative',
+    aspectRatio: '4 / 3',
+    display: 'flex',
+    flexDirection: 'column',
     borderRadius: theme.shape.borderRadiusMedium,
     overflow: 'hidden',
     border: `1px solid ${theme.palette.divider}`,
@@ -456,6 +459,9 @@ const StyledMockUrl = styled(Box)(({ theme }) => ({
 }));
 
 const StyledMockContent = styled(Box)(({ theme }) => ({
+    flex: 1,
+    minHeight: 0,
+    overflow: 'hidden',
     padding: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',

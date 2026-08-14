@@ -127,6 +127,20 @@ test('starts with a gradual my-feature rollout and context cards', () => {
     ).toBeInTheDocument();
 });
 
+test('closes the user preview when moving to the next step', () => {
+    renderAdvancedIntro();
+
+    const grid = screen.getByTestId('QUICK_TOUR_INTRO_USER_GRID');
+    fireEvent.click(within(grid).getAllByRole('button')[0]);
+    expect(screen.getByTestId('QUICK_TOUR_INTRO_POPOVER')).toBeInTheDocument();
+
+    next();
+
+    expect(
+        screen.queryByTestId('QUICK_TOUR_INTRO_POPOVER'),
+    ).not.toBeInTheDocument();
+});
+
 test('explains gradual rollout using the Unleash documentation', async () => {
     renderAdvancedIntro();
 

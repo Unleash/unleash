@@ -696,7 +696,9 @@ export const IntroUserGrid = ({
     const erroredUserIdSet = new Set(erroredUserIds);
 
     const theme = useTheme();
-    const [openUserId, setOpenUserId] = useState<string | undefined>();
+    // The open panel is driven entirely by the parent's `selectedId`, so
+    // clearing the selection (e.g. when moving to the next step) closes it.
+    const openUserId = selectedId;
 
     // Measure the grid area so the tiles can scale to fill it (see gridFit).
     const [gridSize, setGridSize] = useState({ width: 0, height: 0 });
@@ -763,7 +765,6 @@ export const IntroUserGrid = ({
               : 'Feature disabled';
 
     const closePreview = () => {
-        setOpenUserId(undefined);
         onSelect(undefined);
     };
 
@@ -927,13 +928,11 @@ export const IntroUserGrid = ({
                                         selectedId !== user.id
                                     }
                                     onClick={() => {
-                                        if (openUserId === user.id) {
-                                            setOpenUserId(undefined);
-                                            onSelect(undefined);
-                                        } else {
-                                            setOpenUserId(user.id);
-                                            onSelect(user);
-                                        }
+                                        onSelect(
+                                            openUserId === user.id
+                                                ? undefined
+                                                : user,
+                                        );
                                     }}
                                 >
                                     <StyledAvatarWrap>

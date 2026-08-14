@@ -362,13 +362,17 @@ const StyledEvaluationPanel = styled(Box, {
 })<{ state: 'smart' | 'classic' | 'error' }>(({ theme, state }) => {
     const color =
         state === 'smart' ? 'success' : state === 'error' ? 'error' : 'neutral';
+    const borderColor =
+        state === 'classic'
+            ? theme.palette.divider
+            : (theme.palette[color].border ?? theme.palette.divider);
     return {
         display: 'flex',
         flexDirection: 'column',
         gap: theme.spacing(1),
         padding: theme.spacing(1.25),
         borderRadius: theme.shape.borderRadius,
-        border: `1px solid ${theme.palette[color].border ?? theme.palette.divider}`,
+        border: `1px solid ${borderColor}`,
         background: theme.palette[color].light,
         color: theme.palette[color].contrastText,
         fontSize: theme.fontSizes.smallBody,
@@ -377,11 +381,7 @@ const StyledEvaluationPanel = styled(Box, {
 });
 
 const StyledEvalHeadline = styled('span')(({ theme }) => ({
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: theme.spacing(0.5),
     fontWeight: theme.typography.fontWeightBold,
-    '& svg': { fontSize: 15 },
 }));
 
 const StyledExplanation = styled(Box)(({ theme }) => ({
@@ -743,12 +743,6 @@ export const IntroUserGrid = ({
           ? 'smart'
           : 'classic';
     const openIndex = openUser ? users.indexOf(openUser) : -1;
-    const openStateColor =
-        openState === 'smart'
-            ? 'success'
-            : openState === 'error'
-              ? 'error'
-              : 'neutral';
     const openStateLabel =
         openState === 'smart'
             ? openVariant
@@ -1002,19 +996,6 @@ export const IntroUserGrid = ({
                         </StyledPanelHeaderRow>
                         <StyledEvaluationPanel state={openState}>
                             <StyledEvalHeadline>
-                                {openState === 'smart' ? (
-                                    <CheckIcon
-                                        sx={{ color: `${openStateColor}.main` }}
-                                    />
-                                ) : openState === 'error' ? (
-                                    <ErrorOutlineIcon
-                                        sx={{ color: `${openStateColor}.main` }}
-                                    />
-                                ) : (
-                                    <CloseIcon
-                                        sx={{ color: `${openStateColor}.main` }}
-                                    />
-                                )}
                                 {openStateLabel}
                             </StyledEvalHeadline>
                             <StyledExplanation>

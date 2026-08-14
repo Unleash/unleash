@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
     alpha,
     Box,
@@ -26,6 +26,7 @@ import { IntroImpactCharts } from './IntroImpactCharts.tsx';
 // the import + usage below back to it to restore it.
 import { IntroSuccess } from './IntroSuccess.tsx';
 import { IntroStepper } from './IntroStepper.tsx';
+import { HintDot, useIdleHint } from './introHints.tsx';
 import {
     INTRO_RELEASE_PLAN_MILESTONE_MS,
     IntroReleasePlan,
@@ -393,6 +394,14 @@ export const Intro = ({
     const [topicIndex, setTopicIndex] = useState(0);
     const [finished, setFinished] = useState(false);
     const [selectedId, setSelectedId] = useState<string | undefined>();
+    // Which controls the user has touched on the current step. Reset on every
+    // step change so each step's guidance nudges start fresh.
+    const [engaged, setEngaged] = useState<Record<string, boolean>>({});
+    const markEngaged = useCallback((key: string) => {
+        setEngaged((current) =>
+            current[key] ? current : { ...current, [key]: true },
+        );
+    }, []);
     const [incidentState, setIncidentState] = useState<IncidentState>('idle');
     const [erroredCount, setErroredCount] = useState(0);
     const [exposureOrder, setExposureOrder] = useState<string[]>([]);
@@ -414,6 +423,23 @@ export const Intro = ({
     }));
 
     const topic = topics[topicIndex];
+
+    const isRolloutStep = topic.key === 'rollout';
+    const isTargetStep = topic.key === 'target';
+    const isVariantsStep = topic.key === 'variants';
+    // Guidance nudges: each appears only after a few idle seconds and vanishes
+    // the moment its control is used, so users who dive in never see them. On
+    // the rollout step the nudge moves from the toggle to the Next button once
+    // the environment is on.
+    const [hintToggle] = useIdleHint(
+        isRolloutStep && !config.environmentEnabled,
+    );
+    const [hintNext, bumpNextHint] = useIdleHint(
+        isRolloutStep && config.environmentEnabled,
+    );
+    const [hintConstraints] = useIdleHint(isTargetStep && !engaged.target);
+    const [hintVariants] = useIdleHint(isVariantsStep && !engaged.variants);
+
     const evaluations = useMemo(
         () => computeEvaluations(users, config),
         [users, config],
@@ -626,6 +652,7 @@ export const Intro = ({
         setTopicIndex(index);
         applyTopicPreset(index);
         setSelectedId(undefined);
+        setEngaged({});
         setIncidentState('idle');
         setErroredCount(0);
         setExposureOrder([]);
@@ -797,6 +824,33 @@ export const Intro = ({
         }));
     };
 
+    // Handlers that also record engagement so the guidance nudges retreat as
+    // soon as the user touches the right control.
+    const handleRolloutChange = (value: number) => {
+        setRollout(value);
+        // Dragging the slider means the user is exploring, not stuck, so defer
+        // the "click Next" nudge; it also counts as engaging the later steps.
+        bumpNextHint();
+        markEngaged('target');
+        markEngaged('variants');
+    };
+    const handleToggleCountry = (code: string) => {
+        toggleCountry(code);
+        markEngaged('target');
+    };
+    const handleTogglePlan = (plan: IntroUser['plan']) => {
+        togglePlan(plan);
+        markEngaged('target');
+    };
+    const handleAddVariant = () => {
+        addVariant();
+        markEngaged('variants');
+    };
+    const handleWeightsChange = (weights: number[]) => {
+        setVariantWeights(weights);
+        markEngaged('variants');
+    };
+
     const canContinue = true;
 
     if (finished) {
@@ -913,11 +967,14 @@ export const Intro = ({
                             showVariants={topic.key === 'variants'}
                             selectedVariant={selectedEvaluation?.variant}
                             onEnvironmentChange={setEnvironmentEnabled}
-                            onRolloutChange={setRollout}
-                            onToggleCountry={toggleCountry}
-                            onTogglePlan={togglePlan}
-                            onAddVariant={addVariant}
-                            onWeightsChange={setVariantWeights}
+                            onRolloutChange={handleRolloutChange}
+                            onToggleCountry={handleToggleCountry}
+                            onTogglePlan={handleTogglePlan}
+                            onAddVariant={handleAddVariant}
+                            onWeightsChange={handleWeightsChange}
+                            highlightEnvironment={hintToggle}
+                            highlightConstraints={hintConstraints}
+                            highlightVariants={hintVariants}
                         />
                     )}
                 </StyledScroll>
@@ -932,14 +989,19 @@ export const Intro = ({
                             Back
                         </Button>
                     ) : null}
-                    <Button
-                        variant='contained'
-                        onClick={handleNext}
-                        disabled={!canContinue}
-                        data-testid='QUICK_TOUR_INTRO_NEXT_BUTTON'
-                    >
-                        {topicIndex < topics.length - 1 ? 'Next' : 'Finish'}
-                    </Button>
+                    <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                        <Button
+                            variant='contained'
+                            onClick={handleNext}
+                            disabled={!canContinue}
+                            data-testid='QUICK_TOUR_INTRO_NEXT_BUTTON'
+                        >
+                            {topicIndex < topics.length - 1 ? 'Next' : 'Finish'}
+                        </Button>
+                        {hintNext ? (
+                            <HintDot sx={{ top: -3, right: -3 }} />
+                        ) : null}
+                    </Box>
                 </StyledFooter>
             </StyledLeft>
 

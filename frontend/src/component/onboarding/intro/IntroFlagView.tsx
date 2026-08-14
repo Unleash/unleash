@@ -10,8 +10,10 @@ import {
 } from '@mui/material';
 import OutlinedFlagIcon from '@mui/icons-material/OutlinedFlag';
 import AddIcon from '@mui/icons-material/Add';
+import { useState } from 'react';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { StrategyEvaluationChip } from 'component/common/ConstraintsList/StrategyEvaluationChip/StrategyEvaluationChip';
+import { HintDot } from './introHints.tsx';
 import {
     INTRO_COUNTRIES,
     INTRO_PLANS,
@@ -199,6 +201,12 @@ interface IIntroFlagViewProps {
     onTogglePlan: (plan: IntroUser['plan']) => void;
     onAddVariant: () => void;
     onWeightsChange: (weights: number[]) => void;
+    /** Draw a nudge on the production toggle while it is still untouched. */
+    highlightEnvironment?: boolean;
+    /** Nudge the user to try a constraint if they haven't touched one. */
+    highlightConstraints?: boolean;
+    /** Nudge the user to try the variant controls if they haven't touched them. */
+    highlightVariants?: boolean;
 }
 
 const selectableChip = (
@@ -232,7 +240,14 @@ export const IntroFlagView = ({
     onTogglePlan,
     onAddVariant,
     onWeightsChange,
+    highlightEnvironment,
+    highlightConstraints,
+    highlightVariants,
 }: IIntroFlagViewProps) => {
+    // Keep the add-variant tooltip fully controlled (MUI locks controlled vs.
+    // uncontrolled on first render), so the guidance hint can force it open
+    // while still showing the plain label on hover.
+    const [addVariantHovered, setAddVariantHovered] = useState(false);
     // "all users" only when nothing narrows the audience (every country and
     // plan selected, or no constraint at all); otherwise "targeted users".
     const allCountriesSelected =
@@ -255,18 +270,24 @@ export const IntroFlagView = ({
 
             <StyledEnvironmentCard>
                 <StyledEnvironmentHeader>
-                    <Switch
-                        checked={config.environmentEnabled}
-                        onChange={(event) =>
-                            onEnvironmentChange(event.target.checked)
-                        }
-                        slotProps={{
-                            input: {
-                                'aria-label': 'Toggle my-feature in production',
-                            },
-                        }}
-                        data-testid='QUICK_TOUR_INTRO_ONOFF_SWITCH'
-                    />
+                    <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                        <Switch
+                            checked={config.environmentEnabled}
+                            onChange={(event) =>
+                                onEnvironmentChange(event.target.checked)
+                            }
+                            slotProps={{
+                                input: {
+                                    'aria-label':
+                                        'Toggle my-feature in production',
+                                },
+                            }}
+                            data-testid='QUICK_TOUR_INTRO_ONOFF_SWITCH'
+                        />
+                        {highlightEnvironment ? (
+                            <HintDot sx={{ top: 8, right: 10 }} />
+                        ) : null}
+                    </Box>
                     <StyledEnvironmentText>
                         <StyledEnvironmentName>
                             Production environment
@@ -283,7 +304,14 @@ export const IntroFlagView = ({
                     {showConstraints ? (
                         <StyledConfigurationSection>
                             <StyledSectionTitle data-testid='QUICK_TOUR_INTRO_CONSTRAINTS_TITLE'>
-                                <span>Constraints</span>
+                                <Tooltip
+                                    open={Boolean(highlightConstraints)}
+                                    arrow
+                                    placement='right'
+                                    title='Try targeting by country or plan'
+                                >
+                                    <span>Constraints</span>
+                                </Tooltip>
                                 <HelpIcon
                                     htmlTooltip
                                     tooltip={
@@ -434,7 +462,24 @@ export const IntroFlagView = ({
                                     />
                                 </StyledVariantsBarWrapper>
                                 {config.variants.length < 4 ? (
-                                    <Tooltip title='Add variant' arrow>
+                                    <Tooltip
+                                        title={
+                                            highlightVariants
+                                                ? 'Add a variant or drag the slider to split traffic'
+                                                : 'Add variant'
+                                        }
+                                        open={Boolean(
+                                            highlightVariants ||
+                                                addVariantHovered,
+                                        )}
+                                        onOpen={() =>
+                                            setAddVariantHovered(true)
+                                        }
+                                        onClose={() =>
+                                            setAddVariantHovered(false)
+                                        }
+                                        arrow
+                                    >
                                         <StyledAddVariantButton
                                             size='small'
                                             aria-label='Add variant'

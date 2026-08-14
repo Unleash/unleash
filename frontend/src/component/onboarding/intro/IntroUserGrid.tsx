@@ -137,7 +137,7 @@ const StyledPerson = styled('button', {
         padding: theme.spacing(0.5),
         borderRadius: theme.shape.borderRadiusMedium,
         backgroundColor: enabled
-            ? theme.palette.background.paper
+            ? alpha(accent, 0.08)
             : theme.palette.background.elevation2,
         boxShadow: ring,
         opacity: dimmed ? 0.6 : 1,
@@ -148,7 +148,9 @@ const StyledPerson = styled('button', {
         ...(enabled &&
             !selected && { animation: `${ringPulse} 0.55s ease-out` }),
         '&:hover': {
-            backgroundColor: theme.palette.background.paper,
+            backgroundColor: enabled
+                ? alpha(accent, 0.14)
+                : theme.palette.background.paper,
             boxShadow: selected
                 ? `inset 0 0 0 2px ${theme.palette.primary.main}`
                 : `inset 0 0 0 1.5px ${

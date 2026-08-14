@@ -284,7 +284,9 @@ const StyledFooter = styled(Box)(({ theme }) => ({
     flexWrap: 'wrap',
     gap: theme.spacing(1.5),
     flexShrink: 0,
-    padding: theme.spacing(1.5, 4),
+    // Right padding matches StyledScroll (spacing 3) so the Next button's
+    // right edge lines up with the controls above it.
+    padding: theme.spacing(1.5, 3, 1.5, 4),
     borderTop: `1px solid ${theme.palette.divider}`,
 }));
 

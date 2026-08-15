@@ -39,7 +39,7 @@ const releasePlanSafeguard: ISafeguard = {
     action: { id: 'action-1', type: 'pause' },
     impactMetric: {
         id: 'metric-1',
-        metricName: 'unleash_counter_http_requests_total',
+        metricName: 'http_requests_total',
         timeRange: 'day',
         aggregationMode: 'rps',
         labelSelectors: { appName: ['*'] },
@@ -75,7 +75,7 @@ const featureEnvSafeguard: ISafeguard = {
     },
     impactMetric: {
         id: 'metric-2',
-        metricName: 'unleash_counter_http_requests_total',
+        metricName: 'http_requests_total',
         timeRange: 'hour',
         aggregationMode: 'count',
         labelSelectors: { appName: ['*'] },
@@ -88,7 +88,7 @@ const featureEnvSafeguard: ISafeguard = {
 
 const defaultSafeguardPayload = {
     impactMetric: {
-        metricName: 'unleash_counter_http_requests_total',
+        metricName: 'http_requests_total',
         timeRange: 'day',
         aggregationMode: 'count',
         labelSelectors: {},
@@ -141,16 +141,16 @@ const setupServerRoutes = () => {
     testServerRoute(server, '/api/admin/impact-metrics/metadata', {
         metrics: [
             {
-                name: 'unleash_counter_http_requests_total',
+                name: 'http_requests_total',
                 help: 'Total HTTP requests',
                 displayName: 'http_requests_total',
                 source: 'internal',
             },
         ],
     });
-    testServerRoute(server, '/api/admin/impact-metrics/data', {
-        labels: { appName: [] },
-        data: [],
+    testServerRoute(server, '/api/admin/impact-metrics/', {
+        series: [],
+        labels: { appName: [], metric_type: ['counter'] },
     });
     testServerRoute(server, '/api/admin/projects/default/features/feature1', {
         environments: [
@@ -434,7 +434,7 @@ describe('Safeguard', () => {
         const user = userEvent.setup();
         testServerRoute(server, '/api/admin/impact-metrics/', {
             series: [],
-            labels: metricLabels,
+            labels: { metric_type: ['counter'], ...metricLabels },
         });
         const { requests } = testServerRoute(
             server,
@@ -509,7 +509,7 @@ describe('Safeguard', () => {
 
         await screen.findByText('Add suggestion to draft');
         expect(
-            screen.getByText('unleash_counter_http_requests_total'),
+            screen.getByText('http_requests_total'),
         ).toBeInTheDocument();
 
         const confirmButton = await screen.findByRole('button', {

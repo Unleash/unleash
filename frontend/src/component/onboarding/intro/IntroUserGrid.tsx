@@ -755,6 +755,13 @@ export const IntroUserGrid = ({
         onSelect(undefined);
     };
 
+    const handleKeyDown = (event: React.KeyboardEvent) => {
+        if (event.key === 'Escape' && openUser) {
+            event.stopPropagation();
+            closePreview();
+        }
+    };
+
     const renderMockList = () =>
         [
             { name: 92, sub: 52 },
@@ -858,7 +865,7 @@ export const IntroUserGrid = ({
     );
 
     return (
-        <StyledContentRow>
+        <StyledContentRow onKeyDown={handleKeyDown}>
             <StyledGridWrap ref={setGridWrapRef}>
                 <StyledGrid
                     data-testid='QUICK_TOUR_INTRO_USER_GRID'

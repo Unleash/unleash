@@ -15,3 +15,14 @@ export const createFlagFieldInterner = () => {
 };
 
 export const internFlagField = createFlagFieldInterner();
+
+export const internConstraints = (constraints: any) => {
+    if (!Array.isArray(constraints)) {
+        return constraints || [];
+    }
+    return constraints.map((constraint) => ({
+        ...constraint,
+        contextName: internFlagField(constraint.contextName),
+        operator: internFlagField(constraint.operator),
+    }));
+};

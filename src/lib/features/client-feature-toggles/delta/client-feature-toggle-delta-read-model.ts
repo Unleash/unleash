@@ -165,11 +165,11 @@ export default class ClientFeatureToggleDeltaReadModel
             feature.enabled = !!r.enabled;
             feature.name = r.name;
             feature.description = r.description;
-            feature.project = internString(r.project);
+            feature.project = r.project;
             feature.stale = r.stale;
             feature.type = internString(r.type);
             feature.variants = r.variants || [];
-            feature.project = internString(r.project);
+            feature.project = r.project;
 
             acc[r.name] = feature;
             return acc;

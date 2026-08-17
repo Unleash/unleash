@@ -123,7 +123,7 @@ export default class ClientFeatureToggleReadModel
                     impressionData: row.impression_data,
                     enabled: !!row.enabled,
                     description: row.description,
-                    project: internString(row.project),
+                    project: row.project,
                     stale: row.stale,
                     type: internString(row.type),
                 };

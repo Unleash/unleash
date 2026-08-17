@@ -219,12 +219,12 @@ export default class FeatureToggleClientStore
             feature.enabled = !!r.enabled;
             feature.name = r.name;
             feature.description = r.description;
-            feature.project = internString(r.project);
+            feature.project = r.project;
             feature.stale = r.stale;
             feature.type = internString(r.type);
             feature.lastSeenAt = r.last_seen_at;
             feature.variants = r.variants || [];
-            feature.project = internString(r.project);
+            feature.project = r.project;
             if (isAdmin) {
                 feature.favorite = r.favorite;
                 feature.lastSeenAt = r.last_seen_at;

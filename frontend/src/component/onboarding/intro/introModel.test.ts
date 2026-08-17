@@ -33,6 +33,18 @@ describe('introModel', () => {
         expect(a[0].id).toBe('user-1');
     });
 
+    it('covers every country x plan combination in the demo grid', () => {
+        const users = generateIntroUsers(20);
+        const seen = new Set(
+            users.map((user) => `${user.country.code}:${user.plan}`),
+        );
+        for (const code of ['NO', 'US', 'CA', 'GB', 'JP']) {
+            for (const plan of ['pro', 'enterprise']) {
+                expect(seen).toContain(`${code}:${plan}`);
+            }
+        }
+    });
+
     it('spreads the rollout evenly: an N% rollout enables ~N% of users', () => {
         const users = generateIntroUsers(60);
         expect(countEnabled(users, baseConfig({ rollout: 0 }))).toBe(0);

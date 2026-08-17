@@ -108,10 +108,6 @@ const FIRST_NAMES = [
     'Zoe',
 ];
 
-// Avoid making synthetic context values line up with grid columns. This
-// pattern deliberately scatters the plan across each set of 15 users.
-const ENTERPRISE_POSITIONS = new Set([2, 6, 10, 14]);
-
 /**
  * Deterministically generate a stable set of synthetic users. The same index
  * always yields the same identity, so re-generating never reshuffles the grid.
@@ -124,7 +120,7 @@ export const generateIntroUsers = (count: number): IntroUser[] =>
             id: `user-${i + 1}`,
             name,
             country,
-            plan: ENTERPRISE_POSITIONS.has(i % 15) ? 'enterprise' : 'pro',
+            plan: i % 4 === 2 ? 'enterprise' : 'pro',
         };
     });
 

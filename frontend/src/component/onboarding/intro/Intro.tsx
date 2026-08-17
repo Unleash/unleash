@@ -425,6 +425,10 @@ export const Intro = ({
     const isRolloutStep = topic.key === 'rollout';
     const isTargetStep = topic.key === 'target';
     const isVariantsStep = topic.key === 'variants';
+    const isReleaseTopic =
+        topic.key === 'releasePlan' ||
+        topic.key === 'impact' ||
+        topic.key === 'safeguard';
     const [hintToggle] = useIdleHint(
         isRolloutStep && !config.environmentEnabled,
     );
@@ -652,15 +656,7 @@ export const Intro = ({
         setExposureOrder([]);
         setMetricSampleIndex(0);
         setReleaseMilestoneIndex(0);
-        setReleasePlanState(
-            topics[index].key === 'releasePlan'
-                ? 'ready'
-                : topics[index].key === 'impact'
-                  ? 'ready'
-                  : topics[index].key === 'safeguard'
-                    ? 'ready'
-                    : 'ready',
-        );
+        setReleasePlanState('ready');
         setSafeguardState('ready');
         trackEvent('quick-tour-demo', {
             props: { eventType: 'topic', topic: topics[index].key },
@@ -839,8 +835,6 @@ export const Intro = ({
         markEngaged('variants');
     };
 
-    const canContinue = true;
-
     if (finished) {
         const VictoryLap = advancedStepsEnabled ? IntroShowcase : IntroSuccess;
         return (
@@ -885,24 +879,14 @@ export const Intro = ({
                         {topic.body}
                     </Typography>
 
-                    {topic.key === 'releasePlan' ||
-                    topic.key === 'impact' ||
-                    topic.key === 'safeguard' ? (
+                    {isReleaseTopic ? (
                         <IntroReleasePlan
                             environmentEnabled={config.environmentEnabled}
                             milestones={RELEASE_PLAN_MILESTONES}
                             activeMilestoneIndex={releaseMilestoneIndex}
                             state={releasePlanState}
-                            detailed={
-                                topic.key === 'releasePlan' ||
-                                topic.key === 'impact' ||
-                                topic.key === 'safeguard'
-                            }
-                            interactive={
-                                topic.key === 'releasePlan' ||
-                                topic.key === 'impact' ||
-                                topic.key === 'safeguard'
-                            }
+                            detailed
+                            interactive
                             automationDelayMinutes={
                                 topic.key === 'releasePlan' ? 30 : 15
                             }
@@ -982,7 +966,6 @@ export const Intro = ({
                         <Button
                             variant='contained'
                             onClick={handleNext}
-                            disabled={!canContinue}
                             data-testid='QUICK_TOUR_INTRO_NEXT_BUTTON'
                         >
                             {topicIndex < topics.length - 1 ? 'Next' : 'Finish'}

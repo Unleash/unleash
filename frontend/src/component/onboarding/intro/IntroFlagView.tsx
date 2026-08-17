@@ -149,6 +149,32 @@ const StyledConstraintValues = styled(Box)(({ theme }) => ({
     minWidth: 0,
 }));
 
+const StyledDisabledOperatorChip = styled(Chip)(({ theme }) => ({
+    borderRadius: `${theme.shape.borderRadius}px`,
+    padding: theme.spacing(0.25, 0),
+    fontSize: theme.fontSizes.smallerBody,
+    height: 'auto',
+    background: theme.palette.background.elevation2,
+    border: `1px solid ${theme.palette.divider}`,
+    color: theme.palette.text.disabled,
+    fontWeight: theme.typography.fontWeightBold,
+    cursor: 'help',
+    userSelect: 'none',
+    '& .MuiChip-label': { cursor: 'help' },
+}));
+
+const constraintOperator = (hasSelection: boolean) =>
+    hasSelection ? (
+        <StrategyEvaluationChip label='is one of' />
+    ) : (
+        <Tooltip
+            arrow
+            title='No values selected, so this constraint does not narrow the audience.'
+        >
+            <StyledDisabledOperatorChip label='is one of' size='small' />
+        </Tooltip>
+    );
+
 const StyledConstraintValue = styled(Chip, {
     shouldForwardProp: (prop) => prop !== 'selected',
 })<{ selected: boolean }>(({ theme, selected }) => ({
@@ -343,7 +369,9 @@ export const IntroFlagView = ({
                                     Country
                                 </StyledConstraintField>
                                 <StyledConstraintOperatorGroup>
-                                    <StrategyEvaluationChip label='is one of' />
+                                    {constraintOperator(
+                                        config.targetCountryCodes.length > 0,
+                                    )}
                                 </StyledConstraintOperatorGroup>
                                 <StyledConstraintValues>
                                     {INTRO_COUNTRIES.map((country) =>
@@ -362,7 +390,9 @@ export const IntroFlagView = ({
                                     Plan
                                 </StyledConstraintField>
                                 <StyledConstraintOperatorGroup>
-                                    <StrategyEvaluationChip label='is one of' />
+                                    {constraintOperator(
+                                        Boolean(config.targetPlans?.length),
+                                    )}
                                 </StyledConstraintOperatorGroup>
                                 <StyledConstraintValues>
                                     {INTRO_PLANS.map((plan) =>

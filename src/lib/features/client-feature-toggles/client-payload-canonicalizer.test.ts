@@ -41,3 +41,21 @@ test('canonicalizes cache payloads in place without changing their values', () =
         constraints: [constraint],
     });
 });
+
+test('leaves optional feature fields alone', () => {
+    const canonicalizer = createClientPayloadCanonicalizer();
+    const feature: {
+        name: string;
+        type?: string;
+        strategies?: { name: string; constraints?: [] }[];
+    } = { name: 'example' };
+
+    expect(canonicalizer.feature(feature)).toEqual({ name: 'example' });
+
+    feature.strategies = [{ name: 'default' }];
+
+    expect(canonicalizer.feature(feature)).toEqual({
+        name: 'example',
+        strategies: [{ name: 'default' }],
+    });
+});

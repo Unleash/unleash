@@ -186,7 +186,11 @@ export default class ClientFeatureToggleReadModel
             id: row.strategy_id,
             name: internFlagField(row.strategy_name),
             title: row.strategy_title,
-            constraints: row.constraints || [],
+            constraints: (row.constraints || []).map((constraint) => ({
+                ...constraint,
+                contextName: internFlagField(constraint.contextName),
+                operator: internFlagField(constraint.operator),
+            })),
             parameters: mapValues(row.parameters || {}, ensureStringValue),
             sortOrder: row.sort_order,
         };

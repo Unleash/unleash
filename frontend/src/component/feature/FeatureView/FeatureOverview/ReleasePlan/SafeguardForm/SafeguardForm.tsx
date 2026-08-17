@@ -18,7 +18,7 @@ import {
     useImpactMetricsOptions,
     type ImpactMetric,
 } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
-import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
+import { useImpactMetricsLabels } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsLabels';
 import { RangeSelector } from 'component/impact-metrics/ImpactMetricModal/ImpactMetricsControls/RangeSelector/RangeSelector';
 import { ModeSelector } from 'component/impact-metrics/ImpactMetricModal/ImpactMetricsControls/ModeSelector/ModeSelector';
 import {
@@ -181,42 +181,25 @@ const useSafeguardFormMode = (safeguard?: ISafeguard) => {
 
 const useSafeguardMetricsData = (
     metricName: string,
-    timeRange: MetricQuerySchemaTimeRange,
-    aggregationMode: MetricQuerySchemaAggregationMode,
     environment: string,
     source?: MetricSource,
 ) => {
     const { metricOptions, loading } = useImpactMetricsOptions();
-    const { data: metricsData } = useImpactMetricsData(
-        metricName
-            ? {
-                  metricName,
-                  range: timeRange,
-                  aggregationMode: aggregationMode,
-                  source,
-                  mode: 'edit',
-              }
-            : undefined,
-    );
+    const { labels } = useImpactMetricsLabels(metricName, source);
 
     const applicationNames = useMemo(() => {
-        const appNames = metricsData?.labels?.appName || [];
+        const appNames = labels.appName || [];
         return ['*', ...appNames];
-    }, [metricsData?.labels?.appName]);
+    }, [labels.appName]);
 
-    const metricType = getMetricType(
-        metricName,
-        metricsData?.labels?.metric_type,
-    );
+    const metricType = getMetricType(metricName, labels.metric_type);
 
     // External Prometheus metrics may not have an environment label —
     // only filter by environment when the metric actually exposes one.
     // When the label exists, always filter by the current environment even
     // if it's not in the values list — showing unfiltered data from other
     // environments (e.g. development data in production) would be misleading.
-    const metricEnvironment = metricsData?.labels?.environment
-        ? environment
-        : undefined;
+    const metricEnvironment = labels.environment ? environment : undefined;
 
     return {
         metricOptions,
@@ -321,8 +304,6 @@ const useSafeguardFormState = (
     const formMode = useSafeguardFormMode(safeguard);
     const metricsData = useSafeguardMetricsData(
         formValues.metric.metricName,
-        formValues.timeRange,
-        formValues.aggregationMode,
         environment,
         formValues.metric.source,
     );

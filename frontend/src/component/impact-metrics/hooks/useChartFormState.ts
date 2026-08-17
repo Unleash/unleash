@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
+import { useImpactMetricsLabels } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsLabels';
 import type { AggregationMode, ChartConfig, MetricSource } from '../types.ts';
 import type { ImpactMetricsLabels } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import type { MetricSelection } from '../ImpactMetricModal/ImpactMetricsControls/SeriesSelector/MetricSelector.tsx';
@@ -68,20 +68,13 @@ export const useChartFormState = ({
     );
 
     const {
-        data: { labels: fetchedLabels },
+        labels: fetchedLabels,
         loading: fetchingLabels,
         error: labelsFetchError,
-    } = useImpactMetricsData(
-        metricName
-            ? {
-                  // labels only depend on metric and source; the backend
-                  // always discovers them from a month-wide window
-                  metricName,
-                  range: 'hour',
-                  source,
-                  mode: 'edit',
-              }
-            : undefined,
+    } = useImpactMetricsLabels(
+        // the modal stays mounted while closed; only fetch while it is open
+        open ? metricName : '',
+        source,
     );
 
     useEffect(() => {

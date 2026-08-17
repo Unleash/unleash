@@ -22,6 +22,7 @@ const HINT_DELAY_MS = 3000;
 export const useIdleHint = (active: boolean, delayMs = HINT_DELAY_MS) => {
     const [show, setShow] = useState(false);
     const [nonce, setNonce] = useState(0);
+    // biome-ignore lint/correctness/useExhaustiveDependencies: nonce is intentionally a restart trigger
     useEffect(() => {
         if (!active) {
             setShow(false);

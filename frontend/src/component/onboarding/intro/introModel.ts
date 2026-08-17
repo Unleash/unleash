@@ -13,7 +13,6 @@ export interface IntroUser {
     name: string;
     country: IntroCountry;
     plan: IntroPlan;
-    look: IntroLook;
 }
 
 export type IntroPlan = 'pro' | 'enterprise';
@@ -25,18 +24,6 @@ export const INTRO_PLANS: Array<{
     { value: 'pro', label: 'Pro' },
     { value: 'enterprise', label: 'Enterprise' },
 ];
-
-/**
- * Palette indices for the character illustration. Which palettes they index
- * into is owned by IntroCharacter; the model only guarantees the indices are
- * deterministic per user, so the crowd never reshuffles.
- */
-export interface IntroLook {
-    skin: number;
-    hair: number;
-    hairColor: number;
-    shirt: number;
-}
 
 export interface IntroCountry {
     code: string;
@@ -138,17 +125,6 @@ export const generateIntroUsers = (count: number): IntroUser[] =>
             name,
             country,
             plan: ENTERPRISE_POSITIONS.has(i % 15) ? 'enterprise' : 'pro',
-            // Multipliers co-prime with each palette size cycle through every
-            // palette entry and scatter the combinations so neighbouring users
-            // don't look like siblings. Country repeats with period 5, so the
-            // hair formula (also mod 6) mixes in a floor(i/6) term - a plain
-            // linear formula would give every compatriot the same haircut.
-            look: {
-                skin: i % 5,
-                hair: (i + Math.floor(i / 6) * 5 + 2) % 6,
-                hairColor: (i * 3 + 1) % 8,
-                shirt: (i * 11 + 3) % 8,
-            },
         };
     });
 

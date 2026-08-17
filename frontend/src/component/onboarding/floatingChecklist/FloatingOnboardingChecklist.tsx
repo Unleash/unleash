@@ -16,6 +16,7 @@ import {
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import MinimizeIcon from '@mui/icons-material/Minimize';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { Link } from 'react-router';
 import { CreateFeatureDialog } from 'component/project/Project/PaginatedProjectFeatureToggles/ProjectFeatureTogglesHeader/CreateFeatureDialog.tsx';
 import { ConnectSdkDialog } from 'component/onboarding/dialog/ConnectSdkDialog/ConnectSdkDialog.tsx';
@@ -30,6 +31,7 @@ import { useFirstProjectFeature } from './useFirstProjectFeature.ts';
 import { useChecklistRouteMatch } from './useChecklistRouteMatch.ts';
 import { ChecklistSteps, type ChecklistStep } from './ChecklistSteps.tsx';
 import { usePendingAction } from './usePendingAction.ts';
+import { useDraggableWindow } from './useDraggableWindow.ts';
 import type { ChecklistStepKey } from './useChecklistContextValue.ts';
 import { ONBOARDING_CHECKLIST_SPLASH_ID } from './useOnboardingChecklistEligibility.ts';
 
@@ -64,7 +66,7 @@ const Window = styled('aside', {
     position: 'fixed',
     bottom: theme.spacing(3),
     right: theme.spacing(3),
-    width: 380,
+    width: 320,
     maxWidth: `calc(100vw - ${theme.spacing(4)})`,
     maxHeight: `calc(100vh - ${theme.spacing(6)})`,
     display: 'flex',
@@ -87,13 +89,29 @@ const Window = styled('aside', {
     }),
 }));
 
-const Header = styled('div')(({ theme }) => ({
+const Header = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'dragging',
+})<{ dragging?: boolean }>(({ theme, dragging }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(0.125),
-    padding: theme.spacing(1, 1.5, 1, 1.5),
+    padding: theme.spacing(1, 1.5, 1, 0.75),
     background: theme.palette.background.elevation1,
     flexShrink: 0,
+    cursor: dragging ? 'grabbing' : 'grab',
+    // Keep touch drags from scrolling the page, and text from selecting mid-drag.
+    touchAction: 'none',
+    userSelect: dragging ? 'none' : undefined,
+    '&:hover .drag-handle': {
+        color: theme.palette.text.secondary,
+    },
+}));
+
+const DragHandle = styled(DragIndicatorIcon)(({ theme }) => ({
+    color: theme.palette.text.disabled,
+    fontSize: '1.25rem',
+    flexShrink: 0,
+    transition: theme.transitions.create('color'),
 }));
 
 const TitleRow = styled('div')(({ theme }) => ({
@@ -232,6 +250,8 @@ const EligibleFloatingOnboardingChecklist = () => {
         },
         [trackEvent],
     );
+
+    const { windowRef, position, dragging, handleProps } = useDraggableWindow();
 
     const [createFlagOpen, setCreateFlagOpen] = useState(false);
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
@@ -395,8 +415,23 @@ const EligibleFloatingOnboardingChecklist = () => {
 
     return (
         <>
-            <Window aria-label='Get started' pulsing={pulsing}>
-                <Header>
+            <Window
+                aria-label='Get started'
+                pulsing={pulsing}
+                ref={windowRef}
+                style={
+                    position
+                        ? {
+                              top: position.y,
+                              left: position.x,
+                              bottom: 'auto',
+                              right: 'auto',
+                          }
+                        : undefined
+                }
+            >
+                <Header dragging={dragging} {...handleProps}>
+                    <DragHandle className='drag-handle' />
                     <TitleRow>
                         <HeaderTitle>Get started</HeaderTitle>
                         <OnboardingProgressBadge showLabel />

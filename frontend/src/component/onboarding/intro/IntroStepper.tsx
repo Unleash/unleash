@@ -5,7 +5,6 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 export interface IntroStepperStep {
     label: string;
-    /** Whether the step can be navigated to (done or current steps). */
     clickable: boolean;
 }
 
@@ -85,11 +84,6 @@ const StyledChevron = styled(ChevronRightIcon)(({ theme }) => ({
     flexShrink: 0,
 }));
 
-/**
- * A compact horizontal stepper for the intro, styled after the prototype:
- * numbered bullets that fill in as steps complete, with a chevron separator
- * between steps. Replaces the old eyebrow counter and bottom dot stepper.
- */
 export const IntroStepper = ({
     steps,
     activeIndex,

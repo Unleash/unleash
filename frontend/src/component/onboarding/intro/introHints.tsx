@@ -10,15 +10,6 @@ import {
 
 const HINT_DELAY_MS = 3000;
 
-/**
- * Show a subtle nudge once the user has sat idle on a step's control for a few
- * seconds. `active` gates whether the hint is eligible at all (typically: only
- * on a given step, and only until the user engages with the right control). The
- * timer restarts whenever `active` flips true or `bump()` is called, so
- * interacting with the intended control defers the nudge - and once `active`
- * goes false, the nudge never appears (or immediately hides). This is what keeps
- * the hint from showing for users who start clicking straight away.
- */
 export const useIdleHint = (active: boolean, delayMs = HINT_DELAY_MS) => {
     const [show, setShow] = useState(false);
     const [nonce, setNonce] = useState(0);
@@ -42,11 +33,6 @@ const ping = keyframes`
   100% { transform: scale(2.4); opacity: 0; }
 `;
 
-/**
- * A pulsing dot that draws attention to a control the user hasn't touched yet.
- * Render it inside a relatively-positioned parent and place it with `sx`; it
- * never intercepts pointer events.
- */
 const HintDot = styled('span')(({ theme }) => ({
     position: 'absolute',
     width: theme.spacing(2),
@@ -68,13 +54,8 @@ const HintDot = styled('span')(({ theme }) => ({
     },
 }));
 
-/**
- * A guidance nudge: a pulsing dot with a tooltip emanating from it, explaining
- * which control to use. Render it unconditionally inside a relatively-positioned
- * parent and toggle it with `active`; the dot stays mounted (just hidden) while
- * inactive so the tooltip's anchor is ready and the popper positions correctly
- * the instant it opens. Place the dot with `sx`.
- */
+// The dot stays mounted (just hidden) while inactive so the popper positions
+// correctly the instant `active` flips true.
 export const HintBadge = ({
     active,
     title,

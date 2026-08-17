@@ -19,7 +19,6 @@ const StyledRoot = styled(Box)(({ theme }) => ({
     textAlign: 'center',
 }));
 
-// Matches the enabled status badge over the people (IntroUserGrid).
 const StyledCheck = styled(Box)(({ theme }) => ({
     width: theme.spacing(9),
     height: theme.spacing(9),
@@ -52,10 +51,6 @@ const StyledActions = styled(Box)(({ theme }) => ({
     marginTop: theme.spacing(3),
 }));
 
-/**
- * Minimal success screen shown when the intro tour completes. The richer
- * victory-lap lives in {@link IntroShowcase} and can be swapped back in here.
- */
 export const IntroSuccess = ({ onReplay, onComplete }: IIntroSuccessProps) => (
     <StyledRoot data-public data-testid='QUICK_TOUR_INTRO_SHOWCASE'>
         <StyledCheck>

@@ -38,10 +38,9 @@ interface GridFit {
     tileH: number;
 }
 
-// Port of the prototype's density-aware grid: pick the column count + avatar
-// size (and whether there is room for the meta line) that best fills the
-// available box without overflowing, so the people scale to the space.
-const gridFit = (n: number, width: number, height: number): GridFit => {
+// Picks column count + avatar size (and whether meta fits) to fill the box
+// without overflowing.
+export const gridFit = (n: number, width: number, height: number): GridFit => {
     const PAD = 14;
     let best: (GridFit & { score: number }) | null = null;
     for (let cols = 1; cols <= n; cols++) {
@@ -260,8 +259,6 @@ const slideInPanel = keyframes({
     to: { opacity: 1, transform: 'translateX(0)' },
 });
 
-// The grid keeps its full width; the preview panel floats over its right edge
-// (like the prototype) instead of displacing the people.
 const StyledContentRow = styled(Box)({
     position: 'relative',
     flex: 1,
@@ -624,10 +621,6 @@ const evaluationReason = (
     if (!environmentEnabled) {
         return `${user.name} doesn't see my-feature because production is disabled.`;
     }
-    // Each user has a stable rollout bucket (1-100). A rollout of N% turns the
-    // flag on for buckets 1-N, so spelling out the covered range - rather than a
-    // bare "40 < 55" - makes it clear which number is the percentage and which
-    // is the user's bucket.
     const bucket = evaluation.rolloutBucket;
     const rolloutCoverage =
         rollout <= 0
@@ -677,10 +670,6 @@ interface IIntroUserGridProps {
     onSelect: (user: IntroUser | undefined) => void;
 }
 
-/**
- * Stable context cards. Identity stays vivid; exposure is conveyed by the
- * experience strip, raised arm, border, and a detailed app preview.
- */
 export const IntroUserGrid = ({
     users,
     evaluations,
@@ -696,11 +685,8 @@ export const IntroUserGrid = ({
     const erroredUserIdSet = new Set(erroredUserIds);
 
     const theme = useTheme();
-    // The open panel is driven entirely by the parent's `selectedId`, so
-    // clearing the selection (e.g. when moving to the next step) closes it.
     const openUserId = selectedId;
 
-    // Measure the grid area so the tiles can scale to fill it (see gridFit).
     const [gridSize, setGridSize] = useState({ width: 0, height: 0 });
     const resizeObserver = useRef<ResizeObserver>(undefined);
     const setGridWrapRef = useCallback((node: HTMLDivElement | null) => {

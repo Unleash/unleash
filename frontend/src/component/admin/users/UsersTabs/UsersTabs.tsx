@@ -102,19 +102,24 @@ const UsersTabsView = () => {
                         </StyledTabsContainer>
                         <StyledActions>
                             <ConditionallyRender
-                                condition={!isSmallScreen}
+                                condition={isInactiveTab}
                                 show={
-                                    <Search
-                                        initialValue={searchValue}
-                                        onChange={setSearchValue}
+                                    <ConditionallyRender
+                                        condition={isEnterprise()}
+                                        show={<InactiveUsersHeaderActions />}
                                     />
                                 }
-                            />
-                            <ConditionallyRender
-                                condition={isInactiveTab && isEnterprise()}
-                                show={<InactiveUsersHeaderActions />}
                                 elseShow={
                                     <>
+                                        <ConditionallyRender
+                                            condition={!isSmallScreen}
+                                            show={
+                                                <Search
+                                                    initialValue={searchValue}
+                                                    onChange={setSearchValue}
+                                                />
+                                            }
+                                        />
                                         <PageHeader.Divider />
                                         <Tooltip
                                             title='Exports user access information'
@@ -140,7 +145,7 @@ const UsersTabsView = () => {
                         </StyledActions>
                     </StyledHeader>
                     <ConditionallyRender
-                        condition={isSmallScreen}
+                        condition={isSmallScreen && !isInactiveTab}
                         show={
                             <Search
                                 initialValue={searchValue}
@@ -161,11 +166,7 @@ const UsersTabsView = () => {
                     element={
                         <ConditionallyRender
                             condition={isEnterprise()}
-                            show={
-                                <InactiveUsersListBody
-                                    searchValue={searchValue}
-                                />
-                            }
+                            show={<InactiveUsersListBody />}
                             elseShow={
                                 <PremiumFeature feature='inactive-users' page />
                             }

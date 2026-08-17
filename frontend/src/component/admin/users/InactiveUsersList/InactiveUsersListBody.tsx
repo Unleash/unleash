@@ -21,8 +21,6 @@ import {
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { TablePlaceholder } from 'component/common/Table';
 import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
-import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { useSearch } from 'hooks/useSearch';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { InactiveUsersActionCell } from './InactiveUsersActionCell/InactiveUsersActionCell.tsx';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
@@ -30,13 +28,7 @@ import DeleteUser from './DeleteUser/DeleteUser.tsx';
 
 type InactiveUserRow = IInactiveUser & { rootRole?: number };
 
-interface IInactiveUsersListBodyProps {
-    searchValue: string;
-}
-
-export const InactiveUsersListBody = ({
-    searchValue,
-}: IInactiveUsersListBodyProps) => {
+export const InactiveUsersListBody = () => {
     const { removeUser, userApiErrors } = useAdminUsersApi();
     const { setToastData, setToastApiError } = useToast();
     const { inactiveUsers, refetchInactiveUsers } = useInactiveUsers();
@@ -93,7 +85,7 @@ export const InactiveUsersListBody = ({
                         subtitle={user.email || user.username}
                     />
                 ),
-                meta: { minWidth: 200, searchable: true },
+                meta: { minWidth: 200 },
             },
             {
                 id: 'role',
@@ -139,19 +131,6 @@ export const InactiveUsersListBody = ({
                 enableSorting: false,
                 meta: { width: 200, align: 'center' },
             },
-            // Always hidden -- for search
-            {
-                id: 'email',
-                header: 'Email',
-                accessorKey: 'email',
-                meta: { searchable: true },
-            },
-            {
-                id: 'username',
-                header: 'Username',
-                accessorKey: 'username',
-                meta: { searchable: true },
-            },
         ],
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [roles],
@@ -160,20 +139,13 @@ export const InactiveUsersListBody = ({
     const initialState = useMemo(
         () => ({
             sorting: [{ id: 'createdAt', desc: true }],
-            columnVisibility: { email: false, username: false },
         }),
         [],
     );
 
-    const { data, getSearchText } = useSearch(
-        columns,
-        searchValue,
-        massagedData,
-    );
-
     const table = useReactTable({
         columns,
-        data,
+        data: massagedData,
         initialState,
         defaultColumn: {
             cell: ({ getValue }) => (
@@ -191,27 +163,13 @@ export const InactiveUsersListBody = ({
 
     return (
         <>
-            <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <VirtualizedTable tableInstance={table} />
-            </SearchHighlightProvider>
+            <VirtualizedTable tableInstance={table} />
             <ConditionallyRender
                 condition={rowCount === 0}
                 show={
-                    <ConditionallyRender
-                        condition={searchValue?.length > 0}
-                        show={
-                            <TablePlaceholder>
-                                No inactive users found matching &ldquo;
-                                {searchValue}
-                                &rdquo;
-                            </TablePlaceholder>
-                        }
-                        elseShow={
-                            <TablePlaceholder>
-                                No inactive users found.
-                            </TablePlaceholder>
-                        }
-                    />
+                    <TablePlaceholder>
+                        No inactive users found.
+                    </TablePlaceholder>
                 }
             />
             <ConditionallyRender

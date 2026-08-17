@@ -17,7 +17,7 @@ import {
     ensureStringValue,
     mapValues,
 } from '../../util/index.js';
-import { internFlagField } from './intern-flag-field.js';
+import { internConstraints, internFlagField } from './intern-flag-field.js';
 import type EventEmitter from 'events';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store.js';
 import type { Db } from '../../db/db.js';
@@ -268,7 +268,7 @@ export default class FeatureToggleClientStore
             id: row.strategy_id,
             name: internFlagField(row.strategy_name),
             title: row.strategy_title,
-            constraints: row.constraints || [],
+            constraints: internConstraints(row.constraints),
             parameters: mapValues(row.parameters || {}, ensureStringValue),
             sortOrder: row.sort_order,
             milestoneId: row.milestone_id,

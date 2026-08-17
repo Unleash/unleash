@@ -17,6 +17,7 @@ import {
     ensureStringValue,
     mapValues,
 } from '../../util/index.js';
+import { internFlagField } from './intern-flag-field.js';
 import type EventEmitter from 'events';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store.js';
 import type { Db } from '../../db/db.js';
@@ -220,7 +221,7 @@ export default class FeatureToggleClientStore
             feature.description = r.description;
             feature.project = r.project;
             feature.stale = r.stale;
-            feature.type = r.type;
+            feature.type = internFlagField(r.type);
             feature.lastSeenAt = r.last_seen_at;
             feature.variants = r.variants || [];
             feature.project = r.project;
@@ -265,7 +266,7 @@ export default class FeatureToggleClientStore
     private rowToStrategy(row: Record<string, any>): IStrategyConfig {
         const strategy: IStrategyConfig = {
             id: row.strategy_id,
-            name: row.strategy_name,
+            name: internFlagField(row.strategy_name),
             title: row.strategy_title,
             constraints: row.constraints || [],
             parameters: mapValues(row.parameters || {}, ensureStringValue),

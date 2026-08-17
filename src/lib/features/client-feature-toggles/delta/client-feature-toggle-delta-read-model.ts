@@ -8,6 +8,7 @@ import {
     ensureStringValue,
     mapValues,
 } from '../../../util/index.js';
+import { internFlagField } from '../intern-flag-field.js';
 import type {
     FeatureConfigurationDeltaClient,
     IClientFeatureToggleDeltaReadModel,
@@ -166,7 +167,7 @@ export default class ClientFeatureToggleDeltaReadModel
             feature.description = r.description;
             feature.project = r.project;
             feature.stale = r.stale;
-            feature.type = r.type;
+            feature.type = internFlagField(r.type);
             feature.variants = r.variants || [];
             feature.project = r.project;
 
@@ -216,7 +217,7 @@ export default class ClientFeatureToggleDeltaReadModel
     private rowToStrategy(row: Record<string, any>): IStrategyConfig {
         const strategy: IStrategyConfig = {
             id: row.strategy_id,
-            name: row.strategy_name,
+            name: internFlagField(row.strategy_name),
             title: row.strategy_title,
             constraints: row.constraints || [],
             parameters: mapValues(row.parameters || {}, ensureStringValue),

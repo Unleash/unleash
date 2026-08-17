@@ -137,6 +137,7 @@
         "frontend/src/component/admin/users/AccessOverview/AccessOverview.tsx",
         "frontend/src/component/admin/users/AutoCreateDomainUsersToggle.tsx",
         "frontend/src/component/admin/users/InactiveUsersList/InactiveUsersList.tsx",
+        "frontend/src/component/admin/users/InactiveUsersList/InactiveUsersListBody.tsx",
         "frontend/src/component/application/ApplicationChart.tsx",
         "frontend/src/component/application/ApplicationOverview.tsx",
         "frontend/src/component/commandBar/CommandBar.tsx",

@@ -17,11 +17,15 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Search } from 'component/common/Search/Search';
 import { TabLink } from 'component/common/TabNav/TabLink';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import { useAccessOverviewApi } from 'hooks/api/actions/useAccessOverviewApi/useAccessOverviewApi';
 import { usePageTitle } from 'hooks/usePageTitle';
 import theme from 'themes/theme';
 import UsersList from '../UsersList/UsersList.tsx';
+import { InactiveUsersListBody } from '../InactiveUsersList/InactiveUsersListBody.tsx';
+import { InactiveUsersHeaderActions } from '../InactiveUsersList/InactiveUsersHeaderActions.tsx';
 import EditUser from '../EditUser/EditUser.tsx';
 import { AccessOverview } from '../AccessOverview/AccessOverview.tsx';
 import NotFound from 'component/common/NotFound/NotFound';
@@ -45,18 +49,28 @@ const UsersTabsView = () => {
     usePageTitle('Users');
     const { pathname } = useLocation();
     const navigate = useNavigate();
+    const { isEnterprise } = useUiConfig();
     const { users, loading } = useUsers();
     const { downloadCSV } = useAccessOverviewApi();
 
     const [searchValue, setSearchValue] = useState('');
 
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const isInactiveTab = pathname.includes('/inactive');
 
     const tabs = [
         {
             label: `Users (${users.length})`,
             path: '/admin/users',
         },
+        ...(isEnterprise()
+            ? [
+                  {
+                      label: 'Inactive users',
+                      path: '/admin/users/inactive',
+                  },
+              ]
+            : []),
     ];
 
     return (
@@ -96,23 +110,33 @@ const UsersTabsView = () => {
                                     />
                                 }
                             />
-                            <PageHeader.Divider />
-                            <Tooltip
-                                title='Exports user access information'
-                                arrow
-                                describeChild
-                            >
-                                <IconButton onClick={downloadCSV}>
-                                    <Download />
-                                </IconButton>
-                            </Tooltip>
-                            <Button
-                                variant='contained'
-                                color='primary'
-                                onClick={() => navigate('/admin/create-user')}
-                            >
-                                Add new user
-                            </Button>
+                            <ConditionallyRender
+                                condition={isInactiveTab && isEnterprise()}
+                                show={<InactiveUsersHeaderActions />}
+                                elseShow={
+                                    <>
+                                        <PageHeader.Divider />
+                                        <Tooltip
+                                            title='Exports user access information'
+                                            arrow
+                                            describeChild
+                                        >
+                                            <IconButton onClick={downloadCSV}>
+                                                <Download />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Button
+                                            variant='contained'
+                                            color='primary'
+                                            onClick={() =>
+                                                navigate('/admin/create-user')
+                                            }
+                                        >
+                                            Add new user
+                                        </Button>
+                                    </>
+                                }
+                            />
                         </StyledActions>
                     </StyledHeader>
                     <ConditionallyRender
@@ -131,6 +155,22 @@ const UsersTabsView = () => {
                 <Route
                     index
                     element={<UsersList searchValue={searchValue} />}
+                />
+                <Route
+                    path='inactive'
+                    element={
+                        <ConditionallyRender
+                            condition={isEnterprise()}
+                            show={
+                                <InactiveUsersListBody
+                                    searchValue={searchValue}
+                                />
+                            }
+                            elseShow={
+                                <PremiumFeature feature='inactive-users' page />
+                            }
+                        />
+                    }
                 />
                 <Route path='*' element={<NotFound />} />
             </Routes>

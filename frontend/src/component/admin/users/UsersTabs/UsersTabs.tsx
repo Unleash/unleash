@@ -15,6 +15,7 @@ import theme from 'themes/theme';
 import UsersList from '../UsersList/UsersList.tsx';
 import { UsersHeaderActions } from '../UsersList/UsersHeaderActions.tsx';
 import { InactiveUsersListBody } from '../InactiveUsersList/InactiveUsersListBody.tsx';
+import { InactiveUsersCount } from '../InactiveUsersList/InactiveUsersCount.tsx';
 import { InactiveUsersHeaderActions } from '../InactiveUsersList/InactiveUsersHeaderActions.tsx';
 import EditUser from '../EditUser/EditUser.tsx';
 import { AccessOverview } from '../AccessOverview/AccessOverview.tsx';
@@ -53,7 +54,11 @@ const UsersTabsView = () => {
         ...(isEnterprise()
             ? [
                   {
-                      label: 'Inactive users',
+                      label: (
+                          <>
+                              Inactive users (<InactiveUsersCount />)
+                          </>
+                      ),
                       path: '/admin/users/inactive',
                   },
               ]
@@ -77,7 +82,7 @@ const UsersTabsView = () => {
                             >
                                 {tabs.map(({ label, path }) => (
                                     <Tab
-                                        key={label}
+                                        key={path}
                                         value={path}
                                         label={
                                             <TabLink to={path}>{label}</TabLink>

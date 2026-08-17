@@ -45,9 +45,6 @@ const UsersTabsView = () => {
 
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-    // Each tab owns its header actions and body; both are selected by route so
-    // adding another tab is just another entry here and one <Route> in each of
-    // the <Routes> blocks below.
     const tabs = [
         {
             label: `Users (${users.length})`,

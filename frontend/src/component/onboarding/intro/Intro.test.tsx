@@ -2,6 +2,7 @@ import { vi, expect, test } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { screen, fireEvent, act, within } from '@testing-library/react';
 import { Intro } from './Intro.tsx';
+import { generateIntroUsers } from './introModel.ts';
 
 const next = () =>
     fireEvent.click(screen.getByTestId('QUICK_TOUR_INTRO_NEXT_BUTTON'));
@@ -747,10 +748,19 @@ test('explains targeting from the matching context values', () => {
     expect(screen.getByText('"NO"')).toBeInTheDocument();
     expect(screen.getByText('"Pro"')).toBeInTheDocument();
 
-    fireEvent.click(within(grid).getByRole('button', { name: /Cara/ }));
+    const excludedByCountry = generateIntroUsers(20).find(
+        (user) => !['NO', 'US'].includes(user.country.code),
+    )!;
+    fireEvent.click(
+        within(grid).getByRole('button', {
+            name: new RegExp(excludedByCountry.name),
+        }),
+    );
     expect(
         screen.getByText(
-            /Cara doesn't see my-feature because Canada is not one of the targeted countries/,
+            new RegExp(
+                `${excludedByCountry.name} doesn't see my-feature because ${excludedByCountry.country.label} is not one of the targeted countries`,
+            ),
         ),
     ).toBeInTheDocument();
 });

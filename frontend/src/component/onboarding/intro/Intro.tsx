@@ -162,6 +162,8 @@ interface ITopic {
     body: string;
 }
 
+type EngagementKey = 'target' | 'variants';
+
 const TOPICS: ITopic[] = [
     {
         key: 'rollout',
@@ -390,8 +392,10 @@ export const Intro = ({
     const [topicIndex, setTopicIndex] = useState(0);
     const [finished, setFinished] = useState(false);
     const [selectedId, setSelectedId] = useState<string | undefined>();
-    const [engaged, setEngaged] = useState<Record<string, boolean>>({});
-    const markEngaged = useCallback((key: string) => {
+    const [engaged, setEngaged] = useState<
+        Partial<Record<EngagementKey, boolean>>
+    >({});
+    const markEngaged = useCallback((key: EngagementKey) => {
         setEngaged((current) =>
             current[key] ? current : { ...current, [key]: true },
         );

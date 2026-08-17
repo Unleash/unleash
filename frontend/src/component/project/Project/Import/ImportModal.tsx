@@ -1,6 +1,7 @@
 import { styled } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { useDialogDismissTracking } from 'hooks/useTrackDialogDismissed';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { useEffect, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ImportTimeline } from './ImportTimeline.tsx';
@@ -56,7 +57,18 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
     const [importPayload, setImportPayload] = useState('');
     const [activeTab, setActiveTab] = useState<ImportMode>('file');
 
-    const emitDismissed = useDialogDismissTracking(open, 'import-flags');
+    const emitDismissed = useDialogDismissTracking(open, {
+        event: 'export_import',
+        type: 'import completed',
+    });
+    const { trackEvent } = useEventTracker();
+
+    const startImport = () => {
+        trackEvent('export_import', {
+            props: { eventType: 'import completed', action: 'submitted' },
+        });
+        setImportStage('import');
+    };
 
     const close = () => {
         setOpen(false);
@@ -85,7 +97,7 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
             open={open}
             onClose={close}
             label='Import flags'
-            trackingId='import-flags'
+            tracking={{ event: 'export_import', type: 'import completed' }}
         >
             <ModalContentContainer>
                 <TimelineContainer>
@@ -135,7 +147,7 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
                             environment={environment}
                             payload={importPayload}
                             onBack={() => setImportStage('configure')}
-                            onSubmit={() => setImportStage('import')}
+                            onSubmit={startImport}
                             onClose={cancel}
                         />
                     }

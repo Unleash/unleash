@@ -159,7 +159,9 @@ export const FeedbackComponent = ({
     const { trackEvent } = useEventTracker();
     const theme = useTheme();
 
-    const emitDismissed = useDialogDismissTracking(showFeedback, 'feedback');
+    const emitDismissed = useDialogDismissTracking(showFeedback, {
+        event: 'feedback',
+    });
 
     const { addFeedback } = useUserFeedbackApi();
     const { setHasSubmittedFeedback } = useUserSubmittedFeedback(
@@ -202,6 +204,7 @@ export const FeedbackComponent = ({
                 props: {
                     eventType: `submitted - ${feedbackData.category}`,
                     category: feedbackData.category,
+                    action: 'submitted',
                 },
             });
             toastTitle = 'Feedback sent';

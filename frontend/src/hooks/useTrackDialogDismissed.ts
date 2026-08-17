@@ -1,24 +1,22 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useEventTracker } from 'hooks/useEventTracker';
-import type {
-    DialogDismissMethod,
-    DialogTrackingId,
-} from 'utils/trackingEvents';
+import type { DialogDismissMethod, DialogTracking } from 'utils/trackingEvents';
 
 export const useTrackDialogDismissed = () => {
     const { trackEvent } = useEventTracker();
 
     return useCallback(
-        (dialog: DialogTrackingId | undefined, method: DialogDismissMethod) => {
-            if (!dialog && import.meta.env.DEV) {
-                console.warn(
-                    'dialog-dismissed emitted without a trackingId; add one to the dialog component',
-                );
+        (tracking: DialogTracking | undefined, method: DialogDismissMethod) => {
+            if (!tracking) {
+                trackEvent('dialog-dismissed', {
+                    props: { action: 'dismissed', method },
+                });
+                return;
             }
-            trackEvent('dialog-dismissed', {
+            trackEvent(tracking.event, {
                 props: {
+                    ...(tracking.type ? { eventType: tracking.type } : {}),
                     action: 'dismissed',
-                    dialog: dialog ?? 'untagged',
                     method,
                 },
             });
@@ -34,7 +32,7 @@ export const dismissMethodFromCloseReason = (
 // One dismissal can fire two close paths: a manual Escape handler and MUI's onClose.
 export const useDialogDismissTracking = (
     open: boolean,
-    dialog: DialogTrackingId | undefined,
+    tracking: DialogTracking | undefined,
 ) => {
     const trackDialogDismissed = useTrackDialogDismissed();
     const emittedRef = useRef(false);
@@ -45,14 +43,15 @@ export const useDialogDismissTracking = (
         }
     }, [open]);
 
+    const { event, type } = tracking ?? {};
     return useCallback(
         (method: DialogDismissMethod) => {
             if (emittedRef.current) {
                 return;
             }
             emittedRef.current = true;
-            trackDialogDismissed(dialog, method);
+            trackDialogDismissed(event ? { event, type } : undefined, method);
         },
-        [trackDialogDismissed, dialog],
+        [trackDialogDismissed, event, type],
     );
 };

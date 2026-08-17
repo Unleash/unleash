@@ -15,7 +15,7 @@ import {
     useDialogDismissTracking,
 } from 'hooks/useTrackDialogDismissed';
 import { DIALOGUE_CONFIRM_ID } from 'utils/testIds';
-import type { DialogTrackingId } from 'utils/trackingEvents';
+import type { DialogTracking } from 'utils/trackingEvents';
 
 const StyledDialog = styled(Dialog)(({ theme, maxWidth }) => ({
     '& .MuiDialog-paper': {
@@ -63,7 +63,7 @@ interface IDialogue {
     permissionButton?: React.JSX.Element;
     customButton?: React.JSX.Element;
     children?: React.ReactNode;
-    trackingId?: DialogTrackingId;
+    tracking?: DialogTracking;
 }
 
 export const Dialogue: React.FC<IDialogue> = ({
@@ -81,9 +81,9 @@ export const Dialogue: React.FC<IDialogue> = ({
     formId,
     permissionButton,
     customButton,
-    trackingId,
+    tracking,
 }) => {
-    const emitDismissed = useDialogDismissTracking(open, trackingId);
+    const emitDismissed = useDialogDismissTracking(open, tracking);
 
     const handleClick = formId
         ? (e: React.SyntheticEvent) => {

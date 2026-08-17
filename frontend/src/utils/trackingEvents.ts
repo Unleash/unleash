@@ -95,15 +95,16 @@ export type CustomEvents =
     | 'search-docs'
     | 'flag-actions'
     | 'flag-tags'
+    | 'flag-creation'
     | 'dialog-dismissed';
 
-export type DialogTrackingId =
-    | 'toggle-prod-guard'
-    | 'toggle-enable-strategies'
-    | 'toggle-change-request'
-    | 'create-feature'
-    | 'import-flags'
-    | 'feedback';
+// A dialog is identified by the journey it serves: the journey's event name plus,
+// where the surface has operation variants, its eventType. Dismissals emit as rows
+// of that journey with action 'dismissed', so funnels need no join.
+export type DialogTracking = {
+    event: CustomEvents;
+    type?: string;
+};
 
 export type DialogDismissMethod =
     | 'cancel-button'

@@ -7,10 +7,7 @@ import {
     useDialogDismissTracking,
 } from 'hooks/useTrackDialogDismissed';
 import { SIDEBAR_MODAL_ID } from 'utils/testIds';
-import type {
-    DialogDismissMethod,
-    DialogTrackingId,
-} from 'utils/trackingEvents';
+import type { DialogDismissMethod, DialogTracking } from 'utils/trackingEvents';
 import type * as React from 'react';
 
 interface ISidebarModalProps {
@@ -19,7 +16,7 @@ interface ISidebarModalProps {
     label: string;
     onClick?: (e: React.SyntheticEvent) => void;
     children: React.ReactElement<any, any>;
-    trackingId?: DialogTrackingId;
+    tracking?: DialogTracking;
 }
 
 interface IBaseModalProps {
@@ -87,10 +84,7 @@ export const BaseModal: FC<IBaseModalProps> = ({
 };
 
 export const SidebarModal: FC<ISidebarModalProps> = (props) => {
-    const emitDismissed = useDialogDismissTracking(
-        props.open,
-        props.trackingId,
-    );
+    const emitDismissed = useDialogDismissTracking(props.open, props.tracking);
 
     return (
         <BaseModal {...props} onDismiss={emitDismissed}>
@@ -102,10 +96,7 @@ export const SidebarModal: FC<ISidebarModalProps> = (props) => {
 };
 
 export const DynamicSidebarModal: FC<ISidebarModalProps> = (props) => {
-    const emitDismissed = useDialogDismissTracking(
-        props.open,
-        props.trackingId,
-    );
+    const emitDismissed = useDialogDismissTracking(props.open, props.tracking);
 
     return (
         <BaseModal {...props} onDismiss={emitDismissed}>

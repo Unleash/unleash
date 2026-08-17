@@ -6,6 +6,7 @@ import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { type ReactNode, useState, type FormEvent, useMemo } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { useNavigate } from 'react-router';
 import { Dialog, IconButton, styled } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -150,7 +151,11 @@ const CreateFeatureDialogContent = ({
     onSuccess,
 }: ICreateFeatureDialogProps) => {
     const useNewDesign = useUiFlag('newModalDesign');
-    const emitDismissed = useDialogDismissTracking(open, 'create-feature');
+    const emitDismissed = useDialogDismissTracking(open, {
+        event: 'flag-creation',
+        type: 'created',
+    });
+    const { trackEvent } = useEventTracker();
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig, isOss } = useUiConfig();
     const navigate = useNavigate();
@@ -221,8 +226,14 @@ const CreateFeatureDialogContent = ({
 
         if (validToggleName) {
             const payload = getTogglePayload();
+            trackEvent('flag-creation', {
+                props: { eventType: 'created', action: 'submitted' },
+            });
             try {
                 await createFeatureToggle(project, payload);
+                trackEvent('flag-creation', {
+                    props: { eventType: 'created', action: 'succeeded' },
+                });
                 navigate(`/projects/${project}/features/${name}`);
                 setToastData({
                     text: 'Flag created successfully',
@@ -233,6 +244,9 @@ const CreateFeatureDialogContent = ({
                 setStoredFlagConfig({});
                 openFeatureCreatedFeedback();
             } catch (error: unknown) {
+                trackEvent('flag-creation', {
+                    props: { eventType: 'created', action: 'failed' },
+                });
                 setToastApiError(formatUnknownError(error));
             }
         }

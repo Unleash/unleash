@@ -3,17 +3,21 @@ import {
     DELTA_EVENT_TYPES,
     type DeltaHydrationEvent,
 } from './client-feature-toggle-delta-types.js';
+import { createClientPayloadCanonicalizer } from '../client-payload-canonicalizer.js';
 
 export class DeltaCache {
     private events: DeltaEvent[] = [];
     private maxLength: number;
     private hydrationEvent: DeltaHydrationEvent;
+    private canonicalizer = createClientPayloadCanonicalizer();
 
     constructor(hydrationEvent: DeltaHydrationEvent, maxLength: number = 20) {
         this.hydrationEvent = hydrationEvent;
+        this.hydrationEvent.features.forEach(this.canonicalizer.feature);
+        this.hydrationEvent.segments.forEach(this.canonicalizer.segment);
         this.maxLength = maxLength;
 
-        this.addBaseEventFromHydration(hydrationEvent);
+        this.addBaseEventFromHydration(this.hydrationEvent);
     }
 
     private addBaseEventFromHydration(
@@ -34,9 +38,26 @@ export class DeltaCache {
     }
 
     public addEvents(events: DeltaEvent[]): void {
-        this.events = [...this.events, ...events];
+        const canonicalEvents = events.map((event): DeltaEvent => {
+            switch (event.type) {
+                case DELTA_EVENT_TYPES.FEATURE_UPDATED:
+                    return {
+                        ...event,
+                        feature: this.canonicalizer.feature(event.feature),
+                    };
+                case DELTA_EVENT_TYPES.SEGMENT_UPDATED:
+                    return {
+                        ...event,
+                        segment: this.canonicalizer.segment(event.segment),
+                    };
+                default:
+                    return event;
+            }
+        });
 
-        this.updateHydrationEvent(events);
+        this.events = [...this.events, ...canonicalEvents];
+
+        this.updateHydrationEvent(canonicalEvents);
         while (this.events.length > this.maxLength) {
             this.events.shift();
         }

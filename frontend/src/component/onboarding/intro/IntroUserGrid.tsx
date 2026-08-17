@@ -350,6 +350,7 @@ const StyledPopoverClose = styled(IconButton)(({ theme }) => ({
     padding: theme.spacing(0.5),
     margin: theme.spacing(-0.75, -0.75, -0.75, 0),
     borderRadius: '50%',
+    alignSelf: 'start',
     '&:hover': {
         backgroundColor: theme.palette.action.hover,
     },

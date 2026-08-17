@@ -103,7 +103,7 @@ export const IntroStepper = ({
                     <StyledStep
                         type='button'
                         clickable={step.clickable}
-                        disabled={!step.clickable}
+                        aria-disabled={!step.clickable}
                         onClick={() => step.clickable && onStepClick(index)}
                         aria-current={state === 'current' ? 'step' : undefined}
                     >

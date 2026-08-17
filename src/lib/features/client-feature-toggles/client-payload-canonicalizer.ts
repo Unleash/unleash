@@ -6,8 +6,8 @@ type CacheConstraint = {
 };
 
 type CacheFeature = {
-    type: string;
-    strategies: {
+    type?: string;
+    strategies?: {
         name: string;
         constraints?: CacheConstraint[];
     }[];
@@ -52,8 +52,10 @@ export const createClientPayloadCanonicalizer = () => {
     };
 
     const feature = <T extends CacheFeature>(value: T): T => {
-        value.type = canonicalizeFeatureType(value.type);
-        for (const strategy of value.strategies) {
+        if (value.type !== undefined) {
+            value.type = canonicalizeFeatureType(value.type);
+        }
+        for (const strategy of value.strategies ?? []) {
             strategy.name = canonicalizeStrategyName(strategy.name);
             constraints(strategy.constraints);
         }

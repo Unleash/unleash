@@ -123,6 +123,73 @@ test('if caching is enabled should memoize', async () => {
     expect(getClientFeatures).toHaveBeenCalledTimes(1);
 });
 
+test('canonicalizing cached payloads keeps their values', async () => {
+    const features = [
+        {
+            name: 'with-strategies',
+            type: 'release',
+            strategies: [
+                {
+                    name: 'flexibleRollout',
+                    constraints: [{ contextName: 'userId', operator: 'IN' }],
+                },
+            ],
+        },
+        { name: 'without-optional-fields' },
+    ];
+    const segments = [
+        {
+            id: 1,
+            name: 'segment',
+            constraints: [{ contextName: 'appName', operator: 'IN' }],
+        },
+    ];
+    const expectedFeatures = structuredClone(features);
+    const expectedSegments = structuredClone(segments);
+
+    const getClientFeatures = vi.fn().mockReturnValue(features);
+    const getActiveSegmentsForClient = vi.fn().mockReturnValue(segments);
+    const respondWithValidation = vi.fn().mockReturnValue({});
+    const validPath = vi.fn().mockReturnValue(vi.fn());
+    const clientSpecService = new ClientSpecService({ getLogger });
+    const openApiService = { respondWithValidation, validPath };
+    const clientFeatureToggleService = {
+        getClientFeatures,
+        getActiveSegmentsForClient,
+    };
+    const featureToggleService = { getClientFeatures };
+    const configurationRevisionService = { getMaxRevisionId: () => 1 };
+
+    const controller = new FeatureController(
+        {
+            clientSpecService,
+            // @ts-expect-error due to partial implementation
+            openApiService,
+            // @ts-expect-error due to partial implementation
+            clientFeatureToggleService,
+            // @ts-expect-error due to partial implementation
+            featureToggleService,
+            // @ts-expect-error due to partial implementation
+            configurationRevisionService,
+        },
+        {
+            getLogger,
+            clientFeatureCaching: {
+                enabled: true,
+                maxAge: secondsToMilliseconds(10),
+            },
+            flagResolver,
+        },
+    );
+
+    await callGetAll(controller);
+
+    expect(respondWithValidation.mock.calls[0][3].features).toEqual(
+        expectedFeatures,
+    );
+    expect(segments).toEqual(expectedSegments);
+});
+
 test('if caching is not enabled all calls goes to service', async () => {
     const getClientFeatures = vi.fn().mockReturnValue([]);
     const getActiveSegmentsForClient = vi.fn().mockReturnValue([]);

@@ -160,7 +160,10 @@ const StyledDisabledOperatorChip = styled(Chip)(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
     cursor: 'help',
     userSelect: 'none',
-    '& .MuiChip-label': { cursor: 'help' },
+    '& .MuiChip-label': {
+        cursor: 'help',
+        textDecoration: 'line-through',
+    },
 }));
 
 const constraintOperator = (hasSelection: boolean) =>

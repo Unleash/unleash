@@ -75,14 +75,6 @@ const StyledHeading = styled(Box)(({ theme }) => ({
     gap: theme.spacing(0.75),
 }));
 
-const StyledEyebrow = styled(Typography)(({ theme }) => ({
-    color: theme.palette.primary.main,
-    fontSize: theme.typography.caption.fontSize,
-    fontWeight: theme.typography.fontWeightBold,
-    letterSpacing: '0.12em',
-    textTransform: 'uppercase',
-}));
-
 const StyledFeatureGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
     gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
@@ -1210,17 +1202,9 @@ export const IntroShowcase = ({
 
             <StyledHeader>
                 <StyledHeading>
-                    <StyledEyebrow>Your FeatureOps journey</StyledEyebrow>
-                    <Typography variant='h1'>
-                        This was just a glimpse
-                    </Typography>
+                    <Typography variant='h1'>Tour complete!</Typography>
                     <Typography color='textSecondary'>
-                        You've seen how Unleash can release, observe, and
-                        protect a feature in production.
-                        <br />
-                        Revisit those capabilities and discover the broader
-                        platform for targeting, governance, integrations, and
-                        enterprise scale.
+                        What do you want to do next?
                     </Typography>
                 </StyledHeading>
             </StyledHeader>
@@ -1301,7 +1285,7 @@ export const IntroShowcase = ({
                         onClick={onComplete}
                         data-testid='QUICK_TOUR_INTRO_FINISH_BUTTON'
                     >
-                        Create your first flag
+                        Create feature flag
                     </Button>
                 </Box>
             </StyledFooter>

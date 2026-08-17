@@ -1029,3 +1029,57 @@ test('teaches manual recovery before a safeguard automates it', () => {
     ).not.toBeChecked();
     vi.useRealTimers();
 }, 10000);
+
+test('hands the idle nudge from the toggle to Next once production is on', () => {
+    vi.useFakeTimers();
+    renderAdvancedIntro();
+
+    act(() => {
+        vi.advanceTimersByTime(3000);
+    });
+    expect(
+        screen.getByText('Turn on my-feature in production'),
+    ).toBeInTheDocument();
+    expect(
+        screen.queryByText('Click Next to continue'),
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(
+        screen.getByRole('switch', {
+            name: 'Toggle my-feature in production',
+        }),
+    );
+    act(() => {
+        vi.advanceTimersByTime(3000);
+    });
+    expect(screen.getByText('Click Next to continue')).toBeInTheDocument();
+    vi.useRealTimers();
+});
+
+test('dragging the slider defers the Next nudge', () => {
+    vi.useFakeTimers();
+    renderAdvancedIntro();
+
+    fireEvent.click(
+        screen.getByRole('switch', {
+            name: 'Toggle my-feature in production',
+        }),
+    );
+    act(() => {
+        vi.advanceTimersByTime(2500);
+    });
+    fireEvent.change(screen.getByRole('slider', { name: 'Rollout %' }), {
+        target: { value: '70' },
+    });
+    act(() => {
+        vi.advanceTimersByTime(2500);
+    });
+    expect(
+        screen.queryByText('Click Next to continue'),
+    ).not.toBeInTheDocument();
+    act(() => {
+        vi.advanceTimersByTime(500);
+    });
+    expect(screen.getByText('Click Next to continue')).toBeInTheDocument();
+    vi.useRealTimers();
+});

@@ -22,9 +22,8 @@ import {
 import { IntroUserGrid, type GridMode } from './IntroUserGrid.tsx';
 import { IntroFlagView } from './IntroFlagView.tsx';
 import { IntroImpactCharts } from './IntroImpactCharts.tsx';
-// The richer victory-lap screen (IntroShowcase) is kept for reference; swap
-// the import + usage below back to it to restore it.
 import { IntroSuccess } from './IntroSuccess.tsx';
+import { IntroShowcase } from './IntroShowcase.tsx';
 import { IntroStepper } from './IntroStepper.tsx';
 import { HintBadge, useIdleHint } from './introHints.tsx';
 import {
@@ -158,7 +157,6 @@ type IncidentState = 'idle' | 'observing' | 'alert' | 'resolved';
 interface ITopic {
     key: TopicKey;
     mode: GridMode;
-    /** Short label shown in the top stepper. */
     stepLabel: string;
     title: string;
     body: string;
@@ -266,8 +264,6 @@ const StyledRight = styled(Box)(({ theme }) => ({
     padding: theme.spacing(4),
     gap: theme.spacing(2),
     background: theme.palette.background.elevation1,
-    // Keep the audience grid within the panel so it can scale to fill the
-    // available space (see gridFit); only allow scrolling once stacked.
     overflow: 'hidden',
     [theme.breakpoints.down('md')]: {
         overflow: 'visible',
@@ -285,8 +281,6 @@ const StyledFooter = styled(Box)(({ theme }) => ({
     flexWrap: 'wrap',
     gap: theme.spacing(1.5),
     flexShrink: 0,
-    // Right padding matches StyledScroll (spacing 3) so the Next button's
-    // right edge lines up with the controls above it.
     padding: theme.spacing(1.5, 3, 1.5, 4),
     borderTop: `1px solid ${theme.palette.divider}`,
 }));
@@ -396,8 +390,6 @@ export const Intro = ({
     const [topicIndex, setTopicIndex] = useState(0);
     const [finished, setFinished] = useState(false);
     const [selectedId, setSelectedId] = useState<string | undefined>();
-    // Which controls the user has touched on the current step. Reset on every
-    // step change so each step's guidance nudges start fresh.
     const [engaged, setEngaged] = useState<Record<string, boolean>>({});
     const markEngaged = useCallback((key: string) => {
         setEngaged((current) =>
@@ -429,10 +421,6 @@ export const Intro = ({
     const isRolloutStep = topic.key === 'rollout';
     const isTargetStep = topic.key === 'target';
     const isVariantsStep = topic.key === 'variants';
-    // Guidance nudges: each appears only after a few idle seconds and vanishes
-    // the moment its control is used, so users who dive in never see them. On
-    // the rollout step the nudge moves from the toggle to the Next button once
-    // the environment is on.
     const [hintToggle] = useIdleHint(
         isRolloutStep && !config.environmentEnabled,
     );
@@ -826,15 +814,9 @@ export const Intro = ({
         }));
     };
 
-    // Handlers that also record engagement so the guidance nudges retreat as
-    // soon as the user touches the right control.
     const handleRolloutChange = (value: number) => {
         setRollout(value);
-        // Dragging the slider means the user is exploring, not stuck, so defer
-        // the "click Next" nudge; it also counts as engaging the later steps.
         bumpNextHint();
-        markEngaged('target');
-        markEngaged('variants');
     };
     const handleToggleCountry = (code: string) => {
         toggleCountry(code);
@@ -856,8 +838,9 @@ export const Intro = ({
     const canContinue = true;
 
     if (finished) {
+        const VictoryLap = advancedStepsEnabled ? IntroShowcase : IntroSuccess;
         return (
-            <IntroSuccess
+            <VictoryLap
                 onComplete={onComplete}
                 onReplay={() => {
                     setFinished(false);

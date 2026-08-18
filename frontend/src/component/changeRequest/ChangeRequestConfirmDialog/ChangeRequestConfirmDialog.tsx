@@ -5,6 +5,7 @@ import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequ
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
+import type { DialogTracking } from 'utils/trackingEvents';
 
 interface IChangeRequestDialogueProps {
     isOpen: boolean;
@@ -14,6 +15,7 @@ interface IChangeRequestDialogueProps {
     showBanner?: boolean;
     messageComponent: JSX.Element;
     disabled?: boolean;
+    tracking?: DialogTracking;
 }
 
 export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
@@ -24,6 +26,7 @@ export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
     showBanner,
     environment,
     messageComponent,
+    tracking,
 }) => {
     const projectId = useRequiredPathParam('projectId');
     const { data } = usePendingChangeRequests(projectId);
@@ -47,6 +50,7 @@ export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
             onClose={onClose}
             title='Request changes'
             fullWidth
+            tracking={tracking}
         >
             <ConditionallyRender
                 condition={hasChangeRequestInReviewForEnvironment}

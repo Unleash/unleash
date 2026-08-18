@@ -1,6 +1,7 @@
 import { type ComponentProps, useCallback, useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
+import { useEventTracker } from 'hooks/useEventTracker';
 import useToast from 'hooks/useToast';
 import { useChangeRequestToggle } from 'hooks/useChangeRequestToggle';
 import { UpdateEnabledMessage } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/UpdateEnabledMessage';
@@ -34,6 +35,7 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
     const { toggleFeatureEnvironmentOn, toggleFeatureEnvironmentOff } =
         useFeatureApi();
     const { setToastData, setToastApiError } = useToast();
+    const { trackEvent } = useEventTracker();
     const [prodGuardModalState, setProdGuardModalState] = useState<
         ComponentProps<typeof FeatureStrategyProdGuard>
     >({
@@ -65,6 +67,32 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
     const onToggle = useCallback(
         async (newState: boolean, config: OnFeatureToggleSwitchArgs) => {
             let shouldActivateDisabledStrategies = false;
+            let prodGuardShown = false;
+            let strategiesDialogShown = false;
+            const environmentType = config.environmentType || 'unknown';
+            const eventType = newState ? 'enabled' : 'disabled';
+            const viaChangeRequest = Boolean(config.isChangeRequestEnabled);
+
+            trackEvent('flag-environment-toggled', {
+                props: {
+                    eventType,
+                    environmentType,
+                    viaChangeRequest,
+                    hasStrategies: Boolean(config.hasStrategies),
+                    action: 'toggled',
+                },
+            });
+
+            const trackDialogSubmitted = () => {
+                trackEvent('flag-environment-toggled', {
+                    props: {
+                        eventType,
+                        environmentType,
+                        viaChangeRequest,
+                        action: 'submitted',
+                    },
+                });
+            };
 
             const confirmProductionChanges: Middleware = (next) => {
                 if (config.isChangeRequestEnabled) {
@@ -76,10 +104,15 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                     return next();
                 }
 
+                prodGuardShown = true;
                 setProdGuardModalState({
                     open: true,
                     label: `${!newState ? 'Disable' : 'Enable'} Environment`,
                     loading: false,
+                    tracking: {
+                        event: 'flag-environment-toggled',
+                        type: eventType,
+                    },
                     onClose: () => {
                         setProdGuardModalState((prev) => ({
                             ...prev,
@@ -88,6 +121,7 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                         config.onRollback?.();
                     },
                     onClick: () => {
+                        trackDialogSubmitted();
                         setProdGuardModalState((prev) => ({
                             ...prev,
                             open: false,
@@ -108,10 +142,15 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                     return next();
                 }
 
+                strategiesDialogShown = true;
                 setEnableEnvironmentDialogState({
                     isOpen: true,
                     environment: config.environmentName,
                     featureId: config.featureId,
+                    tracking: {
+                        event: 'flag-environment-toggled',
+                        type: eventType,
+                    },
                     onClose: () => {
                         setEnableEnvironmentDialogState((prev) => ({
                             ...prev,
@@ -120,6 +159,7 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                         config.onRollback?.();
                     },
                     onActivateDisabledStrategies: () => {
+                        trackDialogSubmitted();
                         setEnableEnvironmentDialogState((prev) => ({
                             ...prev,
                             isOpen: false,
@@ -128,6 +168,7 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                         next();
                     },
                     onAddDefaultStrategy: () => {
+                        trackDialogSubmitted();
                         setEnableEnvironmentDialogState((prev) => ({
                             ...prev,
                             isOpen: false,
@@ -148,11 +189,41 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                     config.onRollback?.();
                 });
 
+                const trackingProps = {
+                    eventType,
+                    environmentType,
+                    viaChangeRequest,
+                    strategiesDialogShown,
+                };
+
                 onChangeRequestToggle(
                     config.featureId,
                     config.environmentName,
                     newState,
                     shouldActivateDisabledStrategies,
+                    {
+                        onConfirm: () => {
+                            trackEvent('flag-environment-toggled', {
+                                props: {
+                                    ...trackingProps,
+                                    action: 'submitted',
+                                },
+                            });
+                        },
+                        onSuccess: () => {
+                            trackEvent('flag-environment-toggled', {
+                                props: {
+                                    ...trackingProps,
+                                    action: 'succeeded',
+                                },
+                            });
+                        },
+                        onFailure: () => {
+                            trackEvent('flag-environment-toggled', {
+                                props: { ...trackingProps, action: 'failed' },
+                            });
+                        },
+                    },
                 );
             };
 
@@ -160,6 +231,15 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                 if (newState !== true) {
                     return next();
                 }
+
+                const trackingProps = {
+                    eventType,
+                    environmentType,
+                    viaChangeRequest,
+                    hasStrategies: Boolean(config.hasStrategies),
+                    prodGuardShown,
+                    strategiesDialogShown,
+                };
 
                 try {
                     await toggleFeatureEnvironmentOn(
@@ -173,9 +253,15 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                         type: 'success',
                         text: `Enabled in ${config.environmentName}`,
                     });
+                    trackEvent('flag-environment-toggled', {
+                        props: { ...trackingProps, action: 'succeeded' },
+                    });
                     config.onSuccess?.();
                 } catch (error: unknown) {
                     setToastApiError(formatUnknownError(error));
+                    trackEvent('flag-environment-toggled', {
+                        props: { ...trackingProps, action: 'failed' },
+                    });
                     config.onRollback?.();
                 }
             };
@@ -184,6 +270,12 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                 if (newState !== false) {
                     return next();
                 }
+
+                const trackingProps = {
+                    eventType,
+                    environmentType,
+                    prodGuardShown,
+                };
 
                 try {
                     await toggleFeatureEnvironmentOff(
@@ -195,9 +287,15 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                         type: 'success',
                         text: `Disabled in ${config.environmentName}`,
                     });
+                    trackEvent('flag-environment-toggled', {
+                        props: { ...trackingProps, action: 'succeeded' },
+                    });
                     config.onSuccess?.();
                 } catch (error: unknown) {
                     setToastApiError(formatUnknownError(error));
+                    trackEvent('flag-environment-toggled', {
+                        props: { ...trackingProps, action: 'failed' },
+                    });
                     config.onRollback?.();
                 }
             };
@@ -210,7 +308,7 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                 handleToggleEnvironmentOn,
             ]);
         },
-        [setProdGuardModalState],
+        [setProdGuardModalState, trackEvent],
     );
 
     const featureSelected = enableEnvironmentDialogState.featureId.length !== 0;
@@ -228,6 +326,12 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
             />
             <ChangeRequestDialogue
                 isOpen={changeRequestDialogDetails.isOpen}
+                tracking={{
+                    event: 'flag-environment-toggled',
+                    type: changeRequestDialogDetails.enabled
+                        ? 'enabled'
+                        : 'disabled',
+                }}
                 onClose={() => {
                     changeRequestDialogCallback?.();
                     onChangeRequestToggleClose();

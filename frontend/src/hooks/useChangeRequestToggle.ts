@@ -4,6 +4,12 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useChangeRequestApi } from './api/actions/useChangeRequestApi/useChangeRequestApi.js';
 import { usePendingChangeRequests } from './api/getters/usePendingChangeRequests/usePendingChangeRequests.js';
 
+type ChangeRequestToggleCallbacks = {
+    onConfirm?: () => void;
+    onSuccess?: () => void;
+    onFailure?: () => void;
+};
+
 export const useChangeRequestToggle = (project: string) => {
     const { setToastData, setToastApiError } = useToast();
     const { addChange } = useChangeRequestApi();
@@ -12,13 +18,15 @@ export const useChangeRequestToggle = (project: string) => {
     const [pending, setPending] = useState(false);
 
     const [changeRequestDialogDetails, setChangeRequestDialogDetails] =
-        useState<{
-            enabled?: boolean;
-            shouldActivateDisabledStrategies?: boolean;
-            featureName?: string;
-            environment?: string;
-            isOpen: boolean;
-        }>({ isOpen: false });
+        useState<
+            {
+                enabled?: boolean;
+                shouldActivateDisabledStrategies?: boolean;
+                featureName?: string;
+                environment?: string;
+                isOpen: boolean;
+            } & ChangeRequestToggleCallbacks
+        >({ isOpen: false });
 
     const onChangeRequestToggle = useCallback(
         (
@@ -26,12 +34,14 @@ export const useChangeRequestToggle = (project: string) => {
             environment: string,
             enabled: boolean,
             shouldActivateDisabledStrategies: boolean,
+            callbacks?: ChangeRequestToggleCallbacks,
         ) => {
             setChangeRequestDialogDetails({
                 featureName,
                 environment,
                 enabled,
                 shouldActivateDisabledStrategies,
+                ...callbacks,
                 isOpen: true,
             });
         },
@@ -43,6 +53,7 @@ export const useChangeRequestToggle = (project: string) => {
     }, []);
 
     const onChangeRequestToggleConfirm = useCallback(async () => {
+        changeRequestDialogDetails.onConfirm?.();
         try {
             setPending(true);
             await addChange(project, changeRequestDialogDetails.environment!, {
@@ -64,16 +75,18 @@ export const useChangeRequestToggle = (project: string) => {
                 type: 'success',
                 text: 'Changes added to draft',
             });
+            changeRequestDialogDetails.onSuccess?.();
         } catch (error) {
             setToastApiError(formatUnknownError(error));
             setChangeRequestDialogDetails((prev) => ({
                 ...prev,
                 isOpen: false,
             }));
+            changeRequestDialogDetails.onFailure?.();
         } finally {
             setPending(false);
         }
-    }, [addChange]);
+    }, [addChange, changeRequestDialogDetails]);
 
     return {
         pending,

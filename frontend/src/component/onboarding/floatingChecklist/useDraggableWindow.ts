@@ -102,18 +102,29 @@ export const useDraggableWindow = () => {
         }
     }, []);
 
-    // Keep the window on-screen if the viewport shrinks under it.
+    // Keep the window on-screen when the viewport shrinks (window resize) or
+    // when the window's own size changes — e.g. minimize/expand or content
+    // growth. Without the latter, a dragged (top-anchored) window could grow
+    // off the bottom of the screen after being expanded.
     useEffect(() => {
-        const onResize = () => {
-            const node = windowRef.current;
+        const node = windowRef.current;
+        const reclamp = () => {
             if (!node || !sharedPosition) return;
             const rect = node.getBoundingClientRect();
             setPosition((prev) =>
                 prev ? clampToViewport(prev, rect.width, rect.height) : prev,
             );
         };
-        window.addEventListener('resize', onResize);
-        return () => window.removeEventListener('resize', onResize);
+        window.addEventListener('resize', reclamp);
+        const observer =
+            typeof ResizeObserver !== 'undefined'
+                ? new ResizeObserver(reclamp)
+                : null;
+        if (node && observer) observer.observe(node);
+        return () => {
+            window.removeEventListener('resize', reclamp);
+            observer?.disconnect();
+        };
     }, []);
 
     const handleProps = {

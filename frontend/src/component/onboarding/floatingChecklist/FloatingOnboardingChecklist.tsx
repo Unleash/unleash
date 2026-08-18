@@ -12,6 +12,8 @@ import {
     keyframes,
     styled,
     Typography,
+    useMediaQuery,
+    useTheme,
 } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
@@ -65,7 +67,7 @@ const Window = styled('aside', {
 })<{ pulsing?: boolean }>(({ theme, pulsing }) => ({
     position: 'fixed',
     bottom: theme.spacing(3),
-    right: theme.spacing(3),
+    right: theme.spacing(20),
     width: 320,
     maxWidth: `calc(100vw - ${theme.spacing(4)})`,
     maxHeight: `calc(100vh - ${theme.spacing(6)})`,
@@ -90,22 +92,27 @@ const Window = styled('aside', {
 }));
 
 const Header = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'dragging',
-})<{ dragging?: boolean }>(({ theme, dragging }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(0.125),
-    padding: theme.spacing(1, 1.5, 1, 0.75),
-    background: theme.palette.background.elevation1,
-    flexShrink: 0,
-    cursor: dragging ? 'grabbing' : 'grab',
-    // Keep touch drags from scrolling the page, and text from selecting mid-drag.
-    touchAction: 'none',
-    userSelect: dragging ? 'none' : undefined,
-    '&:hover .drag-handle': {
-        color: theme.palette.text.secondary,
-    },
-}));
+    shouldForwardProp: (prop) => prop !== 'dragging' && prop !== 'draggable',
+})<{ dragging?: boolean; draggable?: boolean }>(
+    ({ theme, dragging, draggable }) => ({
+        display: 'flex',
+        alignItems: 'center',
+        gap: theme.spacing(0.125),
+        padding: theme.spacing(1, 1.5, 1, 0.75),
+        background: theme.palette.background.elevation1,
+        flexShrink: 0,
+        ...(draggable && {
+            cursor: dragging ? 'grabbing' : 'grab',
+            // Keep touch drags from scrolling the page, and text from
+            // selecting mid-drag.
+            touchAction: 'none',
+            userSelect: dragging ? 'none' : undefined,
+            '&:hover .drag-handle': {
+                color: theme.palette.text.secondary,
+            },
+        }),
+    }),
+);
 
 const DragHandle = styled(DragIndicatorIcon)(({ theme }) => ({
     color: theme.palette.text.disabled,
@@ -252,6 +259,12 @@ const EligibleFloatingOnboardingChecklist = () => {
     );
 
     const { windowRef, position, dragging, handleProps } = useDraggableWindow();
+    const theme = useTheme();
+    // Below `sm` the window is full-width (anchored by both left and right), so
+    // dragging it doesn't make sense and applying an absolute position would
+    // collapse it to content width.
+    const draggable = !useMediaQuery(theme.breakpoints.down('sm'));
+    const dragPosition = draggable ? position : null;
 
     const [createFlagOpen, setCreateFlagOpen] = useState(false);
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
@@ -420,18 +433,22 @@ const EligibleFloatingOnboardingChecklist = () => {
                 pulsing={pulsing}
                 ref={windowRef}
                 style={
-                    position
+                    dragPosition
                         ? {
-                              top: position.y,
-                              left: position.x,
+                              top: dragPosition.y,
+                              left: dragPosition.x,
                               bottom: 'auto',
                               right: 'auto',
                           }
                         : undefined
                 }
             >
-                <Header dragging={dragging} {...handleProps}>
-                    <DragHandle className='drag-handle' />
+                <Header
+                    draggable={draggable}
+                    dragging={dragging}
+                    {...(draggable ? handleProps : {})}
+                >
+                    {draggable ? <DragHandle className='drag-handle' /> : null}
                     <TitleRow>
                         <HeaderTitle>Get started</HeaderTitle>
                         <OnboardingProgressBadge showLabel />

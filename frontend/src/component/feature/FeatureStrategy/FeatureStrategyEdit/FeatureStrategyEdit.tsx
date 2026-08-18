@@ -40,6 +40,7 @@ import {
 } from './change-request-conflict-data.ts';
 import { constraintId } from 'constants/constraintId.ts';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
+import { summarizeStrategy } from '../summarizeStrategy.ts';
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 import { createFeatureStrategy } from 'utils/createFeatureStrategy.ts';
 import { refreshFeatureChangeRequests } from 'utils/refreshAllPendingChangeRequests.ts';
@@ -59,6 +60,8 @@ export const FeatureStrategyEdit = () => {
     const featureId = useRequiredPathParam('featureId');
     const environmentId = useRequiredQueryParam('environmentId');
     const strategyId = useRequiredQueryParam('strategyId');
+    const [previousStrategyState, setPreviousStrategyState] =
+        useState<StrategyFormState | null>(null);
 
     const [strategy, setStrategy] = useState<StrategyFormState>({
         name: '', // populated in the effect
@@ -169,13 +172,14 @@ export const FeatureStrategyEdit = () => {
 
         const constraintsWithId = addIdSymbolToConstraints(savedStrategy);
 
-        const formattedStrategy = {
+        const formattedStrategy: StrategyFormState = {
             ...savedStrategy,
             constraints: constraintsWithId,
-            name: savedStrategy?.name || savedStrategy?.strategyName,
+            name: savedStrategy?.name || savedStrategy?.strategyName || '',
         };
 
         setStrategy((prev) => ({ ...prev, ...formattedStrategy }));
+        setPreviousStrategyState(formattedStrategy);
     }, [strategyId, data]);
 
     useEffect(() => {
@@ -255,16 +259,44 @@ export const FeatureStrategyEdit = () => {
             });
         }
 
+        const viaChangeRequest = isChangeRequestConfigured(environmentId);
+
+        const flagStrategyProps = {
+            eventType: 'strategy-updated',
+            viaChangeRequest,
+            previous: summarizeStrategy(previousStrategyState),
+            current: summarizeStrategy(strategy),
+        };
+
+        trackEvent('flag-strategy', {
+            props: {
+                ...flagStrategyProps,
+                action: 'submitted',
+            },
+        });
+
         try {
-            if (isChangeRequestConfigured(environmentId)) {
+            if (viaChangeRequest) {
                 await onStrategyRequestEdit(payload);
             } else {
                 await onStrategyEdit(payload);
             }
+            trackEvent('flag-strategy', {
+                props: {
+                    ...flagStrategyProps,
+                    action: 'succeeded',
+                },
+            });
             emitConflictsCreatedEvents();
             refetchFeature();
             navigate(formatFeaturePath(projectId, featureId));
         } catch (error: unknown) {
+            trackEvent('flag-strategy', {
+                props: {
+                    ...flagStrategyProps,
+                    action: 'failed',
+                },
+            });
             setToastApiError(formatUnknownError(error));
         }
     };

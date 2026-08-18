@@ -1,10 +1,26 @@
 import { createContext } from 'react';
 import type { CustomEvents, ReservedEventName } from 'utils/trackingEvents';
 
+// What sinks that only accept flat key-value pairs (Plausible, LogRocket) can carry.
+export type ScalarProps = Record<string, string | number | boolean>;
+
+// The flight recorder takes arbitrary JSON. Nested values are dropped on the way to
+// the scalar-only sinks, which is fine: these events aren't Plausible goals.
+type TrackedValue =
+    | string
+    | number
+    | boolean
+    | null
+    | undefined
+    | TrackedValue[]
+    | { [key: string]: TrackedValue };
+
 // `path` is reserved: the provider injects the current route so custom events correlate
 // with page views on the same screen.
 export type TrackEventOptions = {
-    props?: Record<string, string | number | boolean> & { path?: never };
+    props?: Record<string, TrackedValue> & {
+        path?: never;
+    };
 };
 
 // pageview/pageleave are emitted internally by page-view tracking; excluding them here

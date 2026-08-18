@@ -33,6 +33,7 @@ import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm.
 import { Limit } from 'component/common/Limit/Limit';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
 import type { CreateFeatureStrategySchema } from 'openapi/index.ts';
+import { summarizeStrategy } from '../summarizeStrategy.ts';
 
 const useStrategyLimit = (strategyCount: number) => {
     const { uiConfig } = useUiConfig();
@@ -175,15 +176,42 @@ export const FeatureStrategyCreate = () => {
             },
         });
 
+        const viaChangeRequest = isChangeRequestConfigured(environmentId);
+
+        const flagStrategyProps = {
+            eventType: 'strategy-created',
+            viaChangeRequest,
+            current: summarizeStrategy(strategy),
+        };
+
+        trackEvent('flag-strategy', {
+            props: {
+                ...flagStrategyProps,
+                action: 'submitted',
+            },
+        });
+
         try {
-            if (isChangeRequestConfigured(environmentId)) {
+            if (viaChangeRequest) {
                 await onStrategyRequestAdd(payload);
             } else {
                 await onAddStrategy(payload);
             }
+            trackEvent('flag-strategy', {
+                props: {
+                    ...flagStrategyProps,
+                    action: 'succeeded',
+                },
+            });
             refetchFeature();
             navigate(formatFeaturePath(projectId, featureId));
         } catch (error: unknown) {
+            trackEvent('flag-strategy', {
+                props: {
+                    ...flagStrategyProps,
+                    action: 'failed',
+                },
+            });
             setToastApiError(formatUnknownError(error));
         }
     };

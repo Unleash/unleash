@@ -8,6 +8,7 @@ import SegmentsIcon from '@mui/icons-material/DonutLarge';
 import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
 import useLoading from 'hooks/useLoading';
 import { HealthGridTile } from './ProjectHealthGrid.styles';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 const ProjectResourcesInner = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -71,14 +72,17 @@ const ListItem: FC<
         linkUrl: string;
         linkText: string;
         icon: ReactNode;
+        onLinkClick: () => void;
     }>
-> = ({ children, linkUrl, linkText, icon }) => (
+> = ({ children, linkUrl, linkText, icon, onLinkClick }) => (
     <ListItemRow>
         <ItemContent>
             {icon}
             <span data-loading-resources>{children}</span>
         </ItemContent>
-        <Link to={linkUrl}>{linkText}</Link>
+        <Link to={linkUrl} onClick={onLinkClick}>
+            {linkText}
+        </Link>
     </ListItemRow>
 );
 
@@ -102,6 +106,7 @@ const useProjectResources = (projectId: string) => {
 export const ProjectResources = () => {
     const projectId = useRequiredPathParam('projectId');
     const { resources, loading } = useProjectResources(projectId);
+    const { trackEvent } = useEventTracker();
 
     const loadingRef = useLoading(loading, '[data-loading-resources=true]');
 
@@ -116,6 +121,14 @@ export const ProjectResources = () => {
                         linkUrl={`/projects/${projectId}/settings/access`}
                         linkText='Add members'
                         icon={<UsersIcon />}
+                        onLinkClick={() =>
+                            trackEvent('project-status', {
+                                props: {
+                                    eventType: 'add-members',
+                                    action: 'clicked',
+                                },
+                            })
+                        }
                     >
                         {resources.members} project member(s)
                     </ListItem>
@@ -124,6 +137,14 @@ export const ProjectResources = () => {
                         linkUrl={`/projects/${projectId}/settings/api-access`}
                         linkText='Add new key'
                         icon={<ApiKeyIcon />}
+                        onLinkClick={() =>
+                            trackEvent('project-status', {
+                                props: {
+                                    eventType: 'add-api-key',
+                                    action: 'clicked',
+                                },
+                            })
+                        }
                     >
                         {resources.apiTokens} API key(s)
                     </ListItem>
@@ -132,6 +153,14 @@ export const ProjectResources = () => {
                         linkUrl={`/projects/${projectId}/settings/segments`}
                         linkText='Add segments'
                         icon={<SegmentsIcon />}
+                        onLinkClick={() =>
+                            trackEvent('project-status', {
+                                props: {
+                                    eventType: 'add-segments',
+                                    action: 'clicked',
+                                },
+                            })
+                        }
                     >
                         {resources.segments} project segment(s)
                     </ListItem>

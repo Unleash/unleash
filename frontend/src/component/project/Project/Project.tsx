@@ -119,6 +119,7 @@ const ProjectStatusSvgWithMargin = styled(ProjectStatusSvg)(({ theme }) => ({
 
 const ProjectStatus = () => {
     const [searchParams, setSearchParams] = useSearchParams();
+    const { trackEvent } = useEventTracker();
     const [projectStatusOpen, setProjectStatusOpen] = useState(
         searchParams.has('project-status'),
     );
@@ -126,6 +127,11 @@ const ProjectStatus = () => {
         searchParams.set('project-status', '');
         setSearchParams(searchParams);
         setProjectStatusOpen(true);
+        // tracked here rather than off the search param so that arriving via a
+        // deep link doesn't count as an open.
+        trackEvent('project-status', {
+            props: { action: 'opened' },
+        });
     };
     const closeStatusModal = () => {
         searchParams.delete('project-status');

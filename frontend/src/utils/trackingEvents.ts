@@ -95,6 +95,7 @@ export type CustomEvents =
     | 'search-docs'
     | 'flag-actions'
     | 'flag-tags'
+    | 'project-status'
     | 'flag-creation'
     | 'dialog-dismissed';
 

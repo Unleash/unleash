@@ -1,4 +1,4 @@
-import { Button, styled } from '@mui/material';
+import { Button, Link, styled } from '@mui/material';
 import { DynamicSidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import ProjectStatusSvg from 'assets/icons/projectStatus.svg?react';
 import { ProjectActivity } from './ProjectActivity.tsx';
@@ -9,6 +9,8 @@ import { ProjectHealthGrid } from './ProjectHealthGrid.tsx';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
 import FeedbackIcon from '@mui/icons-material/ChatOutlined';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useEventTracker } from 'hooks/useEventTracker';
+import { useTrackDialogDismissed } from 'hooks/useTrackDialogDismissed';
 
 const ModalContentContainer = styled('section')(({ theme }) => ({
     minHeight: '100vh',
@@ -73,6 +75,8 @@ const TooltipText = styled('p')(({ theme }) => ({
 }));
 
 const LifecycleTooltip: FC = () => {
+    const { trackEvent } = useEventTracker();
+
     return (
         <HelpIcon
             htmlTooltip
@@ -88,9 +92,19 @@ const LifecycleTooltip: FC = () => {
                     </TooltipText>
 
                     <TooltipText>
-                        <a href='https://docs.getunleash.io/concepts/feature-flags#feature-flag-lifecycle'>
+                        <Link
+                            href='https://docs.getunleash.io/concepts/feature-flags#feature-flag-lifecycle'
+                            onClick={() =>
+                                trackEvent('project-status', {
+                                    props: {
+                                        eventType: 'view-lifecycle-docs',
+                                        action: 'clicked',
+                                    },
+                                })
+                            }
+                        >
                             Read more in our documentation
-                        </a>
+                        </Link>
                     </TooltipText>
                 </TooltipContent>
             }
@@ -140,12 +154,17 @@ export const ProjectStatusModal = ({ open, onClose, onFollowLink }: Props) => {
         });
     };
     const { isOss } = useUiConfig();
+    const { trackEvent } = useEventTracker();
+    // The Close button is ours, so DynamicSidebarModal's own dismissal tracking
+    // (close icon, backdrop, escape) never sees it.
+    const trackDialogDismissed = useTrackDialogDismissed();
 
     return (
         <DynamicSidebarModal
             open={open}
             onClose={onClose}
             label='Project status'
+            tracking={{ event: 'project-status' }}
             onClick={(e: React.SyntheticEvent) => {
                 if (e.target instanceof HTMLAnchorElement) {
                     onFollowLink();
@@ -187,6 +206,12 @@ export const ProjectStatusModal = ({ open, onClose, onFollowLink }: Props) => {
                             <FeedbackButton
                                 variant='text'
                                 onClick={() => {
+                                    trackEvent('project-status', {
+                                        props: {
+                                            eventType: 'give-feedback',
+                                            action: 'clicked',
+                                        },
+                                    });
                                     createFeedbackContext();
                                     onClose();
                                 }}
@@ -196,7 +221,16 @@ export const ProjectStatusModal = ({ open, onClose, onFollowLink }: Props) => {
                             </FeedbackButton>
                         </p>
                     </FeedbackContainer>
-                    <Button variant='outlined' onClick={onClose}>
+                    <Button
+                        variant='outlined'
+                        onClick={() => {
+                            trackDialogDismissed(
+                                { event: 'project-status' },
+                                'cancel-button',
+                            );
+                            onClose();
+                        }}
+                    >
                         Close
                     </Button>
                 </CloseRow>

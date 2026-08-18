@@ -6,6 +6,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { HealthGridTile } from './ProjectHealthGrid.styles';
 import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
 import { getTechnicalDebtColor } from 'utils/getTechnicalDebtColor.ts';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 const ChartRadius = 40;
 const ChartStrokeWidth = 13;
@@ -106,6 +107,7 @@ export const ProjectHealth = () => {
         data: { technicalDebt, staleFlags },
     } = useProjectStatus(projectId);
     const { isOss } = useUiConfig();
+    const { trackEvent } = useEventTracker();
     const theme = useTheme();
     const circumference = 2 * Math.PI * ChartRadius;
 
@@ -162,7 +164,17 @@ export const ProjectHealth = () => {
                         {technicalDebt.current}%.
                     </Typography>
                     {!isOss() && (
-                        <Link to={`/insights?project=IS%3A${projectId}`}>
+                        <Link
+                            to={`/insights?project=IS%3A${projectId}`}
+                            onClick={() =>
+                                trackEvent('project-status', {
+                                    props: {
+                                        eventType: 'view-tech-debt',
+                                        action: 'clicked',
+                                    },
+                                })
+                            }
+                        >
                             View technical debt over time
                         </Link>
                     )}
@@ -178,6 +190,14 @@ export const ProjectHealth = () => {
                     </Typography>
                     <Link
                         to={`/projects/${projectId}?state=IS_ANY_OF%3Astale%2Cpotentially-stale`}
+                        onClick={() =>
+                            trackEvent('project-status', {
+                                props: {
+                                    eventType: 'view-unhealthy-flags',
+                                    action: 'clicked',
+                                },
+                            })
+                        }
                     >
                         View unhealthy flags
                     </Link>

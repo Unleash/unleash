@@ -29,6 +29,7 @@ import {
 } from '../../openapi/spec/client-features-schema.js';
 import type ConfigurationRevisionService from '../feature-toggle/configuration-revision-service.js';
 import type { ClientFeatureToggleService } from './client-feature-toggle-service.js';
+import { createClientPayloadCanonicalizer } from './client-payload-canonicalizer.js';
 import {
     CLIENT_METRICS_NAMEPREFIX,
     CLIENT_METRICS_PROJECT,
@@ -137,9 +138,23 @@ export default class FeatureController extends Controller {
         });
 
         if (clientFeatureCaching.enabled) {
+            // the memoized payloads are retained for maxAge, and several
+            // revisions can be cached at the same time, so the canonicalizer
+            // has to outlive a single cache entry to share representatives
+            // across them
+            const canonicalizer = createClientPayloadCanonicalizer();
             this.featuresAndSegments = memoizee(
                 (query: IFeatureToggleQuery, _etag: string) =>
-                    this.resolveFeaturesAndSegments(query),
+                    this.resolveFeaturesAndSegments(query).then(
+                        ([features, segments]) => {
+                            features.forEach(canonicalizer.feature);
+                            segments.forEach(canonicalizer.segment);
+                            return [features, segments] as [
+                                FeatureConfigurationClient[],
+                                IClientSegment[],
+                            ];
+                        },
+                    ),
                 {
                     promise: true,
                     maxAge: clientFeatureCaching.maxAge,

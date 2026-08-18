@@ -88,7 +88,7 @@ overrides:
   ansi-regex: "^5.0.1"
   async: "^3.2.4"
   es5-ext: "0.10.64"
-  esbuild: "0.28.1"
+  esbuild: "0.28.2"
   axios: "1.18.0"
   body-parser: "1.20.6"
   "brace-expansion@^1.1.7": "1.1.18"

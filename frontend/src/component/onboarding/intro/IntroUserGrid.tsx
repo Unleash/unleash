@@ -2,26 +2,24 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import {
     alpha,
     Box,
-    Chip,
     IconButton,
-    Paper,
-    Popper,
+    keyframes,
     styled,
+    Tooltip,
     Typography,
     useTheme,
 } from '@mui/material';
+import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import {
-    INTRO_DEVICES,
     INTRO_PLANS,
     type IntroFlagConfig,
     type IntroUser,
     type IntroVariant,
     type UserEvaluation,
 } from './introModel.js';
-import { IntroAvatar, IntroCharacter } from './IntroCharacter.tsx';
-import { getVariantSolidFill } from './introVariantColor.js';
+import { avatarForIndex } from './introAvatars.ts';
 
 export type GridMode =
     | 'rollout'
@@ -30,87 +28,218 @@ export type GridMode =
     | 'impact'
     | 'safeguard';
 
-const StyledGrid = styled(Box)(({ theme }) => ({
+const GRID_COL_GAP = 8;
+const GRID_ROW_GAP = 10;
+
+interface GridFit {
+    cols: number;
+    avatar: number;
+    showMeta: boolean;
+    tileH: number;
+}
+
+// Picks column count + avatar size (and whether meta fits) to fill the box
+// without overflowing.
+export const gridFit = (n: number, width: number, height: number): GridFit => {
+    const PAD = 14;
+    let best: (GridFit & { score: number }) | null = null;
+    for (let cols = 1; cols <= n; cols++) {
+        const tileW = (width - GRID_COL_GAP * (cols - 1)) / cols;
+        if (tileW < 46) continue;
+        const rows = Math.ceil(n / cols);
+        const budget = (height - GRID_ROW_GAP * (rows - 1)) / rows;
+        if (budget < 34) continue;
+        const modes = [
+            { showMeta: true, textH: 15 + 13 + 10, minW: 56 },
+            { showMeta: false, textH: 15 + 4, minW: 0 },
+        ];
+        for (const mode of modes) {
+            if (tileW < mode.minW) continue;
+            const cellH = Math.min(budget, tileW * 1.45);
+            const avatar = Math.min(
+                Math.round(tileW - 12),
+                Math.round(cellH - mode.textH - PAD),
+                64,
+            );
+            if (avatar < 20) continue;
+            const orphans = (cols - (n % cols)) % cols;
+            const score = avatar * 10 + (mode.showMeta ? 3 : 0) - orphans * 14;
+            if (!best || score > best.score) {
+                best = {
+                    cols,
+                    avatar,
+                    showMeta: mode.showMeta,
+                    tileH: Math.floor(cellH),
+                    score,
+                };
+            }
+            break;
+        }
+    }
+    if (best) return best;
+    const cols = Math.max(
+        1,
+        Math.ceil(Math.sqrt((n * width) / Math.max(height, 1))),
+    );
+    const rows = Math.ceil(n / cols);
+    const budget = Math.max(24, (height - GRID_ROW_GAP * (rows - 1)) / rows);
+    const tileW = (width - GRID_COL_GAP * (cols - 1)) / cols;
+    return {
+        cols,
+        avatar: Math.max(
+            16,
+            Math.min(Math.round(tileW - 8), Math.round(budget - 19)),
+        ),
+        showMeta: false,
+        tileH: Math.floor(budget),
+    };
+};
+
+const StyledGrid = styled(Box)({
+    flex: 1,
+    minHeight: 0,
     display: 'grid',
-    gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-    gap: theme.spacing(1.25),
-    [theme.breakpoints.down('sm')]: {
-        gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-    },
-}));
+    alignContent: 'space-evenly',
+    columnGap: `${GRID_COL_GAP}px`,
+    rowGap: `${GRID_ROW_GAP}px`,
+});
 
 const StyledPerson = styled('button', {
     shouldForwardProp: (prop) =>
-        ![
-            'selected',
-            'stateColor',
-            'stateBackground',
-            'activationDelayMs',
-            'errored',
-        ].includes(prop as string),
+        !['selected', 'dimmed', 'enabled', 'accent'].includes(prop as string),
 })<{
     selected: boolean;
-    stateColor?: string;
-    stateBackground?: string;
-    activationDelayMs: number;
-    errored: boolean;
-}>(
-    ({
-        theme,
-        selected,
-        stateColor,
-        stateBackground,
-        activationDelayMs,
-        errored,
-    }) => ({
+    dimmed: boolean;
+    enabled: boolean;
+    accent: string;
+}>(({ theme, selected, dimmed, enabled, accent }) => {
+    // Pulse the card's coloured ring when a user turns on.
+    const ringPulse = keyframes({
+        from: { boxShadow: `inset 0 0 0 3px ${accent}` },
+        to: { boxShadow: `inset 0 0 0 1.5px ${accent}` },
+    });
+    const ring = selected
+        ? `inset 0 0 0 2px ${theme.palette.primary.main}`
+        : `inset 0 0 0 1.5px ${enabled ? accent : theme.palette.divider}`;
+    return {
         all: 'unset',
         boxSizing: 'border-box',
         cursor: 'pointer',
-        display: 'grid',
-        gridTemplateColumns: '48px minmax(0, 1fr) 54px',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
-        gap: theme.spacing(1),
+        justifyContent: 'center',
+        gap: theme.spacing(0.25),
         minWidth: 0,
-        padding: theme.spacing(0.9),
+        padding: theme.spacing(0.5),
         borderRadius: theme.shape.borderRadiusMedium,
-        backgroundColor: stateBackground ?? theme.palette.background.paper,
-        border: `1px solid ${stateColor ?? theme.palette.divider}`,
-        outline: selected
-            ? `2px solid ${stateColor ?? theme.palette.primary.main}`
-            : '2px solid transparent',
-        outlineOffset: 1,
+        backgroundColor: enabled
+            ? alpha(accent, 0.05)
+            : theme.palette.background.elevation2,
+        boxShadow: ring,
+        opacity: dimmed ? 0.6 : 1,
         transition: theme.transitions.create(
-            ['background-color', 'border-color', 'outline-color'],
-            {
-                duration: theme.transitions.duration.standard,
-                easing: theme.transitions.easing.easeOut,
-                delay: errored ? 0 : activationDelayMs,
-            },
+            ['opacity', 'box-shadow', 'transform', 'background-color'],
+            { duration: theme.transitions.duration.shorter },
         ),
+        ...(enabled &&
+            !selected && { animation: `${ringPulse} 0.55s ease-out` }),
         '&:hover': {
-            borderColor: stateColor ?? theme.palette.primary.main,
+            backgroundColor: enabled
+                ? alpha(accent, 0.1)
+                : theme.palette.background.paper,
+            boxShadow: selected
+                ? `inset 0 0 0 2px ${theme.palette.primary.main}`
+                : `inset 0 0 0 1.5px ${
+                      enabled ? accent : theme.palette.neutral.border
+                  }`,
+            transform: 'translateY(-1px)',
+            opacity: 1,
         },
         '&:focus-visible': {
-            outline: `2px solid ${theme.palette.primary.main}`,
+            boxShadow: `inset 0 0 0 2px ${theme.palette.primary.main}`,
+            opacity: 1,
         },
         '@media (prefers-reduced-motion: reduce)': {
             transition: 'none',
             animation: 'none',
         },
-    }),
-);
-
-const StyledAvatar = styled(Box)({
-    width: 48,
-    alignSelf: 'start',
+    };
 });
 
-const StyledIdentity = styled(Box)({
-    minWidth: 0,
+const StyledAvatarWrap = styled(Box)({
+    position: 'relative',
+    lineHeight: 0,
+    flex: 'none',
+});
+
+const StyledAvatarImg = styled(Box, {
+    shouldForwardProp: (prop) =>
+        !['avatarUrl', 'hue', 'enabled', 'size'].includes(prop as string),
+})<{
+    avatarUrl: string;
+    hue: number;
+    enabled: boolean;
+    size: number;
+}>(({ theme, avatarUrl, hue, enabled, size }) => ({
+    width: size,
+    height: size,
+    borderRadius: '50%',
+    backgroundColor: enabled
+        ? `hsl(${hue}, 55%, 92%)`
+        : theme.palette.background.elevation1,
+    backgroundImage: `url('${avatarUrl}')`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center top',
+    boxShadow: `0 0 0 1px ${alpha(theme.palette.common.black, 0.2)}`,
+    filter: enabled ? 'none' : 'grayscale(0.85)',
+    opacity: enabled ? 1 : 0.5,
+    transition: theme.transitions.create(['filter', 'opacity']),
+}));
+
+const StyledStatusBadge = styled('span', {
+    shouldForwardProp: (prop) => prop !== 'experience',
+})<{ experience: 'smart' | 'classic' | 'error' }>(({ theme, experience }) => {
+    const palette =
+        experience === 'smart'
+            ? {
+                  bg: theme.palette.success.light,
+                  fg: theme.palette.success.main,
+                  ring: theme.palette.success.border,
+              }
+            : experience === 'error'
+              ? {
+                    bg: theme.palette.error.light,
+                    fg: theme.palette.error.main,
+                    ring: theme.palette.error.border,
+                }
+              : {
+                    bg: theme.palette.background.elevation2,
+                    fg: theme.palette.text.secondary,
+                    ring: theme.palette.neutral.border,
+                };
+    return {
+        position: 'absolute',
+        right: -2,
+        top: -2,
+        width: 16,
+        height: 16,
+        borderRadius: '50%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: palette.bg,
+        color: palette.fg,
+        boxShadow: `0 0 0 1.5px ${palette.ring}`,
+        '& svg': { fontSize: 11 },
+    };
 });
 
 const StyledName = styled(Typography)(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.fontSizes.smallBody,
+    maxWidth: '100%',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
@@ -119,255 +248,92 @@ const StyledName = styled(Typography)(({ theme }) => ({
 const StyledMeta = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
     fontSize: theme.fontSizes.smallerBody,
+    maxWidth: '100%',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
 }));
 
-const StyledCountry = styled(StyledMeta)(({ theme }) => ({
-    color: theme.palette.text.primary,
-    marginTop: theme.spacing(0.125),
-}));
-
-const StyledMiniPreview = styled(Box, {
-    shouldForwardProp: (prop) =>
-        !['smart', 'errored', 'restored', 'accent', 'delayMs'].includes(
-            String(prop),
-        ),
-})<{
-    smart: boolean;
-    errored: boolean;
-    restored: boolean;
-    accent: string;
-    delayMs: number;
-}>(({ theme, smart, errored, restored, accent, delayMs }) => ({
-    width: 56,
-    height: 46,
-    position: 'relative',
-    overflow: 'hidden',
-    justifySelf: 'center',
-    alignSelf: 'center',
-    padding: 3,
-    borderRadius: theme.shape.borderRadius,
-    border: `1px solid ${
-        errored
-            ? theme.palette.error.main
-            : smart
-              ? alpha(accent, 0.75)
-              : theme.palette.divider
-    }`,
-    backgroundColor: errored
-        ? alpha(theme.palette.error.main, 0.12)
-        : smart
-          ? alpha(accent, 0.14)
-          : theme.palette.background.elevation1,
-    '&::after': {
-        content: '""',
-        position: 'absolute',
-        zIndex: 2,
-        inset: 0,
-        width: '38%',
-        pointerEvents: 'none',
-        opacity: smart ? 0.65 : 0,
-        transform: smart || errored ? 'translateX(300%)' : 'translateX(-120%)',
-        background: `linear-gradient(90deg, transparent, ${alpha(
-            theme.palette.common.white,
-            0.45,
-        )}, transparent)`,
-        animation: restored
-            ? `intro-restore-sweep 650ms ${theme.transitions.easing.easeOut}`
-            : 'none',
-        transition: theme.transitions.create(['transform', 'opacity'], {
-            duration: 650,
-            easing: theme.transitions.easing.easeOut,
-            delay: errored ? 0 : delayMs,
-        }),
-    },
-    '@keyframes intro-restore-sweep': {
-        '0%': {
-            opacity: 0,
-            transform: 'translateX(300%)',
-        },
-        '20%': {
-            opacity: 0.65,
-        },
-        '100%': {
-            opacity: 0,
-            transform: 'translateX(-120%)',
-        },
-    },
-    transition: theme.transitions.create(['background-color', 'border-color'], {
-        duration: theme.transitions.duration.standard,
-        easing: theme.transitions.easing.easeOut,
-        delay: errored ? 0 : delayMs,
-    }),
-    '@media (prefers-reduced-motion: reduce)': {
-        transition: 'none',
-    },
-}));
-
-const StyledMiniContent = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'visible' && prop !== 'delayMs',
-})<{ visible: boolean; delayMs: number }>(({ theme, visible, delayMs }) => ({
-    position: 'absolute',
-    zIndex: 1,
-    inset: 3,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 3,
-    opacity: visible ? 1 : 0,
-    transition: theme.transitions.create('opacity', {
-        duration: theme.transitions.duration.shorter,
-        easing: theme.transitions.easing.easeOut,
-        delay: visible ? delayMs : 0,
-    }),
-    '@media (prefers-reduced-motion: reduce)': {
-        transition: 'none',
-    },
-}));
-
-const StyledMiniChrome = styled(Box)(({ theme }) => ({
-    height: 5,
-    display: 'flex',
-    justifyContent: 'flex-start',
-    gap: 2,
-    '& span': {
-        width: 3,
-        height: 3,
-        borderRadius: 999,
-        background: theme.palette.text.secondary,
-        opacity: 0.55,
-    },
-}));
-
-const StyledMiniSearch = styled(Box, {
-    shouldForwardProp: (prop) =>
-        !['smart', 'accent', 'delayMs'].includes(String(prop)),
-})<{ smart: boolean; accent: string; delayMs: number }>(
-    ({ theme, smart, accent, delayMs }) => ({
-        height: 8,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '0 3px',
-        borderRadius: 999,
-        color: smart ? accent : theme.palette.text.secondary,
-        backgroundColor: smart
-            ? alpha(accent, 0.22)
-            : alpha(theme.palette.text.secondary, 0.1),
-        fontSize: 6,
-        lineHeight: 1,
-        transition: theme.transitions.create(['background-color', 'color'], {
-            duration: theme.transitions.duration.standard,
-            easing: theme.transitions.easing.easeOut,
-            delay: delayMs,
-        }),
-        '@media (prefers-reduced-motion: reduce)': {
-            transition: 'none',
-        },
-    }),
-);
-
-const StyledMiniResults = styled(Box)({
-    flex: 1,
-    alignSelf: 'center',
-    width: '100%',
-    display: 'grid',
-    gridTemplateColumns: '1fr',
-    gridTemplateRows: 'repeat(3, 1fr)',
-    gap: 2,
+const slideInPanel = keyframes({
+    from: { opacity: 0, transform: 'translateX(24px)' },
+    to: { opacity: 1, transform: 'translateX(0)' },
 });
 
-const StyledMiniSparkle = styled('span', {
-    shouldForwardProp: (prop) =>
-        !['visible', 'accent', 'delayMs'].includes(String(prop)),
-})<{ visible: boolean; accent: string; delayMs: number }>(
-    ({ theme, visible, accent, delayMs }) => ({
-        opacity: visible ? 1 : 0,
-        color: accent,
-        transition: theme.transitions.create(['opacity', 'color'], {
-            duration: theme.transitions.duration.standard,
-            easing: theme.transitions.easing.easeOut,
-            delay: delayMs,
-        }),
-        '@media (prefers-reduced-motion: reduce)': {
-            transition: 'none',
-        },
-    }),
-);
-
-const StyledMiniResult = styled('span', {
-    shouldForwardProp: (prop) =>
-        !['smart', 'accent', 'delayMs'].includes(String(prop)),
-})<{ smart: boolean; accent: string; delayMs: number }>(
-    ({ theme, smart, accent, delayMs }) => ({
-        display: 'block',
-        minWidth: 0,
-        borderRadius: 2,
-        backgroundColor: smart
-            ? alpha(accent, 0.48)
-            : alpha(theme.palette.text.secondary, 0.22),
-        transition: theme.transitions.create('background-color', {
-            duration: theme.transitions.duration.standard,
-            easing: theme.transitions.easing.easeOut,
-            delay: delayMs,
-        }),
-        '@media (prefers-reduced-motion: reduce)': {
-            transition: 'none',
-        },
-    }),
-);
-
-const StyledMiniError = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'visible',
-})<{ visible: boolean }>(({ theme, visible }) => ({
-    position: 'absolute',
-    zIndex: 1,
-    inset: 0,
+const StyledContentRow = styled(Box)({
+    position: 'relative',
+    flex: 1,
+    minHeight: 0,
     display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    opacity: visible ? 1 : 0,
-    color: theme.palette.error.main,
-    fontWeight: theme.typography.fontWeightBold,
-    transition: theme.transitions.create('opacity', {
-        duration: theme.transitions.duration.shorter,
-        easing: theme.transitions.easing.easeOut,
-    }),
+});
+
+const StyledGridWrap = styled(Box)({
+    flex: 1,
+    minWidth: 0,
+    minHeight: 0,
+    display: 'flex',
+    flexDirection: 'column',
+});
+
+const StyledPreviewPanel = styled(Box)(({ theme }) => ({
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    zIndex: 1,
+    width: theme.spacing(38),
+    maxWidth: 'calc(100% - 24px)',
+    maxHeight: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    background: theme.palette.background.paper,
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadiusMedium,
+    boxShadow: theme.boxShadows.popup,
+    overflowY: 'auto',
+    overflowX: 'hidden',
+    overscrollBehavior: 'contain',
+    animation: `${slideInPanel} 0.24s ${theme.transitions.easing.easeOut}`,
+    [theme.breakpoints.down('md')]: {
+        position: 'static',
+        width: '100%',
+        marginTop: theme.spacing(2),
+    },
     '@media (prefers-reduced-motion: reduce)': {
-        transition: 'none',
+        animation: 'none',
     },
 }));
 
-const POPOVER_OFFSET = 8;
-const POPOVER_VIEWPORT_PADDING = 16;
-
-const StyledPopoverContent = styled(Box)(({ theme }) => ({
-    boxSizing: 'border-box',
-    width: theme.spacing(50),
-    maxWidth: 'calc(100vw - 32px)',
-    maxHeight: 'inherit',
-    display: 'flex',
-    flexDirection: 'column',
-}));
-
-const StyledPopoverHeader = styled(Box)(({ theme }) => ({
-    flexShrink: 0,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    minHeight: theme.spacing(3.5),
-    padding: theme.spacing(2, 2, 1.5),
-}));
-
-const StyledPopoverBody = styled(Box)(({ theme }) => ({
-    minHeight: 0,
-    overflowY: 'auto',
-    overscrollBehavior: 'contain',
+const StyledPanelHeader = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1.5),
-    padding: theme.spacing(0, 2, 2),
+    padding: theme.spacing(2, 2, 1),
+}));
+
+const StyledPanelHeaderRow = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1.5),
+}));
+
+const StyledPanelAvatar = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'avatarUrl',
+})<{ avatarUrl: string }>(({ theme, avatarUrl }) => ({
+    width: 40,
+    height: 40,
+    flex: 'none',
+    borderRadius: '50%',
+    backgroundColor: theme.palette.background.elevation2,
+    backgroundImage: `url('${avatarUrl}')`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center top',
+    boxShadow: `0 0 0 1px ${alpha(theme.palette.common.black, 0.2)}`,
+}));
+
+const StyledPopoverBody = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1.5),
+    padding: theme.spacing(1, 2, 2),
     '& > *': {
         flexShrink: 0,
     },
@@ -384,20 +350,37 @@ const StyledPopoverClose = styled(IconButton)(({ theme }) => ({
     padding: theme.spacing(0.5),
     margin: theme.spacing(-0.75, -0.75, -0.75, 0),
     borderRadius: '50%',
+    alignSelf: 'start',
     '&:hover': {
         backgroundColor: theme.palette.action.hover,
     },
 }));
 
-const StyledEvaluationPanel = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(1),
-    padding: theme.spacing(1.25),
-    borderRadius: theme.shape.borderRadius,
-    background: theme.palette.background.elevation1,
-    fontSize: theme.fontSizes.smallBody,
-    lineHeight: 1.45,
+const StyledEvaluationPanel = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'state',
+})<{ state: 'smart' | 'classic' | 'error' }>(({ theme, state }) => {
+    const color =
+        state === 'smart' ? 'success' : state === 'error' ? 'error' : 'neutral';
+    const borderColor =
+        state === 'classic'
+            ? theme.palette.divider
+            : (theme.palette[color].border ?? theme.palette.divider);
+    return {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: theme.spacing(1),
+        padding: theme.spacing(1.25),
+        borderRadius: theme.shape.borderRadius,
+        border: `1px solid ${borderColor}`,
+        background: theme.palette[color].light,
+        color: theme.palette[color].contrastText,
+        fontSize: theme.fontSizes.smallBody,
+        lineHeight: 1.45,
+    };
+});
+
+const StyledEvalHeadline = styled('span')(({ theme }) => ({
+    fontWeight: theme.typography.fontWeightBold,
 }));
 
 const StyledExplanation = styled(Box)(({ theme }) => ({
@@ -410,13 +393,17 @@ const StyledContext = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(0.5),
-    paddingTop: theme.spacing(1),
-    borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
 const StyledContextLabel = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
     fontWeight: theme.typography.fontWeightBold,
+}));
+
+const StyledPreviewLabel = styled('span')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.fontSizes.smallBody,
 }));
 
 const StyledContextJson = styled('pre')(({ theme }) => ({
@@ -440,323 +427,134 @@ const StyledContextJson = styled('pre')(({ theme }) => ({
     },
 }));
 
-const StyledSearchPreview = styled(Box, {
-    shouldForwardProp: (prop) =>
-        !['smart', 'errored', 'restored', 'accent'].includes(String(prop)),
-})<{ smart: boolean; errored: boolean; restored: boolean; accent: string }>(
-    ({ theme, smart, errored, restored, accent }) => {
-        const activeColor = errored ? theme.palette.error.main : accent;
-        const enhanced = smart || errored;
-
-        return {
-            position: 'relative',
-            overflow: 'hidden',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: theme.spacing(1),
-            padding: theme.spacing(1.5),
-            borderRadius: theme.shape.borderRadiusLarge,
-            border: `1px solid ${
-                enhanced ? activeColor : theme.palette.divider
-            }`,
-            backgroundColor: enhanced
-                ? alpha(activeColor, 0.06)
-                : theme.palette.background.elevation1,
-            transition: theme.transitions.create(
-                ['background-color', 'border-color'],
-                {
-                    duration: errored
-                        ? theme.transitions.duration.shorter
-                        : 480,
-                    easing: theme.transitions.easing.easeOut,
-                },
-            ),
-            '& > *': {
-                position: 'relative',
-                zIndex: 1,
-            },
-            '&::after': {
-                content: '""',
-                position: 'absolute',
-                zIndex: 2,
-                inset: 0,
-                width: '38%',
-                pointerEvents: 'none',
-                opacity: smart ? 0.65 : 0,
-                transform:
-                    smart || errored ? 'translateX(300%)' : 'translateX(-120%)',
-                background: `linear-gradient(90deg, transparent, ${alpha(
-                    theme.palette.common.white,
-                    0.35,
-                )}, transparent)`,
-                animation: restored
-                    ? `intro-popover-restore-sweep 650ms ${theme.transitions.easing.easeOut}`
-                    : 'none',
-                transition: theme.transitions.create(['transform', 'opacity'], {
-                    duration: 650,
-                    easing: theme.transitions.easing.easeOut,
-                }),
-            },
-            '@keyframes intro-popover-restore-sweep': {
-                '0%': {
-                    opacity: 0,
-                    transform: 'translateX(300%)',
-                },
-                '20%': {
-                    opacity: 0.65,
-                },
-                '100%': {
-                    opacity: 0,
-                    transform: 'translateX(-120%)',
-                },
-            },
-            '@media (prefers-reduced-motion: reduce)': {
-                transition: 'none',
-                '& *': {
-                    transition: 'none !important',
-                },
-                '&::after': {
-                    display: 'none',
-                },
-            },
-        };
-    },
-);
-
-const StyledPreviewHeader = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: theme.spacing(1),
-}));
-
-const StyledPreviewActions = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(0.5),
-}));
-
-const StyledExperienceChip = styled(Chip, {
-    shouldForwardProp: (prop) =>
-        !['smart', 'errored', 'accent'].includes(String(prop)),
-})<{ smart: boolean; errored: boolean; accent: string }>(
-    ({ theme, smart, errored, accent }) => ({
-        minWidth: 118,
-        transition: theme.transitions.create(
-            ['background-color', 'border-color', 'color'],
-            {
-                duration: errored
-                    ? theme.transitions.duration.shorter
-                    : theme.transitions.duration.standard,
-                easing: theme.transitions.easing.easeOut,
-            },
-        ),
-        ...(smart || errored
-            ? {
-                  backgroundColor: errored
-                      ? theme.palette.error.main
-                      : getVariantSolidFill(accent),
-                  color: theme.palette.common.white,
-                  '&:hover': {
-                      backgroundColor: errored
-                          ? theme.palette.error.main
-                          : getVariantSolidFill(accent),
-                  },
-              }
-            : {}),
-    }),
-);
-
-const StyledSearchInput = styled(Box, {
-    shouldForwardProp: (prop) =>
-        !['smart', 'errored', 'accent'].includes(String(prop)),
-})<{ smart: boolean; errored: boolean; accent: string }>(
-    ({ theme, smart, errored, accent }) => {
-        const activeColor = errored ? theme.palette.error.main : accent;
-        const enhanced = smart || errored;
-
-        return {
-            display: 'flex',
-            alignItems: 'center',
-            gap: theme.spacing(0.75),
-            padding: theme.spacing(0.85, 1.1),
-            borderRadius: 999,
-            border: `1px solid ${
-                enhanced ? alpha(activeColor, 0.65) : theme.palette.divider
-            }`,
-            background: theme.palette.background.paper,
-            color: theme.palette.text.primary,
-            fontSize: theme.fontSizes.smallBody,
-            transition: theme.transitions.create(
-                ['border-color', 'background-color'],
-                {
-                    duration: errored
-                        ? theme.transitions.duration.shorter
-                        : 480,
-                    easing: theme.transitions.easing.easeOut,
-                },
-            ),
-        };
-    },
-);
-
-const StyledFullSparkle = styled('span', {
-    shouldForwardProp: (prop) => !['visible', 'accent'].includes(String(prop)),
-})<{ visible: boolean; accent: string }>(({ theme, visible, accent }) => ({
-    marginLeft: 'auto',
-    opacity: visible ? 1 : 0,
-    color: accent,
-    transition: theme.transitions.create(['opacity', 'color'], {
-        duration: 420,
-        easing: theme.transitions.easing.easeOut,
-    }),
-}));
-
-const StyledPreviewBody = styled(Box)({
+const StyledMockFrame = styled(Box)(({ theme }) => ({
     position: 'relative',
-    height: 240,
-    overflow: 'hidden',
-});
-
-const StyledPreviewState = styled(Box, {
-    shouldForwardProp: (prop) => !['visible', 'animate'].includes(String(prop)),
-})<{ visible: boolean; animate: boolean }>(({ theme, visible, animate }) => ({
-    position: 'absolute',
-    inset: 0,
+    aspectRatio: '4 / 3',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'flex-start',
-    gap: theme.spacing(1),
-    opacity: visible ? 1 : 0,
-    pointerEvents: visible ? 'auto' : 'none',
-    transition: animate
-        ? theme.transitions.create('opacity', {
-              duration: 420,
-              easing: theme.transitions.easing.easeOut,
-          })
-        : 'none',
+    borderRadius: theme.shape.borderRadiusMedium,
+    overflow: 'hidden',
+    border: `1px solid ${theme.palette.divider}`,
+    background: theme.palette.background.paper,
 }));
 
-const StyledClassicMeta = styled(Box)(({ theme }) => ({
+const StyledMockChrome = styled(Box)(({ theme }) => ({
     display: 'flex',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    height: 33,
-    padding: '7px 0',
-    color: theme.palette.text.secondary,
-    fontSize: theme.fontSizes.smallerBody,
+    gap: theme.spacing(0.75),
+    padding: theme.spacing(0.5, 1.5),
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    background: theme.palette.background.elevation1,
 }));
 
-const StyledAiSummary = styled(Box, {
+const StyledMockDot = styled('span')(({ theme }) => ({
+    width: 8,
+    height: 8,
+    borderRadius: '50%',
+    background: theme.palette.divider,
+}));
+
+const StyledMockUrl = styled(Box)(({ theme }) => ({
+    flex: 1,
+    marginLeft: theme.spacing(0.75),
+    height: 20,
+    borderRadius: theme.shape.borderRadius,
+    background: theme.palette.background.paper,
+    border: `1px solid ${theme.palette.divider}`,
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(0, 1),
+    fontSize: theme.fontSizes.smallerBody,
+    color: theme.palette.text.disabled,
+}));
+
+const StyledMockContent = styled(Box)(({ theme }) => ({
+    flex: 1,
+    minHeight: 0,
+    overflow: 'hidden',
+    padding: theme.spacing(2),
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1.75),
+}));
+
+const StyledFeatureCard = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'accent',
 })<{ accent: string }>(({ theme, accent }) => ({
     display: 'flex',
-    gap: theme.spacing(1),
-    boxSizing: 'border-box',
-    height: 52,
-    padding: theme.spacing(1),
+    flexDirection: 'column',
+    gap: theme.spacing(1.25),
+    padding: theme.spacing(1.75),
     borderRadius: theme.shape.borderRadiusMedium,
-    color: theme.palette.text.primary,
-    background: alpha(accent, 0.14),
-    border: `1px solid ${alpha(accent, 0.45)}`,
-    fontSize: theme.fontSizes.smallerBody,
-    lineHeight: 1.45,
-    transition: theme.transitions.create(['background-color', 'border-color'], {
-        duration: 480,
-        easing: theme.transitions.easing.easeOut,
-    }),
+    border: `1px solid ${alpha(accent, 0.35)}`,
+    background: alpha(accent, 0.08),
 }));
 
-const StyledSuggestionRow = styled(Box)(({ theme }) => ({
+const StyledBaselineCard = styled(Box)(({ theme }) => ({
     display: 'flex',
-    flexWrap: 'wrap',
-    gap: theme.spacing(0.5),
+    alignItems: 'center',
+    gap: theme.spacing(1.75),
+    padding: theme.spacing(1.75),
+    borderRadius: theme.shape.borderRadiusMedium,
+    border: `1px solid ${theme.palette.divider}`,
+    background: theme.palette.background.elevation2,
 }));
 
-const StyledErrorSummary = styled(Box)(({ theme }) => ({
-    boxSizing: 'border-box',
-    minHeight: 84,
+const StyledErrorCard = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
-    padding: theme.spacing(1.25),
+    padding: theme.spacing(1.75),
     borderRadius: theme.shape.borderRadiusMedium,
+    border: `1px solid ${theme.palette.error.border}`,
+    background: theme.palette.error.light,
     color: theme.palette.error.main,
-    background: alpha(theme.palette.error.main, 0.1),
-    border: `1px solid ${alpha(theme.palette.error.main, 0.5)}`,
-    fontSize: theme.fontSizes.smallerBody,
-    lineHeight: 1.45,
-    '& svg': {
-        flexShrink: 0,
-    },
+    fontSize: theme.fontSizes.smallBody,
+    fontWeight: theme.typography.fontWeightBold,
+    '& svg': { flex: 'none', fontSize: 18 },
 }));
 
-const StyledErroredResults = styled(Box)({
-    opacity: 0.42,
-    filter: 'saturate(0.35)',
-});
-
-const StyledResults = styled(Box)(({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: '1fr',
-    gap: theme.spacing(0.75),
+const StyledBar = styled('span', {
+    shouldForwardProp: (prop) =>
+        !['w', 'h', 'tone', 'barColor'].includes(String(prop)),
+})<{
+    w: number | string;
+    h: number;
+    tone?: 'strong' | 'mid' | 'weak';
+    barColor?: string;
+}>(({ theme, w, h, tone, barColor }) => ({
+    display: 'block',
+    width: w,
+    height: h,
+    borderRadius: 999,
+    flex: 'none',
+    background:
+        barColor ??
+        (tone === 'strong'
+            ? theme.palette.text.secondary
+            : tone === 'mid'
+              ? theme.palette.text.disabled
+              : theme.palette.divider),
 }));
 
-const StyledResult = styled(Box, {
-    shouldForwardProp: (prop) => !['smart', 'accent'].includes(String(prop)),
-})<{ smart: boolean; accent: string }>(({ theme, smart, accent }) => ({
-    display: 'grid',
-    gridTemplateColumns: '38px 1fr',
-    gap: theme.spacing(0.75),
-    minWidth: 0,
-    padding: theme.spacing(0.7),
-    borderRadius: theme.shape.borderRadius,
-    border: `1px solid ${smart ? alpha(accent, 0.35) : theme.palette.divider}`,
-    backgroundColor: theme.palette.background.paper,
-    transition: theme.transitions.create('border-color', {
-        duration: 480,
-        easing: theme.transitions.easing.easeOut,
-    }),
+const StyledMockRow = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: theme.spacing(1.25),
+    padding: theme.spacing(1.1, 0),
+    borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
-const StyledResultImage = styled(Box, {
-    shouldForwardProp: (prop) => !['smart', 'accent'].includes(String(prop)),
-})<{ smart: boolean; accent: string }>(({ theme, smart, accent }) => ({
-    height: 34,
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: smart ? alpha(accent, 0.5) : theme.palette.divider,
-    transition: theme.transitions.create('background-color', {
-        duration: 480,
-        easing: theme.transitions.easing.easeOut,
-    }),
-}));
-
-const StyledResultCopy = styled(Box)(({ theme }) => ({
+const StyledMockRowCopy = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center',
     gap: theme.spacing(0.5),
 }));
 
-const StyledResultLine = styled(Box, {
-    shouldForwardProp: (prop) =>
-        !['width', 'smart', 'accent'].includes(String(prop)),
-})<{ width: string; smart: boolean; accent: string }>(
-    ({ theme, width, smart, accent }) => ({
-        width,
-        height: 5,
-        borderRadius: 999,
-        backgroundColor: smart ? alpha(accent, 0.5) : theme.palette.divider,
-        transition: theme.transitions.create('background-color', {
-            duration: 480,
-            easing: theme.transitions.easing.easeOut,
-        }),
-    }),
-);
-
 type TargetingConfig = Pick<
     IntroFlagConfig,
-    'targetCountryCodes' | 'targetPlans' | 'targetDevices'
+    'targetCountryCodes' | 'targetPlans'
 >;
 
 const naturalList = (items: string[]): string => {
@@ -781,16 +579,12 @@ const constraintExplanation = (
     const activeCount = [
         targeting.targetCountryCodes.length > 0,
         Boolean(targeting.targetPlans?.length),
-        Boolean(targeting.targetDevices?.length),
     ].filter(Boolean).length;
     const values: string[] = [];
     const failures: string[] = [];
     const plan =
         INTRO_PLANS.find((option) => option.value === user.plan)?.label ??
         user.plan;
-    const device =
-        INTRO_DEVICES.find((option) => option.value === user.device)?.label ??
-        user.device;
 
     if (targeting.targetCountryCodes.length > 0) {
         if (targeting.targetCountryCodes.includes(user.country.code)) {
@@ -806,13 +600,6 @@ const constraintExplanation = (
             values.push(`the ${plan} plan`);
         } else {
             failures.push(`${plan} is not one of the targeted plans`);
-        }
-    }
-    if (targeting.targetDevices?.length) {
-        if (targeting.targetDevices.includes(user.device)) {
-            values.push(device.toLowerCase());
-        } else {
-            failures.push(`${device} is not one of the targeted device types`);
         }
     }
 
@@ -833,37 +620,42 @@ const evaluationReason = (
 ): string => {
     if (!evaluation) return `${user.name} has not been evaluated.`;
     if (!environmentEnabled) {
-        return `${user.name} sees Classic Search because production is disabled.`;
+        return `${user.name} doesn't see my-feature because production is disabled.`;
     }
+    const bucket = evaluation.rolloutBucket;
+    const rolloutCoverage =
+        rollout <= 0
+            ? 'the rollout is at 0%, so it covers no buckets'
+            : `the ${rollout}% rollout covers buckets 1–${rollout}`;
     const constraints = constraintExplanation(user, targeting);
     if (!constraints.matches) {
-        return `${user.name} sees Classic Search because ${naturalList(constraints.failures)}.`;
+        return `${user.name} doesn't see my-feature because ${naturalList(constraints.failures)}.`;
     }
     if (!evaluation.enabled) {
         if (constraints.activeCount > 0) {
             const count = constraintCountLabel(constraints.activeCount);
-            return `${user.name} matches ${count}: ${naturalList(constraints.values)}, but sees Classic Search because the rollout does not include their bucket (${rollout} < ${evaluation.rolloutBucket}).`;
+            return `${user.name} matches ${count}: ${naturalList(constraints.values)}, but doesn't see my-feature because ${rolloutCoverage} (theirs is ${bucket}).`;
         }
-        return `${user.name} sees Classic Search because the rollout does not include their bucket (${rollout} < ${evaluation.rolloutBucket}).`;
+        return `${user.name} doesn't see my-feature because ${rolloutCoverage} (theirs is ${bucket}).`;
     }
     if (errored) {
-        const experience = variant?.label
-            ? `the ${variant.label} variant (${variant.name})`
-            : 'Smart Search';
-        return `${user.name} gets ${experience}, but their search request returned an error.`;
+        const experience = variant
+            ? `my-feature variant ${variant.name}`
+            : 'my-feature';
+        return `${user.name} sees ${experience}, but their request returned an error.`;
     }
-    const experience = variant?.label
-        ? `the ${variant.label} variant (${variant.name})`
-        : 'Smart Search';
+    const experience = variant
+        ? `my-feature variant ${variant.name}`
+        : 'my-feature';
     const allocation =
         variant && explainVariantAllocation
             ? ` Variant ${variant.name} has a ${Math.round(variant.weight)}% allocation, and ${user.name}'s assignment stays sticky.`
             : '';
     if (constraints.activeCount > 0) {
         const count = constraintCountLabel(constraints.activeCount);
-        return `${user.name} gets ${experience} because ${naturalList(constraints.values)} match ${count}, and the rollout includes their bucket (${rollout} ≥ ${evaluation.rolloutBucket}).${allocation}`;
+        return `${user.name} sees ${experience} because ${naturalList(constraints.values)} match ${count}, and ${rolloutCoverage} (theirs is ${bucket}).${allocation}`;
     }
-    return `${user.name} gets ${experience} because the rollout includes their bucket (${rollout} ≥ ${evaluation.rolloutBucket}).${allocation}`;
+    return `${user.name} sees ${experience} because ${rolloutCoverage} (theirs is ${bucket}).${allocation}`;
 };
 
 interface IIntroUserGridProps {
@@ -879,10 +671,6 @@ interface IIntroUserGridProps {
     onSelect: (user: IntroUser | undefined) => void;
 }
 
-/**
- * Stable context cards. Identity stays vivid; exposure is conveyed by the
- * experience strip, raised arm, border, and a detailed app preview.
- */
 export const IntroUserGrid = ({
     users,
     evaluations,
@@ -898,45 +686,41 @@ export const IntroUserGrid = ({
     const erroredUserIdSet = new Set(erroredUserIds);
 
     const theme = useTheme();
-    const [openUserId, setOpenUserId] = useState<string | undefined>();
-    const [restoredUserIds, setRestoredUserIds] = useState<Set<string>>(
-        () => new Set(),
-    );
-    const [popoverMaxHeight, setPopoverMaxHeight] = useState<
-        number | undefined
-    >();
-    const previousErroredUserIds = useRef<Set<string>>(new Set());
-    const restoreAnimationTimer = useRef<number | undefined>(undefined);
-    const buttonRefs = useRef(new Map<string, HTMLButtonElement>());
-    const setButtonRef = useCallback(
-        (userId: string) => (node: HTMLButtonElement | null) => {
-            if (node) buttonRefs.current.set(userId, node);
-            else buttonRefs.current.delete(userId);
-        },
-        [],
-    );
+    const openUserId = selectedId;
 
-    useEffect(() => {
-        const currentErroredUserIds = new Set(erroredUserIds);
-        const restored = [...previousErroredUserIds.current].filter(
-            (userId) => !currentErroredUserIds.has(userId),
-        );
-        previousErroredUserIds.current = currentErroredUserIds;
-
-        if (restored.length > 0) {
-            window.clearTimeout(restoreAnimationTimer.current);
-            setRestoredUserIds(new Set(restored));
-            restoreAnimationTimer.current = window.setTimeout(
-                () => setRestoredUserIds(new Set()),
-                700,
+    const [gridSize, setGridSize] = useState({ width: 0, height: 0 });
+    const resizeObserver = useRef<ResizeObserver>(undefined);
+    const setGridWrapRef = useCallback((node: HTMLDivElement | null) => {
+        resizeObserver.current?.disconnect();
+        if (!node || typeof ResizeObserver === 'undefined') return;
+        resizeObserver.current = new ResizeObserver(([entry]) => {
+            const { width, height } = entry.contentRect;
+            setGridSize((current) =>
+                Math.abs(current.width - width) > 2 ||
+                Math.abs(current.height - height) > 2
+                    ? { width, height }
+                    : current,
             );
-        }
-    }, [erroredUserIds]);
+        });
+        resizeObserver.current.observe(node);
+    }, []);
+    useEffect(() => () => resizeObserver.current?.disconnect(), []);
 
-    useEffect(
-        () => () => window.clearTimeout(restoreAnimationTimer.current),
-        [],
-    );
+    const fit =
+        gridSize.width > 0 && gridSize.height > 0
+            ? gridFit(users.length, gridSize.width, gridSize.height)
+            : null;
+    const avatarSize = fit?.avatar ?? 44;
+    const showMeta = fit?.showMeta ?? true;
+    const gridStyle = fit
+        ? {
+              gridTemplateColumns: `repeat(${fit.cols}, minmax(0, 1fr))`,
+              gridAutoRows: `${fit.tileH}px`,
+          }
+        : {
+              gridTemplateColumns: 'repeat(auto-fill, minmax(84px, 1fr))',
+              gridAutoRows: '96px',
+          };
 
     const openUser = users.find((user) => user.id === openUserId);
     const openEvaluation = openUser
@@ -945,9 +729,6 @@ export const IntroUserGrid = ({
     const openPlan = openUser
         ? INTRO_PLANS.find((option) => option.value === openUser.plan)
         : undefined;
-    const openDevice = openUser
-        ? INTRO_DEVICES.find((option) => option.value === openUser.device)
-        : undefined;
     const openVariant = openEvaluation?.variant
         ? variants.find((variant) => variant.name === openEvaluation.variant)
         : undefined;
@@ -955,419 +736,330 @@ export const IntroUserGrid = ({
         Boolean(environmentEnabled && openEvaluation?.enabled) &&
         !erroredUserIdSet.has(openUser?.id ?? '');
     const openErrored = erroredUserIdSet.has(openUser?.id ?? '');
-    const openRestored = restoredUserIds.has(openUser?.id ?? '');
+    const openState: 'smart' | 'classic' | 'error' = openErrored
+        ? 'error'
+        : openSmart
+          ? 'smart'
+          : 'classic';
+    const openIndex = openUser ? users.indexOf(openUser) : -1;
+    const openStateLabel =
+        openState === 'smart'
+            ? openVariant
+                ? `Variant ${openVariant.name} enabled`
+                : 'Feature enabled'
+            : openState === 'error'
+              ? 'Feature error'
+              : 'Feature disabled';
 
     const closePreview = () => {
-        setOpenUserId(undefined);
         onSelect(undefined);
     };
 
-    const preview = (
-        smart: boolean,
-        variant: IntroVariant | undefined,
-        errored: boolean,
-        restored: boolean,
-    ) => {
-        const accent = variant?.color ?? theme.palette.primary.main;
-        const renderResults = (count: number, resultSmart: boolean) => (
-            <StyledResults>
-                {Array.from({ length: count }, (_, index) => (
-                    <StyledResult
-                        key={index}
-                        smart={resultSmart}
-                        accent={accent}
-                    >
-                        <StyledResultImage
-                            smart={resultSmart}
-                            accent={accent}
-                        />
-                        <StyledResultCopy>
-                            <StyledResultLine
-                                width='62%'
-                                smart={resultSmart}
-                                accent={accent}
-                            />
-                            <StyledResultLine
-                                width='88%'
-                                smart={resultSmart}
-                                accent={accent}
-                            />
-                        </StyledResultCopy>
-                    </StyledResult>
-                ))}
-            </StyledResults>
-        );
-
-        return (
-            <StyledSearchPreview
-                smart={smart}
-                errored={errored}
-                restored={restored}
-                accent={accent}
-            >
-                <StyledPreviewHeader>
-                    <Typography variant='body2' sx={{ fontWeight: 'bold' }}>
-                        {smart || errored ? '✦ Smart Search' : 'Classic Search'}
-                    </Typography>
-                    <StyledPreviewActions>
-                        <StyledExperienceChip
-                            label={
-                                errored
-                                    ? 'Search error'
-                                    : smart
-                                      ? variant?.label
-                                          ? `${variant.name} · ${variant.label}`
-                                          : 'AI-powered'
-                                      : 'Current experience'
-                            }
-                            size='small'
-                            smart={smart}
-                            errored={errored}
-                            accent={accent}
-                            variant={smart || errored ? 'filled' : 'outlined'}
-                        />
-                    </StyledPreviewActions>
-                </StyledPreviewHeader>
-                <StyledSearchInput
-                    smart={smart}
-                    errored={errored}
-                    accent={accent}
-                    data-testid='QUICK_TOUR_INTRO_SEARCH_INPUT'
-                >
-                    <span>⌕</span>
-                    <span>
-                        {smart ? (variant?.placeholder ?? 'Search') : 'Search'}
-                    </span>
-                    <StyledFullSparkle
-                        visible={smart && !errored}
-                        accent={accent}
-                    >
-                        ✦
-                    </StyledFullSparkle>
-                </StyledSearchInput>
-                <StyledPreviewBody>
-                    <StyledPreviewState
-                        visible={!smart && !errored}
-                        animate={!errored}
-                        aria-hidden={smart || errored}
-                    >
-                        <StyledClassicMeta>
-                            <span>128 results</span>
-                            <span>Sorted by relevance</span>
-                        </StyledClassicMeta>
-                        {renderResults(4, false)}
-                    </StyledPreviewState>
-                    <StyledPreviewState
-                        visible={smart}
-                        animate={!errored}
-                        aria-hidden={!smart}
-                    >
-                        <StyledAiSummary accent={accent}>
-                            <span>✦</span>
-                            <span>
-                                An instant answer generated from the most
-                                relevant results.
-                            </span>
-                        </StyledAiSummary>
-                        <StyledSuggestionRow>
-                            <Chip label='Top match' size='small' />
-                            <Chip label='Suggested' size='small' />
-                            <Chip label='Recent' size='small' />
-                        </StyledSuggestionRow>
-                        {renderResults(3, true)}
-                    </StyledPreviewState>
-                    <StyledPreviewState
-                        visible={errored}
-                        animate={!errored}
-                        aria-hidden={!errored}
-                    >
-                        <StyledErrorSummary data-testid='QUICK_TOUR_INTRO_ERROR_PREVIEW'>
-                            <ErrorOutlineIcon />
-                            <span>
-                                Smart Search returned an error. The rest of the
-                                application is still working.
-                            </span>
-                        </StyledErrorSummary>
-                        <StyledErroredResults>
-                            {renderResults(3, false)}
-                        </StyledErroredResults>
-                    </StyledPreviewState>
-                </StyledPreviewBody>
-            </StyledSearchPreview>
-        );
+    const handleKeyDown = (event: React.KeyboardEvent) => {
+        if (event.key === 'Escape' && openUser) {
+            event.stopPropagation();
+            closePreview();
+        }
     };
 
-    return (
-        <>
-            <StyledGrid data-testid='QUICK_TOUR_INTRO_USER_GRID'>
-                {users.map((user, index) => {
-                    const evaluation = evaluations[index];
-                    const plan =
-                        INTRO_PLANS.find(
-                            (option) => option.value === user.plan,
-                        ) ?? INTRO_PLANS[0];
-                    const device =
-                        INTRO_DEVICES.find(
-                            (option) => option.value === user.device,
-                        ) ?? INTRO_DEVICES[0];
-                    const enabled = evaluation?.enabled ?? false;
-                    const variant = evaluation?.variant;
-                    const configuredVariant = variant
-                        ? variants.find((item) => item.name === variant)
-                        : undefined;
-                    const errored = erroredUserIdSet.has(user.id);
-                    const stateColor = errored
-                        ? theme.palette.error.main
-                        : (configuredVariant?.color ??
-                          (enabled ? theme.palette.primary.main : undefined));
-                    const stateBackground = stateColor
-                        ? alpha(stateColor, errored ? 0.12 : 0.08)
-                        : undefined;
+    const renderMockList = () =>
+        [
+            { name: 92, sub: 52 },
+            { name: 74, sub: 44 },
+            { name: 84, sub: 58 },
+            { name: 66, sub: 40 },
+        ].map((row, index) => (
+            <StyledMockRow key={index}>
+                <StyledMockRowCopy>
+                    <StyledBar w={row.name} h={7} tone='mid' />
+                    <StyledBar w={row.sub} h={6} tone='weak' />
+                </StyledMockRowCopy>
+                <StyledBar w={34} h={7} tone='strong' />
+            </StyledMockRow>
+        ));
 
-                    const experienceLabel = errored
-                        ? 'Search unavailable'
-                        : !environmentEnabled || !enabled
-                          ? 'Classic Search'
-                          : configuredVariant?.label
-                            ? `${configuredVariant.name} · ${configuredVariant.label}`
-                            : 'Smart Search';
-                    const smart = environmentEnabled && enabled && !errored;
-                    const previewAccent =
-                        configuredVariant?.color ?? theme.palette.primary.main;
-                    const activationDelayMs = Math.min(index * 18, 400);
-                    const restored = restoredUserIds.has(user.id);
-                    const previewDelayMs = restored ? 0 : activationDelayMs;
-
-                    return (
-                        <StyledPerson
-                            key={user.id}
-                            ref={setButtonRef(user.id)}
-                            type='button'
-                            aria-label={`${user.name}, ${user.country.label}: ${experienceLabel}`}
-                            selected={selectedId === user.id}
-                            stateColor={stateColor}
-                            stateBackground={stateBackground}
-                            activationDelayMs={activationDelayMs}
-                            errored={errored}
-                            onClick={(event) => {
-                                const anchorBottom =
-                                    event.currentTarget.getBoundingClientRect()
-                                        .bottom;
-                                setPopoverMaxHeight(
-                                    Math.max(
-                                        0,
-                                        window.innerHeight -
-                                            anchorBottom -
-                                            POPOVER_OFFSET -
-                                            POPOVER_VIEWPORT_PADDING,
-                                    ),
-                                );
-                                setOpenUserId(user.id);
-                                onSelect(user);
+    const renderMock = (
+        state: 'smart' | 'classic' | 'error',
+        accent: string,
+    ) => (
+        <StyledMockFrame
+            data-testid='QUICK_TOUR_INTRO_MOCK_FRAME'
+            data-experience={state}
+        >
+            <StyledMockChrome>
+                <StyledMockDot />
+                <StyledMockDot />
+                <StyledMockDot />
+                <StyledMockUrl>app.acme.io/accounts</StyledMockUrl>
+            </StyledMockChrome>
+            <StyledMockContent>
+                {state === 'smart' ? (
+                    <StyledFeatureCard accent={accent}>
+                        <StyledBar w={52} h={6} barColor={alpha(accent, 0.4)} />
+                        <StyledBar w={104} h={16} barColor={accent} />
+                        <Box
+                            component='svg'
+                            viewBox='0 0 240 40'
+                            preserveAspectRatio='none'
+                            sx={{ display: 'block', width: '100%', height: 36 }}
+                        >
+                            <path
+                                d='M4 32 L40 22 L72 27 L112 11 L152 19 L196 5 L236 11'
+                                fill='none'
+                                stroke={accent}
+                                strokeWidth={3}
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                            />
+                        </Box>
+                    </StyledFeatureCard>
+                ) : state === 'error' ? (
+                    <StyledErrorCard data-testid='QUICK_TOUR_INTRO_ERROR_PREVIEW'>
+                        <ErrorOutlineIcon />
+                        <StyledMockRowCopy>
+                            <StyledBar w={104} h={16} tone='strong' />
+                            <StyledBar w={64} h={6} tone='weak' />
+                        </StyledMockRowCopy>
+                    </StyledErrorCard>
+                ) : (
+                    <StyledBaselineCard>
+                        <Box
+                            component='svg'
+                            viewBox='0 0 80 80'
+                            sx={{
+                                display: 'block',
+                                width: 56,
+                                height: 56,
+                                flex: 'none',
                             }}
                         >
-                            <StyledAvatar>
-                                <IntroCharacter
-                                    look={user.look}
-                                    raised={enabled && environmentEnabled}
-                                    index={index}
-                                />
-                            </StyledAvatar>
-                            <StyledIdentity>
-                                <StyledName variant='body2'>
-                                    {user.name}
-                                </StyledName>
-                                <StyledCountry>
-                                    {user.country.flag} {user.country.label}
-                                </StyledCountry>
-                                <StyledMeta>
-                                    {plan.label} · {device.label}
-                                </StyledMeta>
-                            </StyledIdentity>
-                            <StyledMiniPreview
-                                smart={smart}
-                                errored={errored}
-                                restored={restored}
-                                accent={previewAccent}
-                                delayMs={previewDelayMs}
-                                aria-hidden
-                                data-testid='QUICK_TOUR_INTRO_MINI_PREVIEW'
-                                data-device={user.device}
-                                data-experience={
-                                    errored
-                                        ? 'error'
-                                        : smart
-                                          ? 'smart'
-                                          : 'classic'
-                                }
+                            <circle
+                                cx={40}
+                                cy={40}
+                                r={30}
+                                fill='none'
+                                stroke={theme.palette.divider}
+                                strokeWidth={10}
+                            />
+                            <circle
+                                cx={40}
+                                cy={40}
+                                r={30}
+                                fill='none'
+                                stroke={alpha(theme.palette.primary.main, 0.5)}
+                                strokeWidth={10}
+                                strokeLinecap='round'
+                                strokeDasharray='130 59'
+                                transform='rotate(-90 40 40)'
+                            />
+                        </Box>
+                        <StyledMockRowCopy>
+                            <StyledBar w={104} h={16} tone='strong' />
+                            <StyledBar w={64} h={6} tone='weak' />
+                        </StyledMockRowCopy>
+                    </StyledBaselineCard>
+                )}
+                {renderMockList()}
+            </StyledMockContent>
+        </StyledMockFrame>
+    );
+
+    return (
+        <StyledContentRow onKeyDown={handleKeyDown}>
+            <StyledGridWrap ref={setGridWrapRef}>
+                <StyledGrid
+                    data-testid='QUICK_TOUR_INTRO_USER_GRID'
+                    style={gridStyle}
+                >
+                    {users.map((user, index) => {
+                        const evaluation = evaluations[index];
+                        const plan =
+                            INTRO_PLANS.find(
+                                (option) => option.value === user.plan,
+                            ) ?? INTRO_PLANS[0];
+                        const enabled = evaluation?.enabled ?? false;
+                        const variant = evaluation?.variant;
+                        const configuredVariant = variant
+                            ? variants.find((item) => item.name === variant)
+                            : undefined;
+                        const errored = erroredUserIdSet.has(user.id);
+                        const experienceLabel = errored
+                            ? 'my-feature error'
+                            : !environmentEnabled || !enabled
+                              ? 'my-feature off'
+                              : configuredVariant
+                                ? `my-feature variant ${configuredVariant.name}`
+                                : 'my-feature on';
+                        const smart = environmentEnabled && enabled && !errored;
+                        const experience: 'smart' | 'classic' | 'error' =
+                            errored ? 'error' : smart ? 'smart' : 'classic';
+                        const accent =
+                            configuredVariant?.color ??
+                            theme.palette.primary.main;
+                        const tooltipLabel = smart
+                            ? configuredVariant
+                                ? `Variant ${configuredVariant.name} enabled`
+                                : 'Feature enabled'
+                            : errored
+                              ? 'Feature error'
+                              : 'Feature disabled';
+
+                        return (
+                            <Tooltip
+                                key={user.id}
+                                title={tooltipLabel}
+                                arrow
+                                enterDelay={200}
                             >
-                                <StyledMiniContent
-                                    visible={!errored}
-                                    delayMs={previewDelayMs}
+                                <StyledPerson
+                                    type='button'
+                                    aria-label={`${user.name}, ${user.country.label}: ${experienceLabel}`}
+                                    selected={selectedId === user.id}
+                                    enabled={smart}
+                                    accent={accent}
+                                    dimmed={
+                                        selectedId !== undefined &&
+                                        selectedId !== user.id
+                                    }
+                                    onClick={() => {
+                                        onSelect(
+                                            openUserId === user.id
+                                                ? undefined
+                                                : user,
+                                        );
+                                    }}
                                 >
-                                    <StyledMiniChrome>
-                                        <span />
-                                        <span />
-                                        <span />
-                                    </StyledMiniChrome>
-                                    <StyledMiniSearch
-                                        smart={smart}
-                                        accent={previewAccent}
-                                        delayMs={previewDelayMs}
-                                    >
-                                        <span>⌕</span>
-                                        <StyledMiniSparkle
-                                            visible={smart}
-                                            accent={previewAccent}
-                                            delayMs={previewDelayMs}
+                                    <StyledAvatarWrap>
+                                        <StyledAvatarImg
+                                            avatarUrl={avatarForIndex(index)}
+                                            hue={(index * 47) % 360}
+                                            enabled={smart}
+                                            size={avatarSize}
+                                        />
+                                        <StyledStatusBadge
+                                            experience={experience}
+                                            data-testid='QUICK_TOUR_INTRO_USER_STATUS'
+                                            data-experience={experience}
                                         >
-                                            ✦
-                                        </StyledMiniSparkle>
-                                    </StyledMiniSearch>
-                                    <StyledMiniResults>
-                                        {Array.from(
-                                            { length: 3 },
-                                            (_, resultIndex) => (
-                                                <StyledMiniResult
-                                                    key={resultIndex}
-                                                    smart={smart}
-                                                    accent={previewAccent}
-                                                    delayMs={previewDelayMs}
-                                                />
-                                            ),
-                                        )}
-                                    </StyledMiniResults>
-                                </StyledMiniContent>
-                                <StyledMiniError visible={errored}>
-                                    !
-                                </StyledMiniError>
-                            </StyledMiniPreview>
-                        </StyledPerson>
-                    );
-                })}
-            </StyledGrid>
-
-            <Popper
-                open={Boolean(openUserId && openUser)}
-                anchorEl={
-                    openUserId ? buttonRefs.current.get(openUserId) : undefined
-                }
-                placement='bottom'
-                sx={{ zIndex: (theme) => theme.zIndex.modal }}
-                modifiers={[
-                    {
-                        name: 'offset',
-                        options: { offset: [0, 8] },
-                    },
-                    {
-                        name: 'preventOverflow',
-                        options: { padding: 16 },
-                    },
-                ]}
-            >
-                {openUser ? (
-                    <Paper
-                        elevation={8}
-                        data-testid='QUICK_TOUR_INTRO_POPOVER'
-                        data-max-height={popoverMaxHeight}
-                        sx={{
-                            maxHeight: popoverMaxHeight,
-                            overflow: 'hidden',
-                        }}
-                    >
-                        <StyledPopoverContent>
-                            <StyledPopoverHeader>
-                                <StyledPopoverTitle variant='caption'>
-                                    Experience details
-                                </StyledPopoverTitle>
-                                <StyledPopoverClose
-                                    size='small'
-                                    aria-label='Close full preview'
-                                    onClick={closePreview}
-                                >
-                                    <CloseIcon fontSize='small' />
-                                </StyledPopoverClose>
-                            </StyledPopoverHeader>
-
-                            <StyledPopoverBody data-testid='QUICK_TOUR_INTRO_POPOVER_BODY'>
-                                {preview(
-                                    openSmart,
-                                    openVariant,
-                                    openErrored,
-                                    openRestored,
-                                )}
-
-                                <StyledEvaluationPanel>
-                                    <StyledExplanation>
-                                        <IntroAvatar look={openUser.look} />
-                                        <span>
-                                            {evaluationReason(
-                                                openUser,
-                                                openEvaluation,
-                                                rollout,
-                                                environmentEnabled,
-                                                openErrored,
-                                                targeting,
-                                                openVariant,
-                                                mode === 'variants',
+                                            {experience === 'smart' ? (
+                                                <CheckIcon />
+                                            ) : experience === 'error' ? (
+                                                <ErrorOutlineIcon />
+                                            ) : (
+                                                <CloseIcon />
                                             )}
-                                        </span>
-                                    </StyledExplanation>
-                                    <StyledContext>
-                                        <StyledContextLabel variant='caption'>
-                                            Context
-                                        </StyledContextLabel>
-                                        <StyledContextJson>
-                                            <span className='json-punctuation'>
-                                                {'{\n'}
-                                            </span>
-                                            {'  '}
-                                            <span className='json-key'>
-                                                "Country"
-                                            </span>
-                                            <span className='json-punctuation'>
-                                                {': '}
-                                            </span>
-                                            <span className='json-string'>
-                                                {`"${openUser.country.flag} ${openUser.country.code}"`}
-                                            </span>
-                                            <span className='json-punctuation'>
-                                                {',\n'}
-                                            </span>
-                                            {'  '}
-                                            <span className='json-key'>
-                                                "Plan"
-                                            </span>
-                                            <span className='json-punctuation'>
-                                                {': '}
-                                            </span>
-                                            <span className='json-string'>
-                                                {`"${openPlan?.emoji} ${openPlan?.label}"`}
-                                            </span>
-                                            <span className='json-punctuation'>
-                                                {',\n'}
-                                            </span>
-                                            {'  '}
-                                            <span className='json-key'>
-                                                "Device"
-                                            </span>
-                                            <span className='json-punctuation'>
-                                                {': '}
-                                            </span>
-                                            <span className='json-string'>
-                                                {`"${openDevice?.emoji} ${openDevice?.label}"`}
-                                            </span>
-                                            <span className='json-punctuation'>
-                                                {'\n}'}
-                                            </span>
-                                        </StyledContextJson>
-                                    </StyledContext>
-                                </StyledEvaluationPanel>
-                            </StyledPopoverBody>
-                        </StyledPopoverContent>
-                    </Paper>
-                ) : null}
-            </Popper>
-        </>
+                                        </StyledStatusBadge>
+                                    </StyledAvatarWrap>
+                                    <StyledName variant='body2'>
+                                        {user.name}
+                                    </StyledName>
+                                    {showMeta ? (
+                                        <StyledMeta>
+                                            {user.country.code} · {plan.label}
+                                        </StyledMeta>
+                                    ) : null}
+                                </StyledPerson>
+                            </Tooltip>
+                        );
+                    })}
+                </StyledGrid>
+            </StyledGridWrap>
+
+            {openUser ? (
+                <StyledPreviewPanel data-testid='QUICK_TOUR_INTRO_POPOVER'>
+                    <StyledPanelHeader>
+                        <StyledPanelHeaderRow>
+                            <StyledPanelAvatar
+                                avatarUrl={avatarForIndex(openIndex)}
+                            />
+                            <Box sx={{ flex: 1, minWidth: 0 }}>
+                                <StyledPopoverTitle
+                                    variant='subtitle2'
+                                    sx={{ color: 'text.primary' }}
+                                >
+                                    {openUser.name}
+                                </StyledPopoverTitle>
+                                <StyledMeta
+                                    sx={{
+                                        whiteSpace: 'normal',
+                                        overflow: 'visible',
+                                    }}
+                                >
+                                    {openUser.country.label} · {openPlan?.label}{' '}
+                                    · bucket {openEvaluation?.rolloutBucket}
+                                </StyledMeta>
+                            </Box>
+                            <StyledPopoverClose
+                                size='small'
+                                aria-label='Close full preview'
+                                onClick={closePreview}
+                            >
+                                <CloseIcon fontSize='small' />
+                            </StyledPopoverClose>
+                        </StyledPanelHeaderRow>
+                        <StyledEvaluationPanel state={openState}>
+                            <StyledEvalHeadline>
+                                {openStateLabel}
+                            </StyledEvalHeadline>
+                            <StyledExplanation>
+                                <span>
+                                    {evaluationReason(
+                                        openUser,
+                                        openEvaluation,
+                                        rollout,
+                                        environmentEnabled,
+                                        openErrored,
+                                        targeting,
+                                        openVariant,
+                                        mode === 'variants',
+                                    )}
+                                </span>
+                            </StyledExplanation>
+                            <StyledContext>
+                                <StyledContextLabel variant='caption'>
+                                    Context
+                                </StyledContextLabel>
+                                <StyledContextJson>
+                                    <span className='json-punctuation'>
+                                        {'{\n'}
+                                    </span>
+                                    {'  '}
+                                    <span className='json-key'>"Country"</span>
+                                    <span className='json-punctuation'>
+                                        {': '}
+                                    </span>
+                                    <span className='json-string'>
+                                        {`"${openUser.country.code}"`}
+                                    </span>
+                                    <span className='json-punctuation'>
+                                        {',\n'}
+                                    </span>
+                                    {'  '}
+                                    <span className='json-key'>"Plan"</span>
+                                    <span className='json-punctuation'>
+                                        {': '}
+                                    </span>
+                                    <span className='json-string'>
+                                        {`"${openPlan?.label}"`}
+                                    </span>
+                                    <span className='json-punctuation'>
+                                        {'\n}'}
+                                    </span>
+                                </StyledContextJson>
+                            </StyledContext>
+                        </StyledEvaluationPanel>
+                    </StyledPanelHeader>
+
+                    <StyledPopoverBody data-testid='QUICK_TOUR_INTRO_POPOVER_BODY'>
+                        <StyledPreviewLabel>Preview</StyledPreviewLabel>
+
+                        {renderMock(
+                            openState,
+                            openVariant?.color ?? theme.palette.primary.main,
+                        )}
+                    </StyledPopoverBody>
+                </StyledPreviewPanel>
+            ) : null}
+        </StyledContentRow>
     );
 };

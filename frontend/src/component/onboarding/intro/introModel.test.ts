@@ -14,7 +14,6 @@ const baseConfig = (
     rollout: 0,
     targetCountryCodes: [],
     targetPlans: [],
-    targetDevices: [],
     variantsEnabled: false,
     variants: [],
     ...overrides,
@@ -32,6 +31,18 @@ describe('introModel', () => {
         expect(a).toEqual(b);
         expect(a).toHaveLength(60);
         expect(a[0].id).toBe('user-1');
+    });
+
+    it('covers every country x plan combination in the demo grid', () => {
+        const users = generateIntroUsers(20);
+        const seen = new Set(
+            users.map((user) => `${user.country.code}:${user.plan}`),
+        );
+        for (const code of ['NO', 'US', 'CA', 'GB', 'JP']) {
+            for (const plan of ['pro', 'enterprise']) {
+                expect(seen).toContain(`${code}:${plan}`);
+            }
+        }
     });
 
     it('spreads the rollout evenly: an N% rollout enables ~N% of users', () => {
@@ -133,7 +144,7 @@ describe('introModel', () => {
         }
     });
 
-    it('ANDs country, plan, and device constraints', () => {
+    it('ANDs country and plan constraints', () => {
         const users = generateIntroUsers(50);
         const evaluations = computeEvaluations(
             users,
@@ -141,15 +152,12 @@ describe('introModel', () => {
                 rollout: 100,
                 targetCountryCodes: ['NO'],
                 targetPlans: ['pro'],
-                targetDevices: ['desktop'],
             }),
         );
 
         users.forEach((user, index) => {
             expect(evaluations[index].enabled).toBe(
-                user.country.code === 'NO' &&
-                    user.plan === 'pro' &&
-                    user.device === 'desktop',
+                user.country.code === 'NO' && user.plan === 'pro',
             );
         });
     });

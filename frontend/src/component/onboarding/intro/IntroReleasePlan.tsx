@@ -386,7 +386,7 @@ export const IntroReleasePlan = ({
         >
             <StyledFlagHeader>
                 <OutlinedFlagIcon fontSize='small' color='primary' />
-                <StyledFlagName>smart-search</StyledFlagName>
+                <StyledFlagName>my-feature</StyledFlagName>
             </StyledFlagHeader>
 
             {children ? <Box sx={{ mb: 1.5 }}>{children}</Box> : null}
@@ -394,7 +394,9 @@ export const IntroReleasePlan = ({
             <StyledCard>
                 <StyledEnvironmentHeader>
                     <CloudCircleIcon fontSize='small' color='disabled' />
-                    <StyledEnvironmentName>production</StyledEnvironmentName>
+                    <StyledEnvironmentName>
+                        Production environment
+                    </StyledEnvironmentName>
                     <Switch
                         checked={environmentEnabled}
                         onChange={(event) =>
@@ -403,8 +405,7 @@ export const IntroReleasePlan = ({
                         size='small'
                         slotProps={{
                             input: {
-                                'aria-label':
-                                    'Toggle Smart Search in production',
+                                'aria-label': 'Toggle my-feature in production',
                             },
                         }}
                         data-testid='QUICK_TOUR_INTRO_ONOFF_SWITCH'

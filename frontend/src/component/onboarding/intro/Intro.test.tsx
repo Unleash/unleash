@@ -2,6 +2,7 @@ import { vi, expect, test } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { screen, fireEvent, act, within } from '@testing-library/react';
 import { Intro } from './Intro.tsx';
+import { generateIntroUsers } from './introModel.ts';
 
 const next = () =>
     fireEvent.click(screen.getByTestId('QUICK_TOUR_INTRO_NEXT_BUTTON'));
@@ -24,7 +25,7 @@ const renderAdvancedIntro = ({
 const completeReleasePlan = () => {
     fireEvent.click(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     );
     for (let milestone = 0; milestone < 3; milestone++) {
@@ -37,7 +38,7 @@ const completeReleasePlan = () => {
 const observeAndRecoverManually = () => {
     fireEvent.click(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     );
     act(() => {
@@ -45,7 +46,7 @@ const observeAndRecoverManually = () => {
     });
     fireEvent.click(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     );
 };
@@ -61,25 +62,22 @@ const advanceLiveTraffic = (duration: number) => {
 const retryWithSafeguard = () => {
     fireEvent.click(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     );
     advanceLiveTraffic(9_500);
 };
 
-test('starts with a gradual Smart Search rollout and context cards', () => {
+test('starts with a gradual my-feature rollout and context cards', () => {
     renderAdvancedIntro();
 
-    expect(screen.getByText('Release Smart Search')).toBeInTheDocument();
-    expect(screen.getByText(/people get Smart Search/)).toBeInTheDocument();
     expect(
-        screen.getByText(
-            /Each card previews the experience that person receives in real time/,
-        ),
+        screen.getByText('Start by toggling the flag in production'),
     ).toBeInTheDocument();
     expect(
-        screen.getByText('of 15 people get Smart Search'),
+        screen.getByText(/of 20 users see my-feature/),
     ).not.toHaveTextContent('%');
+    expect(screen.getByText('Click any user for details.')).toBeInTheDocument();
     expect(screen.queryByText('Controlled release')).not.toBeInTheDocument();
     expect(screen.queryByText('Release')).not.toBeInTheDocument();
     expect(
@@ -87,44 +85,37 @@ test('starts with a gradual Smart Search rollout and context cards', () => {
     ).toBeInTheDocument();
     expect(
         screen
-            .getAllByTestId('QUICK_TOUR_INTRO_MINI_PREVIEW')
+            .getAllByTestId('QUICK_TOUR_INTRO_USER_STATUS')
             .every(
                 (preview) =>
                     preview.getAttribute('data-experience') === 'classic',
             ),
     ).toBe(true);
-    expect(
-        screen
-            .getAllByTestId('QUICK_TOUR_INTRO_MINI_PREVIEW')
-            .filter(
-                (preview) => preview.getAttribute('data-device') === 'mobile',
-            ),
-    ).toHaveLength(6);
 
     const grid = screen.getByTestId('QUICK_TOUR_INTRO_USER_GRID');
     fireEvent.click(within(grid).getAllByRole('button')[0]);
     const popover = screen.getByTestId('QUICK_TOUR_INTRO_POPOVER');
-    expect(popover).toHaveStyle({ overflow: 'hidden' });
-    expect(screen.getByTestId('QUICK_TOUR_INTRO_POPOVER_BODY')).toHaveStyle({
-        overflowY: 'auto',
-    });
-    expect(Number(popover.dataset.maxHeight)).toBeLessThan(window.innerHeight);
-    expect(screen.getByText('Classic Search')).toBeInTheDocument();
-    expect(screen.getByText('Current experience')).toBeInTheDocument();
+    expect(popover).toHaveStyle({ overflowY: 'auto' });
+    expect(screen.getByText('Feature disabled')).toBeInTheDocument();
     expect(screen.getByText('Context')).toBeInTheDocument();
     expect(
         screen.getByText(
-            /Ada sees Classic Search because the rollout does not include their bucket \(0 < \d+\)/,
+            /Ada doesn't see my-feature because production is disabled/,
         ),
     ).toBeInTheDocument();
 
+    fireEvent.click(
+        screen.getByRole('switch', {
+            name: 'Toggle my-feature in production',
+        }),
+    );
     fireEvent.change(screen.getByRole('slider', { name: 'Rollout %' }), {
         target: { value: '100' },
     });
-    expect(screen.getByText('✦ Smart Search')).toBeInTheDocument();
+    expect(screen.getByText('Feature enabled')).toBeInTheDocument();
     expect(
         screen
-            .getAllByTestId('QUICK_TOUR_INTRO_MINI_PREVIEW')
+            .getAllByTestId('QUICK_TOUR_INTRO_USER_STATUS')
             .every(
                 (preview) =>
                     preview.getAttribute('data-experience') === 'smart',
@@ -132,9 +123,23 @@ test('starts with a gradual Smart Search rollout and context cards', () => {
     ).toBe(true);
     expect(
         screen.getByText(
-            /Ada gets Smart Search because the rollout includes their bucket \(100 ≥ \d+\)/,
+            /Ada sees my-feature because the 100% rollout covers buckets 1–100 \(theirs is \d+\)/,
         ),
     ).toBeInTheDocument();
+});
+
+test('closes the user preview when moving to the next step', () => {
+    renderAdvancedIntro();
+
+    const grid = screen.getByTestId('QUICK_TOUR_INTRO_USER_GRID');
+    fireEvent.click(within(grid).getAllByRole('button')[0]);
+    expect(screen.getByTestId('QUICK_TOUR_INTRO_POPOVER')).toBeInTheDocument();
+
+    next();
+
+    expect(
+        screen.queryByTestId('QUICK_TOUR_INTRO_POPOVER'),
+    ).not.toBeInTheDocument();
 });
 
 test('explains gradual rollout using the Unleash documentation', async () => {
@@ -159,10 +164,12 @@ test('walks through the connected story to the showcase', () => {
     renderAdvancedIntro();
 
     next();
-    expect(screen.getByText('Target the right audience')).toBeInTheDocument();
+    expect(
+        screen.getByText('Target who can see your feature'),
+    ).toBeInTheDocument();
 
     next();
-    expect(screen.getByText('Compare experiences')).toBeInTheDocument();
+    expect(screen.getByText('Run experiments')).toBeInTheDocument();
 
     next();
     expect(screen.getByText('Automate the rollout')).toBeInTheDocument();
@@ -180,7 +187,7 @@ test('walks through the connected story to the showcase', () => {
     });
     expect(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     ).not.toBeChecked();
     expect(
@@ -207,48 +214,16 @@ test('walks through the connected story to the showcase', () => {
 
     next();
     expect(screen.getByTestId('QUICK_TOUR_INTRO_SHOWCASE')).toBeInTheDocument();
-    expect(screen.getByText('This was just a glimpse')).toBeInTheDocument();
+    expect(screen.getByText('Tour complete!')).toBeInTheDocument();
     expect(
-        screen.getAllByTestId('QUICK_TOUR_INTRO_SHOWCASE_CARD'),
-    ).toHaveLength(9);
+        screen.getByText('What do you want to do next?'),
+    ).toBeInTheDocument();
     expect(
-        screen.getByRole('link', {
-            name: 'Change requests documentation',
-        }),
-    ).toHaveAttribute(
-        'href',
-        'https://docs.getunleash.io/concepts/change-requests',
-    );
+        screen.getByRole('button', { name: 'Replay intro' }),
+    ).toBeInTheDocument();
     expect(
-        screen.getByRole('link', {
-            name: 'Feature lifecycle documentation',
-        }),
-    ).toHaveAttribute(
-        'href',
-        'https://docs.getunleash.io/concepts/feature-flags#feature-flag-lifecycle',
-    );
-    expect(
-        screen.getByRole('link', {
-            name: 'Enterprise Edge documentation',
-        }),
-    ).toHaveAttribute('href', 'https://docs.getunleash.io/unleash-edge');
-    expect(
-        screen.getByRole('link', {
-            name: 'Access management documentation',
-        }),
-    ).toHaveAttribute(
-        'href',
-        'https://docs.getunleash.io/guides/user-management-access-controls',
-    );
-    expect(
-        screen.getByRole('link', {
-            name: 'Impact metrics & safeguards documentation',
-        }),
-    ).toHaveAttribute(
-        'href',
-        'https://docs.getunleash.io/concepts/impact-metrics',
-    );
-    expect(screen.getByTestId('QUICK_TOUR_INTRO_CONFETTI')).toBeInTheDocument();
+        screen.getByRole('button', { name: 'Create feature flag' }),
+    ).toBeInTheDocument();
     vi.useRealTimers();
 }, 10000);
 
@@ -262,10 +237,14 @@ test('finishes after the three core steps when advanced steps are disabled', () 
         />,
     );
 
-    expect(screen.getByText('Unleash Intro · 1 of 3')).toBeInTheDocument();
+    const stepper = screen.getByTestId('QUICK_TOUR_INTRO_STEPPER');
+    expect(within(stepper).getByText('Rollout')).toBeInTheDocument();
+    expect(within(stepper).getByText('Targeting')).toBeInTheDocument();
+    expect(within(stepper).getByText('Experiments')).toBeInTheDocument();
+    expect(within(stepper).queryByText('Automation')).not.toBeInTheDocument();
     next();
     next();
-    expect(screen.getByText('Compare experiences')).toBeInTheDocument();
+    expect(screen.getByText('Run experiments')).toBeInTheDocument();
     expect(
         screen.getByTestId('QUICK_TOUR_INTRO_NEXT_BUTTON'),
     ).toHaveTextContent('Finish');
@@ -274,6 +253,19 @@ test('finishes after the three core steps when advanced steps are disabled', () 
     expect(onFinish).toHaveBeenCalledTimes(1);
     expect(screen.getByTestId('QUICK_TOUR_INTRO_SHOWCASE')).toBeInTheDocument();
     expect(screen.queryByText('Automate the rollout')).not.toBeInTheDocument();
+});
+
+test('navigates back to a completed step from the stepper', () => {
+    renderAdvancedIntro();
+    next();
+    next();
+    expect(screen.getByText('Run experiments')).toBeInTheDocument();
+
+    const stepper = screen.getByTestId('QUICK_TOUR_INTRO_STEPPER');
+    fireEvent.click(within(stepper).getByText('Rollout'));
+    expect(
+        screen.getByText('Start by toggling the flag in production'),
+    ).toBeInTheDocument();
 });
 
 test('keeps metrics live without errors until production is enabled', () => {
@@ -317,7 +309,7 @@ test('keeps metrics live without errors until production is enabled', () => {
     expect(screen.getByText('Search errors')).toBeInTheDocument();
     expect(
         screen
-            .getAllByTestId('QUICK_TOUR_INTRO_MINI_PREVIEW')
+            .getAllByTestId('QUICK_TOUR_INTRO_USER_STATUS')
             .every(
                 (preview) =>
                     preview.getAttribute('data-experience') === 'classic',
@@ -329,7 +321,7 @@ test('keeps metrics live without errors until production is enabled', () => {
 
     fireEvent.click(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     );
     expect(
@@ -366,7 +358,7 @@ test('keeps metrics live without errors until production is enabled', () => {
     });
     expect(
         screen
-            .getAllByTestId('QUICK_TOUR_INTRO_MINI_PREVIEW')
+            .getAllByTestId('QUICK_TOUR_INTRO_USER_STATUS')
             .filter(
                 (preview) =>
                     preview.getAttribute('data-experience') === 'error',
@@ -375,7 +367,7 @@ test('keeps metrics live without errors until production is enabled', () => {
 
     advanceLiveTraffic(1700);
     const errorPreviews = screen
-        .getAllByTestId('QUICK_TOUR_INTRO_MINI_PREVIEW')
+        .getAllByTestId('QUICK_TOUR_INTRO_USER_STATUS')
         .filter(
             (preview) => preview.getAttribute('data-experience') === 'error',
         );
@@ -385,13 +377,13 @@ test('keeps metrics live without errors until production is enabled', () => {
     ).toHaveTextContent(`${errorPreviews.length}`);
     expect(screen.getByTestId('QUICK_TOUR_INTRO_ERROR_METRIC')).toHaveAttribute(
         'data-max',
-        '15',
+        '20',
     );
 
     const firstErroredCard = errorPreviews[0].closest('button')!;
     advanceLiveTraffic(5400);
     expect(
-        within(firstErroredCard).getByTestId('QUICK_TOUR_INTRO_MINI_PREVIEW'),
+        within(firstErroredCard).getByTestId('QUICK_TOUR_INTRO_USER_STATUS'),
     ).toHaveAttribute('data-experience', 'error');
     const milestoneEvents = within(charts).getAllByTestId(
         'QUICK_TOUR_INTRO_EVENT_MILESTONE',
@@ -400,7 +392,7 @@ test('keeps metrics live without errors until production is enabled', () => {
     milestoneEvents.forEach((event) => {
         expect(event).toHaveAttribute(
             'aria-label',
-            'Milestone started: Expand to 60% of Free + Pro desktop users',
+            'Milestone started: Expand to 60% of Pro + Enterprise in Norway + US',
         );
     });
     expect(within(charts).getAllByTestId('FlagOutlinedIcon')).toHaveLength(2);
@@ -410,27 +402,24 @@ test('keeps metrics live without errors until production is enabled', () => {
     expect(
         within(popover).getByTestId('QUICK_TOUR_INTRO_ERROR_PREVIEW'),
     ).toBeInTheDocument();
-    expect(within(popover).getByText('✦ Smart Search')).toBeInTheDocument();
-    expect(within(popover).getByText('Search error')).toBeInTheDocument();
     expect(
-        within(popover).getByText(/Smart Search returned an error/),
-    ).toBeInTheDocument();
-    expect(
-        within(popover).queryByText('Current experience'),
-    ).not.toBeInTheDocument();
+        within(popover).getByTestId('QUICK_TOUR_INTRO_MOCK_FRAME'),
+    ).toHaveAttribute('data-experience', 'error');
+    expect(within(popover).getByText('Feature error')).toBeInTheDocument();
+    expect(within(popover).getByText(/returned an error/)).toBeInTheDocument();
 
-    advanceLiveTraffic(18_000);
+    advanceLiveTraffic(30_000);
     expect(
         screen
-            .getAllByTestId('QUICK_TOUR_INTRO_MINI_PREVIEW')
+            .getAllByTestId('QUICK_TOUR_INTRO_USER_STATUS')
             .filter(
                 (preview) =>
                     preview.getAttribute('data-experience') === 'error',
             ),
-    ).toHaveLength(15);
+    ).toHaveLength(20);
     expect(
         screen.getByTestId('QUICK_TOUR_INTRO_ERROR_METRIC_VALUE'),
-    ).toHaveTextContent('15');
+    ).toHaveTextContent('20');
     expect(
         screen.getByTestId('QUICK_TOUR_INTRO_SUCCESS_METRIC_VALUE'),
     ).toHaveTextContent('0');
@@ -450,7 +439,7 @@ test('keeps metrics live without errors until production is enabled', () => {
     );
     fireEvent.click(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     );
     expect(
@@ -499,13 +488,13 @@ test('groups rapid environment events without inventing an incident', () => {
     expect(within(secondMilestone).getByText('Running')).toBeInTheDocument();
     expect(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     ).toBeChecked();
 
     fireEvent.click(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     );
 
@@ -562,7 +551,7 @@ test('starts the release plan from the environment and supports manual milestone
 
     fireEvent.click(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     );
 
@@ -592,7 +581,7 @@ test('starts the release plan from the environment and supports manual milestone
 
     fireEvent.click(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     );
     expect(
@@ -608,7 +597,7 @@ test('starts the release plan from the environment and supports manual milestone
     ).toBeInTheDocument();
     fireEvent.click(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     );
 
@@ -618,16 +607,16 @@ test('starts the release plan from the environment and supports manual milestone
     });
     expect(strategyButton).toHaveAttribute('aria-expanded', 'true');
     expect(within(firstMilestone).getByText('Plan')).toBeInTheDocument();
-    expect(within(firstMilestone).getByText('🥉 Free')).toBeInTheDocument();
+    expect(within(firstMilestone).getByText('Pro')).toBeInTheDocument();
     fireEvent.click(
         within(firstMilestone).getByText(
-            'Preview with 40% of Free desktop users',
+            'Preview with 40% of Pro users in Norway',
         ),
     );
     expect(strategyButton).toHaveAttribute('aria-expanded', 'false');
     fireEvent.click(
         within(firstMilestone).getByText(
-            'Preview with 40% of Free desktop users',
+            'Preview with 40% of Pro users in Norway',
         ),
     );
     expect(strategyButton).toHaveAttribute('aria-expanded', 'true');
@@ -682,8 +671,8 @@ test('starts the release plan from the environment and supports manual milestone
     );
 
     for (const [milestone, audience] of [
-        [3, 7],
-        [4, 15],
+        [3, 18],
+        [4, 20],
     ]) {
         act(() => {
             vi.advanceTimersByTime(6600);
@@ -729,21 +718,21 @@ test('marks the tour finished on reaching the showcase and closes it on Finish',
     vi.useRealTimers();
 });
 
-test('targets with product-like country, plan, and device constraints', () => {
+test('targets with product-like country and plan constraints', () => {
     renderAdvancedIntro();
     next();
 
     expect(screen.getByText('Country')).toBeInTheDocument();
     expect(screen.getByText('Plan')).toBeInTheDocument();
-    expect(screen.getByText('Device')).toBeInTheDocument();
-    const norwayConstraint = screen.getByRole('button', { name: '🇳🇴 NO' });
+    expect(screen.queryByText('Device')).not.toBeInTheDocument();
+    const norwayConstraint = screen.getByRole('button', { name: 'Norway' });
     expect(norwayConstraint).toHaveAttribute('aria-pressed', 'true');
     fireEvent.click(norwayConstraint);
     expect(norwayConstraint).toHaveAttribute('aria-pressed', 'false');
     expect(
-        screen.getByRole('button', { name: '🥇 Enterprise' }),
+        screen.getByRole('button', { name: 'Enterprise' }),
     ).toBeInTheDocument();
-    expect(screen.getAllByText('is one of').length).toBeGreaterThanOrEqual(3);
+    expect(screen.getAllByText('is one of').length).toBeGreaterThanOrEqual(2);
 });
 
 test('explains targeting from the matching context values', () => {
@@ -753,19 +742,40 @@ test('explains targeting from the matching context values', () => {
     const grid = screen.getByTestId('QUICK_TOUR_INTRO_USER_GRID');
     fireEvent.click(within(grid).getByRole('button', { name: /Ada/ }));
 
-    const explanation = screen.getByText(/Ada (gets|matches)/);
-    expect(explanation).toHaveTextContent(/Norway, the Pro plan, and desktop/);
-    expect(explanation).toHaveTextContent(/all three constraints/);
-    expect(screen.getByText('"🇳🇴 NO"')).toBeInTheDocument();
-    expect(screen.getByText('"🥈 Pro"')).toBeInTheDocument();
-    expect(screen.getByText('"🖥️ Desktop"')).toBeInTheDocument();
+    const explanation = screen.getByText(/Ada (sees|matches)/);
+    expect(explanation).toHaveTextContent(/Norway and the Pro plan/);
+    expect(explanation).toHaveTextContent(/both constraints/);
+    expect(screen.getByText('"NO"')).toBeInTheDocument();
+    expect(screen.getByText('"Pro"')).toBeInTheDocument();
 
-    fireEvent.click(within(grid).getByRole('button', { name: /Ben/ }));
+    const excludedByCountry = generateIntroUsers(20).find(
+        (user) => !['NO', 'US'].includes(user.country.code),
+    )!;
+    fireEvent.click(
+        within(grid).getByRole('button', {
+            name: new RegExp(excludedByCountry.name),
+        }),
+    );
     expect(
         screen.getByText(
-            /Ben sees Classic Search because Free is not one of the targeted plans/,
+            new RegExp(
+                `${excludedByCountry.name} doesn't see my-feature because ${excludedByCountry.country.label} is not one of the targeted countries`,
+            ),
         ),
     ).toBeInTheDocument();
+});
+
+test('shows the evaluation details in the preview panel', () => {
+    renderAdvancedIntro();
+    next();
+
+    const grid = screen.getByTestId('QUICK_TOUR_INTRO_USER_GRID');
+    fireEvent.click(within(grid).getByRole('button', { name: /Ada/ }));
+
+    const panel = screen.getByTestId('QUICK_TOUR_INTRO_POPOVER');
+    expect(within(panel).getByText('Feature enabled')).toBeInTheDocument();
+    expect(within(panel).getByText('Context')).toBeInTheDocument();
+    expect(within(panel).getByText('"NO"')).toBeInTheDocument();
 });
 
 test('links constraints to the activation strategy documentation', async () => {
@@ -817,7 +827,7 @@ test('names Impact Metrics and links to its documentation', async () => {
     next();
     vi.useRealTimers();
 
-    expect(screen.getAllByText('Impact metrics')).toHaveLength(2);
+    expect(screen.getAllByText('Impact metrics')).toHaveLength(1);
     const charts = screen.getByTestId('QUICK_TOUR_INTRO_IMPACT_CHARTS');
     fireEvent.mouseOver(within(charts).getByLabelText('Help'));
     expect(
@@ -863,15 +873,9 @@ test('manages variants and previews the exact assigned experience', async () => 
 
     const grid = screen.getByTestId('QUICK_TOUR_INTRO_USER_GRID');
     fireEvent.click(within(grid).getAllByRole('button')[0]);
-    expect(screen.getByText('✦ Smart Search')).toBeInTheDocument();
-    const searchInput = screen.getByTestId('QUICK_TOUR_INTRO_SEARCH_INPUT');
+    expect(screen.getByText(/Variant [ABCD] enabled/)).toBeInTheDocument();
     expect(
-        within(searchInput).getByText(
-            /Search by keyword|Ask any question|Find products, docs, or people|What would you like to find?/,
-        ),
-    ).toBeInTheDocument();
-    expect(
-        screen.getByText(/Ada gets the .+ variant \([ABCD]\) because/),
+        screen.getByText(/Ada sees my-feature variant [ABCD] because/),
     ).toBeInTheDocument();
     expect(
         screen.getByText(/Variant [ABCD] has a 25% allocation/),
@@ -905,7 +909,7 @@ test('teaches manual recovery before a safeguard automates it', () => {
     ).toBeInTheDocument();
     expect(
         screen
-            .getAllByTestId('QUICK_TOUR_INTRO_MINI_PREVIEW')
+            .getAllByTestId('QUICK_TOUR_INTRO_USER_STATUS')
             .every(
                 (preview) =>
                     preview.getAttribute('data-experience') === 'classic',
@@ -958,7 +962,7 @@ test('teaches manual recovery before a safeguard automates it', () => {
     );
     fireEvent.click(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     );
     expect(screen.queryByText('Monitoring')).not.toBeInTheDocument();
@@ -972,11 +976,11 @@ test('teaches manual recovery before a safeguard automates it', () => {
     expect(screen.queryByText('Monitoring')).not.toBeInTheDocument();
     expect(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     ).toBeChecked();
     const erroredPreview = screen
-        .getAllByTestId('QUICK_TOUR_INTRO_MINI_PREVIEW')
+        .getAllByTestId('QUICK_TOUR_INTRO_USER_STATUS')
         .find((preview) => preview.getAttribute('data-experience') === 'error');
     expect(erroredPreview).toBeDefined();
     fireEvent.click(erroredPreview!.closest('button')!);
@@ -1008,7 +1012,7 @@ test('teaches manual recovery before a safeguard automates it', () => {
     ).toHaveLength(2);
     expect(
         screen
-            .getAllByTestId('QUICK_TOUR_INTRO_MINI_PREVIEW')
+            .getAllByTestId('QUICK_TOUR_INTRO_USER_STATUS')
             .every(
                 (preview) =>
                     preview.getAttribute('data-experience') === 'classic',
@@ -1016,10 +1020,10 @@ test('teaches manual recovery before a safeguard automates it', () => {
     ).toBe(true);
     const recoveredPopover = screen.getByTestId('QUICK_TOUR_INTRO_POPOVER');
     expect(
-        within(recoveredPopover).getByText('Classic Search'),
+        within(recoveredPopover).getByText('Feature disabled'),
     ).toBeInTheDocument();
     expect(
-        within(recoveredPopover).queryByText('Search error'),
+        within(recoveredPopover).queryByText('Feature error'),
     ).not.toBeInTheDocument();
     expect(
         screen
@@ -1030,18 +1034,62 @@ test('teaches manual recovery before a safeguard automates it', () => {
     ).toBeTruthy();
     expect(
         screen.getByRole('switch', {
-            name: 'Toggle Smart Search in production',
+            name: 'Toggle my-feature in production',
         }),
     ).not.toBeChecked();
     vi.useRealTimers();
 }, 10000);
 
-test('closes the tour on Skip without marking it finished', () => {
-    const onComplete = vi.fn();
-    const onFinish = vi.fn();
-    renderAdvancedIntro({ onComplete, onFinish });
+test('hands the idle nudge from the toggle to Next once production is on', () => {
+    vi.useFakeTimers();
+    renderAdvancedIntro();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Skip' }));
-    expect(onComplete).toHaveBeenCalledTimes(1);
-    expect(onFinish).not.toHaveBeenCalled();
+    act(() => {
+        vi.advanceTimersByTime(3000);
+    });
+    expect(
+        screen.getByText('Turn on my-feature in production'),
+    ).toBeInTheDocument();
+    expect(
+        screen.queryByText('Click Next to continue'),
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(
+        screen.getByRole('switch', {
+            name: 'Toggle my-feature in production',
+        }),
+    );
+    act(() => {
+        vi.advanceTimersByTime(3000);
+    });
+    expect(screen.getByText('Click Next to continue')).toBeInTheDocument();
+    vi.useRealTimers();
+});
+
+test('dragging the slider defers the Next nudge', () => {
+    vi.useFakeTimers();
+    renderAdvancedIntro();
+
+    fireEvent.click(
+        screen.getByRole('switch', {
+            name: 'Toggle my-feature in production',
+        }),
+    );
+    act(() => {
+        vi.advanceTimersByTime(2500);
+    });
+    fireEvent.change(screen.getByRole('slider', { name: 'Rollout %' }), {
+        target: { value: '70' },
+    });
+    act(() => {
+        vi.advanceTimersByTime(2500);
+    });
+    expect(
+        screen.queryByText('Click Next to continue'),
+    ).not.toBeInTheDocument();
+    act(() => {
+        vi.advanceTimersByTime(500);
+    });
+    expect(screen.getByText('Click Next to continue')).toBeInTheDocument();
+    vi.useRealTimers();
 });

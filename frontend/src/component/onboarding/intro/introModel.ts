@@ -13,56 +13,29 @@ export interface IntroUser {
     name: string;
     country: IntroCountry;
     plan: IntroPlan;
-    device: IntroDevice;
-    look: IntroLook;
 }
 
-export type IntroPlan = 'free' | 'pro' | 'enterprise';
-export type IntroDevice = 'desktop' | 'mobile';
+export type IntroPlan = 'pro' | 'enterprise';
 
 export const INTRO_PLANS: Array<{
     value: IntroPlan;
     label: string;
-    emoji: string;
 }> = [
-    { value: 'free', label: 'Free', emoji: '🥉' },
-    { value: 'pro', label: 'Pro', emoji: '🥈' },
-    { value: 'enterprise', label: 'Enterprise', emoji: '🥇' },
+    { value: 'pro', label: 'Pro' },
+    { value: 'enterprise', label: 'Enterprise' },
 ];
-
-export const INTRO_DEVICES: Array<{
-    value: IntroDevice;
-    label: string;
-    emoji: string;
-}> = [
-    { value: 'desktop', label: 'Desktop', emoji: '🖥️' },
-    { value: 'mobile', label: 'Mobile', emoji: '📱' },
-];
-
-/**
- * Palette indices for the character illustration. Which palettes they index
- * into is owned by IntroCharacter; the model only guarantees the indices are
- * deterministic per user, so the crowd never reshuffles.
- */
-export interface IntroLook {
-    skin: number;
-    hair: number;
-    hairColor: number;
-    shirt: number;
-}
 
 export interface IntroCountry {
     code: string;
     label: string;
-    flag: string;
 }
 
 export const INTRO_COUNTRIES: IntroCountry[] = [
-    { code: 'NO', label: 'Norway', flag: '🇳🇴' },
-    { code: 'US', label: 'United States', flag: '🇺🇸' },
-    { code: 'CA', label: 'Canada', flag: '🇨🇦' },
-    { code: 'GB', label: 'United Kingdom', flag: '🇬🇧' },
-    { code: 'JP', label: 'Japan', flag: '🇯🇵' },
+    { code: 'NO', label: 'Norway' },
+    { code: 'US', label: 'United States' },
+    { code: 'CA', label: 'Canada' },
+    { code: 'GB', label: 'United Kingdom' },
+    { code: 'JP', label: 'Japan' },
 ];
 
 export interface IntroVariant {
@@ -92,7 +65,6 @@ export interface IntroFlagConfig {
      */
     targetCountryCodes: string[];
     targetPlans?: IntroUser['plan'][];
-    targetDevices?: IntroUser['device'][];
     variantsEnabled: boolean;
     variants: IntroVariant[];
 }
@@ -136,12 +108,6 @@ const FIRST_NAMES = [
     'Zoe',
 ];
 
-// Avoid making synthetic context values line up with grid columns. These
-// patterns deliberately scatter plan and device across each set of 15 users.
-const PRO_POSITIONS = new Set([0, 4, 5, 7, 9]);
-const ENTERPRISE_POSITIONS = new Set([2, 6, 10, 14]);
-const MOBILE_POSITIONS = new Set([1, 3, 5, 8, 10, 12]);
-
 /**
  * Deterministically generate a stable set of synthetic users. The same index
  * always yields the same identity, so re-generating never reshuffles the grid.
@@ -154,23 +120,7 @@ export const generateIntroUsers = (count: number): IntroUser[] =>
             id: `user-${i + 1}`,
             name,
             country,
-            plan: ENTERPRISE_POSITIONS.has(i % 15)
-                ? 'enterprise'
-                : PRO_POSITIONS.has(i % 15)
-                  ? 'pro'
-                  : 'free',
-            device: MOBILE_POSITIONS.has(i % 15) ? 'mobile' : 'desktop',
-            // Multipliers co-prime with each palette size cycle through every
-            // palette entry and scatter the combinations so neighbouring users
-            // don't look like siblings. Country repeats with period 5, so the
-            // hair formula (also mod 6) mixes in a floor(i/6) term - a plain
-            // linear formula would give every compatriot the same haircut.
-            look: {
-                skin: i % 5,
-                hair: (i + Math.floor(i / 6) * 5 + 2) % 6,
-                hairColor: (i * 3 + 1) % 8,
-                shirt: (i * 11 + 3) % 8,
-            },
+            plan: i % 4 === 2 ? 'enterprise' : 'pro',
         };
     });
 
@@ -242,11 +192,7 @@ export const computeEvaluations = (
         const matchesPlan =
             !config.targetPlans?.length ||
             config.targetPlans.includes(user.plan);
-        const matchesDevice =
-            !config.targetDevices?.length ||
-            config.targetDevices.includes(user.device);
-        const matchesConstraints =
-            matchesCountry && matchesPlan && matchesDevice;
+        const matchesConstraints = matchesCountry && matchesPlan;
         const enabled =
             config.environmentEnabled && matchesConstraints && inRollout;
         return {

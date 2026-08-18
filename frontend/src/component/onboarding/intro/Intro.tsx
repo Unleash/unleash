@@ -1,9 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
     alpha,
     Box,
     Button,
-    Chip,
     styled,
     Typography,
     useTheme,
@@ -23,7 +22,10 @@ import {
 import { IntroUserGrid, type GridMode } from './IntroUserGrid.tsx';
 import { IntroFlagView } from './IntroFlagView.tsx';
 import { IntroImpactCharts } from './IntroImpactCharts.tsx';
+import { IntroSuccess } from './IntroSuccess.tsx';
 import { IntroShowcase } from './IntroShowcase.tsx';
+import { IntroStepper } from './IntroStepper.tsx';
+import { HintBadge, useIdleHint } from './introHints.tsx';
 import {
     INTRO_RELEASE_PLAN_MILESTONE_MS,
     IntroReleasePlan,
@@ -36,8 +38,8 @@ import {
     type SafeguardState,
 } from './IntroSafeguard.tsx';
 
-const USER_COUNT = 15;
-const FLAG_NAME = 'smart-search';
+const USER_COUNT = 20;
+const FLAG_NAME = 'my-feature';
 
 const VARIANT_POOL = [
     {
@@ -87,44 +89,44 @@ const MILESTONE_ERROR_GRACE_MS = 2_000;
 const PROTECTED_RELEASE_MILESTONE_MS = 5_400;
 
 interface IReleasePlanMilestone extends IIntroReleaseMilestone {
+    targetCountryCodes: string[];
     targetPlans: IntroUser['plan'][];
-    targetDevices: IntroUser['device'][];
 }
 
 const RELEASE_PLAN_MILESTONES: IReleasePlanMilestone[] = [
     {
-        name: 'Preview with 40% of Free desktop users',
+        name: 'Preview with 40% of Pro users in Norway',
         rollout: 40,
         constraints: [
-            { field: 'Plan', values: ['🥉 Free'] },
-            { field: 'Device', values: ['🖥️ Desktop'] },
+            { field: 'Country', values: ['Norway'] },
+            { field: 'Plan', values: ['Pro'] },
         ],
-        targetPlans: ['free'],
-        targetDevices: ['desktop'],
+        targetCountryCodes: ['NO'],
+        targetPlans: ['pro'],
     },
     {
-        name: 'Expand to 60% of Free + Pro desktop users',
+        name: 'Expand to 60% of Pro + Enterprise in Norway + US',
         rollout: 60,
         constraints: [
-            { field: 'Plan', values: ['🥉 Free', '🥈 Pro'] },
-            { field: 'Device', values: ['🖥️ Desktop'] },
+            { field: 'Country', values: ['Norway', 'United States'] },
+            { field: 'Plan', values: ['Pro', 'Enterprise'] },
         ],
-        targetPlans: ['free', 'pro'],
-        targetDevices: ['desktop'],
+        targetCountryCodes: ['NO', 'US'],
+        targetPlans: ['pro', 'enterprise'],
     },
     {
-        name: 'Reach 90% of all desktop users',
+        name: 'Reach 90% of all users',
         rollout: 90,
-        constraints: [{ field: 'Device', values: ['🖥️ Desktop'] }],
+        constraints: [],
+        targetCountryCodes: [],
         targetPlans: [],
-        targetDevices: ['desktop'],
     },
     {
         name: 'Release to everyone',
         rollout: 100,
         constraints: [],
+        targetCountryCodes: [],
         targetPlans: [],
-        targetDevices: [],
     },
 ];
 
@@ -137,9 +139,8 @@ const withReleaseMilestone = (
         ...current,
         environmentEnabled: true,
         rollout: milestone.rollout,
-        targetCountryCodes: [],
+        targetCountryCodes: milestone.targetCountryCodes,
         targetPlans: milestone.targetPlans,
-        targetDevices: milestone.targetDevices,
         variantsEnabled: false,
     };
 };
@@ -156,53 +157,55 @@ type IncidentState = 'idle' | 'observing' | 'alert' | 'resolved';
 interface ITopic {
     key: TopicKey;
     mode: GridMode;
+    stepLabel: string;
     title: string;
-    valueTag: string;
     body: string;
 }
+
+type EngagementKey = 'target' | 'variants';
 
 const TOPICS: ITopic[] = [
     {
         key: 'rollout',
         mode: 'rollout',
-        title: 'Release Smart Search',
-        valueTag: 'Gradual rollout',
-        body: 'The code is already deployed, but nobody receives Smart Search yet. Choose how much of the production audience should receive it. The same people stay included as you expand.',
+        stepLabel: 'Rollout',
+        title: 'Start by toggling the flag in production',
+        body: 'When you have toggled a flag on, you can decide how many will see the feature by dragging the rollout slider.',
     },
     {
         key: 'target',
         mode: 'target',
-        title: 'Target the right audience',
-        valueTag: 'Targeting',
-        body: 'Constraints narrow a rollout to the audience you intend. Combine country, plan, and device just as you would in an Unleash activation strategy.',
+        stepLabel: 'Targeting',
+        title: 'Target who can see your feature',
+        body: 'Use constraints to narrow down who can see your feature. Experiment with the controls below.',
     },
     {
         key: 'variants',
         mode: 'variants',
-        title: 'Compare experiences',
-        valueTag: 'Variants',
-        body: 'Offer different versions of Smart Search to the same audience. Adjust how traffic is split between them. Each person keeps the same variant, giving you a reliable way to compare what works best.',
+        stepLabel: 'Experiments',
+        title: 'Run experiments',
+        body: 'Add variants to run experiments where each user gets one version, and you control how traffic is split between them.',
     },
     {
         key: 'releasePlan',
         mode: 'impact',
+        stepLabel: 'Automation',
         title: 'Automate the rollout',
-        valueTag: 'Release plan',
         body: 'You have configured rollout, targeting, and variants by hand. A release plan saves those choices as reusable milestones, then advances them automatically or whenever your team is ready.',
     },
     {
         key: 'impact',
         mode: 'impact',
+        stepLabel: 'Impact',
         title: 'Observe the release',
-        valueTag: 'Impact metrics',
-        body: 'Releases can fail in production. Impact metrics let you watch reliability as Smart Search reaches each audience. Enable production and follow the live signals.',
+        body: 'Releases can fail in production. Impact metrics let you watch reliability as my-feature reaches each audience. Enable production and follow the live signals.',
     },
     {
         key: 'safeguard',
         mode: 'safeguard',
+        stepLabel: 'Safeguards',
         title: 'Automate the response',
-        valueTag: 'Safeguards',
-        body: 'You disabled Smart Search manually when errors rose. This time, a safeguard is watching the same impact metric. Re-enable production and see how Unleash responds automatically.',
+        body: 'You disabled my-feature manually when errors rose. This time, a safeguard is watching the same impact metric. Re-enable production and see how Unleash responds automatically.',
     },
 ];
 
@@ -223,6 +226,7 @@ const StyledLeft = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     minHeight: 0,
+    background: theme.palette.background.paper,
     borderRight: `1px solid ${theme.palette.divider}`,
     [theme.breakpoints.down('md')]: {
         borderRight: 'none',
@@ -233,7 +237,7 @@ const StyledLeft = styled(Box)(({ theme }) => ({
 const StyledHeader = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(2),
+    gap: theme.spacing(3),
     padding: theme.spacing(4, 4, 2),
     flexShrink: 0,
 }));
@@ -245,7 +249,7 @@ const StyledScroll = styled(Box)(({ theme }) => ({
     overflowX: 'hidden',
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(4),
+    gap: theme.spacing(2),
     padding: theme.spacing(0, 3, 2, 4),
     [theme.breakpoints.down('md')]: {
         flex: 'unset',
@@ -258,33 +262,19 @@ const StyledScroll = styled(Box)(({ theme }) => ({
 const StyledRight = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
+    minHeight: 0,
     padding: theme.spacing(4),
     gap: theme.spacing(2),
     background: theme.palette.background.elevation1,
-    overflowY: 'auto',
+    overflow: 'hidden',
     [theme.breakpoints.down('md')]: {
         overflow: 'visible',
     },
 }));
 
-const StyledEyebrow = styled(Typography)(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    textTransform: 'uppercase',
-    letterSpacing: '0.08em',
-    fontSize: theme.fontSizes.smallerBody,
-    fontWeight: theme.typography.fontWeightBold,
-}));
-
 const StyledTitle = styled('h1')(({ theme }) => ({
     margin: 0,
     fontSize: theme.typography.h1.fontSize,
-}));
-
-const StyledTitleRow = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    gap: theme.spacing(1.5),
 }));
 
 const StyledFooter = styled(Box)(({ theme }) => ({
@@ -293,43 +283,31 @@ const StyledFooter = styled(Box)(({ theme }) => ({
     flexWrap: 'wrap',
     gap: theme.spacing(1.5),
     flexShrink: 0,
-    padding: theme.spacing(2, 4, 4),
+    padding: theme.spacing(1.5, 3, 1.5, 4),
     borderTop: `1px solid ${theme.palette.divider}`,
-}));
-
-const StyledDots = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    gap: theme.spacing(1),
-    marginRight: 'auto',
-}));
-
-const StyledDot = styled('span', {
-    shouldForwardProp: (prop) => prop !== 'active',
-})<{ active: boolean }>(({ theme, active }) => ({
-    width: theme.spacing(1),
-    height: theme.spacing(1),
-    borderRadius: '50%',
-    background: active ? theme.palette.primary.main : theme.palette.divider,
-}));
-
-const StyledStat = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'baseline',
-    gap: theme.spacing(1),
 }));
 
 const StyledAudienceHeader = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(0.35),
+    gap: theme.spacing(0.5),
+    flexShrink: 0,
 }));
 
-const StyledStatValue = styled('span')(({ theme }) => ({
-    fontSize: theme.typography.h1.fontSize,
+const StyledAudienceTitle = styled(Typography)(({ theme }) => ({
+    fontSize: theme.typography.body1.fontSize,
     fontWeight: theme.typography.fontWeightBold,
-    color: theme.palette.primary.main,
-    fontVariantNumeric: 'tabular-nums',
+    color: theme.palette.text.primary,
 }));
+
+const StyledAudienceHint = styled(Typography)(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
+    color: theme.palette.text.secondary,
+}));
+
+const StyledStatValue = styled('span')({
+    fontVariantNumeric: 'tabular-nums',
+});
 
 const StyledOutcome = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'severity',
@@ -402,7 +380,9 @@ export const Intro = ({
     const theme = useTheme();
     const variantPalette = [
         theme.palette.primary.main,
-        theme.palette.warning.main,
+        // A golden yellow (rather than orange) so it stays distinct from the
+        // pink/red variant accent.
+        theme.palette.charts.series[1],
         theme.palette.success.main,
         theme.palette.charts.C1,
     ];
@@ -412,6 +392,14 @@ export const Intro = ({
     const [topicIndex, setTopicIndex] = useState(0);
     const [finished, setFinished] = useState(false);
     const [selectedId, setSelectedId] = useState<string | undefined>();
+    const [engaged, setEngaged] = useState<
+        Partial<Record<EngagementKey, boolean>>
+    >({});
+    const markEngaged = useCallback((key: EngagementKey) => {
+        setEngaged((current) =>
+            current[key] ? current : { ...current, [key]: true },
+        );
+    }, []);
     const [incidentState, setIncidentState] = useState<IncidentState>('idle');
     const [erroredCount, setErroredCount] = useState(0);
     const [exposureOrder, setExposureOrder] = useState<string[]>([]);
@@ -424,16 +412,32 @@ export const Intro = ({
         useState<SafeguardState>('ready');
     const [config, setConfig] = useState<IntroFlagConfig>(() => ({
         flagName: FLAG_NAME,
-        environmentEnabled: true,
-        rollout: 0,
+        environmentEnabled: false,
+        rollout: 50,
         targetCountryCodes: [],
         targetPlans: [],
-        targetDevices: [],
         variantsEnabled: false,
         variants: makeVariants(['A', 'B'], variantPalette),
     }));
 
     const topic = topics[topicIndex];
+
+    const isRolloutStep = topic.key === 'rollout';
+    const isTargetStep = topic.key === 'target';
+    const isVariantsStep = topic.key === 'variants';
+    const isReleaseTopic =
+        topic.key === 'releasePlan' ||
+        topic.key === 'impact' ||
+        topic.key === 'safeguard';
+    const [hintToggle] = useIdleHint(
+        isRolloutStep && !config.environmentEnabled,
+    );
+    const [hintNext, bumpNextHint] = useIdleHint(
+        isRolloutStep && config.environmentEnabled,
+    );
+    const [hintConstraints] = useIdleHint(isTargetStep && !engaged.target);
+    const [hintVariants] = useIdleHint(isVariantsStep && !engaged.variants);
+
     const evaluations = useMemo(
         () => computeEvaluations(users, config),
         [users, config],
@@ -496,8 +500,8 @@ export const Intro = ({
                     setConfig((current) => ({
                         ...current,
                         rollout: nextMilestone.rollout,
+                        targetCountryCodes: nextMilestone.targetCountryCodes,
                         targetPlans: nextMilestone.targetPlans,
-                        targetDevices: nextMilestone.targetDevices,
                     }));
                     if (nextIndex === RELEASE_PLAN_MILESTONES.length - 1) {
                         setReleasePlanState('advanced');
@@ -581,11 +585,10 @@ export const Intro = ({
             if (key === 'rollout') {
                 return {
                     ...current,
-                    environmentEnabled: true,
-                    rollout: 0,
+                    environmentEnabled: false,
+                    rollout: 50,
                     targetCountryCodes: [],
                     targetPlans: [],
-                    targetDevices: [],
                     variantsEnabled: false,
                 };
             }
@@ -596,7 +599,6 @@ export const Intro = ({
                     rollout: 100,
                     targetCountryCodes: ['NO', 'US'],
                     targetPlans: ['pro', 'enterprise'],
-                    targetDevices: ['desktop'],
                     variantsEnabled: false,
                 };
             }
@@ -607,7 +609,6 @@ export const Intro = ({
                     rollout: 100,
                     targetCountryCodes: [],
                     targetPlans: [],
-                    targetDevices: [],
                     variantsEnabled: true,
                     variants: makeVariants(['A', 'B'], variantPalette),
                 };
@@ -619,7 +620,6 @@ export const Intro = ({
                     rollout: 0,
                     targetCountryCodes: [],
                     targetPlans: [],
-                    targetDevices: [],
                     variantsEnabled: false,
                 };
             }
@@ -641,7 +641,6 @@ export const Intro = ({
                 rollout: 100,
                 targetCountryCodes: [],
                 targetPlans: [],
-                targetDevices: [],
                 variantsEnabled: true,
             };
         });
@@ -651,20 +650,13 @@ export const Intro = ({
         setTopicIndex(index);
         applyTopicPreset(index);
         setSelectedId(undefined);
+        setEngaged({});
         setIncidentState('idle');
         setErroredCount(0);
         setExposureOrder([]);
         setMetricSampleIndex(0);
         setReleaseMilestoneIndex(0);
-        setReleasePlanState(
-            topics[index].key === 'releasePlan'
-                ? 'ready'
-                : topics[index].key === 'impact'
-                  ? 'ready'
-                  : topics[index].key === 'safeguard'
-                    ? 'ready'
-                    : 'ready',
-        );
+        setReleasePlanState('ready');
         setSafeguardState('ready');
         trackEvent('quick-tour-demo', {
             props: { eventType: 'topic', topic: topics[index].key },
@@ -679,13 +671,6 @@ export const Intro = ({
             onFinish?.();
             trackEvent('quick-tour-demo', { props: { eventType: 'finish' } });
         }
-    };
-
-    const handleSkip = () => {
-        trackEvent('quick-tour-demo', {
-            props: { eventType: 'skip', topic: topic.key },
-        });
-        onComplete();
     };
 
     const setEnvironmentEnabled = (enabled: boolean) => {
@@ -805,15 +790,6 @@ export const Intro = ({
         }));
     };
 
-    const toggleDevice = (device: IntroUser['device']) => {
-        setConfig((current) => ({
-            ...current,
-            targetDevices: current.targetDevices?.includes(device)
-                ? current.targetDevices.filter((item) => item !== device)
-                : [...(current.targetDevices ?? []), device],
-        }));
-    };
-
     const addVariant = () => {
         setConfig((current) => {
             const used = current.variants.map((variant) => variant.name);
@@ -838,11 +814,31 @@ export const Intro = ({
         }));
     };
 
-    const canContinue = true;
+    const handleRolloutChange = (value: number) => {
+        setRollout(value);
+        bumpNextHint();
+    };
+    const handleToggleCountry = (code: string) => {
+        toggleCountry(code);
+        markEngaged('target');
+    };
+    const handleTogglePlan = (plan: IntroUser['plan']) => {
+        togglePlan(plan);
+        markEngaged('target');
+    };
+    const handleAddVariant = () => {
+        addVariant();
+        markEngaged('variants');
+    };
+    const handleWeightsChange = (weights: number[]) => {
+        setVariantWeights(weights);
+        markEngaged('variants');
+    };
 
     if (finished) {
+        const VictoryLap = advancedStepsEnabled ? IntroShowcase : IntroSuccess;
         return (
-            <IntroShowcase
+            <VictoryLap
                 onComplete={onComplete}
                 onReplay={() => {
                     setFinished(false);
@@ -856,18 +852,15 @@ export const Intro = ({
         <StyledPanel>
             <StyledLeft>
                 <StyledHeader>
-                    <StyledEyebrow>
-                        Unleash Intro · {topicIndex + 1} of {topics.length}
-                    </StyledEyebrow>
-                    <StyledTitleRow>
-                        <StyledTitle>{topic.title}</StyledTitle>
-                        <Chip
-                            label={topic.valueTag}
-                            size='small'
-                            color='primary'
-                            variant='outlined'
-                        />
-                    </StyledTitleRow>
+                    <IntroStepper
+                        steps={topics.map((item, index) => ({
+                            label: item.stepLabel,
+                            clickable: index <= topicIndex,
+                        }))}
+                        activeIndex={topicIndex}
+                        onStepClick={goToTopic}
+                    />
+                    <StyledTitle>{topic.title}</StyledTitle>
                 </StyledHeader>
 
                 <StyledScroll>
@@ -886,24 +879,14 @@ export const Intro = ({
                         {topic.body}
                     </Typography>
 
-                    {topic.key === 'releasePlan' ||
-                    topic.key === 'impact' ||
-                    topic.key === 'safeguard' ? (
+                    {isReleaseTopic ? (
                         <IntroReleasePlan
                             environmentEnabled={config.environmentEnabled}
                             milestones={RELEASE_PLAN_MILESTONES}
                             activeMilestoneIndex={releaseMilestoneIndex}
                             state={releasePlanState}
-                            detailed={
-                                topic.key === 'releasePlan' ||
-                                topic.key === 'impact' ||
-                                topic.key === 'safeguard'
-                            }
-                            interactive={
-                                topic.key === 'releasePlan' ||
-                                topic.key === 'impact' ||
-                                topic.key === 'safeguard'
-                            }
+                            detailed
+                            interactive
                             automationDelayMinutes={
                                 topic.key === 'releasePlan' ? 30 : 15
                             }
@@ -957,28 +940,20 @@ export const Intro = ({
                             showVariants={topic.key === 'variants'}
                             selectedVariant={selectedEvaluation?.variant}
                             onEnvironmentChange={setEnvironmentEnabled}
-                            onRolloutChange={setRollout}
-                            onToggleCountry={toggleCountry}
-                            onTogglePlan={togglePlan}
-                            onToggleDevice={toggleDevice}
-                            onAddVariant={addVariant}
-                            onWeightsChange={setVariantWeights}
+                            onRolloutChange={handleRolloutChange}
+                            onToggleCountry={handleToggleCountry}
+                            onTogglePlan={handleTogglePlan}
+                            onAddVariant={handleAddVariant}
+                            onWeightsChange={handleWeightsChange}
+                            highlightEnvironment={hintToggle}
+                            highlightConstraints={hintConstraints}
+                            highlightVariants={hintVariants}
                         />
                     )}
                 </StyledScroll>
 
                 <StyledFooter>
-                    <StyledDots>
-                        {topics.map((item, index) => (
-                            <StyledDot
-                                key={item.key}
-                                active={index === topicIndex}
-                            />
-                        ))}
-                    </StyledDots>
-                    <Button onClick={handleSkip} color='inherit'>
-                        Skip
-                    </Button>
+                    <Box sx={{ flexGrow: 1 }} />
                     {topicIndex > 0 ? (
                         <Button
                             variant='outlined'
@@ -987,31 +962,35 @@ export const Intro = ({
                             Back
                         </Button>
                     ) : null}
-                    <Button
-                        variant='contained'
-                        onClick={handleNext}
-                        disabled={!canContinue}
-                        data-testid='QUICK_TOUR_INTRO_NEXT_BUTTON'
-                    >
-                        {topicIndex < topics.length - 1 ? 'Next' : 'Finish'}
-                    </Button>
+                    <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                        <Button
+                            variant='contained'
+                            onClick={handleNext}
+                            data-testid='QUICK_TOUR_INTRO_NEXT_BUTTON'
+                        >
+                            {topicIndex < topics.length - 1 ? 'Next' : 'Finish'}
+                        </Button>
+                        <HintBadge
+                            active={hintNext}
+                            title='Click Next to continue'
+                            placement='top'
+                            sx={{ top: -6, right: -6 }}
+                        />
+                    </Box>
                 </StyledFooter>
             </StyledLeft>
 
             <StyledRight>
                 <StyledAudienceHeader>
-                    <StyledStat>
+                    <StyledAudienceTitle>
                         <StyledStatValue data-testid='QUICK_TOUR_INTRO_ENABLED_COUNT'>
                             {stats.enabled}
-                        </StyledStatValue>
-                        <Typography color='textSecondary'>
-                            of {stats.total} people get Smart Search
-                        </Typography>
-                    </StyledStat>
-                    <Typography variant='body2' color='textSecondary'>
-                        Each card previews the experience that person receives
-                        in real time. Select one for more details.
-                    </Typography>
+                        </StyledStatValue>{' '}
+                        of {stats.total} users see my-feature
+                    </StyledAudienceTitle>
+                    <StyledAudienceHint>
+                        Click any user for details.
+                    </StyledAudienceHint>
                 </StyledAudienceHeader>
                 <IntroUserGrid
                     users={users}
@@ -1023,7 +1002,6 @@ export const Intro = ({
                     targeting={{
                         targetCountryCodes: config.targetCountryCodes,
                         targetPlans: config.targetPlans,
-                        targetDevices: config.targetDevices,
                     }}
                     erroredUserIds={
                         config.environmentEnabled &&
@@ -1067,8 +1045,8 @@ export const Intro = ({
                             </strong>
                             <span>
                                 {incidentState === 'alert'
-                                    ? 'Disable production to stop the release and return affected users to Classic Search in real time.'
-                                    : 'Users return to a working Classic Search in real time without waiting for a fix or redeployment, giving your team space to investigate and resolve the issue properly.'}
+                                    ? 'Disable production to stop the release and return affected users to the previous experience in real time.'
+                                    : 'Users return to the previous, working experience in real time without waiting for a fix or redeployment, giving your team space to investigate and resolve the issue properly.'}
                             </span>
                         </StyledOutcomeCopy>
                     </StyledOutcome>
@@ -1085,9 +1063,9 @@ export const Intro = ({
                             <strong>Issue contained automatically</strong>
                             <span>
                                 The safeguard disabled production when errors
-                                crossed the threshold. Users return to a working
-                                Classic Search in real time without waiting for
-                                a fix or redeployment.
+                                crossed the threshold. Users return to the
+                                previous, working experience in real time
+                                without waiting for a fix or redeployment.
                             </span>
                         </StyledOutcomeCopy>
                     </StyledOutcome>

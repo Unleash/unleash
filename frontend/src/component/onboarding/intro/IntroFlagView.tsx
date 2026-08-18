@@ -9,13 +9,12 @@ import {
     Typography,
 } from '@mui/material';
 import OutlinedFlagIcon from '@mui/icons-material/OutlinedFlag';
-import CloudCircleIcon from '@mui/icons-material/CloudCircle';
 import AddIcon from '@mui/icons-material/Add';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { StrategyEvaluationChip } from 'component/common/ConstraintsList/StrategyEvaluationChip/StrategyEvaluationChip';
+import { HintBadge } from './introHints.tsx';
 import {
     INTRO_COUNTRIES,
-    INTRO_DEVICES,
     INTRO_PLANS,
     type IntroFlagConfig,
     type IntroUser,
@@ -46,20 +45,34 @@ const StyledEnvironmentHeader = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     gap: theme.spacing(1),
     padding: theme.spacing(1, 1.5),
-    background: theme.palette.background.elevation1,
+    background: theme.palette.background.paper,
 }));
+
+const StyledEnvironmentText = styled(Box)({
+    display: 'flex',
+    flexDirection: 'column',
+});
 
 const StyledEnvironmentName = styled('span')(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
     fontSize: theme.typography.body2.fontSize,
-    marginRight: 'auto',
 }));
 
-const StyledStrategyBody = styled(Box)(({ theme }) => ({
+const StyledEnvironmentStatus = styled('span')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: theme.fontSizes.smallerBody,
+}));
+
+const StyledStrategyBody = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'dimmed',
+})<{ dimmed?: boolean }>(({ theme, dimmed }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(2),
     padding: theme.spacing(1.5),
+    background: theme.palette.background.elevation2,
+    opacity: dimmed ? 0.6 : 1,
+    transition: theme.transitions.create('opacity'),
 }));
 
 const StyledSectionTitle = styled(Box)(({ theme }) => ({
@@ -74,6 +87,10 @@ const StyledConfigurationSection = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1),
+    padding: theme.spacing(1.5),
+    background: theme.palette.background.paper,
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadiusMedium,
 }));
 
 const StyledVariantsControl = styled(Box)(({ theme }) => ({
@@ -107,7 +124,7 @@ const StyledRolloutWrapper = styled(Box)(({ theme }) => ({
 const StyledConstraintRow = styled(Box)(({ theme }) => ({
     display: 'grid',
     gridTemplateColumns: `${theme.spacing(8)} auto minmax(0, 1fr)`,
-    alignItems: 'center',
+    alignItems: 'start',
     gap: theme.spacing(1),
     minHeight: theme.spacing(3.5),
 }));
@@ -131,6 +148,35 @@ const StyledConstraintValues = styled(Box)(({ theme }) => ({
     gap: theme.spacing(0.5),
     minWidth: 0,
 }));
+
+const StyledDisabledOperatorChip = styled(Chip)(({ theme }) => ({
+    borderRadius: `${theme.shape.borderRadius}px`,
+    padding: theme.spacing(0.25, 0),
+    fontSize: theme.fontSizes.smallerBody,
+    height: 'auto',
+    background: theme.palette.background.elevation2,
+    border: `1px solid ${theme.palette.divider}`,
+    color: theme.palette.text.disabled,
+    fontWeight: theme.typography.fontWeightBold,
+    cursor: 'help',
+    userSelect: 'none',
+    '& .MuiChip-label': {
+        cursor: 'help',
+        textDecoration: 'line-through',
+    },
+}));
+
+const constraintOperator = (hasSelection: boolean) =>
+    hasSelection ? (
+        <StrategyEvaluationChip label='is one of' />
+    ) : (
+        <Tooltip
+            arrow
+            title='No values selected, so this constraint does not narrow the audience.'
+        >
+            <StyledDisabledOperatorChip label='is one of' size='small' />
+        </Tooltip>
+    );
 
 const StyledConstraintValue = styled(Chip, {
     shouldForwardProp: (prop) => prop !== 'selected',
@@ -181,9 +227,14 @@ interface IIntroFlagViewProps {
     onRolloutChange: (value: number) => void;
     onToggleCountry: (code: string) => void;
     onTogglePlan: (plan: IntroUser['plan']) => void;
-    onToggleDevice: (device: IntroUser['device']) => void;
     onAddVariant: () => void;
     onWeightsChange: (weights: number[]) => void;
+    /** Draw a nudge on the production toggle while it is still untouched. */
+    highlightEnvironment?: boolean;
+    /** Nudge the user to try a constraint if they haven't touched one. */
+    highlightConstraints?: boolean;
+    /** Nudge the user to try the variant controls if they haven't touched them. */
+    highlightVariants?: boolean;
 }
 
 const selectableChip = (
@@ -215,10 +266,25 @@ export const IntroFlagView = ({
     onRolloutChange,
     onToggleCountry,
     onTogglePlan,
-    onToggleDevice,
     onAddVariant,
     onWeightsChange,
+    highlightEnvironment,
+    highlightConstraints,
+    highlightVariants,
 }: IIntroFlagViewProps) => {
+    // "all users" only when nothing narrows the audience (every country and
+    // plan selected, or no constraint at all); otherwise "targeted users".
+    const allCountriesSelected =
+        config.targetCountryCodes.length === 0 ||
+        config.targetCountryCodes.length === INTRO_COUNTRIES.length;
+    const allPlansSelected =
+        !config.targetPlans?.length ||
+        config.targetPlans.length === INTRO_PLANS.length;
+    const audienceScope =
+        allCountriesSelected && allPlansSelected
+            ? 'all users'
+            : 'targeted users';
+
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             <StyledFlagHeader>
@@ -228,25 +294,126 @@ export const IntroFlagView = ({
 
             <StyledEnvironmentCard>
                 <StyledEnvironmentHeader>
-                    <CloudCircleIcon fontSize='small' color='disabled' />
-                    <StyledEnvironmentName>production</StyledEnvironmentName>
-                    <Switch
-                        checked={config.environmentEnabled}
-                        onChange={(event) =>
-                            onEnvironmentChange(event.target.checked)
-                        }
-                        size='small'
-                        slotProps={{
-                            input: {
-                                'aria-label':
-                                    'Toggle Smart Search in production',
-                            },
-                        }}
-                        data-testid='QUICK_TOUR_INTRO_ONOFF_SWITCH'
-                    />
+                    <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                        <Switch
+                            checked={config.environmentEnabled}
+                            onChange={(event) =>
+                                onEnvironmentChange(event.target.checked)
+                            }
+                            slotProps={{
+                                input: {
+                                    'aria-label':
+                                        'Toggle my-feature in production',
+                                },
+                            }}
+                            data-testid='QUICK_TOUR_INTRO_ONOFF_SWITCH'
+                        />
+                        <HintBadge
+                            active={Boolean(highlightEnvironment)}
+                            title='Turn on my-feature in production'
+                            placement='top'
+                            sx={{ top: 2, right: 4 }}
+                        />
+                    </Box>
+                    <StyledEnvironmentText>
+                        <StyledEnvironmentName>
+                            Production environment
+                        </StyledEnvironmentName>
+                        <StyledEnvironmentStatus>
+                            {config.environmentEnabled
+                                ? `On for ${config.rollout}% of ${audienceScope}`
+                                : 'Off for all users'}
+                        </StyledEnvironmentStatus>
+                    </StyledEnvironmentText>
                 </StyledEnvironmentHeader>
 
-                <StyledStrategyBody>
+                <StyledStrategyBody dimmed={!config.environmentEnabled}>
+                    {showConstraints ? (
+                        <StyledConfigurationSection
+                            sx={{ position: 'relative' }}
+                        >
+                            <HintBadge
+                                active={Boolean(highlightConstraints)}
+                                title='Try targeting by country or plan'
+                                placement='top'
+                                sx={{ top: 12, right: 12 }}
+                            />
+                            <StyledSectionTitle data-testid='QUICK_TOUR_INTRO_CONSTRAINTS_TITLE'>
+                                <span>Constraints</span>
+                                <HelpIcon
+                                    htmlTooltip
+                                    tooltip={
+                                        <>
+                                            <Typography
+                                                variant='body2'
+                                                component='p'
+                                                sx={{ mb: 1 }}
+                                            >
+                                                Constraints are conditions based
+                                                on Unleash context. Every
+                                                constraint on a strategy must
+                                                match before the strategy
+                                                applies.
+                                            </Typography>
+                                            <Link
+                                                href='https://docs.getunleash.io/concepts/activation-strategies#constraints'
+                                                target='_blank'
+                                                rel='noopener noreferrer'
+                                                variant='body2'
+                                            >
+                                                Read more in the documentation
+                                            </Link>
+                                        </>
+                                    }
+                                />
+                            </StyledSectionTitle>
+                            <StyledConstraintRow>
+                                <StyledConstraintField>
+                                    Country
+                                </StyledConstraintField>
+                                <StyledConstraintOperatorGroup>
+                                    {constraintOperator(
+                                        config.targetCountryCodes.length > 0,
+                                    )}
+                                </StyledConstraintOperatorGroup>
+                                <StyledConstraintValues>
+                                    {INTRO_COUNTRIES.map((country) =>
+                                        selectableChip(
+                                            country.label,
+                                            config.targetCountryCodes.includes(
+                                                country.code,
+                                            ),
+                                            () => onToggleCountry(country.code),
+                                        ),
+                                    )}
+                                </StyledConstraintValues>
+                            </StyledConstraintRow>
+                            <StyledConstraintRow>
+                                <StyledConstraintField>
+                                    Plan
+                                </StyledConstraintField>
+                                <StyledConstraintOperatorGroup>
+                                    {constraintOperator(
+                                        Boolean(config.targetPlans?.length),
+                                    )}
+                                </StyledConstraintOperatorGroup>
+                                <StyledConstraintValues>
+                                    {INTRO_PLANS.map((plan) =>
+                                        selectableChip(
+                                            plan.label,
+                                            Boolean(
+                                                config.targetPlans?.includes(
+                                                    plan.value,
+                                                ),
+                                            ),
+                                            () => onTogglePlan(plan.value),
+                                        ),
+                                    )}
+                                </StyledConstraintValues>
+                            </StyledConstraintRow>
+                        </StyledConfigurationSection>
+                    ) : null}
+
                     <StyledConfigurationSection>
                         <StyledSectionTitle>
                             <span>Gradual rollout</span>
@@ -285,101 +452,6 @@ export const IntroFlagView = ({
                             />
                         </StyledRolloutWrapper>
                     </StyledConfigurationSection>
-
-                    {showConstraints ? (
-                        <StyledConfigurationSection>
-                            <StyledSectionTitle data-testid='QUICK_TOUR_INTRO_CONSTRAINTS_TITLE'>
-                                <span>Constraints</span>
-                                <HelpIcon
-                                    htmlTooltip
-                                    tooltip={
-                                        <>
-                                            <Typography
-                                                variant='body2'
-                                                component='p'
-                                                sx={{ mb: 1 }}
-                                            >
-                                                Constraints are conditions based
-                                                on Unleash context. Every
-                                                constraint on a strategy must
-                                                match before the strategy
-                                                applies.
-                                            </Typography>
-                                            <Link
-                                                href='https://docs.getunleash.io/concepts/activation-strategies#constraints'
-                                                target='_blank'
-                                                rel='noopener noreferrer'
-                                                variant='body2'
-                                            >
-                                                Read more in the documentation
-                                            </Link>
-                                        </>
-                                    }
-                                />
-                            </StyledSectionTitle>
-                            <StyledConstraintRow>
-                                <StyledConstraintField>
-                                    Country
-                                </StyledConstraintField>
-                                <StyledConstraintOperatorGroup>
-                                    <StrategyEvaluationChip label='is one of' />
-                                </StyledConstraintOperatorGroup>
-                                <StyledConstraintValues>
-                                    {INTRO_COUNTRIES.map((country) =>
-                                        selectableChip(
-                                            `${country.flag} ${country.code}`,
-                                            config.targetCountryCodes.includes(
-                                                country.code,
-                                            ),
-                                            () => onToggleCountry(country.code),
-                                        ),
-                                    )}
-                                </StyledConstraintValues>
-                            </StyledConstraintRow>
-                            <StyledConstraintRow>
-                                <StyledConstraintField>
-                                    Plan
-                                </StyledConstraintField>
-                                <StyledConstraintOperatorGroup>
-                                    <StrategyEvaluationChip label='is one of' />
-                                </StyledConstraintOperatorGroup>
-                                <StyledConstraintValues>
-                                    {INTRO_PLANS.map((plan) =>
-                                        selectableChip(
-                                            `${plan.emoji} ${plan.label}`,
-                                            Boolean(
-                                                config.targetPlans?.includes(
-                                                    plan.value,
-                                                ),
-                                            ),
-                                            () => onTogglePlan(plan.value),
-                                        ),
-                                    )}
-                                </StyledConstraintValues>
-                            </StyledConstraintRow>
-                            <StyledConstraintRow>
-                                <StyledConstraintField>
-                                    Device
-                                </StyledConstraintField>
-                                <StyledConstraintOperatorGroup>
-                                    <StrategyEvaluationChip label='is one of' />
-                                </StyledConstraintOperatorGroup>
-                                <StyledConstraintValues>
-                                    {INTRO_DEVICES.map((device) =>
-                                        selectableChip(
-                                            `${device.emoji} ${device.label}`,
-                                            Boolean(
-                                                config.targetDevices?.includes(
-                                                    device.value,
-                                                ),
-                                            ),
-                                            () => onToggleDevice(device.value),
-                                        ),
-                                    )}
-                                </StyledConstraintValues>
-                            </StyledConstraintRow>
-                        </StyledConfigurationSection>
-                    ) : null}
 
                     {showVariants ? (
                         <StyledConfigurationSection>
@@ -422,16 +494,29 @@ export const IntroFlagView = ({
                                     />
                                 </StyledVariantsBarWrapper>
                                 {config.variants.length < 4 ? (
-                                    <Tooltip title='Add variant' arrow>
-                                        <StyledAddVariantButton
-                                            size='small'
-                                            aria-label='Add variant'
-                                            onClick={onAddVariant}
-                                            data-testid='QUICK_TOUR_INTRO_ADD_VARIANT_BUTTON'
-                                        >
-                                            <AddIcon fontSize='small' />
-                                        </StyledAddVariantButton>
-                                    </Tooltip>
+                                    <Box
+                                        sx={{
+                                            position: 'relative',
+                                            display: 'inline-flex',
+                                        }}
+                                    >
+                                        <Tooltip title='Add variant' arrow>
+                                            <StyledAddVariantButton
+                                                size='small'
+                                                aria-label='Add variant'
+                                                onClick={onAddVariant}
+                                                data-testid='QUICK_TOUR_INTRO_ADD_VARIANT_BUTTON'
+                                            >
+                                                <AddIcon fontSize='small' />
+                                            </StyledAddVariantButton>
+                                        </Tooltip>
+                                        <HintBadge
+                                            active={Boolean(highlightVariants)}
+                                            title='Add a variant or drag the slider to split traffic'
+                                            placement='top'
+                                            sx={{ top: -6, right: -6 }}
+                                        />
+                                    </Box>
                                 ) : null}
                             </StyledVariantsControl>
                         </StyledConfigurationSection>

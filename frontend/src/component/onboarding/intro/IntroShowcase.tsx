@@ -75,14 +75,6 @@ const StyledHeading = styled(Box)(({ theme }) => ({
     gap: theme.spacing(0.75),
 }));
 
-const StyledEyebrow = styled(Typography)(({ theme }) => ({
-    color: theme.palette.primary.main,
-    fontSize: theme.typography.caption.fontSize,
-    fontWeight: theme.typography.fontWeightBold,
-    letterSpacing: '0.12em',
-    textTransform: 'uppercase',
-}));
-
 const StyledFeatureGrid = styled(Box)(({ theme }) => ({
     display: 'grid',
     gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
@@ -980,7 +972,7 @@ const ChangeRequestPreview = () => (
 const LifecyclePreview = () => (
     <StyledLifecycle>
         {[
-            ['smart-search', 'live', 'Live'],
+            ['my-feature', 'live', 'Live'],
             ['recommendations', 'pre-live', 'Pre-live'],
             ['legacy-checkout', 'completed', 'Completed'],
         ].map(([name, stage, label]) => (
@@ -1030,7 +1022,7 @@ const PlaygroundPreview = () => (
             </StyledPlaygroundRow>
             <StyledPlaygroundRow>
                 <span>
-                    <strong>smart-search</strong>
+                    <strong>my-feature</strong>
                 </span>
                 <span>A</span>
                 <StyledPlaygroundResult>
@@ -1100,8 +1092,8 @@ const SegmentsPreview = () => (
                 }}
             />
             <StyledSegmentValues>
-                <StyledSegmentValue>🥈 Pro</StyledSegmentValue>
-                <StyledSegmentValue>🥇 Enterprise</StyledSegmentValue>
+                <StyledSegmentValue>Pro</StyledSegmentValue>
+                <StyledSegmentValue>Enterprise</StyledSegmentValue>
             </StyledSegmentValues>
         </StyledConstraintRow>
     </StyledSegmentPreview>
@@ -1170,7 +1162,7 @@ const EnterpriseAccessPreview = () => (
         <StyledAccessSectionLabel>Project access</StyledAccessSectionLabel>
         <StyledAccessRow>
             <StyledAccessProjectIcon />
-            <StyledAccessName>Smart Search</StyledAccessName>
+            <StyledAccessName>my-feature</StyledAccessName>
             <StyledAccessRole color='secondary'>Member</StyledAccessRole>
             <StyledAccessPermissionCount>
                 18 / 20 permissions
@@ -1210,17 +1202,9 @@ export const IntroShowcase = ({
 
             <StyledHeader>
                 <StyledHeading>
-                    <StyledEyebrow>Your FeatureOps journey</StyledEyebrow>
-                    <Typography variant='h1'>
-                        This was just a glimpse
-                    </Typography>
+                    <Typography variant='h1'>Tour complete!</Typography>
                     <Typography color='textSecondary'>
-                        You've seen how Unleash can release, observe, and
-                        protect a feature in production.
-                        <br />
-                        Revisit those capabilities and discover the broader
-                        platform for targeting, governance, integrations, and
-                        enterprise scale.
+                        What do you want to do next?
                     </Typography>
                 </StyledHeading>
             </StyledHeader>
@@ -1301,7 +1285,7 @@ export const IntroShowcase = ({
                         onClick={onComplete}
                         data-testid='QUICK_TOUR_INTRO_FINISH_BUTTON'
                     >
-                        Create your first flag
+                        Create feature flag
                     </Button>
                 </Box>
             </StyledFooter>

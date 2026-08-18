@@ -45,6 +45,7 @@ import { FakeDependentFeaturesStore } from '../../lib/features/dependent-feature
 import { FakeLastSeenStore } from '../../lib/features/metrics/last-seen/fake-last-seen-store.js';
 import FakeFeatureSearchStore from '../../lib/features/feature-search/fake-feature-search-store.js';
 import { FakeInactiveUsersStore } from '../../lib/users/inactive/fakes/fake-inactive-users-store.js';
+import { FakeUserAccessLogReadModel } from '../../lib/features/user-access-log/fake-user-access-log-read-model.js';
 import { FakeTrafficDataUsageStore } from '../../lib/features/traffic-data-usage/fake-traffic-data-usage-store.js';
 import { FakeSegmentReadModel } from '../../lib/features/segment/fake-segment-read-model.js';
 import { FakeProjectOwnersReadModel } from '../../lib/features/project/fake-project-owners-read-model.js';
@@ -123,6 +124,7 @@ const createStores: () => IUnleashStores = () => {
         lastSeenStore: new FakeLastSeenStore(),
         featureSearchStore: new FakeFeatureSearchStore(),
         inactiveUsersStore: new FakeInactiveUsersStore(),
+        userAccessLogReadModel: new FakeUserAccessLogReadModel(),
         trafficDataUsageStore: new FakeTrafficDataUsageStore(),
         segmentReadModel: new FakeSegmentReadModel(),
         projectOwnersReadModel: new FakeProjectOwnersReadModel(),

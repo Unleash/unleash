@@ -232,6 +232,8 @@ export * from './update-tag-type-schema.js';
 export * from './update-tags-schema.js';
 export * from './update-user-schema.js';
 export * from './upsert-segment-schema.js';
+export * from './user-access-log-entry-schema.js';
+export * from './user-access-log-schema.js';
 export * from './user-access-overview-schema.js';
 export * from './user-schema.js';
 export * from './users-groups-base-schema.js';

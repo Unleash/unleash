@@ -47,6 +47,7 @@ import { DependentFeaturesStore } from '../features/dependent-features/dependent
 import LastSeenStore from '../features/metrics/last-seen/last-seen-store.js';
 import FeatureSearchStore from '../features/feature-search/feature-search-store.js';
 import { InactiveUsersStore } from '../users/inactive/inactive-users-store.js';
+import { UserAccessLogReadModel } from '../features/user-access-log/user-access-log-read-model.js';
 import { TrafficDataUsageStore } from '../features/traffic-data-usage/traffic-data-usage-store.js';
 import { SegmentReadModel } from '../features/segment/segment-read-model.js';
 import { ProjectOwnersReadModel } from '../features/project/project-owners-read-model.js';
@@ -181,6 +182,7 @@ export const createStores = (
             config.flagResolver,
         ),
         inactiveUsersStore: new InactiveUsersStore(db, eventBus, getLogger),
+        userAccessLogReadModel: new UserAccessLogReadModel(db),
         trafficDataUsageStore: new TrafficDataUsageStore(db, getLogger),
         segmentReadModel: new SegmentReadModel(db),
         projectOwnersReadModel: new ProjectOwnersReadModel(db),

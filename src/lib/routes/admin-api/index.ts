@@ -32,6 +32,7 @@ import type { Db } from '../../db/db.js';
 import ExportImportController from '../../features/export-import-toggles/export-import-controller.js';
 import { SegmentsController } from '../../features/segment/segment-controller.js';
 import { InactiveUsersController } from '../../users/inactive/inactive-users-controller.js';
+import { UserAccessLogController } from '../../features/user-access-log/user-access-log-controller.js';
 import { UiObservabilityController } from '../../features/ui-observability-controller/ui-observability-controller.js';
 import { SearchApi } from './search/index.js';
 import PersonalDashboardController from '../../features/personal-dashboard/personal-dashboard-controller.js';
@@ -110,6 +111,10 @@ export class AdminApi extends Controller {
         this.app.use(
             '/user-admin/inactive',
             new InactiveUsersController(config, services).router,
+        ); // Needs to load first, so that /api/admin/user-admin/{id} doesn't hit first
+        this.app.use(
+            '/user-admin/access-log',
+            new UserAccessLogController(config, services).router,
         ); // Needs to load first, so that /api/admin/user-admin/{id} doesn't hit first
         this.app.use(
             '/user-admin',

@@ -39,6 +39,7 @@ import type { IDependentFeaturesStore } from '../features/dependent-features/dep
 import type { ILastSeenStore } from '../features/metrics/last-seen/types/last-seen-store-type.js';
 import type { IFeatureSearchStore } from '../features/feature-search/feature-search-store-type.js';
 import type { IInactiveUsersStore } from '../users/inactive/types/inactive-users-store-type.js';
+import type { IUserAccessLogReadModel } from '../features/user-access-log/user-access-log-read-model-type.js';
 import type { ITrafficDataUsageStore } from '../features/traffic-data-usage/traffic-data-usage-store-type.js';
 import type { ISegmentReadModel } from '../features/segment/segment-read-model-type.js';
 import type { IProjectOwnersReadModel } from '../features/project/project-owners-read-model.type.js';
@@ -113,6 +114,7 @@ export interface IUnleashStores {
     lastSeenStore: ILastSeenStore;
     featureSearchStore: IFeatureSearchStore;
     inactiveUsersStore: IInactiveUsersStore;
+    userAccessLogReadModel: IUserAccessLogReadModel;
     trafficDataUsageStore: ITrafficDataUsageStore;
     segmentReadModel: ISegmentReadModel;
     projectOwnersReadModel: IProjectOwnersReadModel;

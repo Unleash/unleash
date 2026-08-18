@@ -120,6 +120,7 @@ import {
     createInstanceStatsService,
 } from '../features/instance-stats/createInstanceStatsService.js';
 import { InactiveUsersService } from '../users/inactive/inactive-users-service.js';
+import { UserAccessLogService } from '../features/user-access-log/user-access-log-service.js';
 import {
     createFakeFrontendApiService,
     createFrontendApiService,
@@ -472,6 +473,11 @@ export const createServices = (
     const inactiveUsersService = new InactiveUsersService(stores, config, {
         userService,
     });
+    const userAccessLogService = new UserAccessLogService(
+        { userAccessLogReadModel: stores.userAccessLogReadModel },
+        config,
+        { accessService },
+    );
 
     const jobService = new JobService(
         new JobStore(db!, config),
@@ -572,6 +578,7 @@ export const createServices = (
         clientFeatureToggleService,
         featureSearchService,
         inactiveUsersService,
+        userAccessLogService,
         projectInsightsService,
         jobService,
         featureLifecycleService,
@@ -712,6 +719,7 @@ export interface IUnleashServices {
     clientFeatureToggleService: ClientFeatureToggleService;
     featureSearchService: FeatureSearchService;
     inactiveUsersService: InactiveUsersService;
+    userAccessLogService: UserAccessLogService;
     projectInsightsService: ProjectInsightsService;
     jobService: JobService;
     featureLifecycleService: FeatureLifecycleService;

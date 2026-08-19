@@ -12,13 +12,12 @@ import {
     keyframes,
     styled,
     Typography,
-    useMediaQuery,
-    useTheme,
 } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import MinimizeIcon from '@mui/icons-material/Minimize';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import Draggable from 'react-draggable';
 import { Link } from 'react-router';
 import { CreateFeatureDialog } from 'component/project/Project/PaginatedProjectFeatureToggles/ProjectFeatureTogglesHeader/CreateFeatureDialog.tsx';
 import { ConnectSdkDialog } from 'component/onboarding/dialog/ConnectSdkDialog/ConnectSdkDialog.tsx';
@@ -34,10 +33,18 @@ import { useChecklistRouteMatch } from './useChecklistRouteMatch.ts';
 import { ChecklistSteps, type ChecklistStep } from './ChecklistSteps.tsx';
 import { usePendingAction } from './usePendingAction.ts';
 import { useDraggableWindow } from './useDraggableWindow.ts';
+import { useChecklistDragPosition } from './useChecklistDragPosition.ts';
 import type { ChecklistStepKey } from './useChecklistContextValue.ts';
 import { ONBOARDING_CHECKLIST_SPLASH_ID } from './useOnboardingChecklistEligibility.ts';
 
 const CHECKLIST_SHOWN_TRACKED_KEY = 'floating-onboarding:shown-tracked:v1';
+
+// Kept in sync with `<Draggable handle={...} cancel={...}>` below. The two
+// selectors are the coupling contract with react-draggable; renaming the class
+// without touching `handle` silently breaks dragging.
+const DRAG_HANDLE_CLASS = 'drag-handle';
+const DRAG_HANDLE_ICON_CLASS = 'drag-handle-icon';
+const DRAG_CANCEL_SELECTOR = 'button';
 
 type ChecklistClickAction =
     | 'close'
@@ -92,22 +99,21 @@ const Window = styled('aside', {
 }));
 
 const Header = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'dragging' && prop !== 'draggable',
-})<{ dragging?: boolean; draggable?: boolean }>(
-    ({ theme, dragging, draggable }) => ({
+    shouldForwardProp: (prop) => prop !== 'dragging' && prop !== 'isDraggable',
+})<{ dragging?: boolean; isDraggable?: boolean }>(
+    ({ theme, dragging, isDraggable }) => ({
         display: 'flex',
         alignItems: 'center',
         gap: theme.spacing(0.125),
         padding: theme.spacing(1, 1.5, 1, 0.75),
         background: theme.palette.background.elevation1,
         flexShrink: 0,
-        ...(draggable && {
+        ...(isDraggable && {
             cursor: dragging ? 'grabbing' : 'grab',
-            // Keep touch drags from scrolling the page, and text from
-            // selecting mid-drag.
+            // Prevent touch scroll and text selection from interfering with the drag.
             touchAction: 'none',
             userSelect: dragging ? 'none' : undefined,
-            '&:hover .drag-handle': {
+            [`&:hover .${DRAG_HANDLE_ICON_CLASS}`]: {
                 color: theme.palette.text.secondary,
             },
         }),
@@ -258,13 +264,20 @@ const EligibleFloatingOnboardingChecklist = () => {
         [trackEvent],
     );
 
-    const { windowRef, position, dragging, handleProps } = useDraggableWindow();
-    const theme = useTheme();
-    // Below `sm` the window is full-width (anchored by both left and right), so
-    // dragging it doesn't make sense and applying an absolute position would
-    // collapse it to content width.
-    const draggable = !useMediaQuery(theme.breakpoints.down('sm'));
-    const dragPosition = draggable ? position : null;
+    const [dragPosition, setDragPosition] = useChecklistDragPosition();
+    const {
+        nodeRef,
+        position,
+        dragging,
+        bounds,
+        canDrag,
+        onStart,
+        onStop,
+        onDrag,
+    } = useDraggableWindow({
+        position: dragPosition,
+        onPositionChange: setDragPosition,
+    });
 
     const [createFlagOpen, setCreateFlagOpen] = useState(false);
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
@@ -428,53 +441,57 @@ const EligibleFloatingOnboardingChecklist = () => {
 
     return (
         <>
-            <Window
-                aria-label='Get started'
-                pulsing={pulsing}
-                ref={windowRef}
-                style={
-                    dragPosition
-                        ? {
-                              top: dragPosition.y,
-                              left: dragPosition.x,
-                              bottom: 'auto',
-                              right: 'auto',
-                          }
-                        : undefined
-                }
+            <Draggable
+                nodeRef={nodeRef}
+                disabled={!canDrag}
+                handle={`.${DRAG_HANDLE_CLASS}`}
+                cancel={DRAG_CANCEL_SELECTOR}
+                position={position}
+                bounds={bounds}
+                onStart={onStart}
+                onStop={onStop}
+                onDrag={onDrag}
             >
-                <Header
-                    draggable={draggable}
-                    dragging={dragging}
-                    {...(draggable ? handleProps : {})}
+                <Window
+                    aria-label='Get started'
+                    pulsing={pulsing}
+                    ref={nodeRef}
                 >
-                    {draggable ? <DragHandle className='drag-handle' /> : null}
-                    <TitleRow>
-                        <HeaderTitle>Get started</HeaderTitle>
-                        <OnboardingProgressBadge showLabel />
-                    </TitleRow>
-                    <IconButton
-                        size='medium'
-                        aria-label={state.minimized ? 'Expand' : 'Minimize'}
-                        onClick={toggleMinimized}
+                    <Header
+                        isDraggable={canDrag}
+                        dragging={dragging}
+                        className={canDrag ? DRAG_HANDLE_CLASS : undefined}
                     >
-                        <MinimizeIcon fontSize='medium' />
-                    </IconButton>
-                    <IconButton
-                        size='medium'
-                        aria-label='Close'
-                        onClick={handleDismiss}
-                    >
-                        <CloseIcon fontSize='medium' />
-                    </IconButton>
-                </Header>
+                        {canDrag ? (
+                            <DragHandle className={DRAG_HANDLE_ICON_CLASS} />
+                        ) : null}
+                        <TitleRow>
+                            <HeaderTitle>Get started</HeaderTitle>
+                            <OnboardingProgressBadge showLabel />
+                        </TitleRow>
+                        <IconButton
+                            size='medium'
+                            aria-label={state.minimized ? 'Expand' : 'Minimize'}
+                            onClick={toggleMinimized}
+                        >
+                            <MinimizeIcon fontSize='medium' />
+                        </IconButton>
+                        <IconButton
+                            size='medium'
+                            aria-label='Close'
+                            onClick={handleDismiss}
+                        >
+                            <CloseIcon fontSize='medium' />
+                        </IconButton>
+                    </Header>
 
-                {state.minimized ? null : (
-                    <Body>
-                        <ChecklistSteps steps={steps} />
-                    </Body>
-                )}
-            </Window>
+                    {state.minimized ? null : (
+                        <Body>
+                            <ChecklistSteps steps={steps} />
+                        </Body>
+                    )}
+                </Window>
+            </Draggable>
 
             <CreateFeatureDialog
                 open={createFlagOpen}

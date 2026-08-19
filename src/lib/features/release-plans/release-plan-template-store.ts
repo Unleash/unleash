@@ -132,6 +132,8 @@ export class ReleasePlanTemplateStore extends CRUDStore<
                             sortOrder: row.milestoneSortOrder,
                             strategies: [],
                             releasePlanDefinitionId: row.templateId,
+                            transitionCondition:
+                                row.milestoneTransitionCondition ?? undefined,
                         };
                         acc.push(milestone);
                     }
@@ -191,6 +193,11 @@ export class ReleasePlanTemplateStore extends CRUDStore<
                 'mss.milestone_strategy_id',
                 'ms.id',
             )
+            .leftJoin(
+                'milestone_progressions AS mp',
+                'mp.source_milestone',
+                'mi.id',
+            )
             .orderBy('mi.sort_order', 'asc')
             .orderBy('ms.sort_order', 'asc')
             .select(
@@ -214,6 +221,7 @@ export class ReleasePlanTemplateStore extends CRUDStore<
                 'ms.variants AS strategyVariants',
                 'ms.disabled AS strategyDisabled',
                 'mss.segment_id AS segmentId',
+                'mp.transition_condition AS milestoneTransitionCondition',
             );
         endTimer();
 

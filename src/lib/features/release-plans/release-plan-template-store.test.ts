@@ -100,6 +100,47 @@ test('global templates are visible in every project, scoped ones only in their o
     ]);
 });
 
+test('getById includes transition conditions stored for template milestones', async () => {
+    const store = new ReleasePlanTemplateStore(db.rawDatabase, config);
+    const template = await store.insert({
+        name: 'template-with-progressions',
+        discriminator: 'template',
+        createdByUserId: 1,
+    });
+    await db.rawDatabase('milestones').insert([
+        {
+            id: 'automated-milestone',
+            name: 'milestone 1',
+            sort_order: 0,
+            release_plan_definition_id: template.id,
+        },
+        {
+            id: 'target-milestone',
+            name: 'milestone 2',
+            sort_order: 1,
+            release_plan_definition_id: template.id,
+        },
+    ]);
+    await db.rawDatabase('milestone_progressions').insert({
+        source_milestone: 'automated-milestone',
+        target_milestone: 'target-milestone',
+        transition_condition: { intervalMinutes: 30 },
+    });
+
+    const fetched = await store.getById(template.id);
+
+    expect(fetched.milestones).toEqual([
+        expect.objectContaining({
+            id: 'automated-milestone',
+            transitionCondition: { intervalMinutes: 30 },
+        }),
+        expect.objectContaining({
+            id: 'target-milestone',
+            transitionCondition: undefined,
+        }),
+    ]);
+});
+
 test('updates return exactly the template model fields', async () => {
     const store = new ReleasePlanTemplateStore(db.rawDatabase, config);
     const template = await store.insert({

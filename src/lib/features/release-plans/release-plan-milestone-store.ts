@@ -33,8 +33,12 @@ export class ReleasePlanMilestoneStore extends CRUDStore<
     override async insert(
         item: ReleasePlanMilestoneWriteModel,
     ): Promise<ReleasePlanMilestone> {
-        const row = this.toRow(item);
-        row.id = ulid();
+        const row = {
+            id: ulid(),
+            name: item.name,
+            sort_order: item.sortOrder,
+            release_plan_definition_id: item.releasePlanDefinitionId,
+        };
         await this.db(TABLE).insert(row);
         return fromRow(row);
     }

@@ -75,8 +75,33 @@ If several surveys match the same page, the first one wins.
 the all-or-nothing parser, and `scanSurveys` (flags → prefix filter → parse →
 page match).
 
-**`survey/UxSurveyCard`** — the floating bottom-right card. Currently renders
-title and intro only; closing it hides it until the next page load.
+**`survey/UxSurveyCard`** — the floating bottom-right card: title, intro, the
+questions as a form, and a submit button. One small component per question
+type (rating → MUI `Rating`, mirroring `FeedbackComponent`; single choice →
+radio group; free text → multiline `TextField`), each a controlled input over
+one shared `answers` record keyed by question id. Every answer is kept as a
+string — ratings included — so "answered" is one rule (non-blank after trim)
+regardless of question type, and required-question gating is a single
+`every()` over the questions. Submit is disabled until every required
+question is answered; clicking it flips the card to a local thanks state — a
+centered confirmation that fades away on its own after three seconds (the
+schedule is an injectable `scheduleLeave` prop, so tests trigger the leave
+directly instead of faking timers). That
+state is the seam for the next slice: the submit handler is where the POST to
+`submitBase` will go, and the thanks view is what the visitor sees while/after
+it happens. Closing works in every state.
+
+**A survey is shown at most once per browser.** Submitting or closing marks
+the survey's id as seen (`survey/seenSurveys.ts`) in a single localStorage
+entry — bare key `uxtweak-surveys-seen:v1`, a string array capped at the 50
+newest ids, stored via the repo's `createLocalStorage` (auto-namespaced,
+private-mode safe). `useActiveSurvey` filters seen ids out of every scan with
+a fresh read, so a concluded survey stays gone across route changes and page
+loads without any reactive wiring. Because every campaign has a globally
+unique `surveyId`, republishing as a new campaign naturally shows again.
+Known micro-edge: a flags refresh or route change landing inside the
+three-second thanks window can end the thanks display a moment early —
+harmless, not worth machinery.
 
 ## Decisions worth knowing
 
@@ -98,5 +123,6 @@ title and intro only; closing it hides it until the next page load.
 ## Roadmap
 
 1. ✅ Discovery + minimal card (title/intro, session-only close)
-2. Question rendering (rating / single choice / free text)
-3. Submission to `submitBase` + remembered answered/dismissed state + thanks
+2. ✅ Question rendering (rating / single choice / free text), required
+   gating, thanks state with auto-dismiss, shown-at-most-once suppression
+3. Submission to `submitBase`

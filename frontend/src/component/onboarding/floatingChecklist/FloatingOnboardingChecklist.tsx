@@ -16,6 +16,8 @@ import {
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import MinimizeIcon from '@mui/icons-material/Minimize';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import Draggable from 'react-draggable';
 import { Link } from 'react-router';
 import { CreateFeatureDialog } from 'component/project/Project/PaginatedProjectFeatureToggles/ProjectFeatureTogglesHeader/CreateFeatureDialog.tsx';
 import { ConnectSdkDialog } from 'component/onboarding/dialog/ConnectSdkDialog/ConnectSdkDialog.tsx';
@@ -30,11 +32,17 @@ import { useFirstProjectFeature } from './useFirstProjectFeature.ts';
 import { useChecklistRouteMatch } from './useChecklistRouteMatch.ts';
 import { ChecklistSteps, type ChecklistStep } from './ChecklistSteps.tsx';
 import { usePendingAction } from './usePendingAction.ts';
+import { useDraggableWindow } from './useDraggableWindow.ts';
+import { useChecklistDragPosition } from './useChecklistDragPosition.ts';
 import type { ChecklistStepKey } from './useChecklistContextValue.ts';
 import { ONBOARDING_CHECKLIST_SPLASH_ID } from './useOnboardingChecklistEligibility.ts';
 import { useHelpButtonHint } from 'component/menu/Header/HelpResources/HelpButtonHintContext.tsx';
 
 const CHECKLIST_SHOWN_TRACKED_KEY = 'floating-onboarding:shown-tracked:v1';
+
+const DRAG_HANDLE_CLASS = 'drag-handle';
+const DRAG_HANDLE_ICON_CLASS = 'drag-handle-icon';
+const DRAG_CANCEL_SELECTOR = 'button';
 
 type ChecklistClickAction =
     | 'close'
@@ -64,8 +72,8 @@ const Window = styled('aside', {
 })<{ pulsing?: boolean }>(({ theme, pulsing }) => ({
     position: 'fixed',
     bottom: theme.spacing(3),
-    right: theme.spacing(3),
-    width: 380,
+    right: theme.spacing(20),
+    width: 320,
     maxWidth: `calc(100vw - ${theme.spacing(4)})`,
     maxHeight: `calc(100vh - ${theme.spacing(6)})`,
     display: 'flex',
@@ -88,13 +96,33 @@ const Window = styled('aside', {
     }),
 }));
 
-const Header = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(0.125),
-    padding: theme.spacing(1, 1.5, 1, 1.5),
-    background: theme.palette.background.elevation1,
+const Header = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'dragging' && prop !== 'isDraggable',
+})<{ dragging?: boolean; isDraggable?: boolean }>(
+    ({ theme, dragging, isDraggable }) => ({
+        display: 'flex',
+        alignItems: 'center',
+        gap: theme.spacing(0.125),
+        padding: theme.spacing(1, 1.5, 1, 0.75),
+        background: theme.palette.background.elevation1,
+        flexShrink: 0,
+        ...(isDraggable && {
+            cursor: dragging ? 'grabbing' : 'grab',
+            // Prevent touch scroll and text selection from interfering with the drag.
+            touchAction: 'none',
+            userSelect: dragging ? 'none' : undefined,
+            [`&:hover .${DRAG_HANDLE_ICON_CLASS}`]: {
+                color: theme.palette.text.secondary,
+            },
+        }),
+    }),
+);
+
+const DragHandle = styled(DragIndicatorIcon)(({ theme }) => ({
+    color: theme.palette.text.disabled,
+    fontSize: '1.25rem',
     flexShrink: 0,
+    transition: theme.transitions.create('color'),
 }));
 
 const TitleRow = styled('div')(({ theme }) => ({
@@ -233,6 +261,21 @@ const EligibleFloatingOnboardingChecklist = () => {
         },
         [trackEvent],
     );
+
+    const [dragPosition, setDragPosition] = useChecklistDragPosition();
+    const {
+        nodeRef,
+        position,
+        dragging,
+        bounds,
+        canDrag,
+        onStart,
+        onStop,
+        onDrag,
+    } = useDraggableWindow({
+        position: dragPosition,
+        onPositionChange: setDragPosition,
+    });
 
     const [createFlagOpen, setCreateFlagOpen] = useState(false);
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
@@ -396,34 +439,57 @@ const EligibleFloatingOnboardingChecklist = () => {
 
     return (
         <>
-            <Window aria-label='Get started' pulsing={pulsing}>
-                <Header>
-                    <TitleRow>
-                        <HeaderTitle>Get started</HeaderTitle>
-                        <OnboardingProgressBadge showLabel />
-                    </TitleRow>
-                    <IconButton
-                        size='medium'
-                        aria-label={state.minimized ? 'Expand' : 'Minimize'}
-                        onClick={toggleMinimized}
+            <Draggable
+                nodeRef={nodeRef}
+                disabled={!canDrag}
+                handle={`.${DRAG_HANDLE_CLASS}`}
+                cancel={DRAG_CANCEL_SELECTOR}
+                position={position}
+                bounds={bounds}
+                onStart={onStart}
+                onStop={onStop}
+                onDrag={onDrag}
+            >
+                <Window
+                    aria-label='Get started'
+                    pulsing={pulsing}
+                    ref={nodeRef}
+                >
+                    <Header
+                        isDraggable={canDrag}
+                        dragging={dragging}
+                        className={canDrag ? DRAG_HANDLE_CLASS : undefined}
                     >
-                        <MinimizeIcon fontSize='medium' />
-                    </IconButton>
-                    <IconButton
-                        size='medium'
-                        aria-label='Close'
-                        onClick={handleDismiss}
-                    >
-                        <CloseIcon fontSize='medium' />
-                    </IconButton>
-                </Header>
+                        {canDrag ? (
+                            <DragHandle className={DRAG_HANDLE_ICON_CLASS} />
+                        ) : null}
+                        <TitleRow>
+                            <HeaderTitle>Get started</HeaderTitle>
+                            <OnboardingProgressBadge showLabel />
+                        </TitleRow>
+                        <IconButton
+                            size='medium'
+                            aria-label={state.minimized ? 'Expand' : 'Minimize'}
+                            onClick={toggleMinimized}
+                        >
+                            <MinimizeIcon fontSize='medium' />
+                        </IconButton>
+                        <IconButton
+                            size='medium'
+                            aria-label='Close'
+                            onClick={handleDismiss}
+                        >
+                            <CloseIcon fontSize='medium' />
+                        </IconButton>
+                    </Header>
 
-                {state.minimized ? null : (
-                    <Body>
-                        <ChecklistSteps steps={steps} />
-                    </Body>
-                )}
-            </Window>
+                    {state.minimized ? null : (
+                        <Body>
+                            <ChecklistSteps steps={steps} />
+                        </Body>
+                    )}
+                </Window>
+            </Draggable>
 
             <CreateFeatureDialog
                 open={createFlagOpen}

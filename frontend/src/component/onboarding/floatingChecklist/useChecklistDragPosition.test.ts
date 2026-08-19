@@ -1,7 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
 import { beforeEach, expect, test, vi } from 'vitest';
 
-// Reset the module-scope `persisted` between tests.
 beforeEach(() => {
     vi.resetModules();
 });

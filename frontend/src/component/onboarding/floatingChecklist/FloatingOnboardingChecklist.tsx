@@ -39,9 +39,6 @@ import { ONBOARDING_CHECKLIST_SPLASH_ID } from './useOnboardingChecklistEligibil
 
 const CHECKLIST_SHOWN_TRACKED_KEY = 'floating-onboarding:shown-tracked:v1';
 
-// Kept in sync with `<Draggable handle={...} cancel={...}>` below. The two
-// selectors are the coupling contract with react-draggable; renaming the class
-// without touching `handle` silently breaks dragging.
 const DRAG_HANDLE_CLASS = 'drag-handle';
 const DRAG_HANDLE_ICON_CLASS = 'drag-handle-icon';
 const DRAG_CANCEL_SELECTOR = 'button';

@@ -13,8 +13,10 @@ import { IntroDialog } from './IntroDialog.tsx';
 export const ONBOARDING_INTRO_FINISHED_SPLASH_ID = 'onboarding-intro-finished';
 
 interface OpenOptions {
-    /** Runs after the intro closes (via close, backdrop, Escape, Skip, or Finish). */
+    /** Runs when the intro is dismissed (close, backdrop, Escape, Skip, or Finish). */
     onClose?: () => void;
+    /** Runs after the dialog's leave transition — layout has settled. */
+    onExited?: () => void;
     /** Runs only when the user completes the intro (Finish button). */
     onFinish?: () => void;
 }
@@ -38,12 +40,14 @@ export const IntroProvider = ({ children }: { children: ReactNode }) => {
     // Held in refs so re-renders don't clear pending callbacks between the
     // open() call and the eventual close/finish.
     const onCloseRef = useRef<(() => void) | undefined>(undefined);
+    const onExitedRef = useRef<(() => void) | undefined>(undefined);
     const onFinishRef = useRef<(() => void) | undefined>(undefined);
 
     const open = useCallback(
         (options?: OpenOptions) => {
             if (!enabled) return;
             onCloseRef.current = options?.onClose;
+            onExitedRef.current = options?.onExited;
             onFinishRef.current = options?.onFinish;
             setIsOpen(true);
         },
@@ -54,8 +58,14 @@ export const IntroProvider = ({ children }: { children: ReactNode }) => {
         setIsOpen(false);
         const onClose = onCloseRef.current;
         onCloseRef.current = undefined;
-        onFinishRef.current = undefined;
         onClose?.();
+    }, []);
+
+    const handleExited = useCallback(() => {
+        const onExited = onExitedRef.current;
+        onExitedRef.current = undefined;
+        onFinishRef.current = undefined;
+        onExited?.();
     }, []);
 
     const handleFinish = useCallback(() => {
@@ -70,6 +80,7 @@ export const IntroProvider = ({ children }: { children: ReactNode }) => {
                 <IntroDialog
                     open={isOpen}
                     onClose={handleClose}
+                    onExited={handleExited}
                     onFinish={handleFinish}
                 />
             )}

@@ -2,7 +2,6 @@ import type { FC } from 'react';
 import { beforeEach, expect, test } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { ADMIN } from 'component/providers/AccessProvider/permissions.ts';
 import { createLocalStorage } from 'utils/createLocalStorage.ts';
@@ -165,51 +164,6 @@ test('shows the tour step alongside the other three when the quick tour flag is 
     render(<TestComponent />, { permissions: [{ permission: ADMIN }] });
 
     expect(await screen.findByTestId('count')).toHaveTextContent('0/4');
-});
-
-const HintTestComponent: FC = () => {
-    const value = useChecklistContextValue();
-    if (!value) return <div>null</div>;
-    return (
-        <div>
-            <span data-testid='hint'>{value.helpHintVisible ? 'y' : 'n'}</span>
-            <button type='button' onClick={value.showHelpHint}>
-                show
-            </button>
-            <button type='button' onClick={value.dismissHelpHint}>
-                dismiss
-            </button>
-        </div>
-    );
-};
-
-test('reveals the help hint when a first-time user is prompted', async () => {
-    mockEligibleUser();
-    mockProjectOverview('onboarding-started');
-
-    render(<HintTestComponent />, { permissions: [{ permission: ADMIN }] });
-    expect(await screen.findByTestId('hint')).toHaveTextContent('n');
-
-    await userEvent.click(screen.getByRole('button', { name: 'show' }));
-
-    expect(screen.getByTestId('hint')).toHaveTextContent('y');
-});
-
-test('stays hidden on remount for a user who already dismissed it', async () => {
-    mockEligibleUser();
-    mockProjectOverview('onboarding-started');
-
-    const { unmount } = render(<HintTestComponent />, {
-        permissions: [{ permission: ADMIN }],
-    });
-    await userEvent.click(await screen.findByRole('button', { name: 'show' }));
-    await userEvent.click(screen.getByRole('button', { name: 'dismiss' }));
-    unmount();
-
-    render(<HintTestComponent />, { permissions: [{ permission: ADMIN }] });
-    await userEvent.click(await screen.findByRole('button', { name: 'show' }));
-
-    expect(screen.getByTestId('hint')).toHaveTextContent('n');
 });
 
 test('stays hidden when the default project cannot be loaded', async () => {

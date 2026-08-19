@@ -1,8 +1,14 @@
+import { type FC, useEffect } from 'react';
 import { expect, test, vi } from 'vitest';
 import { render } from 'utils/testRenderer';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { HelpResources } from './HelpResources';
+import {
+    HelpButtonHintProvider,
+    type HelpButtonHintKind,
+    useHelpButtonHint,
+} from './HelpButtonHintContext.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { FloatingOnboardingChecklistContext } from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklistContext.tsx';
 import type { FloatingOnboardingChecklistContextValue } from 'component/onboarding/floatingChecklist/useChecklistContextValue.ts';
@@ -13,6 +19,7 @@ import {
 import { ADMIN } from 'component/providers/AccessProvider/permissions.ts';
 
 const HINT_TEXT = 'You can reopen the Get started checklist from here anytime';
+const INTRO_HINT_TEXT = 'You can restart the Unleash Intro from here anytime';
 
 const baseChecklistContext = (
     overrides: Partial<FloatingOnboardingChecklistContextValue> = {},
@@ -30,9 +37,6 @@ const baseChecklistContext = (
     totalSteps: 3,
     environments: [],
     refetchOverview: vi.fn(),
-    helpHintVisible: false,
-    showHelpHint: vi.fn(),
-    dismissHelpHint: vi.fn(),
     ...overrides,
 });
 
@@ -63,6 +67,11 @@ vi.mock('component/feedbackNew/useFeedback', async (importOriginal) => {
 const trackEvent = vi.fn();
 vi.mock('hooks/useEventTracker', () => ({
     useEventTracker: () => ({ trackEvent }),
+}));
+
+const openIntroMock = vi.fn();
+vi.mock('component/onboarding/intro/IntroProvider.tsx', () => ({
+    useIntro: () => ({ open: openIntroMock }),
 }));
 
 const withLearningLab = () =>
@@ -287,23 +296,74 @@ test("hides Get started until the user's eligibility is known", async () => {
     ).not.toBeInTheDocument();
 });
 
-test('shows the help hint pointing at the button when the context flags it visible', async () => {
+const HintSeeder: FC<{ kind: HelpButtonHintKind }> = ({ kind }) => {
+    const { showHint } = useHelpButtonHint();
+    useEffect(() => {
+        showHint(kind);
+    }, [kind, showHint]);
+    return null;
+};
+
+const renderWithHint = (kind: HelpButtonHintKind) => {
+    window.localStorage.clear();
+    render(
+        <HelpButtonHintProvider>
+            <HintSeeder kind={kind} />
+            <HelpResources />
+        </HelpButtonHintProvider>,
+    );
+};
+
+test('renders only the get-started copy while the get-started hint is active', async () => {
     withLearningLab();
 
-    renderWithChecklistContext({ helpHintVisible: true });
+    renderWithHint('get-started');
 
     expect(await screen.findByText(HINT_TEXT)).toBeInTheDocument();
+    expect(screen.queryByText(INTRO_HINT_TEXT)).not.toBeInTheDocument();
+});
+
+test('renders only the intro-closed copy while the intro-closed hint is active', async () => {
+    withLearningLab();
+
+    renderWithHint('intro-closed');
+
+    expect(await screen.findByText(INTRO_HINT_TEXT)).toBeInTheDocument();
+    expect(screen.queryByText(HINT_TEXT)).not.toBeInTheDocument();
 });
 
 test('dismisses the help hint when the user opens the menu', async () => {
     withLearningLab();
-    const dismissHelpHint = vi.fn();
 
-    renderWithChecklistContext({ helpHintVisible: true, dismissHelpHint });
+    renderWithHint('get-started');
+    expect(await screen.findByText(HINT_TEXT)).toBeInTheDocument();
 
     await userEvent.click(
         await screen.findByRole('button', { name: 'Help and resources' }),
     );
 
-    expect(dismissHelpHint).toHaveBeenCalled();
+    await waitFor(() =>
+        expect(screen.queryByText(HINT_TEXT)).not.toBeInTheDocument(),
+    );
+});
+
+test('surfaces the intro-closed hint after the intro closes from the menu', async () => {
+    testServerRoute(server, '/api/admin/ui-config', {
+        flags: { onboardingIntroTour: true },
+    });
+    window.localStorage.clear();
+    openIntroMock.mockImplementationOnce((options) => options?.onExited?.());
+
+    render(
+        <HelpButtonHintProvider>
+            <HelpResources />
+        </HelpButtonHintProvider>,
+    );
+
+    await userEvent.click(
+        await screen.findByRole('button', { name: 'Help and resources' }),
+    );
+    await userEvent.click(screen.getByText('Unleash Intro'));
+
+    expect(await screen.findByText(INTRO_HINT_TEXT)).toBeInTheDocument();
 });

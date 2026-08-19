@@ -6,6 +6,10 @@ import { testServerSetup } from 'utils/testServer';
 import { FloatingOnboardingChecklist } from './FloatingOnboardingChecklist.tsx';
 import { FloatingOnboardingChecklistContext } from './FloatingOnboardingChecklistContext.tsx';
 import type { FloatingOnboardingChecklistContextValue } from './useChecklistContextValue.ts';
+import {
+    HelpButtonHintProvider,
+    useHelpButtonHint,
+} from 'component/menu/Header/HelpResources/HelpButtonHintContext.tsx';
 
 testServerSetup();
 
@@ -73,9 +77,6 @@ const baseContext = (
     totalSteps: 4,
     environments: [],
     refetchOverview: vi.fn(),
-    helpHintVisible: false,
-    showHelpHint: vi.fn(),
-    dismissHelpHint: vi.fn(),
     ...overrides,
 });
 
@@ -93,7 +94,13 @@ const renderWithContext = (
 beforeEach(() => {
     trackEvent.mockClear();
     window.sessionStorage.clear();
+    window.localStorage.clear();
 });
+
+const HintProbe = () => {
+    const { activeHint } = useHelpButtonHint();
+    return <span data-testid='active-hint'>{activeHint ?? 'none'}</span>;
+};
 
 test("tracks 'shown' once per session", async () => {
     const { unmount } = renderWithContext();
@@ -127,6 +134,23 @@ test("tracks 'close' click when the user closes it", async () => {
     expect(trackEvent).toHaveBeenCalledWith('onboarding-checklist', {
         props: { eventType: 'click', action: 'close' },
     });
+});
+
+test('surfaces the get-started help-button hint after the user dismisses the checklist', async () => {
+    render(
+        <HelpButtonHintProvider>
+            <FloatingOnboardingChecklistContext.Provider value={baseContext()}>
+                <FloatingOnboardingChecklist />
+                <HintProbe />
+            </FloatingOnboardingChecklistContext.Provider>
+        </HelpButtonHintProvider>,
+    );
+
+    expect(screen.getByTestId('active-hint')).toHaveTextContent('none');
+
+    await userEvent.click(await screen.findByLabelText('Close'));
+
+    expect(screen.getByTestId('active-hint')).toHaveTextContent('get-started');
 });
 
 test("tracks 'minimize' click when the user minimizes the panel", async () => {

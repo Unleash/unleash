@@ -1,9 +1,8 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash.ts';
 import { getProjectOnboardingStep } from 'utils/getProjectOnboardingStep.ts';
-import { getLocalStorageItem, setLocalStorageItem } from 'utils/storage.ts';
 import {
     type FloatingOnboardingChecklistCompleted,
     type FloatingOnboardingChecklistState,
@@ -14,8 +13,6 @@ import { ONBOARDING_CHECKLIST_SPLASH_ID } from './useOnboardingChecklistEligibil
 import { useOnboardingChecklistVisibility } from './useOnboardingChecklistVisibility.ts';
 
 export const CHECKLIST_PROJECT_ID = 'default';
-
-const HELP_HINT_STORAGE_KEY = 'floating-onboarding:help-hint-seen:v1';
 
 export type ChecklistStepKey = 'tour' | 'flag' | 'sdk' | 'on';
 
@@ -33,9 +30,6 @@ export interface FloatingOnboardingChecklistContextValue {
     totalSteps: number;
     environments: string[];
     refetchOverview: () => void;
-    helpHintVisible: boolean;
-    showHelpHint: () => void;
-    dismissHelpHint: () => void;
 }
 
 export const useChecklistContextValue =
@@ -44,17 +38,6 @@ export const useChecklistContextValue =
         const { state, update, markCompleted } =
             useFloatingOnboardingChecklistState();
         const [openRequestCounter, setOpenRequestCounter] = useState(0);
-        const [helpHintVisible, setHelpHintVisible] = useState(false);
-
-        const showHelpHint = useCallback(() => {
-            if (getLocalStorageItem<boolean>(HELP_HINT_STORAGE_KEY)) return;
-            setHelpHintVisible(true);
-        }, []);
-
-        const dismissHelpHint = useCallback(() => {
-            setHelpHintVisible(false);
-            setLocalStorageItem(HELP_HINT_STORAGE_KEY, true);
-        }, []);
         const { splash } = useAuthSplash();
         const quickTourEnabled = useUiFlag('onboardingIntroTour');
         const projectId = CHECKLIST_PROJECT_ID;
@@ -116,8 +99,5 @@ export const useChecklistContextValue =
             totalSteps,
             environments,
             refetchOverview,
-            helpHintVisible,
-            showHelpHint,
-            dismissHelpHint,
         };
     };

@@ -42,6 +42,7 @@ const StyledClose = styled(IconButton)(({ theme }) => ({
 interface IIntroDialogProps {
     open: boolean;
     onClose: () => void;
+    onExited: () => void;
     onFinish: () => void;
 }
 
@@ -51,7 +52,12 @@ interface IIntroDialogProps {
  * Rendered once at App level by {@link IntroProvider}; opened via
  * {@link useIntro}.
  */
-export const IntroDialog = ({ open, onClose, onFinish }: IIntroDialogProps) => {
+export const IntroDialog = ({
+    open,
+    onClose,
+    onExited,
+    onFinish,
+}: IIntroDialogProps) => {
     const navigate = useNavigate();
     const advancedStepsEnabled = useUiFlag('onboardingIntroTourAdvancedTopics');
     const { projects } = useProjects({ isPaused: () => !open });
@@ -64,7 +70,12 @@ export const IntroDialog = ({ open, onClose, onFinish }: IIntroDialogProps) => {
     };
 
     return (
-        <StyledDialog open={open} onClose={onClose} maxWidth={false}>
+        <StyledDialog
+            open={open}
+            onClose={onClose}
+            maxWidth={false}
+            slotProps={{ transition: { onExited } }}
+        >
             <StyledClose onClick={onClose} aria-label='Close' size='small'>
                 <CloseIcon fontSize='small' />
             </StyledClose>

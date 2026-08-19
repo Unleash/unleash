@@ -32,6 +32,7 @@ import { ChecklistSteps, type ChecklistStep } from './ChecklistSteps.tsx';
 import { usePendingAction } from './usePendingAction.ts';
 import type { ChecklistStepKey } from './useChecklistContextValue.ts';
 import { ONBOARDING_CHECKLIST_SPLASH_ID } from './useOnboardingChecklistEligibility.ts';
+import { useHelpButtonHint } from 'component/menu/Header/HelpResources/HelpButtonHintContext.tsx';
 
 const CHECKLIST_SHOWN_TRACKED_KEY = 'floating-onboarding:shown-tracked:v1';
 
@@ -213,8 +214,8 @@ const EligibleFloatingOnboardingChecklist = () => {
         environments,
         refetchOverview,
         openRequestCounter,
-        showHelpHint,
     } = useFloatingOnboardingChecklist();
+    const { showHint: showHelpButtonHint } = useHelpButtonHint();
     const { feature, goToFlagHref } = useFirstProjectFeature(projectId);
 
     const { open: openIntro } = useIntro();
@@ -288,7 +289,7 @@ const EligibleFloatingOnboardingChecklist = () => {
         cancelPendingAction();
         update({ dismissed: true });
         setSplashSeen(ONBOARDING_CHECKLIST_SPLASH_ID);
-        showHelpHint();
+        showHelpButtonHint('get-started');
     };
 
     const handleTakeTour = () => {

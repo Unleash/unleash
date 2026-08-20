@@ -168,10 +168,7 @@ test('give feedback calls openFeedback with the correct title and labels', async
     });
 });
 
-test("What's new item shows when flag is enabled", async () => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: { whatsNewPage: true },
-    });
+test("What's new item links to /whats-new", async () => {
     render(<HelpResources />);
 
     await userEvent.click(
@@ -181,21 +178,6 @@ test("What's new item shows when flag is enabled", async () => {
     expect(
         screen.getByRole('menuitem', { name: /What's new/ }),
     ).toHaveAttribute('href', '/whats-new');
-});
-
-test("What's new item is hidden without the flag", async () => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: { whatsNewPage: false },
-    });
-    render(<HelpResources />);
-
-    await userEvent.click(
-        await screen.findByRole('button', { name: 'Help and resources' }),
-    );
-
-    expect(
-        screen.queryByRole('menuitem', { name: /What's new/ }),
-    ).not.toBeInTheDocument();
 });
 
 test('tracks menu open and item click', async () => {

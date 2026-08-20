@@ -166,7 +166,6 @@ export const HelpResources = () => {
     const buttonRef = useRef<HTMLButtonElement | null>(null);
     const open = Boolean(anchorEl);
     const { trackEvent } = useEventTracker();
-    const showWhatsNew = useUiFlag('whatsNewPage');
     const { open: openIntro } = useIntro();
     const introEnabled = useUiFlag('onboardingIntroTour');
     const learningLabFlag = useUiFlag('learningLab');
@@ -310,16 +309,14 @@ export const HelpResources = () => {
                         <OnboardingProgressBadge />
                     </StyledMenuItem>
                 )}
-                {showWhatsNew && (
-                    <StyledMenuItem
-                        component={Link}
-                        to='/whats-new'
-                        onClick={() => handleOptionClick('whats-new')}
-                    >
-                        <NewReleasesOutlinedIcon fontSize='small' />
-                        What's new
-                    </StyledMenuItem>
-                )}
+                <StyledMenuItem
+                    component={Link}
+                    to='/whats-new'
+                    onClick={() => handleOptionClick('whats-new')}
+                >
+                    <NewReleasesOutlinedIcon fontSize='small' />
+                    What's new
+                </StyledMenuItem>
                 {introEnabled && (
                     <StyledMenuItem
                         onClick={() => {

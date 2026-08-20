@@ -9,40 +9,19 @@ import {
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 import type { INavigationMenuItem } from 'interfaces/route';
 import type { IUiConfig } from 'interfaces/uiConfig';
-import { useUiFlagEvaluator, useUiFlag } from 'hooks/useUiFlag';
-import { useVariant } from 'hooks/useVariant';
-import type { Variant } from 'utils/variants';
-
-const useNewRoute = () => {
-    const flag = useUiFlag('newInUnleash');
-    return useVariant(flag as Variant);
-};
-
-const markRouteIfNew = (
-    route: INavigationMenuItem,
-    newRouteTitle?: string,
-): INavigationMenuItem => {
-    if (newRouteTitle?.trim().toLowerCase() === route.title.toLowerCase()) {
-        return { ...route, isNew: true };
-    }
-    return route;
-};
+import { useUiFlagEvaluator } from 'hooks/useUiFlag';
 
 const filterMapRoutes =
     (
         uiConfig: IUiConfig,
         evaluateFlag: ReturnType<typeof useUiFlagEvaluator>,
         planData: PlanData,
-        newRouteTitle?: string,
     ) =>
     (routes: INavigationMenuItem[]) => {
         return routes
             .filter(filterByConfig(uiConfig, evaluateFlag))
             .filter((route) => filterRoutesByPlanData(route?.menu, planData))
-            .map((route) => {
-                const normalized = normalizeRoutePath(route);
-                return markRouteIfNew(normalized, newRouteTitle);
-            });
+            .map(normalizeRoutePath);
     };
 
 export const useRoutes = () => {
@@ -51,7 +30,6 @@ export const useRoutes = () => {
     const routes = getNavRoutes();
     const adminRoutes = useAdminRoutes();
     const primaryRoutes = getPrimaryRoutes();
-    const newRoute = useNewRoute();
     const evaluateFlag = useUiFlagEvaluator();
 
     const planData: PlanData = {
@@ -60,12 +38,7 @@ export const useRoutes = () => {
         billing: isBilling,
     };
 
-    const processRoutes = filterMapRoutes(
-        uiConfig,
-        evaluateFlag,
-        planData,
-        newRoute,
-    );
+    const processRoutes = filterMapRoutes(uiConfig, evaluateFlag, planData);
 
     const filteredMainRoutes = {
         mainNavRoutes: processRoutes(routes),

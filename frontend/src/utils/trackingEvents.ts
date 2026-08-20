@@ -61,8 +61,6 @@ export type CustomEvents =
     | 'sdk-banner'
     | 'feature-lifecycle'
     | 'command-bar'
-    | 'new-in-unleash-click'
-    | 'new-in-unleash-dismiss'
     | 'search-opened'
     | 'events-exported'
     | 'event-timeline'

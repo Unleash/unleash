@@ -83,7 +83,6 @@ export const routes: IRoute[] = [
         title: "What's new",
         component: WhatsNewPage,
         type: 'protected',
-        flag: 'whatsNewPage',
         hidden: true,
         menu: {},
     },

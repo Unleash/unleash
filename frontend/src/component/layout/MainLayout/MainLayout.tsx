@@ -14,7 +14,6 @@ import { DraftBanner } from './DraftBanner/DraftBanner.tsx';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar.tsx';
 import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
-import { NewInUnleash } from './NavigationSidebar/NewInUnleash/NewInUnleash.tsx';
 import { FloatingOnboardingChecklistVisibilityGate } from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklistVisibilityGate.tsx';
 import { FloatingOnboardingChecklistProvider } from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklistContext.tsx';
 import { HelpButtonHintProvider } from 'component/menu/Header/HelpResources/HelpButtonHintContext.tsx';
@@ -191,7 +190,6 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                 />
                             </MainLayoutContentWrapper>
                         </MainLayoutContainer>
-                        <NewInUnleash />
                         <AccessRequestsNotifications />
                     </EventTimelineProvider>
                 </FloatingOnboardingChecklistProvider>

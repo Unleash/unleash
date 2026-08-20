@@ -15,6 +15,7 @@ export type Feature = FeatureBase &
               releasedAt: string;
               docsLink?: string;
               previewImageSrc?: string;
+              enterprise?: boolean;
           }
         | { phase: 'beta' | 'exploring' }
     );
@@ -34,6 +35,7 @@ export const features: Feature[] = [
         releasedAt: '2026-06-09',
         docsLink: 'https://docs.getunleash.io/concepts/impact-metrics',
         previewImageSrc: formatAssetPath(ImpactMetricsImage),
+        enterprise: true,
     },
     {
         title: 'Safeguards and milestone progression',
@@ -44,6 +46,7 @@ export const features: Feature[] = [
         docsLink:
             'https://docs.getunleash.io/concepts/impact-metrics#automate-release-progression',
         previewImageSrc: formatAssetPath(MilestoneImage),
+        enterprise: true,
     },
     {
         title: 'Unleash MCP server',
@@ -53,6 +56,7 @@ export const features: Feature[] = [
         releasedAt: '2026-05-26',
         docsLink: 'https://docs.getunleash.io/integrate/mcp',
         previewImageSrc: formatAssetPath(McpImage),
+        enterprise: true,
     },
     {
         title: 'Service Now integration',

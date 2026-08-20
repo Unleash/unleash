@@ -60,9 +60,30 @@ const StyledCardHeader = styled('header')(({ theme }) => ({
     marginBottom: theme.spacing(1),
 }));
 
+const StyledReleaseDateRow = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    marginBottom: theme.spacing(0.5),
+}));
+
 const StyledReleaseDate = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
-    marginBottom: theme.spacing(0.5),
+}));
+
+const StyledEnterpriseTag = styled('span')(({ theme }) => ({
+    ...theme.typography.caption,
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: theme.spacing(3),
+    padding: theme.spacing(0, 1),
+    marginLeft: 'auto',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: theme.palette.secondary.light,
+    color: theme.palette.secondary.contrastText,
+    border: `1px solid ${theme.palette.secondary.border}`,
+    fontWeight: theme.typography.fontWeightBold,
 }));
 
 const StyledInProgressDescription = styled(Typography)(({ theme }) => ({
@@ -150,13 +171,18 @@ const ReleasedFeatureCard = ({ feature }: { feature: ReleasedFeature }) => {
                 <StyledPreviewImage src={feature.previewImageSrc} alt='' />
             ) : null}
             <StyledContent>
-                <StyledReleaseDate variant='body2'>
-                    {formatDateYMD(
-                        feature.releasedAt,
-                        locationSettings.locale,
-                        'UTC',
-                    )}
-                </StyledReleaseDate>
+                <StyledReleaseDateRow>
+                    <StyledReleaseDate variant='body2'>
+                        {formatDateYMD(
+                            feature.releasedAt,
+                            locationSettings.locale,
+                            'UTC',
+                        )}
+                    </StyledReleaseDate>
+                    {feature.enterprise ? (
+                        <StyledEnterpriseTag>Enterprise</StyledEnterpriseTag>
+                    ) : null}
+                </StyledReleaseDateRow>
                 <StyledCardHeader>
                     <StyledFeatureTitle component='h2' variant='body1'>
                         {feature.title}

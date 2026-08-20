@@ -104,3 +104,32 @@ export const Exploring: Story = () => (
         }}
     />
 );
+
+export const EnterpriseReleased: Story = () => (
+    <FeatureCard
+        feature={{
+            phase: 'released',
+            title: 'Impact metrics',
+            description:
+                'Track error rates, latency, and other application signals directly inside Unleash.',
+            releasedAt: '2026-06-09',
+            docsLink: 'https://docs.getunleash.io/concepts/impact-metrics',
+            enterprise: true,
+        }}
+    />
+);
+
+export const EnterpriseReleasedWithPreview: Story = () => (
+    <FeatureCard
+        feature={{
+            phase: 'released',
+            title: 'Impact metrics',
+            description:
+                'Track error rates, latency, and other application signals directly inside Unleash.',
+            releasedAt: '2026-06-09',
+            docsLink: 'https://docs.getunleash.io/concepts/impact-metrics',
+            previewImageSrc: samplePreviewSrc,
+            enterprise: true,
+        }}
+    />
+);

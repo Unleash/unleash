@@ -20,7 +20,7 @@ import {
 } from '../../error/index.js';
 import normalizeUrl from 'normalize-url';
 import { parse } from 'tldts';
-import { FEAUTRE_LINK_COUNT } from '../metrics/impact/define-impact-metrics.js';
+import { FEATURE_LINK_COUNT } from '../metrics/impact/define-impact-metrics.js';
 
 interface IFeatureLinkStoreObj {
     featureLinkStore: IFeatureLinkStore;
@@ -92,7 +92,7 @@ export default class FeatureLinkService {
             domain: domainWithoutSuffix,
         });
 
-        this.flagResolver.impactMetrics?.incrementCounter(FEAUTRE_LINK_COUNT);
+        this.flagResolver.impactMetrics?.incrementCounter(FEATURE_LINK_COUNT);
 
         await this.eventService.storeEvent(
             new FeatureLinkAddedEvent({

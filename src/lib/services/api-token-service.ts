@@ -30,10 +30,17 @@ import { omitKeys } from '../util/index.js';
 import type EventService from '../features/events/event-service.js';
 import { addMinutes, isPast } from 'date-fns';
 import metricsHelper from '../util/metrics-helper.js';
-import { FUNCTION_TIME } from '../metric-events.js';
+import {
+    FUNCTION_TIME,
+    TOKEN_CACHE_LOOKUP,
+    emitMetricEvent,
+    type TokenLookupResult,
+} from '../metric-events.js';
 import { throwExceedsLimitError } from '../error/exceeds-limit-error.js';
 import type EventEmitter from 'events';
 import type { ResourceLimitsService } from '../features/resource-limits/resource-limits-service.js';
+
+const TOKEN_CACHE_NAME = 'api-token-v1' as const;
 
 const resolveTokenPermissions = (tokenType: string) => {
     if (tokenType === ApiTokenType.ADMIN) {
@@ -65,6 +72,8 @@ export class ApiTokenService {
 
     private queryAfter = new Map<string, Date>();
 
+    private warnedAliasTokens = new Set<string>();
+
     private eventService: EventService;
 
     private lastSeenSecrets: Set<string> = new Set<string>();
@@ -95,6 +104,10 @@ export class ApiTokenService {
         this.environmentStore = environmentStore;
         this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('/services/api-token-service.ts');
+
+        // Assigned before fetchActiveTokens() below, which now emits on it.
+        this.eventBus = config.eventBus;
+
         if (!this.flagResolver.isEnabled('useMemoizedActiveTokens')) {
             // This is probably not needed because the scheduler will run it
             this.fetchActiveTokens();
@@ -105,8 +118,6 @@ export class ApiTokenService {
                 className: 'ApiTokenService',
                 functionName,
             });
-
-        this.eventBus = config.eventBus;
     }
 
     /**
@@ -116,8 +127,24 @@ export class ApiTokenService {
         try {
             this.activeTokens = await this.store.getAllActive();
         } catch (e) {
-            this.logger.warn('Failed to fetch active tokens', e);
+            // This refresh is what bounds how long a revoked token keeps
+            // working. The scheduler logs job failures, but v1 and v2 share one
+            // job id, so name the cache here.
+            this.logger.error(
+                `Failed to refresh cache ${TOKEN_CACHE_NAME}; it is now serving stale tokens until the next successful refresh`,
+                e,
+            );
         }
+    }
+
+    private warnAliasUsage(token: IApiToken): void {
+        if (this.warnedAliasTokens.has(token.tokenName)) {
+            return;
+        }
+        this.warnedAliasTokens.add(token.tokenName);
+        this.logger.warn(
+            `API token "${token.tokenName}" (environment: ${token.environment}) was resolved through the deprecated alias column. It should be rotated before alias support is removed.`,
+        );
     }
 
     async getToken(secret: string): Promise<IApiToken | undefined> {
@@ -128,11 +155,16 @@ export class ApiTokenService {
             return undefined;
         }
 
+        let result: TokenLookupResult = 'miss';
+
         let token = this.activeTokens.find(
             (activeToken) =>
                 Boolean(activeToken.secret) &&
                 constantTimeCompare(activeToken.secret, secret),
         );
+        if (token) {
+            result = 'hit';
+        }
 
         // If the token is not found, try to find it in the legacy format with alias.
         // This allows us to support the old format of tokens migrating to the embedded proxy.
@@ -142,13 +174,20 @@ export class ApiTokenService {
                     Boolean(activeToken.alias) &&
                     constantTimeCompare(activeToken.alias!, secret),
             );
+            if (token) {
+                result = 'hit';
+                this.warnAliasUsage(token);
+            }
         }
 
         const nextAllowedQuery = this.queryAfter.get(secret) ?? 0;
         if (!token) {
             if (isPast(nextAllowedQuery)) {
                 if (this.queryAfter.size > 1000) {
-                    // establish a max limit for queryAfter size to prevent memory leak
+                    // TODO: set a max limit for queryAfter size to prevent memory leak
+                    this.logger.warn(
+                        `${TOKEN_CACHE_NAME}: negative lookup cache reached 1000 entries and was cleared. Repeated tries: might be a client retrying with invalid tokens.`,
+                    );
                     this.queryAfter.clear();
                 }
 
@@ -169,6 +208,8 @@ export class ApiTokenService {
                 }
                 stopCacheTimer();
             } else {
+                // query was suppressed by the negative cache
+                result = 'throttled';
                 if (Math.random() < 0.1) {
                     this.logger.info(
                         `Token ${secret.replace(
@@ -179,6 +220,11 @@ export class ApiTokenService {
                 }
             }
         }
+
+        emitMetricEvent(this.eventBus, TOKEN_CACHE_LOOKUP, {
+            cache: TOKEN_CACHE_NAME,
+            result,
+        });
         return token;
     }
 

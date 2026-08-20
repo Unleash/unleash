@@ -21,6 +21,7 @@ const CLIENT_METRICS_TAGS = 'client-api-tags';
 const CLIENT_METRICS_PROJECT = 'client-api-project';
 const CLIENT_REGISTERED = 'client_registered';
 const IMPACT_METRICS_QUERY_TIME = 'impact_metrics_query_time';
+const TOKEN_CACHE_LOOKUP = 'token_cache_lookup';
 
 type MetricEvent =
     | typeof REQUEST_TIME
@@ -40,7 +41,8 @@ type MetricEvent =
     | typeof CLIENT_METRICS_NAMEPREFIX
     | typeof CLIENT_METRICS_TAGS
     | typeof CLIENT_METRICS_PROJECT
-    | typeof IMPACT_METRICS_QUERY_TIME;
+    | typeof IMPACT_METRICS_QUERY_TIME
+    | typeof TOKEN_CACHE_LOOKUP;
 
 type RequestOriginEventPayload = {
     type: 'UI' | 'API';
@@ -60,9 +62,19 @@ type ClientMetricsProjectPayload = {
     projects: string[];
 };
 
+type TokenCacheName = 'api-token-v1' | 'api-token-v2';
+
+type TokenLookupResult = 'hit' | 'miss' | 'throttled';
+
+type TokenCacheLookupPayload = {
+    cache: TokenCacheName;
+    result: TokenLookupResult;
+};
+
 type MetricEventPayloads = {
     [key: string]: unknown;
     [REQUEST_ORIGIN]: RequestOriginEventPayload;
+    [TOKEN_CACHE_LOOKUP]: TokenCacheLookupPayload;
     [CLIENT_METRICS_NAMEPREFIX]: ClientMetricsNamePrefixPayload;
     [CLIENT_METRICS_TAGS]: ClientMetricsTagsPayload;
     [CLIENT_METRICS_PROJECT]: ClientMetricsProjectPayload;
@@ -110,8 +122,11 @@ export {
     CLIENT_METRICS_PROJECT,
     CLIENT_REGISTERED,
     IMPACT_METRICS_QUERY_TIME,
+    TOKEN_CACHE_LOOKUP,
     type MetricEvent,
     type MetricEventPayload,
+    type TokenCacheName,
+    type TokenLookupResult,
     emitMetricEvent,
     onMetricEvent,
 };

@@ -44,7 +44,12 @@ import {
 import FakeEventStore from '../../../test/fixtures/fake-event-store.js';
 import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store.js';
 import metricsHelper from '../../util/metrics-helper.js';
-import { FUNCTION_TIME } from '../../metric-events.js';
+import {
+    FUNCTION_TIME,
+    TOKEN_CACHE_LOOKUP,
+    emitMetricEvent,
+    type TokenLookupResult,
+} from '../../metric-events.js';
 import {
     AuthorizationTokenKind,
     createTokenV2Credential,
@@ -76,6 +81,8 @@ export const createApiTokenV2Service: (
 };
 
 const TOKEN_LIFETIME_AFTER_LAST_SEEN_IN_MINUTES = 7 * 24 * 60;
+
+const TOKEN_CACHE_NAME = 'api-token-v2' as const;
 
 const resolveTokenPermissions = (tokenType: ApiTokenType) => {
     if (tokenType === ApiTokenType.ADMIN) {
@@ -143,10 +150,23 @@ export class ApiTokenV2Service {
     }
 
     async fetchActiveTokens(): Promise<void> {
-        const tokens = await this.apiTokenV2Store.getAllActive();
-        this.activeTokens = new Map(
-            tokens.map((token) => [token.selector, token] as const),
-        );
+        try {
+            const tokens = await this.apiTokenV2Store.getAllActive();
+            this.activeTokens = new Map(
+                tokens.map((token) => [token.selector, token] as const),
+            );
+        } catch (e) {
+            // a refresh is what bounds how long a revoked token keeps working
+            // if a pod stops refreshing -> security-relevant condition
+            // log it here - the scheduler's job log cannot say if v1 or v2 cache failed
+            this.logger.error(
+                `Failed to refresh cache ${TOKEN_CACHE_NAME}; it is now serving stale tokens until the next successful refresh`,
+                e,
+            );
+            // rethrow: unlike v1 this method does not swallow, so the scheduler
+            // still sees the failure
+            throw e;
+        }
     }
 
     async create(
@@ -258,6 +278,8 @@ export class ApiTokenV2Service {
             return undefined;
         }
 
+        let result: TokenLookupResult = 'miss';
+
         let cachedToken = this.activeTokens.get(credential.selector);
         if (cachedToken?.expiresAt && isPast(cachedToken.expiresAt)) {
             this.activeTokens.delete(credential.selector);
@@ -266,10 +288,18 @@ export class ApiTokenV2Service {
         if (cachedToken && !verifyToken(secret, cachedToken.verifier)) {
             cachedToken = undefined;
         }
+        if (cachedToken) {
+            result = 'hit';
+        }
 
         const nextAllowedQuery = this.queryAfter.get(secret) ?? 0;
         if (!cachedToken && isPast(nextAllowedQuery)) {
             if (this.queryAfter.size > 1000) {
+                // TODO: set a max limit for queryAfter size to prevent memory leak
+
+                this.logger.warn(
+                    `${TOKEN_CACHE_NAME}: negative lookup cache reached 1000 entries and was cleared. Repeated tries: might be a client retrying with invalid tokens.`,
+                );
                 this.queryAfter.clear();
             }
             const stopCacheTimer = this.timer('getTokenWithCache.query');
@@ -287,7 +317,15 @@ export class ApiTokenV2Service {
                 this.queryAfter.set(secret, addMinutes(new Date(), 5));
             }
             stopCacheTimer();
+        } else if (!cachedToken) {
+            // query was suppressed by the negative cache
+            result = 'throttled';
         }
+
+        emitMetricEvent(this.eventBus, TOKEN_CACHE_LOOKUP, {
+            cache: TOKEN_CACHE_NAME,
+            result,
+        });
         return cachedToken && this.toApiToken(cachedToken);
     }
 

@@ -614,6 +614,14 @@ export function registerPrometheusMetrics(
     tagsDistinct.set(0);
     projectDistinct.set(0);
 
+    // ── API token cache ──────────────────────────────────────────────────
+    // One counter, labelled `cache` so v1 and v2 stay comparable.
+    //
+    const tokenCacheLookupTotal = createCounter({
+        name: 'token_cache_lookup_total',
+        help: 'API token resolution attempts by cache and outcome. `hit` was served from the in-memory cache, `miss` reached the store, `throttled` was suppressed by the negative cache.',
+        labelNames: ['cache', 'result'],
+    });
     const featureCreatedByMigration = createCounter({
         name: 'feature_created_by_migration_count',
         help: 'Feature createdBy migration count',
@@ -875,6 +883,10 @@ export function registerPrometheusMetrics(
                 className,
             })
             .observe(time);
+    });
+
+    eventBus.on(events.TOKEN_CACHE_LOOKUP, ({ cache, result }) => {
+        tokenCacheLookupTotal.increment({ cache, result });
     });
 
     eventBus.on(events.EVENTS_CREATED_BY_PROCESSED, ({ updated }) => {

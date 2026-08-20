@@ -95,6 +95,10 @@ const StyledInput = styled(Input)(({ theme }) => ({
 
 const StyledPercentageContainer = styled('div')(({ theme }) => ({
     marginLeft: theme.spacing(3),
+    paddingRight: theme.spacing(5),
+    [theme.breakpoints.down('sm')]: {
+        paddingRight: 0,
+    },
 }));
 
 const StyledWeightInput = styled(Input)(({ theme }) => ({

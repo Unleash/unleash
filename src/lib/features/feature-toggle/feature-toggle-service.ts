@@ -619,7 +619,7 @@ export class FeatureToggleService {
                 ...params,
                 rollout: params?.rollout ?? '100',
                 stickiness,
-                groupId: params?.groupId ?? featureName,
+                groupId: params?.groupId || featureName,
             };
         } else {
             // We don't really have good defaults for the other kinds of known strategies, so return an empty map.

@@ -32,6 +32,10 @@ class FakeEventStore implements IEventStore {
         return Promise.resolve(1);
     }
 
+    getMaxTokenRevisionId(): Promise<number> {
+        return Promise.resolve(1);
+    }
+
     getDeltaRevisionState(
         _environment: string,
         _referencedSegmentIds?: Set<number>,

@@ -42,6 +42,7 @@ export interface IEventStore
         currentMax?: number,
         environment?: string,
     ): Promise<number>;
+    getMaxTokenRevisionId(currentMax?: number): Promise<number>;
     getDeltaRevisionState(
         environment: string,
         referencedSegmentIds?: Set<number>,

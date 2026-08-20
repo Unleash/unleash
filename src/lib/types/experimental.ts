@@ -31,7 +31,7 @@ export type IFlagKey =
     | 'extendedUsageMetrics'
     | 'feedbackComments'
     | 'useMemoizedActiveTokens'
-    | 'queryMissingTokens'
+    | 'queryMissingTokens' // TODO: nowhere used - to be removed
     | 'disableUpdateMaxRevisionId'
     | 'disablePublishUnannouncedEvents'
     | 'outdatedSdksBanner'
@@ -183,6 +183,7 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_SCHEDULED_CACHES,
         false,
     ),
+    // TODO: nowhere used - to be removed
     queryMissingTokens: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_QUERY_MISSING_TOKENS,
         false,

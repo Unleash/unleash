@@ -168,10 +168,9 @@ test('give feedback calls openFeedback with the correct title and labels', async
     });
 });
 
-test("What's new item shows when enterprise and flag are enabled", async () => {
+test("What's new item shows when flag is enabled", async () => {
     testServerRoute(server, '/api/admin/ui-config', {
         flags: { whatsNewPage: true },
-        versionInfo: { current: { enterprise: '1.0.0' } },
     });
     render(<HelpResources />);
 
@@ -184,25 +183,9 @@ test("What's new item shows when enterprise and flag are enabled", async () => {
     ).toHaveAttribute('href', '/whats-new');
 });
 
-test("What's new item is hidden on enterprise without the flag", async () => {
+test("What's new item is hidden without the flag", async () => {
     testServerRoute(server, '/api/admin/ui-config', {
         flags: { whatsNewPage: false },
-        versionInfo: { current: { enterprise: '1.0.0' } },
-    });
-    render(<HelpResources />);
-
-    await userEvent.click(
-        await screen.findByRole('button', { name: 'Help and resources' }),
-    );
-
-    expect(
-        screen.queryByRole('menuitem', { name: /What's new/ }),
-    ).not.toBeInTheDocument();
-});
-
-test("What's new item is hidden on non-enterprise even with the flag", async () => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: { whatsNewPage: true },
     });
     render(<HelpResources />);
 

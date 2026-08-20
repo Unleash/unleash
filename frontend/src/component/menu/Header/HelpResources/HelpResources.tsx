@@ -30,7 +30,6 @@ import { useFeedback } from 'component/feedbackNew/useFeedback';
 import { useEventTracker } from 'hooks/useEventTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useVariant } from 'hooks/useVariant';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useIntro } from 'component/onboarding/intro/IntroProvider.tsx';
 
 const StyledIconButton = styled(IconButton)<{ open?: boolean }>(
@@ -167,9 +166,7 @@ export const HelpResources = () => {
     const buttonRef = useRef<HTMLButtonElement | null>(null);
     const open = Boolean(anchorEl);
     const { trackEvent } = useEventTracker();
-    const { isEnterprise } = useUiConfig();
-    const whatsNewEnabled = useUiFlag('whatsNewPage');
-    const showWhatsNew = isEnterprise() && whatsNewEnabled;
+    const showWhatsNew = useUiFlag('whatsNewPage');
     const { open: openIntro } = useIntro();
     const introEnabled = useUiFlag('onboardingIntroTour');
     const learningLabFlag = useUiFlag('learningLab');

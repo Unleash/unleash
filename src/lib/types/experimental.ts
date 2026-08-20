@@ -258,7 +258,7 @@ const flags: IFlags = {
     ),
     whatsNewPage: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_WHATS_NEW_PAGE,
-        false,
+        true,
     ),
     disableImpactMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_IMPACT_METRICS,

@@ -60,7 +60,7 @@ process.nextTick(async () => {
                         learningLab: true,
                         floatingOnboardingChecklist: true,
                         serviceNowIntegration: true,
-                        whatsNewPage: false,
+                        whatsNewPage: true,
                         onboardingIntroTour: true,
                         topLabelInputs: true,
                         recordSdkFlavorMetrics: true,

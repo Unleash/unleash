@@ -186,7 +186,7 @@
     "tsc-watch": "7.2.1",
     "typescript": "7.0.2",
     "vite-node": "^6.0.0",
-    "vitest": "4.1.9",
+    "vitest": "4.1.10",
     "wait-on": "^9.0.5"
   },
   "lint-staged": {

@@ -36,6 +36,7 @@ test('calls onApiKeyChange with token secret when a token becomes available', as
     testServerRoute(server, '/api/admin/projects/my-project/api-tokens', {
         tokens: [
             {
+                projects: ['my-project'],
                 environment: 'development',
                 type: 'client',
                 secret: 'my-project:development.secretxyz',
@@ -57,6 +58,7 @@ test('calls onApiKeyChange with undefined when user switches to environment with
     testServerRoute(server, '/api/admin/projects/my-project/api-tokens', {
         tokens: [
             {
+                projects: ['my-project'],
                 environment: 'development',
                 type: 'client',
                 secret: 'my-project:development.secretxyz',
@@ -85,6 +87,7 @@ test('calls onNext when clicking Next', async () => {
     testServerRoute(server, '/api/admin/projects/my-project/api-tokens', {
         tokens: [
             {
+                projects: ['my-project'],
                 environment: 'development',
                 type: 'client',
                 secret: 'my-project:development.secretxyz',
@@ -104,4 +107,43 @@ test('calls onNext when clicking Next', async () => {
     await userEvent.click(screen.getByRole('button', { name: /next/i }));
 
     expect(onNext).toHaveBeenCalled();
+});
+
+test('uses the create response for a secure token', async () => {
+    testServerRoute(server, '/api/admin/projects/my-project/api-tokens', {
+        tokens: [],
+    });
+    testServerRoute(
+        server,
+        '/api/admin/projects/my-project/api-tokens',
+        {
+            secret: 'backend.v2_selector_secret',
+            projects: ['my-project'],
+            environment: 'development',
+            type: 'client',
+            secure: true,
+        },
+        'post',
+    );
+
+    const onApiKeyChange = vi.fn();
+    renderComponent(onApiKeyChange);
+
+    await userEvent.click(
+        await screen.findByRole('button', {
+            name: /generate backend api key/i,
+        }),
+    );
+
+    await waitFor(() => {
+        expect(onApiKeyChange).toHaveBeenCalledWith(
+            'backend.v2_selector_secret',
+        );
+    });
+    expect(screen.getAllByText('my-project')).not.toHaveLength(0);
+    expect(screen.getAllByText('development')).not.toHaveLength(0);
+    expect(screen.getAllByText('backend.v2_selector_secret')).not.toHaveLength(
+        0,
+    );
+    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument();
 });

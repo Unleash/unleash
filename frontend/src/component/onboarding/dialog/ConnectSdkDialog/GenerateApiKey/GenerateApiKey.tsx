@@ -5,9 +5,9 @@ import useProjectApiTokensApi from 'hooks/api/actions/useProjectApiTokensApi/use
 import useToast from 'hooks/useToast';
 import { useEventTracker } from 'hooks/useEventTracker';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { parseToken } from '../../parseToken';
 import { TokenExplanation } from './TokenExplanation';
 import type { Sdk, SdkType } from '../../sharedTypes';
+import type { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
 
 const SDK_TYPE_LABEL: Record<SdkType, string> = {
     client: 'Backend',
@@ -56,7 +56,6 @@ export interface IGenerateApiKeyContentProps {
     environments: string[];
     environment: string;
     onEnvSelect: (env: string) => void;
-    parsedToken: ReturnType<typeof parseToken>;
     fetchingTokens?: boolean;
     creatingToken: boolean;
     generateAPIKey: () => void;
@@ -87,12 +86,26 @@ export const GenerateApiKey = ({
     const { createToken, loading: creatingToken } = useProjectApiTokensApi();
     const { setToastApiError } = useToast();
     const [environment, setEnvironment] = useState(environments[0] || '');
+    const [createdToken, setCreatedToken] = useState<IApiToken>();
 
-    const currentToken = tokens.find(
+    const existingToken = tokens.find(
         (token) =>
-            token.environment === environment && token.type === sdk?.type,
+            !token.secure &&
+            token.environment === environment &&
+            token.type === sdk?.type,
     );
-    const parsedToken = parseToken(currentToken?.secret);
+    const currentToken =
+        createdToken?.environment === environment &&
+        createdToken.type === sdk?.type
+            ? createdToken
+            : existingToken;
+    const tokenDetails = currentToken
+        ? {
+              project: currentToken.projects[0],
+              environment: currentToken.environment,
+              secret: currentToken.secret,
+          }
+        : null;
 
     useEffect(() => {
         onApiKeyChange(currentToken?.secret);
@@ -102,7 +115,7 @@ export const GenerateApiKey = ({
 
     const generateAPIKey = async () => {
         try {
-            await createToken(
+            const response = await createToken(
                 {
                     environment,
                     type: sdk.type,
@@ -111,6 +124,7 @@ export const GenerateApiKey = ({
                 },
                 projectId,
             );
+            setCreatedToken(await response.json());
             refreshTokens();
             trackEvent('onboarding', {
                 props: { eventType: 'api-key-generated' },
@@ -156,15 +170,15 @@ export const GenerateApiKey = ({
 
             <SectionBox>
                 <SectionHeader>
-                    {parsedToken ? (
+                    {tokenDetails ? (
                         <>
                             <SectionTitle>{sdkTypeName} API Key</SectionTitle>
                             <SectionSubtitle>
                                 Here is your generated{' '}
                                 {sdkTypeName.toLowerCase()} API key. We will use
                                 it to connect to the{' '}
-                                <b>{parsedToken.project}</b> project in the{' '}
-                                <b>{parsedToken.environment}</b> environment.
+                                <b>{tokenDetails.project}</b> project in the{' '}
+                                <b>{tokenDetails.environment}</b> environment.
                             </SectionSubtitle>
                         </>
                     ) : (
@@ -173,11 +187,11 @@ export const GenerateApiKey = ({
                         </SectionTitle>
                     )}
                 </SectionHeader>
-                {parsedToken ? (
+                {tokenDetails ? (
                     <TokenExplanation
-                        project={parsedToken.project}
-                        environment={parsedToken.environment}
-                        secret={parsedToken.secret}
+                        project={tokenDetails.project}
+                        environment={tokenDetails.environment}
+                        secret={tokenDetails.secret}
                     />
                 ) : (
                     <Button
@@ -189,7 +203,7 @@ export const GenerateApiKey = ({
                     </Button>
                 )}
             </SectionBox>
-            {parsedToken && (
+            {tokenDetails && (
                 <ActionRow>
                     <Button variant='contained' onClick={onNext}>
                         Next

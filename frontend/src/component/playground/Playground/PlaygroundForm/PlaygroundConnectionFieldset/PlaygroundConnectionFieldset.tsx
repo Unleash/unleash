@@ -140,11 +140,9 @@ export const PlaygroundConnectionFieldset: FC<
     };
 
     const updateProjectsBasedOnValidToken = (validToken: IApiToken) => {
-        if (!validToken.projects || validToken.projects === '*') {
+        if (validToken.projects.length === 0) {
             setProjects([allOption.id]);
-        } else if (typeof validToken.projects === 'string') {
-            setProjects([validToken.projects]);
-        } else if (Array.isArray(validToken.projects)) {
+        } else {
             setProjects(validToken.projects);
         }
     };

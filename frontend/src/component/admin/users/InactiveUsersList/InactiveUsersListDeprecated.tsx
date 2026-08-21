@@ -36,7 +36,7 @@ import { StyledUsersLinkDiv } from '../Users.styles';
 
 type InactiveUserRow = IInactiveUser & { rootRole?: number };
 
-export const InactiveUsersList = () => {
+export const InactiveUsersListDeprecated = () => {
     const { removeUser, userApiErrors } = useAdminUsersApi();
     const { deleteInactiveUsers, errors: inactiveUsersApiErrors } =
         useInactiveUsersApi();

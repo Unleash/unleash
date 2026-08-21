@@ -1,27 +1,22 @@
 import { useState } from 'react';
-import {
-    Button,
-    IconButton,
-    Tab,
-    Tabs,
-    Tooltip,
-    styled,
-    useMediaQuery,
-} from '@mui/material';
-import Download from '@mui/icons-material/Download';
-import { Route, Routes, useLocation, useNavigate } from 'react-router';
+import { Tab, Tabs, styled, useMediaQuery } from '@mui/material';
+import { Route, Routes, useLocation } from 'react-router';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 import { PageContent } from 'component/common/PageContent/PageContent';
-import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Search } from 'component/common/Search/Search';
 import { TabLink } from 'component/common/TabNav/TabLink';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
-import { useAccessOverviewApi } from 'hooks/api/actions/useAccessOverviewApi/useAccessOverviewApi';
 import { usePageTitle } from 'hooks/usePageTitle';
 import theme from 'themes/theme';
 import UsersList from '../UsersList/UsersList.tsx';
+import { UsersHeaderActions } from '../UsersList/UsersHeaderActions.tsx';
+import { InactiveUsersListBody } from '../InactiveUsersList/InactiveUsersListBody.tsx';
+import { InactiveUsersCount } from '../InactiveUsersList/InactiveUsersCount.tsx';
+import { InactiveUsersHeaderActions } from '../InactiveUsersList/InactiveUsersHeaderActions.tsx';
 import EditUser from '../EditUser/EditUser.tsx';
 import { AccessOverview } from '../AccessOverview/AccessOverview.tsx';
 import NotFound from 'component/common/NotFound/NotFound';
@@ -44,9 +39,8 @@ const StyledActions = styled('div')({
 const UsersTabsView = () => {
     usePageTitle('Users');
     const { pathname } = useLocation();
-    const navigate = useNavigate();
+    const { isEnterprise } = useUiConfig();
     const { users, loading } = useUsers();
-    const { downloadCSV } = useAccessOverviewApi();
 
     const [searchValue, setSearchValue] = useState('');
 
@@ -57,6 +51,18 @@ const UsersTabsView = () => {
             label: `Users (${users.length})`,
             path: '/admin/users',
         },
+        ...(isEnterprise()
+            ? [
+                  {
+                      label: (
+                          <>
+                              Inactive users (<InactiveUsersCount />)
+                          </>
+                      ),
+                      path: '/admin/users/inactive',
+                  },
+              ]
+            : []),
     ];
 
     return (
@@ -76,7 +82,7 @@ const UsersTabsView = () => {
                             >
                                 {tabs.map(({ label, path }) => (
                                     <Tab
-                                        key={label}
+                                        key={path}
                                         value={path}
                                         label={
                                             <TabLink to={path}>{label}</TabLink>
@@ -87,41 +93,43 @@ const UsersTabsView = () => {
                             </Tabs>
                         </StyledTabsContainer>
                         <StyledActions>
-                            <ConditionallyRender
-                                condition={!isSmallScreen}
-                                show={
-                                    <Search
-                                        initialValue={searchValue}
-                                        onChange={setSearchValue}
-                                    />
-                                }
-                            />
-                            <PageHeader.Divider />
-                            <Tooltip
-                                title='Exports user access information'
-                                arrow
-                                describeChild
-                            >
-                                <IconButton onClick={downloadCSV}>
-                                    <Download />
-                                </IconButton>
-                            </Tooltip>
-                            <Button
-                                variant='contained'
-                                color='primary'
-                                onClick={() => navigate('/admin/create-user')}
-                            >
-                                Add new user
-                            </Button>
+                            <Routes>
+                                <Route
+                                    path='inactive'
+                                    element={
+                                        isEnterprise() ? (
+                                            <InactiveUsersHeaderActions />
+                                        ) : null
+                                    }
+                                />
+                                <Route
+                                    path='*'
+                                    element={
+                                        <UsersHeaderActions
+                                            searchValue={searchValue}
+                                            onSearch={setSearchValue}
+                                            isSmallScreen={isSmallScreen}
+                                        />
+                                    }
+                                />
+                            </Routes>
                         </StyledActions>
                     </StyledHeader>
                     <ConditionallyRender
                         condition={isSmallScreen}
                         show={
-                            <Search
-                                initialValue={searchValue}
-                                onChange={setSearchValue}
-                            />
+                            <Routes>
+                                <Route path='inactive' element={null} />
+                                <Route
+                                    path='*'
+                                    element={
+                                        <Search
+                                            initialValue={searchValue}
+                                            onChange={setSearchValue}
+                                        />
+                                    }
+                                />
+                            </Routes>
                         }
                     />
                 </>
@@ -131,6 +139,18 @@ const UsersTabsView = () => {
                 <Route
                     index
                     element={<UsersList searchValue={searchValue} />}
+                />
+                <Route
+                    path='inactive'
+                    element={
+                        <ConditionallyRender
+                            condition={isEnterprise()}
+                            show={<InactiveUsersListBody />}
+                            elseShow={
+                                <PremiumFeature feature='inactive-users' page />
+                            }
+                        />
+                    }
                 />
                 <Route path='*' element={<NotFound />} />
             </Routes>

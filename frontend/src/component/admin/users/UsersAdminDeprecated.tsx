@@ -4,7 +4,7 @@ import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuar
 import { Route, Routes } from 'react-router';
 import EditUser from './EditUser/EditUser.tsx';
 import NotFound from 'component/common/NotFound/NotFound';
-import { InactiveUsersList } from './InactiveUsersList/InactiveUsersList.tsx';
+import { InactiveUsersListDeprecated } from './InactiveUsersList/InactiveUsersListDeprecated.tsx';
 import { AccessOverview } from './AccessOverview/AccessOverview.tsx';
 import { PremiumFeature } from '../../common/PremiumFeature/PremiumFeature.tsx';
 import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender.tsx';
@@ -31,7 +31,7 @@ export const UsersAdminDeprecated = () => {
                         element={
                             <ConditionallyRender
                                 condition={isEnterprise()}
-                                show={<InactiveUsersList />}
+                                show={<InactiveUsersListDeprecated />}
                                 elseShow={
                                     <PremiumFeature
                                         feature='inactive-users'

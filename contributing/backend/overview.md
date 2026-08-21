@@ -98,10 +98,12 @@ To run migrations, you will set the environment variable for DATABASE_URL
 
 `export DATABASE_URL=postgres://unleash_user:password@localhost:5432/unleash`
 
-Use db-migrate to create new migrations file.
+Existing files in `src/migrations` are immutable legacy migration history. Add
+new migrations to `src/knex-migrations` with a UTC timestamp and a descriptive
+name.
 
 ```bash
-> pnpm run db-migrate create YOUR-MIGRATION-NAME
+> touch src/knex-migrations/YYYYMMDDHHMMSS-your-migration.js
 ```
 
 All migrations require one `up` and one `down` method. There are some migrations that will maintain the database integrity, but not the data integrity and may not be safe to run on a production database.
@@ -109,22 +111,15 @@ All migrations require one `up` and one `down` method. There are some migrations
 Example of a typical migration:
 
 ```js
-/* eslint camelcase: "off" */
-'use strict';
-
-exports.up = function(db, cb) {
-  db.createTable(
-    'examples',
-    {
-      id: { type: 'int', primaryKey: true, notNull: true },
-      created_at: { type: 'timestamp', defaultValue: 'now()' },
-    },
-    cb,
-  );
+export const up = async (knex) => {
+    await knex.schema.createTable('examples', (table) => {
+        table.increments('id').primary();
+        table.timestamp('created_at').defaultTo(knex.fn.now());
+    });
 };
 
-exports.down = function(db, cb) {
-  return db.dropTable('examples', cb);
+export const down = async (knex) => {
+    await knex.schema.dropTable('examples');
 };
 ```
 
@@ -132,7 +127,6 @@ Test your migrations:
 
 ```bash
 > pnpm run db-migrate up
-> pnpm run db-migrate down
 ```
 
 ## Publishing / Releasing new packages

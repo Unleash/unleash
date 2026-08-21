@@ -6,6 +6,9 @@ on:
       - main
     paths:
       - 'src/migrations/**'
+      - 'src/knex-migrations/**'
+      - 'src/migrator.ts'
+      - 'src/migrate.ts'
       - 'frontend/cypress/**'
       - '.github/workflows/validate-migrations.yaml'
       - 'test-migrations/**'

@@ -49,7 +49,7 @@
     "profile:startup": "./scripts/profile-startup.sh",
     "prepare:backend": "concurrently \"pnpm run copy-templates\" \"pnpm run build:backend\"",
     "start:dev": "pnpm run clean && pnpm run dev:backend",
-    "db-migrate": "db-migrate --migrations-dir ./src/migrations",
+    "db-migrate": "pnpm run build:backend && node dist/migrate.js",
     "lint": "biome check . --error-on-warnings",
     "lint:fix": "biome check . --write --error-on-warnings",
     "lint:fix:unsafe": "biome check . --write --error-on-warnings --unsafe",

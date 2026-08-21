@@ -7,76 +7,119 @@ import { secondsToMilliseconds } from 'date-fns';
 import path from 'path';
 import { fileURLToPath } from 'node:url';
 import { cloneDbConfig } from './lib/util/clone-db-config.js';
+import { createConfig } from './lib/create-config.js';
+import { createDb } from './lib/db/db-pool.js';
+import type { Knex } from 'knex';
 
 log.setLogLevel('error');
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const knexMigrationsConfig = {
+    directory: path.join(__dirname, 'knex-migrations'),
+    loadExtensions: ['.js'],
+};
+
+export const LEGACY_MIGRATION_CUTOFF =
+    '20260724084058-set-default-value-for-user-created-for-api-token-v2.js';
+
 async function noDatabaseUrl<T>(fn: () => Promise<T>): Promise<T> {
     // unset DATABASE_URL so it doesn't take presedence over the provided db config
     const dbUrlEnv = process.env.DATABASE_URL;
     delete process.env.DATABASE_URL;
-    const result = fn();
-    process.env.DATABASE_URL = dbUrlEnv;
-    return result;
+    try {
+        return await fn();
+    } finally {
+        if (dbUrlEnv === undefined) {
+            delete process.env.DATABASE_URL;
+        } else {
+            process.env.DATABASE_URL = dbUrlEnv;
+        }
+    }
 }
+
+type MigrationConfig = Pick<IUnleashConfig, 'db'> &
+    Partial<Pick<IUnleashConfig, 'getLogger'>>;
+
+const createKnex = ({ db, getLogger }: MigrationConfig): Knex =>
+    createDb(
+        createConfig({
+            db: {
+                ...db,
+                ssl: db.ssl ?? false,
+                pool: {
+                    ...db.pool,
+                    min: 0,
+                    max: Math.max(db.pool?.max ?? 0, 2),
+                    propagateCreateError: true,
+                },
+            },
+            ...(getLogger ? { getLogger } : {}),
+        }),
+    );
+
+const createLegacyMigrator = ({ db }: MigrationConfig) => {
+    const custom = {
+        ...cloneDbConfig(db),
+        connectionTimeoutMillis: secondsToMilliseconds(10),
+    };
+
+    process.argv = process.argv.filter((it) => !it.includes('--verbose'));
+    return getInstance(true, {
+        cwd: __dirname,
+        config: { custom },
+        env: 'custom',
+    });
+};
+
 export async function migrateDb(
-    { db }: Pick<IUnleashConfig, 'db'>,
+    config: MigrationConfig,
     stopAt?: string,
 ): Promise<void> {
     return noDatabaseUrl(async () => {
-        const custom = {
-            ...cloneDbConfig(db),
-            connectionTimeoutMillis: secondsToMilliseconds(10),
-        };
+        await createLegacyMigrator(config).up(stopAt);
+        if (stopAt) {
+            return;
+        }
 
-        // disable Intellij/WebStorm from setting verbose CLI argument to db-migrator
-        process.argv = process.argv.filter((it) => !it.includes('--verbose'));
-        const dbm = getInstance(true, {
-            cwd: __dirname,
-            config: { custom },
-            env: 'custom',
-        });
-
-        return dbm.up(stopAt);
+        const knex = createKnex(config);
+        try {
+            await knex.migrate.latest(knexMigrationsConfig);
+        } finally {
+            await knex.destroy();
+        }
     });
 }
 
-export async function requiresMigration({
-    db,
-}: Pick<IUnleashConfig, 'db'>): Promise<boolean> {
+export async function requiresMigration(
+    config: MigrationConfig,
+): Promise<boolean> {
     return noDatabaseUrl(async () => {
-        const custom = {
-            ...cloneDbConfig(db),
-            connectionTimeoutMillis: secondsToMilliseconds(10),
-        };
+        const pendingLegacyMigrations =
+            await createLegacyMigrator(config).check();
+        if (pendingLegacyMigrations.length > 0) {
+            return true;
+        }
 
-        // disable Intellij/WebStorm from setting verbose CLI argument to db-migrator
-        process.argv = process.argv.filter((it) => !it.includes('--verbose'));
-        const dbm = getInstance(true, {
-            cwd: __dirname,
-            config: { custom },
-            env: 'custom',
-        });
-
-        const pendingMigrations = await dbm.check();
-        return pendingMigrations.length > 0;
+        const knex = createKnex(config);
+        try {
+            const [, pendingKnexMigrations] =
+                await knex.migrate.list(knexMigrationsConfig);
+            return pendingKnexMigrations.length > 0;
+        } finally {
+            await knex.destroy();
+        }
     });
 }
 
 // This exists to ease testing
-export async function resetDb({ db }: IUnleashConfig): Promise<void> {
+export async function resetDb(config: IUnleashConfig): Promise<void> {
     return noDatabaseUrl(async () => {
-        const custom = {
-            ...cloneDbConfig(db),
-            connectionTimeoutMillis: secondsToMilliseconds(10),
-        };
-
-        const dbm = getInstance(true, {
-            cwd: __dirname,
-            config: { custom },
-            env: 'custom',
-        });
-
-        return dbm.reset();
+        const knex = createKnex(config);
+        try {
+            await knex.migrate.rollback(knexMigrationsConfig, true);
+        } finally {
+            await knex.destroy();
+        }
+        return createLegacyMigrator(config).reset();
     });
 }

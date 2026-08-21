@@ -6,7 +6,9 @@ import { log } from 'db-migrate-shared';
 import postgresPkg from 'pg';
 const { Client } = postgresPkg;
 import type { IDBOption } from '../../lib/types/index.js';
-import { resetDb } from '../../migrator.js';
+import { requiresMigration, resetDb } from '../../migrator.js';
+
+const KNEX_CUTOVER_MIGRATION = '20260821160000-knex-cutover.js';
 
 log.setLogLevel('error');
 
@@ -41,11 +43,22 @@ let db: ITestDb;
 afterAll(async () => {
     await db.destroy();
 });
-test('Up & down migrations work', async () => {
+test('legacy and Knex migrations run and roll back', async () => {
     db = await dbInit('system_user_migration', getLogger);
     // up migration is performed at the beginning of tests
     // here we just validate that the tables have primary keys
     await validateTablesHavePrimaryKeys(db.config.db);
-    // then we test down migrations
+    const completedKnexMigrations = await db
+        .rawDatabase('knex_migrations')
+        .select('name')
+        .orderBy('id');
+    expect(completedKnexMigrations).toEqual([{ name: KNEX_CUTOVER_MIGRATION }]);
+    expect(await requiresMigration(db.config)).toBe(false);
+
     await resetDb(db.config);
+    const remainingKnexMigrations = await db
+        .rawDatabase('knex_migrations')
+        .select('name')
+        .orderBy('id');
+    expect(remainingKnexMigrations).toEqual([]);
 });

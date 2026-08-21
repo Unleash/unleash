@@ -414,9 +414,64 @@ export class ApiTokenV2Service {
 
     async deleteSystemCreatedTokensNotSeen(): Promise<void> {
         this.logger.info('Cleaning unseen system created tokens');
-        await this.apiTokenV2Store.deleteSystemCreatedTokensNotSeen(
-            TOKEN_LIFETIME_AFTER_LAST_SEEN_IN_MINUTES,
+
+        const deleted =
+            await this.apiTokenV2Store.deleteSystemCreatedTokensNotSeen(
+                TOKEN_LIFETIME_AFTER_LAST_SEEN_IN_MINUTES,
+            );
+
+        if (deleted.length === 0) {
+            return;
+        }
+
+        await this.invalidateAndAuditDeletedTokens(deleted);
+
+        this.logger.debug(
+            `Invalidated cache for ${deleted.length} deleted system-created tokens`,
         );
+    }
+
+    private async invalidateAndAuditDeletedTokens(
+        deleted: Omit<ApiTokenV2, 'projects'>[],
+    ): Promise<void> {
+        const events = deleted.map((token) =>
+            this.createTokenDeletedEvent(token),
+        );
+
+        try {
+            // persist ALL events or fail
+            await Promise.all(
+                events.map((event) => this.eventService.storeEvent(event)),
+            );
+        } catch (error) {
+            this.logger.error('Failed to audit token deletions', error);
+
+            throw new Error(
+                'Token deletion audit events could not be persisted',
+                { cause: error },
+            );
+        }
+
+        // cache invalidation - only after pass 1 succeeds
+        for (const token of deleted) {
+            this.activeTokens.delete(token.selector);
+        }
+    }
+
+    private createTokenDeletedEvent(
+        token: Omit<ApiTokenV2, 'projects'>,
+    ): ApiTokenDeletedEvent {
+        const apiToken = this.toApiToken({
+            ...token,
+            projects: [],
+        } as ApiTokenV2);
+
+        const { secret: _, ...tokenWithoutSecret } = apiToken;
+
+        return new ApiTokenDeletedEvent({
+            auditUser: SYSTEM_USER_AUDIT,
+            apiToken: tokenWithoutSecret,
+        });
     }
 
     private toApiToken(token: ApiTokenV2): IApiToken {

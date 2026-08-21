@@ -160,14 +160,15 @@ export class ApiTokenV2Store implements IApiTokenV2Store {
 
     async deleteSystemCreatedTokensNotSeen(
         minutesSinceLastSeen: number,
-    ): Promise<void> {
-        await this.db(TABLE)
+    ): Promise<Omit<ApiTokenV2, 'projects'>[]> {
+        const cutoff = subMinutes(new Date(), minutesSinceLastSeen);
+
+        const deleted = await this.db(TABLE)
             .where('user_created', false)
-            .andWhere(
-                'seen_at',
-                '<',
-                subMinutes(new Date(), minutesSinceLastSeen),
-            )
-            .delete();
+            .andWhere('seen_at', '<', cutoff)
+            .delete()
+            .returning('*');
+
+        return deleted.map(toToken);
     }
 }

@@ -90,9 +90,9 @@ class FakeApiTokenV2Store implements IApiTokenV2Store {
     }
 
     deleteSystemCreatedTokensNotSeen(
-        _minutesSinceLastSeen: number,
-    ): Promise<void> {
-        return Promise.resolve(undefined);
+        minutesSinceLastSeen: number,
+    ): Promise<Omit<ApiTokenV2, 'projects'>[]> {
+        return Promise.resolve([]);
     }
 }
 

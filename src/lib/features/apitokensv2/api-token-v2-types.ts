@@ -49,5 +49,5 @@ export interface IApiTokenV2Store {
     count(): Promise<number>;
     deleteSystemCreatedTokensNotSeen(
         minutesSinceLastSeen: number,
-    ): Promise<void>;
+    ): Promise<Omit<ApiTokenV2, 'projects'>[]>;
 }

@@ -1,3 +1,4 @@
+import { subMinutes } from 'date-fns';
 import type {
     ApiTokenV2,
     ApiTokenV2WithVerifier,
@@ -32,8 +33,22 @@ export class FakeApiTokenV2Store implements IApiTokenV2Store {
 
     async deleteSystemCreatedTokensNotSeen(
         minutesSinceLastSeen: number,
-    ): Promise<void> {
-        return Promise.resolve();
+    ): Promise<Omit<ApiTokenV2, 'projects'>[]> {
+        const cutoff = subMinutes(new Date(), minutesSinceLastSeen);
+        const deleted: Omit<ApiTokenV2, 'projects'>[] = [];
+
+        for (const [selector, token] of this.tokens) {
+            if (token.createdAt) continue;
+
+            const last = token.seenAt;
+            if (last && last < cutoff) {
+                this.tokens.delete(selector);
+
+                const { verifier: _v, ...rest } = token;
+                deleted.push(rest);
+            }
+        }
+        return deleted;
     }
 
     async getBySelector(selector: string) {

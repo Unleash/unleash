@@ -122,6 +122,7 @@ export const SignupDialogComplete: SignupStepContent = ({
     error,
 }) => {
     const offerTour = useUiFlag('onboardingIntroTour');
+    const advancedTopics = useUiFlag('onboardingIntroTourAdvancedTopics');
     const description =
         data.inviteEmails.length === 0
             ? "Choose how you'd like to get started."
@@ -154,15 +155,21 @@ export const SignupDialogComplete: SignupStepContent = ({
                                 >
                                     Learn by doing
                                 </StyledChoiceTitle>
-                                <StyledDuration>~5 min</StyledDuration>
+                                <StyledDuration>
+                                    {advancedTopics ? '~5 min' : '~2 min'}
+                                </StyledDuration>
                             </StyledChoiceHeader>
                             <StyledIntroList>
                                 <li>Release a feature gradually</li>
                                 <li>Target the right audience</li>
                                 <li>Compare different experiences</li>
-                                <li>Automate a rollout</li>
-                                <li>Follow live impact metrics</li>
-                                <li>Contain an issue automatically</li>
+                                {advancedTopics ? (
+                                    <>
+                                        <li>Automate a rollout</li>
+                                        <li>Follow live impact metrics</li>
+                                        <li>Contain an issue automatically</li>
+                                    </>
+                                ) : null}
                             </StyledIntroList>
                             <StyledChoiceNote>
                                 A playful sandbox with a live view of every

@@ -17,7 +17,7 @@ const StyledCheck = styled(Check)(({ theme }) => ({
 const StyledCancel = styled(Warning)(({ theme }) => ({
     color:
         theme.mode === 'light'
-            ? theme.palette.warning.border
+            ? theme.palette.warning.containerBorder
             : theme.palette.warning.main,
 }));
 

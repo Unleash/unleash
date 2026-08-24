@@ -31,22 +31,22 @@ const Value = styled('span')(({ theme }) => ({
 }));
 
 const ErrorContainer = styled(Box)(({ theme }) => ({
-    border: `1px solid ${theme.palette.error.border}`,
+    border: `1px solid ${theme.palette.error.containerBorder}`,
     borderRadius: theme.shape.borderRadiusLarge,
     paddingBottom: theme.spacing(2),
 }));
 
 const WarningContainer = styled(Box)(({ theme }) => ({
-    border: `1px solid ${theme.palette.warning.border}`,
+    border: `1px solid ${theme.palette.warning.containerBorder}`,
     borderRadius: theme.shape.borderRadiusLarge,
     paddingBottom: theme.spacing(2),
 }));
 
 const ErrorHeader = styled(Box)(({ theme }) => ({
     color: theme.palette.error.dark,
-    backgroundColor: theme.palette.error.light,
+    backgroundColor: theme.palette.error.container,
     fontSize: theme.fontSizes.smallBody,
-    borderBottom: `1px solid ${theme.palette.error.border}`,
+    borderBottom: `1px solid ${theme.palette.error.containerBorder}`,
     borderTopLeftRadius: theme.shape.borderRadiusLarge,
     borderTopRightRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(2),
@@ -54,9 +54,9 @@ const ErrorHeader = styled(Box)(({ theme }) => ({
 
 const WarningHeader = styled(Box)(({ theme }) => ({
     color: theme.palette.warning.dark,
-    backgroundColor: theme.palette.warning.light,
+    backgroundColor: theme.palette.warning.container,
     fontSize: theme.fontSizes.smallBody,
-    borderBottom: `1px solid ${theme.palette.warning.border}`,
+    borderBottom: `1px solid ${theme.palette.warning.containerBorder}`,
     borderTopLeftRadius: theme.shape.borderRadiusLarge,
     borderTopRightRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(2),

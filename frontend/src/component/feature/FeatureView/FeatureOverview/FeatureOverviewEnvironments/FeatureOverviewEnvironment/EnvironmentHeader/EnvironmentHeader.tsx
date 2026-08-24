@@ -84,8 +84,8 @@ const StyledTruncator = styled(Truncator)(({ theme }) => ({
 
 const StyledStrategyCount = styled('p')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
-    color: theme.palette.info.contrastText,
-    backgroundColor: theme.palette.info.light,
+    color: theme.palette.info.onContainer,
+    backgroundColor: theme.palette.info.container,
     whiteSpace: 'nowrap',
     width: 'min-content',
     borderRadius: theme.shape.borderRadiusExtraLarge,

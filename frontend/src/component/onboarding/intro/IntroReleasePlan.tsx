@@ -107,9 +107,9 @@ const StyledMilestone = styled(Box, {
             stopped
                 ? theme.palette.warning.main
                 : active
-                  ? theme.palette.success.border
+                  ? theme.palette.success.containerBorder
                   : completed
-                    ? theme.palette.success.border
+                    ? theme.palette.success.containerBorder
                     : theme.palette.divider
         }`,
         borderRadius: theme.shape.borderRadiusLarge,

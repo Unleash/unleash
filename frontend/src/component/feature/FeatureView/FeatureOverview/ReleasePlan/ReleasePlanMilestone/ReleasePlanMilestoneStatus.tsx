@@ -44,10 +44,10 @@ const BaseStatusButton = styled('button')<{ disabled?: boolean }>(
 );
 
 const ActiveStatusButton = styled(BaseStatusButton)(({ theme }) => ({
-    backgroundColor: theme.palette.success.light,
-    color: theme.palette.success.contrastText,
+    backgroundColor: theme.palette.success.container,
+    color: theme.palette.success.onContainer,
     '&:hover': {
-        backgroundColor: theme.palette.success.light,
+        backgroundColor: theme.palette.success.container,
         textDecoration: 'none',
     },
     '& svg': {

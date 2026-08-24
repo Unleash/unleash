@@ -55,7 +55,7 @@ const Distribution = ({ stale = 0, potentiallyStale = 0, total = 0 }) => {
                 <Typography
                     component='span'
                     sx={(theme) => ({
-                        color: theme.palette.error.border,
+                        color: theme.palette.error.containerBorder,
                     })}
                 >
                     {'● '}
@@ -66,7 +66,7 @@ const Distribution = ({ stale = 0, potentiallyStale = 0, total = 0 }) => {
                 <Typography
                     component='span'
                     sx={(theme) => ({
-                        color: theme.palette.warning.border,
+                        color: theme.palette.warning.containerBorder,
                     })}
                 >
                     {'● '}
@@ -77,7 +77,7 @@ const Distribution = ({ stale = 0, potentiallyStale = 0, total = 0 }) => {
                 <Typography
                     component='span'
                     sx={(theme) => ({
-                        color: theme.palette.success.border,
+                        color: theme.palette.success.containerBorder,
                     })}
                 >
                     {'● '}

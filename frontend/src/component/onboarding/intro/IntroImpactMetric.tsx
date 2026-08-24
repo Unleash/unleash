@@ -113,11 +113,11 @@ const StyledEventPill = styled(Box, {
     const eventBackground = grouped
         ? theme.palette.primary.container
         : eventType === 'enabled'
-          ? theme.palette.success.light
+          ? theme.palette.success.container
           : eventType === 'disabled'
             ? theme.palette.neutral.light
             : eventType === 'automated-disabled'
-              ? theme.palette.success.light
+              ? theme.palette.success.container
               : theme.palette.primary.container;
 
     return {
@@ -233,11 +233,11 @@ const StyledEventTooltipIcon = styled(Box, {
                 : theme.palette.primary.main;
     const eventBackground =
         eventType === 'enabled'
-            ? theme.palette.success.light
+            ? theme.palette.success.container
             : eventType === 'disabled'
               ? theme.palette.neutral.light
               : eventType === 'automated-disabled'
-                ? theme.palette.success.light
+                ? theme.palette.success.container
                 : theme.palette.primary.container;
 
     return {

@@ -150,7 +150,7 @@ const StyledPhaseBadge = styled('span', {
         borderRadius: theme.spacing(2),
         backgroundColor: isBeta
             ? theme.palette.primary.container
-            : theme.palette.success.light,
+            : theme.palette.success.container,
         color: isBeta ? theme.palette.primary.main : theme.palette.success.main,
         '&::before': {
             content: '""',

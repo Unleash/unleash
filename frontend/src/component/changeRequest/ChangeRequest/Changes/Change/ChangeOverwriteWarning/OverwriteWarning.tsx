@@ -5,7 +5,7 @@ import { EventDiff } from 'component/events/EventDiff/EventDiff.tsx';
 
 const ChangesToOverwriteContainer = styled(Box)(({ theme }) => ({
     color: theme.palette.warning.dark,
-    backgroundColor: theme.palette.warning.light,
+    backgroundColor: theme.palette.warning.container,
     fontSize: theme.fontSizes.smallBody,
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(2),

@@ -37,7 +37,7 @@ export const FeatureToggleChanges: FC<IFeatureToggleChanges> = ({
                 border: '1px solid',
                 borderColor: (theme) =>
                     conflict
-                        ? theme.palette.warning.border
+                        ? theme.palette.warning.containerBorder
                         : theme.palette.divider,
                 borderBottom: 'none',
                 overflow: 'hidden',

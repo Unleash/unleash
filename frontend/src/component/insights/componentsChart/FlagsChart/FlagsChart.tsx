@@ -31,8 +31,8 @@ export const FlagsChart: FC<IFlagsChartProps> = ({ flagTrends, isLoading }) => {
                 {
                     label: 'Stale',
                     data: flagTrends.map((item) => item.stale),
-                    borderColor: theme.palette.warning.border,
-                    backgroundColor: theme.palette.warning.border,
+                    borderColor: theme.palette.warning.containerBorder,
+                    backgroundColor: theme.palette.warning.containerBorder,
                 },
             ],
         }),

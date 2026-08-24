@@ -14,8 +14,8 @@ const ConnectionAlert = styled('div')(({ theme }) => ({
 }));
 
 const ConnectedAlert = styled(ConnectionAlert)(({ theme }) => ({
-    backgroundColor: theme.palette.success.light,
-    border: `1px solid ${theme.palette.success.border}`,
+    backgroundColor: theme.palette.success.container,
+    border: `1px solid ${theme.palette.success.containerBorder}`,
 }));
 
 const StyledPulse = styled('div')(({ theme }) => ({

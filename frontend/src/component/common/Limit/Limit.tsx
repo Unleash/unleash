@@ -23,7 +23,7 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 }));
 
 const StyledWarningIcon = styled(WarningIcon)(({ theme }) => ({
-    color: theme.palette.warning.border,
+    color: theme.palette.warning.containerBorder,
 }));
 
 const StyledErrorIcon = styled(ErrorIcon)(({ theme }) => ({

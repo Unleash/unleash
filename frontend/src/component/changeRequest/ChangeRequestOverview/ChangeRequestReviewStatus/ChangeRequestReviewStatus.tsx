@@ -87,7 +87,7 @@ export const ChangeRequestReviewStatus: FC<
                 sx={{
                     backgroundColor:
                         changeRequest.state === 'In review'
-                            ? theme.palette.warning.light
+                            ? theme.palette.warning.container
                             : 'initial',
                 }}
                 border={resolveBorder(changeRequest.state, theme)}

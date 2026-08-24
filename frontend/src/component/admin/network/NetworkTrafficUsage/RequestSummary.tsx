@@ -160,14 +160,14 @@ export const OverageInfo: FC<OverageProps> = ({
                 <Row>
                     <dt>Accrued traffic charges</dt>
                     <dd>
-                        <Badge color='secondary'>{overageCost} USD</Badge>
+                        <Badge color='primary'>{overageCost} USD</Badge>
                     </dd>
                 </Row>
                 {estimatedMonthlyCost > 0 && (
                     <Row>
                         <dt>Estimated charges based on current usage</dt>
                         <dd>
-                            <Badge color='secondary'>
+                            <Badge color='primary'>
                                 {estimatedMonthlyCost} USD
                             </Badge>
                         </dd>

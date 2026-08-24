@@ -60,14 +60,21 @@ const theme = {
             // Maybe to move links color to another variable????
             dark: '#9792ED', // Color used for links and on hover for primary buttons
             contrastText: '#EEEEFC', // Color used for content when primary.main is used as a background
+            // Tinted "container" recipe (subtle purple surface: badges, chips, soft banners).
+            // Absorbed from the former `secondary` palette.
+            container: '#34325E', // container fill (subtle purple surface)
+            containerBorder: '#4C4992', // container border
+            onContainer: '#EEEEFC', // text/icon on the container fill
         },
+        // Dormant: all usages migrated to `primary` (main + container recipe).
+        // Kept defined so MUI's default (pink) secondary never leaks; free to repurpose
+        // for a genuinely new secondary color later.
         secondary: {
-            // Used for purple badges and puple light elements
-            main: '#9792ED', // used on icons on these elements
-            light: '#34325E', // used as a bakground on these elements
-            dark: '#EEEEFC', // used for text on these elements
+            main: '#9792ED',
+            light: '#34325E',
+            dark: '#EEEEFC',
             border: '#4C4992',
-            contrastText: '#EEEEFC', // Color used for content when info.main is used as a background
+            contrastText: '#EEEEFC',
         },
         info: {
             // main: '#5483C9',  // used on icons on these elements

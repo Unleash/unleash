@@ -492,8 +492,7 @@ const StyledTimelineEvent = styled(Box, {
     position: string;
     tone?: 'primary' | 'success' | 'warning' | 'neutral';
 }>(({ theme, position, tone = 'primary' }) => {
-    const palette =
-        tone === 'primary' ? theme.palette.secondary : theme.palette[tone];
+    const palette = theme.palette[tone];
 
     return {
         position: 'absolute',
@@ -509,7 +508,7 @@ const StyledTimelineEvent = styled(Box, {
         border: `1px solid ${palette.main}`,
         borderRadius: '50%',
         color: palette.main,
-        background: palette.light,
+        background: palette.container ?? palette.light,
         '& svg': {
             display: 'block',
             width: 18,
@@ -1163,7 +1162,7 @@ const EnterpriseAccessPreview = () => (
         <StyledAccessRow>
             <StyledAccessProjectIcon />
             <StyledAccessName>my-feature</StyledAccessName>
-            <StyledAccessRole color='secondary'>Member</StyledAccessRole>
+            <StyledAccessRole color='primary'>Member</StyledAccessRole>
             <StyledAccessPermissionCount>
                 18 / 20 permissions
             </StyledAccessPermissionCount>

@@ -144,7 +144,7 @@ const StrategyInputList = ({
                         onClick={setValue}
                         data-testid={ADD_TO_STRATEGY_INPUT_LIST}
                         variant='outlined'
-                        color='secondary'
+                        color='primary'
                         startIcon={<Add />}
                     >
                         Add

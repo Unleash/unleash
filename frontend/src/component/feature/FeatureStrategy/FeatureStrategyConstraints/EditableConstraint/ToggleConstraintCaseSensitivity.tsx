@@ -10,9 +10,9 @@ const StyledButton = styled('button')(({ theme }) => ({
     padding: 0,
     borderRadius: theme.shape.borderRadius,
     fontSize: theme.fontSizes.smallerBody,
-    background: theme.palette.secondary.light,
-    border: `1px solid ${theme.palette.secondary.border}`,
-    color: theme.palette.secondary.dark,
+    background: theme.palette.primary.container,
+    border: `1px solid ${theme.palette.primary.containerBorder}`,
+    color: theme.palette.primary.onContainer,
     fontWeight: theme.typography.fontWeightBold,
     transition: 'all 0.03s ease',
     '&:is(:hover, :focus-visible)': {

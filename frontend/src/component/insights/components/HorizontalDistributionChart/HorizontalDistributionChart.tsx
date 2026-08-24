@@ -8,7 +8,7 @@ const StyledDistributionLine = styled(Box)<{
     size?: 'large' | 'small';
 }>(({ theme, type, size = 'large' }) => {
     const color: Record<DistributionLineTypes, string | undefined> = {
-        default: theme.palette.secondary.border,
+        default: theme.palette.primary.containerBorder,
         success: theme.palette.success.border,
         warning: theme.palette.warning.border,
         error: theme.palette.error.border,

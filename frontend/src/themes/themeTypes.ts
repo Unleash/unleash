@@ -56,10 +56,19 @@ declare module '@mui/material/styles' {
 
     interface PaletteColor {
         border?: string;
+        /** Tinted surface fill for this color (subtle "container" background). */
+        container?: string;
+        /** Border for the tinted container surface. */
+        containerBorder?: string;
+        /** Text/icon color drawn on the container fill. */
+        onContainer?: string;
     }
 
     interface SimplePaletteColorOptions {
         border?: string;
+        container?: string;
+        containerBorder?: string;
+        onContainer?: string;
     }
 
     interface CustomTypeBackground {

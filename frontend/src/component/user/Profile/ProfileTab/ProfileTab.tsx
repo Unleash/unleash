@@ -217,7 +217,7 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
                                                     to={`/projects/${project}`}
                                                 >
                                                     <Badge
-                                                        color='secondary'
+                                                        color='primary'
                                                         icon={
                                                             <TopicOutlinedIcon />
                                                         }

@@ -21,7 +21,7 @@ const StyledChip = styled(
     height: 'auto',
     ...(isActive
         ? {
-              backgroundColor: theme.palette.secondary.light,
+              backgroundColor: theme.palette.primary.container,
           }
         : {}),
 

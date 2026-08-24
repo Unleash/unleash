@@ -38,9 +38,9 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
         overflow: 'visible',
     },
     '&[data-variant="set-up-guide"].MuiAlert-standard.MuiAlert-colorInfo': {
-        backgroundColor: theme.palette.secondary.light,
-        borderColor: theme.palette.secondary.border,
-        color: theme.palette.secondary.dark,
+        backgroundColor: theme.palette.primary.container,
+        borderColor: theme.palette.primary.containerBorder,
+        color: theme.palette.primary.onContainer,
     },
 }));
 

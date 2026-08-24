@@ -79,7 +79,7 @@ export const UpgradeProjectCard = () => {
                         More{' '}
                         <Typography
                             component='span'
-                            color='secondary'
+                            color='primary'
                             sx={{
                                 fontWeight: 'bold',
                             }}

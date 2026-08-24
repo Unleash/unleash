@@ -53,9 +53,13 @@ const StyledEnvironmentBox = styled(Box)<{
     borderRadius: theme.shape.borderRadiusMedium,
     border: '1px solid',
     borderColor:
-        theme.palette[mode === 'success' ? 'secondary' : 'warning'].border,
+        mode === 'success'
+            ? theme.palette.primary.containerBorder
+            : theme.palette.warning.border,
     backgroundColor:
-        theme.palette[mode === 'success' ? 'secondary' : 'warning'].light,
+        mode === 'success'
+            ? theme.palette.primary.container
+            : theme.palette.warning.light,
     display: 'inline-block',
     padding: theme.spacing(1.5, 1.5, 1.5, 1.5),
     zIndex: 1,
@@ -93,7 +97,7 @@ const StyledStatus = styled(Typography)<{
 const StyledIconRow = styled(Box)(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(3),
-    color: theme.palette.secondary.main,
+    color: theme.palette.primary.main,
     paddingTop: theme.spacing(2),
 }));
 
@@ -202,7 +206,7 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
     return (
         <Box sx={{ width }}>
             <ArcherContainer
-                strokeColor={theme.palette.secondary.border}
+                strokeColor={theme.palette.primary.containerBorder}
                 endMarker={false}
             >
                 <StyleApplicationContainer>
@@ -216,7 +220,7 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                                 strokeColor:
                                     getEnvironmentMode(environment) ===
                                     'success'
-                                        ? theme.palette.secondary.border
+                                        ? theme.palette.primary.containerBorder
                                         : theme.palette.warning.border,
                             },
                         }))}

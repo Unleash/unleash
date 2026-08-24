@@ -21,7 +21,7 @@ const StyledChip = styled(Chip, {
     fontSize: theme.typography.body2.fontSize,
     height: 'auto',
     '&[data-selected="true"]': {
-        backgroundColor: theme.palette.secondary.light,
+        backgroundColor: theme.palette.primary.container,
         fontWeight: 'bold',
         borderColor: theme.palette.primary.main,
         color: theme.palette.primary.main,

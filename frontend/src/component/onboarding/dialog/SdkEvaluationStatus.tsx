@@ -9,8 +9,8 @@ const ConnectionAlert = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
     fontSize: theme.typography.body2.fontSize,
     borderRadius: theme.shape.borderRadiusMedium,
-    backgroundColor: theme.palette.secondary.light,
-    border: `1px solid ${theme.palette.secondary.border}`,
+    backgroundColor: theme.palette.primary.container,
+    border: `1px solid ${theme.palette.primary.containerBorder}`,
 }));
 
 const ConnectedAlert = styled(ConnectionAlert)(({ theme }) => ({

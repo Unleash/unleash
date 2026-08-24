@@ -85,7 +85,7 @@ export const ProjectAccess = ({
                         return (
                             <Badge
                                 key={role.id}
-                                color={isCustom ? 'success' : 'secondary'}
+                                color={isCustom ? 'success' : 'primary'}
                             >
                                 {role.name}
                             </Badge>

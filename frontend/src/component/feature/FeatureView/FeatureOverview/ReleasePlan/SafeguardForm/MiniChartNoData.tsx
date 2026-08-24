@@ -24,7 +24,7 @@ const StyledQuestionMarkIcon = styled(Box)(({ theme }) => ({
     width: '20px',
     height: '20px',
     borderRadius: '50%',
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.primary.main,
     color: theme.palette.common.white,
     '& svg': {
         fontSize: '14px',

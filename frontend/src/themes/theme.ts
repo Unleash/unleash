@@ -114,14 +114,21 @@ const theme = {
             light: colors.purple[700],
             dark: colors.purple[900],
             contrastText: colors.grey[50], // Color used for content when primary.main is used as a background
+            // Tinted "container" recipe (subtle purple surface: badges, chips, soft banners).
+            // Absorbed from the former `secondary` palette.
+            container: colors.purple[50], // container fill (subtle purple surface)
+            containerBorder: colors.purple[300], // container border
+            onContainer: colors.purple[900], // text/icon on the container fill
         },
+        // Dormant: all usages migrated to `primary` (main + container recipe).
+        // Kept defined so MUI's default (pink) secondary never leaks; free to repurpose
+        // for a genuinely new secondary color later.
         secondary: {
-            // Used for purple badges and purple light elements
             main: colors.purple[800],
             light: colors.purple[50],
-            dark: colors.purple[900], // Color used for text
+            dark: colors.purple[900],
             border: colors.purple[300],
-            contrastText: colors.purple[900], // Color used for text inside badge
+            contrastText: colors.purple[900],
         },
         info: {
             main: colors.blue[500],

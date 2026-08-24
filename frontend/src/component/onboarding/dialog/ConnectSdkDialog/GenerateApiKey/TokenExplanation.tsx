@@ -99,7 +99,7 @@ export const TokenExplanation = ({
     return (
         <FullWidth>
             <ArcherContainer
-                strokeColor={theme.palette.secondary.border}
+                strokeColor={theme.palette.primary.containerBorder}
                 endMarker={false}
                 lineStyle='curve'
             >

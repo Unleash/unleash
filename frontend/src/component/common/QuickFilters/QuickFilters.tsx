@@ -10,7 +10,7 @@ const StyledChip = styled(Chip, {
     fontSize: theme.fontSizes.smallerBody,
     height: 'auto',
     ...(isActive && {
-        backgroundColor: theme.palette.secondary.light,
+        backgroundColor: theme.palette.primary.container,
         fontWeight: 'bold',
         borderColor: theme.palette.primary.main,
         color: theme.palette.primary.main,

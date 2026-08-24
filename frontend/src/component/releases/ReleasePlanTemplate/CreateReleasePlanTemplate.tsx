@@ -62,6 +62,7 @@ export const CreateReleasePlanTemplate = ({ modal }: { modal?: boolean }) => {
         errors,
         setErrors,
         clearErrors,
+        clearError,
         validate,
         getTemplatePayload,
     } = useTemplateForm();
@@ -149,6 +150,7 @@ export const CreateReleasePlanTemplate = ({ modal }: { modal?: boolean }) => {
             setMilestones={setMilestones}
             errors={errors}
             clearErrors={clearErrors}
+            clearError={clearError}
             formTitle='Create release template'
             formatApiCode={formatApiCode}
             handleSubmit={handleSubmit}

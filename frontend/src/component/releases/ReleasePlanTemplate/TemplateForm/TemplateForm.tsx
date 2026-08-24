@@ -46,6 +46,7 @@ interface ITemplateFormProps {
     >;
     errors: { [key: string]: string };
     clearErrors: () => void;
+    clearError: (key: string) => void;
     formTitle: string;
     archived?: boolean;
     formatApiCode: () => string;
@@ -65,6 +66,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
     setMilestones,
     errors,
     clearErrors,
+    clearError,
     formTitle,
     archived,
     formatApiCode,
@@ -144,6 +146,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                     setMilestones={setMilestones}
                     errors={errors}
                     clearErrors={clearErrors}
+                    clearError={clearError}
                     milestoneChanged={milestoneChanged}
                 />
 

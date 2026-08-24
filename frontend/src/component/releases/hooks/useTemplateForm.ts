@@ -7,6 +7,12 @@ export interface IExtendedMilestonePayload
     startExpanded?: boolean;
 }
 
+export const automationErrorKey = (milestoneId: string) =>
+    `${milestoneId}_automation`;
+
+export const isValidAutomationTime = (intervalMinutes: number) =>
+    intervalMinutes >= 1;
+
 export const useTemplateForm = (
     initialName = '',
     initialDescription = '',
@@ -17,7 +23,7 @@ export const useTemplateForm = (
     const [name, setName] = useState(initialName);
     const [description, setDescription] = useState(initialDescription);
     const [milestones, setMilestones] = useState(initialMilestones);
-    const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState<Record<string, string>>({});
 
     useEffect(() => {
         setName(initialName);
@@ -30,6 +36,8 @@ export const useTemplateForm = (
     useEffect(() => {
         setMilestones(initialMilestones);
     }, [initialMilestones.length]);
+
+    const isLastMilestone = (index: number) => index === milestones.length - 1;
 
     const validate = (): Record<string, string> => {
         const validationErrors: Record<string, string> = {};
@@ -44,7 +52,7 @@ export const useTemplateForm = (
 
         const milestoneErrors: Record<string, string> = {};
         const nameSet = new Set();
-        milestones.forEach((m) => {
+        milestones.forEach((m, index) => {
             if (!m.name || m.name.length === 0) {
                 milestoneErrors[m.id] = 'Milestone must have a valid name.';
                 milestoneErrors[`${m.id}_name`] =
@@ -60,6 +68,18 @@ export const useTemplateForm = (
                 milestoneErrors[m.id] = 'Milestone names must be unique.';
             } else if (m.name) {
                 nameSet.add(m.name);
+            }
+
+            const automation = isLastMilestone(index)
+                ? undefined
+                : m.transitionCondition;
+            const hasInvalidAutomationTime =
+                automation !== undefined &&
+                !isValidAutomationTime(automation.intervalMinutes);
+
+            if (hasInvalidAutomationTime) {
+                validationErrors[automationErrorKey(m.id)] =
+                    'Automation time must be greater than zero.';
             }
         });
 
@@ -80,22 +100,31 @@ export const useTemplateForm = (
         setErrors({});
     };
 
+    const clearError = (key: string) => {
+        setErrors(({ [key]: _cleared, ...remaining }) => remaining);
+    };
+
     const getTemplatePayload = () => {
         return {
             name,
             description,
-            milestones: milestones.map(({ startExpanded, ...milestone }) => ({
-                ...milestone,
-                strategies: milestone.strategies?.map(
-                    ({ strategyName, name, ...strategy }) => {
-                        const normalizedName = name || strategyName || ''; // todo(v9) remove the normalization; use `name` directly
-                        return {
-                            name: normalizedName, // place name first in the object for legibility
-                            ...strategy,
-                        };
-                    },
-                ),
-            })),
+            milestones: milestones.map(
+                ({ startExpanded, ...milestone }, index) => ({
+                    ...milestone,
+                    transitionCondition: isLastMilestone(index)
+                        ? undefined
+                        : milestone.transitionCondition,
+                    strategies: milestone.strategies?.map(
+                        ({ strategyName, name, ...strategy }) => {
+                            const normalizedName = name || strategyName || ''; // todo(v9) remove the normalization; use `name` directly
+                            return {
+                                name: normalizedName, // place name first in the object for legibility
+                                ...strategy,
+                            };
+                        },
+                    ),
+                }),
+            ),
         };
     };
 
@@ -109,6 +138,7 @@ export const useTemplateForm = (
         errors,
         setErrors,
         clearErrors,
+        clearError,
         validate,
         getTemplatePayload,
     };

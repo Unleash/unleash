@@ -44,11 +44,17 @@ export const releasePlanMilestoneSchema = {
             nullable: true,
         },
         transitionCondition: {
-            type: transitionConditionSchema.type,
-            additionalProperties:
-                transitionConditionSchema.additionalProperties,
-            required: transitionConditionSchema.required,
-            properties: transitionConditionSchema.properties,
+            type: 'object',
+            additionalProperties: false,
+            required: ['intervalMinutes'],
+            properties: {
+                intervalMinutes: {
+                    type: 'integer',
+                    minimum: 1,
+                    description: 'The interval in minutes before transitioning',
+                    example: 30,
+                },
+            },
             description: 'The condition configuration for the transition',
             nullable: true,
         },

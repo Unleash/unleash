@@ -10,14 +10,14 @@ const StyledBadge = styled('span', {
     lineHeight: 1,
     color: completed
         ? theme.palette.success.contrastText
-        : theme.palette.secondary.dark,
+        : theme.palette.primary.onContainer,
     backgroundColor: completed
         ? theme.palette.success.light
-        : theme.palette.secondary.light,
+        : theme.palette.primary.container,
     border: `1px solid ${
         completed
             ? theme.palette.success.border
-            : theme.palette.secondary.border
+            : theme.palette.primary.containerBorder
     }`,
     borderRadius: theme.shape.borderRadius,
     padding: theme.spacing(0.25, 0.75),

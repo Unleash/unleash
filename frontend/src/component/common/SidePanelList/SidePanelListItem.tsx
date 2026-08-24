@@ -11,7 +11,7 @@ const StyledItem = styled(Button, {
     '&.MuiButton-root': {
         width: '100%',
         backgroundColor: selected
-            ? theme.palette.secondary.light
+            ? theme.palette.primary.container
             : 'transparent',
         borderRight: `${theme.spacing(0.5)} solid ${
             selected ? theme.palette.background.alternative : 'transparent'
@@ -28,7 +28,7 @@ const StyledItem = styled(Button, {
     },
     '&:hover': {
         backgroundColor: selected
-            ? theme.palette.secondary.light
+            ? theme.palette.primary.container
             : theme.palette.neutral.light,
     },
     '&.Mui-disabled': {

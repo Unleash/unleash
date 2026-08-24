@@ -101,7 +101,7 @@ export const ChangeRequestsWidget: FC<IChangeRequestsWidgetProps> = ({
                 </StyledChangeBox>
                 <StyledChangeBox
                     sx={{
-                        background: (theme) => theme.palette.secondary.light,
+                        background: (theme) => theme.palette.primary.container,
                     }}
                 >
                     <StyledSubtitle>To be reviewed</StyledSubtitle>

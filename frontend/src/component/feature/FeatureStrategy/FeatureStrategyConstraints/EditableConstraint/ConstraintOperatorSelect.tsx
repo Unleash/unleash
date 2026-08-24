@@ -35,9 +35,9 @@ const StyledSelect = styled(Select)(({ theme }) => ({
     borderRadius: theme.shape.borderRadius,
     padding: theme.spacing(0.25, 0),
     fontSize: theme.fontSizes.smallerBody,
-    background: theme.palette.secondary.light,
-    border: `1px solid ${theme.palette.secondary.border}`,
-    color: theme.palette.secondary.dark,
+    background: theme.palette.primary.container,
+    border: `1px solid ${theme.palette.primary.containerBorder}`,
+    color: theme.palette.primary.onContainer,
     fontWeight: theme.typography.fontWeightBold,
     fieldset: {
         border: 'none',

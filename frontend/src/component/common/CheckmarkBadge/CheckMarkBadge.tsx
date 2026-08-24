@@ -10,7 +10,7 @@ interface ICheckMarkBadgeProps {
 const StyledCheck = styled(Check)(({ theme }) => ({
     color:
         theme.mode === 'light'
-            ? theme.palette.secondary.border
+            ? theme.palette.primary.containerBorder
             : theme.palette.primary.main,
 }));
 

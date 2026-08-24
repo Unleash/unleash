@@ -79,35 +79,43 @@ const theme = {
         info: {
             // main: '#5483C9',  // used on icons on these elements
             main: '#a2bbe2', // used on icons on these elements
-            light: '#1A2641', // used as a bakground on these elements
+            light: '#b8cbe9', // One step lighter than main
             dark: '#a2bbe2', // used for text on these elements
-            border: '#1B407A',
-            contrastText: '#EEEEFC', // Color used for content when info.main is used as a background
+            contrastText: '#202021', // Contrast against main
+            container: '#1A2641', // Tinted surface fill (soft alert background)
+            containerBorder: '#1B407A', // Border for the container surface
+            onContainer: '#EEEEFC', // Text/icon drawn on the container fill
         },
         success: {
             // main: '#62872F',  // used on icons on these elements
             main: '#94ae6f', // used on icons on these elements
-            light: '#333D30', // used as a bakground on these elements
+            light: '#a8bd88', // One step lighter than main
             dark: '#94ae6f', // used for text on these elements
-            border: '#3D600C',
-            contrastText: '#EEEEFC', // Color used for content when success.main is used as a background
+            contrastText: '#202021', // Contrast against main
+            container: '#333D30', // Tinted surface fill (soft alert background)
+            containerBorder: '#3D600C', // Border for the container surface
+            onContainer: '#EEEEFC', // Text/icon drawn on the container fill
         },
         warning: {
             // main: '#9E691C',  // used on icons on these elements
             main: '#bc7d21', // used on icons on these elements
-            light: '#3B302C', // used as a bakground on these elements
+            light: '#d0913a', // One step lighter than main
             dark: '#bc7d21', // used for text on these elements
-            contrastText: '#EEEEFC', // Color used for content when warning.main is used as a background
-            border: '#6C4A19',
+            contrastText: '#202021', // Contrast against main
+            container: '#3B302C', // Tinted surface fill (soft alert background)
+            containerBorder: '#6C4A19', // Border for the container surface
+            onContainer: '#EEEEFC', // Text/icon drawn on the container fill
         },
         error: {
             // main: '#B93F4A',  // used on error buttons // used on icons on these elements
             main: '#ff6472', // used on error buttons // used on icons on these elements
-            light: '#3F2835', // used as a bakground on these elements
+            light: '#ff8591', // One step lighter than main
             // dark: '#F15260',  // used for text on these elements
             dark: '#ff6472', // used for text on these elements
-            border: '#8A3E45',
-            contrastText: '#EEEEFC', // Color used for content when error.main is used as a background
+            contrastText: '#202021', // Contrast against main
+            container: '#3F2835', // Tinted surface fill (soft alert background)
+            containerBorder: '#8A3E45', // Border for the container surface
+            onContainer: '#EEEEFC', // Text/icon drawn on the container fill
         },
         web: {
             main: '#1A4049', // used on sales-related elements
@@ -410,33 +418,33 @@ export const darkTheme = createTheme({
                         padding: '3px 0 0 0',
                     },
                     '&.MuiAlert-standard.MuiAlert-colorInfo': {
-                        backgroundColor: theme.palette.info.light,
-                        color: theme.palette.info.contrastText,
-                        border: `1px solid ${theme.palette.info.border}`,
+                        backgroundColor: theme.palette.info.container,
+                        color: theme.palette.info.onContainer,
+                        border: `1px solid ${theme.palette.info.containerBorder}`,
                         '& .MuiAlert-icon': {
                             color: theme.palette.info.main,
                         },
                     },
                     '&.MuiAlert-standard.MuiAlert-colorSuccess': {
-                        backgroundColor: theme.palette.success.light,
-                        color: theme.palette.success.contrastText,
-                        border: `1px solid ${theme.palette.success.border}`,
+                        backgroundColor: theme.palette.success.container,
+                        color: theme.palette.success.onContainer,
+                        border: `1px solid ${theme.palette.success.containerBorder}`,
                         '& .MuiAlert-icon': {
                             color: theme.palette.success.main,
                         },
                     },
                     '&.MuiAlert-standard.MuiAlert-colorWarning': {
-                        backgroundColor: theme.palette.warning.light,
-                        color: theme.palette.warning.contrastText,
-                        border: `1px solid ${theme.palette.warning.border}`,
+                        backgroundColor: theme.palette.warning.container,
+                        color: theme.palette.warning.onContainer,
+                        border: `1px solid ${theme.palette.warning.containerBorder}`,
                         '& .MuiAlert-icon': {
                             color: theme.palette.warning.main,
                         },
                     },
                     '&.MuiAlert-standard.MuiAlert-colorError': {
-                        backgroundColor: theme.palette.error.light,
-                        color: theme.palette.error.contrastText,
-                        border: `1px solid ${theme.palette.error.border}`,
+                        backgroundColor: theme.palette.error.container,
+                        color: theme.palette.error.onContainer,
+                        border: `1px solid ${theme.palette.error.containerBorder}`,
                         '& .MuiAlert-icon': {
                             color: theme.palette.error.main,
                         },

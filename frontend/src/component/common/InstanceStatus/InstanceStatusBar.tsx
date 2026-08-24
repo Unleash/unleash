@@ -24,8 +24,8 @@ const StyledWarningBar = styled('aside')(({ theme }) => ({
     padding: theme.spacing(1),
     gap: theme.spacing(1),
     borderBottom: '1px solid',
-    borderColor: theme.palette.warning.border,
-    background: theme.palette.warning.light,
+    borderColor: theme.palette.warning.containerBorder,
+    background: theme.palette.warning.container,
     color: theme.palette.warning.dark,
 }));
 
@@ -38,8 +38,8 @@ const StyledInfoBar = styled('aside')(({ theme }) => ({
     padding: theme.spacing(1),
     gap: theme.spacing(1),
     borderBottom: '1px solid',
-    borderColor: theme.palette.info.border,
-    background: theme.palette.info.light,
+    borderColor: theme.palette.info.containerBorder,
+    background: theme.palette.info.container,
     color: theme.palette.info.dark,
 }));
 

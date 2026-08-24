@@ -53,11 +53,11 @@ const StyledCard = styled('div', {
         border: `1px solid ${theme.palette.divider}`,
         boxShadow: theme.boxShadows.card,
         ...(deprecated && {
-            backgroundColor: theme.palette.warning.light,
+            backgroundColor: theme.palette.warning.container,
         }),
         ':hover': {
             backgroundColor: deprecated
-                ? theme.palette.warning.light
+                ? theme.palette.warning.container
                 : theme.palette.action.hover,
         },
         ...(variant === 'stacked' && {

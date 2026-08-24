@@ -39,8 +39,8 @@ const StyledApplicationBox = styled(Box)<{
 }>(({ theme, mode }) => ({
     borderRadius: theme.shape.borderRadiusMedium,
     border: '1px solid',
-    borderColor: theme.palette[mode].border,
-    backgroundColor: theme.palette[mode].light,
+    borderColor: theme.palette[mode].containerBorder,
+    backgroundColor: theme.palette[mode].container,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -55,11 +55,11 @@ const StyledEnvironmentBox = styled(Box)<{
     borderColor:
         mode === 'success'
             ? theme.palette.primary.containerBorder
-            : theme.palette.warning.border,
+            : theme.palette.warning.containerBorder,
     backgroundColor:
         mode === 'success'
             ? theme.palette.primary.container
-            : theme.palette.warning.light,
+            : theme.palette.warning.container,
     display: 'inline-block',
     padding: theme.spacing(1.5, 1.5, 1.5, 1.5),
     zIndex: 1,
@@ -221,7 +221,7 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                                     getEnvironmentMode(environment) ===
                                     'success'
                                         ? theme.palette.primary.containerBorder
-                                        : theme.palette.warning.border,
+                                        : theme.palette.warning.containerBorder,
                             },
                         }))}
                     >

@@ -52,7 +52,7 @@ const StyledMilestoneCard = styled(Card, {
     flexDirection: 'row',
     justifyContent: 'space-between',
     boxShadow: 'none',
-    border: `1px solid ${hasError ? theme.palette.error.border : theme.palette.divider}`,
+    border: `1px solid ${hasError ? theme.palette.error.containerBorder : theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
     [theme.breakpoints.down('sm')]: {
         justifyContent: 'center',

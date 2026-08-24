@@ -132,31 +132,39 @@ const theme = {
         },
         info: {
             main: colors.blue[500],
-            light: colors.blue[50],
+            light: colors.blue[400], // One step lighter than main
             dark: colors.blue[800], // Color used for text
-            border: colors.blue[200],
-            contrastText: colors.blue[800], // Color used for text inside alert
+            contrastText: colors.grey[50], // Contrast against main
+            container: colors.blue[50], // Tinted surface fill (soft alert background)
+            containerBorder: colors.blue[200], // Border for the container surface
+            onContainer: colors.blue[800], // Text/icon drawn on the container fill
         },
         success: {
             main: colors.green[600],
-            light: colors.green[50],
+            light: colors.green[500], // One step lighter than main
             dark: colors.green[800], // Color used for text
-            border: colors.green[300],
-            contrastText: colors.green[800], // Color used for text inside alert
+            contrastText: colors.grey[50], // Contrast against main
+            container: colors.green[50], // Tinted surface fill (soft alert background)
+            containerBorder: colors.green[300], // Border for the container surface
+            onContainer: colors.green[800], // Text/icon drawn on the container fill
         },
         warning: {
             main: colors.orange[800],
-            light: colors.orange[100],
+            light: colors.orange[700], // One step lighter than main
             dark: colors.orange[900], // Color used for text
-            border: colors.orange[500],
-            contrastText: colors.orange[900], // Color used for text inside alert
+            contrastText: colors.grey[50], // Contrast against main
+            container: colors.orange[100], // Tinted surface fill (soft alert background)
+            containerBorder: colors.orange[500], // Border for the container surface
+            onContainer: colors.orange[900], // Text/icon drawn on the container fill
         },
         error: {
             main: colors.red[700], // used on error buttons // used on icons on these elements
-            light: colors.red[50],
+            light: colors.red[600], // One step lighter than main
             dark: colors.red[800], // Color used for text
-            border: colors.red[300],
-            contrastText: colors.red[800], // Color used for text inside alert
+            contrastText: colors.grey[50], // Contrast against main
+            container: colors.red[50], // Tinted surface fill (soft alert background)
+            containerBorder: colors.red[300], // Border for the container surface
+            onContainer: colors.red[800], // Text/icon drawn on the container fill
         },
         web: {
             main: '#1A4049', // used on sales-related elements
@@ -486,33 +494,33 @@ export const lightTheme = createTheme({
                         padding: '3px 0 0 0',
                     },
                     '&.MuiAlert-standard.MuiAlert-colorInfo': {
-                        backgroundColor: theme.palette.info.light,
-                        color: theme.palette.info.dark,
-                        border: `1px solid ${theme.palette.info.border}`,
+                        backgroundColor: theme.palette.info.container,
+                        color: theme.palette.info.onContainer,
+                        border: `1px solid ${theme.palette.info.containerBorder}`,
                         '& .MuiAlert-icon': {
                             color: theme.palette.info.main,
                         },
                     },
                     '&.MuiAlert-standard.MuiAlert-colorSuccess': {
-                        backgroundColor: theme.palette.success.light,
-                        color: theme.palette.success.dark,
-                        border: `1px solid ${theme.palette.success.border}`,
+                        backgroundColor: theme.palette.success.container,
+                        color: theme.palette.success.onContainer,
+                        border: `1px solid ${theme.palette.success.containerBorder}`,
                         '& .MuiAlert-icon': {
                             color: theme.palette.success.main,
                         },
                     },
                     '&.MuiAlert-standard.MuiAlert-colorWarning': {
-                        backgroundColor: theme.palette.warning.light,
-                        color: theme.palette.warning.dark,
-                        border: `1px solid ${theme.palette.warning.border}`,
+                        backgroundColor: theme.palette.warning.container,
+                        color: theme.palette.warning.onContainer,
+                        border: `1px solid ${theme.palette.warning.containerBorder}`,
                         '& .MuiAlert-icon': {
                             color: theme.palette.warning.main,
                         },
                     },
                     '&.MuiAlert-standard.MuiAlert-colorError': {
-                        backgroundColor: theme.palette.error.light,
-                        color: theme.palette.error.dark,
-                        border: `1px solid ${theme.palette.error.border}`,
+                        backgroundColor: theme.palette.error.container,
+                        color: theme.palette.error.onContainer,
+                        border: `1px solid ${theme.palette.error.containerBorder}`,
                         '& .MuiAlert-icon': {
                             color: theme.palette.error.main,
                         },

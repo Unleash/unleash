@@ -55,8 +55,8 @@ const StepIndicator = styled('span', {
     color: done ? theme.palette.success.main : theme.palette.text.secondary,
     ...(done && {
         borderRadius: theme.shape.borderRadiusMedium,
-        border: `1.25px solid ${theme.palette.success.border}`,
-        backgroundColor: theme.palette.success.light,
+        border: `1.25px solid ${theme.palette.success.containerBorder}`,
+        backgroundColor: theme.palette.success.container,
     }),
     '& svg': { fontSize: done ? 14 : 20 },
 }));

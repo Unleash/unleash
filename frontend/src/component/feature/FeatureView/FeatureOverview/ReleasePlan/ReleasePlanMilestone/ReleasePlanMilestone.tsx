@@ -26,10 +26,10 @@ const StyledAccordion = styled(Accordion, {
     shouldForwardProp: (prop) => prop !== 'status' && prop !== 'hasAutomation',
 })<{ status: MilestoneStatus; hasAutomation?: boolean }>(
     ({ theme, status, hasAutomation }) => ({
-        border: `${status.type === 'active' ? '1.5px' : '1px'} solid ${status.type === 'active' ? theme.palette.success.border : theme.palette.divider}`,
+        border: `${status.type === 'active' ? '1.5px' : '1px'} solid ${status.type === 'active' ? theme.palette.success.containerBorder : theme.palette.divider}`,
         borderBottom: hasAutomation
             ? 'none'
-            : `${status.type === 'active' ? '1.5px' : '1px'} solid ${status.type === 'active' ? theme.palette.success.border : theme.palette.divider}`,
+            : `${status.type === 'active' ? '1.5px' : '1px'} solid ${status.type === 'active' ? theme.palette.success.containerBorder : theme.palette.divider}`,
         overflow: 'hidden',
         boxShadow: 'none',
         margin: 0,

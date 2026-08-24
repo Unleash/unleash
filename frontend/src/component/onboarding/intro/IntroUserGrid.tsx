@@ -204,15 +204,15 @@ const StyledStatusBadge = styled('span', {
     const palette =
         experience === 'smart'
             ? {
-                  bg: theme.palette.success.light,
+                  bg: theme.palette.success.container,
                   fg: theme.palette.success.main,
-                  ring: theme.palette.success.border,
+                  ring: theme.palette.success.containerBorder,
               }
             : experience === 'error'
               ? {
-                    bg: theme.palette.error.light,
+                    bg: theme.palette.error.container,
                     fg: theme.palette.error.main,
-                    ring: theme.palette.error.border,
+                    ring: theme.palette.error.containerBorder,
                 }
               : {
                     bg: theme.palette.background.elevation2,
@@ -364,7 +364,9 @@ const StyledEvaluationPanel = styled(Box, {
     const borderColor =
         state === 'classic'
             ? theme.palette.divider
-            : (theme.palette[color].border ?? theme.palette.divider);
+            : (theme.palette[color].containerBorder ??
+              theme.palette[color].border ??
+              theme.palette.divider);
     return {
         display: 'flex',
         flexDirection: 'column',
@@ -372,8 +374,11 @@ const StyledEvaluationPanel = styled(Box, {
         padding: theme.spacing(1.25),
         borderRadius: theme.shape.borderRadius,
         border: `1px solid ${borderColor}`,
-        background: theme.palette[color].light,
-        color: theme.palette[color].contrastText,
+        background:
+            theme.palette[color].container ?? theme.palette[color].light,
+        color:
+            theme.palette[color].onContainer ??
+            theme.palette[color].contrastText,
         fontSize: theme.fontSizes.smallBody,
         lineHeight: 1.45,
     };
@@ -506,8 +511,8 @@ const StyledErrorCard = styled(Box)(({ theme }) => ({
     gap: theme.spacing(1),
     padding: theme.spacing(1.75),
     borderRadius: theme.shape.borderRadiusMedium,
-    border: `1px solid ${theme.palette.error.border}`,
-    background: theme.palette.error.light,
+    border: `1px solid ${theme.palette.error.containerBorder}`,
+    background: theme.palette.error.container,
     color: theme.palette.error.main,
     fontSize: theme.fontSizes.smallBody,
     fontWeight: theme.typography.fontWeightBold,

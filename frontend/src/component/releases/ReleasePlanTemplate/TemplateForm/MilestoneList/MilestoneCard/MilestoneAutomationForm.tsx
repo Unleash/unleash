@@ -1,20 +1,11 @@
 import Add from '@mui/icons-material/Add';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { Button, IconButton, styled } from '@mui/material';
-import { useState } from 'react';
-import type { SelectChangeEvent } from '@mui/material';
-import {
-    getMinutesFromTimeValueAndUnit,
-    getTimeValueAndUnitFromMinutes,
-    type TimeUnit,
-} from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/hooks/useMilestoneProgressionForm';
+import { useTransitionConditionInput } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/hooks/useTransitionConditionInput';
 import { StyledErrorMessage } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/shared/SharedFormComponents';
 import { TransitionConditionRow } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/shared/TransitionConditionRow';
 import { MilestoneProgressionTimeInput } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/MilestoneProgressionForm/MilestoneProgressionTimeInput';
 import type { TransitionConditionSchema } from 'openapi';
-
-const DEFAULT_INTERVAL_MINUTES = 5 * 60;
-const MAX_TIME_VALUE = 10000;
 
 const StyledAutomationSection = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(1),
@@ -39,11 +30,16 @@ export const MilestoneAutomationForm = ({
     onChange,
     error,
 }: MilestoneAutomationFormProps) => {
-    const initial = getTimeValueAndUnitFromMinutes(
-        transitionCondition?.intervalMinutes ?? DEFAULT_INTERVAL_MINUTES,
+    const {
+        timeValue,
+        timeUnit,
+        intervalMinutes,
+        handleTimeValueChange,
+        handleTimeUnitChange,
+    } = useTransitionConditionInput(
+        transitionCondition?.intervalMinutes,
+        (intervalMinutes) => onChange({ intervalMinutes }),
     );
-    const [timeValue, setTimeValue] = useState(initial.value);
-    const [timeUnit, setTimeUnit] = useState<TimeUnit>(initial.unit);
 
     if (!transitionCondition) {
         return (
@@ -52,44 +48,13 @@ export const MilestoneAutomationForm = ({
                     variant='text'
                     color='primary'
                     startIcon={<Add />}
-                    onClick={() => {
-                        onChange({
-                            intervalMinutes: getMinutesFromTimeValueAndUnit({
-                                value: timeValue,
-                                unit: timeUnit,
-                            }),
-                        });
-                    }}
+                    onClick={() => onChange({ intervalMinutes })}
                 >
                     Add automation
                 </Button>
             </StyledAutomationSection>
         );
     }
-
-    const handleTimeValueChange = (
-        event: React.ChangeEvent<HTMLInputElement>,
-    ) => {
-        const value = Math.min(Number(event.target.value), MAX_TIME_VALUE);
-        setTimeValue(value);
-        onChange({
-            intervalMinutes: getMinutesFromTimeValueAndUnit({
-                value,
-                unit: timeUnit,
-            }),
-        });
-    };
-
-    const handleTimeUnitChange = (event: SelectChangeEvent<unknown>) => {
-        const unit = event.target.value as TimeUnit;
-        setTimeUnit(unit);
-        onChange({
-            intervalMinutes: getMinutesFromTimeValueAndUnit({
-                value: timeValue,
-                unit,
-            }),
-        });
-    };
 
     return (
         <StyledAutomationSection>

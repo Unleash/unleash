@@ -5,7 +5,7 @@ import type {
     IReleasePlanMilestone,
 } from 'interfaces/releasePlans';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
-import { getTimeValueAndUnitFromMinutes } from '../hooks/useMilestoneProgressionForm.js';
+import { getTimeValueAndUnitFromMinutes } from '../hooks/useTransitionConditionInput.ts';
 
 const StyledBoldSpan = styled('span')(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,

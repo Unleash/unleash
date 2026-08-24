@@ -5,7 +5,7 @@ import {
     TextField,
     type SelectChangeEvent,
 } from '@mui/material';
-import type { TimeUnit } from '../hooks/useMilestoneProgressionForm.js';
+import type { TimeUnit } from '../hooks/useTransitionConditionInput.ts';
 
 const StyledInputGroup = styled('div')(({ theme }) => ({
     display: 'flex',

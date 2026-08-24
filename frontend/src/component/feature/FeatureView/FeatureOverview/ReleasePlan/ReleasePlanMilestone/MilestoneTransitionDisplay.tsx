@@ -3,10 +3,8 @@ import { Button, styled } from '@mui/material';
 import type { MilestoneStatus } from './ReleasePlanMilestoneStatus.tsx';
 import { TransitionConditionRow } from '../shared/TransitionConditionRow.tsx';
 import { MilestoneProgressionTimeInput } from '../MilestoneProgressionForm/MilestoneProgressionTimeInput.tsx';
-import {
-    getTimeValueAndUnitFromMinutes,
-    useMilestoneProgressionForm,
-} from '../hooks/useMilestoneProgressionForm.js';
+import { useMilestoneProgressionForm } from '../hooks/useMilestoneProgressionForm.js';
+import { getTimeValueAndUnitFromMinutes } from '../hooks/useTransitionConditionInput.ts';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
@@ -130,7 +128,7 @@ export const MilestoneTransitionDisplay = ({
         status,
     );
 
-    const currentIntervalMinutes = form.getIntervalMinutes();
+    const currentIntervalMinutes = form.intervalMinutes;
     const hasChanged = currentIntervalMinutes !== intervalMinutes;
 
     const progressionInfo = useMilestoneProgressionInfo(

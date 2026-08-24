@@ -47,7 +47,7 @@ export const MilestoneProgressionForm = ({
     );
 
     const progressionInfo = useMilestoneProgressionInfo(
-        form.getIntervalMinutes(),
+        form.intervalMinutes,
         sourceMilestoneStartedAt,
         status,
     );

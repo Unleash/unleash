@@ -1,11 +1,12 @@
 import Add from '@mui/icons-material/Add';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import { Button, IconButton, styled } from '@mui/material';
+import { IconButton, styled } from '@mui/material';
 import { useTransitionConditionInput } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/hooks/useTransitionConditionInput';
 import { StyledErrorMessage } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/shared/SharedFormComponents';
 import { TransitionConditionRow } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/shared/TransitionConditionRow';
 import { MilestoneProgressionTimeInput } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/MilestoneProgressionForm/MilestoneProgressionTimeInput';
 import type { TransitionConditionSchema } from 'openapi';
+import { StyledActionButton } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestoneItem/StyledActionButton';
 
 const StyledAutomationSection = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(1),
@@ -44,14 +45,14 @@ export const MilestoneAutomationForm = ({
     if (!transitionCondition) {
         return (
             <StyledAutomationSection>
-                <Button
+                <StyledActionButton
                     variant='text'
                     color='primary'
                     startIcon={<Add />}
                     onClick={() => onChange({ intervalMinutes })}
                 >
-                    Add automation
-                </Button>
+                    Automate this transition
+                </StyledActionButton>
             </StyledAutomationSection>
         );
     }

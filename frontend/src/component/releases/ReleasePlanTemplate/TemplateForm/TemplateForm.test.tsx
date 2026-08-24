@@ -98,7 +98,7 @@ describe('milestone automations', () => {
         setAutomationsFlag(true);
     });
 
-    test('shows add automation only on milestones that have a next one', async () => {
+    test('shows automate this transition only on milestones that have a next one', async () => {
         renderTemplateForm({
             milestones: [
                 defaultMilestone({ strategies: undefined }),
@@ -110,11 +110,13 @@ describe('milestone automations', () => {
                 }),
             ],
         });
-        expect(await screen.findAllByText('Add automation')).toHaveLength(1);
+        expect(
+            await screen.findAllByText('Automate this transition'),
+        ).toHaveLength(1);
 
         await userEvent.click(screen.getByText('Add milestone'));
 
-        expect(screen.getAllByText('Add automation')).toHaveLength(2);
+        expect(screen.getAllByText('Automate this transition')).toHaveLength(2);
     });
 
     test('removing automation omits the transition condition from the payload', async () => {

@@ -4,7 +4,6 @@ import { createColumnHelper, useReactTable } from '@tanstack/react-table';
 import { NumberParam, StringParam, withDefault } from 'use-query-params';
 import { PaginatedTable, TablePlaceholder } from 'component/common/Table';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { RoleCell } from 'component/common/Table/cells/RoleCell/RoleCell';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { Badge } from 'component/common/Badge/Badge';
@@ -78,31 +77,50 @@ export const UserAccessLog = () => {
 
     const columns = useMemo(
         () => [
-            columnHelper.accessor('user', {
-                id: 'avatar',
-                header: 'Avatar',
-                cell: ({ row }) => (
-                    <TextCell>
-                        <UserAvatar user={row.original.user} />
-                    </TextCell>
-                ),
-                enableSorting: false,
-                meta: { maxWidth: 80 },
-            }),
             columnHelper.accessor((row) => row.user.name || '', {
-                id: 'name',
-                header: 'Name',
-                cell: ({ row }) => (
-                    <HighlightCell
-                        value={row.original.user.name ?? ''}
-                        subtitle={
-                            row.original.user.email ||
-                            row.original.user.username
-                        }
-                    />
-                ),
+                id: 'user',
+                header: 'User',
+                cell: ({ row }) => {
+                    const user = row.original.user;
+                    const subtitle = user.email || user.username;
+                    return (
+                        <TextCell>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 1,
+                                }}
+                            >
+                                <UserAvatar user={user} />
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        minWidth: 0,
+                                    }}
+                                >
+                                    <span>{user.name || ''}</span>
+                                    {subtitle ? (
+                                        <Box
+                                            component='span'
+                                            sx={{
+                                                color: 'text.secondary',
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                whiteSpace: 'nowrap',
+                                            }}
+                                        >
+                                            {subtitle}
+                                        </Box>
+                                    ) : null}
+                                </Box>
+                            </Box>
+                        </TextCell>
+                    );
+                },
                 enableSorting: false,
-                meta: { minWidth: 180 },
+                meta: { minWidth: 220 },
             }),
             columnHelper.accessor(
                 (row) =>

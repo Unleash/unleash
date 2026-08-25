@@ -15,15 +15,15 @@ import useLoading from 'hooks/useLoading';
 import { withTableState } from 'utils/withTableState';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import type { IRole } from 'interfaces/role';
+import type { UserAccessLogEntrySchema } from 'openapi';
 import {
     DEFAULT_PAGE_LIMIT,
     useUserAccessLog,
-    type IUserAccessLogEntry,
 } from 'hooks/api/getters/useUserAccessLog/useUserAccessLog';
 
-const columnHelper = createColumnHelper<IUserAccessLogEntry>();
+const columnHelper = createColumnHelper<UserAccessLogEntrySchema>();
 
-const UpdatedCell = ({ entry }: { entry: IUserAccessLogEntry }) => {
+const UpdatedCell = ({ entry }: { entry: UserAccessLogEntrySchema }) => {
     const { locationSettings } = useLocationSettings();
     const activity =
         entry.status === 'removed' ? entry.removedAt : entry.createdAt;

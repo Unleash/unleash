@@ -51,6 +51,7 @@ const HubSpotChatRunner = ({
                     trialExpiry,
                 }),
             ]);
+            hsq.push(['trackPageView']);
 
             if (document.getElementById(SCRIPT_ID)) {
                 return;

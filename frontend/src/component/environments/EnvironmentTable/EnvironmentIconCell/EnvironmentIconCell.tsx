@@ -25,7 +25,7 @@ const StyledCloudCircle = styled(CloudCircle, {
     shouldForwardProp: (prop) => prop !== 'deprecated',
 })<{ deprecated?: boolean }>(({ theme, deprecated }) => ({
     color: deprecated
-        ? theme.palette.neutral.border
+        ? theme.palette.neutral.containerBorder
         : theme.palette.primary.main,
 }));
 

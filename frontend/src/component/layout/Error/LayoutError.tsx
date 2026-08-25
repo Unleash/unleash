@@ -36,7 +36,9 @@ export const LayoutError: FC<IErrorProps> = ({ error }) => {
     }, []);
 
     return (
-        <Box sx={{ backgroundColor: 'neutral.light', height: '100%', p: 4 }}>
+        <Box
+            sx={{ backgroundColor: 'neutral.container', height: '100%', p: 4 }}
+        >
             <Dialogue
                 open={true}
                 title='Something went wrong'

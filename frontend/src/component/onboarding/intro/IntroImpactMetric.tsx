@@ -115,7 +115,7 @@ const StyledEventPill = styled(Box, {
         : eventType === 'enabled'
           ? theme.palette.success.container
           : eventType === 'disabled'
-            ? theme.palette.neutral.light
+            ? theme.palette.neutral.container
             : eventType === 'automated-disabled'
               ? theme.palette.success.container
               : theme.palette.primary.container;
@@ -134,7 +134,9 @@ const StyledEventPill = styled(Box, {
         transform: 'translate(-50%, -50%) scale(1)',
         borderRadius: '50%',
         color: automated ? theme.palette.neutral.main : eventColor,
-        background: automated ? theme.palette.neutral.light : eventBackground,
+        background: automated
+            ? theme.palette.neutral.container
+            : eventBackground,
         border: '1px solid currentColor',
         boxShadow: theme.shadows[1],
         cursor: 'pointer',
@@ -235,7 +237,7 @@ const StyledEventTooltipIcon = styled(Box, {
         eventType === 'enabled'
             ? theme.palette.success.container
             : eventType === 'disabled'
-              ? theme.palette.neutral.light
+              ? theme.palette.neutral.container
               : eventType === 'automated-disabled'
                 ? theme.palette.success.container
                 : theme.palette.primary.container;
@@ -250,7 +252,9 @@ const StyledEventTooltipIcon = styled(Box, {
         flexShrink: 0,
         borderRadius: '50%',
         color: automated ? theme.palette.neutral.main : eventColor,
-        background: automated ? theme.palette.neutral.light : eventBackground,
+        background: automated
+            ? theme.palette.neutral.container
+            : eventBackground,
         border: '1px solid currentColor',
         '& > svg': {
             width: 17,

@@ -21,7 +21,7 @@ const variants: VariantProps = {
             backgroundColor: theme.palette.background.default,
             background: theme.palette.primary.container,
             '&:hover': {
-                backgroundColor: theme.palette.neutral.light,
+                backgroundColor: theme.palette.neutral.container,
             },
         }),
         header: (theme: Theme): CSSObject => ({
@@ -31,7 +31,7 @@ const variants: VariantProps = {
             backgroundColor: theme.palette.background.default,
             color: theme.palette.text.secondary,
             '&:hover': {
-                backgroundColor: theme.palette.neutral.light,
+                backgroundColor: theme.palette.neutral.container,
             },
             fontSize: theme.fontSizes.smallBody,
         }),

@@ -27,7 +27,7 @@ const StyledTab = styled(Button)<{ selected: boolean }>(
             lineHeight: 1.2,
         },
         '&:hover': {
-            backgroundColor: theme.palette.neutral.light,
+            backgroundColor: theme.palette.neutral.container,
         },
         '&.Mui-disabled': {
             pointerEvents: 'auto',

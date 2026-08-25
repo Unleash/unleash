@@ -127,10 +127,12 @@ const theme = {
          */
         neutral: {
             main: '#858699', // used on icons on these elements
-            light: '#2B2A3C', // used as a bakground on these elements
+            light: '#9a9bab', // One step lighter than main
             dark: '#EEEEFC', // used for text on these elements
-            border: '#454360',
-            contrastText: '#EEEEFC', // Color used for text inside badge
+            contrastText: '#202021', // Contrast against main
+            container: '#2B2A3C', // Tinted surface fill (subtle neutral background)
+            containerBorder: '#454360', // Border for the container surface
+            onContainer: '#EEEEFC', // Text/icon drawn on the container fill
         },
 
         background: {

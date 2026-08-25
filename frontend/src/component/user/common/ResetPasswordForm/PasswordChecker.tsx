@@ -65,7 +65,7 @@ const StyledCheckContainer = styled('div')(({ theme }) => ({
 }));
 
 const StyledDivider = styled('div')(({ theme }) => ({
-    backgroundColor: theme.palette.neutral.light,
+    backgroundColor: theme.palette.neutral.container,
     height: '1px',
     width: '100%',
 }));

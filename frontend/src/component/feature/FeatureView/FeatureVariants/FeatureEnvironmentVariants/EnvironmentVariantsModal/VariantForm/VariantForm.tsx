@@ -27,7 +27,7 @@ const LazyReactJSONEditor = React.lazy(
 
 const StyledVariantForm = styled('div')(({ theme }) => ({
     position: 'relative',
-    backgroundColor: theme.palette.neutral.light,
+    backgroundColor: theme.palette.neutral.container,
     display: 'flex',
     flexDirection: 'column',
     padding: theme.spacing(3),

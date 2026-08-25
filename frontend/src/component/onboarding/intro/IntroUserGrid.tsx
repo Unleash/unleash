@@ -152,7 +152,7 @@ const StyledPerson = styled('button', {
             boxShadow: selected
                 ? `inset 0 0 0 2px ${theme.palette.primary.main}`
                 : `inset 0 0 0 1.5px ${
-                      enabled ? accent : theme.palette.neutral.border
+                      enabled ? accent : theme.palette.neutral.containerBorder
                   }`,
             transform: 'translateY(-1px)',
             opacity: 1,
@@ -217,7 +217,7 @@ const StyledStatusBadge = styled('span', {
               : {
                     bg: theme.palette.background.elevation2,
                     fg: theme.palette.text.secondary,
-                    ring: theme.palette.neutral.border,
+                    ring: theme.palette.neutral.containerBorder,
                 };
     return {
         position: 'absolute',

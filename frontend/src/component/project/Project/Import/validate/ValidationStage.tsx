@@ -77,7 +77,7 @@ const StyledItems = styled('ul')(({ theme }) => ({
     marginBottom: theme.spacing(0),
     paddingLeft: theme.spacing(3),
     paddingBottom: theme.spacing(3),
-    borderBottom: `1px dashed ${theme.palette.neutral.border}`,
+    borderBottom: `1px dashed ${theme.palette.neutral.containerBorder}`,
 }));
 
 const StyledItem = styled('li')(({ theme }) => ({

@@ -16,9 +16,9 @@ export interface ChangeRequestScheduledDialogProps {
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(2),
-    backgroundColor: `${theme.palette.neutral.light}!important`,
+    backgroundColor: `${theme.palette.neutral.container}!important`,
     color: `${theme.palette.text.primary}!important`,
-    borderColor: `${theme.palette.neutral.light}!important`,
+    borderColor: `${theme.palette.neutral.container}!important`,
 }));
 
 export const ChangeRequestScheduledDialog: FC<

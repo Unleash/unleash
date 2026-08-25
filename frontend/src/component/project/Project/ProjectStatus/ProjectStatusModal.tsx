@@ -121,7 +121,7 @@ const CloseRow = styled('div')(({ theme }) => ({
 }));
 
 const FeedbackContainer = styled('div')(({ theme }) => ({
-    backgroundColor: theme.palette.neutral.light,
+    backgroundColor: theme.palette.neutral.container,
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),

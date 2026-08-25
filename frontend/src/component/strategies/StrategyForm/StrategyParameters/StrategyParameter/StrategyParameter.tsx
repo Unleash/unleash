@@ -55,7 +55,7 @@ const StyledParamsContainer = styled('div')(({ theme }) => ({
 const StyledDivider = styled(Divider)(({ theme }) => ({
     borderStyle: 'dashed',
     margin: theme.spacing(2, 0, 3, 0),
-    borderColor: theme.palette.neutral.border,
+    borderColor: theme.palette.neutral.containerBorder,
 }));
 
 const StyledParagraph = styled('p')(({ theme }) => ({

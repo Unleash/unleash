@@ -176,10 +176,12 @@ const theme = {
          */
         neutral: {
             main: colors.grey[700],
-            light: colors.grey[100],
+            light: colors.grey[600], // One step lighter than main
             dark: colors.grey[800],
-            border: colors.grey[500],
-            contrastText: colors.grey[800], // Color used for text inside badge
+            contrastText: colors.grey[50], // Contrast against main
+            container: colors.grey[100], // Tinted surface fill (subtle neutral background)
+            containerBorder: colors.grey[500], // Border for the container surface
+            onContainer: colors.grey[800], // Text/icon drawn on the container fill
         },
 
         background: {

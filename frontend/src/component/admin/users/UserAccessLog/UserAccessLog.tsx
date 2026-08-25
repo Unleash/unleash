@@ -157,11 +157,22 @@ export const UserAccessLog = () => {
                         return <TextCell>System</TextCell>;
                     }
                     return (
-                        <TextCell>{performer.name || performer.id}</TextCell>
+                        <TextCell>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 1,
+                                }}
+                            >
+                                <UserAvatar user={performer} />
+                                <span>{performer.name || performer.id}</span>
+                            </Box>
+                        </TextCell>
                     );
                 },
                 enableSorting: false,
-                meta: { minWidth: 150 },
+                meta: { minWidth: 180 },
             }),
         ],
         [roles],

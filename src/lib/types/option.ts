@@ -106,6 +106,7 @@ export interface IServerOption {
     edgeUrl?: string;
     unleashUrl: string;
     logRocketAppId?: string;
+    hubspotPortalId?: string;
     serverMetrics: boolean;
     enableHeapSnapshotEnpoint: boolean;
     enableStoriesPage: boolean;

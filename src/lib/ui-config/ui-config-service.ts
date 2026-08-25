@@ -135,6 +135,7 @@ export class UiConfigService {
             edgeUrl: this.config.server.edgeUrl,
             unleashUrl: this.config.server.unleashUrl,
             logRocketAppId: this.config.server.logRocketAppId,
+            hubspotPortalId: this.config.server.hubspotPortalId,
             baseUriPath: this.config.server.baseUriPath,
             authenticationType: this.config.authentication?.type,
             frontendApiOrigins: frontendSettings.frontendApiOrigins,

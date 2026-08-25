@@ -55,6 +55,12 @@ export const uiConfigSchema = {
                 'The LogRocket app ID used to initialize session replay in the admin UI. Only used when the `logRocketEnabled` flag is on.',
             example: '1knhci/unleash-sandbox',
         },
+        hubspotPortalId: {
+            type: 'string',
+            description:
+                'The HubSpot portal ID. Currently used to load the customer support chat widget when the `hubspotChatEnabled` flag is on and the instance is a PAYG trial; may be reused by future HubSpot integrations.',
+            example: '1234567',
+        },
         baseUriPath: {
             type: 'string',
             description:

@@ -14,6 +14,7 @@ import { StickyProvider } from 'component/common/Sticky/StickyProvider';
 import { FeedbackProvider } from 'component/feedbackNew/FeedbackProvider';
 import { PlausibleProvider } from 'component/providers/PlausibleProvider/PlausibleProvider';
 import { LogRocketProvider } from 'component/providers/LogRocketProvider/LogRocketProvider';
+import { HubSpotChatLoader } from 'component/providers/HubSpotChatLoader/HubSpotChatLoader';
 import { FlightRecorderProvider } from 'component/providers/FlightRecorderProvider/FlightRecorderProvider';
 import { EventTrackerProvider } from 'component/providers/TrackerProvider/EventTrackerProvider';
 import { LayoutError } from './component/layout/Error/LayoutError.tsx';
@@ -49,6 +50,7 @@ export const ApplicationRoot = () => {
                             <AnnouncerProvider>
                                 <PlausibleProvider>
                                     <LogRocketProvider>
+                                        <HubSpotChatLoader />
                                         <FlightRecorderProvider
                                             hostname={window.location.hostname}
                                         >

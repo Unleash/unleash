@@ -52,7 +52,7 @@ const StyledDataCollectionBadge = styled('div')(({ theme }) => ({
 const StyledTag = styled('span')(({ theme }) => ({
     display: 'block',
     textAlign: 'right',
-    color: theme.palette.neutral.dark,
+    color: theme.palette.neutral.onContainer,
 }));
 
 const StyledDescription = styled('div')(({ theme }) => ({

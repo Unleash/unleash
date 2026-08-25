@@ -44,17 +44,23 @@ interface IStatusBoxProps {
 const resolveIcon = (change: number) => {
     if (change > 0) {
         return (
-            <CallMade sx={{ color: 'success.dark', height: 20, width: 20 }} />
+            <CallMade
+                sx={{ color: 'success.onContainer', height: 20, width: 20 }}
+            />
         );
     }
-    return <SouthEast sx={{ color: 'warning.dark', height: 20, width: 20 }} />;
+    return (
+        <SouthEast
+            sx={{ color: 'warning.onContainer', height: 20, width: 20 }}
+        />
+    );
 };
 
 const resolveColor = (change: number) => {
     if (change > 0) {
-        return 'success.dark';
+        return 'success.onContainer';
     }
-    return 'warning.dark';
+    return 'warning.onContainer';
 };
 
 export const StatusBox: FC<IStatusBoxProps> = ({

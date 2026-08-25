@@ -20,7 +20,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
     textDecorationStyle: 'dotted',
     textDecorationLine: 'underline',
     textUnderlineOffset: theme.spacing(0.75),
-    color: theme.palette.neutral.dark,
+    color: theme.palette.neutral.onContainer,
     padding: 0,
     fontWeight: 'normal',
 }));

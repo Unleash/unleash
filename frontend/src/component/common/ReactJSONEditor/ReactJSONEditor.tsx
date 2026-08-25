@@ -157,7 +157,7 @@ const StyledValidationMessage = styled('div')(({ theme }) => ({
     border: `1px solid ${theme.palette.error.containerBorder}`,
     borderRadius: theme.shape.borderRadiusMedium,
     backgroundColor: theme.palette.error.container,
-    color: theme.palette.error.dark,
+    color: theme.palette.error.onContainer,
     fontSize: theme.fontSizes.smallBody,
     lineHeight: 1.4,
 }));

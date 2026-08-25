@@ -120,9 +120,10 @@ const theme = {
             containerBorder: colors.purple[300],
             onContainer: colors.purple[900],
         },
-        // Dormant: all usages migrated to `primary` (main + container recipe).
-        // Kept defined so MUI's default (pink) secondary never leaks; free to repurpose
-        // for a genuinely new secondary color later.
+        // Secondary is currently dormant: all usages migrated to `primary` (main + container recipe).
+        // Kept defined so MUI's default (pink) secondary never leaks; free to repurpose for a genuinely
+        // new secondary color later.
+
         secondary: {
             main: colors.purple[800],
             light: colors.purple[50],
@@ -133,7 +134,7 @@ const theme = {
         info: {
             main: colors.blue[500],
             light: colors.blue[400],
-            dark: colors.blue[800], // Color used for text
+            dark: colors.blue[800],
             contrastText: colors.grey[50],
             container: colors.blue[50],
             containerBorder: colors.blue[200],
@@ -142,7 +143,7 @@ const theme = {
         success: {
             main: colors.green[600],
             light: colors.green[500],
-            dark: colors.green[800], // Color used for text
+            dark: colors.green[800],
             contrastText: colors.grey[50],
             container: colors.green[50],
             containerBorder: colors.green[300],
@@ -151,7 +152,7 @@ const theme = {
         warning: {
             main: colors.orange[800],
             light: colors.orange[700],
-            dark: colors.orange[900], // Color used for text
+            dark: colors.orange[900],
             contrastText: colors.grey[50],
             container: colors.orange[100],
             containerBorder: colors.orange[500],
@@ -160,7 +161,7 @@ const theme = {
         error: {
             main: colors.red[700],
             light: colors.red[600],
-            dark: colors.red[800], // Color used for text
+            dark: colors.red[800],
             contrastText: colors.grey[50],
             container: colors.red[50],
             containerBorder: colors.red[300],

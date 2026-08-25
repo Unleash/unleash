@@ -182,7 +182,7 @@ const StyledStatusRow = styled(Box)(({ theme }) => ({
 
 const StyledRunningChip = styled(Chip)(({ theme }) => ({
     height: 20,
-    color: theme.palette.success.dark,
+    color: theme.palette.success.onContainer,
     background: alpha(theme.palette.success.main, 0.16),
     '& .MuiChip-icon': {
         color: theme.palette.success.main,

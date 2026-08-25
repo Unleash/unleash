@@ -65,8 +65,6 @@ export const UserAccessLog = () => {
         stateConfig,
     );
 
-    // The endpoint only sorts by last activity, so we forward sortOrder but
-    // never sortBy (it isn't a valid query parameter).
     const { items, total, loading } = useUserAccessLog({
         offset: tableState.offset ? `${tableState.offset}` : undefined,
         limit: `${tableState.limit}`,

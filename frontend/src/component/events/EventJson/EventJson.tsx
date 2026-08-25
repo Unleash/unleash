@@ -7,7 +7,7 @@ interface IEventJsonProps {
 
 export const StyledJsonListItem = styled('li')(({ theme }) => ({
     padding: theme.spacing(4),
-    backgroundColor: theme.palette.neutral.light,
+    backgroundColor: theme.palette.neutral.container,
     borderRadius: theme.shape.borderRadiusLarge,
     fontSize: theme.fontSizes.smallBody,
 

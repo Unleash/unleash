@@ -53,7 +53,7 @@ export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
     wordBreak: 'break-word',
-    border: `1px solid ${theme.palette.neutral.border}`,
+    border: `1px solid ${theme.palette.neutral.containerBorder}`,
 }));
 
 const StyledContainer = styled('div', {
@@ -97,7 +97,7 @@ const StyledSearch = styled('div')<{ isOpen?: boolean }>(
         // anchors to this box's bottom, from sitting flush.
         height: 40,
         backgroundColor: theme.palette.background.paper,
-        border: `1px solid ${theme.palette.neutral.border}`,
+        border: `1px solid ${theme.palette.neutral.containerBorder}`,
         borderRadius: theme.shape.borderRadiusExtraLarge,
         padding: '3px 5px 3px 12px',
         width: '100%',

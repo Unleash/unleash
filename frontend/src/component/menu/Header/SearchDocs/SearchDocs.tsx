@@ -14,7 +14,7 @@ const StyledTrigger = styled(AskAiChat.Trigger)(({ theme }) => ({
     height: 40,
     padding: theme.spacing(0, 1.5),
     marginLeft: theme.spacing(1),
-    border: `1px solid ${theme.palette.neutral.border}`,
+    border: `1px solid ${theme.palette.neutral.containerBorder}`,
     borderRadius: theme.shape.borderRadiusExtraLarge,
     backgroundColor: 'transparent',
     color: theme.palette.text.primary,
@@ -23,7 +23,7 @@ const StyledTrigger = styled(AskAiChat.Trigger)(({ theme }) => ({
     whiteSpace: 'nowrap',
     cursor: 'pointer',
     '&:hover': {
-        backgroundColor: theme.palette.neutral.light,
+        backgroundColor: theme.palette.neutral.container,
     },
     '& svg': {
         color: theme.palette.primary.main,

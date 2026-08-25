@@ -19,7 +19,7 @@ const StyledDescription = styled('div', {
     padding: tooltip ? theme.spacing(1) : theme.spacing(3),
     backgroundColor: tooltip
         ? theme.palette.background.paper
-        : theme.palette.neutral.light,
+        : theme.palette.neutral.container,
     color: theme.palette.text.secondary,
     fontSize: theme.fontSizes.smallBody,
     borderRadius: tooltip ? 0 : theme.shape.borderRadiusMedium,

@@ -95,7 +95,7 @@ const StyledStrategyCount = styled('p')(({ theme }) => ({
 const NeutralStrategyCount = styled(StyledStrategyCount)(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.text.secondary,
-    backgroundColor: theme.palette.neutral.light,
+    backgroundColor: theme.palette.neutral.container,
 }));
 
 type EnvironmentMetadata = {

@@ -37,7 +37,7 @@ const LifecycleTile = styled('article')(({ theme }) => ({
 
     '.skeleton': {
         '&::after': {
-            '--base-color': theme.palette.neutral.border,
+            '--base-color': theme.palette.neutral.containerBorder,
             '--initial': 'rgb(from var(--base-color) r g b / 0)',
             '--middle': 'rgb(from var(--base-color) r g b / 0.2)',
             '--peak': 'rgb(from var(--base-color) r g b / 0.5)',

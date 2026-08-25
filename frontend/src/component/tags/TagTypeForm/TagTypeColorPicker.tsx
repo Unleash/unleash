@@ -90,7 +90,9 @@ export const TagTypeColorPicker: FC<ITagTypeColorPickerProps> = ({
         },
         {
             name: 'Gray',
-            value: getColorWithFallback(lightTheme.palette.neutral.border),
+            value: getColorWithFallback(
+                lightTheme.palette.neutral.containerBorder,
+            ),
         },
     ];
 

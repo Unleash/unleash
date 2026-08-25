@@ -55,7 +55,7 @@ export const PercentageDonut = ({
     const strokeWidth = d * strokeRatio;
 
     const color = disabled
-        ? theme.palette.neutral.border
+        ? theme.palette.neutral.containerBorder
         : theme.palette.primary.light;
 
     return (

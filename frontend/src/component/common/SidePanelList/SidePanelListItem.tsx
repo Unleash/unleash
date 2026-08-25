@@ -29,7 +29,7 @@ const StyledItem = styled(Button, {
     '&:hover': {
         backgroundColor: selected
             ? theme.palette.primary.container
-            : theme.palette.neutral.light,
+            : theme.palette.neutral.container,
     },
     '&.Mui-disabled': {
         pointerEvents: 'auto',

@@ -41,7 +41,7 @@ const StyledNoTemplatesContainer = styled(Box, {
 })<{ solo?: boolean }>(({ theme, solo }) => ({
     display: 'flex',
     alignItems: 'center',
-    backgroundColor: theme.palette.neutral.light,
+    backgroundColor: theme.palette.neutral.container,
     borderRadius: theme.shape.borderRadiusMedium,
     padding: theme.spacing(2),
     gap: theme.spacing(1),

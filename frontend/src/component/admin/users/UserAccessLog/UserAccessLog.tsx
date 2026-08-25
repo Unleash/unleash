@@ -1,21 +1,17 @@
 import { useMemo } from 'react';
-import { Box } from '@mui/material';
+import { Box, Tooltip } from '@mui/material';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
-import {
-    encodeQueryParams,
-    NumberParam,
-    StringParam,
-    withDefault,
-} from 'use-query-params';
-import mapValues from 'lodash.mapvalues';
+import { NumberParam, StringParam, withDefault } from 'use-query-params';
 import { PaginatedTable, TablePlaceholder } from 'component/common/Table';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
-import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { RoleCell } from 'component/common/Table/cells/RoleCell/RoleCell';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { Badge } from 'component/common/Badge/Badge';
+import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
+import { getLocalizedDateString } from 'component/common/util';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
+import { useLocationSettings } from 'hooks/useLocationSettings';
 import useLoading from 'hooks/useLoading';
 import { withTableState } from 'utils/withTableState';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
@@ -28,12 +24,41 @@ import {
 
 const columnHelper = createColumnHelper<IUserAccessLogEntry>();
 
+const UpdatedCell = ({ entry }: { entry: IUserAccessLogEntry }) => {
+    const { locationSettings } = useLocationSettings();
+    const activity =
+        entry.status === 'removed' ? entry.removedAt : entry.createdAt;
+    const added = entry.createdAt
+        ? getLocalizedDateString(entry.createdAt, locationSettings.locale)
+        : '—';
+    const removed = entry.removedAt
+        ? getLocalizedDateString(entry.removedAt, locationSettings.locale)
+        : null;
+
+    return (
+        <TextCell lineClamp={1}>
+            <Tooltip
+                arrow
+                title={
+                    <>
+                        <div>Added: {added}</div>
+                        {removed ? <div>Removed: {removed}</div> : null}
+                    </>
+                }
+            >
+                <span>{activity ? <TimeAgo date={activity} /> : '—'}</span>
+            </Tooltip>
+        </TextCell>
+    );
+};
+
 export const UserAccessLog = () => {
     const { roles } = useUsers();
 
     const stateConfig = {
         offset: withDefault(NumberParam, 0),
         limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
+        sortBy: withDefault(StringParam, 'updated'),
         sortOrder: withDefault(StringParam, 'desc'),
     };
     const [tableState, setTableState] = usePersistentTableState(
@@ -41,11 +66,13 @@ export const UserAccessLog = () => {
         stateConfig,
     );
 
-    const { items, total, loading } = useUserAccessLog(
-        mapValues(encodeQueryParams(stateConfig, tableState), (value) =>
-            value ? `${value}` : undefined,
-        ),
-    );
+    // The endpoint only sorts by last activity, so we forward sortOrder but
+    // never sortBy (it isn't a valid query parameter).
+    const { items, total, loading } = useUserAccessLog({
+        offset: tableState.offset ? `${tableState.offset}` : undefined,
+        limit: `${tableState.limit}`,
+        sortOrder: tableState.sortOrder,
+    });
 
     const bodyLoadingRef = useLoading(loading);
 
@@ -110,20 +137,17 @@ export const UserAccessLog = () => {
                 enableSorting: false,
                 meta: { maxWidth: 120 },
             }),
-            columnHelper.accessor((row) => row.createdAt, {
-                id: 'createdAt',
-                header: 'Added',
-                cell: DateCell,
-                enableSorting: false,
-                meta: { width: 130, maxWidth: 130 },
-            }),
-            columnHelper.accessor((row) => row.removedAt, {
-                id: 'removedAt',
-                header: 'Removed',
-                cell: DateCell,
-                enableSorting: false,
-                meta: { width: 130, maxWidth: 130 },
-            }),
+            columnHelper.accessor(
+                (row) =>
+                    row.status === 'removed' ? row.removedAt : row.createdAt,
+                {
+                    id: 'updated',
+                    header: 'Updated',
+                    cell: ({ row }) => <UpdatedCell entry={row.original} />,
+                    enableSorting: true,
+                    meta: { width: 160, maxWidth: 160 },
+                },
+            ),
             columnHelper.accessor((row) => row.performedBy?.name || '', {
                 id: 'performedBy',
                 header: 'Performed by',

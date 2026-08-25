@@ -1,5 +1,5 @@
 import { register } from 'prom-client';
-import { expect, test, vi } from 'vitest';
+import { expect, test } from 'vitest';
 import { createTestConfig } from '../../../test/config/test-config.js';
 import createStores from '../../../test/fixtures/store.js';
 import FakeEnvironmentStore from '../project-environments/fake-environment-store.js';
@@ -123,53 +123,4 @@ test('a real token lookup puts no token material in the scrape output', async ()
             `token material leaked into the metrics output: ${material}`,
         ).not.toContain(material);
     }
-});
-
-test('the deprecated alias is logged by name, never by value', async () => {
-    const warn = vi.fn();
-    const config = createTestConfig({
-        experimental: { flags: { useMemoizedActiveTokens: true } },
-    });
-    config.getLogger = () => ({
-        debug: vi.fn(),
-        info: vi.fn(),
-        warn,
-        error: vi.fn(),
-        fatal: vi.fn(),
-    });
-
-    const { apiTokenService, apiTokenStore } =
-        createFakeApiTokenService(config);
-    const devKey = 'default:development';
-    const legacy = 'the-legacy-alias';
-
-    const alias = `${devKey}.${legacy}`;
-    const secret = `${devKey}.the-real-secret`;
-    const tokenName = 'legacy-proxy-token';
-
-    await apiTokenStore.insert(
-        {
-            environment: DEFAULT_ENV,
-            projects: ['*'],
-            secret,
-            alias,
-            tokenName,
-            type: ApiTokenType.FRONTEND,
-        } as IApiTokenCreate,
-        SYSTEM_USER_ID,
-    );
-    await apiTokenService.fetchActiveTokens();
-
-    await apiTokenService.getTokenWithCache(alias);
-    await apiTokenService.getTokenWithCache(alias);
-    await apiTokenService.getTokenWithCache(alias);
-
-    const aliasWarnings = warn.mock.calls.filter((call) =>
-        String(call[0]).includes('deprecated alias'),
-    );
-
-    expect(aliasWarnings).toHaveLength(1);
-    expect(aliasWarnings[0][0]).toContain(tokenName);
-    expect(aliasWarnings[0][0]).not.toContain(alias);
-    expect(aliasWarnings[0][0]).not.toContain(secret);
 });

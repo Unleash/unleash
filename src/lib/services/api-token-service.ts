@@ -41,6 +41,10 @@ import type { ResourceLimitsService } from '../features/resource-limits/resource
 
 const TOKEN_CACHE_NAME = 'api-token-v1' as const;
 
+export interface ApiTokenAuthenticationContext {
+    applicationName?: string;
+}
+
 /**
  * `default:development.a1b2c3d4...` - enough to identify, not enough to use.
  * The input is whatever the client sent, so anything unparseable is dropped
@@ -188,7 +192,6 @@ export class ApiTokenService {
             return undefined;
         }
 
-        this.warnAliasUsage(byAlias);
         return this.ifActive(byAlias);
     }
 
@@ -196,7 +199,10 @@ export class ApiTokenService {
         return token?.expiresAt && isPast(token.expiresAt) ? undefined : token;
     }
 
-    private warnAliasUsage(token: IApiToken): void {
+    private warnAliasUsage(
+        token: IApiToken,
+        context: ApiTokenAuthenticationContext,
+    ): void {
         // Warn once per token, not per request: an alias in active use would
         // otherwise flood the log
         // Keyed by alias too: two tokens can share a name and environment, and
@@ -208,8 +214,7 @@ export class ApiTokenService {
 
         this.warnedAliasTokens.add(key);
         this.logger.warn(
-            // Never log the alias itself - it is compared against the presented secret, so it is a credential.
-            `API token "${token.tokenName}" (environment: ${token.environment}) was resolved through the deprecated alias column. It should be rotated before alias support is removed.`,
+            `API token "${token.tokenName}" (environment: ${token.environment}, application: ${context.applicationName ?? 'unknown'}, created: ${token.createdAt.toISOString()}) was resolved through the deprecated alias column during authentication. It should be rotated before alias support is removed.`,
         );
     }
 
@@ -338,9 +343,13 @@ export class ApiTokenService {
 
     public async getUserForToken(
         secret: string,
+        context: ApiTokenAuthenticationContext = {},
     ): Promise<IApiUser | undefined> {
         const token = await this.getTokenWithCache(secret);
         if (token) {
+            if (token.alias === secret) {
+                this.warnAliasUsage(token, context);
+            }
             this.lastSeenSecrets.add(token.secret);
             const apiUser: IApiUser = new ApiUser({
                 tokenName: token.tokenName,

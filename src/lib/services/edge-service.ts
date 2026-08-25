@@ -241,7 +241,6 @@ export default class EdgeService {
                         await this.apiTokenService.createApiTokenWithProjects(
                             {
                                 tokenName: `enterprise_edge_${tokenReq.environment}_${truncate(tokenReq.projects, 3)}`,
-                                alias: `ee_${tokenReq.environment}`,
                                 type: ApiTokenType.BACKEND,
                                 environment: tokenReq.environment,
                                 projects: tokenReq.projects,

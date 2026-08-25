@@ -183,16 +183,33 @@ export class EventStore implements IEventStore {
         }
     }
 
+    /**
+     * Logs and swallows write failures.
+     * Used in calls when need the failure - inside a transaction, say - want batchStoreOrThrow instead.
+     */
     async batchStore(events: IBaseEvent[]): Promise<void> {
+        try {
+            await this.batchStoreOrThrow(events);
+        } catch (error: unknown) {
+            this.logger.warn(
+                `Failed to store ${events.length} events: ${[
+                    ...new Set(events.map((event) => event.type)),
+                ].join(', ')}`,
+                error,
+            );
+        }
+    }
+
+    /**
+     * Same batchStoreOrThrow(), but failures propagate.
+     * No logging: the caller owns the failure, and inside a transaction a swallowed error
+     * would let the surrounding change commit with no event to show for it.
+     */
+    async batchStoreOrThrow(events: IBaseEvent[]): Promise<void> {
         const stopTimer = this.metricTimer('batchStore');
         try {
             await this.db(TABLE).insert(
                 events.map((event) => this.eventToDbRow(event)),
-            );
-        } catch (error: unknown) {
-            this.logger.warn(
-                `Failed to store events: ${JSON.stringify(events)}`,
-                error,
             );
         } finally {
             stopTimer();

@@ -33,6 +33,10 @@ import {
     validateApiToken,
 } from '../../types/models/api-token.js';
 import type EventEmitter from 'events';
+import type { Db } from '../../db/db.js';
+import { ApiTokenV2Store } from './api-token-v2-store.js';
+import EnvironmentStore from '../project-environments/environment-store.js';
+import { createEventsService } from '../../server-impl.js';
 import { FakeApiTokenV2Store } from './fake-api-token-v2-store.js';
 import FakeEnvironmentStore from '../project-environments/fake-environment-store.js';
 import {
@@ -96,6 +100,22 @@ const resolveTokenPermissions = (tokenType: ApiTokenType) => {
     }
     return tokenType === ApiTokenType.FRONTEND ? [FRONTEND] : [];
 };
+
+export const createApiTokenV2ServiceFromDb = (
+    db: Db,
+    config: IUnleashConfig,
+): ApiTokenV2Service =>
+    new ApiTokenV2Service(
+        {
+            apiTokenV2Store: new ApiTokenV2Store(db),
+            environmentStore: new EnvironmentStore(db, config.eventBus, config),
+        },
+        config,
+        {
+            eventService: createEventsService(db, config),
+            resourceLimitsService: new ResourceLimitsService(config),
+        },
+    );
 
 export const createFakeApiTokenV2Service = (config: IUnleashConfig) => {
     const apiTokenV2Store = new FakeApiTokenV2Store();
@@ -412,7 +432,9 @@ export class ApiTokenV2Service {
         return apiUser;
     }
 
-    async deleteSystemCreatedTokensNotSeen(): Promise<void> {
+    async deleteSystemCreatedTokensNotSeen(): Promise<
+        Omit<ApiTokenV2, 'projects'>[]
+    > {
         this.logger.info('Cleaning unseen system created tokens');
 
         const deleted =
@@ -421,40 +443,23 @@ export class ApiTokenV2Service {
             );
 
         if (deleted.length === 0) {
-            return;
+            return deleted;
         }
 
-        await this.invalidateAndAuditDeletedTokens(deleted);
-
-        this.logger.debug(
-            `Invalidated cache for ${deleted.length} deleted system-created tokens`,
+        await this.eventService.storeEventsOrThrow(
+            deleted.map((token) => this.createTokenDeletedEvent(token)),
         );
+
+        this.logger.info(
+            `Deleted ${deleted.length} unseen system created tokens`,
+        );
+
+        return deleted;
     }
 
-    private async invalidateAndAuditDeletedTokens(
-        deleted: Omit<ApiTokenV2, 'projects'>[],
-    ): Promise<void> {
-        const events = deleted.map((token) =>
-            this.createTokenDeletedEvent(token),
-        );
-
-        try {
-            // persist ALL events or fail
-            await Promise.all(
-                events.map((event) => this.eventService.storeEvent(event)),
-            );
-        } catch (error) {
-            this.logger.error('Failed to audit token deletions', error);
-
-            throw new Error(
-                'Token deletion audit events could not be persisted',
-                { cause: error },
-            );
-        }
-
-        // cache invalidation - only after pass 1 succeeds
-        for (const token of deleted) {
-            this.activeTokens.delete(token.selector);
+    invalidateCache(selectors: string[]): void {
+        for (const selector of selectors) {
+            this.activeTokens.delete(selector);
         }
     }
 
@@ -465,8 +470,7 @@ export class ApiTokenV2Service {
             ...token,
             projects: [],
         } as ApiTokenV2);
-
-        const { secret: _, ...tokenWithoutSecret } = apiToken;
+        const { secret: _secret, ...tokenWithoutSecret } = apiToken;
 
         return new ApiTokenDeletedEvent({
             auditUser: SYSTEM_USER_AUDIT,

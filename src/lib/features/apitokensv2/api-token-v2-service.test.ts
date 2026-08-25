@@ -26,6 +26,9 @@ class FakeApiTokenV2Store implements IApiTokenV2Store {
     markedSeen = false;
     getBySelectorCalls = 0;
 
+    // when true, the cleanup reaps stored the way the real query would
+    reapStoredToken = false;
+
     async create(
         token: CreateApiTokenV2,
         selector: string,
@@ -89,10 +92,15 @@ class FakeApiTokenV2Store implements IApiTokenV2Store {
         this.markedSeen = true;
     }
 
-    deleteSystemCreatedTokensNotSeen(
-        minutesSinceLastSeen: number,
+    async deleteSystemCreatedTokensNotSeen(
+        _minutesSinceLastSeen: number,
     ): Promise<Omit<ApiTokenV2, 'projects'>[]> {
-        return Promise.resolve([]);
+        if (!this.reapStoredToken || !this.stored) {
+            return [];
+        }
+        const { verifier: _verifier, ...token } = this.stored;
+        this.stored = undefined;
+        return [token];
     }
 }
 
@@ -110,6 +118,8 @@ const createService = (
 ) => {
     const eventService = {
         storeEvent: vi.fn(),
+        storeEvents: vi.fn(),
+        storeEventsOrThrow: vi.fn(),
     } as unknown as EventService;
     const resourceLimitsService = {
         getResourceLimits: vi.fn().mockResolvedValue({ apiTokens: 50 }),
@@ -148,6 +158,37 @@ describe('ApiTokenV2Service', () => {
         expect(store.stored?.verifier).not.toBe(token.secret);
         expect(store.stored).not.toHaveProperty('secret');
         expect(store.stored?.selector).toBe(token.selector);
+    });
+
+    test('drops cleaned up tokens from the cache', async () => {
+        const store = new FakeApiTokenV2Store();
+        const environmentStore = new FakeEnvironmentStore();
+        await environmentStore.create({
+            enabled: true,
+            protected: false,
+            sortOrder: 0,
+            type: 'production',
+            name: 'production',
+        });
+        const { service } = createService(store, environmentStore);
+        const token = await service.create(tokenInput, SYSTEM_USER_AUDIT);
+        await service.fetchActiveTokens(); // the token is now cached
+        store.reapStoredToken = true;
+
+        // The scheduler runs the delete inside a transaction and then tells
+        const deleted = await service.deleteSystemCreatedTokensNotSeen();
+        service.invalidateCache(deleted.map((token) => token.selector));
+
+        // Without that the token keeps authenticating from memory even though
+        // its row is gone, until the next refresh a minute later.
+        await expect(
+            service.getTokenWithCache({
+                kind: AuthorizationTokenKind.API_TOKEN,
+                version: 'v2',
+                secret: token.secret,
+                selector: token.selector,
+            } as ApiTokenV2Credential),
+        ).resolves.toBeUndefined();
     });
 
     test('authenticates with one selector lookup and a verifier comparison', async () => {

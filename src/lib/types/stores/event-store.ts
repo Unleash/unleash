@@ -27,6 +27,7 @@ export interface IEventStore
     publishUnannouncedEvents(): Promise<void>;
     store(event: IBaseEvent): Promise<void>;
     batchStore(events: IBaseEvent[]): Promise<void>;
+    batchStoreOrThrow(events: IBaseEvent[]): Promise<void>;
     getEvents(): Promise<IEvent[]>;
     count(): Promise<number>;
     searchEventsCount(

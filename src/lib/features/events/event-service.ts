@@ -156,6 +156,26 @@ export default class EventService {
     }
 
     async storeEvents(events: IBaseEvent[]): Promise<void> {
+        const enhancedEvents = await this.prepareEvents(events);
+        if (enhancedEvents.length === 0) {
+            return;
+        }
+        return this.eventStore.batchStore(enhancedEvents);
+    }
+
+    /**
+     * Like storeEvents(), but a failed write throws.
+     * Used inside a transaction, where swallowing it would commit the change without its event.
+     */
+    async storeEventsOrThrow(events: IBaseEvent[]): Promise<void> {
+        const enhancedEvents = await this.prepareEvents(events);
+        if (enhancedEvents.length === 0) {
+            return;
+        }
+        return this.eventStore.batchStoreOrThrow(enhancedEvents);
+    }
+
+    private async prepareEvents(events: IBaseEvent[]): Promise<IBaseEvent[]> {
         // if the event comes with both preData and data, we need to check if they are different before storing, otherwise we discard the event
         let enhancedEvents = events.filter(
             (event) =>
@@ -164,12 +184,12 @@ export default class EventService {
                 !isEqual(event.preData, event.data),
         );
         if (enhancedEvents.length === 0) {
-            return;
+            return enhancedEvents;
         }
         for (const enhancer of [this.enhanceEventsWithTags.bind(this)]) {
             enhancedEvents = await enhancer(enhancedEvents);
         }
-        return this.eventStore.batchStore(enhancedEvents);
+        return enhancedEvents;
     }
 
     async setEventCreatedByUserId(): Promise<void> {

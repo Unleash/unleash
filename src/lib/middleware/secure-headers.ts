@@ -49,6 +49,7 @@ const HUBSPOT_CONNECT_SRC = [
     'https://api.hubapi.com',
     'https://forms.hubspot.com',
     'https://forms.hsforms.com',
+    'https://forms.hscollectedforms.net',
     'wss://*.hubspot.com',
 ];
 

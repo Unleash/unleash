@@ -113,12 +113,12 @@ const theme = {
             main: colors.purple[800],
             light: colors.purple[700],
             dark: colors.purple[900],
-            contrastText: colors.grey[50], // Color used for content when primary.main is used as a background
+            contrastText: colors.grey[50],
             // Tinted "container" recipe (subtle purple surface: badges, chips, soft banners).
             // Absorbed from the former `secondary` palette.
-            container: colors.purple[50], // container fill (subtle purple surface)
-            containerBorder: colors.purple[300], // container border
-            onContainer: colors.purple[900], // text/icon on the container fill
+            container: colors.purple[50],
+            containerBorder: colors.purple[300],
+            onContainer: colors.purple[900],
         },
         // Dormant: all usages migrated to `primary` (main + container recipe).
         // Kept defined so MUI's default (pink) secondary never leaks; free to repurpose
@@ -132,43 +132,43 @@ const theme = {
         },
         info: {
             main: colors.blue[500],
-            light: colors.blue[400], // One step lighter than main
+            light: colors.blue[400],
             dark: colors.blue[800], // Color used for text
-            contrastText: colors.grey[50], // Contrast against main
-            container: colors.blue[50], // Tinted surface fill (soft alert background)
-            containerBorder: colors.blue[200], // Border for the container surface
-            onContainer: colors.blue[800], // Text/icon drawn on the container fill
+            contrastText: colors.grey[50],
+            container: colors.blue[50],
+            containerBorder: colors.blue[200],
+            onContainer: colors.blue[800],
         },
         success: {
             main: colors.green[600],
-            light: colors.green[500], // One step lighter than main
+            light: colors.green[500],
             dark: colors.green[800], // Color used for text
-            contrastText: colors.grey[50], // Contrast against main
-            container: colors.green[50], // Tinted surface fill (soft alert background)
-            containerBorder: colors.green[300], // Border for the container surface
-            onContainer: colors.green[800], // Text/icon drawn on the container fill
+            contrastText: colors.grey[50],
+            container: colors.green[50],
+            containerBorder: colors.green[300],
+            onContainer: colors.green[800],
         },
         warning: {
             main: colors.orange[800],
-            light: colors.orange[700], // One step lighter than main
+            light: colors.orange[700],
             dark: colors.orange[900], // Color used for text
-            contrastText: colors.grey[50], // Contrast against main
-            container: colors.orange[100], // Tinted surface fill (soft alert background)
-            containerBorder: colors.orange[500], // Border for the container surface
-            onContainer: colors.orange[900], // Text/icon drawn on the container fill
+            contrastText: colors.grey[50],
+            container: colors.orange[100],
+            containerBorder: colors.orange[500],
+            onContainer: colors.orange[900],
         },
         error: {
-            main: colors.red[700], // used on error buttons // used on icons on these elements
-            light: colors.red[600], // One step lighter than main
+            main: colors.red[700],
+            light: colors.red[600],
             dark: colors.red[800], // Color used for text
-            contrastText: colors.grey[50], // Contrast against main
-            container: colors.red[50], // Tinted surface fill (soft alert background)
-            containerBorder: colors.red[300], // Border for the container surface
-            onContainer: colors.red[800], // Text/icon drawn on the container fill
+            contrastText: colors.grey[50],
+            container: colors.red[50],
+            containerBorder: colors.red[300],
+            onContainer: colors.red[800],
         },
         web: {
             main: '#1A4049', // used on sales-related elements
-            contrastText: colors.grey[50], // Color used for inner text
+            contrastText: colors.grey[50],
         },
 
         /**
@@ -178,10 +178,10 @@ const theme = {
             main: colors.grey[700],
             light: colors.grey[600],
             dark: colors.grey[800],
-            contrastText: colors.grey[50], // Contrast against main
-            container: colors.grey[100], // Tinted surface fill (subtle neutral background)
-            containerBorder: colors.grey[500], // Border for the container surface
-            onContainer: colors.grey[800], // Text/icon drawn on the container fill
+            contrastText: colors.grey[50],
+            container: colors.grey[100],
+            containerBorder: colors.grey[500],
+            onContainer: colors.grey[800],
         },
 
         background: {

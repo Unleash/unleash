@@ -59,12 +59,12 @@ const theme = {
             light: '#4C4992',
             // Maybe to move links color to another variable????
             dark: '#9792ED', // Color used for links and on hover for primary buttons
-            contrastText: '#EEEEFC', // Color used for content when primary.main is used as a background
+            contrastText: '#EEEEFC',
             // Tinted "container" recipe (subtle purple surface: badges, chips, soft banners).
             // Absorbed from the former `secondary` palette.
-            container: '#34325E', // container fill (subtle purple surface)
-            containerBorder: '#4C4992', // container border
-            onContainer: '#EEEEFC', // text/icon on the container fill
+            container: '#34325E',
+            containerBorder: '#4C4992',
+            onContainer: '#EEEEFC',
         },
         // Dormant: all usages migrated to `primary` (main + container recipe).
         // Kept defined so MUI's default (pink) secondary never leaks; free to repurpose
@@ -78,61 +78,61 @@ const theme = {
         },
         info: {
             // main: '#5483C9',  // used on icons on these elements
-            main: '#a2bbe2', // used on icons on these elements
-            light: '#b8cbe9', // One step lighter than main
+            main: '#a2bbe2',
+            light: '#b8cbe9',
             dark: '#a2bbe2', // used for text on these elements
-            contrastText: '#202021', // Contrast against main
-            container: '#1A2641', // Tinted surface fill (soft alert background)
-            containerBorder: '#1B407A', // Border for the container surface
-            onContainer: '#EEEEFC', // Text/icon drawn on the container fill
+            contrastText: '#202021',
+            container: '#1A2641',
+            containerBorder: '#1B407A',
+            onContainer: '#EEEEFC',
         },
         success: {
             // main: '#62872F',  // used on icons on these elements
-            main: '#94ae6f', // used on icons on these elements
-            light: '#a8bd88', // One step lighter than main
+            main: '#94ae6f',
+            light: '#a8bd88',
             dark: '#94ae6f', // used for text on these elements
-            contrastText: '#202021', // Contrast against main
-            container: '#333D30', // Tinted surface fill (soft alert background)
-            containerBorder: '#3D600C', // Border for the container surface
-            onContainer: '#EEEEFC', // Text/icon drawn on the container fill
+            contrastText: '#202021',
+            container: '#333D30',
+            containerBorder: '#3D600C',
+            onContainer: '#EEEEFC',
         },
         warning: {
             // main: '#9E691C',  // used on icons on these elements
-            main: '#bc7d21', // used on icons on these elements
-            light: '#d0913a', // One step lighter than main
+            main: '#bc7d21',
+            light: '#d0913a',
             dark: '#bc7d21', // used for text on these elements
-            contrastText: '#202021', // Contrast against main
-            container: '#3B302C', // Tinted surface fill (soft alert background)
-            containerBorder: '#6C4A19', // Border for the container surface
-            onContainer: '#EEEEFC', // Text/icon drawn on the container fill
+            contrastText: '#202021',
+            container: '#3B302C',
+            containerBorder: '#6C4A19',
+            onContainer: '#EEEEFC',
         },
         error: {
             // main: '#B93F4A',  // used on error buttons // used on icons on these elements
-            main: '#ff6472', // used on error buttons // used on icons on these elements
-            light: '#ff8591', // One step lighter than main
+            main: '#ff6472',
+            light: '#ff8591',
             // dark: '#F15260',  // used for text on these elements
             dark: '#ff6472', // used for text on these elements
-            contrastText: '#202021', // Contrast against main
-            container: '#3F2835', // Tinted surface fill (soft alert background)
-            containerBorder: '#8A3E45', // Border for the container surface
-            onContainer: '#EEEEFC', // Text/icon drawn on the container fill
+            contrastText: '#202021',
+            container: '#3F2835',
+            containerBorder: '#8A3E45',
+            onContainer: '#EEEEFC',
         },
         web: {
             main: '#1A4049', // used on sales-related elements
-            contrastText: '#EEEEFC', // Color used for inner text
+            contrastText: '#EEEEFC',
         },
 
         /**
          *  Used for grey badges, hover elements, and grey light elements
          */
         neutral: {
-            main: '#858699', // used on icons on these elements
-            light: '#9a9bab', // One step lighter than main
+            main: '#858699',
+            light: '#9a9bab',
             dark: '#EEEEFC', // used for text on these elements
-            contrastText: '#202021', // Contrast against main
-            container: '#2B2A3C', // Tinted surface fill (subtle neutral background)
-            containerBorder: '#454360', // Border for the container surface
-            onContainer: '#EEEEFC', // Text/icon drawn on the container fill
+            contrastText: '#202021',
+            container: '#2B2A3C',
+            containerBorder: '#454360',
+            onContainer: '#EEEEFC',
         },
 
         background: {

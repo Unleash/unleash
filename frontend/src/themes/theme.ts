@@ -231,15 +231,6 @@ const theme = {
         highlight: colors.orange[200],
 
         /**
-         * Used for the interactive guide spotlight
-         */
-        spotlight: {
-            border: '#463cfb',
-            outline: '#6058f5',
-            pulse: '#463cfb',
-        },
-
-        /**
          * Background color used for the API command in the sidebar
          */
         codebox: colors.action[0.12],

@@ -42,12 +42,12 @@ const HUBSPOT_SCRIPT_SRC = [
     'https://js.usemessages.com',
     'https://js.hscollectedforms.net',
     'https://js.hsadspixel.net',
+    'https://static.hsappstatic.net',
 ];
 
 const HUBSPOT_CONNECT_SRC = [
-    'https://api.hubspot.com',
+    'https://*.hubspot.com',
     'https://api.hubapi.com',
-    'https://forms.hubspot.com',
     'https://forms.hsforms.com',
     'https://forms.hscollectedforms.net',
     'wss://*.hubspot.com',

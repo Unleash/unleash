@@ -26,7 +26,7 @@ const StyledRoot = styled(Box)(({ theme }) => ({
     borderTopRightRadius: theme.shape.borderRadiusMedium,
     background:
         theme.mode === 'dark'
-            ? `linear-gradient(135deg, ${theme.palette.background.alternative} 0%, ${theme.palette.action.alternative} 100%)`
+            ? theme.palette.background.alternative
             : `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
     color: theme.palette.common.white,
     overflow: 'hidden',

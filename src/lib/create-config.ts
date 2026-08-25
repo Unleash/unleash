@@ -167,6 +167,14 @@ function loadRateLimitingConfig(options: IUnleashOptions): IRateLimiting {
         process.env.SIGNAL_ENDPOINT_RATE_LIMIT_PER_SECOND,
         1,
     );
+    const tokenAuthenticationMaxPerMinute = parseEnvVarNumber(
+        process.env.TOKEN_AUTHENTICATION_RATE_LIMIT_PER_MINUTE,
+        20_000,
+    );
+    const sdkApiMaxPerMinute = parseEnvVarNumber(
+        process.env.SDK_API_RATE_LIMIT_PER_MINUTE,
+        20_000,
+    );
 
     const defaultRateLimitOptions: IRateLimiting = {
         createUserMaxPerMinute,
@@ -174,6 +182,8 @@ function loadRateLimitingConfig(options: IUnleashOptions): IRateLimiting {
         authenticationMaxPerMinute,
         passwordResetMaxPerMinute,
         callSignalEndpointMaxPerSecond,
+        tokenAuthenticationMaxPerMinute,
+        sdkApiMaxPerMinute,
     };
     return mergeAll([defaultRateLimitOptions, options.rateLimiting || {}]);
 }

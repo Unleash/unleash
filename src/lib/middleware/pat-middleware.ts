@@ -15,6 +15,10 @@ const patMiddleware = (
     logger.debug('Enabling PAT middleware');
 
     return async (req: IAuthRequest, _res, next) => {
+        if (req.user) {
+            return next();
+        }
+
         try {
             const apiToken = req.header('authorization');
             const parsedToken = parseAuthorizationToken(apiToken);

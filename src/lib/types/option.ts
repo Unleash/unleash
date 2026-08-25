@@ -270,6 +270,8 @@ export interface IRateLimiting {
     authenticationMaxPerMinute: number;
     passwordResetMaxPerMinute: number;
     callSignalEndpointMaxPerSecond: number;
+    tokenAuthenticationMaxPerMinute: number;
+    sdkApiMaxPerMinute: number;
 }
 
 export interface IUnleashConfig {

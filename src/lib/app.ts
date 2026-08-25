@@ -126,7 +126,6 @@ export default async function getApp(
         userTokenClientApiLogger(config),
     );
 
-    app.use(baseUriPath, patMiddleware(config, services));
     if (config.authentication.type === IAuthType.NONE) {
         logger.warn(
             'The AuthType=none option for Unleash is no longer recommended and will be removed in version 6.',
@@ -142,6 +141,7 @@ export default async function getApp(
         `${baseUriPath}/api/client`,
         backendApiAccessMiddleware(config, services),
     );
+    app.use(baseUriPath, patMiddleware(config, services));
     app.use(baseUriPath, apiAccessMiddleware(config, services));
 
     switch (config.authentication.type) {

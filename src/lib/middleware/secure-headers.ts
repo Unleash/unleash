@@ -50,6 +50,7 @@ const HUBSPOT_CONNECT_SRC = [
     'https://api.hubapi.com',
     'https://forms.hsforms.com',
     'https://forms.hscollectedforms.net',
+    'https://static.hsappstatic.net',
     'wss://*.hubspot.com',
 ];
 
@@ -189,9 +190,9 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
                     ],
                 },
             },
-            crossOriginEmbedderPolicy: {
-                policy: 'credentialless',
-            },
+            crossOriginEmbedderPolicy: hubspotChatEnabled
+                ? false
+                : { policy: 'credentialless' },
             originAgentCluster: false,
             xDnsPrefetchControl: false,
         });

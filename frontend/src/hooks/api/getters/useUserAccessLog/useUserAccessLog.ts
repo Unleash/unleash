@@ -12,7 +12,7 @@ export interface IUserAccessLogUser {
 }
 
 export interface IUserAccessLogPerformer {
-    id?: number;
+    id: number;
     name?: string;
     imageUrl?: string;
 }

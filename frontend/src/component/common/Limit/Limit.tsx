@@ -11,7 +11,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: theme.palette.background.paper,
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: `${theme.shape.borderRadiusMedium}px`,
     width: '100%',

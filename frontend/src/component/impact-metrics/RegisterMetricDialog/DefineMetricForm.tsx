@@ -40,7 +40,7 @@ const StyledLabel = styled(FormLabel)(({ theme }) => ({
 const RadioCardContainer = styled(Card)(({ theme }) => ({
     display: 'flex',
     alignItems: 'flex-start',
-    background: theme.palette.background.default,
+    background: theme.palette.background.paper,
     paddingInlineStart: theme.spacing(0.5),
     '.MuiRadio-root': {
         marginBlockStart: `calc(-1 * ${theme.spacing(1.5)})`,

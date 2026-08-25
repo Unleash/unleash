@@ -65,7 +65,7 @@ const StyledChip = styled(Chip, {
         '&[data-selected="true"]': {
             borderTop: `1px solid ${theme.palette.divider}`,
             borderBottom: `1px solid ${theme.palette.divider}`,
-            backgroundColor: theme.palette.background.default,
+            backgroundColor: theme.palette.background.paper,
         },
 
         '&[data-selected="true"] + &': {

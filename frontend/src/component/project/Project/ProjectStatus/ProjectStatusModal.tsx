@@ -17,7 +17,7 @@ const ModalContentContainer = styled('section')(({ theme }) => ({
     minHeight: '100vh',
     maxWidth: 1100,
     width: '95vw',
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: theme.palette.background.paper,
     display: 'flex',
     flexFlow: 'column',
     gap: theme.spacing(2.5),

@@ -176,7 +176,7 @@ const theme = {
          */
         neutral: {
             main: colors.grey[700],
-            light: colors.grey[600], // One step lighter than main
+            light: colors.grey[600],
             dark: colors.grey[800],
             contrastText: colors.grey[50], // Contrast against main
             container: colors.grey[100], // Tinted surface fill (subtle neutral background)
@@ -185,13 +185,13 @@ const theme = {
         },
 
         background: {
-            paper: colors.grey[50],
             default: colors.grey[50],
-            application: colors.grey[300],
-            sidebar: colors.purple[800],
-            alternative: colors.purple[800], // used on the dark theme to switch primary main to a darker shade
+            paper: colors.grey[50],
             elevation1: colors.grey[100],
             elevation2: colors.grey[200],
+            application: colors.grey[300], // use only for app background
+            sidebar: colors.purple[800],
+            alternative: colors.purple[800], // Deprecated: used on the dark theme to switch primary main to a darker shade
         },
 
         action: {

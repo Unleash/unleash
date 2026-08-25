@@ -35,7 +35,7 @@ const StyledFormSubtitle = styled('div')(({ theme }) => ({
     },
     marginTop: theme.spacing(-3.5),
     marginBottom: theme.spacing(2),
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: theme.palette.background.paper,
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
     position: 'sticky',

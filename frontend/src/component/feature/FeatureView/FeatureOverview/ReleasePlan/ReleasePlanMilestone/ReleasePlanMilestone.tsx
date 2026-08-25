@@ -35,7 +35,7 @@ const StyledAccordion = styled(Accordion, {
         margin: 0,
         backgroundColor:
             status.type === 'completed'
-                ? theme.palette.background.default
+                ? theme.palette.background.paper
                 : theme.palette.background.paper,
         borderRadius: hasAutomation
             ? `${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px 0 0 !important`

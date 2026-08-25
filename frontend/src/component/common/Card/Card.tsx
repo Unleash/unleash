@@ -18,7 +18,7 @@ type VariantProps = {
 const variants: VariantProps = {
     primary: {
         card: (theme: Theme): CSSObject => ({
-            backgroundColor: theme.palette.background.default,
+            backgroundColor: theme.palette.background.paper,
             background: theme.palette.primary.container,
             '&:hover': {
                 backgroundColor: theme.palette.neutral.container,
@@ -28,7 +28,7 @@ const variants: VariantProps = {
             fontWeight: theme.typography.fontWeightRegular,
         }),
         body: (theme: Theme): CSSObject => ({
-            backgroundColor: theme.palette.background.default,
+            backgroundColor: theme.palette.background.paper,
             color: theme.palette.text.secondary,
             '&:hover': {
                 backgroundColor: theme.palette.neutral.container,

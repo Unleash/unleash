@@ -14,7 +14,7 @@ const ChangesToOverwriteContainer = styled(Box)(({ theme }) => ({
 
 const StyledDiff = styled(EventDiff)(({ theme }) => ({
     padding: theme.spacing(2),
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: theme.palette.background.paper,
     width: 'fit-content',
     borderRadius: theme.shape.borderRadius,
 }));

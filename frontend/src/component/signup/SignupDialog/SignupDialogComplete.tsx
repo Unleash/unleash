@@ -4,6 +4,7 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutlineOutlin
 import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledContent = styled(Box)({
+    width: '100%',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -20,13 +21,15 @@ const StyledHeader = styled(Box)(({ theme }) => ({
     flexDirection: 'column',
     alignItems: 'center',
     gap: theme.spacing(0.75),
-    marginBottom: theme.spacing(4),
+    marginBottom: theme.spacing(3),
     width: '100%',
 }));
 
 const StyledTitle = styled('h1')(({ theme }) => ({
+    width: '100%',
     marginBottom: theme.spacing(1.5),
     fontSize: theme.typography.h1.fontSize,
+    textAlign: 'center',
 }));
 
 const StyledDemoSection = styled(Box)(({ theme }) => ({
@@ -35,14 +38,15 @@ const StyledDemoSection = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: theme.spacing(2),
+    gap: theme.spacing(3),
 }));
 
 const StyledChoices = styled(Box)(({ theme }) => ({
     width: '100%',
     display: 'grid',
     gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-    gap: theme.spacing(2.5),
+    rowGap: theme.spacing(2.5),
+    columnGap: theme.spacing(1),
     [theme.breakpoints.down('sm')]: {
         gridTemplateColumns: '1fr',
     },
@@ -52,6 +56,8 @@ const StyledChoiceCard = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'featured',
 })<{ featured?: boolean }>(({ theme, featured }) => ({
     width: '100%',
+    maxWidth: theme.spacing(50),
+    justifySelf: 'center',
     boxSizing: 'border-box',
     display: 'flex',
     flexDirection: 'column',
@@ -94,13 +100,24 @@ const StyledIntroList = styled('ol')(({ theme }) => ({
     margin: 0,
     paddingLeft: theme.spacing(2.5),
     color: theme.palette.text.primary,
-    fontSize: theme.typography.body2.fontSize,
-    lineHeight: 1.55,
+    fontFamily: theme.typography.caption.fontFamily,
+    fontSize: theme.typography.caption.fontSize,
+    lineHeight: 1.45,
 }));
 
 const StyledChoiceNote = styled(Typography)(({ theme }) => ({
-    color: theme.palette.text.secondary,
+    color: theme.palette.text.primary,
+    fontFamily: theme.typography.caption.fontFamily,
     fontSize: theme.typography.caption.fontSize,
+    lineHeight: 1.45,
+}));
+
+const StyledDescription = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontFamily: theme.typography.body2.fontFamily,
+    fontSize: theme.typography.body2.fontSize,
+    lineHeight: theme.typography.body2.lineHeight,
+    textAlign: 'center',
 }));
 
 const StyledChoiceButton = styled(Button)({
@@ -133,16 +150,7 @@ export const SignupDialogComplete: SignupStepContent = ({
             <StyledCheck />
             <StyledHeader>
                 <StyledTitle>Welcome to Unleash</StyledTitle>
-                <Typography
-                    variant='body2'
-                    sx={{
-                        color: 'text.secondary',
-                        whiteSpace: 'pre-line',
-                        textAlign: 'center',
-                    }}
-                >
-                    {description}
-                </Typography>
+                <StyledDescription>{description}</StyledDescription>
             </StyledHeader>
             {offerTour ? (
                 <StyledDemoSection>
@@ -153,16 +161,16 @@ export const SignupDialogComplete: SignupStepContent = ({
                                     variant='h3'
                                     sx={{ color: 'primary.main' }}
                                 >
-                                    Learn by doing
+                                    Learn the basics
                                 </StyledChoiceTitle>
                                 <StyledDuration>
-                                    {advancedTopics ? '~5 min' : '~2 min'}
+                                    {advancedTopics ? '5 min' : '2 min'}
                                 </StyledDuration>
                             </StyledChoiceHeader>
                             <StyledIntroList>
                                 <li>Release a feature gradually</li>
-                                <li>Target the right audience</li>
-                                <li>Compare different experiences</li>
+                                <li>Target the right users</li>
+                                <li>Run experiments</li>
                                 {advancedTopics ? (
                                     <>
                                         <li>Automate a rollout</li>
@@ -181,12 +189,12 @@ export const SignupDialogComplete: SignupStepContent = ({
                                 disabled={isSubmitting}
                                 data-testid='SIGNUP_TAKE_TOUR_BUTTON'
                             >
-                                Start Unleash Intro
+                                Learn the basics
                             </StyledChoiceButton>
                         </StyledChoiceCard>
                         <StyledChoiceCard>
                             <StyledChoiceTitle variant='h3'>
-                                Explore on your own
+                                Set up a project
                             </StyledChoiceTitle>
                             <Typography variant='body2' color='textSecondary'>
                                 Go straight to Unleash and start creating real

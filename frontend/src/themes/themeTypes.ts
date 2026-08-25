@@ -72,7 +72,6 @@ declare module '@mui/material/styles' {
     }
 
     interface CustomTypeBackground {
-        application: string;
         sidebar: string;
         alternative: string;
         elevation1: string;

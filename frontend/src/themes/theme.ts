@@ -185,11 +185,10 @@ const theme = {
         },
 
         background: {
-            default: colors.grey[50],
+            default: colors.grey[300],
             paper: colors.grey[50],
             elevation1: colors.grey[100],
             elevation2: colors.grey[200],
-            application: colors.grey[300], // use only for app background
             sidebar: colors.purple[800],
             alternative: colors.purple[800], // Deprecated: used on the dark theme to switch primary main to a darker shade
         },

@@ -137,8 +137,7 @@ const theme = {
 
         background: {
             paper: '#222130', // Background color for all containers
-            default: '#222130',
-            application: '#1A1924',
+            default: '#1A1924',
             sidebar: '#4C4992',
             alternative: '#4C4992', // used on the dark theme to shwitch primary main to a darker shade
             elevation1: '#2B2A3C',
@@ -509,7 +508,7 @@ export const darkTheme = createTheme({
                     },
                     '&.accordion-disabled': {
                         outline: `1px solid ${alpha('#39384C', 0.5)}`,
-                        backgroundColor: theme.palette.background.application,
+                        backgroundColor: theme.palette.background.default,
                     },
                     '&.accordion-disabled.Mui-expanded .MuiAccordionSummary-root':
                         {
@@ -612,7 +611,7 @@ export const darkTheme = createTheme({
                 root: ({ theme }) => ({
                     ...iconButtonRoot(theme),
                     '&.operator-is-active svg': {
-                        fill: theme.palette.background.application,
+                        fill: theme.palette.background.default,
                     },
                 }),
                 ...iconButtonSizes,

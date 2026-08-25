@@ -13,7 +13,7 @@ export const ConstraintSeparator = styled(({ ...props }) => (
     lineHeight: 1,
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.text.primary,
-    background: theme.palette.background.application,
+    background: theme.palette.background.default,
     borderRadius: theme.shape.borderRadiusExtraLarge,
     zIndex: theme.zIndex.fab,
     textTransform: 'uppercase',

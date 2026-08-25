@@ -107,7 +107,7 @@ const ToolTipInstructionContent = ({
 const ToolTipDescriptionCode = styled('code')(({ theme }) => ({
     display: 'block',
     color: theme.palette.text.primary,
-    backgroundColor: theme.palette.background.application,
+    backgroundColor: theme.palette.background.default,
     fontSize: theme.fontSizes.smallerBody,
     marginTop: theme.spacing(1),
     padding: theme.spacing(1),

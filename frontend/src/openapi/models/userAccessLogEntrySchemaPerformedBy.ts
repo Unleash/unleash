@@ -9,7 +9,7 @@
  */
 export type UserAccessLogEntrySchemaPerformedBy = {
     /** The id of the acting user. */
-    id?: number;
+    id: number;
     /** The profile image URL of the acting user. */
     imageUrl?: string;
     /** The name of the acting user. */

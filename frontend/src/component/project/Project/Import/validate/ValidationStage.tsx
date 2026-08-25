@@ -43,7 +43,7 @@ const WarningContainer = styled(Box)(({ theme }) => ({
 }));
 
 const ErrorHeader = styled(Box)(({ theme }) => ({
-    color: theme.palette.error.dark,
+    color: theme.palette.error.onContainer,
     backgroundColor: theme.palette.error.container,
     fontSize: theme.fontSizes.smallBody,
     borderBottom: `1px solid ${theme.palette.error.containerBorder}`,
@@ -53,7 +53,7 @@ const ErrorHeader = styled(Box)(({ theme }) => ({
 }));
 
 const WarningHeader = styled(Box)(({ theme }) => ({
-    color: theme.palette.warning.dark,
+    color: theme.palette.warning.onContainer,
     backgroundColor: theme.palette.warning.container,
     fontSize: theme.fontSizes.smallBody,
     borderBottom: `1px solid ${theme.palette.warning.containerBorder}`,
@@ -63,12 +63,12 @@ const WarningHeader = styled(Box)(({ theme }) => ({
 }));
 
 const ErrorMessage = styled(Box)(({ theme }) => ({
-    color: theme.palette.error.dark,
+    color: theme.palette.error.onContainer,
     fontSize: theme.fontSizes.smallBody,
 }));
 
 const WarningMessage = styled(Box)(({ theme }) => ({
-    color: theme.palette.warning.dark,
+    color: theme.palette.warning.onContainer,
     fontSize: theme.fontSizes.smallBody,
 }));
 

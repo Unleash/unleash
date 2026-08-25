@@ -80,7 +80,7 @@ const theme = {
             // main: '#5483C9',  // used on icons on these elements
             main: '#a2bbe2',
             light: '#b8cbe9',
-            dark: '#a2bbe2', // used for text on these elements
+            dark: '#a2bbe2',
             contrastText: '#202021',
             container: '#1A2641',
             containerBorder: '#1B407A',
@@ -90,7 +90,7 @@ const theme = {
             // main: '#62872F',  // used on icons on these elements
             main: '#94ae6f',
             light: '#a8bd88',
-            dark: '#94ae6f', // used for text on these elements
+            dark: '#94ae6f',
             contrastText: '#202021',
             container: '#333D30',
             containerBorder: '#3D600C',
@@ -100,7 +100,7 @@ const theme = {
             // main: '#9E691C',  // used on icons on these elements
             main: '#bc7d21',
             light: '#d0913a',
-            dark: '#bc7d21', // used for text on these elements
+            dark: '#bc7d21',
             contrastText: '#202021',
             container: '#3B302C',
             containerBorder: '#6C4A19',
@@ -110,8 +110,8 @@ const theme = {
             // main: '#B93F4A',  // used on error buttons // used on icons on these elements
             main: '#ff6472',
             light: '#ff8591',
-            // dark: '#F15260',  // used for text on these elements
-            dark: '#ff6472', // used for text on these elements
+            // dark: '#F15260',
+            dark: '#ff6472',
             contrastText: '#202021',
             container: '#3F2835',
             containerBorder: '#8A3E45',
@@ -128,7 +128,7 @@ const theme = {
         neutral: {
             main: '#858699',
             light: '#9a9bab',
-            dark: '#EEEEFC', // used for text on these elements
+            dark: '#EEEEFC',
             contrastText: '#202021',
             container: '#2B2A3C',
             containerBorder: '#454360',

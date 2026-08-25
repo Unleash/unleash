@@ -43,7 +43,8 @@ const StyledBar = styled('aside', {
             theme.palette[variant]?.container ??
             theme.palette[DEFAULT_VARIANT].container,
         color:
-            theme.palette[variant]?.dark ?? theme.palette[DEFAULT_VARIANT].dark,
+            theme.palette[variant]?.onContainer ??
+            theme.palette[DEFAULT_VARIANT].onContainer,
         fontSize: theme.fontSizes.smallBody,
     }),
 );

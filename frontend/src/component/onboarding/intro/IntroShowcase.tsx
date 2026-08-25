@@ -422,7 +422,7 @@ const StyledCodeKey = styled('span')(({ theme }) => ({
 }));
 
 const StyledCodeValue = styled('span')(({ theme }) => ({
-    color: theme.palette.success.dark,
+    color: theme.palette.success.onContainer,
 }));
 
 const StyledPlaygroundResults = styled(Box)(({ theme }) => ({

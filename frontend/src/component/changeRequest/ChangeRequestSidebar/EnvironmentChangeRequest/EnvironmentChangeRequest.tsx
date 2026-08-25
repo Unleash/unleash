@@ -190,7 +190,9 @@ export const EnvironmentChangeRequest: FC<{
                                 <StyledFlexAlignCenterBox>
                                     <StyledSuccessIcon />
                                     <Typography
-                                        color={theme.palette.success.dark}
+                                        color={
+                                            theme.palette.success.onContainer
+                                        }
                                     >
                                         Draft successfully sent to review
                                     </Typography>

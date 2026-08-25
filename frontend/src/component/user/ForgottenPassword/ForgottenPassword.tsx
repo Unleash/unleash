@@ -55,7 +55,7 @@ const StyledInfoIcon = styled(InfoOutlinedIcon)(({ theme }) => ({
 const StyledInfoContent = styled('div')(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
     lineHeight: '20px',
-    color: theme.palette.info.dark,
+    color: theme.palette.info.onContainer,
 }));
 
 type State = 'initial' | 'loading' | 'attempted' | 'too_many_attempts';

@@ -30,7 +30,7 @@ const WarningHeader = styled(Box)(({ theme }) => ({
 }));
 
 const WarningHeaderText = styled(Box)(({ theme }) => ({
-    color: theme.palette.warning.dark,
+    color: theme.palette.warning.onContainer,
     fontWeight: theme.fontWeight.bold,
 }));
 

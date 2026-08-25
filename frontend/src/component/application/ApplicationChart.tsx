@@ -89,7 +89,7 @@ const StyledStatus = styled(Typography)<{
 }>(({ theme, mode }) => ({
     gap: theme.spacing(1),
     fontSize: theme.fontSizes.smallBody,
-    color: theme.palette[mode].dark,
+    color: theme.palette[mode].onContainer,
     display: 'flex',
     alignItems: 'center',
 }));

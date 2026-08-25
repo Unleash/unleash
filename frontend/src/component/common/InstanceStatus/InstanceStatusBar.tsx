@@ -26,7 +26,7 @@ const StyledWarningBar = styled('aside')(({ theme }) => ({
     borderBottom: '1px solid',
     borderColor: theme.palette.warning.containerBorder,
     background: theme.palette.warning.container,
-    color: theme.palette.warning.dark,
+    color: theme.palette.warning.onContainer,
 }));
 
 const StyledInfoBar = styled('aside')(({ theme }) => ({
@@ -40,7 +40,7 @@ const StyledInfoBar = styled('aside')(({ theme }) => ({
     borderBottom: '1px solid',
     borderColor: theme.palette.info.containerBorder,
     background: theme.palette.info.container,
-    color: theme.palette.info.dark,
+    color: theme.palette.info.onContainer,
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({

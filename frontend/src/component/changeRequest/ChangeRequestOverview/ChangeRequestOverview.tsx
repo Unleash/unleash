@@ -568,7 +568,9 @@ export const ChangeRequestOverview: FC = () => {
                     </Typography>
                     <Typography
                         variant='body2'
-                        sx={(theme) => ({ color: theme.palette.neutral.dark })}
+                        sx={(theme) => ({
+                            color: theme.palette.neutral.onContainer,
+                        })}
                     >
                         The change request will be moved to closed, and it can't
                         be applied anymore. Once cancelled, the change request

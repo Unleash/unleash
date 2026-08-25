@@ -7,7 +7,7 @@ import {
 import type { FC } from 'react';
 
 export const colors = (theme: Theme) => ({
-    added: theme.palette.success.dark,
+    added: theme.palette.success.onContainer,
     deleted: theme.palette.error.main,
 });
 

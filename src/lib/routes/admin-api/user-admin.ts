@@ -47,8 +47,6 @@ import {
 } from '../../openapi/spec/users-groups-base-schema.js';
 import type { IGroup } from '../../types/group.js';
 import type { IFlagResolver } from '../../types/experimental.js';
-import rateLimit from 'express-rate-limit';
-import { minutesToMilliseconds } from 'date-fns';
 import {
     type AdminCountSchema,
     adminCountSchema,
@@ -356,13 +354,6 @@ export default class UserAdminController extends Controller {
                         ),
                         ...getStandardResponses(400, 401, 403),
                     },
-                }),
-                rateLimit({
-                    windowMs: minutesToMilliseconds(1),
-                    max: config.rateLimiting.createUserMaxPerMinute,
-                    validate: false,
-                    standardHeaders: true,
-                    legacyHeaders: false,
                 }),
             ],
         });

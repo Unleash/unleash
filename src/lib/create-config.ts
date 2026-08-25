@@ -155,6 +155,10 @@ function loadRateLimitingConfig(options: IUnleashOptions): IRateLimiting {
         process.env.SIMPLE_LOGIN_LIMIT_PER_MINUTE,
         10,
     );
+    const authenticationMaxPerMinute = parseEnvVarNumber(
+        process.env.AUTHENTICATION_RATE_LIMIT_PER_MINUTE,
+        10,
+    );
     const passwordResetMaxPerMinute = parseEnvVarNumber(
         process.env.PASSWORD_RESET_LIMIT_PER_MINUTE,
         1,
@@ -167,6 +171,7 @@ function loadRateLimitingConfig(options: IUnleashOptions): IRateLimiting {
     const defaultRateLimitOptions: IRateLimiting = {
         createUserMaxPerMinute,
         simpleLoginMaxPerMinute,
+        authenticationMaxPerMinute,
         passwordResetMaxPerMinute,
         callSignalEndpointMaxPerSecond,
     };

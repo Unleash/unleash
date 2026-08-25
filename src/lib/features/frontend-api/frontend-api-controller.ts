@@ -21,8 +21,6 @@ import {
 import type { Context } from 'unleash-client';
 import { enrichContextWithIp } from './index.js';
 import NotImplementedError from '../../error/not-implemented-error.js';
-import rateLimit from 'express-rate-limit';
-import { minutesToMilliseconds } from 'date-fns';
 import metricsHelper from '../../util/metrics-helper.js';
 import { FUNCTION_TIME } from '../../metric-events.js';
 import type { IUnleashServices } from '../../services/index.js';
@@ -138,13 +136,6 @@ export default class FrontendAPIController extends Controller {
                         ...getStandardResponses(400, 401, 404),
                     },
                 }),
-                rateLimit({
-                    windowMs: minutesToMilliseconds(1),
-                    max: config.metricsRateLimiting.frontendMetricsMaxPerMinute,
-                    validate: false,
-                    standardHeaders: true,
-                    legacyHeaders: false,
-                }),
             ],
         });
 
@@ -166,14 +157,6 @@ export default class FrontendAPIController extends Controller {
                         200: emptyResponse,
                         ...getStandardResponses(400, 401, 404),
                     },
-                }),
-                rateLimit({
-                    windowMs: minutesToMilliseconds(1),
-                    max: config.metricsRateLimiting
-                        .frontendRegisterMaxPerMinute,
-                    validate: false,
-                    standardHeaders: true,
-                    legacyHeaders: false,
                 }),
             ],
         });

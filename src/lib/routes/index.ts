@@ -3,7 +3,6 @@ import ResetPasswordController from './auth/reset-password-controller.js';
 import { SimplePasswordProvider } from './auth/simple-password-provider.js';
 import type { IUnleashConfig, IUnleashStores } from '../types/index.js';
 import LogoutController from './logout.js';
-import rateLimit from 'express-rate-limit';
 import Controller from './controller.js';
 import { AdminApi } from './admin-api/index.js';
 import ClientApi from './client-api/index.js';
@@ -14,7 +13,6 @@ import FrontendAPIController from '../features/frontend-api/frontend-api-control
 import EdgeController from './edge-api/index.js';
 import { PublicInviteController } from './public-invite.js';
 import type { Db } from '../db/db.js';
-import { minutesToMilliseconds } from 'date-fns';
 import type { IUnleashServices } from '../services/index.js';
 
 class IndexRouter extends Controller {
@@ -37,16 +35,9 @@ class IndexRouter extends Controller {
         );
         this.use('/internal-backstage', new BackstageController(config).router);
         this.use('/logout', new LogoutController(config, services).router);
-        this.useWithMiddleware(
+        this.use(
             '/auth/simple',
             new SimplePasswordProvider(config, services).router,
-            rateLimit({
-                windowMs: minutesToMilliseconds(1),
-                max: config.rateLimiting.simpleLoginMaxPerMinute,
-                validate: false,
-                standardHeaders: true,
-                legacyHeaders: false,
-            }),
         );
         this.use(
             '/auth/reset',

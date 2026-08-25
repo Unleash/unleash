@@ -38,6 +38,7 @@ import { originMiddleware } from './middleware/origin-middleware.js';
 import { userTokenClientApiLogger } from './middleware/user-token-client-api-logger-middleware.js';
 import backendApiAccessMiddleware from './middleware/backend-token-middleware.js';
 import frontendApiAccessMiddleware from './middleware/frontend-token-middleware.js';
+import { createRateLimitMiddleware } from './middleware/rate-limit-middleware.js';
 
 export default async function getApp(
     config: IUnleashConfig,
@@ -84,6 +85,10 @@ export default async function getApp(
         req.url = req.url.replace(/\/+/g, '/');
         next();
     });
+    app.use(
+        baseUriPath,
+        createRateLimitMiddleware(config, 'beforeAuthentication'),
+    );
 
     app.use(
         `${baseUriPath}/api/admin/features-batch`,
@@ -166,6 +171,11 @@ export default async function getApp(
             break;
         }
     }
+
+    app.use(
+        baseUriPath,
+        createRateLimitMiddleware(config, 'afterAuthentication'),
+    );
 
     app.use(
         baseUriPath,

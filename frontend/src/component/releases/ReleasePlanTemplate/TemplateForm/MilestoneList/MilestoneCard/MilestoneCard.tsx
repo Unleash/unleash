@@ -58,7 +58,7 @@ const StyledMilestoneCard = styled(Card, {
         justifyContent: 'center',
     },
     transition: 'background-color 0.2s ease-in-out',
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: theme.palette.background.paper,
 }));
 
 const FlexContainer = styled('div')(({ theme }) => ({
@@ -80,7 +80,7 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     [theme.breakpoints.down('sm')]: {
         justifyContent: 'center',
     },
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: theme.palette.background.paper,
     '&:before': {
         opacity: '0 !important',
     },

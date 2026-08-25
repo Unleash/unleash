@@ -11,7 +11,7 @@ const StyledAutomationContainer = styled('div', {
     paddingLeft: theme.spacing(2.25),
     backgroundColor:
         status?.type === 'completed'
-            ? theme.palette.background.default
+            ? theme.palette.background.paper
             : theme.palette.background.paper,
     display: 'flex',
     flexDirection: 'column',

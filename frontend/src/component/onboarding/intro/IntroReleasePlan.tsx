@@ -114,7 +114,7 @@ const StyledMilestone = styled(Box, {
         }`,
         borderRadius: theme.shape.borderRadiusLarge,
         background: completed
-            ? theme.palette.background.default
+            ? theme.palette.background.paper
             : theme.palette.background.paper,
         transition: theme.transitions.create(
             ['background-color', 'border-color'],

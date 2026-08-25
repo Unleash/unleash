@@ -15,7 +15,7 @@ export const ConstraintListItem = styled('div')(({ theme }) => ({
     position: 'relative',
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
-    background: theme.palette.background.default,
+    background: theme.palette.background.paper,
     padding: theme.spacing(1.5, 2),
     display: 'flex',
     flexFlow: 'column',

@@ -30,7 +30,7 @@ const ChartRow = styled('div')(({ theme }) => ({
 }));
 
 const LifecycleTile = styled('article')(({ theme }) => ({
-    background: theme.palette.background.default,
+    background: theme.palette.background.paper,
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(3),
     minWidth: 0,

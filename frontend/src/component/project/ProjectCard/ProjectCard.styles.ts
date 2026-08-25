@@ -14,10 +14,10 @@ export const StyledProjectCard = styled(Card)<{ disabled?: boolean }>(
             justifyContent: 'center',
         },
         transition: 'background-color 0.2s ease-in-out',
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: theme.palette.background.paper,
         '&:hover': {
             backgroundColor: disabled
-                ? theme.palette.background.default
+                ? theme.palette.background.paper
                 : theme.palette.action.hover,
         },
         borderRadius: theme.shape.borderRadiusMedium,

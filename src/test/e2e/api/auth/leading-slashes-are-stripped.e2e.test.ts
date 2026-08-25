@@ -23,6 +23,10 @@ beforeAll(async () => {
         stores,
         {
             authentication: { enableApiToken: true, type: IAuthType.DEMO },
+            rateLimiting: {
+                sdkApiMaxPerMinute: 1,
+                tokenAuthenticationMaxPerMinute: 1,
+            },
         },
         db.rawDatabase,
     );
@@ -34,6 +38,10 @@ beforeAll(async () => {
                 basePathUri: '/demo',
             },
             authentication: { enableApiToken: true, type: IAuthType.DEMO },
+            rateLimiting: {
+                sdkApiMaxPerMinute: 1,
+                tokenAuthenticationMaxPerMinute: 1,
+            },
         },
         db.rawDatabase,
     );
@@ -61,7 +69,10 @@ test('multiple slashes after base path is also rejected with 401', async () => {
     await appWithBaseUrl.request.get('/demo/api/client/features').expect(401);
 });
 
-test('Access with API token is granted', async () => {
+test('Unauthenticated requests do not consume authenticated token rate limits', async () => {
+    await app.request.get('/api/client/features').expect(401);
+    await app.request.get('/api/client/features').expect(401);
+
     const token = await app.services.apiTokenService.createApiTokenWithProjects(
         {
             environment: DEFAULT_ENV,
@@ -74,4 +85,8 @@ test('Access with API token is granted', async () => {
         .get('/api/client/features')
         .set('Authorization', token.secret)
         .expect(200);
+    await app.request
+        .get('/api/client/features')
+        .set('Authorization', token.secret)
+        .expect(429);
 });

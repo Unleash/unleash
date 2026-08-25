@@ -1,4 +1,7 @@
-export { ApiTokenV2Service } from './api-token-v2-service.js';
+export {
+    ApiTokenV2Service,
+    createApiTokenV2ServiceFromDb,
+} from './api-token-v2-service.js';
 export { ApiTokenV2Store } from './api-token-v2-store.js';
 export { FakeApiTokenV2Store } from './fake-api-token-v2-store.js';
 export type {

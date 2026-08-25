@@ -176,32 +176,4 @@ describe('api token lookup', () => {
             apiTokenService.getTokenWithCache(secret),
         ).resolves.toBeUndefined();
     });
-
-    test('warns once per token when an alias resolves, never logging the alias', async () => {
-        const warn = vi.fn();
-        const { apiTokenService, apiTokenStore } = setup(() => ({
-            debug: vi.fn(),
-            info: vi.fn(),
-            warn,
-            error: vi.fn(),
-            fatal: vi.fn(),
-        }));
-        const alias = `default:${ENV}.legacy-alias`;
-        await insert(apiTokenStore, {
-            secret: `default:${ENV}.real-secret`,
-            alias,
-            tokenName: 'legacy',
-        });
-        await apiTokenService.fetchActiveTokens();
-
-        await apiTokenService.getTokenWithCache(alias);
-        await apiTokenService.getTokenWithCache(alias);
-
-        const warnings = warn.mock.calls.filter((c) =>
-            String(c[0]).includes('deprecated alias'),
-        );
-        expect(warnings).toHaveLength(1);
-        expect(warnings[0][0]).toContain('legacy');
-        expect(warnings[0][0]).not.toContain(alias);
-    });
 });

@@ -1,17 +1,20 @@
-import type { Db } from '../../db/db.js';
+import { subMinutes } from 'date-fns';
+
 import type {
     ApiTokenV2,
     ApiTokenV2WithVerifier,
     CreateApiTokenV2,
     IApiTokenV2Store,
 } from './api-token-v2-types.js';
-import { inTransaction } from '../../db/transaction.js';
 import { ALL_PROJECTS } from '../../util/index.js';
 import { ALL, isAllProjects } from '../../types/models/api-token.js';
-import { subMinutes } from 'date-fns';
+import type { Db } from '../../db/db.js';
+import { inTransaction } from '../../db/transaction.js';
 
 const TABLE = 'api_tokens_v2';
 const API_V2_LINK_TABLE = 'api_tokens_v2_project';
+
+const CLEANUP_BATCH_SIZE = 1000;
 
 const toToken = (row: any): Omit<ApiTokenV2, 'projects'> => ({
     selector: row.selector,
@@ -158,16 +161,34 @@ export class ApiTokenV2Store implements IApiTokenV2Store {
             .update({ seen_at: new Date() });
     }
 
+    /**
+     * First run pulls a bounded backlog in 1 transaction, the rest on subsequent runs.
+     */
     async deleteSystemCreatedTokensNotSeen(
         minutesSinceLastSeen: number,
     ): Promise<Omit<ApiTokenV2, 'projects'>[]> {
         const cutoff = subMinutes(new Date(), minutesSinceLastSeen);
 
         const deleted = await this.db(TABLE)
-            .where('user_created', false)
-            .andWhere('seen_at', '<', cutoff)
+            .whereIn(
+                'selector',
+                this.db(TABLE)
+                    .select('selector')
+                    .where('user_created', false)
+                    .andWhere('seen_at', '<', cutoff)
+                    .limit(CLEANUP_BATCH_SIZE),
+            )
             .delete()
-            .returning('*');
+            // without the verifier
+            .returning([
+                'selector',
+                'token_name',
+                'type',
+                'environment',
+                'expires_at',
+                'created_at',
+                'seen_at',
+            ]);
 
         return deleted.map(toToken);
     }

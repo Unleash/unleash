@@ -17,8 +17,6 @@ import {
     emptyResponse,
     getStandardResponses,
 } from '../../../openapi/util/standard-responses.js';
-import rateLimit from 'express-rate-limit';
-import { minutesToMilliseconds } from 'date-fns';
 import type { BulkMetricsSchema } from '../../../openapi/spec/bulk-metrics-schema.js';
 import { clientMetricsEnvBulkSchema } from '../shared/schema.js';
 import type { IClientMetricsEnv } from '../client-metrics/client-metrics-store-v2-type.js';
@@ -86,13 +84,6 @@ export default class ClientMetricsController extends Controller {
                         202: emptyResponse,
                         204: emptyResponse,
                     },
-                }),
-                rateLimit({
-                    windowMs: minutesToMilliseconds(1),
-                    max: config.metricsRateLimiting.clientMetricsMaxPerMinute,
-                    validate: false,
-                    standardHeaders: true,
-                    legacyHeaders: false,
                 }),
             ],
         });

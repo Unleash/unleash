@@ -5,7 +5,7 @@ import {
     TextField,
     type SelectChangeEvent,
 } from '@mui/material';
-import type { TimeUnit } from '../hooks/useMilestoneProgressionForm.js';
+import type { TimeUnit } from '../hooks/useTransitionConditionInput.ts';
 
 const StyledInputGroup = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -23,6 +23,7 @@ interface IMilestoneProgressionTimeInputProps {
     onTimeValueChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     onTimeUnitChange: (event: SelectChangeEvent<unknown>) => void;
     disabled?: boolean;
+    error?: boolean;
 }
 
 const handleNumericPaste = (e: React.ClipboardEvent) => {
@@ -44,6 +45,7 @@ export const MilestoneProgressionTimeInput = ({
     onTimeValueChange,
     onTimeUnitChange,
     disabled,
+    error,
 }: IMilestoneProgressionTimeInputProps) => {
     return (
         <StyledInputGroup>
@@ -52,6 +54,7 @@ export const MilestoneProgressionTimeInput = ({
                 value={timeValue}
                 onChange={onTimeValueChange}
                 onPaste={handleNumericPaste}
+                error={error}
                 sx={{
                     width: `max(60px, ${String(timeValue).length + 8}ch)`,
                     maxWidth: '300px',

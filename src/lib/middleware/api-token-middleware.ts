@@ -66,6 +66,11 @@ export const apiAccessMiddleware = (
                 } else if (parsedToken) {
                     apiUser = await apiTokenService.getUserForToken(
                         parsedToken.secret,
+                        {
+                            applicationName:
+                                req.header('x-unleash-appname') ??
+                                req.header('unleash-appname'),
+                        },
                     );
                 }
                 const { CLIENT, BACKEND, FRONTEND } = ApiTokenType;

@@ -17,6 +17,24 @@ beforeEach(() => {
     };
 });
 
+test('should not inspect PAT credentials after another middleware authenticates the request', async () => {
+    const accountService = {
+        authenticateAccountByToken: vi.fn(),
+    } as unknown as AccountService;
+    const func = patMiddleware(config, { accountService });
+    const cb = vi.fn();
+    const req = {
+        header: vi.fn(),
+        user: new User({ id: 44, username: 'already-authenticated' }),
+    };
+
+    await func(req, undefined, cb);
+
+    expect(req.header).not.toHaveBeenCalled();
+    expect(accountService.authenticateAccountByToken).not.toHaveBeenCalled();
+    expect(cb).toHaveBeenCalledOnce();
+});
+
 test('should not set user if unknown token', async () => {
     // @ts-expect-error wrong type
     const accountService = {

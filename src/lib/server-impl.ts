@@ -139,6 +139,7 @@ import {
     type ExternalImpactMetricsSource,
 } from './internals.js';
 import SessionStore from './db/session-store.js';
+import { createRateLimitMiddleware } from './middleware/rate-limit-middleware.js';
 import metricsHelper from './util/metrics-helper.js';
 import type { ReleasePlanMilestoneStrategyWriteModel } from './features/release-plans/release-plan-milestone-strategy-store.js';
 import type { ReleasePlanMilestoneStrategyService } from './features/release-plans/release-plan-milestone-strategy-service.js';
@@ -585,6 +586,7 @@ export {
     getProjectDefaultStrategy,
     getDefaultStrategy,
     corsOriginMiddleware,
+    createRateLimitMiddleware,
     ApiTokenType,
     impactRegister,
     EXTERNAL_SOURCE_SETTING_KEY,

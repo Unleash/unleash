@@ -33,9 +33,13 @@ test('presents Unleash Intro as a playful, interactive experience', async () => 
     expect(
         screen.getByText("Choose how you'd like to get started."),
     ).toBeInTheDocument();
-    expect(screen.getByText('Learn by doing')).toBeInTheDocument();
-    expect(screen.getByText('~5 min')).toBeInTheDocument();
-    expect(screen.getByText('Explore on your own')).toBeInTheDocument();
+    expect(
+        screen.getByRole('heading', { name: 'Learn the basics' }),
+    ).toBeInTheDocument();
+    expect(screen.getByText('5 min')).toBeInTheDocument();
+    expect(
+        screen.getByRole('heading', { name: 'Set up a project' }),
+    ).toBeInTheDocument();
     expect(
         screen.getByText(
             'You can reopen Unleash Intro at any time from the Help menu.',
@@ -43,7 +47,7 @@ test('presents Unleash Intro as a playful, interactive experience', async () => 
     ).toBeInTheDocument();
 
     await userEvent.click(
-        screen.getByRole('button', { name: 'Start Unleash Intro' }),
+        screen.getByRole('button', { name: 'Learn the basics' }),
     );
     expect(onNext).toHaveBeenLastCalledWith('tour');
 

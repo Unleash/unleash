@@ -1,12 +1,10 @@
-import BoltIcon from '@mui/icons-material/Bolt';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { Button, styled } from '@mui/material';
 import type { MilestoneStatus } from './ReleasePlanMilestoneStatus.tsx';
+import { TransitionConditionRow } from '../shared/TransitionConditionRow.tsx';
 import { MilestoneProgressionTimeInput } from '../MilestoneProgressionForm/MilestoneProgressionTimeInput.tsx';
-import {
-    getTimeValueAndUnitFromMinutes,
-    useMilestoneProgressionForm,
-} from '../hooks/useMilestoneProgressionForm.js';
+import { useMilestoneProgressionForm } from '../hooks/useMilestoneProgressionForm.js';
+import { getTimeValueAndUnitFromMinutes } from '../hooks/useTransitionConditionInput.ts';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
@@ -35,48 +33,6 @@ const StyledFormWrapper = styled('div', {
         padding: theme.spacing(1.5, 2),
         borderRadius: `${theme.shape.borderRadiusLarge}px`,
     }),
-}));
-
-const StyledDisplayContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-    justifyContent: 'space-between',
-    width: '100%',
-}));
-
-const StyledContentGroup = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-    [theme.breakpoints.down(600)]: {
-        flexWrap: 'wrap',
-    },
-}));
-
-const StyledIcon = styled(BoltIcon, {
-    shouldForwardProp: (prop) => prop !== 'status',
-})<{ status?: MilestoneStatus }>(({ theme, status }) => ({
-    color: theme.palette.common.white,
-    fontSize: 18,
-    flexShrink: 0,
-    backgroundColor:
-        status?.type === 'completed'
-            ? theme.palette.neutral.border
-            : theme.palette.primary.main,
-    borderRadius: '50%',
-    padding: theme.spacing(0.25),
-}));
-
-const StyledLabel = styled('span', {
-    shouldForwardProp: (prop) => prop !== 'status',
-})<{ status?: MilestoneStatus }>(({ theme, status }) => ({
-    color:
-        status?.type === 'completed'
-            ? theme.palette.text.secondary
-            : theme.palette.text.primary,
-    fontSize: theme.typography.body2.fontSize,
-    flexShrink: 0,
 }));
 
 const StyledButtonGroup = styled('div', {
@@ -136,18 +92,15 @@ export const ReadonlyMilestoneTransitionDisplay = ({
     const initial = getTimeValueAndUnitFromMinutes(intervalMinutes);
 
     return (
-        <StyledDisplayContainer>
-            <StyledContentGroup>
-                <StyledIcon status={status} />
-                <StyledLabel status={status}>
-                    Proceed to the next milestone after
-                </StyledLabel>
+        <TransitionConditionRow
+            muted={status?.type === 'completed'}
+            label='Proceed to the next milestone after'
+            condition={
                 <span style={{ fontSize: 'inherit' }}>
                     {initial.value} {initial.unit}
                 </span>
-                <StyledLabel status={status}>from milestone start</StyledLabel>
-            </StyledContentGroup>
-        </StyledDisplayContainer>
+            }
+        />
     );
 };
 
@@ -175,7 +128,7 @@ export const MilestoneTransitionDisplay = ({
         status,
     );
 
-    const currentIntervalMinutes = form.getIntervalMinutes();
+    const currentIntervalMinutes = form.intervalMinutes;
     const hasChanged = currentIntervalMinutes !== intervalMinutes;
 
     const progressionInfo = useMilestoneProgressionInfo(
@@ -236,40 +189,38 @@ export const MilestoneTransitionDisplay = ({
 
     return (
         <StyledFormWrapper hasChanged={hasChanged} onKeyDown={handleKeyDown}>
-            <StyledDisplayContainer>
-                <StyledContentGroup>
-                    <StyledIcon status={status} />
-                    <StyledLabel status={status}>Proceed after</StyledLabel>
+            <TransitionConditionRow
+                condition={
                     <MilestoneProgressionTimeInput
                         timeValue={form.timeValue}
                         timeUnit={form.timeUnit}
                         onTimeValueChange={form.handleTimeValueChange}
                         onTimeUnitChange={form.handleTimeUnitChange}
                     />
-                    <StyledLabel status={status}>
-                        from milestone start
-                    </StyledLabel>
-                </StyledContentGroup>
-                {!hasChanged && (
-                    <StyledButtonGroup hasChanged={false}>
-                        {badge}
-                        <PermissionIconButton
-                            permission={UPDATE_FEATURE_STRATEGY}
-                            projectId={projectId}
-                            environmentId={environment}
-                            onClick={onDelete}
-                            size='medium'
-                            aria-label={`Remove automation for ${milestoneName}`}
-                            tooltipProps={{
-                                title: `Remove automation for ${milestoneName}`,
-                            }}
-                            sx={{ padding: 0.5 }}
-                        >
-                            <DeleteOutlineIcon />
-                        </PermissionIconButton>
-                    </StyledButtonGroup>
-                )}
-            </StyledDisplayContainer>
+                }
+                muted={status?.type === 'completed'}
+                endActions={
+                    !hasChanged && (
+                        <StyledButtonGroup hasChanged={false}>
+                            {badge}
+                            <PermissionIconButton
+                                permission={UPDATE_FEATURE_STRATEGY}
+                                projectId={projectId}
+                                environmentId={environment}
+                                onClick={onDelete}
+                                size='medium'
+                                aria-label={`Remove automation for ${milestoneName}`}
+                                tooltipProps={{
+                                    title: `Remove automation for ${milestoneName}`,
+                                }}
+                                sx={{ padding: 0.5 }}
+                            >
+                                <DeleteOutlineIcon />
+                            </PermissionIconButton>
+                        </StyledButtonGroup>
+                    )
+                }
+            />
             {progressionInfo && (
                 <StyledInfoLine>{progressionInfo}</StyledInfoLine>
             )}

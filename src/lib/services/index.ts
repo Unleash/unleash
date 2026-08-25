@@ -190,6 +190,7 @@ import {
 import type { ReleasePlanMilestoneStrategyService } from '../features/release-plans/release-plan-milestone-strategy-service.js';
 import {
     ApiTokenV2Service,
+    createApiTokenV2ServiceFromDb,
     FakeApiTokenV2Store,
 } from '../features/apitokensv2/index.js';
 import FakeEnvironmentStore from '../features/project-environments/fake-environment-store.js';
@@ -239,6 +240,13 @@ export const createServices = (
         config,
         { eventService, resourceLimitsService },
     );
+
+    const transactionalApiTokenV2Service = db
+        ? withTransactional(
+              (db) => createApiTokenV2ServiceFromDb(db, config),
+              db,
+          )
+        : withFakeTransactional(apiTokenV2Service);
 
     const clientMetricsServiceV2 = new ClientMetricsServiceV2(
         stores,
@@ -534,6 +542,7 @@ export const createServices = (
         versionService,
         apiTokenService,
         apiTokenV2Service,
+        transactionalApiTokenV2Service,
         emailService,
         userService,
         resetTokenService,
@@ -659,6 +668,7 @@ export interface IUnleashServices {
     addonService: AddonService;
     apiTokenService: ApiTokenService;
     apiTokenV2Service: ApiTokenV2Service;
+    transactionalApiTokenV2Service: WithTransactional<ApiTokenV2Service>;
     clientInstanceService: ClientInstanceService;
     clientMetricsServiceV2: ClientMetricsServiceV2;
     contextService: ContextService;

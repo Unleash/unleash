@@ -61,6 +61,10 @@ class FakeEventStore implements IEventStore {
         return Promise.resolve();
     }
 
+    batchStoreOrThrow(events: IBaseEvent[]): Promise<void> {
+        return this.batchStore(events);
+    }
+
     batchStore(events: IBaseEvent[]): Promise<void> {
         events.forEach((event) => {
             this.events.push({

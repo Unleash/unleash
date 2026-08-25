@@ -584,7 +584,6 @@ export function registerPrometheusMetrics(
             method: 'POST',
         })
         .set(config.rateLimiting.callSignalEndpointMaxPerSecond * 60);
-
     const namePrefixUsed = createCounter({
         name: 'nameprefix_count',
         help: 'Count of nameprefix usage in client api',

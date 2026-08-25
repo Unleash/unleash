@@ -65,6 +65,7 @@ export type IFlagKey =
     | 'userTokenWithClientApiLoggingKillSwitch'
     | 'multiMetricChart'
     | 'logRocketEnabled'
+    | 'hubspotChatEnabled'
     | 'newModalDesign'
     | 'allowDeprecatedApiTokenMiddleware'
     | 'newProfileDropdown'
@@ -303,6 +304,10 @@ const flags: IFlags = {
     ),
     logRocketEnabled: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_LOGROCKET_ENABLED,
+        false,
+    ),
+    hubspotChatEnabled: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_HUBSPOT_CHAT_ENABLED,
         false,
     ),
     newModalDesign: parseEnvVarBoolean(

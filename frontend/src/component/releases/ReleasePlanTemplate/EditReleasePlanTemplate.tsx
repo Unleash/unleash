@@ -55,6 +55,7 @@ export const EditReleasePlanTemplate = ({ modal }: { modal?: boolean }) => {
         errors,
         setErrors,
         clearErrors,
+        clearError,
         milestones,
         setMilestones,
         validate,
@@ -142,6 +143,7 @@ export const EditReleasePlanTemplate = ({ modal }: { modal?: boolean }) => {
             setMilestones={setMilestones}
             errors={errors}
             clearErrors={clearErrors}
+            clearError={clearError}
             formTitle={`Edit release template`}
             formatApiCode={formatApiCode}
             handleSubmit={handleSubmit}

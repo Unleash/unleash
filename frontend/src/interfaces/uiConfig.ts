@@ -22,6 +22,7 @@ export interface IUiConfig {
     unleashUrl?: string;
     edgeUrl?: string;
     logRocketAppId?: string;
+    hubspotPortalId?: string;
     version: string;
     versionInfo?: IVersionInfo;
     links: ILinks[];
@@ -98,6 +99,7 @@ export type UiFlags = {
     impactMetricsFlagPage?: boolean;
     multiMetricChart?: boolean;
     logRocketEnabled?: boolean;
+    hubspotChatEnabled?: boolean;
     newModalDesign?: boolean;
     newProfileDropdown?: boolean;
     learningLab?: Variant;

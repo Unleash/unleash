@@ -131,7 +131,7 @@ export const ProjectHealth = () => {
                             cy='50'
                             r={ChartRadius}
                             fill='none'
-                            stroke={theme.palette.background.application}
+                            stroke={theme.palette.background.default}
                             strokeWidth={ChartStrokeWidth}
                             strokeDasharray={`${filledLength * circumference} ${gapLength * circumference}`}
                             strokeDashoffset={offset * circumference}

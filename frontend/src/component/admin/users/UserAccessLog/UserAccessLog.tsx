@@ -90,7 +90,32 @@ export const UserAccessLog = () => {
         sortOrder: tableState.sortOrder === 'asc' ? 'asc' : 'desc',
     });
 
-    const bodyLoadingRef = useLoading(loading);
+    const isPlaceholder = loading;
+
+    const placeholderData = useMemo<UserAccessLogEntrySchema[]>(
+        () =>
+            Array(tableState.limit)
+                .fill(null)
+                .map((_, index) => ({
+                    user: {
+                        id: index,
+                        name: 'Loading user',
+                        email: 'loading@example.com',
+                        imageUrl: '',
+                    },
+                    status: 'added',
+                    createdAt: new Date(2024, 0, 1).toISOString(),
+                    performedBy: { id: 0, name: 'Loading user', imageUrl: '' },
+                })),
+        [tableState.limit],
+    );
+
+    const bodyLoadingRef = useLoading(isPlaceholder);
+
+    const data = useMemo(
+        () => (isPlaceholder ? placeholderData : items),
+        [isPlaceholder, placeholderData, items],
+    );
 
     const columns = useMemo(
         () => [
@@ -190,7 +215,7 @@ export const UserAccessLog = () => {
     const table = useReactTable(
         withTableState(tableState, setTableState, {
             columns,
-            data: items,
+            data,
         }),
     );
 
@@ -201,7 +226,7 @@ export const UserAccessLog = () => {
             <div ref={bodyLoadingRef}>
                 <PaginatedTable tableInstance={table} totalItems={total} />
             </div>
-            {rows.length === 0 && !loading ? (
+            {rows.length === 0 && !isPlaceholder ? (
                 <Box sx={(theme) => ({ padding: theme.spacing(0, 2, 2) })}>
                     <TablePlaceholder>
                         No user access log entries found.

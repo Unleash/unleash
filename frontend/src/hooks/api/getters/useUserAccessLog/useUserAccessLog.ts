@@ -12,4 +12,4 @@ const useParameterizedUserAccessLog = createPaginatedHook<UserAccessLogSchema>(
 );
 
 export const useUserAccessLog = (params: GetUsersAccessLogParams) =>
-    useParameterizedUserAccessLog(params, '', { keepPreviousData: true });
+    useParameterizedUserAccessLog(params);

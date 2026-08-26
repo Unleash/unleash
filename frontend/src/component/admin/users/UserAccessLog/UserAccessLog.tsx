@@ -68,7 +68,7 @@ export const UserAccessLog = () => {
     const { items, total, loading } = useUserAccessLog({
         offset: tableState.offset ? `${tableState.offset}` : undefined,
         limit: `${tableState.limit}`,
-        sortOrder: tableState.sortOrder,
+        sortOrder: tableState.sortOrder === 'asc' ? 'asc' : 'desc',
     });
 
     const bodyLoadingRef = useLoading(loading);

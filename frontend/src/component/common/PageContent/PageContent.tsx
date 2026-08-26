@@ -22,6 +22,8 @@ interface IPageContentProps extends PaperProps {
     bodyClass?: string;
     headerClass?: string;
     withTabs?: boolean;
+    /** Let the body scroll with the page instead of in its own scroll box, so a sticky footer/pagination bar attaches to the window scroll. */
+    scrollWithPage?: boolean;
 }
 
 const StyledHeader = styled('div')(({ theme }) => ({
@@ -62,6 +64,7 @@ export const PageContent: FC<IPageContentProps> = ({
     disableLoading = false,
     className,
     withTabs,
+    scrollWithPage = false,
     ...rest
 }) => {
     const { classes: styles } = useStyles();
@@ -82,6 +85,7 @@ export const PageContent: FC<IPageContentProps> = ({
         {
             [styles.paddingDisabled]: disablePadding,
             [styles.borderDisabled]: disableBorder,
+            [styles.scrollWithPage]: scrollWithPage,
         },
     );
 

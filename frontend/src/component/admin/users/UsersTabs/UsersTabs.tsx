@@ -75,7 +75,7 @@ const UsersTabsView = () => {
         <PageContent
             withTabs
             isLoading={loading}
-            bodyClass={isAccessLog ? 'noop' : undefined}
+            scrollWithPage={isAccessLog}
             header={
                 <>
                     <StyledHeader>

@@ -157,10 +157,10 @@ export const subtleOutlinedButton = (theme: Theme) => ({
         color: theme.palette.primary.main,
         borderColor: theme.palette.divider,
         '&:hover': {
-            // border picks up the primary purple; background uses the light
-            // purple token (secondary.light = purple[50] in light mode)
+            // border picks up the primary purple; background uses the primary
+            // tinted-container token (purple[50] in light mode)
             borderColor: theme.palette.primary.main,
-            backgroundColor: theme.palette.secondary.light,
+            backgroundColor: theme.palette.primary.container,
         },
         // the primary-colored text above out-specifies MUI's disabled color,
         // so restore the disabled text color explicitly

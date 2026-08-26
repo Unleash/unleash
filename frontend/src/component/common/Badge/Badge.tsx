@@ -61,15 +61,9 @@ const StyledBadge = styled('span')<IBadgeProps>(
                   border: `1px solid ${theme.palette.divider}`,
               }
             : {
-                  // Prefer the explicit "container" recipe where a color defines it
-                  // (currently `primary`), falling back to the legacy tint slots.
-                  backgroundColor:
-                      theme.palette[color].container ??
-                      theme.palette[color].light,
-                  color:
-                      theme.palette[color].onContainer ??
-                      theme.palette[color].contrastText,
-                  border: `1px solid ${theme.palette[color].containerBorder ?? theme.palette[color].border ?? 'transparent'}`,
+                  backgroundColor: theme.palette[color].container,
+                  color: theme.palette[color].onContainer,
+                  border: `1px solid ${theme.palette[color].containerBorder}`,
               }),
         ...(round && {
             justifyContent: 'center',

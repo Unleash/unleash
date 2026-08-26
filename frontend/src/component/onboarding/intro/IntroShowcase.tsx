@@ -508,7 +508,7 @@ const StyledTimelineEvent = styled(Box, {
         border: `1px solid ${palette.main}`,
         borderRadius: '50%',
         color: palette.main,
-        background: palette.container ?? palette.light,
+        background: palette.container,
         '& svg': {
             display: 'block',
             width: 18,

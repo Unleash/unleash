@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Box, Tooltip } from '@mui/material';
+import { Box, Tooltip, styled } from '@mui/material';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
 import { NumberParam, StringParam, withDefault } from 'use-query-params';
 import { PaginatedTable, TablePlaceholder } from 'component/common/Table';
@@ -22,6 +22,25 @@ import {
 } from 'hooks/api/getters/useUserAccessLog/useUserAccessLog';
 
 const columnHelper = createColumnHelper<UserAccessLogEntrySchema>();
+
+const StyledUserCell = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+}));
+
+const StyledUserInfo = styled('div')({
+    display: 'flex',
+    flexDirection: 'column',
+    minWidth: 0,
+});
+
+const StyledSubtitle = styled('span')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+}));
 
 const UpdatedCell = ({ entry }: { entry: UserAccessLogEntrySchema }) => {
     const { locationSettings } = useLocationSettings();
@@ -83,37 +102,17 @@ export const UserAccessLog = () => {
                     const subtitle = user.email || user.username;
                     return (
                         <TextCell>
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: 1,
-                                }}
-                            >
+                            <StyledUserCell>
                                 <UserAvatar user={user} />
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        minWidth: 0,
-                                    }}
-                                >
+                                <StyledUserInfo>
                                     <span>{user.name || ''}</span>
                                     {subtitle ? (
-                                        <Box
-                                            component='span'
-                                            sx={{
-                                                color: 'text.secondary',
-                                                overflow: 'hidden',
-                                                textOverflow: 'ellipsis',
-                                                whiteSpace: 'nowrap',
-                                            }}
-                                        >
+                                        <StyledSubtitle>
                                             {subtitle}
-                                        </Box>
+                                        </StyledSubtitle>
                                     ) : null}
-                                </Box>
-                            </Box>
+                                </StyledUserInfo>
+                            </StyledUserCell>
                         </TextCell>
                     );
                 },
@@ -174,16 +173,10 @@ export const UserAccessLog = () => {
                     }
                     return (
                         <TextCell>
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: 1,
-                                }}
-                            >
+                            <StyledUserCell>
                                 <UserAvatar user={performer} />
                                 <span>{performer.name || performer.id}</span>
-                            </Box>
+                            </StyledUserCell>
                         </TextCell>
                     );
                 },

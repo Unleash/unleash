@@ -19,6 +19,7 @@ import { InactiveUsersCount } from '../InactiveUsersList/InactiveUsersCount.tsx'
 import { InactiveUsersHeaderActions } from '../InactiveUsersList/InactiveUsersHeaderActions.tsx';
 import EditUser from '../EditUser/EditUser.tsx';
 import { AccessOverview } from '../AccessOverview/AccessOverview.tsx';
+import { UserAccessLog } from '../UserAccessLog/UserAccessLog.tsx';
 import NotFound from 'component/common/NotFound/NotFound';
 
 const StyledHeader = styled('div')(() => ({
@@ -61,6 +62,10 @@ const UsersTabsView = () => {
                       ),
                       path: '/admin/users/inactive',
                   },
+                  {
+                      label: 'Access log',
+                      path: '/admin/users/access-log',
+                  },
               ]
             : []),
     ];
@@ -102,6 +107,7 @@ const UsersTabsView = () => {
                                         ) : null
                                     }
                                 />
+                                <Route path='access-log' element={null} />
                                 <Route
                                     path='*'
                                     element={
@@ -120,6 +126,7 @@ const UsersTabsView = () => {
                         show={
                             <Routes>
                                 <Route path='inactive' element={null} />
+                                <Route path='access-log' element={null} />
                                 <Route
                                     path='*'
                                     element={
@@ -152,6 +159,7 @@ const UsersTabsView = () => {
                         />
                     }
                 />
+                <Route path='access-log' element={<UserAccessLog />} />
                 <Route path='*' element={<NotFound />} />
             </Routes>
         </PageContent>

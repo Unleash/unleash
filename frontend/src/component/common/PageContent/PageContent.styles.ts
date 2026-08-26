@@ -23,7 +23,7 @@ export const useStyles = makeStyles()((theme) => ({
     borderDisabled: {
         border: 'none',
     },
-    scrollWithPage: {
+    stickyFooter: {
         overflowX: 'visible',
     },
 }));

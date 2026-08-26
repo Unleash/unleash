@@ -99,20 +99,23 @@ export const UserAccessLog = () => {
                 .map((_, index) => ({
                     user: {
                         id: index,
-                        name: '',
-                        username: '',
-                        email: '',
+                        name: 'Loading user',
+                        email: 'loading@example.com',
                         imageUrl: '',
                     },
                     status: 'added',
-                    performedBy: { id: 0, name: '', imageUrl: '' },
+                    createdAt: new Date(2024, 0, 1).toISOString(),
+                    performedBy: { id: 0, name: 'Loading user', imageUrl: '' },
                 })),
         [tableState.limit],
     );
 
     const bodyLoadingRef = useLoading(isPlaceholder);
 
-    const data = isPlaceholder ? placeholderData : items;
+    const data = useMemo(
+        () => (isPlaceholder ? placeholderData : items),
+        [isPlaceholder, placeholderData, items],
+    );
 
     const columns = useMemo(
         () => [
@@ -161,11 +164,8 @@ export const UserAccessLog = () => {
             columnHelper.accessor('status', {
                 id: 'status',
                 header: 'Status',
-                cell: ({ row }) => {
-                    if (isPlaceholder) {
-                        return <TextCell>{''}</TextCell>;
-                    }
-                    return row.original.status === 'removed' ? (
+                cell: ({ row }) =>
+                    row.original.status === 'removed' ? (
                         <TextCell>
                             <Badge color='error'>Removed</Badge>
                         </TextCell>
@@ -173,8 +173,7 @@ export const UserAccessLog = () => {
                         <TextCell>
                             <Badge color='success'>Added</Badge>
                         </TextCell>
-                    );
-                },
+                    ),
                 enableSorting: false,
                 meta: { maxWidth: 120 },
             }),
@@ -210,7 +209,7 @@ export const UserAccessLog = () => {
                 meta: { minWidth: 180 },
             }),
         ],
-        [roles, isPlaceholder],
+        [roles],
     );
 
     const table = useReactTable(

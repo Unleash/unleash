@@ -16,6 +16,7 @@ type HubSpotWindow = Window & {
 
 export const buildIdentity = (props: Omit<Props, 'portalId'>) => ({
     id: `${props.instanceId ?? 'unknown'}:${props.userId}`,
+    email: props.email,
     name: props.userName,
     unleash_unverified_email: props.email,
     unleash_instance_id: props.instanceId,

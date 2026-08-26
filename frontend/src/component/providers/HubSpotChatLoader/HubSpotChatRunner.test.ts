@@ -15,6 +15,7 @@ describe('buildIdentity', () => {
         expect(identity).toStrictEqual({
             id: 'instance-abc:42',
             name: 'Ada Lovelace',
+            email: 'user@example.com',
             unleash_unverified_email: 'user@example.com',
             unleash_instance_id: 'instance-abc',
             unleash_instance_url: window.location.origin,

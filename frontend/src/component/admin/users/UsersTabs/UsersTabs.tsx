@@ -46,7 +46,6 @@ const UsersTabsView = () => {
     const [searchValue, setSearchValue] = useState('');
 
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-    const isAccessLog = pathname === '/admin/users/access-log';
 
     const tabs = [
         {
@@ -75,7 +74,7 @@ const UsersTabsView = () => {
         <PageContent
             withTabs
             isLoading={loading}
-            scrollWithPage={isAccessLog}
+            scrollWithPage
             header={
                 <>
                     <StyledHeader>

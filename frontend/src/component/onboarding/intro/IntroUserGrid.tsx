@@ -364,9 +364,7 @@ const StyledEvaluationPanel = styled(Box, {
     const borderColor =
         state === 'classic'
             ? theme.palette.divider
-            : (theme.palette[color].containerBorder ??
-              theme.palette[color].border ??
-              theme.palette.divider);
+            : theme.palette[color].containerBorder;
     return {
         display: 'flex',
         flexDirection: 'column',
@@ -374,11 +372,8 @@ const StyledEvaluationPanel = styled(Box, {
         padding: theme.spacing(1.25),
         borderRadius: theme.shape.borderRadius,
         border: `1px solid ${borderColor}`,
-        background:
-            theme.palette[color].container ?? theme.palette[color].light,
-        color:
-            theme.palette[color].onContainer ??
-            theme.palette[color].contrastText,
+        background: theme.palette[color].container,
+        color: theme.palette[color].onContainer,
         fontSize: theme.fontSizes.smallBody,
         lineHeight: 1.45,
     };

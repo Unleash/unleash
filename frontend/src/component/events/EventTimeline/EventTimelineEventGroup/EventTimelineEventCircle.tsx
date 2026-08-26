@@ -24,8 +24,7 @@ const StyledEventCircle = styled('div', {
     height: theme.spacing(3),
     width: theme.spacing(3),
     borderRadius: '50%',
-    backgroundColor:
-        theme.palette[variant].container ?? theme.palette[variant].light,
+    backgroundColor: theme.palette[variant].container,
     border: `1px solid ${theme.palette[variant].main}`,
     display: 'flex',
     alignItems: 'center',

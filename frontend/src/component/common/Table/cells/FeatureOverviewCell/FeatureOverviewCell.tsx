@@ -370,7 +370,7 @@ export const PrimaryFeatureInfo: FC<{
                             color={
                                 dependencyType === 'parent'
                                     ? 'warning'
-                                    : 'secondary'
+                                    : 'primary'
                             }
                         >
                             {dependencyType}

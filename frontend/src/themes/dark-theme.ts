@@ -66,15 +66,16 @@ const theme = {
             containerBorder: '#4C4992',
             onContainer: '#EEEEFC',
         },
-        // Dormant: all usages migrated to `primary` (main + container recipe).
-        // Kept defined so MUI's default (pink) secondary never leaks; free to repurpose
-        // for a genuinely new secondary color later.
+        // Secondary is the "fjord" teal, following the same recipe as primary and
+        // the semantic palettes (main + light/dark + tinted container).
         secondary: {
-            main: '#9792ED',
-            light: '#34325E',
-            dark: '#EEEEFC',
-            border: '#4C4992',
-            contrastText: '#EEEEFC',
+            main: '#8FA2A6', // fjord[400]
+            light: '#A7B5B9', // fjord[300]
+            dark: '#8FA2A6', // fjord[400]
+            contrastText: '#202021',
+            container: '#122D33', // fjord[950]
+            containerBorder: '#31545C', // fjord[800]
+            onContainer: '#EEEEFC',
         },
         info: {
             // main: '#5483C9',  // used on icons on these elements
@@ -592,7 +593,8 @@ export const darkTheme = createTheme({
                             backgroundColor:
                                 theme.palette.background.alternative,
                             '&:hover': {
-                                backgroundColor: theme.palette.secondary.light,
+                                backgroundColor:
+                                    theme.palette.primary.container,
                             },
                         },
                 }),

@@ -120,16 +120,14 @@ const theme = {
             containerBorder: colors.purple[300],
             onContainer: colors.purple[900],
         },
-        // Secondary is currently dormant: all usages migrated to `primary` (main + container recipe).
-        // Kept defined so MUI's default (pink) secondary never leaks; free to repurpose for a genuinely
-        // new secondary color later.
-
         secondary: {
-            main: colors.purple[800],
-            light: colors.purple[50],
-            dark: colors.purple[900],
-            border: colors.purple[300],
-            contrastText: colors.purple[900],
+            main: colors.fjord[800],
+            light: colors.fjord[700],
+            dark: colors.fjord[900],
+            contrastText: colors.grey[50],
+            container: colors.fjord[50],
+            containerBorder: colors.fjord[300],
+            onContainer: colors.fjord[900],
         },
         info: {
             main: colors.blue[500],

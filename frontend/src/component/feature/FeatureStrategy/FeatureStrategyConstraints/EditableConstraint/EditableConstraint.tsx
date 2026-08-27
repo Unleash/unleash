@@ -170,7 +170,9 @@ const TopRowInput: FC<{
                 onAddValue={addValues}
                 removeValue={clearValues}
                 currentValue={localConstraint.value}
-                helpText={'A semver value should be of the format X.Y.Z'}
+                helpText={
+                    'A semver value should be of the format X.Y.Z, optionally with a prerelease and/or build suffix, such as 1.2.3-beta.1+build.5'
+                }
                 inputType={'text'}
             />
         );

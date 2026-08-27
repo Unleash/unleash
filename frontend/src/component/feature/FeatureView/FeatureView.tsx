@@ -11,8 +11,6 @@ import { FeatureViewHeader } from './FeatureViewHeader.tsx';
 import { FeatureMetricsOverview } from './FeatureMetrics/FeatureMetricsOverview.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureImpactHeader } from './FeatureImpactOverview/FeatureImpactHeader';
-import { ImpactMetricModal } from '../../impact-metrics/ImpactMetricModal/ImpactMetricModal';
-import { useFeatureImpactChartActions } from './useFeatureImpactChartActions';
 import { useImpactMetricsEnabled } from 'component/impact-metrics/hooks/useImpactMetricsEnabled.ts';
 
 export const FeatureView = () => {
@@ -28,15 +26,6 @@ export const FeatureView = () => {
         featureId,
         { refreshInterval: 15 * 1000 },
     );
-
-    const {
-        chartModalOpen,
-        openChartModal,
-        closeChartModal,
-        saveChart,
-        metricOptions,
-        metadataLoading,
-    } = useFeatureImpactChartActions(projectId, featureId);
 
     const ref = useLoading(loading);
 
@@ -68,7 +57,6 @@ export const FeatureView = () => {
                                     <FeatureImpactHeader
                                         projectId={projectId}
                                         featureName={featureId}
-                                        onAddChart={openChartModal}
                                     />
                                 ) : undefined
                             }
@@ -76,15 +64,6 @@ export const FeatureView = () => {
                     }
                 />
             </Routes>
-            {showImpactMetrics && (
-                <ImpactMetricModal
-                    open={chartModalOpen}
-                    onClose={closeChartModal}
-                    onSave={saveChart}
-                    metrics={metricOptions}
-                    loading={metadataLoading}
-                />
-            )}
         </div>
     );
 };

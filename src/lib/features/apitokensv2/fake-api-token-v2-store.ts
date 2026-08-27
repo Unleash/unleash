@@ -9,7 +9,7 @@ import type {
 export class FakeApiTokenV2Store implements IApiTokenV2Store {
     private readonly tokens = new Map<string, ApiTokenV2WithVerifier>();
 
-    count(): Promise<number> {
+    countUserCreatedTokens(): Promise<number> {
         return Promise.resolve(this.tokens.size);
     }
 

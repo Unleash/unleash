@@ -53,9 +53,10 @@ const tokenRowReducer = (acc, tokenRow) => {
 export class ApiTokenV2Store implements IApiTokenV2Store {
     constructor(private readonly db: Db) {}
 
-    count(): Promise<number> {
+    countUserCreatedTokens(): Promise<number> {
         return this.db(TABLE)
             .count('*')
+            .where('user_created', true)
             .then((res) => Number(res[0].count));
     }
 

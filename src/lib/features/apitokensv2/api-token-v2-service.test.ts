@@ -45,7 +45,7 @@ class FakeApiTokenV2Store implements IApiTokenV2Store {
         return publicToken;
     }
 
-    count(): Promise<number> {
+    countUserCreatedTokens(): Promise<number> {
         if (this.stored) {
             return Promise.resolve(1);
         } else {

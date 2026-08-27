@@ -46,7 +46,7 @@ export interface IApiTokenV2Store {
     ): Promise<ApiTokenV2 | undefined>;
     delete(selector: string): Promise<void>;
     markSeenAt(selector: string): Promise<void>;
-    count(): Promise<number>;
+    countUserCreatedTokens(): Promise<number>;
     deleteSystemCreatedTokensNotSeen(
         minutesSinceLastSeen: number,
     ): Promise<Omit<ApiTokenV2, 'projects'>[]>;

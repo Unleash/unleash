@@ -235,7 +235,7 @@ export class ApiTokenV2Service {
     ): Promise<ApiTokenV2WithSecret> {
         validateApiToken(token);
         await this.validateApiTokenEnvironment(token);
-        await this.validateApiTokenLimit();
+        await this.validateApiTokenLimit(token.userCreated);
 
         const credential = createTokenV2Credential({
             kind:
@@ -258,8 +258,12 @@ export class ApiTokenV2Service {
         return { ...created, secret: credential.secret };
     }
 
-    private async validateApiTokenLimit() {
-        const currentTokenCount = await this.apiTokenV2Store.count();
+    private async validateApiTokenLimit(userCreated: boolean) {
+        if (!userCreated) {
+            return;
+        }
+        const currentTokenCount =
+            await this.apiTokenV2Store.countUserCreatedTokens();
         const { apiTokens: limit } =
             await this.resourceLimitsService.getResourceLimits();
         if (currentTokenCount >= limit) {

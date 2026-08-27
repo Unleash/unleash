@@ -138,7 +138,7 @@
     "swr": "2.4.2",
     "tss-react": "4.9.21",
     "typescript": "7.0.2",
-    "unleash-proxy-client": "3.8.0",
+    "unleash-proxy-client": "3.8.2",
     "use-query-params": "^2.2.2",
     "vite": "^8.0.10",
     "vite-plugin-env-compatible": "2.0.1",

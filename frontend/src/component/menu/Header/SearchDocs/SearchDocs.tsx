@@ -1,12 +1,12 @@
-import { styled } from '@mui/material';
+import { styled, useTheme } from '@mui/material';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
-import { SearchModal } from '@fern-api/search-widget';
+import { AskAiChat } from '@fern-api/search-widget';
 import '@fern-api/search-widget/styles';
 import { useEventTracker } from 'hooks/useEventTracker';
 
 const DOCS_DOMAIN = 'https://docs.getunleash.io';
 
-const StyledSearchModal = styled(SearchModal)(({ theme }) => ({
+const StyledTrigger = styled(AskAiChat.Trigger)(({ theme }) => ({
     display: 'inline-flex',
     alignItems: 'center',
     gap: theme.spacing(0.75),
@@ -32,9 +32,11 @@ const StyledSearchModal = styled(SearchModal)(({ theme }) => ({
 }));
 
 const SearchDocs = () => {
+    const theme = useTheme();
     const { trackEvent } = useEventTracker();
 
-    const trackOpen = () => {
+    const trackOpen = (open: boolean) => {
+        if (!open) return;
         trackEvent('search-docs', {
             props: {
                 eventType: 'opened',
@@ -43,10 +45,18 @@ const SearchDocs = () => {
     };
 
     return (
-        <StyledSearchModal domain={DOCS_DOMAIN} lang='en' onClick={trackOpen}>
-            <AutoAwesomeIcon />
-            Search docs
-        </StyledSearchModal>
+        <AskAiChat.Root
+            domain={DOCS_DOMAIN}
+            lang='en'
+            theme={theme.palette.mode}
+            accentColor={theme.palette.primary.main}
+            onOpenChange={trackOpen}
+        >
+            <StyledTrigger icon={<AutoAwesomeIcon />}>
+                Search docs
+            </StyledTrigger>
+            <AskAiChat.Panel />
+        </AskAiChat.Root>
     );
 };
 

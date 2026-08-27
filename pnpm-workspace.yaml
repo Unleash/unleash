@@ -25,9 +25,7 @@ minimumReleaseAge: 10080
 minimumReleaseAgeIgnoreMissingTime: false
 minimumReleaseAgeExclude:
   - 'unleash-client'
-  # Fern fixed bugs we reported in the docs search widget; pin published
-  # 2026-07-23. Remove this entry once the release is older than 7 days.
-  - '@fern-api/search-widget@0.2.2'
+  - '@fern-api/search-widget@0.5.2'
   - '@unleash/proxy-client-react'
   - '@unleash/sdk-flight-recorder'
   # Renovate security update: esbuild@0.28.1

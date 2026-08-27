@@ -3,7 +3,6 @@ import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
-    Button,
     styled,
     Typography,
 } from '@mui/material';
@@ -22,7 +21,6 @@ import { InfoSection } from './InfoSection.tsx';
 import { EventTimeline } from 'component/events/EventTimeline/EventTimeline';
 import { AccordionContent } from './SharedComponents.tsx';
 import { Link } from 'react-router';
-import { useWelcomeDialogContext } from './WelcomeDialogContext.tsx';
 
 const WelcomeSection = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -31,12 +29,6 @@ const WelcomeSection = styled('div')(({ theme }) => ({
     flexFlow: 'row wrap',
     alignItems: 'baseline',
 }));
-
-const ViewKeyConceptsButton = styled(Button)({
-    fontWeight: 'normal',
-    padding: 0,
-    margin: 0,
-});
 
 const SectionAccordion = styled(Accordion, {
     shouldForwardProp: (prop) => prop !== 'withSummaryContentBorder',
@@ -269,7 +261,6 @@ const ProjectPanel = () => {
 export const PersonalDashboard = () => {
     const { user } = useAuthUser();
     const { trackEvent } = useEventTracker();
-    const { setWelcomeDialog } = useWelcomeDialogContext();
     const { isOss } = useUiConfig();
 
     const name = user?.name || '';
@@ -292,24 +283,6 @@ export const PersonalDashboard = () => {
                 <Typography component='h2' variant='h2'>
                     Welcome {name}
                 </Typography>
-
-                <ViewKeyConceptsButton
-                    sx={{
-                        fontWeight: 'normal',
-                    }}
-                    size={'small'}
-                    variant='text'
-                    onClick={() => {
-                        trackEvent('personal-dashboard', {
-                            props: {
-                                eventType: 'open key concepts',
-                            },
-                        });
-                        setWelcomeDialog('open');
-                    }}
-                >
-                    View key concepts
-                </ViewKeyConceptsButton>
             </WelcomeSection>
 
             <EventTimelinePanel />

@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { act, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import FlagProvider from '@unleash/proxy-client-react';
 import type { UnleashClient } from 'unleash-proxy-client';
-import { render } from 'utils/testRenderer';
+import { render, settleProviders } from 'utils/testRenderer';
 import { testUnleashClient } from 'utils/testUnleashClient';
 import { UxTweakWidgets } from './UxTweakWidgets.tsx';
 
@@ -36,14 +36,6 @@ const surveyFlag = (page: string, questions: object[] = [ratingQuestion]) => ({
         },
     },
 });
-
-// The shared renderer's wrapper starts async provider work on mount (SWR
-// fetches, SDK ready/update events). Positive tests settle it implicitly via
-// findBy*, but the nothing-is-rendered tests have nothing to await, so this
-// flush runs first: it keeps those late updates inside act() and ensures the
-// absence assertions run after anything that could still have rendered the
-// card — proving suppression rather than winning a race.
-const settleProviders = () => act(async () => {});
 
 const renderWidgets = (client: UnleashClient, route = '/projects') =>
     render(

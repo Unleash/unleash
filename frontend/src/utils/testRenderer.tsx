@@ -1,6 +1,7 @@
 import type { FC, JSX } from 'react';
 import { BrowserRouter } from 'react-router';
 import {
+    act,
     render as rtlRender,
     type RenderOptions,
 } from '@testing-library/react';
@@ -76,3 +77,11 @@ export const render = (
         ...renderOptions,
     });
 };
+
+// This render's wrapper starts async provider work on mount (SWR fetches,
+// SDK ready/update events). Positive tests settle it implicitly via findBy*,
+// but nothing-is-rendered tests have nothing to await, so run this flush
+// first: it keeps those late updates inside act() and ensures absence
+// assertions run after anything that could still have rendered — proving
+// absence rather than winning a race.
+export const settleProviders = () => act(async () => {});

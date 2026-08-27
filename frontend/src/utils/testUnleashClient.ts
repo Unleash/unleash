@@ -18,6 +18,8 @@ export const testUnleashClient = (
     const listeners = new Map<string, Set<() => void>>();
     const client = {
         getAllToggles: () => flags,
+        isEnabled: (name: string) =>
+            flags.some((flag) => flag.name === name && flag.enabled),
         // FlagProvider stops the client on unmount.
         stop: () => {},
         on: (event: string, listener: () => void) => {

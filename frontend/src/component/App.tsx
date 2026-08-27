@@ -28,6 +28,7 @@ import { SignupDialog } from './signup/SignupDialog/SignupDialog.tsx';
 import { WelcomeDialog } from './personalDashboard/WelcomeDialog.tsx';
 import { SkipNavLink } from './common/SkipNavLink/SkipNavLink.tsx';
 import { IntroProvider } from './onboarding/intro/IntroProvider.tsx';
+import { UxTweakWidgets } from './uxtweak/UxTweakWidgets.tsx';
 
 const StyledContainer = styled('div')(() => ({
     '& ul': {
@@ -118,6 +119,8 @@ export const App = () => {
                                         </Routes>
 
                                         <FeedbackNPS openUrl='http://feedback.unleash.run' />
+
+                                        {isLoggedIn ? <UxTweakWidgets /> : null}
 
                                         <SplashOverlay />
 

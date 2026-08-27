@@ -44,14 +44,16 @@ scans run inside SDK event callbacks, outside any React error boundary.
 ## The flow
 
 ```
-ApplicationRoot
+App (logged-in branch)
   └─ UxTweakWidgets          gate — the only piece in the main bundle
        └─ (lazy, error-isolated)
           UxTweakRunner       the widget chunk; hosts one widget per kind
             └─ useActiveSurvey()  →  UxSurveyCard
 ```
 
-**`UxTweakWidgets`** — the gate. Watches the SDK client for any flag starting
+**`UxTweakWidgets`** — the gate. Mounted in `App` next to `FeedbackNPS`,
+gated on `isLoggedIn` — under the SDK provider and router it reads from, and
+never on the login screen. Watches the SDK client for any flag starting
 with `uxtweak-` and only then lazy-loads the widget chunk. Installs without
 campaigns pay one event subscription and nothing else. The subtree gets its
 own silent `ErrorBoundary`: without it a widget crash would bubble to the

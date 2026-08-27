@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Box, Tooltip, styled } from '@mui/material';
+import { Box, Skeleton, Tooltip, styled } from '@mui/material';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
 import { NumberParam, StringParam, withDefault } from 'use-query-params';
 import { PaginatedTable, TablePlaceholder } from 'component/common/Table';
@@ -11,7 +11,6 @@ import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import { getLocalizedDateString } from 'component/common/util';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import useLoading from 'hooks/useLoading';
 import { withTableState } from 'utils/withTableState';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import type { IRole } from 'interfaces/role';
@@ -41,6 +40,24 @@ const StyledSubtitle = styled('span')(({ theme }) => ({
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
 }));
+
+const AvatarCellSkeleton = ({ withSubtitle }: { withSubtitle?: boolean }) => (
+    <TextCell>
+        <StyledUserCell>
+            <Skeleton variant='circular' width={32} height={32} />
+            <StyledUserInfo>
+                <Skeleton variant='text' width={140} />
+                {withSubtitle ? <Skeleton variant='text' width={180} /> : null}
+            </StyledUserInfo>
+        </StyledUserCell>
+    </TextCell>
+);
+
+const TextCellSkeleton = ({ width }: { width: number }) => (
+    <TextCell>
+        <Skeleton variant='text' width={width} />
+    </TextCell>
+);
 
 const UpdatedCell = ({ entry }: { entry: UserAccessLogEntrySchema }) => {
     const { locationSettings } = useLocationSettings();
@@ -97,20 +114,13 @@ export const UserAccessLog = () => {
             Array(tableState.limit)
                 .fill(null)
                 .map((_, index) => ({
-                    user: {
-                        id: index,
-                        name: 'Loading user',
-                        email: 'loading@example.com',
-                        imageUrl: '',
-                    },
+                    user: { id: index, name: '', email: '', imageUrl: '' },
                     status: 'added',
                     createdAt: new Date(2024, 0, 1).toISOString(),
-                    performedBy: { id: 0, name: 'Loading user', imageUrl: '' },
+                    performedBy: { id: 0, name: '', imageUrl: '' },
                 })),
         [tableState.limit],
     );
-
-    const bodyLoadingRef = useLoading(isPlaceholder);
 
     const data = useMemo(
         () => (isPlaceholder ? placeholderData : items),
@@ -123,6 +133,9 @@ export const UserAccessLog = () => {
                 id: 'user',
                 header: 'User',
                 cell: ({ row }) => {
+                    if (isPlaceholder) {
+                        return <AvatarCellSkeleton withSubtitle />;
+                    }
                     const user = row.original.user;
                     const subtitle = user.email || user.username;
                     return (
@@ -151,12 +164,15 @@ export const UserAccessLog = () => {
                 {
                     id: 'role',
                     header: 'Role',
-                    cell: ({ getValue, row }) => (
-                        <RoleCell
-                            value={String(getValue() ?? '')}
-                            role={row.original.user.rootRole ?? 0}
-                        />
-                    ),
+                    cell: ({ getValue, row }) =>
+                        isPlaceholder ? (
+                            <TextCellSkeleton width={70} />
+                        ) : (
+                            <RoleCell
+                                value={String(getValue() ?? '')}
+                                role={row.original.user.rootRole ?? 0}
+                            />
+                        ),
                     enableSorting: false,
                     meta: { maxWidth: 120 },
                 },
@@ -165,7 +181,9 @@ export const UserAccessLog = () => {
                 id: 'status',
                 header: 'Status',
                 cell: ({ row }) =>
-                    row.original.status === 'removed' ? (
+                    isPlaceholder ? (
+                        <TextCellSkeleton width={70} />
+                    ) : row.original.status === 'removed' ? (
                         <TextCell>
                             <Badge color='error'>Removed</Badge>
                         </TextCell>
@@ -183,7 +201,12 @@ export const UserAccessLog = () => {
                 {
                     id: 'updated',
                     header: 'Updated',
-                    cell: ({ row }) => <UpdatedCell entry={row.original} />,
+                    cell: ({ row }) =>
+                        isPlaceholder ? (
+                            <TextCellSkeleton width={90} />
+                        ) : (
+                            <UpdatedCell entry={row.original} />
+                        ),
                     enableSorting: true,
                     meta: { width: 160, maxWidth: 160 },
                 },
@@ -192,6 +215,9 @@ export const UserAccessLog = () => {
                 id: 'performedBy',
                 header: 'Performed by',
                 cell: ({ row }) => {
+                    if (isPlaceholder) {
+                        return <AvatarCellSkeleton />;
+                    }
                     const performer = row.original.performedBy;
                     if (!performer?.id) {
                         return <TextCell>System</TextCell>;
@@ -209,7 +235,7 @@ export const UserAccessLog = () => {
                 meta: { minWidth: 180 },
             }),
         ],
-        [roles],
+        [roles, isPlaceholder],
     );
 
     const table = useReactTable(
@@ -223,9 +249,7 @@ export const UserAccessLog = () => {
 
     return (
         <>
-            <div ref={bodyLoadingRef}>
-                <PaginatedTable tableInstance={table} totalItems={total} />
-            </div>
+            <PaginatedTable tableInstance={table} totalItems={total} />
             {rows.length === 0 && !isPlaceholder ? (
                 <Box sx={(theme) => ({ padding: theme.spacing(0, 2, 2) })}>
                     <TablePlaceholder>

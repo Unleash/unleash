@@ -118,4 +118,4 @@ overrides:
   systeminformation: "5.31.7"
   tough-cookie: "4.1.4"
   vite: "8.2.2"
-  ws: "8.21.0"
+  ws: "8.21.3"

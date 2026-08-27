@@ -62,28 +62,6 @@ import {
 } from '../../authentication/authorization-token.js';
 import { verifyToken } from '../../authentication/token-verifier.js';
 
-export const createApiTokenV2Service: (
-    {
-        apiTokenV2Store,
-        environmentStore,
-    }: Pick<IUnleashStores, 'apiTokenV2Store' | 'environmentStore'>,
-    { eventBus, getLogger }: Pick<IUnleashConfig, 'eventBus' | 'getLogger'>,
-    {
-        eventService,
-        resourceLimitsService,
-    }: Pick<IUnleashServices, 'eventService' | 'resourceLimitsService'>,
-) => ApiTokenV2Service = (
-    { apiTokenV2Store, environmentStore },
-    { eventBus, getLogger },
-    { eventService, resourceLimitsService },
-) => {
-    return new ApiTokenV2Service(
-        { apiTokenV2Store, environmentStore },
-        { eventBus, getLogger },
-        { eventService, resourceLimitsService },
-    );
-};
-
 const TOKEN_LIFETIME_AFTER_LAST_SEEN_IN_MINUTES = 7 * 24 * 60;
 
 const TOKEN_CACHE_NAME = 'api-token-v2' as const;
@@ -101,10 +79,10 @@ const resolveTokenPermissions = (tokenType: ApiTokenType) => {
     return tokenType === ApiTokenType.FRONTEND ? [FRONTEND] : [];
 };
 
-export const createApiTokenV2ServiceFromDb = (
+export const createApiTokenV2Service = (
     db: Db,
     config: IUnleashConfig,
-): ApiTokenV2Service =>
+): ReadOnlyApiTokenV2Service & AdminApiTokenV2Service =>
     new ApiTokenV2Service(
         {
             apiTokenV2Store: new ApiTokenV2Store(db),
@@ -117,15 +95,24 @@ export const createApiTokenV2ServiceFromDb = (
         },
     );
 
-export const createFakeApiTokenV2Service = (config: IUnleashConfig) => {
-    const apiTokenV2Store = new FakeApiTokenV2Store();
-    const environmentStore = new FakeEnvironmentStore();
-    const fakeEventStore = new FakeEventStore();
-    const featureTagStore = new FakeFeatureTagStore();
-    const eventService = createFakeEventsService(config, {
-        eventStore: fakeEventStore,
-        featureTagStore: featureTagStore,
-    });
+export const createFakeApiTokenV2Service = (
+    config: IUnleashConfig,
+    stores?: Partial<IUnleashStores>,
+    services?: Partial<IUnleashServices>,
+) => {
+    const apiTokenV2Store =
+        stores?.apiTokenV2Store ?? new FakeApiTokenV2Store();
+    const environmentStore =
+        stores?.environmentStore ?? new FakeEnvironmentStore();
+    const fakeEventStore = stores?.eventStore ?? new FakeEventStore();
+    const featureTagStore =
+        stores?.featureTagStore ?? new FakeFeatureTagStore();
+    const eventService =
+        services?.eventService ??
+        createFakeEventsService(config, {
+            eventStore: fakeEventStore,
+            featureTagStore: featureTagStore,
+        });
     const resourceLimitsService = new ResourceLimitsService(config);
     return new ApiTokenV2Service(
         { apiTokenV2Store, environmentStore },
@@ -134,7 +121,44 @@ export const createFakeApiTokenV2Service = (config: IUnleashConfig) => {
     );
 };
 
-export class ApiTokenV2Service {
+export interface ReadOnlyApiTokenV2Service {
+    getToken(identifier: ApiTokenV2Identifier): Promise<IApiToken | undefined>;
+    getTokenWithCache(
+        credential: ApiTokenV2Credential,
+    ): Promise<IApiToken | undefined>;
+    getUserForToken({
+        secret,
+        selector,
+    }: ApiTokenV2Credential): Promise<IApiUser | undefined>;
+    getUserDefinedTokens(): Promise<IApiToken[]>;
+
+    fetchActiveTokens(): Promise<void>;
+    invalidateCache(selectors: string[]): void;
+}
+
+export interface AdminApiTokenV2Service {
+    create(
+        token: CreateApiTokenV2,
+        auditUser: IAuditUser,
+    ): Promise<ApiTokenV2WithSecret>;
+    createTokensFromEdgeIssue(
+        tokenRequests: EdgeEnvironmentsProjectsListSchema,
+    ): Promise<EdgeTokenSchema[]>;
+    delete(
+        identifier: ApiTokenV2Identifier,
+        auditUser: IAuditUser,
+    ): Promise<boolean>;
+    deleteSystemCreatedTokensNotSeen(): Promise<Omit<ApiTokenV2, 'projects'>[]>;
+    updateExpiry(
+        identifier: ApiTokenV2Identifier,
+        expiresAt: Date,
+        auditUser: IAuditUser,
+    ): Promise<IApiToken | undefined>;
+}
+
+class ApiTokenV2Service
+    implements ReadOnlyApiTokenV2Service, AdminApiTokenV2Service
+{
     private apiTokenV2Store: IApiTokenV2Store;
     private eventService: EventService;
     private environmentStore: IEnvironmentStore;
@@ -249,12 +273,15 @@ export class ApiTokenV2Service {
             credential.selector,
             credential.verifier,
         );
-        await this.eventService.storeEvent(
+        await this.eventService.storeEventsOrThrow([
             new ApiTokenCreatedEvent({
                 auditUser,
-                apiToken: omitKeys(this.toApiToken(created), 'secret'),
+                apiToken: this.toEventToken(
+                    this.toApiToken(created),
+                    created.selector,
+                ),
             }),
-        );
+        ]);
         return { ...created, secret: credential.secret };
     }
 
@@ -382,13 +409,13 @@ export class ApiTokenV2Service {
             });
         }
         const updated = this.toApiToken(updatedStoreToken);
-        await this.eventService.storeEvent(
+        await this.eventService.storeEventsOrThrow([
             new ApiTokenUpdatedEvent({
                 auditUser,
-                previousToken: omitKeys(previous, 'secret'),
-                apiToken: omitKeys(updated, 'secret'),
+                previousToken: this.toEventToken(previous, previous.secret),
+                apiToken: this.toEventToken(updated, previous.secret),
             }),
-        );
+        ]);
         return updated;
     }
 
@@ -402,12 +429,12 @@ export class ApiTokenV2Service {
         }
         await this.apiTokenV2Store.delete(token.secret);
         this.activeTokens.delete(token.secret);
-        await this.eventService.storeEvent(
+        await this.eventService.storeEventsOrThrow([
             new ApiTokenDeletedEvent({
                 auditUser,
-                apiToken: omitKeys(token, 'secret'),
+                apiToken: this.toEventToken(token, token.secret),
             }),
-        );
+        ]);
         return true;
     }
 
@@ -474,12 +501,18 @@ export class ApiTokenV2Service {
             ...token,
             projects: [],
         } as ApiTokenV2);
-        const { secret: _secret, ...tokenWithoutSecret } = apiToken;
-
         return new ApiTokenDeletedEvent({
             auditUser: SYSTEM_USER_AUDIT,
-            apiToken: tokenWithoutSecret,
+            apiToken: this.toEventToken(apiToken, token.selector),
         });
+    }
+
+    private toEventToken(token: IApiToken, selector: string) {
+        return {
+            ...omitKeys(token, 'secret'),
+            selector,
+            tokenVersion: 2 as const,
+        };
     }
 
     private toApiToken(token: ApiTokenV2): IApiToken {

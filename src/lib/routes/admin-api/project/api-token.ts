@@ -27,8 +27,8 @@ import type {
     FrontendApiService,
     IUnleashServices,
 } from '../../../services/index.js';
+import type { WithTransactional } from '../../../server-impl.js';
 import { parseApiTokenV2Identifier } from '../../../authentication/authorization-token.js';
-import type { ApiTokenV2Service } from '../../../features/apitokensv2/index.js';
 import type { IAuthRequest } from '../../unleash-types.js';
 import Controller from '../../controller.js';
 import type { Response } from 'express';
@@ -36,6 +36,10 @@ import { timingSafeEqual } from 'crypto';
 import { OperationDeniedError } from '../../../error/index.js';
 import type { CreateProjectApiTokenSchema } from '../../../openapi/spec/create-project-api-token-schema.js';
 import { createProjectApiToken } from '../../../schema/create-project-api-token-schema.js';
+import type {
+    AdminApiTokenV2Service,
+    ReadOnlyApiTokenV2Service,
+} from '../../../features/apitokensv2/api-token-v2-service.js';
 
 interface ProjectTokenParam {
     token: string;
@@ -47,7 +51,9 @@ const PATH_TOKEN = `${PATH}/:token`;
 export class ProjectApiTokenController extends Controller {
     private apiTokenService: ApiTokenService;
 
-    private apiTokenV2Service: ApiTokenV2Service;
+    private apiTokenV2Service: ReadOnlyApiTokenV2Service;
+
+    private transactionalApiTokenV2Service: WithTransactional<AdminApiTokenV2Service>;
 
     private accessService: AccessService;
 
@@ -62,6 +68,7 @@ export class ProjectApiTokenController extends Controller {
         {
             apiTokenService,
             apiTokenV2Service,
+            transactionalApiTokenV2Service,
             accessService,
             frontendApiService,
             openApiService,
@@ -70,6 +77,7 @@ export class ProjectApiTokenController extends Controller {
             IUnleashServices,
             | 'apiTokenService'
             | 'apiTokenV2Service'
+            | 'transactionalApiTokenV2Service'
             | 'accessService'
             | 'frontendApiService'
             | 'openApiService'
@@ -79,6 +87,7 @@ export class ProjectApiTokenController extends Controller {
         super(config);
         this.apiTokenService = apiTokenService;
         this.apiTokenV2Service = apiTokenV2Service;
+        this.transactionalApiTokenV2Service = transactionalApiTokenV2Service;
         this.accessService = accessService;
         this.frontendApiService = frontendApiService;
         this.openApiService = openApiService;
@@ -190,10 +199,14 @@ export class ProjectApiTokenController extends Controller {
         const tokenData = { ...createToken, projects: [projectId] };
         let token: IApiToken;
         if (this.config.flagResolver.isEnabled('secureTokenStorage')) {
-            const tokenV2 = await this.apiTokenV2Service.create(
-                { ...tokenData, userCreated: true },
-                req.audit,
-            );
+            const tokenV2 =
+                await this.transactionalApiTokenV2Service.transactional(
+                    (service) =>
+                        service.create(
+                            { ...tokenData, userCreated: true },
+                            req.audit,
+                        ),
+                );
             const { selector: _selector, ...tokenWithSecret } = tokenV2;
             token = {
                 ...tokenWithSecret,
@@ -235,7 +248,10 @@ export class ProjectApiTokenController extends Controller {
                     storedToken.projects[0] === projectId))
         ) {
             if (v2Identifier) {
-                await this.apiTokenV2Service.delete(v2Identifier, req.audit);
+                await this.transactionalApiTokenV2Service.transactional(
+                    (service) => service.delete(v2Identifier, req.audit),
+                );
+                this.apiTokenV2Service.invalidateCache([v2Identifier.selector]);
             } else {
                 await this.apiTokenService.delete(token, req.audit);
             }

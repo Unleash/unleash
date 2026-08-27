@@ -11,6 +11,7 @@ import {
     setupAppWithCustomConfig,
 } from '../../helpers/test-helper.js';
 import { vi } from 'vitest';
+import { ApiTokenV2Store } from '../../../../lib/features/apitokensv2/api-token-v2-store.js';
 
 let db: ITestDb;
 let app: IUnleashTest;
@@ -47,7 +48,7 @@ test('lists, updates, and deletes tokens across both token stores', async () => 
         },
         SYSTEM_USER_ID,
     );
-    await app.services.apiTokenV2Service.create(
+    await app.services.transactionalApiTokenV2Service.create(
         {
             projects: ['default'],
             tokenName: 'secure-token',
@@ -110,7 +111,7 @@ test('lists, updates, and deletes tokens across both token stores', async () => 
 });
 
 test('lists, updates, and deletes secure tokens when secure token storage is disabled', async () => {
-    const created = await app.services.apiTokenV2Service.create(
+    const created = await app.services.transactionalApiTokenV2Service.create(
         {
             projects: ['default'],
             tokenName: 'secure-token-after-rollback',
@@ -176,7 +177,7 @@ test('lists, updates, and deletes secure tokens when secure token storage is dis
 });
 
 test('only warms the cache with non-expired secure tokens', async () => {
-    const active = await app.services.apiTokenV2Service.create(
+    const active = await app.services.transactionalApiTokenV2Service.create(
         {
             projects: ['default'],
             tokenName: 'active-secure-token',
@@ -186,7 +187,7 @@ test('only warms the cache with non-expired secure tokens', async () => {
         },
         SYSTEM_USER_AUDIT,
     );
-    const expired = await app.services.apiTokenV2Service.create(
+    const expired = await app.services.transactionalApiTokenV2Service.create(
         {
             projects: ['default'],
             tokenName: 'expired-secure-token',
@@ -197,7 +198,7 @@ test('only warms the cache with non-expired secure tokens', async () => {
         },
         SYSTEM_USER_AUDIT,
     );
-    const getBySelector = vi.spyOn(db.stores.apiTokenV2Store, 'getBySelector');
+    const getBySelector = vi.spyOn(ApiTokenV2Store.prototype, 'getBySelector');
 
     await app.services.apiTokenV2Service.fetchActiveTokens();
 
@@ -220,4 +221,5 @@ test('only warms the cache with non-expired secure tokens', async () => {
         }),
     ).resolves.toBeUndefined();
     expect(getBySelector).toHaveBeenCalledWith(expired.selector);
+    getBySelector.mockRestore();
 });

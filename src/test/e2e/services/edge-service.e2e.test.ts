@@ -1,18 +1,13 @@
 import dbInit, { type ITestDb } from '../helpers/database-init.js';
+import type { AdminApiTokenV2Service } from '../../../lib/features/apitokensv2/api-token-v2-service.js';
 import getLogger from '../../fixtures/no-logger.js';
 import { createTestConfig } from '../../config/test-config.js';
 import { ApiTokenType, type IApiToken } from '../../../lib/types/model.js';
 import { DEFAULT_ENV } from '../../../lib/util/constants.js';
 import { addDays, subDays } from 'date-fns';
 import type ProjectService from '../../../lib/features/project/project-service.js';
-import {
-    createEventsService,
-    createProjectService,
-} from '../../../lib/features/index.js';
-import {
-    EdgeService,
-    ResourceLimitsService,
-} from '../../../lib/services/index.js';
+import { createProjectService } from '../../../lib/features/index.js';
+import { EdgeService } from '../../../lib/services/index.js';
 import {
     type IUnleashStores,
     type IUser,
@@ -22,16 +17,20 @@ import {
 } from '../../../lib/types/index.js';
 import { createApiTokenService } from '../../../lib/features/api-tokens/createApiTokenService.js';
 import { randomBytes } from 'node:crypto';
-import { createApiTokenV2Service } from '../../../lib/features/apitokensv2/api-token-v2-service.js';
+import {
+    createApiTokenV2Service,
+    type ReadOnlyApiTokenV2Service,
+} from '../../../lib/features/apitokensv2/api-token-v2-service.js';
 import type { ApiTokenV2WithSecret } from '../../../lib/features/apitokensv2/index.js';
 import { AuthorizationTokenKind } from '../../../lib/authentication/authorization-token.js';
+import { withFakeTransactional } from '../../../lib/server-impl.js';
 
 let db: ITestDb;
 let stores: IUnleashStores;
 let edgeService: EdgeService;
 let projectService: ProjectService;
 let user: IUser;
-let apiTokenV2Service: ReturnType<typeof createApiTokenV2Service>;
+let apiTokenV2Service: ReadOnlyApiTokenV2Service & AdminApiTokenV2Service;
 
 beforeAll(async () => {
     const config = createTestConfig({
@@ -61,16 +60,16 @@ beforeAll(async () => {
     await projectService.createProject(project, user, TEST_AUDIT_USER);
 
     const apiTokenService = createApiTokenService(db.rawDatabase, config);
-    const eventService = createEventsService(db.rawDatabase, db.config);
-    const resourceLimitsService = new ResourceLimitsService(db.config);
-    apiTokenV2Service = createApiTokenV2Service(db.stores, db.config, {
-        eventService,
-        resourceLimitsService,
-    });
+    apiTokenV2Service = createApiTokenV2Service(db.rawDatabase, db.config);
 
     edgeService = new EdgeService(
         { edgeTokenStore: db.stores.edgeTokenStore },
-        { apiTokenService, apiTokenV2Service },
+        {
+            apiTokenService,
+            apiTokenV2Service,
+            transactionalApiTokenV2Service:
+                withFakeTransactional(apiTokenV2Service),
+        },
         config,
     );
 });

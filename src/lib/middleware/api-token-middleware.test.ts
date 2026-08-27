@@ -8,7 +8,7 @@ import apiTokenMiddleware, {
     TOKEN_TYPE_ERROR_MESSAGE,
 } from './api-token-middleware.js';
 import type { ApiTokenService } from '../services/index.js';
-import type { ApiTokenV2Service } from '../features/apitokensv2/api-token-v2-service.js';
+import type { ReadOnlyApiTokenV2Service } from '../features/apitokensv2/api-token-v2-service.js';
 import type { IUnleashConfig } from '../types/index.js';
 import { vi } from 'vitest';
 
@@ -137,7 +137,7 @@ test('uses the V2 verifier for V2 token format', async () => {
     } as unknown as ApiTokenService;
     const apiTokenV2Service = {
         getUserForToken: vi.fn().mockResolvedValue(apiUser),
-    } as unknown as ApiTokenV2Service;
+    } as unknown as ReadOnlyApiTokenV2Service;
 
     const func = apiTokenMiddleware(config, {
         apiTokenService,
@@ -182,7 +182,7 @@ test('uses the V2 verifier for V2 token format when secure token storage is disa
     } as unknown as ApiTokenService;
     const apiTokenV2Service = {
         getUserForToken: vi.fn().mockResolvedValue(apiUser),
-    } as unknown as ApiTokenV2Service;
+    } as unknown as ReadOnlyApiTokenV2Service;
 
     const func = apiTokenMiddleware(localConfig, {
         apiTokenService,

@@ -4,7 +4,7 @@ import { vi } from 'vitest';
 import type { ApiTokenService } from '../services/index.js';
 import backendApiAccessMiddleware from './backend-token-middleware.js';
 import { IAuthType } from '../server-impl.js';
-import type { ApiTokenV2Service } from '../features/apitokensv2/index.js';
+import type { ReadOnlyApiTokenV2Service } from '../features/apitokensv2/index.js';
 import ApiUser from '../types/api-user.js';
 import { CLIENT } from '../types/permissions.js';
 import { ApiTokenType } from '../types/model.js';
@@ -33,7 +33,7 @@ test('with flag set client api should return 403 if user object is set and token
     } as unknown as ApiTokenService;
     const apiTokenV2Service = {
         getUserForToken: vi.fn(),
-    } as unknown as ApiTokenV2Service;
+    } as unknown as ReadOnlyApiTokenV2Service;
     const func = backendApiAccessMiddleware(localConfig, {
         apiTokenService,
         apiTokenV2Service,
@@ -83,7 +83,7 @@ test.each([
     } as unknown as ApiTokenService;
     const apiTokenV2Service = {
         getUserForToken: vi.fn(),
-    } as unknown as ApiTokenV2Service;
+    } as unknown as ReadOnlyApiTokenV2Service;
 
     const func = backendApiAccessMiddleware(localConfig, {
         apiTokenService,
@@ -137,7 +137,7 @@ test('uses the V2 verifier for V2 token format when secure token storage is disa
     } as unknown as ApiTokenService;
     const apiTokenV2Service = {
         getUserForToken: vi.fn().mockResolvedValue(apiUser),
-    } as unknown as ApiTokenV2Service;
+    } as unknown as ReadOnlyApiTokenV2Service;
 
     const func = backendApiAccessMiddleware(localConfig, {
         apiTokenService,

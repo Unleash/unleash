@@ -32,8 +32,8 @@ const setupLoggedOut = () => {
     });
 };
 
-const setupSharedRoutes = () => {
-    testServerRoute(server, '/api/admin/ui-config', {});
+const setupSharedRoutes = (flags: object = { uxTweakSurveys: true }) => {
+    testServerRoute(server, '/api/admin/ui-config', { flags });
     testServerRoute(server, '/api/admin/projects', { projects: [] });
 };
 
@@ -83,10 +83,10 @@ const renderApp = (route: string) =>
 describe('App research widget gating', () => {
     beforeEach(() => {
         localStorage.clear();
-        setupSharedRoutes();
     });
 
     it('shows no research widgets before the user logs in', async () => {
+        setupSharedRoutes();
         setupLoggedOut();
         renderApp('/login');
 
@@ -99,9 +99,23 @@ describe('App research widget gating', () => {
     });
 
     it('shows a matching survey once the user is logged in', async () => {
+        setupSharedRoutes();
         setupLoggedIn();
         renderApp('/login');
 
         expect(await screen.findByText('Quick feedback')).toBeInTheDocument();
+    });
+
+    it('shows no research widgets when the uxTweakSurveys flag is off', async () => {
+        setupSharedRoutes({});
+        setupLoggedIn();
+        renderApp('/login');
+
+        await waitFor(() =>
+            expect(screen.queryByRole('progressbar')).not.toBeInTheDocument(),
+        );
+        await settleProviders();
+        await settleProviders();
+        expect(screen.queryByText('Quick feedback')).not.toBeInTheDocument();
     });
 });

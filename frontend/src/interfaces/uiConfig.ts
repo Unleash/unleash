@@ -97,6 +97,7 @@ export type UiFlags = {
     signupDialog?: boolean;
     enterpriseEdgeTokensList?: boolean;
     impactMetricsFlagPage?: boolean;
+    uxTweakSurveys?: boolean;
     multiMetricChart?: boolean;
     logRocketEnabled?: boolean;
     hubspotChatEnabled?: boolean;

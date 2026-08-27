@@ -52,8 +52,10 @@ App (logged-in branch)
 ```
 
 **`UxTweakWidgets`** — the gate. Mounted in `App` next to `FeedbackNPS`,
-gated on `isLoggedIn` — under the SDK provider and router it reads from, and
-never on the login screen. Watches the SDK client for any flag starting
+gated on `isLoggedIn` and the internal `uxTweakSurveys` flag
+(`UNLEASH_EXPERIMENTAL_UX_TWEAK_SURVEYS`, an enterprise uiConfig flag that
+doubles as the kill switch) — under the SDK provider and router it reads
+from, and never on the login screen. Watches the SDK client for any flag starting
 with `uxtweak-` and only then lazy-loads the widget chunk. Installs without
 campaigns pay one event subscription and nothing else. The subtree gets its
 own silent `ErrorBoundary`: without it a widget crash would bubble to the

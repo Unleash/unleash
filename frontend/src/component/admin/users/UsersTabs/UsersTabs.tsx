@@ -74,6 +74,7 @@ const UsersTabsView = () => {
         <PageContent
             withTabs
             isLoading={loading}
+            withStickyFooter
             header={
                 <>
                     <StyledHeader>

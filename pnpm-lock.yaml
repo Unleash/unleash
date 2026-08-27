@@ -533,13 +533,13 @@ importers:
         version: 4.25.11(@babel/runtime@7.29.7)(@codemirror/autocomplete@6.20.1)(@codemirror/language@6.12.3)(@codemirror/lint@6.9.7)(@codemirror/search@6.7.0)(@codemirror/state@6.7.1)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.43.0)(codemirror@6.0.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@unleash/proxy-client-react':
         specifier: 5.1.0
-        version: 5.1.0(unleash-proxy-client@3.8.0)
+        version: 5.1.0(unleash-proxy-client@3.8.2)
       '@unleash/sdk-flight-recorder':
         specifier: ^0.8.0
         version: 0.8.0
       '@unleash/toolbar':
         specifier: 1.1.1
-        version: 1.1.1(@unleash/proxy-client-react@5.1.0(unleash-proxy-client@3.8.0))(unleash-proxy-client@3.8.0)
+        version: 1.1.1(@unleash/proxy-client-react@5.1.0(unleash-proxy-client@3.8.2))(unleash-proxy-client@3.8.2)
       '@vitejs/plugin-react':
         specifier: 6.0.5
         version: 6.0.5(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7(supports-color@8.1.1))(@babel/runtime@7.29.7)(rolldown@1.1.4)(vite@8.1.3(@types/node@22.20.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.8.4)))(vite@8.1.3(@types/node@22.20.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.8.4))
@@ -700,8 +700,8 @@ importers:
         specifier: 7.0.2
         version: 7.0.2
       unleash-proxy-client:
-        specifier: 3.8.0
-        version: 3.8.0
+        specifier: 3.8.2
+        version: 3.8.2
       use-query-params:
         specifier: ^2.2.2
         version: 2.2.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -6487,8 +6487,8 @@ packages:
     resolution: {integrity: sha512-xeojMfPZynteI2fqGW70po23Nd588MKSv9cv5dH3BOfQmsVE0jcvypLl7a4/NfrAgmMKOpZ48N4TtnGd7klJDQ==}
     engines: {node: '>=20'}
 
-  unleash-proxy-client@3.8.0:
-    resolution: {integrity: sha512-7+IMDM/t8sUojbYmOMoRW0SjD7+ShOrpI+vR1QWSv1Fnf7IxXLKp1dVhWnWyh9p4iyqFw4RXG9Iw5LHuBMV4aA==}
+  unleash-proxy-client@3.8.2:
+    resolution: {integrity: sha512-xwFk4Zq7mdZxWU69g9On1TT3VSARBm2c+U1oY6PbaBA+FZrODpUHw7xMhIg74Ai56w0RlPMZ4znzHZ3R9PBGpA==}
 
   unpipe@1.0.0:
     resolution: {integrity: sha512-pjy2bYhSsufwWlKwPc+l3cN7+wuJlK6uz0YdJEOlQDbl6jo/YlPi4mb8agUkVC8BF7V8NuzeyPNqRksA3hztKQ==}
@@ -8782,20 +8782,20 @@ snapshots:
 
   '@ungap/structured-clone@1.3.1': {}
 
-  '@unleash/proxy-client-react@5.1.0(unleash-proxy-client@3.8.0)':
+  '@unleash/proxy-client-react@5.1.0(unleash-proxy-client@3.8.2)':
     dependencies:
-      unleash-proxy-client: 3.8.0
+      unleash-proxy-client: 3.8.2
 
   '@unleash/sdk-flight-recorder@0.8.0':
     dependencies:
       ky: 2.0.2
 
-  '@unleash/toolbar@1.1.1(@unleash/proxy-client-react@5.1.0(unleash-proxy-client@3.8.0))(unleash-proxy-client@3.8.0)':
+  '@unleash/toolbar@1.1.1(@unleash/proxy-client-react@5.1.0(unleash-proxy-client@3.8.2))(unleash-proxy-client@3.8.2)':
     dependencies:
       lit: 3.3.3
-      unleash-proxy-client: 3.8.0
+      unleash-proxy-client: 3.8.2
     optionalDependencies:
-      '@unleash/proxy-client-react': 5.1.0(unleash-proxy-client@3.8.0)
+      '@unleash/proxy-client-react': 5.1.0(unleash-proxy-client@3.8.2)
 
   '@vitejs/plugin-react@6.0.5(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7(supports-color@8.1.1))(@babel/runtime@7.29.7)(rolldown@1.1.4)(vite@8.1.3(@types/node@22.20.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.8.4)))(vite@8.1.3(@types/node@22.20.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.8.4))':
     dependencies:
@@ -13261,7 +13261,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  unleash-proxy-client@3.8.0:
+  unleash-proxy-client@3.8.2:
     dependencies:
       tiny-emitter: 2.1.0
 

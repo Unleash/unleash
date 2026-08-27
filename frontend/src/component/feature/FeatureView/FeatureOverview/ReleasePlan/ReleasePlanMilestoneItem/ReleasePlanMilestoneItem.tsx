@@ -1,6 +1,9 @@
 import { styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
+import {
+    isTimeCondition,
+    type IReleasePlanMilestone,
+} from 'interfaces/releasePlans';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import { ReleasePlanMilestone } from '../ReleasePlanMilestone/ReleasePlanMilestone.tsx';
 import { useMilestoneProgressionsApi } from 'hooks/api/actions/useMilestoneProgressionsApi/useMilestoneProgressionsApi';
@@ -101,9 +104,9 @@ export const ReleasePlanMilestoneItem = ({
         trackEvent('release-management', {
             props: {
                 eventType: 'change-progression',
-                transitionUnit: getTimeUnit(
-                    payload.transitionCondition.intervalMinutes,
-                ),
+                transitionUnit: isTimeCondition(payload.transitionCondition)
+                    ? getTimeUnit(payload.transitionCondition.intervalMinutes)
+                    : 'exposures',
             },
         });
         if (isChangeRequestConfigured(environment)) {

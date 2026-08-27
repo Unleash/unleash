@@ -10,7 +10,7 @@ import {
     StyledInfoLine,
 } from '../shared/SharedFormComponents.tsx';
 import { TransitionConditionRow } from '../shared/TransitionConditionRow.tsx';
-import { MilestoneProgressionTimeInput } from './MilestoneProgressionTimeInput.tsx';
+import { TransitionConditionInput } from './TransitionConditionInput.tsx';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton.tsx';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions.ts';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam.ts';
@@ -66,7 +66,7 @@ export const MilestoneProgressionForm = ({
         <StyledFormContainer onSubmit={handleSubmit}>
             <TransitionConditionRow
                 condition={
-                    <MilestoneProgressionTimeInput
+                    <TransitionConditionInput
                         timeValue={form.timeValue}
                         timeUnit={form.timeUnit}
                         onTimeValueChange={form.handleTimeValueChange}

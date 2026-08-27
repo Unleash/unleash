@@ -1,8 +1,9 @@
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { styled, Button, Alert } from '@mui/material';
-import type {
-    IReleasePlan,
-    IReleasePlanMilestone,
+import {
+    isTimeCondition,
+    type IReleasePlan,
+    type IReleasePlanMilestone,
 } from 'interfaces/releasePlans';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import { getTimeValueAndUnitFromMinutes } from '../hooks/useTransitionConditionInput.ts';
@@ -93,10 +94,16 @@ export const ReleasePlanChangeRequestDialog = ({
                         milestone.id === action.payload.targetMilestone,
                 );
 
-                const { value, unit } = getTimeValueAndUnitFromMinutes(
-                    action.payload.transitionCondition.intervalMinutes,
-                );
-                const timeInterval = `${value} ${unit}`;
+                const { transitionCondition } = action.payload;
+                const { value, unit } = isTimeCondition(transitionCondition)
+                    ? getTimeValueAndUnitFromMinutes(
+                          transitionCondition.intervalMinutes,
+                      )
+                    : {
+                          value: transitionCondition.minimumExposures,
+                          unit: 'exposures',
+                      };
+                const conditionDisplay = `${value} ${unit}`;
 
                 return (
                     <p>
@@ -104,7 +111,8 @@ export const ReleasePlanChangeRequestDialog = ({
                         <StyledBoldSpan>{sourceMilestone?.name}</StyledBoldSpan>{' '}
                         to{' '}
                         <StyledBoldSpan>{targetMilestone?.name}</StyledBoldSpan>{' '}
-                        after <StyledBoldSpan>{timeInterval}</StyledBoldSpan> in{' '}
+                        after{' '}
+                        <StyledBoldSpan>{conditionDisplay}</StyledBoldSpan> in{' '}
                         {environmentId}
                     </p>
                 );

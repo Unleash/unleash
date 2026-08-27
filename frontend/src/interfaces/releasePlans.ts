@@ -1,6 +1,16 @@
-import type { TransitionConditionSchema } from 'openapi';
+import type {
+    TransitionConditionSchema,
+    TransitionConditionSchemaOneOf,
+} from 'openapi';
 import type { IFeatureStrategy } from './strategy.ts';
 import type { ISafeguard } from './safeguard.ts';
+
+export type TimeTransitionCondition = TransitionConditionSchemaOneOf;
+
+export const isTimeCondition = (
+    condition: TransitionConditionSchema,
+): condition is TimeTransitionCondition =>
+    condition.type === undefined || condition.type === 'time';
 
 export interface IReleasePlanTemplate {
     id: string;

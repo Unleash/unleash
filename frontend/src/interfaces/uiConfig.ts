@@ -109,6 +109,7 @@ export type UiFlags = {
     topLabelInputs?: boolean;
     searchDocsWidget?: boolean;
     usersTabsUI?: boolean;
+    exposureBasedAutomation?: boolean;
 };
 
 export interface IVersionInfo {

@@ -3,14 +3,12 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { TransitionConditionSchemaOneOf } from './transitionConditionSchemaOneOf';
+import type { TransitionConditionSchemaOneOfThree } from './transitionConditionSchemaOneOfThree';
 
 /**
  * A transition condition for milestone progression
  */
-export interface TransitionConditionSchema {
-    /**
-     * The interval in minutes before transitioning
-     * @minimum 1
-     */
-    intervalMinutes: number;
-}
+export type TransitionConditionSchema =
+    | TransitionConditionSchemaOneOf
+    | TransitionConditionSchemaOneOfThree;

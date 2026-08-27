@@ -2,7 +2,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { Button, styled } from '@mui/material';
 import type { MilestoneStatus } from './ReleasePlanMilestoneStatus.tsx';
 import { TransitionConditionRow } from '../shared/TransitionConditionRow.tsx';
-import { MilestoneProgressionTimeInput } from '../MilestoneProgressionForm/MilestoneProgressionTimeInput.tsx';
+import { TransitionConditionInput } from '../MilestoneProgressionForm/TransitionConditionInput.tsx';
 import { useMilestoneProgressionForm } from '../hooks/useMilestoneProgressionForm.js';
 import { getTimeValueAndUnitFromMinutes } from '../hooks/useTransitionConditionInput.ts';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
@@ -191,7 +191,7 @@ export const MilestoneTransitionDisplay = ({
         <StyledFormWrapper hasChanged={hasChanged} onKeyDown={handleKeyDown}>
             <TransitionConditionRow
                 condition={
-                    <MilestoneProgressionTimeInput
+                    <TransitionConditionInput
                         timeValue={form.timeValue}
                         timeUnit={form.timeUnit}
                         onTimeValueChange={form.handleTimeValueChange}

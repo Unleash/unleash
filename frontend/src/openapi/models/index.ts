@@ -1647,6 +1647,10 @@ export * from './trafficUsageDataSegmentedCombinedSchemaApiDataItemDataPointsIte
 export * from './trafficUsageDataSegmentedCombinedSchemaDateRange';
 export * from './trafficUsageDataSegmentedCombinedSchemaGrouping';
 export * from './transitionConditionSchema';
+export * from './transitionConditionSchemaOneOf';
+export * from './transitionConditionSchemaOneOfThree';
+export * from './transitionConditionSchemaOneOfThreeType';
+export * from './transitionConditionSchemaOneOfType';
 export * from './uiConfigSchema';
 export * from './uiConfigSchemaAuthenticationType';
 export * from './uiConfigSchemaBilling';

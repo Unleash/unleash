@@ -4,8 +4,9 @@ import { IconButton, styled } from '@mui/material';
 import { useTransitionConditionInput } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/hooks/useTransitionConditionInput';
 import { StyledErrorMessage } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/shared/SharedFormComponents';
 import { TransitionConditionRow } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/shared/TransitionConditionRow';
-import { MilestoneProgressionTimeInput } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/MilestoneProgressionForm/MilestoneProgressionTimeInput';
+import { TransitionConditionInput } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/MilestoneProgressionForm/TransitionConditionInput';
 import type { TransitionConditionSchema } from 'openapi';
+import { isTimeCondition } from 'interfaces/releasePlans';
 import { StyledActionButton } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestoneItem/StyledActionButton';
 
 const StyledAutomationSection = styled('div')(({ theme }) => ({
@@ -31,15 +32,19 @@ export const MilestoneAutomationForm = ({
     onChange,
     error,
 }: MilestoneAutomationFormProps) => {
+    const initialIntervalMinutes =
+        transitionCondition && isTimeCondition(transitionCondition)
+            ? transitionCondition.intervalMinutes
+            : undefined;
+
     const {
         timeValue,
         timeUnit,
         intervalMinutes,
         handleTimeValueChange,
         handleTimeUnitChange,
-    } = useTransitionConditionInput(
-        transitionCondition?.intervalMinutes,
-        (intervalMinutes) => onChange({ intervalMinutes }),
+    } = useTransitionConditionInput(initialIntervalMinutes, (intervalMinutes) =>
+        onChange({ intervalMinutes }),
     );
 
     if (!transitionCondition) {
@@ -61,7 +66,7 @@ export const MilestoneAutomationForm = ({
         <StyledAutomationSection>
             <TransitionConditionRow
                 condition={
-                    <MilestoneProgressionTimeInput
+                    <TransitionConditionInput
                         timeValue={timeValue}
                         timeUnit={timeUnit}
                         onTimeValueChange={handleTimeValueChange}

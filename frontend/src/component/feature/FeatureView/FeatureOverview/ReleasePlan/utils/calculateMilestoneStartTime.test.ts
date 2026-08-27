@@ -68,6 +68,25 @@ describe('calculateMilestoneStartTime', () => {
         );
     });
 
+    it('predicts start times up to the first exposure transition in the chain', () => {
+        const milestones = [
+            createMilestone('1', baseTime, ONE_HOUR_IN_MINUTES),
+            {
+                ...createMilestone('2', null),
+                transitionCondition: {
+                    type: 'exposure' as const,
+                    minimumExposures: 1000,
+                },
+            },
+            createMilestone('3', null, FIFTEEN_MINUTES),
+        ];
+
+        expect(calculateMilestoneStartTime(milestones, '2')).toEqual(
+            new Date('2024-01-01T11:00:00.000Z'),
+        );
+        expect(calculateMilestoneStartTime(milestones, '3')).toBeNull();
+    });
+
     it('returns null when milestone chain is broken', () => {
         const milestones = [
             createMilestone('1', baseTime, ONE_HOUR_IN_MINUTES),

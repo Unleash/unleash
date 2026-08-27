@@ -6,6 +6,7 @@ import {
     type SelectChangeEvent,
 } from '@mui/material';
 import type { TimeUnit } from '../hooks/useTransitionConditionInput.ts';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const StyledInputGroup = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -13,13 +14,15 @@ const StyledInputGroup = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-const StyledSelect = styled(Select)(({ theme }) => ({
-    width: '100px',
-}));
+const StyledSelect = styled(Select)({
+    minWidth: '100px',
+});
 
-interface IMilestoneProgressionTimeInputProps {
+type TransitionUnit = TimeUnit | 'exposures';
+
+interface TransitionConditionInputProps {
     timeValue: number;
-    timeUnit: TimeUnit;
+    timeUnit: TransitionUnit;
     onTimeValueChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     onTimeUnitChange: (event: SelectChangeEvent<unknown>) => void;
     disabled?: boolean;
@@ -39,14 +42,16 @@ const stopEnterPropagation = (e: React.KeyboardEvent) => {
     }
 };
 
-export const MilestoneProgressionTimeInput = ({
+export const TransitionConditionInput = ({
     timeValue,
     timeUnit,
     onTimeValueChange,
     onTimeUnitChange,
     disabled,
     error,
-}: IMilestoneProgressionTimeInputProps) => {
+}: TransitionConditionInputProps) => {
+    const exposureBasedAutomationEnabled = useUiFlag('exposureBasedAutomation');
+
     return (
         <StyledInputGroup>
             <TextField
@@ -86,6 +91,14 @@ export const MilestoneProgressionTimeInput = ({
                 <MenuItem value='days' onKeyDown={stopEnterPropagation}>
                     Days
                 </MenuItem>
+                {exposureBasedAutomationEnabled ? (
+                    <MenuItem
+                        value='exposures'
+                        onKeyDown={stopEnterPropagation}
+                    >
+                        Exposures
+                    </MenuItem>
+                ) : null}
             </StyledSelect>
         </StyledInputGroup>
     );

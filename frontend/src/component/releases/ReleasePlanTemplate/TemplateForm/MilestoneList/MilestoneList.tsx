@@ -6,10 +6,8 @@ import { Fragment, useCallback } from 'react';
 import type { OnMoveItem } from 'hooks/useDragItem';
 import { MilestoneCard } from './MilestoneCard/MilestoneCard.tsx';
 import { MilestoneAutomationForm } from './MilestoneCard/MilestoneAutomationForm.tsx';
-import {
-    automationErrorKey,
-    isValidAutomationTime,
-} from 'component/releases/hooks/useTemplateForm';
+import { automationErrorKey } from 'component/releases/hooks/useTemplateForm';
+import { isValidAutomation } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/utils/isValidAutomation';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 interface IMilestoneListProps {
@@ -116,9 +114,7 @@ export const MilestoneList = ({
                                 onChange={(transitionCondition) => {
                                     if (
                                         !transitionCondition ||
-                                        isValidAutomationTime(
-                                            transitionCondition.intervalMinutes,
-                                        )
+                                        isValidAutomation(transitionCondition)
                                     ) {
                                         clearError(
                                             automationErrorKey(milestone.id),

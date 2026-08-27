@@ -1,5 +1,6 @@
 import { createUuid } from 'utils/createUuid';
 import type { IReleasePlanMilestonePayload } from 'interfaces/releasePlans';
+import { isValidAutomation } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/utils/isValidAutomation';
 import { useEffect, useState } from 'react';
 
 export interface IExtendedMilestonePayload
@@ -9,9 +10,6 @@ export interface IExtendedMilestonePayload
 
 export const automationErrorKey = (milestoneId: string) =>
     `${milestoneId}_automation`;
-
-export const isValidAutomationTime = (intervalMinutes: number) =>
-    intervalMinutes >= 1;
 
 export const useTemplateForm = (
     initialName = '',
@@ -73,11 +71,10 @@ export const useTemplateForm = (
             const automation = isLastMilestone(index)
                 ? undefined
                 : m.transitionCondition;
-            const hasInvalidAutomationTime =
-                automation !== undefined &&
-                !isValidAutomationTime(automation.intervalMinutes);
+            const hasInvalidAutomation =
+                automation !== undefined && !isValidAutomation(automation);
 
-            if (hasInvalidAutomationTime) {
+            if (hasInvalidAutomation) {
                 validationErrors[automationErrorKey(m.id)] =
                     'Automation time must be greater than zero.';
             }

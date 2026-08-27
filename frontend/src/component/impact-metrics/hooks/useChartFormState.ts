@@ -54,7 +54,7 @@ export const useChartFormState = ({
     );
     const [timeRange, setTimeRange] = useState<
         'hour' | 'day' | 'week' | 'month'
-    >(initialConfig?.timeRange || 'day');
+    >(initialConfig?.timeRange || 'hour');
     const [yAxisMin, setYAxisMin] = useState(initialConfig?.yAxisMin || 'auto');
     const [labelSelectors, setLabelSelectors] = useState<
         Record<string, string[]>
@@ -94,7 +94,7 @@ export const useChartFormState = ({
         } else if (open && !initialConfig) {
             setTitle('');
             setMetricName('');
-            setTimeRange('day');
+            setTimeRange('hour');
             setYAxisMin('auto');
             setLabelSelectors({});
             setAggregationMode('count');

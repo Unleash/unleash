@@ -108,7 +108,7 @@ const getInitialValues = (safeguard?: ISafeguard) => ({
         '>') as SafeguardTriggerConditionSchemaOperator,
     threshold: safeguard?.triggerCondition?.threshold || 0,
     timeRange: (safeguard?.impactMetric.timeRange ||
-        'day') as MetricQuerySchemaTimeRange,
+        'hour') as MetricQuerySchemaTimeRange,
 });
 
 const useSafeguardFormValues = (safeguard?: ISafeguard) => {

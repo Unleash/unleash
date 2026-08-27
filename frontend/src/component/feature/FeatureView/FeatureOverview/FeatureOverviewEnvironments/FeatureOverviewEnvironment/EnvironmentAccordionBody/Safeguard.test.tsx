@@ -89,7 +89,7 @@ const featureEnvSafeguard: ISafeguard = {
 const defaultSafeguardPayload = {
     impactMetric: {
         metricName: 'unleash_counter_http_requests_total',
-        timeRange: 'day',
+        timeRange: 'hour',
         aggregationMode: 'count',
         labelSelectors: {},
     },

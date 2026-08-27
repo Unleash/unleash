@@ -102,6 +102,15 @@ export default defineConfig(({ mode }) => {
             },
             resolve: {
                 tsconfigPaths: true,
+                dedupe: [
+                    'react',
+                    'react-dom',
+                    '@mui/material',
+                    '@mui/system',
+                    '@mui/utils',
+                    '@emotion/react',
+                    '@emotion/styled',
+                ],
             },
             plugins: [
                 {

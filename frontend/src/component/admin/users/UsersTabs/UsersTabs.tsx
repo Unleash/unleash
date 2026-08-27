@@ -74,6 +74,7 @@ const UsersTabsView = () => {
         <PageContent
             withTabs
             isLoading={loading}
+            disableLoading={pathname.endsWith('/access-log')}
             withStickyFooter
             header={
                 <>

@@ -4,7 +4,7 @@ import { dateSchema } from './date-schema.js';
 export const bulkRegistrationSchema = {
     $id: '#/components/schemas/bulkRegistrationSchema',
     type: 'object',
-    required: ['appName', 'instanceId', 'environment'],
+    required: ['instanceId', 'environment'],
     description: `An application registration. Defines the format POSTed by our backend SDKs when they're starting up`,
     properties: {
         connectVia: {

@@ -58,3 +58,15 @@ test('Upserting an application keeps values not provided intact', async () => {
 
     expect(doubleUpdated).toMatchObject(expectedAfterUpdate);
 });
+
+test('bulk upsert ignores instances without an app name', async () => {
+    await expect(
+        clientInstanceStore.bulkUpsert([
+            {
+                appName: '',
+                instanceId: faker.string.uuid(),
+                environment: 'development',
+            },
+        ]),
+    ).resolves.toBeUndefined();
+});

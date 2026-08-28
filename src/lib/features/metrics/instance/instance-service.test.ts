@@ -198,6 +198,71 @@ test('No registrations during a time period will not call stores', async () => {
     expect(bulkSpy).toHaveBeenCalledTimes(0);
 });
 
+test('registrations without an app name are ignored without dropping valid registrations', async () => {
+    const appStoreSpy = vi.fn();
+    const instanceStoreSpy = vi.fn();
+    const clientMetrics = new ClientInstanceService(
+        {
+            clientMetricsStoreV2: new FakeClientMetricsStoreV2(),
+            strategyStore: new FakeStrategiesStore(),
+            featureToggleStore: new FakeFeatureToggleStore(),
+            clientApplicationsStore: { bulkUpsert: appStoreSpy } as any,
+            clientInstanceStore: { bulkUpsert: instanceStoreSpy } as any,
+            eventStore: new FakeEventStore(),
+        },
+        config,
+        new FakePrivateProjectChecker(),
+    );
+
+    await clientMetrics.registerInstance(
+        { appName: '', instanceId: 'invalid-instance' },
+        '127.0.0.1',
+        'default',
+    );
+    await clientMetrics.registerInstance(
+        { appName: 'valid-app', instanceId: 'valid-instance' },
+        '127.0.0.1',
+        'default',
+    );
+
+    await clientMetrics.bulkAdd();
+
+    expect(appStoreSpy).toHaveBeenCalledWith([
+        expect.objectContaining({ appName: 'valid-app' }),
+    ]);
+    expect(instanceStoreSpy).toHaveBeenCalledWith([
+        expect.objectContaining({ appName: 'valid-app' }),
+    ]);
+});
+
+test('a batch containing only registrations without app names does not call stores', async () => {
+    const appStoreSpy = vi.fn();
+    const instanceStoreSpy = vi.fn();
+    const clientMetrics = new ClientInstanceService(
+        {
+            clientMetricsStoreV2: new FakeClientMetricsStoreV2(),
+            strategyStore: new FakeStrategiesStore(),
+            featureToggleStore: new FakeFeatureToggleStore(),
+            clientApplicationsStore: { bulkUpsert: appStoreSpy } as any,
+            clientInstanceStore: { bulkUpsert: instanceStoreSpy } as any,
+            eventStore: new FakeEventStore(),
+        },
+        config,
+        new FakePrivateProjectChecker(),
+    );
+
+    await clientMetrics.registerInstance(
+        { appName: '', instanceId: 'invalid-instance' },
+        '127.0.0.1',
+        'default',
+    );
+
+    await clientMetrics.bulkAdd();
+
+    expect(appStoreSpy).not.toHaveBeenCalled();
+    expect(instanceStoreSpy).not.toHaveBeenCalled();
+});
+
 test('filter out private projects from overview', async () => {
     const clientApplicationsStore = {
         async getApplicationOverview(

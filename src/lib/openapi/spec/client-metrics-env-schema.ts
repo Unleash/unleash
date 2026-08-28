@@ -4,7 +4,7 @@ import type { FromSchema } from 'json-schema-to-ts';
 export const clientMetricsEnvSchema = {
     $id: '#/components/schemas/clientMetricsEnvSchema',
     type: 'object',
-    required: ['featureName', 'appName', 'environment'],
+    required: ['featureName', 'environment'],
     description: 'Used for reporting feature evaluation results from SDKs',
     properties: {
         featureName: {

@@ -215,29 +215,33 @@ export default class ClientMetricsController extends Controller {
 
             try {
                 for (const app of applications) {
+                    if (!app.appName) {
+                        continue;
+                    }
+                    const application = { ...app, appName: app.appName };
                     // per app `environment` from the body - when this bulk endpoint
                     // forwards metrics from many environments for edge proxies
                     const appEnvironment =
-                        app.environment ?? acceptedEnvironment;
+                        application.environment ?? acceptedEnvironment;
                     if (
-                        app.sdkType === 'frontend' &&
-                        typeof app.sdkVersion === 'string'
+                        application.sdkType === 'frontend' &&
+                        typeof application.sdkVersion === 'string'
                     ) {
                         this.clientInstanceService.registerFrontendClient({
-                            appName: app.appName,
-                            instanceId: app.instanceId,
+                            appName: application.appName,
+                            instanceId: application.instanceId,
                             environment: appEnvironment,
-                            sdkType: app.sdkType,
-                            sdkVersion: app.sdkVersion,
-                            projects: app.projects,
+                            sdkType: application.sdkType,
+                            sdkVersion: application.sdkVersion,
+                            projects: application.projects,
                             // forwarded by Edge for frontend SDKs - backend path already passes `app`
-                            sdkFlavor: app.sdkFlavor,
-                            sdkFlavorVersion: app.sdkFlavorVersion,
+                            sdkFlavor: application.sdkFlavor,
+                            sdkFlavorVersion: application.sdkFlavorVersion,
                         });
                     } else {
                         promises.push(
                             this.clientInstanceService.registerBackendClient(
-                                app,
+                                application,
                                 clientIp,
                                 appEnvironment,
                             ),
@@ -245,8 +249,13 @@ export default class ClientMetricsController extends Controller {
                     }
                 }
                 if (metrics && metrics.length > 0) {
+                    const metricsWithAppName = metrics.filter((metric) =>
+                        Boolean(metric.appName),
+                    );
                     const data: IClientMetricsEnv[] =
-                        await clientMetricsEnvBulkSchema.validateAsync(metrics);
+                        await clientMetricsEnvBulkSchema.validateAsync(
+                            metricsWithAppName,
+                        );
                     const filteredData = data.filter(
                         (metric) => metric.environment === acceptedEnvironment,
                     );

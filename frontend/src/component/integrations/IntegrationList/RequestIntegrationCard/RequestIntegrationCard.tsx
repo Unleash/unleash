@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { styled, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
@@ -27,16 +27,28 @@ const StyledAction = styled(Typography)(({ theme }) => ({
     gap: theme.spacing(0.5),
 }));
 
-export const RequestIntegrationCard: VFC = () => (
+export const RequestIntegrationCard: FC = () => (
     <StyledLink
         href='https://docs.google.com/forms/d/e/1FAIpQLScR1_iuoQiKq89c0TKtj0gM02JVWyQ2hQ-YchBMc2GRrGf7uw/viewform'
         target='_blank'
         rel='noopener noreferrer'
     >
-        <Typography variant='body2' color='text.secondary' data-loading>
+        <Typography
+            variant='body2'
+            data-loading
+            sx={{
+                color: 'text.secondary',
+            }}
+        >
             Are we missing an integration that you need?
         </Typography>
-        <Typography variant='body2' color='text.secondary' data-loading>
+        <Typography
+            variant='body2'
+            data-loading
+            sx={{
+                color: 'text.secondary',
+            }}
+        >
             Go ahead and request it!
         </Typography>
         <StyledAction data-loading>

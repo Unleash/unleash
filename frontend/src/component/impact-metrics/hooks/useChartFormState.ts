@@ -1,8 +1,13 @@
 import { useState, useEffect } from 'react';
-import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
+import { useImpactMetricsLabels } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsLabels';
 import type { AggregationMode, ChartConfig, MetricSource } from '../types.ts';
 import type { ImpactMetricsLabels } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import type { MetricSelection } from '../ImpactMetricModal/ImpactMetricsControls/SeriesSelector/MetricSelector.tsx';
+
+export type AvailableLabels =
+    | { status: 'loading' }
+    | { status: 'error' }
+    | { status: 'ready'; labels: ImpactMetricsLabels };
 import {
     getDefaultAggregation,
     getMetricType,
@@ -36,7 +41,7 @@ export type ChartFormState = {
         getConfigToSave: () => Omit<ChartConfig, 'id'>;
     };
     isValid: boolean;
-    currentAvailableLabels: ImpactMetricsLabels | undefined;
+    currentAvailableLabels: AvailableLabels;
 };
 
 export const useChartFormState = ({
@@ -49,7 +54,7 @@ export const useChartFormState = ({
     );
     const [timeRange, setTimeRange] = useState<
         'hour' | 'day' | 'week' | 'month'
-    >(initialConfig?.timeRange || 'day');
+    >(initialConfig?.timeRange || 'hour');
     const [yAxisMin, setYAxisMin] = useState(initialConfig?.yAxisMin || 'auto');
     const [labelSelectors, setLabelSelectors] = useState<
         Record<string, string[]>
@@ -63,17 +68,13 @@ export const useChartFormState = ({
     );
 
     const {
-        data: { labels: currentAvailableLabels },
-    } = useImpactMetricsData(
-        metricName
-            ? {
-                  metricName,
-                  range: timeRange,
-                  aggregationMode,
-                  source,
-                  mode: 'edit',
-              }
-            : undefined,
+        labels: fetchedLabels,
+        loading: fetchingLabels,
+        error: labelsFetchError,
+    } = useImpactMetricsLabels(
+        // the modal stays mounted while closed; only fetch while it is open
+        open ? metricName : '',
+        source,
     );
 
     useEffect(() => {
@@ -93,7 +94,7 @@ export const useChartFormState = ({
         } else if (open && !initialConfig) {
             setTitle('');
             setMetricName('');
-            setTimeRange('day');
+            setTimeRange('hour');
             setYAxisMin('auto');
             setLabelSelectors({});
             setAggregationMode('count');
@@ -122,10 +123,14 @@ export const useChartFormState = ({
     });
 
     const isValid = metricName.length > 0;
-    const metricType = getMetricType(
-        metricName,
-        currentAvailableLabels?.metric_type,
-    );
+    const metricType = getMetricType(metricName, fetchedLabels?.metric_type);
+    const hasFetchedLabels = Object.keys(fetchedLabels).length > 0;
+    const currentAvailableLabels: AvailableLabels =
+        labelsFetchError && !hasFetchedLabels
+            ? { status: 'error' }
+            : fetchingLabels
+              ? { status: 'loading' }
+              : { status: 'ready', labels: fetchedLabels };
 
     useEffect(() => {
         if (

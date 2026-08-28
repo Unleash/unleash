@@ -7,19 +7,12 @@ import {
     useMemo,
     useState,
 } from 'react';
-import {
-    Box,
-    Button,
-    TextField,
-    Typography,
-    useTheme,
-    Autocomplete,
-    Checkbox,
-} from '@mui/material';
+import { Box, Button, Checkbox } from '@mui/material';
 
 import debounce from 'debounce';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { PlaygroundEditor } from './PlaygroundEditor/PlaygroundEditor.tsx';
 import { parseDateValue, parseValidDate } from 'component/common/util';
 import {
@@ -32,6 +25,10 @@ import { useFullUnleashContext } from 'hooks/api/getters/useUnleashContext/useFu
 import type { IUnleashContextDefinition } from 'interfaces/context.ts';
 import type { SelectOptionGroup } from 'component/common/GeneralSelect/GeneralSelect.tsx';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect.tsx';
+import { FormGroup } from 'component/common/FormGroup/FormGroup.tsx';
+import Input from 'component/common/Input/Input.tsx';
+import { AutocompleteField } from 'component/common/AutocompleteField/AutocompleteField.tsx';
+import { FormFieldControlAligner } from 'component/common/FormField/FormField';
 
 interface IPlaygroundCodeFieldsetProps {
     context: string | undefined;
@@ -86,7 +83,7 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
     context,
     setContext,
 }) => {
-    const theme = useTheme();
+    const topLabelInputs = useUiFlag('topLabelInputs');
     const { setToastData } = useToast();
     const { context: contextData } = useFullUnleashContext();
 
@@ -201,10 +198,10 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
                 ? parseDateValue(validDate.toISOString())
                 : parseDateValue(now.toISOString());
             return (
-                <TextField
+                <Input
                     id='date'
                     label='Date'
-                    size='small'
+                    size='large'
                     type='datetime-local'
                     value={value}
                     sx={{ width: 200, maxWidth: '100%' }}
@@ -213,10 +210,12 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
                         const dateString = parsedDate?.toISOString();
                         dateString && setContextValue(dateString);
                     }}
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
                     required
+                    slotProps={{
+                        inputLabel: {
+                            shrink: true,
+                        },
+                    }}
                 />
             );
         }
@@ -227,14 +226,16 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
             const options = foundField.legalValues.map(({ value }) => value);
 
             return (
-                <Autocomplete
+                <AutocompleteField
                     disablePortal
                     limitTags={3}
                     id='context-legal-values'
+                    label='Value'
                     multiple={true}
                     options={options}
                     disableCloseOnSelect
-                    size='small'
+                    size='large'
+                    fullWidth={false}
                     value={resolveAutocompleteValue()}
                     onChange={changeContextValue}
                     getOptionLabel={(option) => option}
@@ -258,20 +259,17 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
                         );
                     }}
                     sx={{ width: 370, maxWidth: '100%' }}
-                    renderInput={(params) => (
-                        <TextField {...params} label='Value' />
-                    )}
                 />
             );
         }
 
         return (
-            <TextField
+            <Input
                 label='Value'
                 id='context-value'
                 sx={{ width: 370, maxWidth: '100%' }}
                 placeholder={'value1,value2,value3'}
-                size='small'
+                size='large'
                 value={contextValue}
                 onChange={(event) => setContextValue(event.target.value || '')}
             />
@@ -289,18 +287,19 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
     };
 
     return (
-        <Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <Typography
-                    variant='body2'
-                    color={theme.palette.text.primary}
-                    sx={{ ml: 1 }}
-                >
-                    Unleash context
-                </Typography>
-            </Box>
-
-            <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', mb: 2 }}>
+        <FormGroup title='Unleash context'>
+            <Box
+                sx={{
+                    display: 'flex',
+                    gap: 2,
+                    flexWrap: 'wrap',
+                    mb: 2,
+                    ...(topLabelInputs && {
+                        alignItems: 'flex-start',
+                        '& > div': { width: 'auto', flex: '0 0 auto' },
+                    }),
+                }}
+            >
                 <GeneralSelect
                     label='Context field'
                     labelId='context-field-label'
@@ -308,20 +307,23 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
                     value={contextField}
                     onChange={changeContextField}
                     variant='outlined'
-                    size='small'
+                    size='large'
+                    fullWidth={false}
                     sx={{ width: 200, maxWidth: '100%' }}
                     options={contextOptions}
                 />
 
                 {resolveInput()}
-                <Button
-                    variant='outlined'
-                    disabled={!contextField || Boolean(error)}
-                    onClick={onAddField}
-                    sx={{ width: '95px', maxHeight: '40px' }}
-                >
-                    {`${!fieldExist ? 'Add' : 'Replace'} `}
-                </Button>
+                <FormFieldControlAligner>
+                    <Button
+                        variant='outlined'
+                        disabled={!contextField || Boolean(error)}
+                        onClick={onAddField}
+                        sx={{ width: '95px', height: '40px' }}
+                    >
+                        {`${!fieldExist ? 'Add' : 'Replace'} `}
+                    </Button>
+                </FormFieldControlAligner>
             </Box>
 
             <PlaygroundEditor
@@ -329,6 +331,6 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
                 setContext={setContext}
                 error={error}
             />
-        </Box>
+        </FormGroup>
     );
 };

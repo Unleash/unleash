@@ -1,5 +1,5 @@
-import UserProfile from './UserProfile.tsx';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
+import { UserProfile } from './UserProfile.tsx';
 
 const UserProfileContainer = () => {
     const { user } = useAuthUser();

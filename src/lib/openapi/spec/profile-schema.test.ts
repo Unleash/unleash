@@ -9,7 +9,9 @@ test('profileSchema', () => {
             name: 'Admin',
         },
         projects: ['default', 'secretproject'],
+        groups: [],
         subscriptions: ['productivity-report'],
+        canChangePassword: true,
         features: [
             { name: 'firstFeature', project: 'default' },
             { name: 'secondFeature', project: 'secretproject' },

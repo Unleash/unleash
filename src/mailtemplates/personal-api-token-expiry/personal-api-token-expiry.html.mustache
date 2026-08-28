@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Your personal API token is about to expire</title>
+  </head>
+  <body style="margin:0; padding:0; background-color:#eaeaed; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#000;">
+    <div style="display:none !important; font-size:1px; color:#ffffff; line-height:1px; max-height:0px; max-width:0px; opacity:0; overflow:hidden;">
+      Your token{{#tokenDescription}} {{ tokenDescription }}{{/tokenDescription}} will expire in {{ daysUntilExpiry }} {{ dayWord }} – create a replacement before your integrations stop working.
+    </div>
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#eaeaed">
+      <tr>
+        <td align="center">
+          <table width="600" cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;">
+            <tr>
+              <td align="left" style="padding:24px 0;">
+                <img src="https://cdn.getunleash.io/unleash_logo_600.png" alt="Unleash logo" style="max-height:36px; height:auto; width:auto; display:block;" />
+              </td>
+            </tr>
+          </table>
+
+          <table width="600" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+            <tr>
+              <td style="padding:32px 24px 24px; text-align:left;">
+                <h1 style="font-size:24px; font-weight:bold; margin:16px 0;">Your personal API token is about to expire</h1>
+                <p style="font-size:16px; line-height:1.6; margin:16px 0;">Hi {{ recipientName }},</p>
+                <p style="font-size:16px; line-height:1.6; margin:16px 0;">Your personal API token{{#tokenDescription}} <strong>{{ tokenDescription }}</strong>{{/tokenDescription}} will expire in <strong>{{ daysUntilExpiry }} {{ dayWord }}</strong>.</p>
+                <p style="font-size:16px; line-height:1.6; margin:16px 0;">Anything that authenticates with this token will stop working when it expires. Create a replacement token and update your integrations before then.</p>
+                <p style="margin:16px 0;">
+                  <a href="{{{ tokensUrl }}}" target="_blank" style="display:inline-block; padding:10px 20px; background-color:#6c65e5; color:#ffffff; text-decoration:none; border-radius:6px; font-weight:bold; font-size:14px;">Manage tokens</a>
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:0 24px; text-align:left;">
+                <p style="font-size:16px; line-height:1.6; margin:16px 0;">Best,<br />Your Unleash team</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="font-size:12px; color:#3b3f44; text-align:center; padding:24px;">
+                <p style="margin:0;">This email was sent to {{ recipientEmail }}</p>
+              </td>
+            </tr>
+          </table>
+          <table width="600" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td style="height: 32px; line-height: 32px; font-size: 0;">&nbsp;</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

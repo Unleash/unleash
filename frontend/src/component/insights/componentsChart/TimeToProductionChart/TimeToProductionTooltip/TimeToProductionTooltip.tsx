@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import type { InstanceInsightsSchemaProjectFlagTrendsItem } from 'openapi';
 import { Box, Paper, Typography, styled } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
@@ -54,7 +54,7 @@ const resolveBadge = (input?: number) => {
     }
 };
 
-export const TimeToProductionTooltip: VFC<{ tooltip: TooltipState | null }> = ({
+export const TimeToProductionTooltip: FC<{ tooltip: TooltipState | null }> = ({
     tooltip,
 }) => {
     const data = tooltip?.dataPoints.map((point) => {

@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router';
 import { useEffect } from 'react';
 import { PageContent } from 'component/common/PageContent/PageContent';
 

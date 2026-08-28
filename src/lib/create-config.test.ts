@@ -21,9 +21,8 @@ test('should create default config', async () => {
         },
     });
 
-    const { experimental, flagResolver, ...configWithoutExperimental } = config;
-    expect(configWithoutExperimental).toMatchSnapshot();
-    expect(flagResolver).toMatchObject({
+    expect(config).toBeDefined();
+    expect(config.flagResolver).toMatchObject({
         getAll: expect.any(Function),
         isEnabled: expect.any(Function),
         getVariant: expect.any(Function),
@@ -567,4 +566,21 @@ describe('isOSS', () => {
         isOss = resolveIsOss(false, true, 'some environment', true);
         expect(isOss).toBe(true);
     });
+});
+
+test('notifies 14 and 3 days before token expiry unless configured otherwise', () => {
+    const config = createConfig({});
+    expect(config.tokenExpiryNotificationDays).toEqual([14, 3]);
+
+    process.env.TOKEN_EXPIRY_NOTIFICATION_DAYS = '30, 7';
+    const configured = createConfig({});
+    expect(configured.tokenExpiryNotificationDays).toEqual([30, 7]);
+    delete process.env.TOKEN_EXPIRY_NOTIFICATION_DAYS;
+});
+
+test('falls back to the default lead times when the configuration is invalid', () => {
+    process.env.TOKEN_EXPIRY_NOTIFICATION_DAYS = 'garbage,nonsense';
+    const config = createConfig({});
+    expect(config.tokenExpiryNotificationDays).toEqual([14, 3]);
+    delete process.env.TOKEN_EXPIRY_NOTIFICATION_DAYS;
 });

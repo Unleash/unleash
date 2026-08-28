@@ -1,5 +1,5 @@
 import { Suspense, useEffect } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeedbackNPS } from 'component/feedback/FeedbackNPS/FeedbackNPS';
 import { LayoutPicker } from 'component/layout/LayoutPicker/LayoutPicker';
@@ -27,6 +27,9 @@ import { MonthsOldVersionBanner } from './banners/internalBanners/MonthsOldVersi
 import { SignupDialog } from './signup/SignupDialog/SignupDialog.tsx';
 import { WelcomeDialog } from './personalDashboard/WelcomeDialog.tsx';
 import { SkipNavLink } from './common/SkipNavLink/SkipNavLink.tsx';
+import { IntroProvider } from './onboarding/intro/IntroProvider.tsx';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { UxTweakWidgets } from './uxtweak/UxTweakWidgets.tsx';
 
 const StyledContainer = styled('div')(() => ({
     '& ul': {
@@ -47,12 +50,13 @@ export const App = () => {
         : routes;
 
     useEffect(() => {
-        if (hasFetchedAuth && Boolean(user?.id)) {
+        if (hasFetchedAuth && user?.id) {
             refetchUiConfig();
         }
-    }, [authDetails, user]);
+    }, [user, hasFetchedAuth, refetchUiConfig]);
 
     const isLoggedIn = Boolean(user?.id);
+    const uxTweakSurveysEnabled = useUiFlag('uxTweakSurveys');
 
     const location = useLocation();
     useLastViewedPage(location);
@@ -79,49 +83,55 @@ export const App = () => {
                                 <ExternalBanners />
                                 <InternalBanners />
                                 <StyledContainer>
-                                    <ToastRenderer />
-                                    <Routes>
-                                        {availableRoutes.map((route) => (
+                                    <IntroProvider>
+                                        <ToastRenderer />
+                                        <Routes>
+                                            {availableRoutes.map((route) => (
+                                                <Route
+                                                    key={route.path}
+                                                    path={route.path}
+                                                    element={
+                                                        <LayoutPicker
+                                                            isStandalone={
+                                                                route.isStandalone ===
+                                                                true
+                                                            }
+                                                        >
+                                                            <ProtectedRoute
+                                                                route={route}
+                                                            />
+                                                        </LayoutPicker>
+                                                    }
+                                                />
+                                            ))}
                                             <Route
-                                                key={route.path}
-                                                path={route.path}
+                                                path='/'
+                                                element={<InitialRedirect />}
+                                            />
+                                            <Route
+                                                path='*'
                                                 element={
-                                                    <LayoutPicker
-                                                        isStandalone={
-                                                            route.isStandalone ===
-                                                            true
-                                                        }
-                                                    >
-                                                        <ProtectedRoute
-                                                            route={route}
-                                                        />
-                                                    </LayoutPicker>
+                                                    isLoggedIn ? (
+                                                        <NotFound />
+                                                    ) : (
+                                                        <LoginRedirect />
+                                                    )
                                                 }
                                             />
-                                        ))}
-                                        <Route
-                                            path='/'
-                                            element={<InitialRedirect />}
-                                        />
-                                        <Route
-                                            path='*'
-                                            element={
-                                                isLoggedIn ? (
-                                                    <NotFound />
-                                                ) : (
-                                                    <LoginRedirect />
-                                                )
-                                            }
-                                        />
-                                    </Routes>
+                                        </Routes>
 
-                                    <FeedbackNPS openUrl='http://feedback.unleash.run' />
+                                        <FeedbackNPS openUrl='http://feedback.unleash.run' />
 
-                                    <SplashOverlay />
+                                        {isLoggedIn && uxTweakSurveysEnabled ? (
+                                            <UxTweakWidgets />
+                                        ) : null}
 
-                                    <WelcomeDialog />
+                                        <SplashOverlay />
 
-                                    <SignupDialog />
+                                        <WelcomeDialog />
+
+                                        <SignupDialog />
+                                    </IntroProvider>
                                 </StyledContainer>
                             </>
                         </Demo>

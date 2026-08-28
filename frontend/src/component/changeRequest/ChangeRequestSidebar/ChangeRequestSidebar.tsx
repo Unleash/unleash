@@ -1,4 +1,4 @@
-import { useState, type VFC } from 'react';
+import { useState, type FC } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -68,7 +68,7 @@ export const Separator = () => (
     </Typography>
 );
 
-export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
+export const ChangeRequestSidebar: FC<IChangeRequestSidebarProps> = ({
     open,
     project,
     onClose,

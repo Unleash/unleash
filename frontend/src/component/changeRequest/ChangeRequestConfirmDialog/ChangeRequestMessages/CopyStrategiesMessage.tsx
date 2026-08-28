@@ -1,10 +1,10 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { styled, Typography } from '@mui/material';
 import { formatStrategyName } from 'utils/strategyNames';
-import type { IFeatureStrategyPayload } from 'interfaces/strategy';
+import type { FeatureStrategySchema } from 'openapi';
 
 interface ICopyStrategiesMessageProps {
-    payload?: IFeatureStrategyPayload[];
+    payload?: FeatureStrategySchema[];
     fromEnvironment?: string;
     environment?: string;
 }
@@ -15,7 +15,7 @@ const MsgContainer = styled('div')(({ theme }) => ({
     },
 }));
 
-export const CopyStrategiesMessage: VFC<ICopyStrategiesMessageProps> = ({
+export const CopyStrategiesMessage: FC<ICopyStrategiesMessageProps> = ({
     payload,
     fromEnvironment,
     environment,
@@ -25,7 +25,7 @@ export const CopyStrategiesMessage: VFC<ICopyStrategiesMessageProps> = ({
             <strong>Copy: </strong>
         </Typography>
         {payload?.map((strategy) => (
-            <Typography>
+            <Typography key={strategy.id}>
                 <strong>
                     {formatStrategyName(strategy?.name || '')} strategy{' '}
                 </strong>{' '}

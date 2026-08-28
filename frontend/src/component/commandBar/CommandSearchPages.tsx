@@ -1,5 +1,5 @@
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { Link } from 'react-router-dom';
+import { useEventTracker } from 'hooks/useEventTracker';
+import { Link } from 'react-router';
 import {
     CommandResultGroup,
     StyledButtonTypography,
@@ -18,7 +18,7 @@ export const CommandSearchPages = ({
     items: CommandResultGroupItem[];
     onClick: () => void;
 }) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const groupName = 'Pages';
 
     const onItemClick = (item: CommandResultGroupItem) => {
@@ -43,6 +43,7 @@ export const CommandSearchPages = ({
                     key={`command-result-group-pages-${index}`}
                     dense={true}
                     component={Link}
+                    nativeButton={false}
                     to={item.link}
                     onClick={() => {
                         onItemClick(item);

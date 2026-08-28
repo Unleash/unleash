@@ -33,10 +33,6 @@ const StyledContainer = styled('div')(({ theme }) => ({
     maxWidth: 400,
 }));
 
-const StyledInputDescription = styled('p')(({ theme }) => ({
-    marginBottom: theme.spacing(1),
-}));
-
 const StyledInput = styled(Input)(({ theme }) => ({
     width: '100%',
     marginBottom: theme.spacing(2),
@@ -87,9 +83,6 @@ export const StrategyForm: React.FC<IStrategyFormProps> = ({
     return (
         <StyledForm onSubmit={handleSubmit}>
             <StyledContainer>
-                <StyledInputDescription>
-                    What would you like to call your strategy?
-                </StyledInputDescription>
                 <StyledInput
                     disabled={mode === 'Edit'}
                     autoFocus
@@ -101,9 +94,6 @@ export const StrategyForm: React.FC<IStrategyFormProps> = ({
                     onFocus={clearErrors}
                     onBlur={validateStrategyName}
                 />
-                <StyledInputDescription>
-                    What is your strategy description?
-                </StyledInputDescription>
                 <StyledInput
                     label='Strategy description'
                     value={strategyDesc}

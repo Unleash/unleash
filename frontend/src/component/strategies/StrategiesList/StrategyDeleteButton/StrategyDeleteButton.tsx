@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import Delete from '@mui/icons-material/Delete';
@@ -12,7 +12,7 @@ interface IStrategyDeleteButtonProps {
     onClick: () => void;
 }
 
-export const StrategyDeleteButton: VFC<IStrategyDeleteButtonProps> = ({
+export const StrategyDeleteButton: FC<IStrategyDeleteButtonProps> = ({
     strategy,
     onClick,
 }) => {

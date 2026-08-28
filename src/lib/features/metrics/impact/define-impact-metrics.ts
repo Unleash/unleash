@@ -1,6 +1,6 @@
 import type { IFlagResolver } from '../../../types/index.js';
 
-export const FEAUTRE_LINK_COUNT = 'feature_link_count';
+export const FEATURE_LINK_COUNT = 'feature_link_count';
 export const CLIENT_ERROR_COUNT = 'client_error_count';
 export const SERVER_ERROR_COUNT = 'server_error_count';
 export const REQUEST_COUNT = 'request_count';
@@ -10,7 +10,7 @@ export const SCHEDULER_JOB_TIME_SECONDS = 'scheduler_job_time_seconds';
 
 export const defineImpactMetrics = (flagResolver: IFlagResolver) => {
     flagResolver.impactMetrics?.defineCounter(
-        FEAUTRE_LINK_COUNT,
+        FEATURE_LINK_COUNT,
         'Count of feature links',
     );
     flagResolver.impactMetrics?.defineCounter(

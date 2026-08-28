@@ -99,6 +99,27 @@ test('Can delete sessions by user', async () => {
     expect(noSessions.length).toBe(0);
 });
 
+test('Can delete a user other sessions while keeping the current one', async () => {
+    await sessionService.insertSession(newSession);
+    await sessionService.insertSession({ ...newSession, sid: 'second' });
+    await sessionService.insertSession({ ...newSession, sid: 'third' });
+    await sessionService.insertSession(otherSession); // different user, untouched
+
+    await sessionService.deleteSessionsForUserExcept(
+        newSession.sess.user.id,
+        'second',
+    );
+
+    const remaining = await sessionService.getSessionsForUser(
+        newSession.sess.user.id,
+    );
+    expect(remaining.map((session) => session.sid)).toEqual(['second']);
+    // other users are unaffected
+    expect(
+        await sessionService.getSessionsForUser(otherSession.sess.user.id),
+    ).toHaveLength(1);
+});
+
 test('Can delete session by sid', async () => {
     await sessionService.insertSession(newSession);
     await sessionService.insertSession(otherSession);

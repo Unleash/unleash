@@ -16,11 +16,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v5
       - name: Use Node.js 22.x
         uses: actions/setup-node@v6
         with:
           node-version: 22.x
-          cache: 'yarn'
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
       - name: Start database
         working-directory: test-migrations
         run: docker compose up db -d --wait -t 90
@@ -32,21 +34,20 @@ jobs:
         env:
           DATABASE_URL: postgres://postgres:unleash@localhost:5432/unleash
           DATABASE_SSL: false
-          YARN_ENABLE_SCRIPTS: false
         run: |
-          yarn install --immutable
-          yarn db-migrate up
+          pnpm install --frozen-lockfile
+          pnpm db-migrate up
       # run ui tests against previous version of Unleash
       - name: Run Cypress
-        uses: cypress-io/github-action@v6
+        uses: cypress-io/github-action@v7
         with:
           working-directory: frontend
           env: AUTH_USER=admin,AUTH_PASSWORD=unleash4all
+          install: false
           config: baseUrl=http://localhost:4242
           spec: cypress/oss/feature/*.spec.ts
-          install-command: yarn --immutable
       - name: Upload Cypress artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: cypress-artifacts-db-migrations

@@ -10,7 +10,10 @@ export const StyledActionButton = styled(Button)(({ theme }) => ({
     '&:hover': {
         backgroundColor: 'transparent',
     },
-    '& .MuiButton-startIcon': {
+    // Doubled `&&` so this bespoke start-icon styling out-specifies the global
+    // `MuiButton` start-icon rule in the theme, which would otherwise blow the
+    // decorative "+" up to the standard 24px and override its margin.
+    '&& .MuiButton-startIcon': {
         margin: 0,
         width: 20,
         height: 20,
@@ -21,7 +24,7 @@ export const StyledActionButton = styled(Button)(({ theme }) => ({
         alignItems: 'center',
         justifyContent: 'center',
         '& svg': {
-            fontSize: 14,
+            fontSize: 16,
             color: theme.palette.primary.main,
         },
     },

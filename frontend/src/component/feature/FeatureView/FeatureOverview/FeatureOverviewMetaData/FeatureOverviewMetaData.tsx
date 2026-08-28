@@ -6,8 +6,9 @@ import {
     ListItemIcon,
     ListItemText,
     styled,
+    Tooltip,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 import { formatDateYMD } from 'utils/formatDate';
@@ -78,12 +79,18 @@ export const StyledMetaDataItemLabel = styled('span')(({ theme }) => ({
 
 const StyledMetaDataItemText = styled('span')({
     overflowWrap: 'anywhere',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
 });
 
 export const StyledMetaDataItemValue = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
+    flex: 1,
+    minWidth: 0,
+    justifyContent: 'flex-end',
 }));
 
 export const StyledListItemIcon = styled(ListItemIcon)(({ theme }) => ({
@@ -112,7 +119,7 @@ const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
 
     const addLinkButton = (
         <PermissionButton
-            size='small'
+            size='medium'
             startIcon={<AddIcon />}
             permission={UPDATE_FEATURE}
             disabled={links.length >= 10}
@@ -155,6 +162,7 @@ const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
                 >
                     <ListItemButton
                         component='a'
+                        nativeButton={false}
                         href={link.url}
                         target='_blank'
                         rel='noopener noreferrer'
@@ -166,12 +174,14 @@ const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
                         <ListItemText
                             primary={link.title}
                             secondary={link.url}
-                            secondaryTypographyProps={{
-                                sx: {
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    whiteSpace: 'nowrap',
-                                    display: 'block',
+                            slotProps={{
+                                secondary: {
+                                    sx: {
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap',
+                                        display: 'block',
+                                    },
                                 },
                             }}
                         />
@@ -300,9 +310,11 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
                                 Created by:
                             </StyledMetaDataItemLabel>
                             <StyledMetaDataItemValue>
-                                <StyledMetaDataItemText data-loading>
-                                    {feature.createdBy?.name}
-                                </StyledMetaDataItemText>
+                                <Tooltip title={feature.createdBy?.name || ''}>
+                                    <StyledMetaDataItemText data-loading>
+                                        {feature.createdBy?.name}
+                                    </StyledMetaDataItemText>
+                                </Tooltip>
                             </StyledMetaDataItemValue>
                         </StyledMetaDataItem>
                     ) : null}

@@ -83,7 +83,7 @@ export const ApiUrls = ({ compact }: ApiUrlsProps) => {
                 <Button
                     sx={{ mt: 1, marginInline: 1.5 }}
                     variant='text'
-                    size='small'
+                    size='medium'
                     aria-expanded={showAll}
                     aria-controls='api-urls-table'
                     onClick={() => setShowAll(!showAll)}

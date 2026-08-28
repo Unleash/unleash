@@ -1,13 +1,6 @@
 import type React from 'react';
 import { type FormEvent, useState } from 'react';
-import {
-    Button,
-    capitalize,
-    Checkbox,
-    Chip,
-    styled,
-    TextField,
-} from '@mui/material';
+import { Button, capitalize, Checkbox, Chip, styled } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
@@ -25,7 +18,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import type { IUser } from 'interfaces/user';
 import type { IGroup } from 'interfaces/group';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { GO_BACK } from 'constants/navigate';
 import {
     PA_ASSIGN_CREATE_ID,
@@ -357,13 +350,16 @@ export const ProjectAccessAssign = ({
             >
                 <StyledForm onSubmit={handleSubmit}>
                     <div>
-                        <StyledInputDescription
-                            data-testid={PA_USERS_GROUPS_TITLE_ID}
-                        >
-                            Select the {entityType}
-                        </StyledInputDescription>
                         <StyledAutocompleteWrapper>
                             <AutocompleteVirtual
+                                label={capitalize(entityType)}
+                                description={
+                                    <StyledInputDescription
+                                        data-testid={PA_USERS_GROUPS_TITLE_ID}
+                                    >
+                                        Select the {entityType}
+                                    </StyledInputDescription>
+                                }
                                 data-testid={PA_USERS_GROUPS_ID}
                                 size={autocompleteSize}
                                 multiple
@@ -389,11 +385,11 @@ export const ProjectAccessAssign = ({
                                     renderOption(props, option, selected)
                                 }
                                 getOptionLabel={getOptionLabel}
-                                renderTags={(tagValue, getTagProps) =>
-                                    tagValue.map((option, index) => {
+                                renderValue={(value, getItemProps) =>
+                                    value.map((option, index) => {
                                         return (
                                             <Chip
-                                                {...getTagProps({ index })}
+                                                {...getItemProps({ index })}
                                                 size={autocompleteSize}
                                                 key={`${option.type}:${option.id}`}
                                                 label={getOptionLabel(option)}
@@ -435,19 +431,17 @@ export const ProjectAccessAssign = ({
                                     option.type === value.type &&
                                     option.entity.id === value.entity.id
                                 }
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        label={capitalize(entityType)}
-                                    />
-                                )}
                             />
                         </StyledAutocompleteWrapper>
-                        <StyledInputDescription>
-                            Select the role to assign for this project
-                        </StyledInputDescription>
                         <StyledAutocompleteWrapper>
                             <MultipleRoleSelect
+                                label='Role'
+                                description={
+                                    <StyledInputDescription>
+                                        Select the role to assign for this
+                                        project
+                                    </StyledInputDescription>
+                                }
                                 data-testid={PA_ROLE_ID}
                                 roles={filteredRoles}
                                 value={selectedRoles}

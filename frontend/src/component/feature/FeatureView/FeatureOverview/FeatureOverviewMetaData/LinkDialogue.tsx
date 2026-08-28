@@ -1,15 +1,15 @@
 import { type FC, useEffect, useState } from 'react';
-import { Box, styled, TextField } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { useFeatureLinkApi } from 'hooks/api/actions/useFeatureLinkApi/useFeatureLinkApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import type { FeatureLink } from 'interfaces/featureToggle';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
+import Input from 'component/common/Input/Input';
 
-const StyledTextField = styled(TextField)(({ theme }) => ({
-    width: '100%',
+const StyledInput = styled(Input)(({ theme }) => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
 }));
@@ -44,7 +44,7 @@ const LinkDialogue: FC<ILinkDialogueProps> = ({
     const isEditMode = mode === 'edit';
     const dialogueTitle = isEditMode ? 'Edit link' : 'Add link';
     const successMessage = isEditMode ? 'Link updated' : 'Link added';
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     useEffect(() => {
         if (isEditMode && link) {
@@ -98,19 +98,19 @@ const LinkDialogue: FC<ILinkDialogueProps> = ({
             primaryButtonText='Save'
             secondaryButtonText='Cancel'
         >
-            <Box>
-                <StyledTextField
+            <Box sx={{ width: 400, maxWidth: '100%' }}>
+                <StyledInput
                     label='Link'
                     placeholder='https://'
-                    variant='outlined'
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
+                    fullWidth
                 />
-                <StyledTextField
+                <StyledInput
                     label='Title (optional)'
-                    variant='outlined'
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
+                    fullWidth
                 />
             </Box>
         </Dialogue>

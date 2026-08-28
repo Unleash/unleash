@@ -1,4 +1,5 @@
-import { Grid, styled } from '@mui/material';
+import { styled } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { ReleasePlanTemplateCard } from './ReleasePlanTemplateCard/ReleasePlanTemplateCard.tsx';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 
@@ -8,16 +9,21 @@ const StyledGridItem = styled(Grid)({
 
 interface ITemplateList {
     templates: IReleasePlanTemplate[];
+    projectId?: string;
 }
 
 export const ReleasePlanTemplateList: React.FC<ITemplateList> = ({
     templates,
+    projectId,
 }) => {
     return (
         <>
             {templates.map((template) => (
-                <StyledGridItem key={template.id} item xs={6} md={4}>
-                    <ReleasePlanTemplateCard template={template} />
+                <StyledGridItem key={template.id} size={{ xs: 6, md: 4 }}>
+                    <ReleasePlanTemplateCard
+                        template={template}
+                        projectId={projectId}
+                    />
                 </StyledGridItem>
             ))}
         </>

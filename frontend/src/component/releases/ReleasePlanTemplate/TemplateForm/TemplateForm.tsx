@@ -46,11 +46,13 @@ interface ITemplateFormProps {
     >;
     errors: { [key: string]: string };
     clearErrors: () => void;
+    clearError: (key: string) => void;
     formTitle: string;
     archived?: boolean;
     formatApiCode: () => string;
     handleSubmit: (e: React.FormEvent) => void;
     loading?: boolean;
+    modal?: boolean;
     Limit?: React.ReactNode;
     children?: React.ReactNode;
 }
@@ -64,10 +66,12 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
     setMilestones,
     errors,
     clearErrors,
+    clearError,
     formTitle,
     archived,
     formatApiCode,
     handleSubmit,
+    modal,
     Limit,
     children,
 }) => {
@@ -86,6 +90,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
             title={formTitle}
             description={<TemplateFormDescription />}
             formatApiCode={formatApiCode}
+            modal={modal}
         >
             {archived && (
                 <Alert severity='warning'>
@@ -96,6 +101,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                 <StyledInput
                     label='Template name'
                     aria-required
+                    sx={{ marginBottom: 4 }}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     error={Boolean(errors.name)}
@@ -104,11 +110,13 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                         delete errors.name;
                     }}
                     autoFocus
-                    InputProps={{
-                        style: { fontSize: theme.typography.h1.fontSize },
-                    }}
-                    InputLabelProps={{
-                        style: { fontSize: theme.typography.h1.fontSize },
+                    slotProps={{
+                        input: {
+                            style: { fontSize: theme.typography.h1.fontSize },
+                        },
+                        inputLabel: {
+                            style: { fontSize: theme.typography.h1.fontSize },
+                        },
                     }}
                     size='medium'
                 />
@@ -117,25 +125,28 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                     multiline
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    InputProps={{
-                        style: {
-                            fontSize: theme.typography.h2.fontSize,
-                            padding: 0,
+                    slotProps={{
+                        input: {
+                            style: {
+                                fontSize: theme.typography.h2.fontSize,
+                                padding: 0,
+                            },
+                        },
+                        inputLabel: {
+                            style: {
+                                fontSize: theme.typography.h2.fontSize,
+                                padding: 0,
+                            },
                         },
                     }}
-                    InputLabelProps={{
-                        style: {
-                            fontSize: theme.typography.h2.fontSize,
-                            padding: 0,
-                        },
-                    }}
-                    size='small'
+                    size='large'
                 />
                 <MilestoneList
                     milestones={milestones}
                     setMilestones={setMilestones}
                     errors={errors}
                     clearErrors={clearErrors}
+                    clearError={clearError}
                     milestoneChanged={milestoneChanged}
                 />
 

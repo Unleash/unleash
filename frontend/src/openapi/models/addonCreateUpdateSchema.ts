@@ -27,7 +27,7 @@ The list of all supported providers and their parameters for a specific Unleash 
 
 The default set of providers can be found in the [addons reference documentation](https://docs.getunleash.io/integrate). The default supported options are:
 - `datadog` for [Datadog](https://docs.getunleash.io/integrate/datadog)
-- `slack` for [Slack](https://docs.getunleash.io/integrate/slack)
+- `slack-app` for [Slack](https://docs.getunleash.io/integrate/slack-app)
 - `teams` for [Microsoft Teams](https://docs.getunleash.io/integrate/teams)
 - `webhook` for [webhooks](https://docs.getunleash.io/integrate/webhook)
 

@@ -1,7 +1,7 @@
 import { render, screen, cleanup } from '@testing-library/react';
 import { Sticky } from './Sticky.tsx';
 import { type IStickyContext, StickyContext } from './StickyContext.tsx';
-import { vi, expect } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('Sticky component', () => {
     let originalConsoleError: () => void;

@@ -1,7 +1,6 @@
 import { styled } from '@mui/material';
 import HourglassEmptyOutlinedIcon from '@mui/icons-material/HourglassEmptyOutlined';
 import { isToday, isTomorrow, addMinutes } from 'date-fns';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateHM, formatDateYMD } from 'utils/formatDate';
 import type { MilestoneStatus } from './ReleasePlanMilestoneStatus.tsx';
@@ -46,12 +45,7 @@ interface IMilestoneNextStartTimeProps {
 export const MilestoneNextStartTime = ({
     status,
 }: IMilestoneNextStartTimeProps) => {
-    const milestoneProgressionEnabled = useUiFlag('milestoneProgression');
     const { locationSettings } = useLocationSettings();
-
-    if (!milestoneProgressionEnabled) {
-        return null;
-    }
 
     if (status.type !== 'not-started' || !status.scheduledAt) {
         return null;

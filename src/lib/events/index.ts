@@ -125,6 +125,10 @@ export const CLIENT_REGISTER = 'client-register' as const;
 
 export const PAT_CREATED = 'pat-created' as const;
 export const PAT_DELETED = 'pat-deleted' as const;
+export const SERVICE_ACCOUNT_TOKEN_CREATED =
+    'service-account-token-created' as const;
+export const SERVICE_ACCOUNT_TOKEN_DELETED =
+    'service-account-token-deleted' as const;
 
 export const PUBLIC_SIGNUP_TOKEN_CREATED =
     'public-signup-token-created' as const;
@@ -182,6 +186,7 @@ export const BANNER_DELETED = 'banner-deleted' as const;
 
 export const SAFEGUARD_CHANGED = 'safeguard-changed' as const;
 export const SAFEGUARD_DELETED = 'safeguard-deleted' as const;
+export const SAFEGUARD_TRIGGERED = 'safeguard-triggered' as const;
 export const RELEASE_PLAN_PROGRESSIONS_RESUMED =
     'release-plan-progressions-resumed' as const;
 export const RELEASE_PLAN_PROGRESSIONS_PAUSED =
@@ -241,6 +246,9 @@ export const USER_ACCESS_REQUEST_APPROVED =
     'user-access-request-approved' as const;
 export const USER_ACCESS_REQUEST_REJECTED =
     'user-access-request-rejected' as const;
+
+export const REMOTE_MCP_SERVER_SETTINGS_UPDATED =
+    'remote-mcp-server-settings-updated' as const;
 
 export const IEventTypes = [
     APPLICATION_CREATED,
@@ -339,6 +347,8 @@ export const IEventTypes = [
     CLIENT_REGISTER,
     PAT_CREATED,
     PAT_DELETED,
+    SERVICE_ACCOUNT_TOKEN_CREATED,
+    SERVICE_ACCOUNT_TOKEN_DELETED,
     PUBLIC_SIGNUP_TOKEN_CREATED,
     PUBLIC_SIGNUP_TOKEN_USER_ADDED,
     PUBLIC_SIGNUP_TOKEN_TOKEN_UPDATED,
@@ -379,6 +389,7 @@ export const IEventTypes = [
     BANNER_DELETED,
     SAFEGUARD_CHANGED,
     SAFEGUARD_DELETED,
+    SAFEGUARD_TRIGGERED,
     RELEASE_PLAN_PROGRESSIONS_RESUMED,
     RELEASE_PLAN_PROGRESSIONS_PAUSED,
     PROJECT_ENVIRONMENT_ADDED,
@@ -416,6 +427,7 @@ export const IEventTypes = [
     USER_ACCESS_REQUEST_REGISTERED,
     USER_ACCESS_REQUEST_APPROVED,
     USER_ACCESS_REQUEST_REJECTED,
+    REMOTE_MCP_SERVER_SETTINGS_UPDATED,
 ] as const;
 export type IEventType = (typeof IEventTypes)[number];
 

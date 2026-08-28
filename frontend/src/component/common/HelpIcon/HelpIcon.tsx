@@ -1,5 +1,5 @@
 import { styled, Tooltip, type TooltipProps } from '@mui/material';
-import HelpOutline from '@mui/icons-material/HelpOutline';
+import HelpOutline from '@mui/icons-material/HelpOutlineOutlined';
 import {
     HtmlTooltip,
     type IHtmlTooltipProps,
@@ -23,6 +23,7 @@ const StyledContainer = styled('span')<{ size: string | undefined }>(
             fontSize: size || theme.fontSizes.mainHeader,
             color: theme.palette.action.active,
             marginLeft: theme.spacing(0.5),
+            marginRight: theme.spacing(0.5),
         },
     }),
 );
@@ -62,6 +63,22 @@ export const HelpIcon = ({
                 placement={placement}
                 arrow
                 maxWidth={htmlTooltipMaxWidth}
+                slotProps={{
+                    tooltip: {
+                        onMouseDown: (event) => {
+                            const link = (event.target as Element).closest(
+                                'a[href]',
+                            );
+                            if (
+                                event.button === 0 &&
+                                link &&
+                                event.currentTarget.contains(link)
+                            ) {
+                                event.preventDefault();
+                            }
+                        },
+                    },
+                }}
             >
                 <StyledContainer size={size} tabIndex={0} aria-label='Help'>
                     {children ?? <HelpOutline />}

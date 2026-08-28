@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { screen } from '@testing-library/react';
 import { FORGOTTEN_PASSWORD_FIELD } from 'utils/testIds';
 import ForgottenPassword from 'component/user/ForgottenPassword/ForgottenPassword';

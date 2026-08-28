@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { sortStrategiesByFeature } from './sort-strategies.js';
 
 describe('sorting strategies by feature', () => {

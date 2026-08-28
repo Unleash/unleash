@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Box, TextField, Typography } from '@mui/material';
+import { useNavigate } from 'react-router';
+import { Box, Typography } from '@mui/material';
 import { CREATED, OK } from 'constants/statusCodes';
 import useToast from 'hooks/useToast';
 import useResetPassword from 'hooks/api/getters/useResetPassword/useResetPassword';
@@ -16,6 +16,7 @@ import ResetPasswordForm from '../common/ResetPasswordForm/ResetPasswordForm.tsx
 import InvalidToken from '../common/InvalidToken/InvalidToken.tsx';
 import { NewUserWrapper } from './NewUserWrapper/NewUserWrapper.tsx';
 import ResetPasswordError from '../common/ResetPasswordError/ResetPasswordError.tsx';
+import Input from 'component/common/Input/Input.tsx';
 
 export const NewUser = () => {
     const { authDetails } = useAuthDetails();
@@ -114,9 +115,18 @@ export const NewUser = () => {
                     </Typography>
                 }
             />
-            <Typography color='text.secondary'>
+            <Typography
+                sx={{
+                    color: 'text.secondary',
+                }}
+            >
                 We suggest using{' '}
-                <Typography component='strong' fontWeight='bold'>
+                <Typography
+                    component='strong'
+                    sx={{
+                        fontWeight: 'bold',
+                    }}
+                >
                     the email you use for work
                 </Typography>
                 .
@@ -156,7 +166,7 @@ export const NewUser = () => {
                                 </Typography>
                             )}
                         />
-                        <TextField
+                        <Input
                             data-loading
                             type='email'
                             value={
@@ -166,8 +176,7 @@ export const NewUser = () => {
                             }
                             id='email'
                             label='Email'
-                            variant='outlined'
-                            size='small'
+                            size='large'
                             sx={{ my: 1 }}
                             disabled={isValidToken}
                             fullWidth
@@ -182,13 +191,12 @@ export const NewUser = () => {
                         <ConditionallyRender
                             condition={Boolean(isValidInvite)}
                             show={() => (
-                                <TextField
+                                <Input
                                     data-loading
                                     value={name}
                                     id='username'
                                     label='Full name'
-                                    variant='outlined'
-                                    size='small'
+                                    size='large'
                                     sx={{ my: 1 }}
                                     fullWidth
                                     required

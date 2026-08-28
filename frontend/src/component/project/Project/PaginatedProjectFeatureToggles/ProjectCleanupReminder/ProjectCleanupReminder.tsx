@@ -2,12 +2,12 @@ import type { FC } from 'react';
 import { Alert, Box, Button, styled } from '@mui/material';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { subDays, formatISO } from 'date-fns';
 import { useReminders } from 'component/feature/FeatureView/CleanupReminder/useReminders';
 import { useHasRootAccess } from 'hooks/useHasAccess';
 import { DELETE_FEATURE } from 'component/providers/AccessProvider/permissions';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 const ActionsBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -35,7 +35,7 @@ export const ProjectCleanupReminder: FC<{
     const navigate = useNavigate();
     const { shouldShowReminder, snoozeReminder } = useReminders();
     const hasAccess = useHasRootAccess(DELETE_FEATURE, projectId);
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const reminderKey = `project-cleanup-${projectId}`;
     const query = getQuery(projectId);

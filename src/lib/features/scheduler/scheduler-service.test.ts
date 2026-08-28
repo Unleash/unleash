@@ -2,8 +2,8 @@ import { SchedulerService } from './scheduler-service.js';
 import type { LogProvider } from '../../logger.js';
 import MaintenanceService from '../maintenance/maintenance-service.js';
 import { createTestConfig } from '../../../test/config/test-config.js';
-import SettingService from '../../services/setting-service.js';
-import FakeSettingStore from '../../../test/fixtures/fake-setting-store.js';
+import SettingService from '../settings/setting-service.js';
+import FakeSettingStore from '../settings/fake-setting-store.js';
 import type EventService from '../events/event-service.js';
 import { SCHEDULER_JOB_TIME } from '../../metric-events.js';
 import EventEmitter from 'events';
@@ -237,6 +237,7 @@ it('should emit scheduler job time event when scheduled function is run', async 
 
     await schedulerService.schedule(mockJob, 50, 'testJobId');
     await eventPromise;
+    schedulerService.stop();
 });
 
 test('Delays initial job execution by jitter duration', async () => {

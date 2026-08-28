@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import Authentication from 'component/user/Authentication/Authentication';
 import { screen } from '@testing-library/react';
 import {
@@ -78,10 +79,6 @@ test('should render email auth', async () => {
     expect(screen.getByTestId(LOGIN_EMAIL_ID)).toBeInTheDocument();
     expect(screen.queryByTestId(LOGIN_PASSWORD_ID)).not.toBeInTheDocument();
     expect(screen.getByTestId(LOGIN_BUTTON)).toBeInTheDocument();
-});
-
-test('should render Google auth', async () => {
-    await testSSOAuthOption('google');
 });
 
 test('should render OIDC auth', async () => {

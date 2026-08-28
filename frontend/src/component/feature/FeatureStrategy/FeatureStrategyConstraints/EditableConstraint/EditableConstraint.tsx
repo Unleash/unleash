@@ -106,7 +106,7 @@ const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
         background: 'none',
     },
     ':focus-within fieldset': { borderBottomStyle: 'solid' },
-    'label + &': {
+    '.MuiInputLabel-root + &': {
         // mui adds a margin top to 'standard' selects with labels
         margin: 0,
     },
@@ -142,7 +142,7 @@ const TopRowInput: FC<{
     clearValues: () => void;
     localConstraint: EditableConstraintType;
     validator: (value: string) => ConstraintValidationResult;
-    addValuesButtonRef: React.RefObject<HTMLButtonElement>;
+    addValuesButtonRef: React.RefObject<HTMLDivElement | null>;
     editingOpen: boolean;
     setEditingOpen: (open: boolean) => void;
 }> = ({
@@ -170,7 +170,9 @@ const TopRowInput: FC<{
                 onAddValue={addValues}
                 removeValue={clearValues}
                 currentValue={localConstraint.value}
-                helpText={'A semver value should be of the format X.Y.Z'}
+                helpText={
+                    'A semver value should be of the format X.Y.Z, optionally with a prerelease and/or build suffix, such as 1.2.3-beta.1+build.5'
+                }
                 inputType={'text'}
             />
         );
@@ -351,7 +353,7 @@ export const EditableConstraint: FC<Props> = ({
     const showCaseSensitiveButton =
         isStringOperator(operator) || isRegexOperator(operator);
     const deleteButtonRef = useRef<HTMLButtonElement>(null);
-    const addValuesButtonRef = useRef<HTMLButtonElement>(null);
+    const addValuesButtonRef = useRef<HTMLDivElement>(null);
 
     if (!context) {
         return null;
@@ -444,11 +446,11 @@ export const EditableConstraint: FC<Props> = ({
                     <StyledIconButton
                         type='button'
                         data-testid='DELETE_CONSTRAINT_BUTTON'
-                        size='small'
+                        size='medium'
                         onClick={onDelete}
                         ref={deleteButtonRef}
                     >
-                        <Delete fontSize='inherit' />
+                        <Delete />
                     </StyledIconButton>
                 </HtmlTooltip>
             </TopRow>

@@ -2,6 +2,7 @@ export interface IPersonalAPIToken {
     id: string;
     description: string;
     expiresAt: string;
+    expiryWarning?: 'expires-soon' | 'expired';
     createdAt: string;
     seenAt: string;
 }

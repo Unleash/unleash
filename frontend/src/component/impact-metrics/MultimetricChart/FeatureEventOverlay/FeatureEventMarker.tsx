@@ -54,13 +54,14 @@ export const FeatureEventMarker: FC<{ group: EventGroup }> = ({ group }) => {
         <Tooltip
             arrow
             placement='top'
-            componentsProps={{
+            title={<FeatureEventTooltip group={group} />}
+            slotProps={{
                 tooltip: {
                     sx: {
                         bgcolor: theme.palette.background.paper,
                         color: theme.palette.text.primary,
-                        padding: theme.spacing(1.25, 1.5),
-                        borderRadius: theme.shape.borderRadiusMedium,
+                        padding: theme.spacing(2),
+                        borderRadius: `${theme.shape.borderRadiusMedium}px`,
                         boxShadow: theme.shadows[6],
                         border: `1px solid ${theme.palette.divider}`,
                         maxWidth: 320,
@@ -75,7 +76,6 @@ export const FeatureEventMarker: FC<{ group: EventGroup }> = ({ group }) => {
                     },
                 },
             }}
-            title={<FeatureEventTooltip group={group} />}
         >
             <StyledMarkerWrapper sx={{ left: `${clampedPct}%` }}>
                 <StyledMarker

@@ -1,12 +1,7 @@
 import type React from 'react';
 import { useEffect, useState } from 'react';
-import {
-    Button,
-    FormControlLabel,
-    Grid,
-    Switch,
-    TextField,
-} from '@mui/material';
+import { Button, FormControlLabel, Switch } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { Alert } from '@mui/material';
 import { AutoCreateForm } from '../AutoCreateForm/AutoCreateForm.tsx';
 import useToast from 'hooks/useToast';
@@ -18,6 +13,7 @@ import { removeEmptyStringFields } from 'utils/removeEmptyStringFields';
 import { SsoGroupSettings } from '../SsoGroupSettings.tsx';
 import type { IRole } from 'interfaces/role';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import Input from 'component/common/Input/Input.tsx';
 
 const initialState = {
     enabled: false,
@@ -99,7 +95,7 @@ export const SamlAuth = () => {
     return (
         <>
             <Grid container sx={{ mb: 3 }}>
-                <Grid item md={12}>
+                <Grid size={{ md: 12 }}>
                     <ConditionallyRender
                         condition={Boolean(samlConfiguredThroughEnv)}
                         show={
@@ -107,7 +103,7 @@ export const SamlAuth = () => {
                                 SAML is currently configured via environment
                                 variables. Please refer to the{' '}
                                 <a
-                                    href='https://www.unleash-hosted.com/docs/enterprise-authentication'
+                                    href='https://docs.getunleash.io/single-sign-on/how-to-add-sso-saml'
                                     target='_blank'
                                     rel='noreferrer'
                                 >
@@ -121,7 +117,7 @@ export const SamlAuth = () => {
                     <Alert severity='info'>
                         Please read the{' '}
                         <a
-                            href='https://www.unleash-hosted.com/docs/enterprise-authentication'
+                            href='https://docs.getunleash.io/single-sign-on/how-to-add-sso-saml'
                             target='_blank'
                             rel='noreferrer'
                         >
@@ -137,11 +133,11 @@ export const SamlAuth = () => {
             </Grid>
             <form onSubmit={onSubmit}>
                 <Grid container spacing={3}>
-                    <Grid item md={5} mb={2}>
+                    <Grid size={{ md: 5 }} sx={{ mb: 2 }}>
                         <strong>Enable</strong>
                         <p>Enable SAML 2.0 Authentication.</p>
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid size={{ md: 6 }}>
                         <FormControlLabel
                             control={
                                 <Switch
@@ -156,102 +152,100 @@ export const SamlAuth = () => {
                         />
                     </Grid>
                 </Grid>
-                <Grid container spacing={3} mb={2}>
-                    <Grid item md={5}>
+                <Grid container spacing={3} sx={{ mb: 2 }}>
+                    <Grid size={{ md: 5 }}>
                         <strong>Entity ID</strong>
                         <p>(Required) The Entity Identity provider issuer.</p>
                     </Grid>
-                    <Grid item md={6}>
-                        <TextField
+                    <Grid size={{ md: 6 }}>
+                        <Input
                             onChange={trimAndUpdateField}
                             label='Entity ID'
                             name='entityId'
                             value={data.entityId}
                             disabled={!data.enabled || samlConfiguredThroughEnv}
                             style={{ width: '400px' }}
-                            variant='outlined'
-                            size='small'
+                            size='large'
                             required
                         />
                     </Grid>
                 </Grid>
-                <Grid container spacing={3} mb={2}>
-                    <Grid item md={5}>
+                <Grid container spacing={3} sx={{ mb: 2 }}>
+                    <Grid size={{ md: 5 }}>
                         <strong>Single Sign-On URL</strong>
                         <p>
                             (Required) The url to redirect the user to for
                             signing in.
                         </p>
                     </Grid>
-                    <Grid item md={6}>
-                        <TextField
+                    <Grid size={{ md: 6 }}>
+                        <Input
                             onChange={trimAndUpdateField}
                             label='Single Sign-On URL'
                             name='signOnUrl'
                             value={data.signOnUrl}
                             disabled={!data.enabled || samlConfiguredThroughEnv}
                             style={{ width: '400px' }}
-                            variant='outlined'
-                            size='small'
+                            size='large'
                             required
                         />
                     </Grid>
                 </Grid>
-                <Grid container spacing={3} mb={4}>
-                    <Grid item md={5}>
+                <Grid container spacing={3} sx={{ mb: 4 }}>
+                    <Grid size={{ md: 5 }}>
                         <strong>X.509 Certificate</strong>
                         <p>
                             (Required) The certificate used to sign the SAML 2.0
                             request.
                         </p>
                     </Grid>
-                    <Grid item md={7}>
-                        <TextField
+                    <Grid size={{ md: 7 }}>
+                        <Input
                             onChange={updateField}
                             label='X.509 Certificate'
                             name='certificate'
                             value={data.certificate}
                             disabled={!data.enabled || samlConfiguredThroughEnv}
                             style={{ width: '100%' }}
-                            InputProps={{
-                                style: {
-                                    fontSize: '0.6em',
-                                    fontFamily: 'monospace',
-                                },
-                            }}
                             multiline
                             rows={14}
                             maxRows={14}
-                            variant='outlined'
-                            size='small'
+                            size='large'
                             required
+                            slotProps={{
+                                input: {
+                                    style: {
+                                        fontSize: '0.6em',
+                                        fontFamily: 'monospace',
+                                    },
+                                },
+                            }}
                         />
                     </Grid>
                 </Grid>
                 <h3>Optional Configuration</h3>
-                <Grid container spacing={3} mb={2}>
-                    <Grid item md={5}>
+                <Grid container spacing={3} sx={{ mb: 2 }}>
+                    <Grid size={{ md: 5 }}>
                         <strong>Single Sign-out URL</strong>
                         <p>
                             (Optional) The url to redirect the user to for
                             signing out of the IDP.
                         </p>
                     </Grid>
-                    <Grid item md={6}>
-                        <TextField
+                    <Grid size={{ md: 6 }}>
+                        <Input
                             onChange={trimAndUpdateField}
                             label='Single Sign-out URL'
                             name='signOutUrl'
                             value={data.signOutUrl}
                             disabled={!data.enabled || samlConfiguredThroughEnv}
                             style={{ width: '400px' }}
-                            variant='outlined'
-                            size='small'
+                            size='large'
                         />
                     </Grid>
                 </Grid>
-                <Grid container spacing={3} mb={2}>
-                    <Grid item md={5}>
+                <Grid container spacing={3} sx={{ mb: 2 }}>
+                    <Grid size={{ md: 5 }}>
                         <strong>Service Provider X.509 Certificate</strong>
                         <p>
                             (Optional) The private certificate used by the
@@ -260,25 +254,26 @@ export const SamlAuth = () => {
                             requests (SLO).
                         </p>
                     </Grid>
-                    <Grid item md={7}>
-                        <TextField
+                    <Grid size={{ md: 7 }}>
+                        <Input
                             onChange={updateField}
                             label='X.509 Certificate'
                             name='spCertificate'
                             value={data.spCertificate}
                             disabled={!data.enabled || samlConfiguredThroughEnv}
                             style={{ width: '100%' }}
-                            InputProps={{
-                                style: {
-                                    fontSize: '0.6em',
-                                    fontFamily: 'monospace',
-                                },
-                            }}
                             multiline
                             rows={14}
                             maxRows={14}
-                            variant='outlined'
-                            size='small'
+                            size='large'
+                            slotProps={{
+                                input: {
+                                    style: {
+                                        fontSize: '0.6em',
+                                        fontFamily: 'monospace',
+                                    },
+                                },
+                            }}
                         />
                     </Grid>
                 </Grid>
@@ -297,7 +292,7 @@ export const SamlAuth = () => {
                     disabled={samlConfiguredThroughEnv}
                 />
                 <Grid container spacing={3}>
-                    <Grid item md={5}>
+                    <Grid size={{ md: 5 }}>
                         <Button
                             variant='contained'
                             color='primary'

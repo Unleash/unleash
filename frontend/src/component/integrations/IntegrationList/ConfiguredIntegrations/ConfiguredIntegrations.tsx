@@ -2,7 +2,7 @@ import type { AddonSchema, AddonTypeSchema } from 'openapi';
 import useLoading from 'hooks/useLoading';
 import { StyledCardsGrid } from '../IntegrationList.styles';
 import { IntegrationCard } from '../IntegrationCard/IntegrationCard.tsx';
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { Typography, styled } from '@mui/material';
 import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
 import { useUiFlag } from 'hooks/useUiFlag';
@@ -22,7 +22,7 @@ type ConfiguredIntegrationsProps = {
     providers: AddonTypeSchema[];
 };
 
-export const ConfiguredIntegrations: VFC<ConfiguredIntegrationsProps> = ({
+export const ConfiguredIntegrations: FC<ConfiguredIntegrationsProps> = ({
     loading,
     addons,
     providers,
@@ -39,7 +39,12 @@ export const ConfiguredIntegrations: VFC<ConfiguredIntegrationsProps> = ({
                 <Typography component='h3' variant='h2'>
                     Configured integrations
                 </Typography>
-                <Typography variant='body2' color='text.secondary'>
+                <Typography
+                    variant='body2'
+                    sx={{
+                        color: 'text.secondary',
+                    }}
+                >
                     These are the integrations that are currently configured for
                     your Unleash instance.
                 </Typography>
@@ -48,14 +53,7 @@ export const ConfiguredIntegrations: VFC<ConfiguredIntegrationsProps> = ({
                 {addons
                     ?.sort(({ id: a }, { id: b }) => a - b)
                     .map((addon) => {
-                        const {
-                            id,
-                            enabled,
-                            provider,
-                            description,
-                            // events,
-                            // projects,
-                        } = addon;
+                        const { id, enabled, provider, description } = addon;
                         const providerConfig = providers.find(
                             (item) => item.name === provider,
                         );

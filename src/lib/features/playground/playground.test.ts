@@ -3,7 +3,6 @@ import fc from 'fast-check';
 import supertest from 'supertest';
 import { createServices } from '../../services/index.js';
 import { createTestConfig } from '../../../test/config/test-config.js';
-import { it } from '@fast-check/vitest';
 import { describe } from 'vitest';
 import createStores from '../../../test/fixtures/store.js';
 
@@ -13,8 +12,8 @@ import {
     type PlaygroundRequestSchema,
 } from '../../openapi/spec/playground-request-schema.js';
 
-import { generate as generateRequest } from '../../openapi/spec/playground-request-schema.test.js';
-import { clientFeatures } from '../../../test/arbitraries.test.js';
+import { generate as generateRequest } from '../../openapi/spec/playground-request-schema.arbitraries.js';
+import { clientFeatures } from '../../../test/arbitraries.js';
 
 async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;

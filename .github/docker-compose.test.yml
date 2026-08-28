@@ -33,7 +33,8 @@ services:
     environment:
       DATABASE_URL: "postgres://postgres:unleash@db/unleash"
       DATABASE_SSL: "false"
-      UNLEASH_LICENSE: "${FRONTEND_TEST_LICENSE}"
+      UNLEASH_TEST_LICENSE: "${UNLEASH_TEST_LICENSE:-${FRONTEND_TEST_LICENSE}}"
+      UNLEASH_LICENSE: "${UNLEASH_TEST_LICENSE:-${FRONTEND_TEST_LICENSE}}"
       LOG_LEVEL: "info"
     depends_on:
       db:

@@ -24,12 +24,6 @@ export const clientApplicationSchema = {
                 'An SDK version identifier. Usually formatted as "unleash-client-<language>:<version>"',
             example: 'unleash-client-java:7.0.0',
         },
-        environment: {
-            description: `The SDK's configured 'environment' property. This property was deprecated in v5. This property  does **not** control which Unleash environment the SDK gets toggles for. To control Unleash environments, use the SDKs API key.`,
-            deprecated: true,
-            type: 'string',
-            example: 'development',
-        },
         platformName: {
             description:
                 'The platform the application is running on. For languages that compile to binaries, this can be omitted',
@@ -53,6 +47,20 @@ export const clientApplicationSchema = {
                 'The version of the Unleash client specification the client supports',
             type: 'string',
             example: '3.0.0',
+        },
+        sdkFlavor: {
+            description:
+                'The identifier of an integration built on top of an Unleash SDK (e.g. an OpenFeature provider). Sent so adoption of the integration can be tracked alongside sdkVersion.',
+            type: 'string',
+            maxLength: 256,
+            example: 'unleash-openfeature-node-provider',
+        },
+        sdkFlavorVersion: {
+            description:
+                'The version of the integration identified by sdk flavor, that has been built on top of an Unleash SDK',
+            type: 'string',
+            maxLength: 32,
+            example: '1.0.1',
         },
         interval: {
             type: 'number',

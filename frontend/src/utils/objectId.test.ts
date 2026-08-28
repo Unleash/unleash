@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { objectId } from 'utils/objectId';
 
 test('objectId', () => {

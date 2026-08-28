@@ -6,35 +6,38 @@ npm install @unleash/proxy-client-svelte
 2\. Initialize Unleash
 ```svelte
 <script>
-	import { FlagProvider } from '@unleash/proxy-client-svelte';
+    import { FlagProvider } from '@unleash/proxy-client-svelte';
+    const { children } = $props();
 
-	const config = {
+    const config = {
         url: '<YOUR_API_URL>',
         clientKey: '<YOUR_API_TOKEN>', // in production use environment variable
         appName: 'unleash-onboarding-svelte',
-	};
+    };
 </script>
 
 <div class="app">
-	<FlagProvider {config}>
-		<main>
-			<slot />
-		</main>
-	</FlagProvider>
+    <FlagProvider {config}>
+        <main>
+            {@render children()}
+        </main>
+    </FlagProvider>
 </div>
 ```
 
 3\. Check feature flag status
 ```svelte
 <script lang="ts">
-	import { useFlag } from '@unleash/proxy-client-svelte';
-	const enabled = useFlag('<YOUR_FLAG>');
+    import { useFlag } from '@unleash/proxy-client-svelte';
+    const enabled = useFlag('<YOUR_FLAG>');
 </script>
 
 <section>
-    <p>
-        {$enabled ? 'Feature is enabled!' : 'Feature is disabled!'}
-    </p>
+    {#if $enabled}
+        <p><YOUR_FLAG> is enabled!</p>
+    {:else}
+        <p><YOUR_FLAG> is disabled!</p>
+    {/if}
 </section>
 ```
 ---
@@ -49,4 +52,21 @@ const config = {
 ---
 - [SDK repository with documentation](https://github.com/Unleash/proxy-client-svelte)
 - [Svelte example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/Svelte)
-- [How to Implement Feature Flags in SvelteKit](https://docs.getunleash.io/feature-flag-tutorials/sveltekit)
+- [How to Implement Feature Flags in SvelteKit](https://docs.getunleash.io/guides/implement-feature-flags-in-sveltekit)
+
+---
+
+```svelte
+<script lang="ts">
+    import { useFlag } from '@unleash/proxy-client-svelte';
+    const enabled = useFlag('<YOUR_FLAG>');
+</script>
+
+<section>
+    {#if $enabled}
+        <p><YOUR_FLAG> is enabled!</p>
+    {:else}
+        <p><YOUR_FLAG> is disabled!</p>
+    {/if}
+</section>
+```

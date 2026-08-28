@@ -25,6 +25,16 @@ test('constraintSchema invalid value type', () => {
     ).toMatchSnapshot();
 });
 
+test('constraintSchema invalid empty value', () => {
+    expect(
+        validateSchema('#/components/schemas/constraintSchema', {
+            contextName: 'a',
+            operator: 'DATE_AFTER',
+            value: '',
+        }),
+    ).toBeDefined();
+});
+
 test('constraintSchema invalid operator name', () => {
     expect(
         validateSchema('#/components/schemas/constraintSchema', {

@@ -10,7 +10,10 @@ export const getTimeUnit = (timeRange: string) => {
         case 'week':
             return 'day';
         case 'month':
+        case 'threeMonths':
             return 'week';
+        case 'sixMonths':
+            return 'month';
         default:
             return 'day';
     }
@@ -25,7 +28,10 @@ export const getDisplayFormat = (timeRange: string) => {
         case 'week':
             return 'MMM dd';
         case 'month':
+        case 'threeMonths':
             return 'MMM dd';
+        case 'sixMonths':
+            return 'MMM';
         default:
             return 'MMM dd';
     }

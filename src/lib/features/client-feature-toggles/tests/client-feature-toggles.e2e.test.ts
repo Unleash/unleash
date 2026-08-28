@@ -157,6 +157,7 @@ beforeAll(async () => {
                 flags: {
                     strictSchemaValidation: true,
                     deltaApi: true,
+                    allowDeprecatedApiTokenMiddleware: true,
                 },
             },
         },
@@ -170,6 +171,7 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
+                    allowDeprecatedApiTokenMiddleware: true,
                 },
             },
             ui: {
@@ -186,6 +188,7 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
+                    allowDeprecatedApiTokenMiddleware: true,
                 },
             },
             ui: {

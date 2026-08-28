@@ -1,3 +1,4 @@
+import { expect, it } from 'vitest';
 import { batchCreationArchiveData } from './batchCreationArchiveData.ts';
 
 it('handles a single data point', () => {

@@ -1,9 +1,8 @@
-import { useMemo, useState, type VFC } from 'react';
-import { Button } from '@mui/material';
-import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
+import { useMemo, useState, type FC } from 'react';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { DELETE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import type { FeatureSchema } from 'openapi';
 import { addDays, isBefore } from 'date-fns';
 
@@ -23,14 +22,14 @@ const isFeatureInUse = (feature?: FeatureSchema): boolean => {
     );
 };
 
-export const ArchiveButton: VFC<IArchiveButtonProps> = ({
+export const ArchiveButton: FC<IArchiveButtonProps> = ({
     projectId,
     featureIds,
     features,
     onConfirm,
 }) => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const featuresWithUsage = useMemo(() => {
         return featureIds.filter((name) => {
@@ -51,20 +50,16 @@ export const ArchiveButton: VFC<IArchiveButtonProps> = ({
 
     return (
         <>
-            <PermissionHOC projectId={projectId} permission={DELETE_FEATURE}>
-                {({ hasAccess }) => (
-                    <span>
-                        <Button
-                            disabled={!hasAccess || isDialogOpen}
-                            variant='outlined'
-                            size='small'
-                            onClick={() => setIsDialogOpen(true)}
-                        >
-                            Archive
-                        </Button>
-                    </span>
-                )}
-            </PermissionHOC>
+            <PermissionButton
+                permission={DELETE_FEATURE}
+                projectId={projectId}
+                disabled={isDialogOpen}
+                variant='outlined'
+                size='medium'
+                onClick={() => setIsDialogOpen(true)}
+            >
+                Archive
+            </PermissionButton>
             <FeatureArchiveDialog
                 projectId={projectId}
                 featureIds={featureIds}

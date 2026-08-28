@@ -41,6 +41,7 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
+                    allowDeprecatedApiTokenMiddleware: true,
                 },
             },
         },

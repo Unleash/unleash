@@ -22,6 +22,24 @@ interface IParameters {
     customHeaders?: string;
 }
 
+const isInsideDoubleQuotedString = (value: string, offset: number): boolean => {
+    let inString = false;
+    let escaped = false;
+
+    for (let i = 0; i < offset; i++) {
+        const char = value[i];
+        if (escaped) {
+            escaped = false;
+        } else if (char === '\\') {
+            escaped = true;
+        } else if (char === '"') {
+            inString = !inString;
+        }
+    }
+
+    return inString;
+};
+
 export default class Webhook extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
@@ -50,18 +68,34 @@ export default class Webhook extends Addon {
             authorization,
             customHeaders,
         } = parameters;
+        const eventMarkdown = this.msgFormatter.format(event).text;
         const context = {
             event,
             // Stringify twice to avoid escaping in Mustache
             eventJson: JSON.stringify(JSON.stringify(event)),
-            eventMarkdown: this.msgFormatter.format(event).text,
+            eventMarkdown,
         };
 
         let body: string | undefined;
         let sendingEvent = false;
 
         if (typeof bodyTemplate === 'string' && bodyTemplate.length > 1) {
-            body = Mustache.render(bodyTemplate, context);
+            const eventMarkdownPlaceholder = '\0UNLEASH_EVENT_MARKDOWN\0';
+            const renderedBody = Mustache.render(bodyTemplate, {
+                ...context,
+                eventMarkdown: eventMarkdownPlaceholder,
+            });
+            const escapedEventMarkdown = JSON.stringify(eventMarkdown).slice(
+                1,
+                -1,
+            );
+            body = renderedBody.replaceAll(
+                eventMarkdownPlaceholder,
+                (_match, offset: number) =>
+                    isInsideDoubleQuotedString(renderedBody, offset)
+                        ? escapedEventMarkdown
+                        : eventMarkdown,
+            );
         } else {
             body = JSON.stringify(event);
             sendingEvent = true;

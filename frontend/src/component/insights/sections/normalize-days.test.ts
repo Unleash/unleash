@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { normalizeDays } from './normalize-days.ts';
 
 test('0 or less', () => {

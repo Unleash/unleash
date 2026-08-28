@@ -1,5 +1,16 @@
+import type {
+    TransitionConditionSchema,
+    TransitionConditionSchemaOneOf,
+} from 'openapi';
 import type { IFeatureStrategy } from './strategy.ts';
 import type { ISafeguard } from './safeguard.ts';
+
+export type TimeTransitionCondition = TransitionConditionSchemaOneOf;
+
+export const isTimeCondition = (
+    condition: TransitionConditionSchema,
+): condition is TimeTransitionCondition =>
+    condition.type === undefined || condition.type === 'time';
 
 export interface IReleasePlanTemplate {
     id: string;
@@ -17,6 +28,7 @@ export interface IReleasePlanTemplate {
     createdByUserId: number;
     milestones: IReleasePlanMilestonePayload[];
     archivedAt?: string;
+    project?: string | null;
 }
 
 export interface IReleasePlan {
@@ -39,9 +51,7 @@ export interface IReleasePlanMilestone {
     strategies: IReleasePlanMilestoneStrategy[];
     startedAt?: string | null;
     pausedAt?: string | null;
-    transitionCondition?: {
-        intervalMinutes: number;
-    } | null;
+    transitionCondition?: TransitionConditionSchema | null;
 }
 
 export interface IReleasePlanMilestoneStrategy extends IFeatureStrategy {
@@ -59,4 +69,5 @@ export interface IReleasePlanMilestonePayload {
     name: string;
     sortOrder: number;
     strategies?: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>[];
+    transitionCondition?: TransitionConditionSchema;
 }

@@ -49,7 +49,7 @@ type AddValuesProps = {
     anchorEl: HTMLElement | null;
     onClose: () => void;
     helpText?: string;
-    inputProps?: InputBaseComponentProps;
+    htmlInputProps?: InputBaseComponentProps;
 };
 
 const HelpText = styled('p')(({ theme }) => ({
@@ -68,7 +68,7 @@ export const AddValuesPopover: FC<AddValuesProps> = ({
     open,
     onClose,
     helpText,
-    inputProps,
+    htmlInputProps,
 }) => {
     const [inputValue, setInputValue] = useState(initialValue || '');
     const [error, setError] = useState('');
@@ -122,7 +122,7 @@ export const AddValuesPopover: FC<AddValuesProps> = ({
                                 setInputValue(e.target.value);
                                 setError('');
                             }}
-                            size='small'
+                            size='large'
                             variant='standard'
                             fullWidth
                             inputRef={inputRef}
@@ -130,15 +130,15 @@ export const AddValuesPopover: FC<AddValuesProps> = ({
                             error={!!error}
                             helperText={error}
                             aria-describedby={helpTextId}
-                            inputProps={{
-                                ...inputProps,
+                            slotProps={{
+                                htmlInput: htmlInputProps,
                             }}
                             data-testid='CONSTRAINT_VALUES_INPUT'
                         />
                         <AddButton
                             variant='text'
                             type='submit'
-                            size='small'
+                            size='medium'
                             color='primary'
                             disabled={!inputValue?.trim()}
                             data-testid='CONSTRAINT_VALUES_ADD_BUTTON'

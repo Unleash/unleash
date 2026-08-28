@@ -7,11 +7,11 @@ import {
     styled,
     Typography,
 } from '@mui/material';
-import { Link } from 'react-router-dom';
-import type { Theme } from '@mui/material/styles/createTheme';
+import { Link } from 'react-router';
+import type { Theme } from '@mui/material/styles';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { Children } from 'react';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
@@ -57,7 +57,7 @@ export const RecentlyVisitedPathButton = ({
     name: string;
     onClick: () => void;
 }) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const onItemClick = () => {
         trackEvent('command-bar', {
@@ -76,6 +76,7 @@ export const RecentlyVisitedPathButton = ({
             key={keyName}
             dense={true}
             component={Link}
+            nativeButton={false}
             to={path}
             sx={listItemButtonStyle}
             onClick={onItemClick}
@@ -101,7 +102,7 @@ export const RecentlyVisitedProjectButton = ({
     keyName: string;
     onClick: () => void;
 }) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { project, loading } = useProjectOverview(projectId);
     const projectDeleted = !project.name && !loading;
 
@@ -122,6 +123,7 @@ export const RecentlyVisitedProjectButton = ({
             key={keyName}
             dense={true}
             component={Link}
+            nativeButton={false}
             to={`/projects/${projectId}`}
             sx={listItemButtonStyle}
             onClick={onItemClick}
@@ -149,7 +151,7 @@ export const RecentlyVisitedFeatureButton = ({
     featureId: string;
     onClick: () => void;
 }) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const onItemClick = () => {
         trackEvent('command-bar', {
             props: {
@@ -165,6 +167,7 @@ export const RecentlyVisitedFeatureButton = ({
             key={keyName}
             dense={true}
             component={Link}
+            nativeButton={false}
             to={`/projects/${projectId}/features/${featureId}`}
             sx={listItemButtonStyle}
             onClick={onItemClick}
@@ -196,7 +199,7 @@ export const CommandResultGroup = ({
     onClick,
     children,
 }: CommandResultGroupProps) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     if (
         (!children || Children.count(children) === 0) &&
         (!items || items.length === 0)
@@ -230,6 +233,7 @@ export const CommandResultGroup = ({
                         key={`command-result-group-${groupName}-${index}`}
                         dense={true}
                         component={Link}
+                        nativeButton={false}
                         onClick={(e) => {
                             e.stopPropagation();
                             onItemClick(item);

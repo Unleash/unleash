@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
@@ -20,7 +20,7 @@ import { TokenInfo } from 'component/admin/apiToken/ApiTokenForm/TokenInfo/Token
 import { TokenTypeSelector } from 'component/admin/apiToken/ApiTokenForm/TokenTypeSelector/TokenTypeSelector';
 import { ConfirmToken } from 'component/admin/apiToken/ConfirmToken/ConfirmToken';
 import { useProjectApiTokens } from 'hooks/api/getters/useProjectApiTokens/useProjectApiTokens';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 const pageTitle = 'Create project API token';
 
@@ -31,6 +31,7 @@ export const CreateProjectApiTokenForm = () => {
     const navigate = useNavigate();
     const [showConfirm, setShowConfirm] = useState(false);
     const [token, setToken] = useState('');
+    const [secure, setSecure] = useState(false);
 
     const {
         getApiTokenPayload,
@@ -49,7 +50,7 @@ export const CreateProjectApiTokenForm = () => {
     const { createToken: createProjectToken, loading } =
         useProjectApiTokensApi();
     const { refetch: refetchProjectTokens } = useProjectApiTokens(projectId);
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     usePageTitle(pageTitle);
 
@@ -69,6 +70,7 @@ export const CreateProjectApiTokenForm = () => {
                 .then((api) => {
                     scrollToTop();
                     setToken(api.secret);
+                    setSecure(api.secure);
                     setShowConfirm(true);
                     trackEvent('project_api_tokens', {
                         props: { eventType: 'api_key_created' },
@@ -142,6 +144,7 @@ export const CreateProjectApiTokenForm = () => {
                 closeConfirm={closeConfirm}
                 token={token}
                 type={type}
+                secure={secure}
             />
         </FormTemplate>
     );

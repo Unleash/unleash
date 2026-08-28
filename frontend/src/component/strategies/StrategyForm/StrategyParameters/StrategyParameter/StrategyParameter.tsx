@@ -10,6 +10,7 @@ import {
 import Delete from '@mui/icons-material/Delete';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import Input from 'component/common/Input/Input';
+import { FormFieldControlAligner } from 'component/common/FormField/FormField';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type React from 'react';
 import type { IStrategyParameter } from 'interfaces/strategy';
@@ -66,10 +67,10 @@ const StyledParagraph = styled('p')(({ theme }) => ({
 const StyledNameContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(1),
 }));
 
-const StyledNameInput = styled(Input)(({ theme }) => ({
+const StyledNameInput = styled(Input)(() => ({
     minWidth: '365px',
     width: '100%',
 }));
@@ -77,12 +78,12 @@ const StyledNameInput = styled(Input)(({ theme }) => ({
 const StyledGeneralSelect = styled(GeneralSelect)(({ theme }) => ({
     minWidth: '365px',
     width: '100%',
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(1),
 }));
 
 const StyledDescriptionInput = styled(Input)(({ theme }) => ({
     minWidth: '365px',
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(1),
 }));
 
 const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
@@ -111,7 +112,7 @@ export const StrategyParameter = ({
                         Parameters let you provide arguments to your strategy
                         that it can access for evaluation. Read more in the{' '}
                         <Link
-                            href='https://docs.getunleash.io/concepts/activation-strategies#paremeters'
+                            href='https://docs.getunleash.io/concepts/activation-strategies#parameters'
                             target='_blank'
                             rel='noreferrer'
                         >
@@ -130,16 +131,20 @@ export const StrategyParameter = ({
                     error={Boolean(errors?.[`paramName${index}`])}
                     errorText={errors?.[`paramName${index}`]}
                 />
-                <Tooltip title='Remove parameter' arrow>
-                    <IconButton
-                        onClick={() => {
-                            setParams(params.filter((_e, i) => i !== index));
-                        }}
-                        size='large'
-                    >
-                        <Delete />
-                    </IconButton>
-                </Tooltip>
+                <FormFieldControlAligner>
+                    <Tooltip title='Remove parameter' arrow>
+                        <IconButton
+                            onClick={() => {
+                                setParams(
+                                    params.filter((_e, i) => i !== index),
+                                );
+                            }}
+                            size='large'
+                        >
+                            <Delete />
+                        </IconButton>
+                    </Tooltip>
+                </FormFieldControlAligner>
             </StyledNameContainer>
             <StyledGeneralSelect
                 label='Type*'
@@ -148,6 +153,7 @@ export const StrategyParameter = ({
                 value={input.type}
                 onChange={onTypeChange}
                 id={`prop-type-${index}-select`}
+                fullWidth={false}
             />
             <StyledDescriptionInput
                 rows={2}

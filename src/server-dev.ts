@@ -3,6 +3,7 @@ import { createConfig } from './lib/create-config.js';
 import { LogLevel } from './lib/logger.js';
 import { ApiTokenType } from './lib/types/model.js';
 
+// local server configuraion for development purposes.
 process.nextTick(async () => {
     try {
         await start(
@@ -46,20 +47,22 @@ process.nextTick(async () => {
                         extendedMetrics: true,
                         webhookDomainLogging: true,
                         showUserDeviceCount: true,
+                        sessionInspector: true,
                         deltaApi: true,
                         uniqueSdkTracking: true,
                         strictSchemaValidation: true,
-                        customMetrics: true,
-                        impactMetrics: true,
-                        registerImpactMetrics: true,
-                        milestoneProgression: true,
-                        safeguards: true,
-                        gtmReleaseManagement: true,
+                        disableImpactMetrics: false,
                         regexConstraintOperator: true,
-                        enterpriseEdgeTokensList: true,
-                        filterFavorites: true,
+                        semverGteConstraintOperators: true,
                         userTokenWithClientApiLoggingKillSwitch: false,
-                        onlyFeatureTokensWithFeatureAPIs: false,
+                        allowDeprecatedApiTokenMiddleware: false,
+                        newProfileDropdown: true,
+                        learningLab: true,
+                        floatingOnboardingChecklist: true,
+                        serviceNowIntegration: true,
+                        onboardingIntroTour: true,
+                        topLabelInputs: true,
+                        recordSdkFlavorMetrics: true,
                     },
                 },
                 authentication: {

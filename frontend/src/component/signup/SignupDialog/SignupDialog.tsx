@@ -7,19 +7,24 @@ import {
     Typography,
 } from '@mui/material';
 import { type ComponentType, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { SignupDialogSetPassword } from './SignupDialogSetPassword/SignupDialogSetPassword.tsx';
 import { SignupDialogAccountDetails } from './SignupDialogAccountDetails.tsx';
 import { SignupDialogInviteOthers } from './SignupDialogInviteOthers.tsx';
+import { useIntro } from 'component/onboarding/intro/IntroProvider.tsx';
 import { type SignupData, useSignup } from '../hooks/useSignup.ts';
 import { type SubmitSignupData, useSignupApi } from '../hooks/useSignupApi.ts';
 import useToast from 'hooks/useToast.tsx';
 import { formatUnknownError } from 'utils/formatUnknownError.ts';
 import textureImage from 'assets/img/texture-signup.png';
-import { ReactComponent as Heart } from 'assets/icons/heart.svg';
+import Heart from 'assets/icons/heart.svg?react';
 import { formatAssetPath } from 'utils/formatPath.ts';
 import { SignupDialogComplete } from './SignupDialogComplete.tsx';
-import { useWelcomeDialogContext } from 'component/personalDashboard/WelcomeDialogContext.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
+import { useEventTracker } from 'hooks/useEventTracker.ts';
+import {
+    DEFAULT_PROJECT_ID,
+    useDefaultProjectId,
+} from 'hooks/api/getters/useDefaultProject/useDefaultProjectId.ts';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -103,10 +108,12 @@ const StyledHeart = styled(Heart)(({ theme }) => ({
     },
 }));
 
-const StyledBody = styled(Box)(({ theme }) => ({
+const StyledBody = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'wide',
+})<{ wide?: boolean }>(({ theme, wide }) => ({
     display: 'flex',
     flexDirection: 'column',
-    padding: theme.spacing(4, 10),
+    padding: wide ? theme.spacing(4, 5) : theme.spacing(4, 10),
     [theme.breakpoints.down('sm')]: {
         padding: theme.spacing(2),
     },
@@ -114,7 +121,8 @@ const StyledBody = styled(Box)(({ theme }) => ({
     justifyContent: 'center',
     backgroundColor: theme.palette.background.paper,
     width: '100%',
-    maxWidth: theme.spacing(70),
+    maxWidth: wide ? theme.spacing(92) : theme.spacing(70),
+    boxSizing: wide ? 'border-box' : undefined,
     margin: 'auto',
 }));
 
@@ -216,11 +224,13 @@ const SIGNUP_STEPS: SignupStep[] = [
 ];
 
 export const SignupDialog = () => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { setToastApiError } = useToast();
-    const { setWelcomeDialog } = useWelcomeDialogContext();
     const { signupData, signupRequired, refetch } = useSignup();
     const { submitSignupData } = useSignupApi();
+    const navigate = useNavigate();
+    const defaultProjectId = useDefaultProjectId();
+    const { open: openIntro } = useIntro();
 
     const [data, setData] = useState<SubmitSignupData>({
         password: '',
@@ -281,17 +291,16 @@ export const SignupDialog = () => {
             setIsSubmitting(true);
             await submitSignupData(data);
             refetch();
-            setWelcomeDialog('open');
+            navigate(`/projects/${defaultProjectId ?? DEFAULT_PROJECT_ID}`);
+            if (eventType === 'tour') {
+                openIntro();
+            }
         } catch (e: unknown) {
             const error = formatUnknownError(e);
             setToastApiError(error);
             setError(error);
 
-            trackEvent('signup-dialog-error', {
-                props: {
-                    error,
-                },
-            });
+            trackEvent('signup-dialog-error', { props: { error } });
         } finally {
             setIsSubmitting(false);
         }
@@ -318,14 +327,16 @@ export const SignupDialog = () => {
                     ))}
                 </StyledHearts>
             </StyledAside>
-            <StyledBody>
+            <StyledBody wide={currentStep.isCustom}>
                 {!currentStep.isCustom && (
-                    <StyledHeader>
+                    <StyledHeader data-public>
                         <StyledTitle>{currentStep.title}</StyledTitle>
                         <Typography
                             variant='body2'
-                            color='text.secondary'
-                            sx={{ whiteSpace: 'pre-line' }}
+                            sx={{
+                                color: 'text.secondary',
+                                whiteSpace: 'pre-line',
+                            }}
                         >
                             {currentStep.description}
                         </Typography>

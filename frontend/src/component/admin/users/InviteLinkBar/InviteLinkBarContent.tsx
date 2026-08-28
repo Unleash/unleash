@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { Box, Button, styled, Typography } from '@mui/material';
 import useLoading from 'hooks/useLoading';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -49,7 +49,9 @@ export const InviteLinkBarContent = ({
             component='span'
             variant='body2'
             color={willExpireSoon ? 'warning.dark' : 'inherit'}
-            fontWeight='bold'
+            sx={{
+                fontWeight: 'bold',
+            }}
         >
             {expiresIn}
         </Typography>

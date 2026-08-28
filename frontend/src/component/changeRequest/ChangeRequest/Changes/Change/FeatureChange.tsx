@@ -12,17 +12,19 @@ import { VariantPatch } from './VariantPatch/VariantPatch.tsx';
 import { EnvironmentStrategyExecutionOrder } from './EnvironmentStrategyExecutionOrder/EnvironmentStrategyExecutionOrder.tsx';
 import { ArchiveFeatureChange } from './ArchiveFeatureChange.tsx';
 import { DependencyChange } from './DependencyChange.tsx';
-import { Link } from 'react-router-dom';
-import { ReleasePlanChange } from './ReleasePlanChange.tsx';
+import { Link } from 'react-router';
+import {
+    ReleasePlanChange,
+    isConsolidatedMilestoneAction,
+} from './ReleasePlanChange.tsx';
 import { FeatureEnvSafeguardChange } from './FeatureEnvSafeguardChange.tsx';
 import { StrategyChange } from './StrategyChange.tsx';
 
 const StyledSingleChangeBox = styled(Box)(({ theme }) => ({
     overflow: 'hidden',
-    border: '1px solid',
-    borderBottom: 'none',
+    border: `1px solid ${theme.palette.divider}`,
+    borderBottomWidth: 0,
     borderRadius: 0,
-    borderColor: theme.palette.divider,
     '&[data-conflict="change"]': {
         borderColor: theme.palette.warning.border,
     },
@@ -33,7 +35,7 @@ const StyledSingleChangeBox = styled(Box)(({ theme }) => ({
         borderTopColor: theme.palette.divider,
     },
     '&:last-child': {
-        borderBottomStyle: 'solid',
+        borderBottomWidth: '1px',
         borderRadius: `0 0 ${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px`,
     },
 }));
@@ -41,7 +43,7 @@ const StyledSingleChangeBox = styled(Box)(({ theme }) => ({
 const StyledAlert = styled(Alert)(({ theme }) => ({
     borderRadius: 0,
     padding: theme.spacing(1, 2),
-    '&.MuiAlert-standardWarning': {
+    '&.MuiAlert-standard.MuiAlert-colorWarning': {
         borderStyle: 'none none solid none',
     },
 }));
@@ -57,9 +59,6 @@ const InlineList = styled('ul')(({ theme }) => ({
 
 const ChangeInnerBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(3),
-    '&:empty': {
-        display: 'none',
-    },
 }));
 
 export const FeatureChange: FC<{
@@ -79,6 +78,15 @@ export const FeatureChange: FC<{
     isDefaultChange,
     onRefetch,
 }) => {
+    if (isConsolidatedMilestoneAction(change.action)) {
+        const firstConsolidated = feature.changes.find((c) =>
+            isConsolidatedMilestoneAction(c.action),
+        );
+        if (firstConsolidated && firstConsolidated !== change) {
+            return null;
+        }
+    }
+
     const conflict = change.conflict || change.scheduleConflicts;
     return (
         <StyledSingleChangeBox

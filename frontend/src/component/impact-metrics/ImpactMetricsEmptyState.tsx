@@ -1,12 +1,12 @@
 import { Alert, Box, Button, styled, Typography } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { ReactComponent as ImpactMetricsIcon } from 'assets/img/impact-metrics-icon.svg';
+import ImpactMetricsIcon from 'assets/img/impact-metrics-icon.svg?react';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { ADMIN } from '../providers/AccessProvider/permissions';
 
-const DOCS_URL = 'https://docs.getunleash.io/reference/impact-metrics';
+const DOCS_URL = 'https://docs.getunleash.io/concepts/impact-metrics';
 
 const StyledContent = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -75,7 +75,11 @@ export const ImpactMetricsEmptyState = ({
                     <Typography variant='h3' component='h2' sx={{ mb: 1.5 }}>
                         No impact metrics yet
                     </Typography>
-                    <Typography color='text.secondary'>
+                    <Typography
+                        sx={{
+                            color: 'text.secondary',
+                        }}
+                    >
                         Impact metrics help you measure how feature flags affect
                         your application's performance. Get started by sending
                         your first metrics from your code.

@@ -119,7 +119,7 @@ export default class FakeGroupStore implements IGroupStore {
     }
 
     getGroupsForUser(_userId: number): Promise<Group[]> {
-        throw new Error('Method not implemented.');
+        return Promise.resolve([]);
     }
 
     hasProjectRole(_groupId: number): Promise<boolean> {

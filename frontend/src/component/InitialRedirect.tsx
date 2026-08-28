@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { type Location, Navigate } from 'react-router-dom';
+import { type Location, Navigate } from 'react-router';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import Loader from './common/Loader/Loader.tsx';

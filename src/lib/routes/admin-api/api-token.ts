@@ -44,14 +44,21 @@ import {
 import type { FrontendApiService } from '../../features/frontend-api/frontend-api-service.js';
 import { OperationDeniedError } from '../../error/index.js';
 import type { CreateApiTokenSchema } from '../../internals.js';
-import type { IUserPermission } from '../../server-impl.js';
+import type { IUserPermission, WithTransactional } from '../../server-impl.js';
+import { parseApiTokenV2Identifier } from '../../authentication/authorization-token.js';
+import type {
+    AdminApiTokenV2Service,
+    ReadOnlyApiTokenV2Service,
+} from '../../features/apitokensv2/api-token-v2-service.js';
 
 interface TokenParam {
     token: string;
 }
+
 interface TokenNameParam {
     name: string;
 }
+
 export const tokenTypeToCreatePermission: (tokenType: ApiTokenType) => string =
     (tokenType) => {
         switch (tokenType) {
@@ -119,6 +126,10 @@ const tokenTypeToDeletePermission: (tokenType: ApiTokenType) => string = (
 export class ApiTokenController extends Controller {
     private apiTokenService: ApiTokenService;
 
+    private apiTokenV2Service: ReadOnlyApiTokenV2Service;
+
+    private transactionalApiTokenV2Service: WithTransactional<AdminApiTokenV2Service>;
+
     private accessService: AccessService;
 
     private frontendApiService: FrontendApiService;
@@ -136,12 +147,16 @@ export class ApiTokenController extends Controller {
             accessService,
             frontendApiService,
             openApiService,
+            apiTokenV2Service,
+            transactionalApiTokenV2Service,
         }: Pick<
             IUnleashServices,
             | 'apiTokenService'
             | 'accessService'
             | 'frontendApiService'
             | 'openApiService'
+            | 'apiTokenV2Service'
+            | 'transactionalApiTokenV2Service'
         >,
     ) {
         super(config);
@@ -150,8 +165,9 @@ export class ApiTokenController extends Controller {
         this.frontendApiService = frontendApiService;
         this.openApiService = openApiService;
         this.flagResolver = config.flagResolver;
+        this.apiTokenV2Service = apiTokenV2Service;
+        this.transactionalApiTokenV2Service = transactionalApiTokenV2Service;
         this.logger = config.getLogger('api-token-controller.js');
-
         this.route({
             method: 'get',
             path: '',
@@ -160,6 +176,7 @@ export class ApiTokenController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['API tokens'],
+                    release: { stable: '4.14.0' },
                     operationId: 'getAllApiTokens',
                     summary: 'Get API tokens',
                     description:
@@ -180,6 +197,7 @@ export class ApiTokenController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['API tokens'],
+                    release: { stable: '5.4.0' },
                     operationId: 'getApiTokensByName',
                     summary: 'Get API tokens by name',
                     description:
@@ -204,6 +222,7 @@ export class ApiTokenController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['API tokens'],
+                    release: { stable: '4.14.0' },
                     operationId: 'createApiToken',
                     requestBody: createRequestSchema('createApiTokenSchema'),
                     summary: 'Create API token',
@@ -230,6 +249,7 @@ export class ApiTokenController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['API tokens'],
+                    release: { stable: '4.14.0' },
                     operationId: 'updateApiToken',
                     summary: 'Update API token',
                     description:
@@ -259,6 +279,7 @@ export class ApiTokenController extends Controller {
                     summary: 'Delete API token',
                     description:
                         "Deletes an existing API token. The `token` path parameter is the token's `secret`. If the token does not exist, this endpoint returns a 200 OK, but does nothing.",
+                    release: { stable: '4.14.0' },
                     operationId: 'deleteApiToken',
                     responses: {
                         200: emptyResponse,
@@ -313,10 +334,27 @@ export class ApiTokenController extends Controller {
             permissionRequired,
         );
         if (hasPermission) {
-            const token = await this.apiTokenService.createApiTokenWithProjects(
-                createToken,
-                req.audit,
-            );
+            let token: IApiToken;
+            if (this.flagResolver.isEnabled('secureTokenStorage')) {
+                const tokenV2 =
+                    await this.transactionalApiTokenV2Service.transactional(
+                        (service) =>
+                            service.create(
+                                { userCreated: true, ...createToken },
+                                req.audit,
+                            ),
+                    );
+                const { selector: _selector, ...tokenWithSecret } = tokenV2;
+                token = {
+                    ...tokenWithSecret,
+                    project: tokenV2.projects.join(','),
+                };
+            } else {
+                token = await this.apiTokenService.createApiTokenWithProjects(
+                    createToken,
+                    req.audit,
+                );
+            }
             this.openApiService.respondWithValidation(
                 201,
                 res,
@@ -342,10 +380,7 @@ export class ApiTokenController extends Controller {
             this.logger.error(req.body);
             return res.status(400).send();
         }
-        let tokenToUpdate: IApiToken | undefined;
-        try {
-            tokenToUpdate = await this.apiTokenService.getToken(token);
-        } catch (_error) {}
+        const tokenToUpdate = await this.getToken(token);
         if (!tokenToUpdate) {
             res.status(200).end();
             return;
@@ -363,11 +398,21 @@ export class ApiTokenController extends Controller {
             );
         }
 
-        await this.apiTokenService.updateExpiry(
-            token,
-            new Date(expiresAt),
-            req.audit,
-        );
+        const expiry = new Date(expiresAt);
+        const v2Identifier = parseApiTokenV2Identifier(token);
+        if (v2Identifier) {
+            try {
+                await this.transactionalApiTokenV2Service.transactional(
+                    (service) =>
+                        service.updateExpiry(v2Identifier, expiry, req.audit),
+                );
+                this.apiTokenV2Service.invalidateCache([v2Identifier.selector]);
+            } catch (_error) {
+                // Fall through to legacy storage during the migration period.
+            }
+        } else {
+            await this.apiTokenService.updateExpiry(token, expiry, req.audit);
+        }
 
         return res.status(200).end();
     }
@@ -377,10 +422,7 @@ export class ApiTokenController extends Controller {
         res: Response,
     ): Promise<void> {
         const { token } = req.params;
-        let tokenToUpdate: IApiToken | undefined;
-        try {
-            tokenToUpdate = await this.apiTokenService.getToken(token);
-        } catch (_error) {}
+        const tokenToUpdate = await this.getToken(token);
         if (!tokenToUpdate) {
             res.status(200).end();
             return;
@@ -397,7 +439,21 @@ export class ApiTokenController extends Controller {
                 `You do not have the required access [${permissionRequired}] to perform this operation`,
             );
         }
-        await this.apiTokenService.delete(token, req.audit);
+        const v2Identifier = parseApiTokenV2Identifier(token);
+        if (v2Identifier) {
+            try {
+                await this.transactionalApiTokenV2Service.transactional(
+                    (service) => service.delete(v2Identifier, req.audit),
+                );
+                this.apiTokenV2Service.invalidateCache([v2Identifier.selector]);
+            } catch (_error) {
+                // Fall through to legacy storage during the migration period.
+            }
+        } else {
+            try {
+                await this.apiTokenService.delete(token, req.audit);
+            } catch (_err) {}
+        }
         await this.frontendApiService.deleteClientForFrontendApiToken(token);
         res.status(200).end();
     }
@@ -411,8 +467,12 @@ export class ApiTokenController extends Controller {
     }
 
     private async accessibleTokens(user: IUser): Promise<IApiToken[]> {
-        const allTokens = await this.apiTokenService.getUserDefinedTokens();
-
+        const allTokens = (
+            await Promise.all([
+                this.apiTokenService.getUserDefinedTokens(),
+                this.apiTokenV2Service.getUserDefinedTokens(),
+            ])
+        ).flat();
         if (user.isAPI && user.permissions.includes(ADMIN)) {
             return allTokens;
         }
@@ -426,5 +486,26 @@ export class ApiTokenController extends Controller {
             ),
         );
         return accessibleTokens;
+    }
+
+    private async getToken(token: string): Promise<IApiToken | undefined> {
+        const v2Identifier = parseApiTokenV2Identifier(token);
+        if (v2Identifier) {
+            try {
+                const tokenV2 =
+                    await this.apiTokenV2Service.getToken(v2Identifier);
+                if (tokenV2) {
+                    return tokenV2;
+                }
+            } catch (_error) {
+                // Fall through to legacy storage during the migration period.
+            }
+        }
+
+        try {
+            return await this.apiTokenService.getToken(token);
+        } catch (_error) {
+            return undefined;
+        }
     }
 }

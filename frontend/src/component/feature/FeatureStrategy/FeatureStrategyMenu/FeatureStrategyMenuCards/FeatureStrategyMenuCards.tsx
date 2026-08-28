@@ -2,7 +2,8 @@ import { styled, Box } from '@mui/material';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard.tsx';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
+import { QuietLink } from 'component/common/QuietLink';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon.tsx';
 import { type Dispatch, type SetStateAction, useContext, useMemo } from 'react';
@@ -18,7 +19,7 @@ import AccessContext from 'contexts/AccessContext.ts';
 import { formatStrategyName } from 'utils/strategyNames.tsx';
 import { FeatureStrategyMenuCardAction } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardAction.tsx';
 import { formatCreateStrategyPath } from '../../FeatureStrategyCreate/FeatureStrategyCreate.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
+import { useEventTracker } from 'hooks/useEventTracker.ts';
 import { FeatureStrategyMenuCardsDefaultStrategy } from './FeatureStrategyMenuCardsDefaultStrategy.tsx';
 import type { IStrategy } from 'interfaces/strategy.ts';
 import { FeatureStrategyMenuCardIcon } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardIcon.tsx';
@@ -57,13 +58,6 @@ const StyledFiltersContainer = styled(Box)(({ theme }) => ({
     padding: theme.spacing(0, 4, 3, 4),
 }));
 
-const StyledLink = styled(RouterLink)({
-    textDecoration: 'none',
-    '&:hover': {
-        textDecoration: 'underline',
-    },
-});
-
 interface IFeatureStrategyMenuCardsProps {
     projectId: string;
     featureId: string;
@@ -87,7 +81,7 @@ export const FeatureStrategyMenuCards = ({
 }: IFeatureStrategyMenuCardsProps) => {
     const { isEnterprise } = useUiConfig();
     const { hasAccess } = useContext(AccessContext);
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const navigate = useNavigate();
 
     const { strategies } = useStrategies();
@@ -138,9 +132,9 @@ export const FeatureStrategyMenuCards = ({
     const projectDefaultTooltip = hasAccessToDefaultStrategyConfig ? (
         <>
             This is set per project, per environment, and can be configured{' '}
-            <StyledLink to={`/projects/${projectId}/settings/default-strategy`}>
+            <QuietLink to={`/projects/${projectId}/settings/default-strategy`}>
                 here
-            </StyledLink>
+            </QuietLink>
         </>
     ) : (
         <>
@@ -212,6 +206,7 @@ export const FeatureStrategyMenuCards = ({
             <StyledScrollableContent>
                 {shouldRender('releaseTemplates') && (
                     <FeatureStrategyMenuCardsReleaseTemplates
+                        projectId={projectId}
                         onAddReleasePlan={onAddReleasePlan}
                         onReviewReleasePlan={onReviewReleasePlan}
                         filter={filter}

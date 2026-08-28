@@ -4,17 +4,18 @@ import {
     Button,
     type ButtonProps,
     Collapse,
-    Grid,
     styled,
     Typography,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { styles as themeStyles } from 'component/common';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import Add from '@mui/icons-material/Add';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router';
+import { Link } from 'react-router';
+import { QuietLink } from 'component/common/QuietLink';
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
 import { EmptyTemplatesListMessage } from './EmptyTemplatesListMessage.tsx';
 import { ReleasePlanTemplateList } from './ReleasePlanTemplateList.tsx';
@@ -23,18 +24,15 @@ import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { RELEASE_PLAN_TEMPLATE_CREATE } from '@server/types/permissions';
 import MenuBook from '@mui/icons-material/MenuBook';
 import { useLocalStorageState } from 'hooks/useLocalStorageState.ts';
+import { formatReleaseTemplateCreatePath } from 'component/releases/releaseTemplatePaths';
 
-const StyledLink = styled(Link)(({ theme }) => ({
+const StyledLink = styled(QuietLink)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
     padding: 0,
     color: theme.palette.links,
     fontWeight: theme.fontWeight.medium,
-    textDecoration: 'none',
-    '&:hover, &:focus': {
-        textDecoration: 'underline',
-    },
     width: 'max-content',
 }));
 
@@ -88,11 +86,18 @@ export const ReleaseManagement = () => {
                     severity='info'
                     onClose={() => setInfoAlertState('closed')}
                 >
-                    <Typography component='p' display='inline'>
+                    <Typography
+                        component='p'
+                        sx={{
+                            display: 'inline',
+                        }}
+                    >
                         <Typography
-                            fontWeight={'bold'}
-                            display='block'
                             component='span'
+                            sx={{
+                                fontWeight: 'bold',
+                                display: 'block',
+                            }}
                         >
                             Standardize your rollouts with Release templates.
                         </Typography>
@@ -103,10 +108,11 @@ export const ReleaseManagement = () => {
                     </Typography>
                     <StyledAlertButton
                         component={Link}
+                        nativeButton={false}
                         variant='outlined'
                         target='_blank'
                         rel='noopener noreferrer'
-                        to='https://docs.getunleash.io/reference/release-templates'
+                        to='https://docs.getunleash.io/concepts/release-templates'
                     >
                         Learn about release templates
                     </StyledAlertButton>
@@ -120,9 +126,7 @@ export const ReleaseManagement = () => {
                             <ResponsiveButton
                                 Icon={Add}
                                 onClick={() => {
-                                    navigate(
-                                        '/release-templates/create-template',
-                                    );
+                                    navigate(formatReleaseTemplateCreatePath());
                                 }}
                                 maxWidth='700px'
                                 permission={RELEASE_PLAN_TEMPLATE_CREATE}
@@ -145,7 +149,6 @@ export const ReleaseManagement = () => {
                     </div>
                 )}
             </PageContent>
-
             <StyledLink
                 to='https://docs.getunleash.io/concepts/release-templates'
                 rel='noopener noreferrer'

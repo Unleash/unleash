@@ -38,7 +38,6 @@ const FEATURE_COLUMNS = [
     'stale',
     'created_at',
     'impression_data',
-    'last_seen_at',
     'archived_at',
 ];
 
@@ -48,7 +47,6 @@ export interface FeaturesTable {
     type?: string;
     stale?: boolean | null;
     project: string;
-    last_seen_at?: Date;
     created_at?: Date;
     impression_data?: boolean | null;
     archived?: boolean;
@@ -72,7 +70,6 @@ const commonSelectColumns = [
     'features.project as project',
     'features.stale as stale',
     'features.impression_data as impression_data',
-    'features.last_seen_at as last_seen_at',
     'features.created_at as created_at',
 ];
 
@@ -130,11 +127,14 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     destroy(): void {}
 
     async get(name: string): Promise<FeatureToggle> {
-        return this.db
+        const stop = this.timer('getByName');
+        const row = await this.db
             .first(FEATURE_COLUMNS)
             .from(TABLE)
             .where({ name })
             .then(this.rowToFeature);
+        stop();
+        return row;
     }
 
     private getBaseFeatureQuery = (archived: boolean, environment: string) => {
@@ -244,13 +244,14 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             archived: false,
         },
     ): Promise<FeatureToggle[]> {
+        const stop = this.timer('getAll');
         const { archived, ...rest } = query;
         const rows = await this.db
             .select(FEATURE_COLUMNS)
             .from(TABLE)
             .where(rest)
             .modify(FeatureToggleStore.filterByArchived, archived);
-
+        stop();
         return rows.map(this.rowToFeature);
     }
 
@@ -303,10 +304,9 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         }
 
         if (queryModifiers.range && queryModifiers.range.length === 2) {
-            query.andWhereBetween(dateAccessor, [
-                queryModifiers.range[0],
-                queryModifiers.range[1],
-            ]);
+            query
+                .andWhere(dateAccessor, '>=', queryModifiers.range[0])
+                .andWhere(dateAccessor, '<', queryModifiers.range[1]);
         }
 
         const queryResult = await query.first();
@@ -413,7 +413,6 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             project: row.project,
             stale: row.stale || false,
             createdAt: row.created_at,
-            lastSeenAt: row.last_seen_at,
             impressionData: row.impression_data || false,
             archivedAt: row.archived_at || undefined,
             archived: row.archived_at != null,
@@ -516,6 +515,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         const now = new Date();
         const rows = await this.db(TABLE)
             .whereIn('name', names)
+            .whereNull('archived_at')
             .update({ archived_at: now })
             .returning(FEATURE_COLUMNS);
         return rows.map((row) => this.rowToFeature(row));
@@ -539,11 +539,14 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .del();
     }
 
-    async batchDelete(names: string[]): Promise<void> {
-        await this.db(TABLE)
+    async batchDelete(names: string[]): Promise<FeatureToggle[]> {
+        const rows = await this.db(TABLE)
             .whereIn('name', names)
             .whereNotNull('archived_at')
-            .del();
+            .del()
+            .returning(FEATURE_COLUMNS);
+
+        return rows.map((row) => this.rowToFeature(row));
     }
 
     async revive(name: string): Promise<FeatureToggle> {

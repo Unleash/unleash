@@ -101,7 +101,9 @@ export const FeatureOverviewEnvironment = ({
     return (
         <StyledFeatureOverviewEnvironment>
             <StyledAccordion
-                TransitionProps={{ mountOnEnter: true, unmountOnExit: true }}
+                slotProps={{
+                    transition: { mountOnEnter: true, unmountOnExit: true },
+                }}
                 data-testid={`${FEATURE_ENVIRONMENT_ACCORDION}_${environment.name}`}
                 expanded={isOpen && hasActivations}
                 onChange={() => {
@@ -115,6 +117,8 @@ export const FeatureOverviewEnvironment = ({
                         strategyCount: environment.strategies?.length ?? 0,
                         releasePlanCount: environment.releasePlans?.length ?? 0,
                     }}
+                    component={hasActivations ? undefined : 'div'}
+                    role={hasActivations ? undefined : 'none'}
                     environmentId={environment.name}
                     projectId={projectId}
                     featureId={featureId}
@@ -169,7 +173,11 @@ export const FeatureOverviewEnvironment = ({
                     </StyledEnvironmentAccordionContainer>
                     <StyledAccordionFooter>
                         <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                            <Box ml='auto'>
+                            <Box
+                                sx={{
+                                    ml: 'auto',
+                                }}
+                            >
                                 <FeatureStrategyMenuButton
                                     label='Add strategy'
                                     dialogId={dialogId}

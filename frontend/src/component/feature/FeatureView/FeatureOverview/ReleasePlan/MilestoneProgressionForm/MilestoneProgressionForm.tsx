@@ -1,24 +1,19 @@
 import { Button } from '@mui/material';
-import BoltIcon from '@mui/icons-material/Bolt';
 import { useMilestoneProgressionForm } from '../hooks/useMilestoneProgressionForm.js';
-import { MilestoneProgressionTimeInput } from './MilestoneProgressionTimeInput.tsx';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
 import { useMilestoneProgressionInfo } from '../hooks/useMilestoneProgressionInfo.ts';
 import {
     StyledFormContainer,
-    StyledTopRow,
-    StyledLabel,
     StyledButtonGroup,
     StyledErrorMessage,
     StyledInfoLine,
-    createStyledIcon,
 } from '../shared/SharedFormComponents.tsx';
+import { TransitionConditionRow } from '../shared/TransitionConditionRow.tsx';
+import { TransitionConditionInput } from './TransitionConditionInput.tsx';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton.tsx';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions.ts';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam.ts';
-
-const StyledIcon = createStyledIcon(BoltIcon);
 
 interface IMilestoneProgressionFormProps {
     sourceMilestoneId: string;
@@ -52,7 +47,7 @@ export const MilestoneProgressionForm = ({
     );
 
     const progressionInfo = useMilestoneProgressionInfo(
-        form.getIntervalMinutes(),
+        form.intervalMinutes,
         sourceMilestoneStartedAt,
         status,
     );
@@ -69,17 +64,16 @@ export const MilestoneProgressionForm = ({
 
     return (
         <StyledFormContainer onSubmit={handleSubmit}>
-            <StyledTopRow>
-                <StyledIcon />
-                <StyledLabel>Proceed after</StyledLabel>
-                <MilestoneProgressionTimeInput
-                    timeValue={form.timeValue}
-                    timeUnit={form.timeUnit}
-                    onTimeValueChange={form.handleTimeValueChange}
-                    onTimeUnitChange={form.handleTimeUnitChange}
-                />
-                <StyledLabel>from milestone start</StyledLabel>
-            </StyledTopRow>
+            <TransitionConditionRow
+                condition={
+                    <TransitionConditionInput
+                        timeValue={form.timeValue}
+                        timeUnit={form.timeUnit}
+                        onTimeValueChange={form.handleTimeValueChange}
+                        onTimeUnitChange={form.handleTimeUnitChange}
+                    />
+                }
+            />
             {progressionInfo && (
                 <StyledInfoLine>{progressionInfo}</StyledInfoLine>
             )}
@@ -87,7 +81,7 @@ export const MilestoneProgressionForm = ({
                 <StyledErrorMessage>{form.errors.time}</StyledErrorMessage>
             )}
             <StyledButtonGroup>
-                <Button variant='outlined' onClick={onCancel} size='small'>
+                <Button variant='outlined' onClick={onCancel} size='medium'>
                     Cancel
                 </Button>
                 <PermissionButton
@@ -97,7 +91,7 @@ export const MilestoneProgressionForm = ({
                     type='submit'
                     variant='contained'
                     color='primary'
-                    size='small'
+                    size='medium'
                 >
                     Save
                 </PermissionButton>

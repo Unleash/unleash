@@ -1,4 +1,4 @@
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import useToast from 'hooks/useToast';
 import useFeatureLifecycleApi from 'hooks/api/actions/useFeatureLifecycleApi/useFeatureLifecycleApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -12,7 +12,7 @@ export const useUncomplete = ({
     project: string;
     onChange?: () => void;
 }) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { setToastApiError } = useToast();
     const { markFeatureUncompleted, loading } = useFeatureLifecycleApi();
 

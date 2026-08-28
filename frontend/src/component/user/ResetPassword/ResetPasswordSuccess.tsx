@@ -1,5 +1,5 @@
 import { Button, styled, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { AuthPageLayout } from '../common/AuthPageLayout';
 import { AuthSuccessIcon } from '../common/AuthSuccessIcon';
 
@@ -40,6 +40,7 @@ const ResetPasswordSuccess = () => {
                     variant='contained'
                     color='primary'
                     component={Link}
+                    nativeButton={false}
                     to='/login'
                     fullWidth
                 >

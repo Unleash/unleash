@@ -1,3 +1,4 @@
+import { expect, it } from 'vitest';
 import { batchData } from './batchData.ts';
 
 it('handles empty input', () => {

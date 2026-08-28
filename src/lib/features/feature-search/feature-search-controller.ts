@@ -63,6 +63,7 @@ export default class FeatureSearchController extends Controller {
                     tags: ['Search'],
                     summary: 'Search and filter features',
                     description: 'Search and filter by selected fields.',
+                    release: { stable: '5.6.0' },
                     operationId: 'searchFeatures',
                     // top level array needs to be mutable according to openapi library
                     parameters: [...featureSearchQueryParameters],

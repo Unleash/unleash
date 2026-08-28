@@ -11,7 +11,7 @@ import useProjectForm, {
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -47,7 +47,7 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
     const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
     const { defaultStickiness } = useDefaultProjectSettings(id);
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const {
         projectId,
         projectName,
@@ -55,13 +55,10 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
         projectStickiness,
         featureLimit,
         setFeatureLimit,
-        setProjectId,
         setProjectName,
         setProjectDesc,
         setProjectStickiness,
         getEditProjectPayload,
-        clearErrors,
-        validateProjectId,
         validateName,
         errors,
     } = useProjectForm(
@@ -130,7 +127,6 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
                         errors={errors}
                         handleSubmit={handleEditProject}
                         projectId={projectId}
-                        setProjectId={setProjectId}
                         projectName={projectName}
                         setProjectName={setProjectName}
                         projectStickiness={projectStickiness}
@@ -139,9 +135,6 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
                         featureLimit={featureLimit}
                         projectDesc={projectDesc}
                         setProjectDesc={setProjectDesc}
-                        mode='Edit'
-                        clearErrors={clearErrors}
-                        validateProjectId={validateProjectId}
                     >
                         <PermissionButton
                             type='submit'

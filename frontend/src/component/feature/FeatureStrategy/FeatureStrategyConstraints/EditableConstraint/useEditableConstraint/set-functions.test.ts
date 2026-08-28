@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { difference, union } from './set-functions.js';
 
 test('union', () => {

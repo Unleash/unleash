@@ -32,8 +32,8 @@ export default class FakeSegmentStore implements ISegmentStore {
         return false;
     }
 
-    get(): Promise<ISegment> {
-        throw new Error('Method not implemented.');
+    async get(id: number): Promise<ISegment | undefined> {
+        return this.segments.find((segment) => segment.id === Number(id));
     }
 
     async getAll(): Promise<ISegment[]> {

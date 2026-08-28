@@ -4,28 +4,26 @@ export default defineConfig({
     test: {
         globals: true,
         globalSetup: ['./src/test-setup.ts'],
-        setupFiles: ['./src/test/errorWithMessage.ts'],
-        reporters: process.env.GITHUB_ACTIONS
-            ? [
-                  ['dot'],
-                  [
-                      'junit',
-                      {
-                          suiteName: 'Unleash Unit Tests',
-                          outputFile: 'reports/jest-junit.xml',
-                          classnameTemplate: '{filename} - {filepath}',
-                      },
-                  ],
-                  ['github-actions'],
-              ]
-            : [['default']],
-        testTimeout: 30000,
-        exclude: [
-            ...configDefaults.exclude,
-            'frontend/**',
-            'docker/index.js',
-            'dist/**',
+        setupFiles: [
+            './src/test/errorWithMessage.ts',
+            './src/test/reset-cross-file-state.ts',
         ],
+        reporters:
+            process.env.GITHUB_ACTIONS === 'true'
+                ? [
+                      ['dot'],
+                      [
+                          'junit',
+                          {
+                              suiteName: 'Unleash Unit Tests',
+                              outputFile: 'reports/jest-junit.xml',
+                              classnameTemplate: '{filename} - {filepath}',
+                          },
+                      ],
+                      ['github-actions'],
+                  ]
+                : [['default']],
+        testTimeout: 30000,
         environment: 'node',
         coverage: {
             reportOnFailure: true,
@@ -51,5 +49,35 @@ export default defineConfig({
             reportsDirectory: './coverage',
         },
         silent: 'passed-only',
+        projects: [
+            {
+                extends: true,
+                test: {
+                    name: 'unit',
+                    exclude: [
+                        ...configDefaults.exclude,
+                        'frontend/**',
+                        'docker/index.js',
+                        'dist/**',
+                        'src/test/e2e/**',
+                    ],
+                    // Most of a test file's runtime is re-importing the module
+                    // graph in an isolated registry. The harness cleans up
+                    // process-global state at every file boundary (see
+                    // src/test/reset-cross-file-state.ts), so files can safely
+                    // share a registry and pay the import cost once per worker
+                    // instead of once per file.
+                    isolate: false,
+                },
+            },
+            {
+                extends: true,
+                test: {
+                    name: 'e2e',
+                    include: ['src/test/e2e/**/*.test.ts'],
+                    exclude: [...configDefaults.exclude, 'dist/**'],
+                },
+            },
+        ],
     },
 });

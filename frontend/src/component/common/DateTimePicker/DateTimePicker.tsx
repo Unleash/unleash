@@ -1,9 +1,11 @@
 import { INPUT_ERROR_TEXT } from 'utils/testIds';
-import { TextField, type OutlinedTextFieldProps } from '@mui/material';
+import type { OutlinedTextFieldProps } from '@mui/material';
 import { parseValidDate } from '../util.ts';
 import { format } from 'date-fns';
+import Input from '../Input/Input';
 
-interface IDateTimePickerProps extends Omit<OutlinedTextFieldProps, 'variant'> {
+interface IDateTimePickerProps
+    extends Omit<OutlinedTextFieldProps, 'variant' | 'rows'> {
     label: string;
     type?: 'date' | 'datetime';
     error?: boolean;
@@ -33,32 +35,36 @@ export const DateTimePicker = ({
     max,
     value,
     onChange,
+    slotProps,
     ...rest
 }: IDateTimePickerProps) => {
     const getDate = type === 'datetime' ? formatDateTime : formatDate;
     const inputType = type === 'datetime' ? 'datetime-local' : 'date';
 
     return (
-        <TextField
-            type={inputType}
-            size='small'
-            variant='outlined'
+        <Input
             label={label}
+            type={inputType}
+            size='large'
             error={error}
-            helperText={errorText}
+            errorText={errorText}
             value={getDate(value.toISOString())}
             onChange={(e) => {
                 const parsedDate = parseValidDate(e.target.value);
                 onChange(parsedDate ?? value);
             }}
-            FormHelperTextProps={{
-                'data-testid': INPUT_ERROR_TEXT,
-            }}
-            inputProps={{
-                min: min ? getDate(min.toISOString()) : min,
-                max: max ? getDate(max.toISOString()) : max,
-            }}
             {...rest}
+            slotProps={{
+                htmlInput: {
+                    min: min ? getDate(min.toISOString()) : min,
+                    max: max ? getDate(max.toISOString()) : max,
+                },
+
+                formHelperText: {
+                    'data-testid': INPUT_ERROR_TEXT,
+                },
+                ...slotProps,
+            }}
         />
     );
 };

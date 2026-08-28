@@ -1,6 +1,6 @@
-import { type FormEventHandler, type VFC, useState, useCallback } from 'react';
+import { type FormEventHandler, type FC, useState, useCallback } from 'react';
 import { Box, Button, Typography, Checkbox, styled } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useFeatureTypeApi } from 'hooks/api/actions/useFeatureTypeApi/useFeatureTypeApi';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
@@ -15,7 +15,7 @@ import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 type FeatureTypeFormProps = {
     featureType?: FeatureTypeSchema;
@@ -30,13 +30,13 @@ const StyledButtons = styled(Box)(({ theme }) => ({
     paddingTop: theme.spacing(4),
 }));
 
-const StyledForm = styled(Box)(() => ({
+const StyledForm = styled('form')(() => ({
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
 }));
 
-export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
+export const FeatureTypeForm: FC<FeatureTypeFormProps> = ({
     featureType,
     loading,
 }) => {
@@ -52,7 +52,7 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
         !featureType?.lifetimeDays,
     );
     const { setToastData, setToastApiError } = useToast();
-    const tracker = usePlausibleTracker();
+    const tracker = useEventTracker();
 
     const onChangeLifetime = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = Number.parseInt(trim(e.target.value), 10);
@@ -129,7 +129,7 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
             documentationLinkLabel='Feature flag types documentation'
             formatApiCode={formatApiCode}
         >
-            <StyledForm component='form' onSubmit={onSubmit}>
+            <StyledForm onSubmit={onSubmit}>
                 <Typography
                     sx={(theme) => ({
                         margin: theme.spacing(3, 0, 1),

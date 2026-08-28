@@ -1,5 +1,5 @@
 import FeatureOverviewMetaData from './FeatureOverviewMetaData/FeatureOverviewMetaData.tsx';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import {
     FeatureStrategyEdit,
@@ -18,15 +18,16 @@ import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
 import { StrategyDragTooltip } from './StrategyDragTooltip.tsx';
 import { CleanupReminder } from '../CleanupReminder/CleanupReminder.tsx';
 import { useFeature } from '../../../../hooks/api/getters/useFeature/useFeature.ts';
-import { FeatureConnectSdkBanner } from './FeatureConnectSdkBanner.tsx';
-import { FeatureImplementFlagBanner } from './FeatureImplementFlagBanner.tsx';
-import { useUiFlag } from 'hooks/useUiFlag';
+import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import type { FeatureSchema, ProjectOverviewSchema } from 'openapi/index.ts';
+import { FeatureSetupBanner } from './FeatureSetupBanner.tsx';
+import { getFeatureSetupStage } from './getFeatureSetupStage.ts';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     width: '100%',
     gap: theme.spacing(2),
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down(1350)]: {
         flexDirection: 'column',
     },
 }));
@@ -50,7 +51,6 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
     const navigate = useNavigate();
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
-    const onboardingFlagSetup = useUiFlag('onboardingFlagSetup');
     const featurePath = formatFeaturePath(projectId, featureId);
     const { hiddenEnvironments, onEnvironmentVisibilityChange } =
         useEnvironmentVisibility();
@@ -64,10 +64,30 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
     const { splash } = useAuthSplash();
     const [showTooltip, setShowTooltip] = useState(false);
     const [hasClosedTooltip, setHasClosedTooltip] = useState(false);
-    const { feature, refetchFeature, loading } = useFeature(
-        projectId,
-        featureId,
-    );
+    const {
+        feature,
+        refetchFeature,
+        loading: featureLoading,
+    } = useFeature(projectId, featureId);
+    const {
+        project,
+        loading: projectLoading,
+        refetch: refetchProject,
+    } = useProjectOverview(projectId);
+    const allLoadingDone = !featureLoading && !projectLoading;
+
+    // A completed setup step can advance the project's or the feature's onboarding status,
+    // so refresh both to re-evaluate the stage.
+    const refreshSetupBanner = () => {
+        refetchFeature();
+        refetchProject();
+    };
+    const setupStage = getFeatureSetupStage({
+        projectOnboardingStatus: project?.onboardingStatus?.status,
+        feature: feature as FeatureSchema,
+    });
+    const shouldShowSetup = setupStage !== 'setup-completed';
+
     const dragTooltipSplashId = 'strategy-drag-tooltip';
     const shouldShowStrategyDragTooltip = !splash?.[dragTooltipSplashId];
     const toggleShowTooltip = (envIsOpen: boolean) => {
@@ -84,8 +104,30 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
         <div>
             <CleanupReminder feature={feature} onChange={refetchFeature} />
             <StyledContainer>
+                <StyledMainContent>
+                    {allLoadingDone &&
+                        (shouldShowSetup ? (
+                            <FeatureSetupBanner
+                                project={{
+                                    ...(project as ProjectOverviewSchema),
+                                    id: projectId,
+                                }}
+                                feature={{
+                                    ...(feature as FeatureSchema),
+                                    id: featureId,
+                                }}
+                                onComplete={refreshSetupBanner}
+                            />
+                        ) : (
+                            header
+                        ))}
+                    <FeatureOverviewEnvironments
+                        onToggleEnvOpen={toggleShowTooltip}
+                        hiddenEnvironments={hiddenEnvironments}
+                    />
+                </StyledMainContent>
                 <div>
-                    {!loading ? (
+                    {!featureLoading ? (
                         <FeatureOverviewMetaData
                             hiddenEnvironments={hiddenEnvironments}
                             onEnvironmentVisibilityChange={
@@ -96,25 +138,6 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
                         />
                     ) : null}
                 </div>
-                <StyledMainContent>
-                    {!loading && onboardingFlagSetup && (
-                        <>
-                            <FeatureConnectSdkBanner
-                                projectId={projectId}
-                                featureId={featureId}
-                            />
-                            <FeatureImplementFlagBanner
-                                projectId={projectId}
-                                featureId={featureId}
-                            />
-                        </>
-                    )}
-                    {!loading && header}
-                    <FeatureOverviewEnvironments
-                        onToggleEnvOpen={toggleShowTooltip}
-                        hiddenEnvironments={hiddenEnvironments}
-                    />
-                </StyledMainContent>
                 <Routes>
                     <Route
                         path='strategies/create'

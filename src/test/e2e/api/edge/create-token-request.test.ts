@@ -211,6 +211,110 @@ describe('HMAC authenticated create token requests', () => {
     });
 });
 
+describe('api-token v2 (secure storage)', () => {
+    beforeAll(async () => {
+        db = await dbInit('edge_create_token_v2_request', getLogger);
+        app = await setupAppWithCustomConfig(
+            db.stores,
+            {
+                edgeMasterKey,
+                edgeClientSecret,
+                experimental: {
+                    flags: {
+                        secureTokenStorage: true,
+                    },
+                },
+            },
+            db.rawDatabase,
+        );
+        await app.services.edgeService.saveClient(clientId, edgeClientSecret);
+    });
+    test('Happy case, all headers in place and valid signature', async () => {
+        const body: EdgeEnvironmentsProjectsListSchema = {
+            tokens: [
+                {
+                    environment,
+                    projects: ['*'],
+                },
+            ],
+        };
+        const headers = buildRequest({ body });
+        await app.request
+            .post('/edge/issue-token')
+            .set('Authorization', headers.authorization)
+            .set('x-timestamp', headers.timestamp)
+            .set('x-nonce', headers.nonce)
+            .set('content-sha256', headers.bodyHash)
+            .send(body)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.tokens).toHaveLength(1);
+                expect(res.body.tokens[0].projects).toStrictEqual(['*']);
+                expect(res.body.tokens[0].type).toStrictEqual(
+                    ApiTokenType.BACKEND,
+                );
+                const token = res.body.tokens[0].token as string;
+                expect(token).toMatch(/^\*:development\.v2_.*/);
+            });
+    });
+    test('New request with same environment and project gets new token', async () => {
+        const body: EdgeEnvironmentsProjectsListSchema = {
+            tokens: [
+                {
+                    environment,
+                    projects: ['*'],
+                },
+            ],
+        };
+        const headers = buildRequest({ body });
+        let firstToken: unknown | undefined;
+        await app.request
+            .post('/edge/issue-token')
+            .set('Authorization', headers.authorization)
+            .set('x-timestamp', headers.timestamp)
+            .set('x-nonce', headers.nonce)
+            .set('content-sha256', headers.bodyHash)
+            .send(body)
+            .expect(200)
+            .expect((res) => {
+                firstToken = res.body.tokens[0];
+                expect(res.body.tokens).toHaveLength(1);
+                expect(res.body.tokens[0].projects).toStrictEqual(['*']);
+                expect(res.body.tokens[0].type).toStrictEqual(
+                    ApiTokenType.BACKEND,
+                );
+                const token = res.body.tokens[0].token as string;
+                expect(token).toMatch(/^\*:development\..*/);
+            });
+        const secondHeaders = buildRequest({ body });
+        let secondToken: unknown | undefined;
+        await app.request
+            .post('/edge/issue-token')
+            .set('Authorization', secondHeaders.authorization)
+            .set('x-timestamp', secondHeaders.timestamp)
+            .set('x-nonce', secondHeaders.nonce)
+            .set('content-sha256', secondHeaders.bodyHash)
+            .send(body)
+            .expect(200)
+            .expect((res) => {
+                secondToken = res.body.tokens[0];
+                expect(res.body.tokens).toHaveLength(1);
+                expect(res.body.tokens[0].projects).toStrictEqual(['*']);
+                expect(res.body.tokens[0].type).toStrictEqual(
+                    ApiTokenType.BACKEND,
+                );
+                const token = res.body.tokens[0].token as string;
+                expect(token).toMatch(/^\*:development\..*/);
+            });
+        expect(firstToken).not.toEqual(secondToken);
+    });
+    afterAll(async () => {
+        if (db) {
+            await db.destroy();
+        }
+    });
+});
+
 type IssueTokenRequestHeaders = {
     timestamp: string;
     nonce: string;

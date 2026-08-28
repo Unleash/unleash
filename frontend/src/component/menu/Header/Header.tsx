@@ -11,15 +11,16 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import UserProfile from 'component/user/UserProfile';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
-
 import { DrawerMenu } from './DrawerMenu/DrawerMenu.tsx';
-import DarkModeOutlined from '@mui/icons-material/DarkModeOutlined';
-import LightModeOutlined from '@mui/icons-material/LightModeOutlined';
-import { useThemeMode } from 'hooks/useThemeMode';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton.tsx';
 import { CommandBar } from 'component/commandBar/CommandBar';
+import { HelpResources } from './HelpResources/HelpResources';
+import { SearchDocsButton } from './SearchDocs/SearchDocsButton.tsx';
+import { PendingAccessRequestsIndicator } from 'component/admin/users/AccessRequestsNotifications/PendingAccessRequestsIndicator';
+import { Link } from 'react-router';
+import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
+import UnleashLogo from 'assets/img/logoDarkWithText.svg?react';
+import UnleashLogoWhite from 'assets/img/logoWithWhiteText.svg?react';
 
 const HeaderComponent = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.application,
@@ -60,51 +61,96 @@ const StyledNav = styled('nav')({
     flexGrow: 1,
 });
 
-const StyledIconButton = styled(IconButton)<{
-    component?: 'a' | 'button';
-    href?: string;
-    target?: string;
-}>(({ theme }) => ({
-    borderRadius: 100,
-    '&:focus-visible': {
-        outlineStyle: 'solid',
-        outlineWidth: 2,
-        outlineColor: theme.palette.primary.main,
-        borderRadius: '100%',
-    },
+const StyledLogoLink = styled(Link)(({ theme }) => ({
+    display: 'inline-flex',
+    alignItems: 'center',
+    marginLeft: theme.spacing(1),
 }));
 
-const Header = () => {
-    const { onSetThemeMode, themeMode } = useThemeMode();
-    const theme = useTheme();
+const StyledUnleashLogo = styled(UnleashLogo)({ width: '120px' });
 
+const StyledUnleashLogoWhite = styled(UnleashLogoWhite)({ width: '120px' });
+
+const Header = () => {
+    const theme = useTheme();
     const mediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
-    const smallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [openDrawer, setOpenDrawer] = useState(false);
     const toggleDrawer = () => setOpenDrawer((prev) => !prev);
+
+    const headerItems = (
+        <StyledUserContainer>
+            <CommandBar />
+            <SearchDocsButton />
+            <Divider
+                orientation='vertical'
+                variant='middle'
+                flexItem
+                sx={(theme) => ({
+                    marginLeft: theme.spacing(1),
+                    border: 'transparent',
+                })}
+            />
+            <InviteLinkButton />
+            <HelpResources />
+            <Divider
+                orientation='vertical'
+                variant='middle'
+                flexItem
+                sx={{ ml: 1 }}
+            />
+            <UserProfile />
+        </StyledUserContainer>
+    );
 
     if (mediumScreen) {
         return (
             <HeaderComponent position='static'>
                 <ContainerComponent>
-                    <Tooltip title='Menu' arrow>
-                        <IconButton
-                            sx={{
-                                color: (theme) => theme.palette.text.primary,
-                            }}
-                            onClick={toggleDrawer}
-                            aria-controls='header-drawer'
-                            aria-expanded={openDrawer}
-                            size='large'
+                    <Box
+                        sx={{
+                            position: 'relative',
+                            display: 'inline-flex',
+                        }}
+                    >
+                        <Tooltip title='Menu' arrow>
+                            <IconButton
+                                sx={{
+                                    color: (theme) =>
+                                        theme.palette.text.primary,
+                                }}
+                                onClick={toggleDrawer}
+                                aria-controls='header-drawer'
+                                aria-expanded={openDrawer}
+                                size='large'
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                        </Tooltip>
+                        <Box
+                            sx={(theme) => ({
+                                position: 'absolute',
+                                top: 0,
+                                right: 0,
+                                pointerEvents: 'none',
+                            })}
                         >
-                            <MenuIcon />
-                        </IconButton>
-                    </Tooltip>
+                            <PendingAccessRequestsIndicator
+                                showTooltip={false}
+                            />
+                        </Box>
+                    </Box>
+                    <StyledLogoLink to='/' aria-label='Home'>
+                        <ThemeMode
+                            darkmode={
+                                <StyledUnleashLogoWhite aria-label='Unleash logo' />
+                            }
+                            lightmode={
+                                <StyledUnleashLogo aria-label='Unleash logo' />
+                            }
+                        />
+                    </StyledLogoLink>
                     <DrawerMenu open={openDrawer} toggleDrawer={toggleDrawer} />
-                    <StyledUserContainer>
-                        {!smallScreen && <CommandBar />}
-                        <UserProfile />
-                    </StyledUserContainer>
+                    {headerItems}
                 </ContainerComponent>
             </HeaderComponent>
         );
@@ -113,61 +159,7 @@ const Header = () => {
     return (
         <HeaderComponent position='static'>
             <ContainerComponent>
-                <StyledNav>
-                    <StyledUserContainer>
-                        <CommandBar />
-                        <Divider
-                            orientation='vertical'
-                            variant='middle'
-                            flexItem
-                            sx={(theme) => ({
-                                marginLeft: theme.spacing(1),
-                                border: 'transparent',
-                            })}
-                        />
-                        <InviteLinkButton />
-                        <Tooltip
-                            title={
-                                themeMode === 'dark'
-                                    ? 'Switch to light theme'
-                                    : 'Switch to dark theme'
-                            }
-                            arrow
-                        >
-                            <StyledIconButton
-                                onClick={onSetThemeMode}
-                                size='large'
-                            >
-                                <ConditionallyRender
-                                    condition={themeMode === 'dark'}
-                                    show={<DarkModeOutlined />}
-                                    elseShow={<LightModeOutlined />}
-                                />
-                            </StyledIconButton>
-                        </Tooltip>
-                        <Tooltip title='Documentation' arrow>
-                            <StyledIconButton
-                                component='a'
-                                href='https://docs.getunleash.io/'
-                                target='_blank'
-                                rel='noopener noreferrer'
-                                size='large'
-                                sx={(theme) => ({
-                                    marginRight: theme.spacing(1),
-                                })}
-                            >
-                                <MenuBookIcon />
-                            </StyledIconButton>
-                        </Tooltip>
-                        <Divider
-                            orientation='vertical'
-                            variant='middle'
-                            flexItem
-                            sx={{ ml: 1 }}
-                        />
-                        <UserProfile />
-                    </StyledUserContainer>
-                </StyledNav>
+                <StyledNav>{headerItems}</StyledNav>
             </ContainerComponent>
         </HeaderComponent>
     );

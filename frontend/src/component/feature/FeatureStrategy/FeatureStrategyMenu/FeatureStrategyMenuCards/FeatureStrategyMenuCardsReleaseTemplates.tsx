@@ -1,12 +1,11 @@
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { ReactComponent as ReleaseTemplateIcon } from 'assets/img/releaseTemplates.svg';
+import ReleaseTemplateIcon from 'assets/img/releaseTemplates.svg?react';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans.ts';
-import { Box, Button, styled } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
+import { Box, styled } from '@mui/material';
 import type { StrategyFilterValue } from './FeatureStrategyMenuCards.tsx';
 import { useState, type Dispatch, type SetStateAction } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { QuietLink } from 'component/common/QuietLink';
 import {
     FeatureStrategyMenuCardsSection,
     StyledStrategyModalSectionHeader,
@@ -14,10 +13,10 @@ import {
 import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard.tsx';
 import { FeatureStrategyMenuCardAction } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardAction.tsx';
 import { FeatureStrategyMenuCardIcon } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardIcon.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
-import { useHasRootAccess } from 'hooks/useHasAccess.ts';
-import { RELEASE_PLAN_TEMPLATE_CREATE } from '@server/types/permissions.ts';
+import { useEventTracker } from 'hooks/useEventTracker.ts';
 import { Dialogue } from 'component/common/Dialogue/Dialogue.tsx';
+import { Badge } from 'component/common/Badge/Badge.tsx';
+import { NewReleaseTemplateButton } from './NewReleaseTemplateButton.tsx';
 
 const RELEASE_TEMPLATE_DISPLAY_LIMIT = 5;
 
@@ -79,14 +78,8 @@ const StyledNoTemplatesDescription = styled('p')(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const StyledLink = styled(RouterLink)({
-    textDecoration: 'none',
-    '&:hover': {
-        textDecoration: 'underline',
-    },
-});
-
 interface IFeatureStrategyMenuCardsReleaseTemplatesProps {
+    projectId: string;
     onAddReleasePlan: (template: IReleasePlanTemplate) => void;
     onReviewReleasePlan: (template: IReleasePlanTemplate) => void;
     filter: StrategyFilterValue;
@@ -94,15 +87,17 @@ interface IFeatureStrategyMenuCardsReleaseTemplatesProps {
 }
 
 export const FeatureStrategyMenuCardsReleaseTemplates = ({
+    projectId,
     onAddReleasePlan,
     onReviewReleasePlan,
     filter,
     setFilter,
 }: IFeatureStrategyMenuCardsReleaseTemplatesProps) => {
     const { isEnterprise } = useUiConfig();
-    const { templates } = useReleasePlanTemplates();
-    const { trackEvent } = usePlausibleTracker();
-    const canCreateTemplate = useHasRootAccess(RELEASE_PLAN_TEMPLATE_CREATE);
+    const { templates } = useReleasePlanTemplates(projectId, {
+        includeRoot: true,
+    });
+    const { trackEvent } = useEventTracker();
 
     const [noAccessDialogOpen, setNoAccessDialogOpen] =
         useState<boolean>(false);
@@ -117,14 +112,6 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
         ? 0
         : RELEASE_TEMPLATE_DISPLAY_LIMIT;
 
-    const handleLinkClick = () => {
-        trackEvent('new-template-from-add-strategy', {
-            props: {
-                eventType: 'navigate-to-create-template',
-            },
-        });
-    };
-
     const handleNoAccessClick = () => {
         setNoAccessDialogOpen(true);
         trackEvent('new-template-from-add-strategy', {
@@ -138,6 +125,12 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
         setNoAccessDialogOpen(false);
     };
 
+    const scopeBadge = (template: IReleasePlanTemplate) => (
+        <Badge color='disabled'>
+            {template.project ? 'Project' : 'Global'}
+        </Badge>
+    );
+
     return (
         <Box>
             {shouldShowHeader && (
@@ -145,25 +138,10 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
                     sx={{ justifyContent: 'space-between' }}
                 >
                     Release templates
-                    {canCreateTemplate ? (
-                        <Button
-                            component={RouterLink}
-                            to='/release-templates/create-template'
-                            startIcon={<AddIcon />}
-                            onClick={handleLinkClick}
-                            size='small'
-                        >
-                            New template
-                        </Button>
-                    ) : (
-                        <Button
-                            startIcon={<AddIcon />}
-                            onClick={handleNoAccessClick}
-                            size='small'
-                        >
-                            New template
-                        </Button>
-                    )}
+                    <NewReleaseTemplateButton
+                        projectId={projectId}
+                        onNoAccess={handleNoAccessClick}
+                    />
                 </StyledStrategyModalSectionHeader>
             )}
             {!templates.length ? (
@@ -177,18 +155,18 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
                         </StyledNoTemplatesTitle>
                         <StyledNoTemplatesDescription>
                             Go to{' '}
-                            <StyledLink to='/release-templates'>
+                            <QuietLink to='/release-templates'>
                                 Configure &gt; Release templates
-                            </StyledLink>{' '}
+                            </QuietLink>{' '}
                             in the side menu to make your rollouts more
                             efficient and streamlined. Read more in our{' '}
-                            <StyledLink
+                            <QuietLink
                                 to='https://docs.getunleash.io/concepts/release-templates'
                                 target='_blank'
                                 rel='noreferrer'
                             >
                                 documentation
-                            </StyledLink>
+                            </QuietLink>
                             .
                         </StyledNoTemplatesDescription>
                     </StyledNoTemplatesBody>
@@ -207,6 +185,7 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
                             icon={
                                 <FeatureStrategyMenuCardIcon name='releasePlanTemplate' />
                             }
+                            badge={scopeBadge(template)}
                         >
                             <FeatureStrategyMenuCardAction
                                 onClick={() => onReviewReleasePlan(template)}

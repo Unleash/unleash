@@ -42,6 +42,7 @@ import {
     parseEnvVarBoolean,
     parseEnvVarJSON,
     parseEnvVarNumber,
+    parseEnvVarNumbers,
     parseEnvVarStrings,
 } from './util/parseEnvVar.js';
 import {
@@ -154,6 +155,10 @@ function loadRateLimitingConfig(options: IUnleashOptions): IRateLimiting {
         process.env.SIMPLE_LOGIN_LIMIT_PER_MINUTE,
         10,
     );
+    const authenticationMaxPerMinute = parseEnvVarNumber(
+        process.env.AUTHENTICATION_RATE_LIMIT_PER_MINUTE,
+        10,
+    );
     const passwordResetMaxPerMinute = parseEnvVarNumber(
         process.env.PASSWORD_RESET_LIMIT_PER_MINUTE,
         1,
@@ -162,12 +167,23 @@ function loadRateLimitingConfig(options: IUnleashOptions): IRateLimiting {
         process.env.SIGNAL_ENDPOINT_RATE_LIMIT_PER_SECOND,
         1,
     );
+    const tokenAuthenticationMaxPerMinute = parseEnvVarNumber(
+        process.env.TOKEN_AUTHENTICATION_RATE_LIMIT_PER_MINUTE,
+        20_000,
+    );
+    const sdkApiMaxPerMinute = parseEnvVarNumber(
+        process.env.SDK_API_RATE_LIMIT_PER_MINUTE,
+        20_000,
+    );
 
     const defaultRateLimitOptions: IRateLimiting = {
         createUserMaxPerMinute,
         simpleLoginMaxPerMinute,
+        authenticationMaxPerMinute,
         passwordResetMaxPerMinute,
         callSignalEndpointMaxPerSecond,
+        tokenAuthenticationMaxPerMinute,
+        sdkApiMaxPerMinute,
     };
     return mergeAll([defaultRateLimitOptions, options.rateLimiting || {}]);
 }
@@ -295,10 +311,16 @@ const defaultServerOption: IServerOption = {
     cdnPrefix: process.env.CDN_PREFIX,
     edgeUrl: process.env.EDGE_URL,
     unleashUrl: process.env.UNLEASH_URL || 'http://localhost:4242',
+    logRocketAppId: process.env.LOGROCKET_APP_ID,
+    hubspotPortalId: process.env.HUBSPOT_PORTAL_ID,
     serverMetrics: true,
     enableHeapSnapshotEnpoint: parseEnvVarBoolean(
         process.env.ENABLE_HEAP_SNAPSHOT_ENPOINT,
         false,
+    ),
+    enableStoriesPage: parseEnvVarBoolean(
+        process.env.ENABLE_STORIES_PAGE,
+        process.env.NODE_ENV === 'development',
     ),
     disableCompression: parseEnvVarBoolean(
         process.env.SERVER_DISABLE_COMPRESSION,
@@ -586,6 +608,18 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         ).values(),
     ];
 
+    const integrationConfig = {
+        allowPrivateUrlInIntegration:
+            options.allowPrivateUrlInIntegration ??
+            parseEnvVarBoolean(
+                process.env.UNLEASH_ALLOW_PRIVATE_URL_IN_INTEGRATION,
+                false,
+            ),
+        allowListIntegration:
+            options.allowListIntegration ??
+            parseEnvVarStrings(process.env.UNLEASH_ALLOW_LIST_INTEGRATION, []),
+    };
+
     const customStrategySettings = options.customStrategySettings ?? {
         disableCreation: parseEnvVarBoolean(
             process.env.UNLEASH_DISABLE_CUSTOM_STRATEGY_CREATION,
@@ -611,6 +645,10 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
     const ui = loadUI(options);
 
     const email: IEmailOption = mergeAll([defaultEmail, options.email || {}]);
+
+    const tokenExpiryNotificationDays =
+        options.tokenExpiryNotificationDays ??
+        parseEnvVarNumbers(process.env.TOKEN_EXPIRY_NOTIFICATION_DAYS, [14, 3]);
 
     let listen: IListeningPipe | IListeningHost;
     if (server.pipe) {
@@ -825,6 +863,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         flagResolver,
         frontendApi,
         email,
+        tokenExpiryNotificationDays,
         secureHeaders,
         enableOAS,
         preHook: options.preHook,
@@ -859,5 +898,6 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         checkDbOnReady,
         edgeMasterKey,
         edgeClientSecret,
+        ...integrationConfig,
     };
 }

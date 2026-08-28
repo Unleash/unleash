@@ -5,7 +5,7 @@ import { PREDEFINED_ROLE_TYPES } from '@server/util/constants';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import type { IRole } from 'interfaces/role';
-import type { VFC } from 'react';
+import type { FC } from 'react';
 
 const StyledBox = styled(Box)(() => ({
     display: 'flex',
@@ -18,7 +18,7 @@ interface IRolesActionsCellProps {
     onDelete: (event: React.SyntheticEvent) => void;
 }
 
-export const RolesActionsCell: VFC<IRolesActionsCellProps> = ({
+export const RolesActionsCell: FC<IRolesActionsCellProps> = ({
     role,
     onEdit,
     onDelete,

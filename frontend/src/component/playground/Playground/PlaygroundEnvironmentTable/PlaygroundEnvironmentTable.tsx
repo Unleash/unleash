@@ -1,18 +1,17 @@
 import { useMemo, useRef } from 'react';
 import {
-    useFlexLayout,
-    useGlobalFilter,
-    useSortBy,
-    useTable,
-} from 'react-table';
+    createColumnHelper,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
 
-import { VirtualizedTable } from 'component/common/Table';
-import { sortTypes } from 'utils/sortTypes';
-import type {
-    AdvancedPlaygroundEnvironmentFeatureSchema,
-    PlaygroundFeatureSchema,
-} from 'openapi';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
+import { sortingFns } from 'utils/sortingFns';
+import type { AdvancedPlaygroundEnvironmentFeatureSchema } from 'openapi';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
+import type { IFeatureVariant } from 'interfaces/featureToggle';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { FeatureStatusCell } from '../PlaygroundResultsTable/FeatureStatusCell/FeatureStatusCell.tsx';
 import { FeatureResultInfoPopoverCell } from '../PlaygroundResultsTable/FeatureResultInfoPopoverCell/FeatureResultInfoPopoverCell.tsx';
@@ -30,62 +29,66 @@ export const PlaygroundEnvironmentTable = ({
     const theme = useTheme();
     const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const dynamicHeaders = Object.keys(features[0].context).map(
-        (contextField) => ({
-            Header: capitalizeFirst(contextField),
-            accessor: (row: { context: Record<string, unknown> }) =>
-                row.context[contextField],
-            minWidth: 160,
-            Cell: HighlightCell,
-        }),
-    );
+    const columnHelper =
+        createColumnHelper<AdvancedPlaygroundEnvironmentFeatureSchema>();
 
-    const COLUMNS = useMemo(() => {
+    const columns = useMemo(() => {
+        const dynamicHeaders = Object.keys(features[0].context).map(
+            (contextField) =>
+                columnHelper.accessor((row) => row.context?.[contextField], {
+                    id: `context_${contextField}`,
+                    header: capitalizeFirst(contextField),
+                    cell: ({ getValue }) => (
+                        <HighlightCell value={String(getValue() ?? '')} />
+                    ),
+                    meta: { minWidth: 160 },
+                }),
+        );
+
         return [
             ...dynamicHeaders,
-            {
-                Header: 'Variant',
+            columnHelper.accessor((row) => row.variant?.name ?? '', {
                 id: 'variant',
-                accessor: 'variant.name',
-                sortType: 'alphanumeric',
-                filterName: 'variant',
-                maxWidth: 200,
-                Cell: ({
-                    value,
+                header: 'Variant',
+                sortingFn: 'alphanumeric',
+                cell: ({
+                    getValue,
                     row: {
-                        original: { variant, feature, variants, isEnabled },
+                        original: { variant, name, variants, isEnabled },
                     },
-                }: any) => (
+                }) => (
                     <VariantCell
-                        variant={variant?.enabled ? value : ''}
-                        variants={variants}
-                        feature={feature}
+                        variant={variant?.enabled ? String(getValue()) : ''}
+                        // schema/interface mismatch predates this migration
+                        variants={variants as IFeatureVariant[]}
+                        feature={name}
                         isEnabled={isEnabled}
                     />
                 ),
-            },
-            {
-                id: 'isEnabled',
-                Header: 'isEnabled',
-                filterName: 'isEnabled',
-                accessor: (row: PlaygroundFeatureSchema) =>
+                meta: { maxWidth: 200 },
+            }),
+            columnHelper.accessor(
+                (row) =>
                     row?.isEnabled
                         ? 'true'
                         : row?.strategies?.result === 'unknown'
                           ? 'unknown'
                           : 'false',
-                Cell: ({ row }: any) => (
-                    <FeatureStatusCell feature={row.original} />
-                ),
-                sortType: 'playgroundResultState',
-                maxWidth: 120,
-                sortInverted: true,
-            },
-            {
-                Header: '',
-                maxWidth: 70,
+                {
+                    id: 'isEnabled',
+                    header: 'isEnabled',
+                    cell: ({ row }) => (
+                        <FeatureStatusCell feature={row.original} />
+                    ),
+                    sortingFn: sortingFns.playgroundResultState,
+                    sortDescFirst: true,
+                    meta: { maxWidth: 120 },
+                },
+            ),
+            columnHelper.display({
                 id: 'info',
-                Cell: ({ row }: any) => (
+                header: '',
+                cell: ({ row }) => (
                     <FeatureResultInfoPopoverCell
                         feature={row.original}
                         input={{
@@ -94,25 +97,22 @@ export const PlaygroundEnvironmentTable = ({
                         }}
                     />
                 ),
-            },
+                meta: { maxWidth: 70 },
+            }),
         ];
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
-        {
-            columns: COLUMNS as any,
-            data: features,
-            sortTypes,
-            autoResetGlobalFilter: false,
-            autoResetHiddenColumns: false,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            disableMultiSort: true,
-        },
-        useGlobalFilter,
-        useFlexLayout,
-        useSortBy,
-    );
+    const table = useReactTable({
+        columns,
+        data: features,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+        enableMultiSort: false,
+    });
 
     useConditionallyHiddenColumns(
         [
@@ -121,8 +121,8 @@ export const PlaygroundEnvironmentTable = ({
                 columns: ['variant'],
             },
         ],
-        setHiddenColumns,
-        COLUMNS,
+        table.setColumnVisibility,
+        columns,
     );
 
     const parentRef = useRef<HTMLElement | null>(null);
@@ -135,12 +135,7 @@ export const PlaygroundEnvironmentTable = ({
                 maxHeight: '800px',
             }}
         >
-            <VirtualizedTable
-                parentRef={parentRef}
-                rows={rows}
-                headerGroups={headerGroups}
-                prepareRow={prepareRow}
-            />
+            <VirtualizedTable parentRef={parentRef} tableInstance={table} />
         </Box>
     );
 };

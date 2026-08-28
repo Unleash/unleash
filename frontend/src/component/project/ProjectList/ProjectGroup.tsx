@@ -1,13 +1,13 @@
 import type { ComponentType, ReactNode } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { ProjectCard as DefaultProjectCard } from '../ProjectCard/ProjectCard.tsx';
-import type { ProjectSchema } from 'openapi';
 import { loadingData } from './loadingData.ts';
 import { styled } from '@mui/material';
 import { UpgradeProjectCard } from '../ProjectCard/UpgradeProjectCard.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import type { ProjectsListView } from './hooks/useProjectsListState.ts';
 import { ProjectsListTable } from './ProjectsListTable/ProjectsListTable.tsx';
+import type { ProjectSchema } from 'openapi';
 
 const StyledGridContainer = styled('div')(({ theme }) => ({
     display: 'grid',

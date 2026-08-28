@@ -13,6 +13,7 @@ import FakeFeatureToggleStore from '../../feature-toggle/fakes/fake-feature-togg
 import type { IApplicationOverview } from './models.js';
 
 import { vi } from 'vitest';
+import { CLIENT_REGISTER } from '../../../events/index.js';
 
 let config: IUnleashConfig;
 beforeAll(() => {
@@ -46,10 +47,10 @@ test('Multiple registrations of same appname and instanceid within same time per
         started: new Date(),
         interval: 10,
     };
-    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
-    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
-    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
-    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1', 'default');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1', 'default');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1', 'default');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1', 'default');
 
     await clientMetrics.bulkAdd(); // in prod called by a SchedulerService
 
@@ -104,12 +105,12 @@ test('Multiple unique clients causes multiple registrations', async () => {
         started: new Date(),
         interval: 10,
     };
-    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
-    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
-    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
-    await clientMetrics.registerBackendClient(client2, '127.0.0.1');
-    await clientMetrics.registerBackendClient(client2, '127.0.0.1');
-    await clientMetrics.registerBackendClient(client2, '127.0.0.1');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1', 'default');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1', 'default');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1', 'default');
+    await clientMetrics.registerBackendClient(client2, '127.0.0.1', 'default');
+    await clientMetrics.registerBackendClient(client2, '127.0.0.1', 'default');
+    await clientMetrics.registerBackendClient(client2, '127.0.0.1', 'default');
 
     await clientMetrics.bulkAdd(); // in prod called by a SchedulerService
     const registrations: IClientApp[] = appStoreSpy.mock
@@ -147,15 +148,15 @@ test('Same client registered outside of dedup interval will be registered twice'
         started: new Date(),
         interval: 10,
     };
-    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
-    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
-    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1', 'default');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1', 'default');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1', 'default');
 
     await clientMetrics.bulkAdd(); // in prod called by a SchedulerService
 
-    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
-    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
-    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1', 'default');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1', 'default');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1', 'default');
 
     await clientMetrics.bulkAdd(); // in prod called by a SchedulerService
 
@@ -270,13 +271,14 @@ test('`registerInstance` sets `instanceId` to `default` if it is not provided', 
         config,
         {} as any,
     );
+    const environment = '';
 
     await instanceService.registerInstance(
         {
             appName: 'appName',
-            environment: '',
         },
         '::1',
+        environment,
     );
 
     expect(instanceService.seenClients.appName_default).toMatchObject({
@@ -304,18 +306,20 @@ describe('upserting into `seenClients`', () => {
             [key]: { ...client, sdkVersion: 'my-sdk' },
         };
 
+        const environment = 'blue';
+
         await instanceService.registerInstance(
             {
                 ...client,
-                environment: 'blue',
             },
             '::1',
+            environment,
         );
 
         expect(instanceService.seenClients[key]).toMatchObject({
             appName: 'appName',
             instanceId: 'instanceId',
-            environment: 'blue',
+            environment: environment,
             sdkVersion: 'my-sdk',
         });
     });
@@ -334,24 +338,28 @@ describe('upserting into `seenClients`', () => {
         const key = instanceService.clientKey(client);
 
         instanceService.seenClients = {
-            [key]: { ...client, environment: 'blue' },
+            [key]: {
+                ...client,
+                sdkVersion: 'previously-seen-sdk',
+                environment: 'blue',
+            },
         };
 
         await instanceService.registerBackendClient(
             {
                 ...client,
-                sdkVersion: 'my-sdk',
                 started: new Date(),
                 interval: 5,
             },
             '::1',
+            'not-merged',
         );
 
         expect(instanceService.seenClients[key]).toMatchObject({
             appName: 'appName',
             instanceId: 'instanceId',
             environment: 'blue',
-            sdkVersion: 'my-sdk',
+            sdkVersion: 'previously-seen-sdk',
         });
     });
     test('registerFrontendClient merges its data', async () => {
@@ -387,5 +395,141 @@ describe('upserting into `seenClients`', () => {
             environment: 'black',
             metricsCount: 10,
         });
+    });
+
+    test('registerFrontendClient emits an sdk heartbeat with flavor metadata when the flag is enabled', () => {
+        const eventStore = new FakeEventStore();
+        const emitSpy = vi.spyOn(eventStore, 'emit');
+        const flavorConfig = createTestConfig({
+            experimental: { flags: { recordSdkFlavorMetrics: true } },
+        });
+        const instanceService = new ClientInstanceService(
+            { eventStore } as any,
+            flavorConfig,
+            {} as any,
+        );
+
+        instanceService.registerFrontendClient({
+            appName: 'appName',
+            instanceId: 'instanceId',
+            sdkVersion: 'unleash-ios-sdk:2.5.0',
+            sdkType: 'frontend',
+            environment: 'development',
+            sdkFlavor: 'unleash-openfeature-swift-provider',
+            sdkFlavorVersion: '1.2.3',
+        });
+
+        expect(emitSpy).toHaveBeenCalledWith(CLIENT_REGISTER, {
+            sdkName: 'unleash-ios-sdk',
+            sdkVersion: '2.5.0',
+            metadata: {
+                sdkFlavor: 'unleash-openfeature-swift-provider',
+                sdkFlavorVersion: '1.2.3',
+            },
+        });
+    });
+
+    test('registerFrontendClient does not emit a heartbeat when the flag is disabled', () => {
+        const eventStore = new FakeEventStore();
+        const emitSpy = vi.spyOn(eventStore, 'emit');
+        const instanceService = new ClientInstanceService(
+            { eventStore } as any,
+            config, // default config: recordSdkFlavorMetrics is off
+            {} as any,
+        );
+
+        instanceService.registerFrontendClient({
+            appName: 'appName',
+            instanceId: 'instanceId',
+            sdkVersion: 'unleash-ios-sdk:2.5.0',
+            sdkType: 'frontend',
+            environment: 'development',
+            sdkFlavor: 'unleash-openfeature-swift-provider',
+            sdkFlavorVersion: '1.2.3',
+        });
+
+        expect(emitSpy).not.toHaveBeenCalledWith(
+            CLIENT_REGISTER,
+            expect.anything(),
+        );
+    });
+
+    test('registerBackendClient still emits its version heartbeat but strips flavor when the flag is disabled', async () => {
+        const eventStore = new FakeEventStore();
+        const emitSpy = vi.spyOn(eventStore, 'emit');
+        const instanceService = new ClientInstanceService(
+            { eventStore } as any,
+            config, // default config: recordSdkFlavorMetrics is off
+            {} as any,
+        );
+
+        await instanceService.registerBackendClient(
+            {
+                appName: 'appName',
+                instanceId: 'instanceId',
+                sdkVersion: 'unleash-client-node:6.7.0',
+                sdkFlavor: 'unleash-openfeature-node-provider',
+                sdkFlavorVersion: '1.0.1',
+                strategies: ['default'],
+                started: new Date(),
+                interval: 10000,
+            } as any,
+            '127.0.0.1',
+            'development',
+        );
+
+        // Backend always emits the version heartbeat (existing behaviour); only
+        // the flavour fields are gated off.
+        expect(emitSpy).toHaveBeenCalledWith(
+            CLIENT_REGISTER,
+            expect.objectContaining({
+                sdkName: 'unleash-client-node',
+                sdkVersion: '6.7.0',
+                metadata: expect.objectContaining({
+                    sdkFlavor: undefined,
+                    sdkFlavorVersion: undefined,
+                }),
+            }),
+        );
+    });
+
+    test('registerBackendClient includes flavor in the heartbeat when the flag is enabled', async () => {
+        const eventStore = new FakeEventStore();
+        const emitSpy = vi.spyOn(eventStore, 'emit');
+        const flavorConfig = createTestConfig({
+            experimental: { flags: { recordSdkFlavorMetrics: true } },
+        });
+        const instanceService = new ClientInstanceService(
+            { eventStore } as any,
+            flavorConfig,
+            {} as any,
+        );
+
+        await instanceService.registerBackendClient(
+            {
+                appName: 'appName',
+                instanceId: 'instanceId',
+                sdkVersion: 'unleash-client-node:6.7.0',
+                sdkFlavor: 'unleash-openfeature-node-provider',
+                sdkFlavorVersion: '1.0.1',
+                strategies: ['default'],
+                started: new Date(),
+                interval: 10000,
+            } as any,
+            '127.0.0.1',
+            'development',
+        );
+
+        expect(emitSpy).toHaveBeenCalledWith(
+            CLIENT_REGISTER,
+            expect.objectContaining({
+                sdkName: 'unleash-client-node',
+                sdkVersion: '6.7.0',
+                metadata: expect.objectContaining({
+                    sdkFlavor: 'unleash-openfeature-node-provider',
+                    sdkFlavorVersion: '1.0.1',
+                }),
+            }),
+        );
     });
 });

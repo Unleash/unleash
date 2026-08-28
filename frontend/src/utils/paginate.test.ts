@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { paginate } from './paginate.js';
 
 const createInput = (count: number) => {

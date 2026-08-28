@@ -46,5 +46,6 @@ export interface IClientApplicationsStore
     getUnannounced(): Promise<IClientApplication[]>;
     setUnannouncedToAnnounced(): Promise<IClientApplication[]>;
     getApplicationOverview(appName: string): Promise<IApplicationOverview>;
+    mapApplicationOverviewData(rows: any[], existingStrategies: string[]);
     removeInactiveApplications(): Promise<number>;
 }

@@ -3,7 +3,6 @@ import handleErrorResponses from 'hooks/api/getters/httpErrorResponseHandler';
 import type { SWRConfiguration } from 'swr';
 import { useConditionalSWR } from 'hooks/api/getters/useConditionalSWR/useConditionalSWR';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 import { useAuthEndpoint } from 'hooks/api/getters/useAuth/useAuthEndpoint';
 
@@ -25,10 +24,8 @@ export const useSignup = (options?: SWRConfiguration) => {
     } = useUiConfig();
     const { data: authData, refetchAuth } = useAuthEndpoint();
     const { instanceStatus, refetchInstanceStatus } = useInstanceStatus();
-    const signupDialogEnabled = useUiFlag('signupDialog');
 
-    const isPAYG = isEnterprise() && billing === 'pay-as-you-go';
-    const shouldFetch = isPAYG && signupDialogEnabled;
+    const shouldFetch = isEnterprise() && billing === 'pay-as-you-go';
 
     const {
         data: signupData,

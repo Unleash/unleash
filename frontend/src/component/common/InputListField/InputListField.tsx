@@ -1,5 +1,6 @@
-import type { VFC } from 'react';
-import { TextField, type TextFieldProps } from '@mui/material';
+import type { FC } from 'react';
+import type { TextFieldProps } from '@mui/material';
+import Input from '../Input/Input';
 
 interface IInputListFieldProps {
     label: string;
@@ -10,10 +11,9 @@ interface IInputListFieldProps {
     updateValues: (values: string[]) => void;
     onBlur?: TextFieldProps['onBlur'];
     helperText?: TextFieldProps['helperText'];
-    FormHelperTextProps?: TextFieldProps['FormHelperTextProps'];
 }
 
-export const InputListField: VFC<IInputListFieldProps> = ({
+export const InputListField: FC<IInputListFieldProps> = ({
     values = [],
     updateValues,
     placeholder = '',
@@ -38,7 +38,7 @@ export const InputListField: VFC<IInputListFieldProps> = ({
     };
 
     return (
-        <TextField
+        <Input
             {...rest}
             error={error}
             placeholder={placeholder}
@@ -46,8 +46,7 @@ export const InputListField: VFC<IInputListFieldProps> = ({
             onKeyDown={handleKeyDown}
             onChange={handleChange}
             style={{ width: '100%' }}
-            variant='outlined'
-            size='small'
+            size='large'
         />
     );
 };

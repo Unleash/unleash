@@ -1,4 +1,4 @@
-import { Link, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import FeatureLog from './FeatureLog/FeatureLog.tsx';
 import { FeatureOverview } from './FeatureOverview/FeatureOverview.tsx';
@@ -8,43 +8,24 @@ import useLoading from 'hooks/useLoading';
 import { FeatureNotFound } from 'component/feature/FeatureView/FeatureNotFound/FeatureNotFound';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureViewHeader } from './FeatureViewHeader.tsx';
-import { styled } from '@mui/material';
 import { FeatureMetricsOverview } from './FeatureMetrics/FeatureMetricsOverview.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { FeatureImpactHeader } from './FeatureImpactOverview/FeatureImpactHeader';
-import { ImpactMetricModal } from '../../impact-metrics/ImpactMetricModal/ImpactMetricModal';
-import { useFeatureImpactChartActions } from './useFeatureImpactChartActions';
-
-export const StyledLink = styled(Link)(() => ({
-    maxWidth: '100%',
-    textDecoration: 'none',
-    '&:hover, &:focus': {
-        textDecoration: 'underline',
-    },
-}));
+import { useImpactMetricsEnabled } from 'component/impact-metrics/hooks/useImpactMetricsEnabled.ts';
 
 export const FeatureView = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
 
     const impactMetricsFlagPage = useUiFlag('impactMetricsFlagPage');
-    const { isEnterprise } = useUiConfig();
-    const showImpactMetrics = impactMetricsFlagPage && isEnterprise();
+    const impactMetricsEnabled = useImpactMetricsEnabled();
+    const showImpactMetrics = impactMetricsFlagPage && impactMetricsEnabled;
 
     const { feature, loading, error, status } = useFeature(
         projectId,
         featureId,
+        { refreshInterval: 15 * 1000 },
     );
-
-    const {
-        chartModalOpen,
-        openChartModal,
-        closeChartModal,
-        saveChart,
-        metricOptions,
-        metadataLoading,
-    } = useFeatureImpactChartActions(projectId, featureId);
 
     const ref = useLoading(loading);
 
@@ -76,7 +57,6 @@ export const FeatureView = () => {
                                     <FeatureImpactHeader
                                         projectId={projectId}
                                         featureName={featureId}
-                                        onAddChart={openChartModal}
                                     />
                                 ) : undefined
                             }
@@ -84,15 +64,6 @@ export const FeatureView = () => {
                     }
                 />
             </Routes>
-            {showImpactMetrics && (
-                <ImpactMetricModal
-                    open={chartModalOpen}
-                    onClose={closeChartModal}
-                    onSave={saveChart}
-                    metrics={metricOptions}
-                    loading={metadataLoading}
-                />
-            )}
         </div>
     );
 };

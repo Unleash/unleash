@@ -47,3 +47,11 @@ const StyledLink = styled(Link)(({ theme }) => ({
 
 <IconButton sx={focusable}/>
 ```
+
+Prefer a name that describes the component's role rather than the base element if possible:
+
+```ts
+const Title = styled('h1')(({ theme }) => ({
+    ...focusable(theme),
+}));
+```

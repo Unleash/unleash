@@ -5,7 +5,7 @@ import {
     UPDATE_SEGMENT,
     UPDATE_PROJECT_SEGMENT,
 } from 'component/providers/AccessProvider/permissions';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 
 interface IEditSegmentButtonProps {

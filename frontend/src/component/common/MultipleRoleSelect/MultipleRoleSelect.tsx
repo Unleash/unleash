@@ -1,16 +1,16 @@
 import {
-    Autocomplete,
     type AutocompleteProps,
     type AutocompleteRenderOptionState,
     Checkbox,
     styled,
-    TextField,
 } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import type { ReactNode } from 'react';
 import type { IRole } from 'interfaces/role';
 import { RoleDescription } from '../RoleDescription/RoleDescription.tsx';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender.tsx';
+import { AutocompleteField } from '../AutocompleteField/AutocompleteField';
 
 const StyledRoleOption = styled('div')(({ theme }) => ({
     paddingTop: theme.spacing(0.75),
@@ -23,11 +23,15 @@ const StyledRoleOption = styled('div')(({ theme }) => ({
 }));
 
 interface IMultipleRoleSelectProps
-    extends Partial<AutocompleteProps<IRole, true, false, false>> {
+    extends Partial<
+        Omit<AutocompleteProps<IRole, true, false, false>, 'renderInput'>
+    > {
     roles: IRole[];
     value: IRole[];
     setValue: (role: IRole[]) => void;
     required?: boolean;
+    label?: string;
+    description?: ReactNode;
 }
 
 function sortItems<T extends { name: string; type: string }>(items: T[]): T[] {
@@ -54,6 +58,9 @@ export const MultipleRoleSelect = ({
     value,
     setValue,
     required,
+    label = 'Role',
+    description,
+    slotProps,
     ...rest
 }: IMultipleRoleSelectProps) => {
     const renderRoleOption = (
@@ -78,7 +85,10 @@ export const MultipleRoleSelect = ({
 
     return (
         <>
-            <Autocomplete
+            <AutocompleteField
+                label={label}
+                description={description}
+                required={required}
                 slotProps={{
                     paper: {
                         sx: {
@@ -90,11 +100,12 @@ export const MultipleRoleSelect = ({
                             },
                         },
                     },
+                    ...slotProps,
                 }}
                 multiple
                 disableCloseOnSelect
                 openOnFocus
-                size='small'
+                size='large'
                 value={value}
                 groupBy={(option) => {
                     return option.type === 'project'
@@ -105,9 +116,6 @@ export const MultipleRoleSelect = ({
                 options={sortedRoles}
                 renderOption={renderRoleOption}
                 getOptionLabel={(option) => option.name}
-                renderInput={(params) => (
-                    <TextField {...params} label='Role' required={required} />
-                )}
                 {...rest}
             />
             <ConditionallyRender

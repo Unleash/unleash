@@ -84,6 +84,12 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
 }));
 
+const StyledEnvironmentProjectSelect = styled(EnvironmentProjectSelect)(
+    ({ theme }) => ({
+        marginTop: theme.spacing(4),
+    }),
+);
+
 enum APITokenGeneration {
     LATER = 'later',
     NOW = 'now',
@@ -244,13 +250,15 @@ export const EnvironmentCloneModal = ({
             >
                 <StyledForm onSubmit={handleSubmit}>
                     <div>
-                        <StyledInputDescription>
-                            What is your new environment name? (Can't be changed
-                            later)
-                        </StyledInputDescription>
                         <StyledInput
                             autoFocus
                             label='Environment name'
+                            description={
+                                <StyledInputDescription>
+                                    What to call the new environment. This can't
+                                    be changed later.
+                                </StyledInputDescription>
+                            }
                             error={Boolean(errors.name)}
                             errorText={errors.name}
                             value={name}
@@ -264,12 +272,14 @@ export const EnvironmentCloneModal = ({
                             onChange={(e) => setType(e.currentTarget.value)}
                             value={type}
                         />
-                        <StyledInputDescription>
-                            Select which projects you want to clone the
-                            environment configuration in?
-                            <HelpIcon tooltip='The cloned environment will keep the feature flag state for the selected projects, where it will be enabled by default.' />
-                        </StyledInputDescription>
-                        <EnvironmentProjectSelect
+                        <StyledEnvironmentProjectSelect
+                            description={
+                                <StyledInputDescription>
+                                    Select which projects you want to clone the
+                                    environment configuration in
+                                    <HelpIcon tooltip='The cloned environment will keep the feature flag state for the selected projects, where it will be enabled by default.' />
+                                </StyledInputDescription>
+                            }
                             projects={projects}
                             setProjects={setProjects}
                         />

@@ -4,7 +4,7 @@ import {
 } from 'component/providers/AccessProvider/permissions';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { NAVIGATE_TO_CREATE_SEGMENT } from 'utils/testIds';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import type { FC } from 'react';
 

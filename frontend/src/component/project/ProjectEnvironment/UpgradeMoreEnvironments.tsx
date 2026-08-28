@@ -85,7 +85,7 @@ export const UpgradeMoreEnvironments = () => {
                     }}
                     size='small'
                 >
-                    <Close fontSize='inherit' />
+                    <Close />
                 </StyledCloseButton>
             </Tooltip>
         </Wrapper>

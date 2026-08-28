@@ -1,5 +1,6 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import Input from 'component/common/Input/Input';
+import { FormField } from 'component/common/FormField/FormField';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import SelectMenu from 'component/common/select';
 import { OverrideConfig } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantOverrides/VariantOverrides';
@@ -63,12 +64,6 @@ const StyledMarginLabel = styled(StyledLabel)(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
-const StyledSubLabel = styled('p')(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
-    color: theme.palette.text.secondary,
-    marginBottom: theme.spacing(2),
-}));
-
 const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
     marginBottom: theme.spacing(1),
     '& > span': {
@@ -81,7 +76,8 @@ const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
 }));
 
 const StyledFieldColumn = styled('div')(({ theme }) => ({
-    width: '100%',
+    flex: 1,
+    minWidth: 0,
     gap: theme.spacing(1.5),
     display: 'flex',
     '& > div': {
@@ -99,6 +95,10 @@ const StyledInput = styled(Input)(({ theme }) => ({
 
 const StyledPercentageContainer = styled('div')(({ theme }) => ({
     marginLeft: theme.spacing(3),
+    paddingRight: theme.spacing(5),
+    [theme.breakpoints.down('sm')]: {
+        paddingRight: 0,
+    },
 }));
 
 const StyledWeightInput = styled(Input)(({ theme }) => ({
@@ -130,8 +130,15 @@ const StyledTopRow = styled(StyledRow)({
     justifyContent: 'space-between',
 });
 
+const StyledPayloadRow = styled(StyledRow)(({ theme }) => ({
+    gap: theme.spacing(2),
+    '& > :first-child': {
+        flex: '0 0 auto',
+        width: 'auto',
+    },
+}));
+
 const StyledSelectMenu = styled(SelectMenu)(({ theme }) => ({
-    marginRight: theme.spacing(10),
     [theme.breakpoints.up('sm')]: {
         minWidth: theme.spacing(20),
     },
@@ -301,6 +308,18 @@ export const VariantForm = ({
             return false;
         }
     };
+    const getJsonPayloadError = (payload: IPayload): string | undefined => {
+        if (payload.type !== 'json' || payload.value.trim() === '') {
+            return undefined;
+        }
+
+        try {
+            JSON.parse(payload.value);
+            return undefined;
+        } catch (error) {
+            return error instanceof Error ? error.message : 'Invalid JSON';
+        }
+    };
 
     useEffect(() => {
         const newVariant: IFeatureVariantEdit = {
@@ -363,14 +382,11 @@ export const VariantForm = ({
             </StyledDeleteButtonTooltip>
             <StyledTopRow>
                 <StyledNameContainer>
-                    <StyledLabel>Variant name</StyledLabel>
-                    <StyledSubLabel>
-                        This will be used to identify the variant in your code
-                    </StyledSubLabel>
                     <StyledInput
                         id={`variant-name-input-${variant.id}`}
                         data-testid='VARIANT_NAME_INPUT'
                         label='Variant name'
+                        description='This will be used to identify the variant in your code'
                         error={Boolean(errors.name)}
                         errorText={errors.name}
                         value={name}
@@ -411,12 +427,14 @@ export const VariantForm = ({
                                 disabled={!customPercentage}
                                 aria-valuemin={0}
                                 aria-valuemax={100}
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment position='end'>
-                                            %
-                                        </InputAdornment>
-                                    ),
+                                slotProps={{
+                                    input: {
+                                        endAdornment: (
+                                            <InputAdornment position='end'>
+                                                %
+                                            </InputAdornment>
+                                        ),
+                                    },
                                 }}
                             />
                         </StyledPercentageContainer>
@@ -427,7 +445,7 @@ export const VariantForm = ({
                 Payload
                 <HelpIcon tooltip='Passed along with the the variant object.' />
             </StyledMarginLabel>
-            <StyledRow>
+            <StyledPayloadRow>
                 <StyledSelectMenu
                     id='variant-payload-type'
                     name='type'
@@ -446,23 +464,37 @@ export const VariantForm = ({
                     <ConditionallyRender
                         condition={payload.type === 'json'}
                         show={
-                            <Suspense fallback={null}>
-                                <LazyReactJSONEditor
-                                    content={{ text: payload.value }}
-                                    onChange={(content) =>
-                                        setPayload((payload) => {
-                                            return {
-                                                ...payload,
-                                                value:
-                                                    'json' in content
-                                                        ? content.json?.toString() ||
-                                                          ''
-                                                        : content.text,
-                                            };
-                                        })
-                                    }
-                                />
-                            </Suspense>
+                            <FormField label='Value'>
+                                <div>
+                                    <Suspense fallback={null}>
+                                        <LazyReactJSONEditor
+                                            content={{ text: payload.value }}
+                                            onChange={(content) =>
+                                                setPayload((payload) => {
+                                                    clearError(
+                                                        ErrorField.PAYLOAD,
+                                                    );
+                                                    return {
+                                                        ...payload,
+                                                        value:
+                                                            'json' in content
+                                                                ? JSON.stringify(
+                                                                      content.json,
+                                                                  ) || ''
+                                                                : content.text,
+                                                    };
+                                                })
+                                            }
+                                            onBlur={() =>
+                                                validatePayload(payload)
+                                            }
+                                            validationError={getJsonPayloadError(
+                                                payload,
+                                            )}
+                                        />
+                                    </Suspense>
+                                </div>
+                            </FormField>
                         }
                         elseShow={
                             <StyledInput
@@ -492,7 +524,7 @@ export const VariantForm = ({
                         }
                     />
                 </StyledFieldColumn>
-            </StyledRow>
+            </StyledPayloadRow>
             {!disableOverrides ? (
                 <>
                     <StyledMarginLabel>

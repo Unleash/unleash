@@ -1,13 +1,22 @@
 import { useVirtualizer } from '@tanstack/react-virtual';
 import {
+    type CSSProperties,
     Children,
+    type ComponentPropsWithRef,
     type HTMLAttributes,
-    type ReactElement,
     cloneElement,
     forwardRef,
+    isValidElement,
     useRef,
 } from 'react';
-import { Autocomplete, type AutocompleteProps } from '@mui/material';
+import {
+    AutocompleteField,
+    type AutocompleteFieldProps,
+} from '../AutocompleteField/AutocompleteField';
+
+type VirtualizedRowProps = ComponentPropsWithRef<'li'> & {
+    'data-index'?: number;
+};
 
 const ListboxComponent = forwardRef<
     HTMLDivElement,
@@ -35,13 +44,13 @@ const ListboxComponent = forwardRef<
                     }}
                 >
                     {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-                        const element = items[virtualRow.index] as ReactElement;
+                        const element = items[virtualRow.index];
 
-                        if (!element) {
+                        if (!isValidElement<VirtualizedRowProps>(element)) {
                             return null;
                         }
 
-                        const inlineStyle = {
+                        const inlineStyle: CSSProperties = {
                             position: 'absolute',
                             left: 0,
                             width: '100%',
@@ -62,7 +71,7 @@ const ListboxComponent = forwardRef<
 });
 
 type AutocompleteVirtualProps<T, M extends boolean | undefined> = Omit<
-    AutocompleteProps<T, M, boolean, false>,
+    AutocompleteFieldProps<T, M, boolean, false>,
     'disableListWrap' | 'ListboxComponent'
 > & {
     virtualThreshold?: number;
@@ -73,26 +82,14 @@ type AutocompleteVirtualProps<T, M extends boolean | undefined> = Omit<
 function AutocompleteVirtual<T, M extends boolean | undefined>(
     props: AutocompleteVirtualProps<T, M>,
 ) {
-    const {
-        virtualThreshold = 250,
-        getOptionLabel,
-        className,
-        ...restAutocompleteProps
-    } = props;
+    const { virtualThreshold = 250, ...rest } = props;
 
-    const isLargeList = props.options.length > virtualThreshold;
+    const isLargeList = rest.options.length > virtualThreshold;
+    const virtualProps = isLargeList
+        ? { ListboxComponent, groupBy: undefined }
+        : {};
 
-    const autocompleteProps = {
-        ...restAutocompleteProps,
-        getOptionLabel,
-        disableListWrap: true,
-        ...(isLargeList && {
-            ListboxComponent: ListboxComponent,
-            groupBy: undefined,
-        }),
-    };
-
-    return <Autocomplete {...autocompleteProps} />;
+    return <AutocompleteField {...rest} disableListWrap {...virtualProps} />;
 }
 
 export default AutocompleteVirtual;

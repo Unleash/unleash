@@ -22,6 +22,7 @@ interface IPageContentProps extends PaperProps {
     bodyClass?: string;
     headerClass?: string;
     withTabs?: boolean;
+    withStickyFooter?: boolean;
 }
 
 const StyledHeader = styled('div')(({ theme }) => ({
@@ -62,6 +63,7 @@ export const PageContent: FC<IPageContentProps> = ({
     disableLoading = false,
     className,
     withTabs,
+    withStickyFooter = false,
     ...rest
 }) => {
     const { classes: styles } = useStyles();
@@ -82,6 +84,7 @@ export const PageContent: FC<IPageContentProps> = ({
         {
             [styles.paddingDisabled]: disablePadding,
             [styles.borderDisabled]: disableBorder,
+            [styles.stickyFooter]: withStickyFooter,
         },
     );
 

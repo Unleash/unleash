@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import type { FeatureSchema, TagSchema } from 'openapi';
 import { styled, Typography } from '@mui/material';
 import { TextCell } from '../TextCell/TextCell.tsx';
@@ -17,7 +17,7 @@ interface IFeatureTagCellProps {
     };
 }
 
-export const FeatureTagCell: VFC<IFeatureTagCellProps> = ({ row }) => {
+export const FeatureTagCell: FC<IFeatureTagCellProps> = ({ row }) => {
     const { searchQuery } = useSearchHighlightContext();
 
     if (!row.original.tags || row.original.tags.length === 0)

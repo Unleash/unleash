@@ -1,4 +1,4 @@
-import type { Theme } from '@mui/material/styles/createTheme';
+import type { Theme } from '@mui/material/styles';
 import type { ChartOptions } from 'chart.js';
 import type { ILocationSettings } from '../../hooks/useLocationSettings.js';
 import type { IPoint } from '../feature/FeatureView/FeatureMetrics/FeatureMetricsChart/createChartData.js';
@@ -31,7 +31,6 @@ export const createPlaceholderBarChartOptions = (
                 pointStyle: 'none',
                 boxHeight: 0,
                 padding: 15,
-                boxPadding: 5,
             },
         },
 
@@ -58,8 +57,10 @@ export const createPlaceholderBarChartOptions = (
                 display: false,
             },
             grid: {
-                drawBorder: false,
                 color: theme.palette.divider,
+            },
+            border: {
+                display: false,
             },
         },
     },
@@ -91,7 +92,6 @@ export const createBarChartOptions = (
                     usePointStyle: true,
                     boxHeight: 6,
                     padding: 15,
-                    boxPadding: 5,
                 },
             },
 
@@ -126,7 +126,7 @@ export const createBarChartOptions = (
                         ] as unknown as IPoint;
 
                         if (
-                            item.dataset.label !== 'Exposed' ||
+                            item.dataset.label !== 'Enabled' ||
                             data.variants === undefined
                         ) {
                             return '';

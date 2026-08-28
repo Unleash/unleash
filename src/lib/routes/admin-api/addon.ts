@@ -83,6 +83,7 @@ class AddonController extends Controller {
                     description:
                         'Retrieve all addons and providers that are defined on this Unleash instance.',
                     tags: ['Addons'],
+                    release: { stable: '4.14.0' },
                     operationId: 'getAddons',
                     responses: {
                         ...getStandardResponses(401),
@@ -103,6 +104,7 @@ class AddonController extends Controller {
                     description:
                         'Create an addon instance. The addon must use one of the providers available on this Unleash instance.',
                     tags: ['Addons'],
+                    release: { stable: '4.14.0' },
                     operationId: 'createAddon',
                     requestBody: createRequestSchema('addonCreateUpdateSchema'),
                     responses: {
@@ -124,6 +126,7 @@ class AddonController extends Controller {
                     description:
                         'Retrieve information about the addon whose ID matches the ID in the request URL.',
                     tags: ['Addons'],
+                    release: { stable: '4.14.0' },
                     operationId: 'getAddon',
                     responses: {
                         200: createResponseSchema('addonSchema'),
@@ -145,6 +148,7 @@ class AddonController extends Controller {
 
 Note: passing \`null\` as a value for the description property will set it to an empty string.`,
                     tags: ['Addons'],
+                    release: { stable: '4.14.0' },
                     operationId: 'updateAddon',
                     requestBody: createRequestSchema('addonCreateUpdateSchema'),
                     responses: {
@@ -167,6 +171,7 @@ Note: passing \`null\` as a value for the description property will set it to an
                     description:
                         'Delete the addon specified by the ID in the request path.',
                     tags: ['Addons'],
+                    release: { stable: '4.14.0' },
                     operationId: 'deleteAddon',
                     responses: {
                         200: emptyResponse,
@@ -184,6 +189,7 @@ Note: passing \`null\` as a value for the description property will set it to an
             middleware: [
                 openApiService.validPath({
                     tags: ['Addons'],
+                    release: { stable: '6.1.0' },
                     operationId: 'getIntegrationEvents',
                     summary:
                         'Get integration events for a specific integration configuration.',
@@ -200,8 +206,15 @@ Note: passing \`null\` as a value for the description property will set it to an
     }
 
     async getAddons(_req: Request, res: Response<AddonsSchema>): Promise<void> {
-        const addons = await this.addonService.getAddons();
-        const providers = this.addonService.getProviderDefinitions();
+        let addons = await this.addonService.getAddons();
+        let providers = this.addonService.getProviderDefinitions();
+
+        if (!this.flagResolver.isEnabled('serviceNowIntegration')) {
+            addons = addons.filter((addon) => addon.provider !== 'servicenow');
+            providers = providers.filter(
+                (provider) => provider.name !== 'servicenow',
+            );
+        }
 
         this.openApiService.respondWithValidation(200, res, addonsSchema.$id, {
             addons: serializeDates(addons),
@@ -223,12 +236,24 @@ Note: passing \`null\` as a value for the description property will set it to an
         );
     }
 
+    private conditionalServiceNowBlock = (data: AddonCreateUpdateSchema) => {
+        if (
+            data.provider === 'servicenow' &&
+            !this.flagResolver.isEnabled('serviceNowIntegration')
+        ) {
+            throw new BadDataError(
+                'The ServiceNow integration is disabled because the controlling feature flag is turned off.',
+            );
+        }
+    };
+
     async updateAddon(
         req: IAuthRequest<{ id: number }, any, AddonCreateUpdateSchema, any>,
         res: Response<AddonSchema>,
     ): Promise<void> {
         const { id } = req.params;
         const data = req.body;
+        this.conditionalServiceNowBlock(data);
 
         const addon = await this.addonService.updateAddon(id, data, req.audit);
 
@@ -241,10 +266,11 @@ Note: passing \`null\` as a value for the description property will set it to an
     }
 
     async createAddon(
-        req: IAuthRequest<AddonCreateUpdateSchema, any, any, any>,
+        req: IAuthRequest<unknown, any, AddonCreateUpdateSchema, any>,
         res: Response<AddonSchema>,
     ): Promise<void> {
         const data = req.body;
+        this.conditionalServiceNowBlock(data);
         const addon = await this.addonService.createAddon(data, req.audit);
 
         this.openApiService.respondWithValidation(

@@ -1,5 +1,6 @@
+import { expect, test } from 'vitest';
 import { renderHook } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { useEventLogFilters } from './EventLogFilters.tsx';
 
 const allFilterKeys = ['from', 'to', 'createdBy', 'type', 'project', 'feature'];

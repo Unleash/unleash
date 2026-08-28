@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { ApiDetails } from 'component/menu/Footer/ApiDetails/ApiDetails';
 import { render } from 'utils/testRenderer';
 

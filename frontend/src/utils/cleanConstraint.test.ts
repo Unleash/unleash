@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { cleanConstraint } from 'utils/cleanConstraint';
 
 test('cleanConstraint values', () => {

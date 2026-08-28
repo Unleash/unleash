@@ -56,13 +56,13 @@ export const SafeguardChangeView: FC<{
                 </ChangeItemInfo>
                 <div>
                     <TabList>
-                        <Tab>View change</Tab>
-                        <Tab>View diff</Tab>
+                        <Tab value='change'>View change</Tab>
+                        <Tab value='diff'>View diff</Tab>
                     </TabList>
                     {actions}
                 </div>
             </ChangeItemWrapper>
-            <TabPanel>
+            <TabPanel value='change'>
                 {readonly ? (
                     <ReadonlySafeguardDisplay
                         safeguard={safeguard}
@@ -83,7 +83,7 @@ export const SafeguardChangeView: FC<{
                     />
                 )}
             </TabPanel>
-            <TabPanel variant='diff'>
+            <TabPanel value='diff'>
                 <EventDiff
                     entry={{
                         preData: omitIfDefined(currentSafeguard, [
@@ -128,13 +128,13 @@ export const SafeguardDeleteView: FC<{
                 </ChangeItemInfo>
                 <div>
                     <TabList>
-                        <Tab>View change</Tab>
-                        <Tab>View diff</Tab>
+                        <Tab value='change'>View change</Tab>
+                        <Tab value='diff'>View diff</Tab>
                     </TabList>
                     {actions}
                 </div>
             </ChangeItemWrapper>
-            <TabPanel>
+            <TabPanel value='change'>
                 {readonly ? (
                     <ReadonlySafeguardDisplay
                         safeguard={safeguard}
@@ -155,7 +155,7 @@ export const SafeguardDeleteView: FC<{
                     />
                 )}
             </TabPanel>
-            <TabPanel variant='diff'>
+            <TabPanel value='diff'>
                 <EventDiff
                     entry={{
                         preData: safeguard,

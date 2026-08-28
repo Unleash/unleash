@@ -21,8 +21,6 @@ import {
 import type { Context } from 'unleash-client';
 import { enrichContextWithIp } from './index.js';
 import NotImplementedError from '../../error/not-implemented-error.js';
-import rateLimit from 'express-rate-limit';
-import { minutesToMilliseconds } from 'date-fns';
 import metricsHelper from '../../util/metrics-helper.js';
 import { FUNCTION_TIME } from '../../metric-events.js';
 import type { IUnleashServices } from '../../services/index.js';
@@ -73,6 +71,7 @@ export default class FrontendAPIController extends Controller {
             middleware: [
                 this.services.openApiService.validPath({
                     tags: ['Frontend API'],
+                    release: { stable: '4.15.0' },
                     operationId: 'getFrontendFeatures',
                     responses: {
                         200: createResponseSchema('frontendApiFeaturesSchema'),
@@ -94,6 +93,7 @@ export default class FrontendAPIController extends Controller {
             middleware: [
                 this.services.openApiService.validPath({
                     tags: ['Frontend API'],
+                    release: { stable: '6.7.2' },
                     operationId: 'getFrontendApiFeaturesWithPost',
                     requestBody: createRequestSchema(
                         'frontendApiFeaturesPostSchema',
@@ -127,6 +127,7 @@ export default class FrontendAPIController extends Controller {
                     tags: ['Frontend API'],
                     summary: 'Register client usage metrics',
                     description: `Registers usage metrics. Stores information about how many times each flag was evaluated to enabled and disabled within a time frame. If provided, this operation will also store data on how many times each feature flag's variants were displayed to the end user. If the Frontend API is disabled 404 is returned.`,
+                    release: { stable: '4.15.0' },
                     operationId: 'registerFrontendMetrics',
                     requestBody: createRequestSchema('clientMetricsSchema'),
                     responses: {
@@ -134,13 +135,6 @@ export default class FrontendAPIController extends Controller {
                         204: emptyResponse,
                         ...getStandardResponses(400, 401, 404),
                     },
-                }),
-                rateLimit({
-                    windowMs: minutesToMilliseconds(1),
-                    max: config.metricsRateLimiting.frontendMetricsMaxPerMinute,
-                    validate: false,
-                    standardHeaders: true,
-                    legacyHeaders: false,
                 }),
             ],
         });
@@ -156,20 +150,13 @@ export default class FrontendAPIController extends Controller {
                     summary: 'Register a client SDK',
                     description:
                         'This is for future use. Currently Frontend client registration is not supported. Returning 200 for clients that expect this status code. If the Frontend API is disabled 404 is returned.',
+                    release: { stable: '4.15.0' },
                     operationId: 'registerFrontendClient',
                     requestBody: createRequestSchema('frontendApiClientSchema'),
                     responses: {
                         200: emptyResponse,
                         ...getStandardResponses(400, 401, 404),
                     },
-                }),
-                rateLimit({
-                    windowMs: minutesToMilliseconds(1),
-                    max: config.metricsRateLimiting
-                        .frontendRegisterMaxPerMinute,
-                    validate: false,
-                    standardHeaders: true,
-                    legacyHeaders: false,
                 }),
             ],
         });
@@ -233,6 +220,8 @@ export default class FrontendAPIController extends Controller {
             req.body,
             extractClientIp(req),
             req.headers['unleash-sdk'],
+            req.headers['unleash-sdk-flavor'],
+            req.headers['unleash-sdk-flavor-version'],
         );
 
         res.sendStatus(200);

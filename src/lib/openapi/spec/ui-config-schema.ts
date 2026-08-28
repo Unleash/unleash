@@ -49,6 +49,18 @@ export const uiConfigSchema = {
             description: 'The URL of the Unleash instance.',
             example: 'https://unleash.mycompany.com/enterprise',
         },
+        logRocketAppId: {
+            type: 'string',
+            description:
+                'The LogRocket app ID used to initialize session replay in the admin UI. Only used when the `logRocketEnabled` flag is on.',
+            example: '1knhci/unleash-sandbox',
+        },
+        hubspotPortalId: {
+            type: 'string',
+            description:
+                'The HubSpot portal ID. Currently used to load the customer support chat widget when the `hubspotChatEnabled` flag is on and the instance is a PAYG trial; may be reused by future HubSpot integrations.',
+            example: '1234567',
+        },
         baseUriPath: {
             type: 'string',
             description:
@@ -95,6 +107,13 @@ export const uiConfigSchema = {
             description: 'Whether a Prometheus API is available.',
             example: true,
         },
+        impactMetrics: {
+            type: 'string',
+            enum: ['disabled', 'unconfigured', 'external', 'internal', 'full'],
+            description:
+                'Impact metrics availability for this instance. `disabled` when the killswitch is on; `unconfigured` when no source is set up yet; `internal`/`external`/`full` depending on which data sources are available.',
+            example: 'internal',
+        },
         frontendApiOrigins: {
             type: 'array',
             description:
@@ -132,7 +151,7 @@ export const uiConfigSchema = {
                 {
                     value: 'Documentation',
                     icon: 'library_books',
-                    href: 'https://docs.getunleash.io/docs',
+                    href: 'https://docs.getunleash.io',
                     title: 'User documentation',
                 },
                 {
@@ -186,6 +205,12 @@ export const uiConfigSchema = {
             type: 'object',
             description:
                 'The context object used to configure the Unleash instance.',
+        },
+        storiesPageEnabled: {
+            type: 'boolean',
+            description:
+                'Whether the internal `/_stories` component gallery route is enabled. Controlled by the `ENABLE_STORIES_PAGE` environment variable.',
+            example: false,
         },
     },
     components: {

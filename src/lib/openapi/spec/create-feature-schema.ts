@@ -19,10 +19,11 @@ export const createFeatureSchema = {
                 'release',
                 'operational',
                 'permission',
+                'sunset',
             ],
             example: 'release',
             description:
-                "The feature flag's [type](https://docs.getunleash.io/concepts/feature-flags#feature-flag-types). One of experiment, kill-switch, release, operational, or permission",
+                "The feature flag's [type](https://docs.getunleash.io/concepts/feature-flags#feature-flag-types). One of experiment, kill-switch, release, operational, permission, or sunset",
         },
         description: {
             type: 'string',

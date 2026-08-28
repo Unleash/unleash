@@ -1,5 +1,5 @@
-import CheckCircleOutline from '@mui/icons-material/CheckCircleOutline';
-import ErrorOutline from '@mui/icons-material/ErrorOutline';
+import CheckCircleOutline from '@mui/icons-material/CheckCircleOutlineOutlined';
+import ErrorOutline from '@mui/icons-material/ErrorOutlineOutlined';
 import { Alert, CircularProgress, Divider, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IActionEvent } from 'interfaces/action';

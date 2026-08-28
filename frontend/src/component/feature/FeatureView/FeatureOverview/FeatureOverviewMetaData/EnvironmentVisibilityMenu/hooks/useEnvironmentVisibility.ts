@@ -1,12 +1,12 @@
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 export const useEnvironmentVisibility = () => {
     const [value, setValue] = useLocalStorageState<Array<string>>(
         'environment-visibiilty',
         [],
     );
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const onEnvironmentVisibilityChange = (environment: string) => {
         if (value.includes(environment)) {

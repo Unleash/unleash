@@ -15,23 +15,24 @@ const countSchema = joi
     });
 
 // validated type from client-metrics-schema.ts with default values
-export type ValidatedClientMetrics = {
-    environment?: string;
+type ValidatedClientMetrics = {
     appName: string;
     instanceId: string;
-    bucket: IMetricsBucket;
+    bucket?: IMetricsBucket;
 };
 
 export const clientMetricsSchema = joi
     .object<ValidatedClientMetrics>()
     .options({ stripUnknown: true })
     .keys({
-        environment: joi.string().optional(),
         appName: joi.string().required(),
         instanceId: joi.string().empty(['', null]).default('default'),
+        // bucket is optional: requests carrying only impact metrics may omit it
+        // or send it as null
         bucket: joi
             .object()
-            .required()
+            .empty(null)
+            .optional()
             .keys({
                 start: joi.date().required(),
                 stop: joi.date().required(),
@@ -75,22 +76,6 @@ export const applicationSchema = joi
         color: joi.string().allow('').optional(),
         icon: joi.string().allow('').optional(),
         announced: joi.boolean().optional().default(false),
-    });
-
-export const customMetricSchema = joi
-    .object()
-    .options({ stripUnknown: true })
-    .keys({
-        name: joi.string().required(),
-        value: joi.number().required(),
-        labels: joi.object().pattern(joi.string(), joi.string()).optional(),
-    });
-
-export const customMetricsSchema = joi
-    .object()
-    .options({ stripUnknown: true })
-    .keys({
-        metrics: joi.array().items(customMetricSchema).required(),
     });
 
 export const metricSampleSchema = joi
@@ -172,7 +157,6 @@ export const clientRegisterSchema = joi
         strategies: joi.array().items(joi.string(), joi.any().strip()),
         started: joi.date().required(),
         interval: joi.number().required(),
-        environment: joi.string().optional(),
         project: joi.string().optional(),
         projects: joi.array().optional().items(joi.string()),
     });

@@ -1,36 +1,43 @@
 import { useEffect } from 'react';
+import type { Updater, VisibilityState } from '@tanstack/react-table';
 
 interface IConditionallyHiddenColumns {
     condition: boolean;
     columns: string[];
 }
 
+/**
+ * Applies visibility to a tanstack-react-table instance by calling
+ * `setColumnVisibility` with a `Record<string, boolean>` derived from a
+ * list of `{ condition, columns }` pairs.
+ */
 export const useConditionallyHiddenColumns = (
     conditionallyHiddenColumns: IConditionallyHiddenColumns[],
-    setHiddenColumns: (
-        columns: string[] | ((columns: string[]) => string[]),
-    ) => void,
+    setColumnVisibility: (updater: Updater<VisibilityState>) => void,
     columnsDefinition: unknown[],
 ) => {
     useEffect(() => {
-        const columnsToHide = conditionallyHiddenColumns
-            .filter(({ condition }) => condition)
-            .flatMap(({ columns }) => columns);
+        const { hidden, shown } = Object.groupBy(
+            conditionallyHiddenColumns,
+            ({ condition }) => (condition ? 'hidden' : 'shown'),
+        );
 
-        const columnsToShow = conditionallyHiddenColumns
-            .flatMap(({ columns }) => columns)
-            .filter((column) => !columnsToHide.includes(column));
+        const columnsToHide = hidden?.flatMap(({ columns }) => columns) ?? [];
+        const columnsToShow = shown?.flatMap(({ columns }) => columns) ?? [];
 
-        setHiddenColumns((columns) => [
-            ...new Set(
-                [...columns, ...columnsToHide].filter(
-                    (column) => !columnsToShow.includes(column),
-                ),
-            ),
-        ]);
+        setColumnVisibility((current) => {
+            const next = { ...current };
+            for (const column of columnsToShow) {
+                next[column] = true;
+            }
+            for (const column of columnsToHide) {
+                next[column] = false;
+            }
+            return next;
+        });
     }, [
         ...conditionallyHiddenColumns.map(({ condition }) => condition),
-        setHiddenColumns,
+        setColumnVisibility,
         columnsDefinition,
     ]);
 };

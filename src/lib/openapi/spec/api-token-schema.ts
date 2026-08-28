@@ -5,7 +5,7 @@ export const apiTokenSchema = {
     $id: '#/components/schemas/apiTokenSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['secret', 'tokenName', 'type', 'projects', 'createdAt'],
+    required: ['tokenName', 'type', 'projects', 'createdAt'],
     description:
         'An overview of an [Unleash API token](https://docs.getunleash.io/concepts/api-tokens-and-client-keys).',
     properties: {
@@ -13,6 +13,7 @@ export const apiTokenSchema = {
             type: 'string',
             description: 'The token used for authentication.',
             example: 'project:environment.xyzrandomstring',
+            nullable: true,
         },
         tokenName: {
             type: 'string',
@@ -71,6 +72,12 @@ export const apiTokenSchema = {
             nullable: true,
             description: `Alias is no longer in active use and will often be NULL. It's kept around as a way of allowing old proxy tokens created with the old metadata format to keep working.`,
             example: 'randomid-or-some-alias',
+        },
+        secure: {
+            type: 'boolean',
+            nullable: true,
+            description: `True if using the new api token format. This means copy token will no longer work`,
+            example: true,
         },
     },
     components: {},

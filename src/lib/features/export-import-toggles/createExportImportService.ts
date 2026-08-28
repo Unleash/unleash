@@ -83,7 +83,7 @@ export const createFakeExportImportTogglesService = (
         { getLogger },
         eventService,
     );
-    const contextService = createFakeContextService(config);
+    const { contextService } = createFakeContextService(config);
     const strategyService = new StrategyService(
         { strategyStore },
         { getLogger },

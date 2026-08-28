@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { autocorrectDateRange } from './autocorrectDateRange';
 
 describe('setState date handling', () => {

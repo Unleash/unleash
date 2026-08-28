@@ -35,22 +35,6 @@ export const NewFeatureResultInfoPopoverCell = ({
                 open={open}
                 onClose={() => setOpen(false)}
                 anchorEl={ref.current}
-                PaperProps={{
-                    sx: (theme) => ({
-                        '--popover-inline-padding': theme.spacing(4),
-                        paddingInline: 'var(--popover-inline-padding)',
-                        paddingBlock: theme.spacing(3),
-                        display: 'flex',
-                        flexDirection: 'column',
-                        width: 728,
-                        maxWidth: '100%',
-                        height: 'auto',
-                        gap: theme.spacing(3),
-                        overflowY: 'auto',
-                        backgroundColor: theme.palette.background.elevation1,
-                        borderRadius: theme.shape.borderRadius,
-                    }),
-                }}
                 anchorOrigin={{
                     vertical: 'top',
                     horizontal: 'right',
@@ -58,6 +42,25 @@ export const NewFeatureResultInfoPopoverCell = ({
                 transformOrigin={{
                     vertical: 'center',
                     horizontal: 'left',
+                }}
+                slotProps={{
+                    paper: {
+                        sx: (theme) => ({
+                            '--popover-inline-padding': theme.spacing(4),
+                            paddingInline: 'var(--popover-inline-padding)',
+                            paddingBlock: theme.spacing(3),
+                            display: 'flex',
+                            flexDirection: 'column',
+                            width: 728,
+                            maxWidth: '100%',
+                            height: 'auto',
+                            gap: theme.spacing(3),
+                            overflowY: 'auto',
+                            backgroundColor:
+                                theme.palette.background.elevation1,
+                            borderRadius: theme.shape.borderRadius,
+                        }),
+                    },
                 }}
             >
                 <FeatureDetails

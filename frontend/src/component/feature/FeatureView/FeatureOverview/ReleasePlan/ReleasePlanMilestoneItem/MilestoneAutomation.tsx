@@ -1,7 +1,10 @@
 import Add from '@mui/icons-material/Add';
 import WarningAmber from '@mui/icons-material/WarningAmber';
 import { Badge } from 'component/common/Badge/Badge';
-import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
+import {
+    isTimeCondition,
+    type IReleasePlanMilestone,
+} from 'interfaces/releasePlans';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import { MilestoneAutomationSection } from '../ReleasePlanMilestone/MilestoneAutomationSection.tsx';
 import { MilestoneTransitionDisplay } from '../ReleasePlanMilestone/MilestoneTransitionDisplay.tsx';
@@ -14,7 +17,6 @@ interface MilestoneAutomationProps {
     milestone: IReleasePlanMilestone;
     milestones: IReleasePlanMilestone[];
     status: MilestoneStatus;
-    milestoneProgressionsEnabled: boolean;
     readonly: boolean | undefined;
     isProgressionFormOpen: boolean;
     effectiveTransitionCondition: IReleasePlanMilestone['transitionCondition'];
@@ -32,7 +34,6 @@ export const MilestoneAutomation = ({
     milestone,
     milestones,
     status,
-    milestoneProgressionsEnabled,
     readonly,
     isProgressionFormOpen,
     effectiveTransitionCondition,
@@ -50,8 +51,7 @@ export const MilestoneAutomation = ({
         Boolean(milestone.pausedAt),
     );
 
-    const showAutomation =
-        milestoneProgressionsEnabled && isNotLastMilestone && !readonly;
+    const showAutomation = isNotLastMilestone && !readonly;
 
     if (!showAutomation) {
         return null;
@@ -84,7 +84,8 @@ export const MilestoneAutomation = ({
                     onCancel={onCloseProgressionForm}
                     environment={environment}
                 />
-            ) : effectiveTransitionCondition ? (
+            ) : effectiveTransitionCondition &&
+              isTimeCondition(effectiveTransitionCondition) ? (
                 <MilestoneTransitionDisplay
                     intervalMinutes={
                         effectiveTransitionCondition.intervalMinutes

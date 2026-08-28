@@ -200,7 +200,7 @@ const RolloutSlider = ({
                 </SliderContent>
                 <StyledInputBox>
                     <StyledTextField
-                        size='small'
+                        size='large'
                         aria-labelledby='discrete-slider-always'
                         type='number'
                         value={inputValue}
@@ -208,17 +208,19 @@ const RolloutSlider = ({
                         onBlur={handleInputBlur}
                         onKeyDown={handleKeyDown}
                         disabled={disabled}
-                        inputProps={{
-                            min: 0,
-                            max: 100,
-                            step: 1,
-                        }}
-                        InputProps={{
-                            endAdornment: (
-                                <InputAdornment position='end'>
-                                    %
-                                </InputAdornment>
-                            ),
+                        slotProps={{
+                            htmlInput: {
+                                min: 0,
+                                max: 100,
+                                step: 1,
+                            },
+                            input: {
+                                endAdornment: (
+                                    <InputAdornment position='end'>
+                                        %
+                                    </InputAdornment>
+                                ),
+                            },
                         }}
                     />
                 </StyledInputBox>

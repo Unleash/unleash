@@ -1,11 +1,12 @@
 import { type OnMoveItem, useDragItem } from 'hooks/useDragItem';
-import type { Row } from 'react-table';
+import { flexRender, type Cell, type Row } from '@tanstack/react-table';
 import { styled, TableRow } from '@mui/material';
 import { TableCell } from 'component/common/Table';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { UPDATE_ENVIRONMENT } from 'component/providers/AccessProvider/permissions';
 import AccessContext from 'contexts/AccessContext';
 import { type ForwardedRef, useContext, useRef } from 'react';
+import type { IEnvironment } from 'interfaces/environments';
 
 const StyledTableRow = styled(TableRow)(() => ({
     '&:hover': {
@@ -17,7 +18,7 @@ const StyledTableRow = styled(TableRow)(() => ({
 }));
 
 interface IEnvironmentRowProps {
-    row: Row;
+    row: Row<IEnvironment>;
     onMoveItem: OnMoveItem;
 }
 
@@ -33,31 +34,34 @@ export const EnvironmentRow = ({ row, onMoveItem }: IEnvironmentRowProps) => {
         dragHandleRef,
     );
 
-    const renderCell = (cell: any, ref: ForwardedRef<HTMLElement>) => {
-        const { key, ...cellProps } = cell.getCellProps();
-        if (draggable && cell.column.isDragHandle) {
+    const renderCell = (
+        cell: Cell<IEnvironment, unknown>,
+        ref: ForwardedRef<HTMLElement>,
+    ) => {
+        const isDragHandle = cell.column.columnDef.meta?.isDragHandle;
+        const content = flexRender(
+            cell.column.columnDef.cell,
+            cell.getContext(),
+        );
+        if (draggable && isDragHandle) {
             return (
                 <TableCell
-                    key={key}
-                    {...cellProps}
-                    ref={ref}
+                    key={cell.id}
+                    ref={ref as ForwardedRef<HTMLTableCellElement>}
                     className='drag-handle'
                 >
-                    {cell.render('Cell')}
-                </TableCell>
-            );
-        } else {
-            return (
-                <TableCell key={key} {...cellProps}>
-                    {cell.render('Cell')}
+                    {content}
                 </TableCell>
             );
         }
+        return <TableCell key={cell.id}>{content}</TableCell>;
     };
 
     return (
         <StyledTableRow hover ref={draggable ? dragItemRef : undefined}>
-            {row.cells.map((cell: any) => renderCell(cell, dragHandleRef))}
+            {row
+                .getVisibleCells()
+                .map((cell) => renderCell(cell, dragHandleRef))}
         </StyledTableRow>
     );
 };

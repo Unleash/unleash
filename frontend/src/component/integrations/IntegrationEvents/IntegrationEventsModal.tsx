@@ -9,7 +9,7 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { IntegrationEventsStateIcon } from './IntegrationEventsStateIcon.tsx';
 import { IntegrationEventsDetails } from './IntegrationEventsDetails/IntegrationEventsDetails.tsx';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',

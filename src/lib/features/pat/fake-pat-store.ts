@@ -1,15 +1,19 @@
-import type { IPatStore } from './pat-store-type.js';
+import type {
+    IPatStore,
+    AccountTokenForAudit,
+    PersistedAccountTokenCredential,
+} from './pat-store-type.js';
 import type { CreatePatSchema, PatSchema } from '../../openapi/index.js';
 import NotFoundError from '../../error/notfound-error.js';
 
 export default class FakePatStore implements IPatStore {
-    private pats: PatSchema[] = [];
+    private pats: AccountTokenForAudit[] = [];
 
     private nextId = 1;
 
     async create(
         pat: CreatePatSchema,
-        secret: string,
+        credential: PersistedAccountTokenCredential,
         userId: number,
     ): Promise<PatSchema> {
         const newPat: PatSchema = {
@@ -20,7 +24,11 @@ export default class FakePatStore implements IPatStore {
             createdAt: new Date().toISOString(),
             seenAt: undefined,
         };
-        this.pats.push(newPat);
+        this.pats.push(
+            credential.selector
+                ? { ...newPat, secure: true, selector: credential.selector }
+                : { ...newPat, secure: false },
+        );
         return newPat;
     }
 
@@ -28,10 +36,15 @@ export default class FakePatStore implements IPatStore {
         this.pats = this.pats.filter((p) => p.id !== key);
     }
 
-    async deleteForUser(id: number, userId: number): Promise<void> {
-        this.pats = this.pats.filter(
-            (p) => !(p.id === id && p.userId === userId),
-        );
+    async deleteForUser(
+        id: number,
+        userId: number,
+    ): Promise<AccountTokenForAudit | undefined> {
+        const pat = this.pats.find((p) => p.id === id && p.userId === userId);
+        if (pat) {
+            this.pats = this.pats.filter((p) => p.id !== id);
+        }
+        return pat;
     }
 
     async deleteAll(): Promise<void> {
@@ -62,14 +75,19 @@ export default class FakePatStore implements IPatStore {
         if (!pat) {
             throw new NotFoundError('No PAT found.');
         }
-        return pat;
+        const { selector: _selector, secure: _secure, ...publicPat } = pat;
+        return publicPat;
     }
 
     async getAll(): Promise<PatSchema[]> {
-        return this.pats;
+        return this.pats.map(
+            ({ selector: _selector, secure: _secure, ...pat }) => pat,
+        );
     }
 
     async getAllByUser(userId: number): Promise<PatSchema[]> {
-        return this.pats.filter((p) => p.userId === userId);
+        return this.pats
+            .filter((p) => p.userId === userId)
+            .map(({ selector: _selector, secure: _secure, ...pat }) => pat);
     }
 }

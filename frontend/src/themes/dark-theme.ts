@@ -2,7 +2,25 @@ import { createTheme } from '@mui/material/styles';
 import { alpha } from '@mui/material';
 import { focusable } from 'themes/themeStyles';
 import { colors } from './colors.js';
+import {
+    buttonSizes,
+    controlOverrides,
+    iconButtonRoot,
+    iconButtonSizes,
+    outlinedInputSizing,
+    subtleOutlinedButton,
+} from './controls.js';
 import { baseTheme } from './theme.js';
+
+// Redefining `MuiOutlinedInput` (at the time of writing this for border colors) fully replaces the shared
+// one from `controlOverrides`, dropping its input sizing. This bakes the sizing
+// back in so a border override can't lose it.
+const withInputSizing =
+    (theme: object) =>
+    ({ ownerState }: { ownerState?: { size?: string } }) => ({
+        ...outlinedInputSizing(ownerState),
+        ...theme,
+    });
 
 const actionColors = {
     0.54: 'rgba(223, 222, 255, 0.54)',
@@ -19,7 +37,7 @@ const theme = {
         main: '0px 2px 4px rgba(129, 122, 254, 0.2)',
         card: '0px 2px 10px rgba(28, 25, 78, 0.12)',
         elevated: '0px 1px 20px rgba(45, 42, 89, 0.1)',
-        popup: '0px 2px 6px rgba(0, 0, 0, 0.25)',
+        popup: '0px 2px 6px rgba(0, 0, 0, 0.6)',
         primaryHeader: '0px 8px 24px rgba(97, 91, 194, 0.2)',
         separator: '0px 2px 4px rgba(32, 32, 33, 0.12)', // Notifications header
         accordionFooter: 'inset 0px 2px 4px rgba(32, 32, 33, 0.05)',
@@ -230,8 +248,8 @@ const theme = {
             E1: '#68A611',
             series: colors.chartSeries,
             flagMetrics: {
-                exposed: '#A39EFF',
-                notExposed: '#D8D6FF',
+                enabled: '#A39EFF',
+                notEnabled: '#D8D6FF',
             },
         },
 
@@ -239,12 +257,35 @@ const theme = {
             main: '#EEEEFC',
             contrastText: colors.grey[900],
         },
+
+        /**
+         * Syntax highlighting colors for code examples (e.g. SDK onboarding snippets).
+         */
+        codeHighlighting: {
+            keyword: '#ff6472',
+            selectorTag: '#ff6472',
+            string: '#a2bbe2',
+            number: '#9792ED',
+            literal: '#9792ED',
+            comment: '#A0A0B1',
+            builtIn: '#bc7d21',
+            title: '#9792ED',
+            class_: '#85c17e',
+            type: '#a2bbe2',
+            attr: '#c98940',
+            variable: '#EEEEFC',
+            tag: '#94ae6f',
+            meta: '#A0A0B1',
+        },
     },
 } as const;
 
 export const darkTheme = createTheme({
     ...theme,
     components: {
+        // Shared control sizing + ripple removal (design system v2)
+        ...controlOverrides,
+
         // Skeleton
         MuiCssBaseline: {
             styleOverrides: {
@@ -361,7 +402,7 @@ export const darkTheme = createTheme({
                     '> .MuiAlert-message': {
                         padding: '3px 0 0 0',
                     },
-                    '&.MuiAlert-standardInfo': {
+                    '&.MuiAlert-standard.MuiAlert-colorInfo': {
                         backgroundColor: theme.palette.info.light,
                         color: theme.palette.info.contrastText,
                         border: `1px solid ${theme.palette.info.border}`,
@@ -369,7 +410,7 @@ export const darkTheme = createTheme({
                             color: theme.palette.info.main,
                         },
                     },
-                    '&.MuiAlert-standardSuccess': {
+                    '&.MuiAlert-standard.MuiAlert-colorSuccess': {
                         backgroundColor: theme.palette.success.light,
                         color: theme.palette.success.contrastText,
                         border: `1px solid ${theme.palette.success.border}`,
@@ -377,7 +418,7 @@ export const darkTheme = createTheme({
                             color: theme.palette.success.main,
                         },
                     },
-                    '&.MuiAlert-standardWarning': {
+                    '&.MuiAlert-standard.MuiAlert-colorWarning': {
                         backgroundColor: theme.palette.warning.light,
                         color: theme.palette.warning.contrastText,
                         border: `1px solid ${theme.palette.warning.border}`,
@@ -385,7 +426,7 @@ export const darkTheme = createTheme({
                             color: theme.palette.warning.main,
                         },
                     },
-                    '&.MuiAlert-standardError': {
+                    '&.MuiAlert-standard.MuiAlert-colorError': {
                         backgroundColor: theme.palette.error.light,
                         color: theme.palette.error.contrastText,
                         border: `1px solid ${theme.palette.error.border}`,
@@ -399,6 +440,9 @@ export const darkTheme = createTheme({
 
         // Horizontal menu tabs
         MuiTabs: {
+            defaultProps: {
+                'data-public': true,
+            } as any,
             styleOverrides: {
                 root: ({ theme }) => ({
                     '& .MuiTabs-indicator': {
@@ -523,38 +567,54 @@ export const darkTheme = createTheme({
             },
         },
 
-        // For dark theme, primary buttons are a bit darker then the primary.main that we use as a primary color
+        // For dark theme, primary buttons are a bit darker than the primary.main that we use as a primary color
         MuiButton: {
+            defaultProps: {
+                // unsized buttons render ~36px today — `large` on the new
+                // scale preserves their visual weight
+                size: 'large',
+                disableElevation: true, // no shadow on contained buttons
+            },
             styleOverrides: {
                 root: ({ theme }) => ({
                     borderRadius: theme.shape.borderRadius,
                     textTransform: 'none',
-                    fontWeight: theme.typography.fontWeightBold,
-                    '&:not(.Mui-disabled).MuiButton-containedPrimary': {
-                        backgroundColor: theme.palette.background.alternative,
-                        '&:hover': {
-                            backgroundColor: theme.palette.secondary.light,
+                    fontWeight: 600, // semi-bold
+                    ...subtleOutlinedButton(theme),
+                    '&:not(.Mui-disabled).MuiButton-contained.MuiButton-colorPrimary':
+                        {
+                            backgroundColor:
+                                theme.palette.background.alternative,
+                            '&:hover': {
+                                backgroundColor: theme.palette.secondary.light,
+                            },
                         },
-                    },
                 }),
+                ...buttonSizes,
             },
         },
 
         // Constraints negation icon
         MuiIconButton: {
+            defaultProps: {
+                // unsized icon buttons keep their pre-v2 weight (~36px) for now
+                size: 'large',
+            },
             styleOverrides: {
                 root: ({ theme }) => ({
+                    ...iconButtonRoot(theme),
                     '&.operator-is-active svg': {
                         fill: theme.palette.background.application,
                     },
                 }),
+                ...iconButtonSizes,
             },
         },
 
         // Inputs
         MuiOutlinedInput: {
             styleOverrides: {
-                root: ({ theme }) => ({
+                root: withInputSizing({
                     fieldset: {
                         borderColor: '#646382',
                     },

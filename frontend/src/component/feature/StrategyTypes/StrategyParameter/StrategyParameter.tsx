@@ -1,9 +1,10 @@
 import type React from 'react';
-import { FormControlLabel, Switch, TextField } from '@mui/material';
+import { FormControlLabel, Switch } from '@mui/material';
+import Input from 'component/common/Input/Input';
 import StrategyInputList from '../StrategyInputList/StrategyInputList.tsx';
 import ConditionalRolloutSlider from '../RolloutSlider/ConditionalRolloutSlider.tsx';
 import type {
-    IFeatureStrategyParameters,
+    StrategyFormParameters,
     IStrategyParameter,
 } from 'interfaces/strategy';
 import {
@@ -16,7 +17,7 @@ import type { IFormErrors } from 'hooks/useFormErrors';
 
 interface IStrategyParameterProps {
     definition: IStrategyParameter;
-    parameters: IFeatureStrategyParameters;
+    parameters: StrategyFormParameters;
     updateParameter: (field: string, value: string) => void;
     errors: IFormErrors;
 }
@@ -84,16 +85,15 @@ export const StrategyParameter = ({
     if (type === 'number') {
         return (
             <div>
-                <TextField
+                <Input
                     error={Boolean(error)}
                     helperText={error}
-                    variant='outlined'
-                    size='small'
+                    size='large'
                     aria-required={required}
                     style={{ width: '100%' }}
                     label={label}
                     onChange={onChange}
-                    value={value}
+                    value={value ?? ''}
                 />
                 <InputCaption text={description} />
             </div>
@@ -122,11 +122,10 @@ export const StrategyParameter = ({
 
     return (
         <div>
-            <TextField
+            <Input
                 rows={1}
                 placeholder=''
-                variant='outlined'
-                size='small'
+                size='large'
                 style={{ width: '100%' }}
                 aria-required={required}
                 error={Boolean(error)}

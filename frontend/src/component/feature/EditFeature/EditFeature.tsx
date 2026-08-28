@@ -1,5 +1,5 @@
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import EditFeatureForm from '../FeatureForm/EditFeatureForm.tsx';
 import useFeatureForm from '../hooks/useFeatureForm.ts';
 import * as jsonpatch from 'fast-json-patch';

@@ -37,7 +37,7 @@ const DraggableHoverIndicator = styled('span')(({ theme }) => ({
 }));
 
 type Props = {
-    dragItemRef: React.RefObject<HTMLElement>;
+    dragItemRef: React.RefObject<HTMLElement | null>;
 };
 
 export const MilestoneCardDragHandle: FC<Props> = ({ dragItemRef }) => {

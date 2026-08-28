@@ -32,13 +32,22 @@ class FakeEventStore implements IEventStore {
         return Promise.resolve(1);
     }
 
-    getDeltaRevisionState(_environment: string): Promise<{
+    getMaxTokenRevisionId(): Promise<number> {
+        return Promise.resolve(1);
+    }
+
+    getDeltaRevisionState(
+        _environment: string,
+        _referencedSegmentIds?: Set<number>,
+    ): Promise<{
         projectRevisions: Map<string, number>;
-        globalSegmentRevision: number;
+        maxReferencedSegmentRevision: number;
+        segmentRevisions: Map<number, number>;
     }> {
         return Promise.resolve({
             projectRevisions: new Map(),
-            globalSegmentRevision: 0,
+            maxReferencedSegmentRevision: 0,
+            segmentRevisions: new Map(),
         });
     }
 
@@ -50,6 +59,10 @@ class FakeEventStore implements IEventStore {
         });
         this.eventEmitter.emit(event.type, event);
         return Promise.resolve();
+    }
+
+    batchStoreOrThrow(events: IBaseEvent[]): Promise<void> {
+        return this.batchStore(events);
     }
 
     batchStore(events: IBaseEvent[]): Promise<void> {

@@ -60,6 +60,7 @@ beforeAll(async () => {
     const config = createTestConfig({
         server: {
             serverMetrics: true,
+            baseUriPath: '/demo',
         },
     });
     stores = createStores();
@@ -120,6 +121,41 @@ test('should collect metrics for requests', async () => {
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(
         /http_request_duration_milliseconds\{quantile="0\.99",path="somePath",method="GET",status="200",appName="undefined"\}.*1337/,
+    );
+});
+
+test('SDK histogram strips the base path from path labels', async () => {
+    eventBus.emit(REQUEST_TIME, {
+        path: '/demo/api/client/features',
+        method: 'GET',
+        statusCode: 200,
+        time: 90,
+    });
+    eventBus.emit(REQUEST_TIME, {
+        path: '/demo/api/frontend',
+        method: 'GET',
+        statusCode: 200,
+        time: 30,
+    });
+    eventBus.emit(REQUEST_TIME, {
+        path: '/demo/api/admin/projects',
+        method: 'GET',
+        statusCode: 200,
+        time: 50,
+    });
+
+    const metrics = await prometheusRegister.metrics();
+    expect(metrics).toMatch(
+        /http_sdk_request_duration_milliseconds_count\{path="\/api\/client\/features",method="GET",status="200"\} 1/,
+    );
+    expect(metrics).toMatch(
+        /http_sdk_request_duration_milliseconds_count\{path="\/api\/frontend",method="GET",status="200"\} 1/,
+    );
+    expect(metrics).not.toMatch(
+        /http_sdk_request_duration_milliseconds[^\n]*api\/admin/,
+    );
+    expect(metrics).toMatch(
+        /http_request_duration_milliseconds_count\{path="\/demo\/api\/admin\/projects",method="GET",status="200",appName="undefined"\} 1/,
     );
 });
 
@@ -259,10 +295,10 @@ test('Should collect metrics for client sdk versions', async () => {
         'client_sdk_versions',
     );
     expect(metrics).toMatch(
-        /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5",platform_name="not-set",platform_version="not-set",yggdrasil_version="not-set",spec_version="not-set"} 3/,
+        /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5",platform_name="not-set",platform_version="not-set",yggdrasil_version="not-set",spec_version="not-set",sdk_flavor_name="not-set",sdk_flavor_version="not-set"} 3/,
     );
     expect(metrics).toMatch(
-        /client_sdk_versions\{sdk_name="unleash-client-java",sdk_version="5\.0\.0",platform_name="not-set",platform_version="not-set",yggdrasil_version="not-set",spec_version="not-set"} 3/,
+        /client_sdk_versions\{sdk_name="unleash-client-java",sdk_version="5\.0\.0",platform_name="not-set",platform_version="not-set",yggdrasil_version="not-set",spec_version="not-set",sdk_flavor_name="not-set",sdk_flavor_version="not-set"} 3/,
     );
     eventStore.emit(CLIENT_REGISTER, {
         sdkName: 'unleash-client-node',
@@ -272,7 +308,7 @@ test('Should collect metrics for client sdk versions', async () => {
         'client_sdk_versions',
     );
     expect(newmetrics).toMatch(
-        /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5",platform_name="not-set",platform_version="not-set",yggdrasil_version="not-set",spec_version="not-set"} 4/,
+        /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5",platform_name="not-set",platform_version="not-set",yggdrasil_version="not-set",spec_version="not-set",sdk_flavor_name="not-set",sdk_flavor_version="not-set"} 4/,
     );
 });
 
@@ -369,4 +405,33 @@ test('should collect read_only_users metrics', async () => {
     const recordedMetric =
         await prometheusRegister.getSingleMetricAsString('read_only_users');
     expect(recordedMetric).toMatch(/read_only_users 0/);
+});
+
+test('registerPrometheusMetrics exposes integration_available for every registered addon', async () => {
+    const output = await register.metrics();
+
+    expect(output).toMatch(/integration_available\{[^}]*name="webhook"[^}]/);
+    expect(output).toMatch(/integration_available\{[^}]*name="oidc"[^}]/);
+    expect(output).toMatch(
+        /integration_available\{[^}]*name="google"[^}]*deprecated="true"/,
+    );
+});
+
+test('AUTH_LOGIN_COMPLETED event increments auth_login_total', async () => {
+    eventBus.emit('auth-login-completed', {
+        provider: 'google',
+        outcome: 'success',
+    });
+    eventBus.emit('auth-login-completed', {
+        provider: 'google',
+        outcome: 'failure',
+    });
+
+    const output = await register.metrics();
+    expect(output).toMatch(
+        /auth_login_total\{[^}]*provider="google"[^}]*outcome="success"[^}]*\} 1/,
+    );
+    expect(output).toMatch(
+        /auth_login_total\{[^}]*provider="google"[^}]*outcome="failure"[^}]*\} 1/,
+    );
 });

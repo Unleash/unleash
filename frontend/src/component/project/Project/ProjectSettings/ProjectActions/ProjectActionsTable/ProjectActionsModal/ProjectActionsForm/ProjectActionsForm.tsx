@@ -1,5 +1,5 @@
 import { Alert, Link, styled } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 import Input from 'component/common/Input/Input';
 import { FormSwitch } from 'component/common/FormSwitch/FormSwitch';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -23,17 +23,9 @@ const StyledRaisedSection = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(4),
 }));
 
-const StyledInputDescription = styled('p')(({ theme }) => ({
-    display: 'flex',
-    color: theme.palette.text.primary,
-    marginBottom: theme.spacing(1),
-    '&:not(:first-of-type)': {
-        marginTop: theme.spacing(3),
-    },
-}));
-
-const StyledInput = styled(Input)(() => ({
+const StyledInput = styled(Input)(({ theme }) => ({
     width: '100%',
+    marginBottom: theme.spacing(3),
 }));
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
@@ -115,9 +107,6 @@ export const ProjectActionsForm = ({
                     Action status
                 </FormSwitch>
             </StyledRaisedSection>
-            <StyledInputDescription>
-                What is your new action name?
-            </StyledInputDescription>
             <StyledInput
                 autoFocus
                 label='Action name'
@@ -131,9 +120,6 @@ export const ProjectActionsForm = ({
                 onBlur={(e) => handleOnBlur(() => validateName(e.target.value))}
                 autoComplete='off'
             />
-            <StyledInputDescription>
-                What is your new action description?
-            </StyledInputDescription>
             <StyledInput
                 label='Action description'
                 value={description}

@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-yarn prepare:backend
+pnpm prepare:backend
 
 PROFILE_DIR="${STARTUP_PROFILE_DIR:-.profiles/startup}"
 TARGET="${STARTUP_PROFILER_TARGET:-dist/server.js}"

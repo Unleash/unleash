@@ -37,6 +37,12 @@ test('semver valdiation should pass with correct format', () => {
     }
 });
 
+test('semver validation should pass with build metadata and prerelease', () => {
+    expect(() => validateSemver('1.2.3+4000')).not.toThrow();
+    expect(() => validateSemver('1.2.3-beta.1')).not.toThrow();
+    expect(() => validateSemver('1.2.3-beta.1+build.5')).not.toThrow();
+});
+
 test('semver validation should fail partial semver', () => {
     const partial = '1.2';
     expect.assertions(1);

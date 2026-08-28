@@ -6,6 +6,7 @@ import { defaultFromRow, defaultToRow } from './default-mappings.js';
 import type { Row } from './row-type.js';
 import type { IUnleashConfig } from '../../types/index.js';
 import type { Db } from '../db.js';
+import type { Knex } from 'knex';
 
 export type CrudStoreConfig = Pick<IUnleashConfig, 'eventBus'>;
 
@@ -113,7 +114,7 @@ export abstract class CRUDStore<
         const endTimer = this.timer('exists');
         const result = await this.db.raw(
             `SELECT EXISTS(SELECT 1 FROM ${this.tableName} WHERE id = ?) AS present`,
-            [id],
+            [id as Knex.RawBinding],
         );
         const { present } = result.rows[0];
         endTimer();

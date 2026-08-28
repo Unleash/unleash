@@ -2,6 +2,11 @@ import { ApiTokenType } from '../types/model.js';
 import type { IUnleashConfig } from '../types/option.js';
 import type { IApiRequest, IAuthRequest } from '../routes/unleash-types.js';
 import type { IUnleashServices } from '../services/index.js';
+import type { IApiUser } from '../types/index.js';
+import {
+    AuthorizationTokenKind,
+    parseAuthorizationToken,
+} from '../authentication/authorization-token.js';
 
 const isClientApi = ({ path }) => {
     return path && path.indexOf('/api/client') > -1;
@@ -32,9 +37,12 @@ export const apiAccessMiddleware = (
     {
         getLogger,
         authentication,
-        flagResolver,
-    }: Pick<IUnleashConfig, 'getLogger' | 'authentication' | 'flagResolver'>,
-    { apiTokenService }: Pick<IUnleashServices, 'apiTokenService'>,
+    }: Pick<IUnleashConfig, 'getLogger' | 'authentication'>,
+    {
+        apiTokenService,
+        apiTokenV2Service,
+    }: Pick<IUnleashServices, 'apiTokenService'> &
+        Partial<Pick<IUnleashServices, 'apiTokenV2Service'>>,
 ): any => {
     const logger = getLogger('/middleware/api-token.ts');
     logger.debug('Enabling api-token middleware');
@@ -47,13 +55,24 @@ export const apiAccessMiddleware = (
         if (req.user) {
             return next();
         }
-
         try {
             const apiToken = req.header('authorization');
-            if (!apiToken?.startsWith('user:')) {
-                const apiUser = apiToken
-                    ? await apiTokenService.getUserForToken(apiToken)
-                    : undefined;
+            const parsedToken = parseAuthorizationToken(apiToken);
+            if (parsedToken?.kind !== AuthorizationTokenKind.ACCOUNT_ACCESS) {
+                let apiUser: IApiUser | undefined;
+                if (parsedToken?.version === 'v2') {
+                    apiUser =
+                        await apiTokenV2Service?.getUserForToken(parsedToken);
+                } else if (parsedToken) {
+                    apiUser = await apiTokenService.getUserForToken(
+                        parsedToken.secret,
+                        {
+                            applicationName:
+                                req.header('x-unleash-appname') ??
+                                req.header('unleash-appname'),
+                        },
+                    );
+                }
                 const { CLIENT, BACKEND, FRONTEND } = ApiTokenType;
 
                 if (apiUser) {

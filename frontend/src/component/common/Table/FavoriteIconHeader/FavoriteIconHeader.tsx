@@ -1,21 +1,21 @@
-import { useState, type VFC } from 'react';
+import { useState, type FC } from 'react';
 import { IconButton } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { TooltipResolver } from '../../TooltipResolver/TooltipResolver.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 interface IFavoriteIconHeaderProps {
     isActive: boolean;
     onClick: (isPinned: boolean) => void;
 }
 
-export const FavoriteIconHeader: VFC<IFavoriteIconHeaderProps> = ({
+export const FavoriteIconHeader: FC<IFavoriteIconHeaderProps> = ({
     isActive = false,
     onClick,
 }) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const [internalState, setInternalState] = useState(isActive);
     const onToggle = () => {
         const newState = !internalState;
@@ -49,8 +49,8 @@ export const FavoriteIconHeader: VFC<IFavoriteIconHeaderProps> = ({
             >
                 <ConditionallyRender
                     condition={internalState}
-                    show={<StarIcon fontSize='small' />}
-                    elseShow={<StarBorderIcon fontSize='small' />}
+                    show={<StarIcon />}
+                    elseShow={<StarBorderIcon />}
                 />
             </IconButton>
         </TooltipResolver>

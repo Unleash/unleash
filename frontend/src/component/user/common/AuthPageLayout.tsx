@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { styled } from '@mui/material';
-import { ReactComponent as UnleashLogoDark } from 'assets/img/logoDarkWithText.svg';
-import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
+import UnleashLogoDark from 'assets/img/logoDarkWithText.svg?react';
+import UnleashLogoWhite from 'assets/img/logoWithWhiteText.svg?react';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import loginBackground from 'assets/img/loginBackground.png';
 import { formatAssetPath } from 'utils/formatPath';

@@ -3,7 +3,10 @@ import type { IAuthRequest } from '../../unleash-types.js';
 import Controller from '../../controller.js';
 import type { AccessService } from '../../../services/access-service.js';
 import { IAuthType, type IUnleashConfig } from '../../../types/option.js';
-import type { IUnleashServices } from '../../../services/index.js';
+import type {
+    GroupService,
+    IUnleashServices,
+} from '../../../services/index.js';
 import type UserService from '../../../services/user-service.js';
 import type UserFeedbackService from '../../../services/user-feedback-service.js';
 import type UserSplashService from '../../../services/user-splash-service.js';
@@ -41,6 +44,8 @@ class UserController extends Controller {
 
     private userService: UserService;
 
+    private groupService: GroupService;
+
     private userFeedbackService: UserFeedbackService;
 
     private userSplashService: UserSplashService;
@@ -60,6 +65,7 @@ class UserController extends Controller {
         {
             accessService,
             userService,
+            groupService,
             userFeedbackService,
             userSplashService,
             openApiService,
@@ -69,6 +75,7 @@ class UserController extends Controller {
             IUnleashServices,
             | 'accessService'
             | 'userService'
+            | 'groupService'
             | 'userFeedbackService'
             | 'userSplashService'
             | 'openApiService'
@@ -79,6 +86,7 @@ class UserController extends Controller {
         super(config);
         this.accessService = accessService;
         this.userService = userService;
+        this.groupService = groupService;
         this.userFeedbackService = userFeedbackService;
         this.userSplashService = userSplashService;
         this.openApiService = openApiService;
@@ -95,6 +103,7 @@ class UserController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Users'],
+                    release: { stable: '4.14.0' },
                     operationId: 'getMe',
                     summary: 'Get your own user details',
                     description:
@@ -115,6 +124,7 @@ class UserController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Users'],
+                    release: { stable: '4.16.0' },
                     operationId: 'getProfile',
                     summary: 'Get your own user profile',
                     description:
@@ -135,6 +145,7 @@ class UserController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Users'],
+                    release: { stable: '4.14.0' },
                     operationId: 'changeMyPassword',
                     summary: 'Change your own password',
                     description:
@@ -162,6 +173,7 @@ class UserController extends Controller {
             middleware: [
                 this.openApiService.validPath({
                     tags: ['Users'],
+                    release: { stable: '5.10.0' },
                     operationId: 'getUserRoles',
                     summary: 'Get roles for currently logged in user',
                     parameters: [
@@ -261,17 +273,22 @@ class UserController extends Controller {
             throw new BadDataError('User id is missing in request user object');
         }
 
-        const [projects, rootRole, subscriptions] = await Promise.all([
-            this.projectService.getProjectsByUser(user.id),
-            this.accessService.getRootRoleForUser(user.id),
-            this.userSubscriptionsService.getUserSubscriptions(user.id),
-        ]);
+        const [projects, groups, rootRole, subscriptions, canChangePassword] =
+            await Promise.all([
+                this.projectService.getProjectsByUser(user.id),
+                this.groupService.getGroupsForUser(user.id),
+                this.accessService.getRootRoleForUser(user.id),
+                this.userSubscriptionsService.getUserSubscriptions(user.id),
+                this.userService.hasPassword(user.id),
+            ]);
 
         const responseData: ProfileSchema = {
             projects,
+            groups,
             rootRole,
             subscriptions,
             features: [],
+            canChangePassword,
         };
 
         this.openApiService.respondWithValidation(
@@ -294,6 +311,9 @@ class UserController extends Controller {
                 user.id,
                 password,
                 oldPassword,
+                // Keep the session that performed the change alive and sign the
+                // user out of every other device (OWASP session management).
+                { keepSessionId: req.sessionID },
             );
             res.status(200).end();
         } else {

@@ -1,24 +1,34 @@
 name: Build, Lint & Tests
 
 on:
+  workflow_call:
+    inputs:
+      working-directory:
+        type: string
+        default: '.'
+      shards:
+        type: string
+        default: '["1/1"]'
   push:
     branches:
       - main
     paths-ignore:
       - coverage/**
-  pull_request:
-    paths-ignore:
-      - frontend/**
-      - coverage/**
-
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: build
+    name: build (shard ${{ matrix.shard }})
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(inputs.shards || '["1/1"]') }}
     permissions:
       contents: read
       # Needed for the github-reporter from vitest to make comments on PRs
       pull-requests: write
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory || '.' }}
     services:
       # Label used to access the service container
       postgres:
@@ -37,20 +47,19 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v5
       - name: Use Node.js 22
         uses: actions/setup-node@v6
         with:
           node-version: 22.x
-          cache: 'yarn'
-      - name: Enable corepack
-        run: corepack enable
-      - run: yarn install --immutable
+          cache: 'pnpm'
+          cache-dependency-path: ${{ inputs.working-directory || '.' }}/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - run: pnpm lint
+      - run: pnpm build:backend
+      - run: pnpm exec vitest run --shard=${{ matrix.shard }}
         env:
-          YARN_ENABLE_SCRIPTS: false
-      - run: yarn lint
-      - run: yarn build:backend
-      - run: yarn run test
-        env:
+          PORT: 4243
           CI: true
           TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres

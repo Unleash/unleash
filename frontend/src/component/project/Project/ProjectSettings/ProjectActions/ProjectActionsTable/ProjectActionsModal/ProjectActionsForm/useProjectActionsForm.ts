@@ -1,3 +1,4 @@
+import { createUuid } from 'utils/createUuid';
 import { useActions } from 'hooks/api/getters/useActions/useActions';
 import type { IAction, IActionSet, ParameterMatch } from 'interfaces/action';
 import { useEffect, useState } from 'react';
@@ -58,7 +59,7 @@ export const useProjectActionsForm = (action?: IActionSet) => {
                     parameter,
                     { inverted, operator, caseInsensitive, value, values },
                 ]) => ({
-                    id: crypto.randomUUID(),
+                    id: createUuid(),
                     parameter,
                     inverted,
                     operator,
@@ -71,7 +72,7 @@ export const useProjectActionsForm = (action?: IActionSet) => {
         setActorId(action?.actorId ?? 0);
         setActions(
             action?.actions?.map((action) => ({
-                id: crypto.randomUUID(),
+                id: createUuid(),
                 action: action.action,
                 sortOrder: action.sortOrder,
                 executionParams: action.executionParams,

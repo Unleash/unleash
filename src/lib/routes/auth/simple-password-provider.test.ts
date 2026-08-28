@@ -53,7 +53,7 @@ test('Should login user', async () => {
     };
 
     const ctr = new SimplePasswordProvider(config, {
-        // @ts-expect-error
+        // @ts-expect-error -- focused test double implements only the method used here
         userService,
         openApiService,
     });
@@ -93,7 +93,7 @@ test('Should not login user with wrong password', async () => {
     };
 
     const ctr = new SimplePasswordProvider(config, {
-        // @ts-expect-error
+        // @ts-expect-error -- focused test double implements only the method used here
         userService,
         openApiService,
     });

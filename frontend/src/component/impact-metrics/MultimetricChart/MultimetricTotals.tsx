@@ -4,6 +4,7 @@ import { formatLargeNumbers } from '../metricsFormatters';
 import { ConversionIndicator } from './ConversionIndicator';
 
 export type MultimetricStep = {
+    id: string;
     label: string;
     value: number;
     previousStepPercentage: number | null;
@@ -108,7 +109,7 @@ export const MultimetricTotals: FC<MultimetricTotalsProps> = ({ steps }) => {
             <StyledStackedBar>
                 {steps.map((step, index) => (
                     <StyledSegment
-                        key={step.label}
+                        key={step.id}
                         style={{
                             width: `${normalizedWidths[index]}%`,
                             backgroundColor: getStepColor(index),
@@ -118,7 +119,7 @@ export const MultimetricTotals: FC<MultimetricTotalsProps> = ({ steps }) => {
             </StyledStackedBar>
             <StyledLegend>
                 {steps.map((step, index) => (
-                    <StyledLegendItem key={step.label}>
+                    <StyledLegendItem key={step.id}>
                         <StyledColorDot
                             sx={{ backgroundColor: getStepColor(index) }}
                         />

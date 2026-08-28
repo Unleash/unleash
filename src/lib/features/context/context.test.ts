@@ -156,7 +156,7 @@ test('should add and update a single context field with new legal values', async
 
     // non existent context
     await request
-        .post(`${base}/api/admin/context/doesntexist/legalValues`)
+        .post(`${base}/api/admin/context/doesntexist/legal-values`)
         .send({
             value: 'local',
             description: 'Local environment',
@@ -247,6 +247,24 @@ test('should not delete a unknown context field', () => {
     return request
         .delete(`${base}/api/admin/context/unknown`)
         .set('Content-Type', 'application/json')
+        .expect(404);
+});
+
+test('should not update an unknown context field', () => {
+    expect.assertions(0);
+
+    return request
+        .put(`${base}/api/admin/context/unknown`)
+        .send({ description: 'mundane' })
+        .set('Content-Type', 'application/json')
+        .expect(404);
+});
+
+test('should not delete a legal value from a unknown context field', () => {
+    expect.assertions(0);
+
+    return request
+        .delete(`${base}/api/admin/context/unknown/legal-values/local`)
         .expect(404);
 });
 

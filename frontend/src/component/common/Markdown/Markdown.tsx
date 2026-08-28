@@ -1,7 +1,7 @@
 import { Link } from '@mui/material';
 import type { AnchorHTMLAttributes, ComponentProps } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 const LinkRenderer = ({
     href = '',
@@ -19,9 +19,19 @@ const LinkRenderer = ({
     );
 };
 
+type MarkdownProps = ComponentProps<typeof ReactMarkdown> & {
+    className?: string;
+};
+
 export const Markdown = ({
     components,
+    className,
     ...props
-}: ComponentProps<typeof ReactMarkdown>) => (
-    <ReactMarkdown components={{ a: LinkRenderer, ...components }} {...props} />
+}: MarkdownProps) => (
+    <div className={className}>
+        <ReactMarkdown
+            components={{ a: LinkRenderer, ...components }}
+            {...props}
+        />
+    </div>
 );

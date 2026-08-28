@@ -1,6 +1,6 @@
 import { useMemo, type ComponentProps, type FC } from 'react';
 import EmptyIcon from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
-import type SvgIcon from '@mui/material/SvgIcon/SvgIcon';
+import type SvgIcon from '@mui/material/SvgIcon';
 import ApplicationsIcon from '@mui/icons-material/AppsOutlined';
 import ContextFieldsIcon from '@mui/icons-material/AccountTreeOutlined';
 import FlagTypesIcon from '@mui/icons-material/OutlinedFlag';
@@ -22,6 +22,7 @@ import NetworkIcon from '@mui/icons-material/HubOutlined';
 import MaintenanceIcon from '@mui/icons-material/BuildOutlined';
 import BannersIcon from '@mui/icons-material/ViewCarousel';
 import InstanceStatsIcon from '@mui/icons-material/QueryStatsOutlined';
+import ImpactViewsIcon from '@mui/icons-material/QueryStatsOutlined';
 import LicenseIcon from '@mui/icons-material/ReceiptLongOutlined';
 import InstancePrivacyIcon from '@mui/icons-material/ShieldOutlined';
 import LoginHistoryIcon from '@mui/icons-material/HistoryOutlined';
@@ -35,7 +36,6 @@ import PersonalDashboardIcon from '@mui/icons-material/DashboardOutlined';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import PlaygroundIcon from '@mui/icons-material/AutoFixNormal';
 import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
-import RocketLaunchIcon from '@mui/icons-material/RocketLaunchOutlined';
 import BuildIcon from '@mui/icons-material/BuildOutlined';
 import { ChangeRequestIcon } from 'component/common/ChangeRequestIcon/ChangeRequestIcon';
 
@@ -47,6 +47,7 @@ const icons: Record<
     '/search': FlagOutlinedIcon,
     '/insights': InsightsIcon,
     '/impact-metrics': ImpactMetricsIcon,
+    '/impact-views': ImpactViewsIcon,
     '/applications': ApplicationsIcon,
     '/context': ContextFieldsIcon,
     '/feature-toggle-type': FlagTypesIcon,
@@ -67,7 +68,6 @@ const icons: Record<
     '/admin/auth/saml': SingleSignOnIcon,
     '/admin/auth/scim': SingleSignOnIcon,
     '/admin/auth/password': SingleSignOnIcon,
-    '/admin/auth/google': SingleSignOnIcon,
     '/admin/network': NetworkIcon,
     '/admin/network/traffic': NetworkIcon,
     '/admin/network/data-usage': NetworkIcon,
@@ -87,7 +87,6 @@ const icons: Record<
     '/personal': PersonalDashboardIcon,
     '/projects': ProjectIcon,
     '/playground': PlaygroundIcon,
-    '/custom-metrics': RocketLaunchIcon,
     '/change-requests': ChangeRequestIcon,
     GitHub: GitHubIcon,
     Documentation: LibraryBooksIcon,

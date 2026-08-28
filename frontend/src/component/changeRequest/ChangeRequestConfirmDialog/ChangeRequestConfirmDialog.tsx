@@ -1,10 +1,11 @@
-import type { FC } from 'react';
+import type { FC, JSX } from 'react';
 import { Alert, Typography } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
+import type { DialogTracking } from 'utils/trackingEvents';
 
 interface IChangeRequestDialogueProps {
     isOpen: boolean;
@@ -14,6 +15,7 @@ interface IChangeRequestDialogueProps {
     showBanner?: boolean;
     messageComponent: JSX.Element;
     disabled?: boolean;
+    tracking?: DialogTracking;
 }
 
 export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
@@ -24,6 +26,7 @@ export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
     showBanner,
     environment,
     messageComponent,
+    tracking,
 }) => {
     const projectId = useRequiredPathParam('projectId');
     const { data } = usePendingChangeRequests(projectId);
@@ -47,6 +50,7 @@ export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
             onClose={onClose}
             title='Request changes'
             fullWidth
+            tracking={tracking}
         >
             <ConditionallyRender
                 condition={hasChangeRequestInReviewForEnvironment}
@@ -63,8 +67,12 @@ export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
                     </Alert>
                 }
             />
-
-            <Typography variant='body2' color='text.secondary'>
+            <Typography
+                variant='body2'
+                sx={{
+                    color: 'text.secondary',
+                }}
+            >
                 Your suggestion:
             </Typography>
             {messageComponent}

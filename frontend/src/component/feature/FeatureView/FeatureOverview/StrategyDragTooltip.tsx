@@ -1,9 +1,9 @@
 import Close from '@mui/icons-material/Close';
-import { Box, Button, IconButton, styled } from '@mui/material';
+import { Button, IconButton, styled } from '@mui/material';
 import type { FC } from 'react';
 import Joyride, { type TooltipRenderProps } from 'react-joyride';
 
-const StyledTooltip = styled(Box)(({ theme }) => ({
+const StyledTooltip = styled('article')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1),
@@ -42,7 +42,7 @@ const StyledHeader = styled('p')(({ theme }) => ({
 
 const CustomTooltip = ({ closeProps }: TooltipRenderProps) => {
     return (
-        <StyledTooltip component='article'>
+        <StyledTooltip>
             <StyledCloseButton type='button' {...closeProps}>
                 <Close />
             </StyledCloseButton>

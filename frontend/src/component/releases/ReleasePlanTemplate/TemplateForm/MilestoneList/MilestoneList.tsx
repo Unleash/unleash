@@ -1,9 +1,14 @@
+import { createUuid } from 'utils/createUuid';
 import type { IReleasePlanMilestonePayload } from 'interfaces/releasePlans';
 import { styled, Button } from '@mui/material';
 import Add from '@mui/icons-material/Add';
-import { useCallback } from 'react';
+import { Fragment, useCallback } from 'react';
 import type { OnMoveItem } from 'hooks/useDragItem';
 import { MilestoneCard } from './MilestoneCard/MilestoneCard.tsx';
+import { MilestoneAutomationForm } from './MilestoneCard/MilestoneAutomationForm.tsx';
+import { automationErrorKey } from 'component/releases/hooks/useTemplateForm';
+import { isValidAutomation } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/utils/isValidAutomation';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 interface IMilestoneListProps {
     milestones: IReleasePlanMilestonePayload[];
@@ -12,6 +17,7 @@ interface IMilestoneListProps {
     >;
     errors: { [key: string]: string };
     clearErrors: () => void;
+    clearError: (key: string) => void;
     milestoneChanged: (milestone: IReleasePlanMilestonePayload) => void;
 }
 
@@ -25,8 +31,12 @@ export const MilestoneList = ({
     setMilestones,
     errors,
     clearErrors,
+    clearError,
     milestoneChanged,
 }: IMilestoneListProps) => {
+    const templatesAutomationsEnabled = useUiFlag(
+        'releaseTemplatesAutomations',
+    );
     const onMoveItem: OnMoveItem = useCallback(
         async ({ dragIndex, dropIndex, event, draggedElement }) => {
             if (event.type === 'drop') {
@@ -81,19 +91,48 @@ export const MilestoneList = ({
 
     return (
         <>
-            {milestones.map((milestone, index) => (
-                <MilestoneCard
-                    key={milestone.id}
-                    index={index}
-                    onMoveItem={onMoveItem}
-                    milestone={milestone}
-                    milestoneChanged={milestoneChanged}
-                    errors={errors}
-                    clearErrors={clearErrors}
-                    removable={milestones.length > 1}
-                    onDeleteMilestone={onDeleteMilestone(milestone.id)}
-                />
-            ))}
+            {milestones.map((milestone, index) => {
+                const isLast = index === milestones.length - 1;
+                return (
+                    <Fragment key={milestone.id}>
+                        <MilestoneCard
+                            index={index}
+                            onMoveItem={onMoveItem}
+                            milestone={milestone}
+                            milestoneChanged={milestoneChanged}
+                            errors={errors}
+                            clearErrors={clearErrors}
+                            removable={milestones.length > 1}
+                            onDeleteMilestone={onDeleteMilestone(milestone.id)}
+                        />
+                        {templatesAutomationsEnabled && !isLast ? (
+                            <MilestoneAutomationForm
+                                milestoneName={milestone.name}
+                                transitionCondition={
+                                    milestone.transitionCondition
+                                }
+                                onChange={(transitionCondition) => {
+                                    if (
+                                        !transitionCondition ||
+                                        isValidAutomation(transitionCondition)
+                                    ) {
+                                        clearError(
+                                            automationErrorKey(milestone.id),
+                                        );
+                                    }
+                                    milestoneChanged({
+                                        ...milestone,
+                                        transitionCondition,
+                                    });
+                                }}
+                                error={
+                                    errors?.[automationErrorKey(milestone.id)]
+                                }
+                            />
+                        ) : null}
+                    </Fragment>
+                );
+            })}
             <StyledAddMilestoneButton
                 variant='text'
                 color='primary'
@@ -102,14 +141,14 @@ export const MilestoneList = ({
                     setMilestones((prev) => [
                         ...prev,
                         {
-                            id: crypto.randomUUID(),
+                            id: createUuid(),
                             name: `Milestone ${prev.length + 1}`,
                             sortOrder: prev.length,
                             strategies: prev[prev.length - 1].strategies?.map(
                                 (strat) => {
                                     return {
                                         ...strat,
-                                        id: crypto.randomUUID(),
+                                        id: createUuid(),
                                     };
                                 },
                             ),

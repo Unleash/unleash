@@ -72,6 +72,7 @@ export default class ProjectController extends Controller {
             middleware: [
                 this.openApiService.validPath({
                     tags: ['Projects'],
+                    release: { stable: '4.13.0' },
                     operationId: 'getProjects',
                     summary: 'Get a list of all projects.',
                     description:
@@ -102,6 +103,7 @@ export default class ProjectController extends Controller {
             middleware: [
                 this.openApiService.validPath({
                     tags: ['Projects'],
+                    release: { stable: '4.20.0' },
                     operationId: 'getProjectOverview',
                     summary: 'Get an overview of a project.',
                     description:
@@ -124,6 +126,7 @@ export default class ProjectController extends Controller {
                 this.openApiService.validPath({
                     deprecated: true,
                     tags: ['Projects'],
+                    release: { stable: '5.5.0' },
                     operationId: 'getProjectDora',
                     summary: 'Get an overview project dora metrics.',
                     description:
@@ -144,6 +147,7 @@ export default class ProjectController extends Controller {
             middleware: [
                 this.openApiService.validPath({
                     tags: ['Projects'],
+                    release: { stable: '5.10.0' },
                     operationId: 'getProjectApplications',
                     summary: 'Get a list of all applications for a project.',
                     description:
@@ -165,6 +169,7 @@ export default class ProjectController extends Controller {
             middleware: [
                 this.openApiService.validPath({
                     tags: ['Projects'],
+                    release: { stable: '6.1.0' },
                     operationId: 'getProjectFlagCreators',
                     summary: 'Get a list of all flag creators for a project.',
                     description:
@@ -185,6 +190,7 @@ export default class ProjectController extends Controller {
             middleware: [
                 this.openApiService.validPath({
                     tags: ['Projects'],
+                    release: { stable: '6.0.0' },
                     operationId: 'getOutdatedProjectSdks',
                     summary: 'Get outdated project SDKs',
                     description:

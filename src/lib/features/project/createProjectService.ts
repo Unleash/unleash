@@ -57,6 +57,8 @@ import {
     createFakeOnboardingReadModel,
     createOnboardingReadModel,
 } from '../onboarding/createOnboardingReadModel.js';
+import { FeatureLifecycleReadModel } from '../feature-lifecycle/feature-lifecycle-read-model.js';
+import { FakeFeatureLifecycleReadModel } from '../feature-lifecycle/fake-feature-lifecycle-read-model.js';
 import { FakeEdgeTokenStore } from '../edgetokens/fake-edge-token-store.js';
 import { EdgeTokenStore } from '../edgetokens/edge-token-store.js';
 
@@ -68,7 +70,10 @@ export const createProjectService = (
     const eventStore = new EventStore(db, getLogger);
     const projectStore = new ProjectStore(db, eventBus, config);
     const projectOwnersReadModel = new ProjectOwnersReadModel(db);
-    const projectFlagCreatorsReadModel = new ProjectFlagCreatorsReadModel(db);
+    const projectFlagCreatorsReadModel = new ProjectFlagCreatorsReadModel(
+        db,
+        eventBus,
+    );
     const groupStore = new GroupStore(db);
     const edgeTokenStore = new EdgeTokenStore(db, eventBus, config);
     const featureToggleStore = new FeatureToggleStore(
@@ -138,6 +143,8 @@ export const createProjectService = (
 
     const onboardingReadModel = createOnboardingReadModel(db);
 
+    const featureLifecycleReadModel = new FeatureLifecycleReadModel(db);
+
     return new ProjectService(
         {
             projectStore,
@@ -151,6 +158,7 @@ export const createProjectService = (
             projectFlagCreatorsReadModel,
             projectReadModel,
             onboardingReadModel,
+            featureLifecycleReadModel,
             edgeTokenStore,
         },
         config,
@@ -212,6 +220,8 @@ export const createFakeProjectService = (config: IUnleashConfig) => {
 
     const onboardingReadModel = createFakeOnboardingReadModel();
 
+    const featureLifecycleReadModel = new FakeFeatureLifecycleReadModel();
+
     const projectService = new ProjectService(
         {
             projectStore,
@@ -225,6 +235,7 @@ export const createFakeProjectService = (config: IUnleashConfig) => {
             projectStatsStore,
             projectReadModel,
             onboardingReadModel,
+            featureLifecycleReadModel,
             edgeTokenStore,
         },
         config,

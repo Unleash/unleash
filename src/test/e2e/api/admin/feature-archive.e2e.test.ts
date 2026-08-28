@@ -227,6 +227,26 @@ test('can bulk revive features', async () => {
     }
 });
 
+test('bulk revive does not disable environments for flags that are not archived', async () => {
+    const activeFeature = 'activeFeature';
+    await app.createFeature(activeFeature);
+    await app.enableFeature(activeFeature, 'development');
+
+    await app.request
+        .post('/api/admin/projects/default/revive')
+        .send({ features: [activeFeature] })
+        .expect(200);
+
+    const { body } = await app.request
+        .get(`/api/admin/projects/default/features/${activeFeature}`)
+        .expect(200);
+
+    const environment = body.environments.find(
+        (env) => env.name === 'development',
+    );
+    expect(environment?.enabled).toBe(true);
+});
+
 test('Should be able to bulk archive features', async () => {
     const featureName1 = 'archivedFeature1';
     const featureName2 = 'archivedFeature2';
@@ -252,6 +272,41 @@ test('Should be able to bulk archive features', async () => {
             feature.name === featureName1 || feature.name === featureName2,
     );
     expect(archivedFeatures).toHaveLength(2);
+});
+
+test('Should ignore features that are already archived when bulk archiving', async () => {
+    const featureName = 'alreadyArchivedFeature';
+    await app.createFeature(featureName);
+
+    const archive = () =>
+        app.request
+            .post(`/api/admin/projects/${DEFAULT_PROJECT}/archive`)
+            .send({ features: [featureName] })
+            .expect(202);
+
+    const archivedAt = async () => {
+        const { body } = await app.request
+            .get(
+                `/api/admin/search/features?project=IS%3A${DEFAULT_PROJECT}&archived=IS%3Atrue`,
+            )
+            .expect(200);
+        return body.features.find((feature) => feature.name === featureName)
+            .archivedAt;
+    };
+
+    await archive();
+    const firstArchivedAt = await archivedAt();
+
+    await archive();
+
+    expect(await archivedAt()).toBe(firstArchivedAt);
+
+    const { body: events } = await app.request
+        .get(`/api/admin/events/${featureName}`)
+        .expect(200);
+    expect(
+        events.events.filter((event) => event.type === 'feature-archived'),
+    ).toHaveLength(1);
 });
 
 test('Should validate if a list of features with dependencies can be archived', async () => {

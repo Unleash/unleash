@@ -85,6 +85,20 @@ export const bulkRegistrationSchema = {
             enum: ['frontend', 'backend', null],
             nullable: true,
         },
+        sdkFlavor: {
+            description:
+                'The identifier of an integration built on top of an Unleash SDK (e.g. an OpenFeature provider), forwarded by Edge so adoption of the integration can be tracked alongside sdkVersion.',
+            example: 'unleash-openfeature-node-provider',
+            maxLength: 256,
+            type: 'string',
+        },
+        sdkFlavorVersion: {
+            description:
+                'The version of the integration identified by sdkFlavor.',
+            example: '1.0.1',
+            maxLength: 32,
+            type: 'string',
+        },
     },
     components: {
         schemas: {

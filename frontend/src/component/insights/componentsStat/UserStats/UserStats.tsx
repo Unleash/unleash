@@ -3,7 +3,7 @@ import ChevronRight from '@mui/icons-material/ChevronRight';
 import { Box, Typography, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { HorizontalDistributionChart } from '../../components/HorizontalDistributionChart/HorizontalDistributionChart.tsx';
 import { UserDistributionInfo } from './UserDistributionInfo.tsx';
 

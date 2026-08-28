@@ -19,10 +19,11 @@ export const updateFeatureSchema = {
                 'release',
                 'operational',
                 'permission',
+                'sunset',
             ],
             example: 'kill-switch',
             description:
-                'Type of the flag e.g. experiment, kill-switch, release, operational, permission',
+                'Type of the flag e.g. experiment, kill-switch, release, operational, permission, sunset',
         },
         stale: {
             type: 'boolean',

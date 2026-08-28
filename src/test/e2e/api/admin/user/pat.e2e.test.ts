@@ -19,7 +19,17 @@ beforeAll(async () => {
     getLogger.setMuteError(true);
     db = await dbInit('user_pat', getLogger);
     patStore = db.stores.patStore;
-    app = await setupAppWithAuth(db.stores, {}, db.rawDatabase);
+    app = await setupAppWithAuth(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    tokenExpiryNotifications: true,
+                },
+            },
+        },
+        db.rawDatabase,
+    );
 
     await app.request
         .post(`/auth/demo/login`)
@@ -53,12 +63,95 @@ test('should create a PAT', async () => {
     firstSecret = body.secret;
     firstId = body.id;
 
+    const events = await db.stores.eventStore.getEvents();
+    const event = events.find(
+        (event) => event.type === 'pat-created' && event.data.id === body.id,
+    );
+    expect(event?.data).toMatchObject({
+        id: body.id,
+        description,
+        expiresAt: body.expiresAt,
+        secure: false,
+    });
+    expect(event?.data.selector).toBeUndefined();
+    expect(event?.data.seenAt).toBeUndefined();
+
     const response = await request
         .get('/api/admin/user/tokens')
         .expect('Content-Type', /json/)
         .expect(200);
 
     expect(response.body.pats).toHaveLength(1);
+});
+
+test('should authenticate a securely stored PAT after secure token storage is disabled', async () => {
+    const experiments = (
+        app.config.flagResolver as unknown as {
+            experiments: { secureAccountTokenStorage: boolean };
+        }
+    ).experiments;
+    const previousSecureAccountTokenStorage =
+        experiments.secureAccountTokenStorage;
+    experiments.secureAccountTokenStorage = true;
+
+    try {
+        await app.request
+            .post('/auth/demo/login')
+            .send({ email: 'user@getunleash.io' })
+            .expect(200);
+
+        const { body } = await app.request
+            .post('/api/admin/user/tokens')
+            .send({
+                description: 'secure PAT',
+                expiresAt: tomorrow,
+            })
+            .set('Content-Type', 'application/json')
+            .expect(201);
+
+        expect(body.secret).toMatch(
+            /^user:v2_[A-Za-z0-9_-]{22}_[A-Za-z0-9_-]{43}$/,
+        );
+
+        const storedToken = await db
+            .rawDatabase('personal_access_tokens')
+            .where({ id: body.id })
+            .first();
+        expect(storedToken.secret).toBeNull();
+        expect(storedToken.selector).toHaveLength(22);
+        expect(storedToken.verifier).toBeDefined();
+
+        const events = await db.stores.eventStore.getEvents();
+        const event = events.find(
+            (event) =>
+                event.type === 'pat-created' && event.data.id === body.id,
+        );
+        expect(event?.data).toMatchObject({
+            id: body.id,
+            secure: true,
+            selector: storedToken.selector,
+        });
+        expect(event?.data.verifier).toBeUndefined();
+        expect(event?.data.secret).toBeUndefined();
+        expect(event?.data.seenAt).toBeUndefined();
+
+        experiments.secureAccountTokenStorage = false;
+
+        await app.request
+            .get('/api/admin/user')
+            .set('Authorization', body.secret)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.user.email).toBe('user@getunleash.io');
+            });
+
+        await app.request
+            .delete(`/api/admin/user/tokens/${body.id}`)
+            .expect(200);
+    } finally {
+        experiments.secureAccountTokenStorage =
+            previousSecureAccountTokenStorage;
+    }
 });
 
 test('should delete the PAT', async () => {
@@ -77,6 +170,18 @@ test('should delete the PAT', async () => {
     const createdId = body.id;
 
     await request.delete(`/api/admin/user/tokens/${createdId}`).expect(200);
+
+    const events = await db.stores.eventStore.getEvents();
+    const event = events.find(
+        (event) => event.type === 'pat-deleted' && event.data.id === createdId,
+    );
+    expect(event?.data).toMatchObject({
+        id: createdId,
+        description,
+        expiresAt: body.expiresAt,
+        secure: false,
+    });
+    expect(event?.data.seenAt).toBeUndefined();
 });
 
 test('should get all PATs', async () => {
@@ -90,10 +195,17 @@ test('should get all PATs', async () => {
     expect(body.pats).toHaveLength(1);
     expect(body.pats[0].secret).toBeUndefined();
     expect(body.pats[0].id).toBeDefined();
+    expect(body.pats[0].expiryWarning).toBeUndefined();
 });
 
 test('should not allow deletion of other users PAT', async () => {
     const { request } = app;
+
+    const deletionEventsBefore = (
+        await db.stores.eventStore.getEvents()
+    ).filter(
+        (event) => event.type === 'pat-deleted' && event.data.id === firstId,
+    );
 
     await app.request
         .post(`/auth/demo/login`)
@@ -103,6 +215,11 @@ test('should not allow deletion of other users PAT', async () => {
         .expect(200);
 
     await request.delete(`/api/admin/user/tokens/${firstId}`).expect(200);
+
+    const deletionEventsAfter = (await db.stores.eventStore.getEvents()).filter(
+        (event) => event.type === 'pat-deleted' && event.data.id === firstId,
+    );
+    expect(deletionEventsAfter).toHaveLength(deletionEventsBefore.length);
 
     await app.request
         .post(`/auth/demo/login`)
@@ -269,7 +386,7 @@ test('should not get user with expired token', async () => {
             description: 'expired-token',
             expiresAt: '2020-01-01',
         },
-        secret,
+        { secret },
         1,
     );
 

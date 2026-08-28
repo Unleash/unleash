@@ -27,6 +27,7 @@ export const CreateIntegration = () => {
         ...cloneDeep(DEFAULT_DATA),
         provider: provider ? provider.name : '',
     };
+    const deprecated = !provider || Boolean(provider.deprecated);
 
     return (
         <IntegrationForm
@@ -34,6 +35,7 @@ export const CreateIntegration = () => {
             provider={provider}
             fetch={refetchAddons}
             addon={defaultAddon}
+            deprecated={deprecated}
         />
     );
 };

@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { generateSelectablePeriodsFromDate } from './selectable-periods.js';
 
 test('marks months before May 2024 as unselectable', () => {

@@ -1,58 +1,65 @@
 import { TableHead, TableRow } from '@mui/material';
-import type { HeaderGroup } from 'react-table';
+import { flexRender, type Table as TableType } from '@tanstack/react-table';
 import { CellSortable } from './CellSortable/CellSortable.tsx';
 
-export const SortableTableHeader = <T extends object>({
-    headerGroups,
+export const SortableTableHeader = <T,>({
+    tableInstance,
     className,
     flex,
 }: {
-    headerGroups: HeaderGroup<T>[];
+    tableInstance: TableType<T>;
     className?: string;
     flex?: boolean;
 }) => (
     <TableHead className={className}>
-        {headerGroups.map((headerGroup) => {
-            const { key, ...props } = headerGroup.getHeaderGroupProps();
-            return (
-                <TableRow key={key} {...props} data-loading>
-                    {headerGroup.headers.map((column: HeaderGroup<T>) => {
-                        const content = column.render('Header');
+        {tableInstance.getHeaderGroups().map((headerGroup) => (
+            <TableRow
+                key={headerGroup.id}
+                data-loading
+                style={flex ? { display: 'flex' } : undefined}
+            >
+                {headerGroup.headers.map((header) => {
+                    const column = header.column;
+                    const meta = column.columnDef.meta;
+                    const sortDirection = column.getIsSorted();
+                    const headerDef = column.columnDef.header;
+                    const content = header.isPlaceholder
+                        ? null
+                        : flexRender(headerDef, header.getContext());
 
-                        const { key, ...props } = column.getHeaderProps(
-                            column.canSort
-                                ? column.getSortByToggleProps()
-                                : undefined,
-                        );
-
-                        return (
-                            <CellSortable
-                                // @ts-expect-error -- check after `react-table` v8
-                                styles={column.styles || {}}
-                                key={key}
-                                {...props}
-                                ariaTitle={
-                                    typeof content === 'string'
-                                        ? content
-                                        : undefined
-                                }
-                                isSortable={Boolean(column.canSort)}
-                                isSorted={column.isSorted}
-                                isDescending={column.isSortedDesc}
-                                maxWidth={column.maxWidth}
-                                minWidth={column.minWidth}
-                                width={column.width}
-                                isFlex={flex}
-                                isFlexGrow={Boolean(column.minWidth)}
-                                // @ts-expect-error -- check after `react-table` v8
-                                align={column.align}
-                            >
-                                {content}
-                            </CellSortable>
-                        );
-                    })}
-                </TableRow>
-            );
-        })}
+                    return (
+                        <CellSortable
+                            key={header.id}
+                            styles={meta?.styles ?? {}}
+                            ariaTitle={
+                                typeof headerDef === 'string'
+                                    ? headerDef
+                                    : typeof content === 'string'
+                                      ? content
+                                      : column.id
+                            }
+                            isSortable={column.getCanSort()}
+                            isSorted={sortDirection !== false}
+                            isDescending={sortDirection === 'desc'}
+                            onClick={
+                                column.getCanSort()
+                                    ? column.getToggleSortingHandler()
+                                    : undefined
+                            }
+                            maxWidth={meta?.maxWidth}
+                            minWidth={meta?.minWidth}
+                            width={
+                                meta?.width ?? meta?.maxWidth ?? meta?.minWidth
+                            }
+                            isFlex={flex}
+                            isFlexGrow={Boolean(meta?.minWidth)}
+                            align={meta?.align}
+                        >
+                            {content}
+                        </CellSortable>
+                    );
+                })}
+            </TableRow>
+        ))}
     </TableHead>
 );

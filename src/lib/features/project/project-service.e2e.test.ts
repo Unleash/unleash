@@ -121,19 +121,72 @@ test('should have default project', async () => {
     expect(project.id).toBe('default');
 });
 
-test('should list all projects', async () => {
-    const project = {
-        id: 'test-list',
-        name: 'New project',
-        description: 'Blah',
-        mode: 'open' as const,
-        defaultStickiness: 'default',
-    };
+describe('should list all projects', () => {
+    test('includes member count in the project payload', async () => {
+        const project = {
+            id: 'test-list',
+            name: 'New project',
+            description: 'Blah',
+            mode: 'open' as const,
+            defaultStickiness: 'default',
+        };
 
-    await projectService.createProject(project, user, auditUser);
-    const projects = await projectService.getProjects();
-    expect(projects).toHaveLength(2);
-    expect(projects.find((p) => p.name === project.name)?.memberCount).toBe(1);
+        await projectService.createProject(project, user, auditUser);
+        const projects = await projectService.getProjects();
+        expect(projects).toHaveLength(2);
+        expect(projects.find((p) => p.name === project.name)?.memberCount).toBe(
+            1,
+        );
+    });
+
+    test('includes onboarding status', async () => {
+        const project = {
+            id: 'onboarding-status',
+            name: 'Onboarding status project',
+            description: 'Blah',
+            mode: 'open' as const,
+            defaultStickiness: 'default',
+        };
+
+        await projectService.createProject(project, user, auditUser);
+        const projects = await projectService.getProjects();
+        const projectOnboardingStatus = projects.find(
+            (p) => p.id === project.id,
+        )?.onboardingStatus;
+
+        expect(projectOnboardingStatus).toMatchObject({
+            status: 'onboarding-started',
+        });
+    });
+
+    test('includes cleanupCount', async () => {
+        const project = {
+            id: 'cleanup-count',
+            name: 'Cleanup count project',
+            description: 'Blah',
+            mode: 'open' as const,
+            defaultStickiness: 'default',
+        };
+
+        await projectService.createProject(project, user, auditUser);
+
+        await stores.featureToggleStore.create(project.id, {
+            name: 'cleanup-feature',
+            createdByUserId: user.id,
+        });
+
+        await stores.featureLifecycleStore.insert([
+            { feature: 'cleanup-feature', stage: 'initial' },
+            { feature: 'cleanup-feature', stage: 'completed' },
+        ]);
+
+        const projects = await projectService.getProjects();
+        const projectCleanupCount = projects.find(
+            (p) => p.id === project.id,
+        )?.cleanupCount;
+
+        expect(projectCleanupCount).toBe(1);
+    });
 });
 
 test('should create new project', async () => {

@@ -6,7 +6,7 @@ import type {
     IUnleashConfig,
 } from '../../../types/index.js';
 import getLogger from '../../../../test/fixtures/no-logger.js';
-import { REGEX } from '../../../util/constants.js';
+import { DATE_AFTER, REGEX } from '../../../util/constants.js';
 import { describe, test, expect } from 'vitest';
 import { DEFAULT_ENV } from '../../../server-impl.js';
 
@@ -178,6 +178,49 @@ describe('Constraint validation via create strategy', () => {
 });
 
 describe('Constraint validation via update strategy', () => {
+    test('should reject single-value operator constraints with null value', async () => {
+        const { featureToggleService, featureStrategiesStore } =
+            createService();
+
+        await featureStrategiesStore.createFeature({
+            name: 'feature',
+            createdByUserId: 1,
+        });
+
+        const strategy = await featureStrategiesStore.createStrategyFeatureEnv({
+            parameters: {},
+            strategyName: 'default',
+            featureName: 'feature',
+            constraints: [],
+            projectId: 'default',
+            environment: DEFAULT_ENV,
+        });
+
+        await expect(
+            featureToggleService.updateStrategy(
+                strategy.id,
+                {
+                    constraints: [
+                        {
+                            contextName: 'currentTime',
+                            operator: DATE_AFTER,
+                            value: null,
+                            values: [],
+                        },
+                    ],
+                } as unknown as IStrategyConfig,
+                {
+                    projectId: 'default',
+                    featureName: 'feature',
+                    environment: DEFAULT_ENV,
+                },
+                {} as IAuditUser,
+            ),
+        ).rejects.toThrow(
+            'Single-value constraint operators require a non-empty value.',
+        );
+    });
+
     test('should reject invalid regex', async () => {
         const { featureToggleService, featureStrategiesStore } =
             createService();

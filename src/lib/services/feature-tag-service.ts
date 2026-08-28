@@ -94,6 +94,7 @@ class FeatureTagService {
     }
 
     async updateTags(
+        projectId: string,
         featureNames: string[],
         addedTags: ITag[],
         removedTags: ITag[],
@@ -101,6 +102,14 @@ class FeatureTagService {
     ): Promise<void> {
         const featureToggles =
             await this.featureToggleStore.getAllByNames(featureNames);
+        const featureTogglesBelongToProject = featureToggles.every(
+            (toggle) => toggle.project === projectId,
+        );
+        if (!featureTogglesBelongToProject) {
+            throw new BadDataError(
+                'Tried to change tags of feature not belonging to project',
+            );
+        }
         await Promise.all(
             addedTags.map((tag) => this.createTagIfNeeded(tag, auditUser)),
         );

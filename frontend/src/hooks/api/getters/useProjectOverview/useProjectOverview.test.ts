@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { featuresCount } from './useProjectOverview.js';
 
 test('features count based on feature types', () => {

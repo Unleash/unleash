@@ -1,5 +1,5 @@
 import { resolveOrigin } from './cors-origin-middleware.js';
-import FakeSettingStore from '../../test/fixtures/fake-setting-store.js';
+import FakeSettingStore from '../features/settings/fake-setting-store.js';
 import { createTestConfig } from '../../test/config/test-config.js';
 import FakeEventStore from '../../test/fixtures/fake-event-store.js';
 import FakeProjectStore from '../../test/fixtures/fake-project-store.js';

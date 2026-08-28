@@ -1,5 +1,6 @@
-import { Button, FormControlLabel, Grid, Switch, styled } from '@mui/material';
+import { Button, FormControlLabel, Switch, styled } from '@mui/material';
 import { Alert } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ScimTokenGenerationDialog } from './ScimTokenGenerationDialog.tsx';
 import { ScimTokenDialog } from './ScimTokenDialog.tsx';
@@ -82,9 +83,16 @@ export const ScimSettings = () => {
     };
 
     const saveScimSettings = async (enabled: boolean) => {
+        const previousEnabled = settings.enabled ?? false;
         try {
             setEnabled(enabled);
-            await saveSettings({ enabled });
+            try {
+                await saveSettings({ enabled });
+            } catch (error: unknown) {
+                setEnabled(previousEnabled);
+                throw error;
+            }
+
             if (enabled && !settings.hasToken) {
                 const token = await generateNewToken();
                 setNewToken(token);
@@ -104,7 +112,7 @@ export const ScimSettings = () => {
     return (
         <>
             <Grid container sx={{ mb: 3 }}>
-                <Grid item md={12}>
+                <Grid size={{ md: 12 }}>
                     <Alert severity='info'>
                         Please read the{' '}
                         <a
@@ -122,7 +130,7 @@ export const ScimSettings = () => {
             </Grid>
             <StyledContainer>
                 <Grid container spacing={3}>
-                    <Grid item md={10.5} mb={2}>
+                    <Grid size={{ md: 10.5 }} sx={{ mb: 2 }}>
                         <StyledTitleDiv>
                             <strong>SCIM provisioning</strong>
                         </StyledTitleDiv>
@@ -138,7 +146,7 @@ export const ScimSettings = () => {
                             new token one time to the user.
                         </p>
                     </Grid>
-                    <Grid item md={1.5}>
+                    <Grid size={{ md: 1.5 }}>
                         <FormControlLabel
                             control={
                                 <Switch
@@ -156,7 +164,7 @@ export const ScimSettings = () => {
                 </Grid>
 
                 <Grid container spacing={3}>
-                    <Grid item md={5} mb={2}>
+                    <Grid size={{ md: 5 }} sx={{ mb: 2 }}>
                         <ConditionallyRender
                             condition={Boolean(settings.hasToken)}
                             show={
@@ -174,7 +182,7 @@ export const ScimSettings = () => {
                 </Grid>
 
                 <Grid container spacing={3}>
-                    <Grid item md={10.5} mb={2}>
+                    <Grid size={{ md: 10.5 }} sx={{ mb: 2 }}>
                         <StyledTitleDiv>
                             <strong>Delete SCIM Users</strong>
                         </StyledTitleDiv>
@@ -185,7 +193,7 @@ export const ScimSettings = () => {
                             these users.
                         </p>
                     </Grid>
-                    <Grid item md={1.5}>
+                    <Grid size={{ md: 1.5 }}>
                         <Button
                             variant='outlined'
                             color='error'
@@ -197,7 +205,7 @@ export const ScimSettings = () => {
                             Delete Users
                         </Button>
                     </Grid>
-                    <Grid item md={10.5} mb={2}>
+                    <Grid size={{ md: 10.5 }} sx={{ mb: 2 }}>
                         <StyledTitleDiv>
                             <strong>Delete SCIM Groups</strong>
                         </StyledTitleDiv>
@@ -209,7 +217,7 @@ export const ScimSettings = () => {
                             permissions of users present in those groups.
                         </p>
                     </Grid>
-                    <Grid item md={1.5}>
+                    <Grid size={{ md: 1.5 }}>
                         <Button
                             variant='outlined'
                             color='error'

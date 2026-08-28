@@ -9,7 +9,8 @@ import {
     useTheme,
 } from '@mui/material';
 import { Search } from 'component/common/Search/Search';
-import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
+import { TablePlaceholder } from 'component/common/Table';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
@@ -19,12 +20,11 @@ import { useSignalEndpointTokens } from 'hooks/api/getters/useSignalEndpointToke
 import { useSearch } from 'hooks/useSearch';
 import { useMemo, useState } from 'react';
 import {
-    useTable,
-    type SortingRule,
-    useSortBy,
-    useFlexLayout,
-} from 'react-table';
-import { sortTypes } from 'utils/sortTypes';
+    type ColumnDef,
+    getCoreRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
 import { SignalEndpointsTokensCreateDialog } from './SignalEndpointsTokensCreateDialog.tsx';
 import { SignalEndpointsTokensDialog } from './SignalEndpointsTokensDialog.tsx';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
@@ -74,7 +74,7 @@ export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search', string>
 >;
 
-const defaultSort: SortingRule<string> = { id: 'createdAt', desc: true };
+const defaultSort = { id: 'createdAt', desc: true };
 
 interface ISignalEndpointsTokensProps {
     signalEndpoint: ISignalEndpoint;
@@ -93,7 +93,7 @@ export const SignalEndpointsTokens = ({
         useSignalEndpointTokensApi();
 
     const [initialState] = useState(() => ({
-        sortBy: [defaultSort],
+        sorting: [defaultSort],
     }));
 
     const [searchValue, setSearchValue] = useState('');
@@ -143,26 +143,26 @@ export const SignalEndpointsTokens = ({
         }
     };
 
-    const columns = useMemo(
+    const columns = useMemo<ColumnDef<ISignalEndpointToken, unknown>[]>(
         () => [
             {
-                Header: 'Name',
-                accessor: 'name',
-                Cell: HighlightCell,
-                minWidth: 100,
-                searchable: true,
+                id: 'name',
+                header: 'Name',
+                accessorKey: 'name',
+                cell: HighlightCell,
+                meta: { minWidth: 100, searchable: true },
             },
             {
-                Header: 'Created',
-                accessor: 'createdAt',
-                Cell: DateCell,
-                maxWidth: 150,
+                id: 'createdAt',
+                header: 'Created',
+                accessorKey: 'createdAt',
+                cell: DateCell,
+                meta: { maxWidth: 150 },
             },
             {
-                Header: 'Actions',
                 id: 'Actions',
-                align: 'center',
-                Cell: ({ row: { original: rowToken } }: any) => (
+                header: 'Actions',
+                cell: ({ row: { original: rowToken } }) => (
                     <ActionCell>
                         <Tooltip title='Delete token' arrow describeChild>
                             <span>
@@ -178,11 +178,11 @@ export const SignalEndpointsTokens = ({
                         </Tooltip>
                     </ActionCell>
                 ),
-                maxWidth: 100,
-                disableSortBy: true,
+                enableSorting: false,
+                meta: { maxWidth: 100, align: 'center' },
             },
         ],
-        [setSelectedToken, setDeleteOpen],
+        [],
     );
 
     const { data, getSearchText, getSearchContext } = useSearch(
@@ -191,20 +191,16 @@ export const SignalEndpointsTokens = ({
         signalEndpointTokens,
     );
 
-    const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
-        {
-            columns: columns as any[],
-            data,
-            initialState,
-            sortTypes,
-            autoResetHiddenColumns: false,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            disableMultiSort: true,
-        },
-        useSortBy,
-        useFlexLayout,
-    );
+    const table = useReactTable({
+        columns,
+        data,
+        initialState,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+        enableMultiSort: false,
+    });
 
     useConditionallyHiddenColumns(
         [
@@ -213,9 +209,11 @@ export const SignalEndpointsTokens = ({
                 columns: ['createdAt'],
             },
         ],
-        setHiddenColumns,
+        table.setColumnVisibility,
         columns,
     );
+
+    const rowCount = table.getRowModel().rows.length;
 
     return (
         <>
@@ -235,14 +233,10 @@ export const SignalEndpointsTokens = ({
                 </Button>
             </StyledHeader>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <VirtualizedTable
-                    rows={rows}
-                    headerGroups={headerGroups}
-                    prepareRow={prepareRow}
-                />
+                <VirtualizedTable tableInstance={table} />
             </SearchHighlightProvider>
             <ConditionallyRender
-                condition={rows.length === 0}
+                condition={rowCount === 0}
                 show={
                     <ConditionallyRender
                         condition={searchValue?.length > 0}

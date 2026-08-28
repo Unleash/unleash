@@ -7,7 +7,6 @@ import {
     type AutocompleteChangeReason,
     type FilterOptionsState,
     Checkbox,
-    TextField,
     Button,
     Typography,
 } from '@mui/material';
@@ -33,6 +32,7 @@ import { caseInsensitiveSearch } from 'utils/search.js';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi.js';
+import { FormFieldControlAligner } from 'component/common/FormField/FormField';
 
 export const StyledSpan = styled('span')(({ theme }) => ({
     display: 'flex',
@@ -45,7 +45,8 @@ const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
     width: '100%',
-    '& > div': { width: '100%' },
+    alignItems: 'flex-start',
+    '& > :first-child': { width: '100%' },
     justifyContent: 'space-between',
     marginBottom: theme.spacing(2),
     marginRight: theme.spacing(-2),
@@ -92,7 +93,7 @@ const renderOption = (
     </StrechedLi>
 );
 
-const renderTags = (value: AvailableReviewerSchema[]) => (
+const renderValue = (value: AvailableReviewerSchema[]) => (
     <StyledTags>
         {value.length > 1
             ? `${value.length} reviewers`
@@ -120,8 +121,10 @@ export const ChangeRequestReviewersHeader: FC<{
                     Reviewers
                     <Typography
                         component='span'
-                        color='text.secondary'
-                        sx={{ ml: 1 }}
+                        sx={{
+                            color: 'text.secondary',
+                            ml: 1,
+                        }}
                     >
                         ({actualApprovals}/{minApprovals} required)
                     </Typography>
@@ -197,8 +200,9 @@ export const ChangeRequestAddRequestedApprovers: FC<{
     return (
         <StyledBox sx={{ mb: 4 }}>
             <AutocompleteVirtual
+                label={`Reviewers (${reviewers.length})`}
                 sx={{ ml: 'auto', width: theme.spacing(40) }}
-                size='small'
+                size='large'
                 limitTags={3}
                 openOnFocus
                 multiple
@@ -219,24 +223,20 @@ export const ChangeRequestAddRequestedApprovers: FC<{
                 getOptionLabel={(option: AvailableReviewerSchema) =>
                     option.email || option.name || option.username || ''
                 }
-                renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        label={`Reviewers (${reviewers.length})`}
-                    />
-                )}
-                renderTags={(value) => renderTags(value)}
+                renderValue={(value) => renderValue(value)}
                 noOptionsText={isLoading ? 'Loading…' : 'No options'}
             />
-            <Button
-                sx={{ ml: 2 }}
-                variant='contained'
-                color='primary'
-                disabled={false}
-                onClick={() => saveClicked(reviewers)}
-            >
-                Save
-            </Button>
+            <FormFieldControlAligner>
+                <Button
+                    sx={{ ml: 2 }}
+                    variant='contained'
+                    color='primary'
+                    disabled={false}
+                    onClick={() => saveClicked(reviewers)}
+                >
+                    Save
+                </Button>
+            </FormFieldControlAligner>
         </StyledBox>
     );
 };

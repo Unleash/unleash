@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 import { Button, IconButton, styled } from '@mui/material';
 import CloseOutlined from '@mui/icons-material/CloseOutlined';
 
@@ -156,6 +156,7 @@ export const SplashPageOperators = () => {
                             })}
                             variant='contained'
                             component={Link}
+                            nativeButton={false}
                             to='/'
                         >
                             Fine, whatever, I have work to do!

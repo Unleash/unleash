@@ -1,5 +1,6 @@
 import {
     BAD_REQUEST,
+    CONFLICT,
     FORBIDDEN,
     NOT_FOUND,
     UNAUTHORIZED,
@@ -70,6 +71,18 @@ export class NotFoundError extends Error {
     }
 }
 
+export class ConflictError extends Error {
+    statusCode: number;
+    body: IErrorBody;
+
+    constructor(statusCode: number = CONFLICT, body: IErrorBody = {}) {
+        super(getErrorMessage(body) || 'Conflict');
+        this.name = 'ConflictError';
+        this.statusCode = statusCode;
+        this.body = body;
+    }
+}
+
 export class ResponseError extends Error {
     status: number;
     body: unknown;
@@ -85,4 +98,27 @@ export class ResponseError extends Error {
 export const headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
+};
+
+export type ApiErrorCategory =
+    | 'validation'
+    | 'permission'
+    | 'not-found'
+    | 'conflict'
+    | 'unavailable'
+    | 'server'
+    | 'network'
+    | 'unknown';
+
+// Low-cardinality bucket for analytics props; never expose the error message.
+export const apiErrorCategory = (error: unknown): ApiErrorCategory => {
+    if (error instanceof BadRequestError) return 'validation';
+    if (error instanceof AuthenticationError || error instanceof ForbiddenError)
+        return 'permission';
+    if (error instanceof NotFoundError) return 'not-found';
+    if (error instanceof ConflictError) return 'conflict';
+    if (error instanceof UnavailableError) return 'unavailable';
+    if (error instanceof ResponseError) return 'server';
+    if (error instanceof TypeError) return 'network';
+    return 'unknown';
 };

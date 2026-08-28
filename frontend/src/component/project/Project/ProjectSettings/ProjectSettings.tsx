@@ -4,7 +4,7 @@ import {
     Routes,
     useLocation,
     useNavigate,
-} from 'react-router-dom';
+} from 'react-router';
 import {
     type ITab,
     VerticalTabs,
@@ -22,6 +22,13 @@ import { Box, styled } from '@mui/material';
 import { ProjectActions } from './ProjectActions/ProjectActions.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ProjectContextFields } from './ProjectContextFields.tsx';
+import { ProjectReleaseTemplates } from './ProjectReleaseTemplates/ProjectReleaseTemplates.tsx';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam.ts';
+import { useHasRootAccess } from 'hooks/useHasAccess';
+import {
+    RELEASE_PLAN_TEMPLATE_CREATE,
+    UPDATE_PROJECT_RELEASE_TEMPLATE,
+} from '@server/types/permissions';
 
 const StyledBadgeContainer = styled(Box)({
     marginLeft: 'auto',
@@ -33,8 +40,14 @@ export const ProjectSettings = () => {
     const location = useLocation();
     const { isPro, isEnterprise } = useUiConfig();
     const navigate = useNavigate();
+    const projectId = useRequiredPathParam('projectId');
 
     const actionsEnabled = useUiFlag('automatedActions');
+    const canManageReleaseTemplates = useHasRootAccess(
+        [RELEASE_PLAN_TEMPLATE_CREATE, UPDATE_PROJECT_RELEASE_TEMPLATE],
+        projectId,
+    );
+    const showReleaseTemplatesTab = isEnterprise() && canManageReleaseTemplates;
 
     const paidTabs = (...tabs: ITab[]) =>
         isPro() || isEnterprise() ? tabs : [];
@@ -66,6 +79,14 @@ export const ProjectSettings = () => {
             id: 'environments',
             label: 'Environments',
         },
+        ...(showReleaseTemplatesTab
+            ? [
+                  {
+                      id: 'release-templates',
+                      label: 'Release templates',
+                  },
+              ]
+            : []),
         {
             id: 'default-strategy',
             label: 'Default strategy',
@@ -93,8 +114,9 @@ export const ProjectSettings = () => {
         });
     }
 
+    const toTabPath = (id: string) => `/projects/${projectId}/settings/${id}`;
     const onChange = (tab: ITab) => {
-        navigate(tab.id);
+        navigate(toTabPath(tab.id));
     };
 
     return (
@@ -118,6 +140,10 @@ export const ProjectSettings = () => {
                 <Route path='context/*' element={<ProjectContextFields />} />
                 <Route path='segments/*' element={<ProjectSegments />} />
                 <Route
+                    path='release-templates/*'
+                    element={<ProjectReleaseTemplates />}
+                />
+                <Route
                     path='change-requests/*'
                     element={<ChangeRequestConfiguration />}
                 />
@@ -129,7 +155,7 @@ export const ProjectSettings = () => {
                 <Route path='actions/*' element={<ProjectActions />} />
                 <Route
                     path='*'
-                    element={<Navigate replace to={tabs[0].id} />}
+                    element={<Navigate replace to={toTabPath(tabs[0].id)} />}
                 />
             </Routes>
         </VerticalTabs>

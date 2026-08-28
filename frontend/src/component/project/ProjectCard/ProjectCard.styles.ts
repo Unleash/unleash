@@ -59,3 +59,19 @@ export const StyledProjectCardContent = styled('div')(({ theme }) => ({
     justifyContent: 'space-between',
     fontSize: theme.fontSizes.smallerBody,
 }));
+
+export const StyledProjectCardFooter = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    background: theme.palette.background.elevation1,
+    boxShadow: theme.boxShadows.accordionFooter,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderTop: `1px solid ${theme.palette.divider}`,
+    paddingInline: theme.spacing(2),
+    paddingBlock: theme.spacing(1.5),
+}));
+
+export const StyledSubtitle = styled('span')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: theme.fontSizes.smallerBody,
+}));

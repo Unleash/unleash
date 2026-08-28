@@ -1,14 +1,7 @@
-import {
-    Alert,
-    AlertTitle,
-    Button,
-    styled,
-    TextField,
-    Typography,
-} from '@mui/material';
+import { Alert, AlertTitle, Button, styled, Typography } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { type SyntheticEvent, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import useLoading from 'hooks/useLoading';
 import { FORGOTTEN_PASSWORD_FIELD } from 'utils/testIds';
 import { formatApiPath } from 'utils/formatPath';
@@ -16,6 +9,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import OrDivider from '../common/OrDivider';
 import { AuthPageLayout } from '../common/AuthPageLayout';
 import { AuthSuccessIcon } from '../common/AuthSuccessIcon';
+import Input from 'component/common/Input/Input';
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
     fontSize: theme.typography.h2.fontSize,
@@ -150,10 +144,10 @@ const ForgottenPassword = () => {
                             </Typography>
                         }
                     />
-                    <TextField
+                    <Input
                         label='Email'
-                        variant='outlined'
-                        size='small'
+                        size='large'
+                        fullWidth
                         type='email'
                         data-testid={FORGOTTEN_PASSWORD_FIELD}
                         value={email}
@@ -175,6 +169,7 @@ const ForgottenPassword = () => {
                     <Button
                         variant='outlined'
                         component={Link}
+                        nativeButton={false}
                         to='/login'
                         fullWidth
                     >

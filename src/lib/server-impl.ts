@@ -25,7 +25,7 @@ import {
     type IUnleashServices,
     type PatService,
 } from './services/index.js';
-import { defaultLockKey, defaultTimeout, withDbLock } from './util/db-lock.js';
+import { withDbLock } from './util/db-lock.js';
 import { scheduleServices } from './features/scheduler/schedule-services.js';
 import { compareAndLogPostgresVersion } from './util/postgres-version-checker.js';
 import {
@@ -44,6 +44,7 @@ import { CRUDStore } from './db/crud/crud-store.js';
 import type { CrudStoreConfig } from './db/crud/crud-store.js';
 import { type Logger, LogLevel, type LogProvider } from './logger.js';
 import { ImportTogglesStore } from './features/export-import-toggles/import-toggles-store.js';
+import Addon from './addons/addon.js';
 import { ALL_PROJECTS, CUSTOM_ROOT_ROLE_TYPE } from './util/index.js';
 import {
     extractAuditInfoFromUser,
@@ -88,8 +89,13 @@ import type { Constraint } from 'unleash-client/lib/strategy/strategy.js';
 import {
     type ClientFeatureToggleDelta,
     type DeltaEvent,
+    type EnvironmentVisibleRevisionState,
     UPDATE_DELTA,
 } from './features/client-feature-toggles/delta/client-feature-toggle-delta.js';
+import {
+    getReferencedSegmentIds,
+    getVisibleRevision,
+} from './features/client-feature-toggles/delta/visible-revision.js';
 import type { IQueryParam } from './features/feature-toggle/types/feature-toggle-strategies-store-type.js';
 import {
     applyGenericQueryParams,
@@ -102,6 +108,8 @@ import {
     createContextService,
     createEnvironmentService,
     createEventsService,
+    createPatService,
+    createUserService,
     createFakeInstanceStatsService,
     createFakeProjectService,
     createFeatureToggleService,
@@ -114,18 +122,24 @@ import {
     IMPACT_METRICS_QUERY_TIME,
     findParam,
     conditionalMiddleware,
+    requireFeatureEnabled,
     createPlaygroundService,
     createSegmentService,
+    createSettingService,
     createFakeEventsService,
     createFakeFeatureToggleService,
     createFakeSegmentService,
+    createFakeSettingService,
     createDependentFeaturesService,
     createFakeDependentFeaturesService,
     createFakeAccessService,
     corsOriginMiddleware,
     impactRegister,
+    EXTERNAL_SOURCE_SETTING_KEY,
+    type ExternalImpactMetricsSource,
 } from './internals.js';
 import SessionStore from './db/session-store.js';
+import { createRateLimitMiddleware } from './middleware/rate-limit-middleware.js';
 import metricsHelper from './util/metrics-helper.js';
 import type { ReleasePlanMilestoneStrategyWriteModel } from './features/release-plans/release-plan-milestone-strategy-store.js';
 import type { ReleasePlanMilestoneStrategyService } from './features/release-plans/release-plan-milestone-strategy-service.js';
@@ -151,8 +165,10 @@ import {
     createHistogram,
 } from './util/metrics/index.js';
 import FakeEventStore from '../test/fixtures/fake-event-store.js';
+import { FakeAccountStore } from '../test/fixtures/fake-account-store.js';
 import type { Subscriber } from './features/user-subscriptions/user-subscriptions-read-model-type.js';
 import { UserSubscriptionsReadModel } from './features/user-subscriptions/user-subscriptions-read-model.js';
+import { AccountStore } from './db/account-store.js';
 import { FakeUserSubscriptionsReadModel } from './features/user-subscriptions/fake-user-subscriptions-read-model.js';
 import type { IPrivateProjectChecker } from './features/private-project/privateProjectCheckerType.js';
 import type { ProjectAccess } from './features/private-project/privateProjectStore.js';
@@ -246,6 +262,17 @@ export type UnleashFactoryMethods = {
     createSessionDb: (config: IUnleashConfig, db: Db) => RequestHandler;
     createMetricsMonitor: () => MetricsMonitor;
 };
+
+async function waitForFlagResolverReady(
+    config: IUnleashConfig,
+    logger: Logger,
+) {
+    logger.info('Waiting for flag resolver to be ready...');
+    const start = Date.now();
+    await config.flagResolver.ready;
+    logger.info(`Flag resolver is ready after ${Date.now() - start}ms`);
+}
+
 export async function createApp(
     config: IUnleashConfig,
     startApp: boolean,
@@ -258,6 +285,7 @@ export async function createApp(
     },
 ): Promise<IUnleash> {
     const logger = config.getLogger('server-impl.js');
+    await waitForFlagResolverReady(config, logger);
 
     // Surface unhandled promise rejections to logs so they don't crash the process
     process.on('unhandledRejection', (reason: unknown) => {
@@ -384,6 +412,8 @@ async function start(
     const logger = config.getLogger('server-impl.js');
 
     try {
+        await waitForFlagResolverReady(config, logger);
+
         if (config.db.disableMigration) {
             logger.info('DB migration: disabled');
         } else {
@@ -391,11 +421,7 @@ async function start(
                 logger.info('DB migration: start');
                 if (config.flagResolver.isEnabled('migrationLock')) {
                     logger.info('Running migration with lock');
-                    const lock = withDbLock(config.db, {
-                        lockKey: defaultLockKey,
-                        timeout: defaultTimeout,
-                        logger,
-                    });
+                    const lock = withDbLock(config.db, { logger });
                     await lock(migrateDb)(config);
                 } else {
                     logger.info('Running migration without lock');
@@ -433,6 +459,8 @@ async function create(
     const logger = config.getLogger('server-impl.js');
 
     try {
+        await waitForFlagResolverReady(config, logger);
+
         if (config.db.disableMigration) {
             logger.info('DB migrations disabled');
         } else {
@@ -479,10 +507,14 @@ export {
     getVariantValue,
     UPDATE_DELTA,
     UPDATE_REVISION,
+    getReferencedSegmentIds,
+    getVisibleRevision,
     applyGenericQueryParams,
     normalizeQueryParams,
     parseSearchOperatorValue,
     createEventsService,
+    createPatService,
+    createUserService,
     SessionStore,
     createAccessService,
     metricsHelper,
@@ -508,6 +540,8 @@ export {
     createHistogram,
     UserSubscriptionsReadModel,
     FakeUserSubscriptionsReadModel,
+    AccountStore,
+    FakeAccountStore,
     FakePrivateProjectChecker,
     FakeChangeRequestAccessReadModel,
     createFakeProjectReadModel,
@@ -532,6 +566,7 @@ export {
     FeatureTagStore,
     ExportImportController,
     conditionalMiddleware,
+    requireFeatureEnabled,
     DELTA_EVENT_TYPES,
     createKnexTransactionStarter,
     createPlaygroundService,
@@ -542,6 +577,8 @@ export {
     createFakeAccessReadModel,
     createFakeSegmentService,
     createSegmentService,
+    createFakeSettingService,
+    createSettingService,
     createFakeFeatureToggleService,
     createFakeEventsService,
     createDependentFeaturesService,
@@ -549,17 +586,21 @@ export {
     getProjectDefaultStrategy,
     getDefaultStrategy,
     corsOriginMiddleware,
+    createRateLimitMiddleware,
     ApiTokenType,
     impactRegister,
+    EXTERNAL_SOURCE_SETTING_KEY,
     EnvironmentStore,
     ProjectStore,
     defaultMetricsRegister,
+    Addon,
 };
 
 export type {
     Db,
     Row,
     CrudStoreConfig,
+    ExternalImpactMetricsSource,
     IUnleashConfig,
     IUnleashOptions,
     IUnleashServices,
@@ -587,6 +628,7 @@ export type {
     Constraint,
     ClientFeatureToggleDelta,
     DeltaEvent,
+    EnvironmentVisibleRevisionState,
     IQueryParam,
     PatService,
     IRoleWithPermissions,

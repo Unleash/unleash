@@ -3,9 +3,10 @@ import { StyledAutofillTextField } from 'component/user/StyledAutofillTextField'
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import type React from 'react';
-import { useState, type VFC } from 'react';
+import { useState, type FC } from 'react';
+import { FormField } from 'component/common/FormField/FormField';
 
-const PasswordField: VFC<TextFieldProps> = ({ ...rest }) => {
+const PasswordField: FC<TextFieldProps> = ({ label, value, ...rest }) => {
     const [showPassword, setShowPassword] = useState(false);
 
     const handleClickShowPassword = () => {
@@ -21,30 +22,40 @@ const PasswordField: VFC<TextFieldProps> = ({ ...rest }) => {
     const IconComponent = showPassword ? Visibility : VisibilityOff;
     const iconTitle = 'Toggle password visibility';
 
-    return (
+    const field = (
         <StyledAutofillTextField
             variant='outlined'
-            size='small'
+            size='large'
+            fullWidth={Boolean(label)}
+            value={value}
             type={showPassword ? 'text' : 'password'}
-            InputProps={{
-                style: {
-                    paddingRight: '0px',
+            slotProps={{
+                input: {
+                    style: {
+                        paddingRight: '0px',
+                    },
+                    endAdornment: (
+                        <InputAdornment position='end'>
+                            <IconButton
+                                onClick={handleClickShowPassword}
+                                onMouseDown={handleMouseDownPassword}
+                                size='large'
+                            >
+                                <IconComponent titleAccess={iconTitle} />
+                            </IconButton>
+                        </InputAdornment>
+                    ),
                 },
-                endAdornment: (
-                    <InputAdornment position='end'>
-                        <IconButton
-                            onClick={handleClickShowPassword}
-                            onMouseDown={handleMouseDownPassword}
-                            size='large'
-                        >
-                            <IconComponent titleAccess={iconTitle} />
-                        </IconButton>
-                    </InputAdornment>
-                ),
             }}
             {...rest}
         />
     );
+
+    if (!label) {
+        return field;
+    }
+
+    return <FormField label={label}>{field}</FormField>;
 };
 
 export default PasswordField;

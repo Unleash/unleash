@@ -15,10 +15,10 @@ import { CopyStrategyIconMenu } from './StrategyItem/CopyStrategyIconMenu/CopySt
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import Edit from '@mui/icons-material/Edit';
 import MenuStrategyRemove from './StrategyItem/MenuStrategyRemove/MenuStrategyRemove.tsx';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { UPDATE_FEATURE_STRATEGY } from '@server/types/permissions';
 import { StrategyDraggableItem } from './StrategyDraggableItem.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
+import { useEventTracker } from 'hooks/useEventTracker.ts';
 
 type EditControlsProps = {
     projectId: string;
@@ -39,7 +39,7 @@ const EditControls = ({
     otherEnvironments,
     scope,
 }: EditControlsProps) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     return (
         <>
             <PermissionIconButton
@@ -47,6 +47,7 @@ const EditControls = ({
                 environmentId={environmentName}
                 projectId={projectId}
                 component={Link}
+                nativeButton={false}
                 onClick={() => {
                     if (scope === 'milestone') {
                         trackEvent('edit-milestone-strategy', {
@@ -89,11 +90,11 @@ type ProjectEnvironmentStrategyDraggableItemProps = {
     otherEnvironments?: IFeatureEnvironment['name'][];
     isDragging?: boolean;
     onDragStartRef?: (
-        ref: RefObject<HTMLDivElement>,
+        ref: RefObject<HTMLDivElement | null>,
         index: number,
     ) => DragEventHandler<HTMLButtonElement>;
     onDragOver?: (
-        ref: RefObject<HTMLDivElement>,
+        ref: RefObject<HTMLDivElement | null>,
         index: number,
     ) => DragEventHandler<HTMLDivElement>;
     onDragEnd?: () => void;

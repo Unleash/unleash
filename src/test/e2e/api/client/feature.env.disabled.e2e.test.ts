@@ -16,7 +16,17 @@ const projectId = 'default';
 
 beforeAll(async () => {
     db = await dbInit('feature_env_api_client', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {}, db.rawDatabase);
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    allowDeprecatedApiTokenMiddleware: true,
+                },
+            },
+        },
+        db.rawDatabase,
+    );
 
     await app.services.featureToggleService.createFeatureToggle(
         projectId,

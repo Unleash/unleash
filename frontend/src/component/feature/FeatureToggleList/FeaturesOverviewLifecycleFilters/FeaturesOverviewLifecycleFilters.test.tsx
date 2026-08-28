@@ -1,4 +1,11 @@
-import { type MockedFunction, vi } from 'vitest';
+import {
+    beforeEach,
+    describe,
+    expect,
+    it,
+    vi,
+    type MockedFunction,
+} from 'vitest';
 import { render } from 'utils/testRenderer';
 import userEvent from '@testing-library/user-event';
 import { FeaturesOverviewLifecycleFilters } from './FeaturesOverviewLifecycleFilters.tsx';
@@ -36,7 +43,7 @@ describe('LifecycleFilters', () => {
             <FeaturesOverviewLifecycleFilters state={{}} onChange={vi.fn()} />,
         );
 
-        expect(getByText('All lifecycles')).toBeInTheDocument();
+        expect(getByText('Active flags')).toBeInTheDocument();
         expect(getByText('Develop')).toBeInTheDocument();
         expect(getByText('Rollout production')).toBeInTheDocument();
         expect(getByText('Cleanup')).toBeInTheDocument();
@@ -47,7 +54,7 @@ describe('LifecycleFilters', () => {
             <FeaturesOverviewLifecycleFilters state={{}} onChange={vi.fn()} />,
         );
 
-        expect(getByText('All lifecycles')).toBeInTheDocument();
+        expect(getByText('Active flags')).toBeInTheDocument();
         expect(getByText('10')).toBeInTheDocument();
         expect(getByText('Develop')).toBeInTheDocument();
         expect(getByText('2')).toBeInTheDocument();
@@ -78,7 +85,7 @@ describe('LifecycleFilters', () => {
             lifecycle: { operator: 'IS', values: ['completed'] },
         });
 
-        await userEvent.click(getByText('All lifecycles'));
+        await userEvent.click(getByText('Active flags'));
         expect(onChange).toHaveBeenCalledWith({ lifecycle: null });
     });
 });

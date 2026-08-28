@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { PageContent } from 'component/common/PageContent/PageContent';
-import { Box, List, ListItem, styled } from '@mui/material';
+import { Box, List, ListItemButton, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import FeatureSettingsProject from './FeatureSettingsProject/FeatureSettingsProject.tsx';
 import { FeatureSettingsInformation } from './FeatureSettingsInformation/FeatureSettingsInformation.tsx';
@@ -40,25 +40,23 @@ export const FeatureSettings = () => {
             <Box sx={{ display: 'flex' }}>
                 <StyledListContainer>
                     <List>
-                        <ListItem
+                        <ListItemButton
                             key={0}
                             sx={{ padding: '0.75rem 2rem' }}
-                            button
                             onClick={() => setSettings(METADATA)}
                             selected={settings === METADATA}
                         >
                             Metadata
-                        </ListItem>
-                        <ListItem
+                        </ListItemButton>
+                        <ListItemButton
                             key={1}
                             sx={{ padding: '0.75rem 2rem' }}
-                            button
                             onClick={() => setSettings(PROJECT)}
                             selected={settings === PROJECT}
                             hidden={!uiConfig.flags.P}
                         >
                             Project
-                        </ListItem>
+                        </ListItemButton>
                     </List>
                 </StyledListContainer>
                 <StyledInnerBodyContainer>

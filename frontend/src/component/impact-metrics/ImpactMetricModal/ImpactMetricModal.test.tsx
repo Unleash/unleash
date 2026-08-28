@@ -1,6 +1,6 @@
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { render } from 'utils/testRenderer';
 import { ImpactMetricModal } from './ImpactMetricModal.tsx';
@@ -120,7 +120,7 @@ describe('ImpactMetricModal', () => {
         expect(onSave).toHaveBeenCalledWith({
             title: undefined,
             metricName: 'my_external_metric',
-            timeRange: 'day',
+            timeRange: 'hour',
             yAxisMin: 'auto',
             aggregationMode: 'count',
             labelSelectors: { my_custom_label: ['value1'] },

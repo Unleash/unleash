@@ -1,7 +1,7 @@
 import { AddDependencyDialogue } from 'component/feature/Dependencies/AddDependencyDialogue';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { useState } from 'react';
-import { StyledLink } from '../FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/StyledRow.tsx';
+import { QuietLink } from 'component/common/QuietLink';
 import { ExtraActions } from './ExtraActions.tsx';
 import { useDependentFeaturesApi } from 'hooks/api/actions/useDependentFeaturesApi/useDependentFeaturesApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
@@ -15,7 +15,7 @@ import useToast from 'hooks/useToast';
 import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPermissionChangeRequestEnvironment';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { VariantsTooltip } from './VariantsTooltip.tsx';
 import { styled } from '@mui/material';
 import {
@@ -31,7 +31,7 @@ const StyledPermissionButton = styled(PermissionButton)(({ theme }) => ({
 }));
 
 const useDeleteDependency = (project: string, featureId: string) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { addChange } = useChangeRequestApi();
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(project);
@@ -116,7 +116,7 @@ export const DependencyRow = ({ feature }: IDependencyRowProps) => {
                     </StyledMetaDataItemLabel>
                     <div>
                         <StyledPermissionButton
-                            size='small'
+                            size='medium'
                             permission={UPDATE_FEATURE_DEPENDENCY}
                             projectId={feature.project}
                             variant='text'
@@ -135,13 +135,13 @@ export const DependencyRow = ({ feature }: IDependencyRowProps) => {
                         Dependency:
                     </StyledMetaDataItemLabel>
                     <StyledMetaDataItemValue>
-                        <StyledLink
+                        <QuietLink
                             to={`/projects/${feature.project}/features/${feature.dependencies[0]?.feature}`}
                         >
                             <Truncator title={feature.dependencies[0]?.feature}>
                                 {feature.dependencies[0]?.feature}
                             </Truncator>
-                        </StyledLink>
+                        </QuietLink>
                         {checkAccess(UPDATE_FEATURE_DEPENDENCY, environment) ? (
                             <ExtraActions
                                 capabilityId='dependency'
@@ -162,7 +162,7 @@ export const DependencyRow = ({ feature }: IDependencyRowProps) => {
                 </StyledMetaDataItem>
             ) : null}
             {hasParentDependency &&
-            Boolean(feature.dependencies[0]?.variants?.length) ? (
+            feature.dependencies[0]?.variants?.length ? (
                 <StyledMetaDataItem>
                     <StyledMetaDataItemLabel>
                         Dependency value:

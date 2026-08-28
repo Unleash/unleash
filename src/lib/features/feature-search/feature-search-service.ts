@@ -93,6 +93,14 @@ export class FeatureSearchService {
             if (parsed) queryParams.push(parsed);
         }
 
+        if (params.lifecycle) {
+            const parsed = parseSearchOperatorValue(
+                'lifecycle.latest_stage',
+                params.lifecycle,
+            );
+            if (parsed) queryParams.push(parsed);
+        }
+
         ['tag', 'segment', 'project'].forEach((field) => {
             if (params[field]) {
                 const parsed = parseSearchOperatorValue(field, params[field]);

@@ -2,12 +2,15 @@ import type {
     IReleasePlanTemplate,
     IReleasePlanTemplatePayload,
 } from 'interfaces/releasePlans';
+import { releaseTemplatesApiPath } from '../../getters/useReleasePlanTemplates/releaseTemplatesApiPath.js';
 import useAPI from '../useApi/useApi.js';
 
-export const useReleasePlanTemplatesApi = () => {
-    const { makeRequest, createRequest } = useAPI({
+export const useReleasePlanTemplatesApi = (projectId?: string) => {
+    const { makeRequest, createRequest, loading } = useAPI({
         propagateErrors: true,
     });
+
+    const basePath = releaseTemplatesApiPath(projectId);
 
     const deleteReleasePlanTemplate = async (id: string) => {
         const requestId = 'deleteReleasePlanTemplate';
@@ -27,9 +30,8 @@ export const useReleasePlanTemplatesApi = () => {
         template: IReleasePlanTemplatePayload,
     ): Promise<IReleasePlanTemplate> => {
         const requestId = 'createReleasePlanTemplate';
-        const path = 'api/admin/release-plan-templates';
         const req = createRequest(
-            path,
+            basePath,
             {
                 method: 'POST',
                 body: JSON.stringify(template),
@@ -46,7 +48,7 @@ export const useReleasePlanTemplatesApi = () => {
         template: IReleasePlanTemplatePayload,
     ) => {
         const requestId = 'updateReleasePlanTemplate';
-        const path = `api/admin/release-plan-templates/${templateId}`;
+        const path = `${basePath}/${templateId}`;
         const req = createRequest(
             path,
             {
@@ -61,7 +63,7 @@ export const useReleasePlanTemplatesApi = () => {
 
     const archiveReleasePlanTemplate = async (templateId: string) => {
         const requestId = 'updateReleasePlanTemplate';
-        const path = `api/admin/release-plan-templates/archive/${templateId}`;
+        const path = `${basePath}/archive/${templateId}`;
         const req = createRequest(
             path,
             {
@@ -78,6 +80,7 @@ export const useReleasePlanTemplatesApi = () => {
         updateReleasePlanTemplate,
         createReleasePlanTemplate,
         archiveReleasePlanTemplate,
+        loading,
     };
 };
 

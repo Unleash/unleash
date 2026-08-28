@@ -1,6 +1,7 @@
 import type { Operator } from 'constants/operators';
 import type { IFeatureVariant } from './featureToggle.js';
 import { constraintId } from 'constants/constraintId.js';
+import type { ParametersSchema } from 'openapi/index.js';
 
 export interface IFeatureStrategy {
     id: string;
@@ -9,7 +10,7 @@ export interface IFeatureStrategy {
     name: string;
     title?: string;
     constraints: IConstraint[];
-    parameters: IFeatureStrategyParameters;
+    parameters: ParametersSchema;
     variants?: IFeatureVariant[];
     featureName?: string;
     projectId?: string;
@@ -19,26 +20,11 @@ export interface IFeatureStrategy {
     sortOrder?: number;
 }
 
-export type StrategyFormState = Partial<IFeatureStrategy> &
-    Required<Pick<IFeatureStrategy, 'name'>>;
-
-export interface IFeatureStrategyParameters {
-    [key: string]: string | number | undefined;
-}
-
-/**
- * @deprecated use `FeatureStrategySchema` from openapi
- */
-export interface IFeatureStrategyPayload {
-    id?: string;
-    name?: string;
-    title?: string;
-    constraints: IConstraint[];
-    parameters: IFeatureStrategyParameters;
-    variants?: IFeatureVariant[];
-    segments?: number[];
-    disabled?: boolean;
-}
+export type StrategyFormParameters = Partial<ParametersSchema>;
+export type StrategyFormState = Omit<Partial<IFeatureStrategy>, 'parameters'> &
+    Required<Pick<IFeatureStrategy, 'name'>> & {
+        parameters?: StrategyFormParameters;
+    };
 
 export interface IStrategy {
     name: string;

@@ -1,5 +1,6 @@
+import { beforeEach, expect, test } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 import { SWRConfig } from 'swr';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { setLocalStorageItem } from 'utils/storage';

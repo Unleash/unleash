@@ -19,14 +19,4 @@ export interface FeatureTagSchema {
     tagType?: string;
     /** The value of the tag */
     tagValue: string;
-    /**
-     * The [type](https://docs.getunleash.io/concepts/feature-flags#tags) of the tag. This property is deprecated and will be removed in a future version of Unleash. Superseded by the `tagType` property.
-     * @deprecated
-     */
-    type?: string;
-    /**
-     * The value of the tag. This property is deprecated and will be removed in a future version of Unleash. Superseded by the `tagValue` property.
-     * @deprecated
-     */
-    value?: string;
 }

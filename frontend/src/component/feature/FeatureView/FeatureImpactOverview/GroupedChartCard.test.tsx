@@ -1,5 +1,5 @@
 import { screen, waitFor } from '@testing-library/react';
-import { vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { GroupedChartCard } from './GroupedChartCard';

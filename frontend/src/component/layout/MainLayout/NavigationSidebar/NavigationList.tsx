@@ -1,4 +1,4 @@
-import type { ComponentProps, FC } from 'react';
+import type { ComponentProps, FC, ReactNode } from 'react';
 import type { INavigationMenuItem } from 'interfaces/route';
 import type { NavigationMode } from './NavigationMode.tsx';
 import {
@@ -13,8 +13,8 @@ import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
 import { AdminMenuNavigation } from '../AdminMenu/AdminNavigationItems.tsx';
 import { ConfigurationAccordion } from './ConfigurationAccordion.tsx';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
-import { NewFeatureBadge } from 'component/layout/components/NewFeatureBadge/NewFeatureBadge.tsx';
-import { useRoutes } from './useRoutes.ts';
+import { Badge } from 'component/common/Badge/Badge.tsx';
+import { PendingAccessRequestsIndicator } from 'component/admin/users/AccessRequestsNotifications/PendingAccessRequestsIndicator.tsx';
 
 const StyledNavigationList = styled(List)(({ theme }) => ({
     display: 'flex',
@@ -47,16 +47,12 @@ export const PrimaryNavigationList: FC<{
     onClick: (activeItem: string) => void;
     activeItem?: string;
 }> = ({ mode, setMode, onClick, activeItem }) => {
-    const {
-        routes: { primaryRoutes },
-    } = useRoutes();
-    const newRoute = primaryRoutes.find((route) => route.isNew);
     const PrimaryListItem = ({
         href,
         text,
-        isNew,
+        badge,
     }: Pick<ComponentProps<typeof MenuListItem>, 'href' | 'text'> & {
-        isNew?: boolean;
+        badge?: ReactNode;
     }) => (
         <MenuListItem
             href={href}
@@ -65,20 +61,16 @@ export const PrimaryNavigationList: FC<{
             onClick={() => onClick(href)}
             selected={activeItem === href}
             mode={mode}
-            badge={
-                newRoute?.title.toLowerCase() === text.toLowerCase() ? (
-                    <NewFeatureBadge />
-                ) : null
-            }
+            badge={badge}
         />
     );
 
     const { isOss, isEnterprise } = useUiConfig();
-    const impactMetricsEnabled = useUiFlag('impactMetrics');
+    const impactViewsEnabled = useUiFlag('impactViews');
     const showChangeRequestList = isEnterprise();
 
     return (
-        <StyledNavigationList>
+        <StyledNavigationList data-public>
             <PrimaryListItem href='/personal' text='Dashboard' />
             <PrimaryListItem href='/projects' text='Projects' />
             <PrimaryListItem href='/search' text='Flags overview' />
@@ -92,8 +84,26 @@ export const PrimaryNavigationList: FC<{
             {!isOss() ? (
                 <PrimaryListItem href='/insights' text='Analytics' />
             ) : null}
-            {!isOss() && impactMetricsEnabled ? (
-                <PrimaryListItem href='/impact-metrics' text='Impact Metrics' />
+            {!isOss() && impactViewsEnabled ? (
+                <PrimaryListItem
+                    href='/impact-views'
+                    text='Impact views'
+                    badge={
+                        <Badge
+                            color='info'
+                            sx={{
+                                fontSize: '10px',
+                                py: 0,
+                                px: 0.75,
+                                height: 'auto',
+                                lineHeight: 1.4,
+                                whiteSpace: 'nowrap',
+                            }}
+                        >
+                            Beta
+                        </Badge>
+                    }
+                />
             ) : null}
             <ConfigurationAccordion
                 mode={mode}
@@ -147,6 +157,7 @@ export const AdminSettingsLink: FC<{
                 onClick={() => onClick('/admin')}
                 mode={mode}
                 icon={<IconRenderer path='/admin' />}
+                badge={<PendingAccessRequestsIndicator />}
             />
         </StyledNavigationList>
     </Box>

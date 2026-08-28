@@ -1,37 +1,15 @@
-import { ArchiveTable } from 'component/archive/ArchiveTable/ArchiveTable';
-import type { SortingRule } from 'react-table';
-import { usePageTitle } from 'hooks/usePageTitle';
-import { createLocalStorage } from 'utils/createLocalStorage';
-import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
-import { useSearchParams } from 'react-router-dom';
-
-const defaultSort: SortingRule<string> = { id: 'createdAt' };
-const { value, setValue } = createLocalStorage(
-    'FeaturesArchiveTable:v1',
-    defaultSort,
-);
+import { Navigate, useSearchParams } from 'react-router';
 
 export const FeaturesArchiveTable = () => {
-    usePageTitle('Archive');
     const [searchParams] = useSearchParams();
+    const search = searchParams.get('search');
 
-    const {
-        features: archivedFeatures,
-        loading,
-        refetch,
-    } = useFeatureSearch({
-        query: searchParams.get('search') || undefined,
-        archived: 'IS:true',
-    });
+    const params = new URLSearchParams(searchParams);
+    if (search) {
+        params.set('query', search);
+        params.delete('search');
+    }
+    params.set('lifecycle', 'IS:archived');
 
-    return (
-        <ArchiveTable
-            title='Archive'
-            archivedFeatures={archivedFeatures}
-            loading={loading}
-            storedParams={value}
-            setStoredParams={setValue}
-            refetch={refetch}
-        />
-    );
+    return <Navigate to={`/search?${params.toString()}`} replace />;
 };

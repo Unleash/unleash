@@ -9,11 +9,7 @@ import {
     Typography,
     styled,
 } from '@mui/material';
-import type {
-    IFeatureStrategyParameters,
-    IStrategy,
-    StrategyFormState,
-} from 'interfaces/strategy';
+import type { IStrategy, StrategyFormState } from 'interfaces/strategy';
 import produce from 'immer';
 import { FeatureStrategyType } from '../FeatureStrategyType/FeatureStrategyType.tsx';
 import { FeatureStrategyConstraints } from '../FeatureStrategyConstraints/FeatureStrategyConstraints.tsx';
@@ -27,6 +23,7 @@ import { ConstraintSeparator } from 'component/common/ConstraintsList/Constraint
 import { useAssignableSegments } from 'hooks/api/getters/useSegments/useAssignableSegments.ts';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
+import type { ParametersSchema } from 'openapi/index.ts';
 
 export interface StrategyFormBodyProps<T extends StrategyFormState> {
     strategy: T;
@@ -34,10 +31,7 @@ export interface StrategyFormBodyProps<T extends StrategyFormState> {
     strategyDefinition: IStrategy;
     errors: IFormErrors;
 
-    validateParameter?: (
-        name: string,
-        value: IFeatureStrategyParameters[string],
-    ) => void;
+    validateParameter?: (name: string, value: ParametersSchema[string]) => void;
     canRenamePreexistingVariants?: boolean;
 
     alertContent?: React.ReactNode;
@@ -74,9 +68,9 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
     minHeight: '60px',
 }));
 
-const StyledTab = styled(Tab)(({ theme }) => ({
+const StyledTab = styled(Tab)({
     width: '100px',
-}));
+});
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     marginLeft: theme.spacing(1),
@@ -88,9 +82,9 @@ const StyledBox = styled(Box)(({ theme }) => ({
     marginTop: theme.spacing(3.5),
 }));
 
-const StyledDivider = styled(Divider)(({ theme }) => ({
+const StyledDivider = styled(Divider)({
     width: '100%',
-}));
+});
 
 const StyledConstraintSeparator = styled(ConstraintSeparator)({
     top: '-10px',

@@ -118,11 +118,11 @@ export const MultimetricChart: FC<MultimetricChartProps> = ({
         : [];
 
     const eventAnnotations = buildEventAnnotations(eventGroups, theme);
-    const chartOptions = buildChartOptions(
-        visibleWindow,
-        timeRange,
-        eventAnnotations,
-    );
+    const showPlaceholder = hasNoData || loading;
+
+    const chartOptions = showPlaceholder
+        ? {}
+        : buildChartOptions(visibleWindow, timeRange, eventAnnotations);
 
     const showOverlay =
         !hasNoData && !loading && visibleWindow !== null && plotArea !== null;

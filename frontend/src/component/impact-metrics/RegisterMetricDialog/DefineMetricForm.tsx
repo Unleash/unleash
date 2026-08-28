@@ -70,9 +70,11 @@ const RadioCard = ({ value, description, examples }) => {
                 <Typography id={descriptionId}>{description}</Typography>
                 <Typography
                     variant='body2'
-                    color='text.secondary'
-                    sx={{ mt: 1 }}
                     id={exampleId}
+                    sx={{
+                        color: 'text.secondary',
+                        mt: 1,
+                    }}
                 >
                     Examples: {examples}
                 </Typography>
@@ -137,19 +139,21 @@ export const DefineMetricForm = ({
                     id={metricNameInputId}
                     value={metricName}
                     onChange={(event) => setMetricName(event.target.value)}
-                    inputProps={{
-                        pattern: '^[a-zA-Z_:][a-zA-Z0-9_:]*$',
-                        title: 'The name must contain only alphanumeric characters, underscores, and colons. It must start with a letter.',
-                    }}
                     placeholder='e.g., checkout_error_count'
                     variant='outlined'
-                    size='small'
+                    size='large'
                     fullWidth
                     required
                     helperText={`Use letters, numbers, colons, and underscores. Be descriptive and specific.`}
                     sx={{
                         '.MuiFormHelperText-root': {
                             marginInline: 0,
+                        },
+                    }}
+                    slotProps={{
+                        htmlInput: {
+                            pattern: '^[a-zA-Z_:][a-zA-Z0-9_:]*$',
+                            title: 'The name must contain only alphanumeric characters, underscores, and colons. It must start with a letter.',
                         },
                     }}
                 />

@@ -23,7 +23,7 @@ import { strategyVariantSchema } from './strategy-variant-schema.js';
 import { featureDependenciesSchema } from './feature-dependencies-schema.js';
 import { dependentFeatureSchema } from './dependent-feature-schema.js';
 import { featureLinksSchema } from './feature-links-schema.js';
-import { featureLinkSchema } from './feature-link-schema.js';
+import { linkSchema } from './link-schema.js';
 import { releasePlanSafeguardSchema } from './release-plan-safeguard-schema.js';
 import { featureEnvironmentSafeguardSchema } from './feature-environment-safeguard-schema.js';
 import { metricQuerySchema } from './metric-query-schema.js';
@@ -57,7 +57,7 @@ const importTogglesSchemaComponents = {
         featureDependenciesSchema,
         dependentFeatureSchema,
         featureLinksSchema,
-        featureLinkSchema,
+        linkSchema,
         releasePlanSafeguardSchema,
         featureEnvironmentSafeguardSchema,
         metricQuerySchema,
@@ -120,7 +120,7 @@ export type ImportTogglesSchema = FromSchema<
                 featureDependenciesSchema: typeof featureDependenciesSchema;
                 dependentFeatureSchema: typeof dependentFeatureSchema;
                 featureLinksSchema: typeof featureLinksSchema;
-                featureLinkSchema: typeof featureLinkSchema;
+                linkSchema: typeof linkSchema;
                 releasePlanSafeguardSchema: typeof releasePlanSafeguardSchema;
                 metricQuerySchema: typeof metricQuerySchema;
                 safeguardTriggerConditionSchema: typeof safeguardTriggerConditionSchema;

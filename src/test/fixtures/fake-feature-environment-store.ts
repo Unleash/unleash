@@ -23,7 +23,7 @@ export default class FakeFeatureEnvironmentStore
         environment: string,
         variants: IVariant[],
     ): Promise<void> {
-        this.setVariantsToFeatureEnvironments(
+        await this.setVariantsToFeatureEnvironments(
             featureName,
             [environment],
             variants,

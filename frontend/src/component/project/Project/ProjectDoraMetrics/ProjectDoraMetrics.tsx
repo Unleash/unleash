@@ -1,22 +1,34 @@
 import { Box, Tooltip, useMediaQuery } from '@mui/material';
 import { useProjectDoraMetrics } from 'hooks/api/getters/useProjectDoraMetrics/useProjectDoraMetrics';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useMemo } from 'react';
-import { useTable, useGlobalFilter, useSortBy } from 'react-table';
+import { useMemo, useState } from 'react';
+import {
+    type ColumnDef,
+    flexRender,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
 import {
     Table,
-    SortableTableHeader,
     TableBody,
     TableCell,
     TableRow,
     TablePlaceholder,
 } from 'component/common/Table';
+import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Badge } from 'component/common/Badge/Badge';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import theme from 'themes/theme';
+
+type DoraFeatureRow = {
+    name: string;
+    timeToProduction: number;
+};
 
 const resolveDoraMetrics = (input: number) => {
     const ONE_MONTH = 30;
@@ -42,52 +54,51 @@ export const ProjectDoraMetrics = () => {
     const projectId = useRequiredPathParam('projectId');
 
     const { dora, loading } = useProjectDoraMetrics(projectId);
+    const [globalFilter, setGlobalFilter] = useState('');
 
-    const data = useMemo(() => {
+    const data = useMemo<DoraFeatureRow[]>(() => {
         if (loading) {
             return Array(5).fill({
                 name: 'Featurename',
-                timeToProduction: 'Data for production',
+                timeToProduction: 0,
             });
         }
 
         return dora.features;
     }, [dora, loading]);
 
-    const columns = useMemo(
+    const columns = useMemo<ColumnDef<DoraFeatureRow, unknown>[]>(
         () => [
             {
-                Header: 'Name',
-                accessor: 'name',
-                width: '40%',
-                Cell: ({
+                id: 'name',
+                header: 'Name',
+                accessorKey: 'name',
+                cell: ({
                     row: {
                         original: { name },
                     },
-                }: any) => {
-                    return (
-                        <Box
-                            data-loading
-                            sx={{
-                                pl: 2,
-                                pr: 1,
-                                paddingTop: 2,
-                                paddingBottom: 2,
-                                display: 'flex',
-                                alignItems: 'center',
-                            }}
-                        >
-                            {name}
-                        </Box>
-                    );
-                },
-                sortType: 'alphanumeric',
+                }) => (
+                    <Box
+                        data-loading
+                        sx={{
+                            pl: 2,
+                            pr: 1,
+                            paddingTop: 2,
+                            paddingBottom: 2,
+                            display: 'flex',
+                            alignItems: 'center',
+                        }}
+                    >
+                        {name}
+                    </Box>
+                ),
+                sortingFn: 'alphanumeric',
+                meta: { width: '40%' },
             },
             {
-                Header: 'Time to production',
                 id: 'timetoproduction',
-                align: 'center',
-                Cell: ({ row: { original } }: any) => (
+                header: 'Time to production',
+                cell: ({ row: { original } }) => (
                     <Tooltip
                         title='The time from the feature flag of type release was created until it was turned on in a production environment'
                         arrow
@@ -100,15 +111,14 @@ export const ProjectDoraMetrics = () => {
                         </Box>
                     </Tooltip>
                 ),
-                width: 200,
-                disableGlobalFilter: true,
-                disableSortBy: true,
+                enableGlobalFilter: false,
+                enableSorting: false,
+                meta: { width: 200, align: 'center' },
             },
             {
-                Header: `Deviation`,
                 id: 'deviation',
-                align: 'center',
-                Cell: ({ row: { original } }: any) => (
+                header: 'Deviation',
+                cell: ({ row: { original } }) => (
                     <Tooltip
                         title={`Deviation from project average. Average for this project is: ${
                             dora.projectAverage || 0
@@ -128,15 +138,14 @@ export const ProjectDoraMetrics = () => {
                         </Box>
                     </Tooltip>
                 ),
-                width: 300,
-                disableGlobalFilter: true,
-                disableSortBy: true,
+                enableGlobalFilter: false,
+                enableSorting: false,
+                meta: { width: 300, align: 'center' },
             },
             {
-                Header: 'DORA',
                 id: 'dora',
-                align: 'center',
-                Cell: ({ row: { original } }: any) => (
+                header: 'DORA',
+                cell: ({ row: { original } }) => (
                     <Tooltip
                         title='Dora score. High = less than a week to production. Medium = less than a month to production. Low = Less than 6 months to production'
                         arrow
@@ -149,43 +158,36 @@ export const ProjectDoraMetrics = () => {
                         </Box>
                     </Tooltip>
                 ),
-                width: 200,
-                disableGlobalFilter: true,
-                disableSortBy: true,
+                enableGlobalFilter: false,
+                enableSorting: false,
+                meta: { width: 200, align: 'center' },
             },
         ],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [JSON.stringify(dora.features), loading],
     );
 
     const initialState = useMemo(
         () => ({
-            sortBy: [{ id: 'name', desc: false }],
+            sorting: [{ id: 'name', desc: false }],
         }),
         [],
     );
 
     const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        rows,
-        prepareRow,
+    const table = useReactTable({
+        columns,
+        data,
+        initialState,
         state: { globalFilter },
-        setHiddenColumns,
-    } = useTable(
-        {
-            columns: columns as any[], // TODO: fix after `react-table` v8 update
-            data,
-            initialState,
-            autoResetGlobalFilter: false,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-        },
-        useGlobalFilter,
-        useSortBy,
-    );
+        onGlobalFilterChange: setGlobalFilter,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+    });
 
     useConditionallyHiddenColumns(
         [
@@ -194,9 +196,11 @@ export const ProjectDoraMetrics = () => {
                 columns: ['deviation'],
             },
         ],
-        setHiddenColumns,
+        table.setColumnVisibility,
         columns,
     );
+
+    const rows = table.getRowModel().rows;
 
     return (
         <>
@@ -208,27 +212,21 @@ export const ProjectDoraMetrics = () => {
                     />
                 }
             >
-                <Table {...getTableProps()}>
-                    <SortableTableHeader headerGroups={headerGroups} />
-                    <TableBody {...getTableBodyProps()}>
-                        {rows.map((row) => {
-                            prepareRow(row);
-                            const { key, ...rowProps } = row.getRowProps();
-                            return (
-                                <TableRow hover key={key} {...rowProps}>
-                                    {row.cells.map((cell) => {
-                                        const { key, ...cellProps } =
-                                            cell.getCellProps();
-
-                                        return (
-                                            <TableCell key={key} {...cellProps}>
-                                                {cell.render('Cell')}
-                                            </TableCell>
-                                        );
-                                    })}
-                                </TableRow>
-                            );
-                        })}
+                <Table>
+                    <SortableTableHeader tableInstance={table} />
+                    <TableBody>
+                        {rows.map((row) => (
+                            <TableRow hover key={row.id}>
+                                {row.getVisibleCells().map((cell) => (
+                                    <TableCell key={cell.id}>
+                                        {flexRender(
+                                            cell.column.columnDef.cell,
+                                            cell.getContext(),
+                                        )}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        ))}
                     </TableBody>
                 </Table>
                 <ConditionallyRender

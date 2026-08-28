@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { calculateDateRange, type RangeType } from './calculateDateRange.js';
 
 describe('calculateDateRange', () => {

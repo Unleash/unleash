@@ -15,13 +15,13 @@ const USER_LOGIN = 'user-login' as const;
 const EXCEEDS_LIMIT = 'exceeds-limit' as const;
 const REQUEST_ORIGIN = 'request_origin' as const;
 const ADDON_EVENTS_HANDLED = 'addon-event-handled' as const;
+const AUTH_LOGIN_COMPLETED = 'auth-login-completed' as const;
 const CLIENT_METRICS_NAMEPREFIX = 'client-api-nameprefix';
 const CLIENT_METRICS_TAGS = 'client-api-tags';
 const CLIENT_METRICS_PROJECT = 'client-api-project';
-const CLIENT_FEATURES_MEMORY = 'client_features_memory';
-const CLIENT_DELTA_MEMORY = 'client_delta_memory';
 const CLIENT_REGISTERED = 'client_registered';
 const IMPACT_METRICS_QUERY_TIME = 'impact_metrics_query_time';
+const TOKEN_CACHE_LOOKUP = 'token_cache_lookup';
 
 type MetricEvent =
     | typeof REQUEST_TIME
@@ -41,9 +41,8 @@ type MetricEvent =
     | typeof CLIENT_METRICS_NAMEPREFIX
     | typeof CLIENT_METRICS_TAGS
     | typeof CLIENT_METRICS_PROJECT
-    | typeof CLIENT_FEATURES_MEMORY
-    | typeof CLIENT_DELTA_MEMORY
-    | typeof IMPACT_METRICS_QUERY_TIME;
+    | typeof IMPACT_METRICS_QUERY_TIME
+    | typeof TOKEN_CACHE_LOOKUP;
 
 type RequestOriginEventPayload = {
     type: 'UI' | 'API';
@@ -63,9 +62,19 @@ type ClientMetricsProjectPayload = {
     projects: string[];
 };
 
+type TokenCacheName = 'api-token-v1' | 'api-token-v2';
+
+type TokenLookupResult = 'hit' | 'miss' | 'throttled';
+
+type TokenCacheLookupPayload = {
+    cache: TokenCacheName;
+    result: TokenLookupResult;
+};
+
 type MetricEventPayloads = {
     [key: string]: unknown;
     [REQUEST_ORIGIN]: RequestOriginEventPayload;
+    [TOKEN_CACHE_LOOKUP]: TokenCacheLookupPayload;
     [CLIENT_METRICS_NAMEPREFIX]: ClientMetricsNamePrefixPayload;
     [CLIENT_METRICS_TAGS]: ClientMetricsTagsPayload;
     [CLIENT_METRICS_PROJECT]: ClientMetricsProjectPayload;
@@ -107,15 +116,17 @@ export {
     EXCEEDS_LIMIT,
     REQUEST_ORIGIN,
     ADDON_EVENTS_HANDLED,
+    AUTH_LOGIN_COMPLETED,
     CLIENT_METRICS_NAMEPREFIX,
     CLIENT_METRICS_TAGS,
     CLIENT_METRICS_PROJECT,
-    CLIENT_FEATURES_MEMORY,
-    CLIENT_DELTA_MEMORY,
     CLIENT_REGISTERED,
     IMPACT_METRICS_QUERY_TIME,
+    TOKEN_CACHE_LOOKUP,
     type MetricEvent,
     type MetricEventPayload,
+    type TokenCacheName,
+    type TokenLookupResult,
     emitMetricEvent,
     onMetricEvent,
 };

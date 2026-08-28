@@ -1,5 +1,5 @@
 import type React from 'react';
-import { StyledInput, StyledInputDescription } from '../ApiTokenForm.styles';
+import { StyledInput } from '../ApiTokenForm.styles';
 import type { ApiTokenFormErrorType } from '../useApiTokenForm.ts';
 
 interface ITokenInfoProps {
@@ -17,9 +17,6 @@ export const TokenInfo = ({
 }: ITokenInfoProps) => {
     return (
         <>
-            <StyledInputDescription>
-                What would you like to call this token?
-            </StyledInputDescription>
             <StyledInput
                 value={tokenName}
                 name='tokenName'

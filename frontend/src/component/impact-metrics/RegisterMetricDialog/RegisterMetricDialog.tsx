@@ -11,6 +11,7 @@ import {
 import { DefineMetricForm } from './DefineMetricForm';
 import { SuccessView } from './SuccessView';
 import { MetricDefinitionSidebar } from './InfoSidebar';
+import { useTrackRegisterImpactMetrics } from './useTrackRegisterImpactMetrics';
 
 type RegisterMetricDialogProps = {
     open: boolean;
@@ -96,6 +97,7 @@ const InnerDialog = ({ onClose }: Omit<RegisterMetricDialogProps, 'open'>) => {
         stage: 'define',
     });
     const formId = useId();
+    const { trackMetricCreated } = useTrackRegisterImpactMetrics();
 
     return (
         <StyledDialog open={true} onClose={onClose}>
@@ -105,11 +107,16 @@ const InnerDialog = ({ onClose }: Omit<RegisterMetricDialogProps, 'open'>) => {
                         <Typography variant='h1' component='h3'>
                             Create an impact metric
                         </Typography>
-                        <Typography variant='body2' color='text.secondary'>
+                        <Typography
+                            variant='body2'
+                            sx={{
+                                color: 'text.secondary',
+                            }}
+                        >
                             Follow this setup guide to implement and verify your
                             impact metric.{' '}
                             <Link
-                                href='https://docs.getunleash.io/reference/impact-metrics'
+                                href='https://docs.getunleash.io/concepts/impact-metrics'
                                 target='_blank'
                                 rel='noopener noreferrer'
                             >
@@ -127,7 +134,9 @@ const InnerDialog = ({ onClose }: Omit<RegisterMetricDialogProps, 'open'>) => {
                                 </Typography>
                                 <Typography
                                     variant='body2'
-                                    color='text.secondary'
+                                    sx={{
+                                        color: 'text.secondary',
+                                    }}
                                 >
                                     Start by choosing a name and type for your
                                     metric. This will help you track the right
@@ -141,6 +150,7 @@ const InnerDialog = ({ onClose }: Omit<RegisterMetricDialogProps, 'open'>) => {
                                         stage: 'success',
                                         metricName,
                                     });
+                                    trackMetricCreated();
                                 }}
                             />
                         </>

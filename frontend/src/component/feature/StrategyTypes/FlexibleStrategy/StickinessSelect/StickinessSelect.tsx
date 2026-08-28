@@ -9,26 +9,35 @@ import {
 } from '@mui/material';
 import { useStickinessOptions } from 'hooks/useStickinessOptions';
 import { SELECT_ITEM_ID } from 'utils/testIds';
-import type { ReactNode } from 'react';
+import { type ReactNode, useId } from 'react';
+import {
+    FormField,
+    formFieldLabelId,
+} from 'component/common/FormField/FormField';
 
 interface IStickinessSelectProps {
     label: string;
+    description?: ReactNode;
     value: string | undefined;
     onChange: (event: SelectChangeEvent<string>) => void;
     dataTestId?: string;
 }
 
 const StyledValueContainer = styled('div')(({ theme }) => ({
-    lineHeight: 1.1,
-    marginTop: -2,
-    marginBottom: -10,
+    display: 'flex',
+    alignItems: 'baseline',
+    gap: theme.spacing(1),
+    overflow: 'hidden',
 }));
 
 const StyledLabel = styled('div')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
+    flexShrink: 0,
 }));
 
 const StyledDescription = styled('p')(({ theme }) => ({
+    margin: 0,
+    minWidth: 0,
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.neutral.main,
     overflow: 'hidden',
@@ -44,18 +53,36 @@ const StyledDropdownDescription = styled('p')(({ theme }) => ({
     wordBreak: 'break-word',
 }));
 
-const StyledOptionContainer = styled('div')(({ theme }) => ({
+const StyledOptionContainer = styled('div')(() => ({
     lineHeight: 1.2,
     width: '100%',
 }));
 
-export const StickinessSelect = ({
+const StyledFormControl = styled(FormControl)(({ theme }) => ({
+    width: '100%',
+    marginBottom: theme.spacing(2),
+}));
+
+type StickinessSelectControlProps = {
+    label?: ReactNode;
+    id?: string;
+    value: string | undefined;
+    onChange: (event: SelectChangeEvent<string>) => void;
+    dataTestId?: string;
+};
+
+const StickinessSelectControl = ({
     label,
+    id: injectedId,
     value,
     onChange,
     dataTestId,
-}: IStickinessSelectProps) => {
+    ...props
+}: StickinessSelectControlProps) => {
     const theme = useTheme();
+    const generatedId = useId();
+    const id = injectedId ?? generatedId;
+    const labelId = formFieldLabelId(id);
     const stickinessOptions = useStickinessOptions(value);
 
     const renderValue = (selected: string): ReactNode => {
@@ -71,19 +98,19 @@ export const StickinessSelect = ({
     };
 
     return (
-        <FormControl
-            variant='outlined'
-            size='small'
-            sx={{
-                width: '100%',
-                marginBottom: theme.spacing(2),
-            }}
-        >
-            <InputLabel htmlFor='stickiness-select'>{label}</InputLabel>
+        <StyledFormControl variant='outlined' size='large'>
+            {/* TODO: remove floating-label branch when cleaning up 'topLabelInputs' flag */}
+            {label ? (
+                <InputLabel id={labelId} htmlFor={id}>
+                    {label}
+                </InputLabel>
+            ) : null}
             <Select
-                id='stickiness-select'
+                {...props}
+                id={id}
+                labelId={labelId}
                 name='stickiness'
-                label={label}
+                label={label ?? undefined}
                 value={value || ''}
                 data-testid={dataTestId}
                 onChange={onChange}
@@ -97,9 +124,11 @@ export const StickinessSelect = ({
                         vertical: 'top',
                         horizontal: 'left',
                     },
-                    PaperProps: {
-                        style: {
-                            width: '18%',
+                    slotProps: {
+                        paper: {
+                            style: {
+                                width: '18%',
+                            },
                         },
                     },
                 }}
@@ -124,6 +153,22 @@ export const StickinessSelect = ({
                     </MenuItem>
                 ))}
             </Select>
-        </FormControl>
+        </StyledFormControl>
     );
 };
+
+export const StickinessSelect = ({
+    label,
+    description,
+    value,
+    onChange,
+    dataTestId,
+}: IStickinessSelectProps) => (
+    <FormField label={label} description={description}>
+        <StickinessSelectControl
+            value={value}
+            onChange={onChange}
+            dataTestId={dataTestId}
+        />
+    </FormField>
+);

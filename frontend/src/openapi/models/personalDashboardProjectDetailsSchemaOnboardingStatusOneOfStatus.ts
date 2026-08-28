@@ -11,5 +11,6 @@ export type PersonalDashboardProjectDetailsSchemaOnboardingStatusOneOfStatus =
 export const PersonalDashboardProjectDetailsSchemaOnboardingStatusOneOfStatus =
     {
         'onboarding-started': 'onboarding-started',
+        'sdk-connected': 'sdk-connected',
         onboarded: 'onboarded',
     } as const;

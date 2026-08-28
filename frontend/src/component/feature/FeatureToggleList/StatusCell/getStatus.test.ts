@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { getStatus } from './getStatus.js';
 import { PRODUCTION } from 'constants/environmentTypes';
 import type { FeatureSearchEnvironmentSchema } from 'openapi';

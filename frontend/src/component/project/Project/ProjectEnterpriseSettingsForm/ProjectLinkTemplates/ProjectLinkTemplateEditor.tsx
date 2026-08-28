@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Button, styled, TextField } from '@mui/material';
+import { Button, styled } from '@mui/material';
 import type { ProjectLinkTemplateSchema } from 'openapi';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
+import Input from 'component/common/Input/Input';
 
 interface IProjectLinkTemplateEditorProps {
     template?: ProjectLinkTemplateSchema;
@@ -35,7 +36,7 @@ const ProjectLinkTemplateEditor = ({
         title?: string;
         url?: string;
     }>({});
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const validateTemplateForm = () => {
         const errors: { title?: string; url?: string } = {};
@@ -64,27 +65,27 @@ const ProjectLinkTemplateEditor = ({
 
     return (
         <StyledContainer>
-            <TextField
+            <Input
                 label='Title (optional)'
+                description='A descriptive name for the link'
                 fullWidth
                 value={templateTitle}
                 onChange={(e) => setTemplateTitle(e.target.value)}
                 placeholder='e.g., GitHub Issue, Ticket number'
-                helperText='A descriptive name for the link.'
-                size='small'
+                size='large'
             />
-            <TextField
+            <Input
                 label='URL Template'
+                description={
+                    templateErrors.url ||
+                    'You can optionally use placeholders {{project}} and {{feature}} that will be replaced with actual values'
+                }
                 fullWidth
                 required
                 value={templateUrl}
                 onChange={(e) => setTemplateUrl(e.target.value)}
                 placeholder='https://github.com/{{project}}/{{feature}}'
-                helperText={
-                    templateErrors.url ||
-                    'You can optionally use placeholders {{project}} and {{feature}} that will be replaced with actual values.'
-                }
-                size='small'
+                size='large'
                 error={Boolean(templateErrors.url)}
             />
             <StyledDialogActions>

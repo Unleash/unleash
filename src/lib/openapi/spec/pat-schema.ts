@@ -39,6 +39,13 @@ export const patSchema = {
             description: 'The ID of the user this PAT belongs to.',
             example: 1337,
         },
+        expiryWarning: {
+            type: 'string',
+            enum: ['expires-soon', 'expired'],
+            description:
+                'A warning about the expiration of this PAT, absent when there is nothing to warn about. `expires-soon` means the PAT is past the middle of its lifetime and expires within one of the configured `tokenExpiryNotificationDays` lead times; `expired` means it is no longer usable.',
+            example: 'expires-soon',
+        },
         ...createPatSchema.properties,
     },
     components: {

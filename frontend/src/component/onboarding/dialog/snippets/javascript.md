@@ -16,7 +16,11 @@ const unleash = new UnleashClient({
 unleash.start();
 
 setInterval(() => {
-    console.log('Is enabled', unleash.isEnabled('<YOUR_FLAG>'));
+    if (unleash.isEnabled('<YOUR_FLAG>')) {
+        console.log('<YOUR_FLAG> is enabled');
+    } else {
+        console.log('<YOUR_FLAG> is disabled');
+    }
 }, 1000);
 ```
 ---
@@ -26,9 +30,28 @@ const unleash = new UnleashClient({
     clientKey: process.env.UNLEASH_API_TOKEN,
     appName: 'unleash-onboarding-javascript',
 });
+
+setInterval(() => {
+    if (unleash.isEnabled('<YOUR_FLAG>')) {
+        console.log('<YOUR_FLAG> is enabled');
+    } else {
+        console.log('<YOUR_FLAG> is disabled');
+    }
+}, 1000);
+
 unleash.start();
 ```
 
 ---
 - [SDK repository with documentation](https://github.com/Unleash/unleash-proxy-client-js)
 - [JavaScript SDK example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/JavaScript)
+
+---
+
+```js
+if (unleash.isEnabled('<YOUR_FLAG>')) {
+    console.log('<YOUR_FLAG> is enabled');
+} else {
+    console.log('<YOUR_FLAG> is disabled');
+}
+```

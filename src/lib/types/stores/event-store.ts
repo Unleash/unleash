@@ -27,6 +27,7 @@ export interface IEventStore
     publishUnannouncedEvents(): Promise<void>;
     store(event: IBaseEvent): Promise<void>;
     batchStore(events: IBaseEvent[]): Promise<void>;
+    batchStoreOrThrow(events: IBaseEvent[]): Promise<void>;
     getEvents(): Promise<IEvent[]>;
     count(): Promise<number>;
     searchEventsCount(
@@ -42,9 +43,14 @@ export interface IEventStore
         currentMax?: number,
         environment?: string,
     ): Promise<number>;
-    getDeltaRevisionState(environment: string): Promise<{
+    getMaxTokenRevisionId(currentMax?: number): Promise<number>;
+    getDeltaRevisionState(
+        environment: string,
+        referencedSegmentIds?: Set<number>,
+    ): Promise<{
         projectRevisions: Map<string, number>;
-        globalSegmentRevision: number;
+        maxReferencedSegmentRevision: number;
+        segmentRevisions: Map<number, number>;
     }>;
     getRevisionRange(start: number, end: number): Promise<IEvent[]>;
     query(operations: IQueryOperations[]): Promise<IEvent[]>;

@@ -1,8 +1,9 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { formatUpdateStrategyApiCode } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import type { IFeatureStrategy, IStrategy } from 'interfaces/strategy';
 import { screen, waitFor, within, fireEvent } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 import {
     CREATE_FEATURE_STRATEGY,
@@ -78,9 +79,9 @@ describe('NewFeatureStrategyEdit', () => {
             id: 'a',
             name: 'b',
             parameters: {
-                c: 1,
-                b: 2,
-                a: 3,
+                c: '1',
+                b: '2',
+                a: '3',
             },
             constraints: [],
         };
@@ -116,9 +117,9 @@ describe('NewFeatureStrategyEdit', () => {
         "id": "a",
         "name": "b",
         "parameters": {
-          "a": 3,
-          "b": 2,
-          "c": 1
+          "a": "3",
+          "b": "2",
+          "c": "1"
         },
         "constraints": []
       }'"

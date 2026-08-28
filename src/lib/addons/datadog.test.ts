@@ -27,6 +27,8 @@ const ARGS: IAddonConfig = {
     } as unknown as IntegrationEventsService,
     flagResolver: { isEnabled: (_expName: IFlagKey) => false } as IFlagResolver,
     eventBus: <any>{ emit: vi.fn() },
+    allowList: [],
+    allowPrivateUrls: true,
 };
 
 describe('Datadog integration', () => {

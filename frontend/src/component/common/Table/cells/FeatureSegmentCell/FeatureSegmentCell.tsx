@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import type { FeatureSearchResponseSchema } from 'openapi';
 import { styled, Typography } from '@mui/material';
 import { TextCell } from '../TextCell/TextCell.tsx';
@@ -17,7 +17,7 @@ interface IFeatureSegmentCellProps {
     value: string;
 }
 
-export const FeatureSegmentCell: VFC<IFeatureSegmentCellProps> = ({
+export const FeatureSegmentCell: FC<IFeatureSegmentCellProps> = ({
     row,
     value,
 }) => {

@@ -27,6 +27,7 @@ import { CreateStrategy } from 'component/strategies/CreateStrategy/CreateStrate
 import { EditStrategy } from 'component/strategies/EditStrategy/EditStrategy';
 import { SplashPage } from 'component/splash/SplashPage/SplashPage';
 import { CreateUnleashContextPage } from 'component/context/CreateUnleashContext/CreateUnleashContextPage';
+import { CloneContextPage } from 'component/context/CloneContext/CloneContextPage';
 import { CreateSegment } from 'component/segments/CreateSegment/CreateSegment';
 import { EditSegment } from 'component/segments/EditSegment/EditSegment';
 import type { INavigationMenuItem, IRoute } from 'interfaces/route';
@@ -45,17 +46,19 @@ import { PaginatedApplicationList } from '../application/ApplicationList/Paginat
 import { AddonRedirect } from 'component/integrations/AddonRedirect/AddonRedirect';
 import { Insights } from '../insights/Insights.jsx';
 import { LazyImpactMetricsPage } from '../impact-metrics/LazyImpactMetricsPage.tsx';
+import { LazyImpactViewsPage } from '../impact-views/LazyImpactViewsPage.tsx';
 import { FeedbackList } from '../feedbackNew/FeedbackList.jsx';
 import { Application } from 'component/application/Application';
 import { Signals } from 'component/signals/Signals';
 import { LazyCreateProject } from '../project/Project/CreateProject/LazyCreateProject.jsx';
 import { PersonalDashboard } from '../personalDashboard/PersonalDashboard.jsx';
+import { WhatsNewPage } from 'component/whatsNew/WhatsNewPage';
 import { ReleaseManagement } from 'component/releases/ReleaseManagement/ReleaseManagement';
 import { CreateReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/CreateReleasePlanTemplate';
 import { EditReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/EditReleasePlanTemplate';
-import { ExploreCounters } from 'component/counters/ExploreCounters/ExploreCounters.js';
 import { UnknownFlagsTable } from 'component/unknownFlags/UnknownFlagsTable';
 import { ChangeRequests } from 'component/changeRequest/ChangeRequests/ChangeRequests';
+import { LazyStoriesPage } from 'component/stories/LazyStoriesPage.tsx';
 
 export const routes: IRoute[] = [
     // Splash
@@ -74,6 +77,14 @@ export const routes: IRoute[] = [
         component: PersonalDashboard,
         type: 'protected',
         menu: { primary: true },
+    },
+    {
+        path: '/whats-new',
+        title: "What's new",
+        component: WhatsNewPage,
+        type: 'protected',
+        hidden: true,
+        menu: {},
     },
 
     // Project
@@ -182,7 +193,18 @@ export const routes: IRoute[] = [
         type: 'protected',
         menu: { primary: true },
         enterprise: true,
-        flag: 'impactMetrics',
+        notFlag: 'disableImpactMetrics',
+    },
+
+    // Impact Views
+    {
+        path: '/impact-views',
+        title: 'Impact views',
+        component: LazyImpactViewsPage,
+        type: 'protected',
+        menu: { primary: true },
+        enterprise: true,
+        flag: 'impactViews',
     },
 
     // Applications
@@ -202,22 +224,20 @@ export const routes: IRoute[] = [
         menu: { main: true },
     },
 
-    // Counters
-    {
-        path: '/custom-metrics',
-        title: 'Custom metrics',
-        component: ExploreCounters,
-        type: 'protected',
-        menu: { main: true },
-        flag: 'customMetrics',
-    },
-
     // Context
     {
         path: '/context/create',
         parent: '/context',
         title: 'Create',
         component: CreateUnleashContextPage,
+        type: 'protected',
+        menu: {},
+    },
+    {
+        path: '/context/clone/:name',
+        parent: '/context',
+        title: 'Clone',
+        component: CloneContextPage,
         type: 'protected',
         menu: {},
     },
@@ -565,6 +585,16 @@ export const routes: IRoute[] = [
         type: 'unprotected',
         menu: {},
         isStandalone: true,
+    },
+    {
+        path: '/_stories',
+        title: 'Stories',
+        hidden: true,
+        component: LazyStoriesPage,
+        type: 'protected',
+        menu: {},
+        isStandalone: true,
+        configFlag: 'storiesPageEnabled',
     },
 ];
 

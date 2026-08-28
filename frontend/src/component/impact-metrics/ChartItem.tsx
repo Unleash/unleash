@@ -110,7 +110,12 @@ export const ChartItem: FC<ChartItemProps> = ({
                 {config.title && (
                     <Typography variant='h3'>{config.title}</Typography>
                 )}
-                <Typography variant='body2' color='text.secondary'>
+                <Typography
+                    variant='body2'
+                    sx={{
+                        color: 'text.secondary',
+                    }}
+                >
                     {getConfigDescription(config)}
                 </Typography>
             </StyledChartTitle>

@@ -1,6 +1,6 @@
 import useToast from 'hooks/useToast';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { useState } from 'react';
@@ -12,7 +12,7 @@ import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
 import { useFormErrors } from 'hooks/useFormErrors';
 import { sortStrategyParameters } from 'utils/sortStrategyParameters';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import type { CreateFeatureStrategySchema } from 'openapi';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import {
@@ -20,6 +20,7 @@ import {
     UPDATE_PROJECT,
 } from '@server/types/permissions';
 import { StrategyFormBody } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormBody.tsx';
+import { createStrategyPayload } from 'component/feature/FeatureStrategy/featureStrategy.utils';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
@@ -42,7 +43,7 @@ export const useDefaultStrategy = (
 
     const strategy = project.environments?.find(
         (env) => env.environment === environmentId,
-    )?.defaultStrategy;
+    )?.defaultStrategy as StrategyFormState;
 
     return { defaultStrategyFallback, strategy, refetch };
 };
@@ -69,7 +70,7 @@ const EditDefaultStrategy = () => {
     const { uiConfig } = useUiConfig();
     const { unleashUrl } = uiConfig;
     const navigate = useNavigate();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);
 
     if (!strategyDefinition) return null;
@@ -158,22 +159,6 @@ const EditDefaultStrategy = () => {
         </FormTemplate>
     );
 };
-
-export const createStrategyPayload = (
-    strategy: StrategyFormState,
-): CreateFeatureStrategySchema => ({
-    name: strategy.name,
-    title: strategy.title,
-    constraints: strategy.constraints ?? [],
-    parameters: Object.fromEntries(
-        Object.entries(strategy.parameters ?? {})
-            .filter(([, value]) => value !== undefined)
-            .map(([key, value]) => [key, String(value)]),
-    ),
-    variants: strategy.variants ?? [],
-    segments: strategy.segments ?? [],
-    disabled: strategy.disabled ?? false,
-});
 
 const formatUpdateStrategyApiCode = (
     projectId: string,

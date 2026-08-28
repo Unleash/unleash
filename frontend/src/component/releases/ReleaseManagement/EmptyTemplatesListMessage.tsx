@@ -1,8 +1,12 @@
 import { Button, styled, Typography } from '@mui/material';
-import { RELEASE_PLAN_TEMPLATE_CREATE } from '@server/types/permissions';
-import { ReactComponent as ReleaseTemplateIcon } from 'assets/img/releaseTemplates.svg';
+import {
+    RELEASE_PLAN_TEMPLATE_CREATE,
+    UPDATE_PROJECT_RELEASE_TEMPLATE,
+} from '@server/types/permissions';
+import ReleaseTemplateIcon from 'assets/img/releaseTemplates.svg?react';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { Link, useNavigate } from 'react-router-dom';
+import { formatReleaseTemplateCreatePath } from 'component/releases/releaseTemplatePaths';
+import { Link, useNavigate } from 'react-router';
 
 const Container = styled('article')(({ theme }) => ({
     paddingBlock: theme.spacing(5),
@@ -23,7 +27,13 @@ const Buttons = styled('div')(({ theme }) => ({
     justifyContent: 'center',
 }));
 
-export const EmptyTemplatesListMessage = () => {
+export const EmptyTemplatesListMessage = ({
+    createPath = formatReleaseTemplateCreatePath(),
+    projectId,
+}: {
+    createPath?: string;
+    projectId?: string;
+}) => {
     const navigate = useNavigate();
     return (
         <Container>
@@ -31,15 +41,21 @@ export const EmptyTemplatesListMessage = () => {
             <Typography component='h2' variant='h3'>
                 Get started with release templates
             </Typography>
-            <Typography component='p' color='text.secondary'>
+            <Typography
+                component='p'
+                sx={{
+                    color: 'text.secondary',
+                }}
+            >
                 Control your releases with milestones that can be reused by the
                 entire team.
             </Typography>
             <Buttons>
                 <Button
                     component={Link}
+                    nativeButton={false}
                     sx={{ whiteSpace: 'nowrap' }}
-                    to='https://docs.getunleash.io/reference/release-templates'
+                    to='https://docs.getunleash.io/concepts/release-templates'
                     variant='text'
                     rel='noopener noreferrer'
                     target='_blank'
@@ -49,9 +65,13 @@ export const EmptyTemplatesListMessage = () => {
                 <PermissionButton
                     sx={{ whiteSpace: 'nowrap' }}
                     onClick={() => {
-                        navigate('/release-templates/create-template');
+                        navigate(createPath);
                     }}
-                    permission={RELEASE_PLAN_TEMPLATE_CREATE}
+                    permission={[
+                        RELEASE_PLAN_TEMPLATE_CREATE,
+                        UPDATE_PROJECT_RELEASE_TEMPLATE,
+                    ]}
+                    projectId={projectId}
                 >
                     New template
                 </PermissionButton>

@@ -6,7 +6,7 @@ pip install UnleashClient
 2\. Run Unleash
 ```python
 from UnleashClient import UnleashClient
-import asyncio
+import time
 
 client = UnleashClient(
     url="<YOUR_API_URL>",
@@ -16,22 +16,36 @@ client = UnleashClient(
 client.initialize_client()
 
 while True:
-    print(client.is_enabled("<YOUR_FLAG>"))
-    asyncio.run(asyncio.sleep(1))
+    if client.is_enabled("<YOUR_FLAG>"):
+        print("<YOUR_FLAG> is enabled")
+    else:
+        print("<YOUR_FLAG> is disabled")
+    time.sleep(2)
 ```
 ---
 ```python
 from UnleashClient import UnleashClient
-import asyncio
 import os
 
 client = UnleashClient(
     url="<YOUR_API_URL>",
     app_name="unleash-onboarding-python",
-    custom_headers={'Authorization': os.getenv('UNLEASH_API_TOKEN')}
+    custom_headers={'Authorization': os.getenv('UNLEASH_API_TOKEN')})
+
+client.initialize_client()
+
 ```
 
 ---
 - [SDK repository with documentation](https://github.com/Unleash/unleash-client-python)
 - [Python SDK example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/Python)
-- [How to Implement Feature Flags in Python](https://docs.getunleash.io/feature-flag-tutorials/python)
+- [How to Implement Feature Flags in Python](https://docs.getunleash.io/guides/implement-feature-flags-in-python)
+
+---
+
+```python
+if client.is_enabled("<YOUR_FLAG>"):
+    print("<YOUR_FLAG> is enabled")
+else:
+    print("<YOUR_FLAG> is disabled")
+```

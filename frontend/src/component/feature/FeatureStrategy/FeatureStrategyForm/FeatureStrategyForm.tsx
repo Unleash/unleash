@@ -1,9 +1,8 @@
 import type React from 'react';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState, type JSX } from 'react';
+import { useNavigate } from 'react-router';
 import { Button, styled, Box } from '@mui/material';
 import type {
-    IFeatureStrategyParameters,
     IStrategyParameter,
     StrategyFormState,
 } from 'interfaces/strategy';
@@ -26,10 +25,11 @@ import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit.ts
 import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { FeatureStrategyEnabledDisabled } from './FeatureStrategyEnabledDisabled/FeatureStrategyEnabledDisabled.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/UpgradeChangeRequests/UpgradeChangeRequests.tsx';
 
 import { StrategyFormBody } from './StrategyFormBody.tsx';
+import type { ParametersSchema } from 'openapi/index.ts';
 
 export interface IFeatureStrategyFormProps<T extends StrategyFormState> {
     feature: IFeatureToggle;
@@ -71,7 +71,7 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
     Limit,
     disabled,
 }: IFeatureStrategyFormProps<T>) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const [showProdGuard, setShowProdGuard] = useState(false);
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);
     const enableProdGuard = useFeatureStrategyProdGuard(feature, environmentId);
@@ -126,7 +126,7 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
 
     const validateParameter = (
         name: string,
-        value: IFeatureStrategyParameters[string],
+        value?: ParametersSchema[string],
     ): boolean => {
         const parameterValueError = validateParameterValue(
             findParameterDefinition(name),

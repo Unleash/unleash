@@ -82,7 +82,7 @@ export const UpgradeSSO = () => {
                     }}
                     size='small'
                 >
-                    <Close fontSize='inherit' />
+                    <Close />
                 </StyledCloseButton>
             </Tooltip>
         </Wrapper>

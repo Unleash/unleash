@@ -42,10 +42,11 @@ const lifecycleOptions: {
     label: string;
     value: LifecycleStage['name'] | null;
 }[] = [
-    { label: 'All lifecycles', value: null },
+    { label: 'Active flags', value: null },
     { label: 'Develop', value: 'pre-live' },
     { label: 'Rollout production', value: 'live' },
     { label: 'Cleanup', value: 'completed' },
+    { label: 'Archived', value: 'archived' },
 ];
 
 const MinimalChip = ({

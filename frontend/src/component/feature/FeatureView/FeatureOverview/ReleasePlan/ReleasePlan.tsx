@@ -22,14 +22,14 @@ import type {
     IChangeRequestChangeMilestoneProgression,
     IChangeRequestDeleteMilestoneProgression,
 } from 'component/changeRequest/changeRequest.types';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { Truncator } from 'component/common/Truncator/Truncator';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { useMilestoneProgressionsApi } from 'hooks/api/actions/useMilestoneProgressionsApi/useMilestoneProgressionsApi';
 import { DeleteProgressionDialog } from './DeleteProgressionDialog.tsx';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import { ReleasePlanMilestoneItem } from './ReleasePlanMilestoneItem/ReleasePlanMilestoneItem.tsx';
 import { formatDateYMDHMS } from 'utils/formatDate';
+import { useLocationSettings } from 'hooks/useLocationSettings';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
@@ -113,6 +113,7 @@ export const ReleasePlan = ({
     } = plan;
 
     const projectId = useRequiredPathParam('projectId');
+    const { locationSettings } = useLocationSettings();
     const { removeReleasePlanFromFeature, startReleasePlanMilestone } =
         useReleasePlansApi();
     const {
@@ -121,7 +122,7 @@ export const ReleasePlan = ({
         loading: milestoneProgressionLoading,
     } = useMilestoneProgressionsApi();
     const { setToastData, setToastApiError } = useToast();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const [removeOpen, setRemoveOpen] = useState(false);
     const [resumeDialogOpen, setResumeDialogOpen] = useState(false);
@@ -184,7 +185,6 @@ export const ReleasePlan = ({
 
         return null;
     };
-    const milestoneProgressionsEnabled = useUiFlag('milestoneProgression');
     const [progressionFormOpenIndex, setProgressionFormOpenIndex] = useState<
         number | null
     >(null);
@@ -455,7 +455,10 @@ export const ReleasePlan = ({
                 >
                     <b>
                         Automation paused by safeguard
-                        {pausedAt ? ` at ${formatDateYMDHMS(pausedAt)}` : ''}.
+                        {pausedAt
+                            ? ` at ${formatDateYMDHMS(pausedAt, locationSettings.locale)}`
+                            : ''}
+                        .
                     </b>{' '}
                     Existing users on this release plan can still access the
                     feature.
@@ -473,9 +476,6 @@ export const ReleasePlan = ({
                         activeIndex={activeIndex}
                         environmentIsDisabled={environmentIsDisabled}
                         readonly={readonly}
-                        milestoneProgressionsEnabled={
-                            milestoneProgressionsEnabled
-                        }
                         progressionFormOpenIndex={progressionFormOpenIndex}
                         onSetProgressionFormOpenIndex={
                             setProgressionFormOpenIndex

@@ -3,7 +3,7 @@ import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { EventTimelineEventTooltip } from './EventTimelineEventTooltip/EventTimelineEventTooltip.tsx';
 import type { TimelineEventGroup } from '../EventTimeline.tsx';
 import { EventTimelineEventCircle } from './EventTimelineEventCircle.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 const StyledEvent = styled('div', {
     shouldForwardProp: (prop) => prop !== 'position',
@@ -35,7 +35,7 @@ export const EventTimelineEventGroup = ({
     startTime,
     endTime,
 }: IEventTimelineEventProps) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const timelineDuration = endTime - startTime;
     const eventTime = group[0].timestamp;
 

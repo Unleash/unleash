@@ -1,7 +1,8 @@
 /* eslint-disable react/jsx-no-target-blank */
 
-import type { VFC } from 'react';
-import { List, ListItem, ListItemText, Grid, styled } from '@mui/material';
+import type { FC } from 'react';
+import { List, ListItem, ListItemText, styled } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ApiDetails } from './ApiDetails/ApiDetails.tsx';
 import { FooterTitle } from './FooterTitle.tsx';
@@ -68,7 +69,7 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
     },
 }));
 
-export const Footer: VFC = () => {
+export const Footer: FC = () => {
     const { uiConfig } = useUiConfig();
 
     return (
@@ -76,16 +77,16 @@ export const Footer: VFC = () => {
             <FooterContentWrapper>
                 <FooterGridContainer
                     container
-                    justifyContent='space-between'
                     spacing={10}
+                    sx={{ justifyContent: 'space-between' }}
                     style={{ marginBottom: 0 }}
                 >
-                    <Grid item md={4} xs={12}>
+                    <Grid size={{ md: 4, xs: 12 }}>
                         <ApiDetails uiConfig={uiConfig} />
                     </Grid>
-                    <Grid item xs={12} md='auto'>
+                    <Grid size={{ xs: 12, md: 'auto' }}>
                         <Grid container spacing={7} direction='row'>
-                            <Grid item>
+                            <Grid>
                                 <section title='Unleash SDK'>
                                     <FooterTitle>Server SDKs</FooterTitle>
                                     <StyledList dense>
@@ -209,7 +210,7 @@ export const Footer: VFC = () => {
                                     </StyledList>
                                 </section>
                             </Grid>
-                            <Grid item>
+                            <Grid>
                                 <section title='Unleash SDK'>
                                     <FooterTitle>Frontend SDKs</FooterTitle>
                                     <StyledList dense>
@@ -269,7 +270,7 @@ export const Footer: VFC = () => {
                                             <ListItemText
                                                 primary={
                                                     <a
-                                                        href='https://docs.getunleash.io/sdks/ios-proxy'
+                                                        href='https://docs.getunleash.io/sdks/ios'
                                                         target='_blank'
                                                         rel='noreferrer'
                                                     >
@@ -282,7 +283,7 @@ export const Footer: VFC = () => {
                                             <ListItemText
                                                 primary={
                                                     <a
-                                                        href='https://docs.getunleash.io/sdks/android-proxy'
+                                                        href='https://docs.getunleash.io/sdks/android'
                                                         target='_blank'
                                                         rel='noreferrer'
                                                     >
@@ -307,7 +308,7 @@ export const Footer: VFC = () => {
                                     </StyledList>
                                 </section>
                             </Grid>
-                            <Grid item>
+                            <Grid>
                                 <section>
                                     <FooterTitle>About</FooterTitle>
                                     <StyledList dense>

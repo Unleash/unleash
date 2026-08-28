@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import useTagTypeForm from '../TagTypeForm/useTagTypeForm.ts';
 import TagTypeForm from '../TagTypeForm/TagTypeForm.tsx';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';

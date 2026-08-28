@@ -1,6 +1,6 @@
 import { styled } from '@mui/material';
 import type { IGroup } from 'interfaces/group';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { GroupCardActions } from './GroupCardActions.tsx';
 import { RoleBadge } from 'component/common/RoleBadge/RoleBadge';
 import { useScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettings';

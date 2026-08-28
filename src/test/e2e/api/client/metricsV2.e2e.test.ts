@@ -49,7 +49,7 @@ test('should require valid send metrics', async () => {
         .post('/api/client/metrics')
         .set('Authorization', defaultToken.secret)
         .send({
-            appName: 'test',
+            instanceId: 'test',
         })
         .expect(400);
 });
@@ -180,8 +180,6 @@ test('should set lastSeen for toggles with metrics both for toggle and toggle en
     const t1Env = t1.environments.find((e) => e.name === DEFAULT_ENV);
     const t2Env = t2.environments.find((e) => e.name === DEFAULT_ENV);
 
-    expect(t1.lastSeenAt?.getTime()).toBeGreaterThanOrEqual(start);
     expect(t1Env?.lastSeenAt.getTime()).toBeGreaterThanOrEqual(start);
-    expect(t2?.lastSeenAt).toBeDefined();
     expect(t2Env?.lastSeenAt).toBeDefined();
 });

@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { removeEmptyStringFields } from 'utils/removeEmptyStringFields';
 
 test('removeEmptyStringFields', () => {

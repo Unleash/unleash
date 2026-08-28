@@ -1,27 +1,26 @@
 import { INPUT_ERROR_TEXT } from 'utils/testIds';
-import { TextField, type OutlinedTextFieldProps, styled } from '@mui/material';
-import { useStyles } from './Input.styles';
+import { TextField, type OutlinedTextFieldProps } from '@mui/material';
+import type { ReactNode } from 'react';
+import { FormField } from '../FormField/FormField';
 
 interface IInputProps extends Omit<OutlinedTextFieldProps, 'variant'> {
-    label: string;
+    label: ReactNode;
+    description?: ReactNode;
     error?: boolean;
     errorText?: string;
     style?: Object;
     className?: string;
-    value: string;
-    onChange: (e: any) => any;
+    value: string | number;
+    onChange?: (e: any) => any;
     onFocus?: (e: any) => any;
     onBlur?: (e: any) => any;
     multiline?: boolean;
     rows?: number;
 }
 
-const StyledDiv = styled('div')({
-    position: 'relative',
-});
-
 const Input = ({
     label,
+    description,
     placeholder,
     error,
     errorText,
@@ -29,16 +28,16 @@ const Input = ({
     className,
     value,
     onChange,
-    size = 'small',
+    size = 'large',
+    slotProps,
     ...rest
 }: IInputProps) => {
-    const { classes: styles } = useStyles();
     return (
-        <StyledDiv data-loading>
+        <FormField label={label} description={description}>
             <TextField
+                data-loading
                 size={size}
                 variant='outlined'
-                label={label}
                 placeholder={placeholder}
                 error={error}
                 helperText={errorText}
@@ -46,16 +45,16 @@ const Input = ({
                 className={className ? className : ''}
                 value={value}
                 onChange={onChange}
-                FormHelperTextProps={{
-                    'data-testid': INPUT_ERROR_TEXT,
-                    title: errorText,
-                    classes: {
-                        root: styles.helperText,
-                    },
-                }}
                 {...rest}
+                slotProps={{
+                    formHelperText: {
+                        'data-testid': INPUT_ERROR_TEXT,
+                        title: errorText,
+                    },
+                    ...slotProps,
+                }}
             />
-        </StyledDiv>
+        </FormField>
     );
 };
 

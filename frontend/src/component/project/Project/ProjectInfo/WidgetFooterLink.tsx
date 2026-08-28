@@ -1,4 +1,4 @@
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 import { Link, Typography } from '@mui/material';
 import type React from 'react';
 import type { FC } from 'react';
@@ -16,8 +16,8 @@ export const WidgetFooterLink: FC<IWidgetFooterLinkProps> = ({
         <Typography
             data-loading
             variant='body2'
-            textAlign='center'
             sx={{
+                textAlign: 'center',
                 paddingTop: (theme) => theme.spacing(2.5),
                 marginTop: 'auto',
                 justifySelf: 'flex-end',

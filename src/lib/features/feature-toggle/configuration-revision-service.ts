@@ -6,15 +6,38 @@ import type {
     IUnleashStores,
 } from '../../types/index.js';
 import EventEmitter from 'events';
-import { createGauge } from '../../util/metrics/index.js';
+import {
+    Gauge as PromGauge,
+    register as prometheusRegister,
+} from 'prom-client';
+import { createGauge, type Gauge } from '../../util/metrics/index.js';
 
 export const UPDATE_REVISION = 'UPDATE_REVISION';
 
-const revisionIdMetric = createGauge({
-    name: 'environment_revision_id',
-    help: 'Current revision id for environment',
-    labelNames: ['environment'],
+const revisionIdMetricName = 'environment_revision_id';
+
+const asGaugeWrapper = <T extends string>(gauge: PromGauge<T>): Gauge<T> => ({
+    gauge,
+    labels: (labels: Record<T, string | number>) => gauge.labels(labels),
+    reset: () => gauge.reset(),
+    set: (value: number) => gauge.set(value),
 });
+
+const getRevisionIdMetric = (): Gauge<'environment'> => {
+    const existing = prometheusRegister.getSingleMetric(revisionIdMetricName);
+
+    if (existing instanceof PromGauge) {
+        return asGaugeWrapper(existing as PromGauge<'environment'>);
+    }
+
+    return createGauge({
+        name: revisionIdMetricName,
+        help: 'Current revision id for environment',
+        labelNames: ['environment'],
+    });
+};
+
+const revisionIdMetric = getRevisionIdMetric();
 
 // Should only be used for standard polling
 export default class ConfigurationRevisionService extends EventEmitter {

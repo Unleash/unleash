@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type JSX } from 'react';
 import { DemoTopics } from './DemoTopics/DemoTopics.tsx';
 import { DemoSteps } from './DemoSteps/DemoSteps.tsx';
 import { createLocalStorage } from 'utils/createLocalStorage';
@@ -7,12 +7,12 @@ import { DemoDialogWelcome } from './DemoDialog/DemoDialogWelcome/DemoDialogWelc
 import { DemoDialogFinish } from './DemoDialog/DemoDialogFinish/DemoDialogFinish.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { DemoBanner } from './DemoBanner/DemoBanner.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { useMediaQuery } from '@mui/material';
 import theme from 'themes/theme';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { DemoNotice } from './DemoNotice.tsx';
 
 const defaultProgress = {
@@ -32,7 +32,7 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
     const navigate = useNavigate();
     const { uiConfig } = useUiConfig();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down(768));
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const { value: storedProgress, setValue: setStoredProgress } =
         createLocalStorage('Tutorial:v1.1', defaultProgress);

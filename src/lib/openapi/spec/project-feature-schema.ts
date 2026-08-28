@@ -14,7 +14,6 @@ export const projectFeatureSchema = {
         'favorite',
         'impressionData',
         'createdAt',
-        'lastSeenAt',
         'environments',
     ],
     description: 'A project feature flag definition',
@@ -60,15 +59,6 @@ export const projectFeatureSchema = {
             format: 'date-time',
             example: '2023-01-28T15:21:39.975Z',
             description: 'The date the feature was created',
-        },
-        lastSeenAt: {
-            type: 'string',
-            format: 'date-time',
-            nullable: true,
-            deprecated: true,
-            example: '2023-01-28T16:21:39.975Z',
-            description:
-                'The date and time when metrics where last collected for this flag in any environment. This field was deprecated in v5. You should instead use the `lastSeenAt` property on the individual environments listed under the `environments` property.',
         },
         environments: {
             type: 'array',

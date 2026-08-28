@@ -39,6 +39,7 @@ export default class ConstraintsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
+                    release: { stable: '4.13.0' },
                     operationId: 'validateConstraint',
                     requestBody: createRequestSchema('constraintSchema'),
                     summary: 'Validate constraint',

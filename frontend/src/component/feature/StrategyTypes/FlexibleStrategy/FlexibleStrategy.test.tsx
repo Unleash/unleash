@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { useState } from 'react';
 import { screen, fireEvent } from '@testing-library/react';
 import { FlexibleStrategy } from './FlexibleStrategy.tsx';

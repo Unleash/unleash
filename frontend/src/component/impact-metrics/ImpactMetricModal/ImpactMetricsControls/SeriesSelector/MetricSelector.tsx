@@ -1,17 +1,13 @@
-import { type FC, useState } from 'react';
-import {
-    Autocomplete,
-    TextField,
-    Typography,
-    Box,
-    Button,
-} from '@mui/material';
+import { useState } from 'react';
+import { Typography, Box, Button } from '@mui/material';
+import { AutocompleteField } from 'component/common/AutocompleteField/AutocompleteField';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import type { MetricSource } from 'component/impact-metrics/types';
 import { useTrackFlagpageImpactMetrics } from 'component/impact-metrics/useImpactMetricsFunnel';
-import { useUiFlag } from 'hooks/useUiFlag';
+import { useImpactMetricsEnabled } from 'component/impact-metrics/hooks/useImpactMetricsEnabled';
 import { RegisterMetricDialog } from 'component/impact-metrics/RegisterMetricDialog/RegisterMetricDialog';
+import { useTrackRegisterImpactMetrics } from 'component/impact-metrics/RegisterMetricDialog/useTrackRegisterImpactMetrics';
 
 type MetricOption = {
     name: string;
@@ -38,12 +34,18 @@ export type MetricSelectorProps = {
     options: MetricOption[];
     loading?: boolean;
     label?: string;
+    entryPoint?:
+        | 'impact-metrics-page'
+        | 'flag-impact-metrics-accordion'
+        | 'flag-safeguards';
 };
 
-const NoOptionsMessage: FC<{ onRegisterClick?: () => void }> = ({
+const NoOptionsMessage = ({
     onRegisterClick,
+}: {
+    onRegisterClick?: () => void;
 }) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { trackDocsClicked } = useTrackFlagpageImpactMetrics();
 
     const buttonProps = onRegisterClick
@@ -58,7 +60,7 @@ const NoOptionsMessage: FC<{ onRegisterClick?: () => void }> = ({
               },
           }
         : {
-              href: 'https://docs.getunleash.io/reference/impact-metrics',
+              href: 'https://docs.getunleash.io/concepts/impact-metrics',
               target: '_blank',
               rel: 'noopener noreferrer',
               onClick: () => {
@@ -73,16 +75,26 @@ const NoOptionsMessage: FC<{ onRegisterClick?: () => void }> = ({
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-            <Typography variant='body2' fontWeight='bold'>
+            <Typography
+                variant='body2'
+                sx={{
+                    fontWeight: 'bold',
+                }}
+            >
                 No impact metrics found
             </Typography>
-            <Typography variant='body2' color='text.secondary'>
+            <Typography
+                variant='body2'
+                sx={{
+                    color: 'text.secondary',
+                }}
+            >
                 Impact metrics need to be implemented in your code before they
                 can be used in safeguards.
             </Typography>
             <Button
                 variant='contained'
-                size='small'
+                size='medium'
                 sx={{ alignSelf: 'flex-start', mt: 1 }}
                 {...buttonProps}
             >
@@ -117,21 +129,27 @@ const withSelectedValue = (
 const groupLabel = (source?: MetricSource) =>
     source === 'external' ? 'External metrics' : 'Internal metrics';
 
-export const MetricSelector: FC<MetricSelectorProps> = ({
+export const MetricSelector = ({
     value,
     valueSource,
     onChange,
     options,
     loading = false,
     label = 'Metric name',
-}) => {
+    entryPoint,
+}: MetricSelectorProps) => {
     const allOptions = withSelectedValue(options, value, valueSource);
-    const registerImpactMetricsEnabled = useUiFlag('registerImpactMetrics');
+    const registerImpactMetricsEnabled = useImpactMetricsEnabled('internal');
     const [registerDialogOpen, setRegisterDialogOpen] = useState(false);
+    const { trackFormOpened } = useTrackRegisterImpactMetrics(entryPoint);
 
     return (
         <>
-            <Autocomplete
+            <AutocompleteField
+                label={label}
+                placeholder='Search for a metric…'
+                size='large'
+                required
                 options={allOptions}
                 groupBy={(option) => groupLabel(option.source)}
                 getOptionLabel={(option) => option.displayName}
@@ -162,7 +180,9 @@ export const MetricSelector: FC<MetricSelectorProps> = ({
                             </Typography>
                             <Typography
                                 variant='caption'
-                                color='text.secondary'
+                                sx={{
+                                    color: 'text.secondary',
+                                }}
                             >
                                 <Highlighter search={inputValue}>
                                     {option.help}
@@ -171,21 +191,14 @@ export const MetricSelector: FC<MetricSelectorProps> = ({
                         </Box>
                     </Box>
                 )}
-                renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        label={label}
-                        placeholder='Search for a metric…'
-                        variant='outlined'
-                        size='small'
-                        required
-                    />
-                )}
                 noOptionsText={
                     <NoOptionsMessage
                         onRegisterClick={
                             registerImpactMetricsEnabled
-                                ? () => setRegisterDialogOpen(true)
+                                ? () => {
+                                      setRegisterDialogOpen(true);
+                                      trackFormOpened();
+                                  }
                                 : undefined
                         }
                     />

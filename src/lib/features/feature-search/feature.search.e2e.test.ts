@@ -1413,6 +1413,124 @@ test('should return archived when query param set', async () => {
     });
 });
 
+describe('lifecycle and archived filtering', () => {
+    const setupLifecycleFlags = async () => {
+        await app.createFeature({
+            name: 'lifecycle_active',
+            createdAt: '2023-01-29T15:21:39.975Z',
+        });
+        await app.createFeature({
+            name: 'archived_without_lifecycle',
+            createdAt: '2023-01-29T15:21:39.975Z',
+            archived: true,
+        });
+        await app.createFeature({
+            name: 'lifecycle_archived_with_stage',
+            createdAt: '2023-01-29T15:21:39.975Z',
+            archived: true,
+        });
+        await stores.featureLifecycleStore.insert([
+            { feature: 'lifecycle_active', stage: 'live' },
+            { feature: 'lifecycle_archived_with_stage', stage: 'archived' },
+        ]);
+        expect(
+            await stores.featureLifecycleStore.get(
+                'archived_without_lifecycle',
+            ),
+        ).toHaveLength(0);
+        expect(
+            await stores.featureLifecycleStore.get(
+                'lifecycle_archived_with_stage',
+            ),
+        ).toHaveLength(1);
+    };
+
+    const searchByLifecycle = async (params: string) =>
+        app.request
+            .get(`/api/admin/search/features?project=IS:default&${params}`)
+            .expect(200);
+
+    const sortedNames = (body: { features: { name: string }[] }) =>
+        body.features.map((feature) => feature.name).sort();
+
+    test('lifecycle=IS:archived returns only archived flags, like archived=IS:true', async () => {
+        await setupLifecycleFlags();
+
+        const { body } = await searchByLifecycle('lifecycle=IS:archived');
+
+        expect(body.total).toBe(2);
+        expect(sortedNames(body)).toEqual([
+            'archived_without_lifecycle',
+            'lifecycle_archived_with_stage',
+        ]);
+    });
+
+    test('lifecycle=IS_ANY_OF:live,archived returns both the requested active stage and archived flags', async () => {
+        await setupLifecycleFlags();
+
+        const { body } = await searchByLifecycle(
+            'lifecycle=IS_ANY_OF:live,archived',
+        );
+
+        expect(body.total).toBe(3);
+        expect(sortedNames(body)).toEqual([
+            'archived_without_lifecycle',
+            'lifecycle_active',
+            'lifecycle_archived_with_stage',
+        ]);
+    });
+
+    test('lifecycle=IS_NONE_OF:archived excludes the archived stage and keeps only active flags', async () => {
+        await setupLifecycleFlags();
+
+        const { body } = await searchByLifecycle(
+            'lifecycle=IS_NONE_OF:archived',
+        );
+
+        expect(body.total).toBe(1);
+        expect(sortedNames(body)).toEqual(['lifecycle_active']);
+    });
+
+    test('archived=IS:true stays authoritative alongside an exclusion operator and returns archived flags, not active ones', async () => {
+        await setupLifecycleFlags();
+
+        const { body } = await searchByLifecycle(
+            'archived=IS:true&lifecycle=IS_NOT:live',
+        );
+
+        expect(body.total).toBe(2);
+        expect(sortedNames(body)).toEqual([
+            'archived_without_lifecycle',
+            'lifecycle_archived_with_stage',
+        ]);
+    });
+
+    test('archived=IS:true stays authoritative alongside an inclusion operator: archived flags only, no active flags from the requested stages', async () => {
+        await setupLifecycleFlags();
+
+        const { body } = await searchByLifecycle(
+            'archived=IS:true&lifecycle=IS_ANY_OF:live,archived',
+        );
+
+        expect(body.total).toBe(2);
+        expect(sortedNames(body)).toEqual([
+            'archived_without_lifecycle',
+            'lifecycle_archived_with_stage',
+        ]);
+    });
+
+    test('archived=IS:true with a lifecycle filter for only active stages is contradictory and returns nothing', async () => {
+        await setupLifecycleFlags();
+
+        const { body } = await searchByLifecycle(
+            'archived=IS:true&lifecycle=IS:live',
+        );
+
+        expect(body.total).toBe(0);
+        expect(body.features).toEqual([]);
+    });
+});
+
 test('should filter by favorite=IS:true', async () => {
     await app.createFeature('my_feature_a');
     await app.createFeature('my_feature_b');

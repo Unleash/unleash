@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { ProjectList } from './ProjectList.tsx';
 import { screen, waitFor } from '@testing-library/react';

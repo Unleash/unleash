@@ -37,6 +37,8 @@ const StyledBar = styled(Paper)(({ theme }) => ({
     gap: theme.spacing(1),
     flexWrap: 'wrap',
     pointerEvents: 'auto',
+    // PermissionButton sets alignSelf: start for grid parents; override it here
+    '& .MuiButton-root': { alignSelf: 'center' },
 }));
 
 const StyledCount = styled('span')(({ theme }) => ({

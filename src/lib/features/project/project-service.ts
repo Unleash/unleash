@@ -53,6 +53,7 @@ import {
     SYSTEM_USER_ID,
     type IProjectReadModel,
     type IOnboardingReadModel,
+    type IFeatureLifecycleReadModel,
     type IEdgeTokenStore,
 } from '../../types/index.js';
 import type {
@@ -78,7 +79,10 @@ import type {
     IProjectQuery,
     IProjectsQuery,
 } from './project-store-type.js';
-import type { IProjectFlagCreatorsReadModel } from './project-flag-creators-read-model.type.js';
+import type {
+    FlagCreatorsSearchResult,
+    IProjectFlagCreatorsReadModel,
+} from './project-flag-creators-read-model.type.js';
 import { throwExceedsLimitError } from '../../error/exceeds-limit-error.js';
 import type EventEmitter from 'events';
 import type { ApiTokenService } from '../../services/index.js';
@@ -88,6 +92,7 @@ import { batchExecute } from '../../util/index.js';
 import metricsHelper from '../../util/metrics-helper.js';
 import { FUNCTION_TIME } from '../../metric-events.js';
 import type { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
+import type { OnboardingStatus } from '../onboarding/onboarding-read-model-type.js';
 
 type Days = number;
 type Count = number;
@@ -155,6 +160,8 @@ export default class ProjectService {
 
     private onboardingReadModel: IOnboardingReadModel;
 
+    private featureLifecycleReadModel: IFeatureLifecycleReadModel;
+
     private edgeTokenStore: IEdgeTokenStore;
 
     private timer: Function;
@@ -172,6 +179,7 @@ export default class ProjectService {
             projectStatsStore,
             projectReadModel,
             onboardingReadModel,
+            featureLifecycleReadModel,
             edgeTokenStore,
         }: Pick<
             IUnleashStores,
@@ -186,6 +194,7 @@ export default class ProjectService {
             | 'projectStatsStore'
             | 'projectReadModel'
             | 'onboardingReadModel'
+            | 'featureLifecycleReadModel'
             | 'edgeTokenStore'
         >,
         config: IUnleashConfig,
@@ -221,6 +230,7 @@ export default class ProjectService {
         this.eventBus = config.eventBus;
         this.projectReadModel = projectReadModel;
         this.onboardingReadModel = onboardingReadModel;
+        this.featureLifecycleReadModel = featureLifecycleReadModel;
         this.edgeTokenStore = edgeTokenStore;
         this.timer = (functionName: string) =>
             metricsHelper.wrapTimer(config.eventBus, FUNCTION_TIME, {
@@ -233,25 +243,49 @@ export default class ProjectService {
         query?: IProjectQuery & IProjectsQuery,
         userId?: number,
     ): Promise<ProjectForUi[]> {
-        const projects = await this.projectReadModel.getProjectsForAdminUi(
+        const allProjects = await this.projectReadModel.getProjectsForAdminUi(
             query,
             userId,
         );
 
+        let projects = allProjects;
         if (userId) {
             const projectAccess =
                 await this.privateProjectChecker.getUserAccessibleProjects(
                     userId,
                 );
 
-            if (projectAccess.mode === 'all') {
-                return projects;
-            } else {
-                return projects.filter((project) =>
+            if (projectAccess.mode !== 'all') {
+                projects = allProjects.filter((project) =>
                     projectAccess.projects.includes(project.id),
                 );
             }
         }
+
+        const projectIds = projects.map((p) => p.id);
+        const [onboardingStatuses, cleanupByProject] = await Promise.all([
+            this.onboardingReadModel
+                .getOnboardingStatusesForProjects(projectIds)
+                .catch(() => new Map<string, OnboardingStatus>()),
+            this.featureLifecycleReadModel
+                .getStageCountByProject()
+                .then((rows) => {
+                    const map = new Map<string, number>();
+                    for (const row of rows) {
+                        if (row.stage === 'completed') {
+                            map.set(row.project, row.count);
+                        }
+                    }
+                    return map;
+                })
+                .catch(() => new Map<string, number>()),
+        ]);
+
+        for (const project of projects) {
+            project.onboardingStatus = onboardingStatuses.get(project.id);
+            project.cleanupCount = cleanupByProject.get(project.id);
+        }
+
         return projects;
     }
 
@@ -1053,6 +1087,18 @@ export default class ProjectService {
 
     async getProjectFlagCreators(projectId: string) {
         return this.projectFlagCreatorsReadModel.getFlagCreators(projectId);
+    }
+
+    async getFlagCreatorsAcrossProjects(
+        userId: number,
+        options: { query?: string; limit: number; offset: number },
+    ): Promise<FlagCreatorsSearchResult> {
+        const accessibleProjects =
+            await this.privateProjectChecker.getUserAccessibleProjects(userId);
+        return this.projectFlagCreatorsReadModel.getFlagCreatorsAcrossProjects(
+            accessibleProjects,
+            options,
+        );
     }
 
     async changeRole(

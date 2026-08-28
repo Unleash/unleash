@@ -1,6 +1,6 @@
 import { styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { onEnter } from '../onEnter.ts';
 
 const StyledHeader = styled('span')(({ theme }) => ({
@@ -38,7 +38,7 @@ const firstFilterOption = (filter: { name: string; options: string[] }) =>
 const secondFilterOption = (filter: { name: string; options: string[] }) =>
     `${filter.name}:${filter.options.slice(0, 2).join(',')}`;
 
-export const SearchInstructions: VFC<ISearchInstructionsProps> = ({
+export const SearchInstructions: FC<ISearchInstructionsProps> = ({
     filters,
     searchableColumnsString,
     onClick,

@@ -3,9 +3,10 @@ import { FavoriteButton } from 'component/common/FavoriteButton/FavoriteButton';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Truncator } from 'component/common/Truncator/Truncator';
+import { OnboardingStatusBadge } from 'component/project/ProjectCard/OnboardingStatusBadge/OnboardingStatusBadge';
 import { ProjectModeBadge } from 'component/project/ProjectCard/ProjectModeBadge/ProjectModeBadge';
 import type { ProjectSchema } from 'openapi';
-import { Link } from 'react-router-dom';
+import { QuietLink } from 'component/common/QuietLink';
 
 const StyledCellContainer = styled('div')(({ theme }) => ({
     display: 'inline-flex',
@@ -14,12 +15,8 @@ const StyledCellContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(1, 2),
 }));
 
-const StyledFeatureLink = styled(Link)(({ theme }) => ({
-    textDecoration: 'none',
+const StyledFeatureLink = styled(QuietLink)(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
-    '&:hover, &:focus': {
-        textDecoration: 'underline',
-    },
 }));
 
 type ProjectsListTableNameCellProps = {
@@ -36,6 +33,9 @@ export const ProjectsListTableNameCell = ({
     onFavorite,
 }: ProjectsListTableNameCellProps) => {
     const { searchQuery } = useSearchHighlightContext();
+    const { onboardingStatus } = row.original;
+    const isOnboardingInProgress =
+        onboardingStatus && onboardingStatus.status !== 'onboarded';
 
     return (
         <StyledCellContainer>
@@ -47,6 +47,9 @@ export const ProjectsListTableNameCell = ({
                     </Highlighter>
                 </Truncator>
             </StyledFeatureLink>
+            {isOnboardingInProgress ? (
+                <OnboardingStatusBadge onboardingStatus={onboardingStatus} />
+            ) : null}
             <FavoriteButton
                 isFavorite={Boolean(isFavorite)}
                 onClick={onFavorite}

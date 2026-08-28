@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { groupImpactConfigs } from './groupImpactConfigs';
+import { groupImpactConfigs, multimetricFirst } from './groupImpactConfigs';
 import type { ImpactMetricsConfigSchema } from 'openapi';
 
 let ulidCounter = 0;
@@ -207,5 +207,52 @@ describe('groupImpactConfigs', () => {
                 configs: [weekRps],
             }),
         ]);
+    });
+});
+
+describe('multimetricFirst', () => {
+    it('moves multi-config groups ahead of solo groups', () => {
+        const solo = makeConfig({ displayName: 'solo', timeRange: 'week' });
+        const paired1 = makeConfig({ displayName: 'A', timeRange: 'day' });
+        const paired2 = makeConfig({ displayName: 'B', timeRange: 'day' });
+        const groups = groupImpactConfigs([solo, paired1, paired2]);
+        const ordered = multimetricFirst(groups);
+        expect(ordered.map((group) => group.configs.length)).toEqual([2, 1]);
+    });
+
+    it('preserves relative order within each partition', () => {
+        const firstPair = [
+            makeConfig({ displayName: 'A1', timeRange: 'day' }),
+            makeConfig({ displayName: 'A2', timeRange: 'day' }),
+        ];
+        const firstSolo = makeConfig({
+            displayName: 'S1',
+            timeRange: 'week',
+        });
+        const secondPair = [
+            makeConfig({ displayName: 'B1', timeRange: 'month' }),
+            makeConfig({ displayName: 'B2', timeRange: 'month' }),
+        ];
+        const secondSolo = makeConfig({
+            displayName: 'S2',
+            timeRange: 'hour',
+        });
+        const groups = groupImpactConfigs([
+            ...firstPair,
+            firstSolo,
+            ...secondPair,
+            secondSolo,
+        ]);
+        const ordered = multimetricFirst(groups);
+        expect(ordered.map((group) => group.timeRange)).toEqual([
+            'day',
+            'month',
+            'week',
+            'hour',
+        ]);
+    });
+
+    it('returns an empty array when no groups are provided', () => {
+        expect(multimetricFirst([])).toEqual([]);
     });
 });

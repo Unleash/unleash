@@ -1,5 +1,8 @@
 import { faker } from '@faker-js/faker';
-import { type IUnleashTest, setupApp } from '../../helpers/test-helper.js';
+import {
+    type IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../helpers/test-helper.js';
 import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 import getLogger from '../../../fixtures/no-logger.js';
 import version from '../../../../lib/util/version.js';
@@ -16,7 +19,17 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('register_client', getLogger);
-    app = await setupApp(db.stores);
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    allowDeprecatedApiTokenMiddleware: true,
+                },
+            },
+        },
+        undefined,
+    );
 });
 
 afterAll(async () => {

@@ -20,7 +20,7 @@ import {
 } from './editable-constraint-type.js';
 import { difference, union } from './set-functions.js';
 
-type EditableConstraintWithDeletedLegalValues = EditableConstraint & {
+export type EditableConstraintWithDeletedLegalValues = EditableConstraint & {
     deletedLegalValues?: Set<string>;
 };
 
@@ -183,10 +183,19 @@ export const constraintReducer = (
                 return removeValue(action.payload);
             }
             return addValue(action.payload);
-        case 'deleted legal values update':
+        case 'deleted legal values update': {
+            const next = action.payload ?? new Set<string>();
+            const current = state.deletedLegalValues ?? new Set<string>();
+            if (
+                current.size === next.size &&
+                Array.from(current).every((value) => next.has(value))
+            ) {
+                return state;
+            }
             return {
                 ...state,
                 deletedLegalValues: action.payload,
             };
+        }
     }
 };

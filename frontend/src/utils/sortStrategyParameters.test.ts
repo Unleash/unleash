@@ -1,12 +1,13 @@
+import { expect, test } from 'vitest';
 import { sortStrategyParameters } from 'utils/sortStrategyParameters';
 
 test('sortStrategyParameters', () => {
     expect(
         sortStrategyParameters(
             {
-                c: 1,
-                b: 2,
-                a: 3,
+                c: '1',
+                b: '2',
+                a: '3',
             },
             {
                 name: '',
@@ -22,8 +23,8 @@ test('sortStrategyParameters', () => {
             },
         ),
     ).toEqual({
-        a: 3,
-        b: 2,
-        c: 1,
+        a: '3',
+        b: '2',
+        c: '1',
     });
 });

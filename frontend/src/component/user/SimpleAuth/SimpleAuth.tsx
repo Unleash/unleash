@@ -2,24 +2,25 @@ import {
     type ChangeEventHandler,
     type FormEventHandler,
     useState,
-    type VFC,
+    type FC,
 } from 'react';
-import { Button, TextField } from '@mui/material';
+import { Button } from '@mui/material';
 import styles from './SimpleAuth.module.scss';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useAuthApi } from 'hooks/api/actions/useAuthApi/useAuthApi';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { LOGIN_BUTTON, LOGIN_EMAIL_ID } from 'utils/testIds';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import type { IAuthEndpointDetailsResponse } from 'hooks/api/getters/useAuth/useAuthEndpoint';
+import Input from 'component/common/Input/Input';
 
 interface ISimpleAuthProps {
     authDetails: IAuthEndpointDetailsResponse;
     redirect: string;
 }
 
-const SimpleAuth: VFC<ISimpleAuthProps> = ({ authDetails, redirect }) => {
+const SimpleAuth: FC<ISimpleAuthProps> = ({ authDetails, redirect }) => {
     const [email, setEmail] = useState('');
     const [isPending, setIsPending] = useState(false);
     const { refetchUser } = useAuthUser();
@@ -61,12 +62,11 @@ const SimpleAuth: VFC<ISimpleAuthProps> = ({ authDetails, redirect }) => {
                         securing Unleash on GitHub
                     </a>
                 </p>
-                <TextField
+                <Input
                     value={email}
                     onChange={handleChange}
-                    inputProps={{ 'data-testid': 'email-input-field' }}
-                    size='small'
-                    variant='outlined'
+                    size='large'
+                    fullWidth
                     label='Email'
                     name='email'
                     id='email'
@@ -74,6 +74,9 @@ const SimpleAuth: VFC<ISimpleAuthProps> = ({ authDetails, redirect }) => {
                     type='email'
                     data-testid={LOGIN_EMAIL_ID}
                     autoFocus
+                    slotProps={{
+                        htmlInput: { 'data-testid': 'email-input-field' },
+                    }}
                 />
                 <br />
 

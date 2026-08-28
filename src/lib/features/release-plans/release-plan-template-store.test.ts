@@ -15,7 +15,7 @@ afterAll(async () => {
     await db.destroy();
 });
 
-test('insert returns createdAt from the database', async () => {
+test('new templates are global by default', async () => {
     const store = new ReleasePlanTemplateStore(db.rawDatabase, config);
     const template = await store.insert({
         name: 'test-template',
@@ -24,13 +24,124 @@ test('insert returns createdAt from the database', async () => {
         createdByUserId: 1,
     });
 
-    expect(template.id).toBeDefined();
-    expect(template.createdAt).toBeDefined();
-    expect(template.createdAt).toBeInstanceOf(Date);
-    expect(template.name).toBe('test-template');
+    expect(template).toMatchObject({
+        id: expect.any(String),
+        name: 'test-template',
+        createdAt: expect.any(Date),
+        project: null,
+    });
 });
 
-test("store updates don't leak column names that don't belong in the model", async () => {
+test('templates can be scoped to a project', async () => {
+    const store = new ReleasePlanTemplateStore(db.rawDatabase, config);
+
+    const projectTemplate = await store.insert({
+        name: 'project-scoped-template',
+        description: 'scoped to a project',
+        discriminator: 'template',
+        createdByUserId: 1,
+        project: 'default',
+    });
+    expect(projectTemplate).toMatchObject({ project: 'default' });
+    expect(await store.getById(projectTemplate.id)).toMatchObject({
+        project: 'default',
+    });
+});
+
+test('global templates are visible in every project, scoped ones only in their own and listed before global ones', async () => {
+    const store = new ReleasePlanTemplateStore(db.rawDatabase, config);
+    await db.rawDatabase('release_plan_definitions').del();
+    await db.stores.projectStore.create({
+        id: 'other-project',
+        name: 'other-project',
+        description: '',
+    });
+
+    await store.insert({
+        name: 'global-template',
+        discriminator: 'template',
+        createdByUserId: 1,
+    });
+    await store.insert({
+        name: 'default-template',
+        discriminator: 'template',
+        createdByUserId: 1,
+        project: 'default',
+    });
+    await store.insert({
+        name: 'other-template',
+        discriminator: 'template',
+        createdByUserId: 1,
+        project: 'other-project',
+    });
+
+    const globalTemplates = await store.getGlobalTemplates();
+    expect(globalTemplates.map(({ name }) => name)).toEqual([
+        'global-template',
+    ]);
+
+    const defaultTemplates = await store.getProjectTemplates('default');
+    expect(defaultTemplates.map(({ name }) => name)).toEqual([
+        'default-template',
+    ]);
+
+    const visibleInDefault =
+        await store.getProjectAndGlobalTemplates('default');
+    expect(visibleInDefault.map(({ name }) => name)).toEqual([
+        'default-template',
+        'global-template',
+    ]);
+
+    const visibleInOther =
+        await store.getProjectAndGlobalTemplates('other-project');
+    expect(visibleInOther.map(({ name }) => name)).toEqual([
+        'other-template',
+        'global-template',
+    ]);
+});
+
+test('getById includes transition conditions stored for template milestones', async () => {
+    const store = new ReleasePlanTemplateStore(db.rawDatabase, config);
+    const template = await store.insert({
+        name: 'template-with-progressions',
+        discriminator: 'template',
+        createdByUserId: 1,
+    });
+    await db.rawDatabase('milestones').insert([
+        {
+            id: 'automated-milestone',
+            name: 'milestone 1',
+            sort_order: 0,
+            release_plan_definition_id: template.id,
+        },
+        {
+            id: 'target-milestone',
+            name: 'milestone 2',
+            sort_order: 1,
+            release_plan_definition_id: template.id,
+        },
+    ]);
+    await db.rawDatabase('milestone_progressions').insert({
+        source_milestone: 'automated-milestone',
+        target_milestone: 'target-milestone',
+        transition_condition: { intervalMinutes: 30 },
+    });
+
+    const fetched = await store.getById(template.id);
+
+    expect(fetched.milestones).toEqual([
+        expect.objectContaining({
+            id: 'automated-milestone',
+            transitionCondition: { intervalMinutes: 30 },
+        }),
+        expect.objectContaining({
+            id: 'target-milestone',
+            transitionCondition: undefined,
+        }),
+    ]);
+});
+
+test('updates return exactly the template model fields', async () => {
     const store = new ReleasePlanTemplateStore(db.rawDatabase, config);
     const template = await store.insert({
         name: 'template1',
@@ -43,14 +154,13 @@ test("store updates don't leak column names that don't belong in the model", asy
         description: 'new description',
     });
 
-    // camelCased version of db column names that don't belong in the return type
-    const unmappedColumns = [
-        'featureName',
-        'environment',
-        'activeMilestoneId',
-        'releasePlanTemplateId',
-    ];
-    for (const column of unmappedColumns) {
-        expect(updatedTemplate).not.toHaveProperty(column);
-    }
+    expect(Object.keys(updatedTemplate)).toEqual([
+        'id',
+        'name',
+        'createdAt',
+        'description',
+        'project',
+        'discriminator',
+        'createdByUserId',
+    ]);
 });

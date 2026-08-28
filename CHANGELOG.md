@@ -2,6 +2,756 @@
 
 All notable changes to this project will be documented in this file.
 
+## [8.1.0] - 2026-08-05
+
+### Bug Fixes
+
+- No phantom feature delete events
+
+- Align OSS frontend pnpm version
+
+- Keep typed text in the SDK selector while filtering ([#12480](https://github.com/Unleash/unleash/issues/12480))
+
+- Resolve Dependabot npm vulnerabilities
+
+- Do not post frontend flight recorder data from localhost
+
+- Hmr double react root
+
+- Move api build check to hosted edge - sandbox is has been torn down
+
+- Update fern widget with recent fixes
+
+- Give user_created a default value of true
+
+- Do not release lock when migration is stuck
+
+- Align schema to actual response body
+
+- Don't persist flag table selection when changing filters
+
+- Batch archived flag dialog
+
+- Force validation of single valued constraints
+
+- Multiple virtualized tables on same page work
+
+- Adjust some controls layout after top-label migration
+
+- Don't disable environments when reviving unarchived flags
+
+- Search suggestions crash on v8 table columns
+
+- Don't double archive 
+
+- Keep HelpIcon tooltip links interactive
+
+- Merge conflict
+
+- Top-label input layout issues and CR timeline alignment
+
+- Aligns the variant overrides and change request title rows
+
+- Display dates in user's locale in release plan milestones
+
+- Update dependency ip-address to v10.2.1 [security] ([#12511](https://github.com/Unleash/unleash/issues/12511))
+
+- Update dependency ip-address to v10.3.1 [security] ([#12513](https://github.com/Unleash/unleash/issues/12513))
+
+
+### Documentation
+
+- Sql standards adr
+
+
+### Features
+
+- Apply project release templates UI
+
+- Release plan scope badge
+
+- Sdk flavour metrics and custom headers
+
+- Report network errors flight recorder
+
+- Measure sdk timing
+
+- Measure sdk timing base path
+
+- Normalize sdk paths for metrics
+
+- Track edge-observed API token usage
+
+- Await for feature resolver readiness
+
+- In product docs widget
+
+- Add docs to connectSrc
+
+- Add fern algolia to connectSrc
+
+- Add userCreated to tokens and make edge-service create v2 token…
+
+- Conditional new release plan template when applying
+
+- Emit safeguard-triggered event when a safeguard fires
+
+- Align project list view information with project cards
+
+- Emit SDK flavor metadata from frontend client
+
+- Expiring token email sending
+
+- Add unleash toolbar in dev
+
+- Wire up expiry notifications
+
+- Ability to disable v2 tokens safely
+
+- Clone context field definitions ([#12498](https://github.com/Unleash/unleash/issues/12498))
+
+- Pass sdkFlavor through the bulk (Edge) metrics registration path
+
+- Expiry warnings for PATs and service account tokens in token APIs
+
+- Token expiry warning icons in PAT and service account token tables
+
+- Enable v2 tokens for project level tokens
+
+
+### Fix
+
+- Align archive button
+
+
+### Miscellaneous Tasks
+
+- New alpha UI endpoint /api/admin/flag-creators?q=k 
+
+- Flag creators DB query timer
+
+- Simple filter flags by creator (max 500)
+
+- Use smaller maxLimit for flag-creators
+
+- Virtualized filter for flag-creators 
+
+- Upgrade to Typescript 7
+
+- Add @fern-api/search-widget dependency
+
+- Register and oss extension point
+
+- Remove unused sync workflow cache setup ([#12488](https://github.com/Unleash/unleash/issues/12488))
+
+- Adjust search docs button
+
+- Remove workspace pin for package we don't use anymore
+
+- Flag new raw MUI floating labels via Biome plugin
+
+- Orval flag-creators
+
+- Use correct type for flag creators hook 
+
+- Remove the `archiveInFlagsView` flag
+
+- Make snow integration fully runtime-controllable
+
+- Clean up 'newProfileDropdown' feature flag
+
+- New iteration of the quick tour demo
+
+- Setup flag floatingOnboardingChecklist
+
+- Remove `registerImpactMetrics` flag
+
+- Use delayed flag eval in nav
+
+- Rename useDelayedUiFlagEvaluation to useUiFlagEvaluator
+
+- Introduce 2 more sizes to controls
+
+- Remove newProjectList flag
+
+- Run backend and frontend builds as needed ([#12505](https://github.com/Unleash/unleash/issues/12505))
+
+- Create the onboarding checklist dialog ([#12499](https://github.com/Unleash/unleash/issues/12499))
+
+- Floating onboarding checklist keyboard navigation
+
+- Sec vulnerabilities cleanup
+
+- Remove custom metrics POC ([#12517](https://github.com/Unleash/unleash/issues/12517))
+
+- Fiixing how onbording checklist looks
+
+- Sec vulnerabilities cleanup
+
+
+### Refactor
+
+- Project general settings form
+
+- Project enterprise settings + actions form
+
+- Migrate forms to top label components + use FormGroup
+
+- Ui refactor to remove intermediate step in add safeguard
+
+- Migrate more forms to top-label inputs
+
+- Migrate more controls to top label
+
+- Use right hand exclusive range
+
+- Migrate rest of controls to top label
+
+- Drop margin bottom from FormField, own spacing at call sites
+
+- Cleanup token expiry notifications
+
+- Parse authorization tokens on the boundary
+
+
+### Dev
+
+- It's not longer recommended to use Styled name prefix
+
+
+## [8.0.3] - 2026-07-10
+
+### Bug Fixes
+
+- Linting errors ([#12441](https://github.com/Unleash/unleash/issues/12441))
+
+- Close any open page before opening a new pageview ([#12444](https://github.com/Unleash/unleash/issues/12444))
+
+- Normalize trailing slash in tracked page paths ([#12445](https://github.com/Unleash/unleash/issues/12445))
+
+- Do not pollute global Mustache state ([#1222](https://github.com/Unleash/unleash/issues/1222))
+
+- Do not pollute global Mustache state ([#1222](https://github.com/Unleash/unleash/issues/1222))
+
+- Remove extra thick outline on help button ([#1218](https://github.com/Unleash/unleash/issues/1218))
+
+- Do not pollute global Mustache state ([#1222](https://github.com/Unleash/unleash/issues/1222))
+
+- Remove extra thick outline on help button ([#1218](https://github.com/Unleash/unleash/issues/1218))
+
+- Don't allow cloning features across projects
+
+- Strategy operations have previously only needed id
+
+- Updating sort orders requires strategy to belong to feature
+
+- Since title and display name is user entered have mustache filte…
+
+- Added check that all toggles are part of the project in the url
+
+- Prevent cross project segment update
+
+- Project mode should not allow global access
+
+
+### Features
+
+- Add SEMVER_GTE and SEMVER_LTE constraint operators ([#11708](https://github.com/Unleash/unleash/issues/11708))
+
+- Frontend impression events ([#12435](https://github.com/Unleash/unleash/issues/12435))
+
+- Correlate session id ([#12437](https://github.com/Unleash/unleash/issues/12437))
+
+- Track engaged time per page view
+
+- Remove logrocket event tracking setup ([#12385](https://github.com/Unleash/unleash/issues/12385))
+
+- Add pathname to custom tracking events ([#12452](https://github.com/Unleash/unleash/issues/12452))
+
+- Poll ServiceNow for open mapped change request states ([#1197](https://github.com/Unleash/unleash/issues/1197))
+
+- Make project onboarding steps visible to LogRocket ([#12453](https://github.com/Unleash/unleash/issues/12453))
+
+- Add active sessions inspector
+
+- Project level release templates flag
+
+- Project level release templates migration
+
+- Add optional project to template store
+
+- Specialized queries for release template variants
+
+- Release template events project
+
+- Render inputs with top (instead of floating) label behind flag
+
+- Project release templates screen in project settings
+
+- Add new permission for updating project release templates
+
+- Project release template permission application
+
+- Read-only project release templates list
+
+- Pass `Input` descriptions as a prop, drop redundant ones
+
+- Add custom `AutocompleteField`, migrate `SelectSdk` to it
+
+- Context field cross project hardening
+
+- Refresh feature view on interval
+
+- Include global templates in project template resource
+
+- Create, edit and archive project release templates
+
+- Add custom `SelectField`, migrate `BannerForm` to it
+
+- Disable release template actions while saving
+
+- Add `FormGroup` and use it in BannerForm
+
+- Track release template errors and scope
+
+- List project release templates before global ones
+
+
+### Miscellaneous Tasks
+
+- New in unleash page - groundwork ([#1200](https://github.com/Unleash/unleash/issues/1200))
+
+- Run oss ci checks in enterprise ([#1202](https://github.com/Unleash/unleash/issues/1202))
+
+- Sync OSS subtree from upstream
+
+- New in unleash feature images ([#1208](https://github.com/Unleash/unleash/issues/1208))
+
+- New in unleash feedback follow up ([#1204](https://github.com/Unleash/unleash/issues/1204))
+
+- Update notify_enterprise.yaml ([#12443](https://github.com/Unleash/unleash/issues/12443))
+
+- New in unlash set up last 3 features data
+
+- New in unleash better images ([#1213](https://github.com/Unleash/unleash/issues/1213))
+
+- Import OSS subtree with full history ([#1212](https://github.com/Unleash/unleash/issues/1212))
+
+- New in unleash feature share your input 
+
+- Import OSS subtree with full history ([#1212](https://github.com/Unleash/unleash/issues/1212))
+
+- New in unleash feature share your input 
+
+- Import OSS subtree with full history ([#1212](https://github.com/Unleash/unleash/issues/1212))
+
+- New in unleash feature share your input 
+
+- Add a checked target we can enforce in CI
+
+- New in unlash styling
+
+- No early access features
+
+- Rename flag to whatsNewPage
+
+- Disable old new in unleash when whatsNewPage flag is on
+
+- What's new - rename 
+
+- Add what's new to help & resources
+
+- What's new - add events
+
+- What's new fix inconsistent whitespace
+
+- What's new Share your input - add a popup for showing the email
+
+- What's new page - improve column widths
+
+- Add snow icon
+
+- Clean up flag hideTopmenuDocumentation
+
+- What's new different milestone progression and safegrauds link
+
+- Add `topLabelInputs` feature flag
+
+- Tidy package lifecycle scripts
+
+
+### Refactor
+
+- What's new fix styled component names 
+
+
+### Testing
+
+- Add story file for new in unleash card ([#1207](https://github.com/Unleash/unleash/issues/1207))
+
+- Run OSS unit tests without per-file isolation
+
+- Try fixing operational flaky test
+
+
+### Dev
+
+- Lazy-load story modules in StoriesPage
+
+- Enable _stories page on production with flag
+
+- Lint styled component name
+
+- Unify lint and lint:fix
+
+- Allow exported component names to not have Styled prefix
+
+- Remove not needed button stories
+
+- Flag flagListCreatedByFilter
+
+
+## [8.0.2] - 2026-06-29
+
+### Bug Fixes
+
+- Json editor cursor color ([#12354](https://github.com/Unleash/unleash/issues/12354))
+
+- Infinite update loop (React error 185) when editing segment constraints with legal values ([#12366](https://github.com/Unleash/unleash/issues/12366))
+
+- Change password should not be available with SSO ([#12376](https://github.com/Unleash/unleash/issues/12376))
+
+- Don't trap curson on profile menu theme selection ([#12393](https://github.com/Unleash/unleash/issues/12393))
+
+- Prevent nested json errors ([#12408](https://github.com/Unleash/unleash/issues/12408))
+
+- Prevent nested json error pt2 ([#12410](https://github.com/Unleash/unleash/issues/12410))
+
+- Make addons accept allowlists and deny private ip by default ([#12419](https://github.com/Unleash/unleash/issues/12419))
+
+
+### Features
+
+- Add top movers modal ([#12326](https://github.com/Unleash/unleash/issues/12326))
+
+- Create teamsworkflowaddon ([#12344](https://github.com/Unleash/unleash/issues/12344))
+
+- Added htmlInput validation extension for joi schemas ([#12377](https://github.com/Unleash/unleash/issues/12377))
+
+- Add flight recorder to event trackers ([#12375](https://github.com/Unleash/unleash/issues/12375))
+
+- Add flightRecorderAdminEvents flag ([#12378](https://github.com/Unleash/unleash/issues/12378))
+
+- Design system improvements — buttons + shared control foundation ([#12294](https://github.com/Unleash/unleash/issues/12294))
+
+- Configure flight recorder url ([#12379](https://github.com/Unleash/unleash/issues/12379))
+
+- Flush events on user leaving the page ([#12381](https://github.com/Unleash/unleash/issues/12381))
+
+- Remove log rocket from event tracker ([#12382](https://github.com/Unleash/unleash/issues/12382))
+
+- Use event tracker for search component ([#12384](https://github.com/Unleash/unleash/issues/12384))
+
+- Allow csp flight recorder ([#12387](https://github.com/Unleash/unleash/issues/12387))
+
+- Add registerProvider to AddonService ([#12383](https://github.com/Unleash/unleash/issues/12383))
+
+- Anonymize flight recorder context ([#12395](https://github.com/Unleash/unleash/issues/12395))
+
+- Gate servicenow addon behind serviceNowIntegration flag ([#12398](https://github.com/Unleash/unleash/issues/12398))
+
+- Hash email context ([#12397](https://github.com/Unleash/unleash/issues/12397))
+
+- Hash email upfront ([#12403](https://github.com/Unleash/unleash/issues/12403))
+
+- Replace plausible tracker with event tracker ([#12402](https://github.com/Unleash/unleash/issues/12402))
+
+- Add servicenow_change_references table ([#12407](https://github.com/Unleash/unleash/issues/12407))
+
+- Add flightRecorderFrontend variant flag ([#12413](https://github.com/Unleash/unleash/issues/12413))
+
+- Drive SDK flight recorder from feature flag ([#12416](https://github.com/Unleash/unleash/issues/12416))
+
+
+### Miscellaneous Tasks
+
+- Simple code highlighting for onboarding ([#12298](https://github.com/Unleash/unleash/issues/12298))
+
+- Onbording wrap your code min height ([#12332](https://github.com/Unleash/unleash/issues/12332))
+
+- Help and resources learning lab variants handling ([#12337](https://github.com/Unleash/unleash/issues/12337))
+
+- Add wrap to our main text element ([#12349](https://github.com/Unleash/unleash/issues/12349))
+
+- Add teams-workflow and update links in schemas ([#12352](https://github.com/Unleash/unleash/issues/12352))
+
+- Show help&resources when flags are enabled ([#12350](https://github.com/Unleash/unleash/issues/12350))
+
+- Help&resources - report flag variant ([#12353](https://github.com/Unleash/unleash/issues/12353))
+
+- Enable COEP for non-api requests ([#12367](https://github.com/Unleash/unleash/issues/12367))
+
+- Update coep header to be credentialless, i.e. not include cooki… ([#12374](https://github.com/Unleash/unleash/issues/12374))
+
+- Update pnpm to 11.8.0 ([#12373](https://github.com/Unleash/unleash/issues/12373))
+
+- Better header for smaller screens ([#12368](https://github.com/Unleash/unleash/issues/12368))
+
+- Fixing feedback list formatting ([#12380](https://github.com/Unleash/unleash/issues/12380))
+
+- Feedback 5 start rating ([#12386](https://github.com/Unleash/unleash/issues/12386))
+
+- New learning lab url ([#12391](https://github.com/Unleash/unleash/issues/12391))
+
+- Fix invite users dropdown position ([#12392](https://github.com/Unleash/unleash/issues/12392))
+
+- Fix help resources icon shape ([#12394](https://github.com/Unleash/unleash/issues/12394))
+
+- Add servicenowintegration flag ([#12396](https://github.com/Unleash/unleash/issues/12396))
+
+- Support arrow keys navigation in user profile theme selection ([#12399](https://github.com/Unleash/unleash/issues/12399))
+
+- Update feature types descriptions ([#12341](https://github.com/Unleash/unleash/issues/12341))
+
+- Cap codebox height ([#12343](https://github.com/Unleash/unleash/issues/12343))
+
+- Use OIDC for static asset publishing ([#12409](https://github.com/Unleash/unleash/issues/12409))
+
+- Access request notifications ([#12406](https://github.com/Unleash/unleash/issues/12406))
+
+- Highlight access request ([#12411](https://github.com/Unleash/unleash/issues/12411))
+
+- Bump @unleash/sdk-flight-recorder to 0.6.0 ([#12418](https://github.com/Unleash/unleash/issues/12418))
+
+- Highlight access request with Highlight component ([#12417](https://github.com/Unleash/unleash/issues/12417))
+
+- Remove highlights from access requests ([#12423](https://github.com/Unleash/unleash/issues/12423))
+
+- Pending access request menu indicator ([#12420](https://github.com/Unleash/unleash/issues/12420))
+
+- Bump flight recorder ([#12424](https://github.com/Unleash/unleash/issues/12424))
+
+- Bump unleash-client to 6.11.1 ([#12429](https://github.com/Unleash/unleash/issues/12429))
+
+- Add access-request-notifications events ([#12430](https://github.com/Unleash/unleash/issues/12430))
+
+- Optimize frontend evaluation ([#12428](https://github.com/Unleash/unleash/issues/12428))
+
+
+### Refactor
+
+- Simplify button ([#12422](https://github.com/Unleash/unleash/issues/12422))
+
+
+### Testing
+
+- E2e groups failure ([#12340](https://github.com/Unleash/unleash/issues/12340))
+
+- Try fixing e2e group deletion test ([#12351](https://github.com/Unleash/unleash/issues/12351))
+
+
+## [8.0.1] - 2026-06-16
+
+### Bug Fixes
+
+- Invalidate other sessions on password change ([#12262](https://github.com/Unleash/unleash/issues/12262))
+
+- Update lifecycle counts immediately after archiving/reviving/deleting flags ([#12274](https://github.com/Unleash/unleash/issues/12274))
+
+- Keep stable legacy endpoints for a bit longer ([#12307](https://github.com/Unleash/unleash/issues/12307))
+
+- Vulnerabilities ([#12325](https://github.com/Unleash/unleash/issues/12325))
+
+
+### Documentation
+
+- Add unleash_test database creation step to setup guide ([#12254](https://github.com/Unleash/unleash/issues/12254))
+
+
+### Features
+
+- Support filtering feature search by the `archived` lifecycle stage ([#12260](https://github.com/Unleash/unleash/issues/12260))
+
+- Update flags overview page to include archived ([#12268](https://github.com/Unleash/unleash/issues/12268))
+
+- Allow impact views to use 3 months and 6 months window ([#12276](https://github.com/Unleash/unleash/issues/12276))
+
+- Archived features in impact views ([#12287](https://github.com/Unleash/unleash/issues/12287))
+
+- Select theme preference from user profile menu ([#12300](https://github.com/Unleash/unleash/issues/12300))
+
+- Add wiring ([#12318](https://github.com/Unleash/unleash/issues/12318))
+
+- Prepare details for modal ([#12323](https://github.com/Unleash/unleash/issues/12323))
+
+
+### Miscellaneous Tasks
+
+- Onboarding php snippet update ([#12256](https://github.com/Unleash/unleash/issues/12256))
+
+- Onboarding ios snippet update ([#12261](https://github.com/Unleash/unleash/issues/12261))
+
+- Trust @unleash/proxy-client-react ([#12269](https://github.com/Unleash/unleash/issues/12269))
+
+- Onboarding add Next.js snippet ([#12273](https://github.com/Unleash/unleash/issues/12273))
+
+- Redirect /archive to flags page  ([#12279](https://github.com/Unleash/unleash/issues/12279))
+
+- Add react native to onboarding and add missing integrations ([#12280](https://github.com/Unleash/unleash/issues/12280))
+
+- Add newProfileDropdown feature flag ([#12290](https://github.com/Unleash/unleash/issues/12290))
+
+- Redesign user profile dropdown as MUI menu behind flag ([#12289](https://github.com/Unleash/unleash/issues/12289))
+
+- Upgrade react router to v7 ([#12241](https://github.com/Unleash/unleash/issues/12241))
+
+- Remove react-router-dom import ([#12295](https://github.com/Unleash/unleash/issues/12295))
+
+- Move avatar section from user profile button to dropdown ([#12291](https://github.com/Unleash/unleash/issues/12291))
+
+- Hide documentation from top header if flag enabled ([#12297](https://github.com/Unleash/unleash/issues/12297))
+
+- Add release versions to endpoints ([#12309](https://github.com/Unleash/unleash/issues/12309))
+
+- Enforce release definition ([#12310](https://github.com/Unleash/unleash/issues/12310))
+
+- Add new help icon with menu ([#12308](https://github.com/Unleash/unleash/issues/12308))
+
+- SelectSdk dropdown improvements ([#12306](https://github.com/Unleash/unleash/issues/12306))
+
+- Show theme sub menu on hover ([#12317](https://github.com/Unleash/unleash/issues/12317))
+
+- New help option and fix sizes ([#12319](https://github.com/Unleash/unleash/issues/12319))
+
+- Basic events for help resources ([#12320](https://github.com/Unleash/unleash/issues/12320))
+
+- Add TS safeguard around formatAssetPath trap ([#12321](https://github.com/Unleash/unleash/issues/12321))
+
+
+### Refactor
+
+- Migrate project flags table ActionsCell to MUI Menu ([#12277](https://github.com/Unleash/unleash/issues/12277))
+
+- One sdk icons list ([#12288](https://github.com/Unleash/unleash/issues/12288))
+
+
+### Testing
+
+- Make flag name match in any html element ([#12270](https://github.com/Unleash/unleash/issues/12270))
+
+
+## [8.0.0] - 2026-06-09
+
+### Bug Fixes
+
+- Invalid button nesting in segment accordion headers ([#12167](https://github.com/Unleash/unleash/issues/12167))
+
+- Profile tab navigation with React Router `v7_startTransition` ([#12205](https://github.com/Unleash/unleash/issues/12205))
+
+- Remove deprecated Google auth integration - EG-4389 ([#12208](https://github.com/Unleash/unleash/issues/12208))
+
+- Remove json viewer ([#12217](https://github.com/Unleash/unleash/issues/12217))
+
+- Only show impact metrics tip once flag setup is complete ([#12240](https://github.com/Unleash/unleash/issues/12240))
+
+- Impact views minor visual improvements ([#12238](https://github.com/Unleash/unleash/issues/12238))
+
+- Remove SDK registration and metrics `environment` field ([#12224](https://github.com/Unleash/unleash/issues/12224))
+
+
+### Features
+
+- Add Sunset feature flag type ([#12157](https://github.com/Unleash/unleash/issues/12157))
+
+- Goal-view types + goal summary (PR 2) ([#12177](https://github.com/Unleash/unleash/issues/12177))
+
+- Goal summary panel (PR 3) ([#12197](https://github.com/Unleash/unleash/issues/12197))
+
+- Add a new useMinimumUnleashVersion hook ([#12172](https://github.com/Unleash/unleash/issues/12172))
+
+- Followed-features list + dummy goal view ([#12200](https://github.com/Unleash/unleash/issues/12200))
+
+- Impact metrics for all setup options ([#12201](https://github.com/Unleash/unleash/issues/12201))
+
+- Remove instance level impact metrics ([#12203](https://github.com/Unleash/unleash/issues/12203))
+
+- Impact views data fetching ([#12204](https://github.com/Unleash/unleash/issues/12204))
+
+- Add view switcher ([#12214](https://github.com/Unleash/unleash/issues/12214))
+
+- Add roll out strategy banner + refactor flag setup banners ([#12218](https://github.com/Unleash/unleash/issues/12218))
+
+- Setup form ([#12229](https://github.com/Unleash/unleash/issues/12229))
+
+- Add support for logout event ([#12226](https://github.com/Unleash/unleash/issues/12226))
+
+
+### Miscellaneous Tasks
+
+- Remove v5 deprecated admin strategies and variants fields ([#12156](https://github.com/Unleash/unleash/issues/12156))
+
+- Clean up scim error handling, add a flag to disabling scim guard ([#12198](https://github.com/Unleash/unleash/issues/12198))
+
+- Move flag details sidebar from the left to the right ([#12165](https://github.com/Unleash/unleash/issues/12165))
+
+- Remove unused attributes and props in constraint accordion view. ([#12168](https://github.com/Unleash/unleash/issues/12168))
+
+- Project onboarding steps shown simplification ([#12202](https://github.com/Unleash/unleash/issues/12202))
+
+- Svelte snippet update ([#12206](https://github.com/Unleash/unleash/issues/12206))
+
+- Replace feature page impace metrics empty state ([#12209](https://github.com/Unleash/unleash/issues/12209))
+
+- Remove back button from signup screen ([#12212](https://github.com/Unleash/unleash/issues/12212))
+
+- Remove old feature flag and introduce new inverted flag ([#12185](https://github.com/Unleash/unleash/issues/12185))
+
+- Add a build check to see if unleash meets parity with edge api ([#12183](https://github.com/Unleash/unleash/issues/12183))
+
+- Remove deltaDiff parity logic ([#12216](https://github.com/Unleash/unleash/issues/12216))
+
+- Include CLA ([#12213](https://github.com/Unleash/unleash/issues/12213))
+
+- Update PR template ([#12219](https://github.com/Unleash/unleash/issues/12219))
+
+- Remove safeguards flag ([#12207](https://github.com/Unleash/unleash/issues/12207))
+
+- Onboarding android snippet ([#12189](https://github.com/Unleash/unleash/issues/12189))
+
+- Simper Vue code snippets ([#12227](https://github.com/Unleash/unleash/issues/12227))
+
+- Add timing metric for old project list path ([#12228](https://github.com/Unleash/unleash/issues/12228))
+
+- Redesign Connect SDK and Implement flag setup banners ([#12225](https://github.com/Unleash/unleash/issues/12225))
+
+- Bump biome to 2.4.16 ([#12233](https://github.com/Unleash/unleash/issues/12233))
+
+- Bump dependencies ([#12234](https://github.com/Unleash/unleash/issues/12234))
+
+- Onboarding flutter snippet ([#12236](https://github.com/Unleash/unleash/issues/12236))
+
+- Make environment_revision_id gauge register idempotent ([#12239](https://github.com/Unleash/unleash/issues/12239))
+
+- Onboarding small fix in Java snippet ([#12242](https://github.com/Unleash/unleash/issues/12242))
+
+- Gate flag-page impact metrics on useImpactMetricsEnabled ([#12248](https://github.com/Unleash/unleash/issues/12248))
+
+- Set minimum postgres version to 15.0.0 ([#12249](https://github.com/Unleash/unleash/issues/12249))
+
+- Onboarding .NET snippet style ([#12250](https://github.com/Unleash/unleash/issues/12250))
+
+- Remove completed `flightRecorder` experimental flag wiring ([#12252](https://github.com/Unleash/unleash/issues/12252))
+
+- Add new archiveInFlagsView flag to Unleash ([#12257](https://github.com/Unleash/unleash/issues/12257))
+
+- Add new lifecycle options so that we can show archived ([#12259](https://github.com/Unleash/unleash/issues/12259))
+
+
+### Refactor
+
+- Reuse ConnectionPulse component in connect SDK dialog ([#12243](https://github.com/Unleash/unleash/issues/12243))
+
+
 ## [7.6.3] - 2026-04-15
 
 ### Features

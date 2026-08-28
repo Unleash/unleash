@@ -1,3 +1,4 @@
+import { createUuid } from 'utils/createUuid';
 import type React from 'react';
 import { useCallback, useEffect, useImperativeHandle, memo } from 'react';
 import { forwardRef } from 'react';
@@ -81,7 +82,7 @@ export const EditableConstraintsList = forwardRef<
         if (!constraints.every((constraint) => constraintId in constraint)) {
             setConstraints(
                 constraints.map((constraint) => ({
-                    [constraintId]: crypto.randomUUID(),
+                    [constraintId]: createUuid(),
                     ...constraint,
                 })),
             );

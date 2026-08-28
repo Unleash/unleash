@@ -37,6 +37,8 @@ export const scheduleServices = (
         uniqueConnectionService,
         unknownFlagsService,
         edgeService,
+        apiTokenV2Service,
+        transactionalApiTokenV2Service,
     } = services;
 
     schedulerService.schedule(
@@ -52,7 +54,12 @@ export const scheduleServices = (
     );
 
     schedulerService.schedule(
-        apiTokenService.fetchActiveTokens.bind(apiTokenService),
+        async () => {
+            await Promise.all([
+                apiTokenService.fetchActiveTokens(),
+                apiTokenV2Service.fetchActiveTokens(),
+            ]);
+        },
         minutesToMilliseconds(1),
         'fetchActiveTokens',
         0, // no jitter, we need tokens at startup
@@ -212,5 +219,19 @@ export const scheduleServices = (
         edgeService.deleteExpiredNonces.bind(edgeService),
         hoursToMilliseconds(1),
         'clearExpiredEdgeNonces',
+    );
+    schedulerService.schedule(
+        async () => {
+            const deleted = await transactionalApiTokenV2Service.transactional(
+                // delete + audit events: together
+                (service) => service.deleteSystemCreatedTokensNotSeen(),
+            );
+            // after deletion success, clear cache
+            apiTokenV2Service.invalidateCache(
+                deleted.map((token) => token.selector),
+            );
+        },
+        minutesToMilliseconds(10),
+        'deleteSystemCreatedTokensNotSeen',
     );
 };

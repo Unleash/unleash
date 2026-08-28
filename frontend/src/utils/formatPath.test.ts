@@ -1,8 +1,13 @@
+import { expect, test } from 'vitest';
 import {
     parseBasePath,
     formatAssetPath,
     formatApiPath,
 } from 'utils/formatPath';
+
+// Cast helpers: in tests we pass string literals; in production these are
+// always UnformattedAssetPath values coming from Vite's static asset imports.
+const asset = (path: string) => path as unknown as UnformattedAssetPath;
 
 test('formatBasePath', () => {
     expect(parseBasePath()).toEqual('');
@@ -16,19 +21,19 @@ test('formatBasePath', () => {
 });
 
 test('formatAssetPath', () => {
-    expect(formatAssetPath('')).toEqual('');
-    expect(formatAssetPath('/')).toEqual('');
-    expect(formatAssetPath('a')).toEqual('/a');
-    expect(formatAssetPath('/a')).toEqual('/a');
-    expect(formatAssetPath('/a/')).toEqual('/a');
-    expect(formatAssetPath('a/b/')).toEqual('/a/b');
-    expect(formatAssetPath('', '')).toEqual('');
-    expect(formatAssetPath('/', '/')).toEqual('');
-    expect(formatAssetPath('a', 'x')).toEqual('/x/a');
-    expect(formatAssetPath('/a', '/x')).toEqual('/x/a');
-    expect(formatAssetPath('/a/', '/x/')).toEqual('/x/a');
-    expect(formatAssetPath('a/b/', 'x/y/')).toEqual('/x/y/a/b');
-    expect(formatAssetPath('//a//b//', '//x//y//')).toEqual('/x/y/a/b');
+    expect(formatAssetPath(asset(''))).toEqual('');
+    expect(formatAssetPath(asset('/'))).toEqual('');
+    expect(formatAssetPath(asset('a'))).toEqual('/a');
+    expect(formatAssetPath(asset('/a'))).toEqual('/a');
+    expect(formatAssetPath(asset('/a/'))).toEqual('/a');
+    expect(formatAssetPath(asset('a/b/'))).toEqual('/a/b');
+    expect(formatAssetPath(asset(''), '')).toEqual('');
+    expect(formatAssetPath(asset('/'), '/')).toEqual('');
+    expect(formatAssetPath(asset('a'), 'x')).toEqual('/x/a');
+    expect(formatAssetPath(asset('/a'), '/x')).toEqual('/x/a');
+    expect(formatAssetPath(asset('/a/'), '/x/')).toEqual('/x/a');
+    expect(formatAssetPath(asset('a/b/'), 'x/y/')).toEqual('/x/y/a/b');
+    expect(formatAssetPath(asset('//a//b//'), '//x//y//')).toEqual('/x/y/a/b');
 });
 
 test('formatApiPath', () => {

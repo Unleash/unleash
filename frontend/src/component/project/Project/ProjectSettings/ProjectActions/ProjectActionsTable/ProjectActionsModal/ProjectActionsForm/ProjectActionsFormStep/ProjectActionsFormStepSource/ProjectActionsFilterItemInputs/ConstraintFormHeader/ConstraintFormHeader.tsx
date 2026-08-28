@@ -4,6 +4,7 @@ import { styled } from '@mui/material';
 const StyledHeader = styled('h3')(({ theme }) => ({
     fontSize: theme.fontSizes.bodySize,
     fontWeight: theme.typography.fontWeightRegular,
+    marginBottom: theme.spacing(2),
 }));
 
 export const ConstraintFormHeader: React.FC<

@@ -5,7 +5,7 @@
  */
 
 /**
- * Type of the flag e.g. experiment, kill-switch, release, operational, permission
+ * Type of the flag e.g. experiment, kill-switch, release, operational, permission, sunset
  */
 export type UpdateFeatureSchemaType =
     (typeof UpdateFeatureSchemaType)[keyof typeof UpdateFeatureSchemaType];
@@ -17,4 +17,5 @@ export const UpdateFeatureSchemaType = {
     release: 'release',
     operational: 'operational',
     permission: 'permission',
+    sunset: 'sunset',
 } as const;

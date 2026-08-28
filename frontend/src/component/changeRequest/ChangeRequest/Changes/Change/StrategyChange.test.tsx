@@ -1,9 +1,10 @@
+import { beforeEach, expect, test } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { StrategyChange } from './StrategyChange.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 const server = testServerSetup();
 

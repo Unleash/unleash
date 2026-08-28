@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { clearCacheEntries } from './useClearSWRCache.js';
 
 describe('manageCacheEntries', () => {

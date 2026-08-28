@@ -83,7 +83,7 @@ export const LinkField: FC<ILinkFieldProps> = ({
                     sx={small ? { ml: 0.5 } : {}}
                     disabled={isExpired}
                 >
-                    <CopyIcon sx={{ fontSize: small ? 20 : undefined }} />
+                    <CopyIcon />
                 </IconButton>
             </Tooltip>
         </StyledBox>

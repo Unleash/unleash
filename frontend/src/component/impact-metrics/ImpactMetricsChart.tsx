@@ -259,8 +259,10 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
                 >
                     <Typography
                         variant='caption'
-                        color='text.secondary'
-                        sx={{ wordBreak: 'break-all' }}
+                        sx={{
+                            color: 'text.secondary',
+                            wordBreak: 'break-all',
+                        }}
                     >
                         <code>{debug.query}</code>
                     </Typography>

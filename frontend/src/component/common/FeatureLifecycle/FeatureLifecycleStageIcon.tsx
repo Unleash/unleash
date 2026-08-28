@@ -1,9 +1,9 @@
 import type { FC } from 'react';
-import { ReactComponent as CreatedIcon } from 'assets/icons/lifecycle/stage-created.svg';
-import { ReactComponent as PreLiveIcon } from 'assets/icons/lifecycle/stage-prelive.svg';
-import { ReactComponent as LiveIcon } from 'assets/icons/lifecycle/stage-live.svg';
-import { ReactComponent as CompletedIcon } from 'assets/icons/lifecycle/stage-completed.svg';
-import { ReactComponent as ArchivedIcon } from 'assets/icons/lifecycle/stage-archived.svg';
+import CreatedIcon from 'assets/icons/lifecycle/stage-created.svg?react';
+import PreLiveIcon from 'assets/icons/lifecycle/stage-prelive.svg?react';
+import LiveIcon from 'assets/icons/lifecycle/stage-live.svg?react';
+import CompletedIcon from 'assets/icons/lifecycle/stage-completed.svg?react';
+import ArchivedIcon from 'assets/icons/lifecycle/stage-archived.svg?react';
 import type { LifecycleStage } from '../../feature/FeatureView/FeatureOverview/FeatureLifecycle/LifecycleStage.tsx';
 
 export const FeatureLifecycleStageIcon: FC<{

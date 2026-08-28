@@ -29,7 +29,9 @@ export const MetaWidget: FC<IMetaWidgetProps> = ({ id, description }) => {
                 <Typography
                     component='span'
                     variant='body2'
-                    color='text.secondary'
+                    sx={{
+                        color: 'text.secondary',
+                    }}
                 >
                     ID:
                 </Typography>{' '}

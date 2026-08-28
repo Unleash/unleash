@@ -1,5 +1,5 @@
-import { Grid } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import Grid from '@mui/material/Grid';
+import { useNavigate } from 'react-router';
 import { UPDATE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
@@ -49,7 +49,7 @@ export const StrategyView = () => {
             }
         >
             <Grid container>
-                <Grid item xs={12} sm={12}>
+                <Grid size={{ xs: 12, sm: 12 }}>
                     <StrategyDetails
                         strategy={strategy}
                         applications={applications}

@@ -1,3 +1,4 @@
+import { test } from 'vitest';
 import { screen } from '@testing-library/react';
 import { INVALID_TOKEN_BUTTON } from 'utils/testIds';
 import ResetPassword from 'component/user/ResetPassword/ResetPassword';

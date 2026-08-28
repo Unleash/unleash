@@ -1,5 +1,5 @@
 import { type FormEventHandler, useState, type FC } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useSWRConfig } from 'swr';
 import { Box, Button, Typography } from '@mui/material';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
@@ -17,7 +17,7 @@ import { useInviteTokenApi } from 'hooks/api/actions/useInviteTokenApi/useInvite
 import { useInviteTokens } from 'hooks/api/getters/useInviteTokens/useInviteTokens';
 import { LinkField } from '../LinkField/LinkField.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 type IInviteLinkProps = {};
 
@@ -61,7 +61,7 @@ export const InviteLink: FC<IInviteLinkProps> = () => {
     const { data, loading } = useInviteTokens();
     const [inviteLink, setInviteLink] = useState('');
     const { mutate } = useSWRConfig();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const [expiry, setExpiry] = useState(expiryOptions[0].key);
     const [showDisableDialog, setDisableDialogue] = useState(false);
     const defaultToken = data?.tokens?.find(
@@ -175,10 +175,20 @@ export const InviteLink: FC<IInviteLinkProps> = () => {
                                 theme.palette.background.elevation2,
                         }}
                     >
-                        <Typography variant='body2' fontWeight='bold'>
+                        <Typography
+                            variant='body2'
+                            sx={{
+                                fontWeight: 'bold',
+                            }}
+                        >
                             Viewer
                         </Typography>
-                        <Typography variant='body2' color='text.secondary'>
+                        <Typography
+                            variant='body2'
+                            sx={{
+                                color: 'text.secondary',
+                            }}
+                        >
                             Users with this role can only read root resources in
                             Unleash. The viewer can be added to specific
                             projects as project member. Viewers may not view API

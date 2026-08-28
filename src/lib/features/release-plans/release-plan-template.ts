@@ -5,6 +5,7 @@ export interface ReleasePlanTemplate {
     discriminator: 'template';
     name: string;
     description?: string | null;
+    project?: string | null; // TODO: can we drop ? and be nullable
     createdByUserId: number;
     createdAt: Date;
     milestones?: ReleasePlanMilestone[];

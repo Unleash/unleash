@@ -53,12 +53,25 @@ test('Should get all defined feature types', async () => {
         .expect((res) => {
             const { version, types } = res.body;
             expect(version).toBe(1);
-            expect(types.length).toBe(5);
+            expect(types.length).toBe(6);
             expect(types[0].name).toBe('Release');
             expect(
                 validateSchema(featureTypesSchema.$id, res.body),
             ).toBeUndefined();
         });
+});
+
+test('Sunset flag type exists with a 90 day default lifetime', async () => {
+    const { body } = await app.request
+        .get('/api/admin/feature-types')
+        .expect(200);
+
+    const sunset = body.types.find((type) => type.id === 'sunset');
+    expect(sunset).toMatchObject({
+        id: 'sunset',
+        name: 'Sunset',
+        lifetimeDays: 90,
+    });
 });
 
 describe('updating lifetimes', () => {

@@ -19,7 +19,7 @@ export const useUsersPlan = (users: IUser[]): IUsersPlanOutput => {
 
     const planUsers = useMemo(
         () => calculatePaidUsers(users, isBillingUsers, seats),
-        [users, isBillingUsers, seats],
+        [users, isBillingUsers],
     );
 
     const extraSeats = planUsers.filter((user) => user.paid).length;

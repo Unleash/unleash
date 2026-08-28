@@ -2,7 +2,7 @@
  * How to generate OpenAPI client
  *
  * For now we only use generated types (src/openapi/models).
- * Run `yarn gen:api` to generate the client.
+ * Run `pnpm gen:api` to generate the client.
  * We may use methods (src/openapi/apis) for new features in the future.
  */
 import { defineConfig } from 'orval';

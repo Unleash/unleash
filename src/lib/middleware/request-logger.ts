@@ -11,11 +11,8 @@ const requestLogger: (config: IUnleashConfig) => RequestHandler = (config) => {
     const requestLoggerEnabled = config.server.enableRequestLogger;
     const impactMetrics = config.flagResolver.impactMetrics;
     return (req, res, next) => {
-        const impactMetricsEnabled =
-            config.flagResolver.isEnabled('impactMetrics');
-
         res.on('finish', () => {
-            if (impactMetricsEnabled && impactMetrics) {
+            if (impactMetrics) {
                 if (res.statusCode >= 400 && res.statusCode < 500) {
                     impactMetrics.incrementCounter(CLIENT_ERROR_COUNT);
                 }

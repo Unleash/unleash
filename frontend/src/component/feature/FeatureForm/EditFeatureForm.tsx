@@ -110,9 +110,6 @@ const EditFeatureForm: React.FC<IFeatureToggleForm> = ({
 
     return (
         <StyledForm onSubmit={handleSubmit}>
-            <StyledInputDescription>
-                What would you like to call your flag?
-            </StyledInputDescription>
             <StyledInput
                 autoFocus
                 disabled={true}
@@ -121,12 +118,14 @@ const EditFeatureForm: React.FC<IFeatureToggleForm> = ({
                 value={name}
                 onChange={() => {}}
             />
-            <StyledInputDescription>
-                What kind of feature flag do you want?
-            </StyledInputDescription>
             <FeatureTypeSelect
                 sx={styledSelectInput}
                 value={type}
+                description={
+                    <StyledInputDescription>
+                        What kind of feature flag do you want?
+                    </StyledInputDescription>
+                }
                 onChange={setType}
                 label={'Flag type'}
                 id='feature-type-select'
@@ -137,9 +136,6 @@ const EditFeatureForm: React.FC<IFeatureToggleForm> = ({
             <StyledTypeDescription>
                 {renderToggleDescription()}
             </StyledTypeDescription>
-            <StyledInputDescription>
-                How would you describe your feature flag?
-            </StyledInputDescription>
             <StyledInput
                 multiline
                 rows={4}
@@ -165,7 +161,7 @@ const EditFeatureForm: React.FC<IFeatureToggleForm> = ({
                     <Link
                         target='_blank'
                         rel='noopener noreferrer'
-                        href='https://docs.getunleash.io/advanced/impression_data'
+                        href='https://docs.getunleash.io/concepts/impression-data'
                     >
                         the impression data documentation
                     </Link>

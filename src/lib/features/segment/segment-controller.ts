@@ -85,6 +85,7 @@ export class SegmentsController extends Controller {
                     description:
                         'Uses the name provided in the body of the request to validate if the given name exists or not',
                     tags: ['Segments'],
+                    release: { stable: '5.5.0' },
                     operationId: 'validateSegment',
                     requestBody: createRequestSchema('nameSchema'),
                     responses: {
@@ -103,6 +104,7 @@ export class SegmentsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Segments'],
+                    release: { stable: '5.5.0' },
                     operationId: 'getSegmentsByStrategyId',
                     summary: 'Get strategy segments',
                     description:
@@ -125,6 +127,7 @@ export class SegmentsController extends Controller {
                     description:
                         'Sets the segments of the strategy specified to be exactly the ones passed in the payload. Any segments that were used by the strategy before will be removed if they are not in the provided list of segments.',
                     tags: ['Strategies'],
+                    release: { stable: '5.5.0' },
                     operationId: 'updateFeatureStrategySegments',
                     requestBody: createRequestSchema(
                         'updateFeatureStrategySegmentsSchema',
@@ -147,6 +150,7 @@ export class SegmentsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Segments'],
+                    release: { stable: '5.5.0' },
                     operationId: 'getStrategiesBySegmentId',
                     summary: 'Get strategies that reference segment',
                     description:
@@ -192,6 +196,7 @@ export class SegmentsController extends Controller {
                         },
                     ],
                     tags: ['Segments'],
+                    release: { stable: '5.5.0' },
                     operationId: 'removeSegment',
                     responses: {
                         204: emptyResponse,
@@ -212,6 +217,7 @@ export class SegmentsController extends Controller {
                     description:
                         'Updates the content of the segment with the provided payload. Requires `name` and `constraints` to be present. If `project` is not present, it will be set to `null`. Any other fields not specified will be left untouched.',
                     tags: ['Segments'],
+                    release: { stable: '5.5.0' },
                     operationId: 'updateSegment',
                     parameters: [
                         {
@@ -243,6 +249,7 @@ export class SegmentsController extends Controller {
                     summary: 'Get a segment',
                     description: 'Retrieves a segment based on its ID.',
                     tags: ['Segments'],
+                    release: { stable: '5.5.0' },
                     operationId: 'getSegment',
                     parameters: [
                         {
@@ -274,6 +281,7 @@ export class SegmentsController extends Controller {
                     description:
                         'Creates a new segment using the payload provided',
                     tags: ['Segments'],
+                    release: { stable: '5.5.0' },
                     operationId: 'createSegment',
                     requestBody: createRequestSchema('upsertSegmentSchema'),
                     responses: {
@@ -297,6 +305,7 @@ export class SegmentsController extends Controller {
                     description:
                         'Retrieves all segments that exist in this Unleash instance.',
                     tags: ['Segments'],
+                    release: { stable: '5.5.0' },
                     operationId: 'getSegments',
                     responses: {
                         200: createResponseSchema('segmentsSchema'),

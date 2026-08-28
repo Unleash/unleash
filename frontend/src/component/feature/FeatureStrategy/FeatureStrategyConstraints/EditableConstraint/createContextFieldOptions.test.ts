@@ -1,3 +1,4 @@
+import { expect, it } from 'vitest';
 import { IN } from 'constants/operators';
 import { createContextFieldOptions } from './createContextFieldOptions';
 

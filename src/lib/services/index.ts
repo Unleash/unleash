@@ -6,7 +6,6 @@ import HealthService from './health-service.js';
 import ProjectService from '../features/project/project-service.js';
 import ClientInstanceService from '../features/metrics/instance/instance-service.js';
 import ClientMetricsServiceV2 from '../features/metrics/client-metrics/metrics-service-v2.js';
-import { CustomMetricsService } from '../features/metrics/custom/custom-metrics-service.js';
 import TagTypeService from '../features/tag-type/tag-type-service.js';
 import TagService from './tag-service.js';
 import StrategyService from './strategy-service.js';
@@ -18,7 +17,7 @@ import { AccessService } from './access-service.js';
 import { ApiTokenService } from './api-token-service.js';
 import UserService from './user-service.js';
 import ResetTokenService from './reset-token-service.js';
-import SettingService from './setting-service.js';
+import SettingService from '../features/settings/setting-service.js';
 import SessionService from './session-service.js';
 import UserFeedbackService from './user-feedback-service.js';
 import { FeatureToggleService } from '../features/feature-toggle/feature-toggle-service.js';
@@ -189,6 +188,12 @@ import {
     createReleasePlanMilestoneStrategyService,
 } from '../features/release-plans/createReleasePlanMilestoneStrategyService.js';
 import type { ReleasePlanMilestoneStrategyService } from '../features/release-plans/release-plan-milestone-strategy-service.js';
+import { createApiTokenV2Service } from '../features/apitokensv2/index.js';
+import {
+    createFakeApiTokenV2Service,
+    type AdminApiTokenV2Service,
+    type ReadOnlyApiTokenV2Service,
+} from '../features/apitokensv2/api-token-v2-service.js';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -225,8 +230,13 @@ export const createServices = (
 
     const resourceLimitsService = new ResourceLimitsService(config);
 
-    // Initialize custom metrics service
-    const customMetricsService = new CustomMetricsService(config);
+    const apiTokenV2Service = db
+        ? createApiTokenV2Service(db, config)
+        : createFakeApiTokenV2Service(config);
+
+    const transactionalApiTokenV2Service = db
+        ? withTransactional((db) => createApiTokenV2Service(db, config), db)
+        : withFakeTransactional(apiTokenV2Service);
 
     const clientMetricsServiceV2 = new ClientMetricsServiceV2(
         stores,
@@ -241,7 +251,9 @@ export const createServices = (
 
     const transactionalContextService = db
         ? withTransactional(createContextService(config), db)
-        : withFakeTransactional(createFakeContextService(config));
+        : withFakeTransactional(
+              createFakeContextService(config).contextService,
+          );
     const contextService = transactionalContextService;
     const emailService = new EmailService(config);
     const featureTypeService = new FeatureTypeService(
@@ -515,11 +527,12 @@ export const createServices = (
         tagService,
         clientInstanceService,
         clientMetricsServiceV2,
-        customMetricsService,
         contextService,
         transactionalContextService,
         versionService,
         apiTokenService,
+        apiTokenV2Service,
+        transactionalApiTokenV2Service,
         emailService,
         userService,
         resetTokenService,
@@ -644,9 +657,10 @@ export interface IUnleashServices {
     accountService: AccountService;
     addonService: AddonService;
     apiTokenService: ApiTokenService;
+    apiTokenV2Service: ReadOnlyApiTokenV2Service;
+    transactionalApiTokenV2Service: WithTransactional<AdminApiTokenV2Service>;
     clientInstanceService: ClientInstanceService;
     clientMetricsServiceV2: ClientMetricsServiceV2;
-    customMetricsService: CustomMetricsService;
     contextService: ContextService;
     transactionalContextService: WithTransactional<ContextService>;
     emailService: EmailService;

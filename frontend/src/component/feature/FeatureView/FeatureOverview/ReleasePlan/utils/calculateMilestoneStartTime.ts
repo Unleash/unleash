@@ -1,4 +1,7 @@
-import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
+import {
+    isTimeCondition,
+    type IReleasePlanMilestone,
+} from 'interfaces/releasePlans';
 import { addMinutes } from 'date-fns';
 
 const parseStartTime = (startedAt: string | null | undefined): Date | null => {
@@ -14,7 +17,11 @@ const parseStartTime = (startedAt: string | null | undefined): Date | null => {
 const getIntervalMinutes = (
     milestone: IReleasePlanMilestone,
 ): number | null => {
-    const intervalMinutes = milestone.transitionCondition?.intervalMinutes;
+    const condition = milestone.transitionCondition;
+    const intervalMinutes =
+        condition && isTimeCondition(condition)
+            ? condition.intervalMinutes
+            : undefined;
 
     if (!intervalMinutes) {
         return null;

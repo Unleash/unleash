@@ -6,9 +6,9 @@ import {
     StyledListItemText,
 } from './RecentlyVisited/CommandResultGroup.tsx';
 import { ListItemButton } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { IconRenderer } from 'component/layout/MainLayout/NavigationSidebar/IconRenderer';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import type { JSX } from 'react';
 
 interface IPageSuggestionItem {
@@ -47,7 +47,7 @@ export const CommandPageSuggestions = ({
     routes: Record<string, { path: string; title: string }>;
     onClick: () => void;
 }) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const filtered = pages.filter((page) => routes[page]);
     const pageItems = toListItemData(filtered, routes);
     const onItemClick = (item: IPageSuggestionItem) => {
@@ -68,6 +68,7 @@ export const CommandPageSuggestions = ({
                     key={`recently-visited-${index}`}
                     dense={true}
                     component={Link}
+                    nativeButton={false}
                     to={item.path}
                     onClick={() => {
                         onItemClick(item);

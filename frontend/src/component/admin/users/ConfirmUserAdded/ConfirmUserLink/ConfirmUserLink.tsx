@@ -35,7 +35,7 @@ const ConfirmUserLink = ({
                     Want to avoid this step in the future?{' '}
                     {/* TODO - ADD LINK HERE ONCE IT EXISTS*/}
                     <a
-                        href='https://docs.getunleash.io/docs/deploy/email'
+                        href='https://docs.getunleash.io/deploy/configuring-unleash#configure-an-email-server'
                         target='_blank'
                         rel='noopener noreferrer'
                     >

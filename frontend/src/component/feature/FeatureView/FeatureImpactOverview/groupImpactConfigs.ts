@@ -17,6 +17,15 @@ function buildGroupKey(config: ImpactMetricsConfigSchema): string {
     return `${config.timeRange}::${config.aggregationMode}::${config.yAxisMin}::${JSON.stringify(sortedLabels)}`;
 }
 
+// Partitions groups so multi-config groups render before solos. Keeps
+// the original insertion order within each partition, so grouping remains
+// deterministic.
+export function multimetricFirst(groups: ConfigGroup[]): ConfigGroup[] {
+    const multimetric = groups.filter((group) => group.configs.length >= 2);
+    const solo = groups.filter((group) => group.configs.length < 2);
+    return [...multimetric, ...solo];
+}
+
 export function groupImpactConfigs(
     configs: ImpactMetricsConfigSchema[],
 ): ConfigGroup[] {

@@ -13,7 +13,7 @@ import StrategyStore from './strategy-store.js';
 import ClientInstanceStore from './client-instance-store.js';
 import ClientApplicationsStore from './client-applications-store.js';
 import ContextFieldStore from '../features/context/context-field-store.js';
-import SettingStore from './setting-store.js';
+import SettingStore from '../features/settings/setting-store.js';
 import { UserStore } from '../features/users/user-store.js';
 import ProjectStore from '../features/project/project-store.js';
 import TagStore from './tag-store.js';
@@ -70,6 +70,7 @@ import { FeatureLinksReadModel } from '../features/feature-links/feature-links-r
 import { UserUpdatesReadModel } from '../features/users/user-updates-read-model.js';
 import { EdgeTokenStore } from '../features/edgetokens/edge-token-store.js';
 import { ReleasePlanMilestoneStrategyStore } from '../features/release-plans/release-plan-milestone-strategy-store.js';
+import { ApiTokenV2Store } from '../features/apitokensv2/api-token-v2-store.js';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -121,6 +122,7 @@ export const createStores = (
             getLogger,
             config.flagResolver,
         ),
+        apiTokenV2Store: new ApiTokenV2Store(db),
         resetTokenStore: new ResetTokenStore(db, eventBus, getLogger),
         sessionStore: new SessionStore(db, eventBus, getLogger),
         userFeedbackStore: new UserFeedbackStore(db, eventBus, getLogger),
@@ -180,7 +182,10 @@ export const createStores = (
         trafficDataUsageStore: new TrafficDataUsageStore(db, getLogger),
         segmentReadModel: new SegmentReadModel(db),
         projectOwnersReadModel: new ProjectOwnersReadModel(db),
-        projectFlagCreatorsReadModel: new ProjectFlagCreatorsReadModel(db),
+        projectFlagCreatorsReadModel: new ProjectFlagCreatorsReadModel(
+            db,
+            eventBus,
+        ),
         featureLifecycleStore: new FeatureLifecycleStore(db, eventBus),
         featureStrategiesReadModel: new FeatureStrategiesReadModel(db),
         onboardingReadModel: createOnboardingReadModel(db),

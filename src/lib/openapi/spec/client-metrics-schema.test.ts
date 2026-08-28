@@ -44,6 +44,23 @@ test('clientMetricsSchema should ignore additional properties without failing wh
     ).toBeUndefined();
 });
 
+test('clientMetricsSchema is valid when bucket is omitted (e.g. impact-metrics-only request)', () => {
+    expect(
+        validateSchema('#/components/schemas/clientMetricsSchema', {
+            appName: 'a',
+        }),
+    ).toBeUndefined();
+});
+
+test('clientMetricsSchema is valid when bucket is null', () => {
+    expect(
+        validateSchema('#/components/schemas/clientMetricsSchema', {
+            appName: 'a',
+            bucket: null,
+        }),
+    ).toBeUndefined();
+});
+
 test('clientMetricsSchema should fail when required field is missing', () => {
     expect(
         validateSchema('#/components/schemas/clientMetricsSchema', {

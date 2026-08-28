@@ -4,7 +4,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { arraysHaveSameItems } from 'utils/arraysHaveSameItems';
 import { Alert, List, ListItem, styled } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import type { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';

@@ -1,5 +1,6 @@
+import { createUuid } from 'utils/createUuid';
 import { useMemo } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 import { Button, Divider, styled } from '@mui/material';
 import { ProjectActionsActionItem } from './ProjectActionsActionItem.tsx';
 import type { ActionsActionState } from '../../useProjectActionsForm.ts';
@@ -47,7 +48,7 @@ export const ProjectActionsFormStepActions = ({
     const { actionConfigurations } = useActionConfigurations(projectId);
 
     const addAction = (projectId: string) => {
-        const id = crypto.randomUUID();
+        const id = createUuid();
         const action: ActionsActionState = {
             id,
             action: '',

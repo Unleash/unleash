@@ -1,5 +1,5 @@
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useState } from 'react';
 import type { IEnvironment } from 'interfaces/environments';
 import { formatUnknownError } from 'utils/formatUnknownError';

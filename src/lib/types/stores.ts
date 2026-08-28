@@ -6,13 +6,14 @@ import type { IClientApplicationsStore } from './stores/client-applications-stor
 import type { IClientInstanceStore } from './stores/client-instance-store.js';
 import type { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type.js';
 import type { IContextFieldStore } from '../features/context/context-field-store-type.js';
-import type { ISettingStore } from './stores/settings-store.js';
+import type { ISettingStore } from '../features/settings/settings-store-type.js';
 import type { ISessionStore } from './stores/session-store.js';
 import type { ITagStore } from './stores/tag-store.js';
 import type { ITagTypeStore } from '../features/tag-type/tag-type-store-type.js';
 import type { IFeatureTagStore } from './stores/feature-tag-store.js';
 import type { IUserStore } from './stores/user-store.js';
 import type { IAddonStore } from './stores/addon-store.js';
+export type { IAddon } from './stores/addon-store.js';
 import type { IAccessStore } from './stores/access-store.js';
 import type { IApiTokenStore } from './stores/api-token-store.js';
 import type { IResetTokenStore } from './stores/reset-token-store.js';
@@ -67,12 +68,14 @@ import type { IUnknownFlagsStore } from '../features/metrics/unknown-flags/unkno
 import type { IFeatureLinksReadModel } from '../features/feature-links/feature-links-read-model-type.js';
 import type { UserUpdatesReadModel } from '../features/users/user-updates-read-model.js';
 import type { IEdgeTokenStore } from './stores/edge-store.js';
+import type { IApiTokenV2Store } from '../features/apitokensv2/api-token-v2-types.js';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
     accountStore: IAccountStore;
     addonStore: IAddonStore;
     apiTokenStore: IApiTokenStore;
+    apiTokenV2Store: IApiTokenV2Store;
     clientApplicationsStore: IClientApplicationsStore;
     clientInstanceStore: IClientInstanceStore;
     clientMetricsStoreV2: IClientMetricsStoreV2;
@@ -142,6 +145,7 @@ export {
     type IAccountStore,
     type IAddonStore,
     type IApiTokenStore,
+    type IApiTokenV2Store,
     type IClientApplicationsStore,
     type IClientInstanceStore,
     type IClientMetricsStoreV2,

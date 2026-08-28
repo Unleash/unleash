@@ -1,5 +1,5 @@
 import type React from 'react';
-import type { ReactNode, FC, VFC } from 'react';
+import type { ReactNode, FC } from 'react';
 import classnames from 'classnames';
 
 import {
@@ -112,7 +112,7 @@ const PageHeaderComponent: FC<IPageHeaderProps> & {
     );
 };
 
-const PageHeaderDivider: VFC<{ sx?: SxProps<Theme> }> = ({ sx }) => {
+const PageHeaderDivider: FC<{ sx?: SxProps<Theme> }> = ({ sx }) => {
     return <StyledDivider orientation='vertical' variant='middle' sx={sx} />;
 };
 

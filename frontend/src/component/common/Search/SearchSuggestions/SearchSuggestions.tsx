@@ -3,18 +3,22 @@ import History from '@mui/icons-material/History';
 import { Box, Divider, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
+    getAccessor,
     getColumnValues,
     getFilterableColumns,
+    getFilterName,
     getFilterValues,
+    getHeaderLabel,
+    getSearchable,
     type IGetSearchContextOutput,
 } from 'hooks/useSearch';
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { SearchDescription } from './SearchDescription/SearchDescription.tsx';
 import {
     SearchInstructions,
     StyledCode,
 } from './SearchInstructions/SearchInstructions.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { onEnter } from './onEnter.ts';
 import { SearchHistory } from './SearchHistory.tsx';
 import { SearchPaper } from '../Search.tsx';
@@ -45,16 +49,17 @@ interface SearchSuggestionsProps {
 
 const quote = (item: string) => (item.includes(' ') ? `"${item}"` : item);
 
-export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
+export const SearchSuggestions: FC<SearchSuggestionsProps> = ({
     getSearchContext,
     onSuggestion,
     savedQuery,
 }) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const searchContext = getSearchContext();
 
     const filters = getFilterableColumns(searchContext.columns)
         .map((column) => {
+            const filterName = getFilterName(column) as string;
             const filterOptions = searchContext.data.map((row) =>
                 getColumnValues(column, row),
             );
@@ -67,24 +72,28 @@ export const SearchSuggestions: VFC<SearchSuggestionsProps> = ({
                 .sort((a, b) => a.localeCompare(b));
 
             return {
-                name: column.filterName,
-                header: column.Header ?? column.filterName,
+                name: filterName,
+                header: getHeaderLabel(column) ?? filterName,
                 options,
-                suggestedOption: options[0] ?? `example-${column.filterName}`,
-                values: getFilterValues(
-                    column.filterName,
-                    searchContext.searchValue,
-                ),
+                suggestedOption: options[0] ?? `example-${filterName}`,
+                values: getFilterValues(filterName, searchContext.searchValue),
             };
         })
         .sort((a, b) => a.name.localeCompare(b.name));
 
     const searchableColumns = searchContext.columns.filter(
-        (column) => column.searchable && column.accessor,
+        (column) => getSearchable(column) && getAccessor(column),
     );
 
     const searchableColumnsString = searchableColumns
-        .map((column) => column.Header ?? column.accessor)
+        .map((column) => {
+            const accessor = getAccessor(column);
+            return (
+                getHeaderLabel(column) ??
+                (typeof accessor === 'string' ? accessor : column.id)
+            );
+        })
+        .filter(Boolean)
         .join(', ');
 
     const suggestedTextSearch =

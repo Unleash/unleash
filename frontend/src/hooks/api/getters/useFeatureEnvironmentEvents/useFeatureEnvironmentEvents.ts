@@ -56,6 +56,8 @@ export const useFeatureEnvironmentEvents = ({
             type: event.type as MultimetricFeatureEvent['type'],
             label: event.label ?? event.type,
             createdBy: event.createdBy,
+            featureName: event.featureName ?? featureName,
+            environment,
         }),
     );
 

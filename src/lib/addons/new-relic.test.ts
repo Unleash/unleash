@@ -189,7 +189,6 @@ describe('New Relic integration', () => {
                 'New Relic Events API request was successful with status code: 200.',
             event: serializeDates(defaultEvent),
             details: {
-                url: defaultParameters.url,
                 body: {
                     eventType: 'UnleashServiceEvent',
                     unleashEventType: defaultEvent.type,

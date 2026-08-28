@@ -1,5 +1,6 @@
 import { forwardRef, type ReactNode } from 'react';
-import { Box, Grid, styled, useMediaQuery, useTheme } from '@mui/material';
+import { Box, styled, useMediaQuery, useTheme } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import Header from 'component/menu/Header/Header';
 import Footer from 'component/menu/Footer/Footer';
 import BreadcrumbNav from 'component/common/BreadcrumbNav/BreadcrumbNav';
@@ -13,9 +14,10 @@ import { DraftBanner } from './DraftBanner/DraftBanner.tsx';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar.tsx';
 import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
-import { LegacyNewInUnleash } from './NavigationSidebar/NewInUnleash/LegacyNewInUnleash.tsx';
-import { NewInUnleash } from './NavigationSidebar/NewInUnleash/NewInUnleash.tsx';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { FloatingOnboardingChecklistVisibilityGate } from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklistVisibilityGate.tsx';
+import { FloatingOnboardingChecklistProvider } from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklistContext.tsx';
+import { HelpButtonHintProvider } from 'component/menu/Header/HelpResources/HelpButtonHintContext.tsx';
+import { AccessRequestsNotifications } from 'component/admin/users/AccessRequestsNotifications/AccessRequestsNotifications';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -125,77 +127,73 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
         );
         const theme = useTheme();
         const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
-        const useNewNewInUnleash = useUiFlag('gtmReleaseManagement');
 
         return (
-            <EventTimelineProvider>
-                <MainLayoutContainer>
-                    <MainLayoutContentWrapper>
-                        <LayoutFlexContainer>
-                            <ConditionallyRender
-                                condition={!isSmallScreen}
-                                show={
-                                    <NavigationSidebar
-                                        NewInUnleash={
-                                            useNewNewInUnleash
-                                                ? undefined
-                                                : LegacyNewInUnleash
-                                        }
+            <HelpButtonHintProvider>
+                <FloatingOnboardingChecklistProvider>
+                    <EventTimelineProvider>
+                        <MainLayoutContainer>
+                            <MainLayoutContentWrapper>
+                                <LayoutFlexContainer>
+                                    <ConditionallyRender
+                                        condition={!isSmallScreen}
+                                        show={<NavigationSidebar />}
                                     />
-                                }
-                            />
 
-                            <MainContentWrapper>
-                                <ConditionallyRender
-                                    condition={Boolean(
-                                        projectId &&
-                                            isChangeRequestConfiguredInAnyEnv(),
-                                    )}
-                                    show={
-                                        <DraftBanner
-                                            project={projectId || ''}
+                                    <MainContentWrapper>
+                                        <ConditionallyRender
+                                            condition={Boolean(
+                                                projectId &&
+                                                    isChangeRequestConfiguredInAnyEnv(),
+                                            )}
+                                            show={
+                                                <DraftBanner
+                                                    project={projectId || ''}
+                                                />
+                                            }
+                                        />
+                                        <HeaderContentContainer>
+                                            <Header />
+
+                                            <ContentFlexContainer>
+                                                <StyledMainLayoutContent>
+                                                    <SkipNavTarget />
+                                                    <MainLayoutContentContainer
+                                                        ref={ref}
+                                                    >
+                                                        <BreadcrumbNav />
+                                                        {children}
+                                                    </MainLayoutContentContainer>
+                                                </StyledMainLayoutContent>
+                                            </ContentFlexContainer>
+                                        </HeaderContentContainer>
+
+                                        <FloatingOnboardingChecklistVisibilityGate />
+                                        <Footer />
+                                    </MainContentWrapper>
+                                </LayoutFlexContainer>
+
+                                <ThemeMode
+                                    darkmode={
+                                        <StyledImg
+                                            style={{ opacity: 0.06 }}
+                                            src={formatAssetPath(textureImage)}
+                                            alt=''
+                                        />
+                                    }
+                                    lightmode={
+                                        <StyledImg
+                                            src={formatAssetPath(textureImage)}
+                                            alt=''
                                         />
                                     }
                                 />
-                                <HeaderContentContainer>
-                                    <Header />
-
-                                    <ContentFlexContainer>
-                                        <StyledMainLayoutContent>
-                                            <SkipNavTarget />
-                                            <MainLayoutContentContainer
-                                                ref={ref}
-                                            >
-                                                <BreadcrumbNav />
-                                                {children}
-                                            </MainLayoutContentContainer>
-                                        </StyledMainLayoutContent>
-                                    </ContentFlexContainer>
-                                </HeaderContentContainer>
-
-                                <Footer />
-                            </MainContentWrapper>
-                        </LayoutFlexContainer>
-
-                        <ThemeMode
-                            darkmode={
-                                <StyledImg
-                                    style={{ opacity: 0.06 }}
-                                    src={formatAssetPath(textureImage)}
-                                    alt=''
-                                />
-                            }
-                            lightmode={
-                                <StyledImg
-                                    src={formatAssetPath(textureImage)}
-                                    alt=''
-                                />
-                            }
-                        />
-                    </MainLayoutContentWrapper>
-                </MainLayoutContainer>
-                {useNewNewInUnleash && <NewInUnleash />}
-            </EventTimelineProvider>
+                            </MainLayoutContentWrapper>
+                        </MainLayoutContainer>
+                        <AccessRequestsNotifications />
+                    </EventTimelineProvider>
+                </FloatingOnboardingChecklistProvider>
+            </HelpButtonHintProvider>
         );
     },
 );

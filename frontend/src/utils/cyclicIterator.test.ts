@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { CyclicIterator } from './cyclicIterator.js';
 
 test('loops around the list', () => {

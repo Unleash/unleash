@@ -1,4 +1,4 @@
-import { useState, type VFC } from 'react';
+import { useState, type FC } from 'react';
 import {
     IconButton,
     ListItemIcon,
@@ -18,7 +18,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { MORE_BATCH_ACTIONS } from 'utils/testIds';
 
 interface IMoreActionsProps {
@@ -29,7 +29,7 @@ interface IMoreActionsProps {
 
 const menuId = 'selection-actions-menu';
 
-export const MoreActions: VFC<IMoreActionsProps> = ({
+export const MoreActions: FC<IMoreActionsProps> = ({
     projectId,
     data,
     onChange,
@@ -37,7 +37,7 @@ export const MoreActions: VFC<IMoreActionsProps> = ({
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const { staleFeatures } = useProjectApi();
     const { setToastData, setToastApiError } = useToast();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const open = Boolean(anchorEl);
     const selectedIds = data.map(({ name }) => name);
@@ -113,11 +113,13 @@ export const MoreActions: VFC<IMoreActionsProps> = ({
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 disableScrollLock={true}
-                PaperProps={{
-                    sx: (theme) => ({
-                        borderRadius: `${theme.shape.borderRadius}px`,
-                        padding: theme.spacing(1, 1.5),
-                    }),
+                slotProps={{
+                    paper: {
+                        sx: (theme) => ({
+                            borderRadius: `${theme.shape.borderRadius}px`,
+                            padding: theme.spacing(1, 1.5),
+                        }),
+                    },
                 }}
             >
                 <MenuList aria-labelledby={`${menuId}-menu`}>

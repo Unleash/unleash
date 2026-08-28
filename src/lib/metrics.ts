@@ -43,6 +43,7 @@ import type { IClientMetricsEnv } from './features/metrics/client-metrics/client
 import { DbMetricsMonitor } from './metrics-gauge.js';
 import * as impactMetrics from './features/metrics/impact/define-impact-metrics.js';
 import HyperLogLog from 'hyperloglog-lite';
+import { setupIntegrationMetrics } from './features/metrics/integrations/integration-metrics.js';
 
 const DISTINCT_HLL_REGISTERS_EXPONENT = 14;
 
@@ -136,6 +137,13 @@ export function registerPrometheusMetrics(
         maxAgeSeconds: 600,
         ageBuckets: 5,
     });
+    const sdkRequestDuration = createHistogram({
+        name: 'http_sdk_request_duration_milliseconds',
+        help: 'Client and Frontend API response time',
+        labelNames: ['path', 'method', 'status'],
+        buckets: [1, 5, 10, 25, 50, 100, 250, 500, 1000, 2500, 5000],
+    });
+    const baseUriPath = config.server.baseUriPath || '';
     const schedulerDuration = createSummary({
         name: 'scheduler_duration_seconds',
         help: 'Scheduler duration time',
@@ -502,6 +510,8 @@ export function registerPrometheusMetrics(
             'platform_version',
             'yggdrasil_version',
             'spec_version',
+            'sdk_flavor_name',
+            'sdk_flavor_version',
         ],
     });
 
@@ -574,7 +584,6 @@ export function registerPrometheusMetrics(
             method: 'POST',
         })
         .set(config.rateLimiting.callSignalEndpointMaxPerSecond * 60);
-
     const namePrefixUsed = createCounter({
         name: 'nameprefix_count',
         help: 'Count of nameprefix usage in client api',
@@ -604,6 +613,14 @@ export function registerPrometheusMetrics(
     tagsDistinct.set(0);
     projectDistinct.set(0);
 
+    // ── API token cache ──────────────────────────────────────────────────
+    // One counter, labelled `cache` so v1 and v2 stay comparable.
+    //
+    const tokenCacheLookupTotal = createCounter({
+        name: 'token_cache_lookup_total',
+        help: 'API token resolution attempts by cache and outcome. `hit` was served from the in-memory cache, `miss` reached the store, `throttled` was suppressed by the negative cache.',
+        labelNames: ['cache', 'result'],
+    });
     const featureCreatedByMigration = createCounter({
         name: 'feature_created_by_migration_count',
         help: 'Feature createdBy migration count',
@@ -730,16 +747,6 @@ export function registerPrometheusMetrics(
         help: 'Number of API tokens without a project',
     });
 
-    const clientFeaturesMemory = createGauge({
-        name: 'client_features_memory',
-        help: 'The amount of memory client features endpoint is using for caching',
-    });
-
-    const clientDeltaMemory = createGauge({
-        name: 'client_delta_memory',
-        help: 'The amount of memory client features delta endpoint is using for caching',
-    });
-
     const orphanedTokensActive = createGauge({
         name: 'orphaned_api_tokens_active',
         help: 'Number of API tokens without a project, last seen within 3 months',
@@ -832,6 +839,22 @@ export function registerPrometheusMetrics(
                     appName,
                 })
                 .observe(time);
+            const normalizedPath =
+                baseUriPath && path?.startsWith(baseUriPath)
+                    ? path.slice(baseUriPath.length)
+                    : path;
+            if (
+                normalizedPath?.startsWith('/api/client') ||
+                normalizedPath?.startsWith('/api/frontend')
+            ) {
+                sdkRequestDuration
+                    .labels({
+                        path: normalizedPath,
+                        method,
+                        status: statusCode,
+                    })
+                    .observe(time);
+            }
             config.flagResolver.impactMetrics?.incrementCounter(
                 impactMetrics.REQUEST_COUNT,
                 1,
@@ -859,6 +882,10 @@ export function registerPrometheusMetrics(
                 className,
             })
             .observe(time);
+    });
+
+    eventBus.on(events.TOKEN_CACHE_LOOKUP, ({ cache, result }) => {
+        tokenCacheLookupTotal.increment({ cache, result });
     });
 
     eventBus.on(events.EVENTS_CREATED_BY_PROCESSED, ({ updated }) => {
@@ -929,15 +956,6 @@ export function registerPrometheusMetrics(
         },
     );
 
-    eventBus.on(events.CLIENT_FEATURES_MEMORY, (event: { memory: number }) => {
-        clientFeaturesMemory.reset();
-        clientFeaturesMemory.set(event.memory);
-    });
-
-    eventBus.on(events.CLIENT_DELTA_MEMORY, (event: { memory: number }) => {
-        clientDeltaMemory.reset();
-        clientDeltaMemory.set(event.memory);
-    });
     eventBus.on(
         events.CLIENT_REGISTERED,
         ({ appName, environment, interval }) => {
@@ -1200,6 +1218,10 @@ export function registerPrometheusMetrics(
                 yggdrasil_version:
                     heartbeatEvent.metadata?.yggdrasilVersion ?? 'not-set',
                 spec_version: heartbeatEvent.metadata?.specVersion ?? 'not-set',
+                sdk_flavor_name:
+                    heartbeatEvent.metadata?.sdkFlavor ?? 'not-set',
+                sdk_flavor_version:
+                    heartbeatEvent.metadata?.sdkFlavorVersion ?? 'not-set',
             });
         } else {
             clientSdkVersionUsage.increment({
@@ -1209,6 +1231,10 @@ export function registerPrometheusMetrics(
                 platform_version: 'not-set',
                 yggdrasil_version: 'not-set',
                 spec_version: 'not-set',
+                sdk_flavor_name:
+                    heartbeatEvent.metadata?.sdkFlavor ?? 'not-set',
+                sdk_flavor_version:
+                    heartbeatEvent.metadata?.sdkFlavorVersion ?? 'not-set',
             });
         }
     });
@@ -1220,6 +1246,8 @@ export function registerPrometheusMetrics(
     eventBus.on(events.ADDON_EVENTS_HANDLED, ({ result, destination }) => {
         addonEventsHandledCounter.increment({ result, destination });
     });
+
+    setupIntegrationMetrics({ config, stores, eventBus, dbMetrics });
 
     return {
         collectAggDbMetrics: dbMetrics.refreshMetrics,
@@ -1352,8 +1380,7 @@ export default class MetricsMonitor {
             'collectStaticCounters',
         );
         await schedulerService.schedule(
-            async () =>
-                this.registerPoolMetrics.bind(this, db.client.pool, eventBus),
+            async () => this.registerPoolMetrics(db.client.pool, eventBus),
             minutesToMilliseconds(1),
             'registerPoolMetrics',
         );

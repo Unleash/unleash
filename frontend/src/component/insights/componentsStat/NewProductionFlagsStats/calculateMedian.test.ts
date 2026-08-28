@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { calculateMedian } from './calculateMedian.ts';
 
 test('works with empty data', () => {

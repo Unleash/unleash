@@ -2,15 +2,16 @@ import { makeStyles } from 'tss-react/mui';
 import type { Theme } from '@mui/material';
 import type { CSSProperties } from 'react';
 
+export const focusOutline = (theme: Theme) => ({
+    outline: 0,
+    outlineStyle: 'solid',
+    outlineWidth: 2,
+    outlineOffset: 2,
+    outlineColor: theme.palette.primary.main,
+});
+
 export const focusable = (theme: Theme) => ({
-    '&:focus-visible': {
-        outline: 0,
-        outlineStyle: 'solid',
-        outlineWidth: 2,
-        outlineOffset: 2,
-        outlineColor: theme.palette.primary.main,
-        borderRadius: '2px',
-    },
+    '&:focus-visible': { ...focusOutline(theme), borderRadius: '2px' },
 });
 
 export const contentSpacingY = (theme: Theme) => ({

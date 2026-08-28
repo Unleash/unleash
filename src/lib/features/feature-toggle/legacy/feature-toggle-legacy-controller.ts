@@ -53,6 +53,7 @@ class FeatureController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
+                    release: { stable: '4.12.0' },
                     operationId: 'validateFeature',
                     summary: 'Validate a feature flag name.',
                     requestBody: createRequestSchema('validateFeatureSchema'),
@@ -77,6 +78,7 @@ class FeatureController extends Controller {
                     description:
                         'Retrieves all the tags for a feature name. If the feature does not exist it returns an empty list.',
                     tags: ['Features'],
+                    release: { stable: '4.12.0' },
                     operationId: 'listTags',
                     responses: {
                         200: createResponseSchema('tagsSchema'),
@@ -97,6 +99,7 @@ class FeatureController extends Controller {
                     description:
                         'Adds a tag to a feature if the feature and tag type exist in the system. The operation is idempotent, so adding an existing tag will result in a successful response.',
                     tags: ['Features'],
+                    release: { stable: '4.12.0' },
                     operationId: 'addTag',
                     requestBody: createRequestSchema('tagSchema'),
                     responses: {
@@ -118,6 +121,7 @@ class FeatureController extends Controller {
                     description:
                         'Receives a list of tags to add and a list of tags to remove that are mandatory but can be empty. All tags under addedTags are first added to the feature and then all tags under removedTags are removed from the feature.',
                     tags: ['Features'],
+                    release: { stable: '4.22.0' },
                     operationId: 'updateTags',
                     requestBody: createRequestSchema('updateTagsSchema'),
                     responses: {
@@ -140,6 +144,7 @@ class FeatureController extends Controller {
                     description:
                         'Removes a tag from a feature. If the feature exists but the tag does not, it returns a successful response.',
                     tags: ['Features'],
+                    release: { stable: '4.12.0' },
                     operationId: 'removeTag',
                     responses: {
                         200: emptyResponse,

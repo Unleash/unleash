@@ -5,20 +5,16 @@ import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import useToast from 'hooks/useToast';
-import type {
-    IFeatureStrategy,
-    IFeatureStrategyPayload,
-    StrategyFormState,
-} from 'interfaces/strategy';
+import type { StrategyFormState } from 'interfaces/strategy';
 import {
-    createStrategyPayload,
     featureStrategyDocsLink,
     featureStrategyDocsLinkLabel,
     featureStrategyHelp,
     formatFeaturePath,
 } from '../FeatureStrategyEdit/FeatureStrategyEdit.tsx';
+import { createStrategyPayload } from '../featureStrategy.utils';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { useFormErrors } from 'hooks/useFormErrors';
 import { createFeatureStrategy } from 'utils/createFeatureStrategy';
@@ -30,12 +26,14 @@ import { comparisonModerator } from '../featureStrategy.utils';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import useQueryParams from 'hooks/useQueryParams';
 import { useDefaultStrategy } from '../../../project/Project/ProjectSettings/ProjectDefaultStrategySettings/ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy.tsx';
 import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm.tsx';
 import { Limit } from 'component/common/Limit/Limit';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
+import type { CreateFeatureStrategySchema } from 'openapi/index.ts';
+import { summarizeStrategy } from '../summarizeStrategy.ts';
 
 const useStrategyLimit = (strategyCount: number) => {
     const { uiConfig } = useUiConfig();
@@ -84,7 +82,7 @@ export const FeatureStrategyCreate = () => {
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const { data, staleDataNotification, forceRefreshCache } =
         useCollaborateData<IFeatureToggle>(
@@ -119,9 +117,9 @@ export const FeatureStrategyCreate = () => {
                         ...strategyTemplate.parameters,
                         groupId: featureId,
                     },
-                } as any);
+                });
             } else {
-                setStrategy(strategyTemplate as any);
+                setStrategy(strategyTemplate);
             }
         } else if (strategyDefinition) {
             setStrategy(
@@ -139,7 +137,7 @@ export const FeatureStrategyCreate = () => {
         shouldUseDefaultStrategy,
     ]);
 
-    const onAddStrategy = async (payload: IFeatureStrategyPayload) => {
+    const onAddStrategy = async (payload: CreateFeatureStrategySchema) => {
         await addStrategyToFeature(
             projectId,
             featureId,
@@ -153,7 +151,9 @@ export const FeatureStrategyCreate = () => {
         });
     };
 
-    const onStrategyRequestAdd = async (payload: IFeatureStrategyPayload) => {
+    const onStrategyRequestAdd = async (
+        payload: CreateFeatureStrategySchema,
+    ) => {
         await addChange(projectId, environmentId, {
             action: 'addStrategy',
             feature: featureId,
@@ -176,20 +176,47 @@ export const FeatureStrategyCreate = () => {
             },
         });
 
+        const viaChangeRequest = isChangeRequestConfigured(environmentId);
+
+        const flagStrategyProps = {
+            eventType: 'strategy-created',
+            viaChangeRequest,
+            current: summarizeStrategy(strategy),
+        };
+
+        trackEvent('flag-strategy', {
+            props: {
+                ...flagStrategyProps,
+                action: 'submitted',
+            },
+        });
+
         try {
-            if (isChangeRequestConfigured(environmentId)) {
+            if (viaChangeRequest) {
                 await onStrategyRequestAdd(payload);
             } else {
                 await onAddStrategy(payload);
             }
+            trackEvent('flag-strategy', {
+                props: {
+                    ...flagStrategyProps,
+                    action: 'succeeded',
+                },
+            });
             refetchFeature();
             navigate(formatFeaturePath(projectId, featureId));
         } catch (error: unknown) {
+            trackEvent('flag-strategy', {
+                props: {
+                    ...flagStrategyProps,
+                    action: 'failed',
+                },
+            });
             setToastApiError(formatUnknownError(error));
         }
     };
 
-    const emptyFeature = !data || !data.project;
+    const emptyFeature = !data?.project;
 
     if (emptyFeature) return null;
 
@@ -256,7 +283,7 @@ export const formatAddStrategyApiCode = (
     projectId: string,
     featureId: string,
     environmentId: string,
-    strategy: Partial<IFeatureStrategy>,
+    strategy: CreateFeatureStrategySchema,
     unleashUrl?: string,
 ): string => {
     if (!unleashUrl) {

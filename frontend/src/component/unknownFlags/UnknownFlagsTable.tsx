@@ -1,12 +1,17 @@
 import { useContext, useMemo, useState } from 'react';
-import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
+import { TablePlaceholder } from 'component/common/Table';
+import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/VirtualizedTable';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Alert, styled, useMediaQuery } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { useFlexLayout, useSortBy, useTable } from 'react-table';
-import { sortTypes } from 'utils/sortTypes';
+import {
+    type ColumnDef,
+    getCoreRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
 import { Search } from 'component/common/Search/Search';
 import { useSearch } from 'hooks/useSearch';
 import { type UnknownFlag, useUnknownFlags } from './hooks/useUnknownFlags.js';
@@ -61,16 +66,17 @@ export const UnknownFlagsTable = () => {
         return project;
     }, [projects, hasAccess]);
 
-    const columns = useMemo(
+    const columns = useMemo<ColumnDef<UnknownFlag, unknown>[]>(
         () => [
             {
-                Header: 'Flag name',
-                accessor: 'name',
-                minWidth: 100,
-                searchable: true,
+                id: 'name',
+                header: 'Flag name',
+                accessorKey: 'name',
+                meta: { minWidth: 100, searchable: true },
             },
             {
-                Header: (
+                id: 'lastSeenAt',
+                header: () => (
                     <StyledHeader>
                         Last reported
                         <HelpIcon
@@ -79,12 +85,13 @@ export const UnknownFlagsTable = () => {
                         />
                     </StyledHeader>
                 ),
-                accessor: 'lastSeenAt',
-                Cell: UnknownFlagsLastReportedCell,
-                width: 170,
+                accessorKey: 'lastSeenAt',
+                cell: UnknownFlagsLastReportedCell,
+                meta: { width: 170 },
             },
             {
-                Header: (
+                id: 'lastEventAt',
+                header: () => (
                     <StyledHeader>
                         Last event
                         <HelpIcon
@@ -93,44 +100,37 @@ export const UnknownFlagsTable = () => {
                         />
                     </StyledHeader>
                 ),
-                accessor: 'lastEventAt',
-                Cell: ({
-                    row: { original: unknownFlag },
-                }: {
-                    row: { original: UnknownFlag };
-                }) => (
+                accessorKey: 'lastEventAt',
+                cell: ({ row: { original: unknownFlag } }) => (
                     <UnknownFlagsLastEventCell
                         unknownFlag={unknownFlag}
                         dateFormat={formatDateYMDHMS}
                     />
                 ),
-                width: 150,
+                meta: { width: 150 },
             },
             {
-                Header: 'Actions',
-                align: 'center',
-                Cell: ({
-                    row: { original: unknownFlag },
-                }: {
-                    row: { original: UnknownFlag };
-                }) => (
+                id: 'Actions',
+                header: 'Actions',
+                cell: ({ row: { original: unknownFlag } }) => (
                     <UnknownFlagsActionsCell
                         unknownFlag={unknownFlag}
                         suggestedProject={suggestedProject}
                     />
                 ),
-                width: 120,
-                disableSortBy: true,
+                enableSorting: false,
+                meta: { width: 120, align: 'center' },
             },
             // Always hidden -- for search
             {
-                accessor: (row: UnknownFlag) =>
-                    row.reports.map(({ appName }) => appName).join('\n'),
                 id: 'appNames',
-                searchable: true,
+                accessorFn: (row) =>
+                    row.reports.map(({ appName }) => appName).join('\n'),
+                meta: { searchable: true },
             },
             {
-                accessor: (row: UnknownFlag) =>
+                id: 'environments',
+                accessorFn: (row) =>
                     Array.from(
                         new Set(
                             row.reports.flatMap(({ environments }) =>
@@ -140,16 +140,15 @@ export const UnknownFlagsTable = () => {
                             ),
                         ),
                     ).join('\n'),
-                id: 'environments',
-                searchable: true,
+                meta: { searchable: true },
             },
         ],
         [suggestedProject],
     );
 
     const [initialState] = useState({
-        sortBy: [{ id: 'name', desc: false }],
-        hiddenColumns: ['appNames', 'environments'],
+        sorting: [{ id: 'name', desc: false }],
+        columnVisibility: { appNames: false, environments: false },
     });
 
     const { data, getSearchText } = useSearch(
@@ -158,30 +157,30 @@ export const UnknownFlagsTable = () => {
         unknownFlags,
     );
 
-    const { headerGroups, rows, prepareRow } = useTable(
-        {
-            columns: columns as any,
-            data,
-            initialState,
-            sortTypes,
-            autoResetHiddenColumns: false,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            disableMultiSort: true,
-            defaultColumn: {
-                Cell: HighlightCell,
-            },
+    const table = useReactTable({
+        columns,
+        data,
+        initialState,
+        defaultColumn: {
+            cell: ({ getValue }) => (
+                <HighlightCell value={String(getValue() ?? '')} />
+            ),
         },
-        useSortBy,
-        useFlexLayout,
-    );
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+        enableMultiSort: false,
+    });
+
+    const rowCount = table.getRowModel().rows.length;
 
     return (
         <PageContent
             isLoading={loading}
             header={
                 <PageHeader
-                    title={`Unknown flags (${rows.length})`}
+                    title={`Unknown flags (${rowCount})`}
                     actions={
                         <>
                             <ConditionallyRender
@@ -240,14 +239,10 @@ export const UnknownFlagsTable = () => {
             </StyledAlert>
 
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <VirtualizedTable
-                    rows={rows}
-                    headerGroups={headerGroups}
-                    prepareRow={prepareRow}
-                />
+                <VirtualizedTable tableInstance={table} />
             </SearchHighlightProvider>
             <ConditionallyRender
-                condition={rows.length === 0}
+                condition={rowCount === 0}
                 show={
                     <ConditionallyRender
                         condition={searchValue?.length > 0}

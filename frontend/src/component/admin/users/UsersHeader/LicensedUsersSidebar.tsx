@@ -97,7 +97,11 @@ export const LicensedUsersSidebar = ({
                         <RowHeader>Last 30 days</RowHeader>
                         <InfoRow>
                             <LicenceBox>
-                                <Typography fontWeight='bold'>
+                                <Typography
+                                    sx={{
+                                        fontWeight: 'bold',
+                                    }}
+                                >
                                     {data.licensedUsers.current}/
                                     {data.seatCount}
                                 </Typography>

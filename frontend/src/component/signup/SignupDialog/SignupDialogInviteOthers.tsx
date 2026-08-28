@@ -35,7 +35,6 @@ export const SignupDialogInviteOthers: SignupStepContent = ({
     data,
     setData,
     onNext,
-    onBack,
     signupData,
 }) => {
     const isFirstSignup = !signupData?.companyName;
@@ -105,9 +104,9 @@ export const SignupDialogInviteOthers: SignupStepContent = ({
                     onInputChange={(_, newInputValue, reason) => {
                         if (reason === 'input') setInputValue(newInputValue);
                     }}
-                    renderTags={(value, getTagProps) =>
+                    renderValue={(value, getItemProps) =>
                         value.map((email, index) => {
-                            const { key, ...props } = getTagProps({ index });
+                            const { key, ...props } = getItemProps({ index });
                             return <Chip key={key} label={email} {...props} />;
                         })
                     }
@@ -149,11 +148,7 @@ export const SignupDialogInviteOthers: SignupStepContent = ({
                 />
             </StyledSignupDialogField>
             <StyledButtonRow>
-                <div>
-                    <Button variant='outlined' onClick={onBack}>
-                        Back
-                    </Button>
-                </div>
+                <div />
                 <div>
                     <Button variant='text' onClick={onLater} sx={{ mr: 2 }}>
                         Later

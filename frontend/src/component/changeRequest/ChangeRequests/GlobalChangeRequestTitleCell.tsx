@@ -1,6 +1,6 @@
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { Link, styled, Typography } from '@mui/material';
-import { Link as RouterLink, type LinkProps } from 'react-router-dom';
+import { Link as RouterLink, type LinkProps } from 'react-router';
 import { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { Truncator } from 'component/common/Truncator/Truncator';
 import type { ChangeRequestSearchItemSchema } from 'openapi';

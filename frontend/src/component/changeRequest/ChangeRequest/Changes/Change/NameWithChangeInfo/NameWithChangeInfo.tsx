@@ -27,7 +27,12 @@ export const NameWithChangeInfo: FC<{
                 condition={titleHasChanged}
                 show={
                     <Truncated>
-                        <Typography component='del' color='text.secondary'>
+                        <Typography
+                            component='del'
+                            sx={{
+                                color: 'text.secondary',
+                            }}
+                        >
                             {previousName}
                         </Typography>
                     </Truncated>

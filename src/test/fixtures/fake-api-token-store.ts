@@ -61,6 +61,7 @@ export default class FakeApiTokenStore
             createdAt: new Date(),
             project: newToken.projects?.join(',') || '*',
             alias: null,
+            secure: false,
             ...newToken,
         };
         this.tokens.push(apiToken);

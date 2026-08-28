@@ -75,13 +75,13 @@ const MenuStrategyRemove = ({
                 <Tooltip title='More actions'>
                     <IconButton
                         onClick={handleClick}
-                        size='small'
+                        size='large'
                         aria-controls={open ? 'actions-menu' : undefined}
                         aria-haspopup='true'
                         aria-expanded={open ? 'true' : undefined}
                         data-testid={STRATEGY_REMOVE_MENU_BTN}
                     >
-                        <MoreVertIcon sx={{ width: 32, height: 32 }} />
+                        <MoreVertIcon />
                     </IconButton>
                 </Tooltip>
             </Box>

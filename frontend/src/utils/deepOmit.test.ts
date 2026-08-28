@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { deepOmit } from './deepOmit.js';
 
 test('should omit all instances of a given field', () => {

@@ -1,3 +1,4 @@
+import { createUuid } from 'utils/createUuid';
 import { VariantForm } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantForm.tsx';
 import { updateWeightEdit } from 'component/common/util';
 import type React from 'react';
@@ -11,7 +12,7 @@ import type { StrategyFormState } from 'interfaces/strategy';
 import { VariantsSplitPreview } from 'component/common/VariantsSplitPreview/VariantsSplitPreview';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { StrategyVariantsUpgradeAlert } from 'component/common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 const StyledVariantForms = styled('div')({
     display: 'flex',
@@ -35,7 +36,7 @@ export const StrategyVariants = <T extends StrategyFormState>({
     editable,
     permission = UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
 }: StrategyVariantsProps<T>) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const [variantsEdit, setVariantsEdit] = useState<IFeatureVariantEdit[]>([]);
     const theme = useTheme();
 
@@ -50,7 +51,7 @@ export const StrategyVariants = <T extends StrategyFormState>({
                 ...variant,
                 new: editable || false,
                 isValid: true,
-                id: crypto.randomUUID(),
+                id: createUuid(),
                 overrides: [],
             })),
         );
@@ -81,7 +82,7 @@ export const StrategyVariants = <T extends StrategyFormState>({
     };
 
     const addVariant = () => {
-        const id = crypto.randomUUID();
+        const id = createUuid();
         setVariantsEdit((variantsEdit) => [
             ...variantsEdit,
             {

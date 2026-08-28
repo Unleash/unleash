@@ -62,6 +62,12 @@ export interface IQueryParam {
     values: (string | null)[];
 }
 
+export interface StrategyBelongsToFeatureAndProjectParams {
+    strategyId: string;
+    featureName: string;
+    project: string;
+}
+
 export interface IFeatureStrategiesStore
     extends Store<IFeatureStrategy, string> {
     createStrategyFeatureEnv(
@@ -128,4 +134,8 @@ export interface IFeatureStrategiesStore
     getCustomStrategiesInUseCount(): Promise<number>;
 
     getDefaultStickiness(projectId: string): Promise<string>;
+
+    strategyBelongsToFeatureAndProject(
+        params: StrategyBelongsToFeatureAndProjectParams,
+    ): Promise<boolean>;
 }

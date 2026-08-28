@@ -1,4 +1,4 @@
-import { type MouseEvent, useState, type VFC } from 'react';
+import { type MouseEvent, useState, type FC } from 'react';
 import {
     IconButton,
     ListItemIcon,
@@ -9,7 +9,6 @@ import {
 } from '@mui/material';
 import CopyIcon from '@mui/icons-material/AddToPhotos';
 import Lock from '@mui/icons-material/Lock';
-import type { IFeatureStrategyPayload } from 'interfaces/strategy';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
@@ -25,14 +24,15 @@ import { CopyStrategyMessage } from 'component/changeRequest/ChangeRequestConfir
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useCheckProjectAccess } from 'hooks/useHasAccess';
 import { STRATEGY_FORM_COPY_ID } from 'utils/testIds';
+import type { FeatureStrategySchema } from 'openapi';
 
 interface ICopyStrategyIconMenuProps {
     environmentId: string;
     environments: IFeatureEnvironment['name'][];
-    strategy: IFeatureStrategyPayload;
+    strategy: FeatureStrategySchema;
 }
 
-export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
+export const CopyStrategyIconMenu: FC<ICopyStrategyIconMenuProps> = ({
     environmentId,
     environments,
     strategy,
@@ -141,8 +141,10 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
                 anchorEl={anchorEl}
                 open={open}
                 onClose={onClose}
-                MenuListProps={{
-                    'aria-labelledby': `copy-strategy-icon-menu-${strategy.id}`,
+                slotProps={{
+                    list: {
+                        'aria-labelledby': `copy-strategy-icon-menu-${strategy.id}`,
+                    },
                 }}
             >
                 {[...environments, environmentId].map((environment) => {

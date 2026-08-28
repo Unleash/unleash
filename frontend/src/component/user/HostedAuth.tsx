@@ -1,5 +1,6 @@
-import { type FormEventHandler, useState, type VFC } from 'react';
-import { Button, Grid, styled, Typography } from '@mui/material';
+import { type FormEventHandler, useState, type FC } from 'react';
+import { Button, styled, Typography } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { StyledAutofillTextField } from './StyledAutofillTextField.tsx';
 import { useNavigate } from 'react-router';
 import useQueryParams from 'hooks/useQueryParams';
@@ -14,6 +15,7 @@ import type { IAuthEndpointDetailsResponse } from 'hooks/api/getters/useAuth/use
 import { BadRequestError, NotFoundError } from 'utils/apiUtils';
 import { contentSpacingY } from 'themes/themeStyles';
 import useToast from 'hooks/useToast';
+import { FormField } from 'component/common/FormField/FormField';
 
 interface IHostedAuthProps {
     authDetails: IAuthEndpointDetailsResponse;
@@ -37,7 +39,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
     textAlign: 'center',
 }));
 
-const HostedAuth: VFC<IHostedAuthProps> = ({ authDetails, redirect }) => {
+const HostedAuth: FC<IHostedAuthProps> = ({ authDetails, redirect }) => {
     const { refetchUser } = useAuthUser();
     const navigate = useNavigate();
     const params = useQueryParams();
@@ -127,21 +129,23 @@ const HostedAuth: VFC<IHostedAuthProps> = ({ authDetails, redirect }) => {
                             {apiError}
                         </StyledTypography>
                         <StyledDiv>
-                            <StyledAutofillTextField
-                                label='Username or email'
-                                name='username'
-                                id='username'
-                                type='text'
-                                onChange={(evt) =>
-                                    setUsername(evt.target.value)
-                                }
-                                value={username}
-                                error={Boolean(usernameError)}
-                                helperText={usernameError}
-                                variant='outlined'
-                                size='small'
-                                data-testid={LOGIN_EMAIL_ID}
-                            />
+                            <FormField label='Username or email'>
+                                <StyledAutofillTextField
+                                    name='username'
+                                    id='username'
+                                    type='text'
+                                    onChange={(evt) =>
+                                        setUsername(evt.target.value)
+                                    }
+                                    value={username}
+                                    error={Boolean(usernameError)}
+                                    helperText={usernameError}
+                                    variant='outlined'
+                                    size='large'
+                                    data-testid={LOGIN_EMAIL_ID}
+                                    fullWidth
+                                />
+                            </FormField>
                             <PasswordField
                                 label='Password'
                                 onChange={(evt) =>

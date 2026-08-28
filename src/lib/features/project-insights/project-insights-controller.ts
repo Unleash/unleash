@@ -40,6 +40,7 @@ export default class ProjectInsightsController extends Controller {
                 this.openApiService.validPath({
                     deprecated: true,
                     tags: ['Projects'],
+                    release: { stable: '5.11.0' },
                     operationId: 'getProjectInsights',
                     summary: 'Get an overview of a project insights.',
                     description:

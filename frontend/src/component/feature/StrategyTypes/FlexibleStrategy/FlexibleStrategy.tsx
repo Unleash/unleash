@@ -1,5 +1,5 @@
 import { Box, styled } from '@mui/material';
-import type { IFeatureStrategyParameters } from 'interfaces/strategy';
+import type { StrategyFormParameters } from 'interfaces/strategy';
 import ConditionalRolloutSlider from '../RolloutSlider/ConditionalRolloutSlider.tsx';
 import Input from 'component/common/Input/Input';
 import {
@@ -15,7 +15,7 @@ import type { IFormErrors } from 'hooks/useFormErrors';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 
 interface IFlexibleStrategyProps {
-    parameters: IFeatureStrategyParameters;
+    parameters: StrategyFormParameters;
     updateParameter: (field: string, value: string) => void;
     errors?: IFormErrors;
     groupIdTooltip?: React.ReactNode;

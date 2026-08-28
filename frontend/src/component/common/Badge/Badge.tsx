@@ -1,4 +1,9 @@
-import { styled, type SxProps, type Theme } from '@mui/material';
+import {
+    styled,
+    type SvgIconProps,
+    type SxProps,
+    type Theme,
+} from '@mui/material';
 import type React from 'react';
 import {
     cloneElement,
@@ -15,6 +20,7 @@ type Color =
     | 'success'
     | 'warning'
     | 'error'
+    | 'primary'
     | 'secondary'
     | 'neutral'
     | 'disabled'; // TODO: refactor theme
@@ -22,7 +28,7 @@ type Color =
 interface IBadgeProps {
     as?: React.ElementType;
     color?: Color;
-    icon?: ReactElement;
+    icon?: ReactElement<SvgIconProps>;
     iconRight?: boolean;
     className?: string;
     sx?: SxProps<Theme>;
@@ -30,6 +36,7 @@ interface IBadgeProps {
     title?: string;
     onClick?: (event: React.SyntheticEvent) => void;
     tabIndex?: number;
+    round?: boolean;
 }
 
 interface IBadgeIconProps {
@@ -38,7 +45,7 @@ interface IBadgeIconProps {
 }
 
 const StyledBadge = styled('span')<IBadgeProps>(
-    ({ theme, color = 'neutral', icon }) => ({
+    ({ theme, color = 'neutral', icon, round }) => ({
         display: 'inline-flex',
         alignItems: 'center',
         gap: theme.spacing(0.5),
@@ -56,8 +63,14 @@ const StyledBadge = styled('span')<IBadgeProps>(
             : {
                   backgroundColor: theme.palette[color].light,
                   color: theme.palette[color].contrastText,
-                  border: `1px solid ${theme.palette[color].border}`,
+                  border: `1px solid ${theme.palette[color].border ?? 'transparent'}`,
               }),
+        ...(round && {
+            justifyContent: 'center',
+            borderRadius: '50%',
+            width: theme.spacing(3),
+            height: theme.spacing(3),
+        }),
     }),
 );
 
@@ -71,7 +84,7 @@ const StyledBadgeIcon = styled('span')<
             : theme.palette[color].main,
 }));
 
-const BadgeIcon = (color: Color, icon?: ReactElement) => (
+const BadgeIcon = (color: Color, icon?: ReactElement<SvgIconProps>) => (
     <StyledBadgeIcon color={color}>
         <ConditionallyRender
             condition={Boolean(icon?.props.sx)}

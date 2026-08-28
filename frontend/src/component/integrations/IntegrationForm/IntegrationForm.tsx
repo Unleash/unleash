@@ -7,21 +7,14 @@ import {
     useState,
     type FC,
 } from 'react';
-import {
-    Alert,
-    Button,
-    Divider,
-    Link,
-    styled,
-    Typography,
-} from '@mui/material';
+import { Alert, Button, Divider, Link, styled } from '@mui/material';
 import produce from 'immer';
 import { trim } from 'component/common/util';
 import type { AddonSchema, AddonTypeSchema } from 'openapi';
 import { IntegrationParameters } from './IntegrationParameters/IntegrationParameters.tsx';
 import { IntegrationInstall } from './IntegrationInstall/IntegrationInstall.tsx';
 import cloneDeep from 'lodash.clonedeep';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import useAddonsApi from 'hooks/api/actions/useAddonsApi/useAddonsApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -38,11 +31,10 @@ import {
 import {
     StyledForm,
     StyledAlerts,
-    StyledTextField,
+    StyledInput,
     StyledContainer,
     StyledButtonContainer,
     StyledButtonSection,
-    StyledConfigurationSection,
     StyledTitle,
     StyledRaisedSection,
 } from './IntegrationForm.styles';
@@ -54,6 +46,7 @@ import { capitalizeFirst } from 'utils/capitalizeFirst';
 import { IntegrationHowToSection } from '../IntegrationHowToSection/IntegrationHowToSection.tsx';
 import { IntegrationEventsModal } from '../IntegrationEvents/IntegrationEventsModal.tsx';
 import AccessContext from 'contexts/AccessContext';
+import { FormGroup } from 'component/common/FormGroup/FormGroup.tsx';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -72,6 +65,7 @@ type IntegrationFormProps = {
     fetch: () => void;
     editMode: boolean;
     addon: AddonSchema | Omit<AddonSchema, 'id'>;
+    deprecated?: boolean;
 };
 
 export const IntegrationForm: FC<IntegrationFormProps> = ({
@@ -79,6 +73,7 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
     provider,
     addon: initialValues,
     fetch,
+    deprecated,
 }) => {
     const { createAddon, updateAddon } = useAddonsApi();
     const { setToastData, setToastApiError } = useToast();
@@ -216,7 +211,7 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
         event.preventDefault();
-        if (!provider) {
+        if (!provider || deprecated) {
             return;
         }
 
@@ -298,6 +293,7 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                             variant='contained'
                             permission={editMode ? UPDATE_ADDON : CREATE_ADDON}
                             onClick={onSubmit}
+                            disabled={deprecated}
                         >
                             {submitText}
                         </PermissionButton>
@@ -329,22 +325,22 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                         condition={Boolean(alerts)}
                         show={() => (
                             <StyledAlerts>
-                                {alerts?.map(({ type, text }) => (
+                                {alerts?.map(({ type, text, link }) => (
                                     <Alert severity={type} key={text}>
-                                        {text}
+                                        {text}{' '}
+                                        {link && (
+                                            <Link
+                                                href={link.url}
+                                                target='_blank'
+                                                rel='noreferrer'
+                                            >
+                                                {link.title}
+                                            </Link>
+                                        )}
                                     </Alert>
                                 ))}
                             </StyledAlerts>
                         )}
-                    />
-                    <StyledTextField
-                        size='small'
-                        label='Provider'
-                        name='provider'
-                        value={formValues.provider}
-                        disabled
-                        hidden={true}
-                        variant='outlined'
                     />
                     <IntegrationHowToSection provider={provider} />
                     <StyledRaisedSection>
@@ -372,26 +368,22 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                             setParameterValue={setParameterValue}
                         />
                     </StyledRaisedSection>
-                    <StyledConfigurationSection>
-                        <Typography component='h3' variant='h3'>
-                            Configuration
-                        </Typography>
+                    <FormGroup title='Configuration'>
                         <div>
                             <StyledTitle>
                                 What is your integration description?
                             </StyledTitle>
-                            <StyledTextField
-                                size='small'
+                            <StyledInput
+                                size='large'
                                 minRows={1}
                                 multiline
                                 label='Description'
                                 name='description'
                                 placeholder=''
-                                value={formValues.description}
+                                value={formValues.description ?? ''}
                                 error={Boolean(errors.description)}
-                                helperText={errors.description}
+                                errorText={errors.description}
                                 onChange={setFieldValue('description')}
-                                variant='outlined'
                             />
                         </div>
 
@@ -426,7 +418,7 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                                 note='If no environments are selected, the integration will receive events from all environments.'
                             />
                         </div>
-                    </StyledConfigurationSection>
+                    </FormGroup>
                     <ConditionallyRender
                         condition={editMode}
                         show={

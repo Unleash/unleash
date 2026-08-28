@@ -60,7 +60,9 @@ export const TokenTypeSelector = ({
                                             <Typography>{label}</Typography>
                                             <Typography
                                                 variant='body2'
-                                                color='text.secondary'
+                                                sx={{
+                                                    color: 'text.secondary',
+                                                }}
                                             >
                                                 {title}
                                             </Typography>

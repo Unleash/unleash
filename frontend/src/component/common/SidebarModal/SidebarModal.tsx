@@ -2,7 +2,12 @@ import type { FC } from 'react';
 import { Modal, Backdrop, styled, IconButton, Tooltip } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Fade from '@mui/material/Fade';
+import {
+    dismissMethodFromCloseReason,
+    useDialogDismissTracking,
+} from 'hooks/useTrackDialogDismissed';
 import { SIDEBAR_MODAL_ID } from 'utils/testIds';
+import type { DialogDismissMethod, DialogTracking } from 'utils/trackingEvents';
 import type * as React from 'react';
 
 interface ISidebarModalProps {
@@ -11,6 +16,16 @@ interface ISidebarModalProps {
     label: string;
     onClick?: (e: React.SyntheticEvent) => void;
     children: React.ReactElement<any, any>;
+    tracking?: DialogTracking;
+}
+
+interface IBaseModalProps {
+    open: boolean;
+    onClose: () => void;
+    label: string;
+    onClick?: (e: React.SyntheticEvent) => void;
+    children: React.ReactElement<any, any>;
+    onDismiss?: (method: DialogDismissMethod) => void;
 }
 
 const TRANSITION_DURATION = 250;
@@ -38,22 +53,26 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
     right: theme.spacing(3),
 }));
 
-export const BaseModal: FC<ISidebarModalProps> = ({
+export const BaseModal: FC<IBaseModalProps> = ({
     open,
     onClose,
     onClick,
     label,
     children,
+    onDismiss,
 }) => {
     return (
         <Modal
             open={open}
-            onClose={onClose}
+            onClose={(_, reason) => {
+                onDismiss?.(dismissMethodFromCloseReason(reason));
+                onClose();
+            }}
             onClick={onClick}
             closeAfterTransition
             aria-label={label}
-            BackdropComponent={Backdrop}
-            BackdropProps={{ timeout: TRANSITION_DURATION }}
+            slots={{ backdrop: Backdrop }}
+            slotProps={{ backdrop: { timeout: TRANSITION_DURATION } }}
             data-testid={SIDEBAR_MODAL_ID}
             sx={{ minHeight: '100vh' }}
         >
@@ -65,8 +84,10 @@ export const BaseModal: FC<ISidebarModalProps> = ({
 };
 
 export const SidebarModal: FC<ISidebarModalProps> = (props) => {
+    const emitDismissed = useDialogDismissTracking(props.open, props.tracking);
+
     return (
-        <BaseModal {...props}>
+        <BaseModal {...props} onDismiss={emitDismissed}>
             <FixedWidthContentWrapper>
                 {props.children}
             </FixedWidthContentWrapper>
@@ -75,11 +96,18 @@ export const SidebarModal: FC<ISidebarModalProps> = (props) => {
 };
 
 export const DynamicSidebarModal: FC<ISidebarModalProps> = (props) => {
+    const emitDismissed = useDialogDismissTracking(props.open, props.tracking);
+
     return (
-        <BaseModal {...props}>
+        <BaseModal {...props} onDismiss={emitDismissed}>
             <ModalContentWrapper>
                 <Tooltip title='Close' arrow describeChild>
-                    <StyledIconButton onClick={props.onClose}>
+                    <StyledIconButton
+                        onClick={() => {
+                            emitDismissed('close-icon');
+                            props.onClose();
+                        }}
+                    >
                         <CloseIcon />
                     </StyledIconButton>
                 </Tooltip>

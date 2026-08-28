@@ -76,6 +76,27 @@ describe('ConstraintsReadModel - validateConstraints', () => {
             expect(result[0].operator).toBe('SEMVER_EQ');
         });
 
+        test.each([
+            '1.2.3-beta.1',
+            '1.2.3+4000',
+            '1.2.3-beta.1+build.5',
+        ])('validates a semver operator constraint with the value %s', async (value) => {
+            const { readModel } = createReadModel();
+            const constraints: IConstraint[] = [
+                {
+                    contextName: 'someField',
+                    operator: 'SEMVER_EQ',
+                    value,
+                    values: [],
+                },
+            ];
+
+            const result = await readModel.validateConstraints(constraints);
+
+            expect(result).toHaveLength(1);
+            expect(result[0].value).toBe(value);
+        });
+
         test('validates a date operator constraint', async () => {
             const { readModel } = createReadModel();
             const constraints: IConstraint[] = [
@@ -205,6 +226,34 @@ describe('ConstraintsReadModel - validateConstraints', () => {
             await expect(
                 readModel.validateConstraints(constraints),
             ).rejects.toThrow();
+        });
+
+        test.each([
+            ['NUM_EQ', undefined],
+            ['NUM_EQ', null],
+            ['NUM_EQ', ''],
+            ['DATE_AFTER', undefined],
+            ['DATE_AFTER', null],
+            ['DATE_AFTER', ''],
+            ['SEMVER_EQ', undefined],
+            ['SEMVER_EQ', null],
+            ['SEMVER_EQ', ''],
+        ])('rejects %s constraints with %s value', async (operator, value) => {
+            const { readModel } = createReadModel();
+            const constraints = [
+                {
+                    contextName: 'someField',
+                    operator,
+                    value,
+                    values: [],
+                },
+            ] as unknown as IConstraint[];
+
+            await expect(
+                readModel.validateConstraints(constraints),
+            ).rejects.toThrow(
+                'Single-value constraint operators require a non-empty value.',
+            );
         });
 
         test('rejects invalid semver for SEMVER operator', async () => {

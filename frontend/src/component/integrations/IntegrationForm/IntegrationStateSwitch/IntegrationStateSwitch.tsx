@@ -5,7 +5,7 @@ import {
     Typography,
     styled,
 } from '@mui/material';
-import type { MouseEventHandler, VFC } from 'react';
+import type { MouseEventHandler, FC } from 'react';
 
 interface IIntegrationStateSwitchProps {
     checked: boolean;
@@ -19,7 +19,7 @@ const StyledContainer = styled('div')({
     width: '100%',
 });
 
-export const IntegrationStateSwitch: VFC<IIntegrationStateSwitchProps> = ({
+export const IntegrationStateSwitch: FC<IIntegrationStateSwitchProps> = ({
     checked,
     onClick,
 }) => {

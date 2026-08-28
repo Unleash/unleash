@@ -8,12 +8,13 @@ const StyledAddTagButton = styled(PermissionButton)(({ theme }) => ({
     lineHeight: theme.typography.body1.lineHeight,
     borderRadius: theme.shape.borderRadiusExtraLarge,
     background: theme.palette.secondary.light,
-    padding: theme.spacing(0.5, 1),
+    padding: theme.spacing(0.5, 1.5),
     height: theme.spacing(3.5),
-}));
-
-const StyledAddIcon = styled(AddIcon)(({ theme }) => ({
-    fontSize: theme.typography.body2.fontSize,
+    // Keep the leading "+" small; out-specify the global button start-icon
+    // sizing rule in the theme (same fix as StyledActionButton).
+    '&& .MuiButton-startIcon svg': {
+        fontSize: theme.typography.body2.fontSize,
+    },
 }));
 
 type AddTagButtonProps = {
@@ -23,12 +24,12 @@ type AddTagButtonProps = {
 
 export const AddTagButton: FC<AddTagButtonProps> = ({ project, onClick }) => (
     <StyledAddTagButton
-        size='small'
+        size='medium'
         permission={UPDATE_FEATURE}
         projectId={project}
         variant='text'
         onClick={onClick}
-        startIcon={<StyledAddIcon />}
+        startIcon={<AddIcon />}
         data-loading
     >
         Add tag

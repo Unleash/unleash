@@ -1,12 +1,13 @@
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { GO_BACK } from 'constants/navigate';
 import { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import ContextList from 'component/context/ContextList/ContextList/ContextList';
 import { CreateUnleashContext } from 'component/context/CreateUnleashContext/CreateUnleashContext';
 import { EditContext } from 'component/context/EditContext/EditContext';
+import { CloneContext } from 'component/context/CloneContext/CloneContext';
 
 export const ProjectContextFields = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -26,6 +27,22 @@ export const ProjectContextFields = () => {
                         label='Create segment'
                     >
                         <CreateUnleashContext
+                            modal
+                            onSubmit={() => navigate(GO_BACK)}
+                            onCancel={() => navigate(GO_BACK)}
+                        />
+                    </SidebarModal>
+                }
+            />
+            <Route
+                path='clone/:name'
+                element={
+                    <SidebarModal
+                        open
+                        onClose={() => navigate(GO_BACK)}
+                        label='Clone context field'
+                    >
+                        <CloneContext
                             modal
                             onSubmit={() => navigate(GO_BACK)}
                             onCancel={() => navigate(GO_BACK)}

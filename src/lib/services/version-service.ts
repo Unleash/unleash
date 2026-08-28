@@ -3,7 +3,7 @@ import type { IUnleashStores } from '../types/stores.js';
 import type { IUnleashConfig } from '../types/option.js';
 import version from '../util/version.js';
 import type { Logger } from '../logger.js';
-import type { ISettingStore } from '../types/stores/settings-store.js';
+import type { ISettingStore } from '../features/settings/settings-store-type.js';
 import type { EdgeInstanceUsage } from '../features/instance-stats/getEdgeInstances.js';
 
 export interface IVersionInfo {

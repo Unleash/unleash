@@ -1,8 +1,9 @@
-import { TextField, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import type { AddonParameterSchema, AddonSchema } from 'openapi';
 import type { ChangeEventHandler } from 'react';
 import { styled } from '@mui/material';
 import { Markdown } from 'component/common/Markdown/Markdown';
+import Input from 'component/common/Input/Input';
 
 const MASKED_VALUE = '*****';
 
@@ -23,7 +24,7 @@ export interface IIntegrationParameterTextFieldProps {
     config: AddonSchema;
 }
 
-const StyledTextField = styled(TextField)({
+const StyledInput = styled(Input)({
     width: '100%',
 });
 
@@ -41,8 +42,8 @@ export const IntegrationParameterTextField = ({
     const error = parametersErrors[definition.name];
 
     return (
-        <StyledTextField
-            size='small'
+        <StyledInput
+            size='large'
             minRows={definition.type === 'textfield' ? 5 : 0}
             multiline={definition.type === 'textfield'}
             type={type}
@@ -56,13 +57,17 @@ export const IntegrationParameterTextField = ({
             }
             name={definition.name}
             placeholder={definition.placeholder || ''}
-            InputLabelProps={{
-                shrink: true,
+            slotProps={{
+                inputLabel: {
+                    shrink: true,
+                },
+                formHelperText: {
+                    component: 'div',
+                },
             }}
-            value={value}
+            value={typeof value === 'string' ? value : ''}
             error={Boolean(error)}
             onChange={setParameterValue(definition.name)}
-            variant='outlined'
             helperText={
                 definition.description ? (
                     <Markdown>{definition.description}</Markdown>

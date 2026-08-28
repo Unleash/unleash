@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { isProjectFeatureLimitReached } from './useFlagLimits.js';
 
 test('isFeatureLimitReached  should return false when featureLimit is null', async () => {

@@ -59,6 +59,16 @@ export const adminRoutes: INavigationMenuItem[] = [
         },
         group: 'users',
     },
+    {
+        path: '/admin/sessions',
+        title: 'Active sessions',
+        menu: {
+            adminSettings: true,
+            mode: ['enterprise'],
+        },
+        flag: 'sessionInspector',
+        group: 'users',
+    },
 
     // Service accounts
     {
@@ -101,13 +111,6 @@ export const adminRoutes: INavigationMenuItem[] = [
         path: '/admin/auth/password',
         title: 'Password login',
         menu: { adminSettings: true, mode: ['enterprise'] },
-        group: 'sso',
-    },
-    {
-        path: '/admin/auth/google',
-        title: 'Google',
-        menu: { adminSettings: true, mode: ['enterprise'] },
-        flag: 'googleAuthEnabled',
         group: 'sso',
     },
     {
@@ -157,6 +160,21 @@ export const adminRoutes: INavigationMenuItem[] = [
         menu: { adminSettings: true, mode: ['pro', 'enterprise'] },
         group: 'network',
         notFlag: 'consumptionModelUI',
+    },
+
+    // Remote MCP
+    {
+        path: '/admin/remote-mcp',
+        title: 'Remote MCP server',
+        menu: { adminSettings: true, mode: ['enterprise'] },
+    },
+
+    // Impact Metrics
+    {
+        path: '/admin/impact-metrics',
+        title: 'Impact Metrics',
+        menu: { adminSettings: true, mode: ['enterprise'] },
+        notFlag: 'disableImpactMetrics',
     },
 
     // Instance configuration

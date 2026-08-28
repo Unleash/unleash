@@ -1,7 +1,7 @@
-import { Autocomplete, Box, Button, styled, TextField } from '@mui/material';
+import { Box, Button, styled } from '@mui/material';
 import Input from 'component/common/Input/Input';
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import type { SegmentFormStep } from './SegmentForm.tsx';
 import {
     SEGMENT_NAME_ID,
@@ -23,6 +23,7 @@ import type { IFeatureStrategy } from 'interfaces/strategy';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { Limit } from '../common/Limit/Limit.tsx';
+import { AutocompleteField } from 'component/common/AutocompleteField/AutocompleteField.tsx';
 
 interface ISegmentFormPartOneProps {
     name: string;
@@ -143,9 +144,6 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
     return (
         <StyledForm>
             <StyledContainer>
-                <StyledInputDescription>
-                    What is the segment name?
-                </StyledInputDescription>
                 <StyledInput
                     label='Segment name'
                     value={name}
@@ -156,9 +154,6 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
                     required
                     data-testid={SEGMENT_NAME_ID}
                 />
-                <StyledInputDescription>
-                    What is the segment description?
-                </StyledInputDescription>
                 <StyledInput
                     label='Description (optional)'
                     value={description}
@@ -171,20 +166,21 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
                     condition={!projectId && !loading}
                     show={
                         <>
-                            <StyledInputDescription>
-                                Is this segment tied to a specific project?
-                            </StyledInputDescription>
-                            <Autocomplete
-                                size='small'
+                            <AutocompleteField
+                                size='large'
                                 value={selectedProject}
                                 onChange={(_, newValue) => {
                                     setProject(newValue?.id);
                                 }}
                                 options={availableProjects}
                                 getOptionLabel={(option) => option.name}
-                                renderInput={(params) => (
-                                    <TextField {...params} label='Project' />
-                                )}
+                                label='Project'
+                                description={
+                                    <StyledInputDescription>
+                                        Is this segment tied to a specific
+                                        project?
+                                    </StyledInputDescription>
+                                }
                                 disabled={projectsUsed.size > 1}
                             />
                             <SegmentProjectAlert

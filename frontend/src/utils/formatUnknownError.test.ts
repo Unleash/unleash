@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
 test('formatUnknownError', () => {

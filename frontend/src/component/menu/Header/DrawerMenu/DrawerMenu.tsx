@@ -1,13 +1,12 @@
-import type { VFC } from 'react';
-import { Link } from 'react-router-dom';
+import type { FC } from 'react';
+import { Link } from 'react-router';
 import { Divider, Drawer, styled } from '@mui/material';
-import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
-import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
+import UnleashLogo from 'assets/img/logoDarkWithText.svg?react';
+import UnleashLogoWhite from 'assets/img/logoWithWhiteText.svg?react';
 import styles from './DrawerMenu.module.scss'; // FIXME: useStyle - theme
 import theme from 'themes/theme';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { MobileNavigationSidebar } from 'component/layout/MainLayout/NavigationSidebar/MobileNavigationSidebar';
-import { LegacyNewInUnleash } from 'component/layout/MainLayout/NavigationSidebar/NewInUnleash/LegacyNewInUnleash.tsx';
 import { AdminMobileNavigation } from 'component/layout/MainLayout/AdminMenu/AdminNavigationItems';
 import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
 
@@ -29,7 +28,7 @@ interface IDrawerMenuProps {
     toggleDrawer: () => void;
 }
 
-export const DrawerMenu: VFC<IDrawerMenuProps> = ({
+export const DrawerMenu: FC<IDrawerMenuProps> = ({
     open = false,
     toggleDrawer,
 }) => {
@@ -67,10 +66,7 @@ export const DrawerMenu: VFC<IDrawerMenuProps> = ({
                 {showOnlyAdminMenu ? (
                     <AdminMobileNavigation onClick={onClick} />
                 ) : (
-                    <MobileNavigationSidebar
-                        onClick={toggleDrawer}
-                        NewInUnleash={LegacyNewInUnleash}
-                    />
+                    <MobileNavigationSidebar onClick={toggleDrawer} />
                 )}
             </nav>
         </Drawer>

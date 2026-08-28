@@ -105,8 +105,11 @@ export interface IServerOption {
     cdnPrefix?: string;
     edgeUrl?: string;
     unleashUrl: string;
+    logRocketAppId?: string;
+    hubspotPortalId?: string;
     serverMetrics: boolean;
     enableHeapSnapshotEnpoint: boolean;
+    enableStoriesPage: boolean;
     enableRequestLogger: boolean;
     gracefulShutdownEnable: boolean;
     gracefulShutdownTimeout: number;
@@ -160,6 +163,7 @@ export interface IUnleashOptions {
     import?: Partial<IImportOption>;
     experimental?: Partial<IExperimentalOptions>;
     email?: Partial<IEmailOption>;
+    tokenExpiryNotificationDays?: number[];
     secureHeaders?: boolean;
     additionalCspAllowedDomains?: ICspDomainOptions;
     frontendApiOrigins?: string[];
@@ -186,6 +190,8 @@ export interface IUnleashOptions {
     checkDbOnReady?: boolean;
     edgeMasterKey?: string;
     edgeClientSecret?: string;
+    allowPrivateUrlInIntegration?: boolean;
+    allowListIntegration?: string[];
 }
 
 export interface IEmailOption {
@@ -261,8 +267,11 @@ export interface IMetricsRateLimiting {
 export interface IRateLimiting {
     createUserMaxPerMinute: number;
     simpleLoginMaxPerMinute: number;
+    authenticationMaxPerMinute: number;
     passwordResetMaxPerMinute: number;
     callSignalEndpointMaxPerSecond: number;
+    tokenAuthenticationMaxPerMinute: number;
+    sdkApiMaxPerMinute: number;
 }
 
 export interface IUnleashConfig {
@@ -279,6 +288,7 @@ export interface IUnleashConfig {
     experimental?: IExperimentalOptions;
     flagResolver: IFlagResolver;
     email: IEmailOption;
+    tokenExpiryNotificationDays: number[];
     secureHeaders: boolean;
     additionalCspAllowedDomains: ICspDomainConfig;
     frontendApiOrigins: string[];
@@ -317,4 +327,6 @@ export interface IUnleashConfig {
     checkDbOnReady?: boolean;
     edgeMasterKey?: string;
     edgeClientSecret?: string;
+    allowPrivateUrlInIntegration?: boolean;
+    allowListIntegration?: string[];
 }

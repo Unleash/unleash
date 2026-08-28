@@ -6,6 +6,9 @@ import { RoleName } from '../types/model.js';
 import type { IAdminCount } from '../types/stores/account-store.js';
 import { NotFoundError } from '../error/index.js';
 import type { Logger } from '../logger.js';
+import type { AccountAccessCredential } from '../authentication/authorization-token.js';
+import type { AccountTokenReference } from '../types/stores/account-store.js';
+import { verifyToken } from '../authentication/token-verifier.js';
 
 interface IUserWithRole extends IUser {
     rootRole: number;
@@ -18,7 +21,7 @@ export class AccountService {
 
     private accessService: AccessService;
 
-    private lastSeenSecrets: Set<string> = new Set<string>();
+    private lastSeenTokens: Map<string, AccountTokenReference> = new Map();
 
     constructor(
         stores: Pick<IUnleashStores, 'accountStore'>,
@@ -47,12 +50,23 @@ export class AccountService {
         return accountsWithRootRole;
     }
 
-    async getAccountByPersonalAccessToken(secret: string): Promise<IUser> {
+    async authenticateAccountByToken(
+        credential: AccountAccessCredential,
+    ): Promise<IUser> {
         const account =
-            await this.store.getAccountByPersonalAccessToken(secret);
+            credential.version === 'v2'
+                ? await this.getAccountForSecureToken(credential)
+                : await this.store.getAccountByPersonalAccessToken(
+                      credential.secret,
+                  );
         if (account === undefined) {
             throw new NotFoundError();
         }
+        this.addAccountTokenSeen(
+            credential.version === 'v2'
+                ? { version: 'v2', selector: credential.selector }
+                : { version: 'v1', secret: credential.secret },
+        );
         return account;
     }
 
@@ -61,14 +75,27 @@ export class AccountService {
     }
 
     async updateLastSeen(): Promise<void> {
-        if (this.lastSeenSecrets.size > 0) {
-            const toStore = [...this.lastSeenSecrets];
-            this.lastSeenSecrets = new Set<string>();
+        if (this.lastSeenTokens.size > 0) {
+            const toStore = [...this.lastSeenTokens.values()];
+            this.lastSeenTokens = new Map();
             await this.store.markSeenAt(toStore);
         }
     }
 
-    addPATSeen(secret: string): void {
-        this.lastSeenSecrets.add(secret);
+    private async getAccountForSecureToken(
+        credential: Extract<AccountAccessCredential, { version: 'v2' }>,
+    ): Promise<IUser | undefined> {
+        const token = await this.store.getAccountByTokenSelector(
+            credential.selector,
+        );
+        if (!token || !verifyToken(credential.secret, token.verifier)) {
+            return undefined;
+        }
+        return token.account;
+    }
+
+    private addAccountTokenSeen(token: AccountTokenReference): void {
+        const key = token.version === 'v2' ? token.selector : token.secret;
+        this.lastSeenTokens.set(key, token);
     }
 }

@@ -1,8 +1,11 @@
 import { IconButton, styled, Tooltip, Typography } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CloseIcon from '@mui/icons-material/Close';
-import { StyledProjectCard, StyledProjectCardBody } from './ProjectCard.styles';
-import { ProjectCardFooter } from './ProjectCardFooter/ProjectCardFooter.tsx';
+import {
+    StyledProjectCard,
+    StyledProjectCardBody,
+    StyledProjectCardFooter,
+} from './ProjectCard.styles';
 import upgradeProjects from 'assets/img/upgradeProjects.png';
 import { formatAssetPath } from 'utils/formatPath';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
@@ -60,19 +63,26 @@ export const UpgradeProjectCard = () => {
                         onClick={onDismiss}
                         size='small'
                     >
-                        <CloseIcon fontSize='inherit' />
+                        <CloseIcon />
                     </StyledCloseButton>
                 </Tooltip>
                 <StyledInfo
                     href='https://www.getunleash.io/upgrade-unleash?utm_source=oss&utm_medium=feature&utm_content=projects'
                     target='_blank'
                 >
-                    <Typography component='span' fontWeight='bold'>
+                    <Typography
+                        component='span'
+                        sx={{
+                            fontWeight: 'bold',
+                        }}
+                    >
                         More{' '}
                         <Typography
                             component='span'
                             color='secondary'
-                            fontWeight='bold'
+                            sx={{
+                                fontWeight: 'bold',
+                            }}
                         >
                             projects
                         </Typography>{' '}
@@ -86,12 +96,14 @@ export const UpgradeProjectCard = () => {
                     />
                 </StyledInfo>
             </StyledProjectCardBody>
-            <ProjectCardFooter>
+            <StyledProjectCardFooter>
                 <StyledFooter>
                     <Typography
                         variant='body2'
-                        color='text.secondary'
-                        lineHeight={1.2}
+                        sx={{
+                            color: 'text.secondary',
+                            lineHeight: 1.2,
+                        }}
                     >
                         Get unlimited projects, and scale Unleash in your
                         organization
@@ -104,7 +116,7 @@ export const UpgradeProjectCard = () => {
                         <ArrowForwardIcon />
                     </IconButton>
                 </StyledFooter>
-            </ProjectCardFooter>
+            </StyledProjectCardFooter>
         </StyledProjectCard>
     );
 };

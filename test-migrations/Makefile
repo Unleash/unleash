@@ -46,24 +46,24 @@ default:
 .PHONY: prepare
 prepare: 
 	@echo "Preparing the environment..."
-	@yarn --cwd .. install --frozen-lockfile 
+	@pnpm --dir .. install --frozen-lockfile
 
 
 .PHONY: apply-migrations
 apply-migrations: prepare
 	@echo "Applying migrations from HEAD... $(git rev-parse HEAD)"
-	@DATABASE_URL=postgres://postgres:unleash@localhost:5432/unleash DATABASE_SSL=false yarn --cwd .. db-migrate up
+	@DATABASE_URL=postgres://postgres:unleash@localhost:5432/unleash DATABASE_SSL=false pnpm --dir .. db-migrate up
 
 
 .PHONY: run-current-ui
 run-current-ui: prepare
-	@yarn install --cwd ../frontend
-	@UNLEASH_API=http://localhost:$${EXPOSED_PORT:-4244} DATABASE_URL=postgres://postgres:unleash@localhost:5432/unleash DATABASE_SSL=false yarn --cwd ../frontend dev
+	@pnpm --dir .. install --frozen-lockfile
+	@UNLEASH_API=http://localhost:$${EXPOSED_PORT:-4244} DATABASE_URL=postgres://postgres:unleash@localhost:5432/unleash DATABASE_SSL=false pnpm --dir ../frontend dev
 	@echo "You can manually validate current Unleash at http://localhost:3000 and compare with previous version"
 
 .PHONY: run-current
 run-current: prepare start-db
-	@HTTP_PORT=$($${EXPOSED_PORT:-4244}) DATABASE_URL=postgres://postgres:unleash@localhost:5432/unleash DATABASE_SSL=false yarn --cwd .. dev:backend
+	@HTTP_PORT=$($${EXPOSED_PORT:-4244}) DATABASE_URL=postgres://postgres:unleash@localhost:5432/unleash DATABASE_SSL=false pnpm --dir .. dev:backend
 	@echo "You can manually validate current Unleash at http://localhost:$${EXPOSED_PORT:-4244} and compare with previous version"
 	@echo "Waiting for Unleash to be healthy at port $${EXPOSED_PORT:-4244}..."
 	@while ! curl -s "http://localhost:$${EXPOSED_PORT:-4244}/health"; do sleep 0.1; done
@@ -72,7 +72,7 @@ run-current: prepare start-db
 .PHONY: test
 test:
 	@echo "Running tests against $${EXPOSED_PORT:-4242}..."
-	@EXPOSED_PORT=$${EXPOSED_PORT:-4242} yarn --cwd ../frontend e2e:migrations
+	@EXPOSED_PORT=$${EXPOSED_PORT:-4242} pnpm --dir ../frontend e2e:migrations
 	@echo "You can manually validate Unleash at http://localhost:$${EXPOSED_PORT:-4242}"
 	@echo "If you want to test the current version (HEAD of this git repo) side-by-side, execute make run-current"
 	@echo "After all, you clean up by running 'make clean'"

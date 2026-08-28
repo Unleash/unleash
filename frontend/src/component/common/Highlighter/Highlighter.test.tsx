@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { render } from '@testing-library/react';
 import { Highlighter } from './Highlighter.tsx'; // adjust the import path accordingly
 

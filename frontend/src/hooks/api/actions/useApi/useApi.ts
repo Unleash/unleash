@@ -6,6 +6,7 @@ import {
 } from 'react';
 import {
     BAD_REQUEST,
+    CONFLICT,
     FORBIDDEN,
     NOT_FOUND,
     OK,
@@ -15,6 +16,7 @@ import {
 import {
     AuthenticationError,
     BadRequestError,
+    ConflictError,
     ForbiddenError,
     headers,
     NotFoundError,
@@ -158,6 +160,18 @@ const useAPI = ({
                 if (propagateErrors) {
                     const response = await res.json();
                     throw new UnavailableError(res.status, response);
+                }
+            }
+
+            if (res.status === CONFLICT) {
+                setErrors((prev) => ({
+                    ...prev,
+                    conflict: 'Conflict',
+                }));
+
+                if (propagateErrors) {
+                    const response = await res.json();
+                    throw new ConflictError(res.status, response);
                 }
             }
 

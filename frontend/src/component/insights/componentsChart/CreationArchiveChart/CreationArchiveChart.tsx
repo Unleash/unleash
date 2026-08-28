@@ -30,7 +30,7 @@ import { GraphCover } from 'component/insights/GraphCover.tsx';
 import { batchCreationArchiveData } from './batchCreationArchiveData.ts';
 import { useBatchedTooltipDate } from '../useBatchedTooltipDate.ts';
 import { aggregateCreationArchiveData } from './aggregateCreationArchiveData.ts';
-import type { Theme } from '@mui/material/styles/createTheme';
+import type { Theme } from '@mui/material/styles';
 import type { ChartData } from '../chartData.ts';
 
 ChartJS.register(

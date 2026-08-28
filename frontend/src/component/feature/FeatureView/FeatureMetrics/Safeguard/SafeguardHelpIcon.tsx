@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { Box, Typography, Link, styled } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon.tsx';
 
 const StyledTooltipContent = styled(Box)(({ theme }) => ({

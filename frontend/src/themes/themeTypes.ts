@@ -2,6 +2,20 @@
 import { FormHelperTextOwnProps } from '@mui/material/FormHelperText';
 
 declare module '@mui/material/styles' {
+    interface Shape {
+        borderRadiusSmall: number;
+        borderRadiusMedium: number;
+        borderRadiusLarge: number;
+        borderRadiusExtraLarge: number;
+        tableRowHeight: number;
+        tableRowHeightCompact: number;
+        tableRowHeightDense: number;
+    }
+
+    interface ZIndex {
+        sticky: number;
+    }
+
     interface CustomTheme {
         mode: 'light' | 'dark';
         /**
@@ -148,14 +162,50 @@ declare module '@mui/material/styles' {
             E1: string;
             series: string[];
             flagMetrics: {
-                exposed: string;
-                notExposed: string;
+                enabled: string;
+                notEnabled: string;
             };
         };
 
         inverse: {
             main: string;
             contrastText: string;
+        };
+
+        /**
+         * Syntax highlighting colors for code examples (e.g. SDK onboarding snippets).
+         * Use these tokens in any component that renders highlighted code so the
+         * colour choices are centralised and adapt to light / dark mode.
+         */
+        codeHighlighting: {
+            /** Control-flow and reserved words: if, for, return, const, … */
+            keyword: string;
+            /** CSS selector tag names */
+            selectorTag: string;
+            /** String literals, template expressions, and doc-comment tags */
+            string: string;
+            /** Numeric literals */
+            number: string;
+            /** Boolean/null/undefined literals */
+            literal: string;
+            /** Inline and block comments */
+            comment: string;
+            /** Language built-ins: console, print, len, … */
+            builtIn: string;
+            /** Function names at their definition or call site */
+            title: string;
+            /** Class names (e.g. UnleashConfig in UnleashConfig.builder()) */
+            class_: string;
+            /** Type annotations and generic parameters */
+            type: string;
+            /** HTML / XML attribute names and object keys */
+            attr: string;
+            /** Variable references */
+            variable: string;
+            /** HTML / XML tag names */
+            tag: string;
+            /** Preprocessor directives, decorators, and other metadata */
+            meta: string;
         };
     }
     interface Theme extends CustomTheme {}
@@ -178,21 +228,6 @@ declare module '@mui/material/styles' {
     interface TypeAction extends CustomTypeAction {}
 }
 
-declare module '@mui/system/createTheme/shape' {
-    interface Shape {
-        borderRadiusMedium: number;
-        borderRadiusLarge: number;
-        borderRadiusExtraLarge: number;
-        tableRowHeight: number;
-        tableRowHeightCompact: number;
-        tableRowHeightDense: number;
-    }
-}
-declare module '@mui/material/styles/zIndex' {
-    interface ZIndex {
-        sticky: number;
-    }
-}
 declare module '@mui/material' {
     interface ButtonPropsColorOverrides {
         web: true;
@@ -201,5 +236,33 @@ declare module '@mui/material' {
 declare module '@mui/material/FormHelperText' {
     interface FormHelperTextOwnProps {
         'data-testid'?: string;
+    }
+}
+
+// Design system v2 adds a third input size ("large") on top of MUI's
+// built-in "small"/"medium". Sizing lives in themes/controls.ts.
+declare module '@mui/material/InputBase' {
+    interface InputBasePropsSizeOverrides {
+        large: true;
+    }
+}
+declare module '@mui/material/TextField' {
+    interface TextFieldPropsSizeOverrides {
+        large: true;
+    }
+}
+declare module '@mui/material/FormControl' {
+    interface FormControlPropsSizeOverrides {
+        large: true;
+    }
+}
+declare module '@mui/material/Autocomplete' {
+    interface AutocompletePropsSizeOverrides {
+        large: true;
+    }
+}
+declare module '@mui/material/InputLabel' {
+    interface InputLabelPropsSizeOverrides {
+        large: true;
     }
 }

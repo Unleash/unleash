@@ -1,4 +1,4 @@
-import { vi } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { fireEvent, screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { ChangeRequestRejectDialogue } from './ChangeRequestRejectDialog.tsx';

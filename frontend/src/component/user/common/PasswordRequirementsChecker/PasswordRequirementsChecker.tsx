@@ -3,7 +3,7 @@ import { BAD_REQUEST, OK } from 'constants/statusCodes';
 import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 
 const StyledRequirementIcon = styled(RadioButtonUncheckedIcon)(({ theme }) => ({
     color: theme.palette.text.disabled,

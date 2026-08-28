@@ -1,6 +1,7 @@
-import type { FC } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import type { FC, JSX } from 'react';
+import { BrowserRouter } from 'react-router';
 import {
+    act,
     render as rtlRender,
     type RenderOptions,
 } from '@testing-library/react';
@@ -10,7 +11,7 @@ import type { IPermission } from 'interfaces/user';
 import { AnnouncerProvider } from 'component/common/Announcer/AnnouncerProvider/AnnouncerProvider';
 import { AccessProviderMock } from 'component/providers/AccessProvider/AccessProviderMock';
 import { UIProviderContainer } from '../component/providers/UIProvider/UIProviderContainer.tsx';
-import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
+import { ReactRouter7Adapter } from 'utils/ReactRouter7Adapter';
 import { QueryParamProvider } from 'use-query-params';
 import { FeedbackProvider } from 'component/feedbackNew/FeedbackProvider';
 import { StickyProvider } from 'component/common/Sticky/StickyProvider';
@@ -49,7 +50,7 @@ export const render = (
                 <FeedbackProvider>
                     <AccessProviderMock permissions={permissions}>
                         <BrowserRouter>
-                            <QueryParamProvider adapter={ReactRouter6Adapter}>
+                            <QueryParamProvider adapter={ReactRouter7Adapter}>
                                 <ThemeProvider>
                                     <AnnouncerProvider>
                                         <UnleashFlagProvider>
@@ -76,3 +77,11 @@ export const render = (
         ...renderOptions,
     });
 };
+
+// This render's wrapper starts async provider work on mount (SWR fetches,
+// SDK ready/update events). Positive tests settle it implicitly via findBy*,
+// but nothing-is-rendered tests have nothing to await, so run this flush
+// first: it keeps those late updates inside act() and ensures absence
+// assertions run after anything that could still have rendered — proving
+// absence rather than winning a race.
+export const settleProviders = () => act(async () => {});

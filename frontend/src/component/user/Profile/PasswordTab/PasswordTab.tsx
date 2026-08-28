@@ -8,6 +8,7 @@ import PasswordChecker, {
 import PasswordMatcher from 'component/user/common/ResetPasswordForm/PasswordMatcher';
 import { usePasswordApi } from 'hooks/api/actions/usePasswordApi/usePasswordApi';
 import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
+import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
 import useToast from 'hooks/useToast';
 import { type SyntheticEvent, useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -23,6 +24,7 @@ const StyledForm = styled('form')(({ theme }) => ({
 export const PasswordTab = () => {
     const { config: simpleAuthConfig, loading: authSettingsLoading } =
         useAuthSettings('simple');
+    const { profile, loading: profileLoading } = useProfile();
 
     const [loading, setLoading] = useState(false);
     const { setToastData, setToastApiError } = useToast();
@@ -79,7 +81,7 @@ export const PasswordTab = () => {
         setLoading(false);
     };
 
-    if (authSettingsLoading) return null;
+    if (authSettingsLoading || profileLoading) return null;
 
     return (
         <PageContent isLoading={loading} header='Change password'>
@@ -92,63 +94,78 @@ export const PasswordTab = () => {
                     </Alert>
                 }
                 elseShow={
-                    <StyledForm>
-                        <PasswordChecker
-                            password={password}
-                            callback={setValidPassword}
-                            data-loading
-                        />
-                        <PasswordField
-                            data-loading
-                            label='Old password'
-                            name='oldPassword'
-                            value={oldPassword}
-                            error={Boolean(authenticationError)}
-                            helperText={authenticationError}
-                            autoComplete='current-password'
-                            onChange={(
-                                e: React.ChangeEvent<HTMLInputElement>,
-                            ) => setOldPassword(e.target.value)}
-                        />
-                        <PasswordField
-                            data-loading
-                            label='Password'
-                            name='password'
-                            value={password}
-                            error={Boolean(error)}
-                            helperText={error}
-                            autoComplete='new-password'
-                            onChange={(
-                                e: React.ChangeEvent<HTMLInputElement>,
-                            ) => setPassword(e.target.value)}
-                        />
-                        <PasswordField
-                            data-loading
-                            label='Confirm password'
-                            name='confirmPassword'
-                            value={confirmPassword}
-                            autoComplete='new-password'
-                            onChange={(
-                                e: React.ChangeEvent<HTMLInputElement>,
-                            ) => setConfirmPassword(e.target.value)}
-                        />
-                        <PasswordMatcher
-                            data-loading
-                            started={allPasswordsFilled}
-                            passwordsDoNotMatch={passwordsDoNotMatch}
-                            sameAsOldPassword={sameAsOldPassword}
-                        />
-                        <Button
-                            data-loading
-                            variant='contained'
-                            color='primary'
-                            type='submit'
-                            onClick={submit}
-                            disabled={hasError}
-                        >
-                            Save
-                        </Button>
-                    </StyledForm>
+                    <ConditionallyRender
+                        condition={profile?.canChangePassword === false}
+                        show={
+                            <Alert severity='info'>
+                                Your account does not use a password. You sign
+                                in using your organization&apos;s single sign-on
+                                provider, so there is no Unleash password to
+                                change here. To update your sign-in credentials,
+                                use your identity provider or contact your
+                                administrator.
+                            </Alert>
+                        }
+                        elseShow={
+                            <StyledForm>
+                                <PasswordChecker
+                                    password={password}
+                                    callback={setValidPassword}
+                                    data-loading
+                                />
+                                <PasswordField
+                                    data-loading
+                                    label='Old password'
+                                    name='oldPassword'
+                                    value={oldPassword}
+                                    error={Boolean(authenticationError)}
+                                    helperText={authenticationError}
+                                    autoComplete='current-password'
+                                    onChange={(
+                                        e: React.ChangeEvent<HTMLInputElement>,
+                                    ) => setOldPassword(e.target.value)}
+                                />
+                                <PasswordField
+                                    data-loading
+                                    label='Password'
+                                    name='password'
+                                    value={password}
+                                    error={Boolean(error)}
+                                    helperText={error}
+                                    autoComplete='new-password'
+                                    onChange={(
+                                        e: React.ChangeEvent<HTMLInputElement>,
+                                    ) => setPassword(e.target.value)}
+                                />
+                                <PasswordField
+                                    data-loading
+                                    label='Confirm password'
+                                    name='confirmPassword'
+                                    value={confirmPassword}
+                                    autoComplete='new-password'
+                                    onChange={(
+                                        e: React.ChangeEvent<HTMLInputElement>,
+                                    ) => setConfirmPassword(e.target.value)}
+                                />
+                                <PasswordMatcher
+                                    data-loading
+                                    started={allPasswordsFilled}
+                                    passwordsDoNotMatch={passwordsDoNotMatch}
+                                    sameAsOldPassword={sameAsOldPassword}
+                                />
+                                <Button
+                                    data-loading
+                                    variant='contained'
+                                    color='primary'
+                                    type='submit'
+                                    onClick={submit}
+                                    disabled={hasError}
+                                >
+                                    Save
+                                </Button>
+                            </StyledForm>
+                        }
+                    />
                 }
             />
         </PageContent>

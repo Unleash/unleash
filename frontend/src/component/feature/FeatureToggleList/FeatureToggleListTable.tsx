@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState, type FC } from 'react';
 import { Box, Link, useMediaQuery, useTheme } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
 import { PaginatedTable, TablePlaceholder } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
@@ -22,7 +22,7 @@ import useToast from 'hooks/useToast';
 import { FeaturesOverviewToggleFilters } from './FeaturesOverviewLifecycleFilters/FeaturesOverviewToggleFilters.tsx';
 import { withTableState } from 'utils/withTableState';
 import useLoading from 'hooks/useLoading';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import {
     useGlobalFeatureSearch,
     useTableStateFilter,
@@ -33,34 +33,40 @@ import { ExportFlags } from './ExportFlags.tsx';
 import { createFeatureOverviewCell } from 'component/common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
 import { AvatarCell } from 'component/project/Project/PaginatedProjectFeatureToggles/AvatarCell';
 import { StatusCell } from './StatusCell/StatusCell.tsx';
+import { ArchivedActionsCell } from './ArchivedActionsCell.tsx';
+import { ArchivedFeatureDeleteConfirm } from 'component/archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureDeleteConfirm/ArchivedFeatureDeleteConfirm';
+import { ArchivedFeatureReviveConfirm } from 'component/archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureReviveConfirm/ArchivedFeatureReviveConfirm';
 
-export const featuresPlaceholder = Array(15).fill({
-    name: 'Name of the feature',
-    description: 'Short description of the feature',
-    type: '-',
-    createdAt: new Date(2022, 1, 1).toISOString(),
-    project: 'projectID',
-    createdBy: {
-        id: 0,
-        name: 'admin',
-        imageUrl: '',
-    },
-    archivedAt: null,
-    favorite: false,
-    stale: false,
-    dependencyType: null,
-    tags: [],
-    environments: [],
-    impressionData: false,
-    segments: [],
-} as FeatureSearchResponseSchema);
+export const featuresPlaceholder: FeatureSearchResponseSchema[] = Array.from(
+    { length: 15 },
+    (_, index) => ({
+        name: `Name of feature #${index + 1}`,
+        description: 'Short description of the feature',
+        type: '-',
+        createdAt: new Date(2022, 1, 1).toISOString(),
+        project: 'projectID',
+        createdBy: {
+            id: 0,
+            name: 'admin',
+            imageUrl: '',
+        },
+        archivedAt: null,
+        favorite: false,
+        stale: false,
+        dependencyType: null,
+        tags: [],
+        environments: [],
+        impressionData: false,
+        segments: [],
+    }),
+);
 
 const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
 
 export const FeatureToggleListTable: FC = () => {
     const theme = useTheme();
     const { isOss } = useUiConfig();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { environments } = useEnvironments();
     const enabledEnvironments = environments
         .filter((env) => env.enabled)
@@ -82,6 +88,15 @@ export const FeatureToggleListTable: FC = () => {
         setTableState,
         filterState,
     } = useGlobalFeatureSearch();
+    const showArchived = Boolean(
+        filterState.lifecycle?.values?.includes('archived'),
+    );
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [deletedFeature, setDeletedFeature] =
+        useState<FeatureSearchResponseSchema>();
+    const [reviveModalOpen, setReviveModalOpen] = useState(false);
+    const [revivedFeature, setRevivedFeature] =
+        useState<FeatureSearchResponseSchema>();
     const onFlagTypeClick = useTableStateFilter(
         ['type', 'IS'],
         tableState,
@@ -125,6 +140,7 @@ export const FeatureToggleListTable: FC = () => {
                     onFlagTypeClick,
                     onFavorite,
                 ),
+                meta: { width: '100%', align: 'left' },
             }),
             columnHelper.accessor('createdBy', {
                 id: 'createdBy',
@@ -153,14 +169,27 @@ export const FeatureToggleListTable: FC = () => {
                 size: 50,
                 meta: { width: '1%' },
             }),
-            ...(showStatusColumn
+            ...(showStatusColumn || showArchived
                 ? [
                       columnHelper.accessor('environments', {
                           id: 'status',
                           header: 'Status',
-                          cell: ({ row: { original } }) => (
-                              <StatusCell {...original} />
-                          ),
+                          cell: ({ row: { original } }) =>
+                              showArchived ? (
+                                  <ArchivedActionsCell
+                                      projectId={original.project}
+                                      onRevive={() => {
+                                          setRevivedFeature(original);
+                                          setReviveModalOpen(true);
+                                      }}
+                                      onDelete={() => {
+                                          setDeletedFeature(original);
+                                          setDeleteModalOpen(true);
+                                      }}
+                                  />
+                              ) : (
+                                  <StatusCell {...original} />
+                              ),
                           enableSorting: false,
                           size: 350,
                       }),
@@ -185,7 +214,7 @@ export const FeatureToggleListTable: FC = () => {
                 },
             }),
         ],
-        [tableState.favoritesFirst, showStatusColumn],
+        [tableState.favoritesFirst, showStatusColumn, showArchived],
     );
     const data = useMemo<FeatureSearchResponseSchema[]>(
         () =>
@@ -254,25 +283,6 @@ export const FeatureToggleListTable: FC = () => {
                                 }}
                             >
                                 Unknown flags
-                            </Link>
-                            <Link
-                                component={RouterLink}
-                                to='/archive'
-                                underline='always'
-                                sx={{
-                                    marginRight: 2,
-                                    fontSize: theme.typography.body2.fontSize,
-                                    ...focusable(theme),
-                                }}
-                                onClick={() => {
-                                    trackEvent('search-feature-buttons', {
-                                        props: {
-                                            action: 'archive',
-                                        },
-                                    });
-                                }}
-                            >
-                                Archived flags
                             </Link>
                             <ExportFlags
                                 onClick={() => setShowExportDialog(true)}
@@ -358,6 +368,20 @@ export const FeatureToggleListTable: FC = () => {
                 data={data}
                 onClose={() => setShowExportDialog(false)}
                 environments={enabledEnvironments}
+            />
+            <ArchivedFeatureDeleteConfirm
+                deletedFeatures={[deletedFeature?.name!]}
+                projectId={deletedFeature?.project!}
+                open={deleteModalOpen}
+                setOpen={setDeleteModalOpen}
+                refetch={refetchFeatures}
+            />
+            <ArchivedFeatureReviveConfirm
+                revivedFeatures={[revivedFeature?.name!]}
+                projectId={revivedFeature?.project!}
+                open={reviveModalOpen}
+                setOpen={setReviveModalOpen}
+                refetch={refetchFeatures}
             />
         </PageContent>
     );

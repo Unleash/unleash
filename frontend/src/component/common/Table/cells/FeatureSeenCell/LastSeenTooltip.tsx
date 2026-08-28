@@ -112,8 +112,10 @@ export const LastSeenTooltip = ({
                 }
                 elseShow={
                     <Typography
-                        fontWeight={'bold'}
                         color={getColor(featureLastSeen).text}
+                        sx={{
+                            fontWeight: 'bold',
+                        }}
                     >
                         Reported <TimeAgo date={featureLastSeen} />
                     </Typography>

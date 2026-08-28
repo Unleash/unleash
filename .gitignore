@@ -55,8 +55,10 @@ shell.nix
 .husky/prepare-commit-msg
 
 
-# We use yarn.lock
+# We use pnpm-lock.yaml
 package-lock.json
+yarn.lock
+frontend/yarn.lock
 
 .env
 .profiles/
@@ -71,27 +73,13 @@ frontend/src/openapi/index.ts
 # Generated docs
 reports/jest-junit.xml
 
-# Yarn (https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored)
+# Yarn artifacts from the previous package manager
 .pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
-frontend/.yarn/*
-!frontend/.yarn/patches
-!frontend/.yarn/plugins
-!frontend/.yarn/releases
-!frontend/.yarn/sdks
-!frontend/.yarn/versions
-
-docker/.yarn/*
-!docker/.yarn/patches
-!docker/.yarn/plugins
-!docker/.yarn/releases
-!docker/.yarn/sdks
-!docker/.yarn/versions
+.yarn/
+frontend/.yarn/
+docker/.yarn/
+.yarnrc.yml
+frontend/.yarnrc.yml
 
 coverage/.tmp
 coverage/*

@@ -11,22 +11,15 @@ import type {
     IUnleashServices,
     OpenApiService,
 } from '../../../services/index.js';
+import type { ApiTokenService } from '../../../services/api-token-service.js';
 import { createRequestSchema } from '../../../openapi/util/create-request-schema.js';
 import {
     emptyResponse,
     getStandardResponses,
 } from '../../../openapi/util/standard-responses.js';
-import rateLimit from 'express-rate-limit';
-import { minutesToMilliseconds } from 'date-fns';
 import type { BulkMetricsSchema } from '../../../openapi/spec/bulk-metrics-schema.js';
-import {
-    clientMetricsEnvBulkSchema,
-    customMetricsSchema,
-} from '../shared/schema.js';
+import { clientMetricsEnvBulkSchema } from '../shared/schema.js';
 import type { IClientMetricsEnv } from '../client-metrics/client-metrics-store-v2-type.js';
-import type { CustomMetricsSchema } from '../../../openapi/spec/custom-metrics-schema.js';
-import type { StoredCustomMetric } from '../custom/custom-metrics-store.js';
-import type { CustomMetricsService } from '../custom/custom-metrics-service.js';
 import type {
     Metric,
     MetricsTranslator,
@@ -42,24 +35,24 @@ export default class ClientMetricsController extends Controller {
 
     metricsV2: ClientMetricsServiceV2;
 
-    customMetricsService: CustomMetricsService;
-
     metricsTranslator: MetricsTranslator;
 
     flagResolver: IFlagResolver;
+
+    apiTokenService: ApiTokenService;
 
     constructor(
         {
             clientInstanceService,
             clientMetricsServiceV2,
             openApiService,
-            customMetricsService,
+            apiTokenService,
         }: Pick<
             IUnleashServices,
             | 'clientInstanceService'
             | 'clientMetricsServiceV2'
             | 'openApiService'
-            | 'customMetricsService'
+            | 'apiTokenService'
         >,
         config: IUnleashConfig,
     ) {
@@ -70,7 +63,7 @@ export default class ClientMetricsController extends Controller {
         this.clientInstanceService = clientInstanceService;
         this.openApiService = openApiService;
         this.metricsV2 = clientMetricsServiceV2;
-        this.customMetricsService = customMetricsService;
+        this.apiTokenService = apiTokenService;
         this.flagResolver = config.flagResolver;
 
         this.route({
@@ -83,6 +76,7 @@ export default class ClientMetricsController extends Controller {
                     tags: ['Client'],
                     summary: 'Register client usage metrics',
                     description: `Registers usage metrics. Stores information about how many times each flag was evaluated to enabled and disabled within a time frame. If provided, this operation will also store data on how many times each feature flag's variants were displayed to the end user.`,
+                    release: { stable: '4.14.0' },
                     operationId: 'registerClientMetrics',
                     requestBody: createRequestSchema('clientMetricsSchema'),
                     responses: {
@@ -90,13 +84,6 @@ export default class ClientMetricsController extends Controller {
                         202: emptyResponse,
                         204: emptyResponse,
                     },
-                }),
-                rateLimit({
-                    windowMs: minutesToMilliseconds(1),
-                    max: config.metricsRateLimiting.clientMetricsMaxPerMinute,
-                    validate: false,
-                    standardHeaders: true,
-                    legacyHeaders: false,
                 }),
             ],
         });
@@ -111,6 +98,7 @@ export default class ClientMetricsController extends Controller {
                     tags: ['Unleash Edge'],
                     summary: 'Send metrics in bulk',
                     description: `This operation accepts batched metrics from any client. Metrics will be inserted into Unleash's metrics storage`,
+                    release: { stable: '5.9.0' },
                     operationId: 'clientBulkMetrics',
                     requestBody: createRequestSchema('bulkMetricsSchema'),
                     responses: {
@@ -120,35 +108,6 @@ export default class ClientMetricsController extends Controller {
                 }),
             ],
         });
-
-        this.route({
-            method: 'post',
-            path: '/custom',
-            handler: this.customMetrics,
-            permission: NONE,
-            middleware: [
-                this.openApiService.validPath({
-                    tags: ['Client'],
-                    summary: 'Send custom metrics',
-                    description: `This operation accepts custom metrics from clients. These metrics will be exposed via Prometheus in Unleash.`,
-                    operationId: 'clientCustomMetrics',
-                    requestBody: createRequestSchema('customMetricsSchema'),
-                    responses: {
-                        202: emptyResponse,
-                        ...getStandardResponses(400),
-                    },
-                }),
-                rateLimit({
-                    windowMs: minutesToMilliseconds(1),
-                    max: config.metricsRateLimiting.clientMetricsMaxPerMinute,
-                    validate: false,
-                    standardHeaders: true,
-                    legacyHeaders: false,
-                }),
-            ],
-        });
-
-        // Note: Custom metrics GET endpoints are now handled by the admin API
     }
 
     private async processPromiseResults(
@@ -178,22 +137,33 @@ export default class ClientMetricsController extends Controller {
             try {
                 const { body: data, user } = req;
                 const clientIp = extractClientIp(req);
-                const { impactMetrics, ...metricsData } = data;
-                metricsData.environment =
-                    this.metricsV2.resolveMetricsEnvironment(user, metricsData);
+                const {
+                    impactMetrics,
+                    sdkFlavor,
+                    sdkFlavorVersion,
+                    ...metricsData
+                } = data;
+                const environment =
+                    this.metricsV2.resolveMetricsEnvironment(user);
+
                 await this.clientInstanceService.registerInstance(
                     metricsData,
                     clientIp,
+                    environment,
+                );
+
+                const recordSdkFlavorMetrics = this.getRegisteredMetricsData(
+                    metricsData,
+                    sdkFlavor,
+                    sdkFlavorVersion,
                 );
 
                 await this.metricsV2.registerClientMetrics(
-                    metricsData,
+                    recordSdkFlavorMetrics,
                     clientIp,
+                    environment,
                 );
-                if (
-                    this.flagResolver.isEnabled('impactMetrics') &&
-                    impactMetrics
-                ) {
+                if (impactMetrics) {
                     await this.metricsV2.registerImpactMetrics(
                         impactMetrics as Metric[],
                     );
@@ -209,44 +179,20 @@ export default class ClientMetricsController extends Controller {
         }
     }
 
-    async customMetrics(
-        req: IAuthRequest<void, void, CustomMetricsSchema>,
-        res: Response<void>,
-    ): Promise<void> {
-        if (this.config.flagResolver.isEnabled('disableMetrics')) {
-            res.status(204).end();
-        } else {
-            try {
-                const { body } = req;
-
-                // Use Joi validation for custom metrics
-                await customMetricsSchema.validateAsync(body);
-
-                // Process and store custom metrics
-                if (body.metrics && Array.isArray(body.metrics)) {
-                    const validMetrics = body.metrics.filter(
-                        (metric) =>
-                            typeof metric.name === 'string' &&
-                            typeof metric.value === 'number',
-                    );
-
-                    if (validMetrics.length < body.metrics.length) {
-                        this.logger.warn(
-                            'Some invalid metric types found, skipping',
-                        );
-                    }
-
-                    this.customMetricsService.addMetrics(
-                        validMetrics as Omit<StoredCustomMetric, 'timestamp'>[],
-                    );
-                }
-
-                res.status(202).end();
-            } catch (e) {
-                this.logger.error('Failed to process custom metrics', e);
-                res.status(400).end();
-            }
-        }
+    getRegisteredMetricsData(
+        metricsData: any,
+        sdkFlavor: any,
+        sdkFlavorVersion: any,
+    ) {
+        // sdkFlavor / sdkFlavorVersion are in the metrics PAYLOAD (clientMetricsSchema) same as sdkVersion, not headers.
+        // Recording them is gated by the `recordSdkFlavorMetrics` flag.
+        const recordSdkFlavorMetrics = this.config.flagResolver.isEnabled(
+            'recordSdkFlavorMetrics',
+        );
+        const usageMetricsData = recordSdkFlavorMetrics
+            ? { ...metricsData, sdkFlavor, sdkFlavorVersion }
+            : metricsData;
+        return usageMetricsData;
     }
 
     async bulkMetrics(
@@ -256,13 +202,23 @@ export default class ClientMetricsController extends Controller {
         if (this.config.flagResolver.isEnabled('disableMetrics')) {
             res.status(204).end();
         } else {
-            const { body } = req;
+            const { body, user } = req;
             const clientIp = extractClientIp(req);
-            const { metrics, applications, impactMetrics } = body;
+            const { metrics, applications, impactMetrics, seenTokens } = body;
             const promises: Promise<void>[] = [];
+
+            // when an app omits its `environment` and
+            // the filter on raw `metrics[]` entries — only metrics
+            // matching the token's scope are persisted
+            const acceptedEnvironment =
+                this.metricsV2.resolveUserEnvironment(user);
 
             try {
                 for (const app of applications) {
+                    // per app `environment` from the body - when this bulk endpoint
+                    // forwards metrics from many environments for edge proxies
+                    const appEnvironment =
+                        app.environment ?? acceptedEnvironment;
                     if (
                         app.sdkType === 'frontend' &&
                         typeof app.sdkVersion === 'string'
@@ -270,16 +226,20 @@ export default class ClientMetricsController extends Controller {
                         this.clientInstanceService.registerFrontendClient({
                             appName: app.appName,
                             instanceId: app.instanceId,
-                            environment: app.environment,
+                            environment: appEnvironment,
                             sdkType: app.sdkType,
                             sdkVersion: app.sdkVersion,
                             projects: app.projects,
+                            // forwarded by Edge for frontend SDKs - backend path already passes `app`
+                            sdkFlavor: app.sdkFlavor,
+                            sdkFlavorVersion: app.sdkFlavorVersion,
                         });
                     } else {
                         promises.push(
                             this.clientInstanceService.registerBackendClient(
                                 app,
                                 clientIp,
+                                appEnvironment,
                             ),
                         );
                     }
@@ -287,9 +247,6 @@ export default class ClientMetricsController extends Controller {
                 if (metrics && metrics.length > 0) {
                     const data: IClientMetricsEnv[] =
                         await clientMetricsEnvBulkSchema.validateAsync(metrics);
-                    const { user } = req;
-                    const acceptedEnvironment =
-                        this.metricsV2.resolveUserEnvironment(user);
                     const filteredData = data.filter(
                         (metric) => metric.environment === acceptedEnvironment,
                     );
@@ -298,13 +255,22 @@ export default class ClientMetricsController extends Controller {
                     );
                 }
 
-                if (
-                    this.flagResolver.isEnabled('impactMetrics') &&
-                    impactMetrics &&
-                    impactMetrics.length > 0
-                ) {
+                if (impactMetrics && impactMetrics.length > 0) {
                     promises.push(
                         this.metricsV2.registerImpactMetrics(impactMetrics),
+                    );
+                }
+
+                if (seenTokens && seenTokens.length > 0) {
+                    promises.push(
+                        this.apiTokenService
+                            .markSeenByTokens(seenTokens)
+                            .catch((error) => {
+                                this.logger.warn(
+                                    'Failed to mark API tokens as seen from bulk metrics',
+                                    error,
+                                );
+                            }),
                     );
                 }
 

@@ -1,11 +1,7 @@
 import { TableBody, TableRow, useMediaQuery, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import {
-    SortableTableHeader,
-    Table,
-    TableCell,
-    TablePlaceholder,
-} from 'component/common/Table';
+import { Table, TableCell, TablePlaceholder } from 'component/common/Table';
+import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
@@ -18,8 +14,13 @@ import type {
     IPayload,
 } from 'interfaces/featureToggle';
 import { useMemo } from 'react';
-import { useSortBy, useTable } from 'react-table';
-import { sortTypes } from 'utils/sortTypes';
+import {
+    type ColumnDef,
+    flexRender,
+    getCoreRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
 import { PayloadCell } from './PayloadCell/PayloadCell.tsx';
 import { OverridesCell } from './OverridesCell/OverridesCell.tsx';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
@@ -39,94 +40,99 @@ export const EnvironmentVariantsTable = ({
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isLargeScreen = useMediaQuery(theme.breakpoints.down('lg'));
 
-    const columns = useMemo(
+    const columns = useMemo<ColumnDef<IFeatureVariant, unknown>[]>(
         () => [
             {
-                Header: 'Name',
-                accessor: 'name',
-                Cell: HighlightCell,
-                sortType: 'alphanumeric',
-                minWidth: 350,
-                searchable: true,
+                id: 'name',
+                header: 'Name',
+                accessorKey: 'name',
+                cell: HighlightCell,
+                sortingFn: 'alphanumeric',
+                meta: { minWidth: 350, searchable: true },
             },
             {
-                Header: 'Payload',
-                accessor: 'payload',
-                Cell: PayloadCell,
-                disableSortBy: true,
-                searchable: true,
-                filterParsing: (value: IPayload) => value?.value,
+                id: 'payload',
+                header: 'Payload',
+                accessorKey: 'payload',
+                cell: ({ getValue }) => (
+                    <PayloadCell value={getValue() as IPayload} />
+                ),
+                enableSorting: false,
+                meta: {
+                    width: 150,
+                    searchable: true,
+                    filterParsing: (value: IPayload) => value?.value,
+                },
             },
             {
-                Header: 'Overrides',
-                accessor: 'overrides',
-                Cell: OverridesCell,
-                disableSortBy: true,
-                searchable: true,
-                filterParsing: (value: IOverride[]) =>
-                    value
-                        ?.map(
-                            ({ contextName, values }) =>
-                                `${contextName}:${values.join()}`,
-                        )
-                        .join('\n') || '',
+                id: 'overrides',
+                header: 'Overrides',
+                accessorKey: 'overrides',
+                cell: ({ getValue }) => (
+                    <OverridesCell value={getValue() as IOverride[]} />
+                ),
+                enableSorting: false,
+                meta: {
+                    width: 150,
+                    searchable: true,
+                    filterParsing: (value: IOverride[]) =>
+                        value
+                            ?.map(
+                                ({ contextName, values }) =>
+                                    `${contextName}:${values.join()}`,
+                            )
+                            .join('\n') || '',
+                },
             },
             {
-                Header: 'Weight',
-                accessor: 'weight',
-                Cell: ({
+                id: 'weight',
+                header: 'Weight',
+                accessorKey: 'weight',
+                cell: ({
                     row: {
                         original: { name, weight },
                     },
-                }: any) => {
-                    return (
-                        <TextCell data-testid={`VARIANT_WEIGHT_${name}`}>
-                            {calculateVariantWeight(weight)} %
-                        </TextCell>
-                    );
-                },
-                sortType: 'number',
+                }) => (
+                    <TextCell data-testid={`VARIANT_WEIGHT_${name}`}>
+                        {calculateVariantWeight(weight)} %
+                    </TextCell>
+                ),
+                sortingFn: 'basic',
+                meta: { width: 150 },
             },
             {
-                Header: 'Type',
-                accessor: (row: any) =>
+                id: 'weightType',
+                header: 'Type',
+                accessorFn: (row) =>
                     row.weightType === 'fix' ? 'Fixed' : 'Variable',
-                Cell: TextCell,
-                sortType: 'alphanumeric',
+                cell: TextCell,
+                sortingFn: 'alphanumeric',
+                meta: { width: 150 },
             },
         ],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [projectId, variants],
     );
 
     const initialState = useMemo(
         () => ({
-            sortBy: [{ id: 'name', desc: false }],
+            sorting: [{ id: 'name', desc: false }],
         }),
         [],
     );
 
     const { data, getSearchText } = useSearch(columns, searchValue, variants);
 
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        rows,
-        prepareRow,
-        setHiddenColumns,
-    } = useTable(
-        {
-            columns: columns as any[],
-            data,
-            initialState,
-            sortTypes,
-            autoResetHiddenColumns: false,
-            autoResetSortBy: false,
-            disableSortRemove: true,
-            disableMultiSort: true,
-        },
-        useSortBy,
-    );
+    const table = useReactTable({
+        columns,
+        data,
+        initialState,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        autoResetAll: false,
+        enableSortingRemoval: false,
+        enableMultiSort: false,
+    });
 
     useConditionallyHiddenColumns(
         [
@@ -139,33 +145,30 @@ export const EnvironmentVariantsTable = ({
                 columns: ['weightType'],
             },
         ],
-        setHiddenColumns,
+        table.setColumnVisibility,
         columns,
     );
+
+    const rows = table.getRowModel().rows;
 
     return (
         <>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <Table {...getTableProps()}>
-                    <SortableTableHeader headerGroups={headerGroups as any} />
-                    <TableBody {...getTableBodyProps()}>
-                        {rows.map((row) => {
-                            prepareRow(row);
-                            const { key, ...rowProps } = row.getRowProps();
-                            return (
-                                <TableRow hover {...rowProps} key={key}>
-                                    {row.cells.map((cell) => {
-                                        const { key, ...cellProps } =
-                                            cell.getCellProps();
-                                        return (
-                                            <TableCell key={key} {...cellProps}>
-                                                {cell.render('Cell')}
-                                            </TableCell>
-                                        );
-                                    })}
-                                </TableRow>
-                            );
-                        })}
+                <Table>
+                    <SortableTableHeader tableInstance={table} />
+                    <TableBody>
+                        {rows.map((row) => (
+                            <TableRow hover key={row.id}>
+                                {row.getVisibleCells().map((cell) => (
+                                    <TableCell key={cell.id}>
+                                        {flexRender(
+                                            cell.column.columnDef.cell,
+                                            cell.getContext(),
+                                        )}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        ))}
                     </TableBody>
                 </Table>
             </SearchHighlightProvider>

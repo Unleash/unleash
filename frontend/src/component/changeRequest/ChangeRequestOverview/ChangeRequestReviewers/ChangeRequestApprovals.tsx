@@ -12,7 +12,12 @@ export const ChangeRequestApprovals: FC<ChangeRequestApprovalProps> = ({
     approvals = [],
 }) => (
     <>
-        <Typography variant='body1' color='text.secondary'>
+        <Typography
+            variant='body1'
+            sx={{
+                color: 'text.secondary',
+            }}
+        >
             <ConditionallyRender
                 condition={approvals?.length > 0}
                 show={'Approved by'}

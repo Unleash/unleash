@@ -1,12 +1,4 @@
-import {
-    Box,
-    Button,
-    styled,
-    Tab,
-    Tabs,
-    TextField,
-    Typography,
-} from '@mui/material';
+import { Box, Button, styled, Tab, Tabs, Typography } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StyledFileDropZone } from './StyledFileDropZone.tsx';
 import { PulsingAvatar } from 'component/common/PulsingAvatar/PulsingAvatar';
@@ -21,10 +13,7 @@ import {
     CODE_TEXT_FIELD,
     VALIDATE_BUTTON,
 } from 'utils/testIds';
-
-const StyledTextField = styled(TextField)(({ theme }) => ({
-    width: '100%',
-}));
+import Input from 'component/common/Input/Input.tsx';
 
 const DropMessage = styled(Typography)(({ theme }) => ({
     marginTop: theme.spacing(4),
@@ -120,9 +109,9 @@ export const ImportArea: FC<{
                 </StyledFileDropZone>
             }
             elseShow={
-                <StyledTextField
+                <Input
                     label='Exported feature flags'
-                    variant='outlined'
+                    fullWidth
                     onChange={(event) => setImportPayload(event.target.value)}
                     value={importPayload}
                     data-testid={CODE_TEXT_FIELD}

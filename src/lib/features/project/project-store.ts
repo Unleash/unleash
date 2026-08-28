@@ -444,31 +444,27 @@ class ProjectStore implements IProjectStore {
     }
 
     async getMembersCountByProject(projectId: string): Promise<number> {
-        const members = await this.db
-            .from((db) => {
-                db.select('user_id')
-                    .from('role_user')
-                    .leftJoin('roles', 'role_user.role_id', 'roles.id')
-                    .where((builder) =>
-                        builder
-                            .where('project', projectId)
-                            .whereNot('type', 'root'),
+        const membersQuery = this.db
+            .select('user_id')
+            .from('role_user')
+            .leftJoin('roles', 'role_user.role_id', 'roles.id')
+            .where((builder) =>
+                builder.where('project', projectId).whereNot('type', 'root'),
+            )
+            .union((queryBuilder) => {
+                queryBuilder
+                    .select('user_id')
+                    .from('group_role')
+                    .leftJoin(
+                        'group_user',
+                        'group_user.group_id',
+                        'group_role.group_id',
                     )
-                    .union((queryBuilder) => {
-                        queryBuilder
-                            .select('user_id')
-                            .from('group_role')
-                            .leftJoin(
-                                'group_user',
-                                'group_user.group_id',
-                                'group_role.group_id',
-                            )
-                            .where('project', projectId);
-                    })
-                    .as('query');
+                    .where('project', projectId);
             })
-            .count()
-            .first();
+            .as('query');
+
+        const members = await this.db.from(membersQuery).count().first();
         return Number(members.count);
     }
 
@@ -476,33 +472,31 @@ class ProjectStore implements IProjectStore {
         projectId: string,
         date: string,
     ): Promise<number> {
-        const members = await this.db
-            .from((db) => {
-                db.select('user_id')
-                    .from('role_user')
-                    .leftJoin('roles', 'role_user.role_id', 'roles.id')
-                    .where((builder) =>
-                        builder
-                            .where('project', projectId)
-                            .whereNot('type', 'root')
-                            .andWhere('role_user.created_at', '>=', date),
+        const membersQuery = this.db
+            .select('user_id')
+            .from('role_user')
+            .leftJoin('roles', 'role_user.role_id', 'roles.id')
+            .where((builder) =>
+                builder
+                    .where('project', projectId)
+                    .whereNot('type', 'root')
+                    .andWhere('role_user.created_at', '>=', date),
+            )
+            .union((queryBuilder) => {
+                queryBuilder
+                    .select('user_id')
+                    .from('group_role')
+                    .leftJoin(
+                        'group_user',
+                        'group_user.group_id',
+                        'group_role.group_id',
                     )
-                    .union((queryBuilder) => {
-                        queryBuilder
-                            .select('user_id')
-                            .from('group_role')
-                            .leftJoin(
-                                'group_user',
-                                'group_user.group_id',
-                                'group_role.group_id',
-                            )
-                            .where('project', projectId)
-                            .andWhere('group_role.created_at', '>=', date);
-                    })
-                    .as('query');
+                    .where('project', projectId)
+                    .andWhere('group_role.created_at', '>=', date);
             })
-            .count()
-            .first();
+            .as('query');
+
+        const members = await this.db.from(membersQuery).count().first();
         return Number(members.count);
     }
 

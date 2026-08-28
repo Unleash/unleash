@@ -22,7 +22,7 @@ import { transitionConditionSchema } from './transition-condition-schema.js';
 import { dependentFeatureSchema } from './dependent-feature-schema.js';
 import { tagSchema } from './tag-schema.js';
 import { featureLinksSchema } from './feature-links-schema.js';
-import { featureLinkSchema } from './feature-link-schema.js';
+import { linkSchema } from './link-schema.js';
 import { releasePlanSafeguardSchema } from './release-plan-safeguard-schema.js';
 import { featureEnvironmentSafeguardSchema } from './feature-environment-safeguard-schema.js';
 import { metricQuerySchema } from './metric-query-schema.js';
@@ -216,7 +216,7 @@ export const exportResultSchema = {
             dependentFeatureSchema,
             tagSchema,
             featureLinksSchema,
-            featureLinkSchema,
+            linkSchema,
             releasePlanSchema,
             releasePlanMilestoneSchema,
             releasePlanMilestoneStrategySchema,

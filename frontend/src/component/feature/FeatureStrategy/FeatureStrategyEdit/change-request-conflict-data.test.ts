@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import type { IUiConfig } from 'interfaces/uiConfig';
 import {
     getChangeRequestConflictCreatedData,

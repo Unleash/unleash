@@ -47,9 +47,17 @@ const stringListValidator = (
 };
 
 const semVerValidator = (value: string): ConstraintValidationResult => {
-    const isCleanValue = semver.clean(value) === value;
+    const parsed = semver.parse(value, { loose: false });
 
-    if (!semver.valid(value) || !isCleanValue) {
+    // `SemVer.version` drops build metadata, so we can't use it (or
+    // `semver.clean`, which is built on it) to check that the input was already
+    // canonical.
+    const canonicalForm =
+        parsed && parsed.build.length > 0
+            ? `${parsed.version}+${parsed.build.join('.')}`
+            : parsed?.version;
+
+    if (canonicalForm !== value) {
         return [false, 'Value is not a valid semver. For example 1.2.4'];
     }
 

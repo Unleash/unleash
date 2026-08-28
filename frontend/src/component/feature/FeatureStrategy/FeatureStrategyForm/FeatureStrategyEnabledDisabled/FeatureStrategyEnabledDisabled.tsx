@@ -5,7 +5,7 @@ import {
     Checkbox,
     Typography,
 } from '@mui/material';
-import type { VFC } from 'react';
+import type { FC } from 'react';
 
 interface IFeatureStrategyEnabledDisabledProps {
     enabled: boolean;
@@ -25,12 +25,17 @@ const StyledCheckboxRow = styled(Box)(({ theme }) => ({
     marginTop: theme.spacing(1),
 }));
 
-export const FeatureStrategyEnabledDisabled: VFC<
+export const FeatureStrategyEnabledDisabled: FC<
     IFeatureStrategyEnabledDisabledProps
 > = ({ enabled, onToggleEnabled }) => {
     return (
         <StyledBox>
-            <Typography variant='body2' fontWeight='bold'>
+            <Typography
+                variant='body2'
+                sx={{
+                    fontWeight: 'bold',
+                }}
+            >
                 Strategy Status
             </Typography>
             <StyledCheckboxRow>
@@ -44,7 +49,12 @@ export const FeatureStrategyEnabledDisabled: VFC<
                     }
                     label={<Typography variant='body2'>Active</Typography>}
                 />
-                <Typography variant='body2' color='text.secondary'>
+                <Typography
+                    variant='body2'
+                    sx={{
+                        color: 'text.secondary',
+                    }}
+                >
                     Strategy will be exposed when environment is enabled
                 </Typography>
             </StyledCheckboxRow>

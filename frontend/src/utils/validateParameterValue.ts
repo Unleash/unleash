@@ -1,11 +1,9 @@
-import type {
-    IStrategyParameter,
-    IFeatureStrategyParameters,
-} from 'interfaces/strategy';
+import type { IStrategyParameter } from 'interfaces/strategy';
+import type { ParametersSchema } from 'openapi';
 
 export const validateParameterValue = (
     definition: Pick<IStrategyParameter, 'type' | 'required'>,
-    value: IFeatureStrategyParameters[string],
+    value?: ParametersSchema[string],
 ): string | undefined => {
     const { type, required } = definition;
 

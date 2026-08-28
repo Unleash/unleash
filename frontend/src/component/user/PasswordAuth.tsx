@@ -1,6 +1,7 @@
-import { type FormEventHandler, useState, type VFC } from 'react';
+import { type FormEventHandler, useState, type FC } from 'react';
 import { Button, styled } from '@mui/material';
 import { StyledAutofillTextField } from './StyledAutofillTextField.tsx';
+import { FormField } from 'component/common/FormField/FormField';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useNavigate } from 'react-router';
 import useQueryParams from 'hooks/useQueryParams';
@@ -39,7 +40,7 @@ const StyledButton = styled(Button)({
     width: '100%',
 });
 
-const PasswordAuth: VFC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
+const PasswordAuth: FC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
     const navigate = useNavigate();
     const { refetchUser } = useAuthUser();
     const params = useQueryParams();
@@ -129,23 +130,25 @@ const PasswordAuth: VFC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
                         />
 
                         <StyledDiv>
-                            <StyledAutofillTextField
-                                label='Email'
-                                name='username'
-                                id='username'
-                                type='text'
-                                onChange={(evt) =>
-                                    setUsername(evt.target.value)
-                                }
-                                value={username}
-                                error={Boolean(usernameError)}
-                                helperText={usernameError}
-                                autoComplete='username'
-                                data-testid={LOGIN_EMAIL_ID}
-                                variant='outlined'
-                                size='small'
-                                autoFocus
-                            />
+                            <FormField label='Email'>
+                                <StyledAutofillTextField
+                                    name='username'
+                                    id='username'
+                                    type='text'
+                                    onChange={(evt) =>
+                                        setUsername(evt.target.value)
+                                    }
+                                    value={username}
+                                    error={Boolean(usernameError)}
+                                    helperText={usernameError}
+                                    autoComplete='username'
+                                    data-testid={LOGIN_EMAIL_ID}
+                                    variant='outlined'
+                                    size='large'
+                                    fullWidth
+                                    autoFocus
+                                />
+                            </FormField>
                             <PasswordField
                                 label='Password'
                                 onChange={(evt) =>

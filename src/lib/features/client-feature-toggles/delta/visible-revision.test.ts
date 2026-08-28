@@ -7,7 +7,11 @@ const revisionState: EnvironmentVisibleRevisionState = {
         ['alpha', 11],
         ['beta', 14],
     ]),
-    globalSegmentRevision: 12,
+    maxReferencedSegmentRevision: 12,
+    segmentRevisions: new Map([
+        [101, 12],
+        [202, 9],
+    ]),
 };
 
 describe('getVisibleRevision', () => {
@@ -26,5 +30,14 @@ describe('getVisibleRevision', () => {
 
     test('returns 0 when scoped query has no revision state', () => {
         expect(getVisibleRevision(undefined, ['alpha'])).toBe(0);
+    });
+
+    test('uses query-scoped segment revisions when referenced segment ids are provided', () => {
+        expect(
+            getVisibleRevision(revisionState, ['alpha'], new Set([202])),
+        ).toBe(11);
+        expect(
+            getVisibleRevision(revisionState, ['alpha'], new Set([101])),
+        ).toBe(12);
     });
 });

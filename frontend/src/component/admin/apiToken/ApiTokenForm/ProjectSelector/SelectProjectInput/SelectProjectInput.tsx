@@ -1,24 +1,29 @@
-import { type FC, Fragment, useState, type ChangeEvent } from 'react';
+import {
+    type FC,
+    Fragment,
+    useState,
+    type ChangeEvent,
+    type HTMLAttributes,
+    type Key,
+} from 'react';
 import {
     Checkbox,
     FormControlLabel,
-    TextField,
     Box,
     Paper,
     styled,
     Chip,
 } from '@mui/material';
-import { Autocomplete } from '@mui/material';
 
 import type {
     AutocompleteRenderGroupParams,
-    AutocompleteRenderInputParams,
     AutocompleteRenderOptionState,
 } from '@mui/material/Autocomplete';
 
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import type { IAutocompleteBoxOption } from 'component/common/AutocompleteBox/AutocompleteBox';
+import { AutocompleteField } from 'component/common/AutocompleteField/AutocompleteField';
 import { SelectAllButton } from './SelectAllButton/SelectAllButton.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
@@ -81,7 +86,7 @@ export const SelectProjectInput: FC<ISelectProjectInputProps> = ({
     };
 
     const renderOption = (
-        props: object & { key?: string },
+        props: HTMLAttributes<HTMLLIElement> & { key?: Key },
         option: IAutocompleteBoxOption,
         { selected }: AutocompleteRenderOptionState,
     ) => {
@@ -113,19 +118,6 @@ export const SelectProjectInput: FC<ISelectProjectInputProps> = ({
         </Fragment>
     );
 
-    const renderInput = (params: AutocompleteRenderInputParams) => (
-        <TextField
-            {...params}
-            error={Boolean(error)}
-            helperText={error}
-            variant='outlined'
-            label='Projects'
-            placeholder='Select one or more projects'
-            onFocus={onFocus}
-            data-testid='select-input'
-        />
-    );
-
     return (
         <Box sx={{ mt: -1, mb: 3 }}>
             <Box sx={{ mt: 1, mb: 0.25, ml: 1.5 }}>
@@ -141,7 +133,13 @@ export const SelectProjectInput: FC<ISelectProjectInputProps> = ({
                     label='ALL current and future projects'
                 />
             </Box>
-            <Autocomplete
+            <AutocompleteField
+                label='Projects'
+                placeholder='Select one or more projects'
+                error={Boolean(error)}
+                helperText={error}
+                onFocus={onFocus}
+                data-testid='select-input'
                 disabled={disabled || isWildcardSelected}
                 multiple
                 limitTags={2}
@@ -150,12 +148,10 @@ export const SelectProjectInput: FC<ISelectProjectInputProps> = ({
                 getOptionLabel={({ label }) => label}
                 groupBy={() => 'Select/Deselect all'}
                 renderGroup={renderGroup}
-                fullWidth
-                PaperComponent={CustomPaper}
                 renderOption={renderOption}
-                renderTags={(value, getTagProps) => {
+                renderValue={(value, getItemProps) => {
                     return value.map((option, index) => {
-                        const { key, ...props } = getTagProps({ index });
+                        const { key, ...props } = getItemProps({ index });
                         return (
                             <Chip
                                 size='small'
@@ -166,7 +162,6 @@ export const SelectProjectInput: FC<ISelectProjectInputProps> = ({
                         );
                     });
                 }}
-                renderInput={renderInput}
                 value={
                     isWildcardSelected || disabled
                         ? options
@@ -178,6 +173,9 @@ export const SelectProjectInput: FC<ISelectProjectInputProps> = ({
                     const state = input.map(({ value }) => value);
                     setProjects(state);
                     onChange(state);
+                }}
+                slots={{
+                    paper: CustomPaper,
                 }}
             />
         </Box>

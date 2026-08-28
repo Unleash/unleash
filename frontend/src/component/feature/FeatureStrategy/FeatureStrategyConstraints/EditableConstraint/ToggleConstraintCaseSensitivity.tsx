@@ -1,7 +1,7 @@
 import { styled } from '@mui/material';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
-import { ReactComponent as CaseSensitiveIcon } from 'assets/icons/case-sensitive.svg';
-import { ReactComponent as CaseInsensitiveIcon } from 'assets/icons/case-insensitive.svg';
+import CaseSensitiveIcon from 'assets/icons/case-sensitive.svg?react';
+import CaseInsensitiveIcon from 'assets/icons/case-insensitive.svg?react';
 import type { FC } from 'react';
 
 const StyledButton = styled('button')(({ theme }) => ({

@@ -70,6 +70,7 @@ export default class ProjectArchiveController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Archive'],
+                    release: { stable: '4.22.0' },
                     operationId: 'deleteFeatures',
                     description:
                         'This endpoint deletes the specified features, that are in archive.',
@@ -92,6 +93,7 @@ export default class ProjectArchiveController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Archive'],
+                    release: { stable: '4.22.0' },
                     operationId: 'reviveFeatures',
                     description:
                         'This endpoint revives the specified features.',
@@ -113,6 +115,7 @@ export default class ProjectArchiveController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
+                    release: { stable: '5.6.0' },
                     operationId: 'validateArchiveFeatures',
                     description:
                         'This endpoint return info about the archive features impact.',
@@ -136,6 +139,7 @@ export default class ProjectArchiveController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
+                    release: { stable: '4.22.0' },
                     operationId: 'archiveFeatures',
                     description:
                         "This endpoint archives the specified features. Any features that are already archived or that don't exist are ignored. All existing features (whether already archived or not) that are provided must belong to the specified project.",
@@ -156,10 +160,8 @@ export default class ProjectArchiveController extends Controller {
     ): Promise<void> {
         const { projectId } = req.params;
         const { features } = req.body;
-        await this.featureService.deleteFeatures(
-            features,
-            projectId,
-            req.audit,
+        await this.transactionalFeatureToggleService.transactional((service) =>
+            service.deleteFeatures(features, projectId, req.audit),
         );
         res.status(200).end();
     }

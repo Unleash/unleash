@@ -1,11 +1,20 @@
+import { beforeEach, expect, test } from 'vitest';
 import { render } from 'utils/testRenderer';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import { ProjectFeatureToggles } from './ProjectFeatureToggles.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { BATCH_SELECTED_COUNT } from 'utils/testIds';
+import {
+    DELETE_FEATURE,
+    UPDATE_FEATURE,
+} from 'component/providers/AccessProvider/permissions';
 
 const server = testServerSetup();
+
+beforeEach(() => {
+    localStorage.clear();
+});
 
 const setupApi = () => {
     const features = [
@@ -81,8 +90,9 @@ test('filters by flag type', async () => {
             route: '/projects/default',
         },
     );
-    await screen.findByText('featureA');
-    const [icon] = await screen.findAllByTestId('feature-type-icon');
+    const featureA = await screen.findByText('featureA');
+    const featureARow = featureA.closest('tr')!;
+    const icon = within(featureARow).getByTestId('feature-type-icon');
 
     fireEvent.click(icon);
 
@@ -131,6 +141,39 @@ test('selects project features', async () => {
     fireEvent.click(selectFeatureA);
     expect(screen.queryByTestId(BATCH_SELECTED_COUNT)).not.toBeInTheDocument();
 }, 10000);
+
+test('clears the selection when the filters change', async () => {
+    setupApi();
+    render(
+        <Routes>
+            <Route
+                path={'/projects/:projectId'}
+                element={
+                    <ProjectFeatureToggles
+                        environments={['development', 'production']}
+                    />
+                }
+            />
+        </Routes>,
+        {
+            route: '/projects/default',
+        },
+    );
+
+    const featureRow = await screen.findByRole('row', { name: /featureA/ });
+    fireEvent.click(within(featureRow).getByRole('checkbox'));
+    expect((await screen.findByTestId(BATCH_SELECTED_COUNT)).textContent).toBe(
+        '1',
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: /Cleanup/ }));
+
+    await waitFor(() => {
+        expect(
+            screen.queryByTestId(BATCH_SELECTED_COUNT),
+        ).not.toBeInTheDocument();
+    });
+}, 16000);
 
 test('filters by tag', async () => {
     setupApi();
@@ -205,9 +248,7 @@ test('Project is onboarded', async () => {
             route: `/projects/${projectId}`,
         },
     );
-    expect(
-        screen.queryByText('Welcome to your project'),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText('Project setup')).not.toBeInTheDocument();
 }, 10000);
 
 test('Project is not onboarded', async () => {
@@ -229,7 +270,7 @@ test('Project is not onboarded', async () => {
             route: `/projects/${projectId}`,
         },
     );
-    await screen.findByText('Welcome to your project');
+    await screen.findByText('Project setup');
 }, 10000);
 
 test('renders lifecycle quick filters', async () => {
@@ -251,18 +292,50 @@ test('renders lifecycle quick filters', async () => {
         },
     );
 
-    await screen.findByText(/All lifecycles/);
+    await screen.findByText(/Active flags/);
     await screen.findByText(/Develop/);
     await screen.findByText(/Rollout production/);
     await screen.findByText(/Cleanup/);
 }, 10000);
 
-test('clears lifecycle filter when switching to archived view', async () => {
+test('shows onboarding steps when flag is enabled and project is not onboarded', async () => {
+    const projectId = 'default';
     setupApi();
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: {
-            flagCreator: true,
-        },
+        flags: { flagCreator: true },
+    });
+    testServerRoute(server, '/api/admin/projects/default/overview', {
+        onboardingStatus: { status: 'onboarding-started' },
+    });
+    render(
+        <Routes>
+            <Route
+                path={'/projects/:projectId'}
+                element={<ProjectFeatureToggles environments={[]} />}
+            />
+        </Routes>,
+        { route: `/projects/${projectId}` },
+    );
+    await screen.findByText('Project setup');
+}, 10000);
+
+test('shows revive and delete actions for archived flags', async () => {
+    setupApi();
+    testServerRoute(server, '/api/admin/search/features', {
+        features: [
+            {
+                name: 'activeFeature',
+                type: 'release',
+                createdBy: { id: 1, name: 'author' },
+            },
+            {
+                name: 'archivedFeature',
+                type: 'release',
+                archivedAt: '2024-01-01T00:00:00.000Z',
+                createdBy: { id: 1, name: 'author' },
+            },
+        ],
+        total: 2,
     });
 
     render(
@@ -277,18 +350,113 @@ test('clears lifecycle filter when switching to archived view', async () => {
             />
         </Routes>,
         {
-            route: '/projects/default?lifecycle=IS%3Alive',
+            route: '/projects/default',
+            permissions: [
+                { permission: UPDATE_FEATURE, project: 'default' },
+                { permission: DELETE_FEATURE, project: 'default' },
+            ],
         },
     );
 
-    expect(window.location.href).toContain('lifecycle=IS%3Alive');
+    const archivedFeature = await screen.findByText('archivedFeature');
+    const archivedRow = archivedFeature.closest('tr')!;
 
-    await screen.findByText('featureA');
-    const viewArchived = await screen.findByRole('button', {
-        name: /View archived flags/i,
+    fireEvent.click(
+        within(archivedRow).getByRole('button', {
+            name: 'Feature flag actions',
+        }),
+    );
+
+    await screen.findByRole('menuitem', { name: 'Revive feature flag' });
+    screen.getByRole('menuitem', { name: 'Delete feature flag' });
+    expect(
+        screen.queryByRole('menuitem', { name: 'Archive' }),
+    ).not.toBeInTheDocument();
+    expect(
+        screen.queryByRole('menuitem', { name: 'Clone' }),
+    ).not.toBeInTheDocument();
+}, 10000);
+
+test('shows archived batch actions when every selected flag is archived', async () => {
+    setupApi();
+    testServerRoute(server, '/api/admin/search/features', {
+        features: [
+            {
+                name: 'activeFeature',
+                type: 'release',
+                createdBy: { id: 1, name: 'author' },
+            },
+            {
+                name: 'archivedFeature',
+                type: 'release',
+                archivedAt: '2024-01-01T00:00:00.000Z',
+                createdBy: { id: 1, name: 'author' },
+            },
+        ],
+        total: 2,
     });
-    fireEvent.click(viewArchived);
 
-    expect(window.location.href).not.toContain('lifecycle=IS%3Alive');
-    expect(window.location.href).toContain('archived=IS%3Atrue');
+    render(
+        <Routes>
+            <Route
+                path={'/projects/:projectId'}
+                element={
+                    <ProjectFeatureToggles
+                        environments={['development', 'production']}
+                    />
+                }
+            />
+        </Routes>,
+        {
+            route: '/projects/default',
+            permissions: [
+                { permission: UPDATE_FEATURE, project: 'default' },
+                { permission: DELETE_FEATURE, project: 'default' },
+            ],
+        },
+    );
+
+    const archivedRow = await screen.findByRole('row', {
+        name: /archivedFeature/,
+    });
+    fireEvent.click(within(archivedRow).getByRole('checkbox'));
+
+    await screen.findByRole('button', { name: 'Revive' });
+    screen.getByRole('button', { name: 'Delete' });
+    expect(
+        screen.queryByRole('button', { name: 'Archive' }),
+    ).not.toBeInTheDocument();
+
+    const activeRow = screen.getByRole('row', { name: /activeFeature/ });
+    fireEvent.click(within(activeRow).getByRole('checkbox'));
+
+    await screen.findByRole('button', { name: 'Archive' });
+    expect(
+        screen.queryByRole('button', { name: 'Revive' }),
+    ).not.toBeInTheDocument();
+}, 10000);
+
+test('rewrites legacy archived view URLs to the archived lifecycle filter', async () => {
+    setupApi();
+
+    render(
+        <Routes>
+            <Route
+                path={'/projects/:projectId'}
+                element={
+                    <ProjectFeatureToggles
+                        environments={['development', 'production']}
+                    />
+                }
+            />
+        </Routes>,
+        {
+            route: '/projects/default?archived=IS%3Atrue',
+        },
+    );
+
+    await waitFor(() => {
+        expect(window.location.href).not.toContain('archived=IS%3Atrue');
+        expect(window.location.href).toContain('lifecycle=IS%3Aarchived');
+    });
 }, 10000);

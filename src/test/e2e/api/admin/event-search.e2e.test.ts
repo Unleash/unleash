@@ -335,15 +335,21 @@ test('should not include events before `from` or after `to`', async () => {
 
     const { events } = await eventService.getEvents();
     const earlyEvent = events.find((e) => e.data.featureName === 'early-event');
+    if (!earlyEvent) {
+        throw new Error('Expected early-event to exist');
+    }
     await db.rawDatabase.raw(
         `UPDATE events SET created_at = created_at - interval '1 day' where id = ?`,
-        [earlyEvent?.id],
+        [earlyEvent.id],
     );
 
     const lateEvent = events.find((e) => e.data.featureName === 'late-event');
+    if (!lateEvent) {
+        throw new Error('Expected late-event to exist');
+    }
     await db.rawDatabase.raw(
         `UPDATE events SET created_at = created_at + interval '1 day' where id = ?`,
-        [lateEvent?.id],
+        [lateEvent.id],
     );
 
     const today = new Date();

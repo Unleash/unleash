@@ -72,7 +72,7 @@ export const ConstraintDateInput = ({
                 aria-describedby={helpId}
                 hiddenLabel
                 label=''
-                size='small'
+                size='large'
                 type='datetime-local'
                 value={parseDateValue(pickedDate)}
                 onChange={(e) => {
@@ -92,8 +92,10 @@ export const ConstraintDateInput = ({
                         }
                     }
                 }}
-                InputLabelProps={{
-                    shrink: true,
+                slotProps={{
+                    inputLabel: {
+                        shrink: true,
+                    },
                 }}
                 error={Boolean(error)}
                 errorText={error}

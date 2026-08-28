@@ -21,12 +21,20 @@ export interface IUiConfig {
     billing?: 'subscription' | 'pay-as-you-go' | 'enterprise-consumption';
     unleashUrl?: string;
     edgeUrl?: string;
+    logRocketAppId?: string;
+    hubspotPortalId?: string;
     version: string;
     versionInfo?: IVersionInfo;
     links: ILinks[];
     disablePasswordAuth?: boolean;
     emailEnabled?: boolean;
     prometheusAPIAvailable: boolean;
+    impactMetrics?:
+        | 'disabled'
+        | 'unconfigured'
+        | 'external'
+        | 'internal'
+        | 'full';
     maintenanceMode?: boolean;
     frontendApiOrigins?: string[];
     resourceLimits: ResourceLimitsSchema;
@@ -34,6 +42,7 @@ export interface IUiConfig {
     samlConfiguredThroughEnv?: boolean;
     maxSessionsCount?: number;
     unleashContext?: IMutableContext;
+    storiesPageEnabled?: boolean;
 }
 
 export type UiFlags = {
@@ -50,8 +59,9 @@ export type UiFlags = {
     notifications?: boolean;
     personalAccessTokensKillSwitch?: boolean;
     demo?: boolean;
+    onboardingIntroTour?: boolean;
+    onboardingIntroTourAdvancedTopics?: boolean;
     interactiveDemoKillSwitch?: boolean;
-    googleAuthEnabled?: boolean;
     advancedPlayground?: boolean;
     strategyVariant?: boolean;
     doraMetrics?: boolean;
@@ -59,6 +69,7 @@ export type UiFlags = {
     newStrategyConfiguration?: boolean;
     signals?: boolean;
     automatedActions?: boolean;
+    releaseTemplatesAutomations?: boolean;
     celebrateUnleash?: boolean;
     enableLicense?: boolean;
     feedbackComments?: Variant;
@@ -73,26 +84,32 @@ export type UiFlags = {
     flagCreator?: boolean;
     productivityReportEmail?: boolean;
     showUserDeviceCount?: boolean;
+    sessionInspector?: boolean;
     consumptionModel?: boolean;
     consumptionModelUI?: boolean;
-    customMetrics?: boolean;
-    impactMetrics?: boolean;
-    registerImpactMetrics?: boolean;
+    disableImpactMetrics?: boolean;
+    impactViews?: boolean;
     plausibleMetrics?: boolean;
-    milestoneProgression?: boolean;
-    safeguards?: boolean;
     oidcPkceSupport?: boolean;
     extendedUsageMetrics?: boolean;
-    newInUnleash?: boolean | Variant;
-    gtmReleaseManagement?: boolean;
     regexConstraintOperator?: boolean;
+    semverGteConstraintOperators?: boolean;
     signupDialog?: boolean;
     enterpriseEdgeTokensList?: boolean;
     impactMetricsFlagPage?: boolean;
-    filterFavorites?: boolean;
-    pendingUserAccessRequests?: boolean;
-    onboardingFlagSetup?: boolean;
+    uxTweakSurveys?: boolean;
     multiMetricChart?: boolean;
+    logRocketEnabled?: boolean;
+    hubspotChatEnabled?: boolean;
+    newModalDesign?: boolean;
+    newProfileDropdown?: boolean;
+    learningLab?: Variant;
+    floatingOnboardingChecklist?: boolean;
+    flightRecorderFrontend?: Variant;
+    topLabelInputs?: boolean;
+    searchDocsWidget?: boolean;
+    usersTabsUI?: boolean;
+    exposureBasedAutomation?: boolean;
 };
 
 export interface IVersionInfo {

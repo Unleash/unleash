@@ -6,7 +6,7 @@
   "keywords": ["node", "feature toggles", "release"],
   "env": {
     "NPM_CONFIG_PRODUCTION": "false",
-    "YARN_PRODUCTION": "false"
+    "PNPM_CONFIG_PRODUCTION": "false"
   },
   "addons": [
     {

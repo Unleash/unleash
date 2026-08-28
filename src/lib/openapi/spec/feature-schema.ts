@@ -113,15 +113,6 @@ export const featureSchema = {
             example: '2023-01-29T15:21:39.975Z',
             description: 'The date the feature was archived',
         },
-        lastSeenAt: {
-            type: 'string',
-            format: 'date-time',
-            nullable: true,
-            deprecated: true,
-            example: '2023-01-28T16:21:39.975Z',
-            description:
-                'The date when metrics where last collected for the feature. This field was deprecated in v5, use the one in featureEnvironmentSchema',
-        },
         environments: {
             type: 'array',
             items: {
@@ -129,23 +120,6 @@ export const featureSchema = {
             },
             description:
                 'The list of environments where the feature can be used',
-        },
-        variants: {
-            type: 'array',
-            items: {
-                $ref: '#/components/schemas/variantSchema',
-            },
-            description: 'The list of feature variants',
-            deprecated: true,
-        },
-        strategies: {
-            type: 'array',
-            items: {
-                type: 'object',
-            },
-            description:
-                'This was deprecated in v5 and will be removed in a future major version',
-            deprecated: true,
         },
         tags: {
             type: 'array',

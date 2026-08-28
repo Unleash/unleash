@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router';
 import { ApiTokenPage } from './apiToken/ApiTokenPage/ApiTokenPage.tsx';
 import { CreateApiToken } from './apiToken/CreateApiToken/CreateApiToken.tsx';
 import { AuthSettings } from './auth/AuthSettings.tsx';
@@ -14,11 +14,14 @@ import { Roles } from './roles/Roles.tsx';
 import { ServiceAccounts } from './serviceAccounts/ServiceAccounts.tsx';
 import CreateUser from './users/CreateUser/CreateUser.tsx';
 import { InviteLink } from './users/InviteLink/InviteLink.tsx';
-import UsersAdmin from './users/UsersAdmin.tsx';
+import UsersAdminRouter from './users/UsersAdminRouter.tsx';
 import NotFound from 'component/common/NotFound/NotFound';
 import { Banners } from './banners/Banners.tsx';
 import { License } from './license/License.tsx';
 import { AdminHome } from './AdminHome.tsx';
+import { RemoteMcpAdmin } from './remote-mcp/RemoteMcpAdmin.tsx';
+import { ImpactMetricsAdmin } from './impact-metrics/ImpactMetricsAdmin.tsx';
+import { ActiveSessions } from 'component/sessions/ActiveSessions.tsx';
 import { lazy } from 'react';
 
 const EnterpriseEdge = lazy(
@@ -30,7 +33,7 @@ export const Admin = () => {
         <>
             <Routes>
                 <Route index element={<AdminHome />} />
-                <Route path='users/*' element={<UsersAdmin />} />
+                <Route path='users/*' element={<UsersAdminRouter />} />
                 <Route path='api' element={<ApiTokenPage />} />
                 <Route path='api/create-token' element={<CreateApiToken />} />
                 <Route path='service-accounts' element={<ServiceAccounts />} />
@@ -51,7 +54,10 @@ export const Admin = () => {
                     element={<FlaggedBillingRedirect />}
                 />
                 <Route path='billing' element={<Billing />} />
+                <Route path='remote-mcp' element={<RemoteMcpAdmin />} />
+                <Route path='impact-metrics' element={<ImpactMetricsAdmin />} />
                 <Route path='instance-privacy' element={<InstancePrivacy />} />
+                <Route path='sessions' element={<ActiveSessions />} />
                 <Route path='*' element={<NotFound />} />
             </Routes>
         </>

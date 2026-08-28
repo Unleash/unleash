@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 import { useMaintenanceBannerMessage } from './useMaintenanceBannerMessage.ts';
 import { testServerRoute, testServerSetup } from 'utils/testServer.ts';

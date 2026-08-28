@@ -81,7 +81,7 @@ export const AddSingleValueChip = forwardRef<HTMLDivElement, Props>(
                     onDelete={currentValue ? removeValue : undefined}
                 />
                 <AddValuesPopover
-                    inputProps={{
+                    htmlInputProps={{
                         inputMode: inputType === 'number' ? 'decimal' : 'text',
                     }}
                     initialValue={currentValue}

@@ -253,6 +253,9 @@ export default class ClientMetricsServiceV2 {
     }
 
     async registerImpactMetrics(impactMetrics: Metric[]) {
+        if (this.flagResolver.isEnabled('disableImpactMetrics')) {
+            return;
+        }
         try {
             const value =
                 await impactMetricsSchema.validateAsync(impactMetrics);
@@ -266,11 +269,15 @@ export default class ClientMetricsServiceV2 {
     async registerClientMetrics(
         data: ClientMetricsSchema,
         _clientIp: string,
+        environment: string,
     ): Promise<void> {
         const value = await clientMetricsSchema.validateAsync(data);
 
         if (data.sdkVersion) {
             const [sdkName, sdkVersion] = data.sdkVersion.split(':');
+            const recordSdkFlavorMetrics = this.flagResolver.isEnabled(
+                'recordSdkFlavorMetrics',
+            );
             const heartbeatEvent: ISdkHeartbeat = {
                 sdkName,
                 sdkVersion,
@@ -279,22 +286,34 @@ export default class ClientMetricsServiceV2 {
                     platformVersion: data.platformVersion,
                     yggdrasilVersion: data.yggdrasilVersion,
                     specVersion: data.specVersion,
+                    sdkFlavor: recordSdkFlavorMetrics
+                        ? data.sdkFlavor
+                        : undefined,
+                    sdkFlavorVersion: recordSdkFlavorMetrics
+                        ? data.sdkFlavorVersion
+                        : undefined,
                 },
             };
 
             this.config.eventBus.emit(CLIENT_REGISTER, heartbeatEvent);
         }
 
+        const { bucket } = value;
+        // requests carrying only impact metrics may omit the bucket
+        if (!bucket) {
+            return;
+        }
+
         const clientMetrics: IClientMetricsEnv[] = Object.keys(
-            value.bucket.toggles,
+            bucket.toggles,
         ).map((name) => ({
             featureName: name,
             appName: value.appName,
-            environment: value.environment ?? 'default',
-            timestamp: value.bucket.stop, //we might need to approximate between start/stop...
-            yes: value.bucket.toggles[name].yes ?? 0,
-            no: value.bucket.toggles[name].no ?? 0,
-            variants: value.bucket.toggles[name].variants,
+            environment,
+            timestamp: bucket.stop, //we might need to approximate between start/stop...
+            yes: bucket.toggles[name].yes ?? 0,
+            no: bucket.toggles[name].no ?? 0,
+            variants: bucket.toggles[name].variants,
         }));
 
         if (clientMetrics.length) {
@@ -414,15 +433,10 @@ export default class ClientMetricsServiceV2 {
         return result.sort((a, b) => compareAsc(a.timestamp, b.timestamp));
     }
 
-    resolveMetricsEnvironment(
-        user: IUser | IApiUser,
-        data: { environment?: string },
-    ): string {
+    resolveMetricsEnvironment(user: IUser | IApiUser): string {
         if (user instanceof ApiUser) {
             if (user.environment !== ALL) {
                 return user.environment;
-            } else if (user.environment === ALL && data.environment) {
-                return data.environment;
             }
         }
         return 'default';

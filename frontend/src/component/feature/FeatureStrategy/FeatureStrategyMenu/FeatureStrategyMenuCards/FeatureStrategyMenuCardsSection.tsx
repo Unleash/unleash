@@ -63,7 +63,7 @@ export const FeatureStrategyMenuCardsSection = ({
                 {viewMore && limitedChildren.length < allChildren.length && (
                     <StyledViewMoreButton
                         variant='text'
-                        size='small'
+                        size='medium'
                         onClick={viewMore}
                     >
                         {viewMoreLabel}

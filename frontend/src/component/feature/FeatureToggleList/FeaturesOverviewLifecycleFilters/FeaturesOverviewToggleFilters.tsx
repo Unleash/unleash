@@ -2,14 +2,14 @@ import { type FC, useEffect, useState } from 'react';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import useAllTags from 'hooks/api/getters/useAllTags/useAllTags';
+import { useFlagCreators } from 'hooks/api/getters/useFlagCreators/useFlagCreators';
 import {
     type FilterItemParamHolder,
     Filters,
     type IFilterItem,
 } from 'component/filter/Filters/Filters';
 import { formatTag } from 'utils/format-tag';
-import { useUiFlag } from 'hooks/useUiFlag';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 type FeaturesOverviewToggleFiltersProps = {
     state: FilterItemParamHolder;
@@ -22,8 +22,8 @@ export const FeaturesOverviewToggleFilters: FC<
     const { projects } = useProjects();
     const { segments } = useSegments();
     const { tags } = useAllTags();
-    const filterFavoritesEnabled = useUiFlag('filterFavorites');
-    const { trackEvent } = usePlausibleTracker();
+    const { flagCreators } = useFlagCreators();
+    const { trackEvent } = useEventTracker();
 
     const onFilterChange = (value: FilterItemParamHolder) => {
         if (value.favorite !== state.favorite) {
@@ -63,6 +63,10 @@ export const FeaturesOverviewToggleFilters: FC<
         const tagsOptions = (tags || []).map((tag) => ({
             label: formatTag(tag),
             value: formatTag(tag),
+        }));
+        const flagCreatorsOptions = flagCreators.map((creator) => ({
+            label: creator.name,
+            value: String(creator.id),
         }));
 
         const hasMultipleProjects = projectsOptions.length > 1;
@@ -130,29 +134,31 @@ export const FeaturesOverviewToggleFilters: FC<
                     { label: 'Operational', value: 'operational' },
                     { label: 'Kill switch', value: 'kill-switch' },
                     { label: 'Permission', value: 'permission' },
+                    { label: 'Sunset', value: 'sunset' },
                 ],
                 filterKey: 'type',
                 singularOperators: ['IS', 'IS_NOT'],
                 pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
             },
-            ...(filterFavoritesEnabled
-                ? ([
-                      {
-                          label: 'Favorite',
-                          icon: 'star',
-                          options: [
-                              { label: 'True', value: 'true' },
-                              { label: 'False', value: 'false' },
-                          ],
-                          filterKey: 'favorite',
-                          singularOperators: ['IS'] as [string, ...string[]],
-                          pluralOperators: ['IS_ANY_OF'] as [
-                              string,
-                              ...string[],
-                          ],
-                      },
-                  ] as IFilterItem[])
-                : []),
+            {
+                label: 'Created by',
+                icon: 'person',
+                options: flagCreatorsOptions,
+                filterKey: 'createdBy',
+                singularOperators: ['IS', 'IS_NOT'],
+                pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
+            },
+            {
+                label: 'Favorite',
+                icon: 'star',
+                options: [
+                    { label: 'True', value: 'true' },
+                    { label: 'False', value: 'false' },
+                ],
+                filterKey: 'favorite',
+                singularOperators: ['IS'] as [string, ...string[]],
+                pluralOperators: ['IS_ANY_OF'] as [string, ...string[]],
+            },
         ];
 
         setAvailableFilters(availableFilters);
@@ -160,7 +166,7 @@ export const FeaturesOverviewToggleFilters: FC<
         JSON.stringify(projects),
         JSON.stringify(segments),
         JSON.stringify(tags),
-        filterFavoritesEnabled,
+        JSON.stringify(flagCreators),
     ]);
 
     return (

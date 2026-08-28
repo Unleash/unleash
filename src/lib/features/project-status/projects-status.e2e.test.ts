@@ -108,12 +108,15 @@ test('project insights should return correct count for each day', async () => {
     const yesterdayEvent = events.find(
         (e) => e.data.featureName === 'yesterday-event',
     );
+    if (!yesterdayEvent) {
+        throw new Error('Expected yesterday-event to exist');
+    }
 
     const { todayString, yesterdayString } = getCurrentDateStrings();
 
     await db.rawDatabase.raw(`UPDATE events SET created_at = ? where id = ?`, [
         yesterdayString,
-        yesterdayEvent?.id,
+        yesterdayEvent.id,
     ]);
 
     const { body } = await app.request

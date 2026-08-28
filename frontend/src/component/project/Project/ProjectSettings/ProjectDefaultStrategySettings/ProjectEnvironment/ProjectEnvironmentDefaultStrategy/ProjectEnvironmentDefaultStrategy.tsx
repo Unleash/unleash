@@ -1,6 +1,6 @@
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import Edit from '@mui/icons-material/Edit';
 import type { ProjectEnvironmentType } from 'interfaces/environments';
 import { useMemo } from 'react';
@@ -74,6 +74,7 @@ export const ProjectEnvironmentDefaultStrategy = ({
                         environmentId={environmentId}
                         projectId={projectId}
                         component={Link}
+                        nativeButton={false}
                         to={editStrategyPath}
                         tooltipProps={{
                             title: `Edit default strategy for "${environmentId}"`,

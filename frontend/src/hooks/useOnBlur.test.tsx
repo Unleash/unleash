@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { useRef } from 'react';
 import { useOnBlur } from './useOnBlur.ts';

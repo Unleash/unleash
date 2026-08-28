@@ -1,6 +1,13 @@
 import type { IImpactMetricsResolver } from '../../lib/types/index.js';
 
-export const fakeImpactMetricsResolver = () => {
+export const fakeImpactMetricsResolver = (): IImpactMetricsResolver & {
+    counters: Map<string, { value: number; help: string }>;
+    gauges: Map<string, { value: number; help: string }>;
+    histograms: Map<
+        string,
+        { count: number; sum: number; help: string; buckets: number[] }
+    >;
+} => {
     const counters = new Map<string, { value: number; help: string }>();
     const gauges = new Map<string, { value: number; help: string }>();
     const histograms = new Map<

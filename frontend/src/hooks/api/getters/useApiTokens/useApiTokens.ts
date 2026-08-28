@@ -9,8 +9,9 @@ export interface IApiToken {
     secret: string;
     type: string;
     project?: string;
-    projects?: string | string[];
+    projects: string[];
     environment: string;
+    secure: boolean;
 }
 
 export const useApiTokens = (options: SWRConfiguration = {}) => {

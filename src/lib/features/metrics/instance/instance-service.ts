@@ -107,16 +107,14 @@ export default class ClientInstanceService {
     };
 
     public async registerInstance(
-        data: Pick<
-            ClientMetricsSchema,
-            'appName' | 'instanceId' | 'environment'
-        >,
+        data: Pick<ClientMetricsSchema, 'appName' | 'instanceId'>,
         clientIp: string,
+        environment: string,
     ): Promise<void> {
         this.updateSeenClient({
             appName: data.appName,
             instanceId: data.instanceId ?? 'default',
-            environment: data.environment,
+            environment,
             clientIp: clientIp,
         });
     }
@@ -125,21 +123,49 @@ export default class ClientInstanceService {
         data.createdBy = SYSTEM_USER.username!;
 
         this.updateSeenClient(data);
+
+        // feed client_sdk_versions for frontend SDKs
+        const recordSdkFlavorMetrics = this.flagResolver.isEnabled(
+            'recordSdkFlavorMetrics',
+        );
+
+        if (recordSdkFlavorMetrics && data.sdkVersion?.indexOf(':') > -1) {
+            const [sdkName, sdkVersion] = data.sdkVersion.split(':');
+
+            // gate the whole frontend heartbeat (backend gates only the flavor fields and always emits)
+            const heartbeatEvent: ISdkHeartbeat = {
+                sdkName,
+                sdkVersion,
+                metadata: {
+                    sdkFlavor: data.sdkFlavor,
+                    sdkFlavorVersion: data.sdkFlavorVersion,
+                },
+            };
+            this.eventStore.emit(CLIENT_REGISTER, heartbeatEvent);
+        }
     }
 
     public async registerBackendClient(
         data: PartialSome<IClientApp, 'instanceId'>,
         clientIp: string,
+        environment: string,
     ): Promise<void> {
         const value = await clientRegisterSchema.validateAsync(data);
         value.clientIp = clientIp;
         value.createdBy = SYSTEM_USER.username!;
         value.sdkType = 'backend';
+
+        const existing = this.seenClients[this.clientKey(value)];
+        value.environment = existing?.environment ?? environment; // existing or from the authenticated API token
+
         this.updateSeenClient(value);
         this.eventBus.emit(CLIENT_REGISTERED, value);
 
         if (value.sdkVersion && value.sdkVersion.indexOf(':') > -1) {
             const [sdkName, sdkVersion] = value.sdkVersion.split(':');
+            const recordSdkFlavorMetrics = this.flagResolver.isEnabled(
+                'recordSdkFlavorMetrics',
+            );
             const heartbeatEvent: ISdkHeartbeat = {
                 sdkName,
                 sdkVersion,
@@ -148,6 +174,12 @@ export default class ClientInstanceService {
                     platformVersion: data.platformVersion,
                     yggdrasilVersion: data.yggdrasilVersion,
                     specVersion: data.specVersion,
+                    sdkFlavor: recordSdkFlavorMetrics
+                        ? data.sdkFlavor
+                        : undefined,
+                    sdkFlavorVersion: recordSdkFlavorMetrics
+                        ? data.sdkFlavorVersion
+                        : undefined,
                 },
             };
 

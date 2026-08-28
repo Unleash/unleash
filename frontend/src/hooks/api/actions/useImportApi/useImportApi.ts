@@ -1,5 +1,5 @@
 import useAPI from '../useApi/useApi.js';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 export interface ImportQuerySchema {
     project: string;
@@ -11,7 +11,7 @@ export const useImportApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
     });
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const createImport = async (payload: ImportQuerySchema) => {
         const path = `api/admin/features-batch/import`;

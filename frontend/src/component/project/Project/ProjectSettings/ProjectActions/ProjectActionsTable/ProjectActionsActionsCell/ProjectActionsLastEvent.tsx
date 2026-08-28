@@ -3,8 +3,8 @@ import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { useActionEvents } from 'hooks/api/getters/useActionEvents/useActionEvents';
 import { ProjectActionsEventsDetails } from '../ProjectActionsEventsModal/ProjectActionsEventsDetails/ProjectActionsEventsDetails.tsx';
 import { CircularProgress, styled } from '@mui/material';
-import CheckCircleOutline from '@mui/icons-material/CheckCircleOutline';
-import ErrorOutline from '@mui/icons-material/ErrorOutline';
+import CheckCircleOutline from '@mui/icons-material/CheckCircleOutlineOutlined';
+import ErrorOutline from '@mui/icons-material/ErrorOutlineOutlined';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMDHMS } from 'utils/formatDate';
 

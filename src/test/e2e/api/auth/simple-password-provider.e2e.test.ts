@@ -13,7 +13,7 @@ import getLogger from '../../../fixtures/no-logger.js';
 import { EmailService } from '../../../../lib/services/email-service.js';
 import SessionService from '../../../../lib/services/session-service.js';
 import { RoleName } from '../../../../lib/types/model.js';
-import SettingService from '../../../../lib/services/setting-service.js';
+import SettingService from '../../../../lib/features/settings/setting-service.js';
 import { GroupService } from '../../../../lib/services/group-service.js';
 import ResetTokenService from '../../../../lib/services/reset-token-service.js';
 import { createEventsService } from '../../../../lib/features/index.js';

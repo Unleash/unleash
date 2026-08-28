@@ -1,6 +1,8 @@
-import { useMemo, useState } from 'react';
-import { styled, Menu, MenuItem, Tooltip } from '@mui/material';
+import { useMemo, useState, type ReactNode } from 'react';
+import { IconButton, styled, Tooltip } from '@mui/material';
 import Add from '@mui/icons-material/Add';
+import HelpOutlineOutlined from '@mui/icons-material/HelpOutlineOutlined';
+import { useSearchParams } from 'react-router';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -9,6 +11,8 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import {
     SafeguardForm as SafeguardFormBase,
+    safeguardTypeOption,
+    SafeguardTypeSelect,
     type SafeguardType,
 } from '../../../ReleasePlan/SafeguardForm/SafeguardForm.tsx';
 import { SafeguardChangeRequestDialog } from '../../../ReleasePlan/SafeguardForm/SafeguardChangeRequestDialog.tsx';
@@ -27,7 +31,7 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 import type { ISafeguard } from 'interfaces/safeguard';
 import { strategyBackground } from 'component/common/StrategyList/StrategyListItem';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 const StyledSafeguardContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -44,88 +48,56 @@ const StyledSafeguardContainer = styled('div')(({ theme }) => ({
 const StyledAddSafeguardContent = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    gap: theme.spacing(1),
-    justifyContent: 'space-between',
     width: '100%',
     paddingRight: theme.spacing(2),
 }));
 
-export const AddSafeguard = ({
-    onSelect,
-    releasePlan,
-}: {
-    onSelect: (type: SafeguardType) => void;
-    releasePlan?: { id: string; name: string };
-}) => {
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const { trackEvent } = usePlausibleTracker();
+const StyledSplashTriggerButton = styled(IconButton)(({ theme }) => ({
+    color: theme.palette.action.active,
+    padding: theme.spacing(0.5),
+}));
 
+const SafeguardSplashTrigger = () => {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const { trackEvent } = useEventTracker();
+
+    const openSplash = () => {
+        trackEvent('safeguards', {
+            props: {
+                eventType: 'splash opened from feature page',
+            },
+        });
+        searchParams.set('splash', 'impact-metrics-safeguards');
+        setSearchParams(searchParams);
+    };
+
+    return (
+        <Tooltip title='Learn how safeguards work' arrow>
+            <StyledSplashTriggerButton
+                onClick={openSplash}
+                size='medium'
+                aria-label='Learn how safeguards work'
+            >
+                <HelpOutlineOutlined />
+            </StyledSplashTriggerButton>
+        </Tooltip>
+    );
+};
+
+const AddSafeguard = ({ onAdd }: { onAdd: () => void }) => {
     return (
         <StyledSafeguardContainer>
             <StyledAddSafeguardContent>
                 <StyledActionButton
-                    onClick={(e) => {
-                        trackEvent('safeguards', {
-                            props: {
-                                eventType: 'choose safeguard opened',
-                            },
-                        });
-                        setAnchorEl(e.currentTarget);
-                    }}
+                    onClick={onAdd}
                     color='primary'
                     startIcon={<Add />}
-                    sx={{ m: 2 }}
+                    sx={{ mt: 2, mb: 2, ml: 2, mr: 0.5 }}
                 >
                     Add safeguard
                 </StyledActionButton>
+                <SafeguardSplashTrigger />
             </StyledAddSafeguardContent>
-            <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={() => setAnchorEl(null)}
-            >
-                <MenuItem
-                    onClick={() => {
-                        trackEvent('safeguards', {
-                            props: {
-                                eventType: 'form opened',
-                                safeguardType: 'featureEnvironment',
-                            },
-                        });
-                        onSelect('featureEnvironment');
-                        setAnchorEl(null);
-                    }}
-                >
-                    Disable environment
-                </MenuItem>
-                <Tooltip
-                    title={
-                        releasePlan
-                            ? ''
-                            : 'Add a release plan to use this safeguard'
-                    }
-                    placement='right'
-                    arrow
-                >
-                    <span>
-                        <MenuItem
-                            disabled={!releasePlan}
-                            onClick={() => {
-                                trackEvent('safeguards', {
-                                    props: {
-                                        eventType: 'form opened',
-                                        safeguardType: 'releasePlan',
-                                    },
-                                });
-                                onSelect('releasePlan');
-                                setAnchorEl(null);
-                            }}
-                        >
-                            Pause automation
-                        </MenuItem>
-                    </span>
-                </Tooltip>
-            </Menu>
         </StyledSafeguardContainer>
     );
 };
@@ -148,7 +120,7 @@ const useSafeguardActions = ({
     onSafeguardChange: () => void;
 }) => {
     const { setToastData, setToastApiError } = useToast();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { addChange } = useChangeRequestApi();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { data: pendingChangeRequests, refetch: refetchChangeRequests } =
@@ -424,6 +396,8 @@ const SafeguardForm = ({
     featureId,
     onSafeguardChange,
     onCancel,
+    typeSelector,
+    headerAction,
 }: {
     safeguardType: SafeguardType;
     releasePlan?: { id: string; name: string };
@@ -432,6 +406,8 @@ const SafeguardForm = ({
     featureId: string;
     onSafeguardChange: () => void;
     onCancel: () => void;
+    typeSelector?: ReactNode;
+    headerAction?: ReactNode;
 }) => {
     const projectId = useRequiredPathParam('projectId');
     const {
@@ -475,6 +451,8 @@ const SafeguardForm = ({
                 featureId={featureId}
                 badge={safeguardBadge}
                 safeguardType={safeguardType}
+                typeSelector={typeSelector}
+                headerAction={headerAction}
             />
             {submitChangeRequestDialog.data && (
                 <SafeguardChangeRequestDialog
@@ -510,7 +488,7 @@ const SafeguardForm = ({
                 >
                     <p>
                         <strong>Remove</strong> safeguard
-                        {releasePlan && (
+                        {safeguardType === 'releasePlan' && releasePlan && (
                             <>
                                 {' '}
                                 from release plan{' '}
@@ -541,6 +519,17 @@ export const Safeguard = ({
 }) => {
     const releasePlanSafeguard = releasePlan?.safeguards?.[0];
     const [addingType, setAddingType] = useState<SafeguardType | null>(null);
+    const { trackEvent } = useEventTracker();
+
+    const handleTypeChange = (type: SafeguardType) => {
+        trackEvent('safeguards', {
+            props: {
+                eventType: 'form opened',
+                safeguardType: type,
+            },
+        });
+        setAddingType(type);
+    };
 
     const handleExistingChange = () => {
         setAddingType(null);
@@ -561,6 +550,7 @@ export const Safeguard = ({
                             featureId={featureId}
                             onSafeguardChange={handleExistingChange}
                             onCancel={() => {}}
+                            headerAction={<SafeguardSplashTrigger />}
                         />
                     </StyledSafeguardContainer>
                 )}
@@ -574,6 +564,7 @@ export const Safeguard = ({
                             featureId={featureId}
                             onSafeguardChange={handleExistingChange}
                             onCancel={() => {}}
+                            headerAction={<SafeguardSplashTrigger />}
                         />
                     </StyledSafeguardContainer>
                 )}
@@ -581,36 +572,37 @@ export const Safeguard = ({
         );
     }
 
-    if (addingType === 'featureEnvironment') {
-        return (
-            <StyledSafeguardContainer>
-                <SafeguardForm
-                    safeguardType='featureEnvironment'
-                    environmentName={environmentName}
-                    featureId={featureId}
-                    onSafeguardChange={onSafeguardChange}
-                    onCancel={() => setAddingType(null)}
-                />
-            </StyledSafeguardContainer>
+    if (addingType) {
+        const typeSelector = (
+            <SafeguardTypeSelect value={addingType} onChange={handleTypeChange}>
+                {safeguardTypeOption('featureEnvironment')}
+                {safeguardTypeOption(
+                    'releasePlan',
+                    releasePlan
+                        ? undefined
+                        : 'Add a release plan to use this option',
+                )}
+            </SafeguardTypeSelect>
         );
-    }
 
-    if (addingType === 'releasePlan' && releasePlan) {
         return (
             <StyledSafeguardContainer>
                 <SafeguardForm
-                    safeguardType='releasePlan'
+                    safeguardType={addingType}
                     releasePlan={releasePlan}
                     environmentName={environmentName}
                     featureId={featureId}
                     onSafeguardChange={onSafeguardChange}
                     onCancel={() => setAddingType(null)}
+                    typeSelector={typeSelector}
                 />
             </StyledSafeguardContainer>
         );
     }
 
-    return <AddSafeguard onSelect={setAddingType} releasePlan={releasePlan} />;
+    return (
+        <AddSafeguard onAdd={() => handleTypeChange('featureEnvironment')} />
+    );
 };
 
 export default Safeguard;

@@ -1,3 +1,4 @@
+import { createUuid } from 'utils/createUuid';
 import { Alert, Button, Divider, Link, styled } from '@mui/material';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
@@ -169,7 +170,7 @@ export const EnvironmentVariantsModal = ({
                           ...oldVariant,
                           isValid: true,
                           new: false,
-                          id: crypto.randomUUID(),
+                          id: createUuid(),
                       }))
                     : [
                           {
@@ -183,7 +184,7 @@ export const EnvironmentVariantsModal = ({
                                       : defaultStickiness,
                               new: true,
                               isValid: false,
-                              id: crypto.randomUUID(),
+                              id: createUuid(),
                           },
                       ],
             );
@@ -202,7 +203,7 @@ export const EnvironmentVariantsModal = ({
     };
 
     const addVariant = () => {
-        const id = crypto.randomUUID();
+        const id = createUuid();
         setVariantsEdit((variantsEdit) => [
             ...variantsEdit,
             {

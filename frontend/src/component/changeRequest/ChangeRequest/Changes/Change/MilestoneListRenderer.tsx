@@ -1,7 +1,8 @@
 import { styled } from '@mui/material';
-import type {
-    IReleasePlan,
-    IReleasePlanMilestoneStrategy,
+import {
+    isTimeCondition,
+    type IReleasePlan,
+    type IReleasePlanMilestoneStrategy,
 } from 'interfaces/releasePlans';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import { ReleasePlanMilestone } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/ReleasePlanMilestone';
@@ -104,7 +105,9 @@ const MilestoneListRendererCore = ({
                 ) : undefined;
 
                 const automationSection =
-                    showAutomation && milestone.transitionCondition ? (
+                    showAutomation &&
+                    milestone.transitionCondition &&
+                    isTimeCondition(milestone.transitionCondition) ? (
                         <MilestoneAutomationSection status={status}>
                             {readonly ? (
                                 <ReadonlyMilestoneTransitionDisplay

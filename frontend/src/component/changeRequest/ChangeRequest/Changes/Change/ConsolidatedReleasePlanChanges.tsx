@@ -177,9 +177,12 @@ export const ConsolidatedReleasePlanChanges: FC<{
                             const changes = changesByMilestone[id];
                             if (!changes) return null;
 
-                            return changes.map(({ description }) => {
+                            return changes.map(({ change, description }) => {
                                 return (
-                                    <li data-action={description.action}>
+                                    <li
+                                        key={change.id}
+                                        data-action={description.action}
+                                    >
                                         {description.text}
                                     </li>
                                 );
@@ -189,12 +192,12 @@ export const ConsolidatedReleasePlanChanges: FC<{
                 </ChangeItemInfo>
                 <div>
                     <TabList>
-                        <Tab>View change</Tab>
-                        <Tab>View diff</Tab>
+                        <Tab value='change'>View change</Tab>
+                        <Tab value='diff'>View diff</Tab>
                     </TabList>
                 </div>
             </ChangeItemWrapper>
-            <TabPanel>
+            <TabPanel value='change'>
                 {readonly ? (
                     <ReadonlyMilestoneListRenderer
                         plan={modifiedPlan}
@@ -211,7 +214,7 @@ export const ConsolidatedReleasePlanChanges: FC<{
                     />
                 )}
             </TabPanel>
-            <TabPanel variant='diff'>
+            <TabPanel value='diff'>
                 <EventDiff
                     entry={{
                         preData: basePlan,

@@ -1,3 +1,4 @@
+import { test } from 'vitest';
 import theme from 'themes/theme';
 import { screen } from '@testing-library/react';
 import { useDefaultColumnVisibility } from './useDefaultColumnVisibility.ts';

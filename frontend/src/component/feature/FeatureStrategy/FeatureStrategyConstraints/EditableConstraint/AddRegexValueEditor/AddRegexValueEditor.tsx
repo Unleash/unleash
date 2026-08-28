@@ -7,8 +7,8 @@ import {
     Typography,
 } from '@mui/material';
 import Add from '@mui/icons-material/Add';
-import ErrorOutline from '@mui/icons-material/ErrorOutline';
-import CheckCircleOutline from '@mui/icons-material/CheckCircleOutline';
+import ErrorOutline from '@mui/icons-material/ErrorOutlineOutlined';
+import CheckCircleOutline from '@mui/icons-material/CheckCircleOutlineOutlined';
 import Delete from '@mui/icons-material/Delete';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
@@ -180,12 +180,14 @@ const RegexTestInputItem: FC<RegexTestInputItemProps> = memo(
                     <StyledTextField
                         type='text'
                         placeholder='Enter test value'
-                        size='small'
+                        size='large'
                         fullWidth
                         value={input.testString}
                         id={`test-input-${input.id}`}
-                        inputProps={{
-                            'aria-describedby': 'test-strings-description',
+                        slotProps={{
+                            htmlInput: {
+                                'aria-describedby': 'test-strings-description',
+                            },
                         }}
                         inputRef={setInputRef}
                         onChange={handleChange}
@@ -195,12 +197,12 @@ const RegexTestInputItem: FC<RegexTestInputItemProps> = memo(
                         <HtmlTooltip title='Remove test string' arrow>
                             <IconButton
                                 type='button'
-                                size='small'
+                                size='medium'
                                 aria-label={`Remove test string ${index}: ${input.testString === '' ? 'empty string' : ''}`}
                                 sx={{ ml: 'auto' }}
                                 onClick={() => onRemove(input.id)}
                             >
-                                <Delete fontSize='inherit' />
+                                <Delete />
                             </IconButton>
                         </HtmlTooltip>
                     )}
@@ -309,7 +311,7 @@ const RegexTestValues: FC<{
                 <Button
                     type='button'
                     variant='text'
-                    size='small'
+                    size='medium'
                     startIcon={<Add />}
                     onClick={handleAddTestString}
                 >
@@ -433,7 +435,7 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
                         value={inputValue}
                         onChange={handleRegexInputChange}
                         onKeyDown={handleRegexKeyDown}
-                        size='small'
+                        size='large'
                         variant='outlined'
                         fullWidth
                         autoFocus

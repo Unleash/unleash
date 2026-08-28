@@ -78,6 +78,14 @@ export class FrontendApiService {
         this.globalFrontendApiCache = globalFrontendApiCache;
     }
 
+    isCacheReady(): boolean {
+        return this.globalFrontendApiCache.isReady();
+    }
+
+    async waitForCacheReady(): Promise<void> {
+        return this.globalFrontendApiCache.readyPromise;
+    }
+
     async getFrontendApiFeatures(
         token: IApiUser,
         context: Context,
@@ -86,24 +94,24 @@ export class FrontendApiService {
         const definitions = client.getFeatureToggleDefinitions() || [];
         const sessionId =
             context.sessionId || crypto.randomBytes(18).toString('hex');
+        const evaluationContext = {
+            ...context,
+            sessionId,
+        };
 
-        const resultDefinitions = definitions
-            .filter((feature) => {
-                const enabled = client.isEnabled(feature.name, {
-                    ...context,
-                    sessionId,
+        const resultDefinitions: FrontendApiFeatureSchema[] = [];
+        for (const feature of definitions) {
+            const variant = client.getVariant(feature.name, evaluationContext);
+            if (variant.feature_enabled) {
+                resultDefinitions.push({
+                    name: feature.name,
+                    enabled: Boolean(feature.enabled),
+                    variant,
+                    impressionData: Boolean(feature.impressionData),
                 });
-                return enabled;
-            })
-            .map((feature) => ({
-                name: feature.name,
-                enabled: Boolean(feature.enabled),
-                variant: client.getVariant(feature.name, {
-                    ...context,
-                    sessionId,
-                }),
-                impressionData: Boolean(feature.impressionData),
-            }));
+            }
+        }
+
         return resultDefinitions;
     }
 
@@ -119,21 +127,20 @@ export class FrontendApiService {
         metrics: ClientMetricsSchema,
         ip: string,
         sdkVersion?: string | string[],
+        sdkFlavor?: string | string[],
+        sdkFlavorVersion?: string | string[],
     ): Promise<void> {
         FrontendApiService.assertExpectedTokenType(token);
 
         const environment =
             this.services.clientMetricsServiceV2.resolveMetricsEnvironment(
                 token as ApiUser,
-                metrics,
             );
 
         await this.services.clientMetricsServiceV2.registerClientMetrics(
-            {
-                ...metrics,
-                environment,
-            },
+            metrics,
             ip,
+            environment,
         );
 
         // Because we're keeping impact metrics out of the client schema for now,
@@ -143,10 +150,7 @@ export class FrontendApiService {
             impactMetrics?: Metric[];
         };
 
-        if (
-            this.config.flagResolver.isEnabled('impactMetrics') &&
-            impactMetrics
-        ) {
+        if (impactMetrics) {
             await this.services.clientMetricsServiceV2.registerImpactMetrics(
                 impactMetrics as Metric[],
             );
@@ -160,6 +164,12 @@ export class FrontendApiService {
                 sdkType: 'frontend' as const,
                 environment: environment,
                 projects: this.resolveProject(token),
+                sdkFlavor:
+                    typeof sdkFlavor === 'string' ? sdkFlavor : undefined,
+                sdkFlavorVersion:
+                    typeof sdkFlavorVersion === 'string'
+                        ? sdkFlavorVersion
+                        : undefined,
             };
             this.services.clientInstanceService.registerFrontendClient(client);
         }

@@ -4,6 +4,7 @@ import {
     type IIntegrationParameterProps,
 } from './IntegrationParameter/IntegrationParameter.tsx';
 import type { AddonTypeSchema } from 'openapi';
+import { styled } from '@mui/material';
 
 interface IIntegrationParametersProps {
     provider?: AddonTypeSchema;
@@ -12,6 +13,10 @@ interface IIntegrationParametersProps {
     setParameterValue: IIntegrationParameterProps['setParameterValue'];
     config: IIntegrationParameterProps['config'];
 }
+
+const StyledParagraph = styled('p')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+}));
 
 export const IntegrationParameters = ({
     provider,
@@ -24,11 +29,11 @@ export const IntegrationParameters = ({
     return (
         <React.Fragment>
             {editMode ? (
-                <p>
+                <StyledParagraph>
                     Sensitive parameters will be masked with value "<i>*****</i>
                     ". If you don't change the value they will not be updated
                     when saving.
-                </p>
+                </StyledParagraph>
             ) : null}
             {provider.parameters?.map((parameter) => (
                 <IntegrationParameter

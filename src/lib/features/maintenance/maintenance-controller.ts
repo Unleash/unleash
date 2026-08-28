@@ -50,6 +50,7 @@ export default class MaintenanceController extends Controller {
                     description:
                         'Lets administrators put Unleash into a mostly read-only mode. While Unleash is in maintenance mode, users can not change any configuration settings',
                     tags: ['Maintenance'],
+                    release: { stable: '4.20.0' },
                     operationId: 'toggleMaintenance',
                     responses: {
                         204: emptyResponse,
@@ -70,6 +71,7 @@ export default class MaintenanceController extends Controller {
                     description:
                         'Tells you whether maintenance mode is enabled or disabled',
                     tags: ['Maintenance'],
+                    release: { stable: '4.20.0' },
                     operationId: 'getMaintenance',
                     responses: {
                         200: createResponseSchema('maintenanceSchema'),

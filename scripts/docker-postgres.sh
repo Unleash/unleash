@@ -66,7 +66,7 @@ echo "running migrations..."
 DATABASE_URL=$TEST_DATABASE_URL npm run db-migrate -- up
 
 echo "running tests..."
-yarn test
+pnpm test
 
 echo "cleanup..."
 docker stop $HASH

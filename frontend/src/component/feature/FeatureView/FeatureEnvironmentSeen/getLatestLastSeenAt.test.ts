@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import type { IEnvironments } from 'interfaces/featureToggle';
 
 import { getLatestLastSeenAt } from './getLatestLastSeenAt.js';

@@ -36,6 +36,7 @@ export default class UnknownFlagsController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
+                    release: { stable: '7.0.0' },
                     operationId: 'getUnknownFlags',
                     tags: ['Unknown Flags'],
                     summary: 'Get unknown flags',

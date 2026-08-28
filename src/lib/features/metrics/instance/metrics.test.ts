@@ -76,6 +76,28 @@ test('should validate client metrics', () => {
         .expect(400);
 });
 
+test('should reject an empty app name before registering the client instance', async () => {
+    const registerInstance = vi.spyOn(
+        services.clientInstanceService,
+        'registerInstance',
+    );
+
+    await request
+        .post('/api/client/metrics')
+        .send({
+            appName: '',
+            instanceId: 'invalid-instance',
+            bucket: {
+                start: Date.now(),
+                stop: Date.now(),
+                toggles: {},
+            },
+        })
+        .expect(400);
+
+    expect(registerInstance).not.toHaveBeenCalled();
+});
+
 test('should accept empty client metrics', () => {
     return request
         .post('/api/client/metrics')

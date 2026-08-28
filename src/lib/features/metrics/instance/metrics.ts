@@ -210,45 +210,37 @@ export default class ClientMetricsController extends Controller {
             // when an app omits its `environment` and
             // the filter on raw `metrics[]` entries — only metrics
             // matching the token's scope are persisted
-            const envFromToken = this.metricsV2.resolveUserEnvironment(user);
+            const acceptedEnvironment =
+                this.metricsV2.resolveUserEnvironment(user);
 
             try {
                 for (const app of applications) {
-                    const {
-                        appName,
-                        environment,
-                        instanceId,
-                        sdkType,
-                        sdkVersion,
-                        projects,
-                        sdkFlavor,
-                        sdkFlavorVersion,
-                    } = app;
-                    if (!appName) {
+                    if (!app.appName) {
                         continue;
                     }
                     // per app `environment` from the body - when this bulk endpoint
                     // forwards metrics from many environments for edge proxies
-                    const appEnvironment = environment ?? envFromToken;
+                    const appEnvironment =
+                        app.environment ?? acceptedEnvironment;
                     if (
-                        sdkType === 'frontend' &&
-                        typeof sdkVersion === 'string'
+                        app.sdkType === 'frontend' &&
+                        typeof app.sdkVersion === 'string'
                     ) {
                         this.clientInstanceService.registerFrontendClient({
-                            appName,
-                            instanceId,
+                            appName: app.appName,
+                            instanceId: app.instanceId,
                             environment: appEnvironment,
-                            sdkType,
-                            sdkVersion,
-                            projects,
+                            sdkType: app.sdkType,
+                            sdkVersion: app.sdkVersion,
+                            projects: app.projects,
                             // forwarded by Edge for frontend SDKs - backend path already passes `app`
-                            sdkFlavor,
-                            sdkFlavorVersion,
+                            sdkFlavor: app.sdkFlavor,
+                            sdkFlavorVersion: app.sdkFlavorVersion,
                         });
                     } else {
                         promises.push(
                             this.clientInstanceService.registerBackendClient(
-                                { ...app, appName }, // compilation hack: `appName` is required for backend registration
+                                app,
                                 clientIp,
                                 appEnvironment,
                             ),
@@ -264,7 +256,7 @@ export default class ClientMetricsController extends Controller {
                             metricsWithAppName,
                         );
                     const filteredData = data.filter(
-                        (metric) => metric.environment === envFromToken,
+                        (metric) => metric.environment === acceptedEnvironment,
                     );
                     promises.push(
                         this.metricsV2.registerBulkMetrics(filteredData),

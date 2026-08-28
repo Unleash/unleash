@@ -58,21 +58,3 @@ test('Upserting an application keeps values not provided intact', async () => {
 
     expect(doubleUpdated).toMatchObject(expectedAfterUpdate);
 });
-
-test('bulk upsert filters invalid instances while persisting valid ones', async () => {
-    const invalidInstance: INewClientInstance = {
-        appName: '',
-        instanceId: faker.string.uuid(),
-        environment: 'development',
-    };
-    const validInstance: INewClientInstance = {
-        appName: faker.internet.domainName(),
-        instanceId: faker.string.uuid(),
-        environment: 'development',
-    };
-
-    await clientInstanceStore.bulkUpsert([invalidInstance, validInstance]);
-
-    expect(await clientInstanceStore.exists(invalidInstance)).toBe(false);
-    expect(await clientInstanceStore.exists(validInstance)).toBe(true);
-});

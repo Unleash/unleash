@@ -41,6 +41,7 @@ const HUBSPOT_SCRIPT_SRC = [
     'https://js.hsforms.net',
     'https://js.usemessages.com',
     'https://js.hscollectedforms.net',
+    'https://js.hsadspixel.net',
     'https://static.hsappstatic.net',
 ];
 

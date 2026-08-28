@@ -66,7 +66,14 @@ test('clientMetricsSchema requires a non-empty appName', () => {
         validateSchema('#/components/schemas/clientMetricsSchema', {
             appName: '',
         }),
-    ).toBeDefined();
+    ).toMatchObject({
+        errors: [
+            expect.objectContaining({
+                instancePath: '/appName',
+                keyword: 'minLength',
+            }),
+        ],
+    });
 });
 
 test('clientMetricsSchema should fail when required field is missing', () => {

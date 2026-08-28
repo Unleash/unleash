@@ -25,6 +25,7 @@ import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { InactiveUsersActionCell } from './InactiveUsersActionCell/InactiveUsersActionCell.tsx';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import DeleteUser from './DeleteUser/DeleteUser.tsx';
+import useLoading from 'hooks/useLoading';
 
 type InactiveUserRow = IInactiveUser & { rootRole?: number };
 
@@ -33,6 +34,7 @@ export const InactiveUsersListBody = () => {
     const { setToastData, setToastApiError } = useToast();
     const { inactiveUsers, refetchInactiveUsers } = useInactiveUsers();
     const { users, roles, loading: usersLoading } = useUsers();
+    const ref = useLoading(usersLoading);
     const [delDialog, setDelDialog] = useState(false);
     const [delUser, setDelUser] = useState<IInactiveUser>();
     const closeDelDialog = () => {
@@ -162,7 +164,7 @@ export const InactiveUsersListBody = () => {
     const rowCount = table.getRowModel().rows.length;
 
     return (
-        <>
+        <div ref={ref}>
             <VirtualizedTable tableInstance={table} />
             <ConditionallyRender
                 condition={rowCount === 0}
@@ -185,6 +187,6 @@ export const InactiveUsersListBody = () => {
                     />
                 }
             />
-        </>
+        </div>
     );
 };

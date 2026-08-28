@@ -41,7 +41,7 @@ const UsersTabsView = () => {
     usePageTitle('Users');
     const { pathname } = useLocation();
     const { isEnterprise } = useUiConfig();
-    const { users, loading } = useUsers();
+    const { users } = useUsers();
 
     const [searchValue, setSearchValue] = useState('');
 
@@ -73,8 +73,7 @@ const UsersTabsView = () => {
     return (
         <PageContent
             withTabs
-            isLoading={loading}
-            disableLoading={pathname.endsWith('/access-log')}
+            disableLoading
             withStickyFooter
             header={
                 <>

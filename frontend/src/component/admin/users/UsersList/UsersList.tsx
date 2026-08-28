@@ -8,6 +8,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import ConfirmUserAdded from '../ConfirmUserAdded/ConfirmUserAdded.tsx';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
+import useLoading from 'hooks/useLoading';
 import type { IUser } from 'interfaces/user';
 import type { IRole } from 'interfaces/role';
 import useToast from 'hooks/useToast';
@@ -50,7 +51,8 @@ interface IUsersListProps {
 const UsersList = ({ searchValue }: IUsersListProps) => {
     const navigate = useNavigate();
     const { isOss } = useUiConfig();
-    const { users, roles, refetch } = useUsers();
+    const { users, roles, refetch, loading } = useUsers();
+    const ref = useLoading(loading);
     const { setToastData, setToastApiError } = useToast();
     const { removeUser, userLoading, userApiErrors } = useAdminUsersApi();
     const [pwDialog, setPwDialog] = useState<{ open: boolean; user?: IUser }>({
@@ -299,7 +301,7 @@ const UsersList = ({ searchValue }: IUsersListProps) => {
     const rowCount = table.getRowModel().rows.length;
 
     return (
-        <>
+        <div ref={ref}>
             <UserLimitWarning />
             <UsersHeader />
             <AccessRequestsTable />
@@ -375,7 +377,7 @@ const UsersList = ({ searchValue }: IUsersListProps) => {
             />
 
             {showSSOUpgrade ? <UpgradeSSO /> : null}
-        </>
+        </div>
     );
 };
 

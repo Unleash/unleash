@@ -49,7 +49,6 @@ overrides:
 
 patchedDependencies:
   '@tanstack/table-core@8.21.3': 31217d7772d704a6140e9df36366b7450543a18a32d90c300c2966d9be6a9299
-  cypress-vite: fe7c69c6cba105fcf60aadaee434c81cd38010f5686c4defe50137142e7aece0
 
 importers:
 
@@ -572,7 +571,7 @@ importers:
         version: 15.18.0
       cypress-vite:
         specifier: 1.10.2
-        version: 1.10.2(patch_hash=fe7c69c6cba105fcf60aadaee434c81cd38010f5686c4defe50137142e7aece0)(chokidar@5.0.0)(debug@4.4.3(supports-color@8.1.1))(vite@8.2.2(@types/node@22.20.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.8.4))
+        version: 1.10.2(chokidar@5.0.0)(debug@4.4.3(supports-color@8.1.1))(vite@8.2.2(@types/node@22.20.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.8.4))
       date-fns:
         specifier: 4.4.0
         version: 4.4.0
@@ -9372,7 +9371,7 @@ snapshots:
 
   csstype@3.2.3: {}
 
-  cypress-vite@1.10.2(patch_hash=fe7c69c6cba105fcf60aadaee434c81cd38010f5686c4defe50137142e7aece0)(chokidar@5.0.0)(debug@4.4.3(supports-color@8.1.1))(vite@8.2.2(@types/node@22.20.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.8.4)):
+  cypress-vite@1.10.2(chokidar@5.0.0)(debug@4.4.3(supports-color@8.1.1))(vite@8.2.2(@types/node@22.20.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.8.4)):
     dependencies:
       chokidar: 5.0.0
       debug: 4.4.3(supports-color@8.1.1)

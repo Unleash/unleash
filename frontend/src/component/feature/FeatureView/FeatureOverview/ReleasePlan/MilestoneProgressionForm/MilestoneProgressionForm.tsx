@@ -1,13 +1,13 @@
 import { Button } from '@mui/material';
-import { useMilestoneProgressionForm } from '../hooks/useMilestoneProgressionForm.js';
+import { useTransitionConditionForm } from '../hooks/useTransitionConditionForm.ts';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
+import { isTimeCondition } from 'interfaces/releasePlans';
 import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
-import { useMilestoneProgressionInfo } from '../hooks/useMilestoneProgressionInfo.ts';
+import { TimeProgressionInfo } from '../shared/TimeProgressionInfo.tsx';
 import {
     StyledFormContainer,
     StyledButtonGroup,
     StyledErrorMessage,
-    StyledInfoLine,
 } from '../shared/SharedFormComponents.tsx';
 import { TransitionConditionRow } from '../shared/TransitionConditionRow.tsx';
 import { TransitionConditionInput } from './TransitionConditionInput.tsx';
@@ -38,47 +38,47 @@ export const MilestoneProgressionForm = ({
 }: IMilestoneProgressionFormProps) => {
     const projectId = useRequiredPathParam('projectId');
 
-    const form = useMilestoneProgressionForm(
-        sourceMilestoneId,
-        targetMilestoneId,
-        {},
+    const { form, validation } = useTransitionConditionForm({
         sourceMilestoneStartedAt,
         status,
-    );
-
-    const progressionInfo = useMilestoneProgressionInfo(
-        form.intervalMinutes,
-        sourceMilestoneStartedAt,
-        status,
-    );
+    });
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
-        if (!form.validate()) {
+        if (!validation.validate()) {
             return;
         }
 
-        await onSubmit(form.getProgressionPayload());
+        await onSubmit({
+            sourceMilestone: sourceMilestoneId,
+            targetMilestone: targetMilestoneId,
+            transitionCondition: form.condition,
+        });
     };
 
     return (
         <StyledFormContainer onSubmit={handleSubmit}>
             <TransitionConditionRow
+                type={form.condition.type}
                 condition={
                     <TransitionConditionInput
-                        timeValue={form.timeValue}
-                        timeUnit={form.timeUnit}
-                        onTimeValueChange={form.handleTimeValueChange}
-                        onTimeUnitChange={form.handleTimeUnitChange}
+                        value={form.value}
+                        unit={form.unit}
+                        onValueChange={form.handleValueChange}
+                        onUnitChange={form.handleUnitChange}
                     />
                 }
             />
-            {progressionInfo && (
-                <StyledInfoLine>{progressionInfo}</StyledInfoLine>
+            {isTimeCondition(form.condition) && (
+                <TimeProgressionInfo
+                    intervalMinutes={form.condition.intervalMinutes}
+                    sourceMilestoneStartedAt={sourceMilestoneStartedAt}
+                    status={status}
+                />
             )}
-            {form.errors.time && (
-                <StyledErrorMessage>{form.errors.time}</StyledErrorMessage>
+            {validation.error && (
+                <StyledErrorMessage>{validation.error}</StyledErrorMessage>
             )}
             <StyledButtonGroup>
                 <Button variant='outlined' onClick={onCancel} size='medium'>

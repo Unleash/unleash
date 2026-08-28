@@ -76,7 +76,7 @@ export const useTemplateForm = (
 
             if (hasInvalidAutomation) {
                 validationErrors[automationErrorKey(m.id)] =
-                    'Automation time must be greater than zero.';
+                    'Automation value must be greater than zero.';
             }
         });
 

@@ -1,5 +1,6 @@
 import BoltIcon from '@mui/icons-material/Bolt';
 import { styled } from '@mui/material';
+import type { TransitionConditionSchema } from 'openapi';
 import type { ReactNode } from 'react';
 
 const StyledTransitionRowContainer = styled('div')(({ theme }) => ({
@@ -42,6 +43,7 @@ const StyledTransitionLabel = styled('span', {
 
 interface TransitionConditionRowProps {
     condition: ReactNode;
+    type?: TransitionConditionSchema['type'];
     label?: string;
     muted?: boolean;
     endActions?: ReactNode;
@@ -49,19 +51,27 @@ interface TransitionConditionRowProps {
 
 export const TransitionConditionRow = ({
     condition,
+    type = 'time',
     label = 'Proceed after',
     muted,
     endActions,
-}: TransitionConditionRowProps) => (
-    <StyledTransitionRowContainer>
-        <StyledTransitionContentGroup>
-            <StyledTransitionIcon muted={muted} />
-            <StyledTransitionLabel muted={muted}>{label}</StyledTransitionLabel>
-            {condition}
-            <StyledTransitionLabel muted={muted}>
-                from milestone start
-            </StyledTransitionLabel>
-        </StyledTransitionContentGroup>
-        {endActions}
-    </StyledTransitionRowContainer>
-);
+}: TransitionConditionRowProps) => {
+    const conditionText =
+        type === 'exposure' ? 'since feature creation' : 'from milestone start';
+
+    return (
+        <StyledTransitionRowContainer>
+            <StyledTransitionContentGroup>
+                <StyledTransitionIcon muted={muted} />
+                <StyledTransitionLabel muted={muted}>
+                    {label}
+                </StyledTransitionLabel>
+                {condition}
+                <StyledTransitionLabel muted={muted}>
+                    {conditionText}
+                </StyledTransitionLabel>
+            </StyledTransitionContentGroup>
+            {endActions}
+        </StyledTransitionRowContainer>
+    );
+};

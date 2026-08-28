@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import type { SelectChangeEvent } from '@mui/material';
+import type { TransitionConditionSchema } from 'openapi';
 
 export const DEFAULT_INTERVAL_MINUTES = 300;
 export const MAX_TIME_VALUE = 10000;
 
 export type TimeUnit = 'minutes' | 'hours' | 'days';
+export type TransitionUnit = TimeUnit | 'exposures';
 
 export const getTimeValueAndUnitFromMinutes = (
     minutes: number,
@@ -32,42 +34,56 @@ export const getMinutesFromTimeValueAndUnit = (time: {
     }
 };
 
-export const useTransitionConditionInput = (
-    initialMinutes: number = DEFAULT_INTERVAL_MINUTES,
-    onIntervalChange?: (intervalMinutes: number) => void,
-) => {
-    const initial = getTimeValueAndUnitFromMinutes(initialMinutes);
-    const [timeValue, setTimeValue] = useState(initial.value);
-    const [timeUnit, setTimeUnit] = useState<TimeUnit>(initial.unit);
+export const getValueAndUnitFromCondition = (
+    condition: TransitionConditionSchema,
+): { value: number; unit: TransitionUnit } => {
+    if (condition.type === 'exposure') {
+        return { value: condition.minimumExposures, unit: 'exposures' };
+    }
+    return getTimeValueAndUnitFromMinutes(condition.intervalMinutes);
+};
 
-    const handleTimeValueChange = (
-        event: React.ChangeEvent<HTMLInputElement>,
-    ) => {
-        const value = Math.min(Number(event.target.value), MAX_TIME_VALUE);
-        setTimeValue(value);
-        onIntervalChange?.(
-            getMinutesFromTimeValueAndUnit({ value, unit: timeUnit }),
-        );
+export const getConditionFromValueAndUnit = (
+    value: number,
+    unit: TransitionUnit,
+): TransitionConditionSchema =>
+    unit === 'exposures'
+        ? { type: 'exposure', minimumExposures: value }
+        : { intervalMinutes: getMinutesFromTimeValueAndUnit({ value, unit }) };
+
+export const useTransitionConditionInput = (
+    initialCondition: TransitionConditionSchema = {
+        intervalMinutes: DEFAULT_INTERVAL_MINUTES,
+    },
+    onConditionChange?: (condition: TransitionConditionSchema) => void,
+) => {
+    const initial = getValueAndUnitFromCondition(initialCondition);
+    const [value, setValue] = useState(initial.value);
+    const [unit, setUnit] = useState<TransitionUnit>(initial.unit);
+
+    const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const inputValue = Math.round(Number(event.target.value));
+        const newValue =
+            unit === 'exposures'
+                ? inputValue
+                : Math.min(inputValue, MAX_TIME_VALUE);
+        setValue(newValue);
+        onConditionChange?.(getConditionFromValueAndUnit(newValue, unit));
     };
 
-    const handleTimeUnitChange = (event: SelectChangeEvent<unknown>) => {
-        const unit = event.target.value as TimeUnit;
-        setTimeUnit(unit);
-        onIntervalChange?.(
-            getMinutesFromTimeValueAndUnit({ value: timeValue, unit }),
-        );
+    const handleUnitChange = (event: SelectChangeEvent<unknown>) => {
+        const newUnit = event.target.value as TransitionUnit;
+        setUnit(newUnit);
+        onConditionChange?.(getConditionFromValueAndUnit(value, newUnit));
     };
 
     return {
-        timeValue,
-        setTimeValue,
-        timeUnit,
-        setTimeUnit,
-        intervalMinutes: getMinutesFromTimeValueAndUnit({
-            value: timeValue,
-            unit: timeUnit,
-        }),
-        handleTimeValueChange,
-        handleTimeUnitChange,
+        value,
+        setValue,
+        unit,
+        setUnit,
+        condition: getConditionFromValueAndUnit(value, unit),
+        handleValueChange,
+        handleUnitChange,
     };
 };

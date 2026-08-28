@@ -1,12 +1,11 @@
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { styled, Button, Alert } from '@mui/material';
-import {
-    isTimeCondition,
-    type IReleasePlan,
-    type IReleasePlanMilestone,
+import type {
+    IReleasePlan,
+    IReleasePlanMilestone,
 } from 'interfaces/releasePlans';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
-import { getTimeValueAndUnitFromMinutes } from '../hooks/useTransitionConditionInput.ts';
+import { getValueAndUnitFromCondition } from '../hooks/useTransitionConditionInput.ts';
 
 const StyledBoldSpan = styled('span')(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
@@ -94,15 +93,9 @@ export const ReleasePlanChangeRequestDialog = ({
                         milestone.id === action.payload.targetMilestone,
                 );
 
-                const { transitionCondition } = action.payload;
-                const { value, unit } = isTimeCondition(transitionCondition)
-                    ? getTimeValueAndUnitFromMinutes(
-                          transitionCondition.intervalMinutes,
-                      )
-                    : {
-                          value: transitionCondition.minimumExposures,
-                          unit: 'exposures',
-                      };
+                const { value, unit } = getValueAndUnitFromCondition(
+                    action.payload.transitionCondition,
+                );
                 const conditionDisplay = `${value} ${unit}`;
 
                 return (

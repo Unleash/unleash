@@ -6,7 +6,6 @@ import { StyledErrorMessage } from 'component/feature/FeatureView/FeatureOvervie
 import { TransitionConditionRow } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/shared/TransitionConditionRow';
 import { TransitionConditionInput } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/MilestoneProgressionForm/TransitionConditionInput';
 import type { TransitionConditionSchema } from 'openapi';
-import { isTimeCondition } from 'interfaces/releasePlans';
 import { StyledActionButton } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestoneItem/StyledActionButton';
 
 const StyledAutomationSection = styled('div')(({ theme }) => ({
@@ -32,20 +31,8 @@ export const MilestoneAutomationForm = ({
     onChange,
     error,
 }: MilestoneAutomationFormProps) => {
-    const initialIntervalMinutes =
-        transitionCondition && isTimeCondition(transitionCondition)
-            ? transitionCondition.intervalMinutes
-            : undefined;
-
-    const {
-        timeValue,
-        timeUnit,
-        intervalMinutes,
-        handleTimeValueChange,
-        handleTimeUnitChange,
-    } = useTransitionConditionInput(initialIntervalMinutes, (intervalMinutes) =>
-        onChange({ intervalMinutes }),
-    );
+    const { value, unit, condition, handleValueChange, handleUnitChange } =
+        useTransitionConditionInput(transitionCondition, onChange);
 
     if (!transitionCondition) {
         return (
@@ -54,7 +41,7 @@ export const MilestoneAutomationForm = ({
                     variant='text'
                     color='primary'
                     startIcon={<Add />}
-                    onClick={() => onChange({ intervalMinutes })}
+                    onClick={() => onChange(condition)}
                 >
                     Automate this transition
                 </StyledActionButton>
@@ -65,12 +52,13 @@ export const MilestoneAutomationForm = ({
     return (
         <StyledAutomationSection>
             <TransitionConditionRow
+                type={condition.type}
                 condition={
                     <TransitionConditionInput
-                        timeValue={timeValue}
-                        timeUnit={timeUnit}
-                        onTimeValueChange={handleTimeValueChange}
-                        onTimeUnitChange={handleTimeUnitChange}
+                        value={value}
+                        unit={unit}
+                        onValueChange={handleValueChange}
+                        onUnitChange={handleUnitChange}
                         error={Boolean(error)}
                     />
                 }

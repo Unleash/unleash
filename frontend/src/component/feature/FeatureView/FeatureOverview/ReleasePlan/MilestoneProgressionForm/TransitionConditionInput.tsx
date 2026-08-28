@@ -5,7 +5,7 @@ import {
     TextField,
     type SelectChangeEvent,
 } from '@mui/material';
-import type { TimeUnit } from '../hooks/useTransitionConditionInput.ts';
+import type { TransitionUnit } from '../hooks/useTransitionConditionInput.ts';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const StyledInputGroup = styled('div')(({ theme }) => ({
@@ -18,13 +18,11 @@ const StyledSelect = styled(Select)({
     minWidth: '100px',
 });
 
-type TransitionUnit = TimeUnit | 'exposures';
-
 interface TransitionConditionInputProps {
-    timeValue: number;
-    timeUnit: TransitionUnit;
-    onTimeValueChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    onTimeUnitChange: (event: SelectChangeEvent<unknown>) => void;
+    value: number;
+    unit: TransitionUnit;
+    onValueChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    onUnitChange: (event: SelectChangeEvent<unknown>) => void;
     disabled?: boolean;
     error?: boolean;
 }
@@ -43,10 +41,10 @@ const stopEnterPropagation = (e: React.KeyboardEvent) => {
 };
 
 export const TransitionConditionInput = ({
-    timeValue,
-    timeUnit,
-    onTimeValueChange,
-    onTimeUnitChange,
+    value,
+    unit,
+    onValueChange,
+    onUnitChange,
     disabled,
     error,
 }: TransitionConditionInputProps) => {
@@ -56,12 +54,12 @@ export const TransitionConditionInput = ({
         <StyledInputGroup>
             <TextField
                 type='number'
-                value={timeValue}
-                onChange={onTimeValueChange}
+                value={value}
+                onChange={onValueChange}
                 onPaste={handleNumericPaste}
                 error={error}
                 sx={{
-                    width: `max(60px, ${String(timeValue).length + 8}ch)`,
+                    width: `max(60px, ${String(value).length + 8}ch)`,
                     maxWidth: '300px',
                 }}
                 size='large'
@@ -69,17 +67,17 @@ export const TransitionConditionInput = ({
                 slotProps={{
                     htmlInput: {
                         pattern: '[0-9]*',
-                        'aria-label': 'Time duration value',
-                        'aria-describedby': 'time-unit-select',
+                        'aria-label': 'Condition value',
+                        'aria-describedby': 'condition-unit-select',
                     },
                 }}
             />
             <StyledSelect
-                value={timeUnit}
-                onChange={onTimeUnitChange}
+                value={unit}
+                onChange={onUnitChange}
                 size='large'
-                aria-label='Time unit'
-                id='time-unit-select'
+                aria-label='Condition unit'
+                id='condition-unit-select'
                 disabled={disabled}
             >
                 <MenuItem value='minutes' onKeyDown={stopEnterPropagation}>
@@ -91,7 +89,7 @@ export const TransitionConditionInput = ({
                 <MenuItem value='days' onKeyDown={stopEnterPropagation}>
                     Days
                 </MenuItem>
-                {exposureBasedAutomationEnabled ? (
+                {exposureBasedAutomationEnabled || unit === 'exposures' ? (
                     <MenuItem
                         value='exposures'
                         onKeyDown={stopEnterPropagation}

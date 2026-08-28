@@ -2,18 +2,22 @@ import { renderHook, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { beforeEach, expect, test, vi } from 'vitest';
+import { beforeEach, expect, test } from 'vitest';
 import {
     type IExtendedMilestonePayload,
     useTemplateForm,
 } from 'component/releases/hooks/useTemplateForm';
+import type { TransitionConditionSchema } from 'openapi';
 import { TemplateForm } from './TemplateForm.tsx';
 
 const server = testServerSetup();
 
 const setAutomationsFlag = (enabled: boolean) =>
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: { releaseTemplatesAutomations: enabled },
+        flags: {
+            releaseTemplatesAutomations: enabled,
+            exposureBasedAutomation: enabled,
+        },
     });
 
 const defaultMilestone = (
@@ -32,8 +36,14 @@ const defaultMilestone = (
     ...overrides,
 });
 
-const automatedMilestones = (intervalMinutes: number) => [
-    defaultMilestone({ transitionCondition: { intervalMinutes } }),
+const ANY_INTERVAL_MINUTES = 300;
+
+const automatedMilestones = (
+    transitionCondition: TransitionConditionSchema = {
+        intervalMinutes: ANY_INTERVAL_MINUTES,
+    },
+) => [
+    defaultMilestone({ transitionCondition }),
     defaultMilestone({ id: 'milestone-2', name: 'Milestone 2', sortOrder: 1 }),
 ];
 
@@ -120,10 +130,10 @@ describe('milestone automations', () => {
     });
 
     test('removing automation omits the transition condition from the payload', async () => {
-        const onSubmitPayload = vi.fn();
+        const submittedPayloads: unknown[] = [];
         renderTemplateForm({
-            milestones: automatedMilestones(300),
-            onSubmitPayload,
+            milestones: automatedMilestones(),
+            onSubmitPayload: (payload) => submittedPayloads.push(payload),
         });
 
         await userEvent.click(
@@ -131,25 +141,61 @@ describe('milestone automations', () => {
         );
         await userEvent.click(screen.getByText('Save'));
 
-        expect(
-            onSubmitPayload.mock.calls[0][0].milestones[0].transitionCondition,
-        ).toBeUndefined();
+        expect(submittedPayloads).toMatchObject([
+            {
+                milestones: [
+                    { transitionCondition: undefined },
+                    { transitionCondition: undefined },
+                ],
+            },
+        ]);
+    });
+
+    test('saves an exposure based automation in the payload', async () => {
+        const submittedPayloads: unknown[] = [];
+        renderTemplateForm({
+            milestones: automatedMilestones(),
+            onSubmitPayload: (payload) => submittedPayloads.push(payload),
+        });
+
+        await userEvent.click(await screen.findByLabelText('Condition unit'));
+        await userEvent.click(
+            await screen.findByRole('option', { name: 'Exposures' }),
+        );
+        const input = screen.getByLabelText('Condition value');
+        await userEvent.clear(input);
+        await userEvent.type(input, '1000');
+        await userEvent.click(screen.getByText('Save'));
+
+        expect(submittedPayloads).toMatchObject([
+            {
+                milestones: [
+                    {
+                        transitionCondition: {
+                            type: 'exposure',
+                            minimumExposures: 1000,
+                        },
+                    },
+                    { transitionCondition: undefined },
+                ],
+            },
+        ]);
     });
 
     test('rejects a zero automation time on submit', async () => {
-        const onSubmitPayload = vi.fn();
+        const submittedPayloads: unknown[] = [];
         renderTemplateForm({
-            milestones: automatedMilestones(300),
-            onSubmitPayload,
+            milestones: automatedMilestones(),
+            onSubmitPayload: (payload) => submittedPayloads.push(payload),
         });
-        const input = await screen.findByLabelText('Time duration value');
+        const input = await screen.findByLabelText('Condition value');
 
         await userEvent.clear(input); //sets it to 0
         await userEvent.click(screen.getByText('Save'));
 
-        expect(onSubmitPayload).not.toHaveBeenCalled();
+        expect(submittedPayloads).toEqual([]);
         expect(
-            screen.getByText('Automation time must be greater than zero.'),
+            screen.getByText('Automation value must be greater than zero.'),
         ).toBeInTheDocument();
         expect(input).toHaveAttribute('aria-invalid', 'true');
     });

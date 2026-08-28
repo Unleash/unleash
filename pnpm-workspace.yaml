@@ -76,7 +76,6 @@ patchedDependencies:
   # Fixed upstream in TanStack Table v9 — remove this patch when upgrading to v9.
   # See: https://github.com/TanStack/table/issues/4908
   '@tanstack/table-core@8.21.3': patches/@tanstack__table-core@8.21.3.patch
-  cypress-vite: .pnpm/patches/cypress-vite-npm-1.8.0-5384b5466c.patch
 overrides:
   "@codemirror/state": "6.7.1"
   "@types/express-session>@types/express": "4.17.25"

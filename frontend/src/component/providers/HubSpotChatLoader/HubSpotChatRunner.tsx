@@ -41,6 +41,7 @@ const HubSpotChatRunner = ({
             const w = window as HubSpotWindow;
             w._hsq = w._hsq || [];
             const hsq = w._hsq;
+            hsq.push(['doNotTrack']);
             hsq.push([
                 'identify',
                 buildIdentity({

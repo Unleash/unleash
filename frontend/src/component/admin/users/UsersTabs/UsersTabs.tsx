@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { Tab, Tabs, styled, useMediaQuery } from '@mui/material';
 import { Route, Routes, useLocation } from 'react-router';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
@@ -70,88 +70,71 @@ const UsersTabsView = () => {
             : []),
     ];
 
+    const pageHeader = (actions: ReactNode, showSearch: boolean) => (
+        <>
+            <StyledHeader>
+                <StyledTabsContainer>
+                    <Tabs
+                        value={pathname}
+                        indicatorColor='primary'
+                        textColor='primary'
+                        variant='scrollable'
+                        allowScrollButtonsMobile
+                    >
+                        {tabs.map(({ label, path }) => (
+                            <Tab
+                                key={path}
+                                value={path}
+                                label={<TabLink to={path}>{label}</TabLink>}
+                                sx={{ padding: 0 }}
+                            />
+                        ))}
+                    </Tabs>
+                </StyledTabsContainer>
+                <StyledActions>{actions}</StyledActions>
+            </StyledHeader>
+            {showSearch && isSmallScreen ? (
+                <Search initialValue={searchValue} onChange={setSearchValue} />
+            ) : null}
+        </>
+    );
+
     return (
-        <PageContent
-            withTabs
-            isLoading={loading}
-            disableLoading={pathname.endsWith('/access-log')}
-            withStickyFooter
-            header={
-                <>
-                    <StyledHeader>
-                        <StyledTabsContainer>
-                            <Tabs
-                                value={pathname}
-                                indicatorColor='primary'
-                                textColor='primary'
-                                variant='scrollable'
-                                allowScrollButtonsMobile
-                            >
-                                {tabs.map(({ label, path }) => (
-                                    <Tab
-                                        key={path}
-                                        value={path}
-                                        label={
-                                            <TabLink to={path}>{label}</TabLink>
-                                        }
-                                        sx={{ padding: 0 }}
-                                    />
-                                ))}
-                            </Tabs>
-                        </StyledTabsContainer>
-                        <StyledActions>
-                            <Routes>
-                                <Route
-                                    path='inactive'
-                                    element={
-                                        isEnterprise() ? (
-                                            <InactiveUsersHeaderActions />
-                                        ) : null
-                                    }
-                                />
-                                <Route path='access-log' element={null} />
-                                <Route
-                                    path='*'
-                                    element={
-                                        <UsersHeaderActions
-                                            searchValue={searchValue}
-                                            onSearch={setSearchValue}
-                                            isSmallScreen={isSmallScreen}
-                                        />
-                                    }
-                                />
-                            </Routes>
-                        </StyledActions>
-                    </StyledHeader>
-                    <ConditionallyRender
-                        condition={isSmallScreen}
-                        show={
-                            <Routes>
-                                <Route path='inactive' element={null} />
-                                <Route path='access-log' element={null} />
-                                <Route
-                                    path='*'
-                                    element={
-                                        <Search
-                                            initialValue={searchValue}
-                                            onChange={setSearchValue}
-                                        />
-                                    }
-                                />
-                            </Routes>
-                        }
-                    />
-                </>
-            }
-        >
-            <Routes>
-                <Route
-                    index
-                    element={<UsersList searchValue={searchValue} />}
-                />
-                <Route
-                    path='inactive'
-                    element={
+        <Routes>
+            <Route
+                index
+                element={
+                    <PageContent
+                        withTabs
+                        withStickyFooter
+                        header={pageHeader(
+                            <UsersHeaderActions
+                                searchValue={searchValue}
+                                onSearch={setSearchValue}
+                                isSmallScreen={isSmallScreen}
+                            />,
+                            true,
+                        )}
+                        isLoading={loading}
+                    >
+                        <UsersList searchValue={searchValue} />
+                    </PageContent>
+                }
+            />
+            <Route
+                path='inactive'
+                element={
+                    <PageContent
+                        withTabs
+                        withStickyFooter
+                        header={pageHeader(
+                            isEnterprise() ? (
+                                <InactiveUsersHeaderActions />
+                            ) : null,
+                            false,
+                        )}
+                        isLoading={loading}
+                    >
                         <ConditionallyRender
                             condition={isEnterprise()}
                             show={<InactiveUsersListBody />}
@@ -159,12 +142,24 @@ const UsersTabsView = () => {
                                 <PremiumFeature feature='inactive-users' page />
                             }
                         />
-                    }
-                />
-                <Route path='access-log' element={<UserAccessLog />} />
-                <Route path='*' element={<NotFound />} />
-            </Routes>
-        </PageContent>
+                    </PageContent>
+                }
+            />
+            <Route
+                path='access-log'
+                element={
+                    <PageContent
+                        withTabs
+                        withStickyFooter
+                        header={pageHeader(null, false)}
+                        disableLoading
+                    >
+                        <UserAccessLog />
+                    </PageContent>
+                }
+            />
+            <Route path='*' element={<NotFound />} />
+        </Routes>
     );
 };
 

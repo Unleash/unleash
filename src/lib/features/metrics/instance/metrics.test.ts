@@ -287,7 +287,22 @@ test('should return 204 if metrics are disabled by feature flag', async () => {
 });
 
 describe('bulk metrics', () => {
-    test('ignores entries without app names while processing the rest of the payload', async () => {
+    test('still rejects bulk entries with a missing app name', async () => {
+        await request
+            .post('/api/client/metrics/bulk')
+            .send({
+                applications: [
+                    {
+                        instanceId: 'missing-app-name',
+                        environment: 'development',
+                    },
+                ],
+                metrics: [],
+            })
+            .expect(400);
+    });
+
+    test('ignores entries with empty app names while processing the rest of the payload', async () => {
         await request
             .post('/api/client/metrics/bulk')
             .send({
@@ -295,10 +310,6 @@ describe('bulk metrics', () => {
                     {
                         appName: '',
                         instanceId: 'empty-app-name',
-                        environment: 'development',
-                    },
-                    {
-                        instanceId: 'missing-app-name',
                         environment: 'development',
                     },
                     {
@@ -312,6 +323,7 @@ describe('bulk metrics', () => {
                 metrics: [
                     {
                         featureName: 'ignored-metric',
+                        appName: '',
                         environment: 'development',
                         yes: 1,
                         no: 0,

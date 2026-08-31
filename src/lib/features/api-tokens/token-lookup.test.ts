@@ -27,9 +27,7 @@ const insert = (
 
 describe('api token lookup', () => {
     const setup = (getLogger?: any) => {
-        const config = createTestConfig({
-            experimental: { flags: { useMemoizedActiveTokens: true } },
-        });
+        const config = createTestConfig();
         if (getLogger) config.getLogger = getLogger;
         return createFakeApiTokenService(config);
     };

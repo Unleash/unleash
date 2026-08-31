@@ -35,11 +35,6 @@ let apiTokenV2Service: ReadOnlyApiTokenV2Service & AdminApiTokenV2Service;
 beforeAll(async () => {
     const config = createTestConfig({
         server: { baseUriPath: '/test' },
-        experimental: {
-            flags: {
-                useMemoizedActiveTokens: true,
-            },
-        },
         edgeMasterKey: '5ja3QXrqi4T2A+V+0QOw8eTA68lsHQE81vNO80MGrhw=',
     });
     db = await dbInit('api_token_service_serial', getLogger);
@@ -151,6 +146,7 @@ test('validates previously issued v2 tokens when secure token storage is disable
         },
         SYSTEM_USER_AUDIT,
     );
+    apiTokenV2Service.invalidateCache([token.selector]);
 
     await expect(edgeService.getValidTokens([token.secret])).resolves.toEqual({
         tokens: [],

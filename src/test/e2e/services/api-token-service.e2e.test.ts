@@ -25,11 +25,6 @@ let projectService: ProjectService;
 beforeAll(async () => {
     const config = createTestConfig({
         server: { baseUriPath: '/test' },
-        experimental: {
-            flags: {
-                useMemoizedActiveTokens: true,
-            },
-        },
         edgeMasterKey: 'JxvIFjEQIcgp1+y0TzyHcJ4iiIREDtm85GhZFaEsOU8=',
         edgeClientSecret: 'N/ujM32DRtA6IytNvaazOX/5zac9nhsj1jnPqcxl1iA=',
     });

@@ -1,4 +1,4 @@
-import { addMinutes, isPast } from 'date-fns';
+import { isPast } from 'date-fns';
 import ApiUser, { type IApiUser } from '../../types/api-user.js';
 import { ApiTokenType, type IApiToken } from '../../types/model.js';
 import {
@@ -48,12 +48,7 @@ import {
 import FakeEventStore from '../../../test/fixtures/fake-event-store.js';
 import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store.js';
 import metricsHelper from '../../util/metrics-helper.js';
-import {
-    FUNCTION_TIME,
-    TOKEN_CACHE_LOOKUP,
-    emitMetricEvent,
-    type TokenLookupResult,
-} from '../../metric-events.js';
+import { FUNCTION_TIME } from '../../metric-events.js';
 import {
     AuthorizationTokenKind,
     createTokenV2Credential,
@@ -61,10 +56,13 @@ import {
     type ApiTokenV2Identifier,
 } from '../../authentication/authorization-token.js';
 import { verifyToken } from '../../authentication/token-verifier.js';
+import {
+    createTokenCache,
+    type TokenCacheInterface,
+} from '../apitokencache/api-token-cache.js';
 
 const TOKEN_LIFETIME_AFTER_LAST_SEEN_IN_MINUTES = 7 * 24 * 60;
-
-const TOKEN_CACHE_NAME = 'api-token-v2' as const;
+const TOKEN_CACHE_NAME = 'secure-tokens-cache' as const;
 
 const resolveTokenPermissions = (tokenType: ApiTokenType) => {
     if (tokenType === ApiTokenType.ADMIN) {
@@ -165,8 +163,9 @@ class ApiTokenV2Service
     private resourceLimitsService: ResourceLimitsService;
     private eventBus: EventEmitter;
     private logger: Logger;
-    private activeTokens = new Map<string, ApiTokenV2WithVerifier>();
-    private queryAfter = new Map<string, Date>();
+
+    private cache: TokenCacheInterface<ApiTokenV2WithVerifier>;
+
     private timer: Function;
 
     constructor(
@@ -174,7 +173,11 @@ class ApiTokenV2Service
             apiTokenV2Store,
             environmentStore,
         }: Pick<IUnleashStores, 'apiTokenV2Store' | 'environmentStore'>,
-        { eventBus, getLogger }: Pick<IUnleashConfig, 'eventBus' | 'getLogger'>,
+        {
+            eventBus,
+            getLogger,
+            flagResolver,
+        }: Pick<IUnleashConfig, 'eventBus' | 'getLogger' | 'flagResolver'>,
         {
             eventService,
             resourceLimitsService,
@@ -186,6 +189,10 @@ class ApiTokenV2Service
         this.resourceLimitsService = resourceLimitsService;
         this.eventBus = eventBus;
         this.logger = getLogger('features/apitokensv2/api-token-v2-service.ts');
+        this.cache = createTokenCache<ApiTokenV2WithVerifier>(
+            TOKEN_CACHE_NAME,
+            { flagResolver, eventBus: this.eventBus, logger: this.logger },
+        );
         this.timer = (functionName: string) =>
             metricsHelper.wrapTimer(eventBus, FUNCTION_TIME, {
                 className: 'ApiTokenV2Service',
@@ -196,15 +203,15 @@ class ApiTokenV2Service
     async fetchActiveTokens(): Promise<void> {
         try {
             const tokens = await this.apiTokenV2Store.getAllActive();
-            this.activeTokens = new Map(
-                tokens.map((token) => [token.selector, token] as const),
+            await this.cache.setEntries(
+                tokens.map((token) => [token.selector, token]),
             );
         } catch (e) {
             // a refresh is what bounds how long a revoked token keeps working
             // if a pod stops refreshing -> security-relevant condition
             // log it here - the scheduler's job log cannot say if v1 or v2 cache failed
             this.logger.error(
-                `Failed to refresh cache ${TOKEN_CACHE_NAME}; it is now serving stale tokens until the next successful refresh`,
+                `Failed to refresh cache ${this.cache.name}; it is now serving stale tokens until the next successful refresh`,
                 e,
             );
             // rethrow: unlike v1 this method does not swallow, so the scheduler
@@ -321,63 +328,62 @@ class ApiTokenV2Service
         }
         return this.toApiToken(token);
     }
+
     async getTokenWithCache(
         credential: ApiTokenV2Credential,
     ): Promise<IApiToken | undefined> {
-        const { secret } = credential;
+        const verified = await this.findVerifiedToken(credential);
+        if (!verified) {
+            return undefined;
+        }
+        return this.toApiToken(verified);
+    }
+
+    /**
+     * Resolves a credential against the cache, keyed by *selector*
+     */
+    private async findVerifiedToken(
+        credential: ApiTokenV2Credential,
+    ): Promise<ApiTokenV2WithVerifier | undefined> {
+        const { secret, selector } = credential;
         if (!secret) {
             return undefined;
         }
 
-        let result: TokenLookupResult = 'miss';
+        const token = await this.cache.get(selector, (key) =>
+            this.loadToken(key),
+        );
 
-        let cachedToken = this.activeTokens.get(credential.selector);
-        if (cachedToken?.expiresAt && isPast(cachedToken.expiresAt)) {
-            this.activeTokens.delete(credential.selector);
-            cachedToken = undefined;
-        }
-        if (cachedToken && !verifyToken(secret, cachedToken.verifier)) {
-            cachedToken = undefined;
-        }
-        if (cachedToken) {
-            result = 'hit';
+        if (!token || this.hasExpired(token)) {
+            return undefined;
         }
 
-        const nextAllowedQuery = this.queryAfter.get(secret) ?? 0;
-        if (!cachedToken && isPast(nextAllowedQuery)) {
-            if (this.queryAfter.size > 1000) {
-                // TODO: set a max limit for queryAfter size to prevent memory leak
+        if (!verifyToken(secret, token.verifier)) {
+            // the token cache doesn't know about the secret, so a failed verification
+            // does not count as a cache miss, but it does mean the token is not valid for this request
+            return undefined;
+        }
 
-                this.logger.warn(
-                    `${TOKEN_CACHE_NAME}: negative lookup cache reached 1000 entries and was cleared. Repeated tries: might be a client retrying with invalid tokens.`,
-                );
-                this.queryAfter.clear();
+        return token;
+    }
+
+    private async loadToken(
+        selector: string,
+    ): Promise<ApiTokenV2WithVerifier | undefined> {
+        const stopTimer = this.timer('getTokenWithCache.query');
+        try {
+            const token = await this.apiTokenV2Store.getBySelector(selector);
+            if (this.hasExpired(token)) {
+                return undefined;
             }
-            const stopCacheTimer = this.timer('getTokenWithCache.query');
-            const storedToken = await this.apiTokenV2Store.getBySelector(
-                credential.selector,
-            );
-            if (storedToken && verifyToken(secret, storedToken.verifier)) {
-                if (storedToken.expiresAt && isPast(storedToken.expiresAt)) {
-                    this.queryAfter.set(secret, addMinutes(new Date(), 5));
-                } else {
-                    this.activeTokens.set(storedToken.selector, storedToken);
-                    cachedToken = storedToken;
-                }
-            } else {
-                this.queryAfter.set(secret, addMinutes(new Date(), 5));
-            }
-            stopCacheTimer();
-        } else if (!cachedToken) {
-            // query was suppressed by the negative cache
-            result = 'throttled';
+            return token;
+        } finally {
+            stopTimer();
         }
+    }
 
-        emitMetricEvent(this.eventBus, TOKEN_CACHE_LOOKUP, {
-            cache: TOKEN_CACHE_NAME,
-            result,
-        });
-        return cachedToken && this.toApiToken(cachedToken);
+    private hasExpired(token: ApiTokenV2WithVerifier | undefined): boolean {
+        return Boolean(token?.expiresAt && isPast(token.expiresAt));
     }
 
     async getUserDefinedTokens(): Promise<IApiToken[]> {
@@ -401,13 +407,7 @@ class ApiTokenV2Service
         if (!updatedStoreToken) {
             return undefined;
         }
-        const cachedToken = this.activeTokens.get(previous.secret);
-        if (cachedToken) {
-            this.activeTokens.set(cachedToken.selector, {
-                ...cachedToken,
-                expiresAt: updatedStoreToken.expiresAt,
-            });
-        }
+
         const updated = this.toApiToken(updatedStoreToken);
         await this.eventService.storeEventsOrThrow([
             new ApiTokenUpdatedEvent({
@@ -428,7 +428,6 @@ class ApiTokenV2Service
             return false;
         }
         await this.apiTokenV2Store.delete(token.secret);
-        this.activeTokens.delete(token.secret);
         await this.eventService.storeEventsOrThrow([
             new ApiTokenDeletedEvent({
                 auditUser,
@@ -438,20 +437,22 @@ class ApiTokenV2Service
         return true;
     }
 
-    async getUserForToken({
-        secret,
-        selector,
-    }: ApiTokenV2Credential): Promise<IApiUser | undefined> {
-        const token = await this.apiTokenV2Store.getBySelector(selector);
-        if (
-            !token ||
-            !verifyToken(secret, token.verifier) ||
-            (token.expiresAt && isPast(token.expiresAt))
-        ) {
+    /**
+     * the auth path
+     *
+     * note: a revoked token stops working within the refresh
+     * window - the same bound v1 tokens have always had
+     */
+    async getUserForToken(
+        credential: ApiTokenV2Credential,
+    ): Promise<IApiUser | undefined> {
+        const token = await this.findVerifiedToken(credential);
+        if (!token) {
             return undefined;
         }
 
         void this.apiTokenV2Store.markSeenAt(token.selector);
+
         const apiUser: IApiUser = new ApiUser({
             tokenName: token.tokenName,
             permissions: resolveTokenPermissions(token.type),
@@ -490,7 +491,7 @@ class ApiTokenV2Service
 
     invalidateCache(selectors: string[]): void {
         for (const selector of selectors) {
-            this.activeTokens.delete(selector);
+            this.cache.invalidate(selector);
         }
     }
 

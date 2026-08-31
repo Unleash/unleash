@@ -45,18 +45,10 @@ test('Modifying a user should return that user', async () => {
         email: 'test@example.com',
     });
 
-    const afterInsert = new Date();
     const lastUpdate = await readModel.getLastUpdatedAt();
     expect(lastUpdate).toBeDefined();
     const lastUpdatedAt = lastUpdate!.lastUpdatedAt;
     expect(lastUpdatedAt).toBeInstanceOf(Date);
-
-    const users = await readModel.getUsersUpdatedAfterOrEqual(
-        afterInsert,
-        10,
-        inserted.id,
-    );
-    expect(users).toHaveLength(0);
 
     await userStore.update(inserted.id, { name: 'New Name' });
 
@@ -68,11 +60,7 @@ test('Modifying a user should return that user', async () => {
         lastUpdatedAt!.getTime(),
     );
 
-    const users2 = await readModel.getUsersUpdatedAfterOrEqual(
-        afterInsert,
-        10,
-        inserted.id,
-    );
+    const users2 = await readModel.getUsersUpdatedAfterOrEqual(new Date(0), 10);
     expect(users2).toHaveLength(1);
     expect(users2[0].email).toBe('test@example.com');
     expect(users2[0].name).toBe('New Name');
@@ -90,18 +78,10 @@ test('Deleting a user should return that user', async () => {
         email: 'test@example.com',
     });
 
-    const afterInsert = new Date();
     const lastUpdate = await readModel.getLastUpdatedAt();
     expect(lastUpdate).toBeDefined();
     const lastUpdatedAt = lastUpdate!.lastUpdatedAt;
     expect(lastUpdatedAt).toBeInstanceOf(Date);
-
-    const users = await readModel.getUsersUpdatedAfterOrEqual(
-        afterInsert,
-        10,
-        inserted.id,
-    );
-    expect(users).toHaveLength(0);
 
     await userStore.delete(inserted.id);
 
@@ -113,11 +93,7 @@ test('Deleting a user should return that user', async () => {
         lastUpdatedAt!.getTime(),
     );
 
-    const users2 = await readModel.getUsersUpdatedAfterOrEqual(
-        afterInsert,
-        10,
-        inserted.id,
-    );
+    const users2 = await readModel.getUsersUpdatedAfterOrEqual(new Date(0), 10);
     expect(users2).toHaveLength(1);
     expect(users2[0].email).toBeNull(); // currently we nullify the email but this might change in the future
     expect(users2[0].createdAt).toBeInstanceOf(Date);

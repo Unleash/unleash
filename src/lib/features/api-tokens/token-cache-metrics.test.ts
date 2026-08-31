@@ -12,9 +12,7 @@ import { DEFAULT_ENV } from '../../util/index.js';
 
 const setup = () => {
     register.clear();
-    const config = createTestConfig({
-        experimental: { flags: { useMemoizedActiveTokens: true } },
-    });
+    const config = createTestConfig();
     const stores = createStores();
     stores.environmentStore = new FakeEnvironmentStore();
 

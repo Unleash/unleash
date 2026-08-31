@@ -62,13 +62,9 @@ type ClientMetricsProjectPayload = {
     projects: string[];
 };
 
-type TokenCacheName = 'api-token-v1' | 'api-token-v2';
-
-type TokenLookupResult = 'hit' | 'miss' | 'throttled';
-
 type TokenCacheLookupPayload = {
-    cache: TokenCacheName;
-    result: TokenLookupResult;
+    cache: string;
+    result: 'hit' | 'miss' | 'throttled';
 };
 
 type MetricEventPayloads = {
@@ -125,8 +121,6 @@ export {
     TOKEN_CACHE_LOOKUP,
     type MetricEvent,
     type MetricEventPayload,
-    type TokenCacheName,
-    type TokenLookupResult,
     emitMetricEvent,
     onMetricEvent,
 };

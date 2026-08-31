@@ -136,24 +136,16 @@ export default class EdgeService {
         const validatedTokens: EdgeTokenSchema[] = [];
         for (const token of tokens) {
             const parsedToken = parseAuthorizationToken(token);
-            const found =
+            const v2Token =
                 parsedToken?.kind === AuthorizationTokenKind.API_TOKEN &&
                 parsedToken.version === 'v2'
                     ? await this.apiTokenV2Service.getTokenWithCache(
                           parsedToken,
                       )
                     : undefined;
-            if (found) {
-                validatedTokens.push({
-                    token: token,
-                    type: found.type,
-                    projects: found.projects,
-                    environment: found.environment,
-                });
-            }
-        }
-        for (const token of tokens) {
-            const found = await this.apiTokenService.getTokenWithCache(token);
+            const found =
+                v2Token ??
+                (await this.apiTokenService.getTokenWithCache(token));
             if (found) {
                 validatedTokens.push({
                     token: token,

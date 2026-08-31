@@ -27,30 +27,22 @@ import {
 } from '../types/index.js';
 import { omitKeys } from '../util/index.js';
 import type EventService from '../features/events/event-service.js';
-import { addMinutes, isPast } from 'date-fns';
-import metricsHelper from '../util/metrics-helper.js';
-import {
-    FUNCTION_TIME,
-    TOKEN_CACHE_LOOKUP,
-    emitMetricEvent,
-    type TokenLookupResult,
-} from '../metric-events.js';
+import { isPast } from 'date-fns';
 import { throwExceedsLimitError } from '../error/exceeds-limit-error.js';
 import type EventEmitter from 'events';
 import type { ResourceLimitsService } from '../features/resource-limits/resource-limits-service.js';
+import {
+    createTokenCache,
+    type TokenCacheInterface,
+} from '../features/apitokencache/api-token-cache.js';
 
-const TOKEN_CACHE_NAME = 'api-token-v1' as const;
+const TOKEN_CACHE_NAME = 'plain-text-tokens-cache' as const;
 
 export interface ApiTokenAuthenticationContext {
     applicationName?: string;
 }
 
-/**
- * `default:development.a1b2c3d4...` - enough to identify, not enough to use.
- * The input is whatever the client sent, so anything unparseable is dropped
- * rather than echoed into the log.
- */
-const mask = (secret: string): string => {
+const _mask = (secret: string): string => {
     const dot = secret.indexOf('.');
     return dot === -1 ? '<unparseable>' : `${secret.slice(0, dot + 9)}...`;
 };
@@ -81,10 +73,9 @@ export class ApiTokenService {
 
     private logger: Logger;
 
-    private tokensBySecret = new Map<string, IApiToken>(); // holds every token once
-    private tokensByAlias = new Map<string, IApiToken>();
+    private tokensBySecret: TokenCacheInterface<IApiToken>;
 
-    private queryAfter = new Map<string, Date>();
+    private tokensByAlias: TokenCacheInterface<IApiToken>;
 
     private warnedAliasTokens = new Set<string>();
 
@@ -93,8 +84,6 @@ export class ApiTokenService {
     private lastSeenSecrets: Set<string> = new Set<string>();
 
     private flagResolver: IFlagResolver;
-
-    private timer: Function;
 
     private resourceLimitsService: ResourceLimitsService;
 
@@ -122,16 +111,24 @@ export class ApiTokenService {
         // Assigned before fetchActiveTokens() below, which now emits on it.
         this.eventBus = config.eventBus;
 
-        if (!this.flagResolver.isEnabled('useMemoizedActiveTokens')) {
-            // This is probably not needed because the scheduler will run it
-            this.fetchActiveTokens();
-        }
-        this.updateLastSeen();
-        this.timer = (functionName: string) =>
-            metricsHelper.wrapTimer(config.eventBus, FUNCTION_TIME, {
-                className: 'ApiTokenService',
-                functionName,
-            });
+        this.tokensBySecret = createTokenCache<IApiToken>(TOKEN_CACHE_NAME, {
+            flagResolver: this.flagResolver,
+            eventBus: this.eventBus,
+            logger: this.logger,
+        });
+
+        // Deprecated aliases come from the embedded-proxy migration. The
+        // store lookup is indexed by token.secret, so aliases cannot use the
+        // normal read-through loader and must be kept in a separate index
+        // rebuilt from the complete active-token set.
+        this.tokensByAlias = createTokenCache<IApiToken>(
+            `${TOKEN_CACHE_NAME}-by-alias`,
+            {
+                flagResolver: this.flagResolver,
+                eventBus: this.eventBus,
+                logger: this.logger,
+            },
+        );
     }
 
     /**
@@ -151,22 +148,24 @@ export class ApiTokenService {
         }
     }
 
-    /** Swap the whole set. */
-    private replaceActiveTokens(tokens: IApiToken[]): void {
+    /** Warm the caches from the store. */
+    private replaceActiveTokens(activeTokens: IApiToken[]): void {
         const bySecret = new Map<string, IApiToken>();
         const byAlias = new Map<string, IApiToken>();
 
-        tokens.forEach((token) => {
+        activeTokens.forEach((token) => {
             if (token.secret) {
                 bySecret.set(token.secret, token);
             }
+
             if (token.alias) {
+                // the alias is rebuilt wholesale - no other source
                 byAlias.set(token.alias, token);
             }
         });
 
-        this.tokensBySecret = bySecret;
-        this.tokensByAlias = byAlias;
+        this.tokensBySecret.setEntries(Array.from(bySecret.entries()));
+        this.tokensByAlias.setEntries(Array.from(byAlias.entries()));
     }
 
     private cacheActiveToken(token: IApiToken): void {
@@ -178,25 +177,8 @@ export class ApiTokenService {
         }
     }
 
-    private findCachedToken(secret: string): IApiToken | undefined {
-        const bySecret = this.tokensBySecret.get(secret);
-        if (bySecret) {
-            // recheck if token is active (could have expired inside the window)
-            return this.ifActive(bySecret);
-        }
-
-        // check if any aliases - coming from the embedded-proxy migration
-        // aliases are unqueryable - on token.secret the filters
-        const byAlias = this.tokensByAlias.get(secret);
-        if (!byAlias) {
-            return undefined;
-        }
-
-        return this.ifActive(byAlias);
-    }
-
-    private ifActive(token?: IApiToken): IApiToken | undefined {
-        return token?.expiresAt && isPast(token.expiresAt) ? undefined : token;
+    private hasExpired(token?: IApiToken): boolean {
+        return Boolean(token?.expiresAt && isPast(token.expiresAt));
     }
 
     private warnAliasUsage(
@@ -214,7 +196,7 @@ export class ApiTokenService {
 
         this.warnedAliasTokens.add(key);
         this.logger.warn(
-            `API token "${token.tokenName}" (environment: ${token.environment}, application: ${context.applicationName ?? 'unknown'}, created: ${token.createdAt.toISOString()}) was resolved through the deprecated alias column during authentication. It should be rotated before alias support is removed.`,
+            `API token "${token.tokenName}" (environment: ${token.environment}, application: ${context?.applicationName ?? 'unknown'}, created: ${token.createdAt.toISOString()}) was resolved through the deprecated alias column during authentication. It should be rotated before alias support is removed.`,
         );
     }
 
@@ -222,77 +204,30 @@ export class ApiTokenService {
         return this.store.get(secret);
     }
 
-    async getTokenWithCache(secret: string): Promise<IApiToken | undefined> {
+    async getTokenWithCache(
+        secret: string,
+        context: ApiTokenAuthenticationContext = {},
+    ): Promise<IApiToken | undefined> {
         if (!secret) {
             return undefined;
         }
 
-        let result: TokenLookupResult = 'miss';
-        let token = this.findCachedToken(secret);
-
-        if (token) {
-            result = 'hit';
-        } else if (this.isThrottled(secret)) {
-            // store has recently rejected the secret
-            // query was suppressed by the negative cache
-            result = 'throttled';
-        } else {
-            // read-through for a secret the cache does not have yet
-            token = await this.queryToken(secret);
-        }
-
-        emitMetricEvent(this.eventBus, TOKEN_CACHE_LOOKUP, {
-            cache: TOKEN_CACHE_NAME,
-            result,
+        let token = await this.tokensBySecret.get(secret, (key) => {
+            return this.getToken(key);
         });
-        return token;
-    }
-
-    private isThrottled(secret: string): boolean {
-        const nextAllowedQuery = this.queryAfter.get(secret);
-        if (!nextAllowedQuery || isPast(nextAllowedQuery)) {
-            return false;
+        if (token && !this.hasExpired(token)) {
+            return token;
+        }
+        token = await this.tokensByAlias.get(secret, async (_key) => undefined);
+        if (token && !this.hasExpired(token)) {
+            this.warnAliasUsage(token, context);
+            return token;
         }
 
-        // a client looping on a bad token would flood the log
-        if (Math.random() < 0.1) {
-            this.logger.info(
-                `Token ${mask(secret)} rate limited until: ${nextAllowedQuery}`,
-            );
-        }
-        return true;
-    }
-
-    private async queryToken(secret: string): Promise<IApiToken | undefined> {
-        if (this.queryAfter.size > 1000) {
-            this.logger.warn(
-                `${TOKEN_CACHE_NAME}: negative lookup cache reached 1000 entries and was cleared.`,
-            );
-            // TODO: clearing loses all rate-limiting. Maybe FIFO eviction with a hard limit?
-            this.queryAfter.clear();
-        }
-
-        const stopCacheTimer = this.timer('getTokenWithCache.query');
-        try {
-            const found = await this.store.get(secret);
-            const activeToken = this.ifActive(found);
-
-            if (found && !activeToken) {
-                this.logger.info('Token has expired');
-            }
-
-            if (activeToken) {
-                this.cacheActiveToken(activeToken);
-                return activeToken;
-            }
-
-            // Don't re-query an invalid or expired secret for 5 minutes.
-            this.queryAfter.set(secret, addMinutes(new Date(), 5));
-
+        if (!token || this.hasExpired(token)) {
             return undefined;
-        } finally {
-            stopCacheTimer();
         }
+        return token;
     }
 
     async updateLastSeen(): Promise<void> {
@@ -345,11 +280,8 @@ export class ApiTokenService {
         secret: string,
         context: ApiTokenAuthenticationContext = {},
     ): Promise<IApiUser | undefined> {
-        const token = await this.getTokenWithCache(secret);
+        const token = await this.getTokenWithCache(secret, context);
         if (token) {
-            if (token.alias === secret) {
-                this.warnAliasUsage(token, context);
-            }
             this.lastSeenSecrets.add(token.secret);
             const apiUser: IApiUser = new ApiUser({
                 tokenName: token.tokenName,

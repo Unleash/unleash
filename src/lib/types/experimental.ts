@@ -30,7 +30,7 @@ export type IFlagKey =
     | 'feedbackPosting'
     | 'extendedUsageMetrics'
     | 'feedbackComments'
-    | 'useMemoizedActiveTokens'
+    | 'usePromiseTokenCache'
     | 'queryMissingTokens' // TODO: nowhere used - to be removed
     | 'disableUpdateMaxRevisionId'
     | 'disablePublishUnannouncedEvents'
@@ -169,8 +169,8 @@ const flags: IFlags = {
                 '',
         },
     },
-    useMemoizedActiveTokens: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_MEMOIZED_ACTIVE_TOKENS,
+    usePromiseTokenCache: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_USE_PROMISE_TOKEN_CACHE,
         false,
     ),
     disableUpdateMaxRevisionId: parseEnvVarBoolean(

@@ -6,8 +6,8 @@ import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR.js';
 import useUiConfig from '../useUiConfig/useUiConfig.js';
 
 export const useActiveSessions = () => {
-    const { isEnterprise, uiConfig } = useUiConfig();
-    const enabled = isEnterprise() && Boolean(uiConfig.flags.sessionInspector);
+    const { isEnterprise } = useUiConfig();
+    const enabled = isEnterprise();
 
     const { data, error, mutate } = useConditionalSWR(
         enabled,

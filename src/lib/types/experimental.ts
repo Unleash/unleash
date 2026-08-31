@@ -47,7 +47,6 @@ export type IFlagKey =
     | 'productivityReportUnsubscribers'
     | 'tokenExpiryNotifications'
     | 'showUserDeviceCount'
-    | 'sessionInspector'
     | 'memorizeStats'
     | 'deltaApi'
     | 'uniqueSdkTracking'
@@ -234,10 +233,6 @@ const flags: IFlags = {
     ),
     showUserDeviceCount: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SHOW_USER_DEVICE_COUNT,
-        false,
-    ),
-    sessionInspector: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SESSION_INSPECTOR,
         false,
     ),
     deltaApi: parseEnvVarBoolean(

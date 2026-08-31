@@ -84,7 +84,6 @@ export type UiFlags = {
     flagCreator?: boolean;
     productivityReportEmail?: boolean;
     showUserDeviceCount?: boolean;
-    sessionInspector?: boolean;
     consumptionModel?: boolean;
     consumptionModelUI?: boolean;
     disableImpactMetrics?: boolean;

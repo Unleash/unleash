@@ -182,10 +182,7 @@ export default async function getApp(
         rbacMiddleware(config, stores, services.accessService),
     );
 
-    app.use(
-        `${baseUriPath}/api/admin`,
-        sessionContextMiddleware(config.flagResolver),
-    );
+    app.use(`${baseUriPath}/api/admin`, sessionContextMiddleware());
 
     app.use(`${baseUriPath}/api/admin`, originMiddleware(config));
 

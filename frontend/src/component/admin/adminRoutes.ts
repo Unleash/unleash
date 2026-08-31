@@ -66,7 +66,6 @@ export const adminRoutes: INavigationMenuItem[] = [
             adminSettings: true,
             mode: ['enterprise'],
         },
-        flag: 'sessionInspector',
         group: 'users',
     },
 

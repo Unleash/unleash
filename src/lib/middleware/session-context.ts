@@ -1,5 +1,4 @@
 import type { RequestHandler } from 'express';
-import type { IFlagResolver } from '../types/experimental.js';
 import { extractClientIp } from '../util/extract-user.js';
 
 /**
@@ -10,21 +9,12 @@ import { extractClientIp } from '../util/extract-user.js';
  * filter sessions by IP and derive browser/device details without adding
  * dedicated columns to the session table.
  *
- * Capture is gated on the `sessionInspector` flag. The flag is resolved per
- * request (not at mount time) so it can be toggled dynamically without
- * restarting the application.
- *
  * We only stamp values once (when they are missing) to avoid marking the
  * session dirty on every request, which keeps the session store write-once per
  * login.
  */
-export const sessionContextMiddleware = (
-    flagResolver: IFlagResolver,
-): RequestHandler => {
+export const sessionContextMiddleware = (): RequestHandler => {
     return (req, _res, next) => {
-        if (!flagResolver.isEnabled('sessionInspector')) {
-            return next();
-        }
         const session = req.session as
             | (typeof req.session & {
                   user?: unknown;

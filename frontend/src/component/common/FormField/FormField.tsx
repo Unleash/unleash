@@ -27,6 +27,9 @@ const StyledDescription = styled('p')(({ theme }) => ({
 
 const StyledControl = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(1),
+    '& .MuiOutlinedInput-root': {
+        border: `1px solid ${theme.palette.divider}`,
+    },
 }));
 
 const StyledControlAligner = styled('div')(({ theme }) => ({

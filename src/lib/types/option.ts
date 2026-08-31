@@ -227,6 +227,7 @@ export interface IUIConfig {
     flags?: IFlags;
     unleashToken?: string;
     unleashContext?: IFlagContext;
+    billing?: 'subscription' | 'pay-as-you-go';
 }
 
 export interface ICspDomainOptions {

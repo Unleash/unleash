@@ -86,6 +86,7 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
             : [];
         const hubspotChatEnabled =
             Boolean(config.server.hubspotPortalId) &&
+            config.ui?.billing === 'pay-as-you-go' &&
             config.flagResolver.isEnabled('hubspotChatEnabled');
         const hubspotScriptSrc = hubspotChatEnabled ? HUBSPOT_SCRIPT_SRC : [];
         const hubspotConnectSrc = hubspotChatEnabled ? HUBSPOT_CONNECT_SRC : [];

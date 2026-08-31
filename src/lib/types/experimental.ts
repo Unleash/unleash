@@ -79,6 +79,7 @@ export type IFlagKey =
     | 'recordSdkFlavorMetrics'
     | 'searchDocsWidget'
     | 'usersTabsUI'
+    | 'semverBuildMetadata'
     | keyof IFlagKeyOverrides;
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -354,6 +355,10 @@ const flags: IFlags = {
     ),
     usersTabsUI: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_USERS_TABS_UI,
+        false,
+    ),
+    semverBuildMetadata: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SEMVER_BUILD_METADATA,
         false,
     ),
 };

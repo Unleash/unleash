@@ -109,6 +109,7 @@ export type UiFlags = {
     searchDocsWidget?: boolean;
     usersTabsUI?: boolean;
     exposureBasedAutomation?: boolean;
+    semverBuildMetadata?: boolean;
 };
 
 export interface IVersionInfo {

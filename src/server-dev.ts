@@ -62,6 +62,7 @@ process.nextTick(async () => {
                         onboardingIntroTour: true,
                         topLabelInputs: true,
                         recordSdkFlavorMetrics: true,
+                        semverBuildMetadata: true,
                     },
                 },
                 authentication: {

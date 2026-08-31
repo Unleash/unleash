@@ -113,7 +113,7 @@ Reuse existing names before inventing new ones:
 
 Design the response shape for the specific use case. Do not return the full internal model on the theory that clients can "just pick what they want". It's way harder to remove problematic fields than add them when needed.
 
-Every field adds wire cost and couples the client to the internal shape. If the UI does not render a field, do not return it.
+Every field adds wire cost and couples the client to the internal shape. If the intended consumer does not need a field, do not return it.
 
 If callers legitimately need different amounts of data from the same list, prefer separate endpoints over a `?view=minimal|full` parameter — dedicated endpoints stay simpler to reason about and cache.
 

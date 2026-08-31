@@ -4,7 +4,9 @@ title: "ADR: REST API Guidelines"
 
 ## Background
 
-This ADR captures the conventions we want new endpoints to follow. It applies to new work. Reshaping an existing endpoint is a breaking change for its consumers, so bringing an older endpoint into line usually means shipping a new endpoint alongside it and deprecating the old one.
+This ADR captures the conventions we want new endpoints to follow. It applies to new work — but that does not mean creating a replacement endpoint whenever an existing one falls short of these guidelines. Every public endpoint is a contract we maintain and deprecate for a long time; we have OpenAPI diff tooling precisely because breaking or removing one is expensive.
+
+When an existing endpoint doesn't fit a new use case, first see whether it can support it in a backward-compatible way. Create a new endpoint only when a breaking change leaves no other path (e.g. turning a bare-array response into an envelope) — see [URL structure](#url-structure) for when a purpose-built endpoint is warranted.
 
 For request-body conventions (handling `undefined` vs `null` on POST/PUT), see [POST/PUT API payload](/contributing/ADRs/back-end/POST-PUT-api-payload). For response-schema precision, see [Separation of request and response schemas](/contributing/ADRs/overarching/separation-request-response-schemas).
 
@@ -14,13 +16,12 @@ General guidelines for new API endpoints. It's fine to do something different if
 
 ### URL structure
 
-Pick the prefix that matches the audience of the new endpoint
+Pick the prefix that matches the endpoint's role:
 
 * `/api/client` — server SDKs evaluating flags. Public, stable.
 * `/api/frontend` — browser SDKs evaluating flags. Public, stable.
 * `/edge` — Unleash Edge.
 * `/api/integration/*` — new integrations.
-* `/api/ui` — new UI-only endpoints.
 * `/api/admin` — documented public API.
 
 Other prefixes exist for context, but new endpoints should not add to them:
@@ -30,9 +31,7 @@ Other prefixes exist for context, but new endpoints should not add to them:
 * `/health`, `/ready`, `/internal-backstage` — operational endpoints for orchestrators and monitoring.
 * `/auth/*`, `/invite`, `/logout`, `/feedback` — public browser flows.
 
-Stability within any prefix is signalled by the `release: { alpha | beta | stable }` field — alpha endpoints are hidden from public docs. See [API Version Tracking and Stability Lifecycle](/contributing/ADRs/back-end/api-version-tracking). Prefix says who the endpoint is for; `release` says how stable it is.
-
-Prefer purpose-built endpoints for specific UI needs over stretching a generic endpoint with a narrow filter. A dedicated endpoint documents intent, keeps its response shape minimal, and can be optimized independently. See [Write model vs Read models](/contributing/ADRs/back-end/write-model-vs-read-models) for the internal read/write split this endpoint pattern reflects.
+Stability within any prefix is signalled by the `release: { alpha | beta | stable }` field — alpha endpoints are hidden from public docs. See [API Version Tracking and Stability Lifecycle](/contributing/ADRs/back-end/api-version-tracking). The URL prefix should describe the resource, not the current audience — an endpoint can graduate from alpha to stable without moving path.
 
 ### Shadowing dynamic path segments
 
@@ -78,10 +77,10 @@ What to do:
 }
 ```
 * Name the collection field after the resource (`users`, `flagCreators`, `events`) rather than a generic `data`. It reads better at call sites and matches existing endpoints.
-* New list endpoints should have a `limit` by default. 
-  * While adding `limit` it usually makes sense to add [Pagination](#pagination).
-  * But, if you're not adding pagination (even though you should) then think of some other way to get the data beyond the limit — see [Query parameter conventions](#query-parameter-conventions) for the standard sort and filter names.
-* Endpoints should set a `maxLimit`. Always return the applied `total`, `limit`, and `offset` in the response — even when the caller did not paginate — so the envelope stays consistent and callers can see what was actually used. E.g.: a request for `limit=10000000` may still return max `1000` items.
+* New list endpoints should have a `limit` by default.
+* Endpoints should set a `maxLimit`. 
+* Always return the applied `limit` and `offset` in the response — even when the caller did not paginate — so the envelope stays consistent and callers can see what was actually used. E.g.: a request for `limit=10000000` may still return max `1000` items. 
+* Include `total` when the endpoint can support it (see [Pagination](#pagination) for when that makes sense). 
 
 ```json
 {
@@ -96,9 +95,9 @@ What to do:
 
 * Because new list endpoints should have a `limit` by default, users need some way of getting values past the limit e.g.: `Load more` or see `page 2` of the data. 
 * New list endpoints should paginate by default. It is much cheaper to opt in from day one than to retrofit an endpoint whose clients rely on receiving the full list in one call.
-* Default to offset/limit with `?offset=` and `?limit=`, and include `total` in the response so the UI can render counts and page controls.
+* Default to offset/limit with `?offset=` and `?limit=`, and include `total` if possible. Use `hasMore` (or fetch `limit + 1`) when computing `total` would be too expensive.
 * Choose cursor-based pagination (`?cursor=` + `hasMore`) only when stability across pages matters more than a known `total` — for example, endpoints served from a rapidly changing feed.
-* Do not skip pagination because "the list will be short". Instances vary; assumptions about size that hold for one customer routinely fail for another. Response size is not always the limiting factor; sometimes DB load may force us to introduce a limit. 
+* Paginate any collection whose cardinality is unbounded, customer-controlled, or whose cost can materially grow. "Usually short" is not a reason to skip pagination. Instance sizes vary and DB load can force a limit later. Collections with a small, domain-defined upper bound (e.g. feature strategy types) can return the full list even withing the fist page of pagination for most cases. 
 
 ### Query parameter conventions
 
@@ -135,6 +134,5 @@ This is the response-side counterpart to [Separation of request and response sch
 
 ### Trade-offs
 
-* Purpose-built endpoints multiply endpoint count compared to a single generic endpoint with many filters. We accept this in exchange for smaller responses and clearer intent.
-* Enveloping list responses is a breaking change for endpoints that currently return bare arrays. This convention applies to new endpoints; migrating an existing one means adding a new endpoint and deprecating the old. This plan assumes we leave the existing endpoints as is making them inconsistent with our new guidelines. 
+* Enveloping list responses can be a breaking change for some endpoints. This convention applies to new endpoints; existing bare-array endpoints stay as they are unless there is an independent reason to reshape. 
 * Pushing all filtering into SQL sometimes means more complex queries (e.g. `COALESCE` for fallback columns). We accept the query complexity in exchange for correct pagination.

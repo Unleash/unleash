@@ -8,6 +8,7 @@ import {
 } from 'react';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi.ts';
+import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash.ts';
 import { IntroDialog } from './IntroDialog.tsx';
 
 export const ONBOARDING_INTRO_FINISHED_SPLASH_ID = 'onboarding-intro-finished';
@@ -36,6 +37,7 @@ const IntroContext = createContext<IntroContextValue | null>(null);
 export const IntroProvider = ({ children }: { children: ReactNode }) => {
     const enabled = useUiFlag('onboardingIntroTour');
     const { setSplashSeen } = useSplashApi();
+    const { refetchSplash } = useAuthSplash();
     const [isOpen, setIsOpen] = useState(false);
     // Held in refs so re-renders don't clear pending callbacks between the
     // open() call and the eventual close/finish.
@@ -69,9 +71,9 @@ export const IntroProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     const handleFinish = useCallback(() => {
-        setSplashSeen(ONBOARDING_INTRO_FINISHED_SPLASH_ID);
+        setSplashSeen(ONBOARDING_INTRO_FINISHED_SPLASH_ID).then(refetchSplash);
         onFinishRef.current?.();
-    }, [setSplashSeen]);
+    }, [setSplashSeen, refetchSplash]);
 
     return (
         <IntroContext.Provider value={{ open }}>

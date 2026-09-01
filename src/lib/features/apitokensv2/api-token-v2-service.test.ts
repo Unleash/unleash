@@ -519,3 +519,37 @@ describe.each([
         ).resolves.toBeUndefined();
     });
 });
+
+test('serves cached tokens even after deletion in the backing store (until invalidated/evicted)', async () => {
+    currentUsePromiseTokenCache = true;
+    const apiTokenV2Store = new FakeApiTokenV2Store();
+    const environmentStore = new FakeEnvironmentStore();
+    await environmentStore.create({
+        enabled: true,
+        protected: false,
+        sortOrder: 0,
+        type: 'production',
+        name: 'production',
+    });
+    const { service } = createService({
+        environmentStore,
+        apiTokenV2Store,
+    });
+    const token = await service.create(tokenInput, SYSTEM_USER_AUDIT);
+    const credential: ApiTokenV2Credential = {
+        kind: AuthorizationTokenKind.API_TOKEN,
+        version: 'v2',
+        secret: token.secret,
+        selector: token.selector,
+    };
+
+    await expect(service.getTokenWithCache(credential)).resolves.toBeDefined();
+    expect(apiTokenV2Store.getBySelectorCalls).toBe(1);
+
+    const now = Date.now();
+    vi.spyOn(Date, 'now').mockReturnValue(now + 31_000);
+    await apiTokenV2Store.delete(token.selector);
+
+    await expect(service.getTokenWithCache(credential)).resolves.toBeDefined();
+    expect(apiTokenV2Store.getBySelectorCalls).toBe(1);
+});

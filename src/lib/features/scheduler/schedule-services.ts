@@ -71,6 +71,13 @@ export const scheduleServices = (
         'updateLastSeen',
     );
 
+    schedulerService.schedule(
+        apiTokenV2Service.pollTokenChanges.bind(apiTokenV2Service),
+        secondsToMilliseconds(10),
+        'pollApiTokenV2Changes',
+        0,
+    );
+
     // TODO this works fine for keeping labeledAppCounts up to date, but
     // it would be nice if we can keep client_apps_total prometheus metric
     // up to date. We'd need to have access to DbMetricsMonitor, which is

@@ -232,7 +232,10 @@ export const createServices = (
 
     const apiTokenV2Service = db
         ? createApiTokenV2Service(db, config)
-        : createFakeApiTokenV2Service(config);
+        : createFakeApiTokenV2Service(config, stores, {
+              eventService,
+              resourceLimitsService,
+          });
 
     const transactionalApiTokenV2Service = db
         ? withTransactional((db) => createApiTokenV2Service(db, config), db)

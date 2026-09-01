@@ -1,4 +1,4 @@
-import { isPast } from 'date-fns';
+import { isAfter, isPast, subHours } from 'date-fns';
 import ApiUser, { type IApiUser } from '../../types/api-user.js';
 import { ApiTokenType, type IApiToken } from '../../types/model.js';
 import {
@@ -34,12 +34,15 @@ import {
 } from '../../types/models/api-token.js';
 import type EventEmitter from 'events';
 import type { Db } from '../../db/db.js';
+import type { IEventStore } from '../../types/stores/event-store.js';
+import { EventStore } from '../events/event-store.js';
+import { API_TOKEN_DELETED, API_TOKEN_UPDATED } from '../../events/index.js';
 import { ApiTokenV2Store } from './api-token-v2-store.js';
 import EnvironmentStore from '../project-environments/environment-store.js';
-import { createEventsService } from '../../server-impl.js';
 import { FakeApiTokenV2Store } from './fake-api-token-v2-store.js';
 import FakeEnvironmentStore from '../project-environments/fake-environment-store.js';
 import {
+    createEventsService,
     createFakeEventsService,
     type EdgeEnvironmentsProjectsListSchema,
     type EdgeTokenSchema,
@@ -61,7 +64,8 @@ import {
     type TokenCacheInterface,
 } from '../apitokencache/api-token-cache.js';
 
-const TOKEN_LIFETIME_AFTER_LAST_SEEN_IN_MINUTES = 7 * 24 * 60;
+const SYSTEM_TOKEN_LIFETIME_AFTER_LAST_SEEN_IN_MINUTES = 7 * 24 * 60;
+const TOKEN_CACHE_WARMUP_SEEN_WITHIN_HOURS = 6;
 const TOKEN_CACHE_NAME = 'secure-tokens-cache' as const;
 
 const resolveTokenPermissions = (tokenType: ApiTokenType) => {
@@ -85,6 +89,7 @@ export const createApiTokenV2Service = (
         {
             apiTokenV2Store: new ApiTokenV2Store(db),
             environmentStore: new EnvironmentStore(db, config.eventBus, config),
+            eventStore: new EventStore(db, config.getLogger),
         },
         config,
         {
@@ -111,9 +116,10 @@ export const createFakeApiTokenV2Service = (
             eventStore: fakeEventStore,
             featureTagStore: featureTagStore,
         });
-    const resourceLimitsService = new ResourceLimitsService(config);
+    const resourceLimitsService =
+        services?.resourceLimitsService ?? new ResourceLimitsService(config);
     return new ApiTokenV2Service(
-        { apiTokenV2Store, environmentStore },
+        { apiTokenV2Store, environmentStore, eventStore: fakeEventStore },
         config,
         { eventService, resourceLimitsService },
     );
@@ -131,7 +137,9 @@ export interface ReadOnlyApiTokenV2Service {
     getUserDefinedTokens(): Promise<IApiToken[]>;
 
     fetchActiveTokens(): Promise<void>;
+    initialize(): Promise<void>;
     invalidateCache(selectors: string[]): void;
+    pollTokenChanges(): Promise<void>;
 }
 
 export interface AdminApiTokenV2Service {
@@ -165,14 +173,20 @@ class ApiTokenV2Service
     private logger: Logger;
 
     private cache: TokenCacheInterface<ApiTokenV2WithVerifier>;
+    private eventStore: IEventStore;
 
+    private tokenRevision = 0;
     private timer: Function;
 
     constructor(
         {
             apiTokenV2Store,
             environmentStore,
-        }: Pick<IUnleashStores, 'apiTokenV2Store' | 'environmentStore'>,
+            eventStore,
+        }: Pick<
+            IUnleashStores,
+            'apiTokenV2Store' | 'environmentStore' | 'eventStore'
+        >,
         {
             eventBus,
             getLogger,
@@ -186,6 +200,7 @@ class ApiTokenV2Service
         this.apiTokenV2Store = apiTokenV2Store;
         this.eventService = eventService;
         this.environmentStore = environmentStore;
+        this.eventStore = eventStore;
         this.resourceLimitsService = resourceLimitsService;
         this.eventBus = eventBus;
         this.logger = getLogger('features/apitokensv2/api-token-v2-service.ts');
@@ -200,10 +215,86 @@ class ApiTokenV2Service
             });
     }
 
+    async initialize(): Promise<void> {
+        // initialize token revision to avoid unnecessary cache invalidation on startup
+        // because of the read through cache, we don't need to pre-load all tokens, but we still need to know the latest revision
+        // to query changes that happened after the last seen token revision, so we can invalidate the cache for those tokens
+        this.tokenRevision = await this.eventStore.getMaxTokenRevisionId();
+
+        if (!this.cache.usesReadThroughCache()) {
+            return; // only read-through cache needs to be initialized, since it is not pre-loaded with all tokens
+        }
+        const recentTime = subHours(
+            new Date(),
+            TOKEN_CACHE_WARMUP_SEEN_WITHIN_HOURS,
+        );
+        const recentlySeenTokens = (token: ApiTokenV2WithVerifier) =>
+            token.seenAt && isAfter(token.seenAt, recentTime);
+        const tokens = await this.apiTokenV2Store.getAllActive();
+        this.cache.setEntries(
+            tokens
+                .filter(recentlySeenTokens)
+                .map((token) => [token.selector, token]),
+        );
+    }
+
+    async pollTokenChanges(): Promise<void> {
+        if (!this.cache.usesReadThroughCache()) {
+            // old cache implementation could reload everything on changes but because
+            // it refreshes every minute, I decided to keep that behavior for now.
+            return;
+        }
+        try {
+            const revision = await this.eventStore.getMaxTokenRevisionId(
+                this.tokenRevision,
+            );
+            if (revision <= this.tokenRevision) {
+                return;
+            }
+
+            const events = await this.eventStore.getTokenRevisionRange(
+                this.tokenRevision,
+                revision,
+            );
+            for (const event of events) {
+                const payload = (
+                    event.type === API_TOKEN_DELETED
+                        ? event.preData
+                        : event.data
+                ) as { selector?: unknown; tokenVersion?: unknown } | undefined;
+                if (
+                    payload?.tokenVersion === 2 &&
+                    typeof payload?.selector === 'string' &&
+                    (event.type === API_TOKEN_UPDATED ||
+                        event.type === API_TOKEN_DELETED)
+                ) {
+                    // invalidate the cache for this selector, since the token has been updated or deleted
+                    // created ones will be read on demand, so no need to pre-load them
+                    this.cache.invalidate(payload.selector);
+                }
+            }
+            this.tokenRevision = revision;
+        } catch (e) {
+            this.logger.error(
+                `Failed to poll token changes; the cache ${this.cache.name} may be stale until the next successful refresh`,
+                e,
+            );
+        }
+    }
+
+    /**
+     * Bulk-load only the legacy cache. The single-flight cache is intentionally
+     * read-through: a selector is loaded on demand and its sliding TTL keeps hot
+     * tokens resident without re-reading every active token on a fixed schedule.
+     * Successful legacy lookups also seed it so a runtime cache switch is warm.
+     */
     async fetchActiveTokens(): Promise<void> {
+        if (this.cache.usesReadThroughCache()) {
+            return; // skip for read through cache
+        }
         try {
             const tokens = await this.apiTokenV2Store.getAllActive();
-            await this.cache.setEntries(
+            this.cache.setEntries(
                 tokens.map((token) => [token.selector, token]),
             );
         } catch (e) {
@@ -471,7 +562,7 @@ class ApiTokenV2Service
 
         const deleted =
             await this.apiTokenV2Store.deleteSystemCreatedTokensNotSeen(
-                TOKEN_LIFETIME_AFTER_LAST_SEEN_IN_MINUTES,
+                SYSTEM_TOKEN_LIFETIME_AFTER_LAST_SEEN_IN_MINUTES,
             );
 
         if (deleted.length === 0) {

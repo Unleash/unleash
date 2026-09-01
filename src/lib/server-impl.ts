@@ -236,10 +236,11 @@ export async function initialServiceSetup(
     {
         userService,
         apiTokenService,
+        apiTokenV2Service,
         edgeService,
     }: Pick<
         IUnleashServices,
-        'userService' | 'apiTokenService' | 'edgeService'
+        'userService' | 'apiTokenService' | 'apiTokenV2Service' | 'edgeService'
     >,
 ) {
     await userService.initAdminUser(authentication);
@@ -249,6 +250,7 @@ export async function initialServiceSetup(
     if (edgeClientSecret && edgeClientSecret.length > 0) {
         await edgeService.saveClient('enterprise-edge', edgeClientSecret);
     }
+    await apiTokenV2Service.initialize();
 }
 export type UnleashFactoryMethods = {
     // Factory methods: useful for testing

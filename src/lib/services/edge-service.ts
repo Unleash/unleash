@@ -57,7 +57,6 @@ export const createTransactionalEdgeService = (
 ) => {
     const edgeTokenStore = new EdgeTokenStore(db, config.eventBus, config);
     const transactionalApiTokenService = createApiTokenService(db, config);
-
     const transactionalApiTokenV2Service = withTransactional(
         (db) => createApiTokenV2Service(db, config),
         db,

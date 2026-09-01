@@ -167,7 +167,7 @@ export class ProjectApiTokenController extends Controller {
         const { user } = req;
         const { projectId } = req.params;
 
-        const _project = await this.projectService.getProject(projectId); // Validates that the project exists
+        await this.projectService.getProject(projectId); // Validates that the project exists
         const projectTokens = await this.accessibleTokens(user, projectId);
         this.openApiService.respondWithValidation(
             200,
@@ -251,7 +251,6 @@ export class ProjectApiTokenController extends Controller {
                 await this.transactionalApiTokenV2Service.transactional(
                     (service) => service.delete(v2Identifier, req.audit),
                 );
-                this.apiTokenV2Service.invalidateCache([v2Identifier.selector]);
             } else {
                 await this.apiTokenService.delete(token, req.audit);
             }

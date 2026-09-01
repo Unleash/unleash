@@ -298,6 +298,22 @@ export class EventStore implements IEventStore {
         return row?.max ?? 0;
     }
 
+    async getTokenRevisionRange(start: number, end: number): Promise<IEvent[]> {
+        const rows = await this.db
+            .select(EVENT_COLUMNS)
+            .from(TABLE)
+            .where('id', '>', start)
+            .andWhere('id', '<=', end)
+            .whereIn('type', [
+                API_TOKEN_CREATED,
+                API_TOKEN_UPDATED,
+                API_TOKEN_DELETED,
+            ])
+            .orderBy('id', 'asc');
+
+        return rows.map(this.rowToEvent);
+    }
+
     /** This method is used for delta/streaming */
     async getRevisionRange(start: number, end: number): Promise<IEvent[]> {
         const stopTimer = this.metricTimer('getRevisionRange');

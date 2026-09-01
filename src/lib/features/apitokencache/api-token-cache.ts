@@ -16,15 +16,16 @@ export interface TokenCacheInterface<T> {
         key: string,
         load: (key: string) => Promise<T | undefined>,
     ): Promise<T | undefined>;
-    set(key: string, entry: T): Promise<void>;
-    invalidate(key: string): Promise<void>;
+    set(key: string, entry: T): void;
+    invalidate(key: string): void;
     /**
      * Replaces all entries in the cache with the provided fresh entries.
      * This is used to refresh the cache with the latest active tokens from the database.
      * To clean up the cache just send an empty array.
      * @param entries
      */
-    setEntries(entries: [string, T][]): Promise<void>;
+    setEntries(entries: [string, T][]): void;
+    usesReadThroughCache(): boolean;
 }
 
 class CacheProxy<T> implements TokenCacheInterface<T> {
@@ -41,22 +42,26 @@ class CacheProxy<T> implements TokenCacheInterface<T> {
             : this.cache1;
     }
 
+    usesReadThroughCache(): boolean {
+        return this.activeCache.usesReadThroughCache();
+    }
+
     async get(
         key: string,
         load: (key: string) => Promise<T | undefined>,
     ): Promise<T | undefined> {
         return this.activeCache.get(key, load);
     }
-    async set(key: string, entry: T): Promise<void> {
-        return this.activeCache.set(key, entry);
+    set(key: string, entry: T): void {
+        this.activeCache.set(key, entry);
     }
-    async invalidate(key: string): Promise<void> {
-        return this.activeCache.invalidate(key);
+    invalidate(key: string): void {
+        this.activeCache.invalidate(key);
     }
-    async setEntries(entries: [string, T][]): Promise<void> {
-        // only keeps cache 1 updated, cache 2 will be updated on next get() call
-        // with the read through
-        return this.cache1.setEntries(entries);
+    setEntries(entries: [string, T][]): void {
+        // moving this to a client decision, that can be made using `usesReadThroughCache` method
+        // this is only a need for the migration period
+        this.activeCache.setEntries(entries);
     }
 }
 
@@ -73,6 +78,10 @@ class CacheV1<T> implements TokenCacheInterface<T> {
     ) {
         this.eventBus = eventBus;
         this.logger = logger;
+    }
+
+    usesReadThroughCache(): boolean {
+        return false;
     }
 
     async get(
@@ -106,17 +115,15 @@ class CacheV1<T> implements TokenCacheInterface<T> {
         return token;
     }
 
-    async set(key: string, entry: T): Promise<void> {
+    set(key: string, entry: T): void {
         this.activeEntries.set(key, entry);
     }
 
-    async invalidate(key: string): Promise<void> {
+    invalidate(key: string): void {
         this.activeEntries.delete(key);
-        // temporarily throttle negative lookups for 5 minutes to avoid hammering the database with repeated queries for the same missing token
-        this.queryAfter.set(key, addMinutes(new Date(), 5));
     }
 
-    async setEntries(entries: [string, T][]): Promise<void> {
+    setEntries(entries: [string, T][]): void {
         this.activeEntries = new Map(entries);
     }
 }
@@ -136,6 +143,10 @@ class CacheV2<T> implements TokenCacheInterface<T> {
         private eventBus: EventEmitter,
     ) {}
 
+    usesReadThroughCache(): boolean {
+        return true;
+    }
+
     async get(
         key: string,
         load: (key: string) => Promise<T | undefined>,
@@ -153,15 +164,16 @@ class CacheV2<T> implements TokenCacheInterface<T> {
         });
         return entry;
     }
-    async set(key: string, entry: T): Promise<void> {
+
+    set(key: string, entry: T): void {
         this.singleFlightCache.set(key, entry);
     }
 
-    async invalidate(key: string): Promise<void> {
+    invalidate(key: string): void {
         this.singleFlightCache.delete(key);
     }
 
-    async setEntries(entries: [string, T][]): Promise<void> {
+    setEntries(entries: [string, T][]): void {
         this.singleFlightCache.clear();
         for (const [key, entry] of entries) {
             this.singleFlightCache.set(key, entry);

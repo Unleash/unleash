@@ -406,11 +406,12 @@ export class ApiTokenController extends Controller {
                     (service) =>
                         service.updateExpiry(v2Identifier, expiry, req.audit),
                 );
-                this.apiTokenV2Service.invalidateCache([v2Identifier.selector]);
             } catch (_error) {
                 // Fall through to legacy storage during the migration period.
             }
         } else {
+            // only v2 is transactional, v1 is kept as is for simplicity, since it is not used in production anymore.
+            // people might still be able to update expiry but it will not be transactional, which is fine for the migration period.
             await this.apiTokenService.updateExpiry(token, expiry, req.audit);
         }
 

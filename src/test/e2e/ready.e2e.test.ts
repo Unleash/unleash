@@ -75,7 +75,7 @@ describe('DB is up', () => {
 });
 
 describe('DB is down', () => {
-    beforeAll(async () => {
+    beforeEach(async () => {
         db = await dbInit();
     });
 

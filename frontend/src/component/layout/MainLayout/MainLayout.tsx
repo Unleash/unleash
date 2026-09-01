@@ -34,19 +34,19 @@ const MainLayoutContent = styled(Grid)(({ theme }) => ({
     minWidth: 0, // this is a fix for overflowing flex
     maxWidth: `1512px`,
     margin: '0 auto',
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
     [theme.breakpoints.up(1856)]: {
         width: '100%',
     },
     [theme.breakpoints.down(1856)]: {
-        marginLeft: theme.spacing(7),
-        marginRight: theme.spacing(7),
+        marginLeft: theme.spacing(3.5),
+        marginRight: theme.spacing(3.5),
     },
     [theme.breakpoints.down('lg')]: {
         maxWidth: `1250px`,
-        paddingLeft: theme.spacing(1),
-        paddingRight: theme.spacing(1),
+        paddingLeft: theme.spacing(0.5),
+        paddingRight: theme.spacing(0.5),
     },
     [theme.breakpoints.down(1024)]: {
         marginLeft: 0,

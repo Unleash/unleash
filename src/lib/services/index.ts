@@ -231,14 +231,14 @@ export const createServices = (
     const resourceLimitsService = new ResourceLimitsService(config);
 
     const apiTokenV2Service = db
-        ? createApiTokenV2Service(db, config)
+        ? createApiTokenV2Service(config)(db)
         : createFakeApiTokenV2Service(config, stores, {
               eventService,
               resourceLimitsService,
           });
 
     const transactionalApiTokenV2Service = db
-        ? withTransactional((db) => createApiTokenV2Service(db, config), db)
+        ? withTransactional(createApiTokenV2Service(config), db)
         : withFakeTransactional(apiTokenV2Service);
 
     const clientMetricsServiceV2 = new ClientMetricsServiceV2(
@@ -610,6 +610,7 @@ export {
     EmailService,
     AccessService,
     ApiTokenService,
+    createApiTokenV2Service,
     UserService,
     ResetTokenService,
     SettingService,
@@ -651,6 +652,8 @@ export {
     UiConfigService,
     ResourceLimitsService,
     ConfigurationRevisionService,
+    type AdminApiTokenV2Service,
+    type ReadOnlyApiTokenV2Service,
     type ReleasePlanMilestoneStrategyService,
 };
 

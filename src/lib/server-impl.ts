@@ -665,5 +665,9 @@ export * from './types/index.js';
 export * from './error/index.js';
 export * from './util/index.js';
 export * from './services/index.js';
+export {
+    AuthorizationTokenKind,
+    type ApiAuthorizationTokenKind,
+} from './authentication/authorization-token.js';
 export * as eventtypes from './events/index.js';
 export * as interfaces from './interfaces/index.js';

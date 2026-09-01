@@ -82,21 +82,26 @@ const resolveTokenPermissions = (tokenType: ApiTokenType) => {
 };
 
 export const createApiTokenV2Service = (
-    db: Db,
     config: IUnleashConfig,
-): ReadOnlyApiTokenV2Service & AdminApiTokenV2Service =>
-    new ApiTokenV2Service(
-        {
-            apiTokenV2Store: new ApiTokenV2Store(db),
-            environmentStore: new EnvironmentStore(db, config.eventBus, config),
-            eventStore: new EventStore(db, config.getLogger),
-        },
-        config,
-        {
-            eventService: createEventsService(db, config),
-            resourceLimitsService: new ResourceLimitsService(config),
-        },
-    );
+): ((db: Db) => ReadOnlyApiTokenV2Service & AdminApiTokenV2Service) => {
+    return (db: Db) =>
+        new ApiTokenV2Service(
+            {
+                apiTokenV2Store: new ApiTokenV2Store(db),
+                environmentStore: new EnvironmentStore(
+                    db,
+                    config.eventBus,
+                    config,
+                ),
+                eventStore: new EventStore(db, config.getLogger),
+            },
+            config,
+            {
+                eventService: createEventsService(db, config),
+                resourceLimitsService: new ResourceLimitsService(config),
+            },
+        );
+};
 
 export const createFakeApiTokenV2Service = (
     config: IUnleashConfig,
@@ -154,6 +159,10 @@ export interface AdminApiTokenV2Service {
         identifier: ApiTokenV2Identifier,
         auditUser: IAuditUser,
     ): Promise<boolean>;
+    deleteByEnvironment(
+        environment: string,
+        auditUser: IAuditUser,
+    ): Promise<string[]>;
     deleteSystemCreatedTokensNotSeen(): Promise<Omit<ApiTokenV2, 'projects'>[]>;
     updateExpiry(
         identifier: ApiTokenV2Identifier,
@@ -526,6 +535,31 @@ class ApiTokenV2Service
             }),
         ]);
         return true;
+    }
+
+    async deleteByEnvironment(
+        environment: string,
+        auditUser: IAuditUser,
+    ): Promise<string[]> {
+        const deleted =
+            await this.apiTokenV2Store.deleteByEnvironment(environment);
+        if (deleted.length === 0) {
+            return [];
+        }
+
+        await this.eventService.storeEventsOrThrow(
+            deleted.map(
+                (token) =>
+                    new ApiTokenDeletedEvent({
+                        auditUser,
+                        apiToken: this.toEventToken(
+                            this.toApiToken(token),
+                            token.selector,
+                        ),
+                    }),
+            ),
+        );
+        return deleted.map((token) => token.selector);
     }
 
     /**

@@ -23,7 +23,7 @@ export enum AuthorizationTokenKind {
     ADMIN_API_TOKEN = 'admin-api-token', // this is deprecated but still supported
 }
 
-type ApiAuthorizationTokenKind =
+export type ApiAuthorizationTokenKind =
     | AuthorizationTokenKind.API_TOKEN
     | AuthorizationTokenKind.ADMIN_API_TOKEN;
 

@@ -156,6 +156,19 @@ export class ApiTokenV2Store implements IApiTokenV2Store {
         await this.db(TABLE).where({ selector }).delete();
     }
 
+    async deleteByEnvironment(environment: string): Promise<ApiTokenV2[]> {
+        const rows = await this.makeTokenProjectQuery().where(
+            'tokens.environment',
+            environment,
+        );
+        const tokens = toTokens(rows).map(
+            ({ verifier: _verifier, ...token }) => token,
+        );
+
+        await this.db(TABLE).where({ environment }).delete();
+        return tokens;
+    }
+
     async markSeenAt(selector: string): Promise<void> {
         await this.db(TABLE)
             .where({ selector })

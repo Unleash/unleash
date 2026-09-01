@@ -14,7 +14,11 @@ import {
 } from '../../authentication/authorization-token.js';
 import FakeEnvironmentStore from '../project-environments/fake-environment-store.js';
 import { createFakeApiTokenV2Service } from './api-token-v2-service.js';
-import { createTestConfig, type IUnleashStores } from '../../server-impl.js';
+import {
+    ApiTokenDeletedEvent,
+    createTestConfig,
+    type IUnleashStores,
+} from '../../server-impl.js';
 import type { IFlagResolver } from '../../types/experimental.js';
 
 class FakeApiTokenV2Store implements IApiTokenV2Store {
@@ -82,6 +86,15 @@ class FakeApiTokenV2Store implements IApiTokenV2Store {
         if (this.stored?.selector === selector) {
             this.stored = undefined;
         }
+    }
+
+    async deleteByEnvironment(environment: string): Promise<ApiTokenV2[]> {
+        if (!this.stored || this.stored.environment !== environment) {
+            return [];
+        }
+        const { verifier: _verifier, ...token } = this.stored;
+        this.stored = undefined;
+        return [token];
     }
 
     async markSeenAt(): Promise<void> {
@@ -453,6 +466,42 @@ describe.each([
         await service.delete(reference, SYSTEM_USER_AUDIT);
         await expect(service.getToken(reference)).resolves.toBeUndefined();
         expect(eventService.storeEventsOrThrow).toHaveBeenCalledTimes(3);
+    });
+
+    test('deletes environment tokens with selector-bearing events', async () => {
+        const store = new FakeApiTokenV2Store();
+        const environmentStore = new FakeEnvironmentStore();
+        await environmentStore.create({
+            enabled: true,
+            protected: false,
+            sortOrder: 0,
+            type: 'production',
+            name: 'production',
+        });
+        const { service, eventService } = createService({
+            apiTokenV2Store: store,
+            environmentStore,
+        });
+        const created = await service.create(tokenInput, SYSTEM_USER_AUDIT);
+
+        const selectors = await service.deleteByEnvironment(
+            'production',
+            SYSTEM_USER_AUDIT,
+        );
+
+        expect(selectors).toEqual([created.selector]);
+        expect(store.stored).toBeUndefined();
+        const [events] = vi.mocked(eventService.storeEventsOrThrow).mock
+            .calls[1];
+        expect(events).toHaveLength(1);
+        expect(events[0]).toBeInstanceOf(ApiTokenDeletedEvent);
+        expect(events[0]).toMatchObject({
+            preData: {
+                selector: created.selector,
+                tokenVersion: 2,
+                environment: 'production',
+            },
+        });
     });
 
     test('leaves cache updates to the post-commit owner', async () => {

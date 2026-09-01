@@ -55,7 +55,7 @@ beforeAll(async () => {
     await projectService.createProject(project, user, TEST_AUDIT_USER);
 
     const apiTokenService = createApiTokenService(db.rawDatabase, config);
-    apiTokenV2Service = createApiTokenV2Service(db.rawDatabase, db.config);
+    apiTokenV2Service = createApiTokenV2Service(db.config)(db.rawDatabase);
 
     edgeService = new EdgeService(
         { edgeTokenStore: db.stores.edgeTokenStore },

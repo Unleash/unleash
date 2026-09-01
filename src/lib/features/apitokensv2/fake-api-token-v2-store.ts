@@ -84,6 +84,18 @@ export class FakeApiTokenV2Store implements IApiTokenV2Store {
         this.tokens.delete(selector);
     }
 
+    async deleteByEnvironment(environment: string): Promise<ApiTokenV2[]> {
+        const deleted: ApiTokenV2[] = [];
+        for (const [selector, token] of this.tokens) {
+            if (token.environment === environment) {
+                this.tokens.delete(selector);
+                const { verifier: _verifier, ...publicToken } = token;
+                deleted.push(publicToken);
+            }
+        }
+        return deleted;
+    }
+
     async markSeenAt(selector: string): Promise<void> {
         const token = this.tokens.get(selector);
         if (token) {

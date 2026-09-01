@@ -537,8 +537,8 @@ importers:
         specifier: ^0.8.0
         version: 0.8.0
       '@unleash/toolbar':
-        specifier: 1.1.1
-        version: 1.1.1(@unleash/proxy-client-react@5.1.0(unleash-proxy-client@3.8.2))(unleash-proxy-client@3.8.2)
+        specifier: 1.2.0
+        version: 1.2.0(@unleash/proxy-client-react@5.1.0(unleash-proxy-client@3.8.2))(unleash-proxy-client@3.8.2)
       '@vitejs/plugin-react':
         specifier: 6.0.5
         version: 6.0.5(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7(supports-color@8.1.1))(@babel/runtime@7.29.7)(rolldown@1.2.5)(vite@8.2.2(@types/node@22.20.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.8.4)))(vite@8.2.2(@types/node@22.20.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.8.4))
@@ -2529,8 +2529,8 @@ packages:
     resolution: {integrity: sha512-02R4ICG598+8MsbldHyGrDMbsCXTz2OT7WrnTaklrTeA9JwcNQK+Gmu8EUdjHPMpK5H7lek49cxlM0jnOFstPQ==}
     engines: {node: '>=20'}
 
-  '@unleash/toolbar@1.1.1':
-    resolution: {integrity: sha512-l6sX5NcG94depeyjSWNraVKP3/+gw0tBXb6SmP0Hzux4w/n9oNIkYT+s1LTL/3VYwsd9ozjpSjT4X/slJCVhjg==}
+  '@unleash/toolbar@1.2.0':
+    resolution: {integrity: sha512-dFFzFP8cZ+Gr2r8CRyzDDnuTc4HZ7LIAJit4EJeTysDPNXVycpTflJ2qehoeLO35IZt2NbfI4IeQN0bSo+Bo8w==}
     peerDependencies:
       '@unleash/nextjs': '*'
       '@unleash/proxy-client-react': '*'
@@ -8712,7 +8712,7 @@ snapshots:
     dependencies:
       ky: 2.0.2
 
-  '@unleash/toolbar@1.1.1(@unleash/proxy-client-react@5.1.0(unleash-proxy-client@3.8.2))(unleash-proxy-client@3.8.2)':
+  '@unleash/toolbar@1.2.0(@unleash/proxy-client-react@5.1.0(unleash-proxy-client@3.8.2))(unleash-proxy-client@3.8.2)':
     dependencies:
       lit: 3.3.3
       unleash-proxy-client: 3.8.2

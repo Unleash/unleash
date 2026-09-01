@@ -2,12 +2,10 @@ import type { Knex } from 'knex';
 import type EventEmitter from 'events';
 import metricsHelper from '../../util/metrics-helper.js';
 import { DB_TIME } from '../../metric-events.js';
-import type { LogProvider } from '../../logger.js';
 import type {
     FeatureSearchEnvironment,
     IFeatureSearchOverview,
     IFeatureSearchStore,
-    IFlagResolver,
     StageName,
 } from '../../types/index.js';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store.js';
@@ -43,8 +41,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
     constructor(
         db: Db,
         eventBus: EventEmitter,
-        _getLogger: LogProvider,
-        _flagResolver: IFlagResolver,
     ) {
         this.db = db;
         this.timer = (action) =>

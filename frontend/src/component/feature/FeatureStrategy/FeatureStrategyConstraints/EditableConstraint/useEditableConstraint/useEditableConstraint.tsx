@@ -26,6 +26,7 @@ import {
     getInvalidLegalValues,
 } from './legal-value-functions.ts';
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const resolveContextDefinition = (
     context: IUnleashContextDefinition[],
@@ -88,9 +89,14 @@ export const useEditableConstraint = (
         [context, localConstraint.contextName],
     );
 
+    const semverBuildMetadata = useUiFlag('semverBuildMetadata');
+
     const baseValidator = useMemo(
-        () => constraintValidator(localConstraint.operator),
-        [localConstraint.operator],
+        () =>
+            constraintValidator(localConstraint.operator, {
+                semverBuildMetadata,
+            }),
+        [localConstraint.operator, semverBuildMetadata],
     );
 
     const validator = (...values: string[]) => {

@@ -146,8 +146,10 @@ export const ProjectActionsFilterItem = ({
         ),
     ];
 
+    const semverBuildMetadata = useUiFlag('semverBuildMetadata');
+
     const [error, setError] = useState('');
-    const validator = constraintValidator(operator);
+    const validator = constraintValidator(operator, { semverBuildMetadata });
 
     const validate = () => {
         stateChanged({

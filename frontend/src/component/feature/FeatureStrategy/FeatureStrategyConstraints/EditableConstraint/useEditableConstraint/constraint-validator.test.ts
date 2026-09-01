@@ -33,6 +33,32 @@ describe('constraintValidator', () => {
             expect(validate('0.0.1')).toEqual([true, '']);
         });
 
+        test('accepts prerelease', () => {
+            expect(validate('1.2.3-beta.1')).toEqual([true, '']);
+        });
+
+        test('rejects build metadata by default', () => {
+            expect(validate('1.2.3+4000')[0]).toBe(false);
+            expect(validate('1.2.3-beta.1+build.5')[0]).toBe(false);
+        });
+
+        test('rejects invalid semver', () => {
+            const [valid] = validate('not-semver');
+            expect(valid).toBe(false);
+        });
+
+        test('rejects unclean semver', () => {
+            expect(validate('v1.2.3')[0]).toBe(false);
+            expect(validate(' 1.2.3 ')[0]).toBe(false);
+            expect(validate('1.2.3+')[0]).toBe(false);
+        });
+    });
+
+    describe('semver operator with semverBuildMetadata flag', () => {
+        const validate = constraintValidator('SEMVER_EQ', {
+            semverBuildMetadata: true,
+        });
+
         test('accepts prerelease and build metadata', () => {
             expect(validate('1.2.3-beta.1')).toEqual([true, '']);
             expect(validate('1.2.3+4000')).toEqual([true, '']);

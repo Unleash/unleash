@@ -14,7 +14,6 @@ interface MilestoneAutomationProps {
     milestone: IReleasePlanMilestone;
     milestones: IReleasePlanMilestone[];
     status: MilestoneStatus;
-    readonly: boolean | undefined;
     isProgressionFormOpen: boolean;
     effectiveTransitionCondition: IReleasePlanMilestone['transitionCondition'];
     pendingProgressionChange: PendingProgressionChange | null;
@@ -31,7 +30,6 @@ export const MilestoneAutomation = ({
     milestone,
     milestones,
     status,
-    readonly,
     isProgressionFormOpen,
     effectiveTransitionCondition,
     pendingProgressionChange,
@@ -42,17 +40,10 @@ export const MilestoneAutomation = ({
     environment,
 }: MilestoneAutomationProps) => {
     const milestoneIndex = milestones.findIndex((m) => m.id === milestone.id);
-    const isNotLastMilestone = milestoneIndex < milestones.length - 1;
     const nextMilestoneId = milestones[milestoneIndex + 1]?.id || '';
     const hasAnyPausedMilestone = milestones.some((milestone) =>
         Boolean(milestone.pausedAt),
     );
-
-    const showAutomation = isNotLastMilestone && !readonly;
-
-    if (!showAutomation) {
-        return null;
-    }
 
     const hasPendingChange =
         pendingProgressionChange?.action === 'changeMilestoneProgression';

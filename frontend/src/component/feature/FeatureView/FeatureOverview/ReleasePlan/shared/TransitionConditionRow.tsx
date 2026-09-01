@@ -41,6 +41,9 @@ const StyledTransitionLabel = styled('span', {
     flexShrink: 0,
 }));
 
+const getConditionText = (type: TransitionConditionSchema['type']) =>
+    type === 'exposure' ? 'since feature creation' : 'from milestone start';
+
 interface TransitionConditionRowProps {
     condition: ReactNode;
     type?: TransitionConditionSchema['type'];
@@ -56,8 +59,7 @@ export const TransitionConditionRow = ({
     muted,
     endActions,
 }: TransitionConditionRowProps) => {
-    const conditionText =
-        type === 'exposure' ? 'since feature creation' : 'from milestone start';
+    const conditionText = getConditionText(type);
 
     return (
         <StyledTransitionRowContainer>
@@ -75,3 +77,26 @@ export const TransitionConditionRow = ({
         </StyledTransitionRowContainer>
     );
 };
+
+interface ReadonlyTransitionConditionRowProps {
+    value: string;
+    type?: TransitionConditionSchema['type'];
+    label: string;
+    muted?: boolean;
+}
+
+export const ReadonlyTransitionConditionRow = ({
+    value,
+    type = 'time',
+    label,
+    muted,
+}: ReadonlyTransitionConditionRowProps) => (
+    <StyledTransitionRowContainer>
+        <StyledTransitionContentGroup>
+            <StyledTransitionIcon muted={muted} />
+            <StyledTransitionLabel muted={muted}>
+                {label} {value} {getConditionText(type)}
+            </StyledTransitionLabel>
+        </StyledTransitionContentGroup>
+    </StyledTransitionRowContainer>
+);

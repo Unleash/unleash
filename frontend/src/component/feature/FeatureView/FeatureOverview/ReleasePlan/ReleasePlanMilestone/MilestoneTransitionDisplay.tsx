@@ -1,7 +1,10 @@
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { Button, styled } from '@mui/material';
 import type { MilestoneStatus } from './ReleasePlanMilestoneStatus.tsx';
-import { TransitionConditionRow } from '../shared/TransitionConditionRow.tsx';
+import {
+    ReadonlyTransitionConditionRow,
+    TransitionConditionRow,
+} from '../shared/TransitionConditionRow.tsx';
 import { TransitionConditionInput } from '../MilestoneProgressionForm/TransitionConditionInput.tsx';
 import { getValueAndUnitFromCondition } from '../hooks/useTransitionConditionInput.ts';
 import { useTransitionConditionForm } from '../hooks/useTransitionConditionForm.ts';
@@ -90,15 +93,11 @@ export const ReadonlyMilestoneTransitionDisplay = ({
     const initial = getValueAndUnitFromCondition(transitionCondition);
 
     return (
-        <TransitionConditionRow
+        <ReadonlyTransitionConditionRow
             muted={status?.type === 'completed'}
             label='Proceed to the next milestone after'
             type={transitionCondition.type}
-            condition={
-                <span style={{ fontSize: 'inherit' }}>
-                    {initial.value} {initial.unit}
-                </span>
-            }
+            value={`${initial.value} ${initial.unit}`}
         />
     );
 };

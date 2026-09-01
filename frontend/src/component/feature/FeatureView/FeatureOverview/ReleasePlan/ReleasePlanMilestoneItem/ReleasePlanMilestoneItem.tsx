@@ -12,6 +12,7 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { calculateMilestoneStatus } from './milestoneStatusUtils.js';
 import { MilestoneAutomation } from './MilestoneAutomation.tsx';
+import { ReadonlyMilestoneAutomation } from './ReadonlyMilestoneAutomation.tsx';
 import { useEventTracker } from 'hooks/useEventTracker.ts';
 import { ProjectEnvironmentStrategyDraggableItem } from '../../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/ProjectEnvironmentStrategyDraggableItem.tsx';
 
@@ -166,24 +167,36 @@ export const ReleasePlanMilestoneItem = ({
     const pendingProgressionChange = getPendingProgressionChange(milestone.id);
     const effectiveTransitionCondition = milestone.transitionCondition;
 
-    const shouldShowAutomation = isNotLastMilestone && !readonly;
+    const renderAutomationSection = () => {
+        if (!isNotLastMilestone) {
+            return undefined;
+        }
+        if (readonly) {
+            return effectiveTransitionCondition ? (
+                <ReadonlyMilestoneAutomation
+                    transitionCondition={effectiveTransitionCondition}
+                    status={status}
+                />
+            ) : undefined;
+        }
+        return (
+            <MilestoneAutomation
+                milestone={milestone}
+                milestones={milestones}
+                status={status}
+                isProgressionFormOpen={isProgressionFormOpen}
+                effectiveTransitionCondition={effectiveTransitionCondition}
+                pendingProgressionChange={pendingProgressionChange}
+                onOpenProgressionForm={handleOpenProgressionForm}
+                onCloseProgressionForm={handleCloseProgressionForm}
+                onChangeProgression={handleChangeProgression}
+                onDeleteProgression={onDeleteProgression}
+                environment={environment}
+            />
+        );
+    };
 
-    const automationSection = shouldShowAutomation ? (
-        <MilestoneAutomation
-            milestone={milestone}
-            milestones={milestones}
-            status={status}
-            readonly={readonly}
-            isProgressionFormOpen={isProgressionFormOpen}
-            effectiveTransitionCondition={effectiveTransitionCondition}
-            pendingProgressionChange={pendingProgressionChange}
-            onOpenProgressionForm={handleOpenProgressionForm}
-            onCloseProgressionForm={handleCloseProgressionForm}
-            onChangeProgression={handleChangeProgression}
-            onDeleteProgression={onDeleteProgression}
-            environment={environment}
-        />
-    ) : undefined;
+    const automationSection = renderAutomationSection();
 
     const renderStrategy = (strategy, strategyIndex) => (
         <ProjectEnvironmentStrategyDraggableItem

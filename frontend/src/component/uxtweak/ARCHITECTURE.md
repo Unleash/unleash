@@ -57,15 +57,28 @@ gated on `isLoggedIn` and the internal `uxTweakSurveys` flag
 doubles as the kill switch) — under the SDK provider and router it reads
 from, and never on the login screen. Watches the SDK client for any flag starting
 with `uxtweak-` and only then lazy-loads the widget chunk. Installs without
-campaigns pay one event subscription and nothing else. The subtree gets its
+campaigns pay one event subscription and nothing else. The gate is latched
+(`useLatched`): once any `uxtweak-` flag has been present it stays mounted,
+because a flag refresh that drops the last flag (rollout re-bucketing, a
+paused campaign) must not unmount the runner and destroy a survey the visitor
+is mid-answer in — after the flags vanish, an already-loaded chunk rendering
+`null` is the whole cost. The subtree gets its
 own silent `ErrorBoundary`: without it a widget crash would bubble to the
 app-wide boundary in `ApplicationRoot` and replace the entire admin UI with
 the error layout. In-app research must never be able to take the product down.
 
 **`UxTweakRunner`** — the lazily-loaded chunk (default export for `lazy()`).
-For now it is also the survey host: render the card of the survey active on
-the current page. The card is keyed by `surveyId` so no component state
-carries over when one campaign replaces another. When more widget kinds
+For now it is also the survey host: it latches the first survey
+`useActiveSurvey` produces (`useLatched` again) and renders that card until
+the visitor concludes it. Once shown, the card survives flag refreshes,
+payload edits, and route changes — a visitor mid-answer must never have the
+card yanked away (and, since the latched config keeps its object identity,
+a live payload edit can no longer remount the keyed card and reset typed
+answers). The latch deliberately never clears: after conclude, the card's own
+state machine renders nothing, and the grace period suppresses every other
+survey anyway — so a session shows at most one survey by construction. The
+card stays keyed by `surveyId` so no component state carries over when one
+campaign replaces another across sessions. When more widget kinds
 arrive (chat, interviews), each gets its own host rendered here — and the
 survey-specific scanning below gets generalized *then*, against real
 consumers, not before.
@@ -139,6 +152,8 @@ inherit it without knowing it exists.
 2. ✅ Question rendering (rating / single choice / free text), required
    gating, thanks state with auto-dismiss, shown-at-most-once suppression
 3. ✅ 7-day grace period between surveys
-4. Further hardening: mid-answer latch, impression cap, cross-tab sync,
+4. ✅ Mid-answer latch (card survives flag refreshes, payload edits, and
+   route changes until concluded)
+5. Further hardening: impression cap, cross-tab sync,
    deterministic survey order
-5. Submission to `submitBase`
+6. Submission to `submitBase`

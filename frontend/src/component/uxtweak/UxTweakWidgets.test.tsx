@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { screen } from '@testing-library/react';
+import { act, fireEvent, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { Link } from 'react-router';
 import FlagProvider from '@unleash/proxy-client-react';
 import type { UnleashClient } from 'unleash-proxy-client';
 import { render, settleProviders } from 'utils/testRenderer';
@@ -45,6 +46,9 @@ const GRACE_RAW_KEY = ':uxtweak-survey-grace:v1:localStorage:v2';
 
 const seedRaw = (key: string, value: unknown, expiry?: number) =>
     localStorage.setItem(key, JSON.stringify({ value, expiry }));
+
+const clickStar = (name: string) =>
+    fireEvent.click(screen.getByRole('radio', { name }));
 
 const renderWidgets = (client: UnleashClient, route = '/projects') =>
     render(
@@ -108,7 +112,7 @@ describe('UxTweakWidgets', () => {
         const submit = screen.getByRole('button', { name: 'Submit' });
         expect(submit).toBeDisabled();
 
-        await userEvent.click(screen.getByRole('radio', { name: '4 Stars' }));
+        clickStar('4 Stars');
         expect(submit).toBeDisabled();
 
         await userEvent.click(screen.getByRole('radio', { name: 'Weekly' }));
@@ -137,7 +141,7 @@ describe('UxTweakWidgets', () => {
         );
         await screen.findByText('Quick feedback');
 
-        await userEvent.click(screen.getByRole('radio', { name: '4 Stars' }));
+        clickStar('4 Stars');
         await userEvent.click(screen.getByRole('button', { name: 'Submit' }));
         expect(
             screen.getByText('Thanks for your feedback!'),
@@ -209,5 +213,51 @@ describe('UxTweakWidgets', () => {
         seedRaw(GRACE_RAW_KEY, 'active', Date.now() - 1);
         renderWidgets(testUnleashClient([surveyFlag('/projects')]));
         expect(await screen.findByText('Quick feedback')).toBeInTheDocument();
+    });
+
+    it('keeps the card and typed answers when a flag refresh drops the survey', async () => {
+        const client = testUnleashClient([surveyFlag('/projects')]);
+        renderWidgets(client);
+        await screen.findByText('Quick feedback');
+        clickStar('4 Stars');
+
+        act(() => client.setFlags([]));
+        await settleProviders();
+        expect(screen.getByText('Quick feedback')).toBeInTheDocument();
+        expect(screen.getByRole('radio', { name: '4 Stars' })).toBeChecked();
+    });
+
+    it('keeps the originally shown survey when the payload is edited mid-flight', async () => {
+        const client = testUnleashClient([surveyFlag('/projects')]);
+        renderWidgets(client);
+        await screen.findByText('Quick feedback');
+
+        act(() =>
+            client.setFlags([
+                surveyFlag('/projects', [ratingQuestion], {
+                    title: 'Fresh title',
+                }),
+            ]),
+        );
+        await settleProviders();
+        expect(screen.getByText('Quick feedback')).toBeInTheDocument();
+        expect(screen.queryByText('Fresh title')).not.toBeInTheDocument();
+    });
+
+    it('keeps the card when navigating to a page the survey does not target', async () => {
+        render(
+            <FlagProvider
+                unleashClient={testUnleashClient([surveyFlag('/projects')])}
+                startClient={false}
+            >
+                <Link to='/other'>away</Link>
+                <UxTweakWidgets />
+            </FlagProvider>,
+            { route: '/projects' },
+        );
+        await screen.findByText('Quick feedback');
+
+        await userEvent.click(screen.getByRole('link', { name: 'away' }));
+        expect(screen.getByText('Quick feedback')).toBeInTheDocument();
     });
 });

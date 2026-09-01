@@ -100,9 +100,9 @@ Get your own dedicated instance with a free 14-day cloud trial. This includes th
 
 To self-host Unleash in a production environment, you need to deploy it to a persistent server. 
 
-We provide guides for deploying to services like Heroku and DigitalOcean:
+We provide guides for deploying to services like Heroku, DigitalOcean, and RepoCloud:
 
-[![Deploy to Heroku](./.github/deploy-heroku-20.png)](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash) [![Deploy to DigitalOcean](./.github/deploy-digital.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/Unleash/unleash/tree/main&refcode=0e1d75187044)
+[![Deploy to Heroku](./.github/deploy-heroku-20.png)](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash) [![Deploy to DigitalOcean](./.github/deploy-digital.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/Unleash/unleash/tree/main&refcode=0e1d75187044) <a href="https://repocloud.io/details/Unleash/"><img src="https://dnk92k33or340.cloudfront.net/repocloud20px.png" alt="Deploy on RepoCloud"></a>
 
 For more advanced configurations options, check out our documentation on:
 - [Getting started with self-hosting](https://docs.getunleash.io/deploy/getting-started)

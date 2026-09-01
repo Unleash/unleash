@@ -17,7 +17,7 @@ const StyledInput = styled(Input)(({ theme }) => ({
 }));
 
 const StyledDescriptionInput = styled(StyledInput)(({ theme }) => ({
-    padding: theme.spacing(2, 5, 1, 1.75),
+    padding: theme.spacing(0),
 }));
 
 const StyledForm = styled('form')(({ theme }) => ({
@@ -110,29 +110,41 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                     autoFocus
                     slotProps={{
                         input: {
-                            style: { fontSize: theme.typography.h1.fontSize },
-                        },
-                        inputLabel: {
-                            style: { fontSize: theme.typography.h1.fontSize },
-                        },
-                    }}
-                    size='medium'
-                />
-                <StyledDescriptionInput
-                    label='Template description (optional)'
-                    multiline
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    slotProps={{
-                        input: {
                             style: {
-                                fontSize: theme.typography.h2.fontSize,
+                                fontSize: theme.typography.body1.fontSize,
                                 padding: 0,
                             },
                         },
                         inputLabel: {
                             style: {
-                                fontSize: theme.typography.h2.fontSize,
+                                fontSize: theme.typography.body1.fontSize,
+                                padding: 0,
+                            },
+                        },
+                    }}
+                    size='large'
+                />
+                <StyledDescriptionInput
+                    label={
+                        <>
+                            Template description{' '}
+                            <span style={{ fontWeight: 'normal' }}>
+                                (optional)
+                            </span>
+                        </>
+                    }
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    slotProps={{
+                        input: {
+                            style: {
+                                fontSize: theme.typography.body1.fontSize,
+                                padding: 0,
+                            },
+                        },
+                        inputLabel: {
+                            style: {
+                                fontSize: theme.typography.body1.fontSize,
                                 padding: 0,
                             },
                         },

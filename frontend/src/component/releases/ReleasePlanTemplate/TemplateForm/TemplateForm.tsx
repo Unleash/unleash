@@ -16,10 +16,6 @@ const StyledInput = styled(Input)(({ theme }) => ({
     padding: theme.spacing(0),
 }));
 
-const StyledDescriptionInput = styled(StyledInput)(({ theme }) => ({
-    padding: theme.spacing(2, 5, 1, 1.75),
-}));
-
 const StyledForm = styled('form')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -101,7 +97,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                 <StyledInput
                     label='Template name'
                     aria-required
-                    sx={{ marginBottom: 4 }}
+                    sx={{ marginBottom: 2 }}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     error={Boolean(errors.name)}
@@ -110,19 +106,21 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                         delete errors.name;
                     }}
                     autoFocus
-                    slotProps={{
-                        input: {
-                            style: { fontSize: theme.typography.h1.fontSize },
-                        },
-                        inputLabel: {
-                            style: { fontSize: theme.typography.h1.fontSize },
-                        },
-                    }}
-                    size='medium'
                 />
-                <StyledDescriptionInput
-                    label='Template description (optional)'
-                    multiline
+                <StyledInput
+                    label={
+                        <>
+                            Template description{' '}
+                            <span
+                                style={{
+                                    fontWeight:
+                                        theme.typography.fontWeightRegular,
+                                }}
+                            >
+                                (optional)
+                            </span>
+                        </>
+                    }
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     slotProps={{

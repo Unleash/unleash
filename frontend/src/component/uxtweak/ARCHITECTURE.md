@@ -107,6 +107,15 @@ Known micro-edge: a flags refresh or route change landing inside the
 three-second thanks window can end the thanks display a moment early —
 harmless, not worth machinery.
 
+**Concluding any survey starts a 7-day global grace period.** `markSurveySeen`
+also writes a marker (`uxtweak-survey-grace:v1`) with `createLocalStorage`'s
+own `timeToLive`, and `useActiveSurvey` returns `null` while the marker is
+present (the storage layer deletes the expired marker on read — no hand-rolled
+clock math). This is what keeps a visitor matched by several campaigns from
+getting the next card the moment they finish one. Living inside
+`markSurveySeen` means submit, close, and the future submission slice all
+inherit it without knowing it exists.
+
 ## Decisions worth knowing
 
 - **The SDK's `useFlags()`, deliberately.** It wraps `getAllToggles()`, which
@@ -129,4 +138,7 @@ harmless, not worth machinery.
 1. ✅ Discovery + minimal card (title/intro, session-only close)
 2. ✅ Question rendering (rating / single choice / free text), required
    gating, thanks state with auto-dismiss, shown-at-most-once suppression
-3. Submission to `submitBase`
+3. ✅ 7-day grace period between surveys
+4. Further hardening: mid-answer latch, impression cap, cross-tab sync,
+   deterministic survey order
+5. Submission to `submitBase`

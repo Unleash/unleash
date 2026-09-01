@@ -14,8 +14,12 @@ const ratingQuestion = {
     required: true,
 };
 
-const surveyFlag = (page: string, questions: object[] = [ratingQuestion]) => ({
-    name: 'uxtweak-survey-projects-abc1',
+const surveyFlag = (
+    page: string,
+    questions: object[] = [ratingQuestion],
+    overrides: { name?: string; surveyId?: string; title?: string } = {},
+) => ({
+    name: overrides.name ?? 'uxtweak-survey-projects-abc1',
     enabled: true,
     impressionData: false,
     variant: {
@@ -26,9 +30,9 @@ const surveyFlag = (page: string, questions: object[] = [ratingQuestion]) => ({
             type: 'json',
             value: JSON.stringify({
                 v: 1,
-                surveyId: 'sv_1',
+                surveyId: overrides.surveyId ?? 'sv_1',
                 page,
-                title: 'Quick feedback',
+                title: overrides.title ?? 'Quick feedback',
                 intro: 'Two questions about this page.',
                 questions,
                 submitBase: 'https://uxtweak.example.com',
@@ -36,6 +40,11 @@ const surveyFlag = (page: string, questions: object[] = [ratingQuestion]) => ({
         },
     },
 });
+
+const GRACE_RAW_KEY = ':uxtweak-survey-grace:v1:localStorage:v2';
+
+const seedRaw = (key: string, value: unknown, expiry?: number) =>
+    localStorage.setItem(key, JSON.stringify({ value, expiry }));
 
 const renderWidgets = (client: UnleashClient, route = '/projects') =>
     render(
@@ -163,5 +172,42 @@ describe('UxTweakWidgets', () => {
         renderWidgets(testUnleashClient([surveyFlag('/projects')]));
         await settleProviders();
         expect(screen.queryByText('Quick feedback')).not.toBeInTheDocument();
+    });
+
+    it('does not surface the next survey after the visitor concludes one', async () => {
+        const flags = [
+            surveyFlag('/projects'),
+            surveyFlag('/projects', [ratingQuestion], {
+                name: 'uxtweak-survey-projects-def2',
+                surveyId: 'sv_2',
+                title: 'Second survey',
+            }),
+        ];
+        const first = renderWidgets(testUnleashClient(flags));
+        await screen.findByText('Quick feedback');
+
+        await userEvent.click(
+            screen.getByRole('button', { name: 'Close survey' }),
+        );
+        expect(screen.queryByText('Second survey')).not.toBeInTheDocument();
+        first.unmount();
+
+        renderWidgets(testUnleashClient(flags));
+        await settleProviders();
+        expect(screen.queryByText('Quick feedback')).not.toBeInTheDocument();
+        expect(screen.queryByText('Second survey')).not.toBeInTheDocument();
+    });
+
+    it('suppresses surveys during the grace period', async () => {
+        seedRaw(GRACE_RAW_KEY, 'active');
+        renderWidgets(testUnleashClient([surveyFlag('/projects')]));
+        await settleProviders();
+        expect(screen.queryByText('Quick feedback')).not.toBeInTheDocument();
+    });
+
+    it('shows surveys again once the grace period has passed', async () => {
+        seedRaw(GRACE_RAW_KEY, 'active', Date.now() - 1);
+        renderWidgets(testUnleashClient([surveyFlag('/projects')]));
+        expect(await screen.findByText('Quick feedback')).toBeInTheDocument();
     });
 });

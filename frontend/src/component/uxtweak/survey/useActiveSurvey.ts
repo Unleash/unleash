@@ -1,6 +1,10 @@
 import { useLocation } from 'react-router';
 import { useFlags } from '@unleash/proxy-client-react';
-import { hasSeenSurvey, isInSurveyGracePeriod } from './seenSurveys.ts';
+import {
+    hasSeenSurvey,
+    isInSurveyGracePeriod,
+    hasReachedImpressionCap,
+} from './seenSurveys.ts';
 import { scanSurveys, type SurveyConfig } from './surveys.ts';
 
 export const useActiveSurvey = (): SurveyConfig | null => {
@@ -12,7 +16,9 @@ export const useActiveSurvey = (): SurveyConfig | null => {
     }
     return (
         scanSurveys(flags, pathname).find(
-            (survey) => !hasSeenSurvey(survey.surveyId),
+            (survey) =>
+                !hasSeenSurvey(survey.surveyId) &&
+                !hasReachedImpressionCap(survey.surveyId),
         ) ?? null
     );
 };

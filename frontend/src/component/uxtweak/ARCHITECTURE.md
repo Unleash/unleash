@@ -129,6 +129,14 @@ getting the next card the moment they finish one. Living inside
 `markSurveySeen` means submit, close, and the future submission slice all
 inherit it without knowing it exists.
 
+**An ignored survey stops appearing after 3 showings.** The runner records
+one impression per survey per page load (`uxtweak-survey-impressions:v1`; a
+module-level set makes remounts and StrictMode double-effects free), and
+`useActiveSurvey` skips any survey shown `MAX_IMPRESSIONS` times — an
+ignored card must not nag forever, but one glance shouldn't burn it either.
+Like all the frequency storage, malformed entries fail open: the survey
+shows, never a crash.
+
 ## Decisions worth knowing
 
 - **The SDK's `useFlags()`, deliberately.** It wraps `getAllToggles()`, which
@@ -154,6 +162,6 @@ inherit it without knowing it exists.
 3. ✅ 7-day grace period between surveys
 4. ✅ Mid-answer latch (card survives flag refreshes, payload edits, and
    route changes until concluded)
-5. Further hardening: impression cap, cross-tab sync,
-   deterministic survey order
-6. Submission to `submitBase`
+5. ✅ Impression cap (an ignored survey stops appearing after 3 showings)
+6. Further hardening: cross-tab sync, deterministic survey order
+7. Submission to `submitBase`

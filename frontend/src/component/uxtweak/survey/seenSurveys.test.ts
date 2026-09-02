@@ -2,10 +2,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
     hasSeenSurvey,
     isInSurveyGracePeriod,
+    hasReachedImpressionCap,
     markSurveySeen,
+    recordSurveyShown,
 } from './seenSurveys.ts';
 
 const GRACE_RAW_KEY = ':uxtweak-survey-grace:v1:localStorage:v2';
+const IMPRESSIONS_RAW_KEY = ':uxtweak-survey-impressions:v1:localStorage:v2';
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
 const seedRaw = (key: string, value: unknown, expiry?: number) =>
@@ -58,5 +61,39 @@ describe('seen surveys', () => {
         markSurveySeen('sv_first');
         markSurveySeen('sv_second');
         expect(hasSeenSurvey('sv_first')).toBe(true);
+    });
+});
+
+describe('survey impression cap', () => {
+    beforeEach(() => {
+        localStorage.clear();
+    });
+
+    it('records at most one impression per survey per page load', () => {
+        recordSurveyShown('imp_once');
+        recordSurveyShown('imp_once');
+        expect(
+            JSON.parse(localStorage.getItem(IMPRESSIONS_RAW_KEY) ?? '{}').value,
+        ).toEqual(['imp_once']);
+    });
+
+    it('caps a survey only once it reaches the maximum', () => {
+        seedRaw(IMPRESSIONS_RAW_KEY, [
+            'imp_under',
+            'imp_under',
+            'imp_at',
+            'imp_at',
+            'imp_at',
+        ]);
+        expect(hasReachedImpressionCap('imp_under')).toBe(false);
+        expect(hasReachedImpressionCap('imp_at')).toBe(true);
+    });
+
+    it('treats malformed impression storage as zero impressions', () => {
+        seedRaw(IMPRESSIONS_RAW_KEY, 'nope');
+        expect(hasReachedImpressionCap('imp_bad')).toBe(false);
+
+        seedRaw(IMPRESSIONS_RAW_KEY, { imp_bad: 3 });
+        expect(hasReachedImpressionCap('imp_bad')).toBe(false);
     });
 });

@@ -43,6 +43,7 @@ const surveyFlag = (
 });
 
 const GRACE_RAW_KEY = ':uxtweak-survey-grace:v1:localStorage:v2';
+const IMPRESSIONS_RAW_KEY = ':uxtweak-survey-impressions:v1:localStorage:v2';
 
 const seedRaw = (key: string, value: unknown, expiry?: number) =>
     localStorage.setItem(key, JSON.stringify({ value, expiry }));
@@ -213,6 +214,36 @@ describe('UxTweakWidgets', () => {
         seedRaw(GRACE_RAW_KEY, 'active', Date.now() - 1);
         renderWidgets(testUnleashClient([surveyFlag('/projects')]));
         expect(await screen.findByText('Quick feedback')).toBeInTheDocument();
+    });
+
+    it('skips a survey that reached the impression cap', async () => {
+        seedRaw(IMPRESSIONS_RAW_KEY, ['sv_1', 'sv_1', 'sv_1']);
+        renderWidgets(testUnleashClient([surveyFlag('/projects')]));
+        await settleProviders();
+        expect(screen.queryByText('Quick feedback')).not.toBeInTheDocument();
+    });
+
+    it('still shows a survey below the impression cap', async () => {
+        seedRaw(IMPRESSIONS_RAW_KEY, ['sv_1', 'sv_1']);
+        renderWidgets(testUnleashClient([surveyFlag('/projects')]));
+        expect(await screen.findByText('Quick feedback')).toBeInTheDocument();
+    });
+
+    it('records an impression when a survey is shown', async () => {
+        renderWidgets(
+            testUnleashClient([
+                surveyFlag('/projects', [ratingQuestion], {
+                    name: 'uxtweak-survey-projects-wrt1',
+                    surveyId: 'sv_write',
+                    title: 'Write-side survey',
+                }),
+            ]),
+        );
+        await screen.findByText('Write-side survey');
+
+        expect(
+            JSON.parse(localStorage.getItem(IMPRESSIONS_RAW_KEY) ?? '{}').value,
+        ).toEqual(['sv_write']);
     });
 
     it('keeps the card and typed answers when a flag refresh drops the survey', async () => {

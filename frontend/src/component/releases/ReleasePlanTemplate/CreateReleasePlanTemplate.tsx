@@ -21,6 +21,7 @@ import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplat
 import { releaseTemplatesApiPath } from 'hooks/api/getters/useReleasePlanTemplates/releaseTemplatesApiPath';
 import { formatReleaseTemplateListPath } from 'component/releases/releaseTemplatePaths';
 import { releaseTemplateScopeProps } from 'component/releases/releaseTemplateScopeProps';
+import { automationCounts } from 'component/releases/automationCounts';
 import { formatValidationErrors } from './formatValidationErrors.ts';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 
@@ -88,9 +89,8 @@ export const CreateReleasePlanTemplate = ({ modal }: { modal?: boolean }) => {
             return;
         }
         try {
-            const template = await createReleasePlanTemplate(
-                getTemplatePayload(),
-            );
+            const payload = getTemplatePayload();
+            const template = await createReleasePlanTemplate(payload);
             scrollToTop();
             setToastData({
                 type: 'success',
@@ -105,6 +105,7 @@ export const CreateReleasePlanTemplate = ({ modal }: { modal?: boolean }) => {
                     eventType: 'create-template',
                     template: template.name,
                     ...scopeProps,
+                    ...automationCounts(payload.milestones),
                 },
             });
 

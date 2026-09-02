@@ -30,7 +30,7 @@ import { MilestoneCardDragHandle } from './MilestoneCardDragHandle.tsx';
 const leftPadding = 3;
 
 const DraggableCardContainer = styled('div')(({ theme }) => ({
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(4),
     '--left-padding': `var(--form-content-padding, ${theme.spacing(4)})`,
     // for accessibility, never make button smaller than 32px
     '--drag-column-width': `max(var(--left-padding), ${theme.spacing(4)})`,

@@ -111,7 +111,10 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                     label={
                         <>
                             Template description{' '}
-                            <Typography component='span' fontWeight='regular'>
+                            <Typography
+                                component='span'
+                                sx={{ fontWeight: 'regular' }}
+                            >
                                 (optional)
                             </Typography>
                         </>

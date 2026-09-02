@@ -31,6 +31,11 @@ export interface LoginEventSchema {
     ip?: string | null;
     /** Whether the login was successful or not. */
     successful?: boolean;
+    /**
+     * The raw `User-Agent` header sent by the client, up to 512 chars. Opt-in; absent when not enabled or for clients that send no `User-Agent`.
+     * @nullable
+     */
+    user_agent?: string | null;
     /** The username of the user that attempted to log in. Will return "Incorrectly configured provider" when attempting to log in using a misconfigured provider. */
     username?: string;
 }

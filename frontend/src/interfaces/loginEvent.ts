@@ -6,5 +6,6 @@ export interface ILoginEvent {
     created_at: Date;
     successful: boolean;
     ip?: string;
+    user_agent?: string;
     failure_reason?: string;
 }

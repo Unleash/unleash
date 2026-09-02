@@ -85,7 +85,7 @@
     "@unleash/proxy-client-react": "5.1.0",
     "@unleash/sdk-flight-recorder": "^0.8.0",
     "@unleash/toolbar": "1.2.0",
-    "@vitejs/plugin-react": "6.0.5",
+    "@vitejs/plugin-react": "6.1.0",
     "cartesian": "^1.0.1",
     "chart.js": "^4.1.1",
     "chartjs-adapter-date-fns": "3.0.0",

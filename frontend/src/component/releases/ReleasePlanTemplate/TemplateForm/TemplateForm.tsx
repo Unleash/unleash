@@ -1,5 +1,5 @@
 import Input from 'component/common/Input/Input';
-import { Alert, Box, styled, useTheme } from '@mui/material';
+import { Alert, Box, styled, Typography, useTheme } from '@mui/material';
 import type { IReleasePlanMilestonePayload } from 'interfaces/releasePlans';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { TemplateFormDescription } from './TemplateFormDescription.tsx';
@@ -111,14 +111,9 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                     label={
                         <>
                             Template description{' '}
-                            <span
-                                style={{
-                                    fontWeight:
-                                        theme.typography.fontWeightRegular,
-                                }}
-                            >
+                            <Typography component='span' fontWeight='regular'>
                                 (optional)
-                            </span>
+                            </Typography>
                         </>
                     }
                     value={description}

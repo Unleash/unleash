@@ -80,6 +80,7 @@ export type IFlagKey =
     | 'searchDocsWidget'
     | 'usersTabsUI'
     | 'semverBuildMetadata'
+    | 'slackIntegrationProjectLevel'
     | keyof IFlagKeyOverrides;
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -359,6 +360,10 @@ const flags: IFlags = {
     ),
     semverBuildMetadata: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SEMVER_BUILD_METADATA,
+        false,
+    ),
+    slackIntegrationProjectLevel: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SLACK_INTEGRATION_PROJECT_LEVEL,
         false,
     ),
 };

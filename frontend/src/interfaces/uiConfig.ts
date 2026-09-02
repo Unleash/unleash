@@ -110,6 +110,7 @@ export type UiFlags = {
     usersTabsUI?: boolean;
     exposureBasedAutomation?: boolean;
     semverBuildMetadata?: boolean;
+    slackIntegrationProjectLevel?: boolean;
 };
 
 export interface IVersionInfo {

@@ -63,6 +63,7 @@ process.nextTick(async () => {
                         topLabelInputs: true,
                         recordSdkFlavorMetrics: true,
                         semverBuildMetadata: true,
+                        slackIntegrationProjectLevel: true,
                     },
                 },
                 authentication: {

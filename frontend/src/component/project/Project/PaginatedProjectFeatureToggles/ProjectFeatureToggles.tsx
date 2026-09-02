@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -164,15 +164,19 @@ export const ProjectFeatureToggles = ({
 
     const [onboardingFlow, setOnboardingFlow] = useLocalStorageState<
         'visible' | 'closed'
-    >(`onboarding-flow:v1-${projectId}`, 'closed');
+    >(`onboarding-flow:v2-${projectId}`, 'closed');
 
+    const sawOnboardingInProgress = useRef(false);
     useEffect(() => {
-        if (!isPlaceholder && !isOnboarded) {
+        if (isPlaceholder) return;
+        if (!isOnboarded) {
+            sawOnboardingInProgress.current = true;
+        } else if (sawOnboardingInProgress.current) {
             setOnboardingFlow('visible');
         }
     }, [isPlaceholder, isOnboarded]);
 
-    const showNewOnboarding = onboardingFlow === 'visible';
+    const showNewOnboarding = !isOnboarded || onboardingFlow === 'visible';
 
     const showCleanupReminder = !tableState.lastSeenAt && !tableState.lifecycle;
     const environments = availableEnvironments;

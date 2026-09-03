@@ -81,6 +81,7 @@ export type IFlagKey =
     | 'usersTabsUI'
     | 'semverBuildMetadata'
     | 'slackIntegrationProjectLevel'
+    | 'flagStatusTooltips'
     | keyof IFlagKeyOverrides;
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -364,6 +365,10 @@ const flags: IFlags = {
     ),
     slackIntegrationProjectLevel: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SLACK_INTEGRATION_PROJECT_LEVEL,
+        false,
+    ),
+    flagStatusTooltips: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FLAG_STATUS_TOOLTIPS,
         false,
     ),
 };

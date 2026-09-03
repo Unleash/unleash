@@ -111,6 +111,7 @@ export type UiFlags = {
     exposureBasedAutomation?: boolean;
     semverBuildMetadata?: boolean;
     slackIntegrationProjectLevel?: boolean;
+    flagStatusTooltips?: boolean;
 };
 
 export interface IVersionInfo {

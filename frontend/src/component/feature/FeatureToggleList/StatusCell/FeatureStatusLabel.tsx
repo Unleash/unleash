@@ -13,14 +13,18 @@ const StyledTooltipLink = styled(TooltipLink)(() => ({
 export const FeatureStatusLabel: FC<
     Pick<FeatureSearchResponseSchema, 'lifecycle' | 'environments'>
 > = ({ lifecycle, environments }) => {
-    const { label, description } = useMemo(
+    const { label, tooltip } = useMemo(
         () =>
             getFeatureStatusText(getFeatureStatus({ lifecycle, environments })),
         [lifecycle, environments],
     );
 
+    if (!tooltip) {
+        return <Truncator lines={2}>{label}</Truncator>;
+    }
+
     return (
-        <StyledTooltipLink tooltip={description ?? label}>
+        <StyledTooltipLink tooltip={tooltip}>
             <Truncator lines={2}>{label}</Truncator>
         </StyledTooltipLink>
     );

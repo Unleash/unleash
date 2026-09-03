@@ -68,4 +68,13 @@ describe('FeatureStatusLabel', () => {
 
         expect(await tooltipFor(label)).toHaveTextContent(label);
     });
+
+    it('shows a healthy flag without a tooltip', async () => {
+        renderStatus([productionEnvironment()]);
+
+        await userEvent.hover(screen.getByText('–'));
+
+        expect(screen.queryByRole('tooltip')).toBeNull();
+        expect(screen.queryByRole('link')).toBeNull();
+    });
 });

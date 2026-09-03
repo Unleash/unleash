@@ -51,21 +51,21 @@ describe('getFeatureStatusText', () => {
         [
             { type: 'noProductionEnvironments' },
             'No production environments',
-            undefined,
+            'No production environments',
         ],
         [
             { type: 'milestone', name: 'First step', order: 1, total: 2 },
             'Milestone: First step (1 of 2)',
-            undefined,
+            'Milestone: First step (1 of 2)',
         ],
         [
             { type: 'milestone', name: null, order: 2, total: 3 },
             'Milestone 2 of 3',
-            undefined,
+            'Milestone 2 of 3',
         ],
-        [{ type: 'ok' }, '–', 'No issues detected'],
-        [{ type: 'unknown' }, '–', 'We are lacking data about this flag'],
-    ])('describes %o', (status, label, description) => {
-        expect(getFeatureStatusText(status)).toEqual({ label, description });
+        [{ type: 'ok' }, '–', undefined],
+        [{ type: 'unknown' }, 'N/A', undefined],
+    ])('describes %o', (status, label, tooltip) => {
+        expect(getFeatureStatusText(status)).toEqual({ label, tooltip });
     });
 });

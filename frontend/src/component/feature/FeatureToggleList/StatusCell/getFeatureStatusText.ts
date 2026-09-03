@@ -2,10 +2,11 @@ import type { FeatureStatus } from './getFeatureStatus.ts';
 
 export type FeatureStatusText = {
     label: string;
-    description?: string;
+    /** When absent, the status is shown without a tooltip. */
+    tooltip?: string;
 };
 
-const pausedDescriptions = {
+const pausedTooltips = {
     'non-production': 'All non-production environments are disabled',
     any: 'No environment enabled',
     production: 'Production environments are disabled',
@@ -27,12 +28,12 @@ export const getFeatureStatusText = (
         case 'noTraffic':
             return {
                 label: 'No traffic',
-                description: 'A non-production environment is enabled',
+                tooltip: 'A non-production environment is enabled',
             };
         case 'noStrategies':
             return {
                 label: 'No strategies',
-                description:
+                tooltip:
                     status.environment === 'production'
                         ? 'No strategies added in the production environment'
                         : 'No strategies in non-production environment',
@@ -40,30 +41,31 @@ export const getFeatureStatusText = (
         case 'noEnabledStrategies':
             return {
                 label: 'No enabled strategies',
-                description:
+                tooltip:
                     'All strategies in non-production environments are disabled',
             };
         case 'paused':
             return {
                 label: 'Paused',
-                description: pausedDescriptions[status.environment],
+                tooltip: pausedTooltips[status.environment],
             };
         case 'partialProduction':
             return {
                 label: `In ${status.enabledEnvironments.length} out of ${status.total} production environments`,
-                description: `Enabled in: ${status.enabledEnvironments.join(', ')}`,
+                tooltip: `Enabled in: ${status.enabledEnvironments.join(', ')}`,
             };
-        case 'noProductionEnvironments':
-            return { label: 'No production environments' };
-        case 'milestone':
-            return { label: milestoneLabel(status) };
+        case 'noProductionEnvironments': {
+            const label = 'No production environments';
+            return { label, tooltip: label };
+        }
+        case 'milestone': {
+            const label = milestoneLabel(status);
+            return { label, tooltip: label };
+        }
         case 'ok':
-            return { label: '–', description: 'No issues detected' };
+            return { label: '–' };
         case 'unknown':
-            return {
-                label: '–',
-                description: 'We are lacking data about this flag',
-            };
+            return { label: 'N/A' };
         default: {
             const exhaustiveCheck: never = status;
             return exhaustiveCheck;

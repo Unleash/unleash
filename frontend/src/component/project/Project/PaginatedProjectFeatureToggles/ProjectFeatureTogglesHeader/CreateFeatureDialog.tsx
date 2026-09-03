@@ -3,10 +3,16 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
-import { type ReactNode, useState, type FormEvent, useMemo } from 'react';
+import {
+    type ReactNode,
+    useState,
+    type FormEvent,
+    useMemo,
+    useEffect,
+} from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { useEventTracker } from 'hooks/useEventTracker';
+import { useTracking } from 'hooks/useTracking';
 import { useNavigate } from 'react-router';
 import { Dialog, IconButton, styled } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -44,11 +50,18 @@ import { useFlagLimits } from './useFlagLimits.tsx';
 import { useFeatureCreatedFeedback } from './hooks/useFeatureCreatedFeedback.ts';
 import { formatTag } from 'utils/format-tag';
 import { useLocalStorageState } from 'hooks/useLocalStorageState.ts';
+import { emitTrackingAction } from 'utils/trackingEvents';
+import { useEventTracker } from 'hooks/useEventTracker';
 import {
     dismissMethodFromCloseReason,
-    useDialogDismissTracking,
-} from 'hooks/useTrackDialogDismissed';
-import type { DialogDismissMethod } from 'utils/trackingEvents';
+    useDialogTracking,
+} from 'hooks/useDialogTracking';
+import type { DialogDismissMethod, Tracking } from 'utils/trackingEvents';
+
+const flagCreationTracking = {
+    event: 'flag-creation',
+    type: 'created',
+} satisfies Tracking;
 
 interface ICreateFeatureDialogProps {
     open: boolean;
@@ -151,11 +164,16 @@ const CreateFeatureDialogContent = ({
     onSuccess,
 }: ICreateFeatureDialogProps) => {
     const useNewDesign = useUiFlag('newModalDesign');
-    const emitDismissed = useDialogDismissTracking(open, {
-        event: 'flag-creation',
-        type: 'created',
-    });
+    const emitDismissed = useDialogTracking(open, flagCreationTracking);
     const { trackEvent } = useEventTracker();
+
+    // Opening this dialog is a deliberate gesture, so it earns its own row.
+    useEffect(() => {
+        if (open) {
+            emitTrackingAction(trackEvent, flagCreationTracking, 'opened');
+        }
+    }, [open, trackEvent]);
+    const { trackMutation } = useTracking(flagCreationTracking);
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig, isOss } = useUiConfig();
     const navigate = useNavigate();
@@ -226,14 +244,10 @@ const CreateFeatureDialogContent = ({
 
         if (validToggleName) {
             const payload = getTogglePayload();
-            trackEvent('flag-creation', {
-                props: { eventType: 'created', action: 'submitted' },
-            });
             try {
-                await createFeatureToggle(project, payload);
-                trackEvent('flag-creation', {
-                    props: { eventType: 'created', action: 'succeeded' },
-                });
+                await trackMutation(() =>
+                    createFeatureToggle(project, payload),
+                );
                 navigate(`/projects/${project}/features/${name}`);
                 setToastData({
                     text: 'Flag created successfully',
@@ -244,9 +258,6 @@ const CreateFeatureDialogContent = ({
                 setStoredFlagConfig({});
                 openFeatureCreatedFeedback();
             } catch (error: unknown) {
-                trackEvent('flag-creation', {
-                    props: { eventType: 'created', action: 'failed' },
-                });
                 setToastApiError(formatUnknownError(error));
             }
         }

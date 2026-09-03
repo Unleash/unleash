@@ -1,7 +1,6 @@
 import { styled } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
-import { useDialogDismissTracking } from 'hooks/useTrackDialogDismissed';
-import { useEventTracker } from 'hooks/useEventTracker';
+import { useDialogTracking } from 'hooks/useDialogTracking';
 import { useEffect, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ImportTimeline } from './ImportTimeline.tsx';
@@ -16,6 +15,7 @@ import {
 import { ValidationStage } from './validate/ValidationStage.tsx';
 import { ImportStage } from './import/ImportStage.tsx';
 import { ImportOptions } from './configure/ImportOptions.tsx';
+import { importCompletedTracking } from 'component/project/Project/Import/importTracking';
 
 const ModalContentContainer = styled('div')(({ theme }) => ({
     minHeight: '100vh',
@@ -57,18 +57,7 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
     const [importPayload, setImportPayload] = useState('');
     const [activeTab, setActiveTab] = useState<ImportMode>('file');
 
-    const emitDismissed = useDialogDismissTracking(open, {
-        event: 'export_import',
-        type: 'import completed',
-    });
-    const { trackEvent } = useEventTracker();
-
-    const startImport = () => {
-        trackEvent('export_import', {
-            props: { eventType: 'import completed', action: 'submitted' },
-        });
-        setImportStage('import');
-    };
+    const emitDismissed = useDialogTracking(open, importCompletedTracking);
 
     const close = () => {
         setOpen(false);
@@ -97,7 +86,7 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
             open={open}
             onClose={close}
             label='Import flags'
-            tracking={{ event: 'export_import', type: 'import completed' }}
+            tracking={importCompletedTracking}
         >
             <ModalContentContainer>
                 <TimelineContainer>
@@ -147,7 +136,7 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
                             environment={environment}
                             payload={importPayload}
                             onBack={() => setImportStage('configure')}
-                            onSubmit={startImport}
+                            onSubmit={() => setImportStage('import')}
                             onClose={cancel}
                         />
                     }

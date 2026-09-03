@@ -5,7 +5,7 @@ import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequ
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
-import type { DialogTracking } from 'utils/trackingEvents';
+import type { Tracking } from 'utils/trackingEvents';
 
 interface IChangeRequestDialogueProps {
     isOpen: boolean;
@@ -15,7 +15,7 @@ interface IChangeRequestDialogueProps {
     showBanner?: boolean;
     messageComponent: JSX.Element;
     disabled?: boolean;
-    tracking?: DialogTracking;
+    tracking?: Tracking;
 }
 
 export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({

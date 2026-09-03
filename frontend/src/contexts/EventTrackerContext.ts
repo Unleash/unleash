@@ -17,10 +17,12 @@ type TrackedValue =
 
 // `path` is reserved: the provider injects the current route so custom events correlate
 // with page views on the same screen.
+export type EventProps = Record<string, TrackedValue> & {
+    path?: never;
+};
+
 export type TrackEventOptions = {
-    props?: Record<string, TrackedValue> & {
-        path?: never;
-    };
+    props?: EventProps;
 };
 
 // pageview/pageleave are emitted internally by page-view tracking; excluding them here

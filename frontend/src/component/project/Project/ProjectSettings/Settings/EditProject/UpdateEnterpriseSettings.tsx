@@ -12,7 +12,7 @@ import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import { styled } from '@mui/material';
 import { useEventTracker } from 'hooks/useEventTracker';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-import type { ProjectOverviewSchema } from 'openapi';
+import type { ProjectLinkTemplateSchema, ProjectOverviewSchema } from 'openapi';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     minHeight: 0,
@@ -51,6 +51,47 @@ export const useModeTracking = () => {
     };
 
     return { trackModePattern, setPreviousMode };
+};
+
+const templateKey = (template: ProjectLinkTemplateSchema) =>
+    `${template.title ?? ''}|${template.urlTemplate}`;
+
+// Link templates only persist when the surrounding form is saved, so rows emit here by
+// diffing against the previous list. An edit shows up as one deleted plus one added row.
+export const useLinkTemplatesTracking = () => {
+    const [previousTemplates, setPreviousTemplates] = React.useState<
+        ProjectLinkTemplateSchema[]
+    >([]);
+    const { trackEvent } = useEventTracker();
+
+    const trackLinkTemplates = (templates: ProjectLinkTemplateSchema[]) => {
+        const previous = new Set(previousTemplates.map(templateKey));
+        const current = new Set(templates.map(templateKey));
+        for (const template of templates) {
+            if (!previous.has(templateKey(template))) {
+                trackEvent('feature-links', {
+                    props: {
+                        eventType: 'add-template',
+                        action: 'added',
+                        hasTitle: Boolean(template.title),
+                    },
+                });
+            }
+        }
+        for (const template of previousTemplates) {
+            if (!current.has(templateKey(template))) {
+                trackEvent('feature-links', {
+                    props: {
+                        eventType: 'delete-template',
+                        action: 'deleted',
+                        hasTitle: Boolean(template.title),
+                    },
+                });
+            }
+        }
+    };
+
+    return { trackLinkTemplates, setPreviousTemplates };
 };
 
 export const UpdateEnterpriseSettings = ({
@@ -121,6 +162,9 @@ export const UpdateEnterpriseSettings = ({
 
     const { setPreviousMode, trackModePattern } = useModeTracking();
 
+    const { setPreviousTemplates, trackLinkTemplates } =
+        useLinkTemplatesTracking();
+
     const handleEditProjectSettings = async (e: Event) => {
         e.preventDefault();
         const payload = getEnterpriseSettingsPayload();
@@ -133,6 +177,7 @@ export const UpdateEnterpriseSettings = ({
             });
             trackPattern(featureNamingPattern);
             trackModePattern(projectMode);
+            trackLinkTemplates(linkTemplates);
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
@@ -141,6 +186,7 @@ export const UpdateEnterpriseSettings = ({
     useEffect(() => {
         setPreviousPattern(featureNamingPattern || '');
         setPreviousMode(projectMode);
+        setPreviousTemplates(project?.linkTemplates || []);
     }, [project]);
 
     return (

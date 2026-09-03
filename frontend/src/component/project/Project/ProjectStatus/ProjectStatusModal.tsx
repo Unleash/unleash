@@ -10,7 +10,8 @@ import { useFeedback } from 'component/feedbackNew/useFeedback';
 import FeedbackIcon from '@mui/icons-material/ChatOutlined';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useEventTracker } from 'hooks/useEventTracker';
-import { useTrackDialogDismissed } from 'hooks/useTrackDialogDismissed';
+import { useTracking } from 'hooks/useTracking';
+import type { Tracking } from 'utils/trackingEvents';
 
 const ModalContentContainer = styled('section')(({ theme }) => ({
     minHeight: '100vh',
@@ -142,6 +143,8 @@ type Props = {
     onFollowLink: () => void;
 };
 
+const projectStatusTracking: Tracking = { event: 'project-status' };
+
 export const ProjectStatusModal = ({ open, onClose, onFollowLink }: Props) => {
     const { openFeedback } = useFeedback('projectStatus', 'manual');
     const createFeedbackContext = () => {
@@ -157,14 +160,14 @@ export const ProjectStatusModal = ({ open, onClose, onFollowLink }: Props) => {
     const { trackEvent } = useEventTracker();
     // The Close button is ours, so DynamicSidebarModal's own dismissal tracking
     // (close icon, backdrop, escape) never sees it.
-    const trackDialogDismissed = useTrackDialogDismissed();
+    const { track } = useTracking(projectStatusTracking);
 
     return (
         <DynamicSidebarModal
             open={open}
             onClose={onClose}
             label='Project status'
-            tracking={{ event: 'project-status' }}
+            tracking={projectStatusTracking}
             onClick={(e: React.SyntheticEvent) => {
                 if (e.target instanceof HTMLAnchorElement) {
                     onFollowLink();
@@ -224,10 +227,7 @@ export const ProjectStatusModal = ({ open, onClose, onFollowLink }: Props) => {
                     <Button
                         variant='outlined'
                         onClick={() => {
-                            trackDialogDismissed(
-                                { event: 'project-status' },
-                                'cancel-button',
-                            );
+                            track('dismissed', { method: 'cancel-button' });
                             onClose();
                         }}
                     >

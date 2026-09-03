@@ -1,5 +1,5 @@
 import type React from 'react';
-import type { KeyboardEvent } from 'react';
+import { type KeyboardEvent, useEffect, useRef } from 'react';
 import {
     Button,
     Dialog,
@@ -12,10 +12,11 @@ import {
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     dismissMethodFromCloseReason,
-    useDialogDismissTracking,
-} from 'hooks/useTrackDialogDismissed';
+    useDialogTracking,
+} from 'hooks/useDialogTracking';
 import { DIALOGUE_CONFIRM_ID } from 'utils/testIds';
-import type { DialogTracking } from 'utils/trackingEvents';
+import { useEventTracker } from 'hooks/useEventTracker';
+import { emitTrackingAction, type Tracking } from 'utils/trackingEvents';
 
 const StyledDialog = styled(Dialog)(({ theme, maxWidth }) => ({
     '& .MuiDialog-paper': {
@@ -63,7 +64,7 @@ interface IDialogue {
     permissionButton?: React.JSX.Element;
     customButton?: React.JSX.Element;
     children?: React.ReactNode;
-    tracking?: DialogTracking;
+    tracking?: Tracking;
 }
 
 export const Dialogue: React.FC<IDialogue> = ({
@@ -83,7 +84,18 @@ export const Dialogue: React.FC<IDialogue> = ({
     customButton,
     tracking,
 }) => {
-    const emitDismissed = useDialogDismissTracking(open, tracking);
+    const emitDismissed = useDialogTracking(open, tracking);
+    const { trackEvent } = useEventTracker();
+    const openedTrackingRef = useRef(tracking);
+    openedTrackingRef.current = tracking;
+
+    // Opening a Dialogue is a deliberate gesture, so it earns its own row.
+    useEffect(() => {
+        const declaration = openedTrackingRef.current;
+        if (open && declaration) {
+            emitTrackingAction(trackEvent, declaration, 'opened');
+        }
+    }, [open, trackEvent]);
 
     const handleClick = formId
         ? (e: React.SyntheticEvent) => {

@@ -5,7 +5,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import type { DialogTracking } from 'utils/trackingEvents';
+import type { Tracking } from 'utils/trackingEvents';
 
 const StyledList = styled('ul')(({ theme }) => ({
     margin: theme.spacing(1),
@@ -20,7 +20,7 @@ interface IEnableEnvironmentDialogProps {
     environment?: string;
     featureId: string;
     showBanner?: boolean;
-    tracking?: DialogTracking;
+    tracking?: Tracking;
 }
 
 export const EnableEnvironmentDialog: FC<IEnableEnvironmentDialogProps> = ({

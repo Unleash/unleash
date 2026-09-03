@@ -21,7 +21,7 @@ import type { IToast } from 'interfaces/toast';
 import { useTheme } from '@mui/material/styles';
 import type { FeedbackData, FeedbackMode } from './FeedbackContext.tsx';
 import { useEventTracker } from 'hooks/useEventTracker';
-import { useDialogDismissTracking } from 'hooks/useTrackDialogDismissed';
+import { useDialogTracking } from 'hooks/useDialogTracking';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUserType from './useUserType.ts';
 import { BaseModal } from 'component/common/SidebarModal/SidebarModal';
@@ -159,7 +159,7 @@ export const FeedbackComponent = ({
     const { trackEvent } = useEventTracker();
     const theme = useTheme();
 
-    const emitDismissed = useDialogDismissTracking(showFeedback, {
+    const emitDismissed = useDialogTracking(showFeedback, {
         event: 'feedback',
     });
 

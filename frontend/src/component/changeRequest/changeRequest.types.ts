@@ -122,6 +122,8 @@ export type ChangeRequestState =
     | 'Cancelled'
     | 'Rejected';
 
+export type ChangeRequestTransitionState = Exclude<ChangeRequestState, 'Draft'>;
+
 export const isClosed = (state: ChangeRequestState): boolean =>
     ['Applied', 'Cancelled', 'Rejected'].includes(state);
 

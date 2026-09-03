@@ -4,10 +4,10 @@ import CloseIcon from '@mui/icons-material/Close';
 import Fade from '@mui/material/Fade';
 import {
     dismissMethodFromCloseReason,
-    useDialogDismissTracking,
-} from 'hooks/useTrackDialogDismissed';
+    useDialogTracking,
+} from 'hooks/useDialogTracking';
 import { SIDEBAR_MODAL_ID } from 'utils/testIds';
-import type { DialogDismissMethod, DialogTracking } from 'utils/trackingEvents';
+import type { DialogDismissMethod, Tracking } from 'utils/trackingEvents';
 import type * as React from 'react';
 
 interface ISidebarModalProps {
@@ -16,7 +16,7 @@ interface ISidebarModalProps {
     label: string;
     onClick?: (e: React.SyntheticEvent) => void;
     children: React.ReactElement<any, any>;
-    tracking?: DialogTracking;
+    tracking?: Tracking;
 }
 
 interface IBaseModalProps {
@@ -84,7 +84,7 @@ export const BaseModal: FC<IBaseModalProps> = ({
 };
 
 export const SidebarModal: FC<ISidebarModalProps> = (props) => {
-    const emitDismissed = useDialogDismissTracking(props.open, props.tracking);
+    const emitDismissed = useDialogTracking(props.open, props.tracking);
 
     return (
         <BaseModal {...props} onDismiss={emitDismissed}>
@@ -96,7 +96,7 @@ export const SidebarModal: FC<ISidebarModalProps> = (props) => {
 };
 
 export const DynamicSidebarModal: FC<ISidebarModalProps> = (props) => {
-    const emitDismissed = useDialogDismissTracking(props.open, props.tracking);
+    const emitDismissed = useDialogTracking(props.open, props.tracking);
 
     return (
         <BaseModal {...props} onDismiss={emitDismissed}>

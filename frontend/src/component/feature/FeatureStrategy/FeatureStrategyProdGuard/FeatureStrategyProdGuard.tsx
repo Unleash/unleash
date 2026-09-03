@@ -5,7 +5,7 @@ import { Checkbox, FormControlLabel } from '@mui/material';
 import { PRODUCTION } from 'constants/environmentTypes';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { createLocalStorage } from 'utils/createLocalStorage';
-import type { DialogTracking } from 'utils/trackingEvents';
+import type { Tracking } from 'utils/trackingEvents';
 
 interface IFeatureStrategyProdGuardProps {
     open: boolean;
@@ -13,7 +13,7 @@ interface IFeatureStrategyProdGuardProps {
     onClose: () => void;
     label: string;
     loading: boolean;
-    tracking?: DialogTracking;
+    tracking?: Tracking;
 }
 
 interface IFeatureStrategyProdGuardSettings {

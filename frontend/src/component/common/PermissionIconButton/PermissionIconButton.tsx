@@ -37,6 +37,7 @@ interface IButtonProps extends IPermissionIconButtonProps {
 interface ILinkProps extends IPermissionIconButtonProps {
     component: typeof Link;
     to: string;
+    onClick?: (event: React.SyntheticEvent) => void;
 }
 
 const RootPermissionIconButton = (props: IButtonProps | ILinkProps) => {

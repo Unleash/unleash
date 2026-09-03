@@ -33,6 +33,8 @@ import type { IUserProjectRole } from '../../../../interfaces/userProjectRoles.t
 import { useCheckProjectPermissions } from 'hooks/useHasAccess';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import AutocompleteVirtual from 'component/common/AutocompleteVirtual/AutcompleteVirtual';
+import { useTracking } from 'hooks/useTracking';
+import type { Tracking } from 'utils/trackingEvents';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -130,6 +132,12 @@ export const ProjectAccessAssign = ({
 
     const { setToastData, setToastApiError } = useToast();
     const navigate = useNavigate();
+    const tracking: Tracking = {
+        event: 'project-access',
+        type: edit ? 'role-changed' : 'assigned',
+    };
+    const { track, trackMutation, trackValidationFailed } =
+        useTracking(tracking);
 
     const options = [
         ...groups
@@ -212,29 +220,67 @@ export const ProjectAccessAssign = ({
             .map(({ id }) => id),
     };
 
+    // One row per submit gesture; targets are aggregated into counts. Service
+    // accounts go through the same endpoint as users, so they count as users.
+    const accessProps = () => {
+        const roleProps = {
+            rolesCount: selectedRoles.length,
+            roles: selectedRoles.map(({ name }) => name).join(', '),
+        };
+        if (edit) {
+            return {
+                ...roleProps,
+                targetType:
+                    selected?.type === ENTITY_TYPE.GROUP ? 'group' : 'user',
+                groupName:
+                    selected?.type === ENTITY_TYPE.GROUP
+                        ? selected.entity.name
+                        : undefined,
+            };
+        }
+        const selectedGroups = selectedOptions.filter(
+            ({ type }) => type === ENTITY_TYPE.GROUP,
+        );
+        return {
+            ...roleProps,
+            userCount: selectedOptions.length - selectedGroups.length,
+            groupCount: selectedGroups.length,
+            groupNames:
+                selectedGroups.map(({ entity }) => entity.name).join(', ') ||
+                undefined,
+        };
+    };
+
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!isValid) return;
+        const props = accessProps();
+
+        if (!isValid) {
+            trackValidationFailed(props);
+            return;
+        }
         try {
-            if (!edit) {
-                await addAccessToProject(projectId, payload);
-            } else if (
-                selected?.type === ENTITY_TYPE.USER ||
-                selected?.type === ENTITY_TYPE.SERVICE_ACCOUNT
-            ) {
-                await setUserRoles(
-                    projectId,
-                    selectedRoles.map(({ id }) => id),
-                    selected.entity.id,
-                );
-            } else if (selected?.type === ENTITY_TYPE.GROUP) {
-                await setGroupRoles(
-                    projectId,
-                    selectedRoles.map(({ id }) => id),
-                    selected.entity.id,
-                );
-            }
+            await trackMutation(async () => {
+                if (!edit) {
+                    await addAccessToProject(projectId, payload);
+                } else if (
+                    selected?.type === ENTITY_TYPE.USER ||
+                    selected?.type === ENTITY_TYPE.SERVICE_ACCOUNT
+                ) {
+                    await setUserRoles(
+                        projectId,
+                        selectedRoles.map(({ id }) => id),
+                        selected.entity.id,
+                    );
+                } else if (selected?.type === ENTITY_TYPE.GROUP) {
+                    await setGroupRoles(
+                        projectId,
+                        selectedRoles.map(({ id }) => id),
+                        selected.entity.id,
+                    );
+                }
+            }, props);
             refetchProjectAccess();
             navigate(GO_BACK);
             setToastData({
@@ -336,6 +382,7 @@ export const ProjectAccessAssign = ({
     return (
         <SidebarModal
             open
+            tracking={tracking}
             onClose={() => navigate(GO_BACK)}
             label={`${!edit ? 'Assign' : 'Edit'} ${entityType} access`}
         >
@@ -456,11 +503,16 @@ export const ProjectAccessAssign = ({
                             type='submit'
                             variant='contained'
                             color='primary'
-                            disabled={!isValid}
+                            disabled={!isValid || loading}
                         >
                             {edit ? 'Save' : `Assign ${entityType}`}
                         </Button>
-                        <StyledCancelButton onClick={() => navigate(GO_BACK)}>
+                        <StyledCancelButton
+                            onClick={() => {
+                                track('dismissed', { method: 'cancel-button' });
+                                navigate(GO_BACK);
+                            }}
+                        >
                             Cancel
                         </StyledCancelButton>
                     </StyledButtonContainer>

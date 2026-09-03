@@ -61,6 +61,21 @@ test('clientMetricsSchema is valid when bucket is null', () => {
     ).toBeUndefined();
 });
 
+test('clientMetricsSchema requires a non-empty appName', () => {
+    expect(
+        validateSchema('#/components/schemas/clientMetricsSchema', {
+            appName: '',
+        }),
+    ).toMatchObject({
+        errors: [
+            expect.objectContaining({
+                instancePath: '/appName',
+                keyword: 'minLength',
+            }),
+        ],
+    });
+});
+
 test('clientMetricsSchema should fail when required field is missing', () => {
     expect(
         validateSchema('#/components/schemas/clientMetricsSchema', {

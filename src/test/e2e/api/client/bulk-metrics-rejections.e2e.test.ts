@@ -57,25 +57,23 @@ afterEach(async () => {
 });
 
 test('returns 400 and stores nothing when applications contain invalid registrations and metrics also fail validation', async () => {
-    const started = new Date().toISOString();
     await postAndFlushBulkMetrics(
         {
             applications: [
                 {
-                    appName: null,
+                    appName: 'invalid-registration',
                     instanceId: 'instance-1',
                     environment: 'development',
                     interval: minutesToMilliseconds(1),
-                    started,
                     strategies: ['default'],
                 },
             ],
             metrics: [
                 {
                     featureName: 'demo-toggle',
-                    appName: null,
+                    appName: 'invalid-metric',
                     environment: 'development',
-                    timestamp: new Date().toISOString(),
+                    timestamp: null,
                     yes: 1,
                     no: 0,
                     variants: { variantA: 1 },
@@ -93,16 +91,14 @@ test('returns 400 and stores nothing when applications contain invalid registrat
 });
 
 test('returns 400 and stores nothing when application registration rejects but metrics are otherwise valid', async () => {
-    const started = new Date().toISOString();
     await postAndFlushBulkMetrics(
         {
             applications: [
                 {
-                    appName: null,
+                    appName: 'invalid-registration',
                     instanceId: 'instance-1',
                     environment: 'development',
                     interval: minutesToMilliseconds(1),
-                    started,
                     strategies: ['default'],
                 },
             ],
@@ -179,20 +175,19 @@ test('does not emit unhandled rejections when application registration rejects a
             {
                 applications: [
                     {
-                        appName: null,
+                        appName: 'invalid-registration',
                         instanceId: 'instance-1',
                         environment: 'development',
                         interval: minutesToMilliseconds(1),
-                        started: new Date().toISOString(),
                         strategies: ['default'],
                     },
                 ],
                 metrics: [
                     {
                         featureName: 'demo-toggle',
-                        appName: null,
+                        appName: 'invalid-metric',
                         environment: 'development',
-                        timestamp: new Date().toISOString(),
+                        timestamp: null,
                         yes: 1,
                         no: 0,
                         variants: { variantA: 1 },

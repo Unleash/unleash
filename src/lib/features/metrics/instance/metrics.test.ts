@@ -76,6 +76,28 @@ test('should validate client metrics', () => {
         .expect(400);
 });
 
+test('should reject an empty app name before registering the client instance', async () => {
+    const registerInstance = vi.spyOn(
+        services.clientInstanceService,
+        'registerInstance',
+    );
+
+    await request
+        .post('/api/client/metrics')
+        .send({
+            appName: '',
+            instanceId: 'invalid-instance',
+            bucket: {
+                start: Date.now(),
+                stop: Date.now(),
+                toggles: {},
+            },
+        })
+        .expect(400);
+
+    expect(registerInstance).not.toHaveBeenCalled();
+});
+
 test('should accept empty client metrics', () => {
     return request
         .post('/api/client/metrics')
@@ -265,6 +287,58 @@ test('should return 204 if metrics are disabled by feature flag', async () => {
 });
 
 describe('bulk metrics', () => {
+    test('still rejects bulk entries with a missing app name', async () => {
+        await request
+            .post('/api/client/metrics/bulk')
+            .send({
+                applications: [
+                    {
+                        instanceId: 'missing-app-name',
+                        environment: 'development',
+                    },
+                ],
+                metrics: [],
+            })
+            .expect(400);
+    });
+
+    test('ignores entries with empty app names while processing the rest of the payload', async () => {
+        await request
+            .post('/api/client/metrics/bulk')
+            .send({
+                applications: [
+                    {
+                        appName: '',
+                        instanceId: 'empty-app-name',
+                        environment: 'development',
+                    },
+                    {
+                        appName: 'valid-application',
+                        instanceId: 'valid-instance',
+                        environment: 'development',
+                        sdkVersion: 'unleash-client-js:1.0.0',
+                        sdkType: 'frontend',
+                    },
+                ],
+                metrics: [
+                    {
+                        featureName: 'ignored-metric',
+                        appName: '',
+                        environment: 'development',
+                        yes: 1,
+                        no: 0,
+                    },
+                ],
+            })
+            .expect(202);
+
+        await services.clientInstanceService.bulkAdd();
+
+        await expect(
+            services.clientInstanceService.getApplication('valid-application'),
+        ).resolves.toMatchObject({ appName: 'valid-application' });
+    });
+
     test('should separate frontend applications and backend applications', async () => {
         const frontendApp: BulkRegistrationSchema = {
             appName: 'application-name',

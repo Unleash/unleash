@@ -215,6 +215,9 @@ export default class ClientMetricsController extends Controller {
 
             try {
                 for (const app of applications) {
+                    if (!app.appName) {
+                        continue;
+                    }
                     // per app `environment` from the body - when this bulk endpoint
                     // forwards metrics from many environments for edge proxies
                     const appEnvironment =
@@ -245,8 +248,13 @@ export default class ClientMetricsController extends Controller {
                     }
                 }
                 if (metrics && metrics.length > 0) {
+                    const metricsWithAppName = metrics.filter((metric) =>
+                        Boolean(metric.appName),
+                    );
                     const data: IClientMetricsEnv[] =
-                        await clientMetricsEnvBulkSchema.validateAsync(metrics);
+                        await clientMetricsEnvBulkSchema.validateAsync(
+                            metricsWithAppName,
+                        );
                     const filteredData = data.filter(
                         (metric) => metric.environment === acceptedEnvironment,
                     );

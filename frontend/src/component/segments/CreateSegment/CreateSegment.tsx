@@ -22,6 +22,9 @@ import { SEGMENT_CREATE_BTN_ID } from 'utils/testIds';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
+import { useTracking } from 'hooks/useTracking';
+import { segmentTrackingProps } from 'component/segments/segmentTrackingProps';
+import { segmentCreatedTracking } from 'component/segments/segmentTrackingProps';
 
 interface ICreateSegmentProps {
     modal?: boolean;
@@ -35,6 +38,7 @@ export const CreateSegment = ({ modal }: ICreateSegmentProps) => {
     const navigate = useNavigate();
     const { createSegment, loading } = useSegmentsApi();
     const { refetchSegments } = useSegments();
+    const { trackMutation } = useTracking(segmentCreatedTracking);
 
     const {
         name,
@@ -68,8 +72,16 @@ export const CreateSegment = ({ modal }: ICreateSegmentProps) => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         clearErrors();
+        const trackingProps = segmentTrackingProps({
+            name,
+            constraints,
+            description,
+        });
         try {
-            await createSegment(getSegmentPayload());
+            await trackMutation(
+                () => createSegment(getSegmentPayload()),
+                trackingProps,
+            );
             await refetchSegments();
             if (projectId) {
                 navigate(`/projects/${projectId}/settings/segments/`);

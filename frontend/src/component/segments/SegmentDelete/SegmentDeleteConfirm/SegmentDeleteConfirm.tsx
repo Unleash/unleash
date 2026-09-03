@@ -5,6 +5,7 @@ import Input from 'component/common/Input/Input';
 import type { ISegment } from 'interfaces/segment';
 import { SEGMENT_DIALOG_NAME_ID } from 'utils/testIds';
 import { Alert, styled } from '@mui/material';
+import type { Tracking } from 'utils/trackingEvents';
 
 const StyledInput = styled(Input)(({ theme }) => ({
     marginTop: theme.spacing(2),
@@ -16,6 +17,7 @@ interface ISegmentDeleteConfirmProps {
     onClose: () => void;
     onRemove: () => void;
     title: string;
+    tracking?: Tracking;
 }
 
 export const SegmentDeleteConfirm = ({
@@ -24,6 +26,7 @@ export const SegmentDeleteConfirm = ({
     onClose,
     onRemove,
     title,
+    tracking,
 }: ISegmentDeleteConfirmProps) => {
     const [confirmName, setConfirmName] = useState('');
 
@@ -48,6 +51,7 @@ export const SegmentDeleteConfirm = ({
             disabledPrimaryButton={segment?.name !== confirmName}
             onClose={handleCancel}
             formId={formId}
+            tracking={tracking}
         >
             <Alert sx={{ marginBottom: 2 }} severity='warning'>
                 Deleted segments may be referenced in strategies if the feature

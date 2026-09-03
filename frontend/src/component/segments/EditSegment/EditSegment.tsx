@@ -28,6 +28,12 @@ import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPe
 import type { ISegment } from 'interfaces/segment.ts';
 import { constraintId } from 'constants/constraintId.ts';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
+import { useTracking } from 'hooks/useTracking';
+import {
+    segmentChangedProps,
+    segmentEditedTracking,
+    segmentTrackingProps,
+} from 'component/segments/segmentTrackingProps';
 
 interface IEditSegmentProps {
     modal?: boolean;
@@ -55,6 +61,7 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
     const navigate = useNavigate();
     const { updateSegment, loading } = useSegmentsApi();
     const { refetchSegments } = useSegments();
+    const { trackMutation } = useTracking(segmentEditedTracking);
 
     const {
         name,
@@ -101,16 +108,44 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
         if (segment) {
             e.preventDefault();
             clearErrors();
+            const trackingProps = {
+                viaChangeRequest: Boolean(changeRequestEnv),
+                ...segmentTrackingProps({
+                    name,
+                    id: segment.id,
+                    constraints,
+                    description,
+                }),
+                ...segmentChangedProps({
+                    name,
+                    description,
+                    constraints,
+                    initial: {
+                        name: segment.name,
+                        description: segment.description,
+                        constraints: segment.constraints,
+                    },
+                }),
+            };
             try {
-                if (changeRequestEnv) {
-                    await addChange(segment.project || '', changeRequestEnv, {
-                        action: 'updateSegment',
-                        feature: null,
-                        payload: { id: segment.id, ...getSegmentPayload() },
-                    });
-                } else {
-                    await updateSegment(segment.id, getSegmentPayload());
-                }
+                await trackMutation(
+                    () =>
+                        changeRequestEnv
+                            ? addChange(
+                                  segment.project || '',
+                                  changeRequestEnv,
+                                  {
+                                      action: 'updateSegment',
+                                      feature: null,
+                                      payload: {
+                                          id: segment.id,
+                                          ...getSegmentPayload(),
+                                      },
+                                  },
+                              )
+                            : updateSegment(segment.id, getSegmentPayload()),
+                    trackingProps,
+                );
                 refetchSegments();
                 if (projectId) {
                     navigate(`/projects/${projectId}/settings/segments/`);

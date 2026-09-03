@@ -16,6 +16,9 @@ import { useState } from 'react';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPermissionChangeRequestEnvironment';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { useTracking } from 'hooks/useTracking';
+import type { Tracking } from 'utils/trackingEvents';
+import { segmentTrackingProps } from 'component/segments/segmentTrackingProps';
 
 interface IRemoveSegmentButtonProps {
     segment: ISegment;
@@ -31,18 +34,38 @@ export const RemoveSegmentButton = ({ segment }: IRemoveSegmentButtonProps) => {
         useHighestPermissionChangeRequestEnvironment(segment?.project);
     const changeRequestEnv = highestPermissionChangeRequestEnv();
     const { addChange } = useChangeRequestApi();
+    const tracking: Tracking = {
+        event: 'segments',
+        type: 'deleted',
+        props: {
+            ...segmentTrackingProps(segment),
+            viaChangeRequest: Boolean(changeRequestEnv && segment.project),
+        },
+    };
+    const { trackMutation } = useTracking(tracking);
 
     const onRemove = async () => {
+        const changeRequest =
+            changeRequestEnv && segment.project
+                ? { project: segment.project, environment: changeRequestEnv }
+                : undefined;
+
         try {
-            if (changeRequestEnv && segment.project) {
-                await addChange(segment.project, changeRequestEnv, {
-                    action: 'deleteSegment',
-                    feature: null,
-                    payload: { id: segment.id },
-                });
-            } else {
-                await deleteSegment(segment.id);
-            }
+            await trackMutation(async () => {
+                if (changeRequest) {
+                    await addChange(
+                        changeRequest.project,
+                        changeRequest.environment,
+                        {
+                            action: 'deleteSegment',
+                            feature: null,
+                            payload: { id: segment.id },
+                        },
+                    );
+                } else {
+                    await deleteSegment(segment.id);
+                }
+            });
 
             await refetchSegments();
             setToastData({
@@ -77,6 +100,7 @@ export const RemoveSegmentButton = ({ segment }: IRemoveSegmentButtonProps) => {
                         open={showModal}
                         onClose={() => toggleModal(false)}
                         onRemove={onRemove}
+                        tracking={tracking}
                         title={changeRequestEnv ? 'Add to draft' : 'Save'}
                     />
                 )}

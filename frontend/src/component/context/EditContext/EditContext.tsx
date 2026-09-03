@@ -15,6 +15,12 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { GO_BACK } from 'constants/navigate';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
 import { UPDATE_PROJECT_CONTEXT } from '@server/types/permissions.ts';
+import { useTracking } from 'hooks/useTracking';
+import {
+    contextFieldChangedProps,
+    contextFieldEditedTracking,
+    contextFieldTrackingProps,
+} from 'component/context/contextFieldTrackingProps';
 
 type EditContextProps = {
     modal?: boolean;
@@ -32,6 +38,7 @@ export const EditContext: FC<EditContextProps> = ({ modal }) => {
     const { context, refetch } = useContext({ name, project: projectId });
     const { updateContext, loading } = useContextsApi(projectId);
     const navigate = useNavigate();
+    const { trackMutation } = useTracking(contextFieldEditedTracking);
     const {
         contextName,
         contextDesc,
@@ -71,9 +78,27 @@ export const EditContext: FC<EditContextProps> = ({ modal }) => {
         const navigationTarget = projectId
             ? `/projects/${projectId}/settings/context`
             : '/context';
+        const trackingProps = {
+            ...contextFieldTrackingProps({
+                name: contextName,
+                legalValues,
+                description: contextDesc,
+                stickiness,
+            }),
+            ...contextFieldChangedProps({
+                legalValues,
+                description: contextDesc,
+                stickiness,
+                initial: {
+                    description: context?.description,
+                    legalValues: context?.legalValues,
+                    stickiness: context?.stickiness,
+                },
+            }),
+        };
 
         try {
-            await updateContext(payload);
+            await trackMutation(() => updateContext(payload), trackingProps);
             refetch();
             navigate(navigationTarget);
             setToastData({

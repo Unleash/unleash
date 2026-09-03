@@ -23,6 +23,7 @@ import {
 } from './FormTemplate.styles';
 import { relative } from 'themes/themeStyles';
 import { ApiCommandBlock } from './ApiCommandBlock.tsx';
+import { apiCommandTrackingProps } from './apiCommandTrackingProps.ts';
 
 interface ICreateProps {
     title?: ReactNode;
@@ -261,9 +262,13 @@ const FormTemplate: React.FC<ICreateProps> = ({
     const smallScreen = useMediaQuery(`(max-width:${1099}px)`);
     const copyCommand = () => {
         if (formatApiCode !== undefined) {
-            const copied = copy(formatApiCode());
+            const command = formatApiCode();
+            const copied = copy(command);
             trackEvent('api-command-copied', {
-                props: { action: copied ? 'succeeded' : 'failed' },
+                props: {
+                    action: copied ? 'succeeded' : 'failed',
+                    ...apiCommandTrackingProps(command),
+                },
             });
             if (copied) {
                 setToastData({

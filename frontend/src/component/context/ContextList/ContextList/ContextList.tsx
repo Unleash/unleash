@@ -32,6 +32,17 @@ import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { Search } from 'component/common/Search/Search';
 import { UsedInCell } from '../UsedInCell.tsx';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
+import { useTracking } from 'hooks/useTracking';
+import type { Tracking } from 'utils/trackingEvents';
+import {
+    contextFieldTrackingProps,
+    type ContextFieldTrackingProps,
+} from 'component/context/contextFieldTrackingProps';
+
+const contextFieldDeletedTracking: Tracking = {
+    event: 'context-fields',
+    type: 'deleted',
+};
 
 type ContextRow = {
     name: string;
@@ -44,12 +55,29 @@ type ContextRow = {
 const ContextList: FC = () => {
     const projectId = useOptionalPathParam('projectId');
     const [showDelDialogue, setShowDelDialogue] = useState(false);
-    const [contextFieldToDelete, setContextFieldToDelete] = useState<string>();
+    // Props are snapshotted with the name so a background refetch cannot desync the
+    // opened row from the submitted and succeeded rows of the same series.
+    const [deleteTarget, setDeleteTarget] = useState<{
+        name: string;
+        props: ContextFieldTrackingProps;
+    }>();
     const [globalFilter, setGlobalFilter] = useState('');
     const { context, refetchUnleashContext, loading } =
         useScopedUnleashContext();
-    const { removeContext } = useContextsApi(projectId);
+    const { removeContext, loading: removingContext } =
+        useContextsApi(projectId);
     const { setToastData, setToastApiError } = useToast();
+    const deleteTracking = useTracking(contextFieldDeletedTracking);
+
+    const trackingPropsFor = (name: string | undefined) => {
+        const field = context.find((context) => context.name === name);
+        return contextFieldTrackingProps({
+            name: name ?? '',
+            legalValues: field?.legalValues ?? [],
+            description: field?.description,
+            stickiness: field?.stickiness ?? false,
+        });
+    };
 
     const data = useMemo<ContextRow[]>(() => {
         if (loading) {
@@ -132,7 +160,10 @@ const ContextList: FC = () => {
                     <ContextActionsCell
                         name={name}
                         onDelete={() => {
-                            setContextFieldToDelete(name);
+                            setDeleteTarget({
+                                name,
+                                props: trackingPropsFor(name),
+                            });
                             setShowDelDialogue(true);
                         }}
                         allowDelete={usedInFeatures === 0}
@@ -153,7 +184,7 @@ const ContextList: FC = () => {
                 enableGlobalFilter: false,
             },
         ],
-        [projectId],
+        [projectId, context],
     );
 
     const initialState = useMemo(
@@ -165,20 +196,25 @@ const ContextList: FC = () => {
     );
 
     const onDeleteContext = async () => {
-        try {
-            if (contextFieldToDelete === undefined) {
-                throw new Error();
+        if (deleteTarget === undefined) {
+            setToastApiError(formatUnknownError(new Error()));
+        } else {
+            try {
+                await deleteTracking.trackMutation(
+                    () => removeContext(deleteTarget.name),
+                    deleteTarget.props,
+                );
+                refetchUnleashContext();
+                setToastData({
+                    type: 'success',
+                    text: 'Context field deleted',
+                });
+            } catch (error) {
+                setToastApiError(formatUnknownError(error));
             }
-            await removeContext(contextFieldToDelete);
-            refetchUnleashContext();
-            setToastData({
-                type: 'success',
-                text: 'Context field deleted',
-            });
-        } catch (error) {
-            setToastApiError(formatUnknownError(error));
         }
-        setContextFieldToDelete(undefined);
+
+        setDeleteTarget(undefined);
         setShowDelDialogue(false);
     };
 
@@ -260,10 +296,15 @@ const ContextList: FC = () => {
                 open={showDelDialogue}
                 onClick={onDeleteContext}
                 onClose={() => {
-                    setContextFieldToDelete(undefined);
+                    setDeleteTarget(undefined);
                     setShowDelDialogue(false);
                 }}
                 title='Really delete context field'
+                disabledPrimaryButton={removingContext}
+                tracking={{
+                    ...contextFieldDeletedTracking,
+                    props: deleteTarget?.props,
+                }}
             />
         </PageContent>
     );

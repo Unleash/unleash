@@ -8,6 +8,10 @@ import ContextList from 'component/context/ContextList/ContextList/ContextList';
 import { CreateUnleashContext } from 'component/context/CreateUnleashContext/CreateUnleashContext';
 import { EditContext } from 'component/context/EditContext/EditContext';
 import { CloneContext } from 'component/context/CloneContext/CloneContext';
+import {
+    contextFieldCreatedTracking,
+    contextFieldEditedTracking,
+} from 'component/context/contextFieldTrackingProps';
 
 export const ProjectContextFields = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -24,7 +28,8 @@ export const ProjectContextFields = () => {
                     <SidebarModal
                         open
                         onClose={() => navigate(GO_BACK)}
-                        label='Create segment'
+                        label='Create context field'
+                        tracking={contextFieldCreatedTracking}
                     >
                         <CreateUnleashContext
                             modal
@@ -41,6 +46,7 @@ export const ProjectContextFields = () => {
                         open
                         onClose={() => navigate(GO_BACK)}
                         label='Clone context field'
+                        tracking={contextFieldCreatedTracking}
                     >
                         <CloneContext
                             modal
@@ -57,6 +63,7 @@ export const ProjectContextFields = () => {
                         open
                         onClose={() => navigate(GO_BACK)}
                         label='Edit context field'
+                        tracking={contextFieldEditedTracking}
                     >
                         <EditContext modal />
                     </SidebarModal>

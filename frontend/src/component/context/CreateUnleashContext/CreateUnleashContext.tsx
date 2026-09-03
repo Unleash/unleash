@@ -11,6 +11,9 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
 import { UPDATE_PROJECT_CONTEXT } from '@server/types/permissions.ts';
 import type { IUnleashContextDefinition } from 'interfaces/context';
+import { useTracking } from 'hooks/useTracking';
+import { contextFieldTrackingProps } from 'component/context/contextFieldTrackingProps';
+import { contextFieldCreatedTracking } from 'component/context/contextFieldTrackingProps';
 
 interface ICreateContextProps {
     onSubmit: () => void;
@@ -56,16 +59,31 @@ export const CreateUnleashContext = ({
     });
     const { createContext, loading } = useContextsApi(projectId);
     const { refetchUnleashContext } = useScopedUnleashContext();
+    const { trackMutation, trackValidationFailed } = useTracking(
+        contextFieldCreatedTracking,
+    );
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
         e.stopPropagation();
+        const trackingProps = {
+            ...contextFieldTrackingProps({
+                name: contextName,
+                legalValues,
+                description: contextDesc,
+                stickiness,
+            }),
+            cloned: Boolean(cloneFrom),
+        };
         const validName = await validateContext();
 
         if (validName) {
             const payload = getContextPayload();
             try {
-                await createContext(payload);
+                await trackMutation(
+                    () => createContext(payload),
+                    trackingProps,
+                );
                 refetchUnleashContext();
                 setToastData({
                     text: cloneFrom
@@ -77,6 +95,8 @@ export const CreateUnleashContext = ({
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }
+        } else {
+            trackValidationFailed(trackingProps);
         }
     };
 

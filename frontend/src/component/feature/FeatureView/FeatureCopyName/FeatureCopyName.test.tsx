@@ -24,7 +24,12 @@ test('tracks copying the flag name from the button', async () => {
     await userEvent.click(screen.getByRole('button'));
 
     expect(trackEvent).toHaveBeenCalledWith('flag-actions', {
-        props: { eventType: 'name-copied', source: 'button' },
+        props: {
+            eventType: 'name-copied',
+            action: 'copied',
+            name: 'my-flag',
+            method: 'button',
+        },
     });
 });
 
@@ -35,7 +40,12 @@ test('tracks copying the flag name with the keyboard shortcut', async () => {
     await userEvent.keyboard('{Control>}c{/Control}');
 
     expect(trackEvent).toHaveBeenCalledWith('flag-actions', {
-        props: { eventType: 'name-copied', source: 'keyboard-shortcut' },
+        props: {
+            eventType: 'name-copied',
+            action: 'copied',
+            name: 'my-flag',
+            method: 'keyboard-shortcut',
+        },
     });
 });
 

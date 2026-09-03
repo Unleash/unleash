@@ -5,12 +5,15 @@ import useToast from 'hooks/useToast';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import type { Tracking } from 'utils/trackingEvents';
+import { useTracking } from 'hooks/useTracking';
 
 interface IArchivedFeatureReviveConfirmProps {
     revivedFeatures: string[];
     projectId: string;
     open: boolean;
     setOpen: (open: boolean) => void;
+    tracking?: Tracking;
     refetch: () => void;
 }
 
@@ -23,19 +26,32 @@ export const ArchivedFeatureReviveConfirm = ({
     projectId,
     open,
     setOpen,
+    tracking,
     refetch,
 }: IArchivedFeatureReviveConfirmProps) => {
     const { setToastData, setToastApiError } = useToast();
-    const { reviveFeatures } = useProjectApi();
+    const { reviveFeatures, loading: reviveFeaturesLoading } = useProjectApi();
     const { project, loading } = useProjectOverview(projectId);
+    const { trackMutation, trackValidationFailed } = useTracking(tracking);
 
     const onReviveFeatureToggle = async () => {
         try {
             if (revivedFeatures.length === 0) {
+                trackValidationFailed();
                 return;
             }
-            await reviveFeatures(projectId, revivedFeatures);
+            await trackMutation(() =>
+                reviveFeatures(projectId, revivedFeatures),
+            );
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+            return;
+        } finally {
+            clearModal();
+        }
 
+        // Revive already succeeded; a refetch failure is not a failed revive.
+        try {
             await refetch();
             setToastData({
                 type: 'success',
@@ -43,8 +59,6 @@ export const ArchivedFeatureReviveConfirm = ({
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
-        } finally {
-            clearModal();
         }
     };
 
@@ -67,7 +81,10 @@ export const ArchivedFeatureReviveConfirm = ({
             secondaryButtonText='Cancel'
             onClick={onReviveFeatureToggle}
             onClose={clearModal}
-            disabledPrimaryButton={loading || Boolean(project.archivedAt)}
+            disabledPrimaryButton={
+                loading || reviveFeaturesLoading || Boolean(project.archivedAt)
+            }
+            tracking={tracking}
         >
             <ConditionallyRender
                 condition={Boolean(project.archivedAt)}

@@ -25,6 +25,11 @@ import {
 import { useCheckProjectPermissions } from 'hooks/useHasAccess';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
+import { useTracking } from 'hooks/useTracking';
+import {
+    flagClonedTracking,
+    flagNameCopiedTracking,
+} from 'component/feature/flagActionsTracking';
 
 const StyledBoxCell = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -57,6 +62,8 @@ export const ActionsCell: FC<IActionsCellProps> = ({
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [isFeatureNameCopied, setIsFeatureNameCopied] = useState(false);
     const { setToastData } = useToast();
+    const { track } = useTracking(flagClonedTracking);
+    const { track: trackNameCopied } = useTracking(flagNameCopiedTracking);
     const {
         original: { name: featureId, stale },
     } = row;
@@ -74,7 +81,13 @@ export const ActionsCell: FC<IActionsCellProps> = ({
 
     const handleCopyToClipboard = () => {
         try {
-            copy(featureId);
+            // copy() reports failure by returning false, not by throwing
+            if (copy(featureId)) {
+                trackNameCopied('copied', {
+                    method: 'kebab-menu',
+                    name: featureId,
+                });
+            }
             setIsFeatureNameCopied(true);
 
             setTimeout(() => {
@@ -133,6 +146,9 @@ export const ActionsCell: FC<IActionsCellProps> = ({
                     component={RouterLink}
                     nativeButton={false}
                     to={`/projects/${projectId}/features/${featureId}/copy`}
+                    onClick={() => {
+                        track('opened', { name: featureId });
+                    }}
                 >
                     <ListItemIcon>
                         <LibraryAddIcon />

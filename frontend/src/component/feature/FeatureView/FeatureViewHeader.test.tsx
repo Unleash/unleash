@@ -77,7 +77,12 @@ test('tracks marking a flag as stale after the update succeeds', async () => {
 
     await waitFor(() =>
         expect(trackEvent).toHaveBeenCalledWith('flag-actions', {
-            props: { eventType: 'stale-toggled', newState: 'stale' },
+            props: {
+                eventType: 'stale-toggled',
+                name: 'my-flag',
+                newState: 'stale',
+                action: 'succeeded',
+            },
         }),
     );
 });
@@ -97,12 +102,17 @@ test("reports newState: 'active' when flipping a stale flag back to active", asy
 
     await waitFor(() =>
         expect(trackEvent).toHaveBeenCalledWith('flag-actions', {
-            props: { eventType: 'stale-toggled', newState: 'active' },
+            props: {
+                eventType: 'stale-toggled',
+                name: 'my-flag',
+                newState: 'active',
+                action: 'succeeded',
+            },
         }),
     );
 });
 
-test('does not track a stale change that the API rejects', async () => {
+test('reports the status a rejected stale change failed on', async () => {
     server.use(
         http.patch(featurePath, () => HttpResponse.json({}, { status: 400 })),
     );
@@ -117,7 +127,18 @@ test('does not track a stale change that the API rejects', async () => {
         await screen.findByRole('button', { name: /flip to stale/i }),
     );
 
-    await waitFor(() => expect(trackEvent).not.toHaveBeenCalled());
+    await waitFor(() =>
+        expect(trackEvent).toHaveBeenCalledWith('flag-actions', {
+            props: {
+                eventType: 'stale-toggled',
+                name: 'my-flag',
+                newState: 'stale',
+                action: 'failed',
+                failedOn: 'request',
+                errorStatus: 400,
+            },
+        }),
+    );
 });
 
 test('tracks archiving a flag after the archive succeeds', async () => {
@@ -141,7 +162,20 @@ test('tracks archiving a flag after the archive succeeds', async () => {
 
     await waitFor(() =>
         expect(trackEvent).toHaveBeenCalledWith('flag-actions', {
-            props: { eventType: 'archived' },
+            props: {
+                eventType: 'archived',
+                name: 'my-flag',
+                archiveVia: 'direct',
+                action: 'succeeded',
+            },
         }),
     );
+    expect(trackEvent).toHaveBeenCalledWith('flag-actions', {
+        props: {
+            eventType: 'archived',
+            name: 'my-flag',
+            archiveVia: 'direct',
+            action: 'submitted',
+        },
+    });
 });

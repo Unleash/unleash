@@ -5,7 +5,6 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { FeatureStatusChip } from 'component/common/FeatureStatusChip/FeatureStatusChip';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
-import useToast from 'hooks/useToast';
 import { useUiFlag } from 'hooks/useUiFlag';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
@@ -13,7 +12,10 @@ import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/Feat
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 import { FeatureCopyName } from './FeatureCopyName/FeatureCopyName.tsx';
 import { FeatureHeaderActionsKebab } from './FeatureHeaderActionsKebab';
-import { useEventTracker } from 'hooks/useEventTracker';
+import {
+    flagArchivedTracking,
+    flagStaleToggledTracking,
+} from 'component/feature/flagActionsTracking';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     backgroundColor: 'none',
@@ -85,8 +87,11 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
     const featureId = useRequiredPathParam('featureId');
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const { refetchFeature } = useFeature(projectId, featureId);
-    const { setToastApiError } = useToast();
-    const { trackEvent } = useEventTracker();
+    const flagProps = { name: feature.name };
+    const staleProps = {
+        ...flagProps,
+        newState: feature.stale ? 'active' : 'stale',
+    };
 
     const [showDelDialog, setShowDelDialog] = useState(false);
     const [openStaleDialog, setOpenStaleDialog] = useState(false);
@@ -137,10 +142,8 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
             } else {
                 await favorite(projectId, feature.name);
             }
-            refetchFeature();
-        } catch (_error) {
-            setToastApiError('Something went wrong, could not update favorite');
-        }
+        } catch {}
+        refetchFeature();
     };
 
     return (
@@ -189,11 +192,10 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
             ) : (
                 <FeatureArchiveDialog
                     isOpen={showDelDialog}
-                    onConfirm={() => {
-                        trackEvent('flag-actions', {
-                            props: { eventType: 'archived' },
-                        });
-                        navigate(`/projects/${projectId}`);
+                    onConfirm={() => navigate(`/projects/${projectId}`)}
+                    tracking={{
+                        ...flagArchivedTracking,
+                        props: flagProps,
                     }}
                     onClose={() => setShowDelDialog(false)}
                     projectId={projectId}
@@ -203,14 +205,10 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
             <FeatureStaleDialog
                 isStale={feature.stale}
                 isOpen={openStaleDialog}
-                onSuccess={() =>
-                    trackEvent('flag-actions', {
-                        props: {
-                            eventType: 'stale-toggled',
-                            newState: feature.stale ? 'active' : 'stale',
-                        },
-                    })
-                }
+                tracking={{
+                    ...flagStaleToggledTracking,
+                    props: staleProps,
+                }}
                 onClose={() => {
                     setOpenStaleDialog(false);
                     refetchFeature();

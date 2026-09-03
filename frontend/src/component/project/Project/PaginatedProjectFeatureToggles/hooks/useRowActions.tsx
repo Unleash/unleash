@@ -4,7 +4,12 @@ import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureS
 import { MarkCompletedDialogue } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/MarkCompletedDialogue';
 import { ArchivedFeatureDeleteConfirm } from '../../../../archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureDeleteConfirm/ArchivedFeatureDeleteConfirm.tsx';
 import { ArchivedFeatureReviveConfirm } from '../../../../archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureReviveConfirm/ArchivedFeatureReviveConfirm.tsx';
-
+import {
+    flagArchivedTracking,
+    flagDeletedTracking,
+    flagRevivedTracking,
+    flagStaleToggledTracking,
+} from 'component/feature/flagActionsTracking';
 export const useRowActions = (
     onChange: () => void,
     projectId: string,
@@ -41,6 +46,18 @@ export const useRowActions = (
         open: false,
     });
 
+    const staleProps = {
+        name: featureStaleDialogState.featureId,
+        newState: featureStaleDialogState.stale ? 'active' : 'stale',
+    };
+    const archiveProps = { name: featureArchiveState };
+    const deleteProps = {
+        name: showFeatureDeleteDialogue.featureId,
+    };
+    const reviveProps = {
+        name: showFeatureReviveDialogue.featureId,
+    };
+
     const rowActionsDialogs = (
         <>
             <FeatureStaleDialog
@@ -49,6 +66,10 @@ export const useRowActions = (
                 onClose={() => {
                     setFeatureStaleDialogState({});
                     onChange();
+                }}
+                tracking={{
+                    ...flagStaleToggledTracking,
+                    props: staleProps,
                 }}
                 featureId={featureStaleDialogState.featureId || ''}
                 projectId={projectId}
@@ -59,6 +80,10 @@ export const useRowActions = (
                 onConfirm={() => {
                     onChange();
                     onArchiveConfirm?.();
+                }}
+                tracking={{
+                    ...flagArchivedTracking,
+                    props: archiveProps,
                 }}
                 onClose={() => {
                     setFeatureArchiveState(undefined);
@@ -88,6 +113,7 @@ export const useRowActions = (
                         open,
                     }));
                 }}
+                tracking={{ ...flagDeletedTracking, props: deleteProps }}
                 refetch={onChange}
             />
             <ArchivedFeatureReviveConfirm
@@ -100,6 +126,7 @@ export const useRowActions = (
                         open,
                     }));
                 }}
+                tracking={{ ...flagRevivedTracking, props: reviveProps }}
                 refetch={() => {
                     setShowFeatureReviveDialogue((prev) => ({
                         ...prev,

@@ -20,7 +20,9 @@ import {
     UPDATE_FEATURE,
 } from 'component/providers/AccessProvider/permissions';
 import { useCheckProjectPermissions } from 'hooks/useHasAccess';
+import { useTracking } from 'hooks/useTracking';
 import type { FeatureSchema } from 'openapi';
+import { flagClonedTracking } from 'component/feature/flagActionsTracking';
 
 type FeatureHeaderActionsKebabProps = {
     feature: Pick<FeatureSchema, 'project' | 'name' | 'favorite'>;
@@ -43,6 +45,7 @@ export const FeatureHeaderActionsKebab: FC<FeatureHeaderActionsKebabProps> = ({
     const open = Boolean(anchorEl);
     const buttonId = useId();
     const menuId = useId();
+    const { track } = useTracking(flagClonedTracking);
 
     const handleClick = (event: MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -98,6 +101,9 @@ export const FeatureHeaderActionsKebab: FC<FeatureHeaderActionsKebabProps> = ({
                     nativeButton={false}
                     disabled={!canClone}
                     to={`/projects/${feature.project}/features/${feature.name}/copy`}
+                    onClick={() => {
+                        track('opened', { name: feature.name });
+                    }}
                 >
                     <ListItemIcon>
                         <LibraryAddOutlined />

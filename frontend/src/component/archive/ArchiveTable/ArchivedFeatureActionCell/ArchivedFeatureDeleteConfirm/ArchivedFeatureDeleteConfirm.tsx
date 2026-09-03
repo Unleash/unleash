@@ -6,12 +6,15 @@ import Input from 'component/common/Input/Input';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
+import type { Tracking } from 'utils/trackingEvents';
+import { useTracking } from 'hooks/useTracking';
 
 interface IArchivedFeatureDeleteConfirmProps {
     deletedFeatures: string[];
     projectId: string;
     open: boolean;
     setOpen: (open: boolean) => void;
+    tracking?: Tracking;
     refetch: () => void;
 }
 
@@ -31,21 +34,34 @@ export const ArchivedFeatureDeleteConfirm = ({
     projectId,
     open,
     setOpen,
+    tracking,
     refetch,
 }: IArchivedFeatureDeleteConfirmProps) => {
     const [confirmName, setConfirmName] = useState('');
     const { setToastData, setToastApiError } = useToast();
-    const { deleteFeatures } = useProjectApi();
+    const { deleteFeatures, loading } = useProjectApi();
+    const { trackMutation, trackValidationFailed } = useTracking(tracking);
 
     const singularOrPluralFlags = deletedFeatures.length > 1 ? 'flags' : 'flag';
 
     const onDeleteFeatureToggle = async () => {
         try {
             if (deletedFeatures.length === 0) {
+                trackValidationFailed();
                 return;
             }
-            await deleteFeatures(projectId, deletedFeatures);
+            await trackMutation(() =>
+                deleteFeatures(projectId, deletedFeatures),
+            );
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+            return;
+        } finally {
+            clearModal();
+        }
 
+        // Delete already succeeded; a refetch failure is not a failed delete.
+        try {
             await refetch();
             setToastData({
                 type: 'success',
@@ -53,8 +69,6 @@ export const ArchivedFeatureDeleteConfirm = ({
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
-        } finally {
-            clearModal();
         }
     };
 
@@ -73,8 +87,9 @@ export const ArchivedFeatureDeleteConfirm = ({
             secondaryButtonText='Cancel'
             onClick={onDeleteFeatureToggle}
             onClose={clearModal}
-            disabledPrimaryButton={confirmationText !== confirmName}
+            disabledPrimaryButton={confirmationText !== confirmName || loading}
             formId={formId}
+            tracking={tracking}
         >
             <Alert severity='warning'>
                 <b>Warning!</b> Before you delete a feature flag, make sure all

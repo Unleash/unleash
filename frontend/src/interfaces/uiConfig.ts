@@ -112,6 +112,7 @@ export type UiFlags = {
     semverBuildMetadata?: boolean;
     slackIntegrationProjectLevel?: boolean;
     flagStatusTooltips?: boolean;
+    simplerStrategySetup?: boolean;
 };
 
 export interface IVersionInfo {

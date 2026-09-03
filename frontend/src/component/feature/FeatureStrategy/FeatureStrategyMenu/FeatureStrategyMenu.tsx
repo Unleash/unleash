@@ -17,6 +17,8 @@ import {
     type StrategyFilterValue,
 } from './FeatureStrategyMenuCards/FeatureStrategyMenuCards.tsx';
 import { ReleasePlanConfirmationDialog } from './ReleasePlanConfirmationDialog.tsx';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { StrategySetupCards } from './StrategySetup/StrategySetupCards.tsx';
 
 interface IFeatureStrategyMenuProps {
     projectId: string;
@@ -43,6 +45,7 @@ export const FeatureStrategyMenu = ({
     defaultFilter = null,
 }: IFeatureStrategyMenuProps) => {
     const [filter, setFilter] = useState<StrategyFilterValue>(defaultFilter);
+    const simplerStrategySetup = useUiFlag('simplerStrategySetup');
     const { trackEvent } = useEventTracker();
     const [selectedTemplate, setSelectedTemplate] =
         useState<IReleasePlanTemplate>();
@@ -135,7 +138,7 @@ export const FeatureStrategyMenu = ({
                     paper: {
                         sx: {
                             borderRadius: '12px',
-                            height: '100%',
+                            height: simplerStrategySetup ? 'auto' : '100%',
                             width: '100%',
                         },
                     },
@@ -165,6 +168,13 @@ export const FeatureStrategyMenu = ({
                             onConfirm={() => {
                                 addReleasePlan(selectedTemplate);
                             }}
+                        />
+                    ) : simplerStrategySetup ? (
+                        <StrategySetupCards
+                            projectId={projectId}
+                            featureId={featureId}
+                            environmentId={environmentId}
+                            onClose={onClose}
                         />
                     ) : (
                         <FeatureStrategyMenuCards

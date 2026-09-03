@@ -82,6 +82,7 @@ export type IFlagKey =
     | 'semverBuildMetadata'
     | 'slackIntegrationProjectLevel'
     | 'flagStatusTooltips'
+    | 'simplerStrategySetup'
     | keyof IFlagKeyOverrides;
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -365,6 +366,10 @@ const flags: IFlags = {
     ),
     slackIntegrationProjectLevel: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SLACK_INTEGRATION_PROJECT_LEVEL,
+        false,
+    ),
+    simplerStrategySetup: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SIMPLER_STRATEGY_SETUP,
         false,
     ),
     flagStatusTooltips: parseEnvVarBoolean(

@@ -65,6 +65,7 @@ process.nextTick(async () => {
                         semverBuildMetadata: true,
                         slackIntegrationProjectLevel: true,
                         flagStatusTooltips: true,
+                        simplerStrategySetup: true,
                     },
                 },
                 authentication: {

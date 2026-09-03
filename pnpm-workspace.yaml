@@ -78,7 +78,7 @@ patchedDependencies:
   '@tanstack/table-core@8.21.3': patches/@tanstack__table-core@8.21.3.patch
 overrides:
   "@codemirror/state": "6.7.1"
-  "@types/express-session>@types/express": "4.17.25"
+  "@types/express-session>@types/express": "5.0.6"
   "@types/react": "^19.0.0"
   "@wesleytodd/openapi>path-to-regexp": "6.3.0"
   "@xmldom/xmldom": "^0.9.0"

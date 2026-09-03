@@ -8,6 +8,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { useActions } from 'hooks/api/getters/useActions/useActions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { projectDeletedTracking } from 'component/project/projectTracking';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -111,6 +112,7 @@ export const DeleteProject = ({
                 projectId={projectId}
                 projectName={projectName}
                 open={showDelDialog}
+                tracking={projectDeletedTracking}
                 onClose={() => {
                     setShowDelDialog(false);
                 }}

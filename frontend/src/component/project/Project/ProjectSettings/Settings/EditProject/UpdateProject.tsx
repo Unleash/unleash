@@ -12,6 +12,7 @@ import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import { useEventTracker } from 'hooks/useEventTracker';
+import { useTracking } from 'hooks/useTracking';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -48,6 +49,10 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
     const { setToastData, setToastApiError } = useToast();
     const { defaultStickiness } = useDefaultProjectSettings(id);
     const { trackEvent } = useEventTracker();
+    const { trackMutation, trackValidationFailed } = useTracking({
+        event: 'project-settings',
+        type: 'general-saved',
+    });
     const {
         projectId,
         projectName,
@@ -91,11 +96,20 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
         e.preventDefault();
         const payload = getEditProjectPayload();
 
+        const changedProps = {
+            nameChanged: projectName !== project.name,
+            descriptionChanged: projectDesc !== (project.description || ''),
+            stickinessChanged: projectStickiness !== defaultStickiness,
+            flagLimitChanged: featureLimit !== String(project.featureLimit),
+        };
         const validName = validateName();
 
         if (validName) {
             try {
-                await editProject(id, payload);
+                await trackMutation(
+                    () => editProject(id, payload),
+                    changedProps,
+                );
                 refetch();
                 setToastData({
                     text: 'Project information updated',
@@ -107,6 +121,8 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }
+        } else {
+            trackValidationFailed(changedProps);
         }
     };
 

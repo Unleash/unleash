@@ -24,6 +24,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { ProjectContextFields } from './ProjectContextFields.tsx';
 import { ProjectReleaseTemplates } from './ProjectReleaseTemplates/ProjectReleaseTemplates.tsx';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam.ts';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { useHasRootAccess } from 'hooks/useHasAccess';
 import {
     RELEASE_PLAN_TEMPLATE_CREATE,
@@ -41,6 +42,7 @@ export const ProjectSettings = () => {
     const { isPro, isEnterprise } = useUiConfig();
     const navigate = useNavigate();
     const projectId = useRequiredPathParam('projectId');
+    const { trackEvent } = useEventTracker();
 
     const actionsEnabled = useUiFlag('automatedActions');
     const canManageReleaseTemplates = useHasRootAccess(
@@ -115,21 +117,24 @@ export const ProjectSettings = () => {
     }
 
     const toTabPath = (id: string) => `/projects/${projectId}/settings/${id}`;
+    const activeTabId =
+        tabs.find(
+            ({ id }) => id && location.pathname?.includes(`/settings/${id}`),
+        )?.id || tabs[0].id;
     const onChange = (tab: ITab) => {
+        if (tab.id !== activeTabId) {
+            trackEvent('project-settings', {
+                props: {
+                    eventType: tab.id || 'general',
+                    action: 'navigated',
+                },
+            });
+        }
         navigate(toTabPath(tab.id));
     };
 
     return (
-        <VerticalTabs
-            tabs={tabs}
-            value={
-                tabs.find(
-                    ({ id }) =>
-                        id && location.pathname?.includes(`/settings/${id}`),
-                )?.id || tabs[0].id
-            }
-            onChange={onChange}
-        >
+        <VerticalTabs tabs={tabs} value={activeTabId} onChange={onChange}>
             <Routes>
                 <Route path='/*' element={<Settings />} />
                 <Route

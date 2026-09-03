@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Button, styled } from '@mui/material';
 import type { ProjectLinkTemplateSchema } from 'openapi';
-import { useEventTracker } from 'hooks/useEventTracker';
 import Input from 'component/common/Input/Input';
 
 interface IProjectLinkTemplateEditorProps {
@@ -36,7 +35,6 @@ const ProjectLinkTemplateEditor = ({
         title?: string;
         url?: string;
     }>({});
-    const { trackEvent } = useEventTracker();
 
     const validateTemplateForm = () => {
         const errors: { title?: string; url?: string } = {};
@@ -51,11 +49,6 @@ const ProjectLinkTemplateEditor = ({
 
     const handleSave = () => {
         if (validateTemplateForm()) {
-            trackEvent('feature-links', {
-                props: {
-                    eventType: isAdding ? 'add-template' : 'edit-template',
-                },
-            });
             onSave({
                 title: templateTitle || null,
                 urlTemplate: templateUrl,

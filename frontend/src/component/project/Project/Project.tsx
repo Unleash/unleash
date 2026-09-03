@@ -54,6 +54,7 @@ import { ProjectArchived } from './ArchiveProject/ProjectArchived.tsx';
 import { useEventTracker } from '../../../hooks/useEventTracker.ts';
 import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
 import { ProjectStatusModal } from './ProjectStatus/ProjectStatusModal.tsx';
+import { projectDeletedTracking } from 'component/project/projectTracking';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -163,7 +164,7 @@ export const Project = () => {
     const params = useQueryParams();
     const { project, loading, error, refetch } = useProjectOverview(projectId);
     const ref = useLoading(loading, '[data-loading-project=true]');
-    const { setToastData, setToastApiError } = useToast();
+    const { setToastData } = useToast();
     const [modalOpen, setModalOpen] = useState(false);
     const navigate = useNavigate();
     const { pathname } = useLocation();
@@ -255,10 +256,8 @@ export const Project = () => {
             } else {
                 await favorite(projectId);
             }
-            refetch();
-        } catch (_error) {
-            setToastApiError('Something went wrong, could not update favorite');
-        }
+        } catch {}
+        refetch();
     };
 
     const enterpriseIcon = (
@@ -326,10 +325,11 @@ export const Project = () => {
                                     }
                                     value={tab.path}
                                     onClick={() => {
-                                        if (tab.title !== 'Flags') {
+                                        if (tab.name !== 'flags') {
                                             trackEvent('project-navigation', {
                                                 props: {
-                                                    eventType: tab.title,
+                                                    eventType: tab.name,
+                                                    action: 'navigated',
                                                 },
                                             });
                                         }
@@ -371,6 +371,7 @@ export const Project = () => {
             <DeleteProjectDialogue
                 projectId={projectId}
                 open={showDelDialog}
+                tracking={projectDeletedTracking}
                 onClose={() => {
                     setShowDelDialog(false);
                 }}

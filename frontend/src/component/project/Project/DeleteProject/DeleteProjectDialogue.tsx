@@ -9,6 +9,8 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { styled, Typography } from '@mui/material';
 import { ProjectId } from 'component/project/ProjectId/ProjectId';
+import type { Tracking } from 'utils/trackingEvents';
+import { useTracking } from 'hooks/useTracking';
 
 interface IDeleteProjectDialogueProps {
     projectId: string;
@@ -16,6 +18,7 @@ interface IDeleteProjectDialogueProps {
     open: boolean;
     onClose: (e: React.SyntheticEvent) => void;
     onSuccess?: () => void;
+    tracking?: Tracking;
 }
 
 const StyledParagraph = styled(Typography)(({ theme }) => ({
@@ -28,8 +31,10 @@ export const DeleteProjectDialogue = ({
     projectId,
     projectName,
     onSuccess,
+    tracking,
 }: IDeleteProjectDialogueProps) => {
-    const { deleteProject } = useProjectApi();
+    const { deleteProject, loading } = useProjectApi();
+    const { trackMutation } = useTracking(tracking);
     const { refetch: refetchProjects } = useProjects();
     const { refetch: refetchProjectArchive } = useProjects({ archived: true });
     const { setToastData, setToastApiError } = useToast();
@@ -39,7 +44,7 @@ export const DeleteProjectDialogue = ({
     const onClick = async (e: React.SyntheticEvent) => {
         e.preventDefault();
         try {
-            await deleteProject(projectId);
+            await trackMutation(() => deleteProject(projectId));
             refetchProjects();
             refetchProjectArchive();
             setToastData({
@@ -59,6 +64,8 @@ export const DeleteProjectDialogue = ({
             onClick={onClick}
             onClose={onClose}
             title='Are you sure?'
+            disabledPrimaryButton={loading}
+            tracking={tracking}
         >
             <StyledParagraph>
                 This will irreversibly remove:

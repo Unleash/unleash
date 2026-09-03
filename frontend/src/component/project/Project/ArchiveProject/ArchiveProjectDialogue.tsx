@@ -5,12 +5,15 @@ import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import useToast from 'hooks/useToast';
 import { Typography } from '@mui/material';
+import type { Tracking } from 'utils/trackingEvents';
+import { useTracking } from 'hooks/useTracking';
 
 interface IDeleteProjectDialogueProps {
     project: string;
     open: boolean;
     onClose: (e: React.SyntheticEvent) => void;
     onSuccess?: () => void;
+    tracking?: Tracking;
 }
 
 export const ArchiveProjectDialogue = ({
@@ -18,15 +21,17 @@ export const ArchiveProjectDialogue = ({
     onClose,
     project,
     onSuccess,
+    tracking,
 }: IDeleteProjectDialogueProps) => {
-    const { archiveProject } = useProjectApi();
+    const { archiveProject, loading } = useProjectApi();
+    const { trackMutation } = useTracking(tracking);
     const { refetch: refetchProjectOverview } = useProjects();
     const { setToastData, setToastApiError } = useToast();
 
     const onClick = async (e: React.SyntheticEvent) => {
         e.preventDefault();
         try {
-            await archiveProject(project);
+            await trackMutation(() => archiveProject(project));
             refetchProjectOverview();
             setToastData({
                 text: 'Project archived',
@@ -45,6 +50,8 @@ export const ArchiveProjectDialogue = ({
             onClick={onClick}
             onClose={onClose}
             title='Are you sure?'
+            disabledPrimaryButton={loading}
+            tracking={tracking}
         >
             <Typography>
                 The project will be moved to the projects archive, where it can

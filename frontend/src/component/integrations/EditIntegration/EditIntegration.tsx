@@ -10,7 +10,11 @@ const findProvider = (
     providers: AddonTypeSchema[],
 ) => providers.find((provider) => provider.name === addon?.provider);
 
-export const EditIntegration = () => {
+type EditIntegrationProps = {
+    modal?: boolean;
+};
+
+export const EditIntegration = ({ modal }: EditIntegrationProps) => {
     const addonId = useRequiredPathParam('addonId');
     const { providers, addons, refetchAddons } = useAddons();
 
@@ -29,6 +33,7 @@ export const EditIntegration = () => {
             fetch={refetchAddons}
             addon={addon}
             deprecated={deprecated}
+            modal={modal}
         />
     );
 };

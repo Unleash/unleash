@@ -23,6 +23,7 @@ import { ProjectActions } from './ProjectActions/ProjectActions.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ProjectContextFields } from './ProjectContextFields.tsx';
 import { ProjectReleaseTemplates } from './ProjectReleaseTemplates/ProjectReleaseTemplates.tsx';
+import { ProjectIntegrations } from './ProjectIntegrations/ProjectIntegrations.tsx';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam.ts';
 import { useEventTracker } from 'hooks/useEventTracker';
 import { useHasRootAccess } from 'hooks/useHasAccess';
@@ -50,6 +51,7 @@ export const ProjectSettings = () => {
         projectId,
     );
     const showReleaseTemplatesTab = isEnterprise() && canManageReleaseTemplates;
+    const showIntegrationsTab = useUiFlag('slackIntegrationProjectLevel');
 
     const paidTabs = (...tabs: ITab[]) =>
         isPro() || isEnterprise() ? tabs : [];
@@ -93,6 +95,14 @@ export const ProjectSettings = () => {
             id: 'default-strategy',
             label: 'Default strategy',
         },
+        ...(showIntegrationsTab
+            ? [
+                  {
+                      id: 'integrations',
+                      label: 'Integrations',
+                  },
+              ]
+            : []),
         ...paidTabs({
             id: 'change-requests',
             label: 'Change request configuration',
@@ -158,6 +168,12 @@ export const ProjectSettings = () => {
                     element={<ProjectDefaultStrategySettings />}
                 />
                 <Route path='actions/*' element={<ProjectActions />} />
+                {showIntegrationsTab ? (
+                    <Route
+                        path='integrations/*'
+                        element={<ProjectIntegrations />}
+                    />
+                ) : null}
                 <Route
                     path='*'
                     element={<Navigate replace to={toTabPath(tabs[0].id)} />}

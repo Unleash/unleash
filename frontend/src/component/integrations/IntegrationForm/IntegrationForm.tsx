@@ -28,6 +28,8 @@ import {
     CREATE_ADDON,
     UPDATE_ADDON,
 } from '../../providers/AccessProvider/permissions.ts';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
+import { formatIntegrationListPath } from '../integrationPaths.ts';
 import {
     StyledForm,
     StyledAlerts,
@@ -66,6 +68,7 @@ type IntegrationFormProps = {
     editMode: boolean;
     addon: AddonSchema | Omit<AddonSchema, 'id'>;
     deprecated?: boolean;
+    modal?: boolean;
 };
 
 export const IntegrationForm: FC<IntegrationFormProps> = ({
@@ -74,7 +77,9 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
     addon: initialValues,
     fetch,
     deprecated,
+    modal,
 }) => {
+    const projectId = useOptionalPathParam('projectId');
     const { createAddon, updateAddon } = useAddonsApi();
     const { setToastData, setToastApiError } = useToast();
     const navigate = useNavigate();
@@ -243,19 +248,17 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
         try {
             if (editMode) {
                 await updateAddon(formValues as AddonSchema);
-                navigate('/integrations');
-                setToastData({
-                    type: 'success',
-                    text: 'Integration updated',
-                });
             } else {
                 await createAddon(formValues as Omit<AddonSchema, 'id'>);
-                navigate('/integrations');
-                setToastData({
-                    type: 'success',
-                    text: 'Integration created',
-                });
             }
+
+            fetch();
+
+            navigate(formatIntegrationListPath(projectId));
+            setToastData({
+                type: 'success',
+                text: editMode ? 'Integration updated' : 'Integration created',
+            });
         } catch (error) {
             const message = formatUnknownError(error);
             setToastApiError(message);
@@ -278,6 +281,7 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
 
     return (
         <FormTemplate
+            modal={modal}
             description={description || ''}
             documentationLink={documentationUrl}
             documentationLinkLabel={`${
@@ -398,16 +402,23 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                                 required
                             />
                         </div>
-                        <div>
-                            <IntegrationMultiSelector
-                                options={selectableProjects}
-                                selectedItems={formValues.projects || []}
-                                onChange={setProjects}
-                                entityName='project'
-                                description='Selecting project(s) will filter events, so that your integration only receives events related to those specific projects.'
-                                note='If no projects are selected, the integration will receive events from all projects.'
-                            />
-                        </div>
+                        <ConditionallyRender
+                            condition={!projectId}
+                            show={
+                                <div>
+                                    <IntegrationMultiSelector
+                                        options={selectableProjects}
+                                        selectedItems={
+                                            formValues.projects || []
+                                        }
+                                        onChange={setProjects}
+                                        entityName='project'
+                                        description='Selecting project(s) will filter events, so that your integration only receives events related to those specific projects.'
+                                        note='If no projects are selected, the integration will receive events from all projects.'
+                                    />
+                                </div>
+                            }
+                        />
                         <div>
                             <IntegrationMultiSelector
                                 options={selectableEnvironments}

@@ -34,7 +34,7 @@ overrides:
   markdown-it: 14.2.0
   minimatch@3.1.2: 10.2.6
   node-forge: ^1.0.0
-  nwsapi: 2.2.24
+  nwsapi: 2.2.25
   prompt: link:./node_modules/.cache/null
   react: ^19.0.0
   react-dom: ^19.0.0
@@ -5103,8 +5103,8 @@ packages:
     resolution: {integrity: sha512-S48WzZW777zhNIrn7gxOlISNAqi9ZC/uQFnRdbeIHhZhCA6UqpkOT8T1G7BvfdgP4Er8gF4sUbaS0i7QvIfCWw==}
     engines: {node: '>=8'}
 
-  nwsapi@2.2.24:
-    resolution: {integrity: sha512-7YRhZ3jS45LwmSCT4b2sVFHt/WuovaktDU07QrtOBY2PXskss5a9jfmR9jptyumwXST+rFjrmppMY1KT/yn35A==}
+  nwsapi@2.2.25:
+    resolution: {integrity: sha512-kktSgNDIbyEIs/LrE6dtEMnfzxSDpXViFl6c4gFjz/CgtnL4GDCR3wyZXzjvAXsNB8dXU4dAfvIOgLMH2/vwLg==}
 
   oas-kit-common@1.0.8:
     resolution: {integrity: sha512-pJTS2+T0oGIwgjGpw7sIRU8RQMcUoKCDWFLdBqKB2BNmGpbBMH2sdqAaOXUg8OzonZHU0L7vfJu1mJFEiYDWOQ==}
@@ -10781,7 +10781,7 @@ snapshots:
       http-proxy-agent: 7.0.2(supports-color@10.2.2)
       https-proxy-agent: 7.0.6(supports-color@10.2.2)
       is-potential-custom-element-name: 1.0.1
-      nwsapi: 2.2.24
+      nwsapi: 2.2.25
       parse5: 7.3.0
       rrweb-cssom: 0.7.1
       saxes: 6.0.0
@@ -10810,7 +10810,7 @@ snapshots:
       http-proxy-agent: 7.0.2(supports-color@8.1.1)
       https-proxy-agent: 7.0.6(supports-color@8.1.1)
       is-potential-custom-element-name: 1.0.1
-      nwsapi: 2.2.24
+      nwsapi: 2.2.25
       parse5: 7.3.0
       rrweb-cssom: 0.7.1
       saxes: 6.0.0
@@ -11627,7 +11627,7 @@ snapshots:
     dependencies:
       path-key: 3.1.1
 
-  nwsapi@2.2.24: {}
+  nwsapi@2.2.25: {}
 
   oas-kit-common@1.0.8:
     dependencies:

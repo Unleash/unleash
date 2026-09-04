@@ -106,7 +106,7 @@ overrides:
   markdown-it: "14.2.0"
   "minimatch@3.1.2": "10.2.6"
   node-forge: "^1.0.0"
-  nwsapi: "2.2.24"
+  nwsapi: "2.2.25"
   prompt: "link:./node_modules/.cache/null"
   react: "^19.0.0"
   react-dom: "^19.0.0"

@@ -9,21 +9,32 @@ import type { ClientMetricsSchemaBucket } from './clientMetricsSchemaBucket';
  * Client usage metrics, accumulated in buckets of hour by hour by default
  */
 export interface ClientMetricsSchema {
-    /** The name of the application that is evaluating toggles */
-    appName: string;
-    /** Holds all metrics gathered over a window of time. Typically 1 hour wide */
-    bucket: ClientMetricsSchemaBucket;
     /**
-     * Which environment the application is running in. This property was deprecated in v5. This can be determined by the API key calling this endpoint.
-     * @deprecated
+     * The name of the application that is evaluating toggles
+     * @minLength 1
      */
-    environment?: string;
+    appName: string;
+    /**
+     * Holds all metrics gathered over a window of time. Typically 1 hour wide. May be omitted or null when the request only carries impact metrics.
+     * @nullable
+     */
+    bucket?: ClientMetricsSchemaBucket;
     /** A [(somewhat) unique identifier](https://docs.getunleash.io/sdks/node#advanced-usage) for the application */
     instanceId?: string;
     /** The platform the application is running on. For languages that compile to binaries, this can be omitted */
     platformName?: string;
     /** The version of the platform the application is running on. Languages that compile to binaries, this is expected to be the compiler version used to assemble the binary. */
     platformVersion?: string;
+    /**
+     * The identifier of an integration built on top of an Unleash SDK (e.g. an OpenFeature provider). Sent so adoption of the integration can be tracked alongside sdkVersion.
+     * @maxLength 256
+     */
+    sdkFlavor?: string;
+    /**
+     * The version of the integration identified by sdk flavor, that has been built on top of an Unleash SDK
+     * @maxLength 32
+     */
+    sdkFlavorVersion?: string;
     /** An SDK version identifier. Usually formatted as "unleash-client-<language>:<version>" */
     sdkVersion?: string;
     /** The version of the Unleash client specification the client supports */

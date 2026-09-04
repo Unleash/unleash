@@ -4,6 +4,7 @@
  * See `gen:api` script in package.json
  */
 import type { UserAccessOverviewSchemaOverviewEnvironmentItem } from './userAccessOverviewSchemaOverviewEnvironmentItem';
+import type { GroupItemSchema } from './groupItemSchema';
 import type { UserAccessOverviewSchemaOverviewProjectItem } from './userAccessOverviewSchemaOverviewProjectItem';
 import type { UserAccessOverviewSchemaOverviewRootItem } from './userAccessOverviewSchemaOverviewRootItem';
 
@@ -13,6 +14,8 @@ import type { UserAccessOverviewSchemaOverviewRootItem } from './userAccessOverv
 export type UserAccessOverviewSchemaOverview = {
     /** The list of environment permissions */
     environment: UserAccessOverviewSchemaOverviewEnvironmentItem[];
+    /** Experimental: The list of groups the user is in */
+    groups: GroupItemSchema[];
     /** The list of project permissions */
     project: UserAccessOverviewSchemaOverviewProjectItem[];
     /** The list of root permissions */

@@ -17,4 +17,6 @@ export interface BulkMetricsSchema {
     impactMetrics?: ImpactMetricsSchema[];
     /** a list of client usage metrics registered by downstream providers. (Typically Unleash Edge) */
     metrics: ClientMetricsEnvSchema[];
+    /** A list of API tokens observed by downstream providers. (Typically Unleash Edge) */
+    seenTokens?: string[];
 }

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureLinkSchema } from './featureLinkSchema';
+import type { LinkSchema } from './linkSchema';
 
 /**
  * A list of links for a feature
@@ -12,5 +12,5 @@ export interface FeatureLinksSchema {
     /** The name of the child feature. */
     feature: string;
     /** List of feature links */
-    links: FeatureLinkSchema[];
+    links: LinkSchema[];
 }

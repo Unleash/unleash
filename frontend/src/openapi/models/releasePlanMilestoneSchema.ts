@@ -38,7 +38,7 @@ export interface ReleasePlanMilestoneSchema {
     /** A list of strategies that are attached to this milestone. */
     strategies?: ReleasePlanMilestoneStrategySchema[];
     /**
-     * The condition configuration for the transition
+     * The condition configuration for the transition.
      * @nullable
      */
     transitionCondition?: ReleasePlanMilestoneSchemaTransitionCondition;

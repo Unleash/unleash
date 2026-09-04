@@ -9,9 +9,7 @@ import type { FeatureSchemaDependenciesItem } from './featureSchemaDependenciesI
 import type { FeatureEnvironmentSchema } from './featureEnvironmentSchema';
 import type { FeatureSchemaLifecycle } from './featureSchemaLifecycle';
 import type { FeatureSchemaLinksItem } from './featureSchemaLinksItem';
-import type { FeatureSchemaStrategiesItem } from './featureSchemaStrategiesItem';
 import type { TagSchema } from './tagSchema';
-import type { VariantSchema } from './variantSchema';
 
 /**
  * A feature flag definition
@@ -50,12 +48,6 @@ export interface FeatureSchema {
     favorite?: boolean;
     /** `true` if the impression data collection is enabled for the feature, otherwise `false`. */
     impressionData?: boolean;
-    /**
-     * The date when metrics where last collected for the feature. This field was deprecated in v5, use the one in featureEnvironmentSchema
-     * @deprecated
-     * @nullable
-     */
-    lastSeenAt?: string | null;
     /** Current lifecycle stage of the feature */
     lifecycle?: FeatureSchemaLifecycle;
     /** The list of links. This is an experimental field and may change. */
@@ -67,20 +59,10 @@ export interface FeatureSchema {
     /** `true` if the feature is stale based on the age and feature type, otherwise `false`. */
     stale?: boolean;
     /**
-     * This was deprecated in v5 and will be removed in a future major version
-     * @deprecated
-     */
-    strategies?: FeatureSchemaStrategiesItem[];
-    /**
      * The list of feature tags
      * @nullable
      */
     tags?: TagSchema[] | null;
     /** Type of the flag e.g. experiment, kill-switch, release, operational, permission */
     type?: string;
-    /**
-     * The list of feature variants
-     * @deprecated
-     */
-    variants?: VariantSchema[];
 }

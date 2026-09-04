@@ -40,4 +40,9 @@ export interface ReleasePlanTemplateSchema {
     milestones?: ReleasePlanMilestoneSchema[];
     /** The name of the release template. */
     name: string;
+    /**
+     * The project this release template belongs to. `null` for global release templates available in all projects.
+     * @nullable
+     */
+    project?: string | null;
 }

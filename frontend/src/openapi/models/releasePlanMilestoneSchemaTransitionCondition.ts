@@ -5,13 +5,9 @@
  */
 
 /**
- * The condition configuration for the transition
+ * The condition configuration for the transition.
  * @nullable
  */
 export type ReleasePlanMilestoneSchemaTransitionCondition = {
-    /**
-     * The interval in minutes before transitioning
-     * @minimum 1
-     */
-    intervalMinutes: number;
+    [key: string]: unknown;
 } | null;

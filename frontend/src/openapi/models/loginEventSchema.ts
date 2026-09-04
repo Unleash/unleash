@@ -3,6 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { LoginEventSchemaType } from './loginEventSchemaType';
 
 /**
  * A model representing a single login event.
@@ -12,8 +13,6 @@ export interface LoginEventSchema {
     auth_type?: string;
     /** The date and time of when the login was attempted. */
     created_at?: string;
-    /** The type of event. `login` for sign-in attempts and `logout` for sign-outs. */
-    type?: 'login' | 'logout';
     /**
      * The reason for the login failure. This property is only present if the login was unsuccessful.
      * @nullable
@@ -31,6 +30,8 @@ export interface LoginEventSchema {
     ip?: string | null;
     /** Whether the login was successful or not. */
     successful?: boolean;
+    /** The type of event. `login` for sign-in attempts and `logout` for sign-outs. */
+    type?: LoginEventSchemaType;
     /**
      * The raw `User-Agent` header sent by the client, up to 512 chars. Opt-in; absent when not enabled or for clients that send no `User-Agent`.
      * @nullable

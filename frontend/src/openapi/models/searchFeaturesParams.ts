@@ -21,7 +21,7 @@ export type SearchFeaturesParams = {
      */
     state?: string;
     /**
-     * The lifecycle stage of the feature. The stagee can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF.
+     * The lifecycle stage of the feature. The stage can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF.
      * @pattern ^(IS|IS_NOT|IS_ANY_OF|IS_NONE_OF):(.*?)(,([a-zA-Z0-9_]+))*$
      */
     lifecycle?: string;
@@ -70,7 +70,7 @@ export type SearchFeaturesParams = {
      */
     favoritesFirst?: string;
     /**
-     * Whether to get results for archived feature flags or active feature flags. If `IS:true`, Unleash will return only archived flags. If `IS:false`, it will return only active flags.
+     * Deprecated: use the `lifecycle` parameter instead (`lifecycle=IS:archived` is equivalent to `archived=IS:true`). Whether to get results for archived feature flags or active feature flags. If `IS:true`, Unleash will return only archived flags, taking precedence over any `lifecycle` filter. If `IS:false`, it will return only active flags.
      * @pattern ^IS:(true|false)$
      */
     archived?: string;

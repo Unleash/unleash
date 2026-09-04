@@ -63,6 +63,7 @@ jobs:
       run:
         working-directory: ${{ inputs.working-directory || '.' }}
     strategy:
+      fail-fast: false
       matrix:
         test:
           - enterprise/feature.spec.ts

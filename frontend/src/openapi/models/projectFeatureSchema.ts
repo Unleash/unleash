@@ -23,12 +23,6 @@ export interface ProjectFeatureSchema {
     favorite: boolean;
     /** `true` if the impression data collection is enabled for the feature, otherwise `false`. */
     impressionData: boolean;
-    /**
-     * The date and time when metrics where last collected for this flag in any environment. This field was deprecated in v5. You should instead use the `lastSeenAt` property on the individual environments listed under the `environments` property.
-     * @deprecated
-     * @nullable
-     */
-    lastSeenAt: string | null;
     /** Unique feature name */
     name: string;
     /** `true` if the feature is stale based on the age and feature type, otherwise `false`. */

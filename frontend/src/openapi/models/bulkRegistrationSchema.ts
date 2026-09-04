@@ -25,6 +25,16 @@ export interface BulkRegistrationSchema {
     /** The list of projects used in the application */
     projects?: string[];
     /**
+     * The identifier of an integration built on top of an Unleash SDK (e.g. an OpenFeature provider), forwarded by Edge so adoption of the integration can be tracked alongside sdkVersion.
+     * @maxLength 256
+     */
+    sdkFlavor?: string;
+    /**
+     * The version of the integration identified by sdkFlavor.
+     * @maxLength 32
+     */
+    sdkFlavorVersion?: string;
+    /**
      * The sdk type
      * @nullable
      */

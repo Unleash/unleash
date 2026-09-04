@@ -5,7 +5,7 @@
  */
 import type { PersonalDashboardProjectDetailsSchemaInsights } from './personalDashboardProjectDetailsSchemaInsights';
 import type { PersonalDashboardProjectDetailsSchemaLatestEventsItem } from './personalDashboardProjectDetailsSchemaLatestEventsItem';
-import type { PersonalDashboardProjectDetailsSchemaOnboardingStatus } from './personalDashboardProjectDetailsSchemaOnboardingStatus';
+import type { OnboardingStatusSchema } from './onboardingStatusSchema';
 import type { PersonalDashboardProjectDetailsSchemaOwners } from './personalDashboardProjectDetailsSchemaOwners';
 import type { PersonalDashboardProjectDetailsSchemaRolesItem } from './personalDashboardProjectDetailsSchemaRolesItem';
 
@@ -17,8 +17,7 @@ export interface PersonalDashboardProjectDetailsSchema {
     insights: PersonalDashboardProjectDetailsSchemaInsights;
     /** The latest events for the project. */
     latestEvents: PersonalDashboardProjectDetailsSchemaLatestEventsItem[];
-    /** The current onboarding status of the project. */
-    onboardingStatus: PersonalDashboardProjectDetailsSchemaOnboardingStatus;
+    onboardingStatus: OnboardingStatusSchema;
     /** The users and/or groups that have the "owner" role in this project. If no such users or groups exist, the list will contain the "system" owner instead. */
     owners: PersonalDashboardProjectDetailsSchemaOwners;
     /** The list of roles that the user has in this project. */

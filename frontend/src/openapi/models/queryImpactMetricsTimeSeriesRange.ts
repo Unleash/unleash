@@ -13,4 +13,6 @@ export const QueryImpactMetricsTimeSeriesRange = {
     day: 'day',
     week: 'week',
     month: 'month',
+    threeMonths: 'threeMonths',
+    sixMonths: 'sixMonths',
 } as const;

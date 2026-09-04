@@ -7,7 +7,8 @@ import type { DateSchema } from './dateSchema';
 import type { ClientMetricsSchemaBucketToggles } from './clientMetricsSchemaBucketToggles';
 
 /**
- * Holds all metrics gathered over a window of time. Typically 1 hour wide
+ * Holds all metrics gathered over a window of time. Typically 1 hour wide. May be omitted or null when the request only carries impact metrics.
+ * @nullable
  */
 export type ClientMetricsSchemaBucket = {
     /** The start of the time window these metrics are valid for. The window is usually 1 hour wide */
@@ -16,4 +17,4 @@ export type ClientMetricsSchemaBucket = {
     stop: DateSchema;
     /** an object containing feature names with yes/no plus variant usage */
     toggles: ClientMetricsSchemaBucketToggles;
-};
+} | null;

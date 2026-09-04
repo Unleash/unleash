@@ -17,6 +17,6 @@ export interface UpdateFeatureSchema {
     impressionData?: boolean;
     /** `true` if the feature is archived */
     stale?: boolean;
-    /** Type of the flag e.g. experiment, kill-switch, release, operational, permission */
+    /** Type of the flag e.g. experiment, kill-switch, release, operational, permission, sunset */
     type?: UpdateFeatureSchemaType;
 }

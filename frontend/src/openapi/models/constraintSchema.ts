@@ -17,7 +17,10 @@ export interface ConstraintSchema {
     inverted?: boolean;
     /** The operator to use when evaluating this constraint. For more information about the various operators, refer to [the strategy constraint operator documentation](https://docs.getunleash.io/concepts/activation-strategies#constraint-operators). */
     operator: ConstraintSchemaOperator;
-    /** The context value that should be used for constraint evaluation. Use this property instead of `values` for properties that only accept single values. */
+    /**
+     * The context value that should be used for constraint evaluation. Use this property instead of `values` for properties that only accept single values.
+     * @minLength 1
+     */
     value?: string;
     /** The context values that should be used for constraint evaluation. Use this property instead of `value` for properties that accept multiple values. */
     values?: string[];

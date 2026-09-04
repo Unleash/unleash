@@ -3,18 +3,14 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { AddonTypeSchemaAlertsItemLink } from './addonTypeSchemaAlertsItemLink';
 import type { AddonTypeSchemaAlertsItemType } from './addonTypeSchemaAlertsItemType';
 
 export type AddonTypeSchemaAlertsItem = {
+    /** An optional link to display at the end of the alert text. */
+    link?: AddonTypeSchemaAlertsItemLink;
     /** The text of the alert. This is what will be displayed to the user. */
     text: string;
     /** The type of alert. This determines the color of the alert. */
     type: AddonTypeSchemaAlertsItemType;
-    /** An optional link to display at the end of the alert text. */
-    link?: {
-        /** The URL of the link. */
-        url: string;
-        /** The display title of the link. */
-        title?: string | null;
-    };
 };

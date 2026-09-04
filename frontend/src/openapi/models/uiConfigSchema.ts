@@ -6,6 +6,7 @@
 import type { UiConfigSchemaAuthenticationType } from './uiConfigSchemaAuthenticationType';
 import type { UiConfigSchemaBilling } from './uiConfigSchemaBilling';
 import type { UiConfigSchemaFlags } from './uiConfigSchemaFlags';
+import type { UiConfigSchemaImpactMetrics } from './uiConfigSchemaImpactMetrics';
 import type { UiConfigSchemaLinksItem } from './uiConfigSchemaLinksItem';
 import type { ResourceLimitsSchema } from './resourceLimitsSchema';
 import type { UiConfigSchemaUnleashContext } from './uiConfigSchemaUnleashContext';
@@ -35,8 +36,14 @@ export interface UiConfigSchema {
     flags?: UiConfigSchemaFlags;
     /** The list of origins that the front-end API should accept requests from. */
     frontendApiOrigins?: string[];
+    /** The HubSpot portal ID. Currently used to load the customer support chat widget when the `hubspotChatEnabled` flag is on and the instance is a PAYG trial; may be reused by future HubSpot integrations. */
+    hubspotPortalId?: string;
+    /** Impact metrics availability for this instance. `disabled` when the killswitch is on; `unconfigured` when no source is set up yet; `internal`/`external`/`full` depending on which data sources are available. */
+    impactMetrics?: UiConfigSchemaImpactMetrics;
     /** Relevant links to use in the UI. */
     links?: UiConfigSchemaLinksItem[];
+    /** The LogRocket app ID used to initialize session replay in the admin UI. Only used when the `logRocketEnabled` flag is on. */
+    logRocketAppId?: string;
     /** Whether maintenance mode is currently active or not. */
     maintenanceMode?: boolean;
     /** The maximum number of sessions that a user has. */
@@ -53,6 +60,8 @@ export interface UiConfigSchema {
     samlConfiguredThroughEnv?: boolean;
     /** The slogan to display in the UI footer. */
     slogan?: string;
+    /** Whether the internal `/_stories` component gallery route is enabled. Controlled by the `ENABLE_STORIES_PAGE` environment variable. */
+    storiesPageEnabled?: boolean;
     /** The context object used to configure the Unleash instance. */
     unleashContext?: UiConfigSchemaUnleashContext;
     /** The URL of the Unleash instance. */

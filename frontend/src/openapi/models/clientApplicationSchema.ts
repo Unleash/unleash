@@ -9,13 +9,11 @@ import type { ClientApplicationSchemaStarted } from './clientApplicationSchemaSt
  * A client application is an instance of one of our SDKs
  */
 export interface ClientApplicationSchema {
-    /** An identifier for the app that uses the sdk, should be static across SDK restarts */
-    appName: string;
     /**
-     * The SDK's configured 'environment' property. This property was deprecated in v5. This property  does **not** control which Unleash environment the SDK gets toggles for. To control Unleash environments, use the SDKs API key.
-     * @deprecated
+     * An identifier for the app that uses the sdk, should be static across SDK restarts
+     * @minLength 1
      */
-    environment?: string;
+    appName: string;
     /** A unique identifier identifying the instance of the application running the SDK. Often changes based on execution environment. For instance: two pods in Kubernetes will have two different instanceIds */
     instanceId?: string;
     /**
@@ -27,6 +25,16 @@ export interface ClientApplicationSchema {
     platformName?: string;
     /** The version of the platform the application is running on. Languages that compile to binaries, this is expected to be the compiler version used to assemble the binary. */
     platformVersion?: string;
+    /**
+     * The identifier of an integration built on top of an Unleash SDK (e.g. an OpenFeature provider). Sent so adoption of the integration can be tracked alongside sdkVersion.
+     * @maxLength 256
+     */
+    sdkFlavor?: string;
+    /**
+     * The version of the integration identified by sdk flavor, that has been built on top of an Unleash SDK
+     * @maxLength 32
+     */
+    sdkFlavorVersion?: string;
     /** An SDK version identifier. Usually formatted as "unleash-client-<language>:<version>" */
     sdkVersion?: string;
     /** The version of the Unleash client specification the client supports */

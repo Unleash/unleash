@@ -8,7 +8,7 @@ import type { CreateFeatureNamingPatternSchema } from './createFeatureNamingPatt
 import type { FeatureTypeCountSchema } from './featureTypeCountSchema';
 import type { ProjectLinkTemplateSchema } from './projectLinkTemplateSchema';
 import type { ProjectOverviewSchemaMode } from './projectOverviewSchemaMode';
-import type { ProjectOverviewSchemaOnboardingStatus } from './projectOverviewSchemaOnboardingStatus';
+import type { OnboardingStatusSchema } from './onboardingStatusSchema';
 import type { ProjectStatsSchema } from './projectStatsSchema';
 
 /**
@@ -57,8 +57,7 @@ export interface ProjectOverviewSchema {
     mode?: ProjectOverviewSchemaMode;
     /** The name of this project */
     name: string;
-    /** The current onboarding status of the project. */
-    onboardingStatus: ProjectOverviewSchemaOnboardingStatus;
+    onboardingStatus: OnboardingStatusSchema;
     /** Project statistics */
     stats?: ProjectStatsSchema;
     /**

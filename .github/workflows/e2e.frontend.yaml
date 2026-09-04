@@ -109,6 +109,7 @@ jobs:
             fi
             sleep 5
           done
+          sleep 10
           echo '=== smoke test failed after ~150s ==='
           echo '--- docker compose ps ---'
           docker compose -f .github/docker-compose.test.yml ps -a

@@ -15,16 +15,21 @@ services:
   # The Unleash server contains the Unleash configuration and
   # communicates with server-side SDKs and the Unleash Proxy
   frontend:
-    image: node:alpine
-    working_dir: /app
-    command: npx http-server ./build -p 80 --cors --proxy http://unleash:4242
+    image: nginx:alpine
     ports:
       - "3000:80"
     volumes:
-      - ../frontend/build:/app:ro
+      - ../frontend/build:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       unleash:
         condition: service_healthy
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost/ || exit 1
+      interval: 1s
+      timeout: 1m
+      retries: 5
+      start_period: 15s
   unleash:
     image: unleashorg/${UNLEASH_VERSION:-unleash-enterprise:latest}
     pull_policy: "always"

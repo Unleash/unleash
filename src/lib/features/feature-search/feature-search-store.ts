@@ -150,11 +150,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
 
                 selectColumns = [
                     ...selectColumns,
-                    this.db.raw(`CASE
-                            WHEN dependent_features.parent = features.name THEN 'parent'
-                            WHEN dependent_features.child = features.name THEN 'child'
-                            ELSE null
-                            END AS dependency`),
+                    'feature_dependency.dependency as dependency',
                 ];
 
                 applyQueryParams(query, queryParams);
@@ -210,17 +206,25 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         'feature_strategy_segment.segment_id',
                         'segments.id',
                     )
-                    .leftJoin('dependent_features', (qb) => {
-                        qb.on(
-                            'dependent_features.parent',
-                            '=',
-                            'features.name',
-                        ).orOn(
-                            'dependent_features.child',
-                            '=',
-                            'features.name',
-                        );
-                    })
+                    .leftJoin(
+                        this.db
+                            .select(
+                                'parent as feature_name',
+                                this.db.raw("'parent' as dependency"),
+                            )
+                            .from('dependent_features')
+                            .unionAll((union) => {
+                                union
+                                    .select(
+                                        'child as feature_name',
+                                        this.db.raw("'child' as dependency"),
+                                    )
+                                    .from('dependent_features');
+                            })
+                            .as('feature_dependency'),
+                        'feature_dependency.feature_name',
+                        'features.name',
+                    )
                     .leftJoin(
                         'users',
                         'users.id',

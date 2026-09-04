@@ -187,7 +187,7 @@ const StyledConstraintValue = styled(Chip, {
         selected ? theme.palette.primary.main : 'transparent'
     }`,
     backgroundColor: selected
-        ? theme.palette.secondary.light
+        ? theme.palette.primary.container
         : theme.palette.background.elevation2,
     color: theme.palette.text.primary,
     fontWeight: theme.typography.fontWeightRegular,
@@ -201,7 +201,7 @@ const StyledConstraintValue = styled(Chip, {
     ),
     '&:hover': {
         backgroundColor: selected
-            ? theme.palette.secondary.light
+            ? theme.palette.primary.container
             : theme.palette.action.hover,
     },
     '&.MuiChip-clickable:active': {
@@ -210,7 +210,7 @@ const StyledConstraintValue = styled(Chip, {
     '&.Mui-focusVisible': {
         boxShadow: 'none',
         backgroundColor: selected
-            ? theme.palette.secondary.light
+            ? theme.palette.primary.container
             : theme.palette.background.elevation2,
     },
     '@media (prefers-reduced-motion: reduce)': {

@@ -22,7 +22,7 @@ const StyledItemSeparator = styled('div')(({ theme }) => ({
 const StyledInnerBox = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: theme.palette.background.paper,
     border: `1px solid ${theme.palette.divider}`,
     padding: theme.spacing(2),
     paddingTop: theme.spacing(1),

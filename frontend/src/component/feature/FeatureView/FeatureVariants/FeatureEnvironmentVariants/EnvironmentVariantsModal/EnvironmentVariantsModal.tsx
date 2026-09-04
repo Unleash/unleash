@@ -35,7 +35,7 @@ const StyledFormSubtitle = styled('div')(({ theme }) => ({
     },
     marginTop: theme.spacing(-3.5),
     marginBottom: theme.spacing(2),
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: theme.palette.background.paper,
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
     position: 'sticky',
@@ -47,7 +47,7 @@ const StyledCloudCircle = styled(CloudCircle, {
     shouldForwardProp: (prop) => prop !== 'deprecated',
 })<{ deprecated?: boolean }>(({ theme, deprecated }) => ({
     color: deprecated
-        ? theme.palette.neutral.border
+        ? theme.palette.neutral.containerBorder
         : theme.palette.primary.main,
 }));
 

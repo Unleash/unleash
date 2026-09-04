@@ -35,11 +35,11 @@ export const SegmentChange: FC<ISegmentChangeProps> = ({
         >
             <Box
                 sx={(theme) => ({
-                    backgroundColor: theme.palette.neutral.light,
+                    backgroundColor: theme.palette.neutral.container,
                     borderRadius: `${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px 0 0`,
                     border: '1px solid',
                     borderColor: segmentChange.conflict
-                        ? theme.palette.warning.border
+                        ? theme.palette.warning.containerBorder
                         : theme.palette.divider,
                     borderBottom: 'none',
                     overflow: 'hidden',

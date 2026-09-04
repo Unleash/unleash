@@ -59,8 +59,8 @@ const StyledTruncator = styled(Truncator)(({ theme }) => ({
 
 const StyledStrategyCount = styled('p')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
-    color: theme.palette.info.contrastText,
-    backgroundColor: theme.palette.info.light,
+    color: theme.palette.info.onContainer,
+    backgroundColor: theme.palette.info.container,
     whiteSpace: 'nowrap',
     width: 'min-content',
     borderRadius: theme.shape.borderRadiusExtraLarge,
@@ -70,7 +70,7 @@ const StyledStrategyCount = styled('p')(({ theme }) => ({
 const NeutralStrategyCount = styled(StyledStrategyCount)(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.text.secondary,
-    backgroundColor: theme.palette.neutral.light,
+    backgroundColor: theme.palette.neutral.container,
 }));
 
 type EnvironmentMetadata = {

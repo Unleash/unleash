@@ -2,7 +2,7 @@ import { Box, Typography, styled } from '@mui/material';
 import Input from 'component/common/Input/Input';
 
 export const StyledForm = styled('form')(({ theme }) => ({
-    background: theme.palette.background.default,
+    background: theme.palette.background.paper,
 }));
 
 const StyledFormSection = styled('div')(({ theme }) => ({

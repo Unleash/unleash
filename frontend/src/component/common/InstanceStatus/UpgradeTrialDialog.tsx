@@ -18,8 +18,8 @@ const StyledBillingInformation = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(2),
     borderRadius: theme.shape.borderRadiusMedium,
     padding: theme.spacing(1.5, 3, 2.5, 3),
-    border: `1px solid ${theme.palette.secondary.border}`,
-    backgroundColor: theme.palette.secondary.light,
+    border: `1px solid ${theme.palette.primary.containerBorder}`,
+    backgroundColor: theme.palette.primary.container,
 }));
 
 const StyledPrice = styled('span')(({ theme }) => ({

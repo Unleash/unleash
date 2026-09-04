@@ -31,44 +31,44 @@ const Value = styled('span')(({ theme }) => ({
 }));
 
 const ErrorContainer = styled(Box)(({ theme }) => ({
-    border: `1px solid ${theme.palette.error.border}`,
+    border: `1px solid ${theme.palette.error.containerBorder}`,
     borderRadius: theme.shape.borderRadiusLarge,
     paddingBottom: theme.spacing(2),
 }));
 
 const WarningContainer = styled(Box)(({ theme }) => ({
-    border: `1px solid ${theme.palette.warning.border}`,
+    border: `1px solid ${theme.palette.warning.containerBorder}`,
     borderRadius: theme.shape.borderRadiusLarge,
     paddingBottom: theme.spacing(2),
 }));
 
 const ErrorHeader = styled(Box)(({ theme }) => ({
-    color: theme.palette.error.dark,
-    backgroundColor: theme.palette.error.light,
+    color: theme.palette.error.onContainer,
+    backgroundColor: theme.palette.error.container,
     fontSize: theme.fontSizes.smallBody,
-    borderBottom: `1px solid ${theme.palette.error.border}`,
+    borderBottom: `1px solid ${theme.palette.error.containerBorder}`,
     borderTopLeftRadius: theme.shape.borderRadiusLarge,
     borderTopRightRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(2),
 }));
 
 const WarningHeader = styled(Box)(({ theme }) => ({
-    color: theme.palette.warning.dark,
-    backgroundColor: theme.palette.warning.light,
+    color: theme.palette.warning.onContainer,
+    backgroundColor: theme.palette.warning.container,
     fontSize: theme.fontSizes.smallBody,
-    borderBottom: `1px solid ${theme.palette.warning.border}`,
+    borderBottom: `1px solid ${theme.palette.warning.containerBorder}`,
     borderTopLeftRadius: theme.shape.borderRadiusLarge,
     borderTopRightRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(2),
 }));
 
 const ErrorMessage = styled(Box)(({ theme }) => ({
-    color: theme.palette.error.dark,
+    color: theme.palette.error.onContainer,
     fontSize: theme.fontSizes.smallBody,
 }));
 
 const WarningMessage = styled(Box)(({ theme }) => ({
-    color: theme.palette.warning.dark,
+    color: theme.palette.warning.onContainer,
     fontSize: theme.fontSizes.smallBody,
 }));
 
@@ -77,7 +77,7 @@ const StyledItems = styled('ul')(({ theme }) => ({
     marginBottom: theme.spacing(0),
     paddingLeft: theme.spacing(3),
     paddingBottom: theme.spacing(3),
-    borderBottom: `1px dashed ${theme.palette.neutral.border}`,
+    borderBottom: `1px dashed ${theme.palette.neutral.containerBorder}`,
 }));
 
 const StyledItem = styled('li')(({ theme }) => ({

@@ -107,14 +107,14 @@ const StyledMilestone = styled(Box, {
             stopped
                 ? theme.palette.warning.main
                 : active
-                  ? theme.palette.success.border
+                  ? theme.palette.success.containerBorder
                   : completed
-                    ? theme.palette.success.border
+                    ? theme.palette.success.containerBorder
                     : theme.palette.divider
         }`,
         borderRadius: theme.shape.borderRadiusLarge,
         background: completed
-            ? theme.palette.background.default
+            ? theme.palette.background.paper
             : theme.palette.background.paper,
         transition: theme.transitions.create(
             ['background-color', 'border-color'],
@@ -182,7 +182,7 @@ const StyledStatusRow = styled(Box)(({ theme }) => ({
 
 const StyledRunningChip = styled(Chip)(({ theme }) => ({
     height: 20,
-    color: theme.palette.success.dark,
+    color: theme.palette.success.onContainer,
     background: alpha(theme.palette.success.main, 0.16),
     '& .MuiChip-icon': {
         color: theme.palette.success.main,

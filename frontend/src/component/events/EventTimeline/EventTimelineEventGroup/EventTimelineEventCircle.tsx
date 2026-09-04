@@ -14,17 +14,17 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import type { HTMLAttributes } from 'react';
 import SensorsIcon from '@mui/icons-material/Sensors';
 
-type DefaultEventVariant = 'secondary';
+type DefaultEventVariant = 'primary';
 type CustomEventVariant = 'success' | 'neutral' | 'warning' | 'error';
 type EventVariant = DefaultEventVariant | CustomEventVariant;
 
 const StyledEventCircle = styled('div', {
     shouldForwardProp: (prop) => prop !== 'variant',
-})<{ variant?: EventVariant }>(({ theme, variant = 'secondary' }) => ({
+})<{ variant?: EventVariant }>(({ theme, variant = 'primary' }) => ({
     height: theme.spacing(3),
     width: theme.spacing(3),
     borderRadius: '50%',
-    backgroundColor: theme.palette[variant].light,
+    backgroundColor: theme.palette[variant].container,
     border: `1px solid ${theme.palette[variant].main}`,
     display: 'flex',
     alignItems: 'center',
@@ -91,7 +91,7 @@ const customEventVariants: Partial<
 
 const isValidVariant = (variant?: string): variant is EventVariant =>
     variant !== undefined &&
-    ['secondary', 'success', 'neutral', 'warning', 'error'].includes(variant);
+    ['primary', 'success', 'neutral', 'warning', 'error'].includes(variant);
 
 interface IEventTimelineEventCircleProps
     extends HTMLAttributes<HTMLDivElement> {

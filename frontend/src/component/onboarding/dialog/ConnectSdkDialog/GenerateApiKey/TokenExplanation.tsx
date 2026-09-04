@@ -20,7 +20,7 @@ const DescriptionBox = styled('div')(({ theme }) => ({
     flex: 1,
     color: theme.palette.text.secondary,
     fontSize: theme.typography.body2.fontSize,
-    background: theme.palette.background.default,
+    background: theme.palette.background.paper,
 }));
 
 const ProjectDescription = styled(DescriptionBox)(({ theme }) => ({
@@ -99,7 +99,7 @@ export const TokenExplanation = ({
     return (
         <FullWidth>
             <ArcherContainer
-                strokeColor={theme.palette.secondary.border}
+                strokeColor={theme.palette.primary.containerBorder}
                 endMarker={false}
                 lineStyle='curve'
             >

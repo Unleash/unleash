@@ -27,7 +27,7 @@ const StyledTransitionIcon = styled(BoltIcon, {
     fontSize: 18,
     flexShrink: 0,
     backgroundColor: muted
-        ? theme.palette.neutral.border
+        ? theme.palette.neutral.containerBorder
         : theme.palette.primary.main,
     borderRadius: '50%',
     padding: theme.spacing(0.25),

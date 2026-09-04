@@ -268,8 +268,8 @@ export const DemoSteps = ({
                 },
                 spotlight: {
                     borderRadius: theme.shape.borderRadiusMedium,
-                    border: `2px solid ${theme.palette.spotlight.border}`,
-                    outline: `2px solid ${theme.palette.spotlight.outline}`,
+                    border: `2px solid ${theme.palette.primary.main}`,
+                    outline: `2px solid ${theme.palette.primary.light}`,
                     animation: 'pulse 2s infinite',
                 },
                 overlay: {

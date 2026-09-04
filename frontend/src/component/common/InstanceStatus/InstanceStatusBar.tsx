@@ -24,9 +24,9 @@ const StyledWarningBar = styled('aside')(({ theme }) => ({
     padding: theme.spacing(1),
     gap: theme.spacing(1),
     borderBottom: '1px solid',
-    borderColor: theme.palette.warning.border,
-    background: theme.palette.warning.light,
-    color: theme.palette.warning.dark,
+    borderColor: theme.palette.warning.containerBorder,
+    background: theme.palette.warning.container,
+    color: theme.palette.warning.onContainer,
 }));
 
 const StyledInfoBar = styled('aside')(({ theme }) => ({
@@ -38,9 +38,9 @@ const StyledInfoBar = styled('aside')(({ theme }) => ({
     padding: theme.spacing(1),
     gap: theme.spacing(1),
     borderBottom: '1px solid',
-    borderColor: theme.palette.info.border,
-    background: theme.palette.info.light,
-    color: theme.palette.info.dark,
+    borderColor: theme.palette.info.containerBorder,
+    background: theme.palette.info.container,
+    color: theme.palette.info.onContainer,
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({

@@ -44,7 +44,7 @@ const TimeLifecycleRow = styled(Box)(({ theme }) => ({
 }));
 
 const StyledFooter = styled('footer')(({ theme }) => ({
-    background: theme.palette.neutral.light,
+    background: theme.palette.neutral.container,
     color: theme.palette.text.secondary,
     borderRadius: `0 0 ${theme.shape.borderRadiusMedium}px ${theme.shape.borderRadiusMedium}px`, // has to match the parent tooltip container
     margin: theme.spacing(-1, -1.5), // has to match the parent tooltip container

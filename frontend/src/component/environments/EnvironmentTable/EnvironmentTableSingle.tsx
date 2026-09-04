@@ -20,7 +20,9 @@ const StyledTable = styled(Table)(({ theme }) => ({
 const StyledToggleWarning = styled('p', {
     shouldForwardProp: (prop) => prop !== 'warning',
 })<{ warning?: boolean }>(({ theme, warning }) => ({
-    color: warning ? theme.palette.error.dark : theme.palette.text.primary,
+    color: warning
+        ? theme.palette.error.onContainer
+        : theme.palette.text.primary,
 }));
 
 interface IEnvironmentTableSingleProps {

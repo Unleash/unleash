@@ -60,8 +60,8 @@ const ActiveIcon = styled(IconBadge)(({ theme }) => ({
 }));
 
 const DoneIcon = styled(IconBadge)(({ theme }) => ({
-    backgroundColor: theme.palette.success.light,
-    border: `1px solid ${theme.palette.success.border}`,
+    backgroundColor: theme.palette.success.container,
+    border: `1px solid ${theme.palette.success.containerBorder}`,
     color: theme.palette.success.main,
 }));
 

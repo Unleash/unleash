@@ -80,9 +80,9 @@ const StyledEnterpriseTag = styled('span')(({ theme }) => ({
     padding: theme.spacing(0, 1),
     marginLeft: 'auto',
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: theme.palette.secondary.light,
-    color: theme.palette.secondary.contrastText,
-    border: `1px solid ${theme.palette.secondary.border}`,
+    backgroundColor: theme.palette.primary.container,
+    color: theme.palette.primary.onContainer,
+    border: `1px solid ${theme.palette.primary.containerBorder}`,
     fontWeight: theme.typography.fontWeightBold,
 }));
 
@@ -149,8 +149,8 @@ const StyledPhaseBadge = styled('span', {
         padding: theme.spacing(0.5, 1.5),
         borderRadius: theme.spacing(2),
         backgroundColor: isBeta
-            ? theme.palette.secondary.light
-            : theme.palette.success.light,
+            ? theme.palette.primary.container
+            : theme.palette.success.container,
         color: isBeta ? theme.palette.primary.main : theme.palette.success.main,
         '&::before': {
             content: '""',
@@ -248,7 +248,7 @@ const InProgressFeatureCard = ({ feature }: { feature: InProgressFeature }) => {
             <StyledInProgressFooter>
                 <Button
                     size='medium'
-                    color='secondary'
+                    color='primary'
                     variant='outlined'
                     onClick={openDialog}
                 >

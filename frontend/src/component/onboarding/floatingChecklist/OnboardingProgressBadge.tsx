@@ -9,15 +9,15 @@ const StyledBadge = styled('span', {
     fontWeight: theme.typography.fontWeightRegular,
     lineHeight: 1,
     color: completed
-        ? theme.palette.success.contrastText
-        : theme.palette.secondary.dark,
+        ? theme.palette.success.onContainer
+        : theme.palette.primary.onContainer,
     backgroundColor: completed
-        ? theme.palette.success.light
-        : theme.palette.secondary.light,
+        ? theme.palette.success.container
+        : theme.palette.primary.container,
     border: `1px solid ${
         completed
-            ? theme.palette.success.border
-            : theme.palette.secondary.border
+            ? theme.palette.success.containerBorder
+            : theme.palette.primary.containerBorder
     }`,
     borderRadius: theme.shape.borderRadius,
     padding: theme.spacing(0.25, 0.75),

@@ -43,8 +43,8 @@ const StyledInfoBox = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
     padding: theme.spacing(1.5),
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: theme.palette.info.light,
-    border: `1px solid ${theme.palette.info.border}`,
+    backgroundColor: theme.palette.info.container,
+    border: `1px solid ${theme.palette.info.containerBorder}`,
 }));
 
 const StyledInfoIcon = styled(InfoOutlinedIcon)(({ theme }) => ({
@@ -55,7 +55,7 @@ const StyledInfoIcon = styled(InfoOutlinedIcon)(({ theme }) => ({
 const StyledInfoContent = styled('div')(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
     lineHeight: '20px',
-    color: theme.palette.info.dark,
+    color: theme.palette.info.onContainer,
 }));
 
 type State = 'initial' | 'loading' | 'attempted' | 'too_many_attempts';

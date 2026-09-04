@@ -24,13 +24,13 @@ const WarningHeader = styled(Box)(({ theme }) => ({
     gap: theme.spacing(1.5),
     alignSelf: 'stretch',
     borderRadius: `${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px 0 0`,
-    border: `1px solid ${theme.palette.warning.border}`,
-    background: theme.palette.warning.light,
+    border: `1px solid ${theme.palette.warning.containerBorder}`,
+    background: theme.palette.warning.container,
     color: theme.palette.warning.main,
 }));
 
 const WarningHeaderText = styled(Box)(({ theme }) => ({
-    color: theme.palette.warning.dark,
+    color: theme.palette.warning.onContainer,
     fontWeight: theme.fontWeight.bold,
 }));
 
@@ -50,7 +50,7 @@ const IssueContainer = styled(Box)(({ theme }) => ({
     alignSelf: 'stretch',
     gap: theme.spacing(3),
     borderRadius: ` 0 0 ${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px`,
-    border: `1px solid ${theme.palette.warning.border}`,
+    border: `1px solid ${theme.palette.warning.containerBorder}`,
 }));
 
 const IssueTextContainer = styled(Box)(({ theme }) => ({

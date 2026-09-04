@@ -26,7 +26,7 @@ export interface IChangeRequestStatusBadgeProps {
 }
 
 const ReviewRequiredBadge: FC = () => (
-    <Badge color='secondary' icon={<CircleOutlined fontSize={'small'} />}>
+    <Badge color='primary' icon={<CircleOutlined fontSize={'small'} />}>
         Review required
     </Badge>
 );

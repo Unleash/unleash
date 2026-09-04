@@ -314,12 +314,12 @@ const StyledOutcome = styled(Box, {
 })<{ severity: 'success' | 'error' }>(({ theme, severity }) => {
     const borderColor =
         severity === 'error'
-            ? theme.palette.error.border
-            : theme.palette.success.border;
+            ? theme.palette.error.containerBorder
+            : theme.palette.success.containerBorder;
     const backgroundColor =
         severity === 'error'
-            ? theme.palette.error.light
-            : theme.palette.success.light;
+            ? theme.palette.error.container
+            : theme.palette.success.container;
     return {
         display: 'flex',
         alignItems: 'flex-start',

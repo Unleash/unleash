@@ -44,10 +44,10 @@ const BaseStatusButton = styled('button')<{ disabled?: boolean }>(
 );
 
 const ActiveStatusButton = styled(BaseStatusButton)(({ theme }) => ({
-    backgroundColor: theme.palette.success.light,
-    color: theme.palette.success.contrastText,
+    backgroundColor: theme.palette.success.container,
+    color: theme.palette.success.onContainer,
     '&:hover': {
-        backgroundColor: theme.palette.success.light,
+        backgroundColor: theme.palette.success.container,
         textDecoration: 'none',
     },
     '& svg': {
@@ -56,7 +56,7 @@ const ActiveStatusButton = styled(BaseStatusButton)(({ theme }) => ({
 }));
 
 const PausedStatusButton = styled(BaseStatusButton)(({ theme }) => ({
-    backgroundColor: theme.palette.neutral.light,
+    backgroundColor: theme.palette.neutral.container,
     color: theme.palette.text.primary,
     '&:hover': {
         backgroundColor: 'transparent',
@@ -81,10 +81,10 @@ const ScheduledStatusButton = styled(BaseStatusButton)(({ theme }) => ({
 }));
 
 const DefaultStatusButton = styled(BaseStatusButton)(({ theme }) => ({
-    backgroundColor: theme.palette.neutral.light,
+    backgroundColor: theme.palette.neutral.container,
     color: theme.palette.primary.main,
     '&:hover': {
-        backgroundColor: theme.palette.neutral.light,
+        backgroundColor: theme.palette.neutral.container,
         textDecoration: 'none',
     },
     '& svg': {
@@ -93,14 +93,14 @@ const DefaultStatusButton = styled(BaseStatusButton)(({ theme }) => ({
 }));
 
 const CompletedStatusButton = styled(BaseStatusButton)(({ theme }) => ({
-    backgroundColor: theme.palette.neutral.light,
+    backgroundColor: theme.palette.neutral.container,
     color: theme.palette.primary.main,
     '&:hover': {
-        backgroundColor: theme.palette.neutral.light,
+        backgroundColor: theme.palette.neutral.container,
         textDecoration: 'none',
     },
     '& svg': {
-        color: theme.palette.neutral.border,
+        color: theme.palette.neutral.containerBorder,
     },
 }));
 

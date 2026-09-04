@@ -17,7 +17,7 @@ const StyledTooltip = styled('article')(({ theme }) => ({
 }));
 
 const OkButton = styled(Button)(({ theme }) => ({
-    color: theme.palette.secondary.border,
+    color: theme.palette.primary.containerBorder,
     alignSelf: 'start',
     marginLeft: theme.spacing(-1),
 }));

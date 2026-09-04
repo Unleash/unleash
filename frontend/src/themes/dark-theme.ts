@@ -59,69 +59,86 @@ const theme = {
             light: '#4C4992',
             // Maybe to move links color to another variable????
             dark: '#9792ED', // Color used for links and on hover for primary buttons
-            contrastText: '#EEEEFC', // Color used for content when primary.main is used as a background
+            contrastText: '#EEEEFC',
+            // Tinted "container" recipe (subtle purple surface: badges, chips, soft banners).
+            // Absorbed from the former `secondary` palette.
+            container: '#34325E',
+            containerBorder: '#4C4992',
+            onContainer: '#EEEEFC',
         },
+        // Secondary is the "fjord" teal, following the same recipe as primary and
+        // the semantic palettes (main + light/dark + tinted container).
         secondary: {
-            // Used for purple badges and puple light elements
-            main: '#9792ED', // used on icons on these elements
-            light: '#34325E', // used as a bakground on these elements
-            dark: '#EEEEFC', // used for text on these elements
-            border: '#4C4992',
-            contrastText: '#EEEEFC', // Color used for content when info.main is used as a background
+            main: '#8FA2A6', // fjord[400]
+            light: '#A7B5B9', // fjord[300]
+            dark: '#8FA2A6', // fjord[400]
+            contrastText: '#202021',
+            container: '#122D33', // fjord[950]
+            containerBorder: '#31545C', // fjord[800]
+            onContainer: '#EEEEFC',
         },
         info: {
             // main: '#5483C9',  // used on icons on these elements
-            main: '#a2bbe2', // used on icons on these elements
-            light: '#1A2641', // used as a bakground on these elements
-            dark: '#a2bbe2', // used for text on these elements
-            border: '#1B407A',
-            contrastText: '#EEEEFC', // Color used for content when info.main is used as a background
+            main: '#a2bbe2',
+            light: '#b8cbe9',
+            dark: '#a2bbe2',
+            contrastText: '#202021',
+            container: '#1A2641',
+            containerBorder: '#1B407A',
+            onContainer: '#EEEEFC',
         },
         success: {
             // main: '#62872F',  // used on icons on these elements
-            main: '#94ae6f', // used on icons on these elements
-            light: '#333D30', // used as a bakground on these elements
-            dark: '#94ae6f', // used for text on these elements
-            border: '#3D600C',
-            contrastText: '#EEEEFC', // Color used for content when success.main is used as a background
+            main: '#94ae6f',
+            light: '#a8bd88',
+            dark: '#94ae6f',
+            contrastText: '#202021',
+            container: '#333D30',
+            containerBorder: '#3D600C',
+            onContainer: '#EEEEFC',
         },
         warning: {
             // main: '#9E691C',  // used on icons on these elements
-            main: '#bc7d21', // used on icons on these elements
-            light: '#3B302C', // used as a bakground on these elements
-            dark: '#bc7d21', // used for text on these elements
-            contrastText: '#EEEEFC', // Color used for content when warning.main is used as a background
-            border: '#6C4A19',
+            main: '#bc7d21',
+            light: '#d0913a',
+            dark: '#bc7d21',
+            contrastText: '#202021',
+            container: '#3B302C',
+            containerBorder: '#6C4A19',
+            onContainer: '#EEEEFC',
         },
         error: {
             // main: '#B93F4A',  // used on error buttons // used on icons on these elements
-            main: '#ff6472', // used on error buttons // used on icons on these elements
-            light: '#3F2835', // used as a bakground on these elements
-            // dark: '#F15260',  // used for text on these elements
-            dark: '#ff6472', // used for text on these elements
-            border: '#8A3E45',
-            contrastText: '#EEEEFC', // Color used for content when error.main is used as a background
+            main: '#ff6472',
+            light: '#ff8591',
+            // dark: '#F15260',
+            dark: '#ff6472',
+            contrastText: '#202021',
+            container: '#3F2835',
+            containerBorder: '#8A3E45',
+            onContainer: '#EEEEFC',
         },
         web: {
             main: '#1A4049', // used on sales-related elements
-            contrastText: '#EEEEFC', // Color used for inner text
+            contrastText: '#EEEEFC',
         },
 
         /**
          *  Used for grey badges, hover elements, and grey light elements
          */
         neutral: {
-            main: '#858699', // used on icons on these elements
-            light: '#2B2A3C', // used as a bakground on these elements
-            dark: '#EEEEFC', // used for text on these elements
-            border: '#454360',
-            contrastText: '#EEEEFC', // Color used for text inside badge
+            main: '#858699',
+            light: '#9a9bab',
+            dark: '#EEEEFC',
+            contrastText: '#202021',
+            container: '#2B2A3C',
+            containerBorder: '#454360',
+            onContainer: '#EEEEFC',
         },
 
         background: {
             paper: '#222130', // Background color for all containers
-            default: '#222130',
-            application: '#1A1924',
+            default: '#1A1924',
             sidebar: '#4C4992',
             alternative: '#4C4992', // used on the dark theme to shwitch primary main to a darker shade
             elevation1: '#2B2A3C',
@@ -142,7 +159,6 @@ const theme = {
             focus: actionColors[0.12],
             focusOpacity: 0.12,
             activatedOpacity: 0.12,
-            alternative: colors.purple[1000],
         },
 
         /**
@@ -164,15 +180,6 @@ const theme = {
          * Text highlight effect color. Used when filtering/searching over content
          */
         highlight: 'rgba(255, 234, 204, 0.7)',
-
-        /**
-         * Used for the interactive guide spotlight
-         */
-        spotlight: {
-            border: '#8c89bf',
-            outline: '#bcb9f3',
-            pulse: '#bcb9f3',
-        },
 
         /**
          * Background color used for the API command in the sidebar
@@ -403,33 +410,33 @@ export const darkTheme = createTheme({
                         padding: '3px 0 0 0',
                     },
                     '&.MuiAlert-standard.MuiAlert-colorInfo': {
-                        backgroundColor: theme.palette.info.light,
-                        color: theme.palette.info.contrastText,
-                        border: `1px solid ${theme.palette.info.border}`,
+                        backgroundColor: theme.palette.info.container,
+                        color: theme.palette.info.onContainer,
+                        border: `1px solid ${theme.palette.info.containerBorder}`,
                         '& .MuiAlert-icon': {
                             color: theme.palette.info.main,
                         },
                     },
                     '&.MuiAlert-standard.MuiAlert-colorSuccess': {
-                        backgroundColor: theme.palette.success.light,
-                        color: theme.palette.success.contrastText,
-                        border: `1px solid ${theme.palette.success.border}`,
+                        backgroundColor: theme.palette.success.container,
+                        color: theme.palette.success.onContainer,
+                        border: `1px solid ${theme.palette.success.containerBorder}`,
                         '& .MuiAlert-icon': {
                             color: theme.palette.success.main,
                         },
                     },
                     '&.MuiAlert-standard.MuiAlert-colorWarning': {
-                        backgroundColor: theme.palette.warning.light,
-                        color: theme.palette.warning.contrastText,
-                        border: `1px solid ${theme.palette.warning.border}`,
+                        backgroundColor: theme.palette.warning.container,
+                        color: theme.palette.warning.onContainer,
+                        border: `1px solid ${theme.palette.warning.containerBorder}`,
                         '& .MuiAlert-icon': {
                             color: theme.palette.warning.main,
                         },
                     },
                     '&.MuiAlert-standard.MuiAlert-colorError': {
-                        backgroundColor: theme.palette.error.light,
-                        color: theme.palette.error.contrastText,
-                        border: `1px solid ${theme.palette.error.border}`,
+                        backgroundColor: theme.palette.error.container,
+                        color: theme.palette.error.onContainer,
+                        border: `1px solid ${theme.palette.error.containerBorder}`,
                         '& .MuiAlert-icon': {
                             color: theme.palette.error.main,
                         },
@@ -501,7 +508,7 @@ export const darkTheme = createTheme({
                     },
                     '&.accordion-disabled': {
                         outline: `1px solid ${alpha('#39384C', 0.5)}`,
-                        backgroundColor: theme.palette.background.application,
+                        backgroundColor: theme.palette.background.default,
                     },
                     '&.accordion-disabled.Mui-expanded .MuiAccordionSummary-root':
                         {
@@ -586,7 +593,8 @@ export const darkTheme = createTheme({
                             backgroundColor:
                                 theme.palette.background.alternative,
                             '&:hover': {
-                                backgroundColor: theme.palette.secondary.light,
+                                backgroundColor:
+                                    theme.palette.primary.container,
                             },
                         },
                 }),
@@ -604,7 +612,7 @@ export const darkTheme = createTheme({
                 root: ({ theme }) => ({
                     ...iconButtonRoot(theme),
                     '&.operator-is-active svg': {
-                        fill: theme.palette.background.application,
+                        fill: theme.palette.background.default,
                     },
                 }),
                 ...iconButtonSizes,

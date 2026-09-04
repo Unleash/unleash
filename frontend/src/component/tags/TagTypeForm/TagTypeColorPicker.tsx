@@ -62,11 +62,15 @@ export const TagTypeColorPicker: FC<ITagTypeColorPickerProps> = ({
         },
         {
             name: 'Green',
-            value: getColorWithFallback(lightTheme.palette.success.border),
+            value: getColorWithFallback(
+                lightTheme.palette.success.containerBorder,
+            ),
         },
         {
             name: 'Yellow',
-            value: getColorWithFallback(lightTheme.palette.warning.border),
+            value: getColorWithFallback(
+                lightTheme.palette.warning.containerBorder,
+            ),
         },
         {
             name: 'Red',
@@ -74,15 +78,21 @@ export const TagTypeColorPicker: FC<ITagTypeColorPickerProps> = ({
         },
         {
             name: 'Blue',
-            value: getColorWithFallback(lightTheme.palette.info.border),
+            value: getColorWithFallback(
+                lightTheme.palette.info.containerBorder,
+            ),
         },
         {
             name: 'Purple',
-            value: getColorWithFallback(lightTheme.palette.secondary.border),
+            value: getColorWithFallback(
+                lightTheme.palette.primary.containerBorder,
+            ),
         },
         {
             name: 'Gray',
-            value: getColorWithFallback(lightTheme.palette.neutral.border),
+            value: getColorWithFallback(
+                lightTheme.palette.neutral.containerBorder,
+            ),
         },
     ];
 

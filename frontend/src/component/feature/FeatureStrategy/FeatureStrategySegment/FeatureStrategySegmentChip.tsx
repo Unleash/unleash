@@ -32,7 +32,7 @@ const StyledButton = styled('button')(({ theme }) => ({
     all: 'unset',
     height: theme.spacing(2),
     cursor: 'pointer',
-    color: theme.palette.secondary.dark,
+    color: theme.palette.primary.onContainer,
 }));
 
 const StyledLink = styled(Link)(({ theme }) => ({

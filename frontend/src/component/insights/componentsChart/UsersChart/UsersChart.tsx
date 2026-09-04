@@ -38,15 +38,19 @@ export const UsersChart: FC<IUsersChartProps> = ({ userTrends, isLoading }) => {
                           {
                               label: 'Active users',
                               data: userTrends.map((item) => item.active),
-                              borderColor: theme.palette.success.border,
-                              backgroundColor: theme.palette.success.border,
+                              borderColor:
+                                  theme.palette.success.containerBorder,
+                              backgroundColor:
+                                  theme.palette.success.containerBorder,
                               order: 2,
                           },
                           {
                               label: 'Inactive users',
                               data: userTrends.map((item) => item.inactive),
-                              borderColor: theme.palette.warning.border,
-                              backgroundColor: theme.palette.warning.border,
+                              borderColor:
+                                  theme.palette.warning.containerBorder,
+                              backgroundColor:
+                                  theme.palette.warning.containerBorder,
                               order: 1,
                           },
                       ]

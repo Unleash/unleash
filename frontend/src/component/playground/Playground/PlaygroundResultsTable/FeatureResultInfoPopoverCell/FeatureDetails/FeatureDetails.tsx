@@ -44,7 +44,7 @@ export const FeatureDetails = ({
             return [
                 `This feature flag is True in ${input?.environment} because `,
                 'at least one strategy is True',
-                theme.palette.success.contrastText,
+                theme.palette.success.onContainer,
             ];
 
         if (
@@ -54,7 +54,7 @@ export const FeatureDetails = ({
             return [
                 `This feature flag is False in ${input?.environment} because `,
                 'parent dependency is not satisfied and the environment is disabled',
-                theme.palette.error.contrastText,
+                theme.palette.error.onContainer,
             ];
         }
 
@@ -62,35 +62,35 @@ export const FeatureDetails = ({
             return [
                 `This feature flag is False in ${input?.environment} because `,
                 'the environment is disabled',
-                theme.palette.error.contrastText,
+                theme.palette.error.onContainer,
             ];
 
         if (hasOnlyCustomStrategies(feature))
             return [
                 `This feature flag is Unknown in ${input?.environment} because `,
                 'no strategies could be fully evaluated',
-                theme.palette.warning.contrastText,
+                theme.palette.warning.onContainer,
             ];
 
         if (hasCustomStrategies(feature))
             return [
                 `This feature flag is Unknown in ${input?.environment} because `,
                 'not all strategies could be fully evaluated',
-                theme.palette.warning.contrastText,
+                theme.palette.warning.onContainer,
             ];
 
         if (feature.hasUnsatisfiedDependency) {
             return [
                 `This feature flag is False in ${input?.environment} because `,
                 'parent dependency is not satisfied',
-                theme.palette.error.contrastText,
+                theme.palette.error.onContainer,
             ];
         }
 
         return [
             `This feature flag is False in ${input?.environment} because `,
             'all strategies are either False or could not be fully evaluated',
-            theme.palette.error.contrastText,
+            theme.palette.error.onContainer,
         ];
     })();
 

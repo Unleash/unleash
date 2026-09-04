@@ -24,8 +24,8 @@ const StyledContainer = styled('div', {
     padding: theme.spacing(0.5, 0.25),
     color:
         variant === 'ok'
-            ? theme.palette.success.dark
-            : theme.palette.error.dark,
+            ? theme.palette.success.onContainer
+            : theme.palette.error.onContainer,
 
     fontSize: 'var(--font-size)',
     svg: {

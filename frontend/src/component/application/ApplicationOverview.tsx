@@ -113,7 +113,7 @@ const ApplicationOverview = () => {
                                         to={`/projects/${project}`}
                                     >
                                         <Badge
-                                            color='secondary'
+                                            color='primary'
                                             icon={<TopicOutlinedIcon />}
                                         >
                                             {project}

@@ -55,7 +55,8 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                                     sx={(theme) => ({
                                         mr: '1rem',
                                         color: disabled
-                                            ? theme.palette.neutral.border
+                                            ? theme.palette.neutral
+                                                  .containerBorder
                                             : theme.palette.text.secondary,
                                     })}
                                 >

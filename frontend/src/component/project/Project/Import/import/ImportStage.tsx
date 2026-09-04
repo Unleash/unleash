@@ -36,11 +36,11 @@ export const ErrorAvatar = styled(Avatar)(({ theme }) => ({
 }));
 
 const InfoContainer = styled(Box)(({ theme }) => ({
-    border: `1px solid ${theme.palette.info.border}`,
+    border: `1px solid ${theme.palette.info.containerBorder}`,
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(2),
-    color: theme.palette.info.dark,
-    backgroundColor: theme.palette.info.light,
+    color: theme.palette.info.onContainer,
+    backgroundColor: theme.palette.info.container,
     fontSize: theme.fontSizes.smallBody,
 }));
 

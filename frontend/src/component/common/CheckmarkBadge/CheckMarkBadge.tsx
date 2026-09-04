@@ -10,14 +10,14 @@ interface ICheckMarkBadgeProps {
 const StyledCheck = styled(Check)(({ theme }) => ({
     color:
         theme.mode === 'light'
-            ? theme.palette.secondary.border
+            ? theme.palette.primary.containerBorder
             : theme.palette.primary.main,
 }));
 
 const StyledCancel = styled(Warning)(({ theme }) => ({
     color:
         theme.mode === 'light'
-            ? theme.palette.warning.border
+            ? theme.palette.warning.containerBorder
             : theme.palette.warning.main,
 }));
 

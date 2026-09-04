@@ -8,7 +8,7 @@ import { formatAssetPath } from 'utils/formatPath';
 
 const StyledPage = styled('div')(({ theme }) => ({
     minHeight: '100vh',
-    backgroundColor: theme.palette.background.application,
+    backgroundColor: theme.palette.background.default,
 }));
 
 const StyledBackground = styled('img')({

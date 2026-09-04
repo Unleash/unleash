@@ -234,3 +234,118 @@ test("Returns proper error if project and/or feature flag doesn't exist", async 
         })
         .expect(404);
 });
+
+describe('cross-project variant mutations are rejected', () => {
+    const originalVariant: IVariant = {
+        name: 'original-variant',
+        stickiness: 'default',
+        weight: 1000,
+        weightType: WeightType.VARIABLE,
+    };
+
+    beforeAll(async () => {
+        await db.stores.projectStore.create({
+            id: 'malicious-project',
+            name: 'malicious-project',
+            description: '',
+            mode: 'open',
+        });
+    });
+
+    const setupFeatureFlag = async (featureName: string) => {
+        await db.stores.featureToggleStore.create('default', {
+            name: featureName,
+            createdByUserId: 9999,
+        });
+        await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+            featureName,
+            DEFAULT_ENV,
+            true,
+        );
+        await db.stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+            featureName,
+            DEFAULT_ENV,
+            [originalVariant],
+        );
+    };
+
+    const expectVariantsUnchanged = async (featureName: string) => {
+        await app.request
+            .get(
+                `/api/admin/projects/default/features/${featureName}/environments/${DEFAULT_ENV}/variants`,
+            )
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.variants).toHaveLength(1);
+                expect(res.body.variants[0].name).toBe(originalVariant.name);
+            });
+    };
+
+    test('variants-batch cannot overwrite a feature from another project', async () => {
+        const featureName = 'cross-project-variants-batch';
+        await setupFeatureFlag(featureName);
+
+        await app.request
+            .put(
+                `/api/admin/projects/malicious-project/features/${featureName}/variants-batch`,
+            )
+            .send({
+                variants: [
+                    {
+                        name: 'injected-variant',
+                        stickiness: 'default',
+                        weight: 1000,
+                        weightType: WeightType.VARIABLE,
+                    },
+                ],
+                environments: [DEFAULT_ENV],
+            })
+            .expect(404);
+
+        await expectVariantsUnchanged(featureName);
+    });
+
+    test('PUT environment variants cannot overwrite a feature from another project', async () => {
+        const featureName = 'cross-project-variants-put';
+        await setupFeatureFlag(featureName);
+
+        await app.request
+            .put(
+                `/api/admin/projects/malicious-project/features/${featureName}/environments/${DEFAULT_ENV}/variants`,
+            )
+            .send([
+                {
+                    name: 'injected-variant',
+                    stickiness: 'default',
+                    weight: 1000,
+                    weightType: WeightType.VARIABLE,
+                },
+            ])
+            .expect(404);
+
+        await expectVariantsUnchanged(featureName);
+    });
+
+    test('PATCH environment variants cannot overwrite a feature from another project', async () => {
+        const featureName = 'cross-project-variants-patch';
+        await setupFeatureFlag(featureName);
+
+        const patch: IVariant[] = [];
+        const observer = jsonpatch.observe(patch);
+        patch.push({
+            name: 'injected-variant',
+            stickiness: 'default',
+            weight: 1000,
+            weightType: WeightType.VARIABLE,
+        });
+
+        await app.request
+            .patch(
+                `/api/admin/projects/malicious-project/features/${featureName}/environments/${DEFAULT_ENV}/variants`,
+            )
+            .send(jsonpatch.generate(observer))
+            .expect(404);
+
+        await expectVariantsUnchanged(featureName);
+    });
+});

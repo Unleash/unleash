@@ -2209,6 +2209,11 @@ export class FeatureToggleService {
         user: IUser,
         auditUser: IAuditUser,
     ): Promise<IVariant[]> {
+        await this.validateFeatureBelongsToProject({
+            featureName,
+            projectId: project,
+        });
+
         const oldVariants = await this.getVariantsForEnv(
             featureName,
             environment,
@@ -2352,6 +2357,7 @@ export class FeatureToggleService {
         auditUser: IAuditUser,
         oldVariants?: IVariant[],
     ): Promise<IVariant[]> {
+        await this.validateFeatureBelongsToProject({ featureName, projectId });
         await this.stopWhenChangeRequestsEnabled(projectId, environment, user);
         return this.saveVariantsOnEnv(
             projectId,
@@ -2371,6 +2377,7 @@ export class FeatureToggleService {
         _user: IUser,
         auditUser: IAuditUser,
     ): Promise<IVariant[]> {
+        await this.validateFeatureBelongsToProject({ featureName, projectId });
         for (const env of environments) {
             await this.stopWhenChangeRequestsEnabled(projectId, env);
         }

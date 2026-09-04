@@ -92,12 +92,35 @@ jobs:
           key: cypress-${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml', inputs.working-directory || '.')) }}
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Start Unleash test instance
+      - name: Start Unleash test instance (test oss)
         run: |
           docker compose -f .github/docker-compose.test.yml up -d --wait -t 90
         env:
           UNLEASH_TEST_LICENSE: ${{ secrets.UNLEASH_TEST_LICENSE || secrets.FRONTEND_TEST_LICENSE }}
           FRONTEND_TEST_LICENSE: ${{ secrets.FRONTEND_TEST_LICENSE }}
+      - name: Smoke test frontend (test oss)
+        continue-on-error: true
+        run: |
+          for i in $(seq 1 30); do
+            echo "attempt $i: GET http://localhost:3000/"
+            if curl -sS --max-time 15 --fail -o /dev/null http://localhost:3000/; then
+              echo "frontend responded"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo '=== smoke test failed after ~150s ==='
+          echo '--- docker compose ps ---'
+          docker compose -f .github/docker-compose.test.yml ps -a
+          echo '--- frontend logs ---'
+          docker compose -f .github/docker-compose.test.yml logs --no-color frontend
+          echo '--- unleash logs (last 300 lines) ---'
+          docker compose -f .github/docker-compose.test.yml logs --no-color --tail 300 unleash
+          echo '--- db logs (last 100 lines) ---'
+          docker compose -f .github/docker-compose.test.yml logs --no-color --tail 100 db
+          echo '--- frontend health inspect ---'
+          docker inspect --format '{{json .State.Health}}' github-frontend-1 || true
+          exit 1
       - name: Run Cypress
         uses: cypress-io/github-action@v7.4.3
         with:

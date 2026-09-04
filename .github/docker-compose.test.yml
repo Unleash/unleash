@@ -28,8 +28,8 @@ services:
       test: wget -q --spider http://localhost/ || exit 1
       interval: 1s
       timeout: 1m
-      retries: 5
-      start_period: 15s
+      retries: 50
+      start_period: 25s
   unleash:
     image: unleashorg/${UNLEASH_VERSION:-unleash-enterprise:latest}
     pull_policy: "always"

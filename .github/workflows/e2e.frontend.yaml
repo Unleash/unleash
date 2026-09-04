@@ -92,13 +92,13 @@ jobs:
           key: cypress-${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml', inputs.working-directory || '.')) }}
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Start Unleash test instance (test oss)
+      - name: Start Unleash test instance
         run: |
           docker compose -f .github/docker-compose.test.yml up -d --wait -t 90
         env:
           UNLEASH_TEST_LICENSE: ${{ secrets.UNLEASH_TEST_LICENSE || secrets.FRONTEND_TEST_LICENSE }}
           FRONTEND_TEST_LICENSE: ${{ secrets.FRONTEND_TEST_LICENSE }}
-      - name: Smoke test frontend (test oss)
+      - name: Smoke test frontend
         continue-on-error: true
         run: |
           for i in $(seq 1 30); do

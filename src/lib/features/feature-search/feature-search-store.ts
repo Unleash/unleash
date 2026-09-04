@@ -99,8 +99,34 @@ class FeatureSearchStore implements IFeatureSearchStore {
             sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';
 
         const finalQuery = this.db
+            .with('page', (query) => {
+                this.buildPageQuery(
+                    query,
+                    {
+                        userId,
+                        searchParams,
+                        status,
+                        offset,
+                        limit,
+                        sortBy: sortBy || '',
+                        validatedSortOrder,
+                        archived,
+                        favoritesFirst,
+                    },
+                    queryParams,
+                );
+            })
             .with('ranked_features', (query) => {
-                query.from('features');
+                // Driving from the page keeps the decoration joins as indexed
+                // lookups against 25 names rather than hash builds over the
+                // whole of feature_environments, feature_strategies and friends.
+                query
+                    .from('page')
+                    .innerJoin(
+                        'features',
+                        'features.name',
+                        'page.feature_name',
+                    );
 
                 let selectColumns = [
                     'features.name as feature_name',
@@ -270,27 +296,8 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     archived,
                 );
 
-                const rankingSql = this.buildRankingSql(
-                    favoritesFirst,
-                    sortBy || '',
-                    validatedSortOrder,
-                    lastSeenQuery,
-                );
-
-                query
-                    .select(selectColumns)
-                    .denseRank('rank', this.db.raw(rankingSql));
+                query.select(selectColumns);
             })
-            .with(
-                'final_ranks',
-                this.db.raw(
-                    'select feature_name, row_number() over (order by min(rank)) as final_rank from ranked_features group by feature_name',
-                ),
-            )
-            .with(
-                'total_features',
-                this.db.raw('select count(*) as total from final_ranks'),
-            )
             .with('metrics', (queryBuilder) => {
                 queryBuilder
                     .sum('yes as yes')
@@ -301,9 +308,9 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     ])
                     .from('client_metrics_env')
                     .innerJoin(
-                        'final_ranks',
+                        'page',
                         'client_metrics_env.feature_name',
-                        'final_ranks.feature_name',
+                        'page.feature_name',
                     )
                     .where(
                         'client_metrics_env.timestamp',
@@ -317,20 +324,18 @@ class FeatureSearchStore implements IFeatureSearchStore {
             })
             .select([
                 'ranked_features.*',
-                'total_features.total',
-                'final_ranks.final_rank',
+                'page.total',
+                'page.final_rank',
                 'metrics.yes',
                 'metrics.no',
             ])
             .from('ranked_features')
             .innerJoin(
-                'final_ranks',
+                'page',
                 'ranked_features.feature_name',
-                'final_ranks.feature_name',
+                'page.feature_name',
             )
-            .joinRaw('CROSS JOIN total_features')
-            .whereBetween('final_rank', [offset + 1, offset + limit])
-            .orderBy('final_rank');
+            .orderBy('page.final_rank');
 
         this.buildChangeRequestSql(finalQuery);
         this.buildReleasePlanSql(finalQuery);
@@ -386,6 +391,9 @@ class FeatureSearchStore implements IFeatureSearchStore {
                 this.db
                     .select('feature_name', 'environment')
                     .from('feature_strategies')
+                    .whereIn('feature_name', (page) => {
+                        page.select('feature_name').from('page');
+                    })
                     .groupBy('feature_name', 'environment')
                     .where(function () {
                         this.whereNull('disabled').orWhere('disabled', false);
@@ -407,6 +415,9 @@ class FeatureSearchStore implements IFeatureSearchStore {
                 this.db
                     .select('feature_name', 'environment')
                     .from('feature_strategies')
+                    .whereIn('feature_name', (page) => {
+                        page.select('feature_name').from('page');
+                    })
                     .groupBy('feature_name', 'environment')
                     .as('has_strategies'),
                 function () {
@@ -452,6 +463,9 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         'rpd.active_milestone_id',
                     )
                     .where('rpd.discriminator', 'plan')
+                    .whereIn('rpd.feature_name', (page) => {
+                        page.select('feature_name').from('page');
+                    })
                     .as('feature_release_plan'),
                 function () {
                     this.on(
@@ -488,6 +502,9 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         ),
                     )
                     .select('cr.environment')
+                    .whereIn('cre.feature', (page) => {
+                        page.select('feature_name').from('page');
+                    })
                     .groupBy('cre.feature', 'cr.environment')
                     .whereNotIn('cr.state', [
                         'Applied',
@@ -510,12 +527,107 @@ class FeatureSearchStore implements IFeatureSearchStore {
             .select('feature_cr.change_request_ids');
     }
 
-    private buildRankingSql(
-        favoritesFirst: undefined | boolean,
+    /*
+        Selects the page of feature names, and their absolute rank, without
+        joining any of the one-to-many decoration tables. Every sort key is
+        resolved to a single value per feature, so this stays one row per
+        feature instead of the full cross product.
+     */
+    private buildPageQuery(
+        query: Knex.QueryBuilder,
+        {
+            userId,
+            searchParams,
+            status,
+            offset,
+            limit,
+            sortBy,
+            validatedSortOrder,
+            archived,
+            favoritesFirst,
+        }: {
+            userId?: number;
+            searchParams?: string[];
+            status?: string[][];
+            offset: number;
+            limit: number;
+            sortBy: string;
+            validatedSortOrder: 'asc' | 'desc';
+            archived?: boolean;
+            favoritesFirst?: boolean;
+        },
+        queryParams: IQueryParam[],
+    ): void {
+        query.from('features');
+
+        if (userId) {
+            query.leftJoin('favorite_features', function () {
+                this.on('favorite_features.feature', 'features.name').andOnVal(
+                    'favorite_features.user_id',
+                    '=',
+                    userId,
+                );
+            });
+        }
+
+        query
+            .leftJoin('users', 'users.id', 'features.created_by_user_id')
+            .leftJoin(
+                this.db
+                    .select(
+                        'feature as stage_feature',
+                        'stage as latest_stage',
+                        'status as stage_status',
+                        'created_at as entered_stage_at',
+                    )
+                    .from('feature_lifecycles')
+                    .distinctOn('feature')
+                    .orderBy([
+                        'feature',
+                        { column: 'created_at', order: 'desc' },
+                    ])
+                    .as('lifecycle'),
+                'features.name',
+                'lifecycle.stage_feature',
+            );
+
+        applyPageQueryParams(query, queryParams);
+        applySearchFilters(query, searchParams, [
+            'features.name',
+            'features.description',
+        ]);
+        applyPageStatusFilter(query, status);
+
+        const parsedLifecycle =
+            queryParams.find(
+                (param) => param.field === 'lifecycle.latest_stage',
+            ) ?? null;
+        applyLifecycleAndArchivedFilters(query, parsedLifecycle, archived);
+
+        const orderBy = this.buildPageOrderBy(
+            Boolean(favoritesFirst) && Boolean(userId),
+            sortBy,
+            validatedSortOrder,
+        );
+
+        query
+            .select('features.name as feature_name')
+            .select(
+                this.db.raw(
+                    `row_number() over (order by ${orderBy}) as final_rank`,
+                ),
+            )
+            .select(this.db.raw('count(*) over () as total'))
+            .orderByRaw(orderBy)
+            .limit(limit)
+            .offset(offset);
+    }
+
+    private buildPageOrderBy(
+        favoritesFirst: boolean,
         sortBy: string,
         validatedSortOrder: 'asc' | 'desc',
-        lastSeenQuery: string,
-    ) {
+    ): string {
         const sortByMapping = {
             name: 'features.name',
             type: 'features.type',
@@ -523,33 +635,33 @@ class FeatureSearchStore implements IFeatureSearchStore {
             project: 'features.project',
         };
 
-        let rankingSql = 'order by ';
+        let orderBy = '';
         if (favoritesFirst) {
-            rankingSql += 'favorite_features.feature is not null desc, ';
+            orderBy += 'favorite_features.feature is not null desc, ';
         }
 
         if (sortBy.startsWith('environment:')) {
             const [, envName] = sortBy.split(':');
-            rankingSql += this.db
+            orderBy += this.db
                 .raw(
-                    `CASE WHEN feature_environments.environment = ? THEN feature_environments.enabled ELSE NULL END ${validatedSortOrder} NULLS LAST, features.created_at asc, features.name asc`,
+                    `(select fe.enabled from feature_environments fe where fe.feature_name = features.name and fe.environment = ?) ${validatedSortOrder} NULLS LAST, features.created_at asc, features.name asc`,
                     [envName],
                 )
                 .toString();
         } else if (sortBy === 'lastSeenAt') {
-            rankingSql += `${this.db
+            orderBy += `${this.db
                 .raw(
-                    `coalesce(${lastSeenQuery}, features.last_seen_at) ${validatedSortOrder} nulls last`,
+                    `coalesce((select max(coalesce(lsm.last_seen_at, features.last_seen_at)) from feature_environments fe left join last_seen_at_metrics lsm on lsm.feature_name = fe.feature_name and lsm.environment = fe.environment where fe.feature_name = features.name), features.last_seen_at) ${validatedSortOrder} nulls last`,
                 )
                 .toString()}, features.created_at asc, features.name asc`;
         } else if (sortByMapping[sortBy]) {
-            rankingSql += `${this.db
+            orderBy += `${this.db
                 .raw(`?? ${validatedSortOrder}`, [sortByMapping[sortBy]])
                 .toString()}, features.created_at asc, features.name asc`;
         } else {
-            rankingSql += `features.created_at ${validatedSortOrder}, features.name asc`;
+            orderBy += `features.created_at ${validatedSortOrder}, features.name asc`;
         }
-        return rankingSql;
+        return orderBy;
     }
 
     getAggregatedSearchData(rows): IFeatureSearchOverview[] {
@@ -893,6 +1005,162 @@ const applyQueryParams = (
         'segments.name',
         createSegmentBaseQuery,
     );
+};
+
+/*
+    The page query's counterpart to applyQueryParams. Every condition that
+    applyQueryParams expresses against the fanned out row set is expressed here
+    as a semi join instead, so the page query keeps one row per feature.
+ */
+const applyPageQueryParams = (
+    query: Knex.QueryBuilder,
+    queryParams: IQueryParam[],
+): void => {
+    const tagConditions = queryParams.filter((param) => param.field === 'tag');
+    const staleConditions = queryParams.find(
+        (param) => param.field === 'stale',
+    );
+    const segmentConditions = queryParams.filter(
+        (param) => param.field === 'segment',
+    );
+    const lastSeenAtConditions = queryParams.filter(
+        (param) => param.field === 'lastSeenAt',
+    );
+    const favoriteCondition = queryParams.find(
+        (param) => param.field === 'favorite',
+    );
+    const genericConditions = queryParams.filter(
+        (param) =>
+            ![
+                'tag',
+                'stale',
+                'segment',
+                'lastSeenAt',
+                'favorite',
+                'lifecycle.latest_stage',
+            ].includes(param.field),
+    );
+
+    applyGenericQueryParams(query, genericConditions);
+    applyFavoriteCondition(query, favoriteCondition);
+    applyStaleConditions(query, staleConditions);
+    applyPageLastSeenAtConditions(query, lastSeenAtConditions);
+    applyPageMultiQueryParams(
+        query,
+        tagConditions,
+        ['tag_type', 'tag_value'],
+        createTagBaseQuery,
+    );
+    applyPageMultiQueryParams(
+        query,
+        segmentConditions,
+        'segments.name',
+        createSegmentBaseQuery,
+    );
+};
+
+/*
+    A feature matches when any of its environments satisfies the condition. The
+    coalesce fallback covers features with no feature_environments rows, which
+    the fanned out query still produced a row for through its left join.
+ */
+const applyPageLastSeenAtConditions = (
+    query: Knex.QueryBuilder,
+    lastSeenAtConditions: IQueryParam[],
+): void => {
+    lastSeenAtConditions.forEach((param) => {
+        const operator =
+            param.operator === 'IS_BEFORE'
+                ? '<'
+                : param.operator === 'IS_ON_OR_AFTER'
+                  ? '>='
+                  : null;
+        if (!operator) return;
+
+        query.whereRaw(
+            `coalesce(
+                (select bool_or(coalesce(lsm.last_seen_at, features.last_seen_at) ${operator} ?)
+                 from feature_environments fe
+                 left join last_seen_at_metrics lsm
+                        on lsm.feature_name = fe.feature_name
+                       and lsm.environment = fe.environment
+                 where fe.feature_name = features.name),
+                features.last_seen_at ${operator} ?)`,
+            [param.values[0], param.values[0]],
+        );
+    });
+};
+
+const applyPageStatusFilter = (
+    query: Knex.QueryBuilder,
+    status?: string[][],
+): void => {
+    if (!status || status.length === 0) return;
+
+    query.whereExists((qb) => {
+        qb.select(qb.client.raw('1'))
+            .from('feature_environments as fe')
+            .whereRaw('fe.feature_name = features.name')
+            .where((builder) => {
+                for (const [envName, envStatus] of status) {
+                    builder.orWhere(function () {
+                        this.where('fe.environment', envName).andWhere(
+                            'fe.enabled',
+                            envStatus === 'enabled',
+                        );
+                    });
+                }
+            });
+    });
+};
+
+const applyPageMultiQueryParams = (
+    query: Knex.QueryBuilder,
+    queryParams: IQueryParam[],
+    fields: string | string[],
+    createBaseQuery: (
+        values: string[] | string[][],
+    ) => (dbSubQuery: Knex.QueryBuilder) => Knex.QueryBuilder,
+): void => {
+    queryParams.forEach((param) => {
+        const values = param.values
+            .filter((v) => typeof v === 'string')
+            .map((val) =>
+                (Array.isArray(fields)
+                    ? val!.split(/:(.+)/).filter(Boolean)
+                    : [val]
+                ).map((s) => s?.trim() || ''),
+            );
+        const baseSubQuery = createBaseQuery(values);
+
+        switch (param.operator) {
+            case 'INCLUDE':
+            case 'INCLUDE_ANY_OF':
+                query.whereIn('features.name', baseSubQuery);
+                break;
+
+            case 'DO_NOT_INCLUDE':
+            case 'EXCLUDE_IF_ANY_OF':
+                query.whereNotIn('features.name', baseSubQuery);
+                break;
+
+            case 'INCLUDE_ALL_OF':
+                query.whereIn('features.name', (dbSubQuery) => {
+                    baseSubQuery(dbSubQuery)
+                        .groupBy('feature_name')
+                        .havingRaw('COUNT(*) = ?', [values.length]);
+                });
+                break;
+
+            case 'EXCLUDE_ALL':
+                query.whereNotIn('features.name', (dbSubQuery) => {
+                    baseSubQuery(dbSubQuery)
+                        .groupBy('feature_name')
+                        .havingRaw('COUNT(*) = ?', [values.length]);
+                });
+                break;
+        }
+    });
 };
 
 const applyMultiQueryParams = (

@@ -61,6 +61,9 @@ export default defineConfig({
                         'dist/**',
                         'src/test/e2e/**',
                     ],
+                    env: {
+                        SEARCH_FEATURES_RATE_LIMIT_PER_MINUTE: '1000',
+                    },
                     // Most of a test file's runtime is re-importing the module
                     // graph in an isolated registry. The harness cleans up
                     // process-global state at every file boundary (see
@@ -76,6 +79,9 @@ export default defineConfig({
                     name: 'e2e',
                     include: ['src/test/e2e/**/*.test.ts'],
                     exclude: [...configDefaults.exclude, 'dist/**'],
+                    env: {
+                        SEARCH_FEATURES_RATE_LIMIT_PER_MINUTE: '1000',
+                    },
                 },
             },
         ],

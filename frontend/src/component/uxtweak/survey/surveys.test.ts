@@ -192,4 +192,17 @@ describe('scanSurveys', () => {
         expect(found).toHaveLength(1);
         expect(found[0].flagName).toBe(FLAG);
     });
+
+    it('orders surveys by flag name regardless of SDK order', () => {
+        const flags = [
+            flag('uxtweak-survey-projects-bbb2', payloadWith()),
+            flag('uxtweak-survey-projects-aaa1', payloadWith()),
+        ];
+        expect(
+            scanSurveys(flags, '/projects').map((survey) => survey.flagName),
+        ).toEqual([
+            'uxtweak-survey-projects-aaa1',
+            'uxtweak-survey-projects-bbb2',
+        ]);
+    });
 });

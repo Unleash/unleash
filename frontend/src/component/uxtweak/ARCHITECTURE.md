@@ -86,7 +86,9 @@ consumers, not before.
 **`survey/useActiveSurvey`** — the survey on the current page, or `null`.
 Pure derivation: the SDK's `useFlags()` re-renders it whenever flags change,
 `useLocation()` whenever the route changes — no subscription code of our own.
-If several surveys match the same page, the first one wins.
+If several surveys match the same page, the lowest flag name wins —
+`scanSurveys` sorts, because the SDK does not guarantee flag order across
+refreshes and the winner must not change between page loads.
 
 **`survey/surveys.ts`** — the contract module: prefix constant, payload types,
 the all-or-nothing parser, and `scanSurveys` (flags → prefix filter → parse →
@@ -163,5 +165,6 @@ shows, never a crash.
 4. ✅ Mid-answer latch (card survives flag refreshes, payload edits, and
    route changes until concluded)
 5. ✅ Impression cap (an ignored survey stops appearing after 3 showings)
-6. Further hardening: cross-tab sync, deterministic survey order
-7. Submission to `submitBase`
+6. ✅ Deterministic survey order (lowest flag name wins on every page load)
+7. Further hardening: cross-tab sync
+8. Submission to `submitBase`

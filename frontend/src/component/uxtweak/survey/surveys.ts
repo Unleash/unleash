@@ -130,4 +130,5 @@ export const scanSurveys = (
         .filter((flag) => flag.name.startsWith(SURVEY_FLAG_PREFIX))
         .map((flag) => parseSurveyPayload(flag.name, flag.variant?.payload))
         .filter((survey) => survey !== null)
-        .filter((survey) => pageMatches(survey.page, pathname));
+        .filter((survey) => pageMatches(survey.page, pathname))
+        .sort((a, b) => a.flagName.localeCompare(b.flagName));

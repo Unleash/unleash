@@ -249,12 +249,14 @@ export class FrontendApiService {
             throw new BadDataError(error);
         }
         const settings = (await this.getFrontendSettings(false)) || {};
+        const updatedSettings = { ...settings, frontendApiOrigins: value };
         await this.services.settingService.insert(
             frontendSettingsKey,
-            { ...settings, frontendApiOrigins: value },
+            updatedSettings,
             auditUser,
             false,
         );
+        this.cachedFrontendSettings = updatedSettings;
     }
 
     async fetchFrontendSettings(): Promise<FrontendSettings> {

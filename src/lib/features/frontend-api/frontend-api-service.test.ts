@@ -64,3 +64,39 @@ test('frontend api service fetching features from global cache', async () => {
     expect(features).toHaveLength(1);
     expect(createdFrontendRepositoriesCount).toBe(1);
 });
+
+test('setFrontendCorsSettings updates cached frontend settings immediately', async () => {
+    let storedSettings: any = {
+        frontendApiOrigins: ['https://initial.example.com'],
+    };
+    const settingService = {
+        getWithDefault: async () => storedSettings,
+        insert: async (_key: string, value: any) => {
+            storedSettings = value;
+        },
+    };
+
+    const frontendApiService = new FrontendApiService(
+        {
+            getLogger: noLogger,
+            eventBus: new EventEmitter(),
+            frontendApiOrigins: [],
+        } as unknown as Config,
+        { settingService } as any,
+        {} as any,
+    );
+
+    // Populate initial cache
+    const initial = await frontendApiService.getFrontendSettings(true);
+    expect(initial.frontendApiOrigins).toEqual(['https://initial.example.com']);
+
+    // Update CORS settings
+    await frontendApiService.setFrontendCorsSettings(
+        ['https://updated.example.com'],
+        { id: 1, username: 'test-user', ip: '127.0.0.1' },
+    );
+
+    // Cached settings should immediately reflect updated settings
+    const cached = await frontendApiService.getFrontendSettings(true);
+    expect(cached.frontendApiOrigins).toEqual(['https://updated.example.com']);
+});

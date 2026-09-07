@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { GetUsersAccessLogSortOrder } from './getUsersAccessLogSortOrder';
+import type { GetUsersAccessLogSortOrder } from './getUsersAccessLogSortOrder.ts';
 
 export type GetUsersAccessLogParams = {
     /**

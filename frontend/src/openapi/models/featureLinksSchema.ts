@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { LinkSchema } from './linkSchema';
+import type { LinkSchema } from './linkSchema.ts';
 
 /**
  * A list of links for a feature

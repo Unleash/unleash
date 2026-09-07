@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateUserResponseSchemaAccountType } from './createUserResponseSchemaAccountType';
-import type { CreateUserResponseSchemaRootRole } from './createUserResponseSchemaRootRole';
+import type { CreateUserResponseSchemaAccountType } from './createUserResponseSchemaAccountType.ts';
+import type { CreateUserResponseSchemaRootRole } from './createUserResponseSchemaRootRole.ts';
 
 /**
  * An Unleash user after creation

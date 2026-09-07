@@ -10,7 +10,6 @@
 export type NotificationsSchemaItemNotificationType =
     (typeof NotificationsSchemaItemNotificationType)[keyof typeof NotificationsSchemaItemNotificationType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const NotificationsSchemaItemNotificationType = {
     'change-request': 'change-request',
     toggle: 'toggle',

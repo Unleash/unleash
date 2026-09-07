@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FrontendApiFeatureSchemaVariant } from './frontendApiFeatureSchemaVariant';
+import type { FrontendApiFeatureSchemaVariant } from './frontendApiFeatureSchemaVariant.ts';
 
 /**
  * Frontend API feature

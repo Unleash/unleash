@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestCreateFeatureSchemaOneOfSixAction } from './changeRequestCreateFeatureSchemaOneOfSixAction';
-import type { UpdateMilestoneStrategySchema } from './updateMilestoneStrategySchema';
+import type { ChangeRequestCreateFeatureSchemaOneOfSixAction } from './changeRequestCreateFeatureSchemaOneOfSixAction.ts';
+import type { UpdateMilestoneStrategySchema } from './updateMilestoneStrategySchema.ts';
 
 /**
  * Update a milestone strategy belonging to this feature.

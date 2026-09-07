@@ -10,7 +10,6 @@
 export type IntegrationEventSchemaState =
     (typeof IntegrationEventSchemaState)[keyof typeof IntegrationEventSchemaState];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const IntegrationEventSchemaState = {
     success: 'success',
     failed: 'failed',

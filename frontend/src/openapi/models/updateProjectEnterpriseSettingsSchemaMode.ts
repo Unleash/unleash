@@ -10,7 +10,6 @@
 export type UpdateProjectEnterpriseSettingsSchemaMode =
     (typeof UpdateProjectEnterpriseSettingsSchemaMode)[keyof typeof UpdateProjectEnterpriseSettingsSchemaMode];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UpdateProjectEnterpriseSettingsSchemaMode = {
     open: 'open',
     protected: 'protected',

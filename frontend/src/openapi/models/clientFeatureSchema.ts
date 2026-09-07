@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { DependentFeatureSchema } from './dependentFeatureSchema';
-import type { FeatureStrategySchema } from './featureStrategySchema';
-import type { VariantSchema } from './variantSchema';
+import type { DependentFeatureSchema } from './dependentFeatureSchema.ts';
+import type { FeatureStrategySchema } from './featureStrategySchema.ts';
+import type { VariantSchema } from './variantSchema.ts';
 
 /**
  * Feature flag configuration used by SDKs to evaluate state of a flag

@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestSegmentChangeSchemaPayloadOneOf } from './changeRequestSegmentChangeSchemaPayloadOneOf';
-import type { SetStrategySortOrderSchema } from './setStrategySortOrderSchema';
+import type { ChangeRequestSegmentChangeSchemaPayloadOneOf } from './changeRequestSegmentChangeSchemaPayloadOneOf.ts';
+import type { SetStrategySortOrderSchema } from './setStrategySortOrderSchema.ts';
 
 /**
  * The data required to perform this action.

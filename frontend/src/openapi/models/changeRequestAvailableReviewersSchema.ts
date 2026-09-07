@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestReviewerSchema } from './changeRequestReviewerSchema';
+import type { ChangeRequestReviewerSchema } from './changeRequestReviewerSchema.ts';
 
 /**
  * A list of users available to review a change request.

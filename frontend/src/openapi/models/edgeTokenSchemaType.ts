@@ -10,7 +10,6 @@
 export type EdgeTokenSchemaType =
     (typeof EdgeTokenSchemaType)[keyof typeof EdgeTokenSchemaType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const EdgeTokenSchemaType = {
     client: 'client',
     admin: 'admin',

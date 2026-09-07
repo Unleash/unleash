@@ -7,7 +7,6 @@
 export type QueryImpactMetricsTimeSeriesAggregationMode =
     (typeof QueryImpactMetricsTimeSeriesAggregationMode)[keyof typeof QueryImpactMetricsTimeSeriesAggregationMode];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const QueryImpactMetricsTimeSeriesAggregationMode = {
     rps: 'rps',
     count: 'count',

@@ -10,7 +10,6 @@
 export type EdgeInstanceDataSchemaHosting =
     (typeof EdgeInstanceDataSchemaHosting)[keyof typeof EdgeInstanceDataSchemaHosting];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const EdgeInstanceDataSchemaHosting = {
     hosted: 'hosted',
     'self-hosted': 'self-hosted',

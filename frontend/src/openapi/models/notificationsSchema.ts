@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { NotificationsSchemaItem } from './notificationsSchemaItem';
+import type { NotificationsSchemaItem } from './notificationsSchemaItem.ts';
 
 /**
  * A list of [notifications](https://docs.getunleash.io/api/get-notifications)

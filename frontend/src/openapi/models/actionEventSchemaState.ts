@@ -10,7 +10,6 @@
 export type ActionEventSchemaState =
     (typeof ActionEventSchemaState)[keyof typeof ActionEventSchemaState];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ActionEventSchemaState = {
     not_started: 'not started',
     started: 'started',

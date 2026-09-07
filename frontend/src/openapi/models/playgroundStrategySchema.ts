@@ -3,11 +3,11 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PlaygroundConstraintSchema } from './playgroundConstraintSchema';
-import type { PlaygroundStrategySchemaLinks } from './playgroundStrategySchemaLinks';
-import type { ParametersSchema } from './parametersSchema';
-import type { PlaygroundStrategySchemaResult } from './playgroundStrategySchemaResult';
-import type { PlaygroundSegmentSchema } from './playgroundSegmentSchema';
+import type { ParametersSchema } from './parametersSchema.ts';
+import type { PlaygroundConstraintSchema } from './playgroundConstraintSchema.ts';
+import type { PlaygroundSegmentSchema } from './playgroundSegmentSchema.ts';
+import type { PlaygroundStrategySchemaLinks } from './playgroundStrategySchemaLinks.ts';
+import type { PlaygroundStrategySchemaResult } from './playgroundStrategySchemaResult.ts';
 
 /**
  * An evaluated feature flag strategy as used by the Playground

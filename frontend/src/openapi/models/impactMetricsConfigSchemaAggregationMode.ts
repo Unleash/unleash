@@ -10,7 +10,6 @@
 export type ImpactMetricsConfigSchemaAggregationMode =
     (typeof ImpactMetricsConfigSchemaAggregationMode)[keyof typeof ImpactMetricsConfigSchemaAggregationMode];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ImpactMetricsConfigSchemaAggregationMode = {
     rps: 'rps',
     count: 'count',

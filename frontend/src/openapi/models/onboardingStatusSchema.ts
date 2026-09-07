@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { OnboardingStatusSchemaOneOf } from './onboardingStatusSchemaOneOf';
-import type { OnboardingStatusSchemaOneOfThree } from './onboardingStatusSchemaOneOfThree';
+import type { OnboardingStatusSchemaOneOf } from './onboardingStatusSchemaOneOf.ts';
+import type { OnboardingStatusSchemaOneOfThree } from './onboardingStatusSchemaOneOfThree.ts';
 
 /**
  * The current onboarding status of a project.

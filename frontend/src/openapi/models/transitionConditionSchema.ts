@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { TransitionConditionSchemaOneOf } from './transitionConditionSchemaOneOf';
-import type { TransitionConditionSchemaOneOfThree } from './transitionConditionSchemaOneOfThree';
+import type { TransitionConditionSchemaOneOf } from './transitionConditionSchemaOneOf.ts';
+import type { TransitionConditionSchemaOneOfThree } from './transitionConditionSchemaOneOfThree.ts';
 
 /**
  * A transition condition for milestone progression

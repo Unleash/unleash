@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { UserAccessRequestSchema } from './userAccessRequestSchema';
+import type { UserAccessRequestSchema } from './userAccessRequestSchema.ts';
 
 /**
  * A response model with a list of user access requests.

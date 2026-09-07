@@ -12,7 +12,6 @@ export type UserSessionSchemaDeviceType =
     | (typeof UserSessionSchemaDeviceType)[keyof typeof UserSessionSchemaDeviceType]
     | null;
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UserSessionSchemaDeviceType = {
     desktop: 'desktop',
     mobile: 'mobile',

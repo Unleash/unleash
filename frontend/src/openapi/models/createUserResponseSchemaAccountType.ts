@@ -10,7 +10,6 @@
 export type CreateUserResponseSchemaAccountType =
     (typeof CreateUserResponseSchemaAccountType)[keyof typeof CreateUserResponseSchemaAccountType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateUserResponseSchemaAccountType = {
     User: 'User',
     Service_Account: 'Service Account',

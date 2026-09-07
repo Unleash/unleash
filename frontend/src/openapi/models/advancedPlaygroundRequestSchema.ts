@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SdkContextSchema } from './sdkContextSchema';
-import type { AdvancedPlaygroundRequestSchemaProjects } from './advancedPlaygroundRequestSchemaProjects';
+import type { AdvancedPlaygroundRequestSchemaProjects } from './advancedPlaygroundRequestSchemaProjects.ts';
+import type { SdkContextSchema } from './sdkContextSchema.ts';
 
 /**
  * Data for the playground API to evaluate toggles in advanced mode with environment and context multi selection
@@ -14,6 +14,8 @@ export interface AdvancedPlaygroundRequestSchema {
     /**
      * The environments to evaluate toggles in.
      * @minItems 1
+     * @items.minLength 1
+     * @items.pattern ^[a-zA-Z0-9~_.-]+$
      */
     environments: string[];
     /** A list of projects to check for toggles in. */

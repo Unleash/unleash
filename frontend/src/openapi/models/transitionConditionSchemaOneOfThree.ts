@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { TransitionConditionSchemaOneOfThreeType } from './transitionConditionSchemaOneOfThreeType';
+import type { TransitionConditionSchemaOneOfThreeType } from './transitionConditionSchemaOneOfThreeType.ts';
 
 /**
  * Transition once the feature has been exposed (evaluated as enabled) enough times in total

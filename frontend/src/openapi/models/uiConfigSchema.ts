@@ -3,14 +3,14 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { UiConfigSchemaAuthenticationType } from './uiConfigSchemaAuthenticationType';
-import type { UiConfigSchemaBilling } from './uiConfigSchemaBilling';
-import type { UiConfigSchemaFlags } from './uiConfigSchemaFlags';
-import type { UiConfigSchemaImpactMetrics } from './uiConfigSchemaImpactMetrics';
-import type { UiConfigSchemaLinksItem } from './uiConfigSchemaLinksItem';
-import type { ResourceLimitsSchema } from './resourceLimitsSchema';
-import type { UiConfigSchemaUnleashContext } from './uiConfigSchemaUnleashContext';
-import type { VersionSchema } from './versionSchema';
+import type { ResourceLimitsSchema } from './resourceLimitsSchema.ts';
+import type { UiConfigSchemaAuthenticationType } from './uiConfigSchemaAuthenticationType.ts';
+import type { UiConfigSchemaBilling } from './uiConfigSchemaBilling.ts';
+import type { UiConfigSchemaFlags } from './uiConfigSchemaFlags.ts';
+import type { UiConfigSchemaImpactMetrics } from './uiConfigSchemaImpactMetrics.ts';
+import type { UiConfigSchemaLinksItem } from './uiConfigSchemaLinksItem.ts';
+import type { UiConfigSchemaUnleashContext } from './uiConfigSchemaUnleashContext.ts';
+import type { VersionSchema } from './versionSchema.ts';
 
 /**
  * A collection of properties used to configure the Unleash Admin UI.

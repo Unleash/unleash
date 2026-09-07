@@ -7,7 +7,6 @@
 export type SearchFeaturesSortOrder =
     (typeof SearchFeaturesSortOrder)[keyof typeof SearchFeaturesSortOrder];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SearchFeaturesSortOrder = {
     asc: 'asc',
     desc: 'desc',

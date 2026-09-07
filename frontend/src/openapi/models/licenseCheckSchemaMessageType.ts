@@ -10,7 +10,6 @@
 export type LicenseCheckSchemaMessageType =
     (typeof LicenseCheckSchemaMessageType)[keyof typeof LicenseCheckSchemaMessageType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const LicenseCheckSchemaMessageType = {
     info: 'info',
     warning: 'warning',

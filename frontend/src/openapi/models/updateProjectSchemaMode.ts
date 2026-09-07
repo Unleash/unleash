@@ -10,7 +10,6 @@
 export type UpdateProjectSchemaMode =
     (typeof UpdateProjectSchemaMode)[keyof typeof UpdateProjectSchemaMode];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UpdateProjectSchemaMode = {
     open: 'open',
     protected: 'protected',

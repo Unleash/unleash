@@ -10,7 +10,6 @@
 export type UiConfigSchemaImpactMetrics =
     (typeof UiConfigSchemaImpactMetrics)[keyof typeof UiConfigSchemaImpactMetrics];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UiConfigSchemaImpactMetrics = {
     disabled: 'disabled',
     unconfigured: 'unconfigured',

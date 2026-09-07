@@ -3,16 +3,17 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { OidcSettingsResponseSchemaDefaultRootRole } from './oidcSettingsResponseSchemaDefaultRootRole';
-import type { OidcSettingsResponseSchemaIdTokenSigningAlgorithm } from './oidcSettingsResponseSchemaIdTokenSigningAlgorithm';
+import type { OidcSettingsResponseSchemaDefaultRootRole } from './oidcSettingsResponseSchemaDefaultRootRole.ts';
+import type { OidcSettingsResponseSchemaIdTokenSigningAlgorithm } from './oidcSettingsResponseSchemaIdTokenSigningAlgorithm.ts';
 
 /**
  * Response for OpenID Connect settings
  */
 export interface OidcSettingsResponseSchema {
-    /** Authentication Context Class Reference, used to request extra values in the acr claim returned from the server. If multiple values are required, they should be space separated. 
- Consult [the OIDC reference](https://openid.net/specs/openid-connect-core-1_0.html#AuthorizationEndpoint) for more information 
- */
+    /**
+     * Authentication Context Class Reference, used to request extra values in the acr claim returned from the server. If multiple values are required, they should be space separated.
+     *  Consult [the OIDC reference](https://openid.net/specs/openid-connect-core-1_0.html#AuthorizationEndpoint) for more information
+     */
     acrValues?: string;
     /** When enabled Unleash will also request the 'groups' scope as part of the login request. */
     addGroupsScope?: boolean;
@@ -29,7 +30,7 @@ export interface OidcSettingsResponseSchema {
     /** Comma separated list of email domains that are automatically approved for an account in the server. Only relevant if autoCreate is `true` */
     emailDomains?: string;
     /** Whether to enable or disable OpenID Connect for this instance */
-    enabled?: boolean;
+    enabled?: true;
     /** Should we enable group syncing. Refer to the documentation [Group syncing](https://docs.getunleash.io/single-sign-on/how-to-set-up-group-sso-sync) */
     enableGroupSyncing?: boolean;
     /** Enable PKCE (Proof Key for Code Exchange) for enhanced security. Recommended for public clients and provides additional protection against authorization code interception attacks. */

@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { TagSchema } from './tagSchema';
-import type { CreateFeatureSchemaType } from './createFeatureSchemaType';
+import type { CreateFeatureSchemaType } from './createFeatureSchemaType.ts';
+import type { TagSchema } from './tagSchema.ts';
 
 /**
  * Data used to create a new feature flag.

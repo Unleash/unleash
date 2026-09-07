@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateReleasePlanMilestoneSchemaTransitionConditionOneOf } from './createReleasePlanMilestoneSchemaTransitionConditionOneOf';
-import type { CreateReleasePlanMilestoneSchemaTransitionConditionOneOfThree } from './createReleasePlanMilestoneSchemaTransitionConditionOneOfThree';
+import type { CreateReleasePlanMilestoneSchemaTransitionConditionOneOf } from './createReleasePlanMilestoneSchemaTransitionConditionOneOf.ts';
+import type { CreateReleasePlanMilestoneSchemaTransitionConditionOneOfThree } from './createReleasePlanMilestoneSchemaTransitionConditionOneOfThree.ts';
 
 /**
  * When set, release plans created from this template automatically progress from this milestone to the next one once the condition is met.

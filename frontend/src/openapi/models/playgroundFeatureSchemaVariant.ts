@@ -3,13 +3,13 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PlaygroundFeatureSchemaVariantPayload } from './playgroundFeatureSchemaVariantPayload';
+import type { PlaygroundFeatureSchemaVariantPayload } from './playgroundFeatureSchemaVariantPayload.ts';
 
 /**
  * The feature variant you receive based on the provided context or the _disabled
-                          variant_. If a feature is disabled or doesn't have any
-                          variants, you would get the _disabled variant_.
-                          Otherwise, you'll get one of thefeature's defined variants.
+ *                           variant_. If a feature is disabled or doesn't have any
+ *                           variants, you would get the _disabled variant_.
+ *                           Otherwise, you'll get one of thefeature's defined variants.
  * @nullable
  */
 export type PlaygroundFeatureSchemaVariant = {

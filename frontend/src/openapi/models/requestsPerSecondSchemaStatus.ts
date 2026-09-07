@@ -10,7 +10,6 @@
 export type RequestsPerSecondSchemaStatus =
     (typeof RequestsPerSecondSchemaStatus)[keyof typeof RequestsPerSecondSchemaStatus];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const RequestsPerSecondSchemaStatus = {
     success: 'success',
     failure: 'failure',

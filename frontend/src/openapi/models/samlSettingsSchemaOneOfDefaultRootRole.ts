@@ -10,7 +10,6 @@
 export type SamlSettingsSchemaOneOfDefaultRootRole =
     (typeof SamlSettingsSchemaOneOfDefaultRootRole)[keyof typeof SamlSettingsSchemaOneOfDefaultRootRole];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SamlSettingsSchemaOneOfDefaultRootRole = {
     Viewer: 'Viewer',
     Editor: 'Editor',

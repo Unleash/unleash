@@ -10,7 +10,6 @@
 export type CreateReleasePlanMilestoneSchemaTransitionConditionOneOfThreeType =
     (typeof CreateReleasePlanMilestoneSchemaTransitionConditionOneOfThreeType)[keyof typeof CreateReleasePlanMilestoneSchemaTransitionConditionOneOfThreeType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateReleasePlanMilestoneSchemaTransitionConditionOneOfThreeType =
     {
         exposure: 'exposure',

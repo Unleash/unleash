@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { UserSessionSchemaDeviceType } from './userSessionSchemaDeviceType';
+import type { UserSessionSchemaDeviceType } from './userSessionSchemaDeviceType.ts';
 
 /**
  * A model representing a single active user session.

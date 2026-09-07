@@ -10,7 +10,6 @@
 export type ProjectCreatedSchemaMode =
     (typeof ProjectCreatedSchemaMode)[keyof typeof ProjectCreatedSchemaMode];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ProjectCreatedSchemaMode = {
     open: 'open',
     protected: 'protected',

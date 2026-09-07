@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ImpactMetricsSchemaOneOfFiveSamplesItemBucketsItemLe } from './impactMetricsSchemaOneOfFiveSamplesItemBucketsItemLe';
+import type { ImpactMetricsSchemaOneOfFiveSamplesItemBucketsItemLe } from './impactMetricsSchemaOneOfFiveSamplesItemBucketsItemLe.ts';
 
 export type ImpactMetricsSchemaOneOfFiveSamplesItemBucketsItem = {
     /** Count of observations in this bucket */

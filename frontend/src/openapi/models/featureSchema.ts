@@ -3,13 +3,13 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureSchemaCollaborators } from './featureSchemaCollaborators';
-import type { FeatureSchemaCreatedBy } from './featureSchemaCreatedBy';
-import type { FeatureSchemaDependenciesItem } from './featureSchemaDependenciesItem';
-import type { FeatureEnvironmentSchema } from './featureEnvironmentSchema';
-import type { FeatureSchemaLifecycle } from './featureSchemaLifecycle';
-import type { FeatureSchemaLinksItem } from './featureSchemaLinksItem';
-import type { TagSchema } from './tagSchema';
+import type { FeatureEnvironmentSchema } from './featureEnvironmentSchema.ts';
+import type { FeatureSchemaCollaborators } from './featureSchemaCollaborators.ts';
+import type { FeatureSchemaCreatedBy } from './featureSchemaCreatedBy.ts';
+import type { FeatureSchemaDependenciesItem } from './featureSchemaDependenciesItem.ts';
+import type { FeatureSchemaLifecycle } from './featureSchemaLifecycle.ts';
+import type { FeatureSchemaLinksItem } from './featureSchemaLinksItem.ts';
+import type { TagSchema } from './tagSchema.ts';
 
 /**
  * A feature flag definition

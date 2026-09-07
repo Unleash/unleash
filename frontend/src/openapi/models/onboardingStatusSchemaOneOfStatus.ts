@@ -7,7 +7,6 @@
 export type OnboardingStatusSchemaOneOfStatus =
     (typeof OnboardingStatusSchemaOneOfStatus)[keyof typeof OnboardingStatusSchemaOneOfStatus];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const OnboardingStatusSchemaOneOfStatus = {
     'onboarding-started': 'onboarding-started',
     'sdk-connected': 'sdk-connected',

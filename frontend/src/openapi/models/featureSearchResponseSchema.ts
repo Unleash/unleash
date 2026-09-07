@@ -3,11 +3,11 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureSearchResponseSchemaCreatedBy } from './featureSearchResponseSchemaCreatedBy';
-import type { FeatureSearchResponseSchemaDependencyType } from './featureSearchResponseSchemaDependencyType';
-import type { FeatureSearchEnvironmentSchema } from './featureSearchEnvironmentSchema';
-import type { FeatureSearchResponseSchemaLifecycle } from './featureSearchResponseSchemaLifecycle';
-import type { TagSchema } from './tagSchema';
+import type { FeatureSearchEnvironmentSchema } from './featureSearchEnvironmentSchema.ts';
+import type { FeatureSearchResponseSchemaCreatedBy } from './featureSearchResponseSchemaCreatedBy.ts';
+import type { FeatureSearchResponseSchemaDependencyType } from './featureSearchResponseSchemaDependencyType.ts';
+import type { FeatureSearchResponseSchemaLifecycle } from './featureSearchResponseSchemaLifecycle.ts';
+import type { TagSchema } from './tagSchema.ts';
 
 /**
  * A feature flag definition

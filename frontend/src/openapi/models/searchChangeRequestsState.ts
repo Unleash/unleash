@@ -7,7 +7,6 @@
 export type SearchChangeRequestsState =
     (typeof SearchChangeRequestsState)[keyof typeof SearchChangeRequestsState];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SearchChangeRequestsState = {
     'IS:open': 'IS:open',
     'IS:closed': 'IS:closed',

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { LoginEventSchemaType } from './loginEventSchemaType';
+import type { LoginEventSchemaType } from './loginEventSchemaType.ts';
 
 /**
  * A model representing a single login event.

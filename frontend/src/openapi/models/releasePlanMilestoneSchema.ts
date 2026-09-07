@@ -3,16 +3,14 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ReleasePlanMilestoneStrategySchema } from './releasePlanMilestoneStrategySchema';
-import type { ReleasePlanMilestoneSchemaTransitionCondition } from './releasePlanMilestoneSchemaTransitionCondition';
+import type { ReleasePlanMilestoneSchemaTransitionCondition } from './releasePlanMilestoneSchemaTransitionCondition.ts';
+import type { ReleasePlanMilestoneStrategySchema } from './releasePlanMilestoneStrategySchema.ts';
 
 /**
  * Schema representing the creation of a release plan milestone.
  */
 export interface ReleasePlanMilestoneSchema {
-    /**
-     * The milestone's ID. Milestone IDs are ulids.
-     */
+    /** The milestone's ID. Milestone IDs are ulids. */
     id: string;
     /** The name of the milestone. */
     name: string;

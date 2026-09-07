@@ -10,7 +10,6 @@
 export type ActionsSchemaMatchSource =
     (typeof ActionsSchemaMatchSource)[keyof typeof ActionsSchemaMatchSource];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ActionsSchemaMatchSource = {
     'signal-endpoint': 'signal-endpoint',
 } as const;

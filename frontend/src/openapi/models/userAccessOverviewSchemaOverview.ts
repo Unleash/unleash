@@ -3,10 +3,10 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { UserAccessOverviewSchemaOverviewEnvironmentItem } from './userAccessOverviewSchemaOverviewEnvironmentItem';
-import type { GroupItemSchema } from './groupItemSchema';
-import type { UserAccessOverviewSchemaOverviewProjectItem } from './userAccessOverviewSchemaOverviewProjectItem';
-import type { UserAccessOverviewSchemaOverviewRootItem } from './userAccessOverviewSchemaOverviewRootItem';
+import type { GroupItemSchema } from './groupItemSchema.ts';
+import type { UserAccessOverviewSchemaOverviewEnvironmentItem } from './userAccessOverviewSchemaOverviewEnvironmentItem.ts';
+import type { UserAccessOverviewSchemaOverviewProjectItem } from './userAccessOverviewSchemaOverviewProjectItem.ts';
+import type { UserAccessOverviewSchemaOverviewRootItem } from './userAccessOverviewSchemaOverviewRootItem.ts';
 
 /**
  * The access overview (list of permissions) for the user

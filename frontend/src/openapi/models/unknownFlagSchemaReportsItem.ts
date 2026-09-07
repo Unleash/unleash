@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { UnknownFlagSchemaReportsItemEnvironmentsItem } from './unknownFlagSchemaReportsItemEnvironmentsItem';
+import type { UnknownFlagSchemaReportsItemEnvironmentsItem } from './unknownFlagSchemaReportsItemEnvironmentsItem.ts';
 
 export type UnknownFlagSchemaReportsItem = {
     /** The name of the application that reported the unknown flag. */

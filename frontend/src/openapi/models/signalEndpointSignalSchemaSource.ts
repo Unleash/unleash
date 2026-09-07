@@ -10,7 +10,6 @@
 export type SignalEndpointSignalSchemaSource =
     (typeof SignalEndpointSignalSchemaSource)[keyof typeof SignalEndpointSignalSchemaSource];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SignalEndpointSignalSchemaSource = {
     'signal-endpoint': 'signal-endpoint',
 } as const;

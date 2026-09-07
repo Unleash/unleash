@@ -10,7 +10,6 @@
 export type MeteredRequestsSchemaGrouping =
     (typeof MeteredRequestsSchemaGrouping)[keyof typeof MeteredRequestsSchemaGrouping];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const MeteredRequestsSchemaGrouping = {
     monthly: 'monthly',
     daily: 'daily',

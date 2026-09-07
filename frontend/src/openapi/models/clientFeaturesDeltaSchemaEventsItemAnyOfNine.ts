@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ClientFeatureSchema } from './clientFeatureSchema';
-import type { ClientSegmentSchema } from './clientSegmentSchema';
-import type { ClientFeaturesDeltaSchemaEventsItemAnyOfNineType } from './clientFeaturesDeltaSchemaEventsItemAnyOfNineType';
+import type { ClientFeatureSchema } from './clientFeatureSchema.ts';
+import type { ClientFeaturesDeltaSchemaEventsItemAnyOfNineType } from './clientFeaturesDeltaSchemaEventsItemAnyOfNineType.ts';
+import type { ClientSegmentSchema } from './clientSegmentSchema.ts';
 
 export type ClientFeaturesDeltaSchemaEventsItemAnyOfNine = {
     eventId: number;

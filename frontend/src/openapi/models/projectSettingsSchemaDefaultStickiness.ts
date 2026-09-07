@@ -12,7 +12,6 @@ export type ProjectSettingsSchemaDefaultStickiness =
     | (typeof ProjectSettingsSchemaDefaultStickiness)[keyof typeof ProjectSettingsSchemaDefaultStickiness]
     | null;
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ProjectSettingsSchemaDefaultStickiness = {
     default: 'default',
     sessionId: 'sessionId',

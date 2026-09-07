@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ImportTogglesValidateItemSchema } from './importTogglesValidateItemSchema';
+import type { ImportTogglesValidateItemSchema } from './importTogglesValidateItemSchema.ts';
 
 /**
  * An object containing [feature import](https://docs.getunleash.io/concepts/import-export) validation results.

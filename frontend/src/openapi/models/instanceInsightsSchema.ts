@@ -3,13 +3,13 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { InstanceInsightsSchemaCreationArchiveTrendsItem } from './instanceInsightsSchemaCreationArchiveTrendsItem';
-import type { InstanceInsightsSchemaEnvironmentTypeTrendsItem } from './instanceInsightsSchemaEnvironmentTypeTrendsItem';
-import type { InstanceInsightsSchemaFlagTrendsItem } from './instanceInsightsSchemaFlagTrendsItem';
-import type { InstanceInsightsSchemaLifecycleTrendsItem } from './instanceInsightsSchemaLifecycleTrendsItem';
-import type { InstanceInsightsSchemaMetricsSummaryTrendsItem } from './instanceInsightsSchemaMetricsSummaryTrendsItem';
-import type { InstanceInsightsSchemaProjectFlagTrendsItem } from './instanceInsightsSchemaProjectFlagTrendsItem';
-import type { InstanceInsightsSchemaUserTrendsItem } from './instanceInsightsSchemaUserTrendsItem';
+import type { InstanceInsightsSchemaCreationArchiveTrendsItem } from './instanceInsightsSchemaCreationArchiveTrendsItem.ts';
+import type { InstanceInsightsSchemaEnvironmentTypeTrendsItem } from './instanceInsightsSchemaEnvironmentTypeTrendsItem.ts';
+import type { InstanceInsightsSchemaFlagTrendsItem } from './instanceInsightsSchemaFlagTrendsItem.ts';
+import type { InstanceInsightsSchemaLifecycleTrendsItem } from './instanceInsightsSchemaLifecycleTrendsItem.ts';
+import type { InstanceInsightsSchemaMetricsSummaryTrendsItem } from './instanceInsightsSchemaMetricsSummaryTrendsItem.ts';
+import type { InstanceInsightsSchemaProjectFlagTrendsItem } from './instanceInsightsSchemaProjectFlagTrendsItem.ts';
+import type { InstanceInsightsSchemaUserTrendsItem } from './instanceInsightsSchemaUserTrendsItem.ts';
 
 /**
  * A summary of this Unleash instance's usage statistics, including user and flag counts, and trends over time.

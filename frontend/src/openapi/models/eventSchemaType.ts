@@ -10,7 +10,6 @@
 export type EventSchemaType =
     (typeof EventSchemaType)[keyof typeof EventSchemaType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const EventSchemaType = {
     'application-created': 'application-created',
     'feature-created': 'feature-created',

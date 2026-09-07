@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { AddonTypeSchemaAlertsItemLink } from './addonTypeSchemaAlertsItemLink';
-import type { AddonTypeSchemaAlertsItemType } from './addonTypeSchemaAlertsItemType';
+import type { AddonTypeSchemaAlertsItemLink } from './addonTypeSchemaAlertsItemLink.ts';
+import type { AddonTypeSchemaAlertsItemType } from './addonTypeSchemaAlertsItemType.ts';
 
 export type AddonTypeSchemaAlertsItem = {
     /** An optional link to display at the end of the alert text. */

@@ -10,7 +10,6 @@
 export type FeatureEnvironmentSafeguardSchemaImpactMetricTimeRange =
     (typeof FeatureEnvironmentSafeguardSchemaImpactMetricTimeRange)[keyof typeof FeatureEnvironmentSafeguardSchemaImpactMetricTimeRange];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const FeatureEnvironmentSafeguardSchemaImpactMetricTimeRange = {
     hour: 'hour',
     day: 'day',

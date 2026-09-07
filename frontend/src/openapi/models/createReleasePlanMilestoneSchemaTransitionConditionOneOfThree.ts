@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateReleasePlanMilestoneSchemaTransitionConditionOneOfThreeType } from './createReleasePlanMilestoneSchemaTransitionConditionOneOfThreeType';
+import type { CreateReleasePlanMilestoneSchemaTransitionConditionOneOfThreeType } from './createReleasePlanMilestoneSchemaTransitionConditionOneOfThreeType.ts';
 
 /**
  * Transition once the feature has been exposed (evaluated as enabled) enough times in total

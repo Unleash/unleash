@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { UserSchema } from './userSchema';
+import type { UserSchema } from './userSchema.ts';
 
 /**
  * A list of users

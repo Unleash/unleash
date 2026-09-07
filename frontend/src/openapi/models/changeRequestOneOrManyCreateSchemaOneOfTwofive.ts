@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestOneOrManyCreateSchemaOneOfTwofiveAction } from './changeRequestOneOrManyCreateSchemaOneOfTwofiveAction';
-import type { CreateDependentFeatureSchema } from './createDependentFeatureSchema';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfTwofiveAction } from './changeRequestOneOrManyCreateSchemaOneOfTwofiveAction.ts';
+import type { CreateDependentFeatureSchema } from './createDependentFeatureSchema.ts';
 
 /**
  * Add a parent feature dependency.

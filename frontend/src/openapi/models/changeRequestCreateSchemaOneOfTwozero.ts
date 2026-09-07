@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestCreateSchemaOneOfTwozeroAction } from './changeRequestCreateSchemaOneOfTwozeroAction';
-import type { ChangeRequestCreateSchemaOneOfTwozeroPayload } from './changeRequestCreateSchemaOneOfTwozeroPayload';
+import type { ChangeRequestCreateSchemaOneOfTwozeroAction } from './changeRequestCreateSchemaOneOfTwozeroAction.ts';
+import type { ChangeRequestCreateSchemaOneOfTwozeroPayload } from './changeRequestCreateSchemaOneOfTwozeroPayload.ts';
 
 /**
  * Update variants for this feature.

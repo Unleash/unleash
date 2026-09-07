@@ -10,7 +10,6 @@
 export type ChangeRequestOneOrManyCreateSchemaOneOfTwonineAction =
     (typeof ChangeRequestOneOrManyCreateSchemaOneOfTwonineAction)[keyof typeof ChangeRequestOneOrManyCreateSchemaOneOfTwonineAction];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestOneOrManyCreateSchemaOneOfTwonineAction = {
     addReleasePlan: 'addReleasePlan',
 } as const;

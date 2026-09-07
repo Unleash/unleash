@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { UserSessionSchema } from './userSessionSchema';
+import type { UserSessionSchema } from './userSessionSchema.ts';
 
 /**
  * A response model with a list of active user sessions.

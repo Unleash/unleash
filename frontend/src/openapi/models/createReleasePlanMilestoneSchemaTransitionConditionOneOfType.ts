@@ -10,7 +10,6 @@
 export type CreateReleasePlanMilestoneSchemaTransitionConditionOneOfType =
     (typeof CreateReleasePlanMilestoneSchemaTransitionConditionOneOfType)[keyof typeof CreateReleasePlanMilestoneSchemaTransitionConditionOneOfType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateReleasePlanMilestoneSchemaTransitionConditionOneOfType = {
     time: 'time',
 } as const;

@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ReleasePlanTemplateSchemaDiscriminator } from './releasePlanTemplateSchemaDiscriminator';
-import type { ReleasePlanMilestoneSchema } from './releasePlanMilestoneSchema';
+import type { ReleasePlanMilestoneSchema } from './releasePlanMilestoneSchema.ts';
+import type { ReleasePlanTemplateSchemaDiscriminator } from './releasePlanTemplateSchemaDiscriminator.ts';
 
 /**
  * Schema representing the creation of a release template.
@@ -15,26 +15,18 @@ export interface ReleasePlanTemplateSchema {
      * @nullable
      */
     archivedAt?: string | null;
-    /**
-     * The date and time that the release template was created.
-     */
+    /** The date and time that the release template was created. */
     createdAt: string;
-    /**
-     * Release template: The ID of the user who created this template.
-     */
+    /** Release template: The ID of the user who created this template. */
     createdByUserId: number;
     /**
      * A description of the release template.
      * @nullable
      */
     description?: string | null;
-    /**
-     * A field to distinguish between release plans and release templates.
-     */
+    /** A field to distinguish between release plans and release templates. */
     discriminator: ReleasePlanTemplateSchemaDiscriminator;
-    /**
-     * The release plan/template's ID. Release template IDs are ulids.
-     */
+    /** The release plan/template's ID. Release template IDs are ulids. */
     id: string;
     /** A list of the milestones in this release template. */
     milestones?: ReleasePlanMilestoneSchema[];

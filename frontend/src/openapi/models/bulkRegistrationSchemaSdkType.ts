@@ -12,7 +12,6 @@ export type BulkRegistrationSchemaSdkType =
     | (typeof BulkRegistrationSchemaSdkType)[keyof typeof BulkRegistrationSchemaSdkType]
     | null;
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const BulkRegistrationSchemaSdkType = {
     frontend: 'frontend',
     backend: 'backend',

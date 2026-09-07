@@ -10,7 +10,6 @@
 export type CreateRoleWithPermissionsSchemaAnyOfType =
     (typeof CreateRoleWithPermissionsSchemaAnyOfType)[keyof typeof CreateRoleWithPermissionsSchemaAnyOfType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateRoleWithPermissionsSchemaAnyOfType = {
     'root-custom': 'root-custom',
     custom: 'custom',

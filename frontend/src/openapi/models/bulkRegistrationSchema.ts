@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { BulkRegistrationSchemaConnectViaItem } from './bulkRegistrationSchemaConnectViaItem';
-import type { BulkRegistrationSchemaSdkType } from './bulkRegistrationSchemaSdkType';
-import type { DateSchema } from './dateSchema';
+import type { BulkRegistrationSchemaConnectViaItem } from './bulkRegistrationSchemaConnectViaItem.ts';
+import type { BulkRegistrationSchemaSdkType } from './bulkRegistrationSchemaSdkType.ts';
+import type { DateSchema } from './dateSchema.ts';
 
 /**
  * An application registration. Defines the format POSTed by our backend SDKs when they're starting up
@@ -13,8 +13,10 @@ import type { DateSchema } from './dateSchema';
 export interface BulkRegistrationSchema {
     /** The name of the application that is evaluating toggles */
     appName: string;
-    /** A list of applications this app registration has been registered through. If connected directly to Unleash, this is an empty list. 
- This can be used in later visualizations to tell how many levels of proxy or Edge instances our SDKs have connected through */
+    /**
+     * A list of applications this app registration has been registered through. If connected directly to Unleash, this is an empty list.
+     *  This can be used in later visualizations to tell how many levels of proxy or Edge instances our SDKs have connected through
+     */
     connectVia?: BulkRegistrationSchemaConnectViaItem[];
     /** Which environment the application is running in */
     environment: string;

@@ -10,7 +10,6 @@
 export type ConstraintSchemaOperator =
     (typeof ConstraintSchemaOperator)[keyof typeof ConstraintSchemaOperator];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ConstraintSchemaOperator = {
     NOT_IN: 'NOT_IN',
     IN: 'IN',

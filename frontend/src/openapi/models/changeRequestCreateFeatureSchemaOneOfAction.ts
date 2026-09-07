@@ -10,7 +10,6 @@
 export type ChangeRequestCreateFeatureSchemaOneOfAction =
     (typeof ChangeRequestCreateFeatureSchemaOneOfAction)[keyof typeof ChangeRequestCreateFeatureSchemaOneOfAction];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestCreateFeatureSchemaOneOfAction = {
     updateEnabled: 'updateEnabled',
 } as const;

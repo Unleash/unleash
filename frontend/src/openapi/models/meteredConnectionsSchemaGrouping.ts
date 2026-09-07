@@ -10,7 +10,6 @@
 export type MeteredConnectionsSchemaGrouping =
     (typeof MeteredConnectionsSchemaGrouping)[keyof typeof MeteredConnectionsSchemaGrouping];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const MeteredConnectionsSchemaGrouping = {
     monthly: 'monthly',
     daily: 'daily',

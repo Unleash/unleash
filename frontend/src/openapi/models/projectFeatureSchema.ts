@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectFeatureEnvironmentSchema } from './projectFeatureEnvironmentSchema';
-import type { TagSchema } from './tagSchema';
+import type { ProjectFeatureEnvironmentSchema } from './projectFeatureEnvironmentSchema.ts';
+import type { TagSchema } from './tagSchema.ts';
 
 /**
  * A project feature flag definition

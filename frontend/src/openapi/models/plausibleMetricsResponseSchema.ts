@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PlausibleMetricsResponseSchemaDataItem } from './plausibleMetricsResponseSchemaDataItem';
+import type { PlausibleMetricsResponseSchemaDataItem } from './plausibleMetricsResponseSchemaDataItem.ts';
 
 /**
  * Response containing Plausible analytics data for favorite events.

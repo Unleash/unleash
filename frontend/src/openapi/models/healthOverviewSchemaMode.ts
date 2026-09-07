@@ -10,7 +10,6 @@
 export type HealthOverviewSchemaMode =
     (typeof HealthOverviewSchemaMode)[keyof typeof HealthOverviewSchemaMode];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const HealthOverviewSchemaMode = {
     open: 'open',
     protected: 'protected',

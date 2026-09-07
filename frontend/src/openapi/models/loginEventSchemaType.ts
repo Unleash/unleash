@@ -10,7 +10,6 @@
 export type LoginEventSchemaType =
     (typeof LoginEventSchemaType)[keyof typeof LoginEventSchemaType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const LoginEventSchemaType = {
     login: 'login',
     logout: 'logout',

@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestCreateFeatureSchemaOneOfTwonineAction } from './changeRequestCreateFeatureSchemaOneOfTwonineAction';
-import type { ChangeRequestCreateFeatureSchemaOneOfTwoninePayload } from './changeRequestCreateFeatureSchemaOneOfTwoninePayload';
+import type { ChangeRequestCreateFeatureSchemaOneOfTwonineAction } from './changeRequestCreateFeatureSchemaOneOfTwonineAction.ts';
+import type { ChangeRequestCreateFeatureSchemaOneOfTwoninePayload } from './changeRequestCreateFeatureSchemaOneOfTwoninePayload.ts';
 
 /**
  * Remove a release plan from feature environment.

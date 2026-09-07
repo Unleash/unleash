@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { GroupWithProjectRoleSchema } from './groupWithProjectRoleSchema';
-import type { RoleSchema } from './roleSchema';
-import type { UserWithProjectRoleSchema } from './userWithProjectRoleSchema';
+import type { GroupWithProjectRoleSchema } from './groupWithProjectRoleSchema.ts';
+import type { RoleSchema } from './roleSchema.ts';
+import type { UserWithProjectRoleSchema } from './userWithProjectRoleSchema.ts';
 
 /**
  * An object describing access permissions for a given project.

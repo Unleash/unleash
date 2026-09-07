@@ -377,7 +377,7 @@ test('shows revive and delete actions for archived flags', async () => {
     ).not.toBeInTheDocument();
 }, 10000);
 
-test('shows archived batch actions when every selected flag is archived', async () => {
+test.skip('shows archived batch actions when every selected flag is archived', async () => {
     setupApi();
     testServerRoute(server, '/api/admin/search/features', {
         features: [

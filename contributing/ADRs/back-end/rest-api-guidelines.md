@@ -126,6 +126,7 @@ This is the response-side counterpart to [Separation of request and response sch
 
 * Do all row-level filtering in the SQL query, including any fallback logic ("skip rows with no name, username, or email"). Do not filter after the query has returned.
 * Post-query filtering breaks pagination in two ways: `limit=100` can return fewer than 100 rows, and `total` no longer matches what the caller sees. This is not a corner case — it is the normal behavior any time the filter removes at least one row on the current page.
+* Because filtering, pagination, and sorting now all execute in the query, treat new or modified SQL as a review hotspot: check the query plan on realistic data, confirm indexes exist for the filter and sort columns, and watch for accidental full scans. A bad plan degrades the endpoint directly instead of being masked by in-memory work.
 
 ## Consequences
 

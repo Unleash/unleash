@@ -9,6 +9,11 @@ import { subDays } from 'date-fns';
 import type { Db } from './db.js';
 import metricsHelper from '../util/metrics-helper.js';
 import { DB_TIME } from '../metric-events.js';
+import {
+    BULK_UPSERT_CHUNK_SIZE,
+    chunkRows,
+    orderByConflictKey,
+} from './bulk-upsert.js';
 
 const COLUMNS = [
     'app_name',
@@ -86,11 +91,17 @@ export default class ClientInstanceStore implements IClientInstanceStore {
     async bulkUpsert(instances: INewClientInstance[]): Promise<void> {
         const stopTimer = this.metricTimer('bulkUpsert');
 
-        const rows = instances.map(mapToDb);
-        await this.db(TABLE)
-            .insert(rows)
-            .onConflict(['app_name', 'instance_id', 'environment'])
-            .merge();
+        const rows = orderByConflictKey(instances.map(mapToDb), [
+            'app_name',
+            'environment',
+            'instance_id',
+        ]);
+        for (const chunk of chunkRows(rows, BULK_UPSERT_CHUNK_SIZE)) {
+            await this.db(TABLE)
+                .insert(chunk)
+                .onConflict(['app_name', 'instance_id', 'environment'])
+                .merge();
+        }
 
         stopTimer();
     }

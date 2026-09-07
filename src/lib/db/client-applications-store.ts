@@ -13,6 +13,11 @@ import { applySearchFilters } from '../features/feature-search/search-utils.js';
 import type { IFlagResolver } from '../types/index.js';
 import metricsHelper from '../util/metrics-helper.js';
 import { DB_TIME } from '../metric-events.js';
+import {
+    BULK_UPSERT_CHUNK_SIZE,
+    chunkRows,
+    orderByConflictKey,
+} from './bulk-upsert.js';
 
 const COLUMNS = [
     'app_name',
@@ -163,7 +168,7 @@ export default class ClientApplicationsStore
                 }
                 return acc;
             }, {}),
-        );
+        ) as ReturnType<typeof remapRow>[];
         const usageRows = apps.flatMap(this.remapUsageRow);
         const uniqueUsageRows = Object.values(
             usageRows.reduce((acc, row) => {
@@ -173,20 +178,33 @@ export default class ClientApplicationsStore
                 }
                 return acc;
             }, {}),
-        );
+        ) as (typeof usageRows)[number][];
 
-        await this.db(TABLE)
-            .insert(uniqueRows)
-            .onConflict('app_name')
-            .merge({
-                updated_at: this.db.raw('EXCLUDED.updated_at'),
-                seen_at: this.db.raw('EXCLUDED.seen_at'),
-            });
+        const orderedRows = orderByConflictKey(uniqueRows, ['app_name']);
+        for (const chunk of chunkRows(orderedRows, BULK_UPSERT_CHUNK_SIZE)) {
+            await this.db(TABLE)
+                .insert(chunk)
+                .onConflict('app_name')
+                .merge({
+                    updated_at: this.db.raw('EXCLUDED.updated_at'),
+                    seen_at: this.db.raw('EXCLUDED.seen_at'),
+                });
+        }
 
-        await this.db(TABLE_USAGE)
-            .insert(uniqueUsageRows)
-            .onConflict(['app_name', 'project', 'environment'])
-            .ignore();
+        const orderedUsageRows = orderByConflictKey(uniqueUsageRows, [
+            'app_name',
+            'project',
+            'environment',
+        ]);
+        for (const chunk of chunkRows(
+            orderedUsageRows,
+            BULK_UPSERT_CHUNK_SIZE,
+        )) {
+            await this.db(TABLE_USAGE)
+                .insert(chunk)
+                .onConflict(['app_name', 'project', 'environment'])
+                .ignore();
+        }
         stopTimer();
     }
 

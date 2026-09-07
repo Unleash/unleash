@@ -108,6 +108,7 @@ overrides:
   node-forge: "^1.0.0"
   nwsapi: "2.2.27"
   prompt: "link:./node_modules/.cache/null"
+  qs: "6.16.0"
   react: "^19.0.0"
   react-dom: "^19.0.0"
   "router>path-to-regexp": "1.9.0"

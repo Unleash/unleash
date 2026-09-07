@@ -4,7 +4,7 @@ import { Route, Routes } from 'react-router';
 import { ProjectFeatureToggles } from './ProjectFeatureToggles.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
-import { BATCH_SELECTED_COUNT } from 'utils/testIds';
+import { BATCH_ACTIONS_BAR, BATCH_SELECTED_COUNT } from 'utils/testIds';
 import {
     DELETE_FEATURE,
     UPDATE_FEATURE,
@@ -160,7 +160,7 @@ test('clears the selection when the filters change', async () => {
         },
     );
 
-    const featureRow = await screen.findByRole('row', { name: /featureA/ });
+    const featureRow = (await screen.findByText('featureA')).closest('tr')!;
     fireEvent.click(within(featureRow).getByRole('checkbox'));
     expect((await screen.findByTestId(BATCH_SELECTED_COUNT)).textContent).toBe(
         '1',
@@ -377,7 +377,7 @@ test('shows revive and delete actions for archived flags', async () => {
     ).not.toBeInTheDocument();
 }, 10000);
 
-test.skip('shows archived batch actions when every selected flag is archived', async () => {
+test('shows archived batch actions when every selected flag is archived', async () => {
     setupApi();
     testServerRoute(server, '/api/admin/search/features', {
         features: [
@@ -416,23 +416,24 @@ test.skip('shows archived batch actions when every selected flag is archived', a
         },
     );
 
-    const archivedRow = await screen.findByRole('row', {
-        name: /archivedFeature/,
-    });
+    const archivedRow = (await screen.findByText('archivedFeature')).closest(
+        'tr',
+    )!;
     fireEvent.click(within(archivedRow).getByRole('checkbox'));
 
-    await screen.findByRole('button', { name: 'Revive' });
-    screen.getByRole('button', { name: 'Delete' });
+    const batchActions = await screen.findByTestId(BATCH_ACTIONS_BAR);
+    await within(batchActions).findByRole('button', { name: 'Revive' });
+    within(batchActions).getByRole('button', { name: 'Delete' });
     expect(
-        screen.queryByRole('button', { name: 'Archive' }),
+        within(batchActions).queryByRole('button', { name: 'Archive' }),
     ).not.toBeInTheDocument();
 
-    const activeRow = screen.getByRole('row', { name: /activeFeature/ });
+    const activeRow = screen.getByText('activeFeature').closest('tr')!;
     fireEvent.click(within(activeRow).getByRole('checkbox'));
 
-    await screen.findByRole('button', { name: 'Archive' });
+    await within(batchActions).findByRole('button', { name: 'Archive' });
     expect(
-        screen.queryByRole('button', { name: 'Revive' }),
+        within(batchActions).queryByRole('button', { name: 'Revive' }),
     ).not.toBeInTheDocument();
 }, 10000);
 

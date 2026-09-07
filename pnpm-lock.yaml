@@ -564,7 +564,7 @@ importers:
         version: 3.3.3
       countries-and-timezones:
         specifier: ^3.9.0
-        version: 3.9.0
+        version: 3.10.0
       css-mediaquery:
         specifier: ^0.1.2
         version: 0.1.2
@@ -3048,8 +3048,8 @@ packages:
       typescript:
         optional: true
 
-  countries-and-timezones@3.9.0:
-    resolution: {integrity: sha512-3upkVtUfZgdp5xOQI/Deg1ye73ae6bygJMO4UvtUi6wLjwcj7cBqx2PzSZ1VL8i5iveBbjhsQp2Judx7kPKivA==}
+  countries-and-timezones@3.10.0:
+    resolution: {integrity: sha512-HQ1GtXWNZy0r5MnZMLF9xmBmFNmtDVBeKQgX/5DY+RVmcZTODA+EPN/JLPCYRNP86nHG0QQrb1yJwGzXeqCCXw==}
     engines: {node: '>=8.x', npm: '>=5.x'}
 
   cpu-features@0.0.10:
@@ -8642,7 +8642,7 @@ snapshots:
     optionalDependencies:
       typescript: 7.0.2
 
-  countries-and-timezones@3.9.0: {}
+  countries-and-timezones@3.10.0: {}
 
   cpu-features@0.0.10:
     dependencies:

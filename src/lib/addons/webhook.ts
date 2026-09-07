@@ -79,7 +79,7 @@ export default class Webhook extends Addon {
         let body: string | undefined;
         let sendingEvent = false;
 
-        if (typeof bodyTemplate === 'string' && bodyTemplate.length > 1) {
+        if (typeof bodyTemplate === 'string' && bodyTemplate.length > 0) {
             const eventMarkdownPlaceholder = '\0UNLEASH_EVENT_MARKDOWN\0';
             const renderedBody = Mustache.render(bodyTemplate, {
                 ...context,

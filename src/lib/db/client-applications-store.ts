@@ -1,10 +1,12 @@
 import type EventEmitter from 'events';
+import { max } from 'date-fns';
 import NotFoundError from '../error/notfound-error.js';
 import type {
     IClientApplication,
     IClientApplications,
     IClientApplicationsSearchParams,
     IClientApplicationsStore,
+    IClientApplicationUsage,
 } from '../types/stores/client-applications-store.js';
 import type { Logger, LogProvider } from '../logger.js';
 import type { Db } from './db.js';
@@ -13,6 +15,7 @@ import { applySearchFilters } from '../features/feature-search/search-utils.js';
 import type { IFlagResolver } from '../types/index.js';
 import metricsHelper from '../util/metrics-helper.js';
 import { DB_TIME } from '../metric-events.js';
+import type { Row } from '../server-impl.js';
 
 const COLUMNS = [
     'app_name',
@@ -24,6 +27,7 @@ const COLUMNS = [
     'url',
     'color',
     'icon',
+    'seen_at',
 ];
 const TABLE = 'client_applications';
 
@@ -36,21 +40,37 @@ const DEPRECATED_STRATEGIES = [
     'userWithId',
 ];
 
-const mapRow: (any) => IClientApplication = (row) => ({
-    appName: row.app_name,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at,
-    description: row.description,
-    strategies: row.strategies || [],
-    createdBy: row.created_by,
-    url: row.url,
-    color: row.color,
-    icon: row.icon,
-    lastSeen: row.last_seen,
-    announced: row.announced,
-    project: row.project,
-    environment: row.environment,
-});
+type PersistedClientApplicationReadModel = Row<
+    Omit<IClientApplication, 'lastSeen'> & {
+        seenAt: Date;
+        project: string; // project is stored in the usage table, but's legacy
+    }
+>;
+type PersistedClientApplicationWriteModel = Omit<
+    PersistedClientApplicationReadModel,
+    'strategies'
+> & {
+    strategies?: string; // strategies are stored as a JSON string in the database
+};
+type ClientApplicationUpsertRow =
+    Partial<PersistedClientApplicationWriteModel> &
+        Pick<PersistedClientApplicationWriteModel, 'app_name' | 'seen_at'>;
+const mapRow: (row: PersistedClientApplicationReadModel) => IClientApplication =
+    (row) => ({
+        appName: row.app_name,
+        createdAt: row.created_at,
+        updatedAt: row.updated_at,
+        description: row.description,
+        strategies: row.strategies || [],
+        createdBy: row.created_by,
+        url: row.url,
+        color: row.color,
+        icon: row.icon,
+        lastSeen: row.seen_at,
+        announced: row.announced,
+        project: row.project,
+        environment: row.environment,
+    });
 
 const reduceRows = (rows: any[]): IClientApplication[] => {
     const appsObj = rows.reduce((acc, row) => {
@@ -60,7 +80,7 @@ const reduceRows = (rows: any[]): IClientApplication[] => {
 
         if (existingApp) {
             const existingProject = existingApp.usage.find(
-                (usage) => usage.project === project,
+                (usage: IClientApplicationUsage) => usage.project === project,
             );
 
             if (existingProject) {
@@ -92,7 +112,9 @@ const reduceRows = (rows: any[]): IClientApplication[] => {
     return Object.values(appsObj);
 };
 
-const remapRow = (input: Partial<IClientApplication>) => {
+const remapRow: (
+    input: Partial<IClientApplication>,
+) => Partial<PersistedClientApplicationWriteModel> = (input) => {
     const temp = {
         app_name: input.appName,
         updated_at: input.updatedAt || new Date(),
@@ -112,6 +134,37 @@ const remapRow = (input: Partial<IClientApplication>) => {
         }
     });
     return temp;
+};
+
+const isClientApplicationUpsertRow = (
+    row: Partial<PersistedClientApplicationWriteModel>,
+): row is ClientApplicationUpsertRow => Boolean(row.app_name && row.seen_at);
+
+const coalesceApplicationRows = (
+    rows: Partial<PersistedClientApplicationWriteModel>[],
+): ClientApplicationUpsertRow[] => {
+    const rowsByAppName = new Map<string, ClientApplicationUpsertRow>();
+
+    for (const row of rows) {
+        if (!isClientApplicationUpsertRow(row)) {
+            continue;
+        }
+
+        const existing = rowsByAppName.get(row.app_name);
+        rowsByAppName.set(
+            row.app_name,
+            existing
+                ? {
+                      ...row,
+                      seen_at: max([existing.seen_at, row.seen_at]),
+                  }
+                : row,
+        );
+    }
+
+    return [...rowsByAppName.values()].sort((a, b) =>
+        a.app_name.localeCompare(b.app_name),
+    );
 };
 
 export default class ClientApplicationsStore
@@ -155,38 +208,41 @@ export default class ClientApplicationsStore
 
     async bulkUpsert(apps: Partial<IClientApplication>[]): Promise<void> {
         const stopTimer = this.timer('bulkUpsert');
-        const rows = apps.map(remapRow);
-        const uniqueRows = Object.values(
-            rows.reduce((acc, row) => {
-                if (row.app_name) {
-                    acc[row.app_name] = row;
-                }
-                return acc;
-            }, {}),
+        const uniqueSortedRows = coalesceApplicationRows(
+            apps.map((app) => remapRow(app)),
         );
         const usageRows = apps.flatMap(this.remapUsageRow);
-        const uniqueUsageRows = Object.values(
-            usageRows.reduce((acc, row) => {
+        const uniqueSortedUsageRows = Object.values(
+            usageRows.reduce<
+                Record<string, Partial<PersistedClientApplicationWriteModel>>
+            >((acc, row) => {
                 if (row.app_name) {
                     acc[`${row.app_name} ${row.project} ${row.environment}`] =
                         row;
                 }
                 return acc;
             }, {}),
+        ).sort(
+            (a, b) =>
+                (a.app_name ?? '').localeCompare(b.app_name ?? '') ||
+                (a.project ?? '').localeCompare(b.project ?? '') ||
+                (a.environment ?? '').localeCompare(b.environment ?? ''),
         );
 
-        await this.db(TABLE)
-            .insert(uniqueRows)
-            .onConflict('app_name')
-            .merge({
-                updated_at: this.db.raw('EXCLUDED.updated_at'),
-                seen_at: this.db.raw('EXCLUDED.seen_at'),
-            });
+        await this.db.transaction(async (transaction) => {
+            await transaction(TABLE)
+                .insert(uniqueSortedRows)
+                .onConflict('app_name')
+                .merge({
+                    updated_at: transaction.raw('EXCLUDED.updated_at'),
+                    seen_at: transaction.raw('EXCLUDED.seen_at'),
+                });
 
-        await this.db(TABLE_USAGE)
-            .insert(uniqueUsageRows)
-            .onConflict(['app_name', 'project', 'environment'])
-            .ignore();
+            await transaction(TABLE_USAGE)
+                .insert(uniqueSortedUsageRows)
+                .onConflict(['app_name', 'project', 'environment'])
+                .ignore();
+        });
         stopTimer();
     }
 
@@ -489,7 +545,9 @@ export default class ClientApplicationsStore
         };
     }
 
-    private remapUsageRow = (input: Partial<IClientApplication>) => {
+    private remapUsageRow(
+        input: Partial<IClientApplication>,
+    ): Partial<PersistedClientApplicationWriteModel>[] {
         if (!input.projects || input.projects.length === 0) {
             return [
                 {
@@ -505,7 +563,7 @@ export default class ClientApplicationsStore
                 environment: input.environment || '*',
             }));
         }
-    };
+    }
 
     async removeInactiveApplications(): Promise<number> {
         const stopTimer = this.timer('removeInactiveApplications');

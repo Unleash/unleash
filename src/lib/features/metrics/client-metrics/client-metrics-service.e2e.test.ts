@@ -1,6 +1,5 @@
 import ClientInstanceService from '../instance/instance-service.js';
 import type { IClientApp } from '../../../types/model.js';
-import { secondsToMilliseconds } from 'date-fns';
 import { createTestConfig } from '../../../../test/config/test-config.js';
 import type { IUnleashConfig, IUnleashStores } from '../../../types/index.js';
 import { APPLICATION_CREATED } from '../../../events/index.js';
@@ -17,8 +16,6 @@ beforeAll(async () => {
     db = await dbInit('client_metrics_service_serial', getLogger);
     stores = db.stores;
     config = createTestConfig({});
-    const _bulkInterval = secondsToMilliseconds(0.5);
-    const _announcementInterval = secondsToMilliseconds(2);
 
     clientInstanceService = new ClientInstanceService(
         stores,

@@ -217,7 +217,9 @@ export default class ClientInstanceService {
             this.clientApplicationsStore &&
             this.clientInstanceStore
         ) {
-            const uniqueRegistrations = Object.values(this.seenClients).filter(
+            const pendingClients = this.seenClients;
+            this.seenClients = {};
+            const uniqueRegistrations = Object.values(pendingClients).filter(
                 (client) => Boolean(client.appName),
             );
             const uniqueApps: Partial<IClientApplication>[] = Object.values(
@@ -238,15 +240,21 @@ export default class ClientInstanceService {
                     return soFar;
                 }, {}),
             );
-            this.seenClients = {};
             try {
                 if (uniqueRegistrations.length > 0) {
-                    await this.clientApplicationsStore.bulkUpsert(uniqueApps);
                     await this.clientInstanceStore.bulkUpsert(
                         uniqueRegistrations,
                     );
+                    await this.clientApplicationsStore.bulkUpsert(uniqueApps);
                 }
             } catch (err) {
+                // restore on error
+                for (const [key, client] of Object.entries(pendingClients)) {
+                    this.seenClients[key] = {
+                        ...client,
+                        ...this.seenClients[key],
+                    };
+                }
                 this.logger.warn('Failed to register clients', err);
             }
         }

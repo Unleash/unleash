@@ -481,7 +481,7 @@ describe('bulk metrics', () => {
                         },
                         {
                             project: 'project-b',
-                            environments: ['production', 'development'],
+                            environments: ['development', 'production'],
                         },
                         {
                             project: 'project-c',

@@ -25,6 +25,12 @@ services:
     depends_on:
       unleash:
         condition: service_healthy
+    healthcheck:
+      test: wget -q --spider http://127.0.0.1/ || exit 1
+      interval: 1s
+      timeout: 1m
+      retries: 50
+      start_period: 25s
   unleash:
     image: unleashorg/${UNLEASH_VERSION:-unleash-enterprise:latest}
     pull_policy: "always"

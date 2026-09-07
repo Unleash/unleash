@@ -22,6 +22,7 @@ export const testUnleashClient = (
             flags.some((flag) => flag.name === name && flag.enabled),
         // FlagProvider stops the client on unmount.
         stop: () => {},
+        getContext: () => ({ sessionId: 'test-session' }),
         on: (event: string, listener: () => void) => {
             const set = listeners.get(event) ?? new Set();
             set.add(listener);

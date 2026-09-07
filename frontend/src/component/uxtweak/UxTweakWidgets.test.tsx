@@ -1,12 +1,15 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { act, fireEvent, screen } from '@testing-library/react';
+import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Link } from 'react-router';
 import FlagProvider from '@unleash/proxy-client-react';
 import type { UnleashClient } from 'unleash-proxy-client';
 import { render, settleProviders } from 'utils/testRenderer';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { testUnleashClient } from 'utils/testUnleashClient';
 import { UxTweakWidgets } from './UxTweakWidgets.tsx';
+
+const server = testServerSetup();
 
 const ratingQuestion = {
     id: 'q1',
@@ -227,6 +230,39 @@ describe('UxTweakWidgets', () => {
         seedRaw(IMPRESSIONS_RAW_KEY, ['sv_1', 'sv_1']);
         renderWidgets(testUnleashClient([surveyFlag('/projects')]));
         expect(await screen.findByText('Quick feedback')).toBeInTheDocument();
+    });
+
+    it('submits the answers to the survey server', async () => {
+        const { requests } = testServerRoute(
+            server,
+            'https://uxtweak.example.com/public/survey/responses',
+            {},
+            'post',
+        );
+        renderWidgets(testUnleashClient([surveyFlag('/projects')]));
+        await screen.findByText('Quick feedback');
+
+        clickStar('4 Stars');
+        await userEvent.click(screen.getByRole('button', { name: 'Submit' }));
+
+        await waitFor(() => expect(requests).toHaveLength(1));
+        expect(requests[0]).toMatchObject({
+            visitorId: 'test-session',
+            page: '/projects',
+            answers: { q1: 4 },
+        });
+    });
+
+    it('still thanks the visitor when submission fails', async () => {
+        renderWidgets(testUnleashClient([surveyFlag('/projects')]));
+        await screen.findByText('Quick feedback');
+
+        clickStar('4 Stars');
+        await userEvent.click(screen.getByRole('button', { name: 'Submit' }));
+
+        expect(
+            screen.getByText('Thanks for your feedback!'),
+        ).toBeInTheDocument();
     });
 
     it('records an impression when a survey is shown', async () => {

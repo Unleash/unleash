@@ -1,5 +1,9 @@
-import { beforeEach, describe, expect, it } from 'vitest';
-import { screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+    fireEvent,
+    screen,
+    waitForElementToBeRemoved,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
 import { UxSurveyCard } from './UxSurveyCard.tsx';
@@ -27,6 +31,7 @@ describe('UxSurveyCard', () => {
         render(
             <UxSurveyCard
                 survey={survey}
+                onSubmitted={vi.fn()}
                 scheduleLeave={(trigger) => {
                     leave = trigger;
                     return () => {};
@@ -44,5 +49,44 @@ describe('UxSurveyCard', () => {
         await waitForElementToBeRemoved(() =>
             screen.queryByText('Thanks for your feedback!'),
         );
+    });
+
+    it('hands submitted answers up with ratings as numbers and blanks omitted', async () => {
+        const onSubmitted = vi.fn();
+        render(
+            <UxSurveyCard
+                survey={{
+                    ...survey,
+                    questions: [
+                        ...survey.questions,
+                        {
+                            id: 'q2',
+                            type: 'text',
+                            prompt: 'Anything else?',
+                            required: false,
+                        },
+                        {
+                            id: 'q3',
+                            type: 'text',
+                            prompt: 'And more?',
+                            required: false,
+                        },
+                    ],
+                }}
+                onSubmitted={onSubmitted}
+            />,
+        );
+
+        fireEvent.click(screen.getByRole('radio', { name: '4 Stars' }));
+        await userEvent.type(
+            screen.getByLabelText('Anything else?'),
+            '  More flags please  ',
+        );
+        await userEvent.click(screen.getByRole('button', { name: 'Submit' }));
+
+        expect(onSubmitted).toHaveBeenCalledWith({
+            q1: 4,
+            q2: 'More flags please',
+        });
     });
 });

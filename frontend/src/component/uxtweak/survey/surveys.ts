@@ -16,6 +16,8 @@ export type SurveyQuestionConfig =
     | (QuestionBase & { type: 'single'; options: string[] })
     | (QuestionBase & { type: 'text' });
 
+export type SurveyAnswers = Record<string, number | string>;
+
 export interface SurveyConfig {
     flagName: string;
     surveyId: string;

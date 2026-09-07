@@ -23,7 +23,11 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import CheckCircleOutlined from '@mui/icons-material/CheckCircleOutlined';
 import { markSurveySeen } from './seenSurveys.ts';
-import type { SurveyConfig, SurveyQuestionConfig } from './surveys.ts';
+import type {
+    SurveyAnswers,
+    SurveyConfig,
+    SurveyQuestionConfig,
+} from './surveys.ts';
 
 const THANKS_VISIBLE_MS = 3000;
 
@@ -195,6 +199,7 @@ const leaveAfterDelay: ScheduleLeave = (leave) => {
 
 interface UxSurveyCardProps {
     survey: SurveyConfig;
+    onSubmitted: (answers: SurveyAnswers) => void;
     scheduleLeave?: ScheduleLeave;
 }
 
@@ -202,6 +207,7 @@ type CardState = 'answering' | 'thanks' | 'leaving' | 'closed';
 
 export const UxSurveyCard = ({
     survey,
+    onSubmitted,
     scheduleLeave = leaveAfterDelay,
 }: UxSurveyCardProps) => {
     const [state, setState] = useState<CardState>('answering');
@@ -215,6 +221,18 @@ export const UxSurveyCard = ({
     const setAnswer = (questionId: string, value: string) =>
         setAnswers((current) => ({ ...current, [questionId]: value }));
 
+    const cleanAnswers = (): SurveyAnswers => {
+        const clean: SurveyAnswers = {};
+        for (const question of survey.questions) {
+            const value = answers[question.id]?.trim();
+            if (value) {
+                clean[question.id] =
+                    question.type === 'rating' ? Number(value) : value;
+            }
+        }
+        return clean;
+    };
+
     const onClose = () => {
         markSurveySeen(survey.surveyId);
         setState('closed');
@@ -223,6 +241,7 @@ export const UxSurveyCard = ({
     const onSubmit = (event: SyntheticEvent) => {
         event.preventDefault();
         markSurveySeen(survey.surveyId);
+        onSubmitted(cleanAnswers());
         setState('thanks');
     };
 

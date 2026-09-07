@@ -105,10 +105,18 @@ regardless of question type, and required-question gating is a single
 question is answered; clicking it flips the card to a local thanks state — a
 centered confirmation that fades away on its own after three seconds (the
 schedule is an injectable `scheduleLeave` prop, so tests trigger the leave
-directly instead of faking timers). That
-state is the seam for the next slice: the submit handler is where the POST to
-`submitBase` will go, and the thanks view is what the visitor sees while/after
-it happens. Closing works in every state.
+directly instead of faking timers). Closing works in every state.
+
+**Submission** (`survey/submitSurveyResponse.ts`): submitting hands the
+cleaned answers up to the runner (ratings as numbers, blanks omitted), which
+fires `POST ${submitBase}/public/survey/responses` with
+`{ surveyId, visitorId, page, answers }` — the UX Tweak server upserts per
+`(survey, visitor)`, so there is no token. The visitor id is the Unleash
+client's `sessionId` (what rollout stickiness hashed on), else a minted id
+persisted under `uxtweak-visitor-id:v1`. The POST is deliberately
+fire-and-forget with a swallowed failure: the visitor already sees the
+thanks view, and in-app research must never degrade the product over a
+failed request. The card stays presentational — the runner owns the I/O.
 
 **A survey is shown at most once per browser.** Submitting or closing marks
 the survey's id as seen (`survey/seenSurveys.ts`) in a single localStorage
@@ -167,4 +175,5 @@ shows, never a crash.
 5. ✅ Impression cap (an ignored survey stops appearing after 3 showings)
 6. ✅ Deterministic survey order (lowest flag name wins on every page load)
 7. Further hardening: cross-tab sync
-8. Submission to `submitBase`
+8. ✅ Submission to `submitBase` (fire-and-forget POST, visitor id from the
+   Unleash sessionId)

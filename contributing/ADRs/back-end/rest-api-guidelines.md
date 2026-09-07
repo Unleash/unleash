@@ -8,7 +8,7 @@ This ADR captures the conventions we want new endpoints to follow. It applies to
 
 When an existing endpoint doesn't fit a new use case, first see whether it can support it in a backward-compatible way. Create a new endpoint only when a breaking change leaves no other path (e.g. turning a bare-array response into an envelope) — see [URL structure](#url-structure) for when a purpose-built endpoint is warranted.
 
-For request-body conventions (handling `undefined` vs `null` on POST/PUT), see [POST/PUT API payload](/contributing/ADRs/back-end/POST-PUT-api-payload). For response-schema precision, see [Separation of request and response schemas](/contributing/ADRs/overarching/separation-request-response-schemas).
+For request-body conventions (handling `undefined` vs `null` on POST/PUT), see [POST/PUT API payload](/contributing/ADRs/back-end/POST-PUT-api-payload.md). For response-schema precision, see [Separation of request and response schemas](/contributing/ADRs/overarching/separation-request-response-schemas.md).
 
 ## Decision
 
@@ -31,7 +31,7 @@ Other prefixes exist for context, but new endpoints should not add to them:
 * `/health`, `/ready`, `/internal-backstage` — operational endpoints for orchestrators and monitoring.
 * `/auth/*`, `/invite`, `/logout`, `/feedback` — public browser flows.
 
-Stability within any prefix is signalled by the `release: { alpha | beta | stable }` field — alpha endpoints are hidden from public docs. See [API Version Tracking and Stability Lifecycle](/contributing/ADRs/back-end/api-version-tracking). The URL prefix should describe the resource, not the current audience — an endpoint can graduate from alpha to stable without moving path.
+Stability within any prefix is signalled by the `release: { alpha | beta | stable }` field — alpha endpoints are hidden from public docs. See [API Version Tracking and Stability Lifecycle](/contributing/ADRs/back-end/api-version-tracking.md). The URL prefix should describe the resource, not the current audience — an endpoint can graduate from alpha to stable without moving path.
 
 #### SDK-facing prefixes
 
@@ -120,7 +120,7 @@ Every field adds wire cost and couples the client to the internal shape. If the 
 
 If callers legitimately need different amounts of data from the same list, prefer separate endpoints over a `?view=minimal|full` parameter — dedicated endpoints stay simpler to reason about and cache.
 
-This is the response-side counterpart to [Separation of request and response schemas](/contributing/ADRs/overarching/separation-request-response-schemas): responses are tight and precise; request schemas can be more forgiving.
+This is the response-side counterpart to [Separation of request and response schemas](/contributing/ADRs/overarching/separation-request-response-schemas.md): responses are tight and precise; request schemas can be more forgiving.
 
 ### Filter in SQL, not JS
 

@@ -32,6 +32,7 @@ beforeAll(async () => {
                 flags: {
                     strictSchemaValidation: true,
                     extendedUsageMetrics: true,
+                    totalUsageMetrics: true,
                 },
             },
         },
@@ -240,6 +241,10 @@ test('should return toggle summary', async () => {
     expect(defaultEnv.environment).toBe(DEFAULT_ENV);
     expect(defaultEnv.yes).toBe(5);
     expect(defaultEnv.no).toBe(4);
+    expect(demo.totalUsage).toEqual([
+        { environment: DEFAULT_ENV, yes: 5, no: 4 },
+        { environment: 'test', yes: 2, no: 6 },
+    ]);
     expect(demo.seenApplications).toStrictEqual(['backend-api', 'web']);
 });
 

@@ -1,3 +1,4 @@
+import type { EnvironmentTotalUsage } from '../../../types/models/metrics.js';
 import type { Store } from '../../../types/stores/store.js';
 
 export interface IClientMetricsEnvKey {
@@ -29,6 +30,9 @@ export interface IClientMetricsStoreV2
         featureName: string,
         hoursBack?: number,
     ): Promise<IClientMetricsEnv[]>;
+    getTotalUsageForFeature(
+        featureName: string,
+    ): Promise<EnvironmentTotalUsage[]>;
     getSeenAppsForFeatureToggle(
         featureName: string,
         hoursBack?: number,

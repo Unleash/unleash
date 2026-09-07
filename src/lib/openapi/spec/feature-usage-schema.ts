@@ -1,5 +1,6 @@
 import type { FromSchema } from 'json-schema-to-ts';
 import { featureEnvironmentMetricsSchema } from './feature-environment-metrics-schema.js';
+import { featureEnvironmentTotalUsageSchema } from './feature-environment-total-usage-schema.js';
 import { dateSchema } from './date-schema.js';
 
 export const featureUsageSchema = {
@@ -40,6 +41,14 @@ export const featureUsageSchema = {
                 $ref: '#/components/schemas/featureEnvironmentMetricsSchema',
             },
         },
+        totalUsage: {
+            description:
+                'Total usage per environment, accumulated over the metrics retention period and sorted by environment name. This is an experimental field and may change',
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/featureEnvironmentTotalUsageSchema',
+            },
+        },
         seenApplications: {
             description: 'A list of applications seen using this feature',
             type: 'array',
@@ -52,6 +61,7 @@ export const featureUsageSchema = {
     components: {
         schemas: {
             featureEnvironmentMetricsSchema,
+            featureEnvironmentTotalUsageSchema,
             dateSchema,
         },
     },

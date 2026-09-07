@@ -213,7 +213,7 @@ describe('getFeatureStatus', () => {
             ).toEqual({
                 type: 'partialProduction',
                 enabledEnvironments: ['production-eu', 'production-apac'],
-                total: 3,
+                disabledEnvironments: ['production-us'],
             });
         });
 

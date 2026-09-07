@@ -46,15 +46,26 @@ type PersistedClientApplicationReadModel = Row<
         project: string; // project is stored in the usage table, but's legacy
     }
 >;
-type PersistedClientApplicationWriteModel = Omit<
-    PersistedClientApplicationReadModel,
-    'strategies'
-> & {
-    strategies?: string; // strategies are stored as a JSON string in the database
+type PersistedClientApplicationWriteModel = {
+    app_name?: string;
+    seen_at: Date;
+    updated_at: Date;
+    description?: string;
+    created_by?: string;
+    announced?: boolean;
+    url?: string;
+    color?: string;
+    icon?: string;
+    strategies?: string;
 };
-type ClientApplicationUpsertRow =
-    Partial<PersistedClientApplicationWriteModel> &
-        Pick<PersistedClientApplicationWriteModel, 'app_name' | 'seen_at'>;
+type ClientApplicationUpsertRow = PersistedClientApplicationWriteModel & {
+    app_name: string;
+};
+type ClientApplicationUsageWriteModel = {
+    app_name?: string;
+    project: string;
+    environment: string;
+};
 const mapRow: (row: PersistedClientApplicationReadModel) => IClientApplication =
     (row) => ({
         appName: row.app_name,
@@ -112,9 +123,9 @@ const reduceRows = (rows: any[]): IClientApplication[] => {
     return Object.values(appsObj);
 };
 
-const remapRow: (
+const remapRow = (
     input: Partial<IClientApplication>,
-) => Partial<PersistedClientApplicationWriteModel> = (input) => {
+): PersistedClientApplicationWriteModel => {
     const temp = {
         app_name: input.appName,
         updated_at: input.updatedAt || new Date(),
@@ -136,17 +147,13 @@ const remapRow: (
     return temp;
 };
 
-const isClientApplicationUpsertRow = (
-    row: Partial<PersistedClientApplicationWriteModel>,
-): row is ClientApplicationUpsertRow => Boolean(row.app_name && row.seen_at);
-
 const coalesceApplicationRows = (
-    rows: Partial<PersistedClientApplicationWriteModel>[],
+    rows: PersistedClientApplicationWriteModel[],
 ): ClientApplicationUpsertRow[] => {
     const rowsByAppName = new Map<string, ClientApplicationUpsertRow>();
 
     for (const row of rows) {
-        if (!isClientApplicationUpsertRow(row)) {
+        if (!row.app_name) {
             continue;
         }
 
@@ -156,9 +163,10 @@ const coalesceApplicationRows = (
             existing
                 ? {
                       ...row,
+                      app_name: row.app_name,
                       seen_at: max([existing.seen_at, row.seen_at]),
                   }
-                : row,
+                : { ...row, app_name: row.app_name },
         );
     }
 
@@ -213,20 +221,22 @@ export default class ClientApplicationsStore
         );
         const usageRows = apps.flatMap(this.remapUsageRow);
         const uniqueSortedUsageRows = Object.values(
-            usageRows.reduce<
-                Record<string, Partial<PersistedClientApplicationWriteModel>>
-            >((acc, row) => {
-                if (row.app_name) {
-                    acc[`${row.app_name} ${row.project} ${row.environment}`] =
-                        row;
-                }
-                return acc;
-            }, {}),
+            usageRows.reduce<Record<string, ClientApplicationUsageWriteModel>>(
+                (acc, row) => {
+                    if (row.app_name) {
+                        acc[
+                            `${row.app_name} ${row.project} ${row.environment}`
+                        ] = row;
+                    }
+                    return acc;
+                },
+                {},
+            ),
         ).sort(
             (a, b) =>
                 (a.app_name ?? '').localeCompare(b.app_name ?? '') ||
-                (a.project ?? '').localeCompare(b.project ?? '') ||
-                (a.environment ?? '').localeCompare(b.environment ?? ''),
+                a.project.localeCompare(b.project) ||
+                a.environment.localeCompare(b.environment),
         );
 
         await this.db.transaction(async (transaction) => {
@@ -547,7 +557,7 @@ export default class ClientApplicationsStore
 
     private remapUsageRow(
         input: Partial<IClientApplication>,
-    ): Partial<PersistedClientApplicationWriteModel>[] {
+    ): ClientApplicationUsageWriteModel[] {
         if (!input.projects || input.projects.length === 0) {
             return [
                 {

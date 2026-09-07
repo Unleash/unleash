@@ -33,6 +33,10 @@ Other prefixes exist for context, but new endpoints should not add to them:
 
 Stability within any prefix is signalled by the `release: { alpha | beta | stable }` field — alpha endpoints are hidden from public docs. See [API Version Tracking and Stability Lifecycle](/contributing/ADRs/back-end/api-version-tracking). The URL prefix should describe the resource, not the current audience — an endpoint can graduate from alpha to stable without moving path.
 
+#### SDK-facing prefixes
+
+`/api/client` and `/api/frontend` are our strictest stability tier — even our oldest SDKs in the field must still understand these responses. When adding endpoints here, follow the rest of this ADR especially carefully; a subtle break can silently degrade flag evaluation in customer environments long before we hear about it.
+
 ### Shadowing dynamic path segments
 
 If a route like `/api/admin/projects/:projectId` exists, a sibling `/api/admin/projects/some-word` forces `some-word` to become a reserved project id — we depend on the router matching the static route first. That reservation lives only in route registration order: reorder the controllers and the collision reappears, and each new sibling silently reserves some `:id` values that existing data may already contain.

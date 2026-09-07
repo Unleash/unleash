@@ -64,7 +64,12 @@ export class OpenApiService {
 
     validPath(op: ApiOperation): RequestHandler {
         // extract enterpriseOnly and release to avoid leaking into the OpenAPI spec
-        const { enterpriseOnly, release, ...openapiSpec } = op;
+        const {
+            enterpriseOnly,
+            release,
+            audience = 'public',
+            ...openapiSpec
+        } = op;
         const { baseUriPath = '' } = this.config.server ?? {};
         const openapiStaticAssets = `${baseUriPath}/openapi-static`;
 
@@ -101,6 +106,7 @@ export class OpenApiService {
             ...openapiSpec,
             summary: summaryWithStability,
             'x-stability-level': stability,
+            'x-audience': audience,
             description:
                 `${enterpriseBadge}${stabilityBadge}${op.description}`.replaceAll(
                     /\n\s*/g,

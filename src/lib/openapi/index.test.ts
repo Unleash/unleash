@@ -1,4 +1,5 @@
 import {
+    apiAudiences,
     createOpenApiSchema,
     removeJsonSchemaProps,
     schemas,
@@ -75,5 +76,18 @@ describe('createOpenApiSchema', () => {
                 baseUriPath: '/example',
             }).servers?.[0].url,
         ).toEqual('https://example.com/example');
+    });
+
+    test('adds top-level x-audiences metadata', () => {
+        expect(
+            createOpenApiSchema({
+                unleashUrl: 'https://example.com',
+                baseUriPath: '',
+            }),
+        ).toEqual(
+            expect.objectContaining({
+                'x-audiences': apiAudiences,
+            }),
+        );
     });
 });

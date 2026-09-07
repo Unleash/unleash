@@ -69,7 +69,7 @@ What to do:
 
 ```json
 {
-    "items": [ ... ]
+    "users": [ ... ]
 }
 ```
 * This makes it easier to extend the response without breaking the API. E.g.: to add pagination metadata (`total`, `hasMore`, cursors).
@@ -77,10 +77,10 @@ What to do:
 ```json
 {
     "total": 2000,
-    "items": [ ... ]
+    "users": [ ... ]
 }
 ```
-* Name the collection field after the resource (`users`, `flagCreators`, `events`) rather than a generic `data`. It reads better at call sites and matches existing endpoints.
+* Name the collection field after the resource (`users`, `flagCreators`, `events`) rather than a generic `data` or `items`. It reads better at call sites and matches existing endpoints.
 * New list endpoints should have a `limit` by default.
 * Endpoints should set a `maxLimit`. 
 * Always return the applied `limit` and `offset` in the response — even when the caller did not paginate — so the envelope stays consistent and callers can see what was actually used. E.g.: a request for `limit=10000000` may still return max `1000` items. 
@@ -91,7 +91,7 @@ What to do:
     "total": 2000,
     "limit": 1000,
     "offset": 0,
-    "items": [ ... ]
+    "users": [ ... ]
 }
 ```
 

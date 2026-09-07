@@ -135,4 +135,4 @@ This is the response-side counterpart to [Separation of request and response sch
 ### Trade-offs
 
 * Enveloping list responses can be a breaking change for some endpoints. This convention applies to new endpoints; existing bare-array endpoints stay as they are unless there is an independent reason to reshape. 
-* Pushing all filtering into SQL sometimes means more complex queries (e.g. `COALESCE` for fallback columns). We accept the query complexity in exchange for correct pagination.
+* Pushing all filtering into SQL sometimes means more complex queries (e.g. `COALESCE` for fallback columns). We accept the query complexity in exchange for correct pagination. But, Postgres' query planner is very good at planning queries it sees often, so this often leads to better response times and less data transferred between Unleash and Postgres.

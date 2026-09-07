@@ -119,7 +119,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     'ft.tag_value as tag_value',
                     'ft.tag_type as tag_type',
                     'tag_types.color as tag_type_color',
-                    'segments.name as segment_name',
+                    'feature_segments.segment_names as segment_names',
                     'users.id as user_id',
                     'users.name as user_name',
                     'users.username as user_username',
@@ -196,19 +196,28 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     )
                     .leftJoin('tag_types', 'tag_types.name', 'ft.tag_type')
                     .leftJoin(
-                        'feature_strategies',
-                        'feature_strategies.feature_name',
+                        this.db
+                            .select('feature_strategies.feature_name')
+                            .select(
+                                this.db.raw(
+                                    'array_agg(distinct segments.name order by segments.name) as segment_names',
+                                ),
+                            )
+                            .from('feature_strategies')
+                            .innerJoin(
+                                'feature_strategy_segment',
+                                'feature_strategy_segment.feature_strategy_id',
+                                'feature_strategies.id',
+                            )
+                            .innerJoin(
+                                'segments',
+                                'feature_strategy_segment.segment_id',
+                                'segments.id',
+                            )
+                            .groupBy('feature_strategies.feature_name')
+                            .as('feature_segments'),
+                        'feature_segments.feature_name',
                         'features.name',
-                    )
-                    .leftJoin(
-                        'feature_strategy_segment',
-                        'feature_strategy_segment.feature_strategy_id',
-                        'feature_strategies.id',
-                    )
-                    .leftJoin(
-                        'segments',
-                        'feature_strategy_segment.segment_id',
-                        'segments.id',
                     )
                     .leftJoin('dependent_features', (qb) => {
                         qb.on(
@@ -574,7 +583,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     impressionData: row.impression_data,
                     dependencyType: row.dependency,
                     environments: [],
-                    segments: row.segment_name ? [row.segment_name] : [],
+                    segments: row.segment_names ?? [],
                     createdBy: {
                         id: Number(row.user_id),
                         name: name,
@@ -601,14 +610,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
             // Add environment if not already present
             if (!entry.environments.some((e) => e.name === row.environment)) {
                 entry.environments.push(FeatureSearchStore.getEnvironment(row));
-            }
-
-            // Add segment if not already present
-            if (
-                row.segment_name &&
-                !entry.segments.includes(row.segment_name)
-            ) {
-                entry.segments.push(row.segment_name);
             }
 
             // Add tag if new
@@ -888,6 +889,7 @@ const applyQueryParams = (
         segmentConditions,
         'segments.name',
         createSegmentBaseQuery,
+        true,
     );
 };
 
@@ -898,6 +900,7 @@ const applyMultiQueryParams = (
     createBaseQuery: (
         values: string[] | string[][],
     ) => (dbSubQuery: Knex.QueryBuilder) => Knex.QueryBuilder,
+    filterByFeatureName = false,
 ): void => {
     queryParams.forEach((param) => {
         const values = param.values
@@ -913,7 +916,9 @@ const applyMultiQueryParams = (
         switch (param.operator) {
             case 'INCLUDE':
             case 'INCLUDE_ANY_OF':
-                if (Array.isArray(fields)) {
+                if (filterByFeatureName) {
+                    query.whereIn('features.name', baseSubQuery);
+                } else if (Array.isArray(fields)) {
                     query.whereIn(fields, values);
                 } else {
                     query.whereIn(

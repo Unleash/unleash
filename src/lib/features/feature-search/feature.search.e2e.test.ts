@@ -340,7 +340,22 @@ test('should filter features by tag', async () => {
     const { body } = await filterFeaturesByTag('INCLUDE:simple:my_tag');
 
     expect(body).toMatchObject({
-        features: [{ name: 'my_feature_a' }, { name: 'my_feature_d' }],
+        features: [
+            { name: 'my_feature_a' },
+            {
+                name: 'my_feature_d',
+                tags: expect.arrayContaining([
+                    expect.objectContaining({
+                        type: 'simple',
+                        value: 'my_tag',
+                    }),
+                    expect.objectContaining({
+                        type: 'simple',
+                        value: 'tag_c',
+                    }),
+                ]),
+            },
+        ],
     });
 
     const { body: notIncludeBody } = await filterFeaturesByTag(

@@ -34,7 +34,7 @@ import { useCheckProjectPermissions } from 'hooks/useHasAccess';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import AutocompleteVirtual from 'component/common/AutocompleteVirtual/AutcompleteVirtual';
 import { useTracking } from 'hooks/useTracking';
-import type { Tracking } from 'utils/trackingEvents';
+import { projectAccessTracking } from 'component/project/ProjectAccess/projectAccessTracking';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -132,10 +132,7 @@ export const ProjectAccessAssign = ({
 
     const { setToastData, setToastApiError } = useToast();
     const navigate = useNavigate();
-    const tracking: Tracking = {
-        event: 'project-access',
-        type: edit ? 'role-changed' : 'assigned',
-    };
+    const tracking = projectAccessTracking(edit ? 'role-changed' : 'assigned');
     const { track, trackMutation, trackValidationFailed } =
         useTracking(tracking);
 

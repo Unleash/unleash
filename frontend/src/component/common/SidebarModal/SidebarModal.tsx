@@ -1,13 +1,13 @@
-import type { FC } from 'react';
+import { type FC, useEffect } from 'react';
 import { Modal, Backdrop, styled, IconButton, Tooltip } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Fade from '@mui/material/Fade';
+import { useTracking } from 'hooks/useTracking';
+import { SIDEBAR_MODAL_ID } from 'utils/testIds';
 import {
     dismissMethodFromCloseReason,
-    useDialogTracking,
-} from 'hooks/useDialogTracking';
-import { SIDEBAR_MODAL_ID } from 'utils/testIds';
-import type { DialogDismissMethod, Tracking } from 'utils/trackingEvents';
+    type Tracking,
+} from 'utils/trackingEvents';
 import type * as React from 'react';
 
 interface ISidebarModalProps {
@@ -17,15 +17,6 @@ interface ISidebarModalProps {
     onClick?: (e: React.SyntheticEvent) => void;
     children: React.ReactElement<any, any>;
     tracking?: Tracking;
-}
-
-interface IBaseModalProps {
-    open: boolean;
-    onClose: () => void;
-    label: string;
-    onClick?: (e: React.SyntheticEvent) => void;
-    children: React.ReactElement<any, any>;
-    onDismiss?: (method: DialogDismissMethod) => void;
 }
 
 const TRANSITION_DURATION = 250;
@@ -53,19 +44,29 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
     right: theme.spacing(3),
 }));
 
-export const BaseModal: FC<IBaseModalProps> = ({
+export const BaseModal: FC<ISidebarModalProps> = ({
     open,
     onClose,
     onClick,
     label,
     children,
-    onDismiss,
+    tracking,
 }) => {
+    const { track } = useTracking(tracking);
+
+    useEffect(() => {
+        if (open) {
+            track('opened');
+        }
+    }, [open, track]);
+
     return (
         <Modal
             open={open}
             onClose={(_, reason) => {
-                onDismiss?.(dismissMethodFromCloseReason(reason));
+                track('dismissed', {
+                    method: dismissMethodFromCloseReason(reason),
+                });
                 onClose();
             }}
             onClick={onClick}
@@ -84,10 +85,8 @@ export const BaseModal: FC<IBaseModalProps> = ({
 };
 
 export const SidebarModal: FC<ISidebarModalProps> = (props) => {
-    const emitDismissed = useDialogTracking(props.open, props.tracking);
-
     return (
-        <BaseModal {...props} onDismiss={emitDismissed}>
+        <BaseModal {...props}>
             <FixedWidthContentWrapper>
                 {props.children}
             </FixedWidthContentWrapper>
@@ -96,15 +95,15 @@ export const SidebarModal: FC<ISidebarModalProps> = (props) => {
 };
 
 export const DynamicSidebarModal: FC<ISidebarModalProps> = (props) => {
-    const emitDismissed = useDialogTracking(props.open, props.tracking);
+    const { track } = useTracking(props.tracking);
 
     return (
-        <BaseModal {...props} onDismiss={emitDismissed}>
+        <BaseModal {...props}>
             <ModalContentWrapper>
                 <Tooltip title='Close' arrow describeChild>
                     <StyledIconButton
                         onClick={() => {
-                            emitDismissed('close-icon');
+                            track('dismissed', { method: 'close-icon' });
                             props.onClose();
                         }}
                     >

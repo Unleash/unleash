@@ -1,6 +1,6 @@
 import { styled } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
-import { useDialogTracking } from 'hooks/useDialogTracking';
+import { useTracking } from 'hooks/useTracking';
 import { useEffect, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ImportTimeline } from './ImportTimeline.tsx';
@@ -57,14 +57,14 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
     const [importPayload, setImportPayload] = useState('');
     const [activeTab, setActiveTab] = useState<ImportMode>('file');
 
-    const emitDismissed = useDialogTracking(open, importCompletedTracking);
+    const { track } = useTracking(importCompletedTracking);
 
     const close = () => {
         setOpen(false);
     };
 
     const cancel = () => {
-        emitDismissed('cancel-button');
+        track('dismissed', { method: 'cancel-button' });
         close();
     };
 

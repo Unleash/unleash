@@ -50,13 +50,11 @@ import { useFlagLimits } from './useFlagLimits.tsx';
 import { useFeatureCreatedFeedback } from './hooks/useFeatureCreatedFeedback.ts';
 import { formatTag } from 'utils/format-tag';
 import { useLocalStorageState } from 'hooks/useLocalStorageState.ts';
-import { emitTrackingAction } from 'utils/trackingEvents';
-import { useEventTracker } from 'hooks/useEventTracker';
 import {
+    type DialogDismissMethod,
     dismissMethodFromCloseReason,
-    useDialogTracking,
-} from 'hooks/useDialogTracking';
-import type { DialogDismissMethod, Tracking } from 'utils/trackingEvents';
+    type Tracking,
+} from 'utils/trackingEvents';
 
 const flagCreationTracking = {
     event: 'flag-creation',
@@ -164,16 +162,13 @@ const CreateFeatureDialogContent = ({
     onSuccess,
 }: ICreateFeatureDialogProps) => {
     const useNewDesign = useUiFlag('newModalDesign');
-    const emitDismissed = useDialogTracking(open, flagCreationTracking);
-    const { trackEvent } = useEventTracker();
+    const { track, trackMutation } = useTracking(flagCreationTracking);
 
-    // Opening this dialog is a deliberate gesture, so it earns its own row.
     useEffect(() => {
         if (open) {
-            emitTrackingAction(trackEvent, flagCreationTracking, 'opened');
+            track('opened');
         }
-    }, [open, trackEvent]);
-    const { trackMutation } = useTracking(flagCreationTracking);
+    }, [open, track]);
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig, isOss } = useUiConfig();
     const navigate = useNavigate();
@@ -299,7 +294,7 @@ const CreateFeatureDialogContent = ({
     }, [project, projects]);
 
     const onDialogClose = (method: DialogDismissMethod) => {
-        emitDismissed(method);
+        track('dismissed', { method });
         setStoredFlagConfig({
             name,
             tags,
@@ -490,7 +485,7 @@ const CreateFeatureDialogContent = ({
                         Limit={limitNode}
                         name={name}
                         onClose={() => {
-                            emitDismissed('cancel-button');
+                            track('dismissed', { method: 'cancel-button' });
                             onClose();
                         }}
                         resource={'feature flag'}

@@ -1,8 +1,8 @@
 import { Box, styled } from '@mui/material';
 import { formatStrategyName } from 'utils/strategyNames';
-import { FeatureStrategyMenuCardIcon } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardIcon.tsx';
-import { useConfigureStrategy } from '../useConfigureStrategy.ts';
-import { useProjectDefaultStrategy } from '../useProjectDefaultStrategy.ts';
+import { FeatureStrategyMenuCardIcon } from '../FeatureStrategyMenu/FeatureStrategyMenuCard/FeatureStrategyMenuCardIcon.tsx';
+import { useConfigureStrategy } from '../FeatureStrategyMenu/useConfigureStrategy.ts';
+import { useProjectDefaultStrategy } from '../FeatureStrategyMenu/useProjectDefaultStrategy.ts';
 import { MoreStrategiesMenu } from './MoreStrategiesMenu.tsx';
 import { StrategySetupCard } from './StrategySetupCard.tsx';
 

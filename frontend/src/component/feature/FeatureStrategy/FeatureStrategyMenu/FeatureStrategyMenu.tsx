@@ -18,7 +18,7 @@ import {
 } from './FeatureStrategyMenuCards/FeatureStrategyMenuCards.tsx';
 import { ReleasePlanConfirmationDialog } from './ReleasePlanConfirmationDialog.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { StrategySetupCards } from './StrategySetup/StrategySetupCards.tsx';
+import { FeatureStrategyWizard } from '../FeatureStrategyWizard/FeatureStrategyWizard.tsx';
 
 interface IFeatureStrategyMenuProps {
     projectId: string;
@@ -36,7 +36,25 @@ const StyledHeader = styled(Box)(({ theme }) => ({
     padding: theme.spacing(4, 4, 2, 4),
 }));
 
-export const FeatureStrategyMenu = ({
+export const FeatureStrategyMenu = (props: IFeatureStrategyMenuProps) => {
+    const simplerStrategySetup = useUiFlag('simplerStrategySetup');
+
+    if (simplerStrategySetup) {
+        return (
+            <FeatureStrategyWizard
+                projectId={props.projectId}
+                featureId={props.featureId}
+                environmentId={props.environmentId}
+                open={props.isStrategyMenuDialogOpen}
+                onClose={props.onClose}
+            />
+        );
+    }
+
+    return <StrategyMenuDialog {...props} />;
+};
+
+const StrategyMenuDialog = ({
     projectId,
     featureId,
     environmentId,
@@ -45,7 +63,6 @@ export const FeatureStrategyMenu = ({
     defaultFilter = null,
 }: IFeatureStrategyMenuProps) => {
     const [filter, setFilter] = useState<StrategyFilterValue>(defaultFilter);
-    const simplerStrategySetup = useUiFlag('simplerStrategySetup');
     const { trackEvent } = useEventTracker();
     const [selectedTemplate, setSelectedTemplate] =
         useState<IReleasePlanTemplate>();
@@ -138,7 +155,7 @@ export const FeatureStrategyMenu = ({
                     paper: {
                         sx: {
                             borderRadius: '12px',
-                            height: simplerStrategySetup ? 'auto' : '100%',
+                            height: '100%',
                             width: '100%',
                         },
                     },
@@ -168,13 +185,6 @@ export const FeatureStrategyMenu = ({
                             onConfirm={() => {
                                 addReleasePlan(selectedTemplate);
                             }}
-                        />
-                    ) : simplerStrategySetup ? (
-                        <StrategySetupCards
-                            projectId={projectId}
-                            featureId={featureId}
-                            environmentId={environmentId}
-                            onClose={onClose}
                         />
                     ) : (
                         <FeatureStrategyMenuCards

@@ -161,6 +161,7 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
                         'europe-west3-metrics-304612.cloudfunctions.net',
                         'app.unleash-hosted.com',
                         'hosted.edge.getunleash.io',
+                        'uxtweak.unleashsandbox.com',
                         ...flightRecorderSrc,
                         ...logRocketConnectSrc,
                         ...hubspotConnectSrc,

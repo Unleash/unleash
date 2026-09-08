@@ -35,6 +35,12 @@ const setupApi = () => {
         `/api/admin/projects/${projectId}/features/${featureId}`,
         { name: featureId, environments: [] },
     );
+    testServerRoute(server, '/api/admin/strategies', {
+        strategies: [
+            { name: 'flexibleRollout', displayName: 'Gradual rollout' },
+            { name: 'remoteAddress', displayName: '' },
+        ],
+    });
 };
 
 const renderCards = () => {
@@ -128,6 +134,23 @@ describe('setting up a strategy from the setup cards', () => {
         expect(window.location.search).toContain(
             `environmentId=${environmentId}`,
         );
+        expect(dialogDismissals).toHaveLength(1);
+    });
+
+    it('opens the create form for a strategy picked from the more strategies menu', async () => {
+        const { dialogDismissals } = renderCards();
+
+        fireEvent.click(
+            await screen.findByRole('button', { name: /More strategies/ }),
+        );
+        fireEvent.click(screen.getByRole('menuitem', { name: 'IPs' }));
+
+        await waitFor(() => {
+            expect(window.location.pathname).toBe(
+                `${featurePath}/strategies/create`,
+            );
+        });
+        expect(window.location.search).toContain('strategyName=remoteAddress');
         expect(dialogDismissals).toHaveLength(1);
     });
 });

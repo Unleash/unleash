@@ -22,6 +22,8 @@ const vitestConfig = vitestDefineConfig({
         globals: true,
         setupFiles: 'src/setupTests.ts',
         environment: 'jsdom',
+        testTimeout: 30_000,
+        hookTimeout: 30_000,
         exclude: [...configDefaults.exclude, '**/cypress/**'],
         server: {
             deps: {

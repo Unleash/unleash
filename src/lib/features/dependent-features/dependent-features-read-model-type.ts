@@ -6,7 +6,10 @@ export interface IDependentFeaturesReadModel {
     // we're interested in the list of parents, not orphans
     getOrphanParents(parentsAndChildren: string[]): Promise<string[]>;
     getParents(child: string): Promise<IDependency[]>;
-    getDependencies(children: string[]): Promise<IFeatureDependency[]>;
+    getDependencies(
+        children: string[],
+        projectId?: string,
+    ): Promise<IFeatureDependency[]>;
     getPossibleParentFeatures(child: string): Promise<string[]>;
     getPossibleParentVariants(parent: string): Promise<string[]>;
     haveDependencies(features: string[]): Promise<boolean>;

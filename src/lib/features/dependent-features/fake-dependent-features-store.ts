@@ -5,8 +5,8 @@ export class FakeDependentFeaturesStore implements IDependentFeaturesStore {
         return Promise.resolve();
     }
 
-    delete(): Promise<void> {
-        return Promise.resolve();
+    delete(): Promise<number> {
+        return Promise.resolve(0);
     }
 
     deleteAll(): Promise<void> {

@@ -37,10 +37,20 @@ export class DependentFeaturesStore implements IDependentFeaturesStore {
             .merge();
     }
 
-    async delete(dependency: FeatureDependencyId): Promise<void> {
-        await this.db('dependent_features')
+    async delete(
+        dependency: FeatureDependencyId,
+        projectId: string,
+    ): Promise<number> {
+        return this.db('dependent_features')
             .where('parent', dependency.parent)
             .andWhere('child', dependency.child)
+            .whereIn(
+                'child',
+                this.db('features').select('name').where({
+                    name: dependency.child,
+                    project: projectId,
+                }),
+            )
             .del();
     }
 

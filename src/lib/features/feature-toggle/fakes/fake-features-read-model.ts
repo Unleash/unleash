@@ -3,20 +3,20 @@ import type { IFeaturesReadModel } from '../types/features-read-model-type.js';
 export class FakeFeaturesReadModel implements IFeaturesReadModel {
     private existsValue: boolean;
     private existsInProjectValue: boolean;
-    private sameProjectValue: boolean;
+    private inProjectValue: boolean;
 
     constructor({
         featureExists = false,
         featureExistsInProject = true,
-        featuresInTheSameProject = true,
+        featuresInProject = true,
     }: {
         featureExists?: boolean;
         featureExistsInProject?: boolean;
-        featuresInTheSameProject?: boolean;
+        featuresInProject?: boolean;
     } = {}) {
         this.existsValue = featureExists;
         this.existsInProjectValue = featureExistsInProject;
-        this.sameProjectValue = featuresInTheSameProject;
+        this.inProjectValue = featuresInProject;
     }
 
     featureExists(): Promise<boolean> {
@@ -30,10 +30,11 @@ export class FakeFeaturesReadModel implements IFeaturesReadModel {
         return Promise.resolve(this.existsInProjectValue);
     }
 
-    featuresInTheSameProject(
+    featuresInProject(
         _featureA: string,
         _featureB: string,
+        _projectId: string,
     ): Promise<boolean> {
-        return Promise.resolve(this.sameProjectValue);
+        return Promise.resolve(this.inProjectValue);
     }
 }

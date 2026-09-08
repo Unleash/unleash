@@ -1,5 +1,4 @@
 import type EventEmitter from 'events';
-import { max } from 'date-fns';
 import NotFoundError from '../error/notfound-error.js';
 import type {
     IClientApplication,
@@ -158,16 +157,9 @@ const coalesceApplicationRows = (
         }
 
         const existing = rowsByAppName.get(row.app_name);
-        rowsByAppName.set(
-            row.app_name,
-            existing
-                ? {
-                      ...row,
-                      app_name: row.app_name,
-                      seen_at: max([existing.seen_at, row.seen_at]),
-                  }
-                : { ...row, app_name: row.app_name },
-        );
+        const winner =
+            !existing || row.seen_at >= existing.seen_at ? row : existing;
+        rowsByAppName.set(row.app_name, { ...winner, app_name: row.app_name });
     }
 
     return [...rowsByAppName.values()].sort((a, b) =>

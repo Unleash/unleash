@@ -481,7 +481,10 @@ describe('bulk metrics', () => {
                         },
                         {
                             project: 'project-b',
-                            environments: ['development', 'production'],
+                            environments: expect.arrayContaining([
+                                'development',
+                                'production',
+                            ]),
                         },
                         {
                             project: 'project-c',

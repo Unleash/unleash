@@ -28,17 +28,22 @@ describe('ClientApplicationsStore', () => {
         const latestSeenAt = new Date('2026-09-07T08:00:00.000Z');
 
         await service.bulkUpsert([
-            { appName, lastSeen: latestSeenAt },
-            { appName, lastSeen: new Date('2026-09-06T08:00:00.000Z') },
+            { appName, lastSeen: latestSeenAt, description: 'Latest metadata' },
+            {
+                appName,
+                lastSeen: new Date('2026-09-06T08:00:00.000Z'),
+                description: 'Older metadata',
+            },
         ]);
 
         const application = await db
             .rawDatabase('client_applications')
-            .select('seen_at')
+            .select('seen_at', 'description')
             .where({ app_name: appName })
             .first();
 
         expect(application.seen_at).toEqual(latestSeenAt);
+        expect(application.description).toBe('Latest metadata');
     });
 
     describe('mapApplicationOverviewData()', () => {

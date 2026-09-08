@@ -56,7 +56,7 @@ const StyledDescriptionBlock = styled('div')(({ theme }) => ({
     width: '100%',
     maxWidth: theme.spacing(60),
     padding: theme.spacing(3),
-    backgroundColor: theme.palette.neutral.light,
+    backgroundColor: theme.palette.neutral.container,
     color: theme.palette.text.primary,
     fontSize: theme.fontSizes.smallBody,
     borderRadius: theme.shape.borderRadiusMedium,

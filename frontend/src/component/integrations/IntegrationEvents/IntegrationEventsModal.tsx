@@ -41,7 +41,7 @@ const StyledForm = styled('form')({
 });
 
 const StyledFailedItemWrapper = styled('div')(({ theme }) => ({
-    backgroundColor: theme.palette.error.light,
+    backgroundColor: theme.palette.error.container,
 }));
 
 const StyledButtonContainer = styled('div')(({ theme }) => ({

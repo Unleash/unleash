@@ -7,12 +7,12 @@ interface IFeatureStaleCellProps {
 }
 
 const staleStatus = (theme: Theme) => ({
-    color: theme.palette.error.dark,
+    color: theme.palette.error.onContainer,
     fontSize: 'inherit',
 });
 
 const activeStatus = (theme: Theme) => ({
-    color: theme.palette.success.dark,
+    color: theme.palette.success.onContainer,
     fontSize: 'inherit',
 });
 

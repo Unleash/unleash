@@ -114,7 +114,7 @@ export const StrategyForm: React.FC<IStrategyFormProps> = ({
                         appParameter();
                     }}
                     variant='outlined'
-                    color='secondary'
+                    color='primary'
                     startIcon={<Add />}
                 >
                     Add parameter

@@ -73,14 +73,14 @@ const StyledEventMarker = styled(Box, {
     grouped: boolean;
 }>(({ theme, eventType, grouped }) => {
     const eventColor = grouped
-        ? theme.palette.secondary.main
+        ? theme.palette.primary.main
         : eventType === 'enabled'
           ? theme.palette.success.main
           : eventType === 'disabled'
             ? theme.palette.neutral.main
             : eventType === 'automated-disabled'
               ? theme.palette.success.main
-              : theme.palette.secondary.main;
+              : theme.palette.primary.main;
 
     return {
         position: 'absolute',
@@ -102,23 +102,23 @@ const StyledEventPill = styled(Box, {
 }>(({ theme, eventType, grouped }) => {
     const automated = !grouped && eventType === 'automated-disabled';
     const eventColor = grouped
-        ? theme.palette.secondary.main
+        ? theme.palette.primary.main
         : eventType === 'enabled'
           ? theme.palette.success.main
           : eventType === 'disabled'
             ? theme.palette.neutral.main
             : eventType === 'automated-disabled'
               ? theme.palette.success.main
-              : theme.palette.secondary.main;
+              : theme.palette.primary.main;
     const eventBackground = grouped
-        ? theme.palette.secondary.light
+        ? theme.palette.primary.container
         : eventType === 'enabled'
-          ? theme.palette.success.light
+          ? theme.palette.success.container
           : eventType === 'disabled'
-            ? theme.palette.neutral.light
+            ? theme.palette.neutral.container
             : eventType === 'automated-disabled'
-              ? theme.palette.success.light
-              : theme.palette.secondary.light;
+              ? theme.palette.success.container
+              : theme.palette.primary.container;
 
     return {
         position: 'absolute',
@@ -134,7 +134,9 @@ const StyledEventPill = styled(Box, {
         transform: 'translate(-50%, -50%) scale(1)',
         borderRadius: '50%',
         color: automated ? theme.palette.neutral.main : eventColor,
-        background: automated ? theme.palette.neutral.light : eventBackground,
+        background: automated
+            ? theme.palette.neutral.container
+            : eventBackground,
         border: '1px solid currentColor',
         boxShadow: theme.shadows[1],
         cursor: 'pointer',
@@ -184,9 +186,9 @@ const StyledAutomationBadge = styled(Box)(({ theme }) => ({
     justifyContent: 'center',
     width: 16,
     height: 16,
-    border: `1px solid ${theme.palette.secondary.main}`,
+    border: `1px solid ${theme.palette.primary.main}`,
     borderRadius: '50%',
-    color: theme.palette.secondary.main,
+    color: theme.palette.primary.main,
     background: theme.palette.background.paper,
     boxShadow: theme.shadows[1],
     '& svg': {
@@ -230,15 +232,15 @@ const StyledEventTooltipIcon = styled(Box, {
               ? theme.palette.neutral.main
               : eventType === 'automated-disabled'
                 ? theme.palette.success.main
-                : theme.palette.secondary.main;
+                : theme.palette.primary.main;
     const eventBackground =
         eventType === 'enabled'
-            ? theme.palette.success.light
+            ? theme.palette.success.container
             : eventType === 'disabled'
-              ? theme.palette.neutral.light
+              ? theme.palette.neutral.container
               : eventType === 'automated-disabled'
-                ? theme.palette.success.light
-                : theme.palette.secondary.light;
+                ? theme.palette.success.container
+                : theme.palette.primary.container;
 
     return {
         display: 'flex',
@@ -250,7 +252,9 @@ const StyledEventTooltipIcon = styled(Box, {
         flexShrink: 0,
         borderRadius: '50%',
         color: automated ? theme.palette.neutral.main : eventColor,
-        background: automated ? theme.palette.neutral.light : eventBackground,
+        background: automated
+            ? theme.palette.neutral.container
+            : eventBackground,
         border: '1px solid currentColor',
         '& > svg': {
             width: 17,

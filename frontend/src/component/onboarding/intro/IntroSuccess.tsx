@@ -27,8 +27,8 @@ const StyledCheck = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    background: theme.palette.success.light,
-    border: `1.5px solid ${theme.palette.success.border}`,
+    background: theme.palette.success.container,
+    border: `1.5px solid ${theme.palette.success.containerBorder}`,
     color: theme.palette.success.main,
     '& svg': { fontSize: theme.spacing(5) },
 }));

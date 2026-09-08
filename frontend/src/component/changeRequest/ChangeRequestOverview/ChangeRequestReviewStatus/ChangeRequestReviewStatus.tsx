@@ -87,7 +87,7 @@ export const ChangeRequestReviewStatus: FC<
                 sx={{
                     backgroundColor:
                         changeRequest.state === 'In review'
-                            ? theme.palette.warning.light
+                            ? theme.palette.warning.container
                             : 'initial',
                 }}
                 border={resolveBorder(changeRequest.state, theme)}
@@ -148,7 +148,9 @@ const Approved = () => {
             <StyledFlexAlignCenterBox>
                 <StyledSuccessIcon />
                 <Box>
-                    <StyledReviewTitle color={theme.palette.success.dark}>
+                    <StyledReviewTitle
+                        color={theme.palette.success.onContainer}
+                    >
                         Changes approved
                     </StyledReviewTitle>
                     <Typography>
@@ -162,7 +164,9 @@ const Approved = () => {
             <StyledFlexAlignCenterBox>
                 <StyledSuccessIcon />
                 <Box>
-                    <StyledReviewTitle color={theme.palette.success.dark}>
+                    <StyledReviewTitle
+                        color={theme.palette.success.onContainer}
+                    >
                         Changes are ready to be applied
                     </StyledReviewTitle>
                 </Box>
@@ -183,7 +187,9 @@ const ReviewRequired = ({ minApprovals }: IReviewRequiredProps) => {
             <StyledFlexAlignCenterBox>
                 <StyledWarningIcon />
                 <Box>
-                    <StyledReviewTitle color={theme.palette.warning.dark}>
+                    <StyledReviewTitle
+                        color={theme.palette.warning.onContainer}
+                    >
                         Review required
                     </StyledReviewTitle>
                     <Typography>
@@ -197,7 +203,7 @@ const ReviewRequired = ({ minApprovals }: IReviewRequiredProps) => {
 
             <StyledFlexAlignCenterBox>
                 <StyledWarningIcon />
-                <StyledReviewTitle color={theme.palette.warning.dark}>
+                <StyledReviewTitle color={theme.palette.warning.onContainer}>
                     Apply changes is blocked
                 </StyledReviewTitle>
             </StyledFlexAlignCenterBox>
@@ -251,7 +257,9 @@ const Scheduled = ({ schedule, onEditClick }: IScheduledProps) => {
             <StyledFlexAlignCenterBox>
                 <StyledSuccessIcon />
                 <Box>
-                    <StyledReviewTitle color={theme.palette.success.dark}>
+                    <StyledReviewTitle
+                        color={theme.palette.success.onContainer}
+                    >
                         Changes approved
                     </StyledReviewTitle>
                     <Typography>
@@ -348,7 +356,7 @@ const ScheduledPending = ({
         <StyledFlexAlignCenterBox>
             <StyledScheduledIcon />
             <Box>
-                <StyledReviewTitle color={theme.palette.warning.dark}>
+                <StyledReviewTitle color={theme.palette.warning.onContainer}>
                     Changes are scheduled to be applied on: {scheduledTime}
                 </StyledReviewTitle>
                 <Typography>Your timezone is {timezone}</Typography>

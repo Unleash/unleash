@@ -11,7 +11,7 @@ export const StyledToggleButtonOff = styled(IconButton)(({ theme }) => ({
     padding: '0 1px 0',
     marginRight: '1rem',
     '&:hover': {
-        background: theme.palette.background.application,
+        background: theme.palette.background.default,
     },
     [theme.breakpoints.between(1101, 1365)]: {
         marginRight: '0.5rem',

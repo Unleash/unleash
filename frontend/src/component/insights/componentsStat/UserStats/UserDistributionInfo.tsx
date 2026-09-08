@@ -18,8 +18,8 @@ const StyledUserDistIndicator = styled(Box)<StyledLinearProgressProps>(
         height: 8,
         backgroundColor:
             type === 'active'
-                ? theme.palette.success.border
-                : theme.palette.warning.border,
+                ? theme.palette.success.containerBorder
+                : theme.palette.warning.containerBorder,
         borderRadius: `2px`,
         marginRight: theme.spacing(1),
     }),

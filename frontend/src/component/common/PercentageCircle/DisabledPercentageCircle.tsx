@@ -35,7 +35,7 @@ const PercentageCircle = ({
                 cx={radius}
                 cy={radius}
                 fill='none'
-                stroke={theme.palette.neutral.border}
+                stroke={theme.palette.neutral.containerBorder}
                 strokeWidth={diameter}
                 strokeDasharray={`${percentage} 100`}
             />

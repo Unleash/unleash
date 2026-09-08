@@ -12,10 +12,10 @@ const StyledList = styled('ul')({
 });
 
 export const baseChipStyles = (theme: Theme) => ({
-    ':hover': { background: theme.palette.secondary.light },
+    ':hover': { background: theme.palette.primary.container },
     ':focus-visible': {
         background: theme.palette.background.elevation1,
-        outlineColor: theme.palette.secondary.dark,
+        outlineColor: theme.palette.primary.onContainer,
     },
     background: theme.palette.background.elevation1,
     color: theme.palette.text.primary,
@@ -42,7 +42,7 @@ export const ValueChip = styled(
         marginRight: theme.spacing(1),
     },
     svg: {
-        fill: theme.palette.secondary.dark,
+        fill: theme.palette.primary.onContainer,
         borderRadius: '50%',
         outline: `2px solid #0000`,
         transition: 'inherit',

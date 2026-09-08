@@ -61,7 +61,7 @@ const MainLayoutContentWrapper = styled('div')(({ theme }) => ({
     margin: theme.spacing(0, 'auto'),
     flexGrow: 1,
     width: '100%',
-    backgroundColor: theme.palette.background.application,
+    backgroundColor: theme.palette.background.default,
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',

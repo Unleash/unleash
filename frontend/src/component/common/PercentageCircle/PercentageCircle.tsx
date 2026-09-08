@@ -30,7 +30,7 @@ const PercentageCircle = ({
     const d = 2 * r;
 
     const color = disabled
-        ? theme.palette.neutral.border
+        ? theme.palette.neutral.containerBorder
         : theme.palette.primary.light;
 
     return (

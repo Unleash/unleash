@@ -4,8 +4,8 @@ import type { ChangesThatWouldBeOverwritten } from './strategy-change-diff-calcu
 import { EventDiff } from 'component/events/EventDiff/EventDiff.tsx';
 
 const ChangesToOverwriteContainer = styled(Box)(({ theme }) => ({
-    color: theme.palette.warning.dark,
-    backgroundColor: theme.palette.warning.light,
+    color: theme.palette.warning.onContainer,
+    backgroundColor: theme.palette.warning.container,
     fontSize: theme.fontSizes.smallBody,
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(2),
@@ -14,7 +14,7 @@ const ChangesToOverwriteContainer = styled(Box)(({ theme }) => ({
 
 const StyledDiff = styled(EventDiff)(({ theme }) => ({
     padding: theme.spacing(2),
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: theme.palette.background.paper,
     width: 'fit-content',
     borderRadius: theme.shape.borderRadius,
 }));

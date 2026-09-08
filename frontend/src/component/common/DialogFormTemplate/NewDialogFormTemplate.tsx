@@ -48,7 +48,7 @@ type Props = {
 };
 
 const StyledForm = styled('form')(({ theme }) => ({
-    background: theme.palette.background.default,
+    background: theme.palette.background.paper,
     display: 'flex',
     flexDirection: 'column',
     flex: 1,

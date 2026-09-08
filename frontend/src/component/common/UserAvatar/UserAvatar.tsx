@@ -14,7 +14,7 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
     width: theme.spacing(3.5),
     height: theme.spacing(3.5),
     margin: 'auto',
-    backgroundColor: theme.palette.secondary.light,
+    backgroundColor: theme.palette.primary.container,
     color: theme.palette.text.primary,
     fontSize: theme.fontSizes.smallerBody,
     fontWeight: theme.fontWeight.bold,

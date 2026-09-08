@@ -89,7 +89,9 @@ export const ChangeRequestsWidget: FC<IChangeRequestsWidgetProps> = ({
             <StyledWidgetTitle>Open change requests</StyledWidgetTitle>
             <StyledContentBox>
                 <StyledChangeBox
-                    sx={{ background: (theme) => theme.palette.success.light }}
+                    sx={{
+                        background: (theme) => theme.palette.success.container,
+                    }}
                 >
                     <StyledSubtitle>To be applied</StyledSubtitle>
                     <StyledChangeRequestStatusInfo>
@@ -101,7 +103,7 @@ export const ChangeRequestsWidget: FC<IChangeRequestsWidgetProps> = ({
                 </StyledChangeBox>
                 <StyledChangeBox
                     sx={{
-                        background: (theme) => theme.palette.secondary.light,
+                        background: (theme) => theme.palette.primary.container,
                     }}
                 >
                     <StyledSubtitle>To be reviewed</StyledSubtitle>

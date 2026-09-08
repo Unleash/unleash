@@ -47,7 +47,7 @@ const ActiveExperiments = styled('div')(({ theme }) => ({
 }));
 
 const ActiveExperimentCard = styled('div')(({ theme }) => ({
-    backgroundColor: theme.palette.secondary.light,
+    backgroundColor: theme.palette.primary.container,
     borderRadius: `${theme.shape.borderRadiusLarge}px`,
     padding: theme.spacing(3),
     display: 'flex',

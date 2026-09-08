@@ -45,8 +45,8 @@ const StyledCard = styled('div', {
         opacity: 0,
     },
     ...(isDefault && {
-        backgroundColor: theme.palette.secondary.light,
-        borderColor: theme.palette.secondary.border,
+        backgroundColor: theme.palette.primary.container,
+        borderColor: theme.palette.primary.containerBorder,
     }),
     userSelect: 'none',
 }));

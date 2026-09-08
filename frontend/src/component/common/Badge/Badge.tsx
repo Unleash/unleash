@@ -61,9 +61,9 @@ const StyledBadge = styled('span')<IBadgeProps>(
                   border: `1px solid ${theme.palette.divider}`,
               }
             : {
-                  backgroundColor: theme.palette[color].light,
-                  color: theme.palette[color].contrastText,
-                  border: `1px solid ${theme.palette[color].border ?? 'transparent'}`,
+                  backgroundColor: theme.palette[color].container,
+                  color: theme.palette[color].onContainer,
+                  border: `1px solid ${theme.palette[color].containerBorder}`,
               }),
         ...(round && {
             justifyContent: 'center',

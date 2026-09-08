@@ -130,7 +130,7 @@ importers:
         version: 2.0.0
       helmet:
         specifier: ^8.1.0
-        version: 8.2.0
+        version: 8.3.0
       http-errors:
         specifier: ^2.0.1
         version: 2.0.1
@@ -346,8 +346,8 @@ importers:
         specifier: 7.0.0
         version: 7.0.0
       fast-check:
-        specifier: 4.8.0
-        version: 4.8.0
+        specifier: 4.9.0
+        version: 4.9.0
       fetch-mock:
         specifier: ^12.6.0
         version: 12.6.0
@@ -3506,12 +3506,8 @@ packages:
     resolution: {integrity: sha512-11Ndz7Nv+mvAC1j0ktTa7fAb0vLyGGX+rMHNBYQviQDGU0Hw7lhctJANqbPhu9nV9/izT/IntTgZ7Im/9LJs9g==}
     engines: {'0': node >=0.6.0}
 
-  fast-check@4.7.0:
-    resolution: {integrity: sha512-NsZRtqvSSoCP0HbNjUD+r1JH8zqZalyp6gLY9e7OYs7NK9b6AHOs2baBFeBG7bVNsuoukh89x2Yg3rPsul8ziQ==}
-    engines: {node: '>=12.17.0'}
-
-  fast-check@4.8.0:
-    resolution: {integrity: sha512-GOJ158CUMnN6cSahsv4+ExARvIDuzzinFjkp0E9WtiBa5zcVeLozVkWaE4IzFcc+Y48Wp1EDlUZsXRyAztQcSg==}
+  fast-check@4.9.0:
+    resolution: {integrity: sha512-7ms6T7SybUev/PQITciI0yLM2pOSFy5zpG8Ty7tQofcVaQUvrMXp6CBwqF6fThLCLOrfBtuHAtwq6Yu4XPCllg==}
     engines: {node: '>=12.17.0'}
 
   fast-deep-equal@3.1.3:
@@ -3782,8 +3778,8 @@ packages:
   heap@0.2.7:
     resolution: {integrity: sha512-2bsegYkkHO+h/9MGbn6KWcE45cHZgPANo5LXF7EvWdT0yT2EguSVO1nDgU5c8+ZOPwp2vMNa7YFsJhVcDR9Sdg==}
 
-  helmet@8.2.0:
-    resolution: {integrity: sha512-DRgTIUgnWcJ62KyarxxziuqYxKGnR6Rgg19BlbucN/dpmJbl1XOit6qvoOX0ZT+HhWe5OUVhU/a1zpGyc1xA0Q==}
+  helmet@8.3.0:
+    resolution: {integrity: sha512-Qgpiaws3Sm30Av8Eah6sjMCZZwjlBu+E68rhpCWBshY1lb09HtLwj5GviX0OyQIn+ulUS0iX0AxN5n3tLZzz1w==}
     engines: {node: '>=18.0.0'}
 
   highlight.js@11.11.1:
@@ -6862,7 +6858,7 @@ snapshots:
 
   '@fast-check/vitest@0.4.1(vitest@4.1.11)':
     dependencies:
-      fast-check: 4.7.0
+      fast-check: 4.9.0
       vitest: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@22.20.1)(@vitest/coverage-v8@4.1.11)(@vitest/ui@4.1.11)(jsdom@25.0.1(supports-color@10.2.2))(msw@2.14.6(@types/node@22.20.1)(typescript@7.0.2))(vite@8.2.2(@types/node@22.20.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.101.0)(yaml@2.9.0))
 
   '@fern-api/search-widget@0.5.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
@@ -9220,11 +9216,7 @@ snapshots:
 
   extsprintf@1.3.0: {}
 
-  fast-check@4.7.0:
-    dependencies:
-      pure-rand: 8.4.0
-
-  fast-check@4.8.0:
+  fast-check@4.9.0:
     dependencies:
       pure-rand: 8.4.0
 
@@ -9537,7 +9529,7 @@ snapshots:
 
   heap@0.2.7: {}
 
-  helmet@8.2.0: {}
+  helmet@8.3.0: {}
 
   highlight.js@11.11.1: {}
 

@@ -304,4 +304,4 @@ test('add flag change to pending change request', async () => {
     fireEvent.click(flag);
 
     await verifyChangeRequestDialog('Enable feature flag test in production');
-}, 10000);
+});

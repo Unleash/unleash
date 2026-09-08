@@ -3,6 +3,7 @@ import { formatStrategyName } from 'utils/strategyNames';
 import { FeatureStrategyMenuCardIcon } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardIcon.tsx';
 import { useConfigureStrategy } from '../useConfigureStrategy.ts';
 import { useProjectDefaultStrategy } from '../useProjectDefaultStrategy.ts';
+import { MoreStrategiesMenu } from './MoreStrategiesMenu.tsx';
 import { StrategySetupCard } from './StrategySetupCard.tsx';
 
 const MANUAL_STRATEGY = 'flexibleRollout';
@@ -90,6 +91,16 @@ export const StrategySetupCards = ({
                     }
                 />
             </StyledCardGrid>
+            <MoreStrategiesMenu
+                onSelect={(strategy) =>
+                    configureStrategy({
+                        strategyName: strategy.name,
+                        strategyDisplayName:
+                            strategy.displayName ||
+                            formatStrategyName(strategy.name),
+                    })
+                }
+            />
         </StyledContainer>
     );
 };

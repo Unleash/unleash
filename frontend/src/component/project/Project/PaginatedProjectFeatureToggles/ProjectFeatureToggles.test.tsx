@@ -98,7 +98,7 @@ test('filters by flag type', async () => {
 
     await screen.findByText('Flag type');
     await screen.findByText('Operational');
-}, 10000);
+});
 
 test('selects project features', async () => {
     setupApi();
@@ -140,7 +140,7 @@ test('selects project features', async () => {
     // deselect a single item
     fireEvent.click(selectFeatureA);
     expect(screen.queryByTestId(BATCH_SELECTED_COUNT)).not.toBeInTheDocument();
-}, 10000);
+});
 
 test('clears the selection when the filters change', async () => {
     setupApi();
@@ -173,7 +173,7 @@ test('clears the selection when the filters change', async () => {
             screen.queryByTestId(BATCH_SELECTED_COUNT),
         ).not.toBeInTheDocument();
     });
-}, 16000);
+});
 
 test('filters by tag', async () => {
     setupApi();
@@ -198,7 +198,7 @@ test('filters by tag', async () => {
 
     await screen.findByText('include');
     expect(await screen.findAllByText('backend:sdk')).toHaveLength(2);
-}, 10000);
+});
 
 test('filters by flag author', async () => {
     setupApi();
@@ -227,7 +227,7 @@ test('filters by flag author', async () => {
     fireEvent.click(authorA);
 
     expect(window.location.href).toContain('createdBy=IS%3A1');
-}, 10000);
+});
 
 test('Project is onboarded', async () => {
     const projectId = 'default';
@@ -249,7 +249,7 @@ test('Project is onboarded', async () => {
         },
     );
     expect(screen.queryByText('Project setup')).not.toBeInTheDocument();
-}, 10000);
+});
 
 test('Project is not onboarded', async () => {
     const projectId = 'default';
@@ -271,7 +271,7 @@ test('Project is not onboarded', async () => {
         },
     );
     await screen.findByText('Project setup');
-}, 10000);
+});
 
 test('renders lifecycle quick filters', async () => {
     setupApi();
@@ -296,7 +296,7 @@ test('renders lifecycle quick filters', async () => {
     await screen.findByText(/Develop/);
     await screen.findByText(/Rollout production/);
     await screen.findByText(/Cleanup/);
-}, 10000);
+});
 
 test('shows onboarding steps when flag is enabled and project is not onboarded', async () => {
     const projectId = 'default';
@@ -317,7 +317,7 @@ test('shows onboarding steps when flag is enabled and project is not onboarded',
         { route: `/projects/${projectId}` },
     );
     await screen.findByText('Project setup');
-}, 10000);
+});
 
 test('shows revive and delete actions for archived flags', async () => {
     setupApi();
@@ -375,7 +375,7 @@ test('shows revive and delete actions for archived flags', async () => {
     expect(
         screen.queryByRole('menuitem', { name: 'Clone' }),
     ).not.toBeInTheDocument();
-}, 10000);
+});
 
 test('shows archived batch actions when every selected flag is archived', async () => {
     setupApi();
@@ -435,7 +435,7 @@ test('shows archived batch actions when every selected flag is archived', async 
     expect(
         within(batchActions).queryByRole('button', { name: 'Revive' }),
     ).not.toBeInTheDocument();
-}, 10000);
+});
 
 test('rewrites legacy archived view URLs to the archived lifecycle filter', async () => {
     setupApi();
@@ -460,4 +460,4 @@ test('rewrites legacy archived view URLs to the archived lifecycle filter', asyn
         expect(window.location.href).not.toContain('archived=IS%3Atrue');
         expect(window.location.href).toContain('lifecycle=IS%3Aarchived');
     });
-}, 10000);
+});

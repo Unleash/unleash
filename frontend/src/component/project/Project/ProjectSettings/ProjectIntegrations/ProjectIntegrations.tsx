@@ -29,10 +29,7 @@ export const ProjectIntegrations = () => {
     usePageTitle(`Project integrations – ${projectName}`);
 
     const projectAddons = addons.filter(
-        (addon) =>
-            addon.provider === PROJECT_INTEGRATION_PROVIDER &&
-            addon.projects?.length === 1 &&
-            addon.projects[0] === projectId,
+        (addon) => addon.provider === PROJECT_INTEGRATION_PROVIDER,
     );
 
     const createPath = formatIntegrationCreatePath(

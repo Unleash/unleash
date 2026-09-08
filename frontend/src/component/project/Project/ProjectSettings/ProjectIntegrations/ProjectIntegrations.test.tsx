@@ -51,7 +51,14 @@ const setupServer = (addons: object[]) => {
     testServerRoute(server, '/api/admin/signal-endpoints', {
         signalEndpoints: [],
     });
-    testServerRoute(server, '/api/admin/addons', { providers, addons });
+    testServerRoute(
+        server,
+        '/api/admin/addons',
+        { providers, addons },
+        'get',
+        200,
+        { project: 'my-project' },
+    );
 };
 
 const renderPage = () =>
@@ -65,25 +72,15 @@ const renderPage = () =>
         { route: '/projects/my-project/settings/integrations' },
     );
 
-test('shows only the Slack integrations scoped to this project alone', async () => {
+test('shows only Slack integrations', async () => {
     setupServer([
         addon(1, 'Ours', ['my-project']),
-        addon(2, 'Another project', ['someone-else']),
-        addon(3, 'Instance wide', []),
-        addon(4, 'Every project', ['*']),
-        addon(5, 'Shared with another project', ['my-project', 'someone-else']),
-        addon(6, 'Ours but a webhook', ['my-project'], 'webhook'),
+        addon(2, 'Ours but a webhook', ['my-project'], 'webhook'),
     ]);
 
     renderPage();
 
     expect(await screen.findByText('Ours')).toBeInTheDocument();
-    expect(screen.queryByText('Another project')).not.toBeInTheDocument();
-    expect(screen.queryByText('Instance wide')).not.toBeInTheDocument();
-    expect(screen.queryByText('Every project')).not.toBeInTheDocument();
-    expect(
-        screen.queryByText('Shared with another project'),
-    ).not.toBeInTheDocument();
     expect(screen.queryByText('Ours but a webhook')).not.toBeInTheDocument();
 });
 
@@ -100,7 +97,7 @@ test('links to the integration inside the project', async () => {
 });
 
 test('points you at the integrations page when the project has none', async () => {
-    setupServer([addon(1, 'Instance wide', [])]);
+    setupServer([addon(1, 'Instance wide', [], 'webhook')]);
 
     renderPage();
 

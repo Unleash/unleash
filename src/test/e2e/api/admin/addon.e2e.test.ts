@@ -298,3 +298,37 @@ describe('missing descriptions', () => {
             });
     });
 });
+
+test('should filter addons by project', async () => {
+    const config = (projects: string[]) => ({
+        provider: 'webhook',
+        enabled: true,
+        parameters: {
+            url: 'http://localhost:4242/webhook',
+            bodyTemplate: "{'name': '{{event.data.name}}' }",
+        },
+        events: ['feature-updated', 'feature-created'],
+        projects,
+    });
+
+    const { body: scoped } = await app.request
+        .post('/api/admin/addons')
+        .send(config(['addon-filter-project']))
+        .expect(201);
+
+    await app.request
+        .post('/api/admin/addons')
+        .send(config(['addon-filter-project', 'another-project']))
+        .expect(201);
+
+    await app.request.post('/api/admin/addons').send(config([])).expect(201);
+
+    await app.request
+        .get('/api/admin/addons?project=addon-filter-project')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.addons.length).toBe(1);
+            expect(res.body.addons[0].id).toBe(scoped.id);
+        });
+});

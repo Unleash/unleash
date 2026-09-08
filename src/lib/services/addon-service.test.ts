@@ -77,6 +77,18 @@ function getSetup() {
     };
 }
 
+const simpleAddonFor = (projects?: string[]): IAddonDto => ({
+    provider: 'simple',
+    enabled: true,
+    parameters: {
+        url: 'http://localhost/wh',
+        var: 'some-value',
+    },
+    events: [FEATURE_CREATED],
+    description: '',
+    projects,
+});
+
 test('should load addon configurations', async () => {
     const { addonService } = getSetup();
 
@@ -599,6 +611,45 @@ test('should create simple-addon config', async () => {
 
     expect(addons.length).toBe(1);
     expect(addons[0].provider).toBe('simple');
+});
+
+test('should only return addons scoped to a single given project', async () => {
+    const { addonService } = getSetup();
+
+    const scoped = await addonService.createAddon(
+        simpleAddonFor(['my-project']),
+        TEST_AUDIT_USER,
+    );
+    await addonService.createAddon(
+        simpleAddonFor(['other-project']),
+        TEST_AUDIT_USER,
+    );
+    await addonService.createAddon(simpleAddonFor([]), TEST_AUDIT_USER);
+    await addonService.createAddon(simpleAddonFor(undefined), TEST_AUDIT_USER);
+    await addonService.createAddon(simpleAddonFor(['*']), TEST_AUDIT_USER);
+    await addonService.createAddon(
+        simpleAddonFor(['my-project', 'other-project']),
+        TEST_AUDIT_USER,
+    );
+
+    const addons = await addonService.getAddons('my-project');
+
+    expect(addons.map((addon) => addon.id)).toStrictEqual([scoped.id]);
+});
+
+test('should return every addon when no project is given', async () => {
+    const { addonService } = getSetup();
+
+    await addonService.createAddon(
+        simpleAddonFor(['my-project']),
+        TEST_AUDIT_USER,
+    );
+    await addonService.createAddon(simpleAddonFor(['*']), TEST_AUDIT_USER);
+    await addonService.createAddon(simpleAddonFor(undefined), TEST_AUDIT_USER);
+
+    const addons = await addonService.getAddons();
+
+    expect(addons.length).toBe(3);
 });
 
 test('should create tag type for simple-addon', async () => {

@@ -193,8 +193,17 @@ export default class AddonService {
     }
 
     // Should be used by the controller.
-    async getAddons(): Promise<IAddon[]> {
-        const addonConfigs = await this.addonStore.getAll();
+    async getAddons(projectId?: string): Promise<IAddon[]> {
+        let addonConfigs = await this.addonStore.getAll();
+
+        if (projectId) {
+            addonConfigs = addonConfigs.filter(
+                (addon) =>
+                    addon.projects?.length === 1 &&
+                    addon.projects[0] === projectId,
+            );
+        }
+
         return addonConfigs.map((a) => this.filterSensitiveFields(a));
     }
 

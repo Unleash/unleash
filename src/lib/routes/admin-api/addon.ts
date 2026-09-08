@@ -85,6 +85,15 @@ class AddonController extends Controller {
                     tags: ['Addons'],
                     release: { stable: '4.14.0' },
                     operationId: 'getAddons',
+                    parameters: [
+                        {
+                            name: 'project',
+                            description:
+                                'Only return addons that send events to this project and no other',
+                            schema: { type: 'string' },
+                            in: 'query',
+                        },
+                    ],
                     responses: {
                         ...getStandardResponses(401),
                         200: createResponseSchema('addonsSchema'),
@@ -205,8 +214,12 @@ Note: passing \`null\` as a value for the description property will set it to an
         });
     }
 
-    async getAddons(_req: Request, res: Response<AddonsSchema>): Promise<void> {
-        let addons = await this.addonService.getAddons();
+    async getAddons(
+        req: Request<unknown, unknown, unknown, { project?: string }>,
+        res: Response<AddonsSchema>,
+    ): Promise<void> {
+        const { project } = req.query;
+        let addons = await this.addonService.getAddons(project);
         let providers = this.addonService.getProviderDefinitions();
 
         if (!this.flagResolver.isEnabled('serviceNowIntegration')) {

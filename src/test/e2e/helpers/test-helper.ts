@@ -2,7 +2,11 @@ import supertest from 'supertest';
 
 import getApp from '../../../lib/app.js';
 import { createTestConfig } from '../../config/test-config.js';
-import { IAuthType, type IUnleashConfig } from '../../../lib/types/option.js';
+import {
+    IAuthType,
+    type IUnleashConfig,
+    type IUnleashOptions,
+} from '../../../lib/types/option.js';
 import { createServices } from '../../../lib/services/index.js';
 import sessionDb from '../../../lib/middleware/session-db.js';
 import {
@@ -25,6 +29,7 @@ import type TestAgent from 'supertest/lib/agent.d.ts';
 import type Test from 'supertest/lib/test.d.ts';
 import type { Server } from 'node:http';
 import {
+    type CustomAuthHandler,
     initialServiceSetup,
     type IUser,
     type RoleName,
@@ -40,6 +45,12 @@ type SimpleLoginArgs = {
     username: string;
     password: string;
 };
+
+type DeepPartial<T> = T extends (...args: any[]) => any
+    ? T
+    : T extends object
+      ? { [K in keyof T]?: DeepPartial<T[K]> }
+      : T;
 
 export interface IUnleashTest extends IUnleashHttpAPI {
     request: TestAgent<Test>;
@@ -369,8 +380,8 @@ function httpApis(
 async function createApp(
     stores,
     adminAuthentication = IAuthType.NONE,
-    preHook?: Function,
-    customOptions?: any,
+    preHook?: CustomAuthHandler,
+    customOptions?: DeepPartial<IUnleashConfig>,
     db?: Db,
 ): Promise<IUnleashTest> {
     const config = createTestConfig({
@@ -392,7 +403,7 @@ async function createApp(
                 },
             },
         },
-    });
+    } as IUnleashOptions);
     const services = createServices(stores, config, db);
     await initialServiceSetup(config, services);
     // @ts-expect-error We don't have a database for sessions here.
@@ -476,8 +487,7 @@ export async function setupAppWithoutSupertest(
 
 export async function setupAppWithCustomConfig(
     stores: IUnleashStores,
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    customOptions: any,
+    customOptions: DeepPartial<IUnleashConfig>,
     db?: Db,
 ): Promise<IUnleashTest> {
     return createApp(stores, undefined, undefined, customOptions, db);
@@ -485,8 +495,7 @@ export async function setupAppWithCustomConfig(
 
 export async function setupAppWithAuth(
     stores: IUnleashStores,
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    customOptions?: any,
+    customOptions?: DeepPartial<IUnleashConfig>,
     db?: Db,
 ): Promise<IUnleashTest> {
     return createApp(stores, IAuthType.DEMO, undefined, customOptions, db);
@@ -494,9 +503,8 @@ export async function setupAppWithAuth(
 
 export async function setupAppWithCustomAuth(
     stores: IUnleashStores,
-    preHook?: Function,
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    customOptions?: any,
+    preHook?: CustomAuthHandler,
+    customOptions?: DeepPartial<IUnleashConfig>,
     db?: Db,
 ): Promise<IUnleashTest> {
     return createApp(stores, IAuthType.CUSTOM, preHook, customOptions, db);

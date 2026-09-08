@@ -11,7 +11,7 @@ describe('DB is up', () => {
     test('when checkDb is disabled, returns ready', async () => {
         const { request, services } = await setupAppWithCustomConfig(
             db.stores,
-            undefined,
+            {},
             db.rawDatabase,
         );
         await services.frontendApiService.waitForCacheReady();
@@ -82,7 +82,7 @@ describe('DB is down', () => {
     test('when checkDb is disabled, returns readiness good', async () => {
         const { request, services } = await setupAppWithCustomConfig(
             db.stores,
-            undefined,
+            {},
             db.rawDatabase,
         );
         await services.frontendApiService.waitForCacheReady();

@@ -35,7 +35,7 @@ beforeAll(async () => {
         {
             server: {
                 unleashUrl: 'http://localhost:4242',
-                basePathUri: '/demo',
+                baseUriPath: '/demo',
             },
             authentication: { enableApiToken: true, type: IAuthType.DEMO },
             rateLimiting: {

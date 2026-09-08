@@ -3,7 +3,10 @@ import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 import getLogger from '../../../fixtures/no-logger.js';
 import { RoleName } from '../../../../lib/types/model.js';
 import type { PublicSignupTokenCreateSchema } from '../../../../lib/openapi/spec/public-signup-token-create-schema.js';
-import type { IUnleashStores } from '../../../../lib/types/index.js';
+import type {
+    CustomAuthHandler,
+    IUnleashStores,
+} from '../../../../lib/types/index.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -34,13 +37,15 @@ const expireAt = (addDays: number = 7): Date => {
 test('admin users should be able to create a token', async () => {
     expect.assertions(3);
 
-    const preHook = (app, _config, { userService, accessService }) => {
+    const preHook: CustomAuthHandler = (app, _config, services) => {
+        const { userService, accessService } = services!;
         app.use('/api/admin/', async (req, _res, next) => {
             const role = await accessService.getPredefinedRole(RoleName.ADMIN);
             const user = await userService.createUser({
                 email: 'admin@example.com',
                 rootRole: role.id,
             });
+            // @ts-expect-error user is not defined on Request type
             req.user = user;
             next();
         });
@@ -68,7 +73,8 @@ test('admin users should be able to create a token', async () => {
 });
 
 test('no permission to validate a token', async () => {
-    const preHook = (app, _config, { userService, accessService }) => {
+    const preHook: CustomAuthHandler = (app, _config, services) => {
+        const { userService, accessService } = services!;
         app.use('/api/admin/', async (_req, _res, next) => {
             const admin = await accessService.getPredefinedRole(RoleName.ADMIN);
             await userService.createUser({
@@ -96,7 +102,8 @@ test('no permission to validate a token', async () => {
 });
 
 test('should return 400 if token can not be validate', async () => {
-    const preHook = (app, _config, { userService, accessService }) => {
+    const preHook: CustomAuthHandler = (app, _config, services) => {
+        const { userService, accessService } = services!;
         app.use('/api/admin/', async (_req, _res, next) => {
             const admin = await accessService.getPredefinedRole(RoleName.ADMIN);
             await userService.createUser({
@@ -118,7 +125,8 @@ test('should return 400 if token can not be validate', async () => {
 test('users can signup with invite-link', async () => {
     expect.assertions(1);
 
-    const preHook = (app, _config, { userService, accessService }) => {
+    const preHook: CustomAuthHandler = (app, _config, services) => {
+        const { userService, accessService } = services!;
         app.use('/api/admin/', async (_req, _res, next) => {
             const admin = await accessService.getPredefinedRole(RoleName.ADMIN);
             await userService.createUser({
@@ -162,13 +170,15 @@ test('users can signup with invite-link', async () => {
 test('can get a token with users', async () => {
     expect.assertions(1);
 
-    const preHook = (app, _config, { userService, accessService }) => {
+    const preHook: CustomAuthHandler = (app, _config, services) => {
+        const { userService, accessService } = services!;
         app.use('/api/admin/', async (req, _res, next) => {
             const role = await accessService.getPredefinedRole(RoleName.ADMIN);
             const user = await userService.createUser({
                 email: 'admin@example.com',
                 rootRole: role.id,
             });
+            // @ts-expect-error user is not defined on Request type
             req.user = user;
             next();
         });
@@ -204,13 +214,15 @@ test('can get a token with users', async () => {
 });
 
 test('should not be able to set expiry further than 1 month', async () => {
-    const preHook = (app, _config, { userService, accessService }) => {
+    const preHook: CustomAuthHandler = (app, _config, services) => {
+        const { userService, accessService } = services!;
         app.use('/api/admin/', async (req, _res, next) => {
             const role = await accessService.getPredefinedRole(RoleName.ADMIN);
             const user = await userService.createUser({
                 email: 'admin@example.com',
                 rootRole: role.id,
             });
+            // @ts-expect-error user is not defined on Request type
             req.user = user;
             next();
         });

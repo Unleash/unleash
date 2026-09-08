@@ -7,7 +7,7 @@ import getLogger from '../../../fixtures/no-logger.js';
 import { DEFAULT_ENV } from '../../../../lib/util/constants.js';
 import type User from '../../../../lib/types/user.js';
 import { ApiTokenType } from '../../../../lib/types/model.js';
-import { TEST_AUDIT_USER } from '../../../../lib/types/index.js';
+import { IAuthType, TEST_AUDIT_USER } from '../../../../lib/types/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -21,7 +21,7 @@ beforeAll(async () => {
         db.stores,
         {
             authentication: {
-                type: 'none',
+                type: IAuthType.NONE,
             },
             experimental: {
                 flags: {

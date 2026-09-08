@@ -1,22 +1,20 @@
 import dbInit, { type ITestDb } from './helpers/database-init.js';
 import { setupAppWithCustomAuth } from './helpers/test-helper.js';
-import { type IUnleashStores, RoleName } from '../../lib/types/index.js';
-import type { IUnleashServices } from '../../lib/services/index.js';
+import {
+    type CustomAuthHandler,
+    type IUnleashStores,
+    RoleName,
+} from '../../lib/types/index.js';
 import { vi } from 'vitest';
 
 let db: ITestDb;
 let stores: IUnleashStores;
 
-const preHook = (
-    app,
-    _config,
-    {
-        userService,
-        accessService,
-    }: Pick<IUnleashServices, 'userService' | 'accessService'>,
-) => {
+const preHook: CustomAuthHandler = (app, _config, services) => {
+    const { userService, accessService } = services!;
     app.use('/api/admin/', async (req, _res, next) => {
         const role = await accessService.getPredefinedRole(RoleName.EDITOR);
+        // @ts-expect-error user is not defined on Request type
         req.user = await userService.createUser({
             email: 'editor2@example.com',
             rootRole: role.id,

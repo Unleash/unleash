@@ -20,12 +20,6 @@ services:
     command: npx http-server ./build -p 80 --cors --proxy http://unleash:4242
     ports:
       - "3000:80"
-    healthcheck:
-      test: wget --no-verbose --tries=1 --spider http://127.0.0.1/ || exit 1
-      interval: 1s
-      timeout: 1m
-      retries: 20
-      start_period: 30s
     volumes:
       - ../frontend/build:/app:ro
     depends_on:

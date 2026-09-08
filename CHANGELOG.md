@@ -2,6 +2,367 @@
 
 All notable changes to this project will be documented in this file.
 
+## [8.2.0] - 2026-09-08
+
+### Bug Fixes
+
+- Don't claim success when marking a flag stale fails
+
+- Use teams icon for teams workflow
+
+- Announce toast messages to screen readers
+
+- Re-announce repeated messages in the announcer
+
+- Don't show skip link on pages that don't have a nav target
+
+- Button in button in release plans
+
+- Stop toolbar flag reads from re-rendering during render
+
+- Invoke scheduled database pool metrics sampler
+
+- Background color in impact metric modal
+
+- Empty groupId in default strategy
+
+- Replace linear token scan with a Map lookup
+
+- Delete variant button placement
+
+- Avoid relying on secret shape in the UI
+
+- System token cleanup: wrote no audit events
+
+- Safely rate limit authenticated token traffic
+
+- Make system token cleanup delete and audit atomically
+
+- Keep the access log list visible while changing sort order ([#12573](https://github.com/Unleash/unleash/issues/12573))
+
+- Edge issued tokens should not count towards token limit
+
+- Dedupe react and mui in vite to prevent duplicate copies ([#12578](https://github.com/Unleash/unleash/issues/12578))
+
+- Accept semver build metadata in constraint values
+
+- Make mutations and audit events transactional
+
+- Disconnect the access log skeleton from the users-list loading ([#12580](https://github.com/Unleash/unleash/issues/12580))
+
+- Onboarding checklist in safari showing corners after drag
+
+- Invalidate tokens when environments are deleted
+
+- Feature status tooltip 
+
+- No tooltip on healthy and unknown flag status
+
+- Cross-project variant overwrite
+
+- Url normalizing in query
+
+- Update dependency @fern-api/search-widget to v0.5.4 ([#12614](https://github.com/Unleash/unleash/issues/12614))
+
+- Prevent dark mode email templates
+
+- Sets description as title and the description of description as helptext
+
+- Restate long label in the tooltip so that you have a chance to read it
+
+- Treat single-character templates as valid in ServiceNow and webhook addons
+
+- Cross-project IDOR on feature-dependency routes
+
+
+### Documentation
+
+- Fix dead Code Kitchen podcast link in README ([#12579](https://github.com/Unleash/unleash/issues/12579))
+
+
+### Features
+
+- Hide copy action for secure project tokens
+
+- Track flag page header actions
+
+- Gate Remote MCP admin UI to Enterprise plan
+
+- Flags overview - enable filtering flags by creators
+
+- Track flag page tag actions
+
+- Securely store personal and service account tokens
+
+- Uxtweak survey adapter — flag discovery and survey card
+
+- Add unique eventId to custom tracking events to prevent deduplication
+
+- Track sustained hovers on the lifecycle tooltip
+
+- Include secure PAT metadata
+
+- Audit service account token lifecycle
+
+- New users tabbed design ([#12523](https://github.com/Unleash/unleash/issues/12523))
+
+- Impact metrics labels loading indicator
+
+- Add generic dialog-dismissed tracking
+
+- Optimize label lookups for impact metrics
+
+- Impact metrics ui fetching optimization
+
+- Emit dialog dismissals as journey events
+
+- Track project status modal engagement
+
+- Track environment toggles on project flags list
+
+- Track the shape of strategies people configure
+
+- Add resumable scheduled job buckets
+
+- Add automations on release plan templates
+
+- Survey question UI 
+
+- Instrument the API token caches (v1 + v2)
+
+- Add token cache watermark
+
+- Add automations to release templates from UI
+
+- Add exposure transition condition type
+
+- Allow exposure based transition behind flag
+
+- Add inactive users tab to the tabbed users admin page ([#12540](https://github.com/Unleash/unleash/issues/12540))
+
+- Add generated orval models for the user access log ([#12557](https://github.com/Unleash/unleash/issues/12557))
+
+- Add Access log tab to the users admin page ([#12552](https://github.com/Unleash/unleash/issues/12552))
+
+- Mount UxTweakWidgets in the app shell
+
+- Gate uxtweak surveys behind an internal feature flag
+
+- Make the access log pagination bar stick to the bottom ([#12575](https://github.com/Unleash/unleash/issues/12575))
+
+- Shortest time frame by default in impact metrics and safegaurds
+
+- Ask ai docs widget
+
+- Add a bounded single-flight cache
+
+- Add exposures option and transition condition union types
+
+- Support exposure-based automations in release plans and templates
+
+- Add flag controlling single-flight caching
+
+- 7-day grace period between uxtweak surveys
+
+- Further uxtweak survey hardening
+
+- Show automations in CR release plan from template
+
+- Synchronize token caches across pods
+
+- Analytics has info about automation type used in template
+
+- Cap how often an ignored survey is shown
+
+- Add user-agent in login/logout events - EG-4692
+
+- Mutation tracking hook and form template events
+
+- Track segment journeys
+
+- Track context field journeys
+
+- Track flag row actions and lifecycle
+
+- Track project settings journeys
+
+- Track project access journeys
+
+- Simpler strategy setup - part 1 : add a flag and placeholder screen
+
+- Surface project-scoped Slack integrations in project settings
+
+- Strenghten the requirement around appName ([#11628](https://github.com/Unleash/unleash/issues/11628))
+
+- Make the winning survey deterministic across page loads
+
+- Simpler strategy setup - part 2: extract shared hooks + regression test
+
+- Submit survey answers to the UX Tweak server
+
+- Add totalUsage to feature usage metrics, behind flag
+
+- Simpler strategy setup - part 3: the two setup cards
+
+
+### Miscellaneous Tasks
+
+- Show tooltip after closing Getting started checklist
+
+- Don't run open animation all the time
+
+- Mark real Unleash tour completion
+
+- Hide advanced intro steps behind flag
+
+- Remove projectReleaseTemplate flag
+
+- Remove unused gh actions
+
+- Onboarding checklist metrics
+
+- Hide onboarding checklist if any project is onboarded already
+
+- Enable pending access requests notifications
+
+- Backend sharding
+
+- Add missing key in map
+
+- Remove redundant fragment
+
+- Delete dead code
+
+- Fix a number of minor lints
+
+- Consistent flag names for the onboarding intro tour
+
+- Remove unused title tracking
+
+- Alias IFeatureStrategyPayload to FeatureStrategySchema
+
+- Delete deprecated IFeatureStrategyPayload schema
+
+- Remove IFeatureStrategyParameters in favor of ParametersSchema
+
+- Intro tour tooltip 
+
+- Add releaseTemplatesAutomations flag
+
+- Correct paths for onboarding avatras
+
+- Add Enteprise tag to the new features 
+
+- Separate short tour description 
+
+- Reword automation button on template form
+
+- Update texts and fix styling a little
+
+- Chat help 
+
+- Add missing hubspot domain
+
+- Second batch of hubspot domain exclusions 
+
+- Log alias usage and stop creating alias for edge
+
+- Relax security for the chat
+
+- Make sure we send data 
+
+- Fix chat unknown visitor
+
+- Block hubspot tracking pixels
+
+- Add back the pixel domain 
+
+- Check billing before relaxing CSP
+
+- Remove sessionInspector flag
+
+- Bump js-yaml to 4.3.1
+
+- Add semverBuildMetadata flag
+
+- Try improving delay before tour is marked as done 
+
+- Hide frontend support for semver metadata behind flag
+
+- Close project onboarding when it's done
+
+- Adds Slack integration project level flag -> slackIntegrationProjectLevel
+
+- Regenerate all orval types
+
+- Rate limit search features, set to p95 of current usage
+
+- Skip the failing test ProjectFeatureToggles.test.tsx‎ 'shows archived batch actions when every selected flag is archived'
+
+- Bump orval from 7.21.0 to 8.22.0
+
+- Re-generate types with Orval 8.22.0
+
+- Bump @faker-js/faker from 10.4.0 to 10.5.0
+
+- Fix e2e tests with just a healthcheck ([#12610](https://github.com/Unleash/unleash/issues/12610))
+
+- REST API Guidelines ([#12544](https://github.com/Unleash/unleash/issues/12544))
+
+- Fix broken links in REST API guideline ([#12618](https://github.com/Unleash/unleash/issues/12618))
+
+
+### Performance
+
+- Intern low-cardinality flag string constants ([#12532](https://github.com/Unleash/unleash/issues/12532))
+
+- Intern constraint operator and contextName ([#12538](https://github.com/Unleash/unleash/issues/12538))
+
+- Canonicalize strings at cache boundaries ([#12541](https://github.com/Unleash/unleash/issues/12541))
+
+- Reduce feature search segment fan-out
+
+
+### Refactor
+
+- Enable useExhaustiveDependencies for App.tsx and fix warnings
+
+- Centralize secure token primitives
+
+- Improve typing around strategy edits (remove deprecated IFeatureStrategyPayload)
+
+- Unify transition condition component
+
+- Share transition condition input state
+
+- Centralize rate limits around authentication
+
+- Move impact metrics modal to impact metrics header
+
+
+### Styling
+
+- Polish floating onboarding checklist styling ([#12528](https://github.com/Unleash/unleash/issues/12528))
+
+
+### Testing
+
+- Some missing tests for onboaring checklist
+
+- Uxtweak survey adapter tests
+
+- Avoid snapshotting the default config
+
+- Survey question UI
+
+- Fix flaky ProjectFeatureToggles archived-batch test
+
+
+### Core
+
+- Remove some link duplication
+
+
 ## [8.1.0] - 2026-08-05
 
 ### Bug Fixes

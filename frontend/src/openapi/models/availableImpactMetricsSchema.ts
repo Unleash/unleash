@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { AvailableImpactMetricsSchemaMetricsItem } from './availableImpactMetricsSchemaMetricsItem';
+import type { AvailableImpactMetricsSchemaMetricsItem } from './availableImpactMetricsSchemaMetricsItem.ts';
 
 /**
  * Response containing the available impact metrics and their metadata.

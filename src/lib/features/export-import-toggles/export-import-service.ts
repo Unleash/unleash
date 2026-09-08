@@ -397,12 +397,11 @@ export default class ExportImportService
                     return [];
                 }
 
-                const projectId = feature!.project!;
                 return dependency.dependencies.map((parentDependency) =>
                     this.dependentFeaturesService.upsertFeatureDependency(
                         {
                             child: dependency.feature,
-                            projectId,
+                            projectId: dto.project,
                         },
                         parentDependency,
                         user,

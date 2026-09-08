@@ -1,4 +1,8 @@
-import { InvalidOperationError, PermissionError } from '../../error/index.js';
+import {
+    InvalidOperationError,
+    NotFoundError,
+    PermissionError,
+} from '../../error/index.js';
 import type { CreateDependentFeatureSchema } from '../../openapi/index.js';
 import type { IDependentFeaturesStore } from './dependent-features-store-type.js';
 import type {
@@ -103,12 +107,16 @@ export class DependentFeaturesService {
             );
         }
 
-        const [grandchildren, grandparents, parentExists, sameProject] =
+        const [grandchildren, grandparents, parentExists, featuresInProject] =
             await Promise.all([
                 this.dependentFeaturesReadModel.getChildren([child]),
                 this.dependentFeaturesReadModel.getParents(parent),
                 this.featuresReadModel.featureExists(parent),
-                this.featuresReadModel.featuresInTheSameProject(child, parent),
+                this.featuresReadModel.featuresInProject(
+                    child,
+                    parent,
+                    projectId,
+                ),
             ]);
 
         if (grandchildren.length > 0) {
@@ -129,9 +137,9 @@ export class DependentFeaturesService {
             );
         }
 
-        if (!sameProject) {
-            throw new InvalidOperationError(
-                'Parent and child features should be in the same project',
+        if (!featuresInProject) {
+            throw new NotFoundError(
+                `Cannot add the dependency. Both the parent and the child feature must belong to project "${projectId}".`,
             );
         }
 
@@ -168,7 +176,7 @@ export class DependentFeaturesService {
         projectId: string,
         user: IUser,
         auditUser: IAuditUser,
-    ): Promise<void> {
+    ): Promise<number> {
         await this.stopWhenChangeRequestsEnabled(projectId, user);
 
         return this.unprotectedDeleteFeatureDependency(
@@ -182,16 +190,24 @@ export class DependentFeaturesService {
         dependency: FeatureDependencyId,
         projectId: string,
         auditUser: IAuditUser,
-    ): Promise<void> {
-        await this.dependentFeaturesStore.delete(dependency);
-        await this.eventService.storeEvent(
-            new FeatureDependencyRemovedEvent({
-                project: projectId,
-                featureName: dependency.child,
-                auditUser,
-                data: { feature: dependency.parent },
-            }),
+    ): Promise<number> {
+        const deletedCount = await this.dependentFeaturesStore.delete(
+            dependency,
+            projectId,
         );
+
+        if (deletedCount > 0) {
+            await this.eventService.storeEvent(
+                new FeatureDependencyRemovedEvent({
+                    project: projectId,
+                    featureName: dependency.child,
+                    auditUser,
+                    data: { feature: dependency.parent },
+                }),
+            );
+        }
+
+        return deletedCount;
     }
 
     async deleteFeaturesDependencies(
@@ -199,7 +215,7 @@ export class DependentFeaturesService {
         projectId: string,
         user: IUser,
         auditUser: IAuditUser,
-    ): Promise<void> {
+    ): Promise<number> {
         await this.stopWhenChangeRequestsEnabled(projectId, user);
 
         return this.unprotectedDeleteFeaturesDependencies(
@@ -213,9 +229,12 @@ export class DependentFeaturesService {
         features: string[],
         projectId: string,
         auditUser: IAuditUser,
-    ): Promise<void> {
+    ): Promise<number> {
         const dependencies =
-            await this.dependentFeaturesReadModel.getDependencies(features);
+            await this.dependentFeaturesReadModel.getDependencies(
+                features,
+                projectId,
+            );
         const featuresWithDependencies = dependencies.map(
             (dependency) => dependency.feature,
         );
@@ -234,6 +253,8 @@ export class DependentFeaturesService {
                 ),
             );
         }
+
+        return featuresWithDependencies.length;
     }
 
     async getPossibleParentFeatures(feature: string): Promise<string[]> {

@@ -3,12 +3,12 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestDefaultChangeSchemaPayload } from './changeRequestDefaultChangeSchemaPayload';
+import type { ChangeRequestDefaultChangeSchemaPayload } from './changeRequestDefaultChangeSchemaPayload.ts';
 
 /**
  * A description of a default change that will be applied with the change request to prevent invalid states.
-
-Default changes are changes that are applied in addition to explicit user-specified changes when a change request is applied. Any default changes are applied in the background and are not a real part of the change request.
+ *
+ * Default changes are changes that are applied in addition to explicit user-specified changes when a change request is applied. Any default changes are applied in the background and are not a real part of the change request.
  */
 export interface ChangeRequestDefaultChangeSchema {
     /** The kind of action this is. */

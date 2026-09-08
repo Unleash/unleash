@@ -10,7 +10,6 @@
 export type PersonalDashboardSchemaProjectOwnersItemOwnerType =
     (typeof PersonalDashboardSchemaProjectOwnersItemOwnerType)[keyof typeof PersonalDashboardSchemaProjectOwnersItemOwnerType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PersonalDashboardSchemaProjectOwnersItemOwnerType = {
     user: 'user',
 } as const;

@@ -10,7 +10,6 @@
 export type ChangeRequestCreateFeatureSchemaOneOfTwofourAction =
     (typeof ChangeRequestCreateFeatureSchemaOneOfTwofourAction)[keyof typeof ChangeRequestCreateFeatureSchemaOneOfTwofourAction];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestCreateFeatureSchemaOneOfTwofourAction = {
     addReleasePlan: 'addReleasePlan',
 } as const;

@@ -9,7 +9,7 @@ export type FeatureStatus =
     | {
           type: 'partialProduction';
           enabledEnvironments: string[];
-          total: number;
+          disabledEnvironments: string[];
       }
     | { type: 'noProductionEnvironments' }
     | { type: 'milestone'; name: string | null; order: number; total: number }
@@ -67,21 +67,22 @@ export const getFeatureStatus = ({
         }
 
         if (productionEnvironments.length > 1) {
-            const enabledEnvironments = productionEnvironments.filter(
-                (env) => env.enabled,
-            );
+            const enabledEnvironments = productionEnvironments
+                .filter((env) => env.enabled)
+                .map((env) => env.name);
+            const disabledEnvironments = productionEnvironments
+                .filter((env) => !env.enabled)
+                .map((env) => env.name);
 
             if (enabledEnvironments.length === 0) {
                 return { type: 'paused', environment: 'production' };
             }
 
-            if (enabledEnvironments.length !== productionEnvironments.length) {
+            if (disabledEnvironments.length > 0) {
                 return {
                     type: 'partialProduction',
-                    enabledEnvironments: enabledEnvironments.map(
-                        (env) => env.name,
-                    ),
-                    total: productionEnvironments.length,
+                    enabledEnvironments,
+                    disabledEnvironments,
                 };
             }
         }

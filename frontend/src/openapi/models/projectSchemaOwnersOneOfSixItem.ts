@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectSchemaOwnersOneOfSixItemOwnerType } from './projectSchemaOwnersOneOfSixItemOwnerType';
+import type { ProjectSchemaOwnersOneOfSixItemOwnerType } from './projectSchemaOwnersOneOfSixItemOwnerType.ts';
 
 export type ProjectSchemaOwnersOneOfSixItem = {
     ownerType: ProjectSchemaOwnersOneOfSixItemOwnerType;

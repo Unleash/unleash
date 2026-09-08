@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { TransitionConditionSchemaOneOfType } from './transitionConditionSchemaOneOfType';
+import type { TransitionConditionSchemaOneOfType } from './transitionConditionSchemaOneOfType.ts';
 
 /**
  * Transition after a fixed amount of time from milestone start

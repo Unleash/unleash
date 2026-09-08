@@ -10,7 +10,6 @@
 export type HealthReportSchemaMode =
     (typeof HealthReportSchemaMode)[keyof typeof HealthReportSchemaMode];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const HealthReportSchemaMode = {
     open: 'open',
     protected: 'protected',

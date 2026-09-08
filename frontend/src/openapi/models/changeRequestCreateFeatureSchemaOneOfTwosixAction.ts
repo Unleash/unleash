@@ -10,7 +10,6 @@
 export type ChangeRequestCreateFeatureSchemaOneOfTwosixAction =
     (typeof ChangeRequestCreateFeatureSchemaOneOfTwosixAction)[keyof typeof ChangeRequestCreateFeatureSchemaOneOfTwosixAction];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestCreateFeatureSchemaOneOfTwosixAction = {
     startMilestone: 'startMilestone',
 } as const;

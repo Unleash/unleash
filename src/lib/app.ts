@@ -40,6 +40,14 @@ import backendApiAccessMiddleware from './middleware/backend-token-middleware.js
 import frontendApiAccessMiddleware from './middleware/frontend-token-middleware.js';
 import { createRateLimitMiddleware } from './middleware/rate-limit-middleware.js';
 
+export const normalizeUrlPath = (url: string): string => {
+    const queryIndex = url.indexOf('?');
+    const path = queryIndex === -1 ? url : url.slice(0, queryIndex);
+    const query = queryIndex === -1 ? '' : url.slice(queryIndex);
+
+    return path.replace(/\/+/g, '/') + query;
+};
+
 export default async function getApp(
     config: IUnleashConfig,
     stores: IUnleashStores,
@@ -82,7 +90,7 @@ export default async function getApp(
     app.use(cookieParser());
 
     app.use((req, _res, next) => {
-        req.url = req.url.replace(/\/+/g, '/');
+        req.url = normalizeUrlPath(req.url);
         next();
     });
     app.use(

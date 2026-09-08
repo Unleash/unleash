@@ -10,7 +10,6 @@
 export type FeatureEnvironmentSafeguardSchemaImpactMetricAggregationMode =
     (typeof FeatureEnvironmentSafeguardSchemaImpactMetricAggregationMode)[keyof typeof FeatureEnvironmentSafeguardSchemaImpactMetricAggregationMode];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const FeatureEnvironmentSafeguardSchemaImpactMetricAggregationMode = {
     rps: 'rps',
     count: 'count',

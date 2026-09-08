@@ -4,10 +4,7 @@ import type { FeatureSearchResponseSchema } from 'openapi';
 export const getStatus = ({
     lifecycle,
     environments,
-}: Pick<
-    FeatureSearchResponseSchema,
-    'lifecycle' | 'environments' | 'lastSeenAt'
->) => {
+}: Pick<FeatureSearchResponseSchema, 'lifecycle' | 'environments'>) => {
     if (lifecycle?.stage === 'initial') {
         if (
             environments?.some((env) => env.type !== PRODUCTION && env.enabled)

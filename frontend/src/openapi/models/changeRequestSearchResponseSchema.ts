@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestSearchItemSchema } from './changeRequestSearchItemSchema';
+import type { ChangeRequestSearchItemSchema } from './changeRequestSearchItemSchema.ts';
 
 /**
  * Response containing a list of change requests and total count.

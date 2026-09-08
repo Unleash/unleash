@@ -176,6 +176,11 @@ function loadRateLimitingConfig(options: IUnleashOptions): IRateLimiting {
         20_000,
     );
 
+    const searchFeaturesMaxPerMinute = parseEnvVarNumber(
+        process.env.SEARCH_FEATURES_RATE_LIMIT_PER_MINUTE,
+        15,
+    );
+
     const defaultRateLimitOptions: IRateLimiting = {
         createUserMaxPerMinute,
         simpleLoginMaxPerMinute,
@@ -184,6 +189,7 @@ function loadRateLimitingConfig(options: IUnleashOptions): IRateLimiting {
         callSignalEndpointMaxPerSecond,
         tokenAuthenticationMaxPerMinute,
         sdkApiMaxPerMinute,
+        searchFeaturesMaxPerMinute,
     };
     return mergeAll([defaultRateLimitOptions, options.rateLimiting || {}]);
 }

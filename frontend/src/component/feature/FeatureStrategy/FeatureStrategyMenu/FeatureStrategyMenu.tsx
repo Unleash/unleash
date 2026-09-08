@@ -25,7 +25,7 @@ interface IFeatureStrategyMenuProps {
     featureId: string;
     environmentId: string;
     isStrategyMenuDialogOpen: boolean;
-    onClose: any;
+    onClose: () => void;
     defaultFilter?: StrategyFilterValue;
 }
 

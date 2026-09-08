@@ -3,12 +3,12 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectActivitySchema } from './projectActivitySchema';
-import type { ProjectStatusSchemaHealth } from './projectStatusSchemaHealth';
-import type { ProjectStatusSchemaLifecycleSummary } from './projectStatusSchemaLifecycleSummary';
-import type { ProjectStatusSchemaResources } from './projectStatusSchemaResources';
-import type { ProjectStatusSchemaStaleFlags } from './projectStatusSchemaStaleFlags';
-import type { ProjectStatusSchemaTechnicalDebt } from './projectStatusSchemaTechnicalDebt';
+import type { ProjectActivitySchema } from './projectActivitySchema.ts';
+import type { ProjectStatusSchemaHealth } from './projectStatusSchemaHealth.ts';
+import type { ProjectStatusSchemaLifecycleSummary } from './projectStatusSchemaLifecycleSummary.ts';
+import type { ProjectStatusSchemaResources } from './projectStatusSchemaResources.ts';
+import type { ProjectStatusSchemaStaleFlags } from './projectStatusSchemaStaleFlags.ts';
+import type { ProjectStatusSchemaTechnicalDebt } from './projectStatusSchemaTechnicalDebt.ts';
 
 /**
  * Schema representing the overall status of a project, including an array of activity records. Each record in the activity array contains a date and a count, providing a snapshot of the project’s activity level over time.

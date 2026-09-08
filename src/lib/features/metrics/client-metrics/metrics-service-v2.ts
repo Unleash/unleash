@@ -345,6 +345,11 @@ export default class ClientMetricsServiceV2 {
             await this.clientMetricsStoreV2.getSeenAppsForFeatureToggle(
                 featureName,
             );
+        const totalUsage = this.flagResolver.isEnabled('totalUsageMetrics')
+            ? await this.clientMetricsStoreV2.getTotalUsageForFeature(
+                  featureName,
+              )
+            : undefined;
 
         const groupedMetrics = metrics.reduce((prev, curr) => {
             if (prev[curr.environment]) {
@@ -364,6 +369,7 @@ export default class ClientMetricsServiceV2 {
         return {
             featureName,
             lastHourUsage: Object.values(groupedMetrics),
+            ...(totalUsage && { totalUsage }),
             seenApplications,
         };
     }

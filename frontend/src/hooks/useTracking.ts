@@ -1,37 +1,73 @@
+import { useMemo, useRef } from 'react';
 import { useEventTracker } from 'hooks/useEventTracker';
-import {
-    emitTrackingAction,
-    type TrackingAction,
-    type TrackingProps,
-    type Tracking,
-    runTrackedMutation,
+import type {
+    TrackingAction,
+    TrackingProps,
+    Tracking,
 } from 'utils/trackingEvents';
+import { requestFailureProps } from 'utils/requestFailureProps';
 
-export const useTracking = (tracking: Tracking | undefined) => {
-    const { trackEvent } = useEventTracker();
+type TrackEvent = ReturnType<typeof useEventTracker>['trackEvent'];
 
-    const track = (action: TrackingAction, props?: TrackingProps) => {
+type Tracker = {
+    track: (action: TrackingAction, props?: TrackingProps) => void;
+    trackMutation: <T>(
+        fn: () => Promise<T>,
+        props?: TrackingProps,
+    ) => Promise<T>;
+    trackValidationFailed: (props?: TrackingProps) => void;
+};
+
+const createTracker = (
+    trackEvent: TrackEvent,
+    getTracking: () => Tracking | undefined,
+): Tracker => {
+    const track: Tracker['track'] = (action, props) => {
+        const tracking = getTracking();
         if (!tracking) {
             return;
         }
-        emitTrackingAction(trackEvent, tracking, action, props);
+        trackEvent(tracking.event, {
+            props: {
+                ...tracking.props,
+                ...props,
+                ...(tracking.type ? { eventType: tracking.type } : {}),
+                action,
+            },
+        });
     };
 
-    const trackMutation = async <T>(
-        fn: () => Promise<T>,
-        props?: TrackingProps,
-    ): Promise<T> => {
-        if (!tracking) {
-            return fn();
-        }
-        return runTrackedMutation(trackEvent, tracking, fn, props);
+    return {
+        track,
+        // Rethrows so the caller still handles toasts and errors.
+        trackMutation: async (fn, props) => {
+            track('submitted', props);
+            try {
+                const result = await fn();
+                track('succeeded', props);
+                return result;
+            } catch (error: unknown) {
+                track('failed', { ...props, ...requestFailureProps(error) });
+                throw error;
+            }
+        },
+        // Counts as an attempt too, so submitted and failed both get a row.
+        trackValidationFailed: (props) => {
+            track('submitted', props);
+            track('failed', { ...props, failedOn: 'validation' });
+        },
     };
+};
 
-    // A validation failure is still an attempt, so it lands in the same denominator.
-    const trackValidationFailed = (props?: TrackingProps) => {
-        track('submitted', props);
-        track('failed', { ...props, failedOn: 'validation' });
-    };
+// The declaration is read through a ref at call time, so the returned functions stay stable
+// across renders and are safe in effect dependency lists. Without a declaration every call is a no-op.
+export const useTracking = (tracking: Tracking | undefined): Tracker => {
+    const { trackEvent } = useEventTracker();
+    const trackingRef = useRef(tracking);
+    trackingRef.current = tracking;
 
-    return { track, trackMutation, trackValidationFailed };
+    return useMemo(
+        () => createTracker(trackEvent, () => trackingRef.current),
+        [trackEvent],
+    );
 };

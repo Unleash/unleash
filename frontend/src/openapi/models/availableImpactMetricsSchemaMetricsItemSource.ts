@@ -10,7 +10,6 @@
 export type AvailableImpactMetricsSchemaMetricsItemSource =
     (typeof AvailableImpactMetricsSchemaMetricsItemSource)[keyof typeof AvailableImpactMetricsSchemaMetricsItemSource];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const AvailableImpactMetricsSchemaMetricsItemSource = {
     internal: 'internal',
     external: 'external',

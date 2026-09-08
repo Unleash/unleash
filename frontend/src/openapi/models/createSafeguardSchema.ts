@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateSafeguardSchemaImpactMetric } from './createSafeguardSchemaImpactMetric';
-import type { SafeguardTriggerConditionSchema } from './safeguardTriggerConditionSchema';
+import type { CreateSafeguardSchemaImpactMetric } from './createSafeguardSchemaImpactMetric.ts';
+import type { SafeguardTriggerConditionSchema } from './safeguardTriggerConditionSchema.ts';
 
 /**
  * Request body to create a safeguard with metric-based alert condition.

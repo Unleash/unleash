@@ -10,7 +10,6 @@
 export type UserAccessLogEntrySchemaStatus =
     (typeof UserAccessLogEntrySchemaStatus)[keyof typeof UserAccessLogEntrySchemaStatus];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UserAccessLogEntrySchemaStatus = {
     added: 'added',
     removed: 'removed',

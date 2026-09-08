@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SdkContextSchema } from './sdkContextSchema';
-import type { PlaygroundRequestSchemaProjects } from './playgroundRequestSchemaProjects';
+import type { PlaygroundRequestSchemaProjects } from './playgroundRequestSchemaProjects.ts';
+import type { SdkContextSchema } from './sdkContextSchema.ts';
 
 /**
  * Data for the playground API to evaluate feature flags

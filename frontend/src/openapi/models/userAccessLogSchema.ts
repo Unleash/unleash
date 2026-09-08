@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { UserAccessLogEntrySchema } from './userAccessLogEntrySchema';
+import type { UserAccessLogEntrySchema } from './userAccessLogEntrySchema.ts';
 
 /**
  * A paginated list of user access log entries derived from the audit event stream.

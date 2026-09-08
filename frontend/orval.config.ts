@@ -19,6 +19,7 @@ export default defineConfig({
             propertySortOrder: 'Alphabetical',
             // mock: true,
             override: {
+                aliasCombinedTypes: true,
                 mutator: {
                     path: './fetcher.ts',
                     name: 'fetcher',

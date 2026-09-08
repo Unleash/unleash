@@ -37,6 +37,9 @@ export interface UserWithProjectRoleSchema {
      * @minimum 0
      */
     roleId?: number;
-    /** A list of roles this user has in the given project */
+    /**
+     * A list of roles this user has in the given project
+     * @items.minimum 0
+     */
     roles?: number[];
 }

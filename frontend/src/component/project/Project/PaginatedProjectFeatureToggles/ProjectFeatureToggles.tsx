@@ -237,7 +237,7 @@ export const ProjectFeatureToggles = ({
                 },
             }),
 
-            columnHelper.accessor('lastSeenAt', {
+            columnHelper.accessor((row) => row.environments, {
                 id: 'lastSeenAt',
                 header: 'Last seen',
                 cell: ({ row: { original } }) => (

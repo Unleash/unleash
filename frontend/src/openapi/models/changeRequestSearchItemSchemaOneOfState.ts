@@ -10,7 +10,6 @@
 export type ChangeRequestSearchItemSchemaOneOfState =
     (typeof ChangeRequestSearchItemSchemaOneOfState)[keyof typeof ChangeRequestSearchItemSchemaOneOfState];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestSearchItemSchemaOneOfState = {
     Draft: 'Draft',
     Approved: 'Approved',

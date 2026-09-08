@@ -182,6 +182,13 @@ const createRateLimitRules = (config: IUnleashConfig): RateLimitRule[] => {
                 limit: config.rateLimiting.callSignalEndpointMaxPerSecond,
             },
         },
+        {
+            pathPrefixes: ['/api/admin/search/features'],
+            afterAuthentication: {
+                ...perMinute,
+                limit: config.rateLimiting.searchFeaturesMaxPerMinute,
+            },
+        },
     ];
 };
 

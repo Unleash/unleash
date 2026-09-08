@@ -10,7 +10,6 @@
 export type ImpactMetricsConfigSchemaMode =
     (typeof ImpactMetricsConfigSchemaMode)[keyof typeof ImpactMetricsConfigSchemaMode];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ImpactMetricsConfigSchemaMode = {
     read: 'read',
     write: 'write',

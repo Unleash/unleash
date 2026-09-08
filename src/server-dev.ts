@@ -66,6 +66,7 @@ process.nextTick(async () => {
                         slackIntegrationProjectLevel: true,
                         flagStatusTooltips: true,
                         simplerStrategySetup: true,
+                        totalUsageMetrics: true,
                     },
                 },
                 authentication: {

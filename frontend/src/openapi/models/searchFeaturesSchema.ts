@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureSearchResponseSchema } from './featureSearchResponseSchema';
+import type { FeatureSearchResponseSchema } from './featureSearchResponseSchema.ts';
 
 /**
  * A list of features matching search and filter criteria.

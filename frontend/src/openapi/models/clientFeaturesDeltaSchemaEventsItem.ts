@@ -3,11 +3,11 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ClientFeaturesDeltaSchemaEventsItemAnyOf } from './clientFeaturesDeltaSchemaEventsItemAnyOf';
-import type { ClientFeaturesDeltaSchemaEventsItemAnyOfThree } from './clientFeaturesDeltaSchemaEventsItemAnyOfThree';
-import type { ClientFeaturesDeltaSchemaEventsItemAnyOfFive } from './clientFeaturesDeltaSchemaEventsItemAnyOfFive';
-import type { ClientFeaturesDeltaSchemaEventsItemAnyOfSeven } from './clientFeaturesDeltaSchemaEventsItemAnyOfSeven';
-import type { ClientFeaturesDeltaSchemaEventsItemAnyOfNine } from './clientFeaturesDeltaSchemaEventsItemAnyOfNine';
+import type { ClientFeaturesDeltaSchemaEventsItemAnyOf } from './clientFeaturesDeltaSchemaEventsItemAnyOf.ts';
+import type { ClientFeaturesDeltaSchemaEventsItemAnyOfFive } from './clientFeaturesDeltaSchemaEventsItemAnyOfFive.ts';
+import type { ClientFeaturesDeltaSchemaEventsItemAnyOfNine } from './clientFeaturesDeltaSchemaEventsItemAnyOfNine.ts';
+import type { ClientFeaturesDeltaSchemaEventsItemAnyOfSeven } from './clientFeaturesDeltaSchemaEventsItemAnyOfSeven.ts';
+import type { ClientFeaturesDeltaSchemaEventsItemAnyOfThree } from './clientFeaturesDeltaSchemaEventsItemAnyOfThree.ts';
 
 export type ClientFeaturesDeltaSchemaEventsItem =
     | ClientFeaturesDeltaSchemaEventsItemAnyOf

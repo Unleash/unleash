@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { UserAccessLogEntrySchemaPerformedBy } from './userAccessLogEntrySchemaPerformedBy';
-import type { UserAccessLogEntrySchemaStatus } from './userAccessLogEntrySchemaStatus';
-import type { UserAccessLogEntrySchemaUser } from './userAccessLogEntrySchemaUser';
+import type { UserAccessLogEntrySchemaPerformedBy } from './userAccessLogEntrySchemaPerformedBy.ts';
+import type { UserAccessLogEntrySchemaStatus } from './userAccessLogEntrySchemaStatus.ts';
+import type { UserAccessLogEntrySchemaUser } from './userAccessLogEntrySchemaUser.ts';
 
 /**
  * A single user access log entry: when a user was added to and/or removed from the Unleash instance, the role they held, and who performed the action.

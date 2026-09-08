@@ -10,7 +10,6 @@
 export type UpdateFeatureSchemaType =
     (typeof UpdateFeatureSchemaType)[keyof typeof UpdateFeatureSchemaType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UpdateFeatureSchemaType = {
     experiment: 'experiment',
     'kill-switch': 'kill-switch',

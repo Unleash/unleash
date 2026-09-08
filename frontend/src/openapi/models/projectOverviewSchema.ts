@@ -3,13 +3,13 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectEnvironmentSchema } from './projectEnvironmentSchema';
-import type { CreateFeatureNamingPatternSchema } from './createFeatureNamingPatternSchema';
-import type { FeatureTypeCountSchema } from './featureTypeCountSchema';
-import type { ProjectLinkTemplateSchema } from './projectLinkTemplateSchema';
-import type { ProjectOverviewSchemaMode } from './projectOverviewSchemaMode';
-import type { ProjectOverviewSchemaOnboardingStatus } from './projectOverviewSchemaOnboardingStatus';
-import type { ProjectStatsSchema } from './projectStatsSchema';
+import type { CreateFeatureNamingPatternSchema } from './createFeatureNamingPatternSchema.ts';
+import type { FeatureTypeCountSchema } from './featureTypeCountSchema.ts';
+import type { OnboardingStatusSchema } from './onboardingStatusSchema.ts';
+import type { ProjectEnvironmentSchema } from './projectEnvironmentSchema.ts';
+import type { ProjectLinkTemplateSchema } from './projectLinkTemplateSchema.ts';
+import type { ProjectOverviewSchemaMode } from './projectOverviewSchemaMode.ts';
+import type { ProjectStatsSchema } from './projectStatsSchema.ts';
 
 /**
  * A high-level overview of a project. It contains information such as project statistics, the name of the project, what members and what features it contains, etc.
@@ -57,8 +57,7 @@ export interface ProjectOverviewSchema {
     mode?: ProjectOverviewSchemaMode;
     /** The name of this project */
     name: string;
-    /** The current onboarding status of the project. */
-    onboardingStatus: ProjectOverviewSchemaOnboardingStatus;
+    onboardingStatus: OnboardingStatusSchema;
     /** Project statistics */
     stats?: ProjectStatsSchema;
     /**

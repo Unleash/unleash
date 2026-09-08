@@ -21,6 +21,7 @@ const openApiService = {
 
 const appModule = await import('./app.js');
 getApp = appModule.default;
+const { normalizeUrlPath } = appModule;
 
 afterEach(async () => {
     promClient.register.clear();
@@ -52,6 +53,26 @@ test('should call preRouterHook', async () => {
     });
     await getApp(config, {}, { openApiService });
     expect(called).toBe(1);
+});
+
+test.each([
+    ['//api/admin/tags', '/api/admin/tags'],
+    ['////api/client/features', '/api/client/features'],
+    ['/demo///api/client/features', '/demo/api/client/features'],
+    [
+        '/auth/oidc/callback?iss=https%3A%2F%2Faccounts.google.com',
+        '/auth/oidc/callback?iss=https%3A%2F%2Faccounts.google.com',
+    ],
+    [
+        '/auth/oidc/callback?iss=https://accounts.google.com',
+        '/auth/oidc/callback?iss=https://accounts.google.com',
+    ],
+    [
+        '//auth//oidc/callback?iss=https://accounts.google.com&returnTo=//dashboard',
+        '/auth/oidc/callback?iss=https://accounts.google.com&returnTo=//dashboard',
+    ],
+])('normalizes only the URL path for %s', (url, expected) => {
+    expect(normalizeUrlPath(url)).toBe(expected);
 });
 
 describe('compression middleware', () => {

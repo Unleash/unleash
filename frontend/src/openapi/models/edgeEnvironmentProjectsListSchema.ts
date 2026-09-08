@@ -3,14 +3,12 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { EdgeEnvironmentProjectsListSchemaTokensItem } from './edgeEnvironmentProjectsListSchemaTokensItem';
+import type { EdgeEnvironmentProjectsListSchemaTokensItem } from './edgeEnvironmentProjectsListSchemaTokensItem.ts';
 
 /**
  * Schema to request api tokens for a list of environment -> projects tuples
  */
 export interface EdgeEnvironmentProjectsListSchema {
-    /**
-     * A list of requested api tokens.
-     */
+    /** A list of requested api tokens. */
     tokens: EdgeEnvironmentProjectsListSchemaTokensItem[];
 }

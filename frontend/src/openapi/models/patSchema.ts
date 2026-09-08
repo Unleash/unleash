@@ -3,8 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-
-import type { PatSchemaExpiryWarning } from './patSchemaExpiryWarning';
+import type { PatSchemaExpiryWarning } from './patSchemaExpiryWarning.ts';
 
 /**
  * Describes a [personal access token](https://docs.getunleash.io/concepts/api-tokens-and-client-keys#personal-access-tokens), or PAT. PATs are automatically scoped to the authenticated user.

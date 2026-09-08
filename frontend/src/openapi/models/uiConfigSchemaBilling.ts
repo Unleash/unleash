@@ -10,7 +10,6 @@
 export type UiConfigSchemaBilling =
     (typeof UiConfigSchemaBilling)[keyof typeof UiConfigSchemaBilling];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UiConfigSchemaBilling = {
     subscription: 'subscription',
     'pay-as-you-go': 'pay-as-you-go',

@@ -43,7 +43,7 @@ describe('FeatureStatusLabel', () => {
         );
     });
 
-    it('names the environments a partially rolled out flag is enabled in', async () => {
+    it('restates the label in the tooltip if it would be truncated', async () => {
         renderStatus([
             productionEnvironment({ name: 'production-eu' }),
             productionEnvironment({ name: 'production-us', enabled: false }),
@@ -51,7 +51,7 @@ describe('FeatureStatusLabel', () => {
 
         expect(
             await tooltipFor('In 1 out of 2 production environments'),
-        ).toHaveTextContent('Enabled in: production-eu');
+        ).toHaveTextContent('In 1 out of 2 production environments');
     });
 
     it('repeats the label for a status that needs no explanation', async () => {

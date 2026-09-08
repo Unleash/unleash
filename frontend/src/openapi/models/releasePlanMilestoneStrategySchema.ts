@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ConstraintSchema } from './constraintSchema';
-import type { ParametersSchema } from './parametersSchema';
-import type { CreateStrategyVariantSchema } from './createStrategyVariantSchema';
+import type { ConstraintSchema } from './constraintSchema.ts';
+import type { CreateStrategyVariantSchema } from './createStrategyVariantSchema.ts';
+import type { ParametersSchema } from './parametersSchema.ts';
 
 /**
  * Schema representing the creation of a release plan milestone strategy.
@@ -18,9 +18,7 @@ export interface ReleasePlanMilestoneStrategySchema {
      * @nullable
      */
     disabled?: boolean | null;
-    /**
-     * The milestone strategy's ID. Milestone strategy IDs are ulids.
-     */
+    /** The milestone strategy's ID. Milestone strategy IDs are ulids. */
     id: string;
     /** The ID of the milestone that this strategy belongs to. */
     milestoneId: string;

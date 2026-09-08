@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestOneOrManyCreateSchemaOneOfFivetwoAction } from './changeRequestOneOrManyCreateSchemaOneOfFivetwoAction';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfFivetwoPayload } from './changeRequestOneOrManyCreateSchemaOneOfFivetwoPayload';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfFivetwoAction } from './changeRequestOneOrManyCreateSchemaOneOfFivetwoAction.ts';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfFivetwoPayload } from './changeRequestOneOrManyCreateSchemaOneOfFivetwoPayload.ts';
 
 /**
  * Create or update a safeguard for a feature environment.

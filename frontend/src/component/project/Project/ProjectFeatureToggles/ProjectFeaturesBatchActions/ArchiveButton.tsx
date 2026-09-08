@@ -4,7 +4,7 @@ import { DELETE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { useEventTracker } from 'hooks/useEventTracker';
 import type { FeatureSchema } from 'openapi';
-import { addDays, isBefore } from 'date-fns';
+import { addDays, isAfter } from 'date-fns';
 
 interface IArchiveButtonProps {
     projectId: string;
@@ -15,11 +15,14 @@ interface IArchiveButtonProps {
 
 const DEFAULT_USAGE_THRESHOLD_DAYS = 7;
 
-const isFeatureInUse = (feature?: FeatureSchema): boolean => {
+export const isFeatureInUse = (feature?: FeatureSchema): boolean => {
     const aWeekAgo = addDays(new Date(), -DEFAULT_USAGE_THRESHOLD_DAYS);
-    return !!(
-        feature?.lastSeenAt && isBefore(new Date(feature.lastSeenAt), aWeekAgo)
-    );
+    const lastSeenAt = feature?.environments
+        ?.map((env) => env.lastSeenAt)
+        .filter(Boolean)
+        .sort()
+        .at(-1);
+    return Boolean(lastSeenAt && isAfter(new Date(lastSeenAt), aWeekAgo));
 };
 
 export const ArchiveButton: FC<IArchiveButtonProps> = ({

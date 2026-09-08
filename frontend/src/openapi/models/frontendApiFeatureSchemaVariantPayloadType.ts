@@ -10,7 +10,6 @@
 export type FrontendApiFeatureSchemaVariantPayloadType =
     (typeof FrontendApiFeatureSchemaVariantPayloadType)[keyof typeof FrontendApiFeatureSchemaVariantPayloadType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const FrontendApiFeatureSchemaVariantPayloadType = {
     json: 'json',
     csv: 'csv',

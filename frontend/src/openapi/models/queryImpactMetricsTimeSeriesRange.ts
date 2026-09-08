@@ -7,10 +7,11 @@
 export type QueryImpactMetricsTimeSeriesRange =
     (typeof QueryImpactMetricsTimeSeriesRange)[keyof typeof QueryImpactMetricsTimeSeriesRange];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const QueryImpactMetricsTimeSeriesRange = {
     hour: 'hour',
     day: 'day',
     week: 'week',
     month: 'month',
+    threeMonths: 'threeMonths',
+    sixMonths: 'sixMonths',
 } as const;

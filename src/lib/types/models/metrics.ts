@@ -5,8 +5,15 @@ export interface GroupedClientMetrics {
     no: number;
 }
 
+export interface EnvironmentTotalUsage {
+    environment: string;
+    yes: number;
+    no: number;
+}
+
 export interface ToggleMetricsSummary {
     featureName: string;
     lastHourUsage: GroupedClientMetrics[];
+    totalUsage?: EnvironmentTotalUsage[];
     seenApplications: string[];
 }

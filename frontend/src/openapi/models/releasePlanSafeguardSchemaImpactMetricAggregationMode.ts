@@ -10,7 +10,6 @@
 export type ReleasePlanSafeguardSchemaImpactMetricAggregationMode =
     (typeof ReleasePlanSafeguardSchemaImpactMetricAggregationMode)[keyof typeof ReleasePlanSafeguardSchemaImpactMetricAggregationMode];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ReleasePlanSafeguardSchemaImpactMetricAggregationMode = {
     rps: 'rps',
     count: 'count',

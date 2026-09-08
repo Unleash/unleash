@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestOneOrManyCreateSchemaOneOfThreesevenAction } from './changeRequestOneOrManyCreateSchemaOneOfThreesevenAction';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfThreesevenPayload } from './changeRequestOneOrManyCreateSchemaOneOfThreesevenPayload';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfThreesevenAction } from './changeRequestOneOrManyCreateSchemaOneOfThreesevenAction.ts';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfThreesevenPayload } from './changeRequestOneOrManyCreateSchemaOneOfThreesevenPayload.ts';
 
 /**
  * Create or update milestone progression from one milestone to another.

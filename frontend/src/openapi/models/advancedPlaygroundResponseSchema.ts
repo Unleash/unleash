@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { AdvancedPlaygroundFeatureSchema } from './advancedPlaygroundFeatureSchema';
-import type { AdvancedPlaygroundRequestSchema } from './advancedPlaygroundRequestSchema';
-import type { AdvancedPlaygroundResponseSchemaWarnings } from './advancedPlaygroundResponseSchemaWarnings';
+import type { AdvancedPlaygroundFeatureSchema } from './advancedPlaygroundFeatureSchema.ts';
+import type { AdvancedPlaygroundRequestSchema } from './advancedPlaygroundRequestSchema.ts';
+import type { AdvancedPlaygroundResponseSchemaWarnings } from './advancedPlaygroundResponseSchemaWarnings.ts';
 
 /**
  * The state of all features given the provided input.

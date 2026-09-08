@@ -3,13 +3,13 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { AdvancedPlaygroundEnvironmentFeatureSchemaVariantPayload } from './advancedPlaygroundEnvironmentFeatureSchemaVariantPayload';
+import type { AdvancedPlaygroundEnvironmentFeatureSchemaVariantPayload } from './advancedPlaygroundEnvironmentFeatureSchemaVariantPayload.ts';
 
 /**
  * The feature variant you receive based on the provided context or the _disabled
-                          variant_. If a feature is disabled or doesn't have any
-                          variants, you would get the _disabled variant_.
-                          Otherwise, you'll get one of the feature's defined variants.
+ *                           variant_. If a feature is disabled or doesn't have any
+ *                           variants, you would get the _disabled variant_.
+ *                           Otherwise, you'll get one of the feature's defined variants.
  * @nullable
  */
 export type AdvancedPlaygroundEnvironmentFeatureSchemaVariant = {

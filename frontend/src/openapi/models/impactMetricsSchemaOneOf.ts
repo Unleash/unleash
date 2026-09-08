@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ImpactMetricsSchemaOneOfSamplesItem } from './impactMetricsSchemaOneOfSamplesItem';
-import type { ImpactMetricsSchemaOneOfType } from './impactMetricsSchemaOneOfType';
+import type { ImpactMetricsSchemaOneOfSamplesItem } from './impactMetricsSchemaOneOfSamplesItem.ts';
+import type { ImpactMetricsSchemaOneOfType } from './impactMetricsSchemaOneOfType.ts';
 
 export type ImpactMetricsSchemaOneOf = {
     /** Human-readable description of what the metric measures */

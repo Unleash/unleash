@@ -10,7 +10,6 @@
 export type EdgeLicenseStateSchemaEdgeLicenseState =
     (typeof EdgeLicenseStateSchemaEdgeLicenseState)[keyof typeof EdgeLicenseStateSchemaEdgeLicenseState];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const EdgeLicenseStateSchemaEdgeLicenseState = {
     Valid: 'Valid',
     Invalid: 'Invalid',

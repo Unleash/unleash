@@ -7,7 +7,6 @@
 export type ClientFeaturesDeltaSchemaEventsItemAnyOfNineType =
     (typeof ClientFeaturesDeltaSchemaEventsItemAnyOfNineType)[keyof typeof ClientFeaturesDeltaSchemaEventsItemAnyOfNineType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ClientFeaturesDeltaSchemaEventsItemAnyOfNineType = {
     hydration: 'hydration',
 } as const;

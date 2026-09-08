@@ -3,10 +3,10 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { QueryImpactMetricsTimeSeriesRange } from './queryImpactMetricsTimeSeriesRange';
-import type { QueryImpactMetricsTimeSeriesAggregationMode } from './queryImpactMetricsTimeSeriesAggregationMode';
-import type { QueryImpactMetricsTimeSeriesMode } from './queryImpactMetricsTimeSeriesMode';
-import type { QueryImpactMetricsTimeSeriesSource } from './queryImpactMetricsTimeSeriesSource';
+import type { QueryImpactMetricsTimeSeriesAggregationMode } from './queryImpactMetricsTimeSeriesAggregationMode.ts';
+import type { QueryImpactMetricsTimeSeriesMode } from './queryImpactMetricsTimeSeriesMode.ts';
+import type { QueryImpactMetricsTimeSeriesRange } from './queryImpactMetricsTimeSeriesRange.ts';
+import type { QueryImpactMetricsTimeSeriesSource } from './queryImpactMetricsTimeSeriesSource.ts';
 
 export type QueryImpactMetricsTimeSeriesParams = {
     /**

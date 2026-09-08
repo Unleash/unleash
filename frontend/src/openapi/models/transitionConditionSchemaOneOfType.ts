@@ -10,7 +10,6 @@
 export type TransitionConditionSchemaOneOfType =
     (typeof TransitionConditionSchemaOneOfType)[keyof typeof TransitionConditionSchemaOneOfType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TransitionConditionSchemaOneOfType = {
     time: 'time',
 } as const;

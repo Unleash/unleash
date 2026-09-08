@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ConstraintSchema } from './constraintSchema';
-import type { ParametersSchema } from './parametersSchema';
-import type { StrategyVariantSchema } from './strategyVariantSchema';
+import type { ConstraintSchema } from './constraintSchema.ts';
+import type { ParametersSchema } from './parametersSchema.ts';
+import type { StrategyVariantSchema } from './strategyVariantSchema.ts';
 
 /**
  * Update a milestone strategy configuration for a feature flag

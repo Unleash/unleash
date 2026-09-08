@@ -4,6 +4,9 @@
  * See `gen:api` script in package.json
  */
 
-export type FeatureSearchResponseSchemaStrategiesItem = {
+/**
+ * The condition configuration for the transition.
+ */
+export type ReleasePlanMilestoneSchemaTransitionConditionAnyOf = {
     [key: string]: unknown;
 };

@@ -3,9 +3,10 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { EventSchemaPreDataAnyOf } from './eventSchemaPreDataAnyOf.ts';
 
 /**
  * Data relating to the previous state of the event's subject.
  * @nullable
  */
-export type EventSchemaPreData = { [key: string]: unknown } | null;
+export type EventSchemaPreData = EventSchemaPreDataAnyOf | null;

@@ -10,7 +10,6 @@
 export type ChangeRequestOneOrManyCreateSchemaOneOfFivefiveAction =
     (typeof ChangeRequestOneOrManyCreateSchemaOneOfFivefiveAction)[keyof typeof ChangeRequestOneOrManyCreateSchemaOneOfFivefiveAction];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestOneOrManyCreateSchemaOneOfFivefiveAction = {
     deleteFeatureEnvSafeguard: 'deleteFeatureEnvSafeguard',
 } as const;

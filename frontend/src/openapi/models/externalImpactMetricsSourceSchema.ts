@@ -3,12 +3,13 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ExternalImpactMetricsSourceSchemaOneOf } from './externalImpactMetricsSourceSchemaOneOf';
-import type { ExternalImpactMetricsSourceSchemaOneOfTwo } from './externalImpactMetricsSourceSchemaOneOfTwo';
 
 /**
- * Configuration for connecting to an external impact-metrics source (any Prometheus-compatible endpoint). Either disabled, or enabled with a URL.
+ * Configuration for connecting to an external impact-metrics source (any Prometheus-compatible endpoint). A valid URL must be supplied whenever `enabled` is true, including when re-enabling after a previous disable.
  */
-export type ExternalImpactMetricsSourceSchema =
-    | ExternalImpactMetricsSourceSchemaOneOf
-    | ExternalImpactMetricsSourceSchemaOneOfTwo;
+export interface ExternalImpactMetricsSourceSchema {
+    /** Whether the external impact-metrics source is active. When `true`, `url` must be a valid non-empty URL. */
+    enabled: boolean;
+    /** Base URL of the external impact-metrics source. Basic-Auth credentials may be embedded in the URL (e.g. `https://user:pass@metrics.example.com`); they are extracted into an `Authorization` header on outbound requests. Required (non-empty, valid URL) when `enabled` is true; an empty string is discarded when `enabled` is false. */
+    url?: string;
+}

@@ -3,29 +3,29 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestOneOrManyCreateSchemaOneOf } from './changeRequestOneOrManyCreateSchemaOneOf';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfThree } from './changeRequestOneOrManyCreateSchemaOneOfThree';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfSix } from './changeRequestOneOrManyCreateSchemaOneOfSix';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfNine } from './changeRequestOneOrManyCreateSchemaOneOfNine';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfOneone } from './changeRequestOneOrManyCreateSchemaOneOfOneone';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfOnethree } from './changeRequestOneOrManyCreateSchemaOneOfOnethree';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfOnefive } from './changeRequestOneOrManyCreateSchemaOneOfOnefive';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfOneeight } from './changeRequestOneOrManyCreateSchemaOneOfOneeight';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfTwozero } from './changeRequestOneOrManyCreateSchemaOneOfTwozero';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfTwothree } from './changeRequestOneOrManyCreateSchemaOneOfTwothree';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfTwofive } from './changeRequestOneOrManyCreateSchemaOneOfTwofive';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfTwoseven } from './changeRequestOneOrManyCreateSchemaOneOfTwoseven';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfTwonine } from './changeRequestOneOrManyCreateSchemaOneOfTwonine';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfThreeone } from './changeRequestOneOrManyCreateSchemaOneOfThreeone';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfThreefour } from './changeRequestOneOrManyCreateSchemaOneOfThreefour';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfThreeseven } from './changeRequestOneOrManyCreateSchemaOneOfThreeseven';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfFourzero } from './changeRequestOneOrManyCreateSchemaOneOfFourzero';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfFourthree } from './changeRequestOneOrManyCreateSchemaOneOfFourthree';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfFoursix } from './changeRequestOneOrManyCreateSchemaOneOfFoursix';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfFournine } from './changeRequestOneOrManyCreateSchemaOneOfFournine';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfFivetwo } from './changeRequestOneOrManyCreateSchemaOneOfFivetwo';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfFivefive } from './changeRequestOneOrManyCreateSchemaOneOfFivefive';
-import type { ChangeRequestCreateSchema } from './changeRequestCreateSchema';
+import type { ChangeRequestCreateSchema } from './changeRequestCreateSchema.ts';
+import type { ChangeRequestOneOrManyCreateSchemaOneOf } from './changeRequestOneOrManyCreateSchemaOneOf.ts';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfFivefive } from './changeRequestOneOrManyCreateSchemaOneOfFivefive.ts';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfFivetwo } from './changeRequestOneOrManyCreateSchemaOneOfFivetwo.ts';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfFournine } from './changeRequestOneOrManyCreateSchemaOneOfFournine.ts';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfFoursix } from './changeRequestOneOrManyCreateSchemaOneOfFoursix.ts';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfFourthree } from './changeRequestOneOrManyCreateSchemaOneOfFourthree.ts';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfFourzero } from './changeRequestOneOrManyCreateSchemaOneOfFourzero.ts';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfNine } from './changeRequestOneOrManyCreateSchemaOneOfNine.ts';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfOneeight } from './changeRequestOneOrManyCreateSchemaOneOfOneeight.ts';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfOnefive } from './changeRequestOneOrManyCreateSchemaOneOfOnefive.ts';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfOneone } from './changeRequestOneOrManyCreateSchemaOneOfOneone.ts';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfOnethree } from './changeRequestOneOrManyCreateSchemaOneOfOnethree.ts';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfSix } from './changeRequestOneOrManyCreateSchemaOneOfSix.ts';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfThree } from './changeRequestOneOrManyCreateSchemaOneOfThree.ts';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfThreefour } from './changeRequestOneOrManyCreateSchemaOneOfThreefour.ts';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfThreeone } from './changeRequestOneOrManyCreateSchemaOneOfThreeone.ts';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfThreeseven } from './changeRequestOneOrManyCreateSchemaOneOfThreeseven.ts';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfTwofive } from './changeRequestOneOrManyCreateSchemaOneOfTwofive.ts';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfTwonine } from './changeRequestOneOrManyCreateSchemaOneOfTwonine.ts';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfTwoseven } from './changeRequestOneOrManyCreateSchemaOneOfTwoseven.ts';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfTwothree } from './changeRequestOneOrManyCreateSchemaOneOfTwothree.ts';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfTwozero } from './changeRequestOneOrManyCreateSchemaOneOfTwozero.ts';
 
 /**
  * Either a single change or a list of changes to create a change request from.

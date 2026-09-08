@@ -80,6 +80,7 @@ export * from './feature-dependencies-schema.js';
 export * from './feature-environment-metrics-schema.js';
 export * from './feature-environment-safeguard-schema.js';
 export * from './feature-environment-schema.js';
+export * from './feature-environment-total-usage-schema.js';
 export * from './feature-events-schema.js';
 export * from './feature-lifecycle-completed-schema.js';
 export * from './feature-lifecycle-count-schema.js';

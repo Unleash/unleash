@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ActionEventSchemaExecutionParams } from './actionEventSchemaExecutionParams';
-import type { ActionEventSchemaState } from './actionEventSchemaState';
+import type { ActionEventSchemaExecutionParams } from './actionEventSchemaExecutionParams.ts';
+import type { ActionEventSchemaState } from './actionEventSchemaState.ts';
 
 /**
  * An object describing an action event.

@@ -804,18 +804,30 @@ test('should search features by project with operators', async () => {
     });
 });
 
-test('should return segments in payload with no duplicates/nulls', async () => {
+test('should return segments across environments with no duplicates/nulls', async () => {
     await app.createFeature('my_feature_a');
-    const { body: mySegment } = await app.createSegment({
+    const { body: developmentSegment } = await app.createSegment({
         name: 'my_segment_a',
+        constraints: [],
+    });
+    const { body: productionSegment } = await app.createSegment({
+        name: 'my_segment_b',
         constraints: [],
     });
     await app.addStrategyToFeatureEnv(
         {
             name: 'default',
-            segments: [mySegment.id],
+            segments: [developmentSegment.id],
         },
         DEFAULT_ENV,
+        'my_feature_a',
+    );
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            segments: [productionSegment.id],
+        },
+        'production',
         'my_feature_a',
     );
     await app.enableFeature('my_feature_a', 'development');
@@ -826,7 +838,10 @@ test('should return segments in payload with no duplicates/nulls', async () => {
         features: [
             {
                 name: 'my_feature_a',
-                segments: [mySegment.name],
+                segments: expect.arrayContaining([
+                    developmentSegment.name,
+                    productionSegment.name,
+                ]),
                 environments: [
                     {
                         name: 'development',
@@ -835,13 +850,14 @@ test('should return segments in payload with no duplicates/nulls', async () => {
                     },
                     {
                         name: 'production',
-                        hasStrategies: false,
-                        hasEnabledStrategies: false,
+                        hasStrategies: true,
+                        hasEnabledStrategies: true,
                     },
                 ],
             },
         ],
     });
+    expect(body.features[0].segments).toHaveLength(2);
 });
 
 test('should filter features by segment', async () => {
@@ -941,6 +957,38 @@ test('should filter features by segment', async () => {
             { name: 'my_feature_a' },
             { name: 'my_feature_b' },
             { name: 'my_feature_c' },
+        ],
+    });
+});
+
+test('should filter status and segments independently across environments', async () => {
+    await app.createFeature('my_feature_a');
+    await app.enableFeature('my_feature_a', 'development');
+    const { body: productionSegment } = await app.createSegment({
+        name: 'production_segment',
+        constraints: [],
+    });
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            segments: [productionSegment.id],
+        },
+        'production',
+        'my_feature_a',
+    );
+
+    const { body } = await app.request
+        .get(
+            '/api/admin/search/features?segment=INCLUDE:production_segment&status[]=development:enabled',
+        )
+        .expect(200);
+
+    expect(body).toMatchObject({
+        features: [
+            {
+                name: 'my_feature_a',
+                segments: [productionSegment.name],
+            },
         ],
     });
 });

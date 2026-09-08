@@ -5,14 +5,14 @@
  */
 
 /**
- * The link to any URL related to the feature
+ * An optional link to display at the end of the alert text.
  */
-export interface FeatureLinkSchema {
+export type AddonTypeSchemaAlertsItemLink = {
     /**
-     * The description of the link
+     * The display title of the link.
      * @nullable
      */
     title?: string | null;
-    /** The URL the feature is linked to */
+    /** The URL of the link. */
     url: string;
-}
+};

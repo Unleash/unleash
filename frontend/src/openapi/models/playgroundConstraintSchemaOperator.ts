@@ -10,7 +10,6 @@
 export type PlaygroundConstraintSchemaOperator =
     (typeof PlaygroundConstraintSchemaOperator)[keyof typeof PlaygroundConstraintSchemaOperator];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PlaygroundConstraintSchemaOperator = {
     NOT_IN: 'NOT_IN',
     IN: 'IN',

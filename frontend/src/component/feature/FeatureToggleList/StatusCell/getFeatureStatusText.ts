@@ -49,11 +49,18 @@ export const getFeatureStatusText = (
                 label: 'Paused',
                 tooltip: pausedTooltips[status.environment],
             };
-        case 'partialProduction':
+        case 'partialProduction': {
+            const { enabledEnvironments, disabledEnvironments } = status;
+            const total =
+                enabledEnvironments.length + disabledEnvironments.length;
+            const label = `In ${enabledEnvironments.length} out of ${total} production environments`;
+
             return {
-                label: `In ${status.enabledEnvironments.length} out of ${status.total} production environments`,
-                tooltip: `Enabled in: ${status.enabledEnvironments.join(', ')}`,
+                label,
+                // restating the label because it's a long one and could be truncated.
+                tooltip: `${label}. Enabled in: ${enabledEnvironments.join(', ')}. Disabled in: ${disabledEnvironments.join(', ')}`,
             };
+        }
         case 'noProductionEnvironments': {
             const label = 'No production environments';
             return { label, tooltip: label };

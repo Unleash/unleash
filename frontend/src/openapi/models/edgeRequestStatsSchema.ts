@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { EdgeEndpointTrafficSchema } from './edgeEndpointTrafficSchema';
+import type { EdgeEndpointTrafficSchema } from './edgeEndpointTrafficSchema.ts';
 
 /**
  * Represents Edge traffic data.

@@ -77,7 +77,7 @@ patchedDependencies:
   # See: https://github.com/TanStack/table/issues/4908
   '@tanstack/table-core@8.21.3': patches/@tanstack__table-core@8.21.3.patch
 overrides:
-  "@codemirror/state": "6.7.1"
+  "@codemirror/state": "6.7.2"
   "@types/express-session>@types/express": "4.17.25"
   "@types/react": "^19.0.0"
   "@wesleytodd/openapi>path-to-regexp": "6.3.0"
@@ -86,7 +86,7 @@ overrides:
   async: "^3.2.4"
   es5-ext: "0.10.64"
   esbuild: "0.28.2"
-  axios: "1.18.0"
+  axios: "1.20.0"
   body-parser: "1.20.6"
   browserslist: "4.28.8"
   "brace-expansion@^1.1.7": "1.1.18"
@@ -106,8 +106,9 @@ overrides:
   markdown-it: "14.2.0"
   "minimatch@3.1.2": "10.2.6"
   node-forge: "^1.0.0"
-  nwsapi: "2.2.24"
+  nwsapi: "2.2.27"
   prompt: "link:./node_modules/.cache/null"
+  qs: "6.16.0"
   react: "^19.0.0"
   react-dom: "^19.0.0"
   "router>path-to-regexp": "1.9.0"

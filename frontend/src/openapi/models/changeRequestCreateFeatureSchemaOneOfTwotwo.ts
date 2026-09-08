@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestCreateFeatureSchemaOneOfTwotwoAction } from './changeRequestCreateFeatureSchemaOneOfTwotwoAction';
+import type { ChangeRequestCreateFeatureSchemaOneOfTwotwoAction } from './changeRequestCreateFeatureSchemaOneOfTwotwoAction.ts';
 
 /**
  * Remove a parent feature dependency or all dependencies if no payload.

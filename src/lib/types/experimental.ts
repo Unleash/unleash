@@ -83,6 +83,7 @@ export type IFlagKey =
     | 'slackIntegrationProjectLevel'
     | 'flagStatusTooltips'
     | 'simplerStrategySetup'
+    | 'totalUsageMetrics'
     | keyof IFlagKeyOverrides;
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -374,6 +375,10 @@ const flags: IFlags = {
     ),
     flagStatusTooltips: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FLAG_STATUS_TOOLTIPS,
+        false,
+    ),
+    totalUsageMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_TOTAL_USAGE_METRICS,
         false,
     ),
 };

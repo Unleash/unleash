@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SignalEndpointSignalSchemaPayload } from './signalEndpointSignalSchemaPayload';
-import type { SignalEndpointSignalSchemaSource } from './signalEndpointSignalSchemaSource';
+import type { SignalEndpointSignalSchemaPayload } from './signalEndpointSignalSchemaPayload.ts';
+import type { SignalEndpointSignalSchemaSource } from './signalEndpointSignalSchemaSource.ts';
 
 /**
  * An object describing a signal originated from a signal endpoint.

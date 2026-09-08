@@ -10,7 +10,6 @@
 export type CreateFeatureSchemaType =
     (typeof CreateFeatureSchemaType)[keyof typeof CreateFeatureSchemaType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateFeatureSchemaType = {
     experiment: 'experiment',
     'kill-switch': 'kill-switch',

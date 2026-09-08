@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { BulkRegistrationSchemaConnectViaItem } from './bulkRegistrationSchemaConnectViaItem';
-import type { BulkRegistrationSchemaSdkType } from './bulkRegistrationSchemaSdkType';
-import type { DateSchema } from './dateSchema';
+import type { BulkRegistrationSchemaConnectViaItem } from './bulkRegistrationSchemaConnectViaItem.ts';
+import type { BulkRegistrationSchemaSdkType } from './bulkRegistrationSchemaSdkType.ts';
+import type { DateSchema } from './dateSchema.ts';
 
 /**
  * An application registration. Defines the format POSTed by our backend SDKs when they're starting up
@@ -13,8 +13,10 @@ import type { DateSchema } from './dateSchema';
 export interface BulkRegistrationSchema {
     /** The name of the application that is evaluating toggles */
     appName: string;
-    /** A list of applications this app registration has been registered through. If connected directly to Unleash, this is an empty list. 
- This can be used in later visualizations to tell how many levels of proxy or Edge instances our SDKs have connected through */
+    /**
+     * A list of applications this app registration has been registered through. If connected directly to Unleash, this is an empty list.
+     *  This can be used in later visualizations to tell how many levels of proxy or Edge instances our SDKs have connected through
+     */
     connectVia?: BulkRegistrationSchemaConnectViaItem[];
     /** Which environment the application is running in */
     environment: string;
@@ -24,6 +26,16 @@ export interface BulkRegistrationSchema {
     interval?: number;
     /** The list of projects used in the application */
     projects?: string[];
+    /**
+     * The identifier of an integration built on top of an Unleash SDK (e.g. an OpenFeature provider), forwarded by Edge so adoption of the integration can be tracked alongside sdkVersion.
+     * @maxLength 256
+     */
+    sdkFlavor?: string;
+    /**
+     * The version of the integration identified by sdkFlavor.
+     * @maxLength 32
+     */
+    sdkFlavorVersion?: string;
     /**
      * The sdk type
      * @nullable

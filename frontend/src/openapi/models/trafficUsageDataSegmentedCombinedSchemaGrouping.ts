@@ -10,7 +10,6 @@
 export type TrafficUsageDataSegmentedCombinedSchemaGrouping =
     (typeof TrafficUsageDataSegmentedCombinedSchemaGrouping)[keyof typeof TrafficUsageDataSegmentedCombinedSchemaGrouping];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TrafficUsageDataSegmentedCombinedSchemaGrouping = {
     monthly: 'monthly',
     daily: 'daily',

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ImpactMetricsConfigSchema } from './impactMetricsConfigSchema';
+import type { ImpactMetricsConfigSchema } from './impactMetricsConfigSchema.ts';
 
 /**
  * A list of impact metrics configurations for a feature flag.

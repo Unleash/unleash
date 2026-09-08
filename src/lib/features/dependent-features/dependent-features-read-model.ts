@@ -47,11 +47,24 @@ export class DependentFeaturesReadModel implements IDependentFeaturesReadModel {
         }));
     }
 
-    async getDependencies(children: string[]): Promise<IFeatureDependency[]> {
-        const rows = await this.db('dependent_features').whereIn(
-            'child',
-            children,
-        );
+    async getDependencies(
+        children: string[],
+        projectId?: string,
+    ): Promise<IFeatureDependency[]> {
+        const query = this.db('dependent_features');
+        if (projectId !== undefined) {
+            query.whereIn(
+                'child',
+                this.db('features')
+                    .select('name')
+                    .whereIn('name', children)
+                    .andWhere('project', projectId),
+            );
+        } else {
+            query.whereIn('child', children);
+        }
+
+        const rows = await query;
 
         return rows.map((row) => ({
             feature: row.child,

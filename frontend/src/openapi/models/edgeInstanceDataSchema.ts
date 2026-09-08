@@ -3,14 +3,14 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { EdgeApiKeyRevisionIdSchema } from './edgeApiKeyRevisionIdSchema';
-import type { ConnectionConsumptionSchema } from './connectionConsumptionSchema';
-import type { EdgeInstanceDataSchemaHosting } from './edgeInstanceDataSchemaHosting';
-import type { EdgeUpstreamLatencySchema } from './edgeUpstreamLatencySchema';
-import type { EdgeProcessMetricsSchema } from './edgeProcessMetricsSchema';
-import type { RequestConsumptionSchema } from './requestConsumptionSchema';
-import type { EdgeRequestStatsSchema } from './edgeRequestStatsSchema';
-import type { EdgeInstanceTrafficSchema } from './edgeInstanceTrafficSchema';
+import type { ConnectionConsumptionSchema } from './connectionConsumptionSchema.ts';
+import type { EdgeApiKeyRevisionIdSchema } from './edgeApiKeyRevisionIdSchema.ts';
+import type { EdgeInstanceDataSchemaHosting } from './edgeInstanceDataSchemaHosting.ts';
+import type { EdgeInstanceTrafficSchema } from './edgeInstanceTrafficSchema.ts';
+import type { EdgeProcessMetricsSchema } from './edgeProcessMetricsSchema.ts';
+import type { EdgeRequestStatsSchema } from './edgeRequestStatsSchema.ts';
+import type { EdgeUpstreamLatencySchema } from './edgeUpstreamLatencySchema.ts';
+import type { RequestConsumptionSchema } from './requestConsumptionSchema.ts';
 
 /**
  * Represents Edge instance observability data.
@@ -40,7 +40,7 @@ export interface EdgeInstanceDataSchema {
     identifier: string;
     latencyUpstream: EdgeUpstreamLatencySchema;
     /** @nullable */
-    processMetrics?: EdgeProcessMetricsSchema;
+    processMetrics?: EdgeProcessMetricsSchema | null;
     /**
      * Which region the Edge instance is running in. Set to AWS_REGION by default (if present).
      * @nullable

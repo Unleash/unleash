@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FlagCreatorsSchemaFlagCreatorsItem } from './flagCreatorsSchemaFlagCreatorsItem';
+import type { FlagCreatorsSchemaFlagCreatorsItem } from './flagCreatorsSchemaFlagCreatorsItem.ts';
 
 /**
  * A paginated list of users who have created flags across accessible projects.

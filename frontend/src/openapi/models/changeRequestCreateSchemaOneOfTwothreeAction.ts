@@ -10,7 +10,6 @@
 export type ChangeRequestCreateSchemaOneOfTwothreeAction =
     (typeof ChangeRequestCreateSchemaOneOfTwothreeAction)[keyof typeof ChangeRequestCreateSchemaOneOfTwothreeAction];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestCreateSchemaOneOfTwothreeAction = {
     reorderStrategy: 'reorderStrategy',
 } as const;

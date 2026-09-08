@@ -10,7 +10,6 @@
 export type VariantSchemaWeightType =
     (typeof VariantSchemaWeightType)[keyof typeof VariantSchemaWeightType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const VariantSchemaWeightType = {
     variable: 'variable',
     fix: 'fix',

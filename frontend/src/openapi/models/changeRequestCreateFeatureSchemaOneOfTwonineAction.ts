@@ -10,7 +10,6 @@
 export type ChangeRequestCreateFeatureSchemaOneOfTwonineAction =
     (typeof ChangeRequestCreateFeatureSchemaOneOfTwonineAction)[keyof typeof ChangeRequestCreateFeatureSchemaOneOfTwonineAction];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestCreateFeatureSchemaOneOfTwonineAction = {
     deleteReleasePlan: 'deleteReleasePlan',
 } as const;

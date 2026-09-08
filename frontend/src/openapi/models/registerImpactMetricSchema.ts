@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { RegisterImpactMetricSchemaType } from './registerImpactMetricSchemaType';
+import type { RegisterImpactMetricSchemaType } from './registerImpactMetricSchemaType.ts';
 
 /**
  * Describes a new impact metric to register with a zero initial value.

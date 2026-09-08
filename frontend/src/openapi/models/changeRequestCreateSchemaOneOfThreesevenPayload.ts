@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { TransitionConditionSchema } from './transitionConditionSchema';
+import type { TransitionConditionSchema } from './transitionConditionSchema.ts';
 
 export type ChangeRequestCreateSchemaOneOfThreesevenPayload = {
     /** The ID of the source milestone */

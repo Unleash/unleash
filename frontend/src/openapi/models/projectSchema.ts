@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectSchemaMode } from './projectSchemaMode';
-import type { OnboardingStatusSchema } from './onboardingStatusSchema';
-import type { ProjectSchemaOwners } from './projectSchemaOwners';
+import type { OnboardingStatusSchema } from './onboardingStatusSchema.ts';
+import type { ProjectSchemaMode } from './projectSchemaMode.ts';
+import type { ProjectSchemaOwners } from './projectSchemaOwners.ts';
 
 /**
  * A definition of the project used for projects listing purposes

@@ -6,10 +6,10 @@
 
 /**
  * Statistics for a project, including the average time to production, number of features created, the project activity and more.
-
-Stats are divided into current and previous **windows**.
-- The **current window** is the past 30 days.
-- The **previous window** is the 30 days **before** the current window (from 60 to 30 days ago)
+ *
+ * Stats are divided into current and previous **windows**.
+ * - The **current window** is the past 30 days.
+ * - The **previous window** is the 30 days **before** the current window (from 60 to 30 days ago)
  */
 export interface ProjectStatsSchema {
     /** The number of feature flags that were archived during the current window */

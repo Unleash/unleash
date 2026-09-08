@@ -10,7 +10,6 @@
 export type PatSchemaExpiryWarning =
     (typeof PatSchemaExpiryWarning)[keyof typeof PatSchemaExpiryWarning];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PatSchemaExpiryWarning = {
     'expires-soon': 'expires-soon',
     expired: 'expired',

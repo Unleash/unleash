@@ -7,7 +7,6 @@
 export type GetUsersAccessLogSortOrder =
     (typeof GetUsersAccessLogSortOrder)[keyof typeof GetUsersAccessLogSortOrder];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetUsersAccessLogSortOrder = {
     asc: 'asc',
     desc: 'desc',

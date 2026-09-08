@@ -43,10 +43,10 @@ describe('getFeatureStatusText', () => {
             {
                 type: 'partialProduction',
                 enabledEnvironments: ['production-eu', 'production-apac'],
-                total: 3,
+                disabledEnvironments: ['production-us'],
             },
             'In 2 out of 3 production environments',
-            'Enabled in: production-eu, production-apac',
+            'In 2 out of 3 production environments. Enabled in: production-eu, production-apac. Disabled in: production-us',
         ],
         [
             { type: 'noProductionEnvironments' },

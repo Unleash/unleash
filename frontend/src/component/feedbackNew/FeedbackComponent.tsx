@@ -21,7 +21,8 @@ import type { IToast } from 'interfaces/toast';
 import { useTheme } from '@mui/material/styles';
 import type { FeedbackData, FeedbackMode } from './FeedbackContext.tsx';
 import { useEventTracker } from 'hooks/useEventTracker';
-import { useDialogTracking } from 'hooks/useDialogTracking';
+import { useTracking } from 'hooks/useTracking';
+import type { Tracking } from 'utils/trackingEvents';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUserType from './useUserType.ts';
 import { BaseModal } from 'component/common/SidebarModal/SidebarModal';
@@ -148,6 +149,8 @@ interface IFeedbackComponent {
     closeFeedback: () => void;
 }
 
+const feedbackTracking: Tracking = { event: 'feedback' };
+
 export const FeedbackComponent = ({
     feedbackData,
     showFeedback,
@@ -159,9 +162,7 @@ export const FeedbackComponent = ({
     const { trackEvent } = useEventTracker();
     const theme = useTheme();
 
-    const emitDismissed = useDialogTracking(showFeedback, {
-        event: 'feedback',
-    });
+    const { track } = useTracking(feedbackTracking);
 
     const { addFeedback } = useUserFeedbackApi();
     const { setHasSubmittedFeedback } = useUserSubmittedFeedback(
@@ -233,21 +234,18 @@ export const FeedbackComponent = ({
         <BaseModal
             open={showFeedback}
             onClose={closeFeedback}
-            onDismiss={emitDismissed}
+            tracking={feedbackTracking}
             label='Feedback'
         >
             <ParentContainer>
-                <ClickAwayListener
-                    onClickAway={() => {
-                        emitDismissed('backdrop');
-                        closeFeedback();
-                    }}
-                >
+                <ClickAwayListener onClickAway={closeFeedback}>
                     <StyledContainer>
                         <Tooltip title='Close' arrow>
                             <StyledCloseButton
                                 onClick={() => {
-                                    emitDismissed('close-icon');
+                                    track('dismissed', {
+                                        method: 'close-icon',
+                                    });
                                     closeFeedback();
                                 }}
                                 size='large'

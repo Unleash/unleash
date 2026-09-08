@@ -12,7 +12,7 @@ export type UserAccessLogEntrySchemaUser = {
     email?: string;
     /** The id of the user. */
     id: number;
-    /** The URL of the user profile image. Only available while the user still exists. */
+    /** The URL of the user profile image, derived from their email (a Gravatar). */
     imageUrl?: string;
     /** The name of the user. */
     name?: string;

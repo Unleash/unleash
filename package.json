@@ -2,7 +2,7 @@
   "name": "unleash-server",
   "type": "module",
   "description": "Unleash is an enterprise ready feature flag service. It provides different strategies for handling feature flags.",
-  "version": "8.1.0",
+  "version": "8.2.0",
   "keywords": [
     "unleash",
     "feature flag",
@@ -144,7 +144,7 @@
   "devDependencies": {
     "@apidevtools/swagger-parser": "12.1.0",
     "@biomejs/biome": "2.4.16",
-    "@faker-js/faker": "^10.4.0",
+    "@faker-js/faker": "^10.5.0",
     "@fast-check/vitest": "^0.4.1",
     "@types/cors": "2.8.19",
     "@types/express": "4.17.25",

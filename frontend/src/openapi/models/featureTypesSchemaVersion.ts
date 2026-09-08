@@ -10,7 +10,6 @@
 export type FeatureTypesSchemaVersion =
     (typeof FeatureTypesSchemaVersion)[keyof typeof FeatureTypesSchemaVersion];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const FeatureTypesSchemaVersion = {
     NUMBER_1: 1,
 } as const;

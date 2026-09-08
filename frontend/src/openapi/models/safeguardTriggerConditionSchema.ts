@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SafeguardTriggerConditionSchemaOperator } from './safeguardTriggerConditionSchemaOperator';
+import type { SafeguardTriggerConditionSchemaOperator } from './safeguardTriggerConditionSchemaOperator.ts';
 
 /**
  * The condition that triggers the safeguard.

@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestSchemaOneOf } from './changeRequestSchemaOneOf';
-import type { ChangeRequestSchemaOneOfFive } from './changeRequestSchemaOneOfFive';
+import type { ChangeRequestSchemaOneOf } from './changeRequestSchemaOneOf.ts';
+import type { ChangeRequestSchemaOneOfFive } from './changeRequestSchemaOneOfFive.ts';
 
 /**
  * A [change request](https://docs.getunleash.io/concepts/change-requests)

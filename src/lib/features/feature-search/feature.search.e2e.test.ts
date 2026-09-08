@@ -1367,6 +1367,51 @@ test('should return environment usage metrics and lifecycle', async () => {
     });
 });
 
+test('should return metrics and total for a paginated feature', async () => {
+    await app.createFeature('page_metric_feature_a');
+    await app.createFeature('page_metric_feature_b');
+    await stores.clientMetricsStoreV2.batchInsertMetrics([
+        {
+            featureName: 'page_metric_feature_a',
+            appName: 'web',
+            environment: 'development',
+            timestamp: new Date(),
+            yes: 1,
+            no: 2,
+        },
+        {
+            featureName: 'page_metric_feature_b',
+            appName: 'web',
+            environment: 'development',
+            timestamp: new Date(),
+            yes: 3,
+            no: 4,
+        },
+    ]);
+
+    const { body } = await app.request
+        .get(
+            '/api/admin/search/features?project=IS:default&offset=1&limit=1&sortBy=name&sortOrder=asc',
+        )
+        .expect(200);
+
+    expect(body).toMatchObject({
+        total: 2,
+        features: [
+            {
+                name: 'page_metric_feature_b',
+                environments: expect.arrayContaining([
+                    expect.objectContaining({
+                        name: 'development',
+                        yes: 3,
+                        no: 4,
+                    }),
+                ]),
+            },
+        ],
+    });
+});
+
 test('should return dependencyType', async () => {
     await app.createFeature({
         name: 'my_feature_a',

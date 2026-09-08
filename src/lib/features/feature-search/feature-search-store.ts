@@ -296,6 +296,12 @@ class FeatureSearchStore implements IFeatureSearchStore {
                 'total_features',
                 this.db.raw('select count(*) as total from final_ranks'),
             )
+            .with('paginated_features', (queryBuilder) => {
+                queryBuilder
+                    .select(['feature_name', 'final_rank'])
+                    .from('final_ranks')
+                    .whereBetween('final_rank', [offset + 1, offset + limit]);
+            })
             .with('metrics', (queryBuilder) => {
                 queryBuilder
                     .sum('yes as yes')
@@ -306,9 +312,9 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     ])
                     .from('client_metrics_env')
                     .innerJoin(
-                        'final_ranks',
+                        'paginated_features',
                         'client_metrics_env.feature_name',
-                        'final_ranks.feature_name',
+                        'paginated_features.feature_name',
                     )
                     .where(
                         'client_metrics_env.timestamp',
@@ -323,19 +329,18 @@ class FeatureSearchStore implements IFeatureSearchStore {
             .select([
                 'ranked_features.*',
                 'total_features.total',
-                'final_ranks.final_rank',
+                'paginated_features.final_rank',
                 'metrics.yes',
                 'metrics.no',
             ])
             .from('ranked_features')
             .innerJoin(
-                'final_ranks',
+                'paginated_features',
                 'ranked_features.feature_name',
-                'final_ranks.feature_name',
+                'paginated_features.feature_name',
             )
             .joinRaw('CROSS JOIN total_features')
-            .whereBetween('final_rank', [offset + 1, offset + limit])
-            .orderBy('final_rank');
+            .orderBy('paginated_features.final_rank');
 
         this.buildChangeRequestSql(finalQuery);
         this.buildReleasePlanSql(finalQuery);

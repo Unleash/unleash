@@ -40,6 +40,9 @@ export const NewUser = () => {
     const { resetPassword, loading: isPasswordSubmitting } =
         useAuthResetPasswordApi();
     const passwordDisabled = authDetails?.defaultHidden === true;
+    const showAuthOptions =
+        Boolean(authDetails?.options?.length) &&
+        (!isValidInvite || passwordDisabled);
 
     const onSubmitInvitedUser = async (password: string) => {
         try {
@@ -132,7 +135,7 @@ export const NewUser = () => {
                 .
             </Typography>
             <ConditionallyRender
-                condition={Boolean(authDetails?.options?.length)}
+                condition={showAuthOptions}
                 show={
                     <Box sx={{ mt: 2 }}>
                         <AuthOptions options={authDetails?.options} />
@@ -140,9 +143,7 @@ export const NewUser = () => {
                 }
             />
             <ConditionallyRender
-                condition={
-                    Boolean(authDetails?.options?.length) && !passwordDisabled
-                }
+                condition={showAuthOptions && !passwordDisabled}
                 show={
                     <DividerText
                         text='or sign-up with an email address'

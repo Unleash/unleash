@@ -26,10 +26,10 @@ const StyledSingleChangeBox = styled(Box)(({ theme }) => ({
     borderBottomWidth: 0,
     borderRadius: 0,
     '&[data-conflict="change"]': {
-        borderColor: theme.palette.warning.border,
+        borderColor: theme.palette.warning.containerBorder,
     },
     '[data-conflict="change"] + &': {
-        borderTopColor: theme.palette.warning.border,
+        borderTopColor: theme.palette.warning.containerBorder,
     },
     '[data-conflict="feature"] &': {
         borderTopColor: theme.palette.divider,

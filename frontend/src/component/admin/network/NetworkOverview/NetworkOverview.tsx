@@ -29,8 +29,8 @@ const StyledAppsContainer = styled('div')(({ theme }) => ({
 const StyledElementBox = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusMedium,
     border: '1px solid',
-    borderColor: theme.palette.secondary.border,
-    backgroundColor: theme.palette.secondary.light,
+    borderColor: theme.palette.primary.containerBorder,
+    backgroundColor: theme.palette.primary.container,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -165,7 +165,8 @@ export const NetworkOverview = () => {
                                 targetAnchor: 'bottom',
                                 sourceAnchor: 'top',
                                 style: {
-                                    strokeColor: theme.palette.secondary.border,
+                                    strokeColor:
+                                        theme.palette.primary.containerBorder,
                                 },
                             },
                         ]}

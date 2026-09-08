@@ -28,7 +28,7 @@ export const StyledTitle = styled('span')(({ theme }) => ({
 }));
 
 export const StyledText = styled(StyledTitle)(({ theme }) => ({
-    color: theme.palette.neutral.dark,
+    color: theme.palette.neutral.onContainer,
 }));
 
 export const StyledFavoriteIconButton = styled(FavoriteIconButton)(

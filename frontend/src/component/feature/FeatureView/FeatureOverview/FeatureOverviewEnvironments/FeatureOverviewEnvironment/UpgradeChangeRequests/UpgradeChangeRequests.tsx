@@ -7,7 +7,7 @@ import { useLocalStorageState } from 'hooks/useLocalStorageState';
 const Wrapper = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
     borderRadius: theme.shape.borderRadiusMedium,
-    border: `1px solid ${theme.palette.secondary.border}`,
+    border: `1px solid ${theme.palette.primary.containerBorder}`,
     padding: theme.spacing(2),
     display: 'flex',
     position: 'relative',

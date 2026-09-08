@@ -48,7 +48,7 @@ const ChangeRequestHeader = styled(Box)(({ theme }) => ({
     borderRadius: `${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px 0 0`,
     borderBottom: 'none',
     overflow: 'hidden',
-    backgroundColor: theme.palette.neutral.light,
+    backgroundColor: theme.palette.neutral.container,
 }));
 
 const ChangeRequestContent = styled(Box)(({ theme }) => ({
@@ -190,7 +190,9 @@ export const EnvironmentChangeRequest: FC<{
                                 <StyledFlexAlignCenterBox>
                                     <StyledSuccessIcon />
                                     <Typography
-                                        color={theme.palette.success.dark}
+                                        color={
+                                            theme.palette.success.onContainer
+                                        }
                                     >
                                         Draft successfully sent to review
                                     </Typography>

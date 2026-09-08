@@ -12,7 +12,7 @@ const SectionTitleRow = styled('div')(({ theme }) => ({
     top: 0,
     zIndex: theme.zIndex.sticky,
     paddingBlock: theme.spacing(2),
-    background: theme.palette.background.application,
+    background: theme.palette.background.default,
     transition: 'padding 0.3s ease',
     display: 'flex',
     justifyContent: 'space-between',

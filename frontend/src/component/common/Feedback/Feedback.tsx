@@ -52,7 +52,7 @@ export const Feedback: FC<IFeedbackProps> = ({
         <Paper
             elevation={0}
             sx={{
-                background: (theme) => theme.palette.neutral.light,
+                background: (theme) => theme.palette.neutral.container,
                 padding: (theme) => theme.spacing(1.5, 2),
                 marginTop: (theme) => theme.spacing(1.5),
             }}

@@ -34,9 +34,9 @@ const StyledButtons = styled(Box)(({ theme }) => ({
 
 const StyledTip = styled(Alert)(({ theme }) => ({
     maxWidth: 520,
-    backgroundColor: theme.palette.info.light,
+    backgroundColor: theme.palette.info.container,
     marginTop: theme.spacing(4),
-    color: theme.palette.info.dark,
+    color: theme.palette.info.onContainer,
     '& .MuiAlert-icon': {
         color: theme.palette.info.main,
     },

@@ -52,7 +52,7 @@ const StyledDataCollectionBadge = styled('div')(({ theme }) => ({
 const StyledTag = styled('span')(({ theme }) => ({
     display: 'block',
     textAlign: 'right',
-    color: theme.palette.neutral.dark,
+    color: theme.palette.neutral.onContainer,
 }));
 
 const StyledDescription = styled('div')(({ theme }) => ({
@@ -107,7 +107,7 @@ const ToolTipInstructionContent = ({
 const ToolTipDescriptionCode = styled('code')(({ theme }) => ({
     display: 'block',
     color: theme.palette.text.primary,
-    backgroundColor: theme.palette.background.application,
+    backgroundColor: theme.palette.background.default,
     fontSize: theme.fontSizes.smallerBody,
     marginTop: theme.spacing(1),
     padding: theme.spacing(1),

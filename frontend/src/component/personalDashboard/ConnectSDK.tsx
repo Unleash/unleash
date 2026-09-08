@@ -16,7 +16,7 @@ const SuccessContainer = styled('div')(({ theme }) => ({
 
     fontSize: theme.spacing(1.75),
     fontWeight: 'bold',
-    backgroundColor: theme.palette.success.light,
+    backgroundColor: theme.palette.success.container,
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(2, 2, 2, 2),
 }));

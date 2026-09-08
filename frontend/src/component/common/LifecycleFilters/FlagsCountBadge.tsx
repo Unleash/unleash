@@ -16,7 +16,7 @@ const CountBadge = styled(Box)(({ theme }) => ({
     marginRight: theme.spacing(-0.5),
     fontWeight: 'bold',
     '&[data-selected="true"]': {
-        backgroundColor: theme.palette.secondary.light,
+        backgroundColor: theme.palette.primary.container,
         borderColor: theme.palette.primary.main,
         color: theme.palette.primary.main,
     },

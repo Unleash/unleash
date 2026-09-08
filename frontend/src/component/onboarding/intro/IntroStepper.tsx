@@ -52,7 +52,7 @@ const StyledBullet = styled('span', {
     ...(state === 'upcoming'
         ? {
               background: theme.palette.background.paper,
-              border: `1px solid ${theme.palette.neutral.border}`,
+              border: `1px solid ${theme.palette.neutral.containerBorder}`,
               color: theme.palette.text.secondary,
           }
         : {
@@ -79,7 +79,7 @@ const StyledLabel = styled('span', {
 }));
 
 const StyledChevron = styled(ChevronRightIcon)(({ theme }) => ({
-    color: theme.palette.neutral.border,
+    color: theme.palette.neutral.containerBorder,
     fontSize: theme.spacing(2),
     flexShrink: 0,
 }));

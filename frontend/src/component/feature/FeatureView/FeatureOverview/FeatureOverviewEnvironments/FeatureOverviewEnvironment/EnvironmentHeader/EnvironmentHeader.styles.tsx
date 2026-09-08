@@ -5,7 +5,7 @@ export const StyledSuggestion = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(0.5, 3),
-    background: theme.palette.secondary.light,
+    background: theme.palette.primary.container,
     borderBottomLeftRadius: theme.shape.borderRadiusLarge,
     borderBottomRightRadius: theme.shape.borderRadiusLarge,
     color: theme.palette.primary.main,

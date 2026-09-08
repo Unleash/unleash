@@ -60,12 +60,12 @@ const StyledVisitLink = styled(Box)(({ theme }) => ({
     color:
         theme.mode === 'dark'
             ? theme.palette.primary.main
-            : theme.palette.secondary.border,
+            : theme.palette.primary.containerBorder,
     '& svg': {
         color:
             theme.mode === 'dark'
                 ? theme.palette.primary.main
-                : theme.palette.secondary.border,
+                : theme.palette.primary.containerBorder,
     },
 }));
 

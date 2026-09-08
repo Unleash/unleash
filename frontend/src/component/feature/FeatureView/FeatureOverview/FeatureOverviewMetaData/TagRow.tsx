@@ -42,7 +42,7 @@ const StyledTagContainer = styled('div')(({ theme }) => ({
 const _StyledTag = styled(Chip)(({ theme }) => ({
     overflowWrap: 'anywhere',
     lineHeight: theme.typography.body1.lineHeight,
-    backgroundColor: theme.palette.neutral.light,
+    backgroundColor: theme.palette.neutral.container,
     color: theme.palette.text.primary,
     padding: theme.spacing(0.25),
     height: theme.spacing(3.5),

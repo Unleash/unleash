@@ -85,11 +85,11 @@ const EditHeader: FC<{
     }
 
     if (!wasDisabled && willBeDisabled) {
-        return <Action color='error.dark'>Editing strategy</Action>;
+        return <Action color='error.onContainer'>Editing strategy</Action>;
     }
 
     if (wasDisabled && !willBeDisabled) {
-        return <Action color='success.dark'>Editing strategy</Action>;
+        return <Action color='success.onContainer'>Editing strategy</Action>;
     }
 
     return <Action>Editing strategy</Action>;

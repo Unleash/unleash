@@ -9,7 +9,7 @@ const StyledLink = styled('a')(({ theme }) => ({
     justifyContent: 'center',
     padding: theme.spacing(3),
     borderRadius: `${theme.shape.borderRadiusMedium}px`,
-    border: `1px dashed ${theme.palette.secondary.border}`,
+    border: `1px dashed ${theme.palette.primary.containerBorder}`,
     textDecoration: 'none',
     color: 'inherit',
     background: theme.palette.background.elevation1,

@@ -154,10 +154,10 @@ const StyledValidationMessage = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
     marginTop: theme.spacing(0.75),
     padding: theme.spacing(1, 1.5),
-    border: `1px solid ${theme.palette.error.border}`,
+    border: `1px solid ${theme.palette.error.containerBorder}`,
     borderRadius: theme.shape.borderRadiusMedium,
-    backgroundColor: theme.palette.error.light,
-    color: theme.palette.error.dark,
+    backgroundColor: theme.palette.error.container,
+    color: theme.palette.error.onContainer,
     fontSize: theme.fontSizes.smallBody,
     lineHeight: 1.4,
 }));

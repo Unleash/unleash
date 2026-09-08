@@ -30,14 +30,14 @@ export const FeatureToggleChanges: FC<IFeatureToggleChanges> = ({
         <Box
             sx={(theme) => ({
                 backgroundColor: conflict
-                    ? theme.palette.neutral.light
-                    : theme.palette.neutral.light,
+                    ? theme.palette.neutral.container
+                    : theme.palette.neutral.container,
                 borderRadius: (theme) =>
                     `${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px 0 0`,
                 border: '1px solid',
                 borderColor: (theme) =>
                     conflict
-                        ? theme.palette.warning.border
+                        ? theme.palette.warning.containerBorder
                         : theme.palette.divider,
                 borderBottom: 'none',
                 overflow: 'hidden',

@@ -80,7 +80,7 @@ const Window = styled('aside', {
     flexDirection: 'column',
     overflow: 'hidden',
     WebkitMaskImage: '-webkit-radial-gradient(white, black)',
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: theme.palette.background.paper,
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusLarge,
     boxShadow: theme.boxShadows.popup,

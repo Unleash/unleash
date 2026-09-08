@@ -88,9 +88,9 @@ const useTechnicalDebtColor = (techicalDebt: number) => {
         case 'error':
             return theme.palette.error.main;
         case 'warning':
-            return theme.palette.warning.border;
+            return theme.palette.warning.containerBorder;
         default:
-            return theme.palette.success.border;
+            return theme.palette.success.containerBorder;
     }
 };
 
@@ -131,7 +131,7 @@ export const ProjectHealth = () => {
                             cy='50'
                             r={ChartRadius}
                             fill='none'
-                            stroke={theme.palette.background.application}
+                            stroke={theme.palette.background.default}
                             strokeWidth={ChartStrokeWidth}
                             strokeDasharray={`${filledLength * circumference} ${gapLength * circumference}`}
                             strokeDashoffset={offset * circumference}

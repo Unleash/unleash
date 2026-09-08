@@ -242,10 +242,10 @@ export default class ClientInstanceService {
             );
             try {
                 if (uniqueRegistrations.length > 0) {
+                    await this.clientApplicationsStore.bulkUpsert(uniqueApps);
                     await this.clientInstanceStore.bulkUpsert(
                         uniqueRegistrations,
                     );
-                    await this.clientApplicationsStore.bulkUpsert(uniqueApps);
                 }
             } catch (err) {
                 // restore on error

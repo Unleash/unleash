@@ -225,7 +225,7 @@ test('walks through the connected story to the showcase', () => {
         screen.getByRole('button', { name: 'Create feature flag' }),
     ).toBeInTheDocument();
     vi.useRealTimers();
-}, 10000);
+});
 
 test('finishes after the three core steps when advanced steps are disabled', () => {
     const onFinish = vi.fn();
@@ -467,7 +467,7 @@ test('keeps metrics live without errors until production is enabled', () => {
     );
     expect(successfulAfterFirstRecoverySample).toBeLessThan(128);
     vi.useRealTimers();
-}, 10000);
+});
 
 test('groups rapid environment events without inventing an incident', () => {
     vi.useFakeTimers();
@@ -1038,7 +1038,7 @@ test('teaches manual recovery before a safeguard automates it', () => {
         }),
     ).not.toBeChecked();
     vi.useRealTimers();
-}, 10000);
+});
 
 test('hands the idle nudge from the toggle to Next once production is on', () => {
     vi.useFakeTimers();

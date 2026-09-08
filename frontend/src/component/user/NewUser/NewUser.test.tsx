@@ -41,17 +41,22 @@ const setupValidInvite = () => {
     });
 };
 
-test('should render SSO options when signing up with an invite link', async () => {
+test('should not render SSO options when signing up with an invite link', async () => {
     setupAuthDetails();
     setupValidInvite();
 
     render(<NewUser />, { route: '/new-user?invite=valid-secret' });
 
     await screen.findByLabelText(/Full name/);
-    expect(screen.getByTestId(`${SSO_LOGIN_BUTTON}-oidc`)).toBeInTheDocument();
     expect(
-        screen.getByTestId(`${SSO_LOGIN_BUTTON}-github`),
-    ).toBeInTheDocument();
+        screen.queryByTestId(`${SSO_LOGIN_BUTTON}-oidc`),
+    ).not.toBeInTheDocument();
+    expect(
+        screen.queryByTestId(`${SSO_LOGIN_BUTTON}-github`),
+    ).not.toBeInTheDocument();
+    expect(
+        screen.queryByText('or sign-up with an email address'),
+    ).not.toBeInTheDocument();
 });
 
 test('should render SSO options for an invite link when password auth is hidden', async () => {

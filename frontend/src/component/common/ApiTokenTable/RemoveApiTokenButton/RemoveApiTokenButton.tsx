@@ -6,6 +6,8 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import useToast from 'hooks/useToast';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { useTracking } from 'hooks/useTracking';
+import { apiTokenDeletedTracking } from 'component/common/ApiTokenTable/apiTokenTracking';
 
 const StyledUl = styled('ul')({
     marginBottom: 0,
@@ -14,7 +16,7 @@ const StyledUl = styled('ul')({
 interface IRemoveApiTokenButtonProps {
     token: IApiToken;
     permission: string;
-    onRemove: () => void;
+    onRemove: () => Promise<void>;
     project?: string;
 }
 
@@ -25,11 +27,15 @@ export const RemoveApiTokenButton = ({
     project,
 }: IRemoveApiTokenButtonProps) => {
     const [open, setOpen] = useState(false);
+    const [removing, setRemoving] = useState(false);
     const { setToastData, setToastApiError } = useToast();
+    const tracking = apiTokenDeletedTracking(token);
+    const { trackMutation } = useTracking(tracking);
 
     const onRemoveToken = async () => {
+        setRemoving(true);
         try {
-            await onRemove();
+            await trackMutation(onRemove);
             setOpen(false);
 
             setToastData({
@@ -38,6 +44,8 @@ export const RemoveApiTokenButton = ({
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
+        } finally {
+            setRemoving(false);
         }
     };
 
@@ -56,7 +64,9 @@ export const RemoveApiTokenButton = ({
                 open={open}
                 onClick={onRemoveToken}
                 onClose={() => setOpen(false)}
+                disabledPrimaryButton={removing}
                 title='Confirm deletion'
+                tracking={tracking}
             >
                 <div>
                     Are you sure you want to delete the following API token?

@@ -20,7 +20,11 @@ import { TokenInfo } from 'component/admin/apiToken/ApiTokenForm/TokenInfo/Token
 import { TokenTypeSelector } from 'component/admin/apiToken/ApiTokenForm/TokenTypeSelector/TokenTypeSelector';
 import { ConfirmToken } from 'component/admin/apiToken/ConfirmToken/ConfirmToken';
 import { useProjectApiTokens } from 'hooks/api/getters/useProjectApiTokens/useProjectApiTokens';
-import { useEventTracker } from 'hooks/useEventTracker';
+import { useTracking } from 'hooks/useTracking';
+import {
+    apiTokenCreatedTracking,
+    apiTokenCreationProps,
+} from 'component/common/ApiTokenTable/apiTokenTracking';
 
 const pageTitle = 'Create project API token';
 
@@ -50,7 +54,9 @@ export const CreateProjectApiTokenForm = () => {
     const { createToken: createProjectToken, loading } =
         useProjectApiTokensApi();
     const { refetch: refetchProjectTokens } = useProjectApiTokens(projectId);
-    const { trackEvent } = useEventTracker();
+    const { trackMutation, trackValidationFailed } = useTracking(
+        apiTokenCreatedTracking,
+    );
 
     usePageTitle(pageTitle);
 
@@ -59,25 +65,24 @@ export const CreateProjectApiTokenForm = () => {
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
+
         if (!isValid()) {
+            trackValidationFailed(apiTokenCreationProps(getApiTokenPayload()));
             return;
         }
+
         try {
             const payload = getApiTokenPayload();
-
-            await createProjectToken(payload, projectId)
-                .then((res) => res.json())
-                .then((api) => {
-                    scrollToTop();
-                    setToken(api.secret);
-                    setSecure(api.secure);
-                    setShowConfirm(true);
-                    trackEvent('project_api_tokens', {
-                        props: { eventType: 'api_key_created' },
-                    });
-
-                    refetchProjectTokens();
-                });
+            const api = await trackMutation(
+                async () =>
+                    (await createProjectToken(payload, projectId)).json(),
+                apiTokenCreationProps(payload),
+            );
+            scrollToTop();
+            setToken(api.secret);
+            setSecure(api.secure);
+            setShowConfirm(true);
+            refetchProjectTokens();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
@@ -118,6 +123,7 @@ export const CreateProjectApiTokenForm = () => {
                         name='token'
                         permission={permission}
                         projectId={projectId}
+                        disabled={loading}
                     />
                 }
             >

@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router';
 import { useReminders } from './useReminders.ts';
 import { useEventTracker } from 'hooks/useEventTracker';
 import { useUncomplete } from '../FeatureOverview/FeatureLifecycle/useUncomplete.ts';
+import { flagArchivedTracking } from 'component/feature/flagActionsTracking';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     marginBottom: theme.spacing(2),
@@ -174,6 +175,7 @@ export const CleanupReminder: FC<{
                     ) : (
                         <FeatureArchiveDialog
                             isOpen={archiveDialogueOpen}
+                            tracking={flagArchivedTracking}
                             onConfirm={() => {
                                 navigate(`/projects/${feature.project}`);
                             }}

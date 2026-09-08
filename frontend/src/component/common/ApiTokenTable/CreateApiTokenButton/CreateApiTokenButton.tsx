@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router';
 import Add from '@mui/icons-material/Add';
 import { useApiTokens } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useTracking } from 'hooks/useTracking';
+import { apiTokenCreatedTracking } from 'component/common/ApiTokenTable/apiTokenTracking';
 interface ICreateApiTokenButton {
     path: string;
     permission: string | string[];
@@ -29,6 +31,7 @@ export const CreateApiTokenButton = ({
     const navigate = useNavigate();
     const { tokens, loading } = useApiTokens();
     const { uiConfig } = useUiConfig();
+    const { track } = useTracking(apiTokenCreatedTracking);
 
     const { limitReached, limitMessage } = useApiTokenLimit(
         uiConfig.resourceLimits.apiTokens,
@@ -38,7 +41,10 @@ export const CreateApiTokenButton = ({
     return (
         <ResponsiveButton
             Icon={Add}
-            onClick={() => navigate(path)}
+            onClick={() => {
+                track('opened');
+                navigate(path);
+            }}
             data-testid={CREATE_API_TOKEN_BUTTON}
             permission={permission}
             projectId={project}

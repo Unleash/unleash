@@ -5,6 +5,7 @@ import type { IProjectEnvironment } from 'interfaces/environments';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import Input from 'component/common/Input/Input';
 import { ProjectEnvironmentTableSingle } from './ProjectEnvironmentTableSingle/ProjectEnvironmentTableSingle.tsx';
+import type { Tracking } from 'utils/trackingEvents';
 
 const StyledLabel = styled('p')(({ theme }) => ({
     marginTop: theme.spacing(3),
@@ -19,7 +20,8 @@ interface IEnvironmentHideDialogProps {
     environment?: IProjectEnvironment;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    onConfirm: () => void;
+    onConfirm: () => Promise<void>;
+    tracking?: Tracking;
 }
 
 export const EnvironmentHideDialog = ({
@@ -27,8 +29,10 @@ export const EnvironmentHideDialog = ({
     open,
     setOpen,
     onConfirm,
+    tracking,
 }: IEnvironmentHideDialogProps) => {
     const [confirmName, setConfirmName] = useState('');
+    const [confirming, setConfirming] = useState(false);
 
     useEffect(() => {
         setConfirmName('');
@@ -39,9 +43,19 @@ export const EnvironmentHideDialog = ({
             title='Hide environment and disable feature flags?'
             open={open}
             primaryButtonText='Hide environment and disable feature flags'
-            disabledPrimaryButton={environment?.name !== confirmName}
+            disabledPrimaryButton={
+                environment?.name !== confirmName || confirming
+            }
             secondaryButtonText='Close'
-            onClick={onConfirm}
+            tracking={tracking}
+            onClick={async () => {
+                setConfirming(true);
+                try {
+                    await onConfirm();
+                } finally {
+                    setConfirming(false);
+                }
+            }}
             onClose={() => {
                 setOpen(false);
             }}

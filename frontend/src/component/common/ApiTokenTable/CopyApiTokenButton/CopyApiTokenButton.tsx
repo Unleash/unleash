@@ -3,32 +3,32 @@ import useToast from 'hooks/useToast';
 import copy from 'copy-to-clipboard';
 import FileCopy from '@mui/icons-material/FileCopy';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
+import { useTracking } from 'hooks/useTracking';
+import { apiTokenCopiedTracking } from 'component/common/ApiTokenTable/apiTokenTracking';
 
 interface ICopyApiTokenButtonProps {
     token: IApiToken;
     permission: string;
     project?: string;
-    track?: () => void;
 }
 
 export const CopyApiTokenButton = ({
     token,
     project,
     permission,
-    track,
 }: ICopyApiTokenButtonProps) => {
     const { setToastData } = useToast();
+    const { track } = useTracking(apiTokenCopiedTracking(token, 'token-list'));
 
     const copyToken = (value: string) => {
         if (copy(value)) {
+            track('succeeded');
             setToastData({
                 type: 'success',
                 text: 'Token copied to clipboard',
             });
-
-            if (track && typeof track === 'function') {
-                track();
-            }
+        } else {
+            track('failed', { failedOn: 'clipboard' });
         }
     };
 

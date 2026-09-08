@@ -7,8 +7,7 @@ import { FeatureLifecycle } from './FeatureLifecycle.tsx';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { MarkCompletedDialogue } from './MarkCompletedDialogue.tsx';
-import { populateCurrentStage } from './populateCurrentStage.ts';
-import { useEventTracker } from 'hooks/useEventTracker';
+import { flagArchivedTracking } from 'component/feature/flagActionsTracking';
 
 export const FlagExposure: FC<{
     project: string;
@@ -28,7 +27,6 @@ export const FlagExposure: FC<{
     const [showDelDialog, setShowDelDialog] = useState(false);
     const [showMarkCompletedDialogue, setShowMarkCompletedDialogue] =
         useState(false);
-    const { trackEvent } = useEventTracker();
 
     return (
         <Box sx={{ display: 'flex' }} className={className}>
@@ -54,17 +52,8 @@ export const FlagExposure: FC<{
             ) : (
                 <FeatureArchiveDialog
                     isOpen={showDelDialog}
-                    onConfirm={() => {
-                        trackEvent('feature-lifecycle', {
-                            props: {
-                                eventType: 'archived',
-                                stage:
-                                    populateCurrentStage(feature)?.name ??
-                                    'unknown',
-                            },
-                        });
-                        onArchive();
-                    }}
+                    tracking={flagArchivedTracking}
+                    onConfirm={onArchive}
                     onClose={() => setShowDelDialog(false)}
                     projectId={project}
                     featureIds={[flagName]}

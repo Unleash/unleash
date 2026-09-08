@@ -17,6 +17,7 @@ import { ReviveProjectDialog } from './ReviveProjectDialog/ReviveProjectDialog.t
 import { DeleteProjectDialogue } from '../Project/DeleteProject/DeleteProjectDialogue.tsx';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { safeRegExp } from '@server/util/escape-regex';
+import { projectDeletedTracking } from 'component/project/projectTracking';
 
 const StyledApiError = styled(ApiError)(({ theme }) => ({
     maxWidth: '500px',
@@ -159,6 +160,7 @@ export const ArchiveProjectList: FC = () => {
                 projectId={deleteProject.id || ''}
                 projectName={deleteProject.name || ''}
                 open={deleteProject.isOpen}
+                tracking={projectDeletedTracking}
                 onClose={() => {
                     setDeleteProject((state) => ({ ...state, isOpen: false }));
                 }}

@@ -12,7 +12,8 @@ import { ActionsContainer } from '../ActionsContainer.tsx';
 import { IMPORT_CONFIGURATION_BUTTON } from 'utils/testIds';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
-import { useEventTracker } from 'hooks/useEventTracker';
+import { useTracking } from 'hooks/useTracking';
+import { importCompletedTracking } from '../importTracking.ts';
 
 const ImportInfoContainer = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.elevation2,
@@ -94,32 +95,25 @@ export const ValidationStage: FC<{
 }> = ({ environment, project, payload, onClose, onBack, onSubmit }) => {
     const { validateImport } = useValidateImportApi();
     const { setToastData } = useToast();
-    const { trackEvent } = useEventTracker();
+    const { trackValidationFailed } = useTracking(importCompletedTracking);
     const [validationResult, setValidationResult] = useState<IValidationSchema>(
         { errors: [], warnings: [], permissions: [] },
     );
     const [validJSON, setValidJSON] = useState(true);
 
-    const trackValidation = (result: IValidationSchema) => {
-        if (result.errors.length > 0 || result.permissions.length > 0) {
-            trackEvent('export_import', {
-                props: {
-                    eventType: `validation fail`,
-                },
-            });
-        } else {
-            trackEvent('export_import', {
-                props: {
-                    eventType: `validation success`,
-                },
-            });
+    // Counts as a failed import attempt even though nothing was submitted.
+    const onValidated = (result: IValidationSchema) => {
+        if (result.errors.length > 0) {
+            trackValidationFailed({ blockedBy: 'conflict' });
+        } else if (result.permissions.length > 0) {
+            trackValidationFailed({ blockedBy: 'permission' });
         }
         setValidationResult(result);
     };
 
     useEffect(() => {
         validateImport({ environment, project, data: JSON.parse(payload) })
-            .then(trackValidation)
+            .then(onValidated)
             .catch((error) => {
                 setValidJSON(false);
                 setToastData({

@@ -24,6 +24,11 @@ import {
     CREATE_FRONTEND_API_TOKEN,
 } from '@server/types/permissions';
 import { Limit } from 'component/common/Limit/Limit';
+import { useTracking } from 'hooks/useTracking';
+import {
+    apiTokenCreatedTracking,
+    apiTokenCreationProps,
+} from 'component/common/ApiTokenTable/apiTokenTracking';
 
 const pageTitle = 'Create API token';
 interface ICreateApiTokenProps {
@@ -79,6 +84,9 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
 
     const { createToken, loading: loadingCreateToken } = useApiTokensApi();
     const { refetch } = useApiTokens();
+    const { trackMutation, trackValidationFailed } = useTracking(
+        apiTokenCreatedTracking,
+    );
 
     usePageTitle(pageTitle);
 
@@ -86,21 +94,23 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
+
         if (!isValid()) {
+            trackValidationFailed(apiTokenCreationProps(getApiTokenPayload()));
             return;
         }
+
         try {
             const payload = getApiTokenPayload();
-
-            await createToken(payload)
-                .then((res) => res.json())
-                .then((api) => {
-                    scrollToTop();
-                    setToken(api.secret);
-                    setSecure(api.secure);
-                    setShowConfirm(true);
-                    refetch();
-                });
+            const api = await trackMutation(
+                async () => (await createToken(payload)).json(),
+                apiTokenCreationProps(payload),
+            );
+            scrollToTop();
+            setToken(api.secret);
+            setSecure(api.secure);
+            setShowConfirm(true);
+            refetch();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }

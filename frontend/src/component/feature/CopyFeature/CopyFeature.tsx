@@ -3,6 +3,7 @@ import {
     type FormEventHandler,
     type ChangeEventHandler,
 } from 'react';
+import { useTracking } from 'hooks/useTracking';
 import { Link, useNavigate } from 'react-router';
 import {
     Button,
@@ -24,6 +25,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { FeatureNamingPatternInfo } from '../FeatureNamingPatternInfo/FeatureNamingPatternInfo.tsx';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import Input from 'component/common/Input/Input.tsx';
+import { flagClonedTracking } from 'component/feature/flagActionsTracking';
 
 const StyledPage = styled(Paper)(({ theme }) => ({
     overflow: 'visible',
@@ -72,6 +74,7 @@ export const CopyFeatureToggle = () => {
     const [nameError, setNameError] = useState<string | undefined>();
     const [newToggleName, setnewToggleName] = useState<string>();
     const { cloneFeatureToggle, validateFeatureToggleName } = useFeatureApi();
+    const { trackMutation } = useTracking(flagClonedTracking);
     const featureId = useRequiredPathParam('featureId');
     const projectId = useRequiredPathParam('projectId');
     const { feature } = useFeature(projectId, featureId);
@@ -116,10 +119,14 @@ export const CopyFeatureToggle = () => {
         }
 
         try {
-            await cloneFeatureToggle(projectId, featureId, {
-                name: newToggleName as string,
-                replaceGroupId,
-            });
+            await trackMutation(
+                () =>
+                    cloneFeatureToggle(projectId, featureId, {
+                        name: newToggleName as string,
+                        replaceGroupId,
+                    }),
+                { replaceGroupId },
+            );
             navigate(getTogglePath(projectId, newToggleName as string));
         } catch (error) {
             setApiError(formatUnknownError(error));

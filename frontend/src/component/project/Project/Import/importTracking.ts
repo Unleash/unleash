@@ -1,6 +1,6 @@
 import type { Tracking } from 'utils/trackingEvents';
 
 export const importCompletedTracking = {
-    event: 'export_import',
-    type: 'import completed',
+    event: 'export-import',
+    type: 'import-completed',
 } satisfies Tracking;

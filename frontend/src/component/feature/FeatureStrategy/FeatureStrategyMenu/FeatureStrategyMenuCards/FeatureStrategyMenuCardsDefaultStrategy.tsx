@@ -21,13 +21,13 @@ export const FeatureStrategyMenuCardsDefaultStrategy = ({
     onConfigure,
     onClose,
 }: IFeatureStrategyMenuCardsDefaultStrategyProps) => {
-    const { defaultStrategy, applyDefaultStrategy } = useProjectDefaultStrategy(
-        { projectId, featureId, environmentId },
-    );
+    const { defaultStrategy, applyDefaultStrategy, applying } =
+        useProjectDefaultStrategy({ projectId, featureId, environmentId });
 
     const onApply = async () => {
-        await applyDefaultStrategy();
-        onClose();
+        if (await applyDefaultStrategy()) {
+            onClose();
+        }
     };
 
     return (
@@ -51,7 +51,10 @@ export const FeatureStrategyMenuCardsDefaultStrategy = ({
             >
                 Configure
             </FeatureStrategyMenuCardAction>
-            <FeatureStrategyMenuCardAction onClick={onApply}>
+            <FeatureStrategyMenuCardAction
+                onClick={onApply}
+                disabled={applying}
+            >
                 Apply
             </FeatureStrategyMenuCardAction>
         </FeatureStrategyMenuCard>

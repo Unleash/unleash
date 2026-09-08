@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled.ts';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests.ts';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature.ts';
@@ -7,6 +8,7 @@ import useToast from 'hooks/useToast.tsx';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useEventTracker } from 'hooks/useEventTracker';
 import { formatStrategyName } from 'utils/strategyNames';
+import { formatUnknownError } from 'utils/formatUnknownError';
 import type { CreateFeatureStrategySchema } from 'openapi';
 
 const FALLBACK_DEFAULT_STRATEGY: CreateFeatureStrategySchema = {
@@ -28,24 +30,19 @@ export const useProjectDefaultStrategy = ({
     const { project, loading } = useProjectOverview(projectId);
     const { addStrategyToFeature } = useFeatureStrategyApi();
     const { addChange } = useChangeRequestApi();
-    const { setToastData } = useToast();
+    const { setToastData, setToastApiError } = useToast();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
     const { refetchFeature } = useFeature(projectId, featureId);
     const { trackEvent } = useEventTracker();
+    const [applying, setApplying] = useState(false);
 
     const defaultStrategy =
         project?.environments?.find((env) => env.environment === environmentId)
             ?.defaultStrategy || FALLBACK_DEFAULT_STRATEGY;
 
     const applyDefaultStrategy = async () => {
-        trackEvent('strategy-add', {
-            props: {
-                buttonTitle: formatStrategyName(defaultStrategy.name),
-            },
-        });
-
         const payload = {
             name: defaultStrategy.name,
             title: defaultStrategy.title ?? '',
@@ -56,34 +53,49 @@ export const useProjectDefaultStrategy = ({
             disabled: defaultStrategy.disabled ?? false,
         };
 
-        if (isChangeRequestConfigured(environmentId)) {
-            await addChange(projectId, environmentId, {
-                action: 'addStrategy',
-                feature: featureId,
-                payload,
+        setApplying(true);
+        try {
+            if (isChangeRequestConfigured(environmentId)) {
+                await addChange(projectId, environmentId, {
+                    action: 'addStrategy',
+                    feature: featureId,
+                    payload,
+                });
+
+                setToastData({
+                    text: 'Strategy added to draft',
+                    type: 'success',
+                });
+                refetchChangeRequests();
+            } else {
+                await addStrategyToFeature(
+                    projectId,
+                    featureId,
+                    environmentId,
+                    payload,
+                );
+
+                setToastData({
+                    text: 'Strategy applied',
+                    type: 'success',
+                });
+            }
+
+            trackEvent('strategy-add', {
+                props: {
+                    buttonTitle: formatStrategyName(defaultStrategy.name),
+                },
             });
 
-            setToastData({
-                text: 'Strategy added to draft',
-                type: 'success',
-            });
-            refetchChangeRequests();
-        } else {
-            await addStrategyToFeature(
-                projectId,
-                featureId,
-                environmentId,
-                payload,
-            );
-
-            setToastData({
-                text: 'Strategy applied',
-                type: 'success',
-            });
+            refetchFeature();
+            return true;
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+            return false;
+        } finally {
+            setApplying(false);
         }
-
-        refetchFeature();
     };
 
-    return { defaultStrategy, applyDefaultStrategy, loading };
+    return { defaultStrategy, applyDefaultStrategy, loading, applying };
 };

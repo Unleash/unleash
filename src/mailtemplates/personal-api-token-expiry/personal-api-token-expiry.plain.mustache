@@ -1,9 +1,12 @@
-Your personal API token is about to expire
+Your personal API tokens are about to expire
 
 Hi {{{ recipientName }}},
 
-Your personal API token{{#tokenDescription}} {{{ tokenDescription }}}{{/tokenDescription}} will expire in {{ daysUntilExpiry }} {{ dayWord }}.
+The following personal API tokens are about to expire:
+{{#tokens}}
+- {{#tokenDescription}}{{{ tokenDescription }}}{{/tokenDescription}}{{^tokenDescription}}Token without description{{/tokenDescription}} expires in {{ daysUntilExpiry }} {{ dayWord }}
+{{/tokens}}
 
-Anything that authenticates with this token will stop working when it expires. Create a replacement token and update your integrations before then.
+Anything that authenticates with these tokens will stop working when they expire. Create replacement tokens and update your integrations before then.
 
 Manage tokens in Unleash: {{{ tokensUrl }}}

@@ -86,6 +86,23 @@ export type ChangeRequestScheduleConflictData =
       };
 
 export type TransportProvider = () => Transporter;
+type TokenExpiryEmailContext = {
+    recipientEmail: string;
+    recipientName?: string;
+    tokensUrl: string;
+    tokens: {
+        tokenDescription: string;
+        daysUntilExpiry: number;
+        dayWord: string;
+        serviceAccountName?: string;
+    }[];
+};
+
+const withDayWord = <T extends { daysUntilExpiry: number }>(token: T) => ({
+    ...token,
+    dayWord: token.daysUntilExpiry === 1 ? 'day' : 'days',
+});
+
 export class EmailService {
     private logger: Logger;
     private config: IUnleashConfig;
@@ -547,55 +564,46 @@ export class EmailService {
         });
     }
 
-    async sendPersonalApiTokenExpiryEmail({
+    async sendPersonalApiTokensExpiryEmail({
         recipientEmail,
         recipientName,
-        tokenDescription,
-        daysUntilExpiry,
+        tokens,
     }: {
         recipientEmail: string;
         recipientName: string;
-        tokenDescription: string;
-        daysUntilExpiry: number;
+        tokens: { tokenDescription: string; daysUntilExpiry: number }[];
     }): Promise<IEmailEnvelope> {
-        const dayWord = daysUntilExpiry === 1 ? 'day' : 'days';
         return this.sendTokenExpiryEmail({
             template: 'personal-api-token-expiry',
-            subject: `Unleash - your personal API token expires in ${daysUntilExpiry} ${dayWord}`,
+            subject: 'Unleash - your personal API tokens are about to expire',
             recipientEmail,
             context: {
                 recipientName,
                 recipientEmail,
-                tokenDescription,
-                daysUntilExpiry,
-                dayWord,
+                tokens: tokens.map(withDayWord),
                 tokensUrl: `${this.config.server.unleashUrl}/profile/personal-api-tokens`,
             },
         });
     }
 
-    async sendServiceAccountTokenExpiryEmail({
+    async sendServiceAccountTokensExpiryEmail({
         recipientEmail,
-        serviceAccountName,
-        tokenDescription,
-        daysUntilExpiry,
+        tokens,
     }: {
         recipientEmail: string;
-        serviceAccountName: string;
-        tokenDescription: string;
-        daysUntilExpiry: number;
+        tokens: {
+            serviceAccountName: string;
+            tokenDescription: string;
+            daysUntilExpiry: number;
+        }[];
     }): Promise<IEmailEnvelope> {
-        const dayWord = daysUntilExpiry === 1 ? 'day' : 'days';
         return this.sendTokenExpiryEmail({
             template: 'service-account-token-expiry',
-            subject: `Unleash - a service account token expires in ${daysUntilExpiry} ${dayWord}`,
+            subject: 'Unleash - service account tokens are about to expire',
             recipientEmail,
             context: {
-                serviceAccountName,
                 recipientEmail,
-                tokenDescription,
-                daysUntilExpiry,
-                dayWord,
+                tokens: tokens.map(withDayWord),
                 tokensUrl: `${this.config.server.unleashUrl}/admin/service-accounts`,
             },
         });
@@ -610,7 +618,7 @@ export class EmailService {
         template: string;
         subject: string;
         recipientEmail: string;
-        context: Record<string, string | number>;
+        context: TokenExpiryEmailContext;
     }): Promise<IEmailEnvelope> {
         if (this.configured()) {
             const bodyHtml = await this.compileTemplate(

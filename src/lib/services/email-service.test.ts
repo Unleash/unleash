@@ -206,23 +206,25 @@ test('warns the token owner before their personal API token expires', async () =
         getLogger: noLoggerProvider,
     } as unknown as IUnleashConfig);
 
-    const content = await emailService.sendPersonalApiTokenExpiryEmail({
+    const content = await emailService.sendPersonalApiTokensExpiryEmail({
         recipientEmail: 'owner@example.com',
         recipientName: 'Token Owner',
-        tokenDescription: 'ci-pipeline',
-        daysUntilExpiry: 14,
+        tokens: [
+            { tokenDescription: 'ci-pipeline', daysUntilExpiry: 14 },
+            { tokenDescription: 'local-dev', daysUntilExpiry: 1 },
+        ],
     });
 
     expect(content.from).toBe('noreply@getunleash.ai');
     expect(content.to).toBe('owner@example.com');
     expect(content.subject).toBe(
-        'Unleash - your personal API token expires in 14 days',
+        'Unleash - your personal API tokens are about to expire',
     );
     expect(content.html).toContain(
-        'Your personal API token <strong>ci-pipeline</strong> will expire in <strong>14 days</strong>.',
+        '<li><strong>ci-pipeline</strong> expires in <strong>14 days</strong></li><li><strong>local-dev</strong> expires in <strong>1 day</strong></li>',
     );
     expect(content.text).toContain(
-        'Your personal API token ci-pipeline will expire in 14 days.',
+        'The following personal API tokens are about to expire:\n- ci-pipeline expires in 14 days\n- local-dev expires in 1 day',
     );
     expect(content.text).toContain(
         'Manage tokens in Unleash: http://localhost/profile/personal-api-tokens',
@@ -245,22 +247,31 @@ test('points admins at the service account whose token is about to expire', asyn
         getLogger: noLoggerProvider,
     } as unknown as IUnleashConfig);
 
-    const content = await emailService.sendServiceAccountTokenExpiryEmail({
+    const content = await emailService.sendServiceAccountTokensExpiryEmail({
         recipientEmail: 'admin@example.com',
-        tokenDescription: 'R&D deploy-token',
-        daysUntilExpiry: 1,
-        serviceAccountName: 'deploy-bot',
+        tokens: [
+            {
+                tokenDescription: 'R&D deploy-token',
+                daysUntilExpiry: 1,
+                serviceAccountName: 'deploy-bot',
+            },
+            {
+                tokenDescription: 'sync-token',
+                daysUntilExpiry: 14,
+                serviceAccountName: 'sync-bot',
+            },
+        ],
     });
 
     expect(content.to).toBe('admin@example.com');
     expect(content.subject).toBe(
-        'Unleash - a service account token expires in 1 day',
+        'Unleash - service account tokens are about to expire',
     );
     expect(content.html).toContain(
-        'The token <strong>R&amp;D deploy-token</strong> of service account <strong>deploy-bot</strong> will expire in <strong>1 day</strong>.',
+        '<li><strong>R&amp;D deploy-token</strong> of service account <strong>deploy-bot</strong> expires in <strong>1 day</strong></li><li><strong>sync-token</strong> of service account <strong>sync-bot</strong> expires in <strong>14 days</strong></li>',
     );
     expect(content.text).toContain(
-        'The token R&D deploy-token of service account deploy-bot will expire in 1 day.',
+        'The following service account tokens are about to expire:\n- R&D deploy-token of service account deploy-bot expires in 1 day\n- sync-token of service account sync-bot expires in 14 days',
     );
     expect(content.text).toContain(
         'Manage service accounts in Unleash: http://localhost/admin/service-accounts',

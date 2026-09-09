@@ -86,7 +86,7 @@ test('should get ui config', async () => {
     expect(body.impactMetrics).toBe('disabled');
     expect(body.unleashContext).toMatchObject({
         userId: 7,
-        email: hashValue('someone@example.com'),
+        email: 'someone@example.com',
         sessionId: hashValue(TEST_SESSION_ID),
     });
 });

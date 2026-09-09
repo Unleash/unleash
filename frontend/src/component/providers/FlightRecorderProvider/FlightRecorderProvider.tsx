@@ -37,6 +37,7 @@ export const FlightRecorderProvider: FC<{
                 url,
                 clientKey: '',
                 batch: BATCH,
+                hashContextFields: ['email'],
                 // deliveryFailed is retried and routine in browsers
                 // (flaky wifi, adblockers) — warn only on real losses
                 onError: (info) => {

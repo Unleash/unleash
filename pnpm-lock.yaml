@@ -536,8 +536,8 @@ importers:
         specifier: 5.1.0
         version: 5.1.0(unleash-proxy-client@3.8.2)
       '@unleash/sdk-flight-recorder':
-        specifier: ^0.8.0
-        version: 0.8.0
+        specifier: ^0.9.0
+        version: 0.9.0
       '@unleash/toolbar':
         specifier: 1.2.0
         version: 1.2.0(@unleash/proxy-client-react@5.1.0(unleash-proxy-client@3.8.2))(unleash-proxy-client@3.8.2)
@@ -1564,6 +1564,10 @@ packages:
     resolution: {integrity: sha512-jCs9ldd7NwzpgXDIf6P3+NrHh9/sD6CQdxHyjQI+h/6rDNo88ypBxxz45UDuZHz9r3tNz7N/VInSVoVdtXEI4A==}
     engines: {node: ^14.21.3 || >=16}
 
+  '@noble/hashes@2.4.0':
+    resolution: {integrity: sha512-X5XaVWZIBCT7HHZGm5I7ZQXDwLG+bGXuSrMQAW+7Zvl87h1kmc1ZB1VSRJcpUfoUrGQp4Fkoxm5kZ+Ms+aW+eA==}
+    engines: {node: '>= 20.19.0'}
+
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
     engines: {node: '>= 8'}
@@ -2471,8 +2475,8 @@ packages:
     peerDependencies:
       unleash-proxy-client: ^3.8.0
 
-  '@unleash/sdk-flight-recorder@0.8.0':
-    resolution: {integrity: sha512-02R4ICG598+8MsbldHyGrDMbsCXTz2OT7WrnTaklrTeA9JwcNQK+Gmu8EUdjHPMpK5H7lek49cxlM0jnOFstPQ==}
+  '@unleash/sdk-flight-recorder@0.9.0':
+    resolution: {integrity: sha512-hZkmXb+0NmO9CsfPGbWVKDTeizJNwbqECH3rRhYK/Entcnn1EJS8tOw5mFvl9PplQQ+9V4U4dRf4HxywcuP/iA==}
     engines: {node: '>=20'}
 
   '@unleash/toolbar@1.2.0':
@@ -7173,6 +7177,8 @@ snapshots:
 
   '@noble/hashes@1.8.0': {}
 
+  '@noble/hashes@2.4.0': {}
+
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
       '@nodelib/fs.stat': 2.0.5
@@ -8049,8 +8055,9 @@ snapshots:
     dependencies:
       unleash-proxy-client: 3.8.2
 
-  '@unleash/sdk-flight-recorder@0.8.0':
+  '@unleash/sdk-flight-recorder@0.9.0':
     dependencies:
+      '@noble/hashes': 2.4.0
       ky: 2.0.2
 
   '@unleash/toolbar@1.2.0(@unleash/proxy-client-react@5.1.0(unleash-proxy-client@3.8.2))(unleash-proxy-client@3.8.2)':

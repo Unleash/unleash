@@ -105,14 +105,12 @@ export class UiConfigService {
             simpleAuthSettings?.disabled ||
             this.config.authentication.type === IAuthType.NONE;
 
-        const hashedEmail = user.email ? hashValue(user.email) : undefined;
-
         // Hash the raw sessionID (a credential) before exposing it; safe
         // unsalted because the sessionID is high-entropy.
         const analyticsSessionId = sessionId ? hashValue(sessionId) : undefined;
 
         const expFlags = this.config.flagResolver.getAll({
-            email: hashedEmail,
+            email: user.email,
             ...(analyticsSessionId ? { sessionId: analyticsSessionId } : {}),
         });
 
@@ -123,7 +121,7 @@ export class UiConfigService {
 
         const unleashContext = {
             ...this.flagResolver.getStaticContext(),
-            ...(hashedEmail ? { email: hashedEmail } : {}),
+            ...(user.email ? { email: user.email } : {}),
             userId: user.id,
             ...(analyticsSessionId ? { sessionId: analyticsSessionId } : {}),
         };

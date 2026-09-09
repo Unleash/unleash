@@ -83,7 +83,7 @@
     "@uiw/codemirror-theme-duotone": "4.25.11",
     "@uiw/react-codemirror": "4.25.11",
     "@unleash/proxy-client-react": "5.1.0",
-    "@unleash/sdk-flight-recorder": "^0.8.0",
+    "@unleash/sdk-flight-recorder": "^0.9.0",
     "@unleash/toolbar": "1.2.0",
     "@vitejs/plugin-react": "6.1.1",
     "cartesian": "^1.0.1",

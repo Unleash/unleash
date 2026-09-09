@@ -8,7 +8,10 @@ import type { TransitionConditionSchema } from 'openapi';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import type { MilestoneStatus } from './ReleasePlanMilestoneStatus.tsx';
-import { MilestoneTransitionDisplay } from './MilestoneTransitionDisplay.tsx';
+import {
+    MilestoneTransitionDisplay,
+    ReadonlyMilestoneTransitionDisplay,
+} from './MilestoneTransitionDisplay.tsx';
 
 const server = testServerSetup();
 
@@ -17,16 +20,28 @@ const setExposureFlag = (enabled: boolean) =>
         flags: { exposureBasedAutomation: enabled },
     });
 
+const setTotalUsageForMyFeature = () =>
+    testServerRoute(server, '/api/admin/client-metrics/features/my-feature', {
+        lastHourUsage: [],
+        seenApplications: [],
+        totalUsage: [
+            { environment: 'production', yes: 512, no: 100 },
+            { environment: 'development', yes: 99999, no: 0 },
+        ],
+    });
+
 const anHourAgo = () => subHours(new Date(), 1).toISOString();
 
 const renderDisplay = ({
     transitionCondition,
     sourceMilestoneStartedAt,
     status,
+    featureName = 'my-feature',
 }: {
     transitionCondition: TransitionConditionSchema;
     sourceMilestoneStartedAt?: string;
     status?: MilestoneStatus;
+    featureName?: string;
 }) => {
     const onSave = vi.fn().mockResolvedValue({});
     render(
@@ -43,6 +58,7 @@ const renderDisplay = ({
                         milestoneName='Milestone 1'
                         status={status}
                         environment='production'
+                        featureName={featureName}
                     />
                 }
             />
@@ -134,4 +150,43 @@ test('projects no start time for exposure automations', () => {
     expect(
         screen.queryByText(/Will proceed at|Already/),
     ).not.toBeInTheDocument();
+});
+
+test("shows the environment's exposure progress against the automation target", async () => {
+    setExposureFlag(true);
+    setTotalUsageForMyFeature();
+    renderDisplay({
+        transitionCondition: { type: 'exposure', minimumExposures: 1000 },
+    });
+
+    expect((await screen.findByText(/~510\//)).textContent).toBe(
+        '~510/1K exposures',
+    );
+});
+
+test('shows exposure progress in the readonly milestone view', async () => {
+    setExposureFlag(true);
+    setTotalUsageForMyFeature();
+    render(
+        <Routes>
+            <Route
+                path='/projects/:projectId'
+                element={
+                    <ReadonlyMilestoneTransitionDisplay
+                        transitionCondition={{
+                            type: 'exposure',
+                            minimumExposures: 1000,
+                        }}
+                        environment='production'
+                        featureName='my-feature'
+                    />
+                }
+            />
+        </Routes>,
+        { route: '/projects/default' },
+    );
+
+    expect((await screen.findByText(/~510/)).textContent).toBe(
+        '~510/1K exposures',
+    );
 });

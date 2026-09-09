@@ -1,7 +1,9 @@
 import { Button } from '@mui/material';
 import { useTransitionConditionForm } from '../hooks/useTransitionConditionForm.ts';
+import { useExposureProgress } from '../hooks/useExposureProgress.ts';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import { isTimeCondition } from 'interfaces/releasePlans';
+import { ExposureProgress } from '../shared/ExposureProgress.tsx';
 import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
 import { TimeProgressionInfo } from '../shared/TimeProgressionInfo.tsx';
 import {
@@ -25,6 +27,7 @@ interface IMilestoneProgressionFormProps {
     ) => Promise<{ shouldReset?: boolean }>;
     onCancel: () => void;
     environment: string;
+    featureName: string;
 }
 
 export const MilestoneProgressionForm = ({
@@ -35,12 +38,18 @@ export const MilestoneProgressionForm = ({
     onSubmit,
     onCancel,
     environment,
+    featureName,
 }: IMilestoneProgressionFormProps) => {
     const projectId = useRequiredPathParam('projectId');
 
     const { form, validation } = useTransitionConditionForm({
         sourceMilestoneStartedAt,
         status,
+    });
+    const exposureProgress = useExposureProgress({
+        condition: form.condition,
+        environment,
+        featureName,
     });
 
     const handleSubmit = async (event: React.FormEvent) => {
@@ -61,6 +70,11 @@ export const MilestoneProgressionForm = ({
         <StyledFormContainer onSubmit={handleSubmit}>
             <TransitionConditionRow
                 type={form.condition.type}
+                conditionInfo={
+                    exposureProgress && (
+                        <ExposureProgress {...exposureProgress} />
+                    )
+                }
                 condition={
                     <TransitionConditionInput
                         value={form.value}

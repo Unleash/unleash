@@ -112,6 +112,8 @@ const MilestoneListRendererCore = ({
                                         milestone.transitionCondition
                                     }
                                     status={status}
+                                    environment={plan.environment}
+                                    featureName={plan.featureName}
                                 />
                             ) : (
                                 <MilestoneTransitionDisplay
@@ -136,6 +138,7 @@ const MilestoneListRendererCore = ({
                                     status={status}
                                     badge={badge}
                                     environment={plan.environment}
+                                    featureName={plan.featureName}
                                 />
                             )}
                         </MilestoneAutomationSection>

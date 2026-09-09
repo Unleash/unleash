@@ -14,10 +14,8 @@ const StyledTransitionRowContainer = styled('div')(({ theme }) => ({
 const StyledTransitionContentGroup = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
+    flexWrap: 'wrap',
     gap: theme.spacing(1),
-    [theme.breakpoints.down(600)]: {
-        flexWrap: 'wrap',
-    },
 }));
 
 const StyledTransitionIcon = styled(BoltIcon, {
@@ -50,6 +48,7 @@ interface TransitionConditionRowProps {
     label?: string;
     muted?: boolean;
     endActions?: ReactNode;
+    conditionInfo?: ReactNode;
 }
 
 export const TransitionConditionRow = ({
@@ -58,6 +57,7 @@ export const TransitionConditionRow = ({
     label = 'Proceed after',
     muted,
     endActions,
+    conditionInfo,
 }: TransitionConditionRowProps) => {
     const conditionText = getConditionText(type);
 
@@ -72,6 +72,7 @@ export const TransitionConditionRow = ({
                 <StyledTransitionLabel muted={muted}>
                     {conditionText}
                 </StyledTransitionLabel>
+                {conditionInfo}
             </StyledTransitionContentGroup>
             {endActions}
         </StyledTransitionRowContainer>
@@ -83,6 +84,7 @@ interface ReadonlyTransitionConditionRowProps {
     type?: TransitionConditionSchema['type'];
     label: string;
     muted?: boolean;
+    conditionInfo?: ReactNode;
 }
 
 export const ReadonlyTransitionConditionRow = ({
@@ -90,6 +92,7 @@ export const ReadonlyTransitionConditionRow = ({
     type = 'time',
     label,
     muted,
+    conditionInfo,
 }: ReadonlyTransitionConditionRowProps) => (
     <StyledTransitionRowContainer>
         <StyledTransitionContentGroup>
@@ -97,6 +100,7 @@ export const ReadonlyTransitionConditionRow = ({
             <StyledTransitionLabel muted={muted}>
                 {label} {value} {getConditionText(type)}
             </StyledTransitionLabel>
+            {conditionInfo}
         </StyledTransitionContentGroup>
     </StyledTransitionRowContainer>
 );

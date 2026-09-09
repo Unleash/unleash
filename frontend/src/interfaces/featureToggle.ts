@@ -135,10 +135,17 @@ export interface IFeatureEnvironmentMetrics {
     no: number;
 }
 
+export interface IFeatureEnvironmentTotalUsage {
+    environment: string;
+    yes: number;
+    no: number;
+}
+
 export interface IFeatureMetrics {
     version?: number;
     maturity?: string;
     lastHourUsage: IFeatureEnvironmentMetrics[];
+    totalUsage?: IFeatureEnvironmentTotalUsage[];
     seenApplications: string[];
 }
 

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { Route, Routes } from 'react-router';
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
 import { FeatureChange } from './FeatureChange.tsx';
@@ -226,12 +227,20 @@ describe('Consolidated milestone changes', () => {
 
     it('renders the first consolidated change with all changes listed', () => {
         render(
-            <FeatureChange
-                actions={null}
-                changeRequest={changeRequest}
-                change={change1}
-                feature={multiChangeFeature}
-            />,
+            <Routes>
+                <Route
+                    path='/projects/:projectId'
+                    element={
+                        <FeatureChange
+                            actions={null}
+                            changeRequest={changeRequest}
+                            change={change1}
+                            feature={multiChangeFeature}
+                        />
+                    }
+                />
+            </Routes>,
+            { route: '/projects/default' },
         );
 
         const items = screen.getAllByRole('listitem');

@@ -176,6 +176,8 @@ export const ReleasePlanMilestoneItem = ({
                 <ReadonlyMilestoneAutomation
                     transitionCondition={effectiveTransitionCondition}
                     status={status}
+                    environment={environment}
+                    featureName={featureName}
                 />
             ) : undefined;
         }
@@ -192,6 +194,7 @@ export const ReleasePlanMilestoneItem = ({
                 onChangeProgression={handleChangeProgression}
                 onDeleteProgression={onDeleteProgression}
                 environment={environment}
+                featureName={featureName}
             />
         );
     };

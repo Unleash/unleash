@@ -11,6 +11,11 @@ export type ExposureTransitionCondition = Exclude<
     TimeTransitionCondition
 >;
 
+export interface ExposureProgressInfo {
+    exposures: number;
+    target: number;
+}
+
 export const isTimeCondition = (
     condition: TransitionConditionSchema,
 ): condition is TimeTransitionCondition =>

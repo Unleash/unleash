@@ -6,16 +6,22 @@ import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilesto
 interface ReadonlyMilestoneAutomationProps {
     transitionCondition: TransitionConditionSchema;
     status: MilestoneStatus;
+    environment: string;
+    featureName: string;
 }
 
 export const ReadonlyMilestoneAutomation = ({
     transitionCondition,
     status,
+    environment,
+    featureName,
 }: ReadonlyMilestoneAutomationProps) => (
     <MilestoneAutomationSection status={status}>
         <ReadonlyMilestoneTransitionDisplay
             transitionCondition={transitionCondition}
             status={status}
+            environment={environment}
+            featureName={featureName}
         />
     </MilestoneAutomationSection>
 );

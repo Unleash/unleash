@@ -24,6 +24,7 @@ interface MilestoneAutomationProps {
     ) => Promise<{ shouldReset?: boolean }>;
     onDeleteProgression: (milestone: IReleasePlanMilestone) => void;
     environment: string;
+    featureName: string;
 }
 
 export const MilestoneAutomation = ({
@@ -38,6 +39,7 @@ export const MilestoneAutomation = ({
     onChangeProgression,
     onDeleteProgression,
     environment,
+    featureName,
 }: MilestoneAutomationProps) => {
     const milestoneIndex = milestones.findIndex((m) => m.id === milestone.id);
     const nextMilestoneId = milestones[milestoneIndex + 1]?.id || '';
@@ -71,6 +73,7 @@ export const MilestoneAutomation = ({
                     onSubmit={onChangeProgression}
                     onCancel={onCloseProgressionForm}
                     environment={environment}
+                    featureName={featureName}
                 />
             ) : effectiveTransitionCondition ? (
                 <MilestoneTransitionDisplay
@@ -83,6 +86,7 @@ export const MilestoneAutomation = ({
                     status={status}
                     badge={badge}
                     environment={environment}
+                    featureName={featureName}
                 />
             ) : hasAnyPausedMilestone ? null : (
                 <StyledActionButton

@@ -8,6 +8,7 @@ import {
 import { TransitionConditionInput } from '../MilestoneProgressionForm/TransitionConditionInput.tsx';
 import { getValueAndUnitFromCondition } from '../hooks/useTransitionConditionInput.ts';
 import { useTransitionConditionForm } from '../hooks/useTransitionConditionForm.ts';
+import { useExposureProgress } from '../hooks/useExposureProgress.ts';
 import { isSameCondition } from '../utils/isSameCondition.ts';
 import { isTimeCondition } from 'interfaces/releasePlans';
 import type {
@@ -17,6 +18,7 @@ import type {
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
 import { TimeProgressionInfo } from '../shared/TimeProgressionInfo.tsx';
+import { ExposureProgress } from '../shared/ExposureProgress.tsx';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions.ts';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton.tsx';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton.tsx';
@@ -81,15 +83,25 @@ interface IMilestoneTransitionDisplayProps {
     status?: MilestoneStatus;
     badge?: ReactNode;
     environment: string;
+    featureName: string;
 }
 
 export const ReadonlyMilestoneTransitionDisplay = ({
     transitionCondition,
     status,
+    environment,
+    featureName,
 }: {
     transitionCondition: TransitionConditionSchema;
     status?: MilestoneStatus;
+    environment: string;
+    featureName: string;
 }) => {
+    const exposureProgress = useExposureProgress({
+        condition: transitionCondition,
+        environment,
+        featureName,
+    });
     const initial = getValueAndUnitFromCondition(transitionCondition);
 
     return (
@@ -98,6 +110,9 @@ export const ReadonlyMilestoneTransitionDisplay = ({
             label='Proceed to the next milestone after'
             type={transitionCondition.type}
             value={`${initial.value} ${initial.unit}`}
+            conditionInfo={
+                exposureProgress && <ExposureProgress {...exposureProgress} />
+            }
         />
     );
 };
@@ -112,12 +127,18 @@ export const MilestoneTransitionDisplay = ({
     status,
     badge,
     environment,
+    featureName,
 }: IMilestoneTransitionDisplayProps) => {
     const projectId = useRequiredPathParam('projectId');
     const { form, validation } = useTransitionConditionForm({
         initialCondition: transitionCondition,
         sourceMilestoneStartedAt,
         status,
+    });
+    const exposureProgress = useExposureProgress({
+        condition: form.condition,
+        environment,
+        featureName,
     });
 
     const initial = getValueAndUnitFromCondition(transitionCondition);
@@ -173,6 +194,11 @@ export const MilestoneTransitionDisplay = ({
         <StyledFormWrapper hasChanged={hasChanged} onKeyDown={handleKeyDown}>
             <TransitionConditionRow
                 type={form.condition.type}
+                conditionInfo={
+                    exposureProgress && (
+                        <ExposureProgress {...exposureProgress} />
+                    )
+                }
                 condition={
                     <TransitionConditionInput
                         value={form.value}

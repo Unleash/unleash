@@ -1,24 +1,24 @@
-import { Alert } from '@mui/material';
-import Add from '@mui/icons-material/Add';
-import { Link, Route, Routes, useNavigate } from 'react-router';
+import { Alert, Typography, styled } from '@mui/material';
+import { Route, Routes, useNavigate } from 'react-router';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import useAddons from 'hooks/api/getters/useAddons/useAddons';
-import { CREATE_ADDON } from 'component/providers/AccessProvider/permissions';
 import { CreateIntegration } from 'component/integrations/CreateIntegration/CreateIntegration';
 import { EditIntegration } from 'component/integrations/EditIntegration/EditIntegration';
+import { IntegrationProviderCards } from 'component/integrations/IntegrationList/AvailableIntegrations/IntegrationProviderCards';
 import { ConfiguredIntegrations } from 'component/integrations/IntegrationList/ConfiguredIntegrations/ConfiguredIntegrations';
-import {
-    formatIntegrationCreatePath,
-    formatIntegrationListPath,
-} from 'component/integrations/integrationPaths';
+import { StyledCardsGrid } from 'component/integrations/IntegrationList/IntegrationList.styles';
+import { formatIntegrationListPath } from 'component/integrations/integrationPaths';
 
-const PROJECT_INTEGRATION_PROVIDER = 'slack-app';
+const StyledSection = styled('section')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
+}));
 
 export const ProjectIntegrations = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -28,14 +28,10 @@ export const ProjectIntegrations = () => {
 
     usePageTitle(`Project integrations – ${projectName}`);
 
-    const projectAddons = addons.filter(
-        (addon) => addon.provider === PROJECT_INTEGRATION_PROVIDER,
+    const availableProviders = providers.filter(
+        (provider) => !provider.deprecated,
     );
 
-    const createPath = formatIntegrationCreatePath(
-        PROJECT_INTEGRATION_PROVIDER,
-        projectId,
-    );
     const closeModal = () => navigate(formatIntegrationListPath(projectId));
 
     const renderIntegrations = () => {
@@ -47,10 +43,10 @@ export const ProjectIntegrations = () => {
             );
         }
 
-        if (projectAddons.length > 0) {
+        if (addons.length > 0) {
             return (
                 <ConfiguredIntegrations
-                    addons={projectAddons}
+                    addons={addons}
                     providers={providers}
                     loading={loading}
                 />
@@ -62,35 +58,41 @@ export const ProjectIntegrations = () => {
         }
 
         return (
-            <Alert severity='info'>
-                This project has no Slack integrations yet. Add one to send this
-                project's events to Slack. Integrations that are instance-wide
-                or shared with other projects are managed on the{' '}
-                <Link to='/integrations'>integrations page</Link>.
+            <Alert severity='info' sx={{ mb: 3 }}>
+                This project has no integrations yet.
             </Alert>
         );
     };
 
     return (
         <PageContent
-            header={
-                <PageHeader
-                    title='Integrations'
-                    actions={
-                        <ResponsiveButton
-                            Icon={Add}
-                            onClick={() => navigate(createPath)}
-                            maxWidth='700px'
-                            permission={CREATE_ADDON}
-                        >
-                            New Slack integration
-                        </ResponsiveButton>
-                    }
-                />
-            }
+            header={<PageHeader title='Integrations' />}
             isLoading={loading}
         >
             {renderIntegrations()}
+
+            <StyledSection>
+                <div>
+                    <Typography component='h3' variant='h2'>
+                        Available integrations
+                    </Typography>
+                    <Typography
+                        variant='body2'
+                        sx={{
+                            color: 'text.secondary',
+                        }}
+                    >
+                        Add an integration to send this project's events to
+                        another service.
+                    </Typography>
+                </div>
+                <StyledCardsGrid>
+                    <IntegrationProviderCards
+                        providers={availableProviders}
+                        projectId={projectId}
+                    />
+                </StyledCardsGrid>
+            </StyledSection>
 
             <Routes>
                 <Route

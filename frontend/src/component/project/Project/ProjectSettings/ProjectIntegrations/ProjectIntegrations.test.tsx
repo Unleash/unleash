@@ -72,7 +72,7 @@ const renderPage = () =>
         { route: '/projects/my-project/settings/integrations' },
     );
 
-test('shows only Slack integrations', async () => {
+test('shows every integration configured for the project', async () => {
     setupServer([
         addon(1, 'Ours', ['my-project']),
         addon(2, 'Ours but a webhook', ['my-project'], 'webhook'),
@@ -81,7 +81,7 @@ test('shows only Slack integrations', async () => {
     renderPage();
 
     expect(await screen.findByText('Ours')).toBeInTheDocument();
-    expect(screen.queryByText('Ours but a webhook')).not.toBeInTheDocument();
+    expect(screen.getByText('Ours but a webhook')).toBeInTheDocument();
 });
 
 test('links to the integration inside the project', async () => {
@@ -96,18 +96,15 @@ test('links to the integration inside the project', async () => {
     );
 });
 
-test('points you at the integrations page when the project has none', async () => {
-    setupServer([addon(1, 'Instance wide', [], 'webhook')]);
+test('says so when the project has no integrations', async () => {
+    setupServer([]);
 
     renderPage();
 
-    expect(
-        await screen.findByText(/no Slack integrations yet/),
-    ).toBeInTheDocument();
-    expect(screen.queryByText('Instance wide')).not.toBeInTheDocument();
+    expect(await screen.findByText(/no integrations yet/)).toBeInTheDocument();
 });
 
-test('reports a failure instead of claiming the project has none', async () => {
+test('reports a failure instead of claiming the project has no integrations', async () => {
     testServerRoute(server, '/api/admin/ui-config', {
         versionInfo: { current: { enterprise: '1.0.0' } },
     });
@@ -119,9 +116,7 @@ test('reports a failure instead of claiming the project has none', async () => {
     renderPage();
 
     expect(await screen.findByText(/Could not load/)).toBeInTheDocument();
-    expect(
-        screen.queryByText(/no Slack integrations yet/),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText(/no integrations yet/)).not.toBeInTheDocument();
 });
 
 test('creates an integration already scoped to this project', async () => {

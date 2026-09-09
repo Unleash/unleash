@@ -9,6 +9,7 @@ import { OFFICIAL_SDKS } from './SDKs.ts';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { IntegrationProviderCards } from './IntegrationProviderCards.tsx';
 
 interface IAvailableIntegrationsProps {
     providers: AddonTypeSchema[];
@@ -80,29 +81,7 @@ export const AvailableIntegrations: FC<IAvailableIntegrationsProps> = ({
                     </Typography>
                 </div>
                 <StyledCardsGrid>
-                    {filtered
-                        ?.sort(
-                            (a, b) =>
-                                a.displayName?.localeCompare(b.displayName) ||
-                                0,
-                        )
-                        .map(
-                            ({
-                                name,
-                                displayName,
-                                description,
-                                deprecated,
-                            }) => (
-                                <IntegrationCard
-                                    key={name}
-                                    icon={name}
-                                    title={displayName || name}
-                                    description={description}
-                                    link={`/integrations/create/${name}`}
-                                    deprecated={deprecated}
-                                />
-                            ),
-                        )}
+                    <IntegrationProviderCards providers={filtered} />
                     <ConditionallyRender
                         condition={isEnterprise() && signalsEnabled}
                         show={

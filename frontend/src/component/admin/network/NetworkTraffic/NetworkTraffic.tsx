@@ -1,36 +1,15 @@
 import { useInstanceMetrics } from 'hooks/api/getters/useInstanceMetrics/useInstanceMetrics';
 import { useMemo, type FC } from 'react';
-import { Line } from 'react-chartjs-2';
-import {
-    CategoryScale,
-    Chart as ChartJS,
-    type ChartDataset,
-    type ChartOptions,
-    Legend,
-    LinearScale,
-    LineElement,
-    PointElement,
-    TimeScale,
-    Title,
-    Tooltip,
-} from 'chart.js';
-import {
-    type ILocationSettings,
-    useLocationSettings,
-} from 'hooks/useLocationSettings';
-import { formatDateHM } from 'utils/formatDate';
+import type { ChartDataset, ChartOptions } from 'chart.js';
 import type { RequestsPerSecondSchema } from 'openapi';
-import 'chartjs-adapter-date-fns';
-import { Alert, useTheme } from '@mui/material';
-import { Box } from '@mui/system';
-import { CyclicIterator } from 'utils/cyclicIterator';
+import { Alert, Box, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { unknownify } from 'utils/unknownify';
 import type { Theme } from '@mui/material/styles';
+import { LineChart } from 'component/insights/components/LineChart/LineChart';
+import { WidgetTitle } from 'component/insights/components/WidgetTitle/WidgetTitle';
 import { NetworkPrometheusAPIWarning } from '../NetworkPrometheusAPIWarning.tsx';
-
-const pointStyles = ['circle', 'rect', 'rectRounded', 'rectRot', 'triangle'];
 
 interface IPoint {
     x: number;
@@ -41,176 +20,97 @@ type ChartDatasetType = ChartDataset<'line', IPoint[]>;
 
 type ResultValue = [number, string];
 
+const secondsToMs = (seconds: number): number => seconds * 1000;
+
 const createChartPoints = (
     values: ResultValue[],
     y: (m: string) => number,
 ): IPoint[] => {
     return values.map((row) => ({
-        x: row[0],
+        x: secondsToMs(row[0]),
         y: y(row[1]),
     }));
 };
 
-const createInstanceChartOptions = (
-    theme: Theme,
-    locationSettings: ILocationSettings,
-): ChartOptions<'line'> => ({
-    locale: locationSettings.locale,
-    responsive: true,
-    maintainAspectRatio: false,
-    interaction: {
-        mode: 'index',
-        intersect: false,
-    },
-    color: theme.palette.text.secondary,
-    plugins: {
-        tooltip: {
-            backgroundColor: theme.palette.background.paper,
-            bodyColor: theme.palette.text.primary,
-            titleColor: theme.palette.action.active,
-            borderColor: theme.palette.primary.main,
-            borderWidth: 1,
-            padding: 10,
-            boxPadding: 5,
-            usePointStyle: true,
-            callbacks: {
-                title: (items) =>
-                    formatDateHM(
-                        1000 * (items[0].parsed.x ?? 0),
-                        locationSettings.locale,
-                    ),
-            },
-            itemSort: (a, b) => (b.parsed.y ?? 0) - (a.parsed.y ?? 0),
-        },
-        legend: {
-            position: 'bottom',
-            align: 'start',
-            labels: {
-                boxWidth: 10,
-                boxHeight: 10,
-                usePointStyle: true,
-                padding: 24,
-            },
-        },
-        title: {
-            text: 'Top 10 requests per second in the last 6 hours',
-            position: 'top',
-            align: 'start',
-            display: true,
-            font: {
-                size: 16,
-                weight: 400,
-            },
-            color: theme.palette.text.primary,
-            padding: {
-                bottom: 32,
-            },
-        },
-    },
+const overrideOptions: ChartOptions<'line'> = {
     scales: {
+        x: {
+            time: {
+                unit: 'hour',
+                tooltipFormat: 'PPp',
+                displayFormats: { hour: 'p' },
+            },
+            ticks: {
+                source: 'auto',
+                maxRotation: 0,
+                minRotation: 0,
+                maxTicksLimit: 8,
+            },
+        },
         y: {
-            type: 'linear',
             title: {
                 display: true,
                 text: 'Requests per second',
-                color: theme.palette.text.secondary,
             },
-            // min: 0,
-            suggestedMin: 0,
-            ticks: { precision: 0, color: theme.palette.text.secondary },
-            grid: {
-                color: theme.palette.divider,
-            },
-            border: {
-                color: theme.palette.divider,
-            },
-        },
-        x: {
-            type: 'time',
-            time: { unit: 'minute' },
-            grid: {
-                display: true,
-                color: theme.palette.divider,
-            },
-            border: {
-                color: theme.palette.divider,
-            },
-            ticks: {
-                callback: (_, i, data) =>
-                    formatDateHM(data[i].value * 1000, locationSettings.locale),
-            },
+            ticks: { precision: 2 },
         },
     },
-});
+    interaction: { mode: 'index', axis: 'x' },
+    plugins: {
+        tooltip: {
+            itemSort: (a, b) => (b.parsed.y ?? 0) - (a.parsed.y ?? 0),
+        },
+    },
+};
 
-class ItemPicker<T> {
-    private items: CyclicIterator<T>;
-    private picked: Map<string, T> = new Map();
-    constructor(items: T[]) {
-        this.items = new CyclicIterator<T>(items);
-    }
-
-    public pick(key: string): T {
-        if (!this.picked.has(key)) {
-            this.picked.set(key, this.items.next());
-        }
-        return this.picked.get(key)!;
-    }
-}
+const toSeriesLabel = (metric?: {
+    endpoint?: string;
+    appName?: string;
+}): string => `${unknownify(metric?.endpoint)}: ${unknownify(metric?.appName)}`;
 
 const toChartData = (
     theme: Theme,
     rps?: RequestsPerSecondSchema,
 ): ChartDatasetType[] => {
-    if (rps?.data?.result) {
-        const colorPicker = new ItemPicker([
-            theme.palette.success,
-            theme.palette.error,
-            theme.palette.primary,
-            theme.palette.warning,
-        ]);
-        return rps.data.result.map((dataset, i) => {
-            const endpoint = unknownify(dataset.metric?.endpoint);
-            const appName = unknownify(dataset.metric?.appName);
-            const color = colorPicker.pick(endpoint);
-            const values = (dataset.values || []) as ResultValue[];
-            return {
-                label: `${endpoint}: ${appName}`,
-                borderColor: color.main,
-                backgroundColor: color.main,
-                data: createChartPoints(values, (y) => Number.parseFloat(y)),
-                elements: {
-                    point: {
-                        radius: 4,
-                        pointStyle: pointStyles[i % pointStyles.length],
-                    },
-                    line: {
-                        borderDash: [8, 4],
-                    },
-                },
-            };
-        });
+    const results = rps?.data?.result;
+    if (!results) {
+        return [];
     }
-    return [];
+
+    const seriesColors = theme.palette.charts.series;
+    const labelsInColorOrder = results
+        .map((dataset) => toSeriesLabel(dataset.metric))
+        .sort();
+
+    return results.map((dataset) => {
+        const label = toSeriesLabel(dataset.metric);
+        const color =
+            seriesColors[
+                labelsInColorOrder.indexOf(label) % seriesColors.length
+            ];
+        const values = (dataset.values || []) as ResultValue[];
+        return {
+            label,
+            borderColor: color,
+            backgroundColor: color,
+            data: createChartPoints(values, (y) => Number.parseFloat(y)),
+        };
+    });
 };
 
 export const NetworkTraffic: FC = () => {
-    const { locationSettings } = useLocationSettings();
-    const { metrics } = useInstanceMetrics();
+    const { metrics, loading } = useInstanceMetrics();
     const theme = useTheme();
-    const options = useMemo(() => {
-        return createInstanceChartOptions(theme, locationSettings);
-    }, [theme, locationSettings]);
 
     usePageTitle('Network - Traffic');
 
     const data = useMemo(() => {
         return { datasets: toChartData(theme, metrics) };
-    }, [theme, metrics, locationSettings]);
+    }, [theme, metrics]);
 
     return (
         <ConditionallyRender
-            condition={data.datasets.length === 0}
+            condition={data.datasets.length === 0 && !loading}
             show={
                 <Alert severity='warning'>
                     No data available.
@@ -219,30 +119,17 @@ export const NetworkTraffic: FC = () => {
             }
             elseShow={
                 <Box sx={{ display: 'grid', gap: 4 }}>
-                    <div style={{ height: 400 }}>
-                        <Line
-                            data={data}
-                            options={options}
-                            aria-label='An instance metrics line chart with two lines: requests per second for admin API and requests per second for client API'
-                        />
-                    </div>
+                    <WidgetTitle title='Top 10 requests per second in the last 6 hours' />
+                    <LineChart
+                        data={data}
+                        overrideOptions={overrideOptions}
+                        cover={loading}
+                    />
                 </Box>
             }
         />
     );
 };
-
-// Register dependencies that we need to draw the chart.
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    TimeScale,
-    Legend,
-    Tooltip,
-    Title,
-);
 
 // Use a default export to lazy-load the charting library.
 export default NetworkTraffic;

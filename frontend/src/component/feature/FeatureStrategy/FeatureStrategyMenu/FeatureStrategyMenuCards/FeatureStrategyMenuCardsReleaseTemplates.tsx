@@ -4,7 +4,7 @@ import ReleaseTemplateIcon from 'assets/img/releaseTemplates.svg?react';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans.ts';
 import { Box, styled } from '@mui/material';
 import type { StrategyFilterValue } from './FeatureStrategyMenuCards.tsx';
-import { useState, type Dispatch, type SetStateAction } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 import { QuietLink } from 'component/common/QuietLink';
 import {
     FeatureStrategyMenuCardsSection,
@@ -13,8 +13,6 @@ import {
 import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard.tsx';
 import { FeatureStrategyMenuCardAction } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardAction.tsx';
 import { FeatureStrategyMenuCardIcon } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardIcon.tsx';
-import { useEventTracker } from 'hooks/useEventTracker.ts';
-import { Dialogue } from 'component/common/Dialogue/Dialogue.tsx';
 import { Badge } from 'component/common/Badge/Badge.tsx';
 import { NewReleaseTemplateButton } from './NewReleaseTemplateButton.tsx';
 
@@ -97,11 +95,6 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
     const { templates } = useReleasePlanTemplates(projectId, {
         includeRoot: true,
     });
-    const { trackEvent } = useEventTracker();
-
-    const [noAccessDialogOpen, setNoAccessDialogOpen] =
-        useState<boolean>(false);
-
     if (!isEnterprise()) {
         return null;
     }
@@ -111,19 +104,6 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
     const releaseTemplatesDisplayLimit = isFiltered
         ? 0
         : RELEASE_TEMPLATE_DISPLAY_LIMIT;
-
-    const handleNoAccessClick = () => {
-        setNoAccessDialogOpen(true);
-        trackEvent('new-template-from-add-strategy', {
-            props: {
-                eventType: 'show-no-access-dialog',
-            },
-        });
-    };
-
-    const onClose = () => {
-        setNoAccessDialogOpen(false);
-    };
 
     const scopeBadge = (template: IReleasePlanTemplate) => (
         <Badge color='disabled'>
@@ -138,10 +118,7 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
                     sx={{ justifyContent: 'space-between' }}
                 >
                     Release templates
-                    <NewReleaseTemplateButton
-                        projectId={projectId}
-                        onNoAccess={handleNoAccessClick}
-                    />
+                    <NewReleaseTemplateButton projectId={projectId} />
                 </StyledStrategyModalSectionHeader>
             )}
             {!templates.length ? (
@@ -201,16 +178,6 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
                     ))}
                 </FeatureStrategyMenuCardsSection>
             )}
-            <Dialogue
-                open={noAccessDialogOpen}
-                secondaryButtonText='Close'
-                onClose={onClose}
-                title='Contact admin to create release templates'
-            >
-                You don&apos;t have the required permissions to create release
-                templates. You must contact your organization admin to get
-                access.{' '}
-            </Dialogue>
         </Box>
     );
 };

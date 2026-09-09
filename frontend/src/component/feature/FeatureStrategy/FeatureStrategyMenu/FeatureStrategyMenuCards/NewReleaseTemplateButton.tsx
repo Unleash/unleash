@@ -11,17 +11,17 @@ import {
 import { formatReleaseTemplateCreatePath } from 'component/releases/releaseTemplatePaths';
 import { releaseTemplateScopeProps } from 'component/releases/releaseTemplateScopeProps';
 import { useEventTracker } from 'hooks/useEventTracker.ts';
+import { Dialogue } from 'component/common/Dialogue/Dialogue.tsx';
 
 interface INewReleaseTemplateButtonProps {
     projectId: string;
-    onNoAccess: () => void;
 }
 
 export const NewReleaseTemplateButton = ({
     projectId,
-    onNoAccess,
 }: INewReleaseTemplateButtonProps) => {
     const { trackEvent } = useEventTracker();
+    const [noAccessDialogOpen, setNoAccessDialogOpen] = useState(false);
     const canCreateGlobalTemplate = useHasRootAccess(
         RELEASE_PLAN_TEMPLATE_CREATE,
     );
@@ -41,11 +41,36 @@ export const NewReleaseTemplateButton = ({
         });
     };
 
+    const handleNoAccessClick = () => {
+        setNoAccessDialogOpen(true);
+        trackEvent('new-template-from-add-strategy', {
+            props: {
+                eventType: 'show-no-access-dialog',
+            },
+        });
+    };
+
     if (!canCreateGlobalTemplate && !canCreateProjectTemplate) {
         return (
-            <Button startIcon={<AddIcon />} onClick={onNoAccess} size='medium'>
-                New template
-            </Button>
+            <>
+                <Button
+                    startIcon={<AddIcon />}
+                    onClick={handleNoAccessClick}
+                    size='medium'
+                >
+                    New template
+                </Button>
+                <Dialogue
+                    open={noAccessDialogOpen}
+                    secondaryButtonText='Close'
+                    onClose={() => setNoAccessDialogOpen(false)}
+                    title='Contact admin to create release templates'
+                >
+                    You don&apos;t have the required permissions to create
+                    release templates. You must contact your organization admin
+                    to get access.{' '}
+                </Dialogue>
+            </>
         );
     }
 

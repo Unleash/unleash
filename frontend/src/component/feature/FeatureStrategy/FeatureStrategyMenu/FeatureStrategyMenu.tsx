@@ -1,22 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Box, Dialog, IconButton, styled, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { useEventTracker } from 'hooks/useEventTracker';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
-import { releaseTemplateScopeProps } from 'component/releases/releaseTemplateScopeProps';
-import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
-import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import useToast from 'hooks/useToast';
-import { useReleasePlansApi } from 'hooks/api/actions/useReleasePlansApi/useReleasePlansApi';
-import { useFeatureReleasePlans } from 'hooks/api/getters/useFeatureReleasePlans/useFeatureReleasePlans';
-import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { formatUnknownError } from 'utils/formatUnknownError';
 import { ReleasePlanPreview } from './ReleasePlanPreview.tsx';
 import {
     FeatureStrategyMenuCards,
     type StrategyFilterValue,
 } from './FeatureStrategyMenuCards/FeatureStrategyMenuCards.tsx';
-import { ReleasePlanConfirmationDialog } from './ReleasePlanConfirmationDialog.tsx';
+import { useAddReleasePlan } from './useAddReleasePlan.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureStrategyWizard } from '../FeatureStrategyWizard/FeatureStrategyWizard.tsx';
 
@@ -63,87 +54,26 @@ const StrategyMenuDialog = ({
     defaultFilter = null,
 }: IFeatureStrategyMenuProps) => {
     const [filter, setFilter] = useState<StrategyFilterValue>(defaultFilter);
-    const { trackEvent } = useEventTracker();
-    const [selectedTemplate, setSelectedTemplate] =
+    const [previewTemplate, setPreviewTemplate] =
         useState<IReleasePlanTemplate>();
     const [releasePlanPreview, setReleasePlanPreview] = useState(false);
-    const [addReleasePlanConfirmationOpen, setAddReleasePlanConfirmationOpen] =
-        useState(false);
-    const { setToastApiError, setToastData } = useToast();
-    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
-    const { addChange } = useChangeRequestApi();
-    const { refetch: refetchChangeRequests } =
-        usePendingChangeRequests(projectId);
-    const { refetch, releasePlans } = useFeatureReleasePlans(
+    const {
+        addReleasePlan,
+        activeReleasePlan,
+        crProtected,
+        confirmationDialog,
+    } = useAddReleasePlan({
         projectId,
         featureId,
         environmentId,
-    );
-    const { addReleasePlanToFeature } = useReleasePlansApi();
-    const crProtected = isChangeRequestConfigured(environmentId);
-
-    const activeReleasePlan = releasePlans[0];
+        onClose,
+    });
 
     useEffect(() => {
         if (!isStrategyMenuDialogOpen) return;
         setReleasePlanPreview(false);
         setFilter(defaultFilter);
     }, [isStrategyMenuDialogOpen, defaultFilter]);
-
-    const addReleasePlan = async (
-        template: IReleasePlanTemplate,
-        confirmed?: boolean,
-    ) => {
-        try {
-            if (!confirmed && activeReleasePlan) {
-                setAddReleasePlanConfirmationOpen(true);
-                return;
-            }
-            if (crProtected) {
-                await addChange(projectId, environmentId, {
-                    feature: featureId,
-                    action: 'addReleasePlan',
-                    payload: {
-                        templateId: template.id,
-                    },
-                });
-
-                setToastData({
-                    type: 'success',
-                    text: 'Added to draft',
-                });
-
-                refetchChangeRequests();
-            } else {
-                await addReleasePlanToFeature(
-                    featureId,
-                    template.id,
-                    projectId,
-                    environmentId,
-                );
-
-                setToastData({
-                    type: 'success',
-                    text: 'Release plan added',
-                });
-
-                refetch();
-            }
-
-            trackEvent('release-management', {
-                props: {
-                    eventType: 'add-plan',
-                    plan: template.name,
-                    ...releaseTemplateScopeProps(template.project),
-                },
-            });
-            setAddReleasePlanConfirmationOpen(false);
-            setSelectedTemplate(undefined);
-            onClose();
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        }
-    };
 
     return (
         <>
@@ -173,9 +103,9 @@ const StrategyMenuDialog = ({
                             <CloseIcon />
                         </IconButton>
                     </StyledHeader>
-                    {releasePlanPreview && selectedTemplate ? (
+                    {releasePlanPreview && previewTemplate ? (
                         <ReleasePlanPreview
-                            template={selectedTemplate}
+                            template={previewTemplate}
                             projectId={projectId}
                             featureName={featureId}
                             environment={environmentId}
@@ -183,7 +113,7 @@ const StrategyMenuDialog = ({
                             crProtected={crProtected}
                             onBack={() => setReleasePlanPreview(false)}
                             onConfirm={() => {
-                                addReleasePlan(selectedTemplate);
+                                addReleasePlan(previewTemplate);
                             }}
                         />
                     ) : (
@@ -193,12 +123,9 @@ const StrategyMenuDialog = ({
                             environmentId={environmentId}
                             filter={filter}
                             setFilter={setFilter}
-                            onAddReleasePlan={(template) => {
-                                setSelectedTemplate(template);
-                                addReleasePlan(template);
-                            }}
+                            onAddReleasePlan={addReleasePlan}
                             onReviewReleasePlan={(template) => {
-                                setSelectedTemplate(template);
+                                setPreviewTemplate(template);
                                 setReleasePlanPreview(true);
                             }}
                             onClose={onClose}
@@ -206,17 +133,7 @@ const StrategyMenuDialog = ({
                     )}
                 </>
             </Dialog>
-            {selectedTemplate && (
-                <ReleasePlanConfirmationDialog
-                    template={selectedTemplate}
-                    crProtected={crProtected}
-                    open={addReleasePlanConfirmationOpen}
-                    setOpen={setAddReleasePlanConfirmationOpen}
-                    onConfirm={() => {
-                        addReleasePlan(selectedTemplate, true);
-                    }}
-                />
-            )}
+            {confirmationDialog}
         </>
     );
 };

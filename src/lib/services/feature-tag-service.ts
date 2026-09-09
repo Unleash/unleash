@@ -1,3 +1,4 @@
+import { auditEventFields } from '../util/index.js';
 import NotFoundError from '../error/notfound-error.js';
 import {
     FEATURE_TAGGED,
@@ -139,12 +140,10 @@ class FeatureTagService {
         const creationEvents = featureToggles.flatMap((featureToggle) =>
             addedTags.map((addedTag) => ({
                 type: FEATURE_TAGGED,
-                createdBy: auditUser.username,
                 featureName: featureToggle.name,
                 project: featureToggle.project,
+                ...auditEventFields(auditUser),
                 data: addedTag,
-                createdByUserId: auditUser.id,
-                ip: auditUser.ip,
             })),
         );
 
@@ -153,10 +152,8 @@ class FeatureTagService {
                 type: FEATURE_UNTAGGED,
                 featureName: featureToggle.name,
                 project: featureToggle.project,
+                ...auditEventFields(auditUser),
                 preData: removedTag,
-                createdBy: auditUser.username,
-                createdByUserId: auditUser.id,
-                ip: auditUser.ip,
             })),
         );
 
@@ -175,9 +172,7 @@ class FeatureTagService {
                     await this.tagStore.createTag(tag);
                     await this.eventService.storeEvent({
                         type: TAG_CREATED,
-                        createdBy: auditUser.username,
-                        createdByUserId: auditUser.id,
-                        ip: auditUser.ip,
+                        ...auditEventFields(auditUser),
                         data: tag,
                     });
                 } catch (err) {
@@ -207,9 +202,7 @@ class FeatureTagService {
         await this.featureTagStore.untagFeature(featureName, tag);
         await this.eventService.storeEvent({
             type: FEATURE_UNTAGGED,
-            createdBy: auditUser.username,
-            createdByUserId: auditUser.id,
-            ip: auditUser.ip,
+            ...auditEventFields(auditUser),
             featureName,
             project: featureToggle.project,
             preData: tag,

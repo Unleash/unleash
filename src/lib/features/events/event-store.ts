@@ -38,6 +38,7 @@ import type { ITag } from '../../tags/index.js';
 import metricsHelper from '../../util/metrics-helper.js';
 import { DB_TIME } from '../../metric-events.js';
 import type { EnvironmentVisibleRevisionState } from '../client-feature-toggles/delta/client-feature-toggle-delta.js';
+import { sanitizeUserAgent } from '../../util/sanitize-user-agent.js';
 
 const EVENT_COLUMNS = [
     'id',
@@ -109,6 +110,7 @@ export interface IEventTable {
     environment?: string;
     tags: ITag[];
     ip?: string;
+    user_agent?: string;
     group_type: string | null;
     group_id: string | null;
 }
@@ -738,6 +740,7 @@ export class EventStore implements IEventStore {
             project: e.project,
             environment: e.environment,
             ip: e.ip,
+            user_agent: sanitizeUserAgent(e.userAgent),
             group_type: transactionContext?.type || null,
             group_id: transactionContext?.id || null,
         };

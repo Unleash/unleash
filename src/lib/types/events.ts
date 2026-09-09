@@ -7,6 +7,7 @@ import type {
 } from './model.js';
 import type { IApiToken } from './model.js';
 import type { IAuditUser, IUserWithRootRole } from './user.js';
+import { auditEventFields } from '../util/audit-event-fields.js';
 import type { ITagType } from '../features/tag-type/tag-type-store-type.js';
 import type { IFeatureAndTag } from './stores/feature-tag-store.js';
 import {
@@ -136,15 +137,23 @@ export class BaseEvent implements IBaseEvent {
 
     readonly ip: string;
 
+    readonly userAgent?: string;
+
     /**
      * @param type the type of the event we're creating.
-     * @param auditUser User info used to track which user performed the action. Includes username (email or username), userId and ip
+     * @param auditUser User info used to track which user performed the action.
+     * Includes username (email or username), userId, ip and
+     * for actions that came from an HTTP request the user agent.
      */
     constructor(type: IEventType, auditUser: IAuditUser) {
+        const { createdBy, createdByUserId, ip, userAgent } =
+            auditEventFields(auditUser);
+
         this.type = type;
-        this.createdBy = auditUser.username || 'unknown';
-        this.createdByUserId = auditUser.id || -1337;
-        this.ip = auditUser.ip || '';
+        this.createdBy = createdBy;
+        this.createdByUserId = createdByUserId;
+        this.ip = ip;
+        this.userAgent = userAgent;
     }
 }
 

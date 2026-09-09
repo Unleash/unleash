@@ -1,3 +1,4 @@
+import { auditEventFields } from '../../util/index.js';
 import type {
     IContextField,
     IContextFieldDto,
@@ -178,9 +179,7 @@ class ContextService {
         const createdField = await this.contextFieldStore.create(value);
         await this.eventService.storeEvent({
             type: CONTEXT_FIELD_CREATED,
-            createdBy: auditUser.username,
-            createdByUserId: auditUser.id,
-            ip: auditUser.ip,
+            ...auditEventFields(auditUser),
             data: contextField,
         });
 
@@ -203,9 +202,7 @@ class ContextService {
         const { createdAt, sortOrder, ...previousContextField } = contextField;
         await this.eventService.storeEvent({
             type: CONTEXT_FIELD_UPDATED,
-            createdBy: auditUser.username,
-            createdByUserId: auditUser.id,
-            ip: auditUser.ip,
+            ...auditEventFields(auditUser),
             preData: previousContextField,
             data: value,
         });
@@ -244,9 +241,7 @@ class ContextService {
 
         await this.eventService.storeEvent({
             type: CONTEXT_FIELD_UPDATED,
-            createdBy: auditUser.username,
-            createdByUserId: auditUser.id,
-            ip: auditUser.ip,
+            ...auditEventFields(auditUser),
             preData: contextField,
             data: newContextField,
         });
@@ -274,9 +269,7 @@ class ContextService {
 
         await this.eventService.storeEvent({
             type: CONTEXT_FIELD_UPDATED,
-            createdBy: auditUser.username,
-            createdByUserId: auditUser.id,
-            ip: auditUser.ip,
+            ...auditEventFields(auditUser),
             preData: contextField,
             data: newContextField,
         });
@@ -303,9 +296,7 @@ class ContextService {
         await this.contextFieldStore.delete(name);
         await this.eventService.storeEvent({
             type: CONTEXT_FIELD_DELETED,
-            createdBy: auditUser.username,
-            createdByUserId: auditUser.id,
-            ip: auditUser.ip,
+            ...auditEventFields(auditUser),
             preData: contextField,
         });
     }

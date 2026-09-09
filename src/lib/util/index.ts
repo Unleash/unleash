@@ -14,6 +14,8 @@ export * from './time-utils.js';
 export * from './collect-ids.js';
 export * from './parseEnvVar.js';
 export * from './rewriteHTML.js';
+export * from './audit-event-fields.js';
+export * from './sanitize-user-agent.js';
 export * from './extract-user.js';
 export * from './flag-resolver.js';
 export * from './metrics-helper.js';

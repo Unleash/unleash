@@ -7,6 +7,7 @@ import {
     FEATURE_TAGGED,
     FEATURE_UPDATED,
     SEGMENT_UPDATED,
+    type IBaseEvent,
     type IEvent,
 } from '../../../lib/events/index.js';
 import {
@@ -842,4 +843,44 @@ test('Should auto-generate transaction context when none provided', async () => 
     expect(storedEvent!.groupId).toBeTruthy();
     expect(typeof storedEvent!.groupId).toBe('string');
     expect(storedEvent!.groupId).toMatch(/^[0-9A-HJKMNP-TV-Z]{26}$/);
+});
+
+test('persists the user agent when the request had one, and null when it did not', async () => {
+    const withUserAgent: IBaseEvent = {
+        type: FEATURE_CREATED,
+        createdBy: 'test@example.com',
+        createdByUserId: TEST_USER_ID,
+        featureName: 'ua-request-originated',
+        ip: '127.0.0.1',
+        userAgent: 'curl/8.4.0',
+        data: { name: 'ua-request-originated' },
+    };
+    const withoutUserAgent: IBaseEvent = {
+        type: FEATURE_CREATED,
+        createdBy: 'unleash_system_user',
+        createdByUserId: TEST_USER_ID,
+        featureName: 'ua-system-generated',
+        ip: '',
+        data: { name: 'ua-system-generated' },
+    };
+
+    await eventStore.store(withUserAgent);
+    await eventStore.store(withoutUserAgent);
+
+    // The store is the only thing under test here, so read the column directly
+    // rather than through a read path that may not select it.
+    const rows = await db
+        .rawDatabase('events')
+        .select('feature_name', 'user_agent')
+        .whereIn('feature_name', [
+            'ua-request-originated',
+            'ua-system-generated',
+        ]);
+    const byFeature = Object.fromEntries(
+        rows.map((row) => [row.feature_name, row.user_agent]),
+    );
+
+    expect(byFeature['ua-request-originated']).toBe('curl/8.4.0');
+    // null, never '' or a placeholder: "no request behind this event"
+    expect(byFeature['ua-system-generated']).toBeNull();
 });

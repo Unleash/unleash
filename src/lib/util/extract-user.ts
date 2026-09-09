@@ -6,6 +6,12 @@ export function extractClientIp(req: { ip?: string }): string {
     return req.ip || 'unknown';
 }
 
+export function extractUserAgentFromHeaders(
+    req: Pick<IAuthRequest, 'get'>,
+): string | undefined {
+    return req.get('user-agent');
+}
+
 export function extractUsernameFromUser(user: IUser | IApiUser): string {
     return (
         (user as IUser)?.email || user?.username || SYSTEM_USER_AUDIT.username
@@ -29,6 +35,12 @@ export const extractUserInfo = (req: IAuthRequest | IApiRequest) => ({
     username: extractUsername(req),
 });
 
+/**
+ * Creates audit info for bg work that has no HTTP request behind it:
+ * automated actions, scheduled tasks, jobs.
+ *
+ * @deprecated For HTTP requests, use `req.audit` instead.
+ */
 export const extractAuditInfoFromUser = (
     user: IUser | IApiUser,
     ip: string = '127.0.0.1',
@@ -36,11 +48,4 @@ export const extractAuditInfoFromUser = (
     id: extractUserIdFromUser(user),
     username: extractUsernameFromUser(user),
     ip,
-});
-export const extractAuditInfo = (
-    req: IAuthRequest | IApiRequest,
-): IAuditUser => ({
-    id: extractUserId(req),
-    username: extractUsername(req),
-    ip: extractClientIp(req),
 });

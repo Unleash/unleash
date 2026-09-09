@@ -84,6 +84,7 @@ export type IFlagKey =
     | 'flagStatusTooltips'
     | 'simplerStrategySetup'
     | 'totalUsageMetrics'
+    | 'auditEventUserAgent'
     | keyof IFlagKeyOverrides;
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -379,6 +380,10 @@ const flags: IFlags = {
     ),
     totalUsageMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_TOTAL_USAGE_METRICS,
+        false,
+    ),
+    auditEventUserAgent: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_AUDIT_EVENT_USER_AGENT,
         false,
     ),
 };

@@ -47,6 +47,7 @@ import { ImportTogglesStore } from './features/export-import-toggles/import-togg
 import Addon from './addons/addon.js';
 import { ALL_PROJECTS, CUSTOM_ROOT_ROLE_TYPE } from './util/index.js';
 import {
+    auditEventFields,
     extractAuditInfoFromUser,
     getVariantValue,
     isDefined,
@@ -493,6 +494,7 @@ export {
     ALL_PROJECTS,
     ALL,
     isAllProjects,
+    auditEventFields,
     extractAuditInfoFromUser,
     createTestConfig,
     NoAuthUser,

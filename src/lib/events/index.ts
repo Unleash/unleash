@@ -431,19 +431,24 @@ export const IEventTypes = [
 ] as const;
 export type IEventType = (typeof IEventTypes)[number];
 
-// this represents the write model for events
-export interface IBaseEvent {
+export interface IEventData {
     type: IEventType;
-    createdBy: string;
-    createdByUserId: number;
     project?: string;
     environment?: string;
     featureName?: string;
-    ip: string;
     data?: any;
     preData?: any;
     tags?: ITag[];
 }
+
+export interface IEventAuditColumns {
+    createdBy: string;
+    createdByUserId: number;
+    ip: string;
+    userAgent?: string;
+}
+
+export interface IBaseEvent extends IEventData, IEventAuditColumns {}
 
 // This represents the read model for events
 export interface IEvent extends Omit<IBaseEvent, 'ip'> {

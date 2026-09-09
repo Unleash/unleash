@@ -49,7 +49,7 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
     const { setToastData, setToastApiError } = useToast();
     const { defaultStickiness } = useDefaultProjectSettings(id);
     const { trackEvent } = useEventTracker();
-    const { trackMutation, trackValidationFailed } = useTracking({
+    const trackProjectUpdated = useTracking({
         event: 'project-settings',
         type: 'general-saved',
     });
@@ -106,7 +106,7 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
 
         if (validName) {
             try {
-                await trackMutation(
+                await trackProjectUpdated.mutation(
                     () => editProject(id, payload),
                     changedProps,
                 );
@@ -122,7 +122,7 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
                 setToastApiError(formatUnknownError(error));
             }
         } else {
-            trackValidationFailed(changedProps);
+            trackProjectUpdated.validationFailed(changedProps);
         }
     };
 

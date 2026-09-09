@@ -32,15 +32,15 @@ export const ArchivedFeatureReviveConfirm = ({
     const { setToastData, setToastApiError } = useToast();
     const { reviveFeatures, loading: reviveFeaturesLoading } = useProjectApi();
     const { project, loading } = useProjectOverview(projectId);
-    const { trackMutation, trackValidationFailed } = useTracking(tracking);
+    const trackRevive = useTracking(tracking);
 
     const onReviveFeatureToggle = async () => {
         try {
             if (revivedFeatures.length === 0) {
-                trackValidationFailed();
+                trackRevive.validationFailed();
                 return;
             }
-            await trackMutation(() =>
+            await trackRevive.mutation(() =>
                 reviveFeatures(projectId, revivedFeatures),
             );
         } catch (error: unknown) {

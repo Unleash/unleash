@@ -52,19 +52,19 @@ export const BaseModal: FC<ISidebarModalProps> = ({
     children,
     tracking,
 }) => {
-    const { track } = useTracking(tracking);
+    const trackModal = useTracking(tracking);
 
     useEffect(() => {
         if (open) {
-            track('opened');
+            trackModal('opened');
         }
-    }, [open, track]);
+    }, [open, trackModal]);
 
     return (
         <Modal
             open={open}
             onClose={(_, reason) => {
-                track('dismissed', {
+                trackModal('dismissed', {
                     method: dismissMethodFromCloseReason(reason),
                 });
                 onClose();
@@ -95,7 +95,7 @@ export const SidebarModal: FC<ISidebarModalProps> = (props) => {
 };
 
 export const DynamicSidebarModal: FC<ISidebarModalProps> = (props) => {
-    const { track } = useTracking(props.tracking);
+    const trackModal = useTracking(props.tracking);
 
     return (
         <BaseModal {...props}>
@@ -103,7 +103,7 @@ export const DynamicSidebarModal: FC<ISidebarModalProps> = (props) => {
                 <Tooltip title='Close' arrow describeChild>
                     <StyledIconButton
                         onClick={() => {
-                            track('dismissed', { method: 'close-icon' });
+                            trackModal('dismissed', { method: 'close-icon' });
                             props.onClose();
                         }}
                     >

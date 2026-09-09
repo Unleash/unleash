@@ -42,7 +42,7 @@ export const RemoveSegmentButton = ({ segment }: IRemoveSegmentButtonProps) => {
             viaChangeRequest: Boolean(changeRequestEnv && segment.project),
         },
     };
-    const { trackMutation } = useTracking(tracking);
+    const trackRemove = useTracking(tracking);
 
     const onRemove = async () => {
         const changeRequest =
@@ -51,7 +51,7 @@ export const RemoveSegmentButton = ({ segment }: IRemoveSegmentButtonProps) => {
                 : undefined;
 
         try {
-            await trackMutation(async () => {
+            await trackRemove.mutation(async () => {
                 if (changeRequest) {
                     await addChange(
                         changeRequest.project,

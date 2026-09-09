@@ -31,7 +31,7 @@ export const CreateApiTokenButton = ({
     const navigate = useNavigate();
     const { tokens, loading } = useApiTokens();
     const { uiConfig } = useUiConfig();
-    const { track } = useTracking(apiTokenCreatedTracking);
+    const trackApiTokenCreated = useTracking(apiTokenCreatedTracking);
 
     const { limitReached, limitMessage } = useApiTokenLimit(
         uiConfig.resourceLimits.apiTokens,
@@ -42,7 +42,7 @@ export const CreateApiTokenButton = ({
         <ResponsiveButton
             Icon={Add}
             onClick={() => {
-                track('opened');
+                trackApiTokenCreated('opened');
                 navigate(path);
             }}
             data-testid={CREATE_API_TOKEN_BUTTON}

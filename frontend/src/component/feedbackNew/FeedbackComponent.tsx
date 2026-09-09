@@ -162,7 +162,7 @@ export const FeedbackComponent = ({
     const { trackEvent } = useEventTracker();
     const theme = useTheme();
 
-    const { track } = useTracking(feedbackTracking);
+    const trackFeedback = useTracking(feedbackTracking);
 
     const { addFeedback } = useUserFeedbackApi();
     const { setHasSubmittedFeedback } = useUserSubmittedFeedback(
@@ -243,7 +243,7 @@ export const FeedbackComponent = ({
                         <Tooltip title='Close' arrow>
                             <StyledCloseButton
                                 onClick={() => {
-                                    track('dismissed', {
+                                    trackFeedback('dismissed', {
                                         method: 'close-icon',
                                     });
                                     closeFeedback();

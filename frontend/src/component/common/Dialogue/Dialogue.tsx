@@ -83,14 +83,14 @@ export const Dialogue: React.FC<IDialogue> = ({
     customButton,
     tracking,
 }) => {
-    const { track } = useTracking(tracking);
+    const trackDialog = useTracking(tracking);
 
     // Opening a dialog is a user action, so it gets its own row.
     useEffect(() => {
         if (open) {
-            track('opened');
+            trackDialog('opened');
         }
-    }, [open, track]);
+    }, [open, trackDialog]);
 
     const handleClick = formId
         ? (e: React.SyntheticEvent) => {
@@ -106,14 +106,16 @@ export const Dialogue: React.FC<IDialogue> = ({
     const onKeyDown = (event: KeyboardEvent) => {
         if (event.key === 'Escape' && setOpen) {
             if (!onClose) {
-                track('dismissed', { method: 'escape' });
+                trackDialog('dismissed', { method: 'escape' });
             }
             setOpen(false);
         }
     };
 
     const handleMuiClose = (e: React.SyntheticEvent, reason?: string) => {
-        track('dismissed', { method: dismissMethodFromCloseReason(reason) });
+        trackDialog('dismissed', {
+            method: dismissMethodFromCloseReason(reason),
+        });
         onClose?.(e, reason);
     };
 
@@ -164,7 +166,7 @@ export const Dialogue: React.FC<IDialogue> = ({
                         show={
                             <Button
                                 onClick={(e) => {
-                                    track('dismissed', {
+                                    trackDialog('dismissed', {
                                         method: 'cancel-button',
                                     });
                                     onClose?.(e);

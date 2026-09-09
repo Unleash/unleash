@@ -74,7 +74,7 @@ export const CopyFeatureToggle = () => {
     const [nameError, setNameError] = useState<string | undefined>();
     const [newToggleName, setnewToggleName] = useState<string>();
     const { cloneFeatureToggle, validateFeatureToggleName } = useFeatureApi();
-    const { trackMutation } = useTracking(flagClonedTracking);
+    const trackFlagCloned = useTracking(flagClonedTracking);
     const featureId = useRequiredPathParam('featureId');
     const projectId = useRequiredPathParam('projectId');
     const { feature } = useFeature(projectId, featureId);
@@ -119,7 +119,7 @@ export const CopyFeatureToggle = () => {
         }
 
         try {
-            await trackMutation(
+            await trackFlagCloned.mutation(
                 () =>
                     cloneFeatureToggle(projectId, featureId, {
                         name: newToggleName as string,

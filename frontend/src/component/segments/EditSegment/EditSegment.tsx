@@ -61,7 +61,7 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
     const navigate = useNavigate();
     const { updateSegment, loading } = useSegmentsApi();
     const { refetchSegments } = useSegments();
-    const { trackMutation } = useTracking(segmentEditedTracking);
+    const trackSegmentEdited = useTracking(segmentEditedTracking);
 
     const {
         name,
@@ -128,7 +128,7 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
                 }),
             };
             try {
-                await trackMutation(
+                await trackSegmentEdited.mutation(
                     () =>
                         changeRequestEnv
                             ? addChange(

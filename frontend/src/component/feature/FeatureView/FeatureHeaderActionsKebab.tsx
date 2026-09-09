@@ -45,7 +45,7 @@ export const FeatureHeaderActionsKebab: FC<FeatureHeaderActionsKebabProps> = ({
     const open = Boolean(anchorEl);
     const buttonId = useId();
     const menuId = useId();
-    const { track } = useTracking(flagClonedTracking);
+    const trackFlagCloned = useTracking(flagClonedTracking);
 
     const handleClick = (event: MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -102,7 +102,7 @@ export const FeatureHeaderActionsKebab: FC<FeatureHeaderActionsKebabProps> = ({
                     disabled={!canClone}
                     to={`/projects/${feature.project}/features/${feature.name}/copy`}
                     onClick={() => {
-                        track('opened', { name: feature.name });
+                        trackFlagCloned('opened', { name: feature.name });
                     }}
                 >
                     <ListItemIcon>

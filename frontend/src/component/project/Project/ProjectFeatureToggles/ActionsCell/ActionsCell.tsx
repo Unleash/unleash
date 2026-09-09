@@ -62,8 +62,8 @@ export const ActionsCell: FC<IActionsCellProps> = ({
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [isFeatureNameCopied, setIsFeatureNameCopied] = useState(false);
     const { setToastData } = useToast();
-    const { track } = useTracking(flagClonedTracking);
-    const { track: trackNameCopied } = useTracking(flagNameCopiedTracking);
+    const trackFlagCloned = useTracking(flagClonedTracking);
+    const trackFlagNameCopied = useTracking(flagNameCopiedTracking);
     const {
         original: { name: featureId, stale },
     } = row;
@@ -83,7 +83,7 @@ export const ActionsCell: FC<IActionsCellProps> = ({
         try {
             // copy() reports failure by returning false, not by throwing
             if (copy(featureId)) {
-                trackNameCopied('copied', {
+                trackFlagNameCopied('copied', {
                     method: 'kebab-menu',
                     name: featureId,
                 });
@@ -147,7 +147,7 @@ export const ActionsCell: FC<IActionsCellProps> = ({
                     nativeButton={false}
                     to={`/projects/${projectId}/features/${featureId}/copy`}
                     onClick={() => {
-                        track('opened', { name: featureId });
+                        trackFlagCloned('opened', { name: featureId });
                     }}
                 >
                     <ListItemIcon>

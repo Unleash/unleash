@@ -67,7 +67,7 @@ const ContextList: FC = () => {
     const { removeContext, loading: removingContext } =
         useContextsApi(projectId);
     const { setToastData, setToastApiError } = useToast();
-    const deleteTracking = useTracking(contextFieldDeletedTracking);
+    const trackContextFieldDeleted = useTracking(contextFieldDeletedTracking);
 
     const trackingPropsFor = (name: string | undefined) => {
         const field = context.find((context) => context.name === name);
@@ -200,7 +200,7 @@ const ContextList: FC = () => {
             setToastApiError(formatUnknownError(new Error()));
         } else {
             try {
-                await deleteTracking.trackMutation(
+                await trackContextFieldDeleted.mutation(
                     () => removeContext(deleteTarget.name),
                     deleteTarget.props,
                 );

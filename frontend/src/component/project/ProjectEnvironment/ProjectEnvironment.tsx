@@ -71,12 +71,8 @@ const ProjectEnvironmentList = () => {
     const { project, refetch: refetchProject } = useProjectOverview(projectId);
     const { removeEnvironmentFromProject, addEnvironmentToProject } =
         useProjectApi();
-    const { trackMutation: trackMadeVisible } = useTracking(
-        environmentMadeVisibleTracking,
-    );
-    const { trackMutation: trackHidden } = useTracking(
-        environmentHiddenTracking,
-    );
+    const trackMadeVisible = useTracking(environmentMadeVisibleTracking);
+    const trackHidden = useTracking(environmentHiddenTracking);
 
     // local state
     const [selectedEnvironment, setSelectedEnvironment] =
@@ -133,7 +129,7 @@ const ProjectEnvironmentList = () => {
             });
         } else {
             try {
-                await trackMadeVisible(
+                await trackMadeVisible.mutation(
                     () => addEnvironmentToProject(projectId, env.name),
                     environmentTrackingProps(env),
                 );
@@ -151,7 +147,7 @@ const ProjectEnvironmentList = () => {
     const onHideConfirm = async () => {
         if (selectedEnvironment) {
             try {
-                await trackHidden(
+                await trackHidden.mutation(
                     () =>
                         removeEnvironmentFromProject(
                             projectId,

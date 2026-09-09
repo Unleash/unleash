@@ -9,20 +9,17 @@ import { requestFailureProps } from 'utils/requestFailureProps';
 
 type TrackEvent = ReturnType<typeof useEventTracker>['trackEvent'];
 
-type Tracker = {
-    track: (action: TrackingAction, props?: TrackingProps) => void;
-    trackMutation: <T>(
-        fn: () => Promise<T>,
-        props?: TrackingProps,
-    ) => Promise<T>;
-    trackValidationFailed: (props?: TrackingProps) => void;
+// Callable so a call site holds one named function per journey and nothing to destructure.
+type Tracker = ((action: TrackingAction, props?: TrackingProps) => void) & {
+    mutation: <T>(fn: () => Promise<T>, props?: TrackingProps) => Promise<T>;
+    validationFailed: (props?: TrackingProps) => void;
 };
 
 const createTracker = (
     trackEvent: TrackEvent,
     getTracking: () => Tracking | undefined,
 ): Tracker => {
-    const track: Tracker['track'] = (action, props) => {
+    const track = (action: TrackingAction, props?: TrackingProps) => {
         const tracking = getTracking();
         if (!tracking) {
             return;
@@ -37,10 +34,9 @@ const createTracker = (
         });
     };
 
-    return {
-        track,
+    return Object.assign(track, {
         // Rethrows so the caller still handles toasts and errors.
-        trackMutation: async (fn, props) => {
+        mutation: async <T>(fn: () => Promise<T>, props?: TrackingProps) => {
             track('submitted', props);
             try {
                 const result = await fn();
@@ -52,15 +48,15 @@ const createTracker = (
             }
         },
         // Counts as an attempt too, so submitted and failed both get a row.
-        trackValidationFailed: (props) => {
+        validationFailed: (props?: TrackingProps) => {
             track('submitted', props);
             track('failed', { ...props, failedOn: 'validation' });
         },
-    };
+    });
 };
 
-// The declaration is read through a ref at call time, so the returned functions stay stable
-// across renders and are safe in effect dependency lists. Without a declaration every call is a no-op.
+// The declaration is read through a ref at call time, so the returned function stays stable
+// across renders and is safe in effect dependency lists. Without a declaration every call is a no-op.
 export const useTracking = (tracking: Tracking | undefined): Tracker => {
     const { trackEvent } = useEventTracker();
     const trackingRef = useRef(tracking);

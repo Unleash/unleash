@@ -162,13 +162,13 @@ const CreateFeatureDialogContent = ({
     onSuccess,
 }: ICreateFeatureDialogProps) => {
     const useNewDesign = useUiFlag('newModalDesign');
-    const { track, trackMutation } = useTracking(flagCreationTracking);
+    const trackFlagCreation = useTracking(flagCreationTracking);
 
     useEffect(() => {
         if (open) {
-            track('opened');
+            trackFlagCreation('opened');
         }
-    }, [open, track]);
+    }, [open, trackFlagCreation]);
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig, isOss } = useUiConfig();
     const navigate = useNavigate();
@@ -240,7 +240,7 @@ const CreateFeatureDialogContent = ({
         if (validToggleName) {
             const payload = getTogglePayload();
             try {
-                await trackMutation(() =>
+                await trackFlagCreation.mutation(() =>
                     createFeatureToggle(project, payload),
                 );
                 navigate(`/projects/${project}/features/${name}`);
@@ -294,7 +294,7 @@ const CreateFeatureDialogContent = ({
     }, [project, projects]);
 
     const onDialogClose = (method: DialogDismissMethod) => {
-        track('dismissed', { method });
+        trackFlagCreation('dismissed', { method });
         setStoredFlagConfig({
             name,
             tags,
@@ -485,7 +485,9 @@ const CreateFeatureDialogContent = ({
                         Limit={limitNode}
                         name={name}
                         onClose={() => {
-                            track('dismissed', { method: 'cancel-button' });
+                            trackFlagCreation('dismissed', {
+                                method: 'cancel-button',
+                            });
                             onClose();
                         }}
                         resource={'feature flag'}

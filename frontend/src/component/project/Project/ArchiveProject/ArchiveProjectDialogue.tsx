@@ -24,14 +24,14 @@ export const ArchiveProjectDialogue = ({
     tracking,
 }: IDeleteProjectDialogueProps) => {
     const { archiveProject, loading } = useProjectApi();
-    const { trackMutation } = useTracking(tracking);
+    const trackArchive = useTracking(tracking);
     const { refetch: refetchProjectOverview } = useProjects();
     const { setToastData, setToastApiError } = useToast();
 
     const onClick = async (e: React.SyntheticEvent) => {
         e.preventDefault();
         try {
-            await trackMutation(() => archiveProject(project));
+            await trackArchive.mutation(() => archiveProject(project));
             refetchProjectOverview();
             setToastData({
                 text: 'Project archived',

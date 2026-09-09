@@ -34,7 +34,7 @@ export const DeleteProjectDialogue = ({
     tracking,
 }: IDeleteProjectDialogueProps) => {
     const { deleteProject, loading } = useProjectApi();
-    const { trackMutation } = useTracking(tracking);
+    const trackDelete = useTracking(tracking);
     const { refetch: refetchProjects } = useProjects();
     const { refetch: refetchProjectArchive } = useProjects({ archived: true });
     const { setToastData, setToastApiError } = useToast();
@@ -44,7 +44,7 @@ export const DeleteProjectDialogue = ({
     const onClick = async (e: React.SyntheticEvent) => {
         e.preventDefault();
         try {
-            await trackMutation(() => deleteProject(projectId));
+            await trackDelete.mutation(() => deleteProject(projectId));
             refetchProjects();
             refetchProjectArchive();
             setToastData({

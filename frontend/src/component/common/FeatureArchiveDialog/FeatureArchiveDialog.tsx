@@ -278,12 +278,12 @@ const useArchiveAction = ({
         });
     };
 
-    const { trackMutation } = useTracking(tracking);
+    const trackArchive = useTracking(tracking);
 
     const archiveAction = async () => {
         setArchiving(true);
         try {
-            await trackMutation(
+            await trackArchive.mutation(
                 async () => {
                     if (archiveVia === 'change-request') {
                         await addArchiveToggleToChangeRequest();

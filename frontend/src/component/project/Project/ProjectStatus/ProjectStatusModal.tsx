@@ -160,7 +160,7 @@ export const ProjectStatusModal = ({ open, onClose, onFollowLink }: Props) => {
     const { trackEvent } = useEventTracker();
     // The Close button is ours, so DynamicSidebarModal's own dismissal tracking
     // (close icon, backdrop, escape) never sees it.
-    const { track } = useTracking(projectStatusTracking);
+    const trackProjectStatus = useTracking(projectStatusTracking);
 
     return (
         <DynamicSidebarModal
@@ -227,7 +227,9 @@ export const ProjectStatusModal = ({ open, onClose, onFollowLink }: Props) => {
                     <Button
                         variant='outlined'
                         onClick={() => {
-                            track('dismissed', { method: 'cancel-button' });
+                            trackProjectStatus('dismissed', {
+                                method: 'cancel-button',
+                            });
                             onClose();
                         }}
                     >

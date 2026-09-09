@@ -14,7 +14,7 @@ export const useUncomplete = ({
     status?: 'kept' | 'discarded';
     onChange?: () => void;
 }) => {
-    const { trackMutation } = useTracking({
+    const trackUncomplete = useTracking({
         event: 'feature-lifecycle',
         type: 'uncomplete',
     });
@@ -25,7 +25,7 @@ export const useUncomplete = ({
 
     const onUncompleteHandler = async () => {
         try {
-            await trackMutation(
+            await trackUncomplete.mutation(
                 () => markFeatureUncompleted(feature, project),
                 uncompleteProps,
             );

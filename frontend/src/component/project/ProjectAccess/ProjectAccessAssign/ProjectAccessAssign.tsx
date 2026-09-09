@@ -133,8 +133,7 @@ export const ProjectAccessAssign = ({
     const { setToastData, setToastApiError } = useToast();
     const navigate = useNavigate();
     const tracking = projectAccessTracking(edit ? 'role-changed' : 'assigned');
-    const { track, trackMutation, trackValidationFailed } =
-        useTracking(tracking);
+    const trackAssign = useTracking(tracking);
 
     const options = [
         ...groups
@@ -254,11 +253,11 @@ export const ProjectAccessAssign = ({
         const props = accessProps();
 
         if (!isValid) {
-            trackValidationFailed(props);
+            trackAssign.validationFailed(props);
             return;
         }
         try {
-            await trackMutation(async () => {
+            await trackAssign.mutation(async () => {
                 if (!edit) {
                     await addAccessToProject(projectId, payload);
                 } else if (
@@ -506,7 +505,9 @@ export const ProjectAccessAssign = ({
                         </Button>
                         <StyledCancelButton
                             onClick={() => {
-                                track('dismissed', { method: 'cancel-button' });
+                                trackAssign('dismissed', {
+                                    method: 'cancel-button',
+                                });
                                 navigate(GO_BACK);
                             }}
                         >

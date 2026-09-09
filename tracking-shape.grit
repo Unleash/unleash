@@ -1,0 +1,9 @@
+language js
+
+// useTracking returns one callable tracker per journey. Destructuring it reintroduces
+// bare `track`/`trackMutation` bindings and the four call-site shapes the callable removed.
+// The binding is matched by text: a plain name is fine, anything else is a pattern.
+`const $binding = useTracking($args)` as $match where {
+    not $binding <: r"^[\w$]+$",
+    register_diagnostic(span=$match, message="useTracking returns one callable per journey. Hold it as `const trackX = useTracking(xTracking)`; call `trackX(action)`, `trackX.mutation(fn)`, `trackX.validationFailed()`.", severity="error")
+}

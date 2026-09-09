@@ -18,17 +18,19 @@ export const CopyApiTokenButton = ({
     permission,
 }: ICopyApiTokenButtonProps) => {
     const { setToastData } = useToast();
-    const { track } = useTracking(apiTokenCopiedTracking(token, 'token-list'));
+    const trackApiTokenCopied = useTracking(
+        apiTokenCopiedTracking(token, 'token-list'),
+    );
 
     const copyToken = (value: string) => {
         if (copy(value)) {
-            track('succeeded');
+            trackApiTokenCopied('succeeded');
             setToastData({
                 type: 'success',
                 text: 'Token copied to clipboard',
             });
         } else {
-            track('failed', { failedOn: 'clipboard' });
+            trackApiTokenCopied('failed', { failedOn: 'clipboard' });
         }
     };
 

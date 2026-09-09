@@ -29,7 +29,7 @@ export const FeatureStaleDialog = ({
 }: IFeatureStaleDialogProps) => {
     const { setToastData, setToastApiError } = useToast();
     const { patchFeatureToggle, loading } = useFeatureApi();
-    const { trackMutation } = useTracking(tracking);
+    const trackStale = useTracking(tracking);
 
     const flagToStaleContent = (
         <Typography>Setting a flag to stale marks it for cleanup</Typography>
@@ -48,7 +48,7 @@ export const FeatureStaleDialog = ({
 
         try {
             const patch = [{ op: 'replace', path: '/stale', value: !isStale }];
-            await trackMutation(() =>
+            await trackStale.mutation(() =>
                 patchFeatureToggle(projectId, featureId, patch),
             );
             setToastData({

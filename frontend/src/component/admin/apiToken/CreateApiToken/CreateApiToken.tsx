@@ -84,9 +84,7 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
 
     const { createToken, loading: loadingCreateToken } = useApiTokensApi();
     const { refetch } = useApiTokens();
-    const { trackMutation, trackValidationFailed } = useTracking(
-        apiTokenCreatedTracking,
-    );
+    const trackApiTokenCreated = useTracking(apiTokenCreatedTracking);
 
     usePageTitle(pageTitle);
 
@@ -96,13 +94,15 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
         e.preventDefault();
 
         if (!isValid()) {
-            trackValidationFailed(apiTokenCreationProps(getApiTokenPayload()));
+            trackApiTokenCreated.validationFailed(
+                apiTokenCreationProps(getApiTokenPayload()),
+            );
             return;
         }
 
         try {
             const payload = getApiTokenPayload();
-            const api = await trackMutation(
+            const api = await trackApiTokenCreated.mutation(
                 async () => (await createToken(payload)).json(),
                 apiTokenCreationProps(payload),
             );

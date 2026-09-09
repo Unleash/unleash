@@ -105,6 +105,10 @@
       "plugins": ["./floating-label.grit"]
     },
     {
+      "includes": ["frontend/src/**"],
+      "plugins": ["./tracking-shape.grit"]
+    },
+    {
       "includes": [
         "frontend/src/component/InitialRedirect.tsx",
         "frontend/src/component/admin/banners/BannerModal/BannerModal.tsx",

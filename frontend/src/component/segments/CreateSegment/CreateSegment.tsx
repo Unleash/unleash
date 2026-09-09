@@ -38,7 +38,7 @@ export const CreateSegment = ({ modal }: ICreateSegmentProps) => {
     const navigate = useNavigate();
     const { createSegment, loading } = useSegmentsApi();
     const { refetchSegments } = useSegments();
-    const { trackMutation } = useTracking(segmentCreatedTracking);
+    const trackSegmentCreated = useTracking(segmentCreatedTracking);
 
     const {
         name,
@@ -78,7 +78,7 @@ export const CreateSegment = ({ modal }: ICreateSegmentProps) => {
             description,
         });
         try {
-            await trackMutation(
+            await trackSegmentCreated.mutation(
                 () => createSegment(getSegmentPayload()),
                 trackingProps,
             );

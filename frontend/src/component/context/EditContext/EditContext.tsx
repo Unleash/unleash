@@ -38,7 +38,7 @@ export const EditContext: FC<EditContextProps> = ({ modal }) => {
     const { context, refetch } = useContext({ name, project: projectId });
     const { updateContext, loading } = useContextsApi(projectId);
     const navigate = useNavigate();
-    const { trackMutation } = useTracking(contextFieldEditedTracking);
+    const trackContextFieldEdited = useTracking(contextFieldEditedTracking);
     const {
         contextName,
         contextDesc,
@@ -98,7 +98,10 @@ export const EditContext: FC<EditContextProps> = ({ modal }) => {
         };
 
         try {
-            await trackMutation(() => updateContext(payload), trackingProps);
+            await trackContextFieldEdited.mutation(
+                () => updateContext(payload),
+                trackingProps,
+            );
             refetch();
             navigate(navigationTarget);
             setToastData({

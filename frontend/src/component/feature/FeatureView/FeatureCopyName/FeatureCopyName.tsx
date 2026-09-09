@@ -11,13 +11,13 @@ import FileCopyOutlined from '@mui/icons-material/FileCopyOutlined';
 export const FeatureCopyName: FC<{ name: string }> = ({ name }) => {
     const [isFeatureNameCopied, setIsFeatureNameCopied] = useState(false);
     const { setToastData } = useToast();
-    const { track } = useTracking(flagNameCopiedTracking);
+    const trackFlagNameCopied = useTracking(flagNameCopiedTracking);
 
     const handleCopyToClipboard = (method: 'button' | 'keyboard-shortcut') => {
         try {
             // copy() reports failure by returning false, not by throwing
             if (copy(name)) {
-                track('copied', { method, name });
+                trackFlagNameCopied('copied', { method, name });
             }
             setIsFeatureNameCopied(true);
             const timeout = setTimeout(() => {

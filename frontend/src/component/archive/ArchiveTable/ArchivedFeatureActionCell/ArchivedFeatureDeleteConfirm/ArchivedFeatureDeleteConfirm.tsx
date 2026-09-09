@@ -40,17 +40,17 @@ export const ArchivedFeatureDeleteConfirm = ({
     const [confirmName, setConfirmName] = useState('');
     const { setToastData, setToastApiError } = useToast();
     const { deleteFeatures, loading } = useProjectApi();
-    const { trackMutation, trackValidationFailed } = useTracking(tracking);
+    const trackDelete = useTracking(tracking);
 
     const singularOrPluralFlags = deletedFeatures.length > 1 ? 'flags' : 'flag';
 
     const onDeleteFeatureToggle = async () => {
         try {
             if (deletedFeatures.length === 0) {
-                trackValidationFailed();
+                trackDelete.validationFailed();
                 return;
             }
-            await trackMutation(() =>
+            await trackDelete.mutation(() =>
                 deleteFeatures(projectId, deletedFeatures),
             );
         } catch (error: unknown) {

@@ -54,9 +54,7 @@ export const CreateProjectApiTokenForm = () => {
     const { createToken: createProjectToken, loading } =
         useProjectApiTokensApi();
     const { refetch: refetchProjectTokens } = useProjectApiTokens(projectId);
-    const { trackMutation, trackValidationFailed } = useTracking(
-        apiTokenCreatedTracking,
-    );
+    const trackApiTokenCreated = useTracking(apiTokenCreatedTracking);
 
     usePageTitle(pageTitle);
 
@@ -67,13 +65,15 @@ export const CreateProjectApiTokenForm = () => {
         e.preventDefault();
 
         if (!isValid()) {
-            trackValidationFailed(apiTokenCreationProps(getApiTokenPayload()));
+            trackApiTokenCreated.validationFailed(
+                apiTokenCreationProps(getApiTokenPayload()),
+            );
             return;
         }
 
         try {
             const payload = getApiTokenPayload();
-            const api = await trackMutation(
+            const api = await trackApiTokenCreated.mutation(
                 async () =>
                     (await createProjectToken(payload, projectId)).json(),
                 apiTokenCreationProps(payload),

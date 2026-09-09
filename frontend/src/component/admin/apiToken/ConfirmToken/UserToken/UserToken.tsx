@@ -12,17 +12,17 @@ interface IUserTokenProps {
 
 export const UserToken = ({ token, copyTracking }: IUserTokenProps) => {
     const { setToastData } = useToast();
-    const { track } = useTracking(copyTracking);
+    const trackCopy = useTracking(copyTracking);
 
     const copyToken = () => {
         if (copy(token)) {
-            track('succeeded');
+            trackCopy('succeeded');
             setToastData({
                 type: 'success',
                 text: 'Token copied to clipboard',
             });
         } else {
-            track('failed', { failedOn: 'clipboard' });
+            trackCopy('failed', { failedOn: 'clipboard' });
             setToastData({
                 type: 'error',
                 text: 'Could not copy token',

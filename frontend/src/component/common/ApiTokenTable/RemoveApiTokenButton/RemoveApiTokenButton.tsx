@@ -30,12 +30,12 @@ export const RemoveApiTokenButton = ({
     const [removing, setRemoving] = useState(false);
     const { setToastData, setToastApiError } = useToast();
     const tracking = apiTokenDeletedTracking(token);
-    const { trackMutation } = useTracking(tracking);
+    const trackRemove = useTracking(tracking);
 
     const onRemoveToken = async () => {
         setRemoving(true);
         try {
-            await trackMutation(onRemove);
+            await trackRemove.mutation(onRemove);
             setOpen(false);
 
             setToastData({

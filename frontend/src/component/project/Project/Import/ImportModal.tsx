@@ -57,14 +57,14 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
     const [importPayload, setImportPayload] = useState('');
     const [activeTab, setActiveTab] = useState<ImportMode>('file');
 
-    const { track } = useTracking(importCompletedTracking);
+    const trackImportCompleted = useTracking(importCompletedTracking);
 
     const close = () => {
         setOpen(false);
     };
 
     const cancel = () => {
-        track('dismissed', { method: 'cancel-button' });
+        trackImportCompleted('dismissed', { method: 'cancel-button' });
         close();
     };
 

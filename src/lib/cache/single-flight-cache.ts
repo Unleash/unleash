@@ -126,9 +126,12 @@ export class SingleFlightCache<T> {
         this.missed.delete(key);
     }
 
-    clear(): void {
+    /** Replace positive entries without resetting negative lookup backoff. */
+    setEntries(entries: [string, T][]): void {
         this.found.clear();
-        this.missed.clear();
+        for (const [key, value] of entries) {
+            this.set(key, value);
+        }
     }
 
     get size(): { found: number; missed: number } {

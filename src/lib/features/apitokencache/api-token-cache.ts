@@ -174,10 +174,7 @@ class CacheV2<T> implements TokenCacheInterface<T> {
     }
 
     setEntries(entries: [string, T][]): void {
-        this.singleFlightCache.clear();
-        for (const [key, entry] of entries) {
-            this.singleFlightCache.set(key, entry);
-        }
+        this.singleFlightCache.setEntries(entries);
     }
 }
 

@@ -233,6 +233,23 @@ test('set clears a pending negative entry', async () => {
     });
 });
 
+test('setEntries replaces found entries while preserving negative backoff', async () => {
+    const cache = makeCache();
+    const missing = vi.fn(notFound);
+
+    cache.set('stale', { name: 'stale' });
+    await cache.get('missing', missing);
+
+    cache.setEntries([['fresh', { name: 'fresh' }]]);
+
+    await expect(cache.get('fresh', notFound)).resolves.toEqual({
+        name: 'fresh',
+    });
+    await expect(cache.get('stale', notFound)).resolves.toBeUndefined();
+    await expect(cache.get('missing', missing)).resolves.toBeUndefined();
+    expect(missing).toHaveBeenCalledTimes(1);
+});
+
 test('a pending miss does not overwrite a newer set', async () => {
     const cache = makeCache();
     let resolve!: (value: Value | undefined) => void;

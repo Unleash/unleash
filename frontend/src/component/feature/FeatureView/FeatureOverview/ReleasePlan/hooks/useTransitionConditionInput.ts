@@ -4,6 +4,7 @@ import type { TransitionConditionSchema } from 'openapi';
 
 export const DEFAULT_INTERVAL_MINUTES = 300;
 export const MAX_TIME_VALUE = 10000;
+export const MAX_EXPOSURES_VALUE = 1_000_000_000;
 
 export type TimeUnit = 'minutes' | 'hours' | 'days';
 export type TransitionUnit = TimeUnit | 'exposures';
@@ -65,7 +66,7 @@ export const useTransitionConditionInput = (
         const inputValue = Math.round(Number(event.target.value));
         const newValue =
             unit === 'exposures'
-                ? inputValue
+                ? Math.min(inputValue, MAX_EXPOSURES_VALUE)
                 : Math.min(inputValue, MAX_TIME_VALUE);
         setValue(newValue);
         onConditionChange?.(getConditionFromValueAndUnit(newValue, unit));

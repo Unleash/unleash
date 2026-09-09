@@ -80,12 +80,12 @@ test('clamps the time value to the maximum', () => {
     expect(result.current.value).toBe(10000);
 });
 
-test('does not clamp exposure values', () => {
+test('clamps an exposure value to the maximum', () => {
     const { result } = renderHook(() =>
         useTransitionConditionInput({ type: 'exposure', minimumExposures: 1 }),
     );
 
     act(() => result.current.handleValueChange(valueChange('5000000000')));
 
-    expect(result.current.value).toBe(5_000_000_000);
+    expect(result.current.value).toBe(1_000_000_000);
 });

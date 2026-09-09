@@ -1,4 +1,5 @@
 import { Box, styled } from '@mui/material';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { formatStrategyName } from 'utils/strategyNames';
 import { FeatureStrategyMenuCardIcon } from '../FeatureStrategyMenu/FeatureStrategyMenuCard/FeatureStrategyMenuCardIcon.tsx';
 import { useConfigureStrategy } from '../FeatureStrategyMenu/useConfigureStrategy.ts';
@@ -29,6 +30,7 @@ interface IStrategySetupCardsProps {
     featureId: string;
     environmentId: string;
     onClose: () => void;
+    onShowTemplates: () => void;
 }
 
 export const StrategySetupCards = ({
@@ -36,7 +38,9 @@ export const StrategySetupCards = ({
     featureId,
     environmentId,
     onClose,
+    onShowTemplates,
 }: IStrategySetupCardsProps) => {
+    const { isEnterprise } = useUiConfig();
     const { defaultStrategy, applyDefaultStrategy, loading, applying } =
         useProjectDefaultStrategy({
             projectId,
@@ -90,6 +94,17 @@ export const StrategySetupCards = ({
                         })
                     }
                 />
+                {isEnterprise() && (
+                    <StrategySetupCard
+                        name='Start from a template'
+                        description='Roll out gradually with a predefined sequence of milestones.'
+                        icon={
+                            <FeatureStrategyMenuCardIcon name='releasePlanTemplate' />
+                        }
+                        actionLabel='Select template'
+                        onAction={onShowTemplates}
+                    />
+                )}
             </StyledCardGrid>
             <MoreStrategiesMenu
                 onSelect={(strategy) =>

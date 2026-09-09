@@ -38,6 +38,11 @@ export const FeatureStrategyMenu = (props: IFeatureStrategyMenuProps) => {
                 environmentId={props.environmentId}
                 open={props.isStrategyMenuDialogOpen}
                 onClose={props.onClose}
+                initialScreen={
+                    props.defaultFilter === 'releaseTemplates'
+                        ? 'templates'
+                        : 'cards'
+                }
             />
         );
     }

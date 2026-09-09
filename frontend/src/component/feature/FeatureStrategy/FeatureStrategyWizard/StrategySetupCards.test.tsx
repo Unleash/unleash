@@ -17,9 +17,11 @@ const ENVIRONMENT_DEFAULT_STRATEGY = {
     parameters: { rollout: '50' },
 };
 
-const setupApi = () => {
+const setupApi = ({ enterprise = false } = {}) => {
     testServerRoute(server, '/api/admin/ui-config', {
-        versionInfo: { current: { oss: '1.0.0' } },
+        versionInfo: {
+            current: enterprise ? { enterprise: '1.0.0' } : { oss: '1.0.0' },
+        },
     });
     testServerRoute(server, `/api/admin/projects/${projectId}/overview`, {
         featureTypeCounts: [],
@@ -45,6 +47,7 @@ const setupApi = () => {
 
 const renderCards = () => {
     const dialogDismissals: true[] = [];
+    const templateRequests: true[] = [];
 
     render(
         <StrategySetupCards
@@ -52,11 +55,12 @@ const renderCards = () => {
             featureId={featureId}
             environmentId={environmentId}
             onClose={() => dialogDismissals.push(true)}
+            onShowTemplates={() => templateRequests.push(true)}
         />,
         { route: featurePath },
     );
 
-    return { dialogDismissals };
+    return { dialogDismissals, templateRequests };
 };
 
 const strategiesPostRoute = () =>
@@ -152,5 +156,24 @@ describe('setting up a strategy from the setup cards', () => {
         });
         expect(window.location.search).toContain('strategyName=remoteAddress');
         expect(dialogDismissals).toHaveLength(1);
+    });
+
+    it('offers the template card on enterprise', async () => {
+        setupApi({ enterprise: true });
+        const { templateRequests } = renderCards();
+
+        fireEvent.click(
+            await screen.findByRole('button', { name: 'Select template' }),
+        );
+
+        expect(templateRequests).toHaveLength(1);
+    });
+
+    it('hides the template card outside enterprise', async () => {
+        setupApi({ enterprise: false });
+        renderCards();
+
+        await screen.findByText('Set up manually');
+        expect(screen.queryByText('Start from a template')).toBeNull();
     });
 });

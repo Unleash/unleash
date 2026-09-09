@@ -113,6 +113,7 @@ export type UiFlags = {
     slackIntegrationProjectLevel?: boolean;
     flagStatusTooltips?: boolean;
     simplerStrategySetup?: boolean;
+    editableInstanceName?: boolean;
 };
 
 export interface IVersionInfo {

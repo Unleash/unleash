@@ -10,27 +10,15 @@ import type { Theme } from '@mui/material/styles';
 import { LineChart } from 'component/insights/components/LineChart/LineChart';
 import { WidgetTitle } from 'component/insights/components/WidgetTitle/WidgetTitle';
 import { NetworkPrometheusAPIWarning } from '../NetworkPrometheusAPIWarning.tsx';
+import {
+    alignToTimestamps,
+    collectTimestamps,
+    isIsolatedSample,
+    type AlignedPoint,
+    type ResultValue,
+} from './align-series.ts';
 
-interface IPoint {
-    x: number;
-    y: number;
-}
-
-type ChartDatasetType = ChartDataset<'line', IPoint[]>;
-
-type ResultValue = [number, string];
-
-const secondsToMs = (seconds: number): number => seconds * 1000;
-
-const createChartPoints = (
-    values: ResultValue[],
-    y: (m: string) => number,
-): IPoint[] => {
-    return values.map((row) => ({
-        x: secondsToMs(row[0]),
-        y: y(row[1]),
-    }));
-};
+type ChartDatasetType = ChartDataset<'line', AlignedPoint[]>;
 
 const overrideOptions: ChartOptions<'line'> = {
     scales: {
@@ -56,6 +44,20 @@ const overrideOptions: ChartOptions<'line'> = {
         },
     },
     interaction: { mode: 'index', axis: 'x' },
+    elements: {
+        point: {
+            // Points are hidden to match the analytics charts, but a sample
+            // with a gap on both sides draws no line segment either, so it
+            // would be invisible without a marker.
+            radius: (ctx) =>
+                isIsolatedSample(
+                    ctx.dataset.data as AlignedPoint[],
+                    ctx.dataIndex,
+                )
+                    ? 3
+                    : 0,
+        },
+    },
     plugins: {
         tooltip: {
             itemSort: (a, b) => (b.parsed.y ?? 0) - (a.parsed.y ?? 0),
@@ -82,18 +84,22 @@ const toChartData = (
         .map((dataset) => toSeriesLabel(dataset.metric))
         .sort();
 
-    return results.map((dataset) => {
+    const allValues = results.map(
+        (dataset) => (dataset.values || []) as ResultValue[],
+    );
+    const timestamps = collectTimestamps(allValues);
+
+    return results.map((dataset, i) => {
         const label = toSeriesLabel(dataset.metric);
         const color =
             seriesColors[
                 labelsInColorOrder.indexOf(label) % seriesColors.length
             ];
-        const values = (dataset.values || []) as ResultValue[];
         return {
             label,
             borderColor: color,
             backgroundColor: color,
-            data: createChartPoints(values, (y) => Number.parseFloat(y)),
+            data: alignToTimestamps(allValues[i], timestamps),
         };
     });
 };

@@ -198,6 +198,44 @@ test('No registrations during a time period will not call stores', async () => {
     expect(bulkSpy).toHaveBeenCalledTimes(0);
 });
 
+test('restores a failed batch without overwriting newer registrations', async () => {
+    let clientMetrics: ClientInstanceService;
+    const instanceStoreSpy = vi.fn(async () => {
+        await clientMetrics.registerInstance(
+            { appName: 'test-app', instanceId: 'test-instance' },
+            'new-client-ip',
+            'new-environment',
+        );
+        throw new Error('deadlock detected');
+    });
+    clientMetrics = new ClientInstanceService(
+        {
+            clientMetricsStoreV2: new FakeClientMetricsStoreV2(),
+            strategyStore: new FakeStrategiesStore(),
+            featureToggleStore: new FakeFeatureToggleStore(),
+            clientApplicationsStore: { bulkUpsert: vi.fn() } as any,
+            clientInstanceStore: { bulkUpsert: instanceStoreSpy } as any,
+            eventStore: new FakeEventStore(),
+        },
+        config,
+        new FakePrivateProjectChecker(),
+    );
+
+    await clientMetrics.registerInstance(
+        { appName: 'test-app', instanceId: 'test-instance' },
+        'old-client-ip',
+        'old-environment',
+    );
+    await clientMetrics.bulkAdd();
+
+    expect(clientMetrics.seenClients['test-app_test-instance']).toMatchObject({
+        appName: 'test-app',
+        instanceId: 'test-instance',
+        clientIp: 'new-client-ip',
+        environment: 'new-environment',
+    });
+});
+
 test('registrations without an app name are ignored without dropping valid registrations', async () => {
     const appStoreSpy = vi.fn();
     const instanceStoreSpy = vi.fn();

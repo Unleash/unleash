@@ -9,6 +9,7 @@ import { subDays } from 'date-fns';
 import type { Db } from './db.js';
 import metricsHelper from '../util/metrics-helper.js';
 import { DB_TIME } from '../metric-events.js';
+import type { Row } from '../server-impl.js';
 
 const COLUMNS = [
     'app_name',
@@ -21,7 +22,7 @@ const COLUMNS = [
 ];
 const TABLE = 'client_instances';
 
-const mapRow = (row): IClientInstance => ({
+const mapRow = (row: Row<IClientInstance>): IClientInstance => ({
     appName: row.app_name,
     instanceId: row.instance_id,
     sdkVersion: row.sdk_version,
@@ -32,7 +33,7 @@ const mapRow = (row): IClientInstance => ({
     environment: row.environment,
 });
 
-const mapToDb = (client: INewClientInstance) => {
+const mapToDb = (client: INewClientInstance): Row<IClientInstance> => {
     const temp = {
         app_name: client.appName,
         instance_id: client.instanceId,
@@ -43,14 +44,9 @@ const mapToDb = (client: INewClientInstance) => {
         environment: client.environment,
     };
 
-    const result = {};
-    for (const [key, value] of Object.entries(temp)) {
-        if (value !== undefined) {
-            result[key] = value;
-        }
-    }
-
-    return result;
+    return Object.fromEntries(
+        Object.entries(temp).filter(([_, value]) => value !== undefined),
+    ) as Row<IClientInstance>;
 };
 
 export default class ClientInstanceStore implements IClientInstanceStore {
@@ -86,7 +82,14 @@ export default class ClientInstanceStore implements IClientInstanceStore {
     async bulkUpsert(instances: INewClientInstance[]): Promise<void> {
         const stopTimer = this.metricTimer('bulkUpsert');
 
-        const rows = instances.map(mapToDb);
+        const rows = [...instances]
+            .sort(
+                (a, b) =>
+                    a.appName.localeCompare(b.appName) ||
+                    a.instanceId.localeCompare(b.instanceId) ||
+                    (a.environment ?? '').localeCompare(b.environment ?? ''),
+            )
+            .map(mapToDb);
         await this.db(TABLE)
             .insert(rows)
             .onConflict(['app_name', 'instance_id', 'environment'])

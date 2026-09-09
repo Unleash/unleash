@@ -23,6 +23,29 @@ describe('ClientApplicationsStore', () => {
         service = db.stores.clientApplicationsStore as ClientApplicationsStore;
     });
 
+    test('bulkUpsert keeps the latest observation for an application', async () => {
+        const appName = 'coalesced-application';
+        const latestSeenAt = new Date('2026-09-07T08:00:00.000Z');
+
+        await service.bulkUpsert([
+            { appName, lastSeen: latestSeenAt, description: 'Latest metadata' },
+            {
+                appName,
+                lastSeen: new Date('2026-09-06T08:00:00.000Z'),
+                description: 'Older metadata',
+            },
+        ]);
+
+        const application = await db
+            .rawDatabase('client_applications')
+            .select('seen_at', 'description')
+            .where({ app_name: appName })
+            .first();
+
+        expect(application.seen_at).toEqual(latestSeenAt);
+        expect(application.description).toBe('Latest metadata');
+    });
+
     describe('mapApplicationOverviewData()', () => {
         describe('handling deprecated strategies', () => {
             test('should not count any of the four deprecated strategies as missing', () => {

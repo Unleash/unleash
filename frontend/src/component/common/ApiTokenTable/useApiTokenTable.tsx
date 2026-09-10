@@ -3,6 +3,7 @@ import type { IApiToken } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
+import { formatDateYMDHMS } from 'utils/formatDate';
 import {
     type CellContext,
     type ColumnDef,
@@ -100,7 +101,9 @@ export const useApiTokenTable = (
                 id: 'seenAt',
                 header: 'Last seen',
                 accessorKey: 'seenAt',
-                cell: TimeAgoCell,
+                cell: (props) => (
+                    <TimeAgoCell {...props} dateFormat={formatDateYMDHMS} />
+                ),
                 enableGlobalFilter: false,
                 meta: { width: 140 },
             },

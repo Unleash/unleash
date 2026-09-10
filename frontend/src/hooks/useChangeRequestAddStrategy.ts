@@ -67,23 +67,19 @@ export const useChangeRequestAddStrategy = (
         setChangeRequestDialogDetails({ isOpen: false });
     }, []);
 
+    // Rejects on failure so the confirming dialog can report it and stay open.
     const onChangeRequestAddStrategyConfirm = useCallback(async () => {
-        try {
-            await addChange(project, changeRequestDialogDetails.environment!, {
-                feature: changeRequestDialogDetails.featureName!,
-                action: action,
-                payload: changeRequestDialogDetails.strategy!,
-            });
-            refetch();
-            setChangeRequestDialogDetails({ isOpen: false });
-            setToastData({
-                type: 'success',
-                text: 'Changes added to draft',
-            });
-        } catch (error) {
-            setToastApiError(formatUnknownError(error));
-            setChangeRequestDialogDetails({ isOpen: false });
-        }
+        await addChange(project, changeRequestDialogDetails.environment!, {
+            feature: changeRequestDialogDetails.featureName!,
+            action: action,
+            payload: changeRequestDialogDetails.strategy!,
+        });
+        refetch();
+        setChangeRequestDialogDetails({ isOpen: false });
+        setToastData({
+            type: 'success',
+            text: 'Changes added to draft',
+        });
     }, [addChange]);
 
     const onChangeRequestAddStrategiesConfirm = useCallback(async () => {

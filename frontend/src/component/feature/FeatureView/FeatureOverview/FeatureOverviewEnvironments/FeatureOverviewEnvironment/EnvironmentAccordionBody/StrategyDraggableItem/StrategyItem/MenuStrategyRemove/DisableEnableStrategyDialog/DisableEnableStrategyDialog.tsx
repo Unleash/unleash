@@ -3,9 +3,13 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { useEnableDisable } from './hooks/useEnableDisable.ts';
 import { useSuggestEnableDisable } from './hooks/useSuggestEnableDisable.ts';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStrategyChangeRequestAlert } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyChangeRequestAlert/FeatureStrategyChangeRequestAlert';
 import type { IDisableEnableStrategyProps } from './IDisableEnableStrategyProps.tsx';
+import { strategyToggledTracking } from 'component/feature/FeatureStrategy/strategyActionsTracking';
+import { strategyShapeProps } from 'component/feature/FeatureStrategy/summarizeStrategy';
 
 export const DisableEnableStrategyDialog = ({
     isOpen,
@@ -22,23 +26,28 @@ export const DisableEnableStrategyDialog = ({
         ...props,
     });
     const { onEnable, onDisable } = useEnableDisable({ ...props });
-    const disabled = Boolean(props.strategy?.disabled);
+    const { setToastApiError } = useToast();
+    const disabled = Boolean(props.strategy.disabled);
 
-    const onClick = (event: React.FormEvent) => {
-        event.preventDefault();
-        if (isChangeRequest) {
-            if (disabled) {
-                onSuggestEnable();
-            } else {
-                onSuggestDisable();
-            }
-        } else {
-            if (disabled) {
-                onEnable();
-            } else {
-                onDisable();
-            }
-        }
+    const tracking = {
+        ...strategyToggledTracking,
+        props: {
+            ...strategyShapeProps(props.strategy),
+            newState: disabled ? 'enabled' : 'disabled',
+            viaChangeRequest: isChangeRequest,
+        },
+    };
+
+    const toggle = isChangeRequest
+        ? disabled
+            ? onSuggestEnable
+            : onSuggestDisable
+        : disabled
+          ? onEnable
+          : onDisable;
+
+    const onConfirm = async () => {
+        await toggle();
         onClose();
     };
 
@@ -60,8 +69,10 @@ export const DisableEnableStrategyDialog = ({
                     : `${disabled ? 'Enable' : 'Disable'} strategy`
             }
             secondaryButtonText='Cancel'
-            onClick={onClick}
+            onConfirm={onConfirm}
+            onError={(error) => setToastApiError(formatUnknownError(error))}
             onClose={() => onClose()}
+            tracking={tracking}
         >
             <ConditionallyRender
                 condition={isChangeRequest}

@@ -1,7 +1,6 @@
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import useToast from 'hooks/useToast';
-import { formatUnknownError } from 'utils/formatUnknownError';
 import type { IDisableEnableStrategyProps } from '../IDisableEnableStrategyProps.jsx';
 
 export const useEnableDisable = ({
@@ -12,26 +11,22 @@ export const useEnableDisable = ({
 }: IDisableEnableStrategyProps) => {
     const { refetchFeature } = useFeature(projectId, featureId);
     const { setStrategyDisabledState } = useFeatureStrategyApi();
-    const { setToastData, setToastApiError } = useToast();
+    const { setToastData } = useToast();
 
     const onEnableDisable = (enabled: boolean) => async () => {
-        try {
-            await setStrategyDisabledState(
-                projectId,
-                featureId,
-                environmentId,
-                strategy.id,
-                !enabled,
-            );
-            setToastData({
-                text: `Strategy ${enabled ? 'enabled' : 'disabled'}`,
-                type: 'success',
-            });
+        await setStrategyDisabledState(
+            projectId,
+            featureId,
+            environmentId,
+            strategy.id,
+            !enabled,
+        );
+        setToastData({
+            text: `Strategy ${enabled ? 'enabled' : 'disabled'}`,
+            type: 'success',
+        });
 
-            refetchFeature();
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        }
+        refetchFeature();
     };
 
     return {

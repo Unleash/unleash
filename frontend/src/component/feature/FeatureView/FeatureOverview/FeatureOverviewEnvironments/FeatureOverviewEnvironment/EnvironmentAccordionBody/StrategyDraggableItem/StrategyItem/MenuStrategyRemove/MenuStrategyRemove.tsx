@@ -147,7 +147,7 @@ const MenuStrategyRemove = ({
                 projectId={projectId}
                 featureId={featureId}
                 environmentId={environmentId}
-                strategyId={strategy.id}
+                strategy={strategy}
             />
         </>
     );

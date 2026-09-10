@@ -25,6 +25,9 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useCheckProjectAccess } from 'hooks/useHasAccess';
 import { STRATEGY_FORM_COPY_ID } from 'utils/testIds';
 import type { FeatureStrategySchema } from 'openapi';
+import { useTracking } from 'hooks/useTracking';
+import { strategyCopiedTracking } from 'component/feature/FeatureStrategy/strategyActionsTracking';
+import { strategyShapeProps } from 'component/feature/FeatureStrategy/summarizeStrategy';
 
 interface ICopyStrategyIconMenuProps {
     environmentId: string;
@@ -54,6 +57,12 @@ export const CopyStrategyIconMenu: FC<ICopyStrategyIconMenuProps> = ({
     };
     const checkAccess = useCheckProjectAccess(projectId);
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
+    const trackStrategyCopied = useTracking(strategyCopiedTracking);
+    const copyTrackingProps = (targetEnvironment: string) => ({
+        ...strategyShapeProps(strategy),
+        sameEnvironment: targetEnvironment === environmentId,
+        viaChangeRequest: isChangeRequestConfigured(targetEnvironment),
+    });
 
     const {
         changeRequestDialogDetails,
@@ -61,6 +70,14 @@ export const CopyStrategyIconMenu: FC<ICopyStrategyIconMenuProps> = ({
         onChangeRequestAddStrategy,
         onChangeRequestAddStrategyConfirm,
     } = useChangeRequestAddStrategy(projectId, featureId, 'addStrategy');
+
+    const changeRequestEnvironment = changeRequestDialogDetails.environment;
+    const changeRequestTracking = changeRequestEnvironment
+        ? {
+              ...strategyCopiedTracking,
+              props: copyTrackingProps(changeRequestEnvironment),
+          }
+        : undefined;
 
     const onCopyStrategy = async (targetEnvironment: string) => {
         const { id, ...strategyCopy } = {
@@ -77,11 +94,15 @@ export const CopyStrategyIconMenu: FC<ICopyStrategyIconMenuProps> = ({
         }
 
         try {
-            await addStrategyToFeature(
-                projectId,
-                featureId,
-                targetEnvironment,
-                strategy,
+            await trackStrategyCopied.mutation(
+                () =>
+                    addStrategyToFeature(
+                        projectId,
+                        featureId,
+                        targetEnvironment,
+                        strategy,
+                    ),
+                copyTrackingProps(targetEnvironment),
             );
             refetchFeature();
             refetchFeatureImmutable();
@@ -108,6 +129,8 @@ export const CopyStrategyIconMenu: FC<ICopyStrategyIconMenuProps> = ({
                 onClose={onChangeRequestAddStrategyClose}
                 environment={changeRequestDialogDetails?.environment}
                 onConfirm={onChangeRequestAddStrategyConfirm}
+                onError={(error) => setToastApiError(formatUnknownError(error))}
+                tracking={changeRequestTracking}
                 messageComponent={
                     <CopyStrategyMessage
                         fromEnvironment={

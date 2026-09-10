@@ -11,8 +11,11 @@ const StyledHeader = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: theme.spacing(4, 4, 2, 4),
+    padding: theme.spacing(3, 3, 2, 3),
 }));
+
+// match the 'cards' height.
+const DIALOG_MIN_HEIGHT = 340;
 
 type Screen =
     | { kind: 'cards' }
@@ -109,15 +112,16 @@ export const FeatureStrategyWizard = ({
                             borderRadius: '12px',
                             height: 'auto',
                             width: '100%',
+                            minHeight: DIALOG_MIN_HEIGHT,
                         },
                     },
                 }}
             >
                 <StyledHeader>
                     <Typography variant='h2'>
-                        {screen.kind === 'templates'
-                            ? 'Select template'
-                            : 'Add strategy'}
+                        {screen.kind === 'cards'
+                            ? 'Add strategy'
+                            : 'Select template'}
                     </Typography>
                     <IconButton
                         size='medium'

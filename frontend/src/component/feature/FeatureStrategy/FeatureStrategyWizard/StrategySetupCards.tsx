@@ -17,7 +17,7 @@ const StyledContainer = styled(Box)(({ theme }) => ({
     flexDirection: 'column',
     alignItems: 'flex-start',
     gap: theme.spacing(2),
-    padding: theme.spacing(0, 4, 4, 4),
+    padding: theme.spacing(0, 3, 3, 3),
 }));
 
 const StyledCardGrid = styled(Box)(({ theme }) => ({

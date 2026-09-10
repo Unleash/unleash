@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { http, HttpResponse } from 'msw';
 import { Route, Routes } from 'react-router';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
@@ -165,6 +166,38 @@ describe('the strategy wizard dialog', () => {
         await screen.findByText('Set up manually');
     });
 
+    it('shows placeholder templates until the templates have loaded', async () => {
+        setupApi();
+        let releaseTemplates = () => {};
+        const templatesReleased = new Promise<void>((resolve) => {
+            releaseTemplates = resolve;
+        });
+        server.use(
+            http.get(
+                `/api/admin/projects/${projectId}/release-templates`,
+                async () => {
+                    await templatesReleased;
+                    return HttpResponse.json([TEMPLATE]);
+                },
+            ),
+        );
+        renderWizard({ initialScreen: 'templates' });
+
+        await screen.findByLabelText('Loading templates');
+        expect(
+            screen.queryByText(
+                "You don't have any release templates set up yet",
+            ),
+        ).not.toBeInTheDocument();
+
+        releaseTemplates();
+
+        await screen.findByText(TEMPLATE.name);
+        expect(
+            screen.queryByLabelText('Loading templates'),
+        ).not.toBeInTheDocument();
+    });
+
     it('applies a release plan from the template screen', async () => {
         setupApi();
         const { requests } = releasePlansPostRoute();
@@ -186,6 +219,7 @@ describe('the strategy wizard dialog', () => {
         fireEvent.click(screen.getByRole('button', { name: 'Preview' }));
 
         await screen.findByRole('button', { name: 'Apply template' });
+        expect(header()).toHaveTextContent('Select template');
 
         fireEvent.click(screen.getByRole('button', { name: /Go back/ }));
 

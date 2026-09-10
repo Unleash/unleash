@@ -12,7 +12,7 @@ const StyledContainer = styled(Box)(({ theme }) => ({
     flexDirection: 'column',
     alignItems: 'flex-start',
     gap: theme.spacing(2),
-    padding: theme.spacing(0, 4, 4, 4),
+    padding: theme.spacing(0, 3, 3, 3),
 }));
 
 const StyledBackButton = styled(Button)({
@@ -30,6 +30,28 @@ const StyledToolbar = styled(Box)({
     width: '100%',
 });
 
+const StyledSkeletonContainer = styled(Box)({
+    width: '100%',
+});
+
+const StyledTemplatePlaceholder = styled('div')(({ theme }) => ({
+    height: theme.spacing(10),
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.spacing(1),
+}));
+
+const PLACEHOLDER_COUNT = 3;
+
+const TemplatesSkeleton = () => (
+    <StyledSkeletonContainer aria-busy='true' aria-label='Loading templates'>
+        <FeatureStrategyMenuCardsSection>
+            {Array.from({ length: PLACEHOLDER_COUNT }, (_, index) => (
+                <StyledTemplatePlaceholder key={index} className='skeleton' />
+            ))}
+        </FeatureStrategyMenuCardsSection>
+    </StyledSkeletonContainer>
+);
+
 interface ITemplateScreenProps {
     projectId: string;
     onAddReleasePlan: (template: IReleasePlanTemplate) => void;
@@ -43,7 +65,7 @@ export const TemplateScreen = ({
     onReviewReleasePlan,
     onBack,
 }: ITemplateScreenProps) => {
-    const { templates } = useReleasePlanTemplates(projectId, {
+    const { templates, loading } = useReleasePlanTemplates(projectId, {
         includeRoot: true,
     });
 
@@ -60,7 +82,9 @@ export const TemplateScreen = ({
                 )}
                 <NewReleaseTemplateButton projectId={projectId} />
             </StyledToolbar>
-            {templates.length ? (
+            {loading ? (
+                <TemplatesSkeleton />
+            ) : templates.length ? (
                 <FeatureStrategyMenuCardsSection>
                     {templates.map((template) => (
                         <ReleaseTemplateCard

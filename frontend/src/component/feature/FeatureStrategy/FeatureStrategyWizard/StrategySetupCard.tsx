@@ -7,9 +7,8 @@ const StyledCard = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1),
-    padding: theme.spacing(3),
+    padding: theme.spacing(2),
     backgroundColor: theme.palette.background.elevation1,
-    border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
 }));
 
@@ -28,7 +27,7 @@ const StyledIcon = styled('div')(({ theme }) => ({
     width: theme.spacing(4),
     height: theme.spacing(4),
     borderRadius: theme.shape.borderRadiusMedium,
-    backgroundColor: theme.palette.background.elevation2,
+    backgroundColor: theme.palette.background.default,
     '& > svg': {
         width: theme.spacing(3),
         height: theme.spacing(3),
@@ -38,20 +37,21 @@ const StyledIcon = styled('div')(({ theme }) => ({
 }));
 
 const StyledName = styled('p')(({ theme }) => ({
+    ...theme.typography.body1,
     fontWeight: theme.typography.fontWeightBold,
-    fontSize: theme.typography.body2.fontSize,
 }));
 
 const StyledDescription = styled('p')(({ theme }) => ({
     flexGrow: 1,
+    ...theme.typography.body2,
     color: theme.palette.text.secondary,
-    fontSize: theme.typography.caption.fontSize,
 }));
 
 const StyledAction = styled(Button)(({ theme }) => ({
     alignSelf: 'flex-start',
     marginTop: theme.spacing(2),
     paddingInline: 0,
+    fontSize: theme.typography.button.fontSize,
 }));
 
 interface IStrategySetupCardProps {

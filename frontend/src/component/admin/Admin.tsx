@@ -7,6 +7,7 @@ import FlaggedBillingRedirect from './billing/FlaggedBillingRedirect/FlaggedBill
 import { CorsAdmin } from './cors/index.js';
 import { GroupsAdmin } from './groups/GroupsAdmin.tsx';
 import { InstanceAdmin } from './instance-admin/InstanceAdmin.tsx';
+import { InstanceName } from './instance-name/InstanceName.tsx';
 import { InstancePrivacy } from './instance-privacy/InstancePrivacy.tsx';
 import { MaintenanceAdmin } from './maintenance/index.js';
 import { Network } from './network/Network.tsx';
@@ -57,6 +58,7 @@ export const Admin = () => {
                 <Route path='remote-mcp' element={<RemoteMcpAdmin />} />
                 <Route path='impact-metrics' element={<ImpactMetricsAdmin />} />
                 <Route path='instance-privacy' element={<InstancePrivacy />} />
+                <Route path='instance-name' element={<InstanceName />} />
                 <Route path='sessions' element={<ActiveSessions />} />
                 <Route path='*' element={<NotFound />} />
             </Routes>

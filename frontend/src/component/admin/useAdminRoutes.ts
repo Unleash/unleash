@@ -9,9 +9,10 @@ export const useAdminRoutes = () => {
     const { uiConfig, isPro, isEnterprise } = useUiConfig();
     const { isBilling } = useInstanceStatus();
     const evaluateFlag = useUiFlagEvaluator();
+    const isCloud = Boolean(evaluateFlag('UNLEASH_CLOUD'));
     const routes = [...adminRoutes];
 
-    if (evaluateFlag('UNLEASH_CLOUD')) {
+    if (isCloud) {
         const adminBillingMenuItem = routes.findIndex(
             (route) => route.title === 'Billing & invoices',
         );
@@ -22,6 +23,7 @@ export const useAdminRoutes = () => {
     }
 
     return routes
+        .filter((route) => isCloud || route.path !== '/admin/instance-name')
         .filter(filterByConfig(uiConfig, evaluateFlag))
         .filter((route) =>
             filterRoutesByPlanData(route?.menu, {

@@ -178,6 +178,13 @@ export const adminRoutes: INavigationMenuItem[] = [
 
     // Instance configuration
     {
+        path: '/admin/instance-name',
+        title: 'Instance name',
+        menu: { adminSettings: true },
+        flag: 'editableInstanceName',
+        group: 'instance',
+    },
+    {
         path: '/admin/maintenance',
         title: 'Maintenance',
         menu: { adminSettings: true },

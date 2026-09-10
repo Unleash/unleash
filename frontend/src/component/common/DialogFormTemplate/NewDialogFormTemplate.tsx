@@ -58,19 +58,15 @@ const Section = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 4),
 }));
 
-// Slot-prop builder for inline inputs (no outlined border, no padding around the field).
 // Uses MUI's public `slotProps` API so we avoid reaching into internal MUI classes.
-// The single `fieldset` rule is unavoidable: MUI's OutlinedInput renders a fieldset
-// for the notch and does not expose it as a slot.
 const inlineFieldSlotProps = (htmlInputSx: Record<string, unknown>) => ({
     inputLabel: { shrink: true, sx: { display: 'none' } },
-    input: { sx: { padding: 0, '& fieldset': { border: 'none' } } },
+    input: { sx: { padding: 0 } },
     htmlInput: { sx: { padding: 0, width: '100%', ...htmlInputSx } },
 });
 
 export const nameInputSlotProps = (theme: Theme) =>
     inlineFieldSlotProps({
-        fontSize: theme.typography.body1.fontSize,
         fontWeight: theme.typography.fontWeightRegular,
         lineHeight: 1.4,
         '&::placeholder': {
@@ -82,7 +78,6 @@ export const nameInputSlotProps = (theme: Theme) =>
 
 export const descriptionInputSlotProps = (theme: Theme) =>
     inlineFieldSlotProps({
-        fontSize: theme.typography.body1.fontSize,
         color: theme.palette.text.secondary,
         '&::placeholder': {
             color: theme.palette.text.secondary,

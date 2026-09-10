@@ -33,6 +33,7 @@ export const ProjectsListSort: FC<ProjectsListSortProps> = ({
             <GeneralSelect
                 fullWidth
                 label='Sort by'
+                visuallyHideLabel
                 onChange={setSortBy}
                 options={options}
                 value={sortBy || options[0].key}

@@ -19,20 +19,28 @@ const Bar = styled('div')(({ theme }) => ({
     alignItems: 'center',
     padding: theme.spacing(0, 3),
     borderBottom: `1px solid ${theme.palette.divider}`,
-    gap: theme.spacing(1),
+    gap: theme.spacing(0),
     height: theme.spacing(8),
 }));
 
 const ProjectButton = styled(Button)(({ theme }) => ({
     color: theme.palette.text.primary,
-    fontWeight: theme.typography.body1.fontWeight,
     textTransform: 'none',
     padding: theme.spacing(0.5, 1),
     minWidth: 0,
 }));
 
+const StyledSeparator = styled('span')(({ theme }) => ({
+    fontWeight: theme.typography.fontWeightBold,
+    margin: theme.spacing(0, 0.5),
+}));
+
+const Separator = () => <StyledSeparator aria-hidden>/</StyledSeparator>;
+
 const Title = styled('span')(({ theme }) => ({
-    fontWeight: theme.fontWeight.bold,
+    fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.typography.body2.fontSize,
+    paddingLeft: theme.spacing(0.5),
 }));
 
 export const HeaderBreadcrumb: React.FC<Props> = ({
@@ -59,7 +67,7 @@ export const HeaderBreadcrumb: React.FC<Props> = ({
                             {valueLabel ?? value}
                         </ProjectButton>
                     </div>
-                    <span style={{ margin: '0 4px' }}>/</span>
+                    <Separator />
                 </>
             ) : null}
             <Title>{title}</Title>

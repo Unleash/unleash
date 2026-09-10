@@ -30,6 +30,11 @@ const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(4),
+    padding: theme.spacing(2, 4, 4),
+    overflowX: 'auto',
+    [theme.breakpoints.down('md')]: {
+        padding: theme.spacing(2, 2, 2),
+    },
 }));
 
 const projectCardDisplayLimit = 500;
@@ -81,6 +86,7 @@ export const ProjectList = () => {
     return (
         <PageContent
             isLoading={loading}
+            bodyClass='no-padding'
             header={
                 <PageHeader
                     title={`Projects (${projectCount})`}

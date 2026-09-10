@@ -10,9 +10,14 @@ import {
     Typography,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import type { Theme } from '@mui/material/styles';
 import { darkTheme } from 'themes/dark-theme';
+import { lightTheme } from 'themes/theme';
 
 const ARROW_SIZE = 7;
+
+const contrastPalette = (theme: Theme) =>
+    (theme.mode === 'dark' ? lightTheme : darkTheme).palette;
 
 const AnnouncementPopper = styled(Popper)(({ theme }) => ({
     zIndex: theme.zIndex.tooltip,
@@ -23,8 +28,8 @@ const AnnouncementPaper = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
     maxWidth: 310,
     maxHeight: 162,
-    color: theme.palette.common.white,
-    backgroundColor: darkTheme.palette.background.paper,
+    color: contrastPalette(theme).text.primary,
+    backgroundColor: contrastPalette(theme).background.paper,
     borderRadius: theme.shape.borderRadiusLarge,
     boxShadow: theme.boxShadows.popup,
     '&::before': {
@@ -36,7 +41,7 @@ const AnnouncementPaper = styled(Paper)(({ theme }) => ({
         height: 0,
         borderLeft: `${ARROW_SIZE}px solid transparent`,
         borderRight: `${ARROW_SIZE}px solid transparent`,
-        borderBottom: `${ARROW_SIZE}px solid ${darkTheme.palette.background.paper}`,
+        borderBottom: `${ARROW_SIZE}px solid ${contrastPalette(theme).background.paper}`,
     },
 }));
 
@@ -53,7 +58,7 @@ const StyledTitle = styled(Typography)(({ theme }) => ({
 }));
 
 const StyledCloseButton = styled(IconButton)(({ theme }) => ({
-    color: theme.palette.common.white,
+    color: contrastPalette(theme).text.primary,
     padding: theme.spacing(0.25),
     marginTop: theme.spacing(-0.5),
     marginRight: theme.spacing(-0.5),
@@ -61,11 +66,11 @@ const StyledCloseButton = styled(IconButton)(({ theme }) => ({
 
 const StyledBody = styled(Typography)(({ theme }) => ({
     marginTop: theme.spacing(0.5),
-    color: theme.palette.common.white,
+    color: contrastPalette(theme).text.primary,
 }));
 
 const StyledHelpAccent = styled('span')(({ theme }) => ({
-    color: theme.palette.primary.light,
+    color: contrastPalette(theme).primary.light,
     fontWeight: theme.typography.fontWeightBold,
 }));
 
@@ -77,7 +82,7 @@ const Actions = styled(Box)(({ theme }) => ({
 }));
 
 const DismissButton = styled(Button)(({ theme }) => ({
-    color: theme.palette.common.white,
+    color: contrastPalette(theme).text.primary,
     fontWeight: theme.typography.fontWeightBold,
 }));
 

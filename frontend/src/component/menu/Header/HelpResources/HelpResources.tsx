@@ -218,6 +218,7 @@ export const HelpResources = () => {
         markHintSeen,
     } = useHelpButtonHint();
     const hintOpen = activeHint !== null;
+    const hintHighlightsButton = hintOpen && activeHint !== 'menu-regroup';
 
     useHelpMenuRelocationHint();
     const relocationHintEnabled = useUiFlag('helpMenuRelocationHint');
@@ -287,7 +288,7 @@ export const HelpResources = () => {
                     <StyledIconButton
                         ref={setButtonEl}
                         size='large'
-                        open={open || hintOpen}
+                        open={open || hintHighlightsButton}
                         onClick={handleOpen}
                         aria-haspopup='true'
                         aria-expanded={open}

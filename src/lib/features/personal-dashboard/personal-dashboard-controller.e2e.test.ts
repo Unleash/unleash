@@ -419,12 +419,13 @@ test('should return System owner for default project if nothing else is set', as
     ]);
 });
 
-test('should only return the default project after a downgrade to OSS', async () => {
+test('should only return the default project and its flags after a downgrade to OSS', async () => {
     const { body: otherUser } = await loginUser('other_user@test.com');
     const favoritedProject = await createProject(
         `Favorited ${randomId()}`,
         otherUser,
     );
+    await app.createFeature('foreign_flag', favoritedProject.id);
 
     const { body: downgradedUser } = await loginUser('downgraded@test.com');
     const memberedProject = await createProject(
@@ -432,6 +433,9 @@ test('should only return the default project after a downgrade to OSS', async ()
         downgradedUser,
     );
     await favoriteProject(favoritedProject.id);
+    await app.createFeature('default_flag');
+    await app.createFeature('enterprise_flag', memberedProject.id);
+    await app.favoriteFeature('foreign_flag', favoritedProject.id);
 
     const { body: enterpriseBody } = await app.request.get(
         `/api/admin/personal-dashboard`,
@@ -442,6 +446,11 @@ test('should only return the default project after a downgrade to OSS', async ()
             { id: 'default' },
             { id: favoritedProject.id },
             { id: memberedProject.id },
+        ],
+        flags: [
+            { name: 'enterprise_flag', project: memberedProject.id },
+            { name: 'default_flag', project: 'default' },
+            { name: 'foreign_flag', project: favoritedProject.id },
         ],
     });
 
@@ -456,6 +465,9 @@ test('should only return the default project after a downgrade to OSS', async ()
         `/api/admin/personal-dashboard`,
     );
 
-    expect(ossBody).toMatchObject({ projects: [{ id: 'default' }] });
+    expect(ossBody).toMatchObject({
+        projects: [{ id: 'default' }],
+        flags: [{ name: 'default_flag', project: 'default' }],
+    });
     await ossApp.destroy();
 });

@@ -25,7 +25,7 @@ export const createPersonalDashboardService = (
     stores: IUnleashStores,
 ) => {
     return new PersonalDashboardService(
-        new PersonalDashboardReadModel(db),
+        new PersonalDashboardReadModel(db, config),
         new ProjectOwnersReadModel(db),
         new ProjectReadModel(db, config),
         new OnboardingReadModel(db),

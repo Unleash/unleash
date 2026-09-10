@@ -25,14 +25,15 @@ const StyledIcon = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: theme.spacing(5),
-    height: theme.spacing(5),
+    width: theme.spacing(4),
+    height: theme.spacing(4),
     borderRadius: theme.shape.borderRadiusMedium,
     backgroundColor: theme.palette.background.elevation2,
     '& > svg': {
         width: theme.spacing(3),
         height: theme.spacing(3),
-        fill: theme.palette.primary.main,
+        fontSize: theme.spacing(3),
+        color: theme.palette.primary.main,
     },
 }));
 

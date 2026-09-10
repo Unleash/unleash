@@ -1,7 +1,9 @@
 import { Box, styled } from '@mui/material';
+import CheckIcon from '@mui/icons-material/Check';
+import LinearScaleIcon from '@mui/icons-material/LinearScale';
+import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { formatStrategyName } from 'utils/strategyNames';
-import { FeatureStrategyMenuCardIcon } from '../FeatureStrategyMenu/FeatureStrategyMenuCard/FeatureStrategyMenuCardIcon.tsx';
 import { useConfigureStrategy } from '../FeatureStrategyMenu/useConfigureStrategy.ts';
 import { useProjectDefaultStrategy } from '../FeatureStrategyMenu/useProjectDefaultStrategy.ts';
 import { MoreStrategiesMenu } from './MoreStrategiesMenu.tsx';
@@ -71,9 +73,7 @@ export const StrategySetupCards = ({
                             <strong>{environmentId}</strong> in this project
                         </>
                     }
-                    icon={
-                        <FeatureStrategyMenuCardIcon name='defaultStrategy' />
-                    }
+                    icon={<CheckIcon />}
                     badge={defaultStrategy.title ?? undefined}
                     actionLabel='Apply default'
                     actionDisabled={loading || applying}
@@ -82,9 +82,7 @@ export const StrategySetupCards = ({
                 <StrategySetupCard
                     name='Set up manually'
                     description='Choose target audience, exposure percentage, and variants as you prefer.'
-                    icon={
-                        <FeatureStrategyMenuCardIcon name={MANUAL_STRATEGY} />
-                    }
+                    icon={<SignalCellularAltIcon />}
                     badge={MANUAL_STRATEGY_LABEL}
                     actionLabel='Configure'
                     onAction={() =>
@@ -98,9 +96,7 @@ export const StrategySetupCards = ({
                     <StrategySetupCard
                         name='Start from a template'
                         description='Roll out gradually with a predefined sequence of milestones.'
-                        icon={
-                            <FeatureStrategyMenuCardIcon name='releasePlanTemplate' />
-                        }
+                        icon={<LinearScaleIcon />}
                         actionLabel='Select template'
                         onAction={onShowTemplates}
                     />

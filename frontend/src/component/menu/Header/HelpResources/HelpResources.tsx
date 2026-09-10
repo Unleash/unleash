@@ -1,5 +1,6 @@
-import { useContext, useRef, useState } from 'react';
+import { useContext, useState } from 'react';
 import {
+    Badge,
     Box,
     IconButton,
     Menu,
@@ -21,7 +22,12 @@ import RocketLaunchOutlinedIcon from '@mui/icons-material/RocketLaunchOutlined';
 import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
 import LearningLabIcon from 'assets/icons/menu/learning-lab.svg?react';
 import { HelpMenuHint } from './HelpMenuHint.tsx';
+import { HelpMenuAnnouncement } from './HelpMenuAnnouncement.tsx';
 import { useHelpButtonHint } from './HelpButtonHintContext.tsx';
+import {
+    relocationHintCampaignOver,
+    useHelpMenuRelocationHint,
+} from './useHelpMenuRelocationHint.ts';
 import { FloatingOnboardingChecklistContext } from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklistContext.tsx';
 import { useOnboardingChecklistVisibility } from 'component/onboarding/floatingChecklist/useOnboardingChecklistVisibility.ts';
 import { OnboardingProgressBadge } from 'component/onboarding/floatingChecklist/OnboardingProgressBadge.tsx';
@@ -31,12 +37,23 @@ import { useEventTracker } from 'hooks/useEventTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useVariant } from 'hooks/useVariant';
 import { useIntro } from 'component/onboarding/intro/IntroProvider.tsx';
+import { getLocalStorageItem, setLocalStorageItem } from 'utils/storage.ts';
+
+const RELOCATION_DOT_SEEN_KEY = 'help-menu-relocation:menu-opened:v1';
 
 const StyledIconButton = styled(IconButton)<{ open?: boolean }>(
     ({ theme, open }) => ({
         color: open ? theme.palette.primary.main : undefined,
     }),
 );
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+    '& .MuiBadge-badge': {
+        backgroundColor: theme.palette.primary.main,
+        right: theme.spacing(1.4),
+        top: theme.spacing(1.1),
+    },
+}));
 
 const StyledMenu = styled(Menu)(({ theme }) => ({
     '& .MuiPaper-root': {
@@ -163,7 +180,7 @@ const LEARNING_LAB_DEFAULTS: Required<ILearningLabVariant> = {
 
 export const HelpResources = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-    const buttonRef = useRef<HTMLButtonElement | null>(null);
+    const [buttonEl, setButtonEl] = useState<HTMLButtonElement | null>(null);
     const open = Boolean(anchorEl);
     const { trackEvent } = useEventTracker();
     const { open: openIntro } = useIntro();
@@ -196,12 +213,30 @@ export const HelpResources = () => {
         activeHint,
         showHint: showHelpButtonHint,
         dismissHint: dismissHelpButtonHint,
+        closeHint: closeHelpButtonHint,
+        isHintSeen,
+        markHintSeen,
     } = useHelpButtonHint();
     const hintOpen = activeHint !== null;
+
+    useHelpMenuRelocationHint();
+    const relocationHintEnabled = useUiFlag('helpMenuRelocationHint');
+    const [relocationDotSeen, setRelocationDotSeen] = useState(() =>
+        Boolean(getLocalStorageItem<boolean>(RELOCATION_DOT_SEEN_KEY)),
+    );
+    const showRelocationDot =
+        relocationHintEnabled &&
+        !relocationDotSeen &&
+        !relocationHintCampaignOver();
 
     const handleOpen = (e: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(e.currentTarget);
         if (hintOpen) dismissHelpButtonHint();
+        if (!relocationDotSeen) {
+            setLocalStorageItem(RELOCATION_DOT_SEEN_KEY, true);
+            setRelocationDotSeen(true);
+        }
+        if (!isHintSeen('menu-regroup')) markHintSeen('menu-regroup');
         trackEvent(EVENT_NAME, {
             props: {
                 eventType: 'opened',
@@ -243,28 +278,41 @@ export const HelpResources = () => {
     return (
         <>
             <Tooltip title='Help & Resources' arrow>
-                <StyledIconButton
-                    ref={buttonRef}
-                    size='large'
-                    open={open || hintOpen}
-                    onClick={handleOpen}
-                    aria-haspopup='true'
-                    aria-expanded={open}
-                    aria-label='Help and resources'
+                <StyledBadge
+                    color='primary'
+                    variant='dot'
+                    overlap='circular'
+                    invisible={!showRelocationDot}
                 >
-                    <HelpOutlineOutlinedIcon />
-                </StyledIconButton>
+                    <StyledIconButton
+                        ref={setButtonEl}
+                        size='large'
+                        open={open || hintOpen}
+                        onClick={handleOpen}
+                        aria-haspopup='true'
+                        aria-expanded={open}
+                        aria-label='Help and resources'
+                    >
+                        <HelpOutlineOutlinedIcon />
+                    </StyledIconButton>
+                </StyledBadge>
             </Tooltip>
+            <HelpMenuAnnouncement
+                open={activeHint === 'menu-regroup'}
+                anchorEl={buttonEl}
+                onDismiss={dismissHelpButtonHint}
+                onClose={closeHelpButtonHint}
+            />
             <HelpMenuHint
                 open={activeHint === 'get-started'}
-                anchorEl={buttonRef.current}
+                anchorEl={buttonEl}
                 onClose={dismissHelpButtonHint}
             >
                 You can reopen the Get started checklist from here anytime
             </HelpMenuHint>
             <HelpMenuHint
                 open={activeHint === 'intro-closed'}
-                anchorEl={buttonRef.current}
+                anchorEl={buttonEl}
                 onClose={dismissHelpButtonHint}
             >
                 You can restart the <IntroHintIcon /> Unleash Intro from here

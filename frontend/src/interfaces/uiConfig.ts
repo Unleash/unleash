@@ -114,6 +114,7 @@ export type UiFlags = {
     flagStatusTooltips?: boolean;
     simplerStrategySetup?: boolean;
     editableInstanceName?: boolean;
+    helpMenuRelocationHint?: boolean;
 };
 
 export interface IVersionInfo {

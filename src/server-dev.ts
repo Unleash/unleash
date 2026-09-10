@@ -67,6 +67,7 @@ process.nextTick(async () => {
                         flagStatusTooltips: true,
                         simplerStrategySetup: true,
                         totalUsageMetrics: true,
+                        helpMenuRelocationHint: true,
                     },
                 },
                 authentication: {

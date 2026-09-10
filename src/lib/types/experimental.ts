@@ -85,6 +85,7 @@ export type IFlagKey =
     | 'simplerStrategySetup'
     | 'totalUsageMetrics'
     | 'auditEventUserAgent'
+    | 'helpMenuRelocationHint'
     | keyof IFlagKeyOverrides;
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -384,6 +385,10 @@ const flags: IFlags = {
     ),
     auditEventUserAgent: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_AUDIT_EVENT_USER_AGENT,
+        false,
+    ),
+    helpMenuRelocationHint: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_HELP_MENU_RELOCATION_HINT,
         false,
     ),
 };

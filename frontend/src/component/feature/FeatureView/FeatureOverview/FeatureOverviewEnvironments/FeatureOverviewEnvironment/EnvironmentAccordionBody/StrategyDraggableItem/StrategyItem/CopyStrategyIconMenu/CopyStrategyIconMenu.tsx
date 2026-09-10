@@ -71,13 +71,10 @@ export const CopyStrategyIconMenu: FC<ICopyStrategyIconMenuProps> = ({
         onChangeRequestAddStrategyConfirm,
     } = useChangeRequestAddStrategy(projectId, featureId, 'addStrategy');
 
-    const changeRequestEnvironment = changeRequestDialogDetails.environment;
-    const changeRequestTracking = changeRequestEnvironment
-        ? {
-              ...strategyCopiedTracking,
-              props: copyTrackingProps(changeRequestEnvironment),
-          }
-        : undefined;
+    const changeRequestTracking = {
+        ...strategyCopiedTracking,
+        props: copyTrackingProps(changeRequestDialogDetails.environment!),
+    };
 
     const onCopyStrategy = async (targetEnvironment: string) => {
         const { id, ...strategyCopy } = {

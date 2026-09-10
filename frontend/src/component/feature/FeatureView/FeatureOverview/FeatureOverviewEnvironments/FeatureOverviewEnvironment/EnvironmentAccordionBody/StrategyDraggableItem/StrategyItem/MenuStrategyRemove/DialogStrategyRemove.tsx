@@ -40,7 +40,7 @@ interface IFeatureStrategyRemoveDialogueProps {
     onClose: () => void;
     isOpen: boolean;
     scheduledChangeRequestsForStrategy: ScheduledChangeRequestData;
-    tracking?: Tracking;
+    tracking: Tracking;
 }
 
 const RemoveAlert: FC = () => (
@@ -134,7 +134,7 @@ export const FeatureStrategyRemoveDialogue: FC<
             open={isOpen}
             primaryButtonText='Remove strategy'
             secondaryButtonText='Cancel'
-            onConfirm={onRemove}
+            onSubmit={onRemove}
             onError={onError}
             onClose={onClose}
             tracking={tracking}
@@ -169,7 +169,7 @@ export const SuggestFeatureStrategyRemoveDialogue: FC<
             open={isOpen}
             primaryButtonText='Add suggestion to draft'
             secondaryButtonText='Cancel'
-            onConfirm={onRemove}
+            onSubmit={onRemove}
             onError={onError}
             onClose={onClose}
             tracking={tracking}

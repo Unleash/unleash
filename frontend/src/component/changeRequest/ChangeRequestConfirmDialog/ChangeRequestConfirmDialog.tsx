@@ -16,7 +16,7 @@ interface IChangeRequestDialogueProps {
     showBanner?: boolean;
     messageComponent: JSX.Element;
     disabled?: boolean;
-    tracking?: Tracking;
+    tracking: Tracking;
 }
 
 export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
@@ -48,7 +48,7 @@ export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
             primaryButtonText={primaryButtonText}
             secondaryButtonText='Cancel'
             disabledPrimaryButton={disabled}
-            onConfirm={onConfirm}
+            onSubmit={onConfirm}
             onError={onError}
             onClose={onClose}
             title='Request changes'

@@ -8,7 +8,7 @@ import {
 import { Dialogue } from './Dialogue.tsx';
 import { expect, test, vi } from 'vitest';
 
-const renderDialogue = (props: Partial<ComponentProps<typeof Dialogue>>) => {
+const renderDialogue = (props: ComponentProps<typeof Dialogue>) => {
     const rows: Array<{ event: string } & EventProps> = [];
     render(
         <EventTrackerContext.Provider
@@ -17,7 +17,7 @@ const renderDialogue = (props: Partial<ComponentProps<typeof Dialogue>>) => {
                     rows.push({ event, ...options?.props }),
             }}
         >
-            <Dialogue open={true} title='New dialogue created' {...props} />
+            <Dialogue {...props} />
         </EventTrackerContext.Provider>,
     );
 
@@ -44,6 +44,8 @@ test('modal should close when escape is pressed', () => {
 
 test('tracks opening and dismissing as one journey', () => {
     const rows = renderDialogue({
+        open: true,
+        title: 'New dialogue created',
         tracking: { event: 'project-access', type: 'removed' },
         onClose: () => {},
     });
@@ -63,6 +65,8 @@ test('tracks opening and dismissing as one journey', () => {
 
 test('escape is dismissed once even when both close paths are wired', () => {
     const rows = renderDialogue({
+        open: true,
+        title: 'New dialogue created',
         tracking: { event: 'project-access', type: 'removed' },
         setOpen: () => {},
         onClose: () => {},
@@ -82,7 +86,11 @@ test('escape is dismissed once even when both close paths are wired', () => {
 });
 
 test('an undeclared dialog emits nothing', () => {
-    const rows = renderDialogue({ setOpen: () => {} });
+    const rows = renderDialogue({
+        open: true,
+        title: 'New dialogue created',
+        setOpen: () => {},
+    });
 
     fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Escape' });
 
@@ -92,8 +100,10 @@ test('an undeclared dialog emits nothing', () => {
 test('a confirm that runs the request is tracked as one journey while the button waits for it', async () => {
     let finishRequest: () => void = () => {};
     const rows = renderDialogue({
+        open: true,
+        title: 'New dialogue created',
         tracking: { event: 'project-access', type: 'removed' },
-        onConfirm: () =>
+        onSubmit: () =>
             new Promise<void>((resolve) => {
                 finishRequest = resolve;
             }),
@@ -116,8 +126,10 @@ test('a rejected confirm is recorded as failed and handed to the caller', async 
     const failure = new Error('request failed');
     const errors: unknown[] = [];
     const rows = renderDialogue({
+        open: true,
+        title: 'New dialogue created',
         tracking: { event: 'project-access', type: 'removed' },
-        onConfirm: () => Promise.reject(failure),
+        onSubmit: () => Promise.reject(failure),
         onError: (error) => errors.push(error),
     });
     const confirm = screen.getByRole('button', { name: "Yes, I'm sure" });

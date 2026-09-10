@@ -69,7 +69,7 @@ export const DisableEnableStrategyDialog = ({
                     : `${disabled ? 'Enable' : 'Disable'} strategy`
             }
             secondaryButtonText='Cancel'
-            onConfirm={onConfirm}
+            onSubmit={onConfirm}
             onError={(error) => setToastApiError(formatUnknownError(error))}
             onClose={() => onClose()}
             tracking={tracking}

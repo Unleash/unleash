@@ -47,14 +47,29 @@ const StyledDialogActions = styled(DialogActions)(({ theme }) => ({
     padding: 0,
 }));
 
-interface IDialogue {
+// onSubmit when the primary button sends the request: the dialog runs it, disables the button
+// while pending, and emits the whole journey, so tracking is required.
+// onClick when the button only moves the user on, like the production guard: the dialog emits
+// opened and dismissed, whatever runs next owns the request.
+type DialoguePrimaryAction =
+    | {
+          onSubmit: () => Promise<unknown>;
+          onError?: (error: unknown) => void;
+          tracking: Tracking;
+          onClick?: never;
+      }
+    | {
+          onClick?: (e: React.SyntheticEvent) => void;
+          tracking?: Tracking;
+          onSubmit?: never;
+          onError?: never;
+      };
+
+type IDialogue = DialoguePrimaryAction & {
     primaryButtonText?: string;
     secondaryButtonText?: string;
     open: boolean;
     setOpen?: (status: boolean) => void;
-    onClick?: (e: React.SyntheticEvent) => void;
-    onConfirm?: () => Promise<unknown>;
-    onError?: (error: unknown) => void;
     onClose?: (e: React.SyntheticEvent, reason?: string) => void;
     style?: object;
     title: string;
@@ -65,15 +80,14 @@ interface IDialogue {
     permissionButton?: React.JSX.Element;
     customButton?: React.JSX.Element;
     children?: React.ReactNode;
-    tracking?: Tracking;
-}
+};
 
 export const Dialogue: React.FC<IDialogue> = ({
     children,
     open,
     setOpen,
     onClick,
-    onConfirm,
+    onSubmit,
     onError,
     onClose,
     title,
@@ -97,16 +111,7 @@ export const Dialogue: React.FC<IDialogue> = ({
         }
     }, [open, trackDialog]);
 
-    const handleClick = formId
-        ? (e: React.SyntheticEvent) => {
-              e.preventDefault();
-              if (onClick) {
-                  onClick(e);
-              }
-          }
-        : onClick;
-
-    const submit = (request: () => Promise<unknown>) => async () => {
+    const submit = async (request: () => Promise<unknown>) => {
         setPending(true);
         try {
             await trackDialog.mutation(request);
@@ -117,7 +122,15 @@ export const Dialogue: React.FC<IDialogue> = ({
         }
     };
 
-    const handleConfirm = onConfirm ? submit(onConfirm) : undefined;
+    const primaryAction = onSubmit ? () => submit(onSubmit) : onClick;
+
+    const handleConfirm =
+        formId && primaryAction
+            ? (e: React.SyntheticEvent) => {
+                  e.preventDefault();
+                  primaryAction(e);
+              }
+            : primaryAction;
 
     // Older callers close via setOpen, which skips MUI's onClose. When both are given MUI
     // also fires for Escape, so only emit here when it will not.
@@ -160,13 +173,13 @@ export const Dialogue: React.FC<IDialogue> = ({
                         show={permissionButton!}
                         elseShow={
                             <ConditionallyRender
-                                condition={Boolean(handleConfirm || onClick)}
+                                condition={Boolean(handleConfirm)}
                                 show={
                                     <Button
                                         form={formId}
                                         color='primary'
                                         variant='contained'
-                                        onClick={handleConfirm ?? handleClick}
+                                        onClick={handleConfirm}
                                         autoFocus={!formId}
                                         disabled={
                                             disabledPrimaryButton || pending

@@ -1,5 +1,5 @@
 import type React from 'react';
-import { type KeyboardEvent, useEffect } from 'react';
+import { type KeyboardEvent, useEffect, useState } from 'react';
 import {
     Button,
     Dialog,
@@ -53,6 +53,8 @@ interface IDialogue {
     open: boolean;
     setOpen?: (status: boolean) => void;
     onClick?: (e: React.SyntheticEvent) => void;
+    onConfirm?: () => Promise<unknown>;
+    onError?: (error: unknown) => void;
     onClose?: (e: React.SyntheticEvent, reason?: string) => void;
     style?: object;
     title: string;
@@ -71,6 +73,8 @@ export const Dialogue: React.FC<IDialogue> = ({
     open,
     setOpen,
     onClick,
+    onConfirm,
+    onError,
     onClose,
     title,
     primaryButtonText,
@@ -84,6 +88,7 @@ export const Dialogue: React.FC<IDialogue> = ({
     tracking,
 }) => {
     const trackDialog = useTracking(tracking);
+    const [pending, setPending] = useState(false);
 
     // Opening a dialog is a user action, so it gets its own row.
     useEffect(() => {
@@ -100,6 +105,19 @@ export const Dialogue: React.FC<IDialogue> = ({
               }
           }
         : onClick;
+
+    const submit = (request: () => Promise<unknown>) => async () => {
+        setPending(true);
+        try {
+            await trackDialog.mutation(request);
+        } catch (error: unknown) {
+            onError?.(error);
+        } finally {
+            setPending(false);
+        }
+    };
+
+    const handleConfirm = onConfirm ? submit(onConfirm) : undefined;
 
     // Older callers close via setOpen, which skips MUI's onClose. When both are given MUI
     // also fires for Escape, so only emit here when it will not.
@@ -142,15 +160,17 @@ export const Dialogue: React.FC<IDialogue> = ({
                         show={permissionButton!}
                         elseShow={
                             <ConditionallyRender
-                                condition={Boolean(onClick)}
+                                condition={Boolean(handleConfirm || onClick)}
                                 show={
                                     <Button
                                         form={formId}
                                         color='primary'
                                         variant='contained'
-                                        onClick={handleClick}
+                                        onClick={handleConfirm ?? handleClick}
                                         autoFocus={!formId}
-                                        disabled={disabledPrimaryButton}
+                                        disabled={
+                                            disabledPrimaryButton || pending
+                                        }
                                         data-testid={DIALOGUE_CONFIRM_ID}
                                         type={formId ? 'submit' : 'button'}
                                     >

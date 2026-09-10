@@ -1,5 +1,5 @@
 import type { ComponentProps } from 'react';
-import { fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import {
     EventTrackerContext,
@@ -87,4 +87,48 @@ test('an undeclared dialog emits nothing', () => {
     fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Escape' });
 
     expect(rows).toEqual([]);
+});
+
+test('a confirm that runs the request is tracked as one journey while the button waits for it', async () => {
+    let finishRequest: () => void = () => {};
+    const rows = renderDialogue({
+        tracking: { event: 'project-access', type: 'removed' },
+        onConfirm: () =>
+            new Promise<void>((resolve) => {
+                finishRequest = resolve;
+            }),
+    });
+    const confirm = screen.getByRole('button', { name: "Yes, I'm sure" });
+
+    fireEvent.click(confirm);
+
+    expect(confirm).toBeDisabled();
+    finishRequest();
+    await waitFor(() => expect(confirm).toBeEnabled());
+    expect(rows).toEqual([
+        { event: 'project-access', eventType: 'removed', action: 'opened' },
+        { event: 'project-access', eventType: 'removed', action: 'submitted' },
+        { event: 'project-access', eventType: 'removed', action: 'succeeded' },
+    ]);
+});
+
+test('a rejected confirm is recorded as failed and handed to the caller', async () => {
+    const failure = new Error('request failed');
+    const errors: unknown[] = [];
+    const rows = renderDialogue({
+        tracking: { event: 'project-access', type: 'removed' },
+        onConfirm: () => Promise.reject(failure),
+        onError: (error) => errors.push(error),
+    });
+    const confirm = screen.getByRole('button', { name: "Yes, I'm sure" });
+
+    fireEvent.click(confirm);
+
+    await waitFor(() => expect(confirm).toBeEnabled());
+    expect(errors).toEqual([failure]);
+    expect(rows).toMatchObject([
+        { action: 'opened' },
+        { action: 'submitted' },
+        { action: 'failed', failedOn: 'request' },
+    ]);
 });

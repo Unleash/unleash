@@ -455,7 +455,9 @@ export class ApiTokenController extends Controller {
                 await this.apiTokenService.delete(token, req.audit);
             } catch (_err) {}
         }
-        await this.frontendApiService.deleteClientForFrontendApiToken(token);
+        await this.frontendApiService.deleteClientForFrontendApiToken(
+            v2Identifier?.selector ?? token,
+        );
         res.status(200).end();
     }
 

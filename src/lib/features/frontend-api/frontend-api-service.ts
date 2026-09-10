@@ -215,12 +215,12 @@ export class FrontendApiService {
         return client;
     }
 
-    async deleteClientForFrontendApiToken(secret: string): Promise<void> {
-        const clientPromise = this.clients.get(secret);
+    async deleteClientForFrontendApiToken(tokenKey: string): Promise<void> {
+        const clientPromise = this.clients.get(tokenKey);
         if (clientPromise) {
             const client = await clientPromise;
             client.destroy();
-            this.clients.delete(secret);
+            this.clients.delete(tokenKey);
         }
     }
 

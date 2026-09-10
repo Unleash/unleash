@@ -36,6 +36,10 @@ afterAll(async () => {
     await db.destroy();
 });
 
+afterEach(() => {
+    vi.restoreAllMocks();
+});
+
 test('lists, updates, and deletes tokens across both token stores', async () => {
     const legacySecret = 'default:development.legacy-token';
     await db.stores.apiTokenStore.insert(
@@ -48,16 +52,17 @@ test('lists, updates, and deletes tokens across both token stores', async () => 
         },
         SYSTEM_USER_ID,
     );
-    await app.services.transactionalApiTokenV2Service.create(
-        {
-            projects: ['default'],
-            tokenName: 'secure-token',
-            type: ApiTokenType.BACKEND,
-            environment: 'development',
-            userCreated: true,
-        },
-        SYSTEM_USER_AUDIT,
-    );
+    const secureTokenCredential =
+        await app.services.transactionalApiTokenV2Service.create(
+            {
+                projects: ['default'],
+                tokenName: 'secure-token',
+                type: ApiTokenType.BACKEND,
+                environment: 'development',
+                userCreated: true,
+            },
+            SYSTEM_USER_AUDIT,
+        );
 
     const listResponse = await app.request
         .get('/api/admin/api-tokens')
@@ -97,9 +102,16 @@ test('lists, updates, and deletes tokens across both token stores', async () => 
         ]),
     );
 
+    const deleteFrontendClient = vi.spyOn(
+        app.services.frontendApiService,
+        'deleteClientForFrontendApiToken',
+    );
     await app.request
-        .delete(`/api/admin/api-tokens/${secureToken.secret}`)
+        .delete(`/api/admin/api-tokens/${secureTokenCredential.secret}`)
         .expect(200);
+    expect(deleteFrontendClient).toHaveBeenCalledWith(
+        secureTokenCredential.selector,
+    );
     await app.request
         .delete(`/api/admin/api-tokens/${legacySecret}`)
         .expect(200);
@@ -221,5 +233,4 @@ test('only warms the cache with non-expired secure tokens', async () => {
         }),
     ).resolves.toBeUndefined();
     expect(getBySelector).toHaveBeenCalledWith(expired.selector);
-    getBySelector.mockRestore();
 });

@@ -25,8 +25,8 @@ beforeAll(async () => {
     );
 });
 
-const loginUser = (email: string) => {
-    return app.request
+const loginUser = (email: string, testApp: IUnleashTest = app) => {
+    return testApp.request
         .post(`/auth/demo/login`)
         .send({
             email,
@@ -417,4 +417,45 @@ test('should return System owner for default project if nothing else is set', as
             ownerType: 'system',
         },
     ]);
+});
+
+test('should only return the default project after a downgrade to OSS', async () => {
+    const { body: otherUser } = await loginUser('other_user@test.com');
+    const favoritedProject = await createProject(
+        `Favorited ${randomId()}`,
+        otherUser,
+    );
+
+    const { body: downgradedUser } = await loginUser('downgraded@test.com');
+    const memberedProject = await createProject(
+        `Membered ${randomId()}`,
+        downgradedUser,
+    );
+    await favoriteProject(favoritedProject.id);
+
+    const { body: enterpriseBody } = await app.request.get(
+        `/api/admin/personal-dashboard`,
+    );
+
+    expect(enterpriseBody).toMatchObject({
+        projects: [
+            { id: 'default' },
+            { id: favoritedProject.id },
+            { id: memberedProject.id },
+        ],
+    });
+
+    const ossApp = await setupAppWithAuth(
+        db.stores,
+        { isOss: true, experimental: { flags: {} } },
+        db.rawDatabase,
+    );
+    await loginUser('downgraded@test.com', ossApp);
+
+    const { body: ossBody } = await ossApp.request.get(
+        `/api/admin/personal-dashboard`,
+    );
+
+    expect(ossBody).toMatchObject({ projects: [{ id: 'default' }] });
+    await ossApp.destroy();
 });

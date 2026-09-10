@@ -135,11 +135,7 @@ export const createProjectService = (
         resourceLimitsService,
     );
 
-    const projectReadModel = createProjectReadModel(
-        db,
-        eventBus,
-        config.flagResolver,
-    );
+    const projectReadModel = createProjectReadModel(db, config);
 
     const onboardingReadModel = createOnboardingReadModel(db);
 

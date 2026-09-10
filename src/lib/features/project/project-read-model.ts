@@ -1,4 +1,4 @@
-import type { IFlagResolver } from '../../types/index.js';
+import type { IUnleashConfig } from '../../types/index.js';
 import type { Knex } from 'knex';
 import type { Db } from '../../db/db.js';
 import type {
@@ -8,7 +8,6 @@ import type {
 } from './project-read-model-type.js';
 import type { IProjectQuery, IProjectsQuery } from './project-store-type.js';
 import metricsHelper from '../../util/metrics-helper.js';
-import type EventEmitter from 'events';
 import type { IProjectMembersCount } from './project-store.js';
 type Raw<T = any> = Knex.Raw<T>;
 
@@ -52,8 +51,14 @@ export class ProjectReadModel implements IProjectReadModel {
 
     private timer: Function;
 
-    constructor(db: Db, eventBus: EventEmitter, _flagResolver: IFlagResolver) {
+    private isOss: boolean;
+
+    constructor(
+        db: Db,
+        { eventBus, isOss }: Pick<IUnleashConfig, 'eventBus' | 'isOss'>,
+    ) {
         this.db = db;
+        this.isOss = isOss;
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'project',
@@ -284,7 +289,10 @@ export class ProjectReadModel implements IProjectReadModel {
             })
             .as('query');
 
-        const projects = await this.db.from(projectsQuery).pluck('project');
+        const projects = await this.db
+            .from(projectsQuery)
+            .modify(this.onlyDefaultProjectInOss)
+            .pluck('project');
         return projects;
     }
 
@@ -295,8 +303,15 @@ export class ProjectReadModel implements IProjectReadModel {
             .leftJoin('projects', 'favorite_projects.project', 'projects.id')
             .where('favorite_projects.user_id', userId)
             .andWhere('projects.archived_at', null)
+            .modify(this.onlyDefaultProjectInOss)
             .pluck('project');
 
         return favoritedProjects;
     }
+
+    private onlyDefaultProjectInOss = (query: Knex.QueryBuilder): void => {
+        if (this.isOss) {
+            query.where('project', 'default');
+        }
+    };
 }

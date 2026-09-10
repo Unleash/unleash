@@ -196,11 +196,7 @@ export const createStores = (
         largestResourcesReadModel: new LargestResourcesReadModel(db),
         integrationEventsStore: new IntegrationEventsStore(db, { eventBus }),
         featureCollaboratorsReadModel: new FeatureCollaboratorsReadModel(db),
-        projectReadModel: createProjectReadModel(
-            db,
-            eventBus,
-            config.flagResolver,
-        ),
+        projectReadModel: createProjectReadModel(db, config),
         userUnsubscribeStore: new UserUnsubscribeStore(db),
         userSubscriptionsReadModel: new UserSubscriptionsReadModel(db),
         uniqueConnectionStore: new UniqueConnectionStore(db),

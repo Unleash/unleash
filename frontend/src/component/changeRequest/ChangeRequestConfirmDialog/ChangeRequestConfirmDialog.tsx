@@ -9,7 +9,8 @@ import type { Tracking } from 'utils/trackingEvents';
 
 interface IChangeRequestDialogueProps {
     isOpen: boolean;
-    onConfirm: () => void;
+    onConfirm: () => Promise<unknown>;
+    onError?: (error: unknown) => void;
     onClose: () => void;
     environment?: string;
     showBanner?: boolean;
@@ -22,6 +23,7 @@ export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
     isOpen,
     disabled = false,
     onConfirm,
+    onError,
     onClose,
     showBanner,
     environment,
@@ -46,7 +48,8 @@ export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
             primaryButtonText={primaryButtonText}
             secondaryButtonText='Cancel'
             disabledPrimaryButton={disabled}
-            onClick={onConfirm}
+            onConfirm={onConfirm}
+            onError={onError}
             onClose={onClose}
             title='Request changes'
             fullWidth

@@ -107,7 +107,8 @@ export type CustomEvents =
     | 'project-access'
     | 'project-environments'
     | 'project-actions'
-    | 'flags-list';
+    | 'flags-list'
+    | 'prod-guard';
 
 // The hook sets eventType and action from the declaration, so don't pass them as props.
 export type TrackingProps = EventProps & {
@@ -123,12 +124,8 @@ export type Tracking = {
 };
 
 export type TrackingAction =
-    | 'opened'
-    | 'submitted'
-    | 'succeeded'
-    | 'failed'
-    | 'dismissed'
-    | 'copied';
+    // Only for things that later get submitted or dismissed, like a dialog. Not for expand/collapse.
+    'opened' | 'submitted' | 'succeeded' | 'failed' | 'dismissed';
 
 export type DialogDismissMethod =
     | 'cancel-button'

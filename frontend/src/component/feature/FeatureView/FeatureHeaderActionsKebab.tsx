@@ -102,7 +102,7 @@ export const FeatureHeaderActionsKebab: FC<FeatureHeaderActionsKebabProps> = ({
                     disabled={!canClone}
                     to={`/projects/${feature.project}/features/${feature.name}/copy`}
                     onClick={() => {
-                        trackFlagCloned('opened', { name: feature.name });
+                        trackFlagCloned('opened');
                     }}
                 >
                     <ListItemIcon>

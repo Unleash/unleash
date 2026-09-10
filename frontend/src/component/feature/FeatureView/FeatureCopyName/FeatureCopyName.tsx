@@ -15,9 +15,13 @@ export const FeatureCopyName: FC<{ name: string }> = ({ name }) => {
 
     const handleCopyToClipboard = (method: 'button' | 'keyboard-shortcut') => {
         try {
-            // copy() reports failure by returning false, not by throwing
             if (copy(name)) {
-                trackFlagNameCopied('copied', { method, name });
+                trackFlagNameCopied('succeeded', { method });
+            } else {
+                trackFlagNameCopied('failed', {
+                    method,
+                    failedOn: 'clipboard',
+                });
             }
             setIsFeatureNameCopied(true);
             const timeout = setTimeout(() => {

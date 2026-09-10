@@ -81,11 +81,12 @@ export const ActionsCell: FC<IActionsCellProps> = ({
 
     const handleCopyToClipboard = () => {
         try {
-            // copy() reports failure by returning false, not by throwing
             if (copy(featureId)) {
-                trackFlagNameCopied('copied', {
+                trackFlagNameCopied('succeeded', { method: 'kebab-menu' });
+            } else {
+                trackFlagNameCopied('failed', {
                     method: 'kebab-menu',
-                    name: featureId,
+                    failedOn: 'clipboard',
                 });
             }
             setIsFeatureNameCopied(true);
@@ -147,7 +148,7 @@ export const ActionsCell: FC<IActionsCellProps> = ({
                     nativeButton={false}
                     to={`/projects/${projectId}/features/${featureId}/copy`}
                     onClick={() => {
-                        trackFlagCloned('opened', { name: featureId });
+                        trackFlagCloned('opened');
                     }}
                 >
                     <ListItemIcon>

@@ -6,7 +6,7 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
-import { type ComponentType, useState } from 'react';
+import { type ComponentType, useContext, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { SignupDialogSetPassword } from './SignupDialogSetPassword/SignupDialogSetPassword.tsx';
 import { SignupDialogAccountDetails } from './SignupDialogAccountDetails.tsx';
@@ -25,6 +25,7 @@ import {
     DEFAULT_PROJECT_ID,
     useDefaultProjectId,
 } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId.ts';
+import AccessContext from 'contexts/AccessContext.ts';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -194,6 +195,7 @@ type SignupStep = {
     description?: string;
     content: SignupStepContent;
     show?: (signupData?: SignupData) => boolean;
+    adminOnly?: boolean;
     isCustom?: boolean;
 };
 
@@ -215,6 +217,7 @@ const SIGNUP_STEPS: SignupStep[] = [
         description:
             'Bring your teammates on board to collaborate on feature flags and evaluate Unleash together.\nYou can always invite more people later.',
         content: SignupDialogInviteOthers,
+        adminOnly: true,
     },
     {
         title: `You're all set`,
@@ -222,6 +225,22 @@ const SIGNUP_STEPS: SignupStep[] = [
         isCustom: true,
     },
 ];
+
+export const getSignupSteps = (
+    signupData: SignupData | undefined,
+    isAdmin: boolean,
+) =>
+    SIGNUP_STEPS.filter(({ show, adminOnly }) => {
+        if (adminOnly && !isAdmin) {
+            return false;
+        }
+
+        if (show && !show(signupData)) {
+            return false;
+        }
+
+        return true;
+    });
 
 export const SignupDialog = () => {
     const { trackEvent } = useEventTracker();
@@ -231,6 +250,7 @@ export const SignupDialog = () => {
     const navigate = useNavigate();
     const defaultProjectId = useDefaultProjectId();
     const { open: openIntro } = useIntro();
+    const { isAdmin } = useContext(AccessContext);
 
     const [data, setData] = useState<SubmitSignupData>({
         password: '',
@@ -245,7 +265,7 @@ export const SignupDialog = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState('');
 
-    const steps = SIGNUP_STEPS.filter(({ show }) => !show || show(signupData));
+    const steps = getSignupSteps(signupData, isAdmin);
     const safeStep = Math.min(step, steps.length - 1);
     const currentStep = steps[safeStep];
 

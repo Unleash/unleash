@@ -11,6 +11,8 @@ import {
     StyledSignupDialogTextField,
     type SignupStepContent,
 } from './SignupDialog';
+import { useContext } from 'react';
+import AccessContext from 'contexts/AccessContext.ts';
 
 const StyledCheckboxContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -26,7 +28,8 @@ export const SignupDialogAccountDetails: SignupStepContent = ({
     onNext,
     signupData,
 }) => {
-    const requestCompanyData = !signupData?.companyName;
+    const { isAdmin } = useContext(AccessContext);
+    const requestCompanyData = isAdmin && !signupData?.companyName;
 
     const isValidForm =
         data.name.trim() !== '' &&

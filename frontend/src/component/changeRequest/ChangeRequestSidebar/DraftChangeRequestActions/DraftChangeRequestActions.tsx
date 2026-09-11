@@ -10,7 +10,6 @@ import {
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import AutocompleteVirtual from 'component/common/AutocompleteVirtual/AutcompleteVirtual';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { FormFieldControlAligner } from 'component/common/FormField/FormField';
 import { caseInsensitiveSearch } from 'utils/search';
 import type { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
@@ -80,19 +79,15 @@ const renderValue = (value: AvailableReviewerSchema[]) => (
     </StyledTags>
 );
 
-const StyledActions = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'topLabel',
-})<{ topLabel: boolean }>(({ topLabel }) => ({
+const StyledActions = styled('div')({
     display: 'flex',
     marginLeft: 'auto',
-    ...(topLabel && {
-        alignItems: 'flex-start',
-        '& > :first-child': {
-            width: 'auto',
-            marginBottom: 0,
-        },
-    }),
-}));
+    alignItems: 'flex-start',
+    '& > :first-child': {
+        width: 'auto',
+        marginBottom: 0,
+    },
+});
 
 export const DraftChangeRequestActions: FC<{
     environmentChangeRequest: ChangeRequestType;
@@ -116,7 +111,6 @@ export const DraftChangeRequestActions: FC<{
     setDisabled,
 }) => {
     const theme = useTheme();
-    const topLabelInputs = useUiFlag('topLabelInputs');
     const { reviewers: availableReviewers, loading: isLoading } =
         useAvailableChangeRequestReviewers(
             environmentChangeRequest.project,
@@ -150,7 +144,7 @@ export const DraftChangeRequestActions: FC<{
         );
 
     return (
-        <StyledActions topLabel={topLabelInputs}>
+        <StyledActions>
             <AutocompleteVirtual
                 label={`Reviewers (${reviewers.length})`}
                 sx={{ ml: 'auto', width: theme.spacing(40) }}

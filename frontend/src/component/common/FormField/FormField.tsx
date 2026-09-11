@@ -1,7 +1,6 @@
 import { Children, cloneElement, isValidElement, useId } from 'react';
 import type { ReactElement, ReactNode } from 'react';
 import { styled } from '@mui/material';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledFormField = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -45,26 +44,11 @@ interface FormFieldProps {
 export const formFieldLabelId = (controlId: string) => `${controlId}-label`;
 
 export const FormField = ({ label, description, children }: FormFieldProps) => {
-    const topLabelInputs = useUiFlag('topLabelInputs'); // TODO on topLabelInputs cleanup: also prune the whitelist in oss/biome.json
     const generatedId = useId();
 
     const child = Children.only(children) as ReactElement<
         Record<string, unknown>
     >;
-
-    if (!topLabelInputs) {
-        const floatingControl = cloneElement(child, { label });
-        if (!description) {
-            return floatingControl;
-        }
-        return (
-            <>
-                {description}
-                {floatingControl}
-            </>
-        );
-    }
-
     const descriptionContent = isValidElement(description)
         ? (description.props as { children?: ReactNode }).children
         : description;
@@ -111,11 +95,5 @@ interface FormFieldControlAlignerProps {
 export const FormFieldControlAligner = ({
     children,
 }: FormFieldControlAlignerProps) => {
-    const topLabelInputs = useUiFlag('topLabelInputs');
-
-    if (!topLabelInputs) {
-        return <>{children}</>;
-    }
-
     return <StyledControlAligner>{children}</StyledControlAligner>;
 };

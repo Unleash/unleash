@@ -104,7 +104,6 @@ export type UiFlags = {
     learningLab?: Variant;
     floatingOnboardingChecklist?: boolean;
     flightRecorderFrontend?: Variant;
-    topLabelInputs?: boolean;
     searchDocsWidget?: boolean;
     usersTabsUI?: boolean;
     exposureBasedAutomation?: boolean;

@@ -12,7 +12,6 @@ import { Box, Button, Checkbox } from '@mui/material';
 import debounce from 'debounce';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { PlaygroundEditor } from './PlaygroundEditor/PlaygroundEditor.tsx';
 import { parseDateValue, parseValidDate } from 'component/common/util';
 import {
@@ -83,7 +82,6 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
     context,
     setContext,
 }) => {
-    const topLabelInputs = useUiFlag('topLabelInputs');
     const { setToastData } = useToast();
     const { context: contextData } = useFullUnleashContext();
 
@@ -294,10 +292,8 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
                     gap: 2,
                     flexWrap: 'wrap',
                     mb: 2,
-                    ...(topLabelInputs && {
-                        alignItems: 'flex-start',
-                        '& > div': { width: 'auto', flex: '0 0 auto' },
-                    }),
+                    alignItems: 'flex-start',
+                    '& > div': { width: 'auto', flex: '0 0 auto' },
                 }}
             >
                 <GeneralSelect

@@ -72,7 +72,6 @@ export type IFlagKey =
     | 'floatingOnboardingChecklist'
     | 'onboardingIntroTour'
     | 'onboardingIntroTourAdvancedTopics'
-    | 'topLabelInputs'
     | 'secureTokenStorage'
     | 'secureAccountTokenStorage'
     | 'recordSdkFlavorMetrics'
@@ -332,10 +331,6 @@ const flags: IFlags = {
     ),
     serviceNowIntegration: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SERVICE_NOW_INTEGRATION,
-        false,
-    ),
-    topLabelInputs: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_TOP_LABEL_INPUTS,
         false,
     ),
     recordSdkFlavorMetrics: parseEnvVarBoolean(

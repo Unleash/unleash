@@ -7,7 +7,6 @@ import { useState, type JSX } from 'react';
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader.tsx';
 import { parseParameterStrings } from 'utils/parseParameter';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { Limit } from 'component/common/Limit/Limit';
 
 interface IFreeTextInputProps {
@@ -19,42 +18,40 @@ interface IFreeTextInputProps {
     setError: (error: string) => void;
 }
 
-const useStyles = makeStyles<{ topLabel: boolean }>()(
-    (theme, { topLabel }) => ({
-        valueChip: {
-            margin: '0 0.5rem 0.5rem 0',
+const useStyles = makeStyles()((theme) => ({
+    valueChip: {
+        margin: '0 0.5rem 0.5rem 0',
+    },
+    chipValue: {
+        whiteSpace: 'pre',
+    },
+    inputContainer: {
+        display: 'flex',
+        alignItems: 'flex-end',
+        [theme.breakpoints.down(700)]: {
+            flexDirection: 'column',
+            alignItems: 'flex-start',
         },
-        chipValue: {
-            whiteSpace: 'pre',
+    },
+    inputInnerContainer: {
+        minWidth: '300px',
+        [theme.breakpoints.down(700)]: {
+            minWidth: '100%',
         },
-        inputContainer: {
-            display: 'flex',
-            alignItems: topLabel ? 'flex-end' : 'center',
-            [theme.breakpoints.down(700)]: {
-                flexDirection: 'column',
-                alignItems: 'flex-start',
-            },
+    },
+    input: {
+        width: '100%',
+        margin: '1rem 0',
+    },
+    button: {
+        marginLeft: '1rem',
+        [theme.breakpoints.down(700)]: {
+            marginLeft: 0,
+            marginBottom: '0.5rem',
         },
-        inputInnerContainer: {
-            minWidth: '300px',
-            [theme.breakpoints.down(700)]: {
-                minWidth: '100%',
-            },
-        },
-        input: {
-            width: '100%',
-            margin: '1rem 0',
-        },
-        button: {
-            marginLeft: '1rem',
-            [theme.breakpoints.down(700)]: {
-                marginLeft: 0,
-                marginBottom: '0.5rem',
-            },
-        },
-        valuesContainer: { marginTop: '1rem' },
-    }),
-);
+    },
+    valuesContainer: { marginTop: '1rem' },
+}));
 
 const LimitContainer = styled(Box)(({ theme }) => ({
     '&:has(*)': {
@@ -72,8 +69,7 @@ export const FreeTextInput = ({
     setError,
 }: IFreeTextInputProps) => {
     const [inputValues, setInputValues] = useState('');
-    const topLabelInputs = useUiFlag('topLabelInputs');
-    const { classes: styles } = useStyles({ topLabel: topLabelInputs });
+    const { classes: styles } = useStyles();
     const { uiConfig, loading } = useUiConfig();
     const constraintValuesLimit = uiConfig.resourceLimits.constraintValues;
 
@@ -167,7 +163,7 @@ const ConstraintValueChips = ({
     values,
     removeValue,
 }: IConstraintValueChipsProps) => {
-    const { classes: styles } = useStyles({ topLabel: false });
+    const { classes: styles } = useStyles();
     return (
         <>
             {values.map((value, index) => {

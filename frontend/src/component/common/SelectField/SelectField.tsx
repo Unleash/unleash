@@ -1,6 +1,5 @@
 import {
     FormControl,
-    InputLabel,
     MenuItem,
     Select,
     type SelectChangeEvent,
@@ -23,7 +22,6 @@ interface SelectControlProps
     options: SelectFieldOption[];
     value: string;
     onChange: (value: string) => void;
-    label?: ReactNode;
     id?: string;
 }
 
@@ -31,7 +29,6 @@ const SelectControl = ({
     options,
     value,
     onChange,
-    label,
     id: injectedId,
     size = 'large',
     fullWidth = true,
@@ -43,16 +40,10 @@ const SelectControl = ({
 
     return (
         <FormControl variant='outlined' size={size} fullWidth={fullWidth}>
-            {label ? (
-                <InputLabel id={labelId} htmlFor={id}>
-                    {label}
-                </InputLabel>
-            ) : null}
             <Select
                 {...props}
                 id={id}
                 labelId={labelId}
-                label={label ?? undefined}
                 value={value}
                 onChange={(event: SelectChangeEvent<unknown>) =>
                     onChange(String(event.target.value))

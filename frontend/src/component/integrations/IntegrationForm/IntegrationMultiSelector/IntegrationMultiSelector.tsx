@@ -15,8 +15,6 @@ import {
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { FormField } from 'component/common/FormField/FormField';
-import { useUiFlag } from 'hooks/useUiFlag';
-import { StyledHelpText, StyledTitle } from '../IntegrationForm.styles';
 
 export interface IIntegrationMultiSelectorProps {
     options: IAutocompleteBoxOption[];
@@ -47,8 +45,6 @@ export const IntegrationMultiSelector = ({
     note,
     required,
 }: IIntegrationMultiSelectorProps) => {
-    const topLabelInputs = useUiFlag('topLabelInputs');
-
     const fieldLabel = (
         <>
             {capitalize(`${entityName}s`)}
@@ -62,7 +58,6 @@ export const IntegrationMultiSelector = ({
             error={Boolean(error)}
             helperText={error || note}
             variant='outlined'
-            label={topLabelInputs ? undefined : fieldLabel}
             placeholder={`Select ${entityName}s to filter by`}
             onFocus={onFocus}
             data-testid={`select-${entityName}-input`}
@@ -110,16 +105,6 @@ export const IntegrationMultiSelector = ({
             }}
         />
     );
-
-    if (!topLabelInputs) {
-        return (
-            <>
-                <StyledTitle>{capitalize(`${entityName}s`)}</StyledTitle>
-                <StyledHelpText>{description}</StyledHelpText>
-                {control}
-            </>
-        );
-    }
 
     return (
         <FormField label={fieldLabel} description={description}>

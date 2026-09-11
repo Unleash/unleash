@@ -15,6 +15,14 @@ import { ProjectActionsForm } from './ProjectActionsForm/ProjectActionsForm.tsx'
 import { useProjectActionsForm } from './ProjectActionsForm/useProjectActionsForm.ts';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useTracking } from 'hooks/useTracking';
+import {
+    type ActionModalOpenedFrom,
+    projectActionSizeProps,
+    projectActionChangedFields,
+    projectActionCreatedTracking,
+    projectActionEditedTracking,
+} from '../../projectActionsTracking.ts';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -50,6 +58,7 @@ interface IProjectActionsModalProps {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     onOpenEvents: () => void;
+    openedFrom?: ActionModalOpenedFrom;
 }
 
 export const ProjectActionsModal = ({
@@ -57,6 +66,7 @@ export const ProjectActionsModal = ({
     open,
     setOpen,
     onOpenEvents,
+    openedFrom,
 }: IProjectActionsModalProps) => {
     const projectId = useRequiredPathParam('projectId');
     const { refetch } = useActions(projectId);
@@ -93,6 +103,10 @@ export const ProjectActionsModal = ({
     }, [open]);
 
     const editing = action !== undefined;
+    const tracking = editing
+        ? { ...projectActionEditedTracking, props: { openedFrom } }
+        : projectActionCreatedTracking;
+    const trackProjectAction = useTracking(tracking);
     const title = `${editing ? 'Edit' : 'New'} action`;
 
     const payload: ActionSetPayload = {
@@ -150,14 +164,27 @@ export const ProjectActionsModal = ({
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!validate()) return;
+        const trackingProps = {
+            ...projectActionSizeProps(payload),
+            newState: enabled ? 'enabled' : 'disabled',
+            changedFields: action
+                ? projectActionChangedFields(payload, action)
+                : undefined,
+        };
+
+        if (!validate()) {
+            trackProjectAction.validationFailed(trackingProps);
+            return;
+        }
 
         try {
-            if (editing) {
-                await updateActionSet(action.id, payload);
-            } else {
-                await addActionSet(payload);
-            }
+            await trackProjectAction.mutation(
+                () =>
+                    editing
+                        ? updateActionSet(action.id, payload)
+                        : addActionSet(payload),
+                trackingProps,
+            );
             setToastData({
                 text: `action ${editing ? 'updated' : 'added'} successfully`,
                 type: 'success',
@@ -176,6 +203,7 @@ export const ProjectActionsModal = ({
                 setOpen(false);
             }}
             label={title}
+            tracking={tracking}
         >
             <FormTemplate
                 loading={loading}
@@ -224,6 +252,9 @@ export const ProjectActionsModal = ({
                         </Button>
                         <StyledCancelButton
                             onClick={() => {
+                                trackProjectAction('dismissed', {
+                                    method: 'cancel-button',
+                                });
                                 setOpen(false);
                             }}
                         >

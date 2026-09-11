@@ -31,6 +31,12 @@ import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSign
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { ProjectActionsEventsModal } from './ProjectActionsEventsModal/ProjectActionsEventsModal.tsx';
+import { useTracking } from 'hooks/useTracking';
+import {
+    type ActionModalOpenedFrom,
+    type EventsModalOpenedFrom,
+    projectActionToggledTracking,
+} from '../projectActionsTracking.ts';
 
 interface IProjectActionsTableProps {
     modalOpen: boolean;
@@ -48,6 +54,7 @@ export const ProjectActionsTable = ({
     setSelectedAction,
 }: IProjectActionsTableProps) => {
     const { setToastData, setToastApiError } = useToast();
+    const trackProjectActionToggled = useTracking(projectActionToggledTracking);
 
     const projectId = useRequiredPathParam('projectId');
     const { actions, refetch } = useActions(projectId);
@@ -58,10 +65,35 @@ export const ProjectActionsTable = ({
 
     const [eventsModalOpen, setEventsModalOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
+    const [actionModalOpenedFrom, setActionModalOpenedFrom] =
+        useState<ActionModalOpenedFrom>();
+    const [eventsModalOpenedFrom, setEventsModalOpenedFrom] =
+        useState<EventsModalOpenedFrom>();
+
+    const openActionModal = (
+        action: IActionSet,
+        openedFrom: ActionModalOpenedFrom,
+    ) => {
+        setSelectedAction(action);
+        setActionModalOpenedFrom(openedFrom);
+        setModalOpen(true);
+    };
+
+    const openEventsModal = (
+        action: IActionSet,
+        openedFrom: EventsModalOpenedFrom,
+    ) => {
+        setSelectedAction(action);
+        setEventsModalOpenedFrom(openedFrom);
+        setEventsModalOpen(true);
+    };
 
     const onToggleAction = async (action: IActionSet, enabled: boolean) => {
         try {
-            await toggleActionSet(action.id, enabled);
+            await trackProjectActionToggled.mutation(
+                () => toggleActionSet(action.id, enabled),
+                { newState: enabled ? 'enabled' : 'disabled' },
+            );
             setToastData({
                 text: `"${action.name}" has been ${
                     enabled ? 'enabled' : 'disabled'
@@ -75,17 +107,13 @@ export const ProjectActionsTable = ({
     };
 
     const onDeleteConfirm = async (action: IActionSet) => {
-        try {
-            await removeActionSet(action.id);
-            setToastData({
-                text: `"${action.name}" has been deleted`,
-                type: 'success',
-            });
-            refetch();
-            setDeleteOpen(false);
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        }
+        await removeActionSet(action.id);
+        setToastData({
+            text: `"${action.name}" has been deleted`,
+            type: 'success',
+        });
+        refetch();
+        setDeleteOpen(false);
     };
 
     const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -101,10 +129,7 @@ export const ProjectActionsTable = ({
                     <LinkCell
                         title={action.name}
                         subtitle={action.description}
-                        onClick={() => {
-                            setSelectedAction(action);
-                            setModalOpen(true);
-                        }}
+                        onClick={() => openActionModal(action, 'name-cell')}
                     />
                 ),
                 meta: { minWidth: 60 },
@@ -144,10 +169,9 @@ export const ProjectActionsTable = ({
                 cell: ({ row: { original: action } }) => (
                     <ProjectActionsActionsCell
                         action={action}
-                        onCreateAction={() => {
-                            setSelectedAction(action);
-                            setModalOpen(true);
-                        }}
+                        onCreateAction={() =>
+                            openActionModal(action, 'actions-cell')
+                        }
                     />
                 ),
                 meta: { maxWidth: 130 },
@@ -173,14 +197,10 @@ export const ProjectActionsTable = ({
                 cell: ({ row: { original: action } }) => (
                     <ProjectActionsTableActionsCell
                         actionId={action.id}
-                        onOpenEvents={() => {
-                            setSelectedAction(action);
-                            setEventsModalOpen(true);
-                        }}
-                        onEdit={() => {
-                            setSelectedAction(action);
-                            setModalOpen(true);
-                        }}
+                        onOpenEvents={() =>
+                            openEventsModal(action, 'kebab-menu')
+                        }
+                        onEdit={() => openActionModal(action, 'kebab-menu')}
                         onDelete={() => {
                             setSelectedAction(action);
                             setDeleteOpen(true);
@@ -249,8 +269,10 @@ export const ProjectActionsTable = ({
                 setOpen={setModalOpen}
                 onOpenEvents={() => {
                     setModalOpen(false);
+                    setEventsModalOpenedFrom('action-modal');
                     setEventsModalOpen(true);
                 }}
+                openedFrom={actionModalOpenedFrom}
             />
             <ProjectActionsEventsModal
                 action={selectedAction}
@@ -258,14 +280,17 @@ export const ProjectActionsTable = ({
                 setOpen={setEventsModalOpen}
                 onOpenConfiguration={() => {
                     setEventsModalOpen(false);
+                    setActionModalOpenedFrom('events-modal');
                     setModalOpen(true);
                 }}
+                openedFrom={eventsModalOpenedFrom}
             />
             <ProjectActionsDeleteDialog
                 action={selectedAction}
                 open={deleteOpen}
                 setOpen={setDeleteOpen}
                 onConfirm={onDeleteConfirm}
+                onError={(error) => setToastApiError(formatUnknownError(error))}
             />
         </>
     );

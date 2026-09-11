@@ -6,6 +6,7 @@ import Input from 'component/common/Input/Input';
 interface IProjectLinkTemplateEditorProps {
     template?: ProjectLinkTemplateSchema;
     onSave: (template: ProjectLinkTemplateSchema) => void;
+    onValidationFailed: () => void;
     onCancel: () => void;
     isAdding: boolean;
 }
@@ -26,6 +27,7 @@ const StyledDialogActions = styled('div')(({ theme }) => ({
 const ProjectLinkTemplateEditor = ({
     template,
     onSave,
+    onValidationFailed,
     onCancel,
     isAdding,
 }: IProjectLinkTemplateEditorProps) => {
@@ -53,6 +55,8 @@ const ProjectLinkTemplateEditor = ({
                 title: templateTitle || null,
                 urlTemplate: templateUrl,
             });
+        } else {
+            onValidationFailed();
         }
     };
 

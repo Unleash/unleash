@@ -142,7 +142,7 @@ importers:
         version: 10.3.1
       joi:
         specifier: ^18.1.2
-        version: 18.2.5
+        version: 18.2.8
       js-sha256:
         specifier: ^0.11.1
         version: 0.11.1
@@ -4068,8 +4068,8 @@ packages:
     resolution: {integrity: sha512-ekilCSN1jwRvIbgeg/57YFh8qQDNbwDb9xT/qu2DAHbFFZUicIl4ygVaAvzveMhMVr3LnpSKTNnwt8PoOfmKhQ==}
     hasBin: true
 
-  joi@18.2.5:
-    resolution: {integrity: sha512-+gEA7rLfaNWx9JzawWPrPetSZwT16NUqHtECDgjyAJreXcs4TM7tx2Pa+VVJJK0YHM83ybrVdaT6UekHH50FJQ==}
+  joi@18.2.8:
+    resolution: {integrity: sha512-G2TX62h58ZHuwqetJgP2F4ualakqAmZtBYe3jWen7gxQRw5xApX6crnFtuB91WC0c3ESBnva+kGSnb3+6pIQDQ==}
     engines: {node: '>= 20'}
 
   js-sha256@0.11.1:
@@ -9799,7 +9799,7 @@ snapshots:
 
   jiti@2.6.1: {}
 
-  joi@18.2.5:
+  joi@18.2.8:
     dependencies:
       '@hapi/address': 5.1.1
       '@hapi/formula': 3.0.2
@@ -12131,7 +12131,7 @@ snapshots:
   wait-on@9.0.10(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2):
     dependencies:
       axios: 1.20.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
-      joi: 18.2.5
+      joi: 18.2.8
       lodash: 4.18.1
       minimist: 1.2.8
       rxjs: 7.8.2

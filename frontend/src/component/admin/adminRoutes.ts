@@ -182,6 +182,7 @@ export const adminRoutes: INavigationMenuItem[] = [
         title: 'Instance name',
         menu: { adminSettings: true },
         flag: 'editableInstanceName',
+        deployment: 'cloud',
         group: 'instance',
     },
     {
@@ -201,6 +202,7 @@ export const adminRoutes: INavigationMenuItem[] = [
         title: 'License',
         menu: { adminSettings: true, mode: ['enterprise'] },
         flag: 'enableLicense',
+        deployment: 'self-hosted',
         group: 'instance',
     },
     {
@@ -221,6 +223,7 @@ export const adminRoutes: INavigationMenuItem[] = [
         path: '/admin/billing',
         title: 'Billing & invoices',
         menu: { adminSettings: true, billing: true },
+        deployment: 'cloud',
     },
 
     // Event log

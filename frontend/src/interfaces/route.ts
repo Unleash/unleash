@@ -26,6 +26,7 @@ export interface INavigationMenuItem {
     configFlag?: keyof IUiConfig;
     group?: string;
     enterprise?: boolean;
+    deployment?: 'cloud' | 'self-hosted';
 }
 
 interface IRouteMenu {

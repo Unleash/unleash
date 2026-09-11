@@ -207,6 +207,20 @@ export default class AddonService {
         return addonConfigs.map((a) => this.filterSensitiveFields(a));
     }
 
+    private validateAddonBelongsToProject(
+        addon: IAddon,
+        project: string | undefined,
+    ): void {
+        const { projects } = addon;
+
+        if (!project) return;
+        if (projects?.length === 1 && projects[0] === project) return;
+
+        throw new NotFoundError(
+            `Could not find integration ${addon.id} in project ${project}`,
+        );
+    }
+
     filterSensitiveFields(addonConfig: IAddon): IAddon {
         const { sensitiveParams } = this;
         const a = { ...addonConfig };
@@ -258,8 +272,15 @@ export default class AddonService {
         return Promise.resolve();
     }
 
-    async createAddon(data: IAddonDto, auditUser: IAuditUser): Promise<IAddon> {
+    async createAddon(
+        data: IAddonDto,
+        auditUser: IAuditUser,
+        project?: string,
+    ): Promise<IAddon> {
         const addonConfig = await addonSchema.validateAsync(data);
+        if (project) {
+            addonConfig.projects = [project];
+        }
         await this.validateKnownProvider(addonConfig);
         await this.validateRequiredParameters(addonConfig);
         await this.validateUrlParameter(addonConfig);
@@ -289,12 +310,17 @@ export default class AddonService {
         id: number,
         data: IAddonDto,
         auditUser: IAuditUser,
+        project?: string,
     ): Promise<IAddon> {
         const existingConfig = await this.addonStore.get(id);
         if (existingConfig === undefined) {
             throw new NotFoundError();
         } // because getting an early 404 here makes more sense
+        this.validateAddonBelongsToProject(existingConfig, project);
         const addonConfig = await addonSchema.validateAsync(data);
+        if (project) {
+            addonConfig.projects = [project];
+        }
         await this.validateKnownProvider(addonConfig);
         await this.validateRequiredParameters(addonConfig);
         await this.validateUrlParameter(addonConfig);
@@ -324,12 +350,17 @@ export default class AddonService {
         return result;
     }
 
-    async removeAddon(id: number, auditUser: IAuditUser): Promise<void> {
+    async removeAddon(
+        id: number,
+        auditUser: IAuditUser,
+        project?: string,
+    ): Promise<void> {
         const existingConfig = await this.addonStore.get(id);
         if (existingConfig === undefined) {
             /// No config, no need to delete
             return;
         }
+        this.validateAddonBelongsToProject(existingConfig, project);
         await this.addonStore.delete(id);
         await this.eventService.storeEvent(
             new AddonConfigDeletedEvent({

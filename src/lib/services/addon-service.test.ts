@@ -23,6 +23,7 @@ import {
 } from '../types/index.js';
 import { createFakeEventsService } from '../internals.js';
 import { createTestConfig } from '../../test/config/test-config.js';
+import NotFoundError from '../error/notfound-error.js';
 import { IntegrationEventsService } from './index.js';
 import joi from 'joi';
 const { ValidationError } = joi;
@@ -962,4 +963,146 @@ describe('registerProvider', () => {
         const fetched = await addonService.getAddon(created.id);
         expect(fetched.parameters.token).toBe(MASKED_VALUE);
     });
+});
+
+test('should update an addon scoped to the given project', async () => {
+    const { addonService } = getSetup();
+    const addon = await addonService.createAddon(
+        simpleAddonFor(['my-project']),
+        TEST_AUDIT_USER,
+    );
+
+    const updated = await addonService.updateAddon(
+        addon.id,
+        { ...simpleAddonFor(['my-project']), description: 'updated' },
+        TEST_AUDIT_USER,
+        'my-project',
+    );
+
+    expect(updated.description).toBe('updated');
+});
+
+test('should not update an addon belonging to another project', async () => {
+    const { addonService } = getSetup();
+    const addon = await addonService.createAddon(
+        simpleAddonFor(['other-project']),
+        TEST_AUDIT_USER,
+    );
+
+    await expect(
+        addonService.updateAddon(
+            addon.id,
+            simpleAddonFor(['other-project']),
+            TEST_AUDIT_USER,
+            'my-project',
+        ),
+    ).rejects.toThrow(NotFoundError);
+});
+
+test('should not update an instance-wide addon from a project', async () => {
+    const { addonService } = getSetup();
+    const addon = await addonService.createAddon(
+        simpleAddonFor([]),
+        TEST_AUDIT_USER,
+    );
+
+    await expect(
+        addonService.updateAddon(
+            addon.id,
+            simpleAddonFor([]),
+            TEST_AUDIT_USER,
+            'my-project',
+        ),
+    ).rejects.toThrow(NotFoundError);
+});
+
+test('should not update a shared addon from one of its projects', async () => {
+    const { addonService } = getSetup();
+    const addon = await addonService.createAddon(
+        simpleAddonFor(['my-project', 'other-project']),
+        TEST_AUDIT_USER,
+    );
+
+    await expect(
+        addonService.updateAddon(
+            addon.id,
+            simpleAddonFor(['my-project', 'other-project']),
+            TEST_AUDIT_USER,
+            'my-project',
+        ),
+    ).rejects.toThrow(NotFoundError);
+});
+
+test('should not remove an addon belonging to another project', async () => {
+    const { addonService } = getSetup();
+    const addon = await addonService.createAddon(
+        simpleAddonFor(['other-project']),
+        TEST_AUDIT_USER,
+    );
+
+    await expect(
+        addonService.removeAddon(addon.id, TEST_AUDIT_USER, 'my-project'),
+    ).rejects.toThrow(NotFoundError);
+});
+
+test('should still update any addon without a project', async () => {
+    const { addonService } = getSetup();
+    const addon = await addonService.createAddon(
+        simpleAddonFor([]),
+        TEST_AUDIT_USER,
+    );
+
+    const updated = await addonService.updateAddon(
+        addon.id,
+        { ...simpleAddonFor([]), description: 'updated' },
+        TEST_AUDIT_USER,
+    );
+
+    expect(updated.description).toBe('updated');
+});
+
+test('should not let a project widen its own addon to every project', async () => {
+    const { addonService } = getSetup();
+    const addon = await addonService.createAddon(
+        simpleAddonFor(['my-project']),
+        TEST_AUDIT_USER,
+    );
+
+    const updated = await addonService.updateAddon(
+        addon.id,
+        simpleAddonFor([]),
+        TEST_AUDIT_USER,
+        'my-project',
+    );
+
+    expect(updated.projects).toStrictEqual(['my-project']);
+});
+
+test('should not let a project move its addon to another project', async () => {
+    const { addonService } = getSetup();
+    const addon = await addonService.createAddon(
+        simpleAddonFor(['my-project']),
+        TEST_AUDIT_USER,
+    );
+
+    const updated = await addonService.updateAddon(
+        addon.id,
+        simpleAddonFor(['other-project']),
+        TEST_AUDIT_USER,
+        'my-project',
+    );
+
+    expect(updated.projects).toStrictEqual(['my-project']);
+});
+
+test('should scope a created addon to the project it was created from', async () => {
+    const { addonService } = getSetup();
+
+    const addon = await addonService.createAddon(
+        simpleAddonFor(['some-other-project']),
+        TEST_AUDIT_USER,
+        'my-project',
+    );
+
+    expect(addon.projects).toStrictEqual(['my-project']);
 });

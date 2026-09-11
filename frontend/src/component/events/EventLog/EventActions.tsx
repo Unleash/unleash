@@ -12,7 +12,8 @@ import {
 import FileDownload from '@mui/icons-material/FileDownload';
 import type { EventSchema } from 'openapi';
 import { json2csv } from 'json-2-csv';
-import { useEventTracker } from 'hooks/useEventTracker';
+import { useTracking } from 'hooks/useTracking';
+import { eventLogExportedTracking } from './eventLogTracking';
 
 const StyledActions = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -30,7 +31,7 @@ interface IEventActions {
 
 export const EventActions: FC<IEventActions> = ({ events }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const { trackEvent } = useEventTracker();
+    const trackEventLogExported = useTracking(eventLogExportedTracking);
 
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -40,13 +41,21 @@ export const EventActions: FC<IEventActions> = ({ events }) => {
         setAnchorEl(null);
     };
 
-    const exportJson = () => {
-        const jsonString = JSON.stringify(events);
-        const blob = new Blob([jsonString], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-
+    const exportEvents = (format: 'csv' | 'json') => {
         const currentDate = new Date().toISOString().split('T')[0];
-        const fileName = `events_${currentDate}.json`;
+        const { content, mime, fileName } =
+            format === 'csv'
+                ? {
+                      content: json2csv(events),
+                      mime: 'text/csv;charset=utf-8;',
+                      fileName: `data_${currentDate}.csv`,
+                  }
+                : {
+                      content: JSON.stringify(events),
+                      mime: 'application/json',
+                      fileName: `events_${currentDate}.json`,
+                  };
+        const url = URL.createObjectURL(new Blob([content], { type: mime }));
 
         const a = document.createElement('a');
         a.href = url;
@@ -56,35 +65,9 @@ export const EventActions: FC<IEventActions> = ({ events }) => {
         URL.revokeObjectURL(url);
         setAnchorEl(null);
 
-        trackEvent('events-exported', {
-            props: {
-                eventType: 'json',
-            },
-        });
-    };
-
-    const exportCsv = () => {
-        const csvContent = json2csv(events);
-        const blob = new Blob([csvContent], {
-            type: 'text/csv;charset=utf-8;',
-        });
-        const url = URL.createObjectURL(blob);
-
-        const currentDate = new Date().toISOString().split('T')[0];
-        const fileName = `data_${currentDate}.csv`;
-
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = fileName;
-        a.click();
-
-        URL.revokeObjectURL(url);
-        setAnchorEl(null);
-
-        trackEvent('events-exported', {
-            props: {
-                eventType: 'csv',
-            },
+        trackEventLogExported('succeeded', {
+            eventCount: events.length,
+            format,
         });
     };
 
@@ -117,14 +100,14 @@ export const EventActions: FC<IEventActions> = ({ events }) => {
                 disableScrollLock={true}
             >
                 <MenuList>
-                    <MenuItem onClick={exportCsv}>
+                    <MenuItem onClick={() => exportEvents('csv')}>
                         <ListItemText>
                             <Typography variant='body2'>
                                 Export as CSV
                             </Typography>
                         </ListItemText>
                     </MenuItem>
-                    <MenuItem onClick={exportJson}>
+                    <MenuItem onClick={() => exportEvents('json')}>
                         <ListItemText>
                             <Typography variant='body2'>
                                 Export as JSON

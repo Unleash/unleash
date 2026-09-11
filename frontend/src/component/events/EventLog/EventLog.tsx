@@ -14,6 +14,12 @@ import { useEventLogSearch } from './useEventLogSearch.ts';
 import { StickyPaginationBar } from 'component/common/Table/StickyPaginationBar/StickyPaginationBar';
 import { EventActions } from './EventActions.tsx';
 import useLoading from 'hooks/useLoading';
+import { useTracking } from 'hooks/useTracking';
+import {
+    eventLogPageSizeChangedTracking,
+    eventLogPaginatedTracking,
+    eventLogRawViewToggledTracking,
+} from './eventLogTracking';
 
 interface IEventLogProps {
     title: string;
@@ -67,6 +73,30 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
               : { type: 'global' },
     );
     const ref = useLoading(loading, '[data-loading-events=true]');
+    const trackEventLogRawViewToggled = useTracking(
+        eventLogRawViewToggledTracking,
+    );
+    const trackEventLogPaginated = useTracking(eventLogPaginatedTracking);
+    const trackEventLogPageSizeChanged = useTracking(
+        eventLogPageSizeChangedTracking,
+    );
+
+    const fetchNextPage = () => {
+        pagination.nextPage();
+        trackEventLogPaginated('succeeded', {
+            pageDepth: pagination.currentPage + 2,
+        });
+    };
+    const fetchPrevPage = () => {
+        pagination.prevPage();
+        trackEventLogPaginated('succeeded', {
+            pageDepth: pagination.currentPage,
+        });
+    };
+    const setPageLimit = (pageSize: number) => {
+        pagination.setPageLimit(pageSize);
+        trackEventLogPageSizeChanged('succeeded', { pageSize });
+    };
 
     const setSearchValue = (query = '') => {
         setTableState({ query });
@@ -74,8 +104,11 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
     const { eventSettings, setEventSettings } = useEventSettings();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-    const onShowData = () => {
+    const toggleShowData = () => {
         setEventSettings((prev) => ({ showData: !prev.showData }));
+        trackEventLogRawViewToggled('succeeded', {
+            newState: eventSettings.showData ? 'hidden' : 'shown',
+        });
     };
 
     const searchInputField = (
@@ -92,7 +125,7 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
             control={
                 <Switch
                     checked={eventSettings.showData}
-                    onChange={onShowData}
+                    onChange={toggleShowData}
                     color='primary'
                 />
             }
@@ -174,9 +207,9 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
                             totalItems={total}
                             pageSize={pagination.pageSize}
                             pageIndex={pagination.currentPage}
-                            fetchPrevPage={pagination.prevPage}
-                            fetchNextPage={pagination.nextPage}
-                            setPageLimit={pagination.setPageLimit}
+                            fetchPrevPage={fetchPrevPage}
+                            fetchNextPage={fetchNextPage}
+                            setPageLimit={setPageLimit}
                         />
                     }
                 />

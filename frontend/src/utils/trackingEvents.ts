@@ -64,7 +64,6 @@ export type CustomEvents =
     | 'feature-lifecycle'
     | 'command-bar'
     | 'search-opened'
-    | 'events-exported'
     | 'event-timeline'
     | 'onboarding'
     | 'personal-dashboard'
@@ -109,7 +108,8 @@ export type CustomEvents =
     | 'project-actions'
     | 'flags-list'
     | 'prod-guard'
-    | 'list-filters';
+    | 'list-filters'
+    | 'event-log';
 
 // The hook sets eventType and action from the declaration, so don't pass them as props.
 export type TrackingProps = EventProps & {

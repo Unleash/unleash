@@ -16,10 +16,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestConfig } from 'hooks/api/getters/useChangeRequestConfig/useChangeRequestConfig';
-import {
-    type IChangeRequestConfig,
-    useChangeRequestApi,
-} from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { UPDATE_PROJECT } from '@server/types/permissions';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -28,7 +25,11 @@ import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { useTheme } from '@mui/material/styles';
 import AccessContext from 'contexts/AccessContext';
-import { useEventTracker } from 'hooks/useEventTracker';
+import { useTracking } from 'hooks/useTracking';
+import {
+    changeRequestToggledTracking,
+    requiredApprovalsChangedTracking,
+} from 'component/changeRequest/changeRequestTracking';
 import { PROJECT_CHANGE_REQUEST_WRITE } from '../../../../providers/AccessProvider/permissions.ts';
 import type { IChangeRequestEnvironmentConfig as IChangeRequestRow } from 'component/changeRequest/changeRequest.types';
 
@@ -42,16 +43,17 @@ const StyledBox = styled(Box)(({ theme }) => ({
 }));
 
 export const ChangeRequestTable: FC = () => {
-    const { trackEvent } = useEventTracker();
     const { hasAccess } = useContext(AccessContext);
     const [dialogState, setDialogState] = useState<{
         isOpen: boolean;
         enableEnvironment: string;
+        environmentType: string;
         isEnabled: boolean;
         requiredApprovals: number;
     }>({
         isOpen: false,
         enableEnvironment: '',
+        environmentType: '',
         isEnabled: false,
         requiredApprovals: 1,
     });
@@ -63,47 +65,34 @@ export const ChangeRequestTable: FC = () => {
     const { updateChangeRequestEnvironmentConfig } = useChangeRequestApi();
     const { setToastData, setToastApiError } = useToast();
 
-    const onRowChange =
-        (
-            enableEnvironment: string,
-            isEnabled: boolean,
-            requiredApprovals: number,
-        ) =>
-        () => {
-            setDialogState({
-                isOpen: true,
-                enableEnvironment,
-                isEnabled,
-                requiredApprovals,
-            });
-        };
-
-    const onConfirm = async () => {
-        if (dialogState.enableEnvironment) {
-            await updateConfiguration();
-        }
-        setDialogState((state) => ({ ...state, isOpen: false }));
+    const onRowChange = (row: IChangeRequestRow) => () => {
+        setDialogState({
+            isOpen: true,
+            enableEnvironment: row.environment,
+            environmentType: row.type,
+            isEnabled: row.changeRequestEnabled,
+            requiredApprovals: row.requiredApprovals,
+        });
     };
 
-    async function updateConfiguration(config?: IChangeRequestConfig) {
-        try {
-            await updateChangeRequestEnvironmentConfig(
-                config || {
-                    project: projectId,
-                    environment: dialogState.enableEnvironment,
-                    enabled: !dialogState.isEnabled,
-                    requiredApprovals: dialogState.requiredApprovals,
-                },
-            );
-            setToastData({
-                type: 'success',
-                text: 'Change request status updated',
-            });
-            await refetchChangeRequestConfig();
-        } catch (error) {
-            setToastApiError(formatUnknownError(error));
-        }
-    }
+    const trackRequiredApprovalsChanged = useTracking(
+        requiredApprovalsChangedTracking,
+    );
+
+    const onConfirm = async () => {
+        await updateChangeRequestEnvironmentConfig({
+            project: projectId,
+            environment: dialogState.enableEnvironment,
+            enabled: !dialogState.isEnabled,
+            requiredApprovals: dialogState.requiredApprovals,
+        });
+        setDialogState((state) => ({ ...state, isOpen: false }));
+        setToastData({
+            type: 'success',
+            text: 'Change request status updated',
+        });
+        await refetchChangeRequestConfig();
+    };
 
     const approvalOptions = Array.from(Array(10).keys())
         .map((key) => String(key + 1))
@@ -116,16 +105,30 @@ export const ChangeRequestTable: FC = () => {
             };
         });
 
-    function onRequiredApprovalsChange(
+    async function onRequiredApprovalsChange(
         original: IChangeRequestRow,
         approvals: string,
     ) {
-        updateConfiguration({
-            project: projectId,
-            environment: original.environment,
-            enabled: original.changeRequestEnabled,
-            requiredApprovals: Number(approvals),
-        });
+        const requiredApprovals = Number(approvals);
+        try {
+            await trackRequiredApprovalsChanged.mutation(
+                () =>
+                    updateChangeRequestEnvironmentConfig({
+                        project: projectId,
+                        environment: original.environment,
+                        enabled: original.changeRequestEnabled,
+                        requiredApprovals,
+                    }),
+                { requiredApprovals },
+            );
+            setToastData({
+                type: 'success',
+                text: 'Change request status updated',
+            });
+            await refetchChangeRequestConfig();
+        } catch (error) {
+            setToastApiError(formatUnknownError(error));
+        }
     }
 
     const columns = useMemo<ColumnDef<IChangeRequestRow, unknown>[]>(
@@ -190,11 +193,7 @@ export const ChangeRequestTable: FC = () => {
                             slotProps={{
                                 input: { 'aria-label': original.environment },
                             }}
-                            onClick={onRowChange(
-                                original.environment,
-                                original.changeRequestEnabled,
-                                original.requiredApprovals,
-                            )}
+                            onClick={onRowChange(original)}
                         />
                     </StyledBox>
                 ),
@@ -252,21 +251,16 @@ export const ChangeRequestTable: FC = () => {
                 </TableBody>
             </Table>
             <Dialogue
-                onClick={() => {
-                    trackEvent('change_request', {
-                        props: {
-                            eventType: `change request ${
-                                !dialogState.isEnabled ? 'enabled' : 'disabled'
-                            }`,
-                        },
-                    });
-
-                    onConfirm();
-                }}
+                onSubmit={onConfirm}
+                onError={(error) => setToastApiError(formatUnknownError(error))}
                 open={dialogState.isOpen}
                 onClose={() =>
                     setDialogState((state) => ({ ...state, isOpen: false }))
                 }
+                tracking={changeRequestToggledTracking({
+                    newState: dialogState.isEnabled ? 'disabled' : 'enabled',
+                    environmentType: dialogState.environmentType,
+                })}
                 primaryButtonText={dialogState.isEnabled ? 'Disable' : 'Enable'}
                 secondaryButtonText='Cancel'
                 title={`${

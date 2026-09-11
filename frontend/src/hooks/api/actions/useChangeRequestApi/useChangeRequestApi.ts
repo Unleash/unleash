@@ -1,9 +1,12 @@
 import useAPI from '../useApi/useApi.js';
-import { useEventTracker } from '../../../useEventTracker.js';
-import type { PlausibleChangeRequestState } from 'component/changeRequest/changeRequest.types';
-import { getUniqueChangeRequestId } from 'utils/unique-change-request-id';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useChangeRequestPlausibleContext } from 'component/changeRequest/ChangeRequestContext';
+import { useTracking } from 'hooks/useTracking';
+import {
+    changeAddedTracking,
+    changeDiscardedTracking,
+    commentAddedTracking,
+    draftDiscardedTracking,
+    titleUpdatedTracking,
+} from 'component/changeRequest/changeRequestTracking';
 
 export interface IChangeSchema {
     feature: string | null;
@@ -41,23 +44,22 @@ export interface IChangeRequestConfig {
 }
 
 export const useChangeRequestApi = () => {
-    const { trackEvent } = useEventTracker();
+    const trackChangeAdded = useTracking(changeAddedTracking);
+    const trackChangeDiscarded = useTracking(changeDiscardedTracking);
+    const trackDraftDiscarded = useTracking(draftDiscardedTracking);
+    const trackCommentAdded = useTracking(commentAddedTracking);
+    const trackTitleUpdated = useTracking(titleUpdatedTracking);
+
     const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
     });
-    const { uiConfig } = useUiConfig();
-    const { willOverwriteStrategyChanges } = useChangeRequestPlausibleContext();
 
     const addChange = async (
         project: string,
         environment: string,
         payload: IChangeSchema | IChangeSchema[],
     ) => {
-        trackEvent('change_request', {
-            props: {
-                eventType: 'change added',
-            },
-        });
+        const changes = Array.isArray(payload) ? payload : [payload];
 
         const path = `api/admin/projects/${project}/environments/${environment}/change-requests`;
         const req = createRequest(path, {
@@ -65,14 +67,19 @@ export const useChangeRequestApi = () => {
             body: JSON.stringify(payload),
         });
 
-        const response = await makeRequest(req.caller, req.id);
-        return response.json();
+        return trackChangeAdded.mutation(
+            async () => {
+                const response = await makeRequest(req.caller, req.id);
+                return response.json();
+            },
+            // A bulk call only ever carries one kind of change.
+            { changeType: changes[0].action, changeCount: changes.length },
+        );
     };
 
     const changeState = async (
         project: string,
         changeRequestId: number,
-        previousState: PlausibleChangeRequestState,
         payload: {
             state:
                 | 'Approved'
@@ -85,15 +92,6 @@ export const useChangeRequestApi = () => {
             scheduledAt?: string;
         },
     ) => {
-        trackEvent('change_request', {
-            props: {
-                eventType: payload.state,
-                previousState,
-                willOverwriteStrategyChanges,
-                id: getUniqueChangeRequestId(uiConfig, changeRequestId),
-            },
-        });
-
         const path = `api/admin/projects/${project}/change-requests/${changeRequestId}/state`;
         const req = createRequest(path, {
             method: 'PUT',
@@ -114,7 +112,9 @@ export const useChangeRequestApi = () => {
             method: 'DELETE',
         });
 
-        return makeRequest(req.caller, req.id);
+        return trackChangeDiscarded.mutation(() =>
+            makeRequest(req.caller, req.id),
+        );
     };
 
     const editChange = async (
@@ -156,7 +156,9 @@ export const useChangeRequestApi = () => {
             method: 'DELETE',
         });
 
-        return makeRequest(req.caller, req.id);
+        return trackDraftDiscarded.mutation(() =>
+            makeRequest(req.caller, req.id),
+        );
     };
 
     const addComment = async (
@@ -164,19 +166,15 @@ export const useChangeRequestApi = () => {
         changeRequestId: string,
         text: string,
     ) => {
-        trackEvent('change_request', {
-            props: {
-                eventType: 'comment added',
-            },
-        });
-
         const path = `/api/admin/projects/${projectId}/change-requests/${changeRequestId}/comments`;
         const req = createRequest(path, {
             method: 'POST',
             body: JSON.stringify({ text }),
         });
 
-        return makeRequest(req.caller, req.id);
+        return trackCommentAdded.mutation(() =>
+            makeRequest(req.caller, req.id),
+        );
     };
 
     const updateTitle = async (
@@ -184,30 +182,21 @@ export const useChangeRequestApi = () => {
         changeRequestId: number,
         title: string,
     ) => {
-        trackEvent('change_request', {
-            props: {
-                eventType: 'title updated',
-            },
-        });
-
         const path = `api/admin/projects/${project}/change-requests/${changeRequestId}/title`;
         const req = createRequest(path, {
             method: 'PUT',
             body: JSON.stringify({ title }),
         });
 
-        return makeRequest(req.caller, req.id);
+        return trackTitleUpdated.mutation(() =>
+            makeRequest(req.caller, req.id),
+        );
     };
     const updateRequestedApprovers = async (
         project: string,
         changeRequestId: number,
         reviewers: number[],
     ) => {
-        trackEvent('change_request', {
-            props: {
-                eventType: 'approvers updated',
-            },
-        });
         const path = `api/admin/projects/${project}/change-requests/${changeRequestId}/approvers`;
         const req = createRequest(path, {
             method: 'PUT',

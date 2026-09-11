@@ -47,14 +47,19 @@ import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadg
 import { Badge } from 'component/common/Badge/Badge';
 import type { UiFlags } from 'interfaces/uiConfig';
 import { HiddenProjectIconWithTooltip } from './HiddenProjectIconWithTooltip/HiddenProjectIconWithTooltip.tsx';
-import { ChangeRequestPlausibleProvider } from 'component/changeRequest/ChangeRequestContext';
 import { ProjectApplications } from '../ProjectApplications/ProjectApplications.tsx';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ProjectArchived } from './ArchiveProject/ProjectArchived.tsx';
-import { useEventTracker } from '../../../hooks/useEventTracker.ts';
 import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
-import { ProjectStatusModal } from './ProjectStatus/ProjectStatusModal.tsx';
-import { projectDeletedTracking } from 'component/project/projectTracking';
+import {
+    ProjectStatusModal,
+    type ProjectStatusOpenedFrom,
+} from './ProjectStatus/ProjectStatusModal.tsx';
+import {
+    projectDeletedTracking,
+    projectTabNavigatedTracking,
+} from 'component/project/projectTracking';
+import { useTracking } from 'hooks/useTracking';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -120,19 +125,16 @@ const ProjectStatusSvgWithMargin = styled(ProjectStatusSvg)(({ theme }) => ({
 
 const ProjectStatus = () => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const { trackEvent } = useEventTracker();
     const [projectStatusOpen, setProjectStatusOpen] = useState(
         searchParams.has('project-status'),
     );
+    const [openedFrom, setOpenedFrom] =
+        useState<ProjectStatusOpenedFrom>('deep-link');
     const openStatusModal = () => {
         searchParams.set('project-status', '');
         setSearchParams(searchParams);
+        setOpenedFrom('project-header');
         setProjectStatusOpen(true);
-        // tracked here rather than off the search param so that arriving via a
-        // deep link doesn't count as an open.
-        trackEvent('project-status', {
-            props: { action: 'opened' },
-        });
     };
     const closeStatusModal = () => {
         searchParams.delete('project-status');
@@ -151,6 +153,7 @@ const ProjectStatus = () => {
             </ProjectStatusButton>
             <ProjectStatusModal
                 open={projectStatusOpen}
+                openedFrom={openedFrom}
                 onClose={closeStatusModal}
                 onFollowLink={() => setProjectStatusOpen(false)}
             />
@@ -160,7 +163,7 @@ const ProjectStatus = () => {
 
 export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
-    const { trackEvent } = useEventTracker();
+    const trackTabNavigated = useTracking(projectTabNavigatedTracking);
     const params = useQueryParams();
     const { project, loading, error, refetch } = useProjectOverview(projectId);
     const ref = useLoading(loading, '[data-loading-project=true]');
@@ -174,11 +177,6 @@ export const Project = () => {
     const { favorite, unfavorite } = useFavoriteProjectsApi();
 
     const [showDelDialog, setShowDelDialog] = useState(false);
-
-    const [
-        changeRequestChangesWillOverwrite,
-        setChangeRequestChangesWillOverwrite,
-    ] = useState(false);
 
     const tabs: ITab[] = [
         {
@@ -326,11 +324,8 @@ export const Project = () => {
                                     value={tab.path}
                                     onClick={() => {
                                         if (tab.name !== 'flags') {
-                                            trackEvent('project-navigation', {
-                                                props: {
-                                                    eventType: tab.name,
-                                                    action: 'navigated',
-                                                },
+                                            trackTabNavigated('succeeded', {
+                                                tab: tab.name,
                                             });
                                         }
                                         navigate(
@@ -396,18 +391,7 @@ export const Project = () => {
                 />
                 <Route
                     path='change-requests/:id'
-                    element={
-                        <ChangeRequestPlausibleProvider
-                            value={{
-                                willOverwriteStrategyChanges:
-                                    changeRequestChangesWillOverwrite,
-                                registerWillOverwriteStrategyChanges: () =>
-                                    setChangeRequestChangesWillOverwrite(true),
-                            }}
-                        >
-                            <ChangeRequestOverview />
-                        </ChangeRequestPlausibleProvider>
-                    }
+                    element={<ChangeRequestOverview />}
                 />
                 <Route path='settings/*' element={<ProjectSettings />} />
                 <Route path='applications' element={<ProjectApplications />} />

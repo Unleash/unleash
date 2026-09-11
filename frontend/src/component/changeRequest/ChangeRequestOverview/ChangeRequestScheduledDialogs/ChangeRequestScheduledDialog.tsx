@@ -1,17 +1,20 @@
 import type { FC, ReactElement } from 'react';
 import { Alert, styled, Typography } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
+import type { Tracking } from 'utils/trackingEvents';
 
 export interface ChangeRequestScheduledDialogProps {
     title: string;
-    primaryButtonText: string;
+    primaryButtonText?: string;
     open: boolean;
-    onConfirm: () => void;
+    onConfirm?: () => Promise<unknown>;
+    onError?: (error: unknown) => void;
     onClose: () => void;
     scheduledTime?: string;
     message: string;
     permissionButton?: ReactElement;
     disabled?: boolean;
+    tracking: Tracking;
 }
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
@@ -26,6 +29,7 @@ export const ChangeRequestScheduledDialog: FC<
 > = ({
     open,
     onConfirm,
+    onError,
     onClose,
     title,
     primaryButtonText,
@@ -33,29 +37,53 @@ export const ChangeRequestScheduledDialog: FC<
     message,
     scheduledTime,
     permissionButton,
+    tracking,
 }) => {
     if (!scheduledTime) return null;
 
-    return (
-        <Dialogue
-            title={title}
-            primaryButtonText={primaryButtonText}
-            disabledPrimaryButton={disabled}
-            secondaryButtonText='Cancel'
-            open={open}
-            onClose={onClose}
-            onClick={() => onConfirm()}
-            permissionButton={permissionButton}
-            fullWidth
-        >
+    const content = (
+        <>
             <StyledAlert icon={false}>
-                There is a scheduled time to apply these changes set for{' '}
+                These changes are scheduled to be applied at{' '}
                 <strong>
                     <br />
                     {`${new Date(scheduledTime).toLocaleString()}`}
                 </strong>
             </StyledAlert>
             <Typography variant={'body1'}>{message}</Typography>
+        </>
+    );
+
+    if (onConfirm) {
+        return (
+            <Dialogue
+                title={title}
+                primaryButtonText={primaryButtonText}
+                disabledPrimaryButton={disabled}
+                secondaryButtonText='Cancel'
+                open={open}
+                onClose={onClose}
+                onSubmit={onConfirm}
+                onError={onError}
+                tracking={tracking}
+                fullWidth
+            >
+                {content}
+            </Dialogue>
+        );
+    }
+
+    return (
+        <Dialogue
+            title={title}
+            secondaryButtonText='Cancel'
+            open={open}
+            onClose={onClose}
+            permissionButton={permissionButton}
+            tracking={tracking}
+            fullWidth
+        >
+            {content}
         </Dialogue>
     );
 };

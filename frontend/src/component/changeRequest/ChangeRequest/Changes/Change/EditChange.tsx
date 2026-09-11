@@ -30,6 +30,8 @@ import { FeatureStrategyForm } from '../../../../feature/FeatureStrategy/Feature
 import { constraintId } from 'constants/constraintId.ts';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
 import { getChangeStrategyName } from 'utils/getChangeStrategyName.ts';
+import { changeEditedTracking } from 'component/changeRequest/changeRequestTracking';
+import { useTracking } from 'hooks/useTracking';
 
 interface IEditChangeProps {
     change:
@@ -68,6 +70,8 @@ export const EditChange = ({
 }: IEditChangeProps) => {
     const projectId = useRequiredPathParam('projectId');
     const { editChange } = useChangeRequestApi();
+    const editTracking = changeEditedTracking(change);
+    const trackEdit = useTracking(editTracking);
 
     const constraintsWithId = addIdSymbolToConstraints(change.payload);
 
@@ -117,7 +121,9 @@ export const EditChange = ({
     };
     const onInternalSubmit = async () => {
         try {
-            await editChange(projectId, changeRequestId, change.id, payload);
+            await trackEdit.mutation(() =>
+                editChange(projectId, changeRequestId, change.id, payload),
+            );
             onSubmit();
             setToastData({
                 text: 'Change updated',
@@ -135,6 +141,7 @@ export const EditChange = ({
             open={open}
             onClose={onClose}
             label='Edit change'
+            tracking={editTracking}
             onClick={(e) => {
                 e.stopPropagation();
             }}

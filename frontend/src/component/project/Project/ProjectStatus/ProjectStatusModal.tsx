@@ -9,7 +9,6 @@ import { ProjectHealthGrid } from './ProjectHealthGrid.tsx';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
 import FeedbackIcon from '@mui/icons-material/ChatOutlined';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useEventTracker } from 'hooks/useEventTracker';
 import { useTracking } from 'hooks/useTracking';
 import type { Tracking } from 'utils/trackingEvents';
 
@@ -75,8 +74,13 @@ const TooltipText = styled('p')(({ theme }) => ({
     },
 }));
 
+const lifecycleDocsOpenedTracking: Tracking = {
+    event: 'project-status',
+    type: 'lifecycle-docs-opened',
+};
+
 const LifecycleTooltip: FC = () => {
-    const { trackEvent } = useEventTracker();
+    const trackLifecycleDocsOpened = useTracking(lifecycleDocsOpenedTracking);
 
     return (
         <HelpIcon
@@ -96,12 +100,7 @@ const LifecycleTooltip: FC = () => {
                         <Link
                             href='https://docs.getunleash.io/concepts/feature-flags#feature-flag-lifecycle'
                             onClick={() =>
-                                trackEvent('project-status', {
-                                    props: {
-                                        eventType: 'view-lifecycle-docs',
-                                        action: 'clicked',
-                                    },
-                                })
+                                trackLifecycleDocsOpened('succeeded')
                             }
                         >
                             Read more in our documentation
@@ -137,15 +136,26 @@ const FeedbackButton = styled(Button)(({ theme }) => ({
     verticalAlign: 'baseline',
 }));
 
+export type ProjectStatusOpenedFrom = 'deep-link' | 'project-header';
+
 type Props = {
     open: boolean;
+    openedFrom: ProjectStatusOpenedFrom;
     onClose: () => void;
     onFollowLink: () => void;
 };
 
-const projectStatusTracking: Tracking = { event: 'project-status' };
+const feedbackOpenedTracking: Tracking = {
+    event: 'project-status',
+    type: 'feedback-opened',
+};
 
-export const ProjectStatusModal = ({ open, onClose, onFollowLink }: Props) => {
+export const ProjectStatusModal = ({
+    open,
+    openedFrom,
+    onClose,
+    onFollowLink,
+}: Props) => {
     const { openFeedback } = useFeedback('projectStatus', 'manual');
     const createFeedbackContext = () => {
         openFeedback({
@@ -157,10 +167,14 @@ export const ProjectStatusModal = ({ open, onClose, onFollowLink }: Props) => {
         });
     };
     const { isOss } = useUiConfig();
-    const { trackEvent } = useEventTracker();
+    const projectStatusTracking: Tracking = {
+        event: 'project-status',
+        props: { openedFrom },
+    };
     // The Close button is ours, so DynamicSidebarModal's own dismissal tracking
     // (close icon, backdrop, escape) never sees it.
     const trackProjectStatus = useTracking(projectStatusTracking);
+    const trackFeedbackOpened = useTracking(feedbackOpenedTracking);
 
     return (
         <DynamicSidebarModal
@@ -209,12 +223,7 @@ export const ProjectStatusModal = ({ open, onClose, onFollowLink }: Props) => {
                             <FeedbackButton
                                 variant='text'
                                 onClick={() => {
-                                    trackEvent('project-status', {
-                                        props: {
-                                            eventType: 'give-feedback',
-                                            action: 'clicked',
-                                        },
-                                    });
+                                    trackFeedbackOpened('succeeded');
                                     createFeedbackContext();
                                     onClose();
                                 }}

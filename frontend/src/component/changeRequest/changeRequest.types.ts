@@ -107,7 +107,7 @@ export interface IChangeRequestChangeBase {
     };
 }
 
-export type PlausibleChangeRequestState =
+export type ChangeRequestTrackedState =
     | Exclude<ChangeRequestState, 'Scheduled'>
     | 'Scheduled pending'
     | 'Scheduled failed'

@@ -1,4 +1,6 @@
 import type { FC } from 'react';
+import { useTracking } from 'hooks/useTracking';
+import { changeRequestListFilteredTracking } from 'component/changeRequest/changeRequestTracking';
 import { StyledContainer } from './ChangeRequestFilters.styles';
 import type { FilterChipsProps } from './ChangeRequestFilters.types';
 
@@ -21,11 +23,13 @@ export const StateFilterChips: FC<FilterChipsProps> = ({
     StyledChip,
 }) => {
     const activeStateFilter = getStateFilter(tableState.state?.values?.[0]);
+    const trackListFiltered = useTracking(changeRequestListFilteredTracking);
 
     const handleStateFilterChange = (filter: StateFilterType) => () => {
         if (filter === activeStateFilter) {
             return;
         }
+        trackListFiltered('succeeded', { filter });
         setTableState({ state: { operator: 'IS' as const, values: [filter] } });
     };
 

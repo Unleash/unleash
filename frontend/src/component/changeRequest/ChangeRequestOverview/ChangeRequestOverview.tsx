@@ -32,19 +32,23 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { changesCount } from '../changesCount.ts';
 import { ChangeRequestRejectDialogue } from './ChangeRequestRejectDialog/ChangeRequestRejectDialog.tsx';
 import { ApplyButton } from './ApplyButton/ApplyButton.tsx';
-import {
-    ChangeRequestApplyScheduledDialogue,
-    ChangeRequestRejectScheduledDialogue,
-} from './ChangeRequestScheduledDialogs/changeRequestScheduledDialogs.tsx';
+import { ChangeRequestScheduledDialog } from './ChangeRequestScheduledDialogs/ChangeRequestScheduledDialog.tsx';
+import { APPLY_CHANGE_REQUEST } from 'component/providers/AccessProvider/permissions';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { ScheduleChangeRequestDialog } from './ChangeRequestScheduledDialogs/ScheduleChangeRequestDialog.tsx';
 import {
+    type ChangeRequestTransitionState,
     isClosed,
-    type PlausibleChangeRequestState,
 } from '../changeRequest.types';
 import { useNavigate } from 'react-router';
 import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
 import { ChangeRequestRequestedApprovers } from './ChangeRequestRequestedApprovers/ChangeRequestRequestedApprovers.tsx';
 import { ChangeRequestIcon } from 'component/common/ChangeRequestIcon/ChangeRequestIcon.tsx';
+import { useTracking } from 'hooks/useTracking';
+import {
+    changeRequestTransitionTracking,
+    trackedState,
+} from 'component/changeRequest/changeRequestTracking';
 
 const breakpoint = 'md';
 
@@ -169,6 +173,13 @@ export const ChangeRequestOverview: FC = () => {
     const navigate = useNavigate();
     const _theme = useTheme();
 
+    const previousState = changeRequest && trackedState(changeRequest);
+    const transitionTracking = (state: ChangeRequestTransitionState) =>
+        changeRequestTransitionTracking(state, previousState);
+    const trackApproved = useTracking(transitionTracking('Approved'));
+    const trackApplied = useTracking(transitionTracking('Applied'));
+    const trackScheduled = useTracking(transitionTracking('Scheduled'));
+
     if (!changeRequest) {
         return null;
     }
@@ -177,21 +188,15 @@ export const ChangeRequestOverview: FC = () => {
         changeRequest.environment,
     );
 
-    const getCurrentState = (): PlausibleChangeRequestState => {
-        switch (changeRequest.state) {
-            case 'Scheduled':
-                return `${changeRequest.state} ${changeRequest.schedule.status}`;
-            default:
-                return changeRequest.state;
-        }
-    };
+    const onRequestError = (error: unknown) =>
+        setToastApiError(formatUnknownError(error));
 
     const onApplyChanges = async () => {
         try {
             setDisabled(true);
-            await changeState(projectId, Number(id), getCurrentState(), {
-                state: 'Applied',
-            });
+            await trackApplied.mutation(() =>
+                changeState(projectId, Number(id), { state: 'Applied' }),
+            );
             setShowApplyScheduledDialog(false);
             await refetchChangeRequest();
             refetchChangeRequestOpen();
@@ -210,10 +215,12 @@ export const ChangeRequestOverview: FC = () => {
     const onScheduleChangeRequest = async (scheduledDate: Date) => {
         try {
             setDisabled(true);
-            await changeState(projectId, Number(id), getCurrentState(), {
-                state: 'Scheduled',
-                scheduledAt: scheduledDate.toISOString(),
-            });
+            await trackScheduled.mutation(() =>
+                changeState(projectId, Number(id), {
+                    state: 'Scheduled',
+                    scheduledAt: scheduledDate.toISOString(),
+                }),
+            );
             setShowScheduleChangeDialog(false);
             refetchChangeRequest();
             refetchChangeRequestOpen();
@@ -249,19 +256,15 @@ export const ChangeRequestOverview: FC = () => {
     const onCancelChanges = async () => {
         try {
             setDisabled(true);
-            await changeState(projectId, Number(id), getCurrentState(), {
-                state: 'Cancelled',
-            });
+            await changeState(projectId, Number(id), { state: 'Cancelled' });
             setShowCancelDialog(false);
-            await refetchChangeRequest();
+            refetchChangeRequest();
             refetchChangeRequestOpen();
             refetchActionableChangeRequests();
             setToastData({
                 type: 'success',
                 text: 'Changes cancelled',
             });
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
         } finally {
             setDisabled(false);
         }
@@ -270,12 +273,12 @@ export const ChangeRequestOverview: FC = () => {
     const onReject = async (comment?: string) => {
         try {
             setDisabled(true);
-            await changeState(projectId, Number(id), getCurrentState(), {
+            await changeState(projectId, Number(id), {
                 state: 'Rejected',
                 comment,
             });
             setShowRejectDialog(false);
-            await refetchChangeRequest();
+            refetchChangeRequest();
 
             setToastData({
                 type: 'success',
@@ -283,8 +286,6 @@ export const ChangeRequestOverview: FC = () => {
             });
             refetchChangeRequestOpen();
             refetchActionableChangeRequests();
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
         } finally {
             setDisabled(false);
         }
@@ -293,9 +294,9 @@ export const ChangeRequestOverview: FC = () => {
     const onApprove = async () => {
         try {
             setDisabled(true);
-            await changeState(projectId, Number(id), getCurrentState(), {
-                state: 'Approved',
-            });
+            await trackApproved.mutation(() =>
+                changeState(projectId, Number(id), { state: 'Approved' }),
+            );
             await refetchChangeRequest();
             refetchActionableChangeRequests();
             refetchChangeRequestOpen();
@@ -559,8 +560,10 @@ export const ChangeRequestOverview: FC = () => {
                 </StyledDiv>
                 <Dialogue
                     open={showCancelDialog}
-                    onClick={onCancelChanges}
+                    onSubmit={onCancelChanges}
+                    onError={onRequestError}
                     onClose={onCancelAbort}
+                    tracking={transitionTracking('Cancelled')}
                     title='Cancel change request'
                 >
                     <Typography sx={{ marginBottom: 2 }}>
@@ -580,8 +583,10 @@ export const ChangeRequestOverview: FC = () => {
                 <ChangeRequestRejectDialogue
                     open={showRejectDialog}
                     onConfirm={onReject}
+                    onError={onRequestError}
                     onClose={onCancelReject}
                     disabled={disabled}
+                    tracking={transitionTracking('Rejected')}
                 />
                 <>
                     <ScheduleChangeRequestDialog
@@ -602,22 +607,41 @@ export const ChangeRequestOverview: FC = () => {
                                 : 'Schedule changes'
                         }
                         scheduledAt={scheduledAt}
+                        tracking={transitionTracking('Scheduled')}
                     />
-                    <ChangeRequestApplyScheduledDialogue
+                    <ChangeRequestScheduledDialog
+                        title='Apply changes'
+                        message='Applying the changes now means the scheduled time will be ignored'
                         open={showApplyScheduledDialog}
-                        onConfirm={onApplyChanges}
                         onClose={onApplyScheduledAbort}
                         scheduledTime={scheduledAt}
-                        disabled={!allowChangeRequestActions || disabled}
-                        projectId={projectId}
-                        environment={changeRequest.environment}
+                        permissionButton={
+                            <PermissionButton
+                                variant='contained'
+                                onClick={() => onApplyChanges()}
+                                projectId={projectId}
+                                permission={APPLY_CHANGE_REQUEST}
+                                environmentId={changeRequest.environment}
+                                disabled={
+                                    !allowChangeRequestActions || disabled
+                                }
+                            >
+                                Apply changes now
+                            </PermissionButton>
+                        }
+                        tracking={transitionTracking('Applied')}
                     />
-                    <ChangeRequestRejectScheduledDialogue
+                    <ChangeRequestScheduledDialog
+                        title='Reject changes'
+                        primaryButtonText='Reject changes'
+                        message='Rejecting this change request will delete its schedule and it can no longer be rescheduled or applied.'
                         open={showRejectScheduledDialog}
                         onConfirm={onReject}
+                        onError={onRequestError}
                         onClose={onRejectScheduledAbort}
                         scheduledTime={scheduledAt}
                         disabled={disabled}
+                        tracking={transitionTracking('Rejected')}
                     />
                 </>
             </ChangeRequestBody>

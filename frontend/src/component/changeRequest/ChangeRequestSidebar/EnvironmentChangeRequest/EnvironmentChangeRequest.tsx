@@ -23,6 +23,8 @@ import Input from 'component/common/Input/Input';
 import { ChangeRequestTitle } from './ChangeRequestTitle.tsx';
 import { UpdateCount } from 'component/changeRequest/UpdateCount';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { useTracking } from 'hooks/useTracking';
+import { changeRequestTransitionTracking } from 'component/changeRequest/changeRequestTracking';
 import { DraftChangeRequestActions } from '../DraftChangeRequestActions/DraftChangeRequestActions.tsx';
 import type { AvailableReviewerSchema } from 'hooks/api/getters/useAvailableChangeRequestReviewers/useAvailableChangeRequestReviewers.ts';
 
@@ -74,15 +76,20 @@ export const EnvironmentChangeRequest: FC<{
     const [title, setTitle] = useState(environmentChangeRequest.title);
     const { changeState, updateRequestedApprovers } = useChangeRequestApi();
     const [reviewers, setReviewers] = useState<AvailableReviewerSchema[]>([]);
+    const trackSentToReview = useTracking(
+        changeRequestTransitionTracking('In review', 'Draft'),
+    );
 
     const [disabled, setDisabled] = useState(false);
     const sendToReview = async (project: string) => {
         setDisabled(true);
         try {
-            await changeState(project, environmentChangeRequest.id, 'Draft', {
-                state: 'In review',
-                comment: commentText,
-            });
+            await trackSentToReview.mutation(() =>
+                changeState(project, environmentChangeRequest.id, {
+                    state: 'In review',
+                    comment: commentText,
+                }),
+            );
 
             if (reviewers && reviewers.length > 0) {
                 await updateRequestedApprovers(

@@ -101,7 +101,6 @@ export type UiFlags = {
     logRocketEnabled?: boolean;
     hubspotChatEnabled?: boolean;
     newModalDesign?: boolean;
-    newProfileDropdown?: boolean;
     learningLab?: Variant;
     floatingOnboardingChecklist?: boolean;
     flightRecorderFrontend?: Variant;

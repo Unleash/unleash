@@ -67,7 +67,6 @@ export type IFlagKey =
     | 'hubspotChatEnabled'
     | 'newModalDesign'
     | 'allowDeprecatedApiTokenMiddleware'
-    | 'newProfileDropdown'
     | 'serviceNowIntegration'
     | 'learningLab'
     | 'floatingOnboardingChecklist'
@@ -314,10 +313,6 @@ const flags: IFlags = {
     ),
     newModalDesign: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NEW_MODAL_DESIGN,
-        false,
-    ),
-    newProfileDropdown: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_PROFILE_DROPDOWN,
         false,
     ),
     learningLab: {

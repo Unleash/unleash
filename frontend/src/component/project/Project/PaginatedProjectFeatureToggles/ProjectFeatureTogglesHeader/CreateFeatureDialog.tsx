@@ -255,6 +255,8 @@ const CreateFeatureDialogContent = ({
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }
+        } else {
+            trackFlagCreation.validationFailed();
         }
     };
 
@@ -276,6 +278,12 @@ const CreateFeatureDialogContent = ({
             },
         });
 
+    const limitReached = globalFlagLimitReached
+        ? 'global'
+        : projectFlagLimitReached
+          ? 'project'
+          : 'none';
+
     const { projects } = useProjects();
     const { featureTypes } = useFeatureTypes();
     const FeatureTypeIcon = getFeatureTypeIcons(type);
@@ -294,7 +302,7 @@ const CreateFeatureDialogContent = ({
     }, [project, projects]);
 
     const onDialogClose = (method: DialogDismissMethod) => {
-        trackFlagCreation('dismissed', { method });
+        trackFlagCreation('dismissed', { method, limitReached });
         setStoredFlagConfig({
             name,
             tags,
@@ -487,6 +495,7 @@ const CreateFeatureDialogContent = ({
                         onClose={() => {
                             trackFlagCreation('dismissed', {
                                 method: 'cancel-button',
+                                limitReached,
                             });
                             onClose();
                         }}

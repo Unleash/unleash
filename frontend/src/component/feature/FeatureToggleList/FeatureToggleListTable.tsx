@@ -15,6 +15,8 @@ import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { ExportDialog } from './ExportDialog.tsx';
+import { flagsExportedTracking } from './exportTracking';
+import { flagsSearchedTracking } from './searchTracking';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { focusable } from 'themes/themeStyles';
 import { FeatureLifecycleCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
@@ -22,7 +24,7 @@ import useToast from 'hooks/useToast';
 import { FeaturesOverviewToggleFilters } from './FeaturesOverviewLifecycleFilters/FeaturesOverviewToggleFilters.tsx';
 import { useTableState } from 'hooks/useTableState';
 import useLoading from 'hooks/useLoading';
-import { useEventTracker } from 'hooks/useEventTracker';
+import { useTracking } from 'hooks/useTracking';
 import { flagsListProps, flagsListTableTracking } from './flagsListTracking';
 import {
     useGlobalFeatureSearch,
@@ -67,7 +69,7 @@ const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
 export const FeatureToggleListTable: FC = () => {
     const theme = useTheme();
     const { isOss } = useUiConfig();
-    const { trackEvent } = useEventTracker();
+    const trackFlagsSearched = useTracking(flagsSearchedTracking('features'));
     const { environments } = useEnvironments();
     const enabledEnvironments = environments
         .filter((env) => env.enabled)
@@ -259,12 +261,7 @@ export const FeatureToggleListTable: FC = () => {
 
     const setSearchValue = (query = '') => {
         setTableState({ query });
-        trackEvent('search-bar', {
-            props: {
-                screen: 'features',
-                length: query.length,
-            },
-        });
+        trackFlagsSearched('succeeded', { queryLength: query.length });
     };
 
     const rows = table.getRowModel().rows;
@@ -379,6 +376,10 @@ export const FeatureToggleListTable: FC = () => {
                 data={data}
                 onClose={() => setShowExportDialog(false)}
                 environments={enabledEnvironments}
+                tracking={{
+                    ...flagsExportedTracking,
+                    props: { source: 'flags-list', flagCount: data.length },
+                }}
             />
             <ArchivedFeatureDeleteConfirm
                 deletedFeatures={[deletedFeature?.name!]}

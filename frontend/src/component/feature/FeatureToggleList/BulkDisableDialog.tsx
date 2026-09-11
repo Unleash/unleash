@@ -11,6 +11,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { flagsToggledTracking } from './batchOperationsTracking';
 
 interface IExportDialogProps {
     showExportDialog: boolean;
@@ -59,42 +60,49 @@ export const BulkDisableDialog = ({
             label: env,
         }));
 
-    const onClick = async () => {
-        try {
-            if (isChangeRequestConfigured(selected)) {
-                await addChange(
-                    projectId,
-                    selected,
-                    data.map((feature) => ({
-                        action: 'updateEnabled',
-                        feature: feature.name,
-                        payload: { enabled: false },
-                    })),
-                );
-                refetchChangeRequests();
-                setToastData({
-                    type: 'success',
-                    text: 'Changes added to draft',
-                });
-            } else {
-                await bulkToggleFeaturesEnvironmentOff(
-                    projectId,
-                    data.map((feature) => feature.name),
-                    selected,
-                );
-                setToastData({
-                    type: 'success',
-                    text: 'Feature flags disabled',
-                });
-            }
-            onClose();
-            onConfirm?.();
-        } catch (e: unknown) {
-            setToastApiError(formatUnknownError(e));
-        }
+    const changeRequestConfigured = isChangeRequestConfigured(selected);
+
+    const tracking = {
+        ...flagsToggledTracking,
+        props: {
+            newState: 'disabled',
+            flagCount: data.length,
+            viaChangeRequest: changeRequestConfigured,
+        },
     };
 
-    const buttonText = isChangeRequestConfigured(selected)
+    const disableFlags = async () => {
+        if (changeRequestConfigured) {
+            await addChange(
+                projectId,
+                selected,
+                data.map((feature) => ({
+                    action: 'updateEnabled',
+                    feature: feature.name,
+                    payload: { enabled: false },
+                })),
+            );
+            refetchChangeRequests();
+            setToastData({
+                type: 'success',
+                text: 'Changes added to draft',
+            });
+        } else {
+            await bulkToggleFeaturesEnvironmentOff(
+                projectId,
+                data.map((feature) => feature.name),
+                selected,
+            );
+            setToastData({
+                type: 'success',
+                text: 'Feature flags disabled',
+            });
+        }
+        onClose();
+        onConfirm?.();
+    };
+
+    const buttonText = changeRequestConfigured
         ? 'Add to change request'
         : 'Disable flags';
 
@@ -103,7 +111,9 @@ export const BulkDisableDialog = ({
             open={showExportDialog}
             title='Disable feature flags'
             onClose={onClose}
-            onClick={onClick}
+            onSubmit={disableFlags}
+            onError={(error) => setToastApiError(formatUnknownError(error))}
+            tracking={tracking}
             primaryButtonText={buttonText}
             secondaryButtonText='Cancel'
         >
@@ -120,7 +130,7 @@ export const BulkDisableDialog = ({
                     onChange={(option: string) => setSelected(option)}
                 />
                 <ConditionallyRender
-                    condition={isChangeRequestConfigured(selected)}
+                    condition={changeRequestConfigured}
                     show={
                         <SpacedAlert severity='warning'>
                             Change requests are enabled for this environment.

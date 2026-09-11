@@ -56,8 +56,14 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
     const [environment, setEnvironment] = useState('');
     const [importPayload, setImportPayload] = useState('');
     const [activeTab, setActiveTab] = useState<ImportMode>('file');
+    // Dropping a file switches the tab to 'code', so activeTab alone can't tell file from code.
+    const [importSource, setImportSource] = useState<ImportMode>('file');
 
-    const trackImportCompleted = useTracking(importCompletedTracking);
+    const importTracking = {
+        ...importCompletedTracking,
+        props: { importSource },
+    };
+    const trackImportCompleted = useTracking(importTracking);
 
     const close = () => {
         setOpen(false);
@@ -79,6 +85,7 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
         setEnvironment('');
         setImportPayload('');
         setActiveTab('file');
+        setImportSource('file');
     };
 
     return (
@@ -86,7 +93,7 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
             open={open}
             onClose={close}
             label='Import flags'
-            tracking={importCompletedTracking}
+            tracking={importTracking}
         >
             <ModalContentContainer>
                 <TimelineContainer>
@@ -115,7 +122,10 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
                                     activeTab={activeTab}
                                     setActiveTab={setActiveTab}
                                     importPayload={importPayload}
-                                    setImportPayload={setImportPayload}
+                                    setImportPayload={(payload, source) => {
+                                        setImportPayload(payload);
+                                        setImportSource(source);
+                                    }}
                                 />
                             }
                             actions={
@@ -138,6 +148,7 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
                             onBack={() => setImportStage('configure')}
                             onSubmit={() => setImportStage('import')}
                             onClose={cancel}
+                            tracking={importTracking}
                         />
                     }
                 />
@@ -149,6 +160,7 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
                             environment={environment}
                             payload={importPayload}
                             onClose={close}
+                            tracking={importTracking}
                         />
                     }
                 />

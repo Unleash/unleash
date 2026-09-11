@@ -22,7 +22,6 @@ test('should render bulk enable dialog in regular mode', async () => {
             },
         ],
         onClose: () => {},
-        onConfirm: () => {},
         environments: ['env1', 'env2'],
         projectId: 'project1',
     };
@@ -91,7 +90,6 @@ test('should render bulk enable dialog in change request mode', async () => {
             },
         ],
         onClose: () => {},
-        onConfirm: () => {},
         environments: ['env1', 'env2'],
         projectId: 'project1',
     };

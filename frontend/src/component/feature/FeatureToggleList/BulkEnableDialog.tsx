@@ -11,6 +11,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { flagsToggledTracking } from './batchOperationsTracking';
 
 interface IExportDialogProps {
     showExportDialog: boolean;
@@ -59,43 +60,49 @@ export const BulkEnableDialog = ({
             label: env,
         }));
 
-    const onClick = async () => {
-        try {
-            if (isChangeRequestConfigured(selected)) {
-                await addChange(
-                    projectId,
-                    selected,
-                    data.map((feature) => ({
-                        action: 'updateEnabled',
-                        feature: feature.name,
-                        payload: { enabled: true },
-                    })),
-                );
-                refetchChangeRequests();
-                setToastData({
-                    type: 'success',
-                    text: 'Changes added to draft',
-                });
-            } else {
-                await bulkToggleFeaturesEnvironmentOn(
-                    projectId,
-                    data.map((feature) => feature.name),
-                    selected,
-                );
-                setToastData({
-                    type: 'success',
-                    text: 'Feature flags enabled',
-                });
-            }
+    const changeRequestConfigured = isChangeRequestConfigured(selected);
 
-            onClose();
-            onConfirm?.();
-        } catch (e: unknown) {
-            setToastApiError(formatUnknownError(e));
-        }
+    const tracking = {
+        ...flagsToggledTracking,
+        props: {
+            newState: 'enabled',
+            flagCount: data.length,
+            viaChangeRequest: changeRequestConfigured,
+        },
     };
 
-    const buttonText = isChangeRequestConfigured(selected)
+    const enableFlags = async () => {
+        if (changeRequestConfigured) {
+            await addChange(
+                projectId,
+                selected,
+                data.map((feature) => ({
+                    action: 'updateEnabled',
+                    feature: feature.name,
+                    payload: { enabled: true },
+                })),
+            );
+            refetchChangeRequests();
+            setToastData({
+                type: 'success',
+                text: 'Changes added to draft',
+            });
+        } else {
+            await bulkToggleFeaturesEnvironmentOn(
+                projectId,
+                data.map((feature) => feature.name),
+                selected,
+            );
+            setToastData({
+                type: 'success',
+                text: 'Feature flags enabled',
+            });
+        }
+        onClose();
+        onConfirm?.();
+    };
+
+    const buttonText = changeRequestConfigured
         ? 'Add to change request'
         : 'Enable flags';
 
@@ -104,7 +111,9 @@ export const BulkEnableDialog = ({
             open={showExportDialog}
             title='Enable feature flags'
             onClose={onClose}
-            onClick={onClick}
+            onSubmit={enableFlags}
+            onError={(error) => setToastApiError(formatUnknownError(error))}
+            tracking={tracking}
             primaryButtonText={buttonText}
             secondaryButtonText='Cancel'
         >
@@ -121,7 +130,7 @@ export const BulkEnableDialog = ({
                     onChange={(option: string) => setSelected(option)}
                 />
                 <ConditionallyRender
-                    condition={isChangeRequestConfigured(selected)}
+                    condition={changeRequestConfigured}
                     show={
                         <SpacedAlert severity='warning'>
                             Change requests are enabled for this environment.

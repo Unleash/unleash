@@ -14,6 +14,8 @@ import { Box } from '@mui/system';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useProjectFeatureSearch } from '../../PaginatedProjectFeatureToggles/useProjectFeatureSearch.ts';
+import { useTracking } from 'hooks/useTracking';
+import type { Tracking } from 'utils/trackingEvents';
 
 export const ImportStatusArea = styled(Box)(({ theme }) => ({
     padding: theme.spacing(4, 2, 2, 2),
@@ -63,16 +65,22 @@ export const ImportStage: FC<{
     project: string;
     payload: string;
     onClose: () => void;
-}> = ({ environment, project, payload, onClose }) => {
+    tracking: Tracking;
+}> = ({ environment, project, payload, onClose, tracking }) => {
     const { createImport, loading, errors } = useImportApi();
     const { refetch: refreshProject } = useProjectFeatureSearch(project);
     const { refetch: refreshChangeRequests } =
         usePendingChangeRequests(project);
     const { setToastData } = useToast();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(project);
+    const trackImportCompleted = useTracking(tracking);
 
     useEffect(() => {
-        createImport({ environment, project, data: JSON.parse(payload) })
+        const data = JSON.parse(payload);
+        trackImportCompleted
+            .mutation(() => createImport({ environment, project, data }), {
+                flagCount: data.features?.length ?? 0,
+            })
             .then(() => {
                 refreshProject();
                 refreshChangeRequests();

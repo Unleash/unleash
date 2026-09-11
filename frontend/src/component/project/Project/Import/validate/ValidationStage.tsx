@@ -13,7 +13,7 @@ import { IMPORT_CONFIGURATION_BUTTON } from 'utils/testIds';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { useTracking } from 'hooks/useTracking';
-import { importCompletedTracking } from '../importTracking.ts';
+import type { Tracking } from 'utils/trackingEvents';
 
 const ImportInfoContainer = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.elevation2,
@@ -92,10 +92,19 @@ export const ValidationStage: FC<{
     onClose: () => void;
     onSubmit: () => void;
     onBack: () => void;
-}> = ({ environment, project, payload, onClose, onBack, onSubmit }) => {
+    tracking: Tracking;
+}> = ({
+    environment,
+    project,
+    payload,
+    onClose,
+    onBack,
+    onSubmit,
+    tracking,
+}) => {
     const { validateImport } = useValidateImportApi();
     const { setToastData } = useToast();
-    const trackImportCompleted = useTracking(importCompletedTracking);
+    const trackImportCompleted = useTracking(tracking);
     const [validationResult, setValidationResult] = useState<IValidationSchema>(
         { errors: [], warnings: [], permissions: [] },
     );

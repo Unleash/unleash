@@ -9,6 +9,7 @@ import type { FeatureSchema } from 'openapi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender.tsx';
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates.ts';
+import type { Tracking } from 'utils/trackingEvents';
 
 interface IExportDialogProps {
     showExportDialog: boolean;
@@ -17,6 +18,7 @@ interface IExportDialogProps {
     onClose: () => void;
     onConfirm?: () => void;
     environments: string[];
+    tracking: Tracking;
 }
 
 const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
@@ -31,6 +33,7 @@ export const ExportDialog = ({
     onClose,
     onConfirm,
     environments,
+    tracking,
 }: IExportDialogProps) => {
     const [selected, setSelected] = useState(environments[0]);
     const { createExport } = useExportApi();
@@ -64,21 +67,15 @@ export const ExportDialog = ({
         ref.current?.removeChild(link);
     };
 
-    const onClick = async () => {
-        try {
-            const payload = {
-                features: data.map((feature) => feature.name),
-                environment: selected,
-                project,
-            };
-            const res = await createExport(payload);
-            const body = await res.json();
-            downloadFile(body);
-            onClose();
-            onConfirm?.();
-        } catch (e: unknown) {
-            setToastApiError(formatUnknownError(e));
-        }
+    const exportFlags = async () => {
+        const res = await createExport({
+            features: data.map((feature) => feature.name),
+            environment: selected,
+            project,
+        });
+        downloadFile(await res.json());
+        onClose();
+        onConfirm?.();
     };
 
     return (
@@ -86,7 +83,9 @@ export const ExportDialog = ({
             open={showExportDialog}
             title='Export feature flag configuration'
             onClose={onClose}
-            onClick={onClick}
+            onSubmit={exportFlags}
+            onError={(error) => setToastApiError(formatUnknownError(error))}
+            tracking={tracking}
             primaryButtonText='Export selection'
             secondaryButtonText='Cancel'
         >

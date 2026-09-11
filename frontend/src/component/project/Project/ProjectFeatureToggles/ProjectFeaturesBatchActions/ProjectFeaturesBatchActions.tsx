@@ -2,12 +2,13 @@ import { type FC, useMemo, useState } from 'react';
 import { Button } from '@mui/material';
 import type { FeatureSchema } from 'openapi';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
+import { flagsExportedTracking } from 'component/feature/FeatureToggleList/exportTracking';
 import { ArchiveButton } from './ArchiveButton.tsx';
 import { MoreActions } from './MoreActions.tsx';
 import { ManageTags } from './ManageTags.tsx';
-import { useEventTracker } from 'hooks/useEventTracker';
 import { BulkDisableDialog } from 'component/feature/FeatureToggleList/BulkDisableDialog';
 import { BulkEnableDialog } from 'component/feature/FeatureToggleList/BulkEnableDialog';
+
 interface IProjectFeaturesBatchActionsProps {
     selectedIds: string[];
     data: FeatureSchema[];
@@ -22,7 +23,6 @@ export const ProjectFeaturesBatchActions: FC<
     const [showExportDialog, setShowExportDialog] = useState(false);
     const [showBulkEnableDialog, setShowBulkEnableDialog] = useState(false);
     const [showBulkDisableDialog, setShowBulkDisableDialog] = useState(false);
-    const { trackEvent } = useEventTracker();
     const selectedData = useMemo(
         () => data.filter((d) => selectedIds.includes(d.name)),
         [data, selectedIds],
@@ -35,31 +35,6 @@ export const ProjectFeaturesBatchActions: FC<
             .filter((env) => env !== undefined) as string[];
         return Array.from(new Set(envs));
     }, [selectedData]);
-
-    const confirmExport = () => {
-        onChange?.();
-        trackEvent('batch_operations', {
-            props: {
-                eventType: 'features exported',
-            },
-        });
-    };
-    const confirmBulkEnabled = () => {
-        onChange?.();
-        trackEvent('batch_operations', {
-            props: {
-                eventType: 'features enabled',
-            },
-        });
-    };
-    const confirmBulkDisabled = () => {
-        onChange?.();
-        trackEvent('batch_operations', {
-            props: {
-                eventType: 'features disabled',
-            },
-        });
-    };
 
     const confirmArchive = () => {
         onChange?.();
@@ -110,7 +85,14 @@ export const ProjectFeaturesBatchActions: FC<
                 data={selectedData}
                 onClose={() => setShowExportDialog(false)}
                 environments={environments}
-                onConfirm={confirmExport}
+                onConfirm={onChange}
+                tracking={{
+                    ...flagsExportedTracking,
+                    props: {
+                        source: 'batch-actions',
+                        flagCount: selectedData.length,
+                    },
+                }}
             />
             <BulkEnableDialog
                 showExportDialog={showBulkEnableDialog}
@@ -118,7 +100,7 @@ export const ProjectFeaturesBatchActions: FC<
                 onClose={() => setShowBulkEnableDialog(false)}
                 environments={environments}
                 projectId={projectId}
-                onConfirm={confirmBulkEnabled}
+                onConfirm={onChange}
             />
             <BulkDisableDialog
                 showExportDialog={showBulkDisableDialog}
@@ -126,7 +108,7 @@ export const ProjectFeaturesBatchActions: FC<
                 onClose={() => setShowBulkDisableDialog(false)}
                 environments={environments}
                 projectId={projectId}
-                onConfirm={confirmBulkDisabled}
+                onConfirm={onChange}
             />
         </>
     );

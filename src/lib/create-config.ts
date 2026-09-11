@@ -176,6 +176,11 @@ function loadRateLimitingConfig(options: IUnleashOptions): IRateLimiting {
         20_000,
     );
 
+    const adminApiMaxPerMinute = parseEnvVarNumber(
+        process.env.ADMIN_API_RATE_LIMIT_PER_MINUTE,
+        6000,
+    );
+
     const defaultRateLimitOptions: IRateLimiting = {
         createUserMaxPerMinute,
         simpleLoginMaxPerMinute,
@@ -184,6 +189,7 @@ function loadRateLimitingConfig(options: IUnleashOptions): IRateLimiting {
         callSignalEndpointMaxPerSecond,
         tokenAuthenticationMaxPerMinute,
         sdkApiMaxPerMinute,
+        adminApiMaxPerMinute,
     };
     return mergeAll([defaultRateLimitOptions, options.rateLimiting || {}]);
 }

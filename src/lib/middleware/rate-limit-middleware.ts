@@ -59,6 +59,7 @@ const formatRateLimitRule = (
 const createRateLimitRules = (config: IUnleashConfig): RateLimitRule[] => {
     const perMinute = { windowMs: minutesToMilliseconds(1) };
     const perSecond = { windowMs: secondsToMilliseconds(1) };
+    const adminApiPath = ['/api/admin'];
     const supportedSdkApiPaths = ['/api/client', '/api/frontend'];
     const deprecatedProxyApiPaths = [
         '/api/proxy',
@@ -67,6 +68,13 @@ const createRateLimitRules = (config: IUnleashConfig): RateLimitRule[] => {
     ];
 
     return [
+        {
+            pathPrefixes: adminApiPath,
+            beforeAuthentication: {
+                ...perMinute,
+                limit: config.rateLimiting.adminApiMaxPerMinute,
+            },
+        },
         {
             afterAuthentication: {
                 tokenKinds: [AuthorizationTokenKind.ACCOUNT_ACCESS],

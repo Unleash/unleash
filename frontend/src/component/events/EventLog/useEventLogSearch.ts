@@ -5,7 +5,8 @@ import mapValues from 'lodash.mapvalues';
 import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
 import type { SearchEventsParams } from 'openapi';
 import type { FilterItemParamHolder } from 'component/filter/Filters/Filters';
-import { format, subYears } from 'date-fns';
+import { format, parseISO, subYears } from 'date-fns';
+import { formatInTimeZone } from 'date-fns-tz';
 import { autocorrectDateRange } from 'component/filter/autocorrectDateRange';
 import { SafeNumberParam } from 'utils/safeNumberParam';
 import { DEFAULT_PAGE_LIMIT } from 'utils/paginationConfig';
@@ -53,16 +54,17 @@ export const useEventLogSearch = (
     storageKey = 'event-log',
     refreshInterval = 15 * 1000,
 ) => {
+    const today = formatInTimeZone(new Date(), 'UTC', 'yyyy-MM-dd');
     const stateConfig = {
         offset: withDefault(SafeNumberParam, 0),
         limit: withDefault(SafeNumberParam, DEFAULT_PAGE_LIMIT),
         query: StringParam,
         from: withDefault(FilterItemParam, {
-            values: [format(subYears(new Date(), 1), 'yyyy-MM-dd')],
+            values: [format(subYears(parseISO(today), 1), 'yyyy-MM-dd')],
             operator: 'IS',
         }),
         to: withDefault(FilterItemParam, {
-            values: [format(new Date(), 'yyyy-MM-dd')],
+            values: [today],
             operator: 'IS',
         }),
         createdBy: FilterItemParam,

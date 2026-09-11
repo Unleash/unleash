@@ -17,7 +17,8 @@ import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveD
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { useNavigate } from 'react-router';
 import { useReminders } from './useReminders.ts';
-import { useEventTracker } from 'hooks/useEventTracker';
+import { useTracking } from 'hooks/useTracking';
+import { reminderSnoozedTracking } from '../FeatureOverview/FeatureLifecycle/lifecycleTracking';
 import { useUncomplete } from '../FeatureOverview/FeatureLifecycle/useUncomplete.ts';
 import { flagArchivedTracking } from 'component/feature/flagActionsTracking';
 
@@ -31,7 +32,7 @@ const ActionsBox = styled(Box)(({ theme }) => ({
     alignItems: 'center',
 }));
 
-type ReminderType = 'complete' | 'removeCode' | 'archive' | null;
+type ReminderType = 'complete' | 'remove-code' | 'archive' | null;
 
 export const COMPLETE_REMINDER_DAYS = 30;
 export const REMOVE_CODE_REMINDER_DAYS = 3;
@@ -41,18 +42,17 @@ export const CleanupReminder: FC<{
     onChange: () => void;
 }> = ({ feature, onChange }) => {
     const navigate = useNavigate();
-    const { trackEvent } = useEventTracker();
-
     const [markCompleteDialogueOpen, setMarkCompleteDialogueOpen] =
         useState(false);
     const [archiveDialogueOpen, setArchiveDialogueOpen] = useState(false);
+
+    const currentStage = populateCurrentStage(feature);
     const { onUncompleteHandler, loading } = useUncomplete({
         feature: feature.name,
         project: feature.project,
+        stage: currentStage,
         onChange,
     });
-
-    const currentStage = populateCurrentStage(feature);
     const isRelevantType =
         feature.type === 'release' || feature.type === 'experiment';
     const enteredStageAt = currentStage?.enteredStageAt;
@@ -78,7 +78,7 @@ export const CleanupReminder: FC<{
                 return 'archive';
             }
             if (daysInStage > REMOVE_CODE_REMINDER_DAYS) {
-                return 'removeCode';
+                return 'remove-code';
             }
         }
 
@@ -86,8 +86,16 @@ export const CleanupReminder: FC<{
     };
 
     const reminder = determineReminder();
+    const trackReminderSnoozed = useTracking(
+        reminderSnoozedTracking({ name: feature.name }),
+    );
 
     if (!reminder) return null;
+
+    const onSnooze = () => {
+        snoozeReminder(feature.name);
+        trackReminderSnoozed('succeeded', { reminder });
+    };
 
     return (
         <StyledBox>
@@ -123,6 +131,7 @@ export const CleanupReminder: FC<{
                         projectId={feature.project}
                         featureId={feature.name}
                         onComplete={onChange}
+                        openedFrom='reminder-banner'
                     />
                 </>
             )}
@@ -134,17 +143,7 @@ export const CleanupReminder: FC<{
                         icon={<CleaningServicesIcon />}
                         action={
                             <ActionsBox>
-                                <Button
-                                    size='medium'
-                                    onClick={() => {
-                                        snoozeReminder(feature.name);
-                                        trackEvent('feature-lifecycle', {
-                                            props: {
-                                                eventType: 'snoozeReminder',
-                                            },
-                                        });
-                                    }}
-                                >
+                                <Button size='medium' onClick={onSnooze}>
                                     Remind me later
                                 </Button>
                                 <PermissionButton
@@ -187,23 +186,13 @@ export const CleanupReminder: FC<{
                 </>
             )}
 
-            {reminder === 'removeCode' && (
+            {reminder === 'remove-code' && (
                 <Alert
                     severity='warning'
                     icon={<CleaningServicesIcon />}
                     action={
                         <ActionsBox>
-                            <Button
-                                size='medium'
-                                onClick={() => {
-                                    snoozeReminder(feature.name);
-                                    trackEvent('feature-lifecycle', {
-                                        props: {
-                                            eventType: 'snoozeReminder',
-                                        },
-                                    });
-                                }}
-                            >
+                            <Button size='medium' onClick={onSnooze}>
                                 Remind me later
                             </Button>
                             <PermissionButton

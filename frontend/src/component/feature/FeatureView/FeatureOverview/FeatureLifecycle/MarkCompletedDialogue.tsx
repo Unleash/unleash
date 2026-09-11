@@ -6,7 +6,13 @@ import useFeatureLifecycleApi from 'hooks/api/actions/useFeatureLifecycleApi/use
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SingleVariantOptions } from './SingleVariantOptions.tsx';
 import { useParentVariantOptions } from 'hooks/api/getters/useFeatureDependencyOptions/useFeatureDependencyOptions';
-import { useEventTracker } from 'hooks/useEventTracker';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
+import {
+    flagCompletedTracking,
+    type LifecycleCompletedStatus,
+    type LifecycleOpenedFrom,
+} from './lifecycleTracking';
 
 interface IMarkCompletedDialogueProps {
     isOpen: boolean;
@@ -14,9 +20,8 @@ interface IMarkCompletedDialogueProps {
     onComplete: () => void;
     projectId: string;
     featureId: string;
+    openedFrom: LifecycleOpenedFrom;
 }
-
-type Status = 'kept' | 'discarded' | 'kept-with-variant';
 
 export const MarkCompletedDialogue = ({
     projectId,
@@ -24,44 +29,46 @@ export const MarkCompletedDialogue = ({
     isOpen,
     setIsOpen,
     onComplete,
+    openedFrom,
 }: IMarkCompletedDialogueProps) => {
     const { markFeatureCompleted } = useFeatureLifecycleApi();
+    const { setToastApiError } = useToast();
     const { parentVariantOptions: variantOptions } = useParentVariantOptions(
         projectId,
         featureId,
     );
-    const [status, setStatus] = useState<Status>('kept');
+    const [status, setStatus] = useState<LifecycleCompletedStatus>('kept');
     const [variant, setVariant] = useState<string | undefined>(undefined);
 
-    const { trackEvent } = useEventTracker();
+    const tracking = flagCompletedTracking({
+        name: featureId,
+        openedFrom,
+        status,
+        variantOptionsCount: variantOptions.length,
+    });
 
-    const onClick = async () => {
-        const sentStatus = status === 'kept-with-variant' ? 'kept' : status;
+    const onConfirm = async () => {
         await markFeatureCompleted(featureId, projectId, {
-            status: sentStatus,
+            status: status === 'kept-with-variant' ? 'kept' : status,
             statusValue: variant,
         });
         setIsOpen(false);
         onComplete();
-        trackEvent('feature-lifecycle', {
-            props: {
-                eventType: 'complete',
-                status: sentStatus,
-            },
-        });
     };
 
     return (
         <Dialogue
             open={isOpen}
             title='Mark completed'
+            tracking={tracking}
             onClose={() => {
                 setIsOpen(false);
             }}
             disabledPrimaryButton={
-                status === 'kept-with-variant' && variant === null
+                status === 'kept-with-variant' && variant === undefined
             }
-            onClick={onClick}
+            onSubmit={onConfirm}
+            onError={(error) => setToastApiError(formatUnknownError(error))}
             primaryButtonText={'Mark completed'}
             secondaryButtonText='Cancel'
         >
@@ -92,7 +99,7 @@ export const MarkCompletedDialogue = ({
                     name='selected'
                     sx={{ gap: (theme) => theme.spacing(0.5) }}
                     onChange={(_e, value) => {
-                        setStatus(value as Status);
+                        setStatus(value as LifecycleCompletedStatus);
                     }}
                 >
                     <LegalValueLabel

@@ -371,6 +371,7 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
                     projectId={feature.project}
                     featureId={feature.name}
                     onComplete={onChange}
+                    openedFrom='flag-metadata'
                 />
             ) : null}
         </>

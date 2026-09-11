@@ -102,6 +102,7 @@ export const useRowActions = (
                 projectId={projectId}
                 featureId={showMarkCompletedDialogue.featureId}
                 onComplete={onChange}
+                openedFrom='project-list'
             />
             <ArchivedFeatureDeleteConfirm
                 deletedFeatures={[showFeatureDeleteDialogue.featureId]}

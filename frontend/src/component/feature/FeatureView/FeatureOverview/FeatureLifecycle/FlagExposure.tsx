@@ -67,6 +67,7 @@ export const FlagExposure: FC<{
                     projectId={feature.project}
                     featureId={feature.name}
                     onComplete={refetchFeature}
+                    openedFrom='personal-dashboard'
                 />
             ) : null}
         </Box>

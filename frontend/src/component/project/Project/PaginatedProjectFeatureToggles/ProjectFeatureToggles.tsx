@@ -570,6 +570,7 @@ export const ProjectFeatureToggles = ({
                                 />
                             </FilterRow>
                             <FavoriteIconHeader
+                                scope='project'
                                 isActive={tableState.favoritesFirst}
                                 onClick={() =>
                                     setTableState({

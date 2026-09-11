@@ -326,6 +326,7 @@ export const FeatureToggleListTable: FC = () => {
                     state={filterState}
                 />
                 <FavoriteIconHeader
+                    scope='global'
                     isActive={tableState.favoritesFirst}
                     onClick={() =>
                         setTableState({

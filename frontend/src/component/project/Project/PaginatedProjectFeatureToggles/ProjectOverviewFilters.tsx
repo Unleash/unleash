@@ -8,7 +8,8 @@ import {
 import { useProjectFlagCreators } from 'hooks/api/getters/useProjectFlagCreators/useProjectFlagCreators';
 import { formatTag } from 'utils/format-tag';
 import { styled } from '@mui/material';
-import { useEventTracker } from 'hooks/useEventTracker';
+import { useTracking } from 'hooks/useTracking';
+import { favoritesFilteredTracking } from 'component/filter/favoritesFilteredTracking';
 
 type ProjectOverviewFiltersProps = {
     state: FilterItemParamHolder;
@@ -28,16 +29,13 @@ export const ProjectOverviewFilters: FC<ProjectOverviewFiltersProps> = ({
     const { tags } = useAllTags();
     const { flagCreators } = useProjectFlagCreators(project);
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
-    const { trackEvent } = useEventTracker();
+    const trackFavoritesFiltered = useTracking(favoritesFilteredTracking);
 
     const onFilterChange = (value: FilterItemParamHolder) => {
         if (value.favorite !== state.favorite) {
-            trackEvent('favorite', {
-                props: {
-                    action: value.favorite
-                        ? 'filter-enabled'
-                        : 'filter-disabled',
-                },
+            trackFavoritesFiltered('succeeded', {
+                newState: value.favorite ? 'enabled' : 'disabled',
+                scope: 'project',
             });
         }
         onChange(value);

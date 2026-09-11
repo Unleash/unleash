@@ -9,8 +9,14 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import { getLocalizedDateString } from '../util.ts';
 import type { FilterItemParams } from 'component/filter/FilterItem/FilterItem';
 import { DateRangePresets } from './DateRangePresets.tsx';
+import { useTracking } from 'hooks/useTracking';
+import {
+    filterRemovedTracking,
+    filterValueToggledTracking,
+} from 'component/filter/Filters/filtersTracking';
 
 export interface IFilterDateItemProps {
+    filterKey: string;
     name: string;
     label: ReactNode;
     onChange: (value: FilterItemParams) => void;
@@ -25,6 +31,7 @@ export interface IFilterDateItemProps {
 }
 
 export const FilterDateItem: FC<IFilterDateItemProps> = ({
+    filterKey,
     name,
     label,
     onChange,
@@ -37,6 +44,14 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
     const ref = useRef<HTMLDivElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
     const { locationSettings } = useLocationSettings();
+    const trackFilterValueToggled = useTracking(filterValueToggledTracking);
+    const trackFilterRemoved = useTracking(filterRemovedTracking);
+    const trackSelected = () =>
+        trackFilterValueToggled('succeeded', {
+            filterKey,
+            method: 'filter-bar',
+            newState: 'selected',
+        });
 
     const open = () => setAnchorEl(ref.current);
     const onClose = () => setAnchorEl(null);
@@ -63,6 +78,7 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
               onChange({ operator: operators[0], values: [] });
               onClose();
               onChipClose();
+              trackFilterRemoved('succeeded', { filterKey });
           }
         : undefined;
 
@@ -113,7 +129,7 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
                         displayWeekNumber
                         value={selectedDate}
                         disableFuture
-                        onChange={(value) => {
+                        onChange={(value, selectionState) => {
                             const formattedValue = value
                                 ? format(value, 'yyyy-MM-dd')
                                 : '';
@@ -121,10 +137,19 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
                                 operator: currentOperator,
                                 values: [formattedValue],
                             });
+                            // Picking a year fires onChange too, with a 'partial' selection state.
+                            if (selectionState === 'finish') {
+                                trackSelected();
+                            }
                         }}
                     />
                     {onRangeChange && (
-                        <DateRangePresets onRangeChange={onRangeChange} />
+                        <DateRangePresets
+                            onRangeChange={(range) => {
+                                onRangeChange(range);
+                                trackSelected();
+                            }}
+                        />
                     )}
                 </LocalizationProvider>
             </StyledPopover>

@@ -8,6 +8,8 @@ import FilterList from '@mui/icons-material/FilterList';
 import { Box } from '@mui/system';
 import type { IFilterItem } from './Filters/Filters.tsx';
 import { FILTERS_MENU } from 'utils/testIds';
+import { useTracking } from 'hooks/useTracking';
+import { filterAddedTracking } from './Filters/filtersTracking';
 
 const StyledButton = styled(Button)(({ theme }) => ({
     padding: theme.spacing(0, 1.25, 0, 1.25),
@@ -41,6 +43,7 @@ export const AddFilterButton = ({
     availableFilters,
 }: IAddFilterButtonProps) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const trackFilterAdded = useTracking(filterAddedTracking);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -49,9 +52,10 @@ export const AddFilterButton = ({
         setAnchorEl(null);
     };
 
-    const onSelect = (label: string) => {
-        onSelectedOptionsChange([...hiddenOptions, label]);
+    const onSelect = (filter: IFilterItem) => {
+        onSelectedOptionsChange([...hiddenOptions, filter.label]);
         handleClose();
+        trackFilterAdded('succeeded', { filterKey: filter.filterKey });
     };
 
     return (
@@ -72,10 +76,13 @@ export const AddFilterButton = ({
                     const filter = availableFilters.find(
                         (f) => f.label === label,
                     );
+                    if (!filter) {
+                        return null;
+                    }
                     return (
-                        <MenuItem key={label} onClick={() => onSelect(label)}>
+                        <MenuItem key={label} onClick={() => onSelect(filter)}>
                             <StyledIconContainer>
-                                <StyledIcon>{filter?.icon}</StyledIcon>
+                                <StyledIcon>{filter.icon}</StyledIcon>
                                 {label}
                             </StyledIconContainer>
                         </MenuItem>

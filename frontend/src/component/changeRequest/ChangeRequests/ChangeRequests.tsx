@@ -10,7 +10,7 @@ import { AvatarCell } from 'component/changeRequest/ProjectChangeRequests/Change
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { GlobalChangeRequestTitleCell } from './GlobalChangeRequestTitleCell.js';
 import { FeaturesCell } from '../ProjectChangeRequests/ChangeRequestsTabs/FeaturesCell.js';
-import { withTableState } from 'utils/withTableState';
+import { useTableState } from 'hooks/useTableState';
 import {
     useChangeRequestSearch,
     type SearchChangeRequestsInput,
@@ -148,9 +148,10 @@ const ChangeRequestsInner = ({ user }: { user: IUser }) => {
     );
 
     const table = useReactTable(
-        withTableState(effectiveTableState, setTableState, {
-            columns,
-            data,
+        useTableState({
+            tableState: effectiveTableState,
+            setTableState,
+            options: { columns, data },
         }),
     );
     const tableId = useId();

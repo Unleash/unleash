@@ -10,6 +10,8 @@ import mapValues from 'lodash.mapvalues';
 import type { SearchFeaturesParams } from 'openapi';
 import { SafeNumberParam } from 'utils/safeNumberParam';
 import { DEFAULT_PAGE_LIMIT } from 'utils/paginationConfig';
+import { useTracking } from 'hooks/useTracking';
+import { filterValueToggledTracking } from 'component/filter/Filters/filtersTracking';
 
 export const useGlobalFeatureSearch = (pageLimit = DEFAULT_PAGE_LIMIT) => {
     const storageKey = 'features-list-table';
@@ -94,33 +96,35 @@ export const useTableStateFilter = <K extends string>(
             values: string[];
         };
     }) => void,
-) =>
-    useCallback(
+) => {
+    const trackFilterValueToggled = useTracking(filterValueToggledTracking);
+    return useCallback(
         (value: string | number) => {
             const currentState = state ? state[key] : undefined;
-            console.log({ key, operator, state: currentState, value });
-
-            if (
+            const unchanged =
                 currentState &&
-                currentState.values.length > 0 &&
-                !currentState.values.includes(`${value}`)
-            ) {
-                setState({
-                    ...state,
-                    [key]: {
-                        operator: currentState.operator,
-                        values: [...currentState.values, value],
-                    },
-                });
-            } else if (!currentState) {
-                setState({
-                    ...state,
-                    [key]: {
-                        operator: operator,
-                        values: [value],
-                    },
-                });
+                (currentState.values.length === 0 ||
+                    currentState.values.includes(`${value}`));
+
+            if (unchanged) {
+                return;
             }
+
+            setState({
+                ...state,
+                [key]: currentState
+                    ? {
+                          operator: currentState.operator,
+                          values: [...currentState.values, value],
+                      }
+                    : { operator, values: [value] },
+            });
+            trackFilterValueToggled('succeeded', {
+                filterKey: key,
+                method: 'cell',
+                newState: 'selected',
+            });
         },
-        [state, setState, key, operator],
+        [state, setState, key, operator, trackFilterValueToggled],
     );
+};

@@ -8,6 +8,8 @@ import { DropdownMenu } from '../DropdownMenu/DropdownMenu.tsx';
 import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { LifecycleChip } from './LifecycleChip.tsx';
 import { FlagsCountBadge } from './FlagsCountBadge.tsx';
+import { useTracking } from 'hooks/useTracking';
+import { flagsListLifecycleFilteredTracking } from 'component/feature/FeatureToggleList/flagsListTracking';
 
 interface ILifecycleFiltersBaseProps {
     state: FilterItemParamHolder;
@@ -82,6 +84,9 @@ export const LifecycleFilters = ({
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const selectedLifecycle = state.lifecycle?.values?.[0] ?? null;
+    const trackLifecycleFiltered = useTracking(
+        flagsListLifecycleFilteredTracking,
+    );
 
     const isActive = (value: LifecycleStage['name'] | null) => {
         return value === selectedLifecycle;
@@ -101,6 +106,9 @@ export const LifecycleFilters = ({
                 ? { lifecycle: null }
                 : { lifecycle: { operator: 'IS', values: [value] } },
         );
+        if (value !== selectedLifecycle) {
+            trackLifecycleFiltered('succeeded', { stage: value ?? 'all' });
+        }
     };
 
     const selectedOption =

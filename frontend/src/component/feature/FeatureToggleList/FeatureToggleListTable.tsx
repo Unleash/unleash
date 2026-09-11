@@ -20,9 +20,10 @@ import { focusable } from 'themes/themeStyles';
 import { FeatureLifecycleCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import useToast from 'hooks/useToast';
 import { FeaturesOverviewToggleFilters } from './FeaturesOverviewLifecycleFilters/FeaturesOverviewToggleFilters.tsx';
-import { withTableState } from 'utils/withTableState';
+import { useTableState } from 'hooks/useTableState';
 import useLoading from 'hooks/useLoading';
 import { useEventTracker } from 'hooks/useEventTracker';
+import { flagsListProps, flagsListTableTracking } from './flagsListTracking';
 import {
     useGlobalFeatureSearch,
     useTableStateFilter,
@@ -222,9 +223,18 @@ export const FeatureToggleListTable: FC = () => {
         [initialLoad, features, loading],
     );
     const table = useReactTable(
-        withTableState(tableState, setTableState, {
-            columns,
-            data,
+        useTableState({
+            tableState,
+            setTableState,
+            options: { columns, data },
+            tracking: {
+                ...flagsListTableTracking,
+                props: flagsListProps({
+                    filterState,
+                    query: tableState.query,
+                    total,
+                }),
+            },
         }),
     );
 

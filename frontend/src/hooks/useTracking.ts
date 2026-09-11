@@ -10,7 +10,10 @@ import { requestFailureProps } from 'utils/requestFailureProps';
 type TrackEvent = ReturnType<typeof useEventTracker>['trackEvent'];
 
 // Callable so a call site holds one named function per journey and nothing to destructure.
-type Tracker = ((action: TrackingAction, props?: TrackingProps) => void) & {
+export type Tracker = ((
+    action: TrackingAction,
+    props?: TrackingProps,
+) => void) & {
     mutation: <T>(fn: () => Promise<T>, props?: TrackingProps) => Promise<T>;
     validationFailed: (props?: TrackingProps) => void;
 };

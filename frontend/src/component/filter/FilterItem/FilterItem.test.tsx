@@ -28,6 +28,7 @@ const setup = (
 ) => {
     const recordedChanges: FilterItemParams[] = [];
     const mockProps: IFilterItemProps = {
+        filterKey: 'irrelevant',
         name: 'Test Label',
         label: 'irrelevant',
         options,

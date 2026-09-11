@@ -108,7 +108,8 @@ export type CustomEvents =
     | 'project-environments'
     | 'project-actions'
     | 'flags-list'
-    | 'prod-guard';
+    | 'prod-guard'
+    | 'list-filters';
 
 // The hook sets eventType and action from the declaration, so don't pass them as props.
 export type TrackingProps = EventProps & {

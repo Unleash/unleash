@@ -1,11 +1,11 @@
 import { vi, expect, describe, it } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { useReactTable } from '@tanstack/react-table';
-import { withTableState } from './withTableState.ts';
+import { useTableState } from './useTableState.ts';
 import { useState } from 'react';
 import { render } from '@testing-library/react';
 
-describe('withTableState', () => {
+describe('useTableState', () => {
     it('should create paginated and sorted table state', () => {
         const mockTableState = {
             limit: 10,
@@ -16,13 +16,15 @@ describe('withTableState', () => {
         const mockSetTableState = vi.fn();
         const mockOptions = { data: [], columns: [] };
 
-        const result = withTableState(
-            mockTableState,
-            mockSetTableState,
-            mockOptions,
+        const { result } = renderHook(() =>
+            useTableState({
+                tableState: mockTableState,
+                setTableState: mockSetTableState,
+                options: mockOptions,
+            }),
         );
 
-        expect(result.state).toEqual({
+        expect(result.current.state).toEqual({
             pagination: {
                 pageIndex: 1,
                 pageSize: 10,
@@ -37,18 +39,20 @@ describe('withTableState', () => {
     });
 
     it('sets default options', () => {
-        expect(
-            withTableState(
-                {
+        const { result } = renderHook(() =>
+            useTableState({
+                tableState: {
                     limit: 10,
                     offset: 10,
                     sortBy: 'name',
                     sortOrder: 'asc',
                 },
-                vi.fn(),
-                { data: [], columns: [] },
-            ),
-        ).toMatchObject({
+                setTableState: vi.fn(),
+                options: { data: [], columns: [] },
+            }),
+        );
+
+        expect(result.current).toMatchObject({
             getCoreRowModel: expect.any(Function),
             enableSorting: true,
             enableMultiSort: false,
@@ -74,7 +78,11 @@ describe('withTableState', () => {
 
         const { result } = renderHook(() =>
             useReactTable(
-                withTableState(mockTableState, mockSetTableState, mockOptions),
+                useTableState({
+                    tableState: mockTableState,
+                    setTableState: mockSetTableState,
+                    options: mockOptions,
+                }),
             ),
         );
 
@@ -101,7 +109,11 @@ describe('withTableState', () => {
 
         const { result } = renderHook(() =>
             useReactTable(
-                withTableState(mockTableState, mockSetTableState, mockOptions),
+                useTableState({
+                    tableState: mockTableState,
+                    setTableState: mockSetTableState,
+                    options: mockOptions,
+                }),
             ),
         );
 
@@ -143,7 +155,11 @@ describe('withTableState', () => {
 
         const { result } = renderHook(() =>
             useReactTable(
-                withTableState(mockTableState, mockSetTableState, mockOptions),
+                useTableState({
+                    tableState: mockTableState,
+                    setTableState: mockSetTableState,
+                    options: mockOptions,
+                }),
             ),
         );
 
@@ -169,9 +185,10 @@ describe('withTableState', () => {
         const { result, rerender } = renderHook(
             (state) =>
                 useReactTable(
-                    withTableState(state as any, vi.fn(), {
-                        data: [],
-                        columns: [],
+                    useTableState({
+                        tableState: state as any,
+                        setTableState: vi.fn(),
+                        options: { data: [], columns: [] },
                     }),
                 ),
             { initialProps },
@@ -225,9 +242,10 @@ describe('withTableState', () => {
             };
 
             const table = useReactTable(
-                withTableState(state, setTableState, {
-                    data: [],
-                    columns: [],
+                useTableState({
+                    tableState: state,
+                    setTableState,
+                    options: { data: [], columns: [] },
                 }),
             );
 
@@ -331,13 +349,15 @@ describe('withTableState', () => {
             ],
         };
 
-        const result = withTableState(
-            mockTableState,
-            mockSetTableState,
-            mockOptions,
+        const { result } = renderHook(() =>
+            useTableState({
+                tableState: mockTableState,
+                setTableState: mockSetTableState,
+                options: mockOptions,
+            }),
         );
 
-        expect(result.state).toMatchObject({
+        expect(result.current.state).toMatchObject({
             columnVisibility: {
                 name: true,
                 createdAt: true,

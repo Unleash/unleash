@@ -6,70 +6,86 @@ import {
     type VisibilityState,
     getCoreRowModel,
 } from '@tanstack/react-table';
+import { type Tracker, useTracking } from 'hooks/useTracking';
+import type { Tracking } from 'utils/trackingEvents';
+import { trackedColumnName } from 'utils/formatEnvironmentColumnId';
 
 type TableStateColumns = (string | null)[] | null | undefined;
 
 const createOnSortingChange =
-    (
+    ({
+        tableState,
+        setTableState,
+        trackSorted,
+    }: {
         tableState: {
             sortBy: string;
             sortOrder: string;
-        },
+        };
         setTableState: (newState: {
             sortBy?: string;
             sortOrder?: string;
-        }) => void,
-    ): OnChangeFn<SortingState> =>
+        }) => void;
+        trackSorted: Tracker;
+    }): OnChangeFn<SortingState> =>
     (newSortBy) => {
-        if (typeof newSortBy === 'function') {
-            const computedSortBy = newSortBy([
-                {
-                    id: tableState.sortBy,
-                    desc: tableState.sortOrder === 'desc',
-                },
-            ])[0];
-            setTableState({
-                sortBy: computedSortBy?.id,
-                sortOrder: computedSortBy?.desc ? 'desc' : 'asc',
-            });
-        } else {
-            const sortBy = newSortBy[0];
-            setTableState({
-                sortBy: sortBy?.id,
-                sortOrder: sortBy?.desc ? 'desc' : 'asc',
+        const sortBy =
+            typeof newSortBy === 'function'
+                ? newSortBy([
+                      {
+                          id: tableState.sortBy,
+                          desc: tableState.sortOrder === 'desc',
+                      },
+                  ])[0]
+                : newSortBy[0];
+
+        setTableState({
+            sortBy: sortBy?.id,
+            sortOrder: sortBy?.desc ? 'desc' : 'asc',
+        });
+        if (sortBy?.id) {
+            trackSorted('succeeded', {
+                column: trackedColumnName(sortBy.id),
+                direction: sortBy.desc ? 'desc' : 'asc',
             });
         }
     };
 
 const createOnPaginationChange =
-    (
+    ({
+        tableState,
+        setTableState,
+        trackPaginated,
+        trackPageSizeChanged,
+    }: {
         tableState: {
             limit: number;
             offset: number;
-        },
-        setTableState: (newState: { limit?: number; offset?: number }) => void,
-    ): OnChangeFn<PaginationState> =>
+        };
+        setTableState: (newState: { limit?: number; offset?: number }) => void;
+        trackPaginated: Tracker;
+        trackPageSizeChanged: Tracker;
+    }): OnChangeFn<PaginationState> =>
     (newPagination) => {
-        if (typeof newPagination === 'function') {
-            const computedPagination = newPagination({
-                pageSize: tableState.limit,
-                pageIndex: tableState.offset
-                    ? Math.floor(tableState.offset / tableState.limit)
-                    : 0,
-            });
-            setTableState({
-                limit: computedPagination?.pageSize,
-                offset: computedPagination?.pageIndex
-                    ? computedPagination?.pageIndex *
-                      computedPagination?.pageSize
-                    : 0,
-            });
-        } else {
-            const { pageSize, pageIndex } = newPagination;
-            setTableState({
-                limit: pageSize,
-                offset: pageIndex ? pageIndex * pageSize : 0,
-            });
+        const currentPageIndex = tableState.offset
+            ? Math.floor(tableState.offset / tableState.limit)
+            : 0;
+        const { pageSize, pageIndex } =
+            typeof newPagination === 'function'
+                ? newPagination({
+                      pageSize: tableState.limit,
+                      pageIndex: currentPageIndex,
+                  })
+                : newPagination;
+
+        setTableState({
+            limit: pageSize,
+            offset: pageIndex ? pageIndex * pageSize : 0,
+        });
+        if (pageSize !== tableState.limit) {
+            trackPageSizeChanged('succeeded', { pageSize });
+        } else if (pageIndex !== currentPageIndex) {
+            trackPaginated('succeeded', { pageDepth: pageIndex + 1 });
         }
     };
 
@@ -141,23 +157,42 @@ const createColumnVisibilityState = (tableState: {
           }
         : {};
 
-export const withTableState = <T extends Object>(
+type UseTableStateArgs<T extends Object> = {
     tableState: {
         sortBy: string;
         sortOrder: string;
         limit: number;
         offset: number;
         columns?: TableStateColumns;
-    },
+    };
     setTableState: (newState: {
         sortBy?: string;
         sortOrder?: string;
         limit?: number;
         offset?: number;
         columns?: TableStateColumns;
-    }) => void,
-    options: Omit<TableOptions<T>, 'getCoreRowModel'>,
-) => {
+    }) => void;
+    options: Omit<TableOptions<T>, 'getCoreRowModel'>;
+    // With a descriptor the table emits sorted, paginated and page-size-changed rows itself.
+    tracking?: Tracking;
+};
+
+export const useTableState = <T extends Object>({
+    tableState,
+    setTableState,
+    options,
+    tracking,
+}: UseTableStateArgs<T>) => {
+    const trackSorted = useTracking(
+        tracking && { ...tracking, type: 'sorted' },
+    );
+    const trackPaginated = useTracking(
+        tracking && { ...tracking, type: 'paginated' },
+    );
+    const trackPageSizeChanged = useTracking(
+        tracking && { ...tracking, type: 'page-size-changed' },
+    );
+
     const hideAllColumns = Object.fromEntries(
         Object.keys(options.state?.columnVisibility || {}).map((column) => [
             column,
@@ -185,8 +220,17 @@ export const withTableState = <T extends Object>(
         manualSorting: true,
         enableSortingRemoval: false,
         enableHiding: true,
-        onPaginationChange: createOnPaginationChange(tableState, setTableState),
-        onSortingChange: createOnSortingChange(tableState, setTableState),
+        onPaginationChange: createOnPaginationChange({
+            tableState,
+            setTableState,
+            trackPaginated,
+            trackPageSizeChanged,
+        }),
+        onSortingChange: createOnSortingChange({
+            tableState,
+            setTableState,
+            trackSorted,
+        }),
         onColumnVisibilityChange: createOnColumnVisibilityChange(
             tableState,
             setTableState,

@@ -11,8 +11,14 @@ import {
     VirtualizedFilterOptions,
     type VirtualizedFilterOptionsHandle,
 } from './VirtualizedFilterOptions.tsx';
+import { useTracking } from 'hooks/useTracking';
+import {
+    filterRemovedTracking,
+    filterValueToggledTracking,
+} from 'component/filter/Filters/filtersTracking';
 
 export interface IFilterItemProps {
+    filterKey: string;
     name: string;
     label: ReactNode;
     options: Array<{ label: string; value: string }>;
@@ -30,6 +36,7 @@ export type FilterItemParams = {
 };
 
 export const FilterItem: FC<IFilterItemProps> = ({
+    filterKey,
     name,
     label,
     options,
@@ -45,6 +52,14 @@ export const FilterItem: FC<IFilterItemProps> = ({
     const listRef = useRef<VirtualizedFilterOptionsHandle>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
     const [searchText, setSearchText] = useState('');
+    const trackFilterValueToggled = useTracking(filterValueToggledTracking);
+    const trackFilterRemoved = useTracking(filterRemovedTracking);
+    const trackToggled = (newState: 'selected' | 'deselected') =>
+        trackFilterValueToggled('succeeded', {
+            filterKey,
+            method: 'filter-bar',
+            newState,
+        });
 
     const currentOperators =
         state && state.values.length > 1 ? pluralOperators : singularOperators;
@@ -75,6 +90,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
               onChange({ operator: singularOperators[0], values: [] });
               onClose();
               onChipClose();
+              trackFilterRemoved('succeeded', { filterKey });
           }
         : undefined;
 
@@ -90,11 +106,13 @@ export const FilterItem: FC<IFilterItemProps> = ({
                     (selected) => selected !== value,
                 ),
             });
+            trackToggled('deselected');
         } else {
             onChange({
                 operator: currentOperator,
                 values: [...selectedOptions, value],
             });
+            trackToggled('selected');
         }
     };
 

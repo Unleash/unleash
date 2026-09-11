@@ -21,7 +21,7 @@ import {
 import { DEFAULT_PAGE_LIMIT } from 'hooks/api/getters/useProjectApplications/useProjectApplications';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
-import { withTableState } from 'utils/withTableState';
+import { useTableState } from 'hooks/useTableState';
 import useLoading from 'hooks/useLoading';
 import mapValues from 'lodash.mapvalues';
 
@@ -127,9 +127,10 @@ export const PaginatedApplicationList = () => {
     );
 
     const table = useReactTable(
-        withTableState(tableState, setTableState, {
-            columns,
-            data,
+        useTableState({
+            tableState,
+            setTableState,
+            options: { columns, data },
         }),
     );
 

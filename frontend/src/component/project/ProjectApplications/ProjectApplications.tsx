@@ -17,7 +17,7 @@ import {
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import useLoading from 'hooks/useLoading';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
-import { withTableState } from 'utils/withTableState';
+import { useTableState } from 'hooks/useTableState';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import type { ProjectApplicationSchema } from 'openapi';
 import mapValues from 'lodash.mapvalues';
@@ -149,9 +149,10 @@ export const ProjectApplications = () => {
     );
 
     const table = useReactTable(
-        withTableState(tableState, setTableState, {
-            columns,
-            data: applications,
+        useTableState({
+            tableState,
+            setTableState,
+            options: { columns, data: applications },
         }),
     );
 

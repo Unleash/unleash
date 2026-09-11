@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { Box } from '@mui/material';
 import { ColumnsMenu } from '../ColumnsMenu/ColumnsMenu.tsx';
-import { formatEnvironmentColumnId } from '../formatEnvironmentColumnId.ts';
+import { formatEnvironmentColumnId } from 'utils/formatEnvironmentColumnId';
 
 type ProjectFeaturesColumnsMenuProps = {
     columnVisibility: Record<string, boolean>;

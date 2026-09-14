@@ -413,7 +413,7 @@ importers:
         version: 1.0.1
       logrocket:
         specifier: ^12.1.1
-        version: 12.1.1
+        version: 12.3.0
       re2js:
         specifier: 2.3.2
         version: 2.3.2
@@ -4374,8 +4374,8 @@ packages:
     resolution: {integrity: sha512-1somDdy9sChrr9/f4UlzhdaGfDR2c/SaD2a4T7qEkG4jTS57/B3qmnjLYePwQ8cqWnUHZI0iAKxMBpCZICiZ2g==}
     engines: {node: '>=8.0'}
 
-  logrocket@12.1.1:
-    resolution: {integrity: sha512-l7z9ii5nNV6NZ3nzEqbB3xJAqFJC6QdRYDK8DeCC6JKwzuI8nyUezUJAotgMyClrqB6eV/Bo0i/KihQlXSRDKw==}
+  logrocket@12.3.0:
+    resolution: {integrity: sha512-qgzRu5nDxrVCXV4bnhgKUTUc0UmEKvx15jRE2hPqK4gxxius+2ePwxvq4/krxnBaLf2TWdtMwf+d6xE3Ya4I5A==}
 
   longest-streak@3.1.0:
     resolution: {integrity: sha512-9Ri+o0JYgehTaVBBDoMqIl8GXtbWg711O3srftcHhZ0dqnETqLaoIK0x17fUw9rFSlK/0NlsKe0Ahhyl5pXE2g==}
@@ -10126,7 +10126,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  logrocket@12.1.1: {}
+  logrocket@12.3.0: {}
 
   longest-streak@3.1.0: {}
 

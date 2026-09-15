@@ -82,7 +82,7 @@ importers:
         version: 1.8.1(supports-color@10.2.2)
       connect-session-knex:
         specifier: ^5.0.0
-        version: 5.0.0(pg@8.22.0)(supports-color@10.2.2)
+        version: 5.0.0(pg@8.23.0)(supports-color@10.2.2)
       cookie-parser:
         specifier: ^1.4.7
         version: 1.4.7
@@ -157,7 +157,7 @@ importers:
         version: 3.1.1
       knex:
         specifier: ^3.2.10
-        version: 3.3.0(pg@8.22.0)(supports-color@10.2.2)
+        version: 3.3.0(pg@8.23.0)(supports-color@10.2.2)
       ky:
         specifier: ^1.14.3
         version: 1.14.3
@@ -208,7 +208,7 @@ importers:
         version: 0.3.0
       pg:
         specifier: ^8.20.0
-        version: 8.22.0
+        version: 8.23.0
       pg-connection-string:
         specifier: ^2.12.0
         version: 2.14.0
@@ -4977,12 +4977,15 @@ packages:
   pg-protocol@1.15.0:
     resolution: {integrity: sha512-cq9sECI5s0+uPUXjbz8ioyPJni6RzsRib0US67i5IoTZKw8fNeYlVE7u8F4dG7vEJJtc5wdD1K189lCCUwqWTQ==}
 
+  pg-protocol@1.16.0:
+    resolution: {integrity: sha512-sILXutLVjCLjcDuOmvhX5e2Z4cS5qG/6Bu3VkpFwdf/633ElGLpEh9bgmuI5I4sqKqkifQiGyiCcx1HdtrK7tg==}
+
   pg-types@2.2.0:
     resolution: {integrity: sha512-qTAAlrEsl8s4OiEQY69wDvcMIdQN6wdz5ojQiOy6YRMuynxenON0O5oCpJI6lshc6scgAY8qvJ2On/p+CXY0GA==}
     engines: {node: '>=4'}
 
-  pg@8.22.0:
-    resolution: {integrity: sha512-8wih1vVIBMxoUM2oB4soJsD9tDnDpLv4OXBJ+EJzFsvycD+lfyIreC2gGHq78f8jbLLt+bvlPTFdFZfJkOuzAA==}
+  pg@8.23.0:
+    resolution: {integrity: sha512-Ip2EQCngowJLGOfCwkFhPXU7/ljlhn6Rxlmy4XYfL2Y+vyRM59+8uR2xqRWKdYmbXmxCFOAmKxBuSUCdF34qLg==}
     engines: {node: '>= 16.0.0'}
     peerDependencies:
       pg-native: '>=3.0.1'
@@ -8583,9 +8586,9 @@ snapshots:
       tree-kill: 1.2.2
       yargs: 18.0.0
 
-  connect-session-knex@5.0.0(pg@8.22.0)(supports-color@10.2.2):
+  connect-session-knex@5.0.0(pg@8.23.0)(supports-color@10.2.2):
     dependencies:
-      knex: 3.3.0(pg@8.22.0)(supports-color@10.2.2)
+      knex: 3.3.0(pg@8.23.0)(supports-color@10.2.2)
     transitivePeerDependencies:
       - better-sqlite3
       - mariadb
@@ -8785,7 +8788,7 @@ snapshots:
     dependencies:
       bluebird: 3.7.2
       db-migrate-base: 2.3.1
-      pg: 8.22.0
+      pg: 8.23.0
       semver: 7.7.4
     transitivePeerDependencies:
       - pg-native
@@ -9958,7 +9961,7 @@ snapshots:
     dependencies:
       is-buffer: 1.1.6
 
-  knex@3.3.0(pg@8.22.0)(supports-color@10.2.2):
+  knex@3.3.0(pg@8.23.0)(supports-color@10.2.2):
     dependencies:
       colorette: 2.0.19
       commander: 10.0.1
@@ -9975,7 +9978,7 @@ snapshots:
       tarn: 3.1.2
       tildify: 2.0.0
     optionalDependencies:
-      pg: 8.22.0
+      pg: 8.23.0
     transitivePeerDependencies:
       - supports-color
 
@@ -10843,11 +10846,13 @@ snapshots:
 
   pg-int8@1.0.1: {}
 
-  pg-pool@3.14.0(pg@8.22.0):
+  pg-pool@3.14.0(pg@8.23.0):
     dependencies:
-      pg: 8.22.0
+      pg: 8.23.0
 
   pg-protocol@1.15.0: {}
+
+  pg-protocol@1.16.0: {}
 
   pg-types@2.2.0:
     dependencies:
@@ -10857,11 +10862,11 @@ snapshots:
       postgres-date: 1.0.7
       postgres-interval: 1.2.0
 
-  pg@8.22.0:
+  pg@8.23.0:
     dependencies:
       pg-connection-string: 2.14.0
-      pg-pool: 3.14.0(pg@8.22.0)
-      pg-protocol: 1.15.0
+      pg-pool: 3.14.0(pg@8.23.0)
+      pg-protocol: 1.16.0
       pg-types: 2.2.0
       pgpass: 1.0.5
     optionalDependencies:

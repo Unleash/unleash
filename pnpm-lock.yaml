@@ -650,8 +650,8 @@ importers:
         specifier: ^19.0.0
         version: 19.2.8(react@19.2.8)
       react-draggable:
-        specifier: 4.6.0
-        version: 4.6.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: 4.7.1
+        version: 4.7.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react-dropzone:
         specifier: 14.4.1
         version: 14.4.1(react@19.2.8)
@@ -5192,8 +5192,8 @@ packages:
     peerDependencies:
       react: ^19.0.0
 
-  react-draggable@4.6.0:
-    resolution: {integrity: sha512-g4vqY53xhmPrBnZvGP+1YQV0eYnB3o0VLzoi6q2IpwnQrxIZ34tYRKpVtsWIXPg4D/pvLn+oYCW5gOK2cWIrgA==}
+  react-draggable@4.7.1:
+    resolution: {integrity: sha512-wa3tzfFnYt3yaZLuyU58fl1TNunfWfBekDgWhZA1+gb2jnp42wZ0ymuopR6M5kqDYmm4hKmzGlcKWjZf3Zb6RQ==}
     peerDependencies:
       react: ^19.0.0
       react-dom: ^19.0.0
@@ -11041,7 +11041,7 @@ snapshots:
       react: 19.2.8
       scheduler: 0.27.0
 
-  react-draggable@4.6.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+  react-draggable@4.7.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:
       clsx: 2.1.1
       prop-types: 15.8.1
@@ -11084,7 +11084,7 @@ snapshots:
       prop-types: 15.8.1
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
-      react-draggable: 4.6.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-draggable: 4.7.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react-resizable: 3.2.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       resize-observer-polyfill: 1.5.1
 
@@ -11149,7 +11149,7 @@ snapshots:
       prop-types: 15.8.1
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
-      react-draggable: 4.6.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react-draggable: 4.7.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
 
   react-router@8.3.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:

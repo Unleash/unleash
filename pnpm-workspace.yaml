@@ -116,7 +116,7 @@ overrides:
   "router>path-to-regexp": "1.9.0"
   semver: "7.7.4"
   set-value: "^4.0.1"
-  shell-quote: "1.9.0"
+  shell-quote: "1.10.0"
   ssh2: "^1.4.0"
   systeminformation: "5.31.7"
   tough-cookie: "4.1.4"

@@ -118,7 +118,7 @@ overrides:
   set-value: "^4.0.1"
   shell-quote: "1.10.0"
   ssh2: "^1.4.0"
-  systeminformation: "5.31.7"
+  systeminformation: "5.33.10"
   tough-cookie: "4.1.4"
   vite: "8.2.2"
   ws: "8.21.3"

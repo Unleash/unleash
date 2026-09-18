@@ -68,7 +68,7 @@ export const AvailableIntegrations: FC<IAvailableIntegrationsProps> = ({
             <StyledSection>
                 <div>
                     <Typography component='h3' variant='h2'>
-                        Unleash crafted
+                        Official integrations
                     </Typography>
                     <Typography
                         variant='body2'

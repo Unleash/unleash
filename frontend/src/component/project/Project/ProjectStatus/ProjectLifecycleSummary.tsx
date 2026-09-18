@@ -86,7 +86,7 @@ const Counter = styled('span')({
 });
 
 const BigText = styled('span')(({ theme }) => ({
-    fontSize: `calc(2 * ${theme.typography.body1.fontSize})`,
+    ...theme.typography.display,
 }));
 
 const Stats = styled('dl')(({ theme }) => ({

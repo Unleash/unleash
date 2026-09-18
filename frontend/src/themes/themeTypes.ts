@@ -1,7 +1,15 @@
 // biome-ignore lint: we need this to correctly extend the MUI theme
 import { FormHelperTextOwnProps } from '@mui/material/FormHelperText';
+import type { CSSProperties } from 'react';
 
 declare module '@mui/material/styles' {
+    interface TypographyVariants {
+        display: CSSProperties;
+    }
+    interface TypographyVariantsOptions {
+        display?: CSSProperties;
+    }
+
     interface Shape {
         borderRadiusSmall: number;
         borderRadiusMedium: number;

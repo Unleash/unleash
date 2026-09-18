@@ -66,7 +66,7 @@ const HeaderNumber = styled('span')(({ theme }) => ({
     flexFlow: 'row nowrap',
     alignItems: 'center',
     gap: theme.spacing(2),
-    fontSize: theme.typography.h1.fontSize,
+    fontSize: theme.typography.display.fontSize,
     fontWeight: 'bold',
 }));
 

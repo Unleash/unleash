@@ -29,6 +29,13 @@ export const baseTheme = {
             fontSize: `${14 / 16}rem`,
             lineHeight: 1.75,
         },
+        // Largest step in the scale — for big content headers and numbers
+        // (marketing/splash heroes, dashboard stat figures).
+        display: {
+            fontSize: `${30 / 16}rem`,
+            lineHeight: 36 / 30,
+            fontWeight: '700',
+        },
         h1: {
             fontSize: '1.5rem',
             lineHeight: 1.875,

@@ -95,3 +95,8 @@ export const requiredApprovalsChangedTracking: Tracking = {
     event: 'change_request',
     type: 'required-approvals-changed',
 };
+
+export const changeRequestConflictCreatedTracking: Tracking = {
+    event: 'change_request',
+    type: 'conflict-created',
+};

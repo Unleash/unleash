@@ -31,7 +31,9 @@ import {
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import { useEventTracker } from 'hooks/useEventTracker';
+import { useTracking } from 'hooks/useTracking';
+import { strategyUpdatedTracking as createStrategyUpdatedTracking } from '../strategyActionsTracking.ts';
+import { changeRequestConflictCreatedTracking } from 'component/changeRequest/changeRequestTracking';
 import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm.tsx';
 import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 import {
@@ -113,7 +115,15 @@ export const FeatureStrategyEdit = () => {
         }
     }, [feature]);
 
-    const { trackEvent } = useEventTracker();
+    const viaChangeRequest = isChangeRequestConfigured(environmentId);
+    const strategyUpdatedTracking = createStrategyUpdatedTracking({
+        strategyScope,
+        viaChangeRequest,
+    });
+    const trackStrategyUpdated = useTracking(strategyUpdatedTracking);
+    const trackConflictCreated = useTracking(
+        changeRequestConflictCreatedTracking,
+    );
     const { changeRequests: scheduledChangeRequestThatUseStrategy } =
         useScheduledChangeRequestsWithStrategy(projectId, strategyId);
 
@@ -135,13 +145,7 @@ export const FeatureStrategyEdit = () => {
             ...pendingCrsUsingThisStrategy,
             ...scheduledCrsUsingThisStrategy,
         ].forEach((data) => {
-            trackEvent('change_request', {
-                props: {
-                    ...data,
-                    action: 'edit-strategy',
-                    eventType: 'conflict-created',
-                },
-            });
+            trackConflictCreated('succeeded', data);
         });
 
     useEffect(() => {
@@ -251,52 +255,21 @@ export const FeatureStrategyEdit = () => {
     };
 
     const onSubmit = async () => {
-        if (strategyScope === 'milestone') {
-            trackEvent('edit-milestone-strategy', {
-                props: {
-                    eventType: 'form submitted',
-                },
-            });
-        }
-
-        const viaChangeRequest = isChangeRequestConfigured(environmentId);
-
-        const flagStrategyProps = {
-            eventType: 'strategy-updated',
-            viaChangeRequest,
-            previous: summarizeStrategy(previousStrategyState),
-            current: summarizeStrategy(strategy),
-        };
-
-        trackEvent('flag-strategy', {
-            props: {
-                ...flagStrategyProps,
-                action: 'submitted',
-            },
-        });
-
         try {
-            if (viaChangeRequest) {
-                await onStrategyRequestEdit(payload);
-            } else {
-                await onStrategyEdit(payload);
-            }
-            trackEvent('flag-strategy', {
-                props: {
-                    ...flagStrategyProps,
-                    action: 'succeeded',
+            await trackStrategyUpdated.mutation(
+                () =>
+                    viaChangeRequest
+                        ? onStrategyRequestEdit(payload)
+                        : onStrategyEdit(payload),
+                {
+                    previous: summarizeStrategy(previousStrategyState),
+                    current: summarizeStrategy(strategy),
                 },
-            });
+            );
             emitConflictsCreatedEvents();
             refetchFeature();
             navigate(formatFeaturePath(projectId, featureId));
         } catch (error: unknown) {
-            trackEvent('flag-strategy', {
-                props: {
-                    ...flagStrategyProps,
-                    action: 'failed',
-                },
-            });
             setToastApiError(formatUnknownError(error));
         }
     };
@@ -336,7 +309,8 @@ export const FeatureStrategyEdit = () => {
                 loading={loading}
                 permission={UPDATE_FEATURE_STRATEGY}
                 errors={errors}
-                changeRequestsEnabled={isChangeRequestConfigured(environmentId)}
+                changeRequestsEnabled={viaChangeRequest}
+                tracking={strategyUpdatedTracking}
             />
             {staleDataNotification}
         </FormTemplate>

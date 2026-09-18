@@ -6,7 +6,11 @@ import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequ
 import { useReleasePlansApi } from 'hooks/api/actions/useReleasePlansApi/useReleasePlansApi';
 import { useFeatureReleasePlans } from 'hooks/api/getters/useFeatureReleasePlans/useFeatureReleasePlans';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { useEventTracker } from 'hooks/useEventTracker';
+import { useTracking } from 'hooks/useTracking';
+import {
+    releasePlanAddedTracking,
+    releasePlanReplaceConfirmTracking,
+} from 'component/releases/releaseManagementTracking';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ReleasePlanConfirmationDialog } from './ReleasePlanConfirmationDialog.tsx';
@@ -24,7 +28,7 @@ export const useAddReleasePlan = ({
     environmentId,
     onClose,
 }: IAddReleasePlanOptions) => {
-    const { trackEvent } = useEventTracker();
+    const trackReleasePlanAdded = useTracking(releasePlanAddedTracking);
     const { setToastApiError, setToastData } = useToast();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { addChange } = useChangeRequestApi();
@@ -47,50 +51,51 @@ export const useAddReleasePlan = ({
         template: IReleasePlanTemplate,
         confirmed?: boolean,
     ) => {
+        if (!confirmed && activeReleasePlan) {
+            setPendingTemplate(template);
+            setConfirmationOpen(true);
+            return;
+        }
+
         try {
-            if (!confirmed && activeReleasePlan) {
-                setPendingTemplate(template);
-                setConfirmationOpen(true);
-                return;
-            }
-            if (crProtected) {
-                await addChange(projectId, environmentId, {
-                    feature: featureId,
-                    action: 'addReleasePlan',
-                    payload: {
-                        templateId: template.id,
-                    },
-                });
+            await trackReleasePlanAdded.mutation(
+                async () => {
+                    if (crProtected) {
+                        await addChange(projectId, environmentId, {
+                            feature: featureId,
+                            action: 'addReleasePlan',
+                            payload: {
+                                templateId: template.id,
+                            },
+                        });
 
-                setToastData({
-                    type: 'success',
-                    text: 'Added to draft',
-                });
+                        setToastData({
+                            type: 'success',
+                            text: 'Added to draft',
+                        });
 
-                refetchChangeRequests();
-            } else {
-                await addReleasePlanToFeature(
-                    featureId,
-                    template.id,
-                    projectId,
-                    environmentId,
-                );
+                        refetchChangeRequests();
+                    } else {
+                        await addReleasePlanToFeature(
+                            featureId,
+                            template.id,
+                            projectId,
+                            environmentId,
+                        );
 
-                setToastData({
-                    type: 'success',
-                    text: 'Release plan added',
-                });
+                        setToastData({
+                            type: 'success',
+                            text: 'Release plan added',
+                        });
 
-                refetch();
-            }
-
-            trackEvent('release-management', {
-                props: {
-                    eventType: 'add-plan',
-                    plan: template.name,
+                        refetch();
+                    }
+                },
+                {
+                    viaChangeRequest: crProtected,
                     ...releaseTemplateScopeProps(template.project),
                 },
-            });
+            );
             setConfirmationOpen(false);
             setPendingTemplate(undefined);
             onClose();
@@ -108,6 +113,7 @@ export const useAddReleasePlan = ({
             onConfirm={() => {
                 addReleasePlan(pendingTemplate, true);
             }}
+            tracking={releasePlanReplaceConfirmTracking}
         />
     ) : null;
 

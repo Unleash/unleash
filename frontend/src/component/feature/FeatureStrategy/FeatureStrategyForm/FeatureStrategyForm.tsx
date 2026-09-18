@@ -26,6 +26,8 @@ import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewW
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { FeatureStrategyEnabledDisabled } from './FeatureStrategyEnabledDisabled/FeatureStrategyEnabledDisabled.tsx';
 import { useEventTracker } from 'hooks/useEventTracker';
+import { useTracking } from 'hooks/useTracking';
+import type { Tracking } from 'utils/trackingEvents';
 import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/UpgradeChangeRequests/UpgradeChangeRequests.tsx';
 
 import { StrategyFormBody } from './StrategyFormBody.tsx';
@@ -45,6 +47,7 @@ export interface IFeatureStrategyFormProps<T extends StrategyFormState> {
     canRenamePreexistingVariants?: boolean;
     Limit?: JSX.Element;
     disabled?: boolean;
+    tracking?: Tracking;
 }
 
 const StyledAlertBox = styled(Box)(({ theme }) => ({
@@ -70,8 +73,10 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
     canRenamePreexistingVariants,
     Limit,
     disabled,
+    tracking,
 }: IFeatureStrategyFormProps<T>) => {
     const { trackEvent } = useEventTracker();
+    const trackStrategyForm = useTracking(tracking);
     const [showProdGuard, setShowProdGuard] = useState(false);
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);
     const enableProdGuard = useFeatureStrategyProdGuard(feature, environmentId);
@@ -161,6 +166,7 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
             });
         }
         if (!validateAllParameters()) {
+            trackStrategyForm.validationFailed();
             return;
         }
 

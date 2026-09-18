@@ -10,7 +10,11 @@ import {
 } from '@server/types/permissions.ts';
 import { formatReleaseTemplateCreatePath } from 'component/releases/releaseTemplatePaths';
 import { releaseTemplateScopeProps } from 'component/releases/releaseTemplateScopeProps';
-import { useEventTracker } from 'hooks/useEventTracker.ts';
+import { useTracking } from 'hooks/useTracking.ts';
+import {
+    releaseTemplateCreatedTracking,
+    releaseTemplateNoAccessTracking,
+} from 'component/releases/releaseManagementTracking';
 import { Dialogue } from 'component/common/Dialogue/Dialogue.tsx';
 
 interface INewReleaseTemplateButtonProps {
@@ -20,7 +24,7 @@ interface INewReleaseTemplateButtonProps {
 export const NewReleaseTemplateButton = ({
     projectId,
 }: INewReleaseTemplateButtonProps) => {
-    const { trackEvent } = useEventTracker();
+    const trackTemplateCreated = useTracking(releaseTemplateCreatedTracking);
     const [noAccessDialogOpen, setNoAccessDialogOpen] = useState(false);
     const canCreateGlobalTemplate = useHasRootAccess(
         RELEASE_PLAN_TEMPLATE_CREATE,
@@ -33,20 +37,9 @@ export const NewReleaseTemplateButton = ({
 
     const handleNavigateToCreate = (project?: string) => {
         setMenuAnchor(null);
-        trackEvent('new-template-from-add-strategy', {
-            props: {
-                eventType: 'navigate-to-create-template',
-                ...releaseTemplateScopeProps(project),
-            },
-        });
-    };
-
-    const handleNoAccessClick = () => {
-        setNoAccessDialogOpen(true);
-        trackEvent('new-template-from-add-strategy', {
-            props: {
-                eventType: 'show-no-access-dialog',
-            },
+        trackTemplateCreated('opened', {
+            openedFrom: 'add-strategy',
+            ...releaseTemplateScopeProps(project),
         });
     };
 
@@ -55,7 +48,7 @@ export const NewReleaseTemplateButton = ({
             <>
                 <Button
                     startIcon={<AddIcon />}
-                    onClick={handleNoAccessClick}
+                    onClick={() => setNoAccessDialogOpen(true)}
                     size='medium'
                 >
                     New template
@@ -65,6 +58,7 @@ export const NewReleaseTemplateButton = ({
                     secondaryButtonText='Close'
                     onClose={() => setNoAccessDialogOpen(false)}
                     title='Contact admin to create release templates'
+                    tracking={releaseTemplateNoAccessTracking}
                 >
                     You don&apos;t have the required permissions to create
                     release templates. You must contact your organization admin

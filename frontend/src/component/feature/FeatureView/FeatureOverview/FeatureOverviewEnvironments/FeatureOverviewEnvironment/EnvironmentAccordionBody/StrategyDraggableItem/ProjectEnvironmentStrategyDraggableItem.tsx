@@ -18,7 +18,8 @@ import MenuStrategyRemove from './StrategyItem/MenuStrategyRemove/MenuStrategyRe
 import { Link } from 'react-router';
 import { UPDATE_FEATURE_STRATEGY } from '@server/types/permissions';
 import { StrategyDraggableItem } from './StrategyDraggableItem.tsx';
-import { useEventTracker } from 'hooks/useEventTracker.ts';
+import { useTracking } from 'hooks/useTracking.ts';
+import { strategyUpdatedTracking } from 'component/feature/FeatureStrategy/strategyActionsTracking';
 
 type EditControlsProps = {
     projectId: string;
@@ -39,7 +40,9 @@ const EditControls = ({
     otherEnvironments,
     scope,
 }: EditControlsProps) => {
-    const { trackEvent } = useEventTracker();
+    const trackStrategyUpdated = useTracking(
+        strategyUpdatedTracking({ strategyScope: scope }),
+    );
     return (
         <>
             <PermissionIconButton
@@ -49,11 +52,7 @@ const EditControls = ({
                 component={Link}
                 nativeButton={false}
                 onClick={() => {
-                    if (scope === 'milestone') {
-                        trackEvent('edit-milestone-strategy', {
-                            props: { eventType: 'clicked edit button' },
-                        });
-                    }
+                    trackStrategyUpdated('opened');
                 }}
                 to={editStrategyPath}
                 tooltipProps={{

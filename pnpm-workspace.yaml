@@ -120,5 +120,5 @@ overrides:
   ssh2: "^1.4.0"
   systeminformation: "5.33.10"
   tough-cookie: "4.1.4"
-  vite: "8.2.2"
+  vite: "8.3.0"
   ws: "8.21.3"

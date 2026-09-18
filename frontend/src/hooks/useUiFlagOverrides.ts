@@ -105,6 +105,7 @@ const initToolbar = async () => {
 
     new UnleashToolbar(manager, wrapped, {
         banner: 'Overrides apply to useUiFlag consumers and nav routing. A few components read uiConfig.flags directly and are unaffected.',
+        focusOnOpen: 'search',
     });
 
     notify();

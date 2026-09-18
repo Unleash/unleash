@@ -84,6 +84,7 @@ export type IFlagKey =
     | 'totalUsageMetrics'
     | 'auditEventUserAgent'
     | 'helpMenuRelocationHint'
+    | 'playgroundPerFlag'
     | keyof IFlagKeyOverrides;
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -379,6 +380,10 @@ const flags: IFlags = {
     ),
     helpMenuRelocationHint: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_HELP_MENU_RELOCATION_HINT,
+        false,
+    ),
+    playgroundPerFlag: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PLAYGORUND_PER_FLAG,
         false,
     ),
 };

@@ -113,6 +113,7 @@ export type UiFlags = {
     simplerStrategySetup?: boolean;
     editableInstanceName?: boolean;
     helpMenuRelocationHint?: boolean;
+    playgroundPerFlag?: boolean;
 };
 
 export interface IVersionInfo {

@@ -173,7 +173,7 @@ const ApplicationCounters = ({
     );
 };
 
-const useTracking = () => {
+const useApplicationChartTracking = () => {
     const { trackEvent } = useEventTracker();
     return () => {
         trackEvent('sdk-reporting', {
@@ -195,7 +195,7 @@ const getEnvironmentMode = (
 };
 
 export const ApplicationChart = ({ data }: IApplicationChartProps) => {
-    const trackClick = useTracking();
+    const trackClick = useApplicationChartTracking();
     const applicationName = useRequiredPathParam('name');
     const { elementRef, width } = useElementWidth();
     const navigate = useNavigate();

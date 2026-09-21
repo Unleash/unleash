@@ -32,7 +32,7 @@ import { useNavigate } from 'react-router';
 
 const columnHelper = createColumnHelper<ProjectApplicationSchema>();
 
-const useTracking = () => {
+const useProjectApplicationsTracking = () => {
     const { trackEvent } = useEventTracker();
     useEffect(() => {
         trackEvent('sdk-reporting', {
@@ -51,7 +51,7 @@ const useTracking = () => {
 };
 
 export const ProjectApplications = () => {
-    const trackProjectApplicationClick = useTracking();
+    const trackProjectApplicationClick = useProjectApplicationsTracking();
     const navigate = useNavigate();
 
     const projectId = useRequiredPathParam('projectId');

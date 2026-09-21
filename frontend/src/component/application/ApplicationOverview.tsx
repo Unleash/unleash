@@ -59,7 +59,7 @@ const ApplicationHeader = styled('div')(({ theme }) => ({
     alignSelf: 'stretch',
 }));
 
-const useTracking = () => {
+const useApplicationOverviewTracking = () => {
     const { trackEvent } = useEventTracker();
     useEffect(() => {
         trackEvent('sdk-reporting', {
@@ -72,7 +72,7 @@ const useTracking = () => {
 
 const ApplicationOverview = () => {
     usePageTitle('Applications - Overview');
-    useTracking();
+    useApplicationOverviewTracking();
     const applicationName = useRequiredPathParam('name');
     const _navigate = useNavigate();
     const { data, loading } = useApplicationOverview(applicationName);

@@ -7,6 +7,7 @@ import {
     AddonConfigCreatedEvent,
     AddonConfigDeletedEvent,
     AddonConfigUpdatedEvent,
+    type IFlagResolver,
 } from '../types/index.js';
 import { addonSchema } from './addon-schema.js';
 import NameExistsError from '../error/name-exists-error.js';
@@ -24,7 +25,7 @@ import {
     type IUnleashStores,
     SYSTEM_USER_AUDIT,
 } from '../types/index.js';
-import type { IAddonDefinition } from '../types/model.js';
+import type { IAddonDefinition, IAddonOverview } from '../types/model.js';
 import { minutesToMilliseconds } from 'date-fns';
 import type EventService from '../features/events/event-service.js';
 import { omitKeys } from '../util/index.js';
@@ -53,6 +54,8 @@ export default class AddonService {
     addonProviders: IAddonProviders;
 
     sensitiveParams: ISensitiveParams;
+
+    flagResolver: IFlagResolver;
 
     fetchAddonConfigs: (() => Promise<IAddon[]>) &
         memoizee.Memoized<() => Promise<IAddon[]>>;
@@ -97,6 +100,7 @@ export default class AddonService {
         this.eventHandlers = new Map();
         this.allowPrivateUrls = allowPrivateUrlInIntegration ?? false;
         this.allowList = allowListIntegration ?? [];
+        this.flagResolver = flagResolver;
 
         this.addonProviders =
             addons ||
@@ -250,6 +254,23 @@ export default class AddonService {
         return Object.values(addonProviders).map((p) => p.definition);
     }
 
+    async getAddonsOverview(projectId?: string): Promise<IAddonOverview> {
+        let addons = await this.getAddons(projectId);
+        let providers = this.getProviderDefinitions();
+
+        if (!this.flagResolver.isEnabled('serviceNowIntegration')) {
+            addons = addons.filter((addon) => addon.provider !== 'servicenow');
+            providers = providers.filter(
+                (provider) => provider.name !== 'servicenow',
+            );
+        }
+
+        return {
+            addons,
+            providers,
+        };
+    }
+
     async addTagTypes(providerName: string): Promise<void> {
         const provider = this.addonProviders[providerName];
         if (provider) {
@@ -282,6 +303,7 @@ export default class AddonService {
             addonConfig.projects = [project];
         }
         await this.validateKnownProvider(addonConfig);
+        this.validateProviderEnabled(addonConfig);
         await this.validateRequiredParameters(addonConfig);
         await this.validateUrlParameter(addonConfig);
         const addon = this.addonProviders[addonConfig.provider];
@@ -322,6 +344,7 @@ export default class AddonService {
             addonConfig.projects = [project];
         }
         await this.validateKnownProvider(addonConfig);
+        this.validateProviderEnabled(addonConfig);
         await this.validateRequiredParameters(addonConfig);
         await this.validateUrlParameter(addonConfig);
         if (this.sensitiveParams[addonConfig.provider].length > 0) {
@@ -393,6 +416,17 @@ export default class AddonService {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    validateProviderEnabled({ provider }: Pick<IAddonDto, 'provider'>): void {
+        if (
+            provider === 'servicenow' &&
+            !this.flagResolver.isEnabled('serviceNowIntegration')
+        ) {
+            throw new BadDataError(
+                'The ServiceNow integration is disabled because the controlling feature flag is turned off.',
+            );
+        }
+    }
+
     async validateRequiredParameters({
         provider,
         parameters,

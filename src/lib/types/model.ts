@@ -11,6 +11,7 @@ import type { Collaborator } from '../features/feature-toggle/types/feature-coll
 import type { EventEmitter } from 'events';
 import type { ITag } from '../tags/index.js';
 import type { IFeatureLink } from '../features/feature-links/feature-links-read-model-type.js';
+import type { IAddon } from './index.js';
 
 export type Operator = (typeof ALL_OPERATORS)[number];
 
@@ -453,6 +454,11 @@ export interface IAddonDefinition {
     installation?: IAddonInstallation;
     alerts?: IAddonAlert[];
     howTo?: string;
+}
+
+export interface IAddonOverview {
+    providers: IAddonDefinition[];
+    addons: IAddon[];
 }
 
 export interface IAddonInstallation {

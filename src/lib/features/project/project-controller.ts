@@ -47,6 +47,7 @@ import {
 import ProjectStatusController from '../project-status/project-status-controller.js';
 import FeatureLinkController from '../feature-links/feature-link-controller.js';
 import { ContextController } from '../context/context.js';
+import { ProjectAddonController } from '../../routes/admin-api/project/addon.js';
 
 export default class ProjectController extends Controller {
     private projectService: ProjectService;
@@ -221,6 +222,7 @@ export default class ProjectController extends Controller {
             '/',
             new ContextController(config, services, 'project').router,
         );
+        this.use('/', new ProjectAddonController(config, services).router);
     }
 
     async getProjects(

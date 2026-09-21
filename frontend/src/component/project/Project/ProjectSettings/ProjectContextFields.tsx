@@ -70,7 +70,7 @@ export const ProjectContextFields = () => {
                 }
             />
             {/* change this to be the context table */}
-            <Route path='*' element={<ContextList />} />
+            <Route path='*' element={<ContextList variant='h2' />} />
         </Routes>
     );
 };

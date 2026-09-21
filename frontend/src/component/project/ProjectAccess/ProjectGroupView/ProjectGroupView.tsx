@@ -186,7 +186,7 @@ export const ProjectGroupView: FC<IProjectGroupViewProps> = ({
             <StyledPageContent
                 header={
                     <PageHeader
-                        secondary
+                        variant='h2'
                         titleElement={
                             <StyledTitle>
                                 {group?.name} (

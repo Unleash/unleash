@@ -33,6 +33,7 @@ export const ProjectFeatureTogglesHeader: FC<
     return (
         <Box ref={headerLoadingRef} aria-busy={isLoading} aria-live='polite'>
             <PageHeader
+                variant='h2'
                 titleElement={`${title} ${
                     totalItems !== undefined ? `(${totalItems})` : ''
                 }`}

@@ -47,7 +47,7 @@ export const ProjectSegments = () => {
                     </SidebarModal>
                 }
             />
-            <Route path='*' element={<SegmentTable />} />
+            <Route path='*' element={<SegmentTable variant='h2' />} />
         </Routes>
     );
 };

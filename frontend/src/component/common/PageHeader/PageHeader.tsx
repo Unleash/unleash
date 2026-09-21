@@ -45,7 +45,8 @@ const StyledHeader = styled('div')(({ theme }) => ({
 }));
 
 const StyledHeaderTitle = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.mainHeader,
+    // Line-height is kept fixed so the header row has a stable height — it aligns
+    // with the action buttons and avoids layout shift between loading/loaded states.
     lineHeight: theme.spacing(5),
     fontWeight: theme.typography.fontWeightBold,
 }));
@@ -66,6 +67,11 @@ interface IPageHeaderProps {
     loading?: boolean;
     actions?: ReactNode;
     className?: string;
+    /**
+     * Side effects only: `title` is not set as the browser tab title, and no
+     * screen-reader navigation announcement is made. Does not affect
+     * styling — pass `variant` to change the heading size.
+     */
     secondary?: boolean;
     children?: React.ReactNode;
 }
@@ -95,7 +101,7 @@ const PageHeaderComponent: FC<IPageHeaderProps> & {
                     data-loading
                 >
                     <StyledHeaderTitle
-                        variant={variant || secondary ? 'h2' : 'h1'}
+                        variant={variant ?? 'h1'}
                         className={classnames(className)}
                     >
                         {titleElement || title}

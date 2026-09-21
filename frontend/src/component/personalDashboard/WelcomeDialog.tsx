@@ -52,7 +52,7 @@ export const WelcomeDialog = () => {
         <StyledDialog open={welcomeDialog === 'open'} onClose={onClose}>
             <ContentWrapper>
                 <WelcomeLine>
-                    <Typography variant='h2'>Welcome to</Typography>
+                    <Typography variant='h1'>Welcome to</Typography>
                     <ThemeMode
                         darkmode={<StyledUnleashLogoWhite />}
                         lightmode={<StyledUnleashLogo />}

@@ -222,6 +222,7 @@ export const ChangeRequestTable: FC = () => {
         <PageContent
             header={
                 <PageHeader
+                    variant='h2'
                     titleElement='Change request configuration'
                     actions={<ChangeRequestProcessHelp />}
                 />

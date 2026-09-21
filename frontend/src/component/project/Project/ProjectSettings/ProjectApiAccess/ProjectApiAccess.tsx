@@ -71,6 +71,7 @@ export const ProjectApiAccess = () => {
             <PageContent
                 header={
                     <PageHeader
+                        variant='h2'
                         title={`API access (${rowCount})`}
                         actions={
                             <>

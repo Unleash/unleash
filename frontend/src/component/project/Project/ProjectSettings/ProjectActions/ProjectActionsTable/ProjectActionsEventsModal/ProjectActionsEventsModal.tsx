@@ -19,7 +19,7 @@ import {
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    marginBottom: theme.fontSizes.mainHeader,
+    marginBottom: theme.spacing(2.5),
 }));
 
 const StyledHeaderRow = styled('div')({
@@ -29,9 +29,9 @@ const StyledHeaderRow = styled('div')({
     width: '100%',
 });
 
-const StyledTitle = styled('h1')({
-    fontWeight: 'normal',
-});
+const StyledTitle = styled('h1')(({ theme }) => ({
+    ...theme.typography.h1,
+}));
 
 const StyledForm = styled('form')({
     display: 'flex',

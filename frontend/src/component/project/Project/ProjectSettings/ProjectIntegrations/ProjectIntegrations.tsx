@@ -66,7 +66,7 @@ export const ProjectIntegrations = () => {
 
     return (
         <PageContent
-            header={<PageHeader title='Integrations' />}
+            header={<PageHeader title='Integrations' variant='h2' />}
             isLoading={loading}
         >
             {renderIntegrations()}

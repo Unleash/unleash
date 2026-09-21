@@ -23,7 +23,6 @@ export const StyledHeader = styled(Typography)<TypographyProps>(
         display: 'flex',
         alignItems: 'center',
         marginRight: theme.spacing(1),
-        fontSize: theme.fontSizes.mainHeader,
     }),
 );
 

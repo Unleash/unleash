@@ -39,6 +39,7 @@ export const ProjectReleaseTemplates = () => {
         <PageContent
             header={
                 <PageHeader
+                    variant='h2'
                     title='Release templates'
                     actions={
                         <ResponsiveButton

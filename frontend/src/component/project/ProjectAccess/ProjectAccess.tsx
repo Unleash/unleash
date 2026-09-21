@@ -24,7 +24,7 @@ export const ProjectAccess = () => {
     if (isOss()) {
         return (
             <PageContent
-                header={<PageHeader title='User access' />}
+                header={<PageHeader title='User access' variant='h2' />}
                 sx={{ justifyContent: 'center' }}
             >
                 <PremiumFeature feature='access' />
@@ -34,7 +34,9 @@ export const ProjectAccess = () => {
 
     if (!hasAccess([UPDATE_PROJECT, PROJECT_USER_ACCESS_READ], projectId)) {
         return (
-            <PageContent header={<PageHeader title='User access' />}>
+            <PageContent
+                header={<PageHeader title='User access' variant='h2' />}
+            >
                 <Alert severity='error'>
                     You need project owner permissions or a custom role with
                     "view project user permission" to access this section.

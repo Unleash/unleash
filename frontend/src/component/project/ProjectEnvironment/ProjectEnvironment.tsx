@@ -255,6 +255,7 @@ const ProjectEnvironmentList = () => {
 
     const header = (
         <PageHeader
+            variant='h2'
             title={`Environments (${rows.length})`}
             actions={
                 <>

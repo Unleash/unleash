@@ -149,8 +149,8 @@ const StyledFooter = styled('div')(({ theme }) => ({
 }));
 
 const StyledTitle = styled('h1')(({ theme }) => ({
-    marginBottom: theme.fontSizes.mainHeader,
-    fontWeight: 'normal',
+    ...theme.typography.h1,
+    marginBottom: theme.spacing(2.5),
 }));
 
 const StyledMobileGuidanceContainer = styled('div')(() => ({

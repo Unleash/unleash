@@ -4,5 +4,5 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 export const ProjectLog = () => {
     const projectId = useRequiredPathParam('projectId');
 
-    return <EventLog title='Event Log' project={projectId} />;
+    return <EventLog title='Event Log' project={projectId} variant='h2' />;
 };

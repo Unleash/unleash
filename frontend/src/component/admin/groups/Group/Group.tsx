@@ -291,6 +291,7 @@ export const Group: FC = () => {
                         header={
                             <PageHeader
                                 secondary
+                                variant='h2'
                                 title={`Users (${
                                     rows.length < data.length
                                         ? `${rows.length} of ${data.length}`

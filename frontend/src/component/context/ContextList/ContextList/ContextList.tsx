@@ -1,4 +1,5 @@
 import { type FC, useMemo, useState } from 'react';
+import type { TypographyProps } from '@mui/material';
 import {
     type ColumnDef,
     flexRender,
@@ -52,7 +53,9 @@ type ContextRow = {
     usedInFeatures?: number;
 };
 
-const ContextList: FC = () => {
+const ContextList: FC<{ variant?: TypographyProps['variant'] }> = ({
+    variant,
+}) => {
     const projectId = useOptionalPathParam('projectId');
     const [showDelDialogue, setShowDelDialogue] = useState(false);
     // Props are snapshotted with the name so a background refetch cannot desync the
@@ -238,6 +241,7 @@ const ContextList: FC = () => {
             isLoading={loading}
             header={
                 <PageHeader
+                    variant={variant}
                     title={`Context fields (${rows.length})`}
                     actions={
                         <>

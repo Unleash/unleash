@@ -56,12 +56,12 @@ const StyledHeader = styled('div')(({ theme }) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
-    marginBottom: theme.fontSizes.mainHeader,
+    marginBottom: theme.spacing(2.5),
 }));
 
-const StyledHeaderTitle = styled('h1')({
-    fontWeight: 'normal',
-});
+const StyledHeaderTitle = styled('h1')(({ theme }) => ({
+    ...theme.typography.h1,
+}));
 
 type IntegrationFormProps = {
     provider?: AddonTypeSchema;

@@ -48,8 +48,7 @@ const StyledForm = styled('form')({
 });
 
 const StyledTitle = styled('h1')(({ theme }) => ({
-    fontWeight: 'normal',
-    fontSize: theme.typography.h1.fontSize,
+    ...theme.typography.h1,
     margin: 0,
 }));
 

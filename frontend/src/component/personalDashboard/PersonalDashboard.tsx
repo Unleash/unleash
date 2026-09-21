@@ -289,7 +289,7 @@ export const PersonalDashboard = () => {
             {isOss() && <InfoSection />}
 
             <WelcomeSection>
-                <Typography component='h2' variant='h2'>
+                <Typography component='h2' variant='h1'>
                     Welcome {name}
                 </Typography>
 

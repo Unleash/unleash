@@ -236,6 +236,7 @@ export const FeatureEnvironmentVariants = () => {
             isLoading={loading}
             header={
                 <PageHeader
+                    variant='h2'
                     title='Variants'
                     actions={
                         <ConditionallyRender

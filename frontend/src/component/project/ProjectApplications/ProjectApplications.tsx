@@ -164,6 +164,7 @@ export const ProjectApplications = () => {
             bodyClass='no-padding'
             header={
                 <PageHeader
+                    variant='h2'
                     title='Project applications'
                     actions={
                         <>

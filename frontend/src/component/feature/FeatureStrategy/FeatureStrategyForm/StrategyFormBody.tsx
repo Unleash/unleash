@@ -53,7 +53,7 @@ const StyledHeaderBox = styled(Box)(({ theme }) => ({
 }));
 
 const StyledTitle = styled('h1')(({ theme }) => ({
-    fontWeight: 'normal',
+    ...theme.typography.h1,
     display: 'flex',
     alignItems: 'center',
     paddingTop: theme.spacing(2),

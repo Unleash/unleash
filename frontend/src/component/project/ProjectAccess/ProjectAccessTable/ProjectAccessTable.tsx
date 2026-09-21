@@ -407,6 +407,7 @@ export const ProjectAccessTable: FC = () => {
             header={
                 <PageHeader
                     secondary
+                    variant='h2'
                     title={`User access (${
                         rows.length < data.length
                             ? `${rows.length} of ${data.length}`

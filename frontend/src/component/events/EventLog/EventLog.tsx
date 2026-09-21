@@ -1,4 +1,9 @@
-import { Switch, FormControlLabel, useMediaQuery } from '@mui/material';
+import {
+    Switch,
+    FormControlLabel,
+    useMediaQuery,
+    type TypographyProps,
+} from '@mui/material';
 import EventJson from 'component/events/EventJson/EventJson';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -25,6 +30,7 @@ interface IEventLogProps {
     title: string;
     project?: string;
     feature?: string;
+    variant?: TypographyProps['variant'];
 }
 
 const StyledEventsList = styled('ul')(({ theme }) => ({
@@ -54,7 +60,12 @@ const Placeholder = styled('li')({
     '&[data-loading-events=true]': { zIndex: '1' }, // .skeleton has z-index: 9990
 });
 
-export const EventLog = ({ title, project, feature }: IEventLogProps) => {
+export const EventLog = ({
+    title,
+    project,
+    feature,
+    variant,
+}: IEventLogProps) => {
     const { isEnterprise } = useUiConfig();
     const showFilters = isEnterprise();
     const {
@@ -168,6 +179,7 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
                 bodyClass={'no-padding'}
                 header={
                     <PageHeader
+                        variant={variant}
                         title={`${title} (${total})`}
                         actions={
                             <>

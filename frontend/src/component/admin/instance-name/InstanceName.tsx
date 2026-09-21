@@ -5,6 +5,7 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 import { validateInstanceName } from './validateInstanceName.js';
 
 const StyledForm = styled('form')(({ theme }) => ({
@@ -22,7 +23,24 @@ export const InstanceName = () => (
 );
 
 const InstanceNamePage = () => {
-    const [name, setName] = useState('');
+    const { instanceStatus, loading } = useInstanceStatus();
+
+    return (
+        <PageContent
+            header={<PageHeader title='Instance name' />}
+            isLoading={loading}
+        >
+            {!loading && (
+                <InstanceNameForm
+                    initialName={instanceStatus?.instanceName ?? ''}
+                />
+            )}
+        </PageContent>
+    );
+};
+
+const InstanceNameForm = ({ initialName }: { initialName: string }) => {
+    const [name, setName] = useState(initialName);
     const errorText = validateInstanceName(name);
     const canSubmit = name.trim().length > 0 && errorText === undefined;
 
@@ -32,31 +50,28 @@ const InstanceNamePage = () => {
     };
 
     return (
-        <PageContent header={<PageHeader title='Instance name' />}>
-            <StyledForm onSubmit={onSubmit}>
-                <p>
-                    The instance name is displayed to users when they log into
-                    Unleash. You can change your instance name by editing it
-                    below.
-                </p>
-                <Input
-                    label='Name'
-                    value={name}
-                    placeholder='My instance name'
-                    onChange={(event) => setName(event.target.value)}
-                    error={errorText !== undefined}
-                    errorText={errorText}
-                    fullWidth
-                />
-                <Button
-                    type='submit'
-                    variant='contained'
-                    color='primary'
-                    disabled={!canSubmit}
-                >
-                    Save
-                </Button>
-            </StyledForm>
-        </PageContent>
+        <StyledForm onSubmit={onSubmit}>
+            <p>
+                The instance name is displayed to users when they log into
+                Unleash. You can change your instance name by editing it below.
+            </p>
+            <Input
+                label='Name'
+                value={name}
+                placeholder='My instance name'
+                onChange={(event) => setName(event.target.value)}
+                error={errorText !== undefined}
+                errorText={errorText}
+                fullWidth
+            />
+            <Button
+                type='submit'
+                variant='contained'
+                color='primary'
+                disabled={!canSubmit}
+            >
+                Save
+            </Button>
+        </StyledForm>
     );
 };

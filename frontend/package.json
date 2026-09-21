@@ -14,6 +14,7 @@
     "ci": "pnpm run lint:fix && pnpm run ts:check && pnpm run build --logLevel=error && pnpm run test --reporter=dot",
     "build": "pnpm run lint:material:icons && vite build",
     "dev": "vite",
+    "dev:cloud": "UNLEASH_BASE_PATH=/demo/ pnpm run dev",
     "start": "vite",
     "start:prod": "vite build && vite preview",
     "start:sandbox": "UNLEASH_API=https://sandbox.getunleash.io/ VITE_TEST_REDIRECT=true UNLEASH_BASE_PATH=/pro/ pnpm run start",

@@ -1,4 +1,5 @@
 import {
+    useEffect,
     useState,
     type FormEventHandler,
     type ChangeEventHandler,
@@ -75,6 +76,9 @@ export const CopyFeatureToggle = () => {
     const [newToggleName, setnewToggleName] = useState<string>();
     const { cloneFeatureToggle, validateFeatureToggleName } = useFeatureApi();
     const trackCloneFlag = useTracking(cloneFlagTracking);
+    useEffect(() => {
+        trackCloneFlag('opened');
+    }, [trackCloneFlag]);
     const featureId = useRequiredPathParam('featureId');
     const projectId = useRequiredPathParam('projectId');
     const { feature } = useFeature(projectId, featureId);

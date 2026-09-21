@@ -87,11 +87,7 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
     const featureId = useRequiredPathParam('featureId');
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const { refetchFeature } = useFeature(projectId, featureId);
-    const flagProps = { name: feature.name };
-    const staleProps = {
-        ...flagProps,
-        newState: feature.stale ? 'active' : 'stale',
-    };
+    const staleProps = { newState: feature.stale ? 'active' : 'stale' };
 
     const [showDelDialog, setShowDelDialog] = useState(false);
     const [openStaleDialog, setOpenStaleDialog] = useState(false);
@@ -193,10 +189,7 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
                 <FeatureArchiveDialog
                     isOpen={showDelDialog}
                     onConfirm={() => navigate(`/projects/${projectId}`)}
-                    tracking={{
-                        ...archiveFlagTracking,
-                        props: flagProps,
-                    }}
+                    tracking={archiveFlagTracking}
                     onClose={() => setShowDelDialog(false)}
                     projectId={projectId}
                     featureIds={[featureId]}

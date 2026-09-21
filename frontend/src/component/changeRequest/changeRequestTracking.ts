@@ -3,9 +3,9 @@ import type {
     ChangeRequestTransitionState,
     ChangeRequestType,
 } from 'component/changeRequest/changeRequest.types';
-import type { Tracking } from 'utils/trackingEvents';
+import type { Tracking, TrackingType } from 'utils/trackingEvents';
 
-const transitionType: Record<ChangeRequestTransitionState, string> = {
+const transitionType: Record<ChangeRequestTransitionState, TrackingType> = {
     Approved: 'approve-change-request',
     Applied: 'apply-change-request',
     Scheduled: 'schedule-change-request',
@@ -41,14 +41,14 @@ export const editChangeTracking = (change: { action: string }): Tracking => ({
     props: { changeType: change.action },
 });
 
-export const discardChangeTracking: Tracking = {
+export const deleteChangeTracking: Tracking = {
     event: 'change-request',
-    type: 'discard-change',
+    type: 'delete-change',
 };
 
-export const discardDraftTracking: Tracking = {
+export const deleteDraftTracking: Tracking = {
     event: 'change-request',
-    type: 'discard-draft',
+    type: 'delete-draft',
 };
 
 export const addCommentTracking: Tracking = {
@@ -94,9 +94,4 @@ export const toggleChangeRequestsTracking = ({
 export const selectRequiredApprovalsTracking: Tracking = {
     event: 'change-request',
     type: 'select-required-approvals',
-};
-
-export const createConflictTracking: Tracking = {
-    event: 'change-request',
-    type: 'create-conflict',
 };

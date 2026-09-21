@@ -79,7 +79,6 @@ test('tracks marking a flag as stale after the update succeeds', async () => {
         expect(trackEvent).toHaveBeenCalledWith('flag-actions', {
             props: {
                 eventType: 'toggle-flag-stale',
-                name: 'my-flag',
                 newState: 'stale',
                 action: 'succeeded',
             },
@@ -104,7 +103,6 @@ test("reports newState: 'active' when flipping a stale flag back to active", asy
         expect(trackEvent).toHaveBeenCalledWith('flag-actions', {
             props: {
                 eventType: 'toggle-flag-stale',
-                name: 'my-flag',
                 newState: 'active',
                 action: 'succeeded',
             },
@@ -131,7 +129,6 @@ test('reports the status a rejected stale change failed on', async () => {
         expect(trackEvent).toHaveBeenCalledWith('flag-actions', {
             props: {
                 eventType: 'toggle-flag-stale',
-                name: 'my-flag',
                 newState: 'stale',
                 action: 'failed',
                 failedOn: 'request',
@@ -164,7 +161,6 @@ test('tracks archiving a flag after the archive succeeds', async () => {
         expect(trackEvent).toHaveBeenCalledWith('flag-actions', {
             props: {
                 eventType: 'archive-flag',
-                name: 'my-flag',
                 archiveVia: 'direct',
                 action: 'succeeded',
             },
@@ -173,7 +169,6 @@ test('tracks archiving a flag after the archive succeeds', async () => {
     expect(trackEvent).toHaveBeenCalledWith('flag-actions', {
         props: {
             eventType: 'archive-flag',
-            name: 'my-flag',
             archiveVia: 'direct',
             action: 'submitted',
         },

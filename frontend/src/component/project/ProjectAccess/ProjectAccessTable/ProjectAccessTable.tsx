@@ -60,7 +60,10 @@ import {
     PA_REMOVE_BUTTON_ID,
 } from 'utils/testIds';
 import { useTracking } from 'hooks/useTracking';
-import { projectAccessTracking } from 'component/project/ProjectAccess/projectAccessTracking';
+import {
+    removeAccessTracking,
+    viewGroupDetailsTracking,
+} from 'component/project/ProjectAccess/projectAccessTracking';
 
 export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search', string>
@@ -103,16 +106,8 @@ export const ProjectAccessTable: FC = () => {
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const { setToastData } = useToast();
-    const trackViewGroupDetails = useTracking(
-        projectAccessTracking('view-group-details'),
-    );
-    const trackAssignAccess = useTracking(
-        projectAccessTracking('assign-access'),
-    );
-    const trackChangeRole = useTracking(projectAccessTracking('change-role'));
-    const trackRemoveAccess = useTracking(
-        projectAccessTracking('remove-access'),
-    );
+    const trackViewGroupDetails = useTracking(viewGroupDetailsTracking);
+    const trackRemoveAccess = useTracking(removeAccessTracking);
 
     const { access, refetchProjectAccess } = useProjectAccess(projectId);
     const { removeUserAccess, removeGroupAccess, loading } = useProjectApi();
@@ -232,14 +227,6 @@ export const ProjectAccessTable: FC = () => {
                                     ? 'group'
                                     : 'user'
                             }/${row.entity.id}`}
-                            onClick={() => {
-                                trackChangeRole('opened', {
-                                    targetType:
-                                        row.type === ENTITY_TYPE.GROUP
-                                            ? 'group'
-                                            : 'user',
-                                });
-                            }}
                             tooltipProps={{
                                 title: 'Edit access',
                             }}
@@ -434,10 +421,7 @@ export const ProjectAccessTable: FC = () => {
                                 }
                             />
                             <ResponsiveButton
-                                onClick={() => {
-                                    trackAssignAccess('opened');
-                                    navigate('create');
-                                }}
+                                onClick={() => navigate('create')}
                                 maxWidth='700px'
                                 Icon={Add}
                                 permission={[
@@ -504,7 +488,7 @@ export const ProjectAccessTable: FC = () => {
             <Dialogue
                 open={removeOpen}
                 tracking={{
-                    ...projectAccessTracking('remove-access'),
+                    ...removeAccessTracking,
                     props: selectedRow ? removeProps(selectedRow) : undefined,
                 }}
                 disabledPrimaryButton={loading}
@@ -531,11 +515,6 @@ export const ProjectAccessTable: FC = () => {
                     </>
                 }
                 onEdit={() => {
-                    if (selectedRow) {
-                        trackChangeRole('opened', {
-                            targetType: 'group',
-                        });
-                    }
                     navigate(`edit/group/${selectedRow?.entity.id}`);
                 }}
                 onRemove={() => {

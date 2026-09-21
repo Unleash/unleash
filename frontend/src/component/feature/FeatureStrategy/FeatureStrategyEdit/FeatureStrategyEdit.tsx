@@ -33,13 +33,9 @@ import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useCh
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useTracking } from 'hooks/useTracking';
 import { editStrategyTracking as createEditStrategyTracking } from '../strategyActionsTracking.ts';
-import { createConflictTracking } from 'component/changeRequest/changeRequestTracking';
 import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm.tsx';
 import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
-import {
-    getChangeRequestConflictCreatedData,
-    getChangeRequestConflictCreatedDataFromScheduleData,
-} from './change-request-conflict-data.ts';
+import { changeRequestsUpdatingStrategy } from './changeRequestsUpdatingStrategy.ts';
 import { constraintId } from 'constants/constraintId.ts';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
 import { summarizeStrategy } from '../summarizeStrategy.ts';
@@ -121,30 +117,14 @@ export const FeatureStrategyEdit = () => {
         viaChangeRequest,
     });
     const trackEditStrategy = useTracking(editStrategyTracking);
-    const trackCreateConflict = useTracking(createConflictTracking);
-    const { changeRequests: scheduledChangeRequestThatUseStrategy } =
+    const { changeRequests: scheduledChangeRequestsThatUseStrategy } =
         useScheduledChangeRequestsWithStrategy(projectId, strategyId);
-
-    const pendingCrsUsingThisStrategy = getChangeRequestConflictCreatedData(
-        pendingChangeRequests,
-        featureId,
-        strategyId,
-        uiConfig,
-    );
-
-    const scheduledCrsUsingThisStrategy =
-        getChangeRequestConflictCreatedDataFromScheduleData(
-            scheduledChangeRequestThatUseStrategy,
-            uiConfig,
-        );
-
-    const emitConflictsCreatedEvents = (): void =>
-        [
-            ...pendingCrsUsingThisStrategy,
-            ...scheduledCrsUsingThisStrategy,
-        ].forEach((data) => {
-            trackCreateConflict('succeeded', data);
-        });
+    const conflictingChangeRequestCount =
+        changeRequestsUpdatingStrategy(
+            pendingChangeRequests,
+            featureId,
+            strategyId,
+        ).length + (scheduledChangeRequestsThatUseStrategy?.length ?? 0);
 
     useEffect(() => {
         const environmentConfig: IFeatureEnvironment | undefined =
@@ -262,9 +242,9 @@ export const FeatureStrategyEdit = () => {
                 {
                     previous: summarizeStrategy(previousStrategyState),
                     current: summarizeStrategy(strategy),
+                    conflictingChangeRequestCount,
                 },
             );
-            emitConflictsCreatedEvents();
             refetchFeature();
             navigate(formatFeaturePath(projectId, featureId));
         } catch (error: unknown) {

@@ -12,7 +12,6 @@ export type LifecycleCompletedStatus =
     | 'discarded';
 
 export const completeFlagTracking = (props: {
-    name: string;
     openedFrom: LifecycleOpenedFrom;
     status: LifecycleCompletedStatus;
     variantOptionsCount: number;
@@ -23,7 +22,6 @@ export const completeFlagTracking = (props: {
 });
 
 export const uncompleteFlagTracking = (props: {
-    name: string;
     status?: 'kept' | 'discarded';
 }): Tracking => ({
     event: 'feature-lifecycle',
@@ -31,8 +29,7 @@ export const uncompleteFlagTracking = (props: {
     props,
 });
 
-export const snoozeReminderTracking = (props: { name: string }): Tracking => ({
+export const snoozeReminderTracking: Tracking = {
     event: 'feature-lifecycle',
     type: 'snooze-reminder',
-    props,
-});
+};

@@ -17,9 +17,7 @@ export const useUncomplete = ({
     onChange?: () => void;
 }) => {
     const status = stage?.name === 'completed' ? stage.status : undefined;
-    const trackUncompleteFlag = useTracking(
-        uncompleteFlagTracking({ name: feature, status }),
-    );
+    const trackUncompleteFlag = useTracking(uncompleteFlagTracking({ status }));
     const { setToastApiError } = useToast();
     const { markFeatureUncompleted, loading } = useFeatureLifecycleApi();
 

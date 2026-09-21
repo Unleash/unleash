@@ -9,12 +9,7 @@ import {
     UPDATE_PROJECT_RELEASE_TEMPLATE,
 } from '@server/types/permissions.ts';
 import { formatReleaseTemplateCreatePath } from 'component/releases/releaseTemplatePaths';
-import { releaseTemplateScopeProps } from 'component/releases/releaseTemplateScopeProps';
-import { useTracking } from 'hooks/useTracking.ts';
-import {
-    createTemplateTracking,
-    createTemplateWithoutAccessTracking,
-} from 'component/releases/releaseManagementTracking';
+import { createTemplateTracking } from 'component/releases/releaseManagementTracking';
 import { Dialogue } from 'component/common/Dialogue/Dialogue.tsx';
 
 interface INewReleaseTemplateButtonProps {
@@ -24,7 +19,6 @@ interface INewReleaseTemplateButtonProps {
 export const NewReleaseTemplateButton = ({
     projectId,
 }: INewReleaseTemplateButtonProps) => {
-    const trackCreateTemplate = useTracking(createTemplateTracking);
     const [noAccessDialogOpen, setNoAccessDialogOpen] = useState(false);
     const canCreateGlobalTemplate = useHasRootAccess(
         RELEASE_PLAN_TEMPLATE_CREATE,
@@ -34,14 +28,7 @@ export const NewReleaseTemplateButton = ({
         projectId,
     );
     const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
-
-    const handleNavigateToCreate = (project?: string) => {
-        setMenuAnchor(null);
-        trackCreateTemplate('opened', {
-            openedFrom: 'add-strategy',
-            ...releaseTemplateScopeProps(project),
-        });
-    };
+    const closeMenu = () => setMenuAnchor(null);
 
     if (!canCreateGlobalTemplate && !canCreateProjectTemplate) {
         return (
@@ -58,7 +45,10 @@ export const NewReleaseTemplateButton = ({
                     secondaryButtonText='Close'
                     onClose={() => setNoAccessDialogOpen(false)}
                     title='Contact admin to create release templates'
-                    tracking={createTemplateWithoutAccessTracking}
+                    tracking={{
+                        ...createTemplateTracking,
+                        props: { blockedBy: 'permission' },
+                    }}
                 >
                     You don&apos;t have the required permissions to create
                     release templates. You must contact your organization admin
@@ -83,13 +73,13 @@ export const NewReleaseTemplateButton = ({
                 <Menu
                     anchorEl={menuAnchor}
                     open={Boolean(menuAnchor)}
-                    onClose={() => setMenuAnchor(null)}
+                    onClose={closeMenu}
                 >
                     <MenuItem
                         component={RouterLink}
                         nativeButton={false}
                         to={formatReleaseTemplateCreatePath()}
-                        onClick={() => handleNavigateToCreate()}
+                        onClick={closeMenu}
                     >
                         Global template
                     </MenuItem>
@@ -97,7 +87,7 @@ export const NewReleaseTemplateButton = ({
                         component={RouterLink}
                         nativeButton={false}
                         to={formatReleaseTemplateCreatePath(projectId)}
-                        onClick={() => handleNavigateToCreate(projectId)}
+                        onClick={closeMenu}
                     >
                         Project template
                     </MenuItem>
@@ -113,7 +103,6 @@ export const NewReleaseTemplateButton = ({
             nativeButton={false}
             to={formatReleaseTemplateCreatePath(project)}
             startIcon={<AddIcon />}
-            onClick={() => handleNavigateToCreate(project)}
             size='medium'
         >
             New template

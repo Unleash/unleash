@@ -7,9 +7,9 @@ import { TooltipResolver } from '../../TooltipResolver/TooltipResolver.tsx';
 import { useTracking } from 'hooks/useTracking';
 import type { Tracking } from 'utils/trackingEvents';
 
-const pinFavoritesTracking: Tracking = {
+const toggleFavoritesPinTracking: Tracking = {
     event: 'favorite',
-    type: 'pin-favorites',
+    type: 'toggle-favorites-pin',
 };
 
 interface IFavoriteIconHeaderProps {
@@ -23,12 +23,12 @@ export const FavoriteIconHeader: FC<IFavoriteIconHeaderProps> = ({
     onClick,
     scope,
 }) => {
-    const trackPinFavorites = useTracking(pinFavoritesTracking);
+    const trackToggleFavoritesPin = useTracking(toggleFavoritesPinTracking);
     const [internalState, setInternalState] = useState(isActive);
     const onToggle = () => {
         const pinned = !internalState;
         setInternalState(pinned);
-        trackPinFavorites('succeeded', {
+        trackToggleFavoritesPin('succeeded', {
             newState: pinned ? 'pinned' : 'unpinned',
             scope,
         });

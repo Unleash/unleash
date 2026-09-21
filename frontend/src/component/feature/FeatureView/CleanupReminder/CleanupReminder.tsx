@@ -86,9 +86,7 @@ export const CleanupReminder: FC<{
     };
 
     const reminder = determineReminder();
-    const trackSnoozeReminder = useTracking(
-        snoozeReminderTracking({ name: feature.name }),
-    );
+    const trackSnoozeReminder = useTracking(snoozeReminderTracking);
 
     if (!reminder) return null;
 

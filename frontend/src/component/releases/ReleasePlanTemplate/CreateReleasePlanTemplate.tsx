@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { Button, styled } from '@mui/material';
 import { TemplateForm } from './TemplateForm/TemplateForm.tsx';
@@ -16,6 +17,8 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useEventTracker } from 'hooks/useEventTracker';
+import { useTracking } from 'hooks/useTracking';
+import { createTemplateTracking } from 'component/releases/releaseManagementTracking';
 import { Limit } from 'component/common/Limit/Limit.tsx';
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates.ts';
 import { releaseTemplatesApiPath } from 'hooks/api/getters/useReleasePlanTemplates/releaseTemplatesApiPath';
@@ -73,6 +76,10 @@ export const CreateReleasePlanTemplate = ({ modal }: { modal?: boolean }) => {
     };
 
     const scopeProps = releaseTemplateScopeProps(projectId);
+    const trackCreateTemplate = useTracking(createTemplateTracking);
+    useEffect(() => {
+        trackCreateTemplate('opened', releaseTemplateScopeProps(projectId));
+    }, [trackCreateTemplate, projectId]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

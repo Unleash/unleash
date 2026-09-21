@@ -2,9 +2,9 @@ import useAPI from '../useApi/useApi.js';
 import { useTracking } from 'hooks/useTracking';
 import {
     addChangeTracking,
-    discardChangeTracking,
+    deleteChangeTracking,
     addCommentTracking,
-    discardDraftTracking,
+    deleteDraftTracking,
     editTitleTracking,
 } from 'component/changeRequest/changeRequestTracking';
 
@@ -45,8 +45,8 @@ export interface IChangeRequestConfig {
 
 export const useChangeRequestApi = () => {
     const trackAddChange = useTracking(addChangeTracking);
-    const trackDiscardChange = useTracking(discardChangeTracking);
-    const trackDiscardDraft = useTracking(discardDraftTracking);
+    const trackDeleteChange = useTracking(deleteChangeTracking);
+    const trackDeleteDraft = useTracking(deleteDraftTracking);
     const trackAddComment = useTracking(addCommentTracking);
     const trackEditTitle = useTracking(editTitleTracking);
 
@@ -112,7 +112,7 @@ export const useChangeRequestApi = () => {
             method: 'DELETE',
         });
 
-        return trackDiscardChange.mutation(() =>
+        return trackDeleteChange.mutation(() =>
             makeRequest(req.caller, req.id),
         );
     };
@@ -156,9 +156,7 @@ export const useChangeRequestApi = () => {
             method: 'DELETE',
         });
 
-        return trackDiscardDraft.mutation(() =>
-            makeRequest(req.caller, req.id),
-        );
+        return trackDeleteDraft.mutation(() => makeRequest(req.caller, req.id));
     };
 
     const addComment = async (

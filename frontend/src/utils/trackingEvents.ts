@@ -101,6 +101,48 @@ export type CustomEvents =
     | 'list-filters'
     | 'event-log';
 
+// One verb per meaning, so a new verb is only added when it is not a synonym of one here:
+// show and hide are toggle, discard is delete, assign is add, change is edit.
+export type TrackingVerb =
+    | 'create'
+    | 'edit'
+    | 'delete'
+    | 'archive'
+    | 'revive'
+    | 'clone'
+    | 'copy'
+    | 'toggle'
+    | 'enable'
+    | 'filter'
+    | 'search'
+    | 'sort'
+    | 'paginate'
+    | 'export'
+    | 'import'
+    | 'add'
+    | 'remove'
+    | 'select'
+    | 'view'
+    | 'open'
+    | 'confirm'
+    | 'snooze'
+    | 'complete'
+    | 'uncomplete'
+    | 'send'
+    | 'approve'
+    | 'reject'
+    | 'apply'
+    | 'schedule'
+    | 'cancel';
+
+export type TrackingType = `${TrackingVerb}-${string}`;
+
+export type DialogDismissMethod =
+    | 'cancel-button'
+    | 'backdrop'
+    | 'escape'
+    | 'close-icon';
+
 // The hook sets eventType and action from the declaration, so don't pass them as props.
 export type TrackingProps = EventProps & {
     eventType?: never;
@@ -110,19 +152,13 @@ export type TrackingProps = EventProps & {
 // Every action emits as a row of the same event, so funnels need no join.
 export type Tracking = {
     event: CustomEvents;
-    type?: string;
+    type?: TrackingType;
     props?: TrackingProps;
 };
 
 export type TrackingAction =
     // Only for things that later get submitted or dismissed, like a dialog. Not for expand/collapse.
     'opened' | 'submitted' | 'succeeded' | 'failed' | 'dismissed';
-
-export type DialogDismissMethod =
-    | 'cancel-button'
-    | 'backdrop'
-    | 'escape'
-    | 'close-icon';
 
 export const dismissMethodFromCloseReason = (
     reason: string | undefined,

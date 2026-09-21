@@ -14,8 +14,3 @@ export const createTemplateTracking: Tracking = {
     event: 'release-management',
     type: 'create-template',
 };
-
-export const createTemplateWithoutAccessTracking: Tracking = {
-    event: 'release-management',
-    type: 'create-template-without-access',
-};

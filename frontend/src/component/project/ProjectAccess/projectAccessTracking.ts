@@ -1,12 +1,21 @@
 import type { Tracking } from 'utils/trackingEvents';
 
-type ProjectAccessType =
-    | 'remove-access'
-    | 'assign-access'
-    | 'change-role'
-    | 'view-group-details';
-
-export const projectAccessTracking = (type: ProjectAccessType): Tracking => ({
+export const addAccessTracking: Tracking = {
     event: 'project-access',
-    type,
-});
+    type: 'add-access',
+};
+
+export const editRoleTracking: Tracking = {
+    event: 'project-access',
+    type: 'edit-role',
+};
+
+export const removeAccessTracking: Tracking = {
+    event: 'project-access',
+    type: 'remove-access',
+};
+
+export const viewGroupDetailsTracking: Tracking = {
+    event: 'project-access',
+    type: 'view-group-details',
+};

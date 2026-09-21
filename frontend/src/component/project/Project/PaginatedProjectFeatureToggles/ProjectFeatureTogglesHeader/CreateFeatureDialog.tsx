@@ -54,6 +54,7 @@ import {
     type DialogDismissMethod,
     dismissMethodFromCloseReason,
     type Tracking,
+    type TrackingProps,
 } from 'utils/trackingEvents';
 
 const createFlagTracking = {
@@ -162,13 +163,6 @@ const CreateFeatureDialogContent = ({
     onSuccess,
 }: ICreateFeatureDialogProps) => {
     const useNewDesign = useUiFlag('newModalDesign');
-    const trackCreateFlag = useTracking(createFlagTracking);
-
-    useEffect(() => {
-        if (open) {
-            trackCreateFlag('opened');
-        }
-    }, [open, trackCreateFlag]);
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig, isOss } = useUiConfig();
     const navigate = useNavigate();
@@ -278,11 +272,21 @@ const CreateFeatureDialogContent = ({
             },
         });
 
-    const limitReached = globalFlagLimitReached
-        ? 'global'
+    const blockedProps: TrackingProps = globalFlagLimitReached
+        ? { blockedBy: 'limit', scope: 'global' }
         : projectFlagLimitReached
-          ? 'project'
-          : 'none';
+          ? { blockedBy: 'limit', scope: 'project' }
+          : {};
+    const trackCreateFlag = useTracking({
+        ...createFlagTracking,
+        props: blockedProps,
+    });
+
+    useEffect(() => {
+        if (open) {
+            trackCreateFlag('opened');
+        }
+    }, [open, trackCreateFlag]);
 
     const { projects } = useProjects();
     const { featureTypes } = useFeatureTypes();
@@ -302,7 +306,7 @@ const CreateFeatureDialogContent = ({
     }, [project, projects]);
 
     const onDialogClose = (method: DialogDismissMethod) => {
-        trackCreateFlag('dismissed', { method, limitReached });
+        trackCreateFlag('dismissed', { method });
         setStoredFlagConfig({
             name,
             tags,
@@ -495,7 +499,6 @@ const CreateFeatureDialogContent = ({
                         onClose={() => {
                             trackCreateFlag('dismissed', {
                                 method: 'cancel-button',
-                                limitReached,
                             });
                             onClose();
                         }}

@@ -1,16 +1,15 @@
 import type { IProjectEnvironment } from 'interfaces/environments';
 import type { Tracking } from 'utils/trackingEvents';
 
-export const showEnvironmentTracking: Tracking = {
+export const toggleEnvironmentVisibilityTracking: Tracking = {
     event: 'project-environments',
-    type: 'show-environment',
+    type: 'toggle-environment-visibility',
 };
 
-export const hideEnvironmentTracking: Tracking = {
-    event: 'project-environments',
-    type: 'hide-environment',
-};
-
-export const environmentTrackingProps = (env: IProjectEnvironment) => ({
+export const environmentTrackingProps = (
+    env: IProjectEnvironment,
+    newState: 'visible' | 'hidden',
+) => ({
     environmentType: env.type,
+    newState,
 });

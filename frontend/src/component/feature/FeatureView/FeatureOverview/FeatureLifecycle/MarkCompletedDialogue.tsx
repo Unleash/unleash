@@ -41,7 +41,6 @@ export const MarkCompletedDialogue = ({
     const [variant, setVariant] = useState<string | undefined>(undefined);
 
     const tracking = completeFlagTracking({
-        name: featureId,
         openedFrom,
         status,
         variantOptionsCount: variantOptions.length,

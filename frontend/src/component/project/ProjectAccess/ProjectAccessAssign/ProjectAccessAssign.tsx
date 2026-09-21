@@ -1,5 +1,5 @@
 import type React from 'react';
-import { type FormEvent, useState } from 'react';
+import { type FormEvent, useEffect, useState } from 'react';
 import { Button, capitalize, Checkbox, Chip, styled } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
@@ -34,7 +34,10 @@ import { useCheckProjectPermissions } from 'hooks/useHasAccess';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import AutocompleteVirtual from 'component/common/AutocompleteVirtual/AutcompleteVirtual';
 import { useTracking } from 'hooks/useTracking';
-import { projectAccessTracking } from 'component/project/ProjectAccess/projectAccessTracking';
+import {
+    addAccessTracking,
+    editRoleTracking,
+} from 'component/project/ProjectAccess/projectAccessTracking';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -132,10 +135,12 @@ export const ProjectAccessAssign = ({
 
     const { setToastData, setToastApiError } = useToast();
     const navigate = useNavigate();
-    const tracking = projectAccessTracking(
-        edit ? 'change-role' : 'assign-access',
-    );
+    const tracking = edit ? editRoleTracking : addAccessTracking;
     const trackAssign = useTracking(tracking);
+    const targetType = selected?.type === ENTITY_TYPE.GROUP ? 'group' : 'user';
+    useEffect(() => {
+        trackAssign('opened', edit ? { targetType } : undefined);
+    }, [trackAssign, edit, targetType]);
 
     const options = [
         ...groups
@@ -228,8 +233,7 @@ export const ProjectAccessAssign = ({
         if (edit) {
             return {
                 ...roleProps,
-                targetType:
-                    selected?.type === ENTITY_TYPE.GROUP ? 'group' : 'user',
+                targetType,
                 groupName:
                     selected?.type === ENTITY_TYPE.GROUP
                         ? selected.entity.name

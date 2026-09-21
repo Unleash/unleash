@@ -13,6 +13,8 @@ import { MyProjects } from './MyProjects.tsx';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { useEventTracker } from 'hooks/useEventTracker';
 import { useDashboardState } from './useDashboardState.ts';
+import { useTracking } from 'hooks/useTracking';
+import { personalDashboardTracking } from './personalDashboardTracking.ts';
 import { MyFlags } from './MyFlags.tsx';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { fromPersonalDashboardProjectDetailsOutput } from './RemoteData.ts';
@@ -266,9 +268,14 @@ const ProjectPanel = () => {
     );
 };
 
+const sectionState = (expanded: boolean) =>
+    expanded ? 'expanded' : 'collapsed';
+
 export const PersonalDashboard = () => {
     const { user } = useAuthUser();
     const { trackEvent } = useEventTracker();
+    const { expandFlags, expandProjects, expandTimeline } = useDashboardState();
+    const trackDashboard = useTracking(personalDashboardTracking);
     const { setWelcomeDialog } = useWelcomeDialogContext();
     const { isOss } = useUiConfig();
 
@@ -277,10 +284,10 @@ export const PersonalDashboard = () => {
     usePageTitle(name ? `Dashboard: ${name}` : 'Dashboard');
 
     useEffect(() => {
-        trackEvent('personal-dashboard', {
-            props: {
-                eventType: 'seen',
-            },
+        trackDashboard('succeeded', {
+            flagsSection: sectionState(expandFlags),
+            projectsSection: sectionState(expandProjects),
+            timelineSection: sectionState(expandTimeline),
         });
     }, []);
 

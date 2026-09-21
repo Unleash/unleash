@@ -809,6 +809,7 @@ export * from './featureEnvironmentSafeguardSchemaImpactMetricLabelSelectors.ts'
 export * from './featureEnvironmentSafeguardSchemaImpactMetricSource.ts';
 export * from './featureEnvironmentSafeguardSchemaImpactMetricTimeRange.ts';
 export * from './featureEnvironmentSchema.ts';
+export * from './featureEnvironmentTotalUsageSchema.ts';
 export * from './featureEventsSchema.ts';
 export * from './featureEventsSchemaVersion.ts';
 export * from './featureLifecycleCompletedSchema.ts';
@@ -877,6 +878,7 @@ export * from './getActiveSessions401.ts';
 export * from './getActiveSessions403.ts';
 export * from './getAddon401.ts';
 export * from './getAddons401.ts';
+export * from './getAddonsParams.ts';
 export * from './getAdminCount401.ts';
 export * from './getAdminCount403.ts';
 export * from './getAdvancedPlayground400.ts';

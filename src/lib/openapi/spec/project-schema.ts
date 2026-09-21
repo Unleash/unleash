@@ -29,7 +29,8 @@ export const projectSchema = {
         health: {
             type: 'number',
             example: 50,
-            description: 'Use `technicalDebt` instead.',
+            description:
+                "An indicator of the project's health on a scale from 0 to 100",
             deprecated: true,
         },
         technicalDebt: {
@@ -39,6 +40,7 @@ export const projectSchema = {
             maximum: 100,
             description:
                 "An indicator of the [project's technical debt](https://docs.getunleash.io/concepts/technical-debt#project-status) on a scale from 0 to 100",
+            deprecated: true,
         },
         featureCount: {
             type: 'number',
@@ -202,6 +204,7 @@ export const projectSchema = {
                     },
                 },
             ],
+            deprecated: true,
         },
     },
     components: {

@@ -26,7 +26,7 @@ import {
 import { Limit } from 'component/common/Limit/Limit';
 import { useTracking } from 'hooks/useTracking';
 import {
-    apiTokenCreatedTracking,
+    createApiTokenTracking,
     apiTokenCreationProps,
 } from 'component/common/ApiTokenTable/apiTokenTracking';
 
@@ -84,7 +84,7 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
 
     const { createToken, loading: loadingCreateToken } = useApiTokensApi();
     const { refetch } = useApiTokens();
-    const trackApiTokenCreated = useTracking(apiTokenCreatedTracking);
+    const trackCreateApiToken = useTracking(createApiTokenTracking);
 
     usePageTitle(pageTitle);
 
@@ -94,7 +94,7 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
         e.preventDefault();
 
         if (!isValid()) {
-            trackApiTokenCreated.validationFailed(
+            trackCreateApiToken.validationFailed(
                 apiTokenCreationProps(getApiTokenPayload()),
             );
             return;
@@ -102,7 +102,7 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
 
         try {
             const payload = getApiTokenPayload();
-            const api = await trackApiTokenCreated.mutation(
+            const api = await trackCreateApiToken.mutation(
                 async () => (await createToken(payload)).json(),
                 apiTokenCreationProps(payload),
             );

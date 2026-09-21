@@ -103,12 +103,16 @@ export const ProjectAccessTable: FC = () => {
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const { setToastData } = useToast();
-    const trackGroupDetails = useTracking(
-        projectAccessTracking('group-details'),
+    const trackViewGroupDetails = useTracking(
+        projectAccessTracking('view-group-details'),
     );
-    const trackAssigned = useTracking(projectAccessTracking('assigned'));
-    const trackRoleChanged = useTracking(projectAccessTracking('role-changed'));
-    const trackRemoved = useTracking(projectAccessTracking('removed'));
+    const trackAssignAccess = useTracking(
+        projectAccessTracking('assign-access'),
+    );
+    const trackChangeRole = useTracking(projectAccessTracking('change-role'));
+    const trackRemoveAccess = useTracking(
+        projectAccessTracking('remove-access'),
+    );
 
     const { access, refetchProjectAccess } = useProjectAccess(projectId);
     const { removeUserAccess, removeGroupAccess, loading } = useProjectApi();
@@ -152,7 +156,7 @@ export const ProjectAccessTable: FC = () => {
                                 onClick={() => {
                                     setSelectedRow(row);
                                     setGroupOpen(true);
-                                    trackGroupDetails('succeeded');
+                                    trackViewGroupDetails('succeeded');
                                 }}
                                 title={String(getValue() ?? '')}
                                 subtitle={`${(row.entity as IGroup).users?.length} users`}
@@ -229,7 +233,7 @@ export const ProjectAccessTable: FC = () => {
                                     : 'user'
                             }/${row.entity.id}`}
                             onClick={() => {
-                                trackRoleChanged('opened', {
+                                trackChangeRole('opened', {
                                     targetType:
                                         row.type === ENTITY_TYPE.GROUP
                                             ? 'group'
@@ -377,7 +381,7 @@ export const ProjectAccessTable: FC = () => {
         }
 
         try {
-            await trackRemoved.mutation(
+            await trackRemoveAccess.mutation(
                 () =>
                     userOrGroup.type !== ENTITY_TYPE.GROUP
                         ? removeUserAccess(projectId, id)
@@ -431,7 +435,7 @@ export const ProjectAccessTable: FC = () => {
                             />
                             <ResponsiveButton
                                 onClick={() => {
-                                    trackAssigned('opened');
+                                    trackAssignAccess('opened');
                                     navigate('create');
                                 }}
                                 maxWidth='700px'
@@ -500,7 +504,7 @@ export const ProjectAccessTable: FC = () => {
             <Dialogue
                 open={removeOpen}
                 tracking={{
-                    ...projectAccessTracking('removed'),
+                    ...projectAccessTracking('remove-access'),
                     props: selectedRow ? removeProps(selectedRow) : undefined,
                 }}
                 disabledPrimaryButton={loading}
@@ -528,7 +532,7 @@ export const ProjectAccessTable: FC = () => {
                 }
                 onEdit={() => {
                     if (selectedRow) {
-                        trackRoleChanged('opened', {
+                        trackChangeRole('opened', {
                             targetType: 'group',
                         });
                     }

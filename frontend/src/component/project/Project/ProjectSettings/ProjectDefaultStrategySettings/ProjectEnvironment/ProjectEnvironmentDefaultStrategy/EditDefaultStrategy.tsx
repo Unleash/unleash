@@ -82,7 +82,7 @@ const EditDefaultStrategy = () => {
         try {
             await updateDefaultStrategy(projectId, environmentId, payload);
 
-            trackEvent('default_strategy', {
+            trackEvent('default-strategy', {
                 props: {
                     action: 'edit',
                     hasTitle: Boolean(payload.title),

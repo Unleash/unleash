@@ -132,7 +132,9 @@ export const ProjectAccessAssign = ({
 
     const { setToastData, setToastApiError } = useToast();
     const navigate = useNavigate();
-    const tracking = projectAccessTracking(edit ? 'role-changed' : 'assigned');
+    const tracking = projectAccessTracking(
+        edit ? 'change-role' : 'assign-access',
+    );
     const trackAssign = useTracking(tracking);
 
     const options = [

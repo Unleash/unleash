@@ -1,11 +1,11 @@
 import useAPI from '../useApi/useApi.js';
 import { useTracking } from 'hooks/useTracking';
 import {
-    changeAddedTracking,
-    changeDiscardedTracking,
-    commentAddedTracking,
-    draftDiscardedTracking,
-    titleUpdatedTracking,
+    addChangeTracking,
+    discardChangeTracking,
+    addCommentTracking,
+    discardDraftTracking,
+    editTitleTracking,
 } from 'component/changeRequest/changeRequestTracking';
 
 export interface IChangeSchema {
@@ -44,11 +44,11 @@ export interface IChangeRequestConfig {
 }
 
 export const useChangeRequestApi = () => {
-    const trackChangeAdded = useTracking(changeAddedTracking);
-    const trackChangeDiscarded = useTracking(changeDiscardedTracking);
-    const trackDraftDiscarded = useTracking(draftDiscardedTracking);
-    const trackCommentAdded = useTracking(commentAddedTracking);
-    const trackTitleUpdated = useTracking(titleUpdatedTracking);
+    const trackAddChange = useTracking(addChangeTracking);
+    const trackDiscardChange = useTracking(discardChangeTracking);
+    const trackDiscardDraft = useTracking(discardDraftTracking);
+    const trackAddComment = useTracking(addCommentTracking);
+    const trackEditTitle = useTracking(editTitleTracking);
 
     const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
@@ -67,7 +67,7 @@ export const useChangeRequestApi = () => {
             body: JSON.stringify(payload),
         });
 
-        return trackChangeAdded.mutation(
+        return trackAddChange.mutation(
             async () => {
                 const response = await makeRequest(req.caller, req.id);
                 return response.json();
@@ -112,7 +112,7 @@ export const useChangeRequestApi = () => {
             method: 'DELETE',
         });
 
-        return trackChangeDiscarded.mutation(() =>
+        return trackDiscardChange.mutation(() =>
             makeRequest(req.caller, req.id),
         );
     };
@@ -156,7 +156,7 @@ export const useChangeRequestApi = () => {
             method: 'DELETE',
         });
 
-        return trackDraftDiscarded.mutation(() =>
+        return trackDiscardDraft.mutation(() =>
             makeRequest(req.caller, req.id),
         );
     };
@@ -172,9 +172,7 @@ export const useChangeRequestApi = () => {
             body: JSON.stringify({ text }),
         });
 
-        return trackCommentAdded.mutation(() =>
-            makeRequest(req.caller, req.id),
-        );
+        return trackAddComment.mutation(() => makeRequest(req.caller, req.id));
     };
 
     const updateTitle = async (
@@ -188,9 +186,7 @@ export const useChangeRequestApi = () => {
             body: JSON.stringify({ title }),
         });
 
-        return trackTitleUpdated.mutation(() =>
-            makeRequest(req.caller, req.id),
-        );
+        return trackEditTitle.mutation(() => makeRequest(req.caller, req.id));
     };
     const updateRequestedApprovers = async (
         project: string,

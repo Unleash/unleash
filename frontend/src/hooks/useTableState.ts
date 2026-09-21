@@ -16,7 +16,7 @@ const createOnSortingChange =
     ({
         tableState,
         setTableState,
-        trackSorted,
+        trackSortTable,
     }: {
         tableState: {
             sortBy: string;
@@ -26,7 +26,7 @@ const createOnSortingChange =
             sortBy?: string;
             sortOrder?: string;
         }) => void;
-        trackSorted: Tracker;
+        trackSortTable: Tracker;
     }): OnChangeFn<SortingState> =>
     (newSortBy) => {
         const sortBy =
@@ -44,7 +44,7 @@ const createOnSortingChange =
             sortOrder: sortBy?.desc ? 'desc' : 'asc',
         });
         if (sortBy?.id) {
-            trackSorted('succeeded', {
+            trackSortTable('succeeded', {
                 column: trackedColumnName(sortBy.id),
                 direction: sortBy.desc ? 'desc' : 'asc',
             });
@@ -55,16 +55,16 @@ const createOnPaginationChange =
     ({
         tableState,
         setTableState,
-        trackPaginated,
-        trackPageSizeChanged,
+        trackPaginateTable,
+        trackSelectPageSize,
     }: {
         tableState: {
             limit: number;
             offset: number;
         };
         setTableState: (newState: { limit?: number; offset?: number }) => void;
-        trackPaginated: Tracker;
-        trackPageSizeChanged: Tracker;
+        trackPaginateTable: Tracker;
+        trackSelectPageSize: Tracker;
     }): OnChangeFn<PaginationState> =>
     (newPagination) => {
         const currentPageIndex = tableState.offset
@@ -83,9 +83,9 @@ const createOnPaginationChange =
             offset: pageIndex ? pageIndex * pageSize : 0,
         });
         if (pageSize !== tableState.limit) {
-            trackPageSizeChanged('succeeded', { pageSize });
+            trackSelectPageSize('succeeded', { pageSize });
         } else if (pageIndex !== currentPageIndex) {
-            trackPaginated('succeeded', { pageDepth: pageIndex + 1 });
+            trackPaginateTable('succeeded', { pageDepth: pageIndex + 1 });
         }
     };
 
@@ -173,7 +173,7 @@ type UseTableStateArgs<T extends Object> = {
         columns?: TableStateColumns;
     }) => void;
     options: Omit<TableOptions<T>, 'getCoreRowModel'>;
-    // With a descriptor the table emits sorted, paginated and page-size-changed rows itself.
+    // With a descriptor the table emits sort-table, paginate-table and select-page-size rows itself.
     tracking?: Tracking;
 };
 
@@ -183,14 +183,14 @@ export const useTableState = <T extends Object>({
     options,
     tracking,
 }: UseTableStateArgs<T>) => {
-    const trackSorted = useTracking(
-        tracking && { ...tracking, type: 'sorted' },
+    const trackSortTable = useTracking(
+        tracking && { ...tracking, type: 'sort-table' },
     );
-    const trackPaginated = useTracking(
-        tracking && { ...tracking, type: 'paginated' },
+    const trackPaginateTable = useTracking(
+        tracking && { ...tracking, type: 'paginate-table' },
     );
-    const trackPageSizeChanged = useTracking(
-        tracking && { ...tracking, type: 'page-size-changed' },
+    const trackSelectPageSize = useTracking(
+        tracking && { ...tracking, type: 'select-page-size' },
     );
 
     const hideAllColumns = Object.fromEntries(
@@ -223,13 +223,13 @@ export const useTableState = <T extends Object>({
         onPaginationChange: createOnPaginationChange({
             tableState,
             setTableState,
-            trackPaginated,
-            trackPageSizeChanged,
+            trackPaginateTable,
+            trackSelectPageSize,
         }),
         onSortingChange: createOnSortingChange({
             tableState,
             setTableState,
-            trackSorted,
+            trackSortTable,
         }),
         onColumnVisibilityChange: createOnColumnVisibilityChange(
             tableState,

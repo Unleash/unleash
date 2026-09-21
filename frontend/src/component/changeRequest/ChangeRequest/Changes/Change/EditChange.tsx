@@ -30,7 +30,7 @@ import { FeatureStrategyForm } from '../../../../feature/FeatureStrategy/Feature
 import { constraintId } from 'constants/constraintId.ts';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
 import { getChangeStrategyName } from 'utils/getChangeStrategyName.ts';
-import { changeEditedTracking } from 'component/changeRequest/changeRequestTracking';
+import { editChangeTracking } from 'component/changeRequest/changeRequestTracking';
 import { useTracking } from 'hooks/useTracking';
 
 interface IEditChangeProps {
@@ -70,7 +70,7 @@ export const EditChange = ({
 }: IEditChangeProps) => {
     const projectId = useRequiredPathParam('projectId');
     const { editChange } = useChangeRequestApi();
-    const editTracking = changeEditedTracking(change);
+    const editTracking = editChangeTracking(change);
     const trackEdit = useTracking(editTracking);
 
     const constraintsWithId = addIdSymbolToConstraints(change.payload);

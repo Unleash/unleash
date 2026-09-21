@@ -74,7 +74,7 @@ export const ArchiveProject = ({
                 open={showArchiveDialog}
                 tracking={{
                     event: 'project-settings',
-                    type: 'project-archived',
+                    type: 'archive-project',
                 }}
                 onClose={() => {
                     setShowArchiveDialog(false);

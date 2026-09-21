@@ -26,7 +26,7 @@ import { useCheckProjectAccess } from 'hooks/useHasAccess';
 import { STRATEGY_FORM_COPY_ID } from 'utils/testIds';
 import type { FeatureStrategySchema } from 'openapi';
 import { useTracking } from 'hooks/useTracking';
-import { strategyCopiedTracking } from 'component/feature/FeatureStrategy/strategyActionsTracking';
+import { copyStrategyTracking } from 'component/feature/FeatureStrategy/strategyActionsTracking';
 import { strategyShapeProps } from 'component/feature/FeatureStrategy/summarizeStrategy';
 
 interface ICopyStrategyIconMenuProps {
@@ -57,7 +57,7 @@ export const CopyStrategyIconMenu: FC<ICopyStrategyIconMenuProps> = ({
     };
     const checkAccess = useCheckProjectAccess(projectId);
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
-    const trackStrategyCopied = useTracking(strategyCopiedTracking);
+    const trackCopyStrategy = useTracking(copyStrategyTracking);
     const copyTrackingProps = (targetEnvironment: string) => ({
         ...strategyShapeProps(strategy),
         sameEnvironment: targetEnvironment === environmentId,
@@ -72,7 +72,7 @@ export const CopyStrategyIconMenu: FC<ICopyStrategyIconMenuProps> = ({
     } = useChangeRequestAddStrategy(projectId, featureId, 'addStrategy');
 
     const changeRequestTracking = {
-        ...strategyCopiedTracking,
+        ...copyStrategyTracking,
         props: copyTrackingProps(changeRequestDialogDetails.environment!),
     };
 
@@ -91,7 +91,7 @@ export const CopyStrategyIconMenu: FC<ICopyStrategyIconMenuProps> = ({
         }
 
         try {
-            await trackStrategyCopied.mutation(
+            await trackCopyStrategy.mutation(
                 () =>
                     addStrategyToFeature(
                         projectId,

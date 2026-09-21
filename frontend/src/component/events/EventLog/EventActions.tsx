@@ -13,7 +13,7 @@ import FileDownload from '@mui/icons-material/FileDownload';
 import type { EventSchema } from 'openapi';
 import { json2csv } from 'json-2-csv';
 import { useTracking } from 'hooks/useTracking';
-import { eventLogExportedTracking } from './eventLogTracking';
+import { exportEventLogTracking } from './eventLogTracking';
 
 const StyledActions = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -31,7 +31,7 @@ interface IEventActions {
 
 export const EventActions: FC<IEventActions> = ({ events }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const trackEventLogExported = useTracking(eventLogExportedTracking);
+    const trackExportEventLog = useTracking(exportEventLogTracking);
 
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -65,7 +65,7 @@ export const EventActions: FC<IEventActions> = ({ events }) => {
         URL.revokeObjectURL(url);
         setAnchorEl(null);
 
-        trackEventLogExported('succeeded', {
+        trackExportEventLog('succeeded', {
             eventCount: events.length,
             format,
         });

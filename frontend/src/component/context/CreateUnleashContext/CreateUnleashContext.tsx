@@ -13,7 +13,7 @@ import { UPDATE_PROJECT_CONTEXT } from '@server/types/permissions.ts';
 import type { IUnleashContextDefinition } from 'interfaces/context';
 import { useTracking } from 'hooks/useTracking';
 import { contextFieldTrackingProps } from 'component/context/contextFieldTrackingProps';
-import { contextFieldCreatedTracking } from 'component/context/contextFieldTrackingProps';
+import { createContextFieldTracking } from 'component/context/contextFieldTrackingProps';
 
 interface ICreateContextProps {
     onSubmit: () => void;
@@ -59,7 +59,7 @@ export const CreateUnleashContext = ({
     });
     const { createContext, loading } = useContextsApi(projectId);
     const { refetchUnleashContext } = useScopedUnleashContext();
-    const trackContextFieldCreated = useTracking(contextFieldCreatedTracking);
+    const trackCreateContextField = useTracking(createContextFieldTracking);
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
@@ -78,7 +78,7 @@ export const CreateUnleashContext = ({
         if (validName) {
             const payload = getContextPayload();
             try {
-                await trackContextFieldCreated.mutation(
+                await trackCreateContextField.mutation(
                     () => createContext(payload),
                     trackingProps,
                 );
@@ -94,7 +94,7 @@ export const CreateUnleashContext = ({
                 setToastApiError(formatUnknownError(error));
             }
         } else {
-            trackContextFieldCreated.validationFailed(trackingProps);
+            trackCreateContextField.validationFailed(trackingProps);
         }
     };
 

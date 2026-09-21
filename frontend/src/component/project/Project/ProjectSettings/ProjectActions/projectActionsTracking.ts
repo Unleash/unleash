@@ -2,29 +2,29 @@ import type { ActionSetPayload } from 'hooks/api/actions/useActionsApi/useAction
 import type { IActionSet } from 'interfaces/action';
 import type { Tracking } from 'utils/trackingEvents';
 
-export const projectActionCreatedTracking: Tracking = {
+export const createActionTracking: Tracking = {
     event: 'project-actions',
-    type: 'created',
+    type: 'create-action',
 };
 
-export const projectActionEditedTracking: Tracking = {
+export const editActionTracking: Tracking = {
     event: 'project-actions',
-    type: 'edited',
+    type: 'edit-action',
 };
 
-export const projectActionDeletedTracking: Tracking = {
+export const deleteActionTracking: Tracking = {
     event: 'project-actions',
-    type: 'deleted',
+    type: 'delete-action',
 };
 
-export const projectActionToggledTracking: Tracking = {
+export const toggleActionTracking: Tracking = {
     event: 'project-actions',
-    type: 'toggled',
+    type: 'toggle-action',
 };
 
-export const projectActionEventsViewedTracking: Tracking = {
+export const viewActionEventsTracking: Tracking = {
     event: 'project-actions',
-    type: 'events-viewed',
+    type: 'view-action-events',
 };
 
 export type ActionModalOpenedFrom =

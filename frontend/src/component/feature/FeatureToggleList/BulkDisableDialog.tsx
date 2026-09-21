@@ -11,7 +11,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { flagsToggledTracking } from './batchOperationsTracking';
+import { toggleFlagsTracking } from './batchOperationsTracking';
 
 interface IExportDialogProps {
     showExportDialog: boolean;
@@ -63,7 +63,7 @@ export const BulkDisableDialog = ({
     const changeRequestConfigured = isChangeRequestConfigured(selected);
 
     const tracking = {
-        ...flagsToggledTracking,
+        ...toggleFlagsTracking,
         props: {
             newState: 'disabled',
             flagCount: data.length,

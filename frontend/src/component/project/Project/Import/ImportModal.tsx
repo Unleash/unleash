@@ -15,7 +15,7 @@ import {
 import { ValidationStage } from './validate/ValidationStage.tsx';
 import { ImportStage } from './import/ImportStage.tsx';
 import { ImportOptions } from './configure/ImportOptions.tsx';
-import { importCompletedTracking } from 'component/project/Project/Import/importTracking';
+import { importFlagsTracking } from 'component/project/Project/Import/importTracking';
 
 const ModalContentContainer = styled('div')(({ theme }) => ({
     minHeight: '100vh',
@@ -60,17 +60,17 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
     const [importSource, setImportSource] = useState<ImportMode>('file');
 
     const importTracking = {
-        ...importCompletedTracking,
+        ...importFlagsTracking,
         props: { importSource },
     };
-    const trackImportCompleted = useTracking(importTracking);
+    const trackImportFlags = useTracking(importTracking);
 
     const close = () => {
         setOpen(false);
     };
 
     const cancel = () => {
-        trackImportCompleted('dismissed', { method: 'cancel-button' });
+        trackImportFlags('dismissed', { method: 'cancel-button' });
         close();
     };
 

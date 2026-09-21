@@ -11,8 +11,8 @@ import type { FilterItemParams } from 'component/filter/FilterItem/FilterItem';
 import { DateRangePresets } from './DateRangePresets.tsx';
 import { useTracking } from 'hooks/useTracking';
 import {
-    filterRemovedTracking,
-    filterValueToggledTracking,
+    removeFilterTracking,
+    toggleFilterValueTracking,
 } from 'component/filter/Filters/filtersTracking';
 
 export interface IFilterDateItemProps {
@@ -44,10 +44,10 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
     const ref = useRef<HTMLDivElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
     const { locationSettings } = useLocationSettings();
-    const trackFilterValueToggled = useTracking(filterValueToggledTracking);
-    const trackFilterRemoved = useTracking(filterRemovedTracking);
+    const trackToggleFilterValue = useTracking(toggleFilterValueTracking);
+    const trackRemoveFilter = useTracking(removeFilterTracking);
     const trackSelected = () =>
-        trackFilterValueToggled('succeeded', {
+        trackToggleFilterValue('succeeded', {
             filterKey,
             method: 'filter-bar',
             newState: 'selected',
@@ -78,7 +78,7 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
               onChange({ operator: operators[0], values: [] });
               onClose();
               onChipClose();
-              trackFilterRemoved('succeeded', { filterKey });
+              trackRemoveFilter('succeeded', { filterKey });
           }
         : undefined;
 

@@ -30,7 +30,7 @@ const renderTracking = (initial: Tracking | undefined) => {
 
 const roleChanged: Tracking = {
     event: 'project-access',
-    type: 'role-changed',
+    type: 'change-role',
     props: { targetType: 'group' },
 };
 
@@ -42,7 +42,7 @@ test('stamps the declaration onto every row of the journey', () => {
     expect(rows).toEqual([
         {
             event: 'project-access',
-            eventType: 'role-changed',
+            eventType: 'change-role',
             action: 'opened',
             targetType: 'group',
             rolesCount: 2,

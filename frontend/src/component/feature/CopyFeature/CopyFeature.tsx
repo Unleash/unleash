@@ -25,7 +25,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { FeatureNamingPatternInfo } from '../FeatureNamingPatternInfo/FeatureNamingPatternInfo.tsx';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import Input from 'component/common/Input/Input.tsx';
-import { flagClonedTracking } from 'component/feature/flagActionsTracking';
+import { cloneFlagTracking } from 'component/feature/flagActionsTracking';
 
 const StyledPage = styled(Paper)(({ theme }) => ({
     overflow: 'visible',
@@ -74,7 +74,7 @@ export const CopyFeatureToggle = () => {
     const [nameError, setNameError] = useState<string | undefined>();
     const [newToggleName, setnewToggleName] = useState<string>();
     const { cloneFeatureToggle, validateFeatureToggleName } = useFeatureApi();
-    const trackFlagCloned = useTracking(flagClonedTracking);
+    const trackCloneFlag = useTracking(cloneFlagTracking);
     const featureId = useRequiredPathParam('featureId');
     const projectId = useRequiredPathParam('projectId');
     const { feature } = useFeature(projectId, featureId);
@@ -119,7 +119,7 @@ export const CopyFeatureToggle = () => {
         }
 
         try {
-            await trackFlagCloned.mutation(
+            await trackCloneFlag.mutation(
                 () =>
                     cloneFeatureToggle(projectId, featureId, {
                         name: newToggleName as string,

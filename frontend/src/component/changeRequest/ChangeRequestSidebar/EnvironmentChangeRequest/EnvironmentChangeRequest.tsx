@@ -76,7 +76,7 @@ export const EnvironmentChangeRequest: FC<{
     const [title, setTitle] = useState(environmentChangeRequest.title);
     const { changeState, updateRequestedApprovers } = useChangeRequestApi();
     const [reviewers, setReviewers] = useState<AvailableReviewerSchema[]>([]);
-    const trackSentToReview = useTracking(
+    const trackSendToReview = useTracking(
         changeRequestTransitionTracking('In review', 'Draft'),
     );
 
@@ -84,7 +84,7 @@ export const EnvironmentChangeRequest: FC<{
     const sendToReview = async (project: string) => {
         setDisabled(true);
         try {
-            await trackSentToReview.mutation(() =>
+            await trackSendToReview.mutation(() =>
                 changeState(project, environmentChangeRequest.id, {
                     state: 'In review',
                     comment: commentText,

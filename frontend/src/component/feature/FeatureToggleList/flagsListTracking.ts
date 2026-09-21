@@ -25,12 +25,12 @@ export const flagsListProps = ({
     };
 };
 
-export const flagsListColumnToggledTracking: Tracking = {
+export const toggleColumnTracking: Tracking = {
     event: 'flags-list',
-    type: 'column-toggled',
+    type: 'toggle-column',
 };
 
-export const flagsListLifecycleFilteredTracking: Tracking = {
+export const filterLifecycleTracking: Tracking = {
     event: 'flags-list',
-    type: 'lifecycle-filtered',
+    type: 'filter-lifecycle',
 };

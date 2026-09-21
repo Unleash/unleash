@@ -183,7 +183,7 @@ export const LegacyCreateProjectDialog = ({
                 });
 
                 if (projectStickiness !== DEFAULT_PROJECT_STICKINESS) {
-                    trackEvent('project_stickiness_set');
+                    trackEvent('project-stickiness-set');
                 }
                 trackEvent('project-mode', {
                     props: { mode: projectMode, action: 'added' },

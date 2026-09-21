@@ -1,26 +1,26 @@
 import type { Tracking } from 'utils/trackingEvents';
 import type { FeatureEnvironmentStrategyScope } from './FeatureStrategyEdit/FeatureStrategyEdit.tsx';
 
-export const strategyDeletedTracking: Tracking = {
+export const deleteStrategyTracking: Tracking = {
     event: 'flag-strategy',
-    type: 'strategy-deleted',
+    type: 'delete-strategy',
 };
 
-export const strategyToggledTracking: Tracking = {
+export const toggleStrategyTracking: Tracking = {
     event: 'flag-strategy',
-    type: 'strategy-toggled',
+    type: 'toggle-strategy',
 };
 
-export const strategyCopiedTracking: Tracking = {
+export const copyStrategyTracking: Tracking = {
     event: 'flag-strategy',
-    type: 'strategy-copied',
+    type: 'copy-strategy',
 };
 
-export const strategyUpdatedTracking = (props: {
+export const editStrategyTracking = (props: {
     strategyScope: FeatureEnvironmentStrategyScope;
     viaChangeRequest?: boolean;
 }): Tracking => ({
     event: 'flag-strategy',
-    type: 'strategy-updated',
+    type: 'edit-strategy',
     props,
 });

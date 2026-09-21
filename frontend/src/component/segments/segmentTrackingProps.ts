@@ -62,12 +62,12 @@ export const segmentChangedProps = ({
         JSON.stringify(initial.constraints ?? []),
 });
 
-export const segmentCreatedTracking: Tracking = {
+export const createSegmentTracking: Tracking = {
     event: 'segments',
-    type: 'created',
+    type: 'create-segment',
 };
 
-export const segmentEditedTracking: Tracking = {
+export const editSegmentTracking: Tracking = {
     event: 'segments',
-    type: 'edited',
+    type: 'edit-segment',
 };

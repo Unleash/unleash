@@ -2,7 +2,7 @@ import { type FC, useMemo, useState } from 'react';
 import { Button } from '@mui/material';
 import type { FeatureSchema } from 'openapi';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
-import { flagsExportedTracking } from 'component/feature/FeatureToggleList/exportTracking';
+import { exportFlagsTracking } from 'component/feature/FeatureToggleList/exportTracking';
 import { ArchiveButton } from './ArchiveButton.tsx';
 import { MoreActions } from './MoreActions.tsx';
 import { ManageTags } from './ManageTags.tsx';
@@ -87,7 +87,7 @@ export const ProjectFeaturesBatchActions: FC<
                 environments={environments}
                 onConfirm={onChange}
                 tracking={{
-                    ...flagsExportedTracking,
+                    ...exportFlagsTracking,
                     props: {
                         source: 'batch-actions',
                         flagCount: selectedData.length,

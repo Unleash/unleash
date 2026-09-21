@@ -4,7 +4,7 @@ import useLoading from 'hooks/useLoading';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
-import { flagsExportedTracking } from 'component/feature/FeatureToggleList/exportTracking';
+import { exportFlagsTracking } from 'component/feature/FeatureToggleList/exportTracking';
 import IosShare from '@mui/icons-material/IosShare';
 import { FlagCreationButton } from './FlagCreationButton/FlagCreationButton.tsx';
 import { ImportButton } from './ImportButton/ImportButton.tsx';
@@ -59,7 +59,7 @@ export const ProjectFeatureTogglesHeader: FC<
                                 onClose={() => setShowExportDialog(false)}
                                 environments={environmentsToExport || []}
                                 tracking={{
-                                    ...flagsExportedTracking,
+                                    ...exportFlagsTracking,
                                     props: { source: 'project-header' },
                                 }}
                             />

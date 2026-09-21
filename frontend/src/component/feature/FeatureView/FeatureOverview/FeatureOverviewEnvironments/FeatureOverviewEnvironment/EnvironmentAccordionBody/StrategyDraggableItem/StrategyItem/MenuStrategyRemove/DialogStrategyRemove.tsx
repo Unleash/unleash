@@ -11,7 +11,7 @@ import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useCh
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
-import { strategyDeletedTracking } from 'component/feature/FeatureStrategy/strategyActionsTracking';
+import { deleteStrategyTracking } from 'component/feature/FeatureStrategy/strategyActionsTracking';
 import { strategyShapeProps } from 'component/feature/FeatureStrategy/summarizeStrategy';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import type { Tracking } from 'utils/trackingEvents';
@@ -288,7 +288,7 @@ export const DialogStrategyRemove = ({
 
     const viaChangeRequest = isChangeRequestConfigured(environmentId);
     const tracking = {
-        ...strategyDeletedTracking,
+        ...deleteStrategyTracking,
         props: {
             ...strategyShapeProps(strategy),
             viaChangeRequest,

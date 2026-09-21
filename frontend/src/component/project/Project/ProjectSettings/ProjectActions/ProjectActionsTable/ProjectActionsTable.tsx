@@ -35,7 +35,7 @@ import { useTracking } from 'hooks/useTracking';
 import {
     type ActionModalOpenedFrom,
     type EventsModalOpenedFrom,
-    projectActionToggledTracking,
+    toggleActionTracking,
 } from '../projectActionsTracking.ts';
 
 interface IProjectActionsTableProps {
@@ -54,7 +54,7 @@ export const ProjectActionsTable = ({
     setSelectedAction,
 }: IProjectActionsTableProps) => {
     const { setToastData, setToastApiError } = useToast();
-    const trackProjectActionToggled = useTracking(projectActionToggledTracking);
+    const trackToggleAction = useTracking(toggleActionTracking);
 
     const projectId = useRequiredPathParam('projectId');
     const { actions, refetch } = useActions(projectId);
@@ -90,7 +90,7 @@ export const ProjectActionsTable = ({
 
     const onToggleAction = async (action: IActionSet, enabled: boolean) => {
         try {
-            await trackProjectActionToggled.mutation(
+            await trackToggleAction.mutation(
                 () => toggleActionSet(action.id, enabled),
                 { newState: enabled ? 'enabled' : 'disabled' },
             );

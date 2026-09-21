@@ -1,21 +1,21 @@
 import type { Tracking } from 'utils/trackingEvents';
 
-export const releasePlanAddedTracking: Tracking = {
+export const addReleasePlanTracking: Tracking = {
     event: 'release-management',
-    type: 'release-plan-added',
+    type: 'add-release-plan',
 };
 
-export const releasePlanReplaceConfirmTracking: Tracking = {
+export const confirmReplaceReleasePlanTracking: Tracking = {
     event: 'release-management',
-    type: 'release-plan-replace-confirm',
+    type: 'confirm-replace-release-plan',
 };
 
-export const releaseTemplateCreatedTracking: Tracking = {
+export const createTemplateTracking: Tracking = {
     event: 'release-management',
-    type: 'template-created',
+    type: 'create-template',
 };
 
-export const releaseTemplateNoAccessTracking: Tracking = {
+export const createTemplateWithoutAccessTracking: Tracking = {
     event: 'release-management',
-    type: 'template-create-no-access',
+    type: 'create-template-without-access',
 };

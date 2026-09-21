@@ -37,8 +37,8 @@ import useProjectOverview, {
 import { UpgradeMoreEnvironments } from './UpgradeMoreEnvironments.tsx';
 import { useTracking } from 'hooks/useTracking';
 import {
-    environmentHiddenTracking,
-    environmentMadeVisibleTracking,
+    hideEnvironmentTracking,
+    showEnvironmentTracking,
     environmentTrackingProps,
 } from './projectEnvironmentTracking.ts';
 
@@ -71,8 +71,8 @@ const ProjectEnvironmentList = () => {
     const { project, refetch: refetchProject } = useProjectOverview(projectId);
     const { removeEnvironmentFromProject, addEnvironmentToProject } =
         useProjectApi();
-    const trackMadeVisible = useTracking(environmentMadeVisibleTracking);
-    const trackHidden = useTracking(environmentHiddenTracking);
+    const trackShowEnvironment = useTracking(showEnvironmentTracking);
+    const trackHideEnvironment = useTracking(hideEnvironmentTracking);
 
     // local state
     const [selectedEnvironment, setSelectedEnvironment] =
@@ -129,7 +129,7 @@ const ProjectEnvironmentList = () => {
             });
         } else {
             try {
-                await trackMadeVisible.mutation(
+                await trackShowEnvironment.mutation(
                     () => addEnvironmentToProject(projectId, env.name),
                     environmentTrackingProps(env),
                 );
@@ -147,7 +147,7 @@ const ProjectEnvironmentList = () => {
     const onHideConfirm = async () => {
         if (selectedEnvironment) {
             try {
-                await trackHidden.mutation(
+                await trackHideEnvironment.mutation(
                     () =>
                         removeEnvironmentFromProject(
                             projectId,
@@ -348,7 +348,7 @@ const ProjectEnvironmentList = () => {
                     tracking={
                         selectedEnvironment
                             ? {
-                                  ...environmentHiddenTracking,
+                                  ...hideEnvironmentTracking,
                                   props: environmentTrackingProps(
                                       selectedEnvironment,
                                   ),

@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useTracking } from 'hooks/useTracking';
-import { changeRequestListFilteredTracking } from 'component/changeRequest/changeRequestTracking';
+import { filterChangeRequestListTracking } from 'component/changeRequest/changeRequestTracking';
 import type { TableState } from '../ChangeRequests.types';
 import { StyledContainer } from './ChangeRequestFilters.styles';
 import type { FilterChipsProps } from './ChangeRequestFilters.types';
@@ -36,7 +36,7 @@ export const UserFilterChips: FC<UserFilterChipsProps> = ({
     StyledChip,
 }) => {
     const userIdString = userId.toString();
-    const trackListFiltered = useTracking(changeRequestListFilteredTracking);
+    const trackFilterList = useTracking(filterChangeRequestListTracking);
 
     const activeUserFilter: UserFilterType | undefined = getUserFilter(
         tableState,
@@ -47,7 +47,7 @@ export const UserFilterChips: FC<UserFilterChipsProps> = ({
         if (filter === activeUserFilter) {
             return;
         }
-        trackListFiltered('succeeded', { filter });
+        trackFilterList('succeeded', { filter });
 
         const [targetProperty, otherProperty] =
             filter === 'created'

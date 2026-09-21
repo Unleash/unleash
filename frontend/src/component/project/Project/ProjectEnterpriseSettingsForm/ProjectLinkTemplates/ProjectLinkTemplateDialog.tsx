@@ -5,8 +5,8 @@ import { useTracking } from 'hooks/useTracking';
 import { dismissMethodFromCloseReason } from 'utils/trackingEvents';
 import ProjectLinkTemplateEditor from './ProjectLinkTemplateEditor.tsx';
 import {
-    linkTemplateAddedTracking,
-    linkTemplateEditedTracking,
+    addLinkTemplateTracking,
+    editLinkTemplateTracking,
 } from './projectLinkTemplateTracking.ts';
 
 interface IProjectLinkTemplateDialogProps {
@@ -25,7 +25,7 @@ const ProjectLinkTemplateDialog = ({
     isAdding,
 }: IProjectLinkTemplateDialogProps) => {
     const trackLinkTemplate = useTracking(
-        isAdding ? linkTemplateAddedTracking : linkTemplateEditedTracking,
+        isAdding ? addLinkTemplateTracking : editLinkTemplateTracking,
     );
 
     useEffect(() => {

@@ -18,9 +18,9 @@ import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/Feat
 import { useNavigate } from 'react-router';
 import { useReminders } from './useReminders.ts';
 import { useTracking } from 'hooks/useTracking';
-import { reminderSnoozedTracking } from '../FeatureOverview/FeatureLifecycle/lifecycleTracking';
+import { snoozeReminderTracking } from '../FeatureOverview/FeatureLifecycle/lifecycleTracking';
 import { useUncomplete } from '../FeatureOverview/FeatureLifecycle/useUncomplete.ts';
-import { flagArchivedTracking } from 'component/feature/flagActionsTracking';
+import { archiveFlagTracking } from 'component/feature/flagActionsTracking';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     marginBottom: theme.spacing(2),
@@ -86,15 +86,15 @@ export const CleanupReminder: FC<{
     };
 
     const reminder = determineReminder();
-    const trackReminderSnoozed = useTracking(
-        reminderSnoozedTracking({ name: feature.name }),
+    const trackSnoozeReminder = useTracking(
+        snoozeReminderTracking({ name: feature.name }),
     );
 
     if (!reminder) return null;
 
     const onSnooze = () => {
         snoozeReminder(feature.name);
-        trackReminderSnoozed('succeeded', { reminder });
+        trackSnoozeReminder('succeeded', { reminder });
     };
 
     return (
@@ -174,7 +174,7 @@ export const CleanupReminder: FC<{
                     ) : (
                         <FeatureArchiveDialog
                             isOpen={archiveDialogueOpen}
-                            tracking={flagArchivedTracking}
+                            tracking={archiveFlagTracking}
                             onConfirm={() => {
                                 navigate(`/projects/${feature.project}`);
                             }}

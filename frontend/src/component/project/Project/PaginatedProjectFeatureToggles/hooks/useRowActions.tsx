@@ -5,10 +5,10 @@ import { MarkCompletedDialogue } from 'component/feature/FeatureView/FeatureOver
 import { ArchivedFeatureDeleteConfirm } from '../../../../archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureDeleteConfirm/ArchivedFeatureDeleteConfirm.tsx';
 import { ArchivedFeatureReviveConfirm } from '../../../../archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureReviveConfirm/ArchivedFeatureReviveConfirm.tsx';
 import {
-    flagArchivedTracking,
-    flagDeletedTracking,
-    flagRevivedTracking,
-    flagStaleToggledTracking,
+    archiveFlagTracking,
+    deleteFlagTracking,
+    reviveFlagTracking,
+    toggleFlagStaleTracking,
 } from 'component/feature/flagActionsTracking';
 export const useRowActions = (
     onChange: () => void,
@@ -68,7 +68,7 @@ export const useRowActions = (
                     onChange();
                 }}
                 tracking={{
-                    ...flagStaleToggledTracking,
+                    ...toggleFlagStaleTracking,
                     props: staleProps,
                 }}
                 featureId={featureStaleDialogState.featureId || ''}
@@ -82,7 +82,7 @@ export const useRowActions = (
                     onArchiveConfirm?.();
                 }}
                 tracking={{
-                    ...flagArchivedTracking,
+                    ...archiveFlagTracking,
                     props: archiveProps,
                 }}
                 onClose={() => {
@@ -114,7 +114,7 @@ export const useRowActions = (
                         open,
                     }));
                 }}
-                tracking={{ ...flagDeletedTracking, props: deleteProps }}
+                tracking={{ ...deleteFlagTracking, props: deleteProps }}
                 refetch={onChange}
             />
             <ArchivedFeatureReviveConfirm
@@ -127,7 +127,7 @@ export const useRowActions = (
                         open,
                     }));
                 }}
-                tracking={{ ...flagRevivedTracking, props: reviveProps }}
+                tracking={{ ...reviveFlagTracking, props: reviveProps }}
                 refetch={() => {
                     setShowFeatureReviveDialogue((prev) => ({
                         ...prev,

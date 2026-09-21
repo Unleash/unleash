@@ -56,9 +56,9 @@ import {
     type Tracking,
 } from 'utils/trackingEvents';
 
-const flagCreationTracking = {
+const createFlagTracking = {
     event: 'flag-creation',
-    type: 'created',
+    type: 'create-flag',
 } satisfies Tracking;
 
 interface ICreateFeatureDialogProps {
@@ -162,13 +162,13 @@ const CreateFeatureDialogContent = ({
     onSuccess,
 }: ICreateFeatureDialogProps) => {
     const useNewDesign = useUiFlag('newModalDesign');
-    const trackFlagCreation = useTracking(flagCreationTracking);
+    const trackCreateFlag = useTracking(createFlagTracking);
 
     useEffect(() => {
         if (open) {
-            trackFlagCreation('opened');
+            trackCreateFlag('opened');
         }
-    }, [open, trackFlagCreation]);
+    }, [open, trackCreateFlag]);
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig, isOss } = useUiConfig();
     const navigate = useNavigate();
@@ -240,7 +240,7 @@ const CreateFeatureDialogContent = ({
         if (validToggleName) {
             const payload = getTogglePayload();
             try {
-                await trackFlagCreation.mutation(() =>
+                await trackCreateFlag.mutation(() =>
                     createFeatureToggle(project, payload),
                 );
                 navigate(`/projects/${project}/features/${name}`);
@@ -256,7 +256,7 @@ const CreateFeatureDialogContent = ({
                 setToastApiError(formatUnknownError(error));
             }
         } else {
-            trackFlagCreation.validationFailed();
+            trackCreateFlag.validationFailed();
         }
     };
 
@@ -302,7 +302,7 @@ const CreateFeatureDialogContent = ({
     }, [project, projects]);
 
     const onDialogClose = (method: DialogDismissMethod) => {
-        trackFlagCreation('dismissed', { method, limitReached });
+        trackCreateFlag('dismissed', { method, limitReached });
         setStoredFlagConfig({
             name,
             tags,
@@ -493,7 +493,7 @@ const CreateFeatureDialogContent = ({
                         Limit={limitNode}
                         name={name}
                         onClose={() => {
-                            trackFlagCreation('dismissed', {
+                            trackCreateFlag('dismissed', {
                                 method: 'cancel-button',
                                 limitReached,
                             });

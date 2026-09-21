@@ -5,9 +5,9 @@ import type { Tracking } from 'utils/trackingEvents';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useAPI from '../useApi/useApi.js';
 
-const featureFavoriteToggledTracking: Tracking = {
+const toggleFlagFavoriteTracking: Tracking = {
     event: 'favorite',
-    type: 'feature-favorite-toggled',
+    type: 'toggle-flag-favorite',
 };
 
 export const useFavoriteFeaturesApi = () => {
@@ -15,9 +15,7 @@ export const useFavoriteFeaturesApi = () => {
         propagateErrors: true,
     });
     const { setToastData, setToastApiError } = useToast();
-    const trackFeatureFavoriteToggled = useTracking(
-        featureFavoriteToggledTracking,
-    );
+    const trackToggleFlagFavorite = useTracking(toggleFlagFavoriteTracking);
 
     const favorite = useCallback(
         async (projectId: string, featureName: string) => {
@@ -29,7 +27,7 @@ export const useFavoriteFeaturesApi = () => {
             );
 
             try {
-                await trackFeatureFavoriteToggled.mutation(
+                await trackToggleFlagFavorite.mutation(
                     () => makeLightRequest(req.caller, req.id),
                     { newState: 'favorited' },
                 );
@@ -42,7 +40,7 @@ export const useFavoriteFeaturesApi = () => {
                 setToastApiError(formatUnknownError(error));
             }
         },
-        [createRequest, makeLightRequest, trackFeatureFavoriteToggled],
+        [createRequest, makeLightRequest, trackToggleFlagFavorite],
     );
 
     const unfavorite = useCallback(
@@ -55,7 +53,7 @@ export const useFavoriteFeaturesApi = () => {
             );
 
             try {
-                await trackFeatureFavoriteToggled.mutation(
+                await trackToggleFlagFavorite.mutation(
                     () => makeLightRequest(req.caller, req.id),
                     { newState: 'unfavorited' },
                 );
@@ -68,7 +66,7 @@ export const useFavoriteFeaturesApi = () => {
                 setToastApiError(formatUnknownError(error));
             }
         },
-        [createRequest, makeLightRequest, trackFeatureFavoriteToggled],
+        [createRequest, makeLightRequest, trackToggleFlagFavorite],
     );
 
     return {

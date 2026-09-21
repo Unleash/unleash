@@ -37,7 +37,7 @@ import useToast from 'hooks/useToast';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ExtraActions } from './ExtraActions.tsx';
-import { flagArchivedTracking } from 'component/feature/flagActionsTracking';
+import { archiveFlagTracking } from 'component/feature/flagActionsTracking';
 
 const StyledMetaDataContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -355,7 +355,7 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
             ) : (
                 <FeatureArchiveDialog
                     isOpen={archiveDialogOpen}
-                    tracking={flagArchivedTracking}
+                    tracking={archiveFlagTracking}
                     onConfirm={() => {
                         navigate(`/projects/${feature.project}`);
                     }}

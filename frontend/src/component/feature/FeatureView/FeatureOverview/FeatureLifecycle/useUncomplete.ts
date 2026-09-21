@@ -1,5 +1,5 @@
 import { useTracking } from 'hooks/useTracking';
-import { flagUncompletedTracking } from './lifecycleTracking';
+import { uncompleteFlagTracking } from './lifecycleTracking';
 import type { LifecycleStage } from './LifecycleStage.tsx';
 import useToast from 'hooks/useToast';
 import useFeatureLifecycleApi from 'hooks/api/actions/useFeatureLifecycleApi/useFeatureLifecycleApi';
@@ -17,15 +17,15 @@ export const useUncomplete = ({
     onChange?: () => void;
 }) => {
     const status = stage?.name === 'completed' ? stage.status : undefined;
-    const trackFlagUncompleted = useTracking(
-        flagUncompletedTracking({ name: feature, status }),
+    const trackUncompleteFlag = useTracking(
+        uncompleteFlagTracking({ name: feature, status }),
     );
     const { setToastApiError } = useToast();
     const { markFeatureUncompleted, loading } = useFeatureLifecycleApi();
 
     const onUncompleteHandler = async () => {
         try {
-            await trackFlagUncompleted.mutation(() =>
+            await trackUncompleteFlag.mutation(() =>
                 markFeatureUncompleted(feature, project),
             );
             onChange?.();

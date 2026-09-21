@@ -11,28 +11,28 @@ export type LifecycleCompletedStatus =
     | 'kept-with-variant'
     | 'discarded';
 
-export const flagCompletedTracking = (props: {
+export const completeFlagTracking = (props: {
     name: string;
     openedFrom: LifecycleOpenedFrom;
     status: LifecycleCompletedStatus;
     variantOptionsCount: number;
 }): Tracking => ({
     event: 'feature-lifecycle',
-    type: 'completed',
+    type: 'complete-flag',
     props,
 });
 
-export const flagUncompletedTracking = (props: {
+export const uncompleteFlagTracking = (props: {
     name: string;
     status?: 'kept' | 'discarded';
 }): Tracking => ({
     event: 'feature-lifecycle',
-    type: 'uncompleted',
+    type: 'uncomplete-flag',
     props,
 });
 
-export const reminderSnoozedTracking = (props: { name: string }): Tracking => ({
+export const snoozeReminderTracking = (props: { name: string }): Tracking => ({
     event: 'feature-lifecycle',
-    type: 'reminder-snoozed',
+    type: 'snooze-reminder',
     props,
 });

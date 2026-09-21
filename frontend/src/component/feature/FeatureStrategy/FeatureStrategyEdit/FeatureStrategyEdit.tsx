@@ -32,8 +32,8 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useTracking } from 'hooks/useTracking';
-import { strategyUpdatedTracking as createStrategyUpdatedTracking } from '../strategyActionsTracking.ts';
-import { changeRequestConflictCreatedTracking } from 'component/changeRequest/changeRequestTracking';
+import { editStrategyTracking as createEditStrategyTracking } from '../strategyActionsTracking.ts';
+import { createConflictTracking } from 'component/changeRequest/changeRequestTracking';
 import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm.tsx';
 import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 import {
@@ -116,14 +116,12 @@ export const FeatureStrategyEdit = () => {
     }, [feature]);
 
     const viaChangeRequest = isChangeRequestConfigured(environmentId);
-    const strategyUpdatedTracking = createStrategyUpdatedTracking({
+    const editStrategyTracking = createEditStrategyTracking({
         strategyScope,
         viaChangeRequest,
     });
-    const trackStrategyUpdated = useTracking(strategyUpdatedTracking);
-    const trackConflictCreated = useTracking(
-        changeRequestConflictCreatedTracking,
-    );
+    const trackEditStrategy = useTracking(editStrategyTracking);
+    const trackCreateConflict = useTracking(createConflictTracking);
     const { changeRequests: scheduledChangeRequestThatUseStrategy } =
         useScheduledChangeRequestsWithStrategy(projectId, strategyId);
 
@@ -145,7 +143,7 @@ export const FeatureStrategyEdit = () => {
             ...pendingCrsUsingThisStrategy,
             ...scheduledCrsUsingThisStrategy,
         ].forEach((data) => {
-            trackConflictCreated('succeeded', data);
+            trackCreateConflict('succeeded', data);
         });
 
     useEffect(() => {
@@ -256,7 +254,7 @@ export const FeatureStrategyEdit = () => {
 
     const onSubmit = async () => {
         try {
-            await trackStrategyUpdated.mutation(
+            await trackEditStrategy.mutation(
                 () =>
                     viaChangeRequest
                         ? onStrategyRequestEdit(payload)
@@ -310,7 +308,7 @@ export const FeatureStrategyEdit = () => {
                 permission={UPDATE_FEATURE_STRATEGY}
                 errors={errors}
                 changeRequestsEnabled={viaChangeRequest}
-                tracking={strategyUpdatedTracking}
+                tracking={editStrategyTracking}
             />
             {staleDataNotification}
         </FormTemplate>

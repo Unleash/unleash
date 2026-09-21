@@ -8,8 +8,8 @@ import { useFeatureReleasePlans } from 'hooks/api/getters/useFeatureReleasePlans
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useTracking } from 'hooks/useTracking';
 import {
-    releasePlanAddedTracking,
-    releasePlanReplaceConfirmTracking,
+    addReleasePlanTracking,
+    confirmReplaceReleasePlanTracking,
 } from 'component/releases/releaseManagementTracking';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -28,7 +28,7 @@ export const useAddReleasePlan = ({
     environmentId,
     onClose,
 }: IAddReleasePlanOptions) => {
-    const trackReleasePlanAdded = useTracking(releasePlanAddedTracking);
+    const trackAddReleasePlan = useTracking(addReleasePlanTracking);
     const { setToastApiError, setToastData } = useToast();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { addChange } = useChangeRequestApi();
@@ -58,7 +58,7 @@ export const useAddReleasePlan = ({
         }
 
         try {
-            await trackReleasePlanAdded.mutation(
+            await trackAddReleasePlan.mutation(
                 async () => {
                     if (crProtected) {
                         await addChange(projectId, environmentId, {
@@ -113,7 +113,7 @@ export const useAddReleasePlan = ({
             onConfirm={() => {
                 addReleasePlan(pendingTemplate, true);
             }}
-            tracking={releasePlanReplaceConfirmTracking}
+            tracking={confirmReplaceReleasePlanTracking}
         />
     ) : null;
 

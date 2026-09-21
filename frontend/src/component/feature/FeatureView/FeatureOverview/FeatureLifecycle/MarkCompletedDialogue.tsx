@@ -9,7 +9,7 @@ import { useParentVariantOptions } from 'hooks/api/getters/useFeatureDependencyO
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import {
-    flagCompletedTracking,
+    completeFlagTracking,
     type LifecycleCompletedStatus,
     type LifecycleOpenedFrom,
 } from './lifecycleTracking';
@@ -40,7 +40,7 @@ export const MarkCompletedDialogue = ({
     const [status, setStatus] = useState<LifecycleCompletedStatus>('kept');
     const [variant, setVariant] = useState<string | undefined>(undefined);
 
-    const tracking = flagCompletedTracking({
+    const tracking = completeFlagTracking({
         name: featureId,
         openedFrom,
         status,

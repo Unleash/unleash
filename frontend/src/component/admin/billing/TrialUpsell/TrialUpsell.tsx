@@ -65,7 +65,7 @@ export const TrialUpsell = () => {
     const { trackEvent } = useEventTracker();
 
     const onUpgrade = () => {
-        trackEvent('upgrade_trial_billing_page', {
+        trackEvent('upgrade-trial-billing-page', {
             props: {
                 eventType: 'upgrade_click',
             },

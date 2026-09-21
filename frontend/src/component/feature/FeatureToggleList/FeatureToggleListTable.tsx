@@ -15,8 +15,8 @@ import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { ExportDialog } from './ExportDialog.tsx';
-import { flagsExportedTracking } from './exportTracking';
-import { flagsSearchedTracking } from './searchTracking';
+import { exportFlagsTracking } from './exportTracking';
+import { searchFlagsTracking } from './searchTracking';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { focusable } from 'themes/themeStyles';
 import { FeatureLifecycleCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
@@ -69,7 +69,7 @@ const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
 export const FeatureToggleListTable: FC = () => {
     const theme = useTheme();
     const { isOss } = useUiConfig();
-    const trackFlagsSearched = useTracking(flagsSearchedTracking('features'));
+    const trackSearchFlags = useTracking(searchFlagsTracking('features'));
     const { environments } = useEnvironments();
     const enabledEnvironments = environments
         .filter((env) => env.enabled)
@@ -261,7 +261,7 @@ export const FeatureToggleListTable: FC = () => {
 
     const setSearchValue = (query = '') => {
         setTableState({ query });
-        trackFlagsSearched('succeeded', { queryLength: query.length });
+        trackSearchFlags('succeeded', { queryLength: query.length });
     };
 
     const rows = table.getRowModel().rows;
@@ -377,7 +377,7 @@ export const FeatureToggleListTable: FC = () => {
                 onClose={() => setShowExportDialog(false)}
                 environments={enabledEnvironments}
                 tracking={{
-                    ...flagsExportedTracking,
+                    ...exportFlagsTracking,
                     props: { source: 'flags-list', flagCount: data.length },
                 }}
             />

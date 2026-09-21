@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import { Search } from 'component/common/Search/Search';
 import useLoading from 'hooks/useLoading';
 import { useTracking } from 'hooks/useTracking';
-import { flagsSearchedTracking } from 'component/feature/FeatureToggleList/searchTracking';
+import { searchFlagsTracking } from 'component/feature/FeatureToggleList/searchTracking';
 
 interface IProjectFlagsSearchProps {
     isLoading?: boolean;
@@ -17,10 +17,10 @@ export const ProjectFlagsSearch: FC<IProjectFlagsSearchProps> = ({
     onChangeSearchQuery,
 }) => {
     const headerLoadingRef = useLoading(isLoading || false);
-    const trackFlagsSearched = useTracking(flagsSearchedTracking('project'));
+    const trackSearchFlags = useTracking(searchFlagsTracking('project'));
     const handleSearch = (query: string) => {
         onChangeSearchQuery?.(query);
-        trackFlagsSearched('succeeded', { queryLength: query.length });
+        trackSearchFlags('succeeded', { queryLength: query.length });
     };
 
     return (

@@ -8,7 +8,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStrategyChangeRequestAlert } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyChangeRequestAlert/FeatureStrategyChangeRequestAlert';
 import type { IDisableEnableStrategyProps } from './IDisableEnableStrategyProps.tsx';
-import { strategyToggledTracking } from 'component/feature/FeatureStrategy/strategyActionsTracking';
+import { toggleStrategyTracking } from 'component/feature/FeatureStrategy/strategyActionsTracking';
 import { strategyShapeProps } from 'component/feature/FeatureStrategy/summarizeStrategy';
 
 export const DisableEnableStrategyDialog = ({
@@ -30,7 +30,7 @@ export const DisableEnableStrategyDialog = ({
     const disabled = Boolean(props.strategy.disabled);
 
     const tracking = {
-        ...strategyToggledTracking,
+        ...toggleStrategyTracking,
         props: {
             ...strategyShapeProps(props.strategy),
             newState: disabled ? 'enabled' : 'disabled',

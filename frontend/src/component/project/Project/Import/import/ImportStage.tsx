@@ -73,11 +73,11 @@ export const ImportStage: FC<{
         usePendingChangeRequests(project);
     const { setToastData } = useToast();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(project);
-    const trackImportCompleted = useTracking(tracking);
+    const trackImportFlags = useTracking(tracking);
 
     useEffect(() => {
         const data = JSON.parse(payload);
-        trackImportCompleted
+        trackImportFlags
             .mutation(() => createImport({ environment, project, data }), {
                 flagCount: data.features?.length ?? 0,
             })

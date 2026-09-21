@@ -1,16 +1,16 @@
 import type { Tracking } from 'utils/trackingEvents';
 
-export const filterAddedTracking: Tracking = {
+export const addFilterTracking: Tracking = {
     event: 'list-filters',
-    type: 'filter-added',
+    type: 'add-filter',
 };
 
-export const filterValueToggledTracking: Tracking = {
+export const toggleFilterValueTracking: Tracking = {
     event: 'list-filters',
-    type: 'filter-value-toggled',
+    type: 'toggle-filter-value',
 };
 
-export const filterRemovedTracking: Tracking = {
+export const removeFilterTracking: Tracking = {
     event: 'list-filters',
-    type: 'filter-removed',
+    type: 'remove-filter',
 };

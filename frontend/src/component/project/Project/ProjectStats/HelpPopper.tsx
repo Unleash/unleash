@@ -73,7 +73,7 @@ export const HelpPopper: FC<IHelpPopperProps> = ({ children, id }) => {
                         {children}
                         <Feedback
                             id={id}
-                            eventName='project_overview'
+                            eventName='project-overview'
                             localStorageKey='ProjectOverviewFeedback'
                         />
                     </StyledPaper>

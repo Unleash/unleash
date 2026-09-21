@@ -50,12 +50,12 @@ export const contextFieldChangedProps = ({
     stickinessChanged: Boolean(stickiness) !== Boolean(initial.stickiness),
 });
 
-export const contextFieldCreatedTracking: Tracking = {
+export const createContextFieldTracking: Tracking = {
     event: 'context-fields',
-    type: 'created',
+    type: 'create-context-field',
 };
 
-export const contextFieldEditedTracking: Tracking = {
+export const editContextFieldTracking: Tracking = {
     event: 'context-fields',
-    type: 'edited',
+    type: 'edit-context-field',
 };

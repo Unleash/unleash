@@ -74,13 +74,13 @@ const TooltipText = styled('p')(({ theme }) => ({
     },
 }));
 
-const lifecycleDocsOpenedTracking: Tracking = {
+const openLifecycleDocsTracking: Tracking = {
     event: 'project-status',
-    type: 'lifecycle-docs-opened',
+    type: 'open-lifecycle-docs',
 };
 
 const LifecycleTooltip: FC = () => {
-    const trackLifecycleDocsOpened = useTracking(lifecycleDocsOpenedTracking);
+    const trackOpenLifecycleDocs = useTracking(openLifecycleDocsTracking);
 
     return (
         <HelpIcon
@@ -99,9 +99,7 @@ const LifecycleTooltip: FC = () => {
                     <TooltipText>
                         <Link
                             href='https://docs.getunleash.io/concepts/feature-flags#feature-flag-lifecycle'
-                            onClick={() =>
-                                trackLifecycleDocsOpened('succeeded')
-                            }
+                            onClick={() => trackOpenLifecycleDocs('succeeded')}
                         >
                             Read more in our documentation
                         </Link>
@@ -145,9 +143,9 @@ type Props = {
     onFollowLink: () => void;
 };
 
-const feedbackOpenedTracking: Tracking = {
+const openFeedbackTracking: Tracking = {
     event: 'project-status',
-    type: 'feedback-opened',
+    type: 'open-feedback',
 };
 
 export const ProjectStatusModal = ({
@@ -174,7 +172,7 @@ export const ProjectStatusModal = ({
     // The Close button is ours, so DynamicSidebarModal's own dismissal tracking
     // (close icon, backdrop, escape) never sees it.
     const trackProjectStatus = useTracking(projectStatusTracking);
-    const trackFeedbackOpened = useTracking(feedbackOpenedTracking);
+    const trackOpenFeedback = useTracking(openFeedbackTracking);
 
     return (
         <DynamicSidebarModal
@@ -223,7 +221,7 @@ export const ProjectStatusModal = ({
                             <FeedbackButton
                                 variant='text'
                                 onClick={() => {
-                                    trackFeedbackOpened('succeeded');
+                                    trackOpenFeedback('succeeded');
                                     createFeedbackContext();
                                     onClose();
                                 }}

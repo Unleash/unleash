@@ -6,12 +6,12 @@ import type {
 import type { Tracking } from 'utils/trackingEvents';
 
 const transitionType: Record<ChangeRequestTransitionState, string> = {
-    Approved: 'approved',
-    Applied: 'applied',
-    Scheduled: 'scheduled',
-    Cancelled: 'cancelled',
-    'In review': 'in-review',
-    Rejected: 'rejected',
+    Approved: 'approve-change-request',
+    Applied: 'apply-change-request',
+    Scheduled: 'schedule-change-request',
+    Cancelled: 'cancel-change-request',
+    'In review': 'send-change-request-to-review',
+    Rejected: 'reject-change-request',
 };
 
 export const trackedState = (
@@ -25,78 +25,78 @@ export const changeRequestTransitionTracking = (
     state: ChangeRequestTransitionState,
     previousState: ChangeRequestTrackedState | undefined,
 ): Tracking => ({
-    event: 'change_request',
+    event: 'change-request',
     type: transitionType[state],
     props: { previousState },
 });
 
-export const changeAddedTracking: Tracking = {
-    event: 'change_request',
-    type: 'change-added',
+export const addChangeTracking: Tracking = {
+    event: 'change-request',
+    type: 'add-change',
 };
 
-export const changeEditedTracking = (change: { action: string }): Tracking => ({
-    event: 'change_request',
-    type: 'change-edited',
+export const editChangeTracking = (change: { action: string }): Tracking => ({
+    event: 'change-request',
+    type: 'edit-change',
     props: { changeType: change.action },
 });
 
-export const changeDiscardedTracking: Tracking = {
-    event: 'change_request',
-    type: 'change-discarded',
+export const discardChangeTracking: Tracking = {
+    event: 'change-request',
+    type: 'discard-change',
 };
 
-export const draftDiscardedTracking: Tracking = {
-    event: 'change_request',
-    type: 'draft-discarded',
+export const discardDraftTracking: Tracking = {
+    event: 'change-request',
+    type: 'discard-draft',
 };
 
-export const commentAddedTracking: Tracking = {
-    event: 'change_request',
-    type: 'comment-added',
+export const addCommentTracking: Tracking = {
+    event: 'change-request',
+    type: 'add-comment',
 };
 
-export const titleUpdatedTracking: Tracking = {
-    event: 'change_request',
-    type: 'title-updated',
+export const editTitleTracking: Tracking = {
+    event: 'change-request',
+    type: 'edit-title',
 };
 
-export const approversUpdatedTracking: Tracking = {
-    event: 'change_request',
-    type: 'approvers-updated',
+export const editApproversTracking: Tracking = {
+    event: 'change-request',
+    type: 'edit-approvers',
 };
 
-export const changeRequestTabSwitchedTracking: Tracking = {
-    event: 'change_request',
-    type: 'tab-switched',
+export const selectChangeRequestTabTracking: Tracking = {
+    event: 'change-request',
+    type: 'select-tab',
 };
 
-export const changeRequestListFilteredTracking: Tracking = {
-    event: 'change_request',
-    type: 'list-filtered',
+export const filterChangeRequestListTracking: Tracking = {
+    event: 'change-request',
+    type: 'filter-list',
 };
 
-export const changeRequestToggledTracking = ({
+export const toggleChangeRequestsTracking = ({
     newState,
     environmentType,
 }: {
     newState: 'enabled' | 'disabled';
     environmentType: string;
 }): Tracking => ({
-    event: 'change_request',
-    type: 'change-request-toggled',
+    event: 'change-request',
+    type: 'toggle-change-requests',
     props: {
         newState,
         environmentType,
     },
 });
 
-export const requiredApprovalsChangedTracking: Tracking = {
-    event: 'change_request',
-    type: 'required-approvals-changed',
+export const selectRequiredApprovalsTracking: Tracking = {
+    event: 'change-request',
+    type: 'select-required-approvals',
 };
 
-export const changeRequestConflictCreatedTracking: Tracking = {
-    event: 'change_request',
-    type: 'conflict-created',
+export const createConflictTracking: Tracking = {
+    event: 'change-request',
+    type: 'create-conflict',
 };

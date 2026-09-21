@@ -168,13 +168,13 @@ export const PremiumFeature = ({
     const tracker = useEventTracker();
 
     const trackUpgradePlan = () => {
-        tracker.trackEvent('upgrade_plan_clicked', {
+        tracker.trackEvent('upgrade-plan-clicked', {
             props: { feature: label },
         });
     };
 
     const trackReadAbout = () => {
-        tracker.trackEvent('read_about', {
+        tracker.trackEvent('read-about', {
             props: { feature: label },
         });
     };

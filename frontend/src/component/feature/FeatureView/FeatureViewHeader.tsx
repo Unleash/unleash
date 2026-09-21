@@ -13,8 +13,8 @@ import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveD
 import { FeatureCopyName } from './FeatureCopyName/FeatureCopyName.tsx';
 import { FeatureHeaderActionsKebab } from './FeatureHeaderActionsKebab';
 import {
-    flagArchivedTracking,
-    flagStaleToggledTracking,
+    archiveFlagTracking,
+    toggleFlagStaleTracking,
 } from 'component/feature/flagActionsTracking';
 
 const StyledHeader = styled('div')(({ theme }) => ({
@@ -194,7 +194,7 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
                     isOpen={showDelDialog}
                     onConfirm={() => navigate(`/projects/${projectId}`)}
                     tracking={{
-                        ...flagArchivedTracking,
+                        ...archiveFlagTracking,
                         props: flagProps,
                     }}
                     onClose={() => setShowDelDialog(false)}
@@ -206,7 +206,7 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
                 isStale={feature.stale}
                 isOpen={openStaleDialog}
                 tracking={{
-                    ...flagStaleToggledTracking,
+                    ...toggleFlagStaleTracking,
                     props: staleProps,
                 }}
                 onClose={() => {

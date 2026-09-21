@@ -1,29 +1,25 @@
 import type { EventProps } from 'contexts/EventTrackerContext';
 
-/**
- * Allowed event names for analytics trackers.
- * New events must be added here and registered in Plausible as Custom event goals.
- * @see https://plausible.io/docs/custom-event-goals#2-create-a-custom-event-goal-in-your-plausible-analytics-account
- **/
+// Event names sent to Plausible and the flight recorder. A journey's event is its product area;
+// add one only when instrumenting an area that has none. The rest are legacy one-off events.
 export type CustomEvents =
     | 'invite'
-    | 'upgrade_plan_clicked'
-    | 'read_about'
-    | 'change_request'
+    | 'upgrade-plan-clicked'
+    | 'read-about'
+    | 'change-request'
     | 'favorite'
     | 'maintenance'
     | 'banner'
-    | 'hidden_environment'
-    | 'project_overview'
-    | 'suggest_tags'
-    | 'unknown_ui_error'
+    | 'hidden-environment'
+    | 'project-overview'
+    | 'unknown-ui-error'
     | 'export-import'
     | 'api-tokens'
-    | 'project_stickiness_set'
+    | 'project-stickiness-set'
     | 'notifications'
-    | 'batch_operations'
-    | 'strategyTitle'
-    | 'default_strategy'
+    | 'batch-operations'
+    | 'strategy-title'
+    | 'default-strategy'
     | 'demo'
     | 'demo-start'
     | 'demo-close'
@@ -48,8 +44,7 @@ export type CustomEvents =
     | 'open-integration'
     | 'feature-naming-pattern'
     | 'project-mode'
-    | 'dependent_features'
-    | 'playground_token_input_used'
+    | 'dependent-features'
     | 'search-filter'
     | 'search-feature-buttons'
     | 'new-strategy-form'
@@ -76,8 +71,8 @@ export type CustomEvents =
     | 'impact-metrics'
     | 'impact-metrics-safeguards-splash'
     | 'release-management-splash'
-    | 'upgrade_trial_dialog'
-    | 'upgrade_trial_billing_page'
+    | 'upgrade-trial-dialog'
+    | 'upgrade-trial-billing-page'
     | 'flagpage-impact-metrics'
     | 'signup-dialog'
     | 'signup-dialog-error'
@@ -93,7 +88,6 @@ export type CustomEvents =
     | 'flag-actions'
     | 'flag-tags'
     | 'flag-strategy'
-    | 'flag-environment-toggled'
     | 'project-status'
     | 'flag-creation'
     | 'segments'

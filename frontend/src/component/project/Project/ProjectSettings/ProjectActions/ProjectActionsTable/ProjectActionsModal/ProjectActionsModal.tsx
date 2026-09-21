@@ -20,8 +20,8 @@ import {
     type ActionModalOpenedFrom,
     projectActionSizeProps,
     projectActionChangedFields,
-    projectActionCreatedTracking,
-    projectActionEditedTracking,
+    createActionTracking,
+    editActionTracking,
 } from '../../projectActionsTracking.ts';
 
 const StyledHeader = styled('div')(({ theme }) => ({
@@ -104,8 +104,8 @@ export const ProjectActionsModal = ({
 
     const editing = action !== undefined;
     const tracking = editing
-        ? { ...projectActionEditedTracking, props: { openedFrom } }
-        : projectActionCreatedTracking;
+        ? { ...editActionTracking, props: { openedFrom } }
+        : createActionTracking;
     const trackProjectAction = useTracking(tracking);
     const title = `${editing ? 'Edit' : 'New'} action`;
 

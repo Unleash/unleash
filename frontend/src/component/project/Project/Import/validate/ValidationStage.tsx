@@ -104,7 +104,7 @@ export const ValidationStage: FC<{
 }) => {
     const { validateImport } = useValidateImportApi();
     const { setToastData } = useToast();
-    const trackImportCompleted = useTracking(tracking);
+    const trackImportFlags = useTracking(tracking);
     const [validationResult, setValidationResult] = useState<IValidationSchema>(
         { errors: [], warnings: [], permissions: [] },
     );
@@ -113,9 +113,9 @@ export const ValidationStage: FC<{
     // Counts as a failed import attempt even though nothing was submitted.
     const onValidated = (result: IValidationSchema) => {
         if (result.errors.length > 0) {
-            trackImportCompleted.validationFailed({ blockedBy: 'conflict' });
+            trackImportFlags.validationFailed({ blockedBy: 'conflict' });
         } else if (result.permissions.length > 0) {
-            trackImportCompleted.validationFailed({ blockedBy: 'permission' });
+            trackImportFlags.validationFailed({ blockedBy: 'permission' });
         }
         setValidationResult(result);
     };

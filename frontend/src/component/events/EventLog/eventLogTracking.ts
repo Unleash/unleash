@@ -1,21 +1,21 @@
 import type { Tracking } from 'utils/trackingEvents';
 
-export const eventLogExportedTracking: Tracking = {
+export const exportEventLogTracking: Tracking = {
     event: 'event-log',
-    type: 'exported',
+    type: 'export-event-log',
 };
 
-export const eventLogRawViewToggledTracking: Tracking = {
+export const toggleRawViewTracking: Tracking = {
     event: 'event-log',
-    type: 'raw-view-toggled',
+    type: 'toggle-raw-view',
 };
 
-export const eventLogPaginatedTracking: Tracking = {
+export const paginateTableTracking: Tracking = {
     event: 'event-log',
-    type: 'paginated',
+    type: 'paginate-table',
 };
 
-export const eventLogPageSizeChangedTracking: Tracking = {
+export const selectPageSizeTracking: Tracking = {
     event: 'event-log',
-    type: 'page-size-changed',
+    type: 'select-page-size',
 };

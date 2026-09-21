@@ -169,7 +169,7 @@ export const FeatureStrategyCreate = () => {
     const payload = createStrategyPayload(strategy);
 
     const onSubmit = async () => {
-        trackEvent('strategyTitle', {
+        trackEvent('strategy-title', {
             props: {
                 hasTitle: Boolean(strategy.title),
                 on: 'create',

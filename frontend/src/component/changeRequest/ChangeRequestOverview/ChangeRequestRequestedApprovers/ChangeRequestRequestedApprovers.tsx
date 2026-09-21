@@ -33,7 +33,7 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi.js';
 import { useTracking } from 'hooks/useTracking';
-import { approversUpdatedTracking } from 'component/changeRequest/changeRequestTracking';
+import { editApproversTracking } from 'component/changeRequest/changeRequestTracking';
 import { FormFieldControlAligner } from 'component/common/FormField/FormField';
 
 export const StyledSpan = styled('span')(({ theme }) => ({
@@ -259,7 +259,7 @@ export const ChangeRequestRequestedApprovers: FC<{
     const { reviewers: requestedReviewers, refetchReviewers } =
         useRequestedApprovers(changeRequest.project, changeRequest.id);
     const { updateRequestedApprovers } = useChangeRequestApi();
-    const trackApproversUpdated = useTracking(approversUpdatedTracking);
+    const trackEditApprovers = useTracking(editApproversTracking);
     const canShowAddReviewers =
         (changeRequest.state === 'Draft' ||
             changeRequest.state === 'In review') &&
@@ -319,7 +319,7 @@ export const ChangeRequestRequestedApprovers: FC<{
                 ...reviewers.map((reviewer) => reviewer.id),
                 ...selectedReviewers.map((reviewer) => reviewer.id),
             ];
-            await trackApproversUpdated.mutation(() =>
+            await trackEditApprovers.mutation(() =>
                 updateRequestedApprovers(
                     changeRequest.project,
                     changeRequest.id,

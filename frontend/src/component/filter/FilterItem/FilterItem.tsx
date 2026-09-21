@@ -13,8 +13,8 @@ import {
 } from './VirtualizedFilterOptions.tsx';
 import { useTracking } from 'hooks/useTracking';
 import {
-    filterRemovedTracking,
-    filterValueToggledTracking,
+    removeFilterTracking,
+    toggleFilterValueTracking,
 } from 'component/filter/Filters/filtersTracking';
 
 export interface IFilterItemProps {
@@ -52,10 +52,10 @@ export const FilterItem: FC<IFilterItemProps> = ({
     const listRef = useRef<VirtualizedFilterOptionsHandle>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
     const [searchText, setSearchText] = useState('');
-    const trackFilterValueToggled = useTracking(filterValueToggledTracking);
-    const trackFilterRemoved = useTracking(filterRemovedTracking);
+    const trackToggleFilterValue = useTracking(toggleFilterValueTracking);
+    const trackRemoveFilter = useTracking(removeFilterTracking);
     const trackToggled = (newState: 'selected' | 'deselected') =>
-        trackFilterValueToggled('succeeded', {
+        trackToggleFilterValue('succeeded', {
             filterKey,
             method: 'filter-bar',
             newState,
@@ -90,7 +90,7 @@ export const FilterItem: FC<IFilterItemProps> = ({
               onChange({ operator: singularOperators[0], values: [] });
               onClose();
               onChipClose();
-              trackFilterRemoved('succeeded', { filterKey });
+              trackRemoveFilter('succeeded', { filterKey });
           }
         : undefined;
 

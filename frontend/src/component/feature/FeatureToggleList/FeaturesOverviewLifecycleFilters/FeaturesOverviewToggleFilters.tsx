@@ -10,7 +10,7 @@ import {
 } from 'component/filter/Filters/Filters';
 import { formatTag } from 'utils/format-tag';
 import { useTracking } from 'hooks/useTracking';
-import { favoritesFilteredTracking } from 'component/filter/favoritesFilteredTracking';
+import { filterFavoritesTracking } from 'component/filter/filterFavoritesTracking';
 
 type FeaturesOverviewToggleFiltersProps = {
     state: FilterItemParamHolder;
@@ -24,11 +24,11 @@ export const FeaturesOverviewToggleFilters: FC<
     const { segments } = useSegments();
     const { tags } = useAllTags();
     const { flagCreators } = useFlagCreators();
-    const trackFavoritesFiltered = useTracking(favoritesFilteredTracking);
+    const trackFilterFavorites = useTracking(filterFavoritesTracking);
 
     const onFilterChange = (value: FilterItemParamHolder) => {
         if (value.favorite !== state.favorite) {
-            trackFavoritesFiltered('succeeded', {
+            trackFilterFavorites('succeeded', {
                 newState: value.favorite ? 'enabled' : 'disabled',
                 scope: 'global',
             });

@@ -18,7 +18,7 @@ import { UPDATE_PROJECT_CONTEXT } from '@server/types/permissions.ts';
 import { useTracking } from 'hooks/useTracking';
 import {
     contextFieldChangedProps,
-    contextFieldEditedTracking,
+    editContextFieldTracking,
     contextFieldTrackingProps,
 } from 'component/context/contextFieldTrackingProps';
 
@@ -38,7 +38,7 @@ export const EditContext: FC<EditContextProps> = ({ modal }) => {
     const { context, refetch } = useContext({ name, project: projectId });
     const { updateContext, loading } = useContextsApi(projectId);
     const navigate = useNavigate();
-    const trackContextFieldEdited = useTracking(contextFieldEditedTracking);
+    const trackEditContextField = useTracking(editContextFieldTracking);
     const {
         contextName,
         contextDesc,
@@ -98,7 +98,7 @@ export const EditContext: FC<EditContextProps> = ({ modal }) => {
         };
 
         try {
-            await trackContextFieldEdited.mutation(
+            await trackEditContextField.mutation(
                 () => updateContext(payload),
                 trackingProps,
             );

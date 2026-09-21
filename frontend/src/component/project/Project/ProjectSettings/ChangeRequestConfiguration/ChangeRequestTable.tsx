@@ -27,8 +27,8 @@ import { useTheme } from '@mui/material/styles';
 import AccessContext from 'contexts/AccessContext';
 import { useTracking } from 'hooks/useTracking';
 import {
-    changeRequestToggledTracking,
-    requiredApprovalsChangedTracking,
+    toggleChangeRequestsTracking,
+    selectRequiredApprovalsTracking,
 } from 'component/changeRequest/changeRequestTracking';
 import { PROJECT_CHANGE_REQUEST_WRITE } from '../../../../providers/AccessProvider/permissions.ts';
 import type { IChangeRequestEnvironmentConfig as IChangeRequestRow } from 'component/changeRequest/changeRequest.types';
@@ -75,8 +75,8 @@ export const ChangeRequestTable: FC = () => {
         });
     };
 
-    const trackRequiredApprovalsChanged = useTracking(
-        requiredApprovalsChangedTracking,
+    const trackSelectRequiredApprovals = useTracking(
+        selectRequiredApprovalsTracking,
     );
 
     const onConfirm = async () => {
@@ -111,7 +111,7 @@ export const ChangeRequestTable: FC = () => {
     ) {
         const requiredApprovals = Number(approvals);
         try {
-            await trackRequiredApprovalsChanged.mutation(
+            await trackSelectRequiredApprovals.mutation(
                 () =>
                     updateChangeRequestEnvironmentConfig({
                         project: projectId,
@@ -258,7 +258,7 @@ export const ChangeRequestTable: FC = () => {
                 onClose={() =>
                     setDialogState((state) => ({ ...state, isOpen: false }))
                 }
-                tracking={changeRequestToggledTracking({
+                tracking={toggleChangeRequestsTracking({
                     newState: dialogState.isEnabled ? 'disabled' : 'enabled',
                     environmentType: dialogState.environmentType,
                 })}

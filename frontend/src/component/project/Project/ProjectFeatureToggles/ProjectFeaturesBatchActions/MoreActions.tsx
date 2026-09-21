@@ -61,7 +61,7 @@ export const MoreActions: FC<IMoreActionsProps> = ({
                 text: 'Feature flags marked as stale',
                 type: 'success',
             });
-            trackEvent('batch_operations', {
+            trackEvent('batch-operations', {
                 props: {
                     eventType: 'features staled',
                 },
@@ -80,7 +80,7 @@ export const MoreActions: FC<IMoreActionsProps> = ({
                 text: 'Feature flags unmarked as stale',
                 type: 'success',
             });
-            trackEvent('batch_operations', {
+            trackEvent('batch-operations', {
                 props: {
                     eventType: 'features unstaled',
                 },

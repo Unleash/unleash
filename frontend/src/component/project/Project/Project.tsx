@@ -56,8 +56,8 @@ import {
     type ProjectStatusOpenedFrom,
 } from './ProjectStatus/ProjectStatusModal.tsx';
 import {
-    projectDeletedTracking,
-    projectTabNavigatedTracking,
+    deleteProjectTracking,
+    selectProjectTabTracking,
 } from 'component/project/projectTracking';
 import { useTracking } from 'hooks/useTracking';
 
@@ -163,7 +163,7 @@ const ProjectStatus = () => {
 
 export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
-    const trackTabNavigated = useTracking(projectTabNavigatedTracking);
+    const trackSelectTab = useTracking(selectProjectTabTracking);
     const params = useQueryParams();
     const { project, loading, error, refetch } = useProjectOverview(projectId);
     const ref = useLoading(loading, '[data-loading-project=true]');
@@ -324,7 +324,7 @@ export const Project = () => {
                                     value={tab.path}
                                     onClick={() => {
                                         if (tab.name !== 'flags') {
-                                            trackTabNavigated('succeeded', {
+                                            trackSelectTab('succeeded', {
                                                 tab: tab.name,
                                             });
                                         }
@@ -366,7 +366,7 @@ export const Project = () => {
             <DeleteProjectDialogue
                 projectId={projectId}
                 open={showDelDialog}
-                tracking={projectDeletedTracking}
+                tracking={deleteProjectTracking}
                 onClose={() => {
                     setShowDelDialog(false);
                 }}

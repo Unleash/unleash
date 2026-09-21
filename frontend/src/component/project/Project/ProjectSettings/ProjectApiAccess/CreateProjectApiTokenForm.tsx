@@ -22,7 +22,7 @@ import { ConfirmToken } from 'component/admin/apiToken/ConfirmToken/ConfirmToken
 import { useProjectApiTokens } from 'hooks/api/getters/useProjectApiTokens/useProjectApiTokens';
 import { useTracking } from 'hooks/useTracking';
 import {
-    apiTokenCreatedTracking,
+    createApiTokenTracking,
     apiTokenCreationProps,
 } from 'component/common/ApiTokenTable/apiTokenTracking';
 
@@ -54,7 +54,7 @@ export const CreateProjectApiTokenForm = () => {
     const { createToken: createProjectToken, loading } =
         useProjectApiTokensApi();
     const { refetch: refetchProjectTokens } = useProjectApiTokens(projectId);
-    const trackApiTokenCreated = useTracking(apiTokenCreatedTracking);
+    const trackCreateApiToken = useTracking(createApiTokenTracking);
 
     usePageTitle(pageTitle);
 
@@ -65,7 +65,7 @@ export const CreateProjectApiTokenForm = () => {
         e.preventDefault();
 
         if (!isValid()) {
-            trackApiTokenCreated.validationFailed(
+            trackCreateApiToken.validationFailed(
                 apiTokenCreationProps(getApiTokenPayload()),
             );
             return;
@@ -73,7 +73,7 @@ export const CreateProjectApiTokenForm = () => {
 
         try {
             const payload = getApiTokenPayload();
-            const api = await trackApiTokenCreated.mutation(
+            const api = await trackCreateApiToken.mutation(
                 async () =>
                     (await createProjectToken(payload, projectId)).json(),
                 apiTokenCreationProps(payload),

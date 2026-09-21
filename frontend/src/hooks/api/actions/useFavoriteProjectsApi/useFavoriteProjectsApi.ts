@@ -5,9 +5,9 @@ import type { Tracking } from 'utils/trackingEvents';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useAPI from '../useApi/useApi.js';
 
-const projectFavoriteToggledTracking: Tracking = {
+const toggleProjectFavoriteTracking: Tracking = {
     event: 'favorite',
-    type: 'project-favorite-toggled',
+    type: 'toggle-project-favorite',
 };
 
 export const useFavoriteProjectsApi = () => {
@@ -15,8 +15,8 @@ export const useFavoriteProjectsApi = () => {
         propagateErrors: true,
     });
     const { setToastData, setToastApiError } = useToast();
-    const trackProjectFavoriteToggled = useTracking(
-        projectFavoriteToggledTracking,
+    const trackToggleProjectFavorite = useTracking(
+        toggleProjectFavoriteTracking,
     );
 
     const favorite = useCallback(
@@ -29,7 +29,7 @@ export const useFavoriteProjectsApi = () => {
             );
 
             try {
-                await trackProjectFavoriteToggled.mutation(
+                await trackToggleProjectFavorite.mutation(
                     () => makeLightRequest(req.caller, req.id),
                     { newState: 'favorited' },
                 );
@@ -42,7 +42,7 @@ export const useFavoriteProjectsApi = () => {
                 setToastApiError(formatUnknownError(error));
             }
         },
-        [createRequest, makeLightRequest, trackProjectFavoriteToggled],
+        [createRequest, makeLightRequest, trackToggleProjectFavorite],
     );
 
     const unfavorite = useCallback(
@@ -55,7 +55,7 @@ export const useFavoriteProjectsApi = () => {
             );
 
             try {
-                await trackProjectFavoriteToggled.mutation(
+                await trackToggleProjectFavorite.mutation(
                     () => makeLightRequest(req.caller, req.id),
                     { newState: 'unfavorited' },
                 );
@@ -68,7 +68,7 @@ export const useFavoriteProjectsApi = () => {
                 setToastApiError(formatUnknownError(error));
             }
         },
-        [createRequest, makeLightRequest, trackProjectFavoriteToggled],
+        [createRequest, makeLightRequest, trackToggleProjectFavorite],
     );
 
     return {

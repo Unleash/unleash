@@ -9,7 +9,7 @@ import { Box } from '@mui/system';
 import type { IFilterItem } from './Filters/Filters.tsx';
 import { FILTERS_MENU } from 'utils/testIds';
 import { useTracking } from 'hooks/useTracking';
-import { filterAddedTracking } from './Filters/filtersTracking';
+import { addFilterTracking } from './Filters/filtersTracking';
 
 const StyledButton = styled(Button)(({ theme }) => ({
     padding: theme.spacing(0, 1.25, 0, 1.25),
@@ -43,7 +43,7 @@ export const AddFilterButton = ({
     availableFilters,
 }: IAddFilterButtonProps) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const trackFilterAdded = useTracking(filterAddedTracking);
+    const trackAddFilter = useTracking(addFilterTracking);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -55,7 +55,7 @@ export const AddFilterButton = ({
     const onSelect = (filter: IFilterItem) => {
         onSelectedOptionsChange([...hiddenOptions, filter.label]);
         handleClose();
-        trackFilterAdded('succeeded', { filterKey: filter.filterKey });
+        trackAddFilter('succeeded', { filterKey: filter.filterKey });
     };
 
     return (

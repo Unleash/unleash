@@ -13,7 +13,7 @@ describe('<ChangeRequestRejectDialogue />', () => {
                 open={true}
                 onConfirm={handleConfirm}
                 onClose={handleClose}
-                tracking={{ event: 'change_request' }}
+                tracking={{ event: 'change-request' }}
             />,
         );
 

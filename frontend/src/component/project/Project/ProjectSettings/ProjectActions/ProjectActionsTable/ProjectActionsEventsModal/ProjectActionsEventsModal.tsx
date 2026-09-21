@@ -13,7 +13,7 @@ import { ProjectActionsEventsDetails } from './ProjectActionsEventsDetails/Proje
 import { useTracking } from 'hooks/useTracking';
 import {
     type EventsModalOpenedFrom,
-    projectActionEventsViewedTracking,
+    viewActionEventsTracking,
 } from '../../projectActionsTracking.ts';
 
 const StyledHeader = styled('div')(({ theme }) => ({
@@ -68,10 +68,10 @@ export const ProjectActionsEventsModal = ({
     const projectId = useRequiredPathParam('projectId');
     const { locationSettings } = useLocationSettings();
     const tracking = {
-        ...projectActionEventsViewedTracking,
+        ...viewActionEventsTracking,
         props: { openedFrom },
     };
-    const trackEventsViewed = useTracking(tracking);
+    const trackViewActionEvents = useTracking(tracking);
     const { actionEvents, hasMore, loadMore, loading } = useActionEvents(
         action?.id,
         projectId,
@@ -169,7 +169,7 @@ export const ProjectActionsEventsModal = ({
                     <StyledButtonContainer>
                         <Button
                             onClick={() => {
-                                trackEventsViewed('dismissed', {
+                                trackViewActionEvents('dismissed', {
                                     method: 'cancel-button',
                                 });
                                 setOpen(false);

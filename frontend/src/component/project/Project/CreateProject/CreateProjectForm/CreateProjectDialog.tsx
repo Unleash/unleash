@@ -407,7 +407,7 @@ export const CreateProjectDialog: FC<Props> = ({ open, onClose }) => {
             navigate(`/projects/${createdProject.id}`);
             setToastData({ text: 'Project created', type: 'success' });
             if (projectStickiness !== DEFAULT_PROJECT_STICKINESS) {
-                trackEvent('project_stickiness_set');
+                trackEvent('project-stickiness-set');
             }
             trackEvent('project-mode', {
                 props: { mode: projectMode, action: 'added' },

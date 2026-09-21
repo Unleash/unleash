@@ -76,7 +76,7 @@ export const ManageTags: FC<IManageTagsProps> = ({
                 type: 'success',
                 autoHideDuration: 12000,
             });
-            trackEvent('batch_operations', {
+            trackEvent('batch-operations', {
                 props: {
                     eventType: 'tags updated',
                 },

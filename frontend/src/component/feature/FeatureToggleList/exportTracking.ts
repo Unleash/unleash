@@ -1,6 +1,6 @@
 import type { Tracking } from 'utils/trackingEvents';
 
-export const flagsExportedTracking: Tracking = {
+export const exportFlagsTracking: Tracking = {
     event: 'export-import',
-    type: 'flags-exported',
+    type: 'export-flags',
 };

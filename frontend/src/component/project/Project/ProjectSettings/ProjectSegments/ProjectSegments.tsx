@@ -8,8 +8,8 @@ import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { GO_BACK } from 'constants/navigate';
 import { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import {
-    segmentCreatedTracking,
-    segmentEditedTracking,
+    createSegmentTracking,
+    editSegmentTracking,
 } from 'component/segments/segmentTrackingProps';
 
 export const ProjectSegments = () => {
@@ -28,7 +28,7 @@ export const ProjectSegments = () => {
                         open
                         onClose={() => navigate(GO_BACK)}
                         label='Create segment'
-                        tracking={segmentCreatedTracking}
+                        tracking={createSegmentTracking}
                     >
                         <CreateSegment modal />
                     </SidebarModal>
@@ -41,7 +41,7 @@ export const ProjectSegments = () => {
                         open
                         onClose={() => navigate(GO_BACK)}
                         label='Edit segment'
-                        tracking={segmentEditedTracking}
+                        tracking={editSegmentTracking}
                     >
                         <EditSegment modal />
                     </SidebarModal>

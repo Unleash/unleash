@@ -19,7 +19,7 @@ import { Link } from 'react-router';
 import { UPDATE_FEATURE_STRATEGY } from '@server/types/permissions';
 import { StrategyDraggableItem } from './StrategyDraggableItem.tsx';
 import { useTracking } from 'hooks/useTracking.ts';
-import { strategyUpdatedTracking } from 'component/feature/FeatureStrategy/strategyActionsTracking';
+import { editStrategyTracking } from 'component/feature/FeatureStrategy/strategyActionsTracking';
 
 type EditControlsProps = {
     projectId: string;
@@ -40,8 +40,8 @@ const EditControls = ({
     otherEnvironments,
     scope,
 }: EditControlsProps) => {
-    const trackStrategyUpdated = useTracking(
-        strategyUpdatedTracking({ strategyScope: scope }),
+    const trackEditStrategy = useTracking(
+        editStrategyTracking({ strategyScope: scope }),
     );
     return (
         <>
@@ -52,7 +52,7 @@ const EditControls = ({
                 component={Link}
                 nativeButton={false}
                 onClick={() => {
-                    trackStrategyUpdated('opened');
+                    trackEditStrategy('opened');
                 }}
                 to={editStrategyPath}
                 tooltipProps={{

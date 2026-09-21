@@ -21,9 +21,9 @@ import { EventActions } from './EventActions.tsx';
 import useLoading from 'hooks/useLoading';
 import { useTracking } from 'hooks/useTracking';
 import {
-    eventLogPageSizeChangedTracking,
-    eventLogPaginatedTracking,
-    eventLogRawViewToggledTracking,
+    selectPageSizeTracking,
+    paginateTableTracking,
+    toggleRawViewTracking,
 } from './eventLogTracking';
 
 interface IEventLogProps {
@@ -84,29 +84,25 @@ export const EventLog = ({
               : { type: 'global' },
     );
     const ref = useLoading(loading, '[data-loading-events=true]');
-    const trackEventLogRawViewToggled = useTracking(
-        eventLogRawViewToggledTracking,
-    );
-    const trackEventLogPaginated = useTracking(eventLogPaginatedTracking);
-    const trackEventLogPageSizeChanged = useTracking(
-        eventLogPageSizeChangedTracking,
-    );
+    const trackToggleRawView = useTracking(toggleRawViewTracking);
+    const trackPaginateTable = useTracking(paginateTableTracking);
+    const trackSelectPageSize = useTracking(selectPageSizeTracking);
 
     const fetchNextPage = () => {
         pagination.nextPage();
-        trackEventLogPaginated('succeeded', {
+        trackPaginateTable('succeeded', {
             pageDepth: pagination.currentPage + 2,
         });
     };
     const fetchPrevPage = () => {
         pagination.prevPage();
-        trackEventLogPaginated('succeeded', {
+        trackPaginateTable('succeeded', {
             pageDepth: pagination.currentPage,
         });
     };
     const setPageLimit = (pageSize: number) => {
         pagination.setPageLimit(pageSize);
-        trackEventLogPageSizeChanged('succeeded', { pageSize });
+        trackSelectPageSize('succeeded', { pageSize });
     };
 
     const setSearchValue = (query = '') => {
@@ -117,7 +113,7 @@ export const EventLog = ({
 
     const toggleShowData = () => {
         setEventSettings((prev) => ({ showData: !prev.showData }));
-        trackEventLogRawViewToggled('succeeded', {
+        trackToggleRawView('succeeded', {
             newState: eventSettings.showData ? 'hidden' : 'shown',
         });
     };

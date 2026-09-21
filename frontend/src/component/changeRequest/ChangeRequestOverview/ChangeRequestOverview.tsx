@@ -176,9 +176,9 @@ export const ChangeRequestOverview: FC = () => {
     const previousState = changeRequest && trackedState(changeRequest);
     const transitionTracking = (state: ChangeRequestTransitionState) =>
         changeRequestTransitionTracking(state, previousState);
-    const trackApproved = useTracking(transitionTracking('Approved'));
-    const trackApplied = useTracking(transitionTracking('Applied'));
-    const trackScheduled = useTracking(transitionTracking('Scheduled'));
+    const trackApprove = useTracking(transitionTracking('Approved'));
+    const trackApply = useTracking(transitionTracking('Applied'));
+    const trackSchedule = useTracking(transitionTracking('Scheduled'));
 
     if (!changeRequest) {
         return null;
@@ -194,7 +194,7 @@ export const ChangeRequestOverview: FC = () => {
     const onApplyChanges = async () => {
         try {
             setDisabled(true);
-            await trackApplied.mutation(() =>
+            await trackApply.mutation(() =>
                 changeState(projectId, Number(id), { state: 'Applied' }),
             );
             setShowApplyScheduledDialog(false);
@@ -215,7 +215,7 @@ export const ChangeRequestOverview: FC = () => {
     const onScheduleChangeRequest = async (scheduledDate: Date) => {
         try {
             setDisabled(true);
-            await trackScheduled.mutation(() =>
+            await trackSchedule.mutation(() =>
                 changeState(projectId, Number(id), {
                     state: 'Scheduled',
                     scheduledAt: scheduledDate.toISOString(),
@@ -294,7 +294,7 @@ export const ChangeRequestOverview: FC = () => {
     const onApprove = async () => {
         try {
             setDisabled(true);
-            await trackApproved.mutation(() =>
+            await trackApprove.mutation(() =>
                 changeState(projectId, Number(id), { state: 'Approved' }),
             );
             await refetchChangeRequest();

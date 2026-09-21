@@ -16,7 +16,7 @@ import { SafeNumberParam } from 'utils/safeNumberParam';
 import { DEFAULT_PAGE_LIMIT } from 'utils/paginationConfig';
 import { useEffect } from 'react';
 import { useTracking } from 'hooks/useTracking';
-import { filterValueToggledTracking } from 'component/filter/Filters/filtersTracking';
+import { toggleFilterValueTracking } from 'component/filter/Filters/filtersTracking';
 
 const ARCHIVED = { operator: 'IS', values: ['archived'] };
 
@@ -96,7 +96,7 @@ export const useProjectFeatureSearchActions = (
     tableState: ReturnType<typeof useProjectFeatureSearch>['tableState'],
     setTableState: ReturnType<typeof useProjectFeatureSearch>['setTableState'],
 ) => {
-    const trackFilterValueToggled = useTracking(filterValueToggledTracking);
+    const trackToggleFilterValue = useTracking(toggleFilterValueTracking);
     const onAttributeClick = (attribute: Attribute, value: string) => {
         const attributeState = tableState[attribute.key];
         const unchanged =
@@ -116,7 +116,7 @@ export const useProjectFeatureSearchActions = (
                   }
                 : { operator: attribute.operator, values: [value] },
         });
-        trackFilterValueToggled('succeeded', {
+        trackToggleFilterValue('succeeded', {
             filterKey: attribute.key,
             method: 'cell',
             newState: 'selected',

@@ -40,9 +40,9 @@ import {
     type ContextFieldTrackingProps,
 } from 'component/context/contextFieldTrackingProps';
 
-const contextFieldDeletedTracking: Tracking = {
+const deleteContextFieldTracking: Tracking = {
     event: 'context-fields',
-    type: 'deleted',
+    type: 'delete-context-field',
 };
 
 type ContextRow = {
@@ -70,7 +70,7 @@ const ContextList: FC<{ variant?: TypographyProps['variant'] }> = ({
     const { removeContext, loading: removingContext } =
         useContextsApi(projectId);
     const { setToastData, setToastApiError } = useToast();
-    const trackContextFieldDeleted = useTracking(contextFieldDeletedTracking);
+    const trackDeleteContextField = useTracking(deleteContextFieldTracking);
 
     const trackingPropsFor = (name: string | undefined) => {
         const field = context.find((context) => context.name === name);
@@ -203,7 +203,7 @@ const ContextList: FC<{ variant?: TypographyProps['variant'] }> = ({
             setToastApiError(formatUnknownError(new Error()));
         } else {
             try {
-                await trackContextFieldDeleted.mutation(
+                await trackDeleteContextField.mutation(
                     () => removeContext(deleteTarget.name),
                     deleteTarget.props,
                 );
@@ -306,7 +306,7 @@ const ContextList: FC<{ variant?: TypographyProps['variant'] }> = ({
                 title='Really delete context field'
                 disabledPrimaryButton={removingContext}
                 tracking={{
-                    ...contextFieldDeletedTracking,
+                    ...deleteContextFieldTracking,
                     props: deleteTarget?.props,
                 }}
             />

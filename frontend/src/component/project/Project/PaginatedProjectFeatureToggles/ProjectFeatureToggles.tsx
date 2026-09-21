@@ -23,7 +23,7 @@ import useLoading from 'hooks/useLoading';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
 import { useTableState } from 'hooks/useTableState';
 import {
-    flagsListColumnToggledTracking,
+    toggleColumnTracking,
     flagsListProps,
     flagsListTableTracking,
 } from 'component/feature/FeatureToggleList/flagsListTracking';
@@ -136,8 +136,8 @@ export const ProjectFeatureToggles = ({
         query: tableState.query,
         total,
     });
-    const trackColumnToggled = useTracking({
-        ...flagsListColumnToggledTracking,
+    const trackToggleColumn = useTracking({
+        ...toggleColumnTracking,
         props: listProps,
     });
 
@@ -489,12 +489,12 @@ export const ProjectFeatureToggles = ({
                         !columnId.includes(','),
                 ),
             });
-            trackColumnToggled('succeeded', {
+            trackToggleColumn('succeeded', {
                 column: trackedColumnName(columnId),
                 newState: isVisible ? 'hidden' : 'shown',
             });
         },
-        [columnVisibility, setTableState, trackColumnToggled],
+        [columnVisibility, setTableState, trackToggleColumn],
     );
 
     const selectedData = useSelectedData(features, rowSelection);

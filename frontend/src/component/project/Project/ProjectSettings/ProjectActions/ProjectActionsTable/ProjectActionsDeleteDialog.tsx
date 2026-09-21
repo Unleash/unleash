@@ -2,7 +2,7 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import type { IActionSet } from 'interfaces/action';
 import {
     projectActionSizeProps,
-    projectActionDeletedTracking,
+    deleteActionTracking,
 } from '../projectActionsTracking.ts';
 
 interface IProjectActionsDeleteDialogProps {
@@ -26,7 +26,7 @@ export const ProjectActionsDeleteDialog = ({
         primaryButtonText='Delete action'
         secondaryButtonText='Cancel'
         tracking={{
-            ...projectActionDeletedTracking,
+            ...deleteActionTracking,
             props: projectActionSizeProps(action),
         }}
         onSubmit={() => onConfirm(action!)}

@@ -11,7 +11,7 @@ import type { SearchFeaturesParams } from 'openapi';
 import { SafeNumberParam } from 'utils/safeNumberParam';
 import { DEFAULT_PAGE_LIMIT } from 'utils/paginationConfig';
 import { useTracking } from 'hooks/useTracking';
-import { filterValueToggledTracking } from 'component/filter/Filters/filtersTracking';
+import { toggleFilterValueTracking } from 'component/filter/Filters/filtersTracking';
 
 export const useGlobalFeatureSearch = (pageLimit = DEFAULT_PAGE_LIMIT) => {
     const storageKey = 'features-list-table';
@@ -97,7 +97,7 @@ export const useTableStateFilter = <K extends string>(
         };
     }) => void,
 ) => {
-    const trackFilterValueToggled = useTracking(filterValueToggledTracking);
+    const trackToggleFilterValue = useTracking(toggleFilterValueTracking);
     return useCallback(
         (value: string | number) => {
             const currentState = state ? state[key] : undefined;
@@ -119,12 +119,12 @@ export const useTableStateFilter = <K extends string>(
                       }
                     : { operator, values: [value] },
             });
-            trackFilterValueToggled('succeeded', {
+            trackToggleFilterValue('succeeded', {
                 filterKey: key,
                 method: 'cell',
                 newState: 'selected',
             });
         },
-        [state, setState, key, operator, trackFilterValueToggled],
+        [state, setState, key, operator, trackToggleFilterValue],
     );
 };

@@ -31,7 +31,7 @@ import AccessContext from 'contexts/AccessContext';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
 import { GO_BACK } from 'constants/navigate';
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
-import { contextFieldCreatedTracking } from 'component/context/contextFieldTrackingProps';
+import { createContextFieldTracking } from 'component/context/contextFieldTrackingProps';
 
 interface ISegmentFormPartTwoProps {
     project?: string;
@@ -165,7 +165,7 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
                         label='Create new context'
                         onClose={() => setOpen(false)}
                         open={open}
-                        tracking={contextFieldCreatedTracking}
+                        tracking={createContextFieldTracking}
                     >
                         <CreateUnleashContext
                             onSubmit={() => setOpen(false)}

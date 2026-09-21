@@ -12,8 +12,8 @@ import { formatReleaseTemplateCreatePath } from 'component/releases/releaseTempl
 import { releaseTemplateScopeProps } from 'component/releases/releaseTemplateScopeProps';
 import { useTracking } from 'hooks/useTracking.ts';
 import {
-    releaseTemplateCreatedTracking,
-    releaseTemplateNoAccessTracking,
+    createTemplateTracking,
+    createTemplateWithoutAccessTracking,
 } from 'component/releases/releaseManagementTracking';
 import { Dialogue } from 'component/common/Dialogue/Dialogue.tsx';
 
@@ -24,7 +24,7 @@ interface INewReleaseTemplateButtonProps {
 export const NewReleaseTemplateButton = ({
     projectId,
 }: INewReleaseTemplateButtonProps) => {
-    const trackTemplateCreated = useTracking(releaseTemplateCreatedTracking);
+    const trackCreateTemplate = useTracking(createTemplateTracking);
     const [noAccessDialogOpen, setNoAccessDialogOpen] = useState(false);
     const canCreateGlobalTemplate = useHasRootAccess(
         RELEASE_PLAN_TEMPLATE_CREATE,
@@ -37,7 +37,7 @@ export const NewReleaseTemplateButton = ({
 
     const handleNavigateToCreate = (project?: string) => {
         setMenuAnchor(null);
-        trackTemplateCreated('opened', {
+        trackCreateTemplate('opened', {
             openedFrom: 'add-strategy',
             ...releaseTemplateScopeProps(project),
         });
@@ -58,7 +58,7 @@ export const NewReleaseTemplateButton = ({
                     secondaryButtonText='Close'
                     onClose={() => setNoAccessDialogOpen(false)}
                     title='Contact admin to create release templates'
-                    tracking={releaseTemplateNoAccessTracking}
+                    tracking={createTemplateWithoutAccessTracking}
                 >
                     You don&apos;t have the required permissions to create
                     release templates. You must contact your organization admin

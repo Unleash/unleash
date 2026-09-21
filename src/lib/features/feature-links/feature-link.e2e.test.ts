@@ -5,7 +5,11 @@ import {
 import dbInit, {
     type ITestDb,
 } from '../../../test/e2e/helpers/database-init.js';
-import type { IEventStore, IFeatureLinkStore } from '../../types/index.js';
+import {
+    type IEventStore,
+    type IFeatureLinkStore,
+    TEST_AUDIT_USER,
+} from '../../types/index.js';
 import getLogger from '../../../test/fixtures/no-logger.js';
 import type { LinkSchema } from '../../openapi/spec/link-schema.js';
 import type { IFeatureLinksReadModel } from './feature-links-read-model-type.js';
@@ -48,9 +52,10 @@ const addLink = async (
     featureName: string,
     link: LinkSchema,
     expectedCode = 204,
+    projectId = 'default',
 ) => {
     return app.request
-        .post(`/api/admin/projects/default/features/${featureName}/link`)
+        .post(`/api/admin/projects/${projectId}/features/${featureName}/link`)
         .send(link)
         .expect(expectedCode);
 };
@@ -60,10 +65,11 @@ const updateLink = async (
     linkId: string,
     link: LinkSchema,
     expectedCode = 204,
+    projectId = 'default',
 ) => {
     return app.request
         .put(
-            `/api/admin/projects/default/features/${featureName}/link/${linkId}`,
+            `/api/admin/projects/${projectId}/features/${featureName}/link/${linkId}`,
         )
         .send(link)
         .expect(expectedCode);
@@ -73,10 +79,11 @@ const deleteLink = async (
     featureName: string,
     linkId: string,
     expectedCode = 204,
+    projectId = 'default',
 ) => {
     return app.request
         .delete(
-            `/api/admin/projects/default/features/${featureName}/link/${linkId}`,
+            `/api/admin/projects/${projectId}/features/${featureName}/link/${linkId}`,
         )
         .expect(expectedCode);
 };
@@ -182,5 +189,57 @@ test('should manage feature links', async () => {
             featureName: 'my_feature',
             project: 'default',
         },
+    ]);
+});
+
+test('cannot manage feature links via a different project', async () => {
+    const featureName = 'feature-in-default';
+    await app.createFeature(featureName);
+
+    const otherProject = 'other-project';
+    const user = await db.stores.userStore.getByQuery({
+        email: 'user@getunleash.io',
+    });
+
+    await app.services.projectService.createProject(
+        {
+            id: otherProject,
+            name: 'Other Project',
+            mode: 'open',
+            defaultStickiness: 'clientId',
+        },
+        user,
+        TEST_AUDIT_USER,
+    );
+
+    // Create must target the feature's own project
+    await addLink(
+        featureName,
+        { url: 'example.com', title: 'abuse attempt' },
+        404,
+        otherProject,
+    );
+    expect(await featureLinkStore.getAll()).toEqual([]);
+
+    await addLink(featureName, { url: 'example.com', title: 'real link' });
+    const [link] = await featureLinkStore.getAll();
+
+    // Update via a project the user can access, but that does not own the feature
+    await updateLink(
+        featureName,
+        link.id,
+        { url: 'evil.com', title: 'hijacked' },
+        404,
+        otherProject,
+    );
+    expect(await featureLinkStore.get(link.id)).toMatchObject({
+        url: 'https://example.com',
+        title: 'real link',
+    });
+
+    // Same for delete
+    await deleteLink(featureName, link.id, 404, otherProject);
+    expect(await featureLinkStore.getAll()).toMatchObject([
+        { id: link.id, url: 'https://example.com', title: 'real link' },
     ]);
 });

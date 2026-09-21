@@ -134,7 +134,7 @@ test('cannot create/update invalid link', async () => {
 test('cannot create link for non-existent feature', async () => {
     const flagResolver = { impactMetrics: fakeImpactMetricsResolver() };
     const nonExistingFeature = new FakeFeaturesReadModel({
-        featureExists: false,
+        featureExistsInProject: false,
     });
     const { featureLinkService } = createFakeFeatureLinkService(
         {

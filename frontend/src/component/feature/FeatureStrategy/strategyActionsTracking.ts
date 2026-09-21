@@ -1,5 +1,32 @@
-import type { Tracking } from 'utils/trackingEvents';
+import type { Tracking, TrackingProps } from 'utils/trackingEvents';
 import type { FeatureEnvironmentStrategyScope } from './FeatureStrategyEdit/FeatureStrategyEdit.tsx';
+import { foldStrategyType } from './summarizeStrategy.ts';
+
+export type StrategySetupScreen = 'cards' | 'templates';
+
+export const createStrategyTracking: Tracking = {
+    event: 'flag-strategy',
+    type: 'create-strategy',
+};
+
+export const selectStrategySetupTracking = (props: {
+    initialScreen: StrategySetupScreen;
+}): Tracking => ({
+    event: 'flag-strategy',
+    type: 'select-strategy-setup',
+    props,
+});
+
+export const strategyTypeProps = ({
+    selectedStrategyName,
+    defaultStrategyName,
+}: {
+    selectedStrategyName: string;
+    defaultStrategyName: string;
+}): TrackingProps => ({
+    strategyType: foldStrategyType(selectedStrategyName),
+    defaultStrategyType: foldStrategyType(defaultStrategyName),
+});
 
 export const deleteStrategyTracking: Tracking = {
     event: 'flag-strategy',

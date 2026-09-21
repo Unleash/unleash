@@ -2,6 +2,15 @@ import { useEffect, useState } from 'react';
 import { Box, Dialog, IconButton, styled, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
+import { useTracking } from 'hooks/useTracking';
+import {
+    type DialogDismissMethod,
+    dismissMethodFromCloseReason,
+} from 'utils/trackingEvents';
+import {
+    selectStrategySetupTracking,
+    type StrategySetupScreen,
+} from '../strategyActionsTracking.ts';
 import { ReleasePlanPreview } from '../FeatureStrategyMenu/ReleasePlanPreview.tsx';
 import { useAddReleasePlan } from '../FeatureStrategyMenu/useAddReleasePlan.tsx';
 import { StrategySetupCards } from './StrategySetupCards.tsx';
@@ -28,7 +37,7 @@ interface IFeatureStrategyWizardProps {
     environmentId: string;
     open: boolean;
     onClose: () => void;
-    initialScreen?: 'cards' | 'templates';
+    initialScreen?: StrategySetupScreen;
 }
 
 export const FeatureStrategyWizard = ({
@@ -40,6 +49,9 @@ export const FeatureStrategyWizard = ({
     initialScreen = 'cards',
 }: IFeatureStrategyWizardProps) => {
     const [screen, setScreen] = useState<Screen>({ kind: initialScreen });
+    const trackStrategySetup = useTracking(
+        selectStrategySetupTracking({ initialScreen }),
+    );
     const {
         addReleasePlan,
         activeReleasePlan,
@@ -55,7 +67,13 @@ export const FeatureStrategyWizard = ({
     useEffect(() => {
         if (!open) return;
         setScreen({ kind: initialScreen });
-    }, [open, initialScreen]);
+        trackStrategySetup('opened');
+    }, [open, initialScreen, trackStrategySetup]);
+
+    const dismiss = (method: DialogDismissMethod) => {
+        trackStrategySetup('dismissed', { method });
+        onClose();
+    };
 
     const screenContent = () => {
         switch (screen.kind) {
@@ -104,7 +122,9 @@ export const FeatureStrategyWizard = ({
         <>
             <Dialog
                 open={open}
-                onClose={onClose}
+                onClose={(_, reason) =>
+                    dismiss(dismissMethodFromCloseReason(reason))
+                }
                 maxWidth='md'
                 slotProps={{
                     paper: {
@@ -125,7 +145,7 @@ export const FeatureStrategyWizard = ({
                     </Typography>
                     <IconButton
                         size='medium'
-                        onClick={onClose}
+                        onClick={() => dismiss('close-icon')}
                         edge='end'
                         aria-label='close'
                     >

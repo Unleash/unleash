@@ -3,7 +3,7 @@ import { isMultiValueOperator } from 'constants/operators';
 import { BuiltInStrategies } from 'utils/strategyNames';
 
 // A custom strategy name is something the customer typed, so only built-in names are sent.
-const foldStrategyType = (name: string) =>
+export const foldStrategyType = (name: string) =>
     BuiltInStrategies.includes(name) ? name : 'custom';
 
 const countConstraintValues = ({ operator, values, value }: IConstraint) =>

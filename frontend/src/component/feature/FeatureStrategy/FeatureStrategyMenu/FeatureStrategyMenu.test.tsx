@@ -103,7 +103,7 @@ const renderMenu = () => {
         { route: `/projects/${projectId}/features/${featureId}` },
     );
 
-    return { closes, trackEvent };
+    return { closes };
 };
 
 // Both the project default card and every strategy card offer "Configure", so
@@ -127,7 +127,7 @@ describe('adding a strategy from the menu', () => {
 
     it('applies the environment default strategy without opening a form', async () => {
         const { requests } = strategiesPostRoute();
-        const { closes, trackEvent } = renderMenu();
+        const { closes } = renderMenu();
         await filterTo('Project default');
 
         // The card shows the environment's default once the project overview
@@ -140,9 +140,6 @@ describe('adding a strategy from the menu', () => {
             name: 'flexibleRollout',
             title: '50% of all users',
             parameters: { rollout: '50' },
-        });
-        expect(trackEvent).toHaveBeenCalledWith('strategy-add', {
-            props: { buttonTitle: 'Gradual rollout' },
         });
         expect(window.location.pathname).toBe(
             `/projects/${projectId}/features/${featureId}`,
@@ -190,7 +187,7 @@ describe('adding a strategy from the menu', () => {
     });
 
     it('opens the create-strategy form prefilled with the environment default', async () => {
-        const { closes, trackEvent } = renderMenu();
+        const { closes } = renderMenu();
         await filterTo('Project default');
 
         await screen.findByText('50% of all users');
@@ -205,14 +202,11 @@ describe('adding a strategy from the menu', () => {
             'strategyName=flexibleRollout',
         );
         expect(window.location.search).toContain('defaultStrategy=true');
-        expect(trackEvent).toHaveBeenCalledWith('strategy-add', {
-            props: { buttonTitle: 'Default strategy' },
-        });
         expect(closes).toHaveLength(1);
     });
 
     it('opens the create-strategy form when configuring a strategy type', async () => {
-        const { closes, trackEvent } = renderMenu();
+        const { closes } = renderMenu();
         await filterTo('Advanced strategies');
 
         fireEvent.click(
@@ -230,9 +224,6 @@ describe('adding a strategy from the menu', () => {
         expect(window.location.search).toContain(
             `environmentId=${environmentId}`,
         );
-        expect(trackEvent).toHaveBeenCalledWith('strategy-add', {
-            props: { buttonTitle: 'IPs' },
-        });
         expect(closes).toHaveLength(1);
     });
 });

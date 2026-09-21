@@ -159,7 +159,6 @@ export const FeatureStrategyMenuCards = ({
                     onClick={() =>
                         onConfigure({
                             strategyName: strategy.name,
-                            strategyDisplayName: name,
                         })
                     }
                 >

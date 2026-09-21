@@ -5,16 +5,13 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature.ts';
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi.ts';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi.ts';
 import useToast from 'hooks/useToast.tsx';
-import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-import { useEventTracker } from 'hooks/useEventTracker';
-import { formatStrategyName } from 'utils/strategyNames';
+import { useTracking } from 'hooks/useTracking';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import type { CreateFeatureStrategySchema } from 'openapi';
-
-const FALLBACK_DEFAULT_STRATEGY: CreateFeatureStrategySchema = {
-    name: 'flexibleRollout',
-    title: '100% of all users',
-};
+import {
+    createStrategyTracking,
+    strategyTypeProps,
+} from '../strategyActionsTracking.ts';
+import { useEnvironmentDefaultStrategy } from './useEnvironmentDefaultStrategy.ts';
 
 interface IProjectDefaultStrategyOptions {
     projectId: string;
@@ -27,7 +24,10 @@ export const useProjectDefaultStrategy = ({
     featureId,
     environmentId,
 }: IProjectDefaultStrategyOptions) => {
-    const { project, loading } = useProjectOverview(projectId);
+    const { defaultStrategy, loading } = useEnvironmentDefaultStrategy(
+        projectId,
+        environmentId,
+    );
     const { addStrategyToFeature } = useFeatureStrategyApi();
     const { addChange } = useChangeRequestApi();
     const { setToastData, setToastApiError } = useToast();
@@ -35,12 +35,8 @@ export const useProjectDefaultStrategy = ({
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
     const { refetchFeature } = useFeature(projectId, featureId);
-    const { trackEvent } = useEventTracker();
+    const trackCreateStrategy = useTracking(createStrategyTracking);
     const [applying, setApplying] = useState(false);
-
-    const defaultStrategy =
-        project?.environments?.find((env) => env.environment === environmentId)
-            ?.defaultStrategy || FALLBACK_DEFAULT_STRATEGY;
 
     const applyDefaultStrategy = async () => {
         const payload = {
@@ -55,37 +51,39 @@ export const useProjectDefaultStrategy = ({
 
         setApplying(true);
         try {
-            if (isChangeRequestConfigured(environmentId)) {
-                await addChange(projectId, environmentId, {
-                    action: 'addStrategy',
-                    feature: featureId,
-                    payload,
-                });
+            await trackCreateStrategy.mutation(
+                async () => {
+                    if (isChangeRequestConfigured(environmentId)) {
+                        await addChange(projectId, environmentId, {
+                            action: 'addStrategy',
+                            feature: featureId,
+                            payload,
+                        });
 
-                setToastData({
-                    text: 'Strategy added to draft',
-                    type: 'success',
-                });
-                refetchChangeRequests();
-            } else {
-                await addStrategyToFeature(
-                    projectId,
-                    featureId,
-                    environmentId,
-                    payload,
-                );
+                        setToastData({
+                            text: 'Strategy added to draft',
+                            type: 'success',
+                        });
+                        refetchChangeRequests();
+                    } else {
+                        await addStrategyToFeature(
+                            projectId,
+                            featureId,
+                            environmentId,
+                            payload,
+                        );
 
-                setToastData({
-                    text: 'Strategy applied',
-                    type: 'success',
-                });
-            }
-
-            trackEvent('strategy-add', {
-                props: {
-                    buttonTitle: formatStrategyName(defaultStrategy.name),
+                        setToastData({
+                            text: 'Strategy applied',
+                            type: 'success',
+                        });
+                    }
                 },
-            });
+                strategyTypeProps({
+                    selectedStrategyName: defaultStrategy.name,
+                    defaultStrategyName: defaultStrategy.name,
+                }),
+            );
 
             refetchFeature();
             return true;

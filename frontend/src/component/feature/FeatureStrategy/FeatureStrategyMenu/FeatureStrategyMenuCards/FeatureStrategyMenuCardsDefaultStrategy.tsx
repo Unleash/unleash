@@ -44,7 +44,6 @@ export const FeatureStrategyMenuCardsDefaultStrategy = ({
                 onClick={() =>
                     onConfigure({
                         strategyName: defaultStrategy.name,
-                        strategyDisplayName: STRATEGY_DISPLAY_NAME,
                         isDefault: true,
                     })
                 }

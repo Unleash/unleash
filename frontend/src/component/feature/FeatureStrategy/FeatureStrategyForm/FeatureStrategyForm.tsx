@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useEffect, useState, type JSX } from 'react';
+import { useState, type JSX } from 'react';
 import { useNavigate } from 'react-router';
 import { Button, styled, Box } from '@mui/material';
 import type {
@@ -25,7 +25,6 @@ import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit.ts
 import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { FeatureStrategyEnabledDisabled } from './FeatureStrategyEnabledDisabled/FeatureStrategyEnabledDisabled.tsx';
-import { useEventTracker } from 'hooks/useEventTracker';
 import { useTracking } from 'hooks/useTracking';
 import type { Tracking } from 'utils/trackingEvents';
 import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/UpgradeChangeRequests/UpgradeChangeRequests.tsx';
@@ -75,20 +74,11 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
     disabled,
     tracking,
 }: IFeatureStrategyFormProps<T>) => {
-    const { trackEvent } = useEventTracker();
     const trackStrategyForm = useTracking(tracking);
     const [showProdGuard, setShowProdGuard] = useState(false);
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);
     const enableProdGuard = useFeatureStrategyProdGuard(feature, environmentId);
     const { strategyDefinition } = useStrategy(strategy.name);
-
-    useEffect(() => {
-        trackEvent('new-strategy-form', {
-            props: {
-                eventType: 'seen',
-            },
-        });
-    }, []);
 
     const foundEnvironment = feature.environments.find(
         (environment) => environment.name === environmentId,
@@ -153,28 +143,21 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
             .every(Boolean);
     };
 
-    const onDefaultCancel = () => {
-        navigate(formatFeaturePath(feature.project, feature.name));
+    const onCancelWithTracking = () => {
+        trackStrategyForm('dismissed', { method: 'cancel-button' });
+
+        if (onCancel) {
+            onCancel();
+        } else {
+            navigate(formatFeaturePath(feature.project, feature.name));
+        }
     };
 
     const onSubmitWithValidation = async () => {
-        if (Array.isArray(strategy.variants) && strategy.variants?.length > 0) {
-            trackEvent('strategy-variants', {
-                props: {
-                    eventType: 'submitted',
-                },
-            });
-        }
         if (!validateAllParameters()) {
             trackStrategyForm.validationFailed();
             return;
         }
-
-        trackEvent('new-strategy-form', {
-            props: {
-                eventType: 'submitted',
-            },
-        });
 
         if (enableProdGuard && !changeRequestsEnabled) {
             setShowProdGuard(true);
@@ -264,7 +247,7 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
             <Button
                 type='button'
                 color='primary'
-                onClick={onCancel ? onCancel : onDefaultCancel}
+                onClick={onCancelWithTracking}
                 disabled={loading}
             >
                 Cancel

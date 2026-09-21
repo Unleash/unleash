@@ -66,14 +66,7 @@ export default class FeatureLinkService {
         newLink: Omit<IFeatureLink, 'id' | 'domain'>,
         auditUser: IAuditUser,
     ): Promise<IFeatureLink> {
-        const featureExists = await this.featuresReadModel.featureExists(
-            newLink.featureName,
-        );
-        if (!featureExists) {
-            throw new NotFoundError(
-                `Could not find feature with name ${newLink.featureName}`,
-            );
-        }
+        await this.validateFeatureBelongsToProject(newLink.featureName, projectId);
 
         const countLinks = await this.featureLinkStore.count({
             featureName: newLink.featureName,
@@ -120,6 +113,8 @@ export default class FeatureLinkService {
             throw new NotFoundError(`Could not find link with id ${linkId}`);
         }
 
+        await this.validateFeatureBelongsToProject(preData.featureName, projectId);
+
         const link = await this.featureLinkStore.update(linkId, {
             ...updatedLink,
             url: normalizedUrl,
@@ -149,6 +144,8 @@ export default class FeatureLinkService {
             throw new NotFoundError(`Could not find link with id ${linkId}`);
         }
 
+        await this.validateFeatureBelongsToProject(link.featureName, projectId);
+
         await this.featureLinkStore.delete(linkId);
 
         await this.eventService.storeEvent(
@@ -159,5 +156,21 @@ export default class FeatureLinkService {
                 auditUser,
             }),
         );
+    }
+
+    private async validateFeatureBelongsToProject(
+        featureName: string,
+        projectId: string,
+    ): Promise<void> {
+        const featureExistsInProject =
+            await this.featuresReadModel.featureExistsInProject(
+                featureName,
+                projectId,
+            );
+        if (!featureExistsInProject) {
+            throw new NotFoundError(
+                `Could not find feature with name ${featureName} in project ${projectId}`,
+            );
+        }
     }
 }

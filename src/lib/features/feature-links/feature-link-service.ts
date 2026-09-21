@@ -66,7 +66,10 @@ export default class FeatureLinkService {
         newLink: Omit<IFeatureLink, 'id' | 'domain'>,
         auditUser: IAuditUser,
     ): Promise<IFeatureLink> {
-        await this.validateFeatureBelongsToProject(newLink.featureName, projectId);
+        await this.validateFeatureBelongsToProject(
+            newLink.featureName,
+            projectId,
+        );
 
         const countLinks = await this.featureLinkStore.count({
             featureName: newLink.featureName,
@@ -113,7 +116,10 @@ export default class FeatureLinkService {
             throw new NotFoundError(`Could not find link with id ${linkId}`);
         }
 
-        await this.validateFeatureBelongsToProject(preData.featureName, projectId);
+        await this.validateFeatureBelongsToProject(
+            preData.featureName,
+            projectId,
+        );
 
         const link = await this.featureLinkStore.update(linkId, {
             ...updatedLink,

@@ -47,15 +47,7 @@ export const useRowActions = (
     });
 
     const staleProps = {
-        name: featureStaleDialogState.featureId,
         newState: featureStaleDialogState.stale ? 'active' : 'stale',
-    };
-    const archiveProps = { name: featureArchiveState };
-    const deleteProps = {
-        name: showFeatureDeleteDialogue.featureId,
-    };
-    const reviveProps = {
-        name: showFeatureReviveDialogue.featureId,
     };
 
     const rowActionsDialogs = (
@@ -81,10 +73,7 @@ export const useRowActions = (
                     onChange();
                     onArchiveConfirm?.();
                 }}
-                tracking={{
-                    ...archiveFlagTracking,
-                    props: archiveProps,
-                }}
+                tracking={archiveFlagTracking}
                 onClose={() => {
                     setFeatureArchiveState(undefined);
                 }}
@@ -114,7 +103,7 @@ export const useRowActions = (
                         open,
                     }));
                 }}
-                tracking={{ ...deleteFlagTracking, props: deleteProps }}
+                tracking={deleteFlagTracking}
                 refetch={onChange}
             />
             <ArchivedFeatureReviveConfirm
@@ -127,7 +116,7 @@ export const useRowActions = (
                         open,
                     }));
                 }}
-                tracking={{ ...reviveFlagTracking, props: reviveProps }}
+                tracking={reviveFlagTracking}
                 refetch={() => {
                     setShowFeatureReviveDialogue((prev) => ({
                         ...prev,

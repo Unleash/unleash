@@ -80,7 +80,6 @@ export const EditContext: FC<EditContextProps> = ({ modal }) => {
             : '/context';
         const trackingProps = {
             ...contextFieldTrackingProps({
-                name: contextName,
                 legalValues,
                 description: contextDesc,
                 stickiness,

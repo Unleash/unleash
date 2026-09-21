@@ -66,7 +66,6 @@ export const CreateUnleashContext = ({
         e.stopPropagation();
         const trackingProps = {
             ...contextFieldTrackingProps({
-                name: contextName,
                 legalValues,
                 description: contextDesc,
                 stickiness,

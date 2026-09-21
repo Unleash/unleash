@@ -73,7 +73,6 @@ export const CreateSegment = ({ modal }: ICreateSegmentProps) => {
         e.preventDefault();
         clearErrors();
         const trackingProps = segmentTrackingProps({
-            name,
             constraints,
             description,
         });

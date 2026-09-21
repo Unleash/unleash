@@ -75,7 +75,6 @@ const ContextList: FC<{ variant?: TypographyProps['variant'] }> = ({
     const trackingPropsFor = (name: string | undefined) => {
         const field = context.find((context) => context.name === name);
         return contextFieldTrackingProps({
-            name: name ?? '',
             legalValues: field?.legalValues ?? [],
             description: field?.description,
             stickiness: field?.stickiness ?? false,

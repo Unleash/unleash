@@ -7,28 +7,21 @@ const constraintValueCount = ({ operator, values, value }: IConstraint) =>
         ? (values?.length ?? 0)
         : Number(Boolean(value));
 
-// Constraint values may identify the customer's end users, so only their
-// counts are captured; the configuration itself is captured whole.
+// Constraint values may identify the customer's end users and context field
+// names are customer-defined, so only the operator and a value count are captured.
 const summarizeSegmentConstraint = (constraint: IConstraint) => ({
-    contextName: constraint.contextName,
     operator: constraint.operator,
     valueCount: constraintValueCount(constraint),
 });
 
 // Shared by create, edit and delete so the shapes stay comparable across the lifecycle.
 export const segmentTrackingProps = ({
-    name,
-    id,
     constraints,
     description,
 }: {
-    name: string;
-    id?: number;
     constraints: IConstraint[];
     description?: string;
 }) => ({
-    name,
-    id,
     constraintsCount: constraints.length,
     constraintValuesCount: constraints.reduce(
         (total, constraint) => total + constraintValueCount(constraint),

@@ -111,8 +111,6 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
             const trackingProps = {
                 viaChangeRequest: Boolean(changeRequestEnv),
                 ...segmentTrackingProps({
-                    name,
-                    id: segment.id,
                     constraints,
                     description,
                 }),

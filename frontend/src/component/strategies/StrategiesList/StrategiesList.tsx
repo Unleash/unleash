@@ -427,7 +427,7 @@ export const StrategiesList = () => {
                 isLoading={loading}
                 header={
                     <PageHeader
-                        titleElement={
+                        heading={
                             <Title
                                 title='Standard strategies'
                                 description='Standard strategies let you enable a feature only for a specified audience. Select a starting setup, then customize your strategy with targeting and variants.'
@@ -468,7 +468,7 @@ export const StrategiesList = () => {
                 isLoading={loading}
                 header={
                     <PageHeader
-                        titleElement={
+                        heading={
                             <Title
                                 title='Advanced and custom strategies'
                                 description='Advanced strategies let you target based on specific properties. Custom activation strategies let you define your own activation strategies to use with Unleash.'

@@ -118,7 +118,7 @@ export const ChangeRequestSidebar: FC<IChangeRequestSidebarProps> = ({
             <SidebarModal open={open} onClose={onClose} label='Review changes'>
                 <StyledPageContent
                     disableBorder={true}
-                    header={<PageHeader titleElement='Review your changes' />}
+                    header={<PageHeader heading='Review your changes' />}
                 >
                     There are no changes to review.
                     {/* FIXME: empty state */}

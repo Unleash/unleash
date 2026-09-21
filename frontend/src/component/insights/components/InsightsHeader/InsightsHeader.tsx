@@ -2,13 +2,7 @@ import type { ReactNode, FC } from 'react';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
 import ReviewsOutlined from '@mui/icons-material/ReviewsOutlined';
-import {
-    Button,
-    styled,
-    Typography,
-    useMediaQuery,
-    useTheme,
-} from '@mui/material';
+import { Button, styled, useMediaQuery, useTheme } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
@@ -71,19 +65,6 @@ export const InsightsHeader: FC<DashboardHeaderProps> = ({ actions }) => {
         <>
             <PageHeader
                 title={pageName}
-                titleElement={
-                    <Typography
-                        variant='h1'
-                        component='span'
-                        sx={(theme) => ({
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: theme.spacing(1),
-                        })}
-                    >
-                        {pageName}
-                    </Typography>
-                }
                 actions={
                     <StyledActionsContainer>
                         <ConditionallyRender

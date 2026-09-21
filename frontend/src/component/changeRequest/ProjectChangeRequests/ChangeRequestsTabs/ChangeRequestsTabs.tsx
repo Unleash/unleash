@@ -324,7 +324,7 @@ export const ChangeRequestsTabs = ({
             headerClass={classes.header}
             header={
                 <PageHeader
-                    titleElement={
+                    heading={
                         <StyledTabContainer>
                             <Tabs
                                 value={activeTab?.title}

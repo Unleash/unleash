@@ -17,7 +17,7 @@ const StyledHeaderHint = styled('div')(({ theme }) => ({
 export const ReviewChangesHeader: FC = () => (
     <PageHeader
         actions={''}
-        titleElement={
+        heading={
             <>
                 <Box
                     sx={{

@@ -56,7 +56,7 @@ const RemoteMcpPage = () => {
         <PageContent
             header={
                 <PageHeader
-                    titleElement={
+                    heading={
                         <StyledTitleRow>
                             Remote MCP Server
                             <HelpIcon

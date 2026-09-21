@@ -1,6 +1,6 @@
 import { type FC, useMemo } from 'react';
 import { useState, useCallback } from 'react';
-import { Typography, styled, Box } from '@mui/material';
+import { styled, Box } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader.tsx';
 import { useImpactMetricsOptions } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { ImpactMetricModal } from './ImpactMetricModal/ImpactMetricModal.tsx';
@@ -150,11 +150,6 @@ export const ImpactMetrics: FC = () => {
                 <>
                     <PageHeader
                         title='Impact metrics'
-                        titleElement={
-                            <Typography variant='h1' component='span'>
-                                Impact metrics
-                            </Typography>
-                        }
                         actions={
                             <PermissionButton
                                 variant='contained'

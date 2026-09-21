@@ -187,7 +187,7 @@ export const ProjectGroupView: FC<IProjectGroupViewProps> = ({
                 header={
                     <PageHeader
                         variant='h2'
-                        titleElement={
+                        heading={
                             <StyledTitle>
                                 {group?.name} (
                                 {rows.length < data.length

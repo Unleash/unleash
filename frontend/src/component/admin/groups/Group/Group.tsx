@@ -290,9 +290,8 @@ export const Group: FC = () => {
                         isLoading={loading}
                         header={
                             <PageHeader
-                                secondary
                                 variant='h2'
-                                title={`Users (${
+                                heading={`Users (${
                                     rows.length < data.length
                                         ? `${rows.length} of ${data.length}`
                                         : data.length

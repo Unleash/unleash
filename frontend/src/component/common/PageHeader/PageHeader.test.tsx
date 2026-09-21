@@ -11,14 +11,6 @@ test('the page title renders as a level-1 heading by default', () => {
     );
 });
 
-test('setting secondary does not change the heading level', () => {
-    render(<PageHeader title='My section' secondary />);
-
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-        'My section',
-    );
-});
-
 test('the heading level follows the passed variant', () => {
     render(<PageHeader title='My header' variant='h3' />);
 
@@ -43,10 +35,13 @@ test('an explicit variant changes the heading style without giving up the browse
     expect(document.title).toBe('My page');
 });
 
-test("when setting secondary, the header's title does not become the browser tab title", () => {
-    document.title = 'Title claimed by the primary header';
+test('a header with a heading leaves the browser tab title alone', () => {
+    document.title = 'Title claimed by the page';
 
-    render(<PageHeader title='My section' secondary />);
+    render(<PageHeader heading='My section' />);
 
-    expect(document.title).toBe('Title claimed by the primary header');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+        'My section',
+    );
+    expect(document.title).toBe('Title claimed by the page');
 });

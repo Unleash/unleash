@@ -137,7 +137,7 @@ export const FeatureImpactMetrics: FC = () => {
         <PageContent>
             <PageHeader
                 variant='h2'
-                titleElement='Impact Metrics'
+                heading='Impact Metrics'
                 actions={
                     <PermissionButton
                         variant='contained'

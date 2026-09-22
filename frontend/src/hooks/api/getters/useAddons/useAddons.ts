@@ -3,12 +3,12 @@ import { useState, useEffect, useCallback } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
+import { formatIntegrationApiPath } from 'component/integrations/integrationPaths';
 import type { AddonsSchema } from 'openapi';
 
 const useAddons = (options: SWRConfiguration = {}) => {
     const projectId = useOptionalPathParam('projectId');
-    const query = projectId ? `?project=${projectId}` : '';
-    const key = `api/admin/addons${query}`;
+    const key = formatIntegrationApiPath(projectId);
 
     const fetcher = async () => {
         const path = formatApiPath(key);

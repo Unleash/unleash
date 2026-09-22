@@ -51,14 +51,10 @@ const setupServer = (addons: object[]) => {
     testServerRoute(server, '/api/admin/signal-endpoints', {
         signalEndpoints: [],
     });
-    testServerRoute(
-        server,
-        '/api/admin/addons',
-        { providers, addons },
-        'get',
-        200,
-        { project: 'my-project' },
-    );
+    testServerRoute(server, '/api/admin/projects/my-project/addons', {
+        providers,
+        addons,
+    });
 };
 
 const renderPage = () =>
@@ -126,7 +122,7 @@ test('creates an integration already scoped to this project', async () => {
     testServerRoute(server, '/api/admin/environments', { environments: [] });
     const { requests } = testServerRoute(
         server,
-        '/api/admin/addons',
+        '/api/admin/projects/my-project/addons',
         { id: 1 },
         'post',
         201,

@@ -28,8 +28,12 @@ import {
     CREATE_ADDON,
     UPDATE_ADDON,
 } from '../../providers/AccessProvider/permissions.ts';
+import { UPDATE_PROJECT_ADDON } from '@server/types/permissions.ts';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
-import { formatIntegrationListPath } from '../integrationPaths.ts';
+import {
+    formatIntegrationApiPath,
+    formatIntegrationListPath,
+} from '../integrationPaths.ts';
 import {
     StyledForm,
     StyledAlerts,
@@ -118,7 +122,7 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
     const { isAdmin } = useContext(AccessContext);
 
     const submitText = editMode ? 'Update' : 'Create';
-    const url = `${uiConfig.unleashUrl}/api/admin/addons${
+    const url = `${uiConfig.unleashUrl}/${formatIntegrationApiPath(projectId)}${
         editMode ? `/${(formValues as AddonSchema).id}` : ``
     }`;
 
@@ -296,7 +300,12 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                             type='submit'
                             color='primary'
                             variant='contained'
-                            permission={editMode ? UPDATE_ADDON : CREATE_ADDON}
+                            permission={
+                                editMode
+                                    ? [UPDATE_ADDON, UPDATE_PROJECT_ADDON]
+                                    : [CREATE_ADDON, UPDATE_PROJECT_ADDON]
+                            }
+                            projectId={projectId}
                             onClick={onSubmit}
                             disabled={deprecated}
                         >

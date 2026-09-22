@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import type { IConstraintsReadModel } from './constraints-read-model-type.js';
+import type { IConstraintValidator } from './constraint-validator-type.js';
 import type { IUnleashConfig } from '../../types/option.js';
 import type { IUnleashServices } from '../../services/index.js';
 import { NONE } from '../../types/permissions.js';
@@ -13,7 +13,7 @@ import {
 } from '../../openapi/index.js';
 
 export default class ConstraintsController extends Controller {
-    private constraintsReadModel: IConstraintsReadModel;
+    private constraintValidator: IConstraintValidator;
 
     private openApiService: OpenApiService;
 
@@ -22,12 +22,12 @@ export default class ConstraintsController extends Controller {
     constructor(
         config: IUnleashConfig,
         {
-            constraintsReadModel,
+            constraintValidator,
             openApiService,
-        }: Pick<IUnleashServices, 'constraintsReadModel' | 'openApiService'>,
+        }: Pick<IUnleashServices, 'constraintValidator' | 'openApiService'>,
     ) {
         super(config);
-        this.constraintsReadModel = constraintsReadModel;
+        this.constraintValidator = constraintValidator;
         this.openApiService = openApiService;
         this.logger = config.getLogger('/admin-api/validation.ts');
 
@@ -58,7 +58,7 @@ export default class ConstraintsController extends Controller {
         req: Request<void, void, ConstraintSchema>,
         res: Response,
     ): Promise<void> {
-        await this.constraintsReadModel.validateConstraint(req.body);
+        await this.constraintValidator.validateConstraint(req.body);
         res.status(204).send();
     }
 }

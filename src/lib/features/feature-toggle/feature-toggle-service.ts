@@ -76,7 +76,7 @@ import { DEFAULT_ENV } from '../../util/index.js';
 import type { Operation } from 'fast-json-patch';
 import fastJsonPatch from 'fast-json-patch';
 const { applyPatch, deepClone } = fastJsonPatch;
-import type { IConstraintsReadModel } from '../constraints/constraints-read-model-type.js';
+import type { IConstraintValidator } from '../constraints/constraint-validator-type.js';
 import type { SetStrategySortOrderSchema } from '../../openapi/spec/set-strategy-sort-order-schema.js';
 import {
     getDefaultStrategy,
@@ -158,7 +158,7 @@ export type ServicesAndReadModels = {
     featureLinkService: FeatureLinkService;
     featureLinksReadModel: IFeatureLinksReadModel;
     resourceLimitsService: ResourceLimitsService;
-    constraintsReadModel: IConstraintsReadModel;
+    constraintValidator: IConstraintValidator;
 };
 
 export class FeatureToggleService {
@@ -178,7 +178,7 @@ export class FeatureToggleService {
 
     private projectStore: IProjectStore;
 
-    private constraintsReadModel: IConstraintsReadModel;
+    private constraintValidator: IConstraintValidator;
 
     private segmentService: ISegmentService;
 
@@ -229,7 +229,7 @@ export class FeatureToggleService {
             featureLinksReadModel,
             featureLinkService,
             resourceLimitsService,
-            constraintsReadModel,
+            constraintValidator,
         }: ServicesAndReadModels,
     ) {
         this.logger = getLogger('services/feature-toggle-service.ts');
@@ -240,7 +240,7 @@ export class FeatureToggleService {
         this.tagStore = featureTagStore;
         this.projectStore = projectStore;
         this.featureEnvironmentStore = featureEnvironmentStore;
-        this.constraintsReadModel = constraintsReadModel;
+        this.constraintValidator = constraintValidator;
         this.segmentService = segmentService;
         this.accessService = accessService;
         this.eventService = eventService;
@@ -650,9 +650,7 @@ export class FeatureToggleService {
                 existing: existing?.constraints ?? [],
             });
             constraints =
-                await this.constraintsReadModel.validateConstraints(
-                    constraints,
-                );
+                await this.constraintValidator.validateConstraints(constraints);
         }
 
         parameters = await this.parametersWithDefaults(

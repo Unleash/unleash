@@ -1,17 +1,17 @@
-import { ConstraintsReadModel } from './constraints-read-model.js';
+import { ConstraintValidator } from './constraint-validator.js';
 import FakeContextFieldStore from '../context/fake-context-field-store.js';
 import type { IConstraint } from '../../types/index.js';
 
-const createReadModel = (contextFieldStore?: FakeContextFieldStore) => {
+const createValidator = (contextFieldStore?: FakeContextFieldStore) => {
     const store = contextFieldStore ?? new FakeContextFieldStore();
-    const readModel = new ConstraintsReadModel(store);
-    return { readModel, store };
+    const validator = new ConstraintValidator(store);
+    return { validator, store };
 };
 
-describe('ConstraintsReadModel - validateConstraints', () => {
+describe('ConstraintValidator - validateConstraints', () => {
     describe('valid constraints', () => {
         test('validates a string operator constraint (IN)', async () => {
-            const { readModel } = createReadModel();
+            const { validator } = createValidator();
             const constraints: IConstraint[] = [
                 {
                     contextName: 'someField',
@@ -20,14 +20,14 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 },
             ];
 
-            const result = await readModel.validateConstraints(constraints);
+            const result = await validator.validateConstraints(constraints);
 
             expect(result).toHaveLength(1);
             expect(result[0].operator).toBe('IN');
         });
 
         test('validates a NOT_IN constraint', async () => {
-            const { readModel } = createReadModel();
+            const { validator } = createValidator();
             const constraints: IConstraint[] = [
                 {
                     contextName: 'someField',
@@ -36,14 +36,14 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 },
             ];
 
-            const result = await readModel.validateConstraints(constraints);
+            const result = await validator.validateConstraints(constraints);
 
             expect(result).toHaveLength(1);
             expect(result[0].operator).toBe('NOT_IN');
         });
 
         test('validates a numeric operator constraint', async () => {
-            const { readModel } = createReadModel();
+            const { validator } = createValidator();
             const constraints: IConstraint[] = [
                 {
                     contextName: 'someField',
@@ -53,14 +53,14 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 },
             ];
 
-            const result = await readModel.validateConstraints(constraints);
+            const result = await validator.validateConstraints(constraints);
 
             expect(result).toHaveLength(1);
             expect(result[0].operator).toBe('NUM_EQ');
         });
 
         test('validates a semver operator constraint', async () => {
-            const { readModel } = createReadModel();
+            const { validator } = createValidator();
             const constraints: IConstraint[] = [
                 {
                     contextName: 'someField',
@@ -70,7 +70,7 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 },
             ];
 
-            const result = await readModel.validateConstraints(constraints);
+            const result = await validator.validateConstraints(constraints);
 
             expect(result).toHaveLength(1);
             expect(result[0].operator).toBe('SEMVER_EQ');
@@ -81,7 +81,7 @@ describe('ConstraintsReadModel - validateConstraints', () => {
             '1.2.3+4000',
             '1.2.3-beta.1+build.5',
         ])('validates a semver operator constraint with the value %s', async (value) => {
-            const { readModel } = createReadModel();
+            const { validator } = createValidator();
             const constraints: IConstraint[] = [
                 {
                     contextName: 'someField',
@@ -91,14 +91,14 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 },
             ];
 
-            const result = await readModel.validateConstraints(constraints);
+            const result = await validator.validateConstraints(constraints);
 
             expect(result).toHaveLength(1);
             expect(result[0].value).toBe(value);
         });
 
         test('validates a date operator constraint', async () => {
-            const { readModel } = createReadModel();
+            const { validator } = createValidator();
             const constraints: IConstraint[] = [
                 {
                     contextName: 'someField',
@@ -108,14 +108,14 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 },
             ];
 
-            const result = await readModel.validateConstraints(constraints);
+            const result = await validator.validateConstraints(constraints);
 
             expect(result).toHaveLength(1);
             expect(result[0].operator).toBe('DATE_AFTER');
         });
 
         test('validates a REGEX constraint', async () => {
-            const { readModel } = createReadModel();
+            const { validator } = createValidator();
             const constraints: IConstraint[] = [
                 {
                     contextName: 'someField',
@@ -125,14 +125,14 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 },
             ];
 
-            const result = await readModel.validateConstraints(constraints);
+            const result = await validator.validateConstraints(constraints);
 
             expect(result).toHaveLength(1);
             expect(result[0].operator).toBe('REGEX');
         });
 
         test('validates multiple constraints at once', async () => {
-            const { readModel } = createReadModel();
+            const { validator } = createValidator();
             const constraints: IConstraint[] = [
                 {
                     contextName: 'fieldA',
@@ -153,21 +153,21 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 },
             ];
 
-            const result = await readModel.validateConstraints(constraints);
+            const result = await validator.validateConstraints(constraints);
 
             expect(result).toHaveLength(3);
         });
 
         test('returns empty array for empty input', async () => {
-            const { readModel } = createReadModel();
+            const { validator } = createValidator();
 
-            const result = await readModel.validateConstraints([]);
+            const result = await validator.validateConstraints([]);
 
             expect(result).toEqual([]);
         });
 
         test('defaults values to empty array when not provided for non-string operators', async () => {
-            const { readModel } = createReadModel();
+            const { validator } = createValidator();
             const constraints: IConstraint[] = [
                 {
                     contextName: 'someField',
@@ -176,7 +176,7 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 } as IConstraint,
             ];
 
-            const result = await readModel.validateConstraints(constraints);
+            const result = await validator.validateConstraints(constraints);
 
             expect(result[0].values).toEqual([]);
         });
@@ -184,7 +184,7 @@ describe('ConstraintsReadModel - validateConstraints', () => {
 
     describe('invalid constraints', () => {
         test('rejects invalid operator', async () => {
-            const { readModel } = createReadModel();
+            const { validator } = createValidator();
             const constraints = [
                 {
                     contextName: 'someField',
@@ -194,12 +194,12 @@ describe('ConstraintsReadModel - validateConstraints', () => {
             ] as unknown as IConstraint[];
 
             await expect(
-                readModel.validateConstraints(constraints),
+                validator.validateConstraints(constraints),
             ).rejects.toThrow();
         });
 
         test('rejects missing contextName', async () => {
-            const { readModel } = createReadModel();
+            const { validator } = createValidator();
             const constraints = [
                 {
                     operator: 'IN',
@@ -208,12 +208,12 @@ describe('ConstraintsReadModel - validateConstraints', () => {
             ] as unknown as IConstraint[];
 
             await expect(
-                readModel.validateConstraints(constraints),
+                validator.validateConstraints(constraints),
             ).rejects.toThrow();
         });
 
         test('rejects invalid number for NUM operator', async () => {
-            const { readModel } = createReadModel();
+            const { validator } = createValidator();
             const constraints: IConstraint[] = [
                 {
                     contextName: 'someField',
@@ -224,7 +224,7 @@ describe('ConstraintsReadModel - validateConstraints', () => {
             ];
 
             await expect(
-                readModel.validateConstraints(constraints),
+                validator.validateConstraints(constraints),
             ).rejects.toThrow();
         });
 
@@ -239,7 +239,7 @@ describe('ConstraintsReadModel - validateConstraints', () => {
             ['SEMVER_EQ', null],
             ['SEMVER_EQ', ''],
         ])('rejects %s constraints with %s value', async (operator, value) => {
-            const { readModel } = createReadModel();
+            const { validator } = createValidator();
             const constraints = [
                 {
                     contextName: 'someField',
@@ -250,14 +250,14 @@ describe('ConstraintsReadModel - validateConstraints', () => {
             ] as unknown as IConstraint[];
 
             await expect(
-                readModel.validateConstraints(constraints),
+                validator.validateConstraints(constraints),
             ).rejects.toThrow(
                 'Single-value constraint operators require a non-empty value.',
             );
         });
 
         test('rejects invalid semver for SEMVER operator', async () => {
-            const { readModel } = createReadModel();
+            const { validator } = createValidator();
             const constraints: IConstraint[] = [
                 {
                     contextName: 'someField',
@@ -268,12 +268,12 @@ describe('ConstraintsReadModel - validateConstraints', () => {
             ];
 
             await expect(
-                readModel.validateConstraints(constraints),
+                validator.validateConstraints(constraints),
             ).rejects.toThrow();
         });
 
         test('rejects invalid date for DATE operator', async () => {
-            const { readModel } = createReadModel();
+            const { validator } = createValidator();
             const constraints: IConstraint[] = [
                 {
                     contextName: 'someField',
@@ -284,12 +284,12 @@ describe('ConstraintsReadModel - validateConstraints', () => {
             ];
 
             await expect(
-                readModel.validateConstraints(constraints),
+                validator.validateConstraints(constraints),
             ).rejects.toThrow();
         });
 
         test('rejects invalid regex for REGEX operator', async () => {
-            const { readModel } = createReadModel();
+            const { validator } = createValidator();
             const constraints: IConstraint[] = [
                 {
                     contextName: 'someField',
@@ -300,12 +300,12 @@ describe('ConstraintsReadModel - validateConstraints', () => {
             ];
 
             await expect(
-                readModel.validateConstraints(constraints),
+                validator.validateConstraints(constraints),
             ).rejects.toThrow();
         });
 
         test('rejects an IN_CIDR constraint with a value that is not an IP or range', async () => {
-            const { readModel } = createReadModel();
+            const { validator } = createValidator();
             const constraints: IConstraint[] = [
                 {
                     contextName: 'remoteAddress',
@@ -315,14 +315,14 @@ describe('ConstraintsReadModel - validateConstraints', () => {
             ];
 
             await expect(
-                readModel.validateConstraints(constraints),
+                validator.validateConstraints(constraints),
             ).rejects.toThrow(
                 'the provided values are not valid IP addresses or CIDR ranges: office',
             );
         });
 
         test('rejects inverted REGEX constraint', async () => {
-            const { readModel } = createReadModel();
+            const { validator } = createValidator();
             const constraints: IConstraint[] = [
                 {
                     contextName: 'someField',
@@ -334,7 +334,7 @@ describe('ConstraintsReadModel - validateConstraints', () => {
             ];
 
             await expect(
-                readModel.validateConstraints(constraints),
+                validator.validateConstraints(constraints),
             ).rejects.toThrow('REGEX operator cannot be inverted.');
         });
     });
@@ -353,7 +353,7 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                     { value: 'DE' },
                 ],
             });
-            const { readModel } = createReadModel(store);
+            const { validator } = createValidator(store);
 
             const constraints: IConstraint[] = [
                 {
@@ -363,7 +363,7 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 },
             ];
 
-            const result = await readModel.validateConstraints(constraints);
+            const result = await validator.validateConstraints(constraints);
             expect(result).toHaveLength(1);
         });
 
@@ -376,7 +376,7 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 stickiness: false,
                 legalValues: [{ value: 'US' }, { value: 'UK' }],
             });
-            const { readModel } = createReadModel(store);
+            const { validator } = createValidator(store);
 
             const constraints: IConstraint[] = [
                 {
@@ -387,7 +387,7 @@ describe('ConstraintsReadModel - validateConstraints', () => {
             ];
 
             await expect(
-                readModel.validateConstraints(constraints),
+                validator.validateConstraints(constraints),
             ).rejects.toThrow();
         });
 
@@ -400,7 +400,7 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 stickiness: false,
                 legalValues: [{ value: '1' }, { value: '2' }, { value: '3' }],
             });
-            const { readModel } = createReadModel(store);
+            const { validator } = createValidator(store);
 
             const constraints: IConstraint[] = [
                 {
@@ -411,7 +411,7 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 },
             ];
 
-            const result = await readModel.validateConstraints(constraints);
+            const result = await validator.validateConstraints(constraints);
             expect(result).toHaveLength(1);
         });
 
@@ -424,7 +424,7 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 stickiness: false,
                 legalValues: [{ value: '1' }, { value: '2' }],
             });
-            const { readModel } = createReadModel(store);
+            const { validator } = createValidator(store);
 
             const constraints: IConstraint[] = [
                 {
@@ -436,7 +436,7 @@ describe('ConstraintsReadModel - validateConstraints', () => {
             ];
 
             await expect(
-                readModel.validateConstraints(constraints),
+                validator.validateConstraints(constraints),
             ).rejects.toThrow();
         });
 
@@ -449,7 +449,7 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 stickiness: false,
                 legalValues: [],
             });
-            const { readModel } = createReadModel(store);
+            const { validator } = createValidator(store);
 
             const constraints: IConstraint[] = [
                 {
@@ -459,12 +459,12 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 },
             ];
 
-            const result = await readModel.validateConstraints(constraints);
+            const result = await validator.validateConstraints(constraints);
             expect(result).toHaveLength(1);
         });
 
         test('skips legal values check when context field does not exist', async () => {
-            const { readModel } = createReadModel();
+            const { validator } = createValidator();
 
             const constraints: IConstraint[] = [
                 {
@@ -474,7 +474,7 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 },
             ];
 
-            const result = await readModel.validateConstraints(constraints);
+            const result = await validator.validateConstraints(constraints);
             expect(result).toHaveLength(1);
         });
 
@@ -487,7 +487,7 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 stickiness: false,
                 legalValues: [{ value: '1.0.0' }, { value: '2.0.0' }],
             });
-            const { readModel } = createReadModel(store);
+            const { validator } = createValidator(store);
 
             const constraints: IConstraint[] = [
                 {
@@ -498,7 +498,7 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 },
             ];
 
-            const result = await readModel.validateConstraints(constraints);
+            const result = await validator.validateConstraints(constraints);
             expect(result).toHaveLength(1);
         });
 
@@ -512,7 +512,7 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 stickiness: false,
                 legalValues: [{ value: dateValue }],
             });
-            const { readModel } = createReadModel(store);
+            const { validator } = createValidator(store);
 
             const constraints: IConstraint[] = [
                 {
@@ -523,7 +523,7 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 },
             ];
 
-            const result = await readModel.validateConstraints(constraints);
+            const result = await validator.validateConstraints(constraints);
             expect(result).toHaveLength(1);
         });
 
@@ -536,7 +536,7 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 stickiness: false,
                 legalValues: [{ value: '^abc$' }, { value: '^def$' }],
             });
-            const { readModel } = createReadModel(store);
+            const { validator } = createValidator(store);
 
             const constraints: IConstraint[] = [
                 {
@@ -547,7 +547,7 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 },
             ];
 
-            const result = await readModel.validateConstraints(constraints);
+            const result = await validator.validateConstraints(constraints);
             expect(result).toHaveLength(1);
         });
     });

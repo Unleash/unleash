@@ -1,6 +1,6 @@
 import type { IConstraint } from '../../types/index.js';
 
-export interface IConstraintsReadModel {
+export interface IConstraintValidator {
     validateConstraints(constraints: IConstraint[]): Promise<IConstraint[]>;
-    validateConstraint(input: IConstraint): Promise<IConstraint>;
+    validateConstraint(constraint: IConstraint): Promise<IConstraint>;
 }

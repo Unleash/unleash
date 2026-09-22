@@ -178,11 +178,9 @@ import type FeatureLinkService from '../features/feature-links/feature-link-serv
 import { createUserService } from '../features/users/createUserService.js';
 import { UiConfigService } from '../ui-config/ui-config-service.js';
 import { ResourceLimitsService } from '../features/resource-limits/resource-limits-service.js';
-import {
-    createConstraintsReadModel,
-    createFakeConstraintsReadModel,
-} from '../features/constraints/createConstraintsReadModel.js';
-import type { IConstraintsReadModel } from '../features/constraints/constraints-read-model-type.js';
+import { ConstraintValidator } from '../features/constraints/constraint-validator.js';
+import { FakeConstraintValidator } from '../features/constraints/fake-constraint-validator.js';
+import type { IConstraintValidator } from '../features/constraints/constraint-validator-type.js';
 import {
     createFakeReleasePlanMilestoneStrategyService,
     createReleasePlanMilestoneStrategyService,
@@ -312,9 +310,9 @@ export const createServices = (
         ? createChangeRequestSegmentUsageReadModel(db)
         : createFakeChangeRequestSegmentUsageReadModel();
 
-    const constraintsReadModel = db
-        ? createConstraintsReadModel(stores.contextFieldStore)
-        : createFakeConstraintsReadModel();
+    const constraintValidator = db
+        ? new ConstraintValidator(stores.contextFieldStore)
+        : new FakeConstraintValidator();
 
     const segmentService = new SegmentService(
         stores,
@@ -324,7 +322,7 @@ export const createServices = (
         eventService,
         privateProjectChecker,
         resourceLimitsService,
-        constraintsReadModel,
+        constraintValidator,
     );
 
     const clientInstanceService = new ClientInstanceService(
@@ -590,7 +588,7 @@ export const createServices = (
         unknownFlagsService,
         uiConfigService,
         resourceLimitsService,
-        constraintsReadModel,
+        constraintValidator,
     };
 };
 
@@ -734,5 +732,5 @@ export interface IUnleashServices {
     unknownFlagsService: UnknownFlagsService;
     uiConfigService: UiConfigService;
     resourceLimitsService: ResourceLimitsService;
-    constraintsReadModel: IConstraintsReadModel;
+    constraintValidator: IConstraintValidator;
 }

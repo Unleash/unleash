@@ -17,7 +17,7 @@ import {
     validateRegex,
     validateCidr,
 } from '../../util/validators/constraint-types.js';
-import type { IConstraintsReadModel } from './constraints-read-model-type.js';
+import type { IConstraintValidator } from './constraint-validator-type.js';
 import BadDataError from '../../error/bad-data-error.js';
 
 const oneOf = (values: string[], match: string) => {
@@ -38,12 +38,13 @@ const validateSingleValue = (value: unknown): void => {
     }
 };
 
-type IContextFieldStoreReadModel = Pick<IContextFieldStore, 'get' | 'exists'>;
-export class ConstraintsReadModel implements IConstraintsReadModel {
-    private contextFieldStore: IContextFieldStoreReadModel;
+type ContextFieldReadModel = Pick<IContextFieldStore, 'get' | 'exists'>;
 
-    constructor(contextFieldStore: IContextFieldStoreReadModel) {
-        this.contextFieldStore = contextFieldStore;
+export class ConstraintValidator implements IConstraintValidator {
+    private contextFieldReadModel: ContextFieldReadModel;
+
+    constructor(contextFieldReadModel: ContextFieldReadModel) {
+        this.contextFieldReadModel = contextFieldReadModel;
     }
 
     async validateConstraints(
@@ -89,8 +90,8 @@ export class ConstraintsReadModel implements IConstraintsReadModel {
             validateCidr(constraint.values);
         }
 
-        if (await this.contextFieldStore.exists(constraint.contextName)) {
-            const contextDefinition = await this.contextFieldStore.get(
+        if (await this.contextFieldReadModel.exists(constraint.contextName)) {
+            const contextDefinition = await this.contextFieldReadModel.get(
                 constraint.contextName,
             );
 

@@ -694,17 +694,14 @@ export class UserService {
      */
     async resetPassword(token: string, password: string): Promise<void> {
         this.validatePassword(password);
-        const user = await this.getUserForToken(token);
+        // Consume before changing the password so concurrent requests cannot
+        // both pass validation and both write a new password (TOCTOU).
+        const userId = await this.resetTokenService.consumeToken(token);
 
         await this.changePasswordWithPreviouslyUsedPasswordCheck(
-            user.id,
+            userId,
             password,
         );
-
-        await this.resetTokenService.useAccessToken({
-            userId: user.id,
-            token,
-        });
     }
 
     async createResetPasswordEmail(

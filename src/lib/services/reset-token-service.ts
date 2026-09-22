@@ -34,13 +34,23 @@ export default class ResetTokenService {
     }
 
     async useAccessToken(token: IResetQuery): Promise<boolean> {
-        try {
-            await this.isValid(token.token);
-            await this.store.useToken(token);
-            return true;
-        } catch (_e) {
-            return false;
+        return this.store.useToken(token);
+    }
+
+    /**
+     * Atomically validates and consumes a single-use reset/invite token.
+     * Exactly one concurrent caller can succeed for a given token
+     * (GHSA-36wh-fxff-4h93 / TOCTOU on isValid + useToken).
+     * @returns the user id that owned the consumed token
+     */
+    async consumeToken(token: string): Promise<number> {
+        const userId = await this.store.consumeToken(token);
+        if (userId == null) {
+            // Distinguish used vs missing/expired for clearer errors.
+            await this.isValid(token);
+            throw new InvalidTokenError();
         }
+        return userId;
     }
 
     async getActiveInvitations(): Promise<IInviteLinks> {

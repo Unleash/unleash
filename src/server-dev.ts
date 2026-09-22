@@ -67,6 +67,7 @@ process.nextTick(async () => {
                         totalUsageMetrics: true,
                         helpMenuRelocationHint: true,
                         playgroundPerFlag: true,
+                        ipConstraintOperator: true,
                     },
                 },
                 authentication: {

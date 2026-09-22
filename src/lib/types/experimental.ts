@@ -85,6 +85,7 @@ export type IFlagKey =
     | 'auditEventUserAgent'
     | 'helpMenuRelocationHint'
     | 'playgroundPerFlag'
+    | 'ipConstraintOperator'
     | keyof IFlagKeyOverrides;
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -292,6 +293,10 @@ const flags: IFlags = {
     ),
     semverGteConstraintOperators: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SEMVER_GTE_CONSTRAINT_OPERATORS,
+        false,
+    ),
+    ipConstraintOperator: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_IP_CONSTRAINT_OPERATOR,
         false,
     ),
     userTokenWithClientApiLoggingKillSwitch: parseEnvVarBoolean(

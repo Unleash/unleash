@@ -113,6 +113,7 @@ export type UiFlags = {
     simplerStrategySetup?: boolean;
     editableInstanceName?: boolean;
     helpMenuRelocationHint?: boolean;
+    ipConstraintOperator?: boolean;
     playgroundPerFlag?: boolean;
 };
 

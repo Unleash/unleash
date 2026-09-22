@@ -304,6 +304,23 @@ describe('ConstraintsReadModel - validateConstraints', () => {
             ).rejects.toThrow();
         });
 
+        test('rejects an IN_CIDR constraint with a value that is not an IP or range', async () => {
+            const { readModel } = createReadModel();
+            const constraints: IConstraint[] = [
+                {
+                    contextName: 'remoteAddress',
+                    operator: 'IN_CIDR',
+                    values: ['10.0.0.0/8', 'office'],
+                },
+            ];
+
+            await expect(
+                readModel.validateConstraints(constraints),
+            ).rejects.toThrow(
+                'the provided values are not valid IP addresses or CIDR ranges: office',
+            );
+        });
+
         test('rejects inverted REGEX constraint', async () => {
             const { readModel } = createReadModel();
             const constraints: IConstraint[] = [

@@ -2,6 +2,7 @@ import type { IConstraint, IContextFieldStore } from '../../types/index.js';
 import { constraintSchema } from '../../schema/feature-schema.js';
 import {
     DATE_OPERATORS,
+    IN_CIDR,
     NUM_OPERATORS,
     REGEX,
     SEMVER_OPERATORS,
@@ -14,6 +15,7 @@ import {
     validateSemver,
     validateString,
     validateRegex,
+    validateCidr,
 } from '../../util/validators/constraint-types.js';
 import type { IConstraintsReadModel } from './constraints-read-model-type.js';
 import BadDataError from '../../error/bad-data-error.js';
@@ -81,6 +83,10 @@ export class ConstraintsReadModel implements IConstraintsReadModel {
 
         if (operator === REGEX) {
             validateRegex(constraint.value, constraint.inverted);
+        }
+
+        if (operator === IN_CIDR) {
+            validateCidr(constraint.values);
         }
 
         if (await this.contextFieldStore.exists(constraint.contextName)) {

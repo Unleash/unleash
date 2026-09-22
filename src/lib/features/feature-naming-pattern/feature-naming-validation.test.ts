@@ -169,4 +169,33 @@ describe('validate feature flag names against a pattern', () => {
             invalidNames: new Set(features),
         });
     });
+
+    test('nested-quantifier patterns that ReDoS native RegExp complete quickly', () => {
+        // Native `new RegExp('^(a+)+b$')` backtracks exponentially on a long
+        // non-matching string (n=26 ~200ms, n=32 several seconds). RE2JS is
+        // linear-time, so this stays well under the bound. Reverting
+        // compileRegex to RegExp makes this test hang/timeout.
+        const pattern = '(a+)+b';
+        const name = 'a'.repeat(40);
+
+        const started = performance.now();
+        const result = checkFeatureFlagNamesAgainstPattern([name], pattern);
+        const elapsed = performance.now() - started;
+
+        expect(result).toMatchObject({
+            state: 'invalid',
+            invalidNames: new Set([name]),
+        });
+        expect(elapsed).toBeLessThan(100);
+    });
+
+    test('lookaround and backreferences are rejected', () => {
+        expect(() =>
+            checkFeatureFlagNamesAgainstPattern(['foo'], '(?=x)foo'),
+        ).toThrow(/unsupported Perl syntax/);
+
+        expect(() =>
+            checkFeatureFlagNamesAgainstPattern(['aa'], '(a)\\1'),
+        ).toThrow(/invalid escape sequence/);
+    });
 });

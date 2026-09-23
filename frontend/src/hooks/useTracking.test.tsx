@@ -96,9 +96,11 @@ test('later renders reuse the same tracker with the latest declaration', () => {
     const { rows, result, rerender } = renderTracking(editRole);
     const tracker = result.current;
 
-    rerender({ event: 'feedback' });
+    rerender({ event: 'feedback', type: 'send-feedback' });
     result.current('dismissed');
 
     expect(result.current).toBe(tracker);
-    expect(rows).toEqual([{ event: 'feedback', action: 'dismissed' }]);
+    expect(rows).toEqual([
+        { event: 'feedback', eventType: 'send-feedback', action: 'dismissed' },
+    ]);
 });

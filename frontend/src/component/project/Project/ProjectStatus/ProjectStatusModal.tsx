@@ -167,6 +167,7 @@ export const ProjectStatusModal = ({
     const { isOss } = useUiConfig();
     const projectStatusTracking: Tracking = {
         event: 'project-status',
+        type: 'view-project-status',
         props: { openedFrom },
     };
     // The Close button is ours, so DynamicSidebarModal's own dismissal tracking

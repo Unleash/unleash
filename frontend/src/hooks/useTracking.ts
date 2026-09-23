@@ -9,7 +9,9 @@ import { requestFailureProps } from 'utils/requestFailureProps';
 
 type TrackEvent = ReturnType<typeof useEventTracker>['trackEvent'];
 
-// Callable so a call site holds one named function per journey and nothing to destructure.
+/**
+ * Callable, so a call site holds one named function per journey and you don't have to destructure
+ */
 export type Tracker = ((
     action: TrackingAction,
     props?: TrackingProps,
@@ -31,7 +33,7 @@ const createTracker = (
             props: {
                 ...tracking.props,
                 ...props,
-                ...(tracking.type ? { eventType: tracking.type } : {}),
+                eventType: tracking.type,
                 action,
             },
         });
@@ -50,7 +52,7 @@ const createTracker = (
                 throw error;
             }
         },
-        // Counts as an attempt too, so submitted and failed both get a row.
+        // Counts as an attempt too, so submitted and failed are both sent.
         validationFailed: (props?: TrackingProps) => {
             track('submitted', props);
             track('failed', { ...props, failedOn: 'validation' });
@@ -58,8 +60,22 @@ const createTracker = (
     });
 };
 
-// The declaration is read through a ref at call time, so the returned function stays stable
-// across renders and is safe in effect dependency lists. Without a declaration every call is a no-op.
+/**
+ * The only way a journey is sent; nothing should call `trackEvent` or `useEventTracker` directly.
+ *
+ * Call the tracker from the handler for whatever the user did: a click, a key press, a form
+ * submit. Call it before navigate() if you are navigating. Avoid calling it from an effect: an
+ * effect re-runs on every dependency change and may send the event twice. Two events are the
+ * exception because no handler produces them: a dialog sends opened from an effect on its open
+ * prop, and a search box sends succeeded from an effect on the settled query.
+ *
+ * The declaration is read through a ref at call time, so the returned function stays stable
+ * across renders and is safe in effect dependency lists.
+ *
+ * The declaration may be undefined. Shared components like Dialogue and SidebarModal take
+ * tracking as an optional prop, and many callers do not pass one currently. The tracker they get back
+ * still works, it just sends nothing, so they can call it without checking first.
+ */
 export const useTracking = (tracking: Tracking | undefined): Tracker => {
     const { trackEvent } = useEventTracker();
     const trackingRef = useRef(tracking);

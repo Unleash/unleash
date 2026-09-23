@@ -47,10 +47,25 @@ const StyledDialogActions = styled(DialogActions)(({ theme }) => ({
     padding: 0,
 }));
 
-// onSubmit when the primary button sends the request: the dialog runs it, disables the button
-// while pending, and emits the whole journey, so tracking is required.
-// onClick when the button only moves the user on, like the production guard: the dialog emits
-// opened and dismissed, whatever runs next owns the request.
+/**
+ * Pass onSubmit when the primary button sends a request (e.g. clicking
+ * Confirm sends a POST). The dialog runs it, disables the button while it is
+ * pending, and writes the whole journey, so tracking must also be passed.
+ *
+ * Pass onError to handle errors from onSubmit. Do not call .mutation, keep a
+ * pending flag, or catch errors inside onSubmit. It should only perform the
+ * request and let the dialog handle tracking and error management.
+ *
+ * Pass onClick when the button only moves the user on in the journey and does
+ * not send a request, e.g. the production guard, which only navigates the
+ * user forward. The dialog writes opened and dismissed by itself, while the
+ * request should be tracked using the same tracking object elsewhere (using
+ * .mutation()).
+ *
+ * Either way, ideally we do not call 'opened' or 'dismissed' manually; the
+ * dialog handles these events itself. There may be exceptions, such as custom
+ * buttons or specific user interactions.
+ */
 type DialoguePrimaryAction =
     | {
           onSubmit: () => Promise<unknown>;
@@ -104,7 +119,7 @@ export const Dialogue: React.FC<IDialogue> = ({
     const trackDialog = useTracking(tracking);
     const [pending, setPending] = useState(false);
 
-    // Opening a dialog is a user action, so it gets its own row.
+    // Opening a dialog is a user action, so it gets its own event.
     useEffect(() => {
         if (open) {
             trackDialog('opened');

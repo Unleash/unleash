@@ -16,6 +16,9 @@ interface ISidebarModalProps {
     label: string;
     onClick?: (e: React.SyntheticEvent) => void;
     children: React.ReactElement<any, any>;
+    /**
+     * Same contract as the tracking prop on Dialogue.
+     */
     tracking?: Tracking;
 }
 

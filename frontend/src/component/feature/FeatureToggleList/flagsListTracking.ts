@@ -1,7 +1,8 @@
+import type { TableTracking } from 'hooks/useTableState';
 import type { Tracking } from 'utils/trackingEvents';
 import type { FilterItemParamHolder } from 'component/filter/Filters/Filters';
 
-export const flagsListTableTracking: Tracking = {
+export const flagsListTableTracking: TableTracking = {
     event: 'flags-list',
 };
 

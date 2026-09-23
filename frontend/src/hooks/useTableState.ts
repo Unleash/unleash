@@ -173,9 +173,11 @@ type UseTableStateArgs<T extends Object> = {
         columns?: TableStateColumns;
     }) => void;
     options: Omit<TableOptions<T>, 'getCoreRowModel'>;
-    // With a descriptor the table emits sort-table, paginate-table and select-page-size rows itself.
-    tracking?: Tracking;
+    // The table sets the type itself: sort-table, paginate-table and select-page-size.
+    tracking?: TableTracking;
 };
+
+export type TableTracking = Omit<Tracking, 'type'>;
 
 export const useTableState = <T extends Object>({
     tableState,

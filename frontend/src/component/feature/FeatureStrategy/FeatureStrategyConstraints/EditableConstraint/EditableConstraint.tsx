@@ -42,6 +42,7 @@ import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext
 import { AddRegexValueChip } from './AddRegexValueChip.tsx';
 import { ToggleConstraintInverted } from './ToggleConstraintInverted.tsx';
 import { AddRegexValueEditor } from './AddRegexValueEditor/AddRegexValueEditor.tsx';
+import { CidrSdkRequirements } from './CidrSdkRequirements.tsx';
 
 const invertedDisabledMessages: Partial<Record<Operator, string>> = {
     REGEX: 'The REGEX operator does not support inversion',
@@ -465,6 +466,7 @@ export const EditableConstraint: FC<Props> = ({
                     </StyledIconButton>
                 </HtmlTooltip>
             </TopRow>
+            {isCidrConstraint(localConstraint) ? <CidrSdkRequirements /> : null}
             <InlineEdit
                 localConstraint={localConstraint}
                 legalValueData={legalValueData}

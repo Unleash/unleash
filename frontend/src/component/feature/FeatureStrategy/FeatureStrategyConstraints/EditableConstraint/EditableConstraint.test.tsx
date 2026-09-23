@@ -112,6 +112,10 @@ describe('EditableConstraint', () => {
                 await screen.findByRole('option', { name: /is an IP in/i }),
             );
 
+            await screen.findByText(
+                /IP constraints require these SDK versions/,
+            );
+
             fireEvent.click(
                 await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
             );

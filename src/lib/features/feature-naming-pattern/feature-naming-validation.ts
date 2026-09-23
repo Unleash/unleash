@@ -1,7 +1,6 @@
-import { RE2JS } from 're2js';
 import type { IFeatureNaming } from '../../types/model.js';
 
-const compileRegex = (pattern: string) => RE2JS.compile(`^${pattern}$`);
+const compileRegex = (pattern: string) => new RegExp(`^${pattern}$`);
 
 const disallowedStrings = [' ', '\\t', '\\s', '\\n', '\\r', '\\f', '\\v'];
 

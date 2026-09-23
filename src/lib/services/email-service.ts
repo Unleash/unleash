@@ -25,6 +25,41 @@ export enum TemplateFormat {
     PLAIN = 'plain',
 }
 
+/**
+ * Recursively HTML-escape string values in a Mustache view.
+ * Needed when templates use `{{{ }}}` / `{{& }}` and the context may be untrusted.
+ */
+export const escapeMustacheContext = (
+    context: unknown,
+): Record<string, unknown> => {
+    if (
+        context === null ||
+        typeof context !== 'object' ||
+        Array.isArray(context)
+    ) {
+        return {};
+    }
+    return escapeMustacheValue(context) as Record<string, unknown>;
+};
+
+const escapeMustacheValue = (value: unknown): unknown => {
+    if (typeof value === 'string') {
+        return Mustache.escape(value);
+    }
+    if (!value || typeof value !== 'object') {
+        return value;
+    }
+    if (Array.isArray(value)) {
+        return value.map(escapeMustacheValue);
+    }
+    return Object.fromEntries(
+        Object.entries(value).map(([key, nested]) => [
+            key,
+            escapeMustacheValue(nested),
+        ]),
+    );
+};
+
 export enum TransporterType {
     SMTP = 'smtp',
     JSON = 'json',
@@ -752,10 +787,14 @@ export class EmailService {
         templateName: string,
         format: TemplateFormat,
         context: unknown,
+        options?: { escapeContext?: boolean },
     ): Promise<string> {
         try {
             const template = this.resolveTemplate(templateName, format);
-            return await Promise.resolve(Mustache.render(template, context));
+            const view = options?.escapeContext
+                ? escapeMustacheContext(context)
+                : context;
+            return await Promise.resolve(Mustache.render(template, view));
         } catch (e) {
             this.logger.info(`Could not find template ${templateName}`);
             return Promise.reject(e);

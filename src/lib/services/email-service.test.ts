@@ -1,4 +1,9 @@
-import { EmailService, type TransportProvider } from './email-service.js';
+import {
+    EmailService,
+    TemplateFormat,
+    escapeMustacheContext,
+    type TransportProvider,
+} from './email-service.js';
 import noLoggerProvider from '../../test/fixtures/no-logger.js';
 import type { IUnleashConfig } from '../types/index.js';
 import { vi } from 'vitest';
@@ -318,5 +323,59 @@ test('Should add optional headers to productivity email', async () => {
 
     expect(productivityMail.headers).toStrictEqual({
         'x-header-name': 'value',
+    });
+});
+
+test('compileTemplate escapeContext HTML-encodes values before triple-stash render', async () => {
+    const emailService = new EmailService({
+        email: {
+            host: 'test',
+            port: 587,
+            secure: false,
+            smtpuser: '',
+            smtppass: '',
+            sender: 'noreply@getunleash.ai',
+        },
+        getLogger: noLoggerProvider,
+    } as unknown as IUnleashConfig);
+
+    const xss = '<script>alert("XSS")</script>';
+    const escaped = await emailService.compileTemplate(
+        'scheduled-execution-failed',
+        TemplateFormat.HTML,
+        { errorMessage: xss },
+        { escapeContext: true },
+    );
+    const raw = await emailService.compileTemplate(
+        'scheduled-execution-failed',
+        TemplateFormat.HTML,
+        { errorMessage: xss },
+    );
+
+    expect(escaped).toContain(
+        '&lt;script&gt;alert(&quot;XSS&quot;)&lt;&#x2F;script&gt;',
+    );
+    expect(escaped).not.toContain('<script>alert("XSS")</script>');
+    expect(raw).toContain('<script>alert("XSS")</script>');
+});
+
+test('escapeMustacheContext escapes nested strings, arrays, and objects', () => {
+    const xss = '<script>x</script>';
+
+    expect(escapeMustacheContext({ a: xss })).toEqual({
+        a: '&lt;script&gt;x&lt;&#x2F;script&gt;',
+    });
+    expect(escapeMustacheContext({ a: [xss, 'ok', xss] })).toEqual({
+        a: [
+            '&lt;script&gt;x&lt;&#x2F;script&gt;',
+            'ok',
+            '&lt;script&gt;x&lt;&#x2F;script&gt;',
+        ],
+    });
+    expect(escapeMustacheContext({ a: { b: xss, c: [xss] } })).toEqual({
+        a: {
+            b: '&lt;script&gt;x&lt;&#x2F;script&gt;',
+            c: ['&lt;script&gt;x&lt;&#x2F;script&gt;'],
+        },
     });
 });

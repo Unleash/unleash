@@ -15,6 +15,9 @@ type TargetElement =
 
 type RenderFunc = () => JSX.Element;
 
+/**
+ * @deprecated in favor of ternary operator https://github.com/bricks-software/unleash-enterprise/blob/main/oss/contributing/ADRs/front-end/jsx-conditionals.md
+ */
 export const ConditionallyRender = ({
     condition,
     show,

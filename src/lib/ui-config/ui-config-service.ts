@@ -109,8 +109,12 @@ export class UiConfigService {
         // unsalted because the sessionID is high-entropy.
         const analyticsSessionId = sessionId ? hashValue(sessionId) : undefined;
 
+        const emailContext = user.email
+            ? { email: user.email, hashedEmail: hashValue(user.email) }
+            : {};
+
         const expFlags = this.config.flagResolver.getAll({
-            email: user.email,
+            ...emailContext,
             ...(analyticsSessionId ? { sessionId: analyticsSessionId } : {}),
         });
 
@@ -121,7 +125,7 @@ export class UiConfigService {
 
         const unleashContext = {
             ...this.flagResolver.getStaticContext(),
-            ...(user.email ? { email: user.email } : {}),
+            ...emailContext,
             userId: user.id,
             ...(analyticsSessionId ? { sessionId: analyticsSessionId } : {}),
         };

@@ -87,6 +87,7 @@ test('should get ui config', async () => {
     expect(body.unleashContext).toMatchObject({
         userId: 7,
         email: 'someone@example.com',
+        hashedEmail: hashValue('someone@example.com'),
         sessionId: hashValue(TEST_SESSION_ID),
     });
 });

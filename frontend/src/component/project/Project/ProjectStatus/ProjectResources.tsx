@@ -113,7 +113,7 @@ export const ProjectResources = () => {
     return (
         <HealthGridTile ref={loadingRef}>
             <ProjectResourcesInner>
-                <Typography variant='h4' sx={{ margin: 0 }}>
+                <Typography variant='h3' component='h4' sx={{ margin: 0 }}>
                     Project resources
                 </Typography>
                 <ResourceList>

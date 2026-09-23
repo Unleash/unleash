@@ -168,7 +168,7 @@ export const AvailableIntegrations: FC<IAvailableIntegrationsProps> = ({
                 <StyledSdksSection>
                     <StyledSdksGroup>
                         <Box>
-                            <Typography component='h4' variant='h4'>
+                            <Typography component='h4' variant='h3'>
                                 Backend SDKs
                             </Typography>
                             <Typography
@@ -206,7 +206,7 @@ export const AvailableIntegrations: FC<IAvailableIntegrationsProps> = ({
                     </StyledSdksGroup>
                     <StyledSdksGroup>
                         <Box>
-                            <Typography component='h4' variant='h4'>
+                            <Typography component='h4' variant='h3'>
                                 Frontend SDKs
                             </Typography>
                             <Typography

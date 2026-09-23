@@ -45,18 +45,22 @@ export const baseTheme = {
             fontWeight: '700',
         },
         h3: {
-            fontSize: `${15 / 16}rem`,
-            fontWeight: '700',
-        },
-        h4: {
-            fontSize: `${15 / 16}rem`,
+            fontSize: `${14 / 16}rem`,
+            lineHeight: 20 / 14,
             fontWeight: '700',
         },
         caption: {
             fontSize: `${12 / 16}rem`,
+            lineHeight: 16 / 12,
+        },
+        overline: {
+            fontSize: `${12 / 16}rem`,
+            lineHeight: 16 / 12,
+            fontWeight: '700',
+            textTransform: 'uppercase',
         },
         body1: {
-            fontSize: `${15 / 16}rem`,
+            fontSize: `${14 / 16}rem`,
         },
         body2: {
             fontSize: `${14 / 16}rem`,
@@ -67,7 +71,7 @@ export const baseTheme = {
         largeHeader: '2rem',
         mediumHeader: '1.5rem',
         mainHeader: '1.25rem',
-        bodySize: `${15 / 16}rem`,
+        bodySize: `${14 / 16}rem`,
         smallBody: `${14 / 16}rem`,
         smallerBody: `${12 / 16}rem`,
     },

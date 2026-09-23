@@ -56,7 +56,7 @@ export const StyledTitle = forwardRef<
     <Typography
         ref={ref}
         component='h4'
-        variant='h4'
+        variant='h3'
         sx={(theme) => ({
             margin: theme.spacing(1, 0),
         })}

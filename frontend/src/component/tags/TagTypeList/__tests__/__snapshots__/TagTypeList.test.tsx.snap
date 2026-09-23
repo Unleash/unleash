@@ -50,7 +50,7 @@ exports[`renders an empty list correctly 1`] = `
                     />
                   </svg>
                   <div
-                    class="MuiInputBase-root MuiInputBase-colorPrimary mui-12wn7bb-MuiInputBase-root"
+                    class="MuiInputBase-root MuiInputBase-colorPrimary mui-1bp4sgz-MuiInputBase-root"
                   >
                     <input
                       aria-label="Search (Ctrl+Shift+K)"

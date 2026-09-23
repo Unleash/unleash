@@ -1,4 +1,5 @@
-import { screen, fireEvent } from '@testing-library/react';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { describe, expect, test, vi } from 'vitest';
@@ -11,6 +12,7 @@ const setupApi = () => {
     testServerRoute(server, '/api/admin/ui-config', {
         flags: {
             regexConstraintOperator: true,
+            ipConstraintOperator: true,
         },
     });
     testServerRoute(server, '/api/admin/context', [{ name: 'appName' }]);
@@ -83,6 +85,51 @@ describe('EditableConstraint', () => {
             // The editor should open automatically because the value was
             // cleared when the operator changed.
             await screen.findByTestId('CONSTRAINT_VALUES_INPUT');
+        });
+    });
+
+    describe('IN_CIDR constraint', () => {
+        test('selects the IN_CIDR operator and adds an IP value', async () => {
+            setupApi();
+            const onUpdate = vi.fn();
+
+            render(
+                <EditableConstraint
+                    constraint={{
+                        contextName: 'appName',
+                        operator: 'IN',
+                        values: [],
+                    }}
+                    onDelete={vi.fn()}
+                    onUpdate={onUpdate}
+                />,
+            );
+
+            fireEvent.mouseDown(
+                await screen.findByRole('combobox', { name: /operator/i }),
+            );
+            fireEvent.click(
+                await screen.findByRole('option', { name: /is an IP in/i }),
+            );
+
+            fireEvent.click(
+                await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            );
+            await screen.findByText(
+                'IP addresses or CIDR ranges, for example 192.168.1.1 or 10.0.0.0/8',
+            );
+            await userEvent.type(
+                await screen.findByLabelText('Constraint Value'),
+                '10.0.0.0/8',
+            );
+            fireEvent.click(screen.getByTestId('CONSTRAINT_VALUES_ADD_BUTTON'));
+
+            await waitFor(() => {
+                expect(onUpdate.mock.lastCall?.[0]).toMatchObject({
+                    operator: 'IN_CIDR',
+                    values: ['10.0.0.0/8'],
+                });
+            });
         });
     });
 });

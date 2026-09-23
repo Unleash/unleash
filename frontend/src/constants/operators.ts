@@ -16,7 +16,8 @@ export type Operator =
     | 'SEMVER_LT'
     | 'SEMVER_GTE'
     | 'SEMVER_LTE'
-    | 'REGEX';
+    | 'REGEX'
+    | 'IN_CIDR';
 
 export const NOT_IN = 'NOT_IN' as const;
 export const IN = 'IN' as const;
@@ -36,6 +37,7 @@ export const SEMVER_LT = 'SEMVER_LT' as const;
 export const SEMVER_GTE = 'SEMVER_GTE' as const;
 export const SEMVER_LTE = 'SEMVER_LTE' as const;
 export const REGEX = 'REGEX' as const;
+export const IN_CIDR = 'IN_CIDR' as const;
 
 export const allOperators: Operator[] = [
     IN,
@@ -56,6 +58,7 @@ export const allOperators: Operator[] = [
     SEMVER_GTE,
     SEMVER_LTE,
     REGEX,
+    IN_CIDR,
 ];
 
 const isOperator =
@@ -93,6 +96,10 @@ export const regexOperators = [REGEX];
 export type RegexOperator = (typeof regexOperators)[number];
 export const isRegexOperator = isOperator(regexOperators);
 
+export const cidrOperators = [IN_CIDR];
+export type CidrOperator = (typeof cidrOperators)[number];
+export const isCidrOperator = isOperator(cidrOperators);
+
 export const singleValueOperators = [
     ...semVerOperators,
     ...dateOperators,
@@ -102,7 +109,11 @@ export const singleValueOperators = [
 export type SingleValueOperator = (typeof singleValueOperators)[number];
 export const isSingleValueOperator = isOperator(singleValueOperators);
 
-export const multipleValueOperators = [...stringOperators, ...inOperators];
+export const multipleValueOperators = [
+    ...stringOperators,
+    ...inOperators,
+    ...cidrOperators,
+];
 export type MultiValueOperator = (typeof multipleValueOperators)[number];
 export const isMultiValueOperator = isOperator(multipleValueOperators);
 

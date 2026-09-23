@@ -164,6 +164,7 @@
     "@fern-api/search-widget": "0.5.4",
     "chartjs-plugin-datalabels": "^2.2.0",
     "highlight.js": "^11.11.1",
+    "ip-address": "10.3.1",
     "json-2-csv": "^5.5.10",
     "json-diff-react": "^1.0.1",
     "logrocket": "^12.1.1",

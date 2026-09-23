@@ -2,6 +2,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import {
     dateOperators,
     IN,
+    IN_CIDR,
+    isCidrOperator,
     multipleValueOperators,
     NOT_IN,
     numOperators,
@@ -53,6 +55,10 @@ test('calls onUpdate with new state', async () => {
 });
 
 describe('validators', () => {
+    const stringValueOperators = multipleValueOperators.filter(
+        (operator) => !isCidrOperator(operator),
+    );
+
     const checkValidator = (
         validator: (...values: string[]) => [boolean, string],
         expectations: [string | string[], boolean][],
@@ -133,7 +139,7 @@ describe('validators', () => {
         ]);
     });
     test.each(
-        multipleValueOperators,
+        stringValueOperators,
     )('picks the right value for multi-value operator: %s', (operator) => {
         const initial: IConstraint = {
             contextName: 'context-field',
@@ -154,7 +160,7 @@ describe('validators', () => {
     });
 
     test.each(
-        multipleValueOperators,
+        stringValueOperators,
     )('multi-value operator %s should reject fully duplicate inputs and accept new values', (operator) => {
         const initial: IConstraint = {
             contextName: 'context-field',
@@ -170,6 +176,25 @@ describe('validators', () => {
             ['a', false],
             [['a', 'c'], true],
             [['a', 'b'], false],
+        ]);
+    });
+
+    test('IN_CIDR only accepts IP addresses or CIDR ranges that are not already added', () => {
+        const initial: IConstraint = {
+            contextName: 'context-field',
+            operator: IN_CIDR,
+            values: ['10.0.0.0/8'],
+        };
+
+        const { result } = renderHook(() =>
+            useEditableConstraint(initial, () => {}),
+        );
+
+        checkValidator(result.current.validator, [
+            ['192.168.1.1', true],
+            ['10.0.0.0/16', true],
+            ['not an ip', false],
+            ['10.0.0.0/8', false],
         ]);
     });
 });

@@ -28,6 +28,7 @@ import {
 import type { IConstraint } from 'interfaces/strategy';
 import {
     type EditableConstraint as EditableConstraintType,
+    isCidrConstraint,
     isDateConstraint,
     isMultiValueConstraint,
     isNumberConstraint,
@@ -185,6 +186,16 @@ const TopRowInput: FC<{
                 validator={validator}
                 editingOpen={editingOpen}
                 setEditingOpen={setEditingOpen}
+            />
+        );
+    }
+    if (isCidrConstraint(localConstraint)) {
+        return (
+            <AddValuesChip
+                validator={validator}
+                helpText='IP addresses or CIDR ranges, for example 192.168.1.1 or 10.0.0.0/8'
+                ref={addValuesButtonRef}
+                onAddValues={addValues}
             />
         );
     }

@@ -29,6 +29,7 @@ const constraintOperatorDescriptions: Record<Operator, string> = {
     SEMVER_GTE: 'is a SemVer greater than or equal to',
     SEMVER_LTE: 'is a SemVer less than or equal to',
     REGEX: 'matches regex',
+    IN_CIDR: 'is an IP in',
 };
 
 const invertedConstraintOperatorDescriptions: Record<Operator, string> = {
@@ -50,4 +51,5 @@ const invertedConstraintOperatorDescriptions: Record<Operator, string> = {
     SEMVER_GTE: 'is a SemVer not greater than or equal to',
     SEMVER_LTE: 'is a SemVer not less than or equal to',
     REGEX: 'does not match regex',
+    IN_CIDR: 'is an IP not in',
 };

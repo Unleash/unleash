@@ -233,10 +233,11 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
                     options={options}
                     disableCloseOnSelect
                     size='large'
-                    fullWidth={false}
+                    fullWidth={true}
                     value={resolveAutocompleteValue()}
                     onChange={changeContextValue}
                     getOptionLabel={(option) => option}
+                    slotProps={{ chip: { size: 'small' } }}
                     renderOption={(props, option, { selected }) => {
                         return (
                             <li {...props}>
@@ -256,7 +257,14 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
                             </li>
                         );
                     }}
-                    sx={{ width: 370, maxWidth: '100%' }}
+                    sx={{
+                        width: 330,
+                        maxWidth: '100%',
+                        '& .MuiOutlinedInput-root .MuiAutocomplete-input': {
+                            paddingTop: 0,
+                            paddingBottom: 0,
+                        },
+                    }}
                 />
             );
         }
@@ -265,7 +273,7 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
             <Input
                 label='Value'
                 id='context-value'
-                sx={{ width: 370, maxWidth: '100%' }}
+                sx={{ width: 330, maxWidth: '100%' }}
                 placeholder={'value1,value2,value3'}
                 size='large'
                 value={contextValue}
@@ -290,9 +298,10 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
                 sx={{
                     display: 'flex',
                     gap: 2,
-                    flexWrap: 'wrap',
+                    flexWrap: 'nowrap',
                     mb: 2,
                     alignItems: 'flex-start',
+                    overflowX: 'auto',
                     '& > div': { width: 'auto', flex: '0 0 auto' },
                 }}
             >
@@ -315,7 +324,7 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
                         variant='outlined'
                         disabled={!contextField || Boolean(error)}
                         onClick={onAddField}
-                        sx={{ width: '95px', height: '40px' }}
+                        sx={{ width: '95px' }}
                     >
                         {`${!fieldExist ? 'Add' : 'Replace'} `}
                     </Button>

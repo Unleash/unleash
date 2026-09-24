@@ -5,7 +5,6 @@ import {
     fromIConstraint,
     invertedToggleDisabled,
     isMultiValueConstraint,
-    isSingleValueConstraint,
     toIConstraint,
 } from './editable-constraint-type.ts';
 import type {
@@ -130,17 +129,14 @@ export const useEditableConstraint = (
     }, [constraint.values, contextDefinition.legalValues]);
 
     const invalidLegalValues = useMemo(() => {
-        if (
-            contextDefinition.legalValues?.length &&
-            isSingleValueConstraint(localConstraint)
-        ) {
+        if (contextDefinition.legalValues?.length) {
             return getInvalidLegalValues(
                 (value) => baseValidator(value)[0],
                 contextDefinition.legalValues,
             );
         }
         return undefined;
-    }, [baseValidator, contextDefinition.legalValues, localConstraint]);
+    }, [baseValidator, contextDefinition.legalValues]);
 
     const legalValueData = contextDefinition.legalValues?.length
         ? {

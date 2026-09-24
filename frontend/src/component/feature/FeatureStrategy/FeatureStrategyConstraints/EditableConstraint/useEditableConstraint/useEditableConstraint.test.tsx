@@ -202,7 +202,7 @@ describe('validators', () => {
 describe('legal values', () => {
     const definition = {
         name: 'context-field',
-        legalValues: [{ value: 'A' }, { value: '6' }],
+        legalValues: [{ value: 'A' }, { value: '6' }, { value: '10.0.0.0/8' }],
     };
     setupApi(definition);
 
@@ -290,7 +290,23 @@ describe('legal values', () => {
         await waitFor(() => {
             expect(
                 result.current.legalValueData?.invalidLegalValues,
-            ).toStrictEqual(new Set(['A']));
+            ).toStrictEqual(new Set(['A', '10.0.0.0/8']));
+        });
+    });
+    test('identifies invalid legal values for the IN_CIDR operator', async () => {
+        const initial: IConstraint = {
+            contextName: definition.name,
+            operator: IN_CIDR,
+            values: [],
+        };
+
+        const { result } = renderHook(() =>
+            useEditableConstraint(initial, () => {}),
+        );
+        await waitFor(() => {
+            expect(
+                result.current.legalValueData?.invalidLegalValues,
+            ).toStrictEqual(new Set(['A', '6']));
         });
     });
 });

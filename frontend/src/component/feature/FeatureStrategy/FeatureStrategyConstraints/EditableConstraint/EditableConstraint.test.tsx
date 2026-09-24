@@ -5,19 +5,24 @@ import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { describe, expect, test, vi } from 'vitest';
 import { EditableConstraint } from './EditableConstraint';
 import type { IConstraint } from 'interfaces/strategy';
+import type { IUnleashContextDefinition } from 'interfaces/context';
 
 const server = testServerSetup();
 
 const noOp = () => {};
 
-const setupApi = () => {
+const setupApi = ({
+    contextFields = [{ name: 'appName' }],
+}: {
+    contextFields?: Partial<IUnleashContextDefinition>[];
+} = {}) => {
     testServerRoute(server, '/api/admin/ui-config', {
         flags: {
             regexConstraintOperator: true,
             ipConstraintOperator: true,
         },
     });
-    testServerRoute(server, '/api/admin/context', [{ name: 'appName' }]);
+    testServerRoute(server, '/api/admin/context', contextFields);
 };
 
 describe('EditableConstraint', () => {
@@ -193,6 +198,91 @@ describe('EditableConstraint', () => {
                 'Target range: 10.0.0.0 - 10.255.255.255',
             );
             expect(chip).toHaveTextContent('10.0.0.0/8');
+        });
+
+        test('prevents selecting legal values that are invalid for the operator', async () => {
+            setupApi({
+                contextFields: [
+                    {
+                        name: 'ipAddress',
+                        legalValues: [
+                            { value: 'not-an-ip-10' },
+                            { value: '10.0.0.0/8' },
+                            { value: '192.168.1.1' },
+                        ],
+                    },
+                ],
+            });
+            const onUpdate = vi.fn();
+
+            render(
+                <EditableConstraint
+                    constraint={{
+                        contextName: 'ipAddress',
+                        operator: 'IN_CIDR',
+                        values: [],
+                    }}
+                    onDelete={vi.fn()}
+                    onUpdate={onUpdate}
+                />,
+            );
+
+            expect(
+                await screen.findByRole('checkbox', { name: 'not-an-ip-10' }),
+            ).toBeDisabled();
+            expect(
+                screen.getByRole('checkbox', { name: '10.0.0.0/8' }),
+            ).toBeEnabled();
+            screen.getByText(
+                'Values that are not valid for your chosen operator have been disabled.',
+            );
+
+            await userEvent.type(screen.getByLabelText('Search'), '10{Enter}');
+
+            await waitFor(() => {
+                expect(onUpdate.mock.lastCall?.[0]).toMatchObject({
+                    operator: 'IN_CIDR',
+                    values: ['10.0.0.0/8'],
+                });
+            });
+
+            await userEvent.clear(screen.getByLabelText('Search'));
+            fireEvent.click(screen.getByRole('button', { name: 'Select all' }));
+
+            await waitFor(() => {
+                expect(onUpdate.mock.lastCall?.[0]).toMatchObject({
+                    operator: 'IN_CIDR',
+                    values: ['10.0.0.0/8', '192.168.1.1'],
+                });
+            });
+            screen.getByRole('button', { name: 'Unselect all' });
+        });
+
+        test('disables select all when no legal value is valid for the operator', async () => {
+            setupApi({
+                contextFields: [
+                    {
+                        name: 'ipAddress',
+                        legalValues: [{ value: 'not-an-ip' }],
+                    },
+                ],
+            });
+
+            render(
+                <EditableConstraint
+                    constraint={{
+                        contextName: 'ipAddress',
+                        operator: 'IN_CIDR',
+                        values: [],
+                    }}
+                    onDelete={vi.fn()}
+                    onUpdate={vi.fn()}
+                />,
+            );
+
+            expect(
+                await screen.findByRole('button', { name: 'Select all' }),
+            ).toBeDisabled();
         });
     });
 });

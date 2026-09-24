@@ -1,0 +1,29 @@
+# To get started with Dependabot version updates, you'll need to specify which
+# package ecosystems to update and where the package manifests are located.
+# Please see the documentation for all configuration options:
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "19:00"
+      timezone: "Europe/Madrid"
+    labels:
+      - "dependencies"
+    ignore:
+      - dependency-name: "python"
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "19:00"
+      timezone: "Europe/Madrid"
+    labels:
+      - "dependencies"
+    ignore:
+      - dependency-name: "react-router-dom"
+    cooldown:
+      default-days: 7

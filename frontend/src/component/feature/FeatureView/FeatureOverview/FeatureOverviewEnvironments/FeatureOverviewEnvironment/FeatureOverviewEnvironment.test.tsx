@@ -72,6 +72,44 @@ const setupOssEndpoints = () => {
     });
 };
 
+const setupPlaygroundPerFlagEndpoints = () => {
+    testServerRoute(server, '/api/admin/ui-config', {
+        versionInfo: {
+            current: {},
+        },
+        flags: {
+            playgroundPerFlag: true,
+        },
+        resourceLimits: {
+            featureEnvironmentStrategies: 30,
+        },
+    });
+    testServerRoute(server, '/api/admin/environments/project/default', {
+        environments: [
+            {
+                name: 'production',
+                enabled: true,
+                type: 'production',
+            },
+        ],
+    });
+    testServerRoute(server, '/api/admin/context', [{ name: 'appName' }]);
+};
+
+const environmentWithActivations = {
+    name: 'production',
+    enabled: true,
+    type: 'production',
+    strategies: [
+        {
+            id: '1',
+            name: 'flexibleRollout',
+            parameters: {},
+            constraints: [],
+        },
+    ],
+};
+
 describe('FeatureOverviewEnvironment', () => {
     test('should allow to add strategy', async () => {
         renderRoute(
@@ -242,5 +280,27 @@ describe('FeatureOverviewEnvironment', () => {
 
         expect(releaseTemplatesFilter).toBeInTheDocument();
         expect(releaseTemplatesFilter).toHaveAttribute('aria-pressed', 'true');
+    });
+
+    describe('Try configuration', () => {
+        test('opens the drawer when the flag is on', async () => {
+            setupPlaygroundPerFlagEndpoints();
+            const user = userEvent.setup();
+            renderRoute(
+                <FeatureOverviewEnvironment
+                    environment={environmentWithActivations}
+                />,
+                [{ permission: CREATE_FEATURE_STRATEGY }],
+            );
+
+            await user.click(await screen.findByText('production'));
+            await user.click(await screen.findByText('Try configuration'));
+
+            expect(
+                await screen.findByRole('heading', {
+                    name: 'Try configuration',
+                }),
+            ).toBeInTheDocument();
+        });
     });
 });

@@ -1,5 +1,11 @@
 import { useState } from 'react';
-import { Accordion, AccordionDetails, Box, styled } from '@mui/material';
+import {
+    Accordion,
+    AccordionDetails,
+    Box,
+    Button,
+    styled,
+} from '@mui/material';
 import type {
     IFeatureEnvironment,
     IFeatureEnvironmentMetrics,
@@ -19,6 +25,9 @@ import type { IReleasePlan } from 'interfaces/releasePlans';
 import { EnvironmentAccordionBody } from './EnvironmentAccordionBody/EnvironmentAccordionBody.tsx';
 import type { StrategyFilterValue } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenuCards/FeatureStrategyMenuCards';
 import { FeatureStrategyMenuButton } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenuButton.tsx';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { useEventTracker } from 'hooks/useEventTracker';
+import { TestConfigurationSidebar } from './TestConfiguration/TestConfigurationSidebar.tsx';
 
 const StyledFeatureOverviewEnvironment = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -84,6 +93,10 @@ export const FeatureOverviewEnvironment = ({
     const [filter, setFilter] = useState<StrategyFilterValue>(null);
     const [isStrategyMenuDialogOpen, setIsStrategyMenuDialogOpen] =
         useState<boolean>(false);
+    const playgroundPerFlag = useUiFlag('playgroundPerFlag');
+    const [isTestConfigurationOpen, setIsTestConfigurationOpen] =
+        useState<boolean>(false);
+    const { trackEvent } = useEventTracker();
 
     const dialogId = isStrategyMenuDialogOpen
         ? 'FeatureStrategyMenuDialog'
@@ -173,6 +186,24 @@ export const FeatureOverviewEnvironment = ({
                     </StyledEnvironmentAccordionContainer>
                     <StyledAccordionFooter>
                         <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                            {playgroundPerFlag ? (
+                                <Button
+                                    variant='outlined'
+                                    onClick={(event) => {
+                                        event.stopPropagation();
+                                        trackEvent('playground', {
+                                            props: {
+                                                eventType:
+                                                    'test-configuration-opened',
+                                                environment: environment.name,
+                                            },
+                                        });
+                                        setIsTestConfigurationOpen(true);
+                                    }}
+                                >
+                                    Try configuration
+                                </Button>
+                            ) : null}
                             <Box
                                 sx={{
                                     ml: 'auto',
@@ -204,6 +235,16 @@ export const FeatureOverviewEnvironment = ({
                     </StyledAccordionFooter>
                 </NewStyledAccordionDetails>
             </StyledAccordion>
+            {playgroundPerFlag ? (
+                <TestConfigurationSidebar
+                    open={isTestConfigurationOpen}
+                    onClose={() => setIsTestConfigurationOpen(false)}
+                    projectId={projectId}
+                    featureId={featureId}
+                    environmentId={environment.name}
+                    strategies={environment.strategies}
+                />
+            ) : null}
         </StyledFeatureOverviewEnvironment>
     );
 };

@@ -15,7 +15,7 @@ import { Roles } from './roles/Roles.tsx';
 import { ServiceAccounts } from './serviceAccounts/ServiceAccounts.tsx';
 import CreateUser from './users/CreateUser/CreateUser.tsx';
 import { InviteLink } from './users/InviteLink/InviteLink.tsx';
-import UsersAdminRouter from './users/UsersAdminRouter.tsx';
+import UsersTabs from './users/UsersTabs/UsersTabs.tsx';
 import NotFound from 'component/common/NotFound/NotFound';
 import { Banners } from './banners/Banners.tsx';
 import { License } from './license/License.tsx';
@@ -34,7 +34,7 @@ export const Admin = () => {
         <>
             <Routes>
                 <Route index element={<AdminHome />} />
-                <Route path='users/*' element={<UsersAdminRouter />} />
+                <Route path='users/*' element={<UsersTabs />} />
                 <Route path='api' element={<ApiTokenPage />} />
                 <Route path='api/create-token' element={<CreateApiToken />} />
                 <Route path='service-accounts' element={<ServiceAccounts />} />

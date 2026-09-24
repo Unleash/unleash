@@ -76,7 +76,6 @@ export type IFlagKey =
     | 'secureAccountTokenStorage'
     | 'recordSdkFlavorMetrics'
     | 'searchDocsWidget'
-    | 'usersTabsUI'
     | 'semverBuildMetadata'
     | 'slackIntegrationProjectLevel'
     | 'flagStatusTooltips'
@@ -353,10 +352,6 @@ const flags: IFlags = {
     ),
     searchDocsWidget: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SEARCH_DOCS_WIDGET,
-        false,
-    ),
-    usersTabsUI: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_USERS_TABS_UI,
         false,
     ),
     semverBuildMetadata: parseEnvVarBoolean(

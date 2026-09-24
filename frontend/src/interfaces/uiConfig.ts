@@ -59,7 +59,6 @@ export type UiFlags = {
     notifications?: boolean;
     personalAccessTokensKillSwitch?: boolean;
     demo?: boolean;
-    onboardingIntroTour?: boolean;
     onboardingIntroTourAdvancedTopics?: boolean;
     interactiveDemoKillSwitch?: boolean;
     advancedPlayground?: boolean;

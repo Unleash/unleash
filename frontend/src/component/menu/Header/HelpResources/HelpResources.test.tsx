@@ -31,10 +31,10 @@ const baseChecklistContext = (
     openRequestCounter: 0,
     dismissed: false,
     projectId: 'default',
-    visibleSteps: ['flag', 'sdk', 'on'],
+    visibleSteps: ['tour', 'flag', 'sdk', 'on'],
     done: { tour: false, flag: false, sdk: false, on: false },
     completedCount: 0,
-    totalSteps: 3,
+    totalSteps: 4,
     environments: [],
     refetchOverview: vi.fn(),
     ...overrides,
@@ -95,30 +95,6 @@ test('opens help menu with all items when clicking the button', async () => {
     expect(screen.getByText('GitHub')).toBeInTheDocument();
     expect(screen.getByText('Give feedback')).toBeInTheDocument();
     expect(screen.getByText('Slack community')).toBeInTheDocument();
-});
-
-test('quick tour item is shown when the flag is on', async () => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: { onboardingIntroTour: true },
-    });
-    render(<HelpResources />);
-
-    await userEvent.click(
-        await screen.findByRole('button', { name: 'Help and resources' }),
-    );
-
-    expect(screen.getByText('Unleash Intro')).toBeInTheDocument();
-});
-
-test('quick tour item is hidden when the flag is off', async () => {
-    withLearningLab();
-    render(<HelpResources />);
-
-    await userEvent.click(
-        await screen.findByRole('button', { name: 'Help and resources' }),
-    );
-
-    expect(screen.queryByText('Unleash Intro')).not.toBeInTheDocument();
 });
 
 test('external links have correct hrefs', async () => {
@@ -234,7 +210,7 @@ test('shows Get started with progress badge when the user is already known to be
     });
 
     renderWithChecklistContext(
-        { completedCount: 1, totalSteps: 3 },
+        { completedCount: 1, totalSteps: 4 },
         { permissions: [{ permission: ADMIN }] },
     );
 
@@ -244,7 +220,7 @@ test('shows Get started with progress badge when the user is already known to be
 
     const item = await screen.findByRole('menuitem', { name: /Get started/ });
     expect(item).toBeInTheDocument();
-    expect(item).toHaveTextContent('1/3');
+    expect(item).toHaveTextContent('1/4');
 });
 
 test("hides Get started until the user's eligibility is known", async () => {
@@ -313,9 +289,6 @@ test('dismisses the help hint when the user opens the menu', async () => {
 });
 
 test('surfaces the intro-closed hint after the intro closes from the menu', async () => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: { onboardingIntroTour: true },
-    });
     window.localStorage.clear();
     openIntroMock.mockImplementationOnce((options) => options?.onExited?.());
 

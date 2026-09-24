@@ -40,15 +40,12 @@ const TestComponent: FC = () => {
 
 const mockEligibleUser = ({
     splash = {},
-    quickTour = false,
 }: {
     splash?: Record<string, boolean>;
-    quickTour?: boolean;
 } = {}) => {
     testServerRoute(server, '/api/admin/ui-config', {
         flags: {
             floatingOnboardingChecklist: true,
-            onboardingIntroTour: quickTour,
         },
     });
     testServerRoute(server, '/api/admin/user', {
@@ -112,7 +109,7 @@ test('shows completed count matching the server progress', async () => {
     expect(await screen.findByTestId('flag')).toHaveTextContent('y');
     expect(await screen.findByTestId('sdk')).toHaveTextContent('y');
     expect(await screen.findByTestId('on')).toHaveTextContent('n');
-    expect(await screen.findByTestId('count')).toHaveTextContent('2/3');
+    expect(await screen.findByTestId('count')).toHaveTextContent('2/4');
 });
 
 test('keeps the flag step ticked while the server still reports it incomplete', async () => {
@@ -155,15 +152,6 @@ test('stays visible on next load after the user reopens a dismissed checklist', 
     render(<TestComponent />, { permissions: [{ permission: ADMIN }] });
 
     expect(await screen.findByTestId('dismissed')).toHaveTextContent('n');
-});
-
-test('shows the tour step alongside the other three when the quick tour flag is on', async () => {
-    mockEligibleUser({ quickTour: true });
-    mockProjectOverview('onboarding-started');
-
-    render(<TestComponent />, { permissions: [{ permission: ADMIN }] });
-
-    expect(await screen.findByTestId('count')).toHaveTextContent('0/4');
 });
 
 test('stays hidden when the default project cannot be loaded', async () => {

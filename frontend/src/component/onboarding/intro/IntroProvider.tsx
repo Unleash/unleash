@@ -6,7 +6,6 @@ import {
     useRef,
     useState,
 } from 'react';
-import { useUiFlag } from 'hooks/useUiFlag';
 import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi.ts';
 import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash.ts';
 import { IntroDialog } from './IntroDialog.tsx';
@@ -35,7 +34,6 @@ const IntroContext = createContext<IntroContextValue | null>(null);
  * about; new call sites don't have to plumb state through the tree.
  */
 export const IntroProvider = ({ children }: { children: ReactNode }) => {
-    const enabled = useUiFlag('onboardingIntroTour');
     const { setSplashSeen } = useSplashApi();
     const { refetchSplash } = useAuthSplash();
     const [isOpen, setIsOpen] = useState(false);
@@ -45,16 +43,12 @@ export const IntroProvider = ({ children }: { children: ReactNode }) => {
     const onExitedRef = useRef<(() => void) | undefined>(undefined);
     const onFinishRef = useRef<(() => void) | undefined>(undefined);
 
-    const open = useCallback(
-        (options?: OpenOptions) => {
-            if (!enabled) return;
-            onCloseRef.current = options?.onClose;
-            onExitedRef.current = options?.onExited;
-            onFinishRef.current = options?.onFinish;
-            setIsOpen(true);
-        },
-        [enabled],
-    );
+    const open = useCallback((options?: OpenOptions) => {
+        onCloseRef.current = options?.onClose;
+        onExitedRef.current = options?.onExited;
+        onFinishRef.current = options?.onFinish;
+        setIsOpen(true);
+    }, []);
 
     const handleClose = useCallback(() => {
         setIsOpen(false);
@@ -78,14 +72,12 @@ export const IntroProvider = ({ children }: { children: ReactNode }) => {
     return (
         <IntroContext.Provider value={{ open }}>
             {children}
-            {enabled && (
-                <IntroDialog
-                    open={isOpen}
-                    onClose={handleClose}
-                    onExited={handleExited}
-                    onFinish={handleFinish}
-                />
-            )}
+            <IntroDialog
+                open={isOpen}
+                onClose={handleClose}
+                onExited={handleExited}
+                onFinish={handleFinish}
+            />
         </IntroContext.Provider>
     );
 };

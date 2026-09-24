@@ -70,7 +70,6 @@ export type IFlagKey =
     | 'serviceNowIntegration'
     | 'learningLab'
     | 'floatingOnboardingChecklist'
-    | 'onboardingIntroTour'
     | 'onboardingIntroTourAdvancedTopics'
     | 'secureTokenStorage'
     | 'secureAccountTokenStorage'
@@ -122,10 +121,6 @@ const flags: IFlags = {
     ),
     migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, true),
     demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
-    onboardingIntroTour: parseEnvVarBoolean(
-        process.env.UNLEASH_ONBOARDING_INTRO_TOUR,
-        false,
-    ),
     onboardingIntroTourAdvancedTopics: parseEnvVarBoolean(
         process.env.UNLEASH_ONBOARDING_INTRO_TOUR_ADVANCED_TOPICS,
         false,

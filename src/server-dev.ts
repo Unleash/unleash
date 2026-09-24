@@ -58,7 +58,6 @@ process.nextTick(async () => {
                         learningLab: true,
                         floatingOnboardingChecklist: true,
                         serviceNowIntegration: true,
-                        onboardingIntroTour: true,
                         recordSdkFlavorMetrics: true,
                         semverBuildMetadata: true,
                         slackIntegrationProjectLevel: true,

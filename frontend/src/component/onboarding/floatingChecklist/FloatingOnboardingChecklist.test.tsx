@@ -206,8 +206,7 @@ test("tracks 'retake-tour' click when the tour has already been completed", asyn
 
 test("tracks 'create-flag' click on the flag step's action button", async () => {
     renderWithContext({
-        visibleSteps: ['flag', 'sdk', 'on'],
-        done: { tour: false, flag: false, sdk: false, on: false },
+        done: { tour: true, flag: false, sdk: false, on: false },
     });
 
     await userEvent.click(await screen.findByText('New feature flag'));
@@ -219,8 +218,7 @@ test("tracks 'create-flag' click on the flag step's action button", async () => 
 
 test("tracks 'view-created-flag' when the flag-step link is used after the flag exists", async () => {
     renderWithContext({
-        visibleSteps: ['flag', 'sdk', 'on'],
-        done: { tour: false, flag: true, sdk: false, on: false },
+        done: { tour: true, flag: true, sdk: false, on: false },
     });
 
     // Flag is done → 'sdk' is first-incomplete and auto-expanded;
@@ -237,8 +235,7 @@ test("tracks 'view-created-flag' when the flag-step link is used after the flag 
 
 test("tracks 'connect-sdk' click on the sdk step's action button", async () => {
     renderWithContext({
-        visibleSteps: ['flag', 'sdk', 'on'],
-        done: { tour: false, flag: true, sdk: false, on: false },
+        done: { tour: true, flag: true, sdk: false, on: false },
     });
 
     // 'sdk' is the first incomplete visible step → auto-expanded.
@@ -253,8 +250,7 @@ test("tracks 'connect-sdk' click on the sdk step's action button", async () => {
 
 test("tracks 'enable-flag' click when the on-step's 'Go to flag' link is used", async () => {
     renderWithContext({
-        visibleSteps: ['flag', 'sdk', 'on'],
-        done: { tour: false, flag: true, sdk: true, on: false },
+        done: { tour: true, flag: true, sdk: true, on: false },
     });
 
     // 'on' is the first incomplete visible step, so its body ("Go to flag")
@@ -270,8 +266,7 @@ test("tracks 'enable-flag' click when the on-step's 'Go to flag' link is used", 
 
 test("tracks 'view-enabled-flag' when the on-step link is used after enabling", async () => {
     renderWithContext({
-        visibleSteps: ['flag', 'sdk', 'on'],
-        done: { tour: false, flag: true, sdk: true, on: true },
+        done: { tour: true, flag: true, sdk: true, on: true },
     });
 
     // With all visible steps done, expand the on-step explicitly.

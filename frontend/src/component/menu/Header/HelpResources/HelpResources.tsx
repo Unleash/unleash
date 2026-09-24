@@ -184,7 +184,6 @@ export const HelpResources = () => {
     const open = Boolean(anchorEl);
     const { trackEvent } = useEventTracker();
     const { open: openIntro } = useIntro();
-    const introEnabled = useUiFlag('onboardingIntroTour');
     const learningLabFlag = useUiFlag('learningLab');
     const learningLabVariant = useVariant<ILearningLabVariant>(
         learningLabFlag || undefined,
@@ -366,21 +365,18 @@ export const HelpResources = () => {
                     <NewReleasesOutlinedIcon fontSize='small' />
                     What's new
                 </StyledMenuItem>
-                {introEnabled && (
-                    <StyledMenuItem
-                        onClick={() => {
-                            handleOptionClick('quick-tour');
-                            openIntro({
-                                onExited: () =>
-                                    showHelpButtonHint('intro-closed'),
-                            });
-                        }}
-                        data-testid='QUICK_TOUR_BUTTON'
-                    >
-                        <ExploreOutlinedIcon fontSize='small' />
-                        Unleash Intro
-                    </StyledMenuItem>
-                )}
+                <StyledMenuItem
+                    onClick={() => {
+                        handleOptionClick('quick-tour');
+                        openIntro({
+                            onExited: () => showHelpButtonHint('intro-closed'),
+                        });
+                    }}
+                    data-testid='QUICK_TOUR_BUTTON'
+                >
+                    <ExploreOutlinedIcon fontSize='small' />
+                    Unleash Intro
+                </StyledMenuItem>
                 <StyledMenuItem
                     component='a'
                     href={DOCUMENTATION_URL}

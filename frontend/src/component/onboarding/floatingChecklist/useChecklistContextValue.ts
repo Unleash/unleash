@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash.ts';
 import { getProjectOnboardingStep } from 'utils/getProjectOnboardingStep.ts';
 import {
@@ -39,7 +38,6 @@ export const useChecklistContextValue =
             useFloatingOnboardingChecklistState();
         const [openRequestCounter, setOpenRequestCounter] = useState(0);
         const { splash } = useAuthSplash();
-        const quickTourEnabled = useUiFlag('onboardingIntroTour');
         const projectId = CHECKLIST_PROJECT_ID;
 
         const splashDismissed = Boolean(
@@ -71,9 +69,7 @@ export const useChecklistContextValue =
             sdk: serverStep >= 2,
             on: serverStep >= 3,
         };
-        const visibleSteps: ChecklistStepKey[] = quickTourEnabled
-            ? ['tour', 'flag', 'sdk', 'on']
-            : ['flag', 'sdk', 'on'];
+        const visibleSteps: ChecklistStepKey[] = ['tour', 'flag', 'sdk', 'on'];
         const totalSteps = visibleSteps.length;
         const completedCount = visibleSteps.filter((key) => done[key]).length;
 

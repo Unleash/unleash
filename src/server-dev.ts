@@ -56,7 +56,6 @@ process.nextTick(async () => {
                         userTokenWithClientApiLoggingKillSwitch: false,
                         allowDeprecatedApiTokenMiddleware: false,
                         learningLab: true,
-                        floatingOnboardingChecklist: true,
                         serviceNowIntegration: true,
                         recordSdkFlavorMetrics: true,
                         semverBuildMetadata: true,

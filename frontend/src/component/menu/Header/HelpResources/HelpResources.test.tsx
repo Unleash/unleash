@@ -176,9 +176,6 @@ test('tracks menu open and item click', async () => {
 });
 
 const mockCheapGatePassingWithSplash = (splash: Record<string, boolean>) => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: { floatingOnboardingChecklist: true },
-    });
     testServerRoute(server, '/api/admin/user', {
         user: { id: 1 },
         permissions: [],

@@ -44,9 +44,7 @@ const mockEligibleUser = ({
     splash?: Record<string, boolean>;
 } = {}) => {
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: {
-            floatingOnboardingChecklist: true,
-        },
+        flags: {},
     });
     testServerRoute(server, '/api/admin/user', {
         user: { id: 1 },

@@ -8,6 +8,8 @@ import type { IConstraint } from 'interfaces/strategy';
 
 const server = testServerSetup();
 
+const noOp = () => {};
+
 const setupApi = () => {
     testServerRoute(server, '/api/admin/ui-config', {
         flags: {
@@ -32,8 +34,8 @@ describe('EditableConstraint', () => {
             render(
                 <EditableConstraint
                     constraint={constraint}
-                    onDelete={vi.fn()}
-                    onUpdate={vi.fn()}
+                    onDelete={noOp}
+                    onUpdate={noOp}
                 />,
             );
 
@@ -55,8 +57,8 @@ describe('EditableConstraint', () => {
             render(
                 <EditableConstraint
                     constraint={constraint}
-                    onDelete={vi.fn()}
-                    onUpdate={vi.fn()}
+                    onDelete={noOp}
+                    onUpdate={noOp}
                 />,
             );
 
@@ -89,6 +91,19 @@ describe('EditableConstraint', () => {
     });
 
     describe('IN_CIDR constraint', () => {
+        const ipConstraint: IConstraint = {
+            contextName: 'appName',
+            operator: 'IN_CIDR',
+            values: [],
+        };
+
+        const openValuesPopover = async () => {
+            fireEvent.click(
+                await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            );
+            return screen.findByLabelText('Constraint Value');
+        };
+
         test('selects the IN_CIDR operator and adds an IP value', async () => {
             setupApi();
             const onUpdate = vi.fn();
@@ -100,7 +115,7 @@ describe('EditableConstraint', () => {
                         operator: 'IN',
                         values: [],
                     }}
-                    onDelete={vi.fn()}
+                    onDelete={noOp}
                     onUpdate={onUpdate}
                 />,
             );
@@ -134,6 +149,50 @@ describe('EditableConstraint', () => {
                     values: ['10.0.0.0/8'],
                 });
             });
+        });
+
+        test('shows the target range while typing a valid value', async () => {
+            setupApi();
+
+            render(
+                <EditableConstraint
+                    constraint={ipConstraint}
+                    onDelete={noOp}
+                    onUpdate={noOp}
+                />,
+            );
+
+            const input = await openValuesPopover();
+            await userEvent.type(input, 'not-an-ip');
+            expect(screen.queryByRole('status')).not.toBeInTheDocument();
+
+            await userEvent.clear(input);
+            await userEvent.type(input, '10.0.0.0/8');
+
+            expect(await screen.findByRole('status')).toHaveTextContent(
+                'Target range: 10.0.0.0 - 10.255.255.255',
+            );
+        });
+
+        test('adds a valid value as a chip titled with its target range', async () => {
+            setupApi();
+
+            render(
+                <EditableConstraint
+                    constraint={ipConstraint}
+                    onDelete={noOp}
+                    onUpdate={noOp}
+                />,
+            );
+
+            const input = await openValuesPopover();
+            await userEvent.type(input, '10.0.0.0/8');
+            fireEvent.click(screen.getByTestId('CONSTRAINT_VALUES_ADD_BUTTON'));
+
+            const chip = await screen.findByTitle(
+                'Target range: 10.0.0.0 - 10.255.255.255',
+            );
+            expect(chip).toHaveTextContent('10.0.0.0/8');
         });
     });
 });

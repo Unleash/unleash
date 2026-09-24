@@ -58,12 +58,14 @@ type Props = {
     removeValue: (value: string) => void;
     // the element that should receive focus when all value chips are deleted
     getExternalFocusTarget: () => HTMLElement | null;
+    getValueTitle?: (value: string) => string | undefined;
 };
 
 export const ValueList: FC<PropsWithChildren<Props>> = ({
     values = [],
     removeValue,
     getExternalFocusTarget,
+    getValueTitle,
     children,
 }) => {
     const constraintElementRefs: React.MutableRefObject<
@@ -99,6 +101,7 @@ export const ValueList: FC<PropsWithChildren<Props>> = ({
                                 },
                             }}
                             label={value}
+                            title={getValueTitle?.(value)}
                             onDelete={() => {
                                 nextFocusTarget(index)?.focus();
                                 removeValue(value);

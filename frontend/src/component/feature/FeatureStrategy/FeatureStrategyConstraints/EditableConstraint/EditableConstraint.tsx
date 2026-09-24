@@ -43,6 +43,8 @@ import { AddRegexValueChip } from './AddRegexValueChip.tsx';
 import { ToggleConstraintInverted } from './ToggleConstraintInverted.tsx';
 import { AddRegexValueEditor } from './AddRegexValueEditor/AddRegexValueEditor.tsx';
 import { CidrSdkRequirements } from './CidrSdkRequirements.tsx';
+import { CidrTargetRange, formatTargetRange } from './CidrTargetRange.tsx';
+import { getTargetRange } from './useEditableConstraint/ip-address.ts';
 
 const invertedDisabledMessages: Partial<Record<Operator, string>> = {
     REGEX: 'The REGEX operator does not support inversion',
@@ -197,6 +199,7 @@ const TopRowInput: FC<{
                 helpText='IP addresses or CIDR ranges, for example 192.168.1.1 or 10.0.0.0/8'
                 ref={addValuesButtonRef}
                 onAddValues={addValues}
+                ValuePreview={CidrTargetRange}
             />
         );
     }
@@ -376,6 +379,15 @@ export const EditableConstraint: FC<Props> = ({
         context,
     );
 
+    const valueTitle = isCidrConstraint(localConstraint)
+        ? (value: string) => {
+              const range = getTargetRange(value);
+              return range
+                  ? `Target range: ${formatTargetRange(range)}`
+                  : undefined;
+          }
+        : undefined;
+
     return (
         <Container>
             <TopRow>
@@ -435,6 +447,7 @@ export const EditableConstraint: FC<Props> = ({
                                   : undefined
                         }
                         removeValue={removeValue}
+                        getValueTitle={valueTitle}
                         getExternalFocusTarget={() =>
                             addValuesButtonRef.current ??
                             deleteButtonRef.current

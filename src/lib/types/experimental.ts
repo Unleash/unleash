@@ -388,7 +388,7 @@ const flags: IFlags = {
         false,
     ),
     playgroundPerFlag: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PLAYGORUND_PER_FLAG,
+        process.env.UNLEASH_EXPERIMENTAL_PLAYGROUND_PER_FLAG,
         false,
     ),
 };

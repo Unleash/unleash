@@ -5,7 +5,10 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import useInstanceStatusApi from 'hooks/api/actions/useInstanceStatusApi/useInstanceStatusApi';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
 import { validateInstanceName } from './validateInstanceName.js';
 
 const StyledForm = styled('form')(({ theme }) => ({
@@ -23,7 +26,8 @@ export const InstanceName = () => (
 );
 
 const InstanceNamePage = () => {
-    const { instanceStatus, loading } = useInstanceStatus();
+    const { instanceStatus, loading, refetchInstanceStatus } =
+        useInstanceStatus();
 
     return (
         <PageContent
@@ -32,21 +36,40 @@ const InstanceNamePage = () => {
         >
             {!loading && (
                 <InstanceNameForm
-                    initialName={instanceStatus?.instanceName ?? ''}
+                    initialName={instanceStatus?.name ?? ''}
+                    onSaved={refetchInstanceStatus}
                 />
             )}
         </PageContent>
     );
 };
 
-const InstanceNameForm = ({ initialName }: { initialName: string }) => {
+const InstanceNameForm = ({
+    initialName,
+    onSaved,
+}: {
+    initialName: string;
+    onSaved: () => void;
+}) => {
     const [name, setName] = useState(initialName);
+    const { setInstanceName, loading } = useInstanceStatusApi();
+    const { setToastData, setToastApiError } = useToast();
     const errorText = validateInstanceName(name);
-    const canSubmit = name.trim().length > 0 && errorText === undefined;
+    const canSubmit =
+        name.trim().length > 0 && errorText === undefined && !loading;
 
-    const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        // TODO: wire to instance-name API when backend is ready.
+        try {
+            await setInstanceName(name.trim());
+            onSaved();
+            setToastData({
+                type: 'success',
+                text: 'Instance name updated',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
     };
 
     return (

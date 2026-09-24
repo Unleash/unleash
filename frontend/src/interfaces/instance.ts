@@ -26,7 +26,7 @@ export interface IInstanceStatus {
     ucaSignup?: boolean;
     emailDomain?: string;
     autoCreateDomainUsers?: boolean;
-    instanceName?: string;
+    name?: string;
 }
 
 export enum InstanceState {

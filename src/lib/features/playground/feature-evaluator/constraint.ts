@@ -8,6 +8,7 @@ import {
 import type { Context } from './context.js';
 import { resolveContextValue } from './helpers.js';
 import { RE2JS } from 're2js';
+import { Address4, Address6 } from 'ip-address';
 
 export interface Constraint {
     contextName: string;
@@ -37,6 +38,7 @@ export enum Operator {
     SEMVER_GTE = 'SEMVER_GTE',
     SEMVER_LTE = 'SEMVER_LTE',
     REGEX = 'REGEX',
+    IN_CIDR = 'IN_CIDR',
 }
 
 export type OperatorImpl = (
@@ -178,6 +180,58 @@ const RegexOperator = (constraint: Constraint, context: Context) => {
     }
 };
 
+type SubnetAddress<T> = {
+    correctForm(): string;
+    isInSubnet(other: T): boolean;
+};
+
+type AddressConstructor<T> = {
+    isValid(input: string): boolean;
+    new (input: string): T;
+};
+
+const matchesIpOrRange = <T extends SubnetAddress<T>>(
+    remoteAddress: T,
+    range: string,
+    Address: AddressConstructor<T>,
+): boolean => {
+    if (!Address.isValid(range)) {
+        return false;
+    }
+
+    const subnetRange = new Address(range);
+
+    return (
+        remoteAddress.correctForm() === subnetRange.correctForm() ||
+        remoteAddress.isInSubnet(subnetRange)
+    );
+};
+
+const CidrOperator = (constraint: Constraint, context: Context) => {
+    const values = cleanValues(constraint.values);
+    const contextValue = resolveContextValue(context, constraint.contextName);
+
+    if (typeof contextValue !== 'string') {
+        return false;
+    }
+
+    if (Address4.isValid(contextValue)) {
+        const remoteAddress = new Address4(contextValue);
+        return values.some((range) =>
+            matchesIpOrRange(remoteAddress, range, Address4),
+        );
+    }
+
+    if (Address6.isValid(contextValue)) {
+        const remoteAddress = new Address6(contextValue);
+        return values.some((range) =>
+            matchesIpOrRange(remoteAddress, range, Address6),
+        );
+    }
+
+    return false;
+};
+
 export const operators = new Map<Operator, OperatorImpl>();
 operators.set(Operator.IN, InOperator);
 operators.set(Operator.NOT_IN, InOperator);
@@ -197,3 +251,4 @@ operators.set(Operator.SEMVER_LT, SemverOperator);
 operators.set(Operator.SEMVER_GTE, SemverOperator);
 operators.set(Operator.SEMVER_LTE, SemverOperator);
 operators.set(Operator.REGEX, RegexOperator);
+operators.set(Operator.IN_CIDR, CidrOperator);

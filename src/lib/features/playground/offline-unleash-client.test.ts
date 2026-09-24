@@ -224,6 +224,75 @@ describe('offline client', () => {
         expect(client.isEnabled(invertedRegexFeature).result).toBeFalsy();
     });
 
+    it('IN_CIDR constrains on remoteAddress', async () => {
+        const exactIpv4 = 'exact-ipv4';
+        const ipv4Range = 'ipv4-range';
+        const ipv4RangeMiss = 'ipv4-range-miss';
+        const ipv6Range = 'ipv6-range';
+        const invalidEntriesIgnored = 'invalid-entries-ignored';
+        const invalidEntriesOnly = 'invalid-entries-only';
+        const cidrFeature = (name: string, values: string[]) => ({
+            name,
+            enabled: true,
+            project: 'default',
+            strategies: [
+                {
+                    name: 'default',
+                    constraints: [
+                        {
+                            contextName: 'remoteAddress',
+                            operator: 'IN_CIDR' as const,
+                            values,
+                        },
+                    ],
+                },
+            ],
+            variants: [],
+            type: '',
+            stale: false,
+        });
+        const ipv4Context = {
+            appName: 'client-test',
+            remoteAddress: '160.33.0.33',
+        };
+        const ipv6Context = {
+            appName: 'client-test',
+            remoteAddress: '2001:db8:0:1::42',
+        };
+        const noAddressContext = { appName: 'client-test' };
+        const client = await offlineUnleashClient({
+            features: [
+                cidrFeature(exactIpv4, ['160.33.0.33']),
+                cidrFeature(ipv4Range, ['160.33.0.0/16']),
+                cidrFeature(ipv4RangeMiss, ['160.34.0.0/16']),
+                cidrFeature(ipv6Range, ['2001:db8::/32']),
+                cidrFeature(invalidEntriesIgnored, [
+                    '127.invalid',
+                    '160.33.0.0/16',
+                ]),
+                cidrFeature(invalidEntriesOnly, ['127.invalid']),
+            ],
+            context: ipv4Context,
+            logError: console.log,
+        });
+
+        expect(client.isEnabled(exactIpv4, ipv4Context).result).toBe(true);
+        expect(client.isEnabled(exactIpv4, ipv6Context).result).toBe(false);
+        expect(client.isEnabled(ipv4Range, ipv4Context).result).toBe(true);
+        expect(client.isEnabled(ipv4RangeMiss, ipv4Context).result).toBe(false);
+        expect(client.isEnabled(ipv6Range, ipv4Context).result).toBe(false);
+        expect(client.isEnabled(ipv6Range, ipv6Context).result).toBe(true);
+        expect(
+            client.isEnabled(invalidEntriesIgnored, ipv4Context).result,
+        ).toBe(true);
+        expect(client.isEnabled(invalidEntriesOnly, ipv4Context).result).toBe(
+            false,
+        );
+        expect(client.isEnabled(ipv4Range, noAddressContext).result).toBe(
+            false,
+        );
+    });
+
     it('considers disabled features with a default strategy to be enabled', async () => {
         const name = 'toggle-name';
         const context = { appName: 'client-test' };

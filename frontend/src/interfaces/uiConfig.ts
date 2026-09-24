@@ -105,7 +105,6 @@ export type UiFlags = {
     floatingOnboardingChecklist?: boolean;
     flightRecorderFrontend?: Variant;
     searchDocsWidget?: boolean;
-    usersTabsUI?: boolean;
     exposureBasedAutomation?: boolean;
     semverBuildMetadata?: boolean;
     slackIntegrationProjectLevel?: boolean;

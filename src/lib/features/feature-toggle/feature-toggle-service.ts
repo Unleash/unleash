@@ -81,7 +81,7 @@ import type { SetStrategySortOrderSchema } from '../../openapi/spec/set-strategy
 import {
     getDefaultStrategy,
     getProjectDefaultStrategy,
-} from '../playground/feature-evaluator/helpers.js';
+} from './default-strategy.js';
 import type { AccessService } from '../../services/access-service.js';
 import type { IUser } from '../../types/index.js';
 import type { IFeatureProjectUserParams } from './feature-toggle-controller.js';

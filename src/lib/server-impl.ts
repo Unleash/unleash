@@ -212,7 +212,7 @@ import {
 import {
     getDefaultStrategy,
     getProjectDefaultStrategy,
-} from './features/playground/feature-evaluator/helpers.js';
+} from './features/feature-toggle/default-strategy.js';
 import { getDbConfig } from '../test/e2e/helpers/database-config.js';
 import { testDbPrefix } from '../test/e2e/helpers/database-init.js';
 import type { RequestHandler } from 'express';

@@ -29,7 +29,7 @@ export const CidrSdkRequirements: FC = () => {
                     6.11.0, Java 12.3.0, Ruby 6.7.1, Python 6.7.0, .NET 6.2.0,
                     Go 6.4.0, Rust 0.16.0 - or a frontend SDK connected to
                     Unleash or Unleash Enterprise Edge 20.2.0. Not supported in
-                    PHP yet.
+                    PHP.
                 </StyledAlert>
             </Collapse>
             {open ? null : (

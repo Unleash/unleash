@@ -1,5 +1,11 @@
-import { type FormEventHandler, useEffect, useRef, useState } from 'react';
-import { Alert, Box, Button, styled } from '@mui/material';
+import {
+    type FormEventHandler,
+    Fragment,
+    useEffect,
+    useRef,
+    useState,
+} from 'react';
+import { Alert, Box, Button, Divider, styled } from '@mui/material';
 import { DynamicSidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import useToast from 'hooks/useToast';
 import { useEventTracker } from 'hooks/useEventTracker';
@@ -26,9 +32,17 @@ interface ITestConfigurationSidebarProps {
     strategies?: IFeatureStrategy[];
 }
 
-const StyledContent = styled('div')(({ theme }) => ({
+const StyledSidebar = styled('div')({
     width: 762,
     maxWidth: '100%',
+    minHeight: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+});
+
+const StyledContent = styled('div')(({ theme }) => ({
+    flex: 1,
+    isolation: 'isolate',
     padding: theme.spacing(6, 4, 4),
     display: 'flex',
     flexDirection: 'column',
@@ -41,14 +55,14 @@ const StyledTitle = styled('h2')(({ theme }) => ({
     margin: 0,
 }));
 
-const StyledDescription = styled('p')(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    margin: 0,
-}));
-
-const StyledHelpText = styled('p')(({ theme }) => ({
-    color: theme.palette.text.primary,
-    margin: 0,
+const StyledFooter = styled('div')(({ theme }) => ({
+    position: 'sticky',
+    bottom: 0,
+    display: 'flex',
+    justifyContent: 'flex-end',
+    padding: theme.spacing(2, 4),
+    borderTop: `1px solid ${theme.palette.divider}`,
+    backgroundColor: theme.palette.background.paper,
 }));
 
 const StyledSectionLabel = styled('p')(({ theme }) => ({
@@ -66,7 +80,6 @@ const StyledResultSection = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(2),
-    paddingTop: theme.spacing(2),
 }));
 
 const StyledButtonRow = styled('div')(({ theme }) => ({
@@ -215,70 +228,79 @@ export const TestConfigurationSidebar = ({
             onClose={onClose}
             label='Try configuration'
         >
-            <StyledContent>
-                <StyledTitle>Try configuration</StyledTitle>
-                <StyledDescription>
-                    Test your strategy configuration. This may help you to
-                    understand how Unleash works, how feature flags are
-                    evaluated and for you to easily debug your feature flags.
-                </StyledDescription>
-                <StyledHelpText>
-                    You can edit within the field below to test different
-                    contexts
-                </StyledHelpText>
-                <Box component='form' onSubmit={onSubmit}>
-                    <PlaygroundCodeFieldset
-                        context={context}
-                        setContext={setContext}
-                    />
-                    <StyledButtonRow>
-                        <Button
-                            variant='contained'
-                            type='submit'
-                            disabled={loading}
-                        >
-                            Try configuration
-                        </Button>
-                    </StyledButtonRow>
-                </Box>
-                {configurationError ? (
-                    <Alert severity='warning'>{configurationError}</Alert>
-                ) : null}
-                {invalidContextProperties &&
-                invalidContextProperties.length > 0 ? (
-                    <Alert severity='warning'>
-                        Some context properties were not taken into account
-                        during evaluation:{' '}
-                        {invalidContextProperties?.join(', ')}
+            <StyledSidebar>
+                <StyledContent>
+                    <StyledTitle>Try configuration</StyledTitle>
+                    <Alert severity='info'>
+                        Test your strategy configuration. This may help you to
+                        understand how Unleash works, how feature flags are
+                        evaluated and for you to easily debug your feature
+                        flags.
                     </Alert>
-                ) : null}
-                {evaluations.map((evaluation) => {
-                    const contextLabel = contextFields
-                        .map(
-                            (field) =>
-                                `${field}: ${String(evaluation.context[field] ?? '')}`,
-                        )
-                        .join(', ');
-
-                    return (
-                        <EvaluationResult
-                            key={contextLabel}
-                            evaluation={evaluation}
-                            environmentId={environmentId}
-                            label={
-                                contextLabel
-                                    ? `Result for ${contextLabel}`
-                                    : 'Result'
+                    <Box component='form' onSubmit={onSubmit}>
+                        <PlaygroundCodeFieldset
+                            context={context}
+                            setContext={setContext}
+                            description={
+                                <>
+                                    You can edit within the field below to test
+                                    different contexts for{' '}
+                                    <strong>{featureId}</strong> in{' '}
+                                    <strong>{environmentId}</strong>
+                                </>
                             }
                         />
-                    );
-                })}
-                <StyledButtonRow>
+                        <StyledButtonRow>
+                            <Button
+                                variant='contained'
+                                type='submit'
+                                disabled={loading}
+                            >
+                                Try configuration
+                            </Button>
+                        </StyledButtonRow>
+                    </Box>
+                    {configurationError ? (
+                        <Alert severity='warning'>{configurationError}</Alert>
+                    ) : null}
+                    {invalidContextProperties &&
+                    invalidContextProperties.length > 0 ? (
+                        <Alert severity='warning'>
+                            Some context properties were not taken into account
+                            during evaluation:{' '}
+                            {invalidContextProperties?.join(', ')}
+                        </Alert>
+                    ) : null}
+                    {evaluations.map((evaluation, index) => {
+                        const contextLabel = contextFields
+                            .map(
+                                (field) =>
+                                    `${field}: ${String(evaluation.context[field] ?? '')}`,
+                            )
+                            .join(', ');
+
+                        return (
+                            <Fragment key={contextLabel}>
+                                {index > 0 ? <Divider /> : null}
+                                <EvaluationResult
+                                    evaluation={evaluation}
+                                    environmentId={environmentId}
+                                    label={
+                                        contextLabel
+                                            ? `Result for ${contextLabel}`
+                                            : 'Result'
+                                    }
+                                />
+                            </Fragment>
+                        );
+                    })}
+                </StyledContent>
+                <StyledFooter>
                     <Button variant='outlined' onClick={onClose}>
                         Close
                     </Button>
-                </StyledButtonRow>
-            </StyledContent>
+                </StyledFooter>
+            </StyledSidebar>
         </DynamicSidebarModal>
     );
 };

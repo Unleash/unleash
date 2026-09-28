@@ -15,6 +15,11 @@ const StyledLegend = styled('legend')(({ theme }) => ({
     color: theme.palette.text.primary,
 }));
 
+const StyledDescription = styled('p')(({ theme }) => ({
+    margin: theme.spacing(0, 0, 1.5),
+    color: theme.palette.text.primary,
+}));
+
 const StyledContent = styled('div')(({ theme }) => ({
     padding: theme.spacing(1.5),
     border: `1px solid ${theme.palette.divider}`,
@@ -30,11 +35,20 @@ const StyledContent = styled('div')(({ theme }) => ({
 
 interface FormGroupProps extends Omit<ComponentProps<'fieldset'>, 'title'> {
     title?: ReactNode;
+    description?: ReactNode;
 }
 
-export const FormGroup = ({ title, children, ...props }: FormGroupProps) => (
+export const FormGroup = ({
+    title,
+    description,
+    children,
+    ...props
+}: FormGroupProps) => (
     <StyledFieldset {...props}>
         {title ? <StyledLegend>{title}</StyledLegend> : null}
+        {description ? (
+            <StyledDescription>{description}</StyledDescription>
+        ) : null}
         <StyledContent>{children}</StyledContent>
     </StyledFieldset>
 );

@@ -2,6 +2,7 @@ import {
     type Dispatch,
     type FC,
     type FormEvent,
+    type ReactNode,
     type SetStateAction,
     useEffect,
     useMemo,
@@ -32,6 +33,7 @@ import { FormFieldControlAligner } from 'component/common/FormField/FormField';
 interface IPlaygroundCodeFieldsetProps {
     context: string | undefined;
     setContext: Dispatch<SetStateAction<string | undefined>>;
+    description?: ReactNode;
 }
 
 const createContextFieldOptions = (
@@ -81,6 +83,7 @@ const createContextFieldOptions = (
 export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
     context,
     setContext,
+    description,
 }) => {
     const { setToastData } = useToast();
     const { context: contextData } = useFullUnleashContext();
@@ -293,7 +296,7 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
     };
 
     return (
-        <FormGroup title='Unleash context'>
+        <FormGroup title='Unleash context' description={description}>
             <Box
                 sx={{
                     display: 'flex',

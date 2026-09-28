@@ -74,26 +74,27 @@ export default class UnleashClient {
             if (parentToggle.dependencies?.length) {
                 return false;
             }
-            if (Boolean(parent.enabled) !== Boolean(parentToggle.enabled)) {
-                return false;
-            }
+
+            // Same rule as the Node SDK: a parent counts as enabled only if
+            // it is enabled in this environment and its strategies pass.
+            const parentIsEnabled =
+                parentToggle.enabled &&
+                this.isEnabled(parent.feature, context, () => false).result ===
+                    true;
 
             if (parent.enabled !== false) {
                 if (parent.variants?.length) {
-                    return parent.variants.includes(
-                        this.getVariant(parent.feature, context).name,
+                    return (
+                        parentIsEnabled &&
+                        parent.variants.includes(
+                            this.getVariant(parent.feature, context).name,
+                        )
                     );
                 }
-                return (
-                    this.isEnabled(parent.feature, context, () => false)
-                        .result === true
-                );
+                return parentIsEnabled;
             }
 
-            return !(
-                this.isEnabled(parent.feature, context, () => false).result ===
-                true
-            );
+            return !parentIsEnabled;
         });
     }
 

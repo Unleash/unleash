@@ -11,6 +11,7 @@ import {
 import { once } from 'events';
 import { playgroundStrategyEvaluation } from '../../openapi/spec/playground-strategy-schema.js';
 import { DEFAULT_ENV } from '../../server-impl.js';
+import type { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
 
 export const offlineUnleashClientNode = async ({
     features,
@@ -569,6 +570,100 @@ describe('offline client', () => {
         });
         expect(result.result).toEqual(
             playgroundStrategyEvaluation.unknownResult,
+        );
+    });
+
+    it('a parent counts as on only when it is enabled in the environment and its strategies pass', async () => {
+        const feature = (
+            overrides: Pick<FeatureConfigurationClient, 'name'> &
+                Partial<FeatureConfigurationClient>,
+        ): FeatureConfigurationClient => ({
+            project: 'default',
+            type: '',
+            stale: false,
+            enabled: true,
+            strategies: [{ name: 'default' }],
+            variants: [],
+            ...overrides,
+        });
+
+        const client = await offlineUnleashClient({
+            features: [
+                feature({
+                    name: 'parent-on-for-included-user',
+                    strategies: [
+                        {
+                            name: 'default',
+                            constraints: [
+                                {
+                                    contextName: 'userId',
+                                    operator: 'IN',
+                                    values: ['included-user'],
+                                },
+                            ],
+                        },
+                    ],
+                }),
+                feature({
+                    name: 'parent-disabled-in-environment',
+                    enabled: false,
+                }),
+                feature({
+                    name: 'needs-strategy-parent-off',
+                    dependencies: [
+                        {
+                            feature: 'parent-on-for-included-user',
+                            enabled: false,
+                        },
+                    ],
+                }),
+                feature({
+                    name: 'needs-disabled-parent-off',
+                    dependencies: [
+                        {
+                            feature: 'parent-disabled-in-environment',
+                            enabled: false,
+                        },
+                    ],
+                }),
+                feature({
+                    name: 'needs-strategy-parent-disabled-variant',
+                    dependencies: [
+                        {
+                            feature: 'parent-on-for-included-user',
+                            variants: ['disabled'],
+                        },
+                    ],
+                }),
+            ],
+            context: { appName: 'test', environment: DEFAULT_ENV },
+            logError: console.log,
+        });
+
+        const parentOnForThisUser = client.isEnabled(
+            'needs-strategy-parent-off',
+            { userId: 'included-user' },
+        );
+        const parentOffForThisUser = client.isEnabled(
+            'needs-strategy-parent-off',
+            { userId: 'excluded-user' },
+        );
+        const parentOffInEnvironment = client.isEnabled(
+            'needs-disabled-parent-off',
+            { userId: 'included-user' },
+        );
+        // the fallback variant of an off parent is literally named 'disabled';
+        // that must not count as a variant match
+        const parentOffButVariantNameMatches = client.isEnabled(
+            'needs-strategy-parent-disabled-variant',
+            { userId: 'excluded-user' },
+        );
+
+        expect(parentOnForThisUser.hasUnsatisfiedDependency).toBe(true);
+        expect(parentOffForThisUser.hasUnsatisfiedDependency).toBe(false);
+        expect(parentOffInEnvironment.hasUnsatisfiedDependency).toBe(false);
+        expect(parentOffButVariantNameMatches.hasUnsatisfiedDependency).toBe(
+            true,
         );
     });
 

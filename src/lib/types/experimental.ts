@@ -5,7 +5,7 @@ import {
     parseEnvVarBooleanOrStringVariant,
 } from '../util/index.js';
 import type { MetricFlagContext } from 'unleash-client/lib/impact-metrics/metric-types.js';
-import type { Context } from '../features/playground/feature-evaluator/index.js';
+import type { Context } from 'unleash-client';
 
 // biome-ignore lint/suspicious/noEmptyInterface: extension point for packages that embed unleash-server.
 export interface IFlagKeyOverrides {}

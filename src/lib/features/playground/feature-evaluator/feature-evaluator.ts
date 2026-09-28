@@ -1,20 +1,20 @@
-import Client, { type FeatureStrategiesEvaluationResult } from './client.js';
+import type { Context } from 'unleash-client';
+import Client, {
+    type EvaluatedVariant,
+    type FeatureStrategiesEvaluationResult,
+} from './client.js';
+import type { FeatureInterface, Segment } from './feature.js';
 import Repository from './repository/index.js';
-import type { Context } from './context.js';
-import { defaultStrategies } from './strategy/index.js';
-
-import type { FeatureInterface } from './feature.js';
-import type { Variant } from './variant.js';
 import {
-    type BootstrapOptions,
-    resolveBootstrapProvider,
-} from './repository/bootstrap-provider.js';
-import InMemStorageProvider from './repository/storage-provider-in-mem.js';
+    explainedDefaultStrategies,
+    unknownStrategyExplainer,
+} from './strategy/index.js';
 
 export interface FeatureEvaluatorConfig {
     appName: string;
     environment?: string;
-    bootstrap?: BootstrapOptions;
+    features: FeatureInterface[];
+    segments?: Segment[];
 }
 
 export interface StaticContext {
@@ -32,19 +32,16 @@ export class FeatureEvaluator {
     constructor({
         appName,
         environment = 'default',
-        bootstrap = { data: [] },
+        features,
+        segments,
     }: FeatureEvaluatorConfig) {
         this.staticContext = { appName, environment };
-        this.repository = new Repository({
-            appName,
-            bootstrapProvider: resolveBootstrapProvider(bootstrap),
-            storageProvider: new InMemStorageProvider(),
-        });
-        this.client = new Client(this.repository, defaultStrategies);
-    }
-
-    async start(): Promise<void> {
-        return this.repository.start();
+        this.repository = new Repository({ features, segments });
+        this.client = new Client(
+            this.repository,
+            explainedDefaultStrategies,
+            unknownStrategyExplainer,
+        );
     }
 
     isEnabled(
@@ -52,17 +49,14 @@ export class FeatureEvaluator {
         context: Context = {},
     ): FeatureStrategiesEvaluationResult {
         const enhancedContext = { ...this.staticContext, ...context };
-        return this.client.isEnabled(name, enhancedContext, () => ({
-            result: false,
-            strategies: [],
-        }));
+        return this.client.isEnabled(name, enhancedContext);
     }
 
     getVariant(
         name: string,
         context: Context = {},
-        fallbackVariant?: Variant,
-    ): Variant {
+        fallbackVariant?: EvaluatedVariant,
+    ): EvaluatedVariant {
         const enhancedContext = { ...this.staticContext, ...context };
         return this.client.getVariant(name, enhancedContext, fallbackVariant);
     }
@@ -74,8 +68,8 @@ export class FeatureEvaluator {
             'result' | 'variant'
         >,
         context: Context = {},
-        fallbackVariant?: Variant,
-    ): Variant {
+        fallbackVariant?: EvaluatedVariant,
+    ): EvaluatedVariant {
         const enhancedContext = { ...this.staticContext, ...context };
         return this.client.forceGetVariant(
             name,
@@ -83,10 +77,6 @@ export class FeatureEvaluator {
             forcedResults,
             fallbackVariant,
         );
-    }
-
-    getFeatureToggleDefinition(toggleName: string): FeatureInterface {
-        return this.repository.getToggle(toggleName);
     }
 
     getFeatureToggleDefinitions(): FeatureInterface[] {

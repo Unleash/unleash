@@ -1,13 +1,14 @@
 import type { SdkContextSchema } from '../../openapi/spec/sdk-context-schema.js';
-import { FeatureEvaluator } from './feature-evaluator/index.js';
+import {
+    FeatureEvaluator,
+    type FeatureInterface,
+    type Segment,
+} from './feature-evaluator/index.js';
 import type { FeatureConfigurationClient } from '../../features/feature-toggle/types/feature-toggle-strategies-store-type.js';
-import type { Segment } from './feature-evaluator/strategy/strategy.js';
 import type { ISegment } from '../../types/model.js';
 import { serializeDates } from '../../types/serialize-dates.js';
-import type { Operator } from './feature-evaluator/constraint.js';
+import type { Operator } from 'unleash-client/lib/strategy/strategy.js';
 import type { PayloadType } from 'unleash-client';
-import type { FeatureInterface } from 'unleash-client/lib/feature.js';
-import type { FeatureInterface as PlaygroundFeatureInterface } from './feature-evaluator/feature.js';
 
 type NonEmptyList<T> = [T, ...T[]];
 
@@ -64,24 +65,14 @@ export type ClientInitOptions = {
     context: SdkContextSchema;
 };
 
-export const offlineUnleashClient = async ({
+export const offlineUnleashClient = ({
     features,
     context,
     segments,
-}: ClientInitOptions): Promise<FeatureEvaluator> => {
-    const client = new FeatureEvaluator({
+}: ClientInitOptions): FeatureEvaluator =>
+    new FeatureEvaluator({
         ...context,
         appName: context.appName,
-        bootstrap: {
-            // FIXME: mismatch between playground and proxy types
-            data: mapFeaturesForClient(
-                features,
-            ) as PlaygroundFeatureInterface[],
-            segments: mapSegmentsForClient(segments || []),
-        },
+        features: mapFeaturesForClient(features),
+        segments: mapSegmentsForClient(segments || []),
     });
-
-    await client.start();
-
-    return client;
-};

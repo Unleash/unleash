@@ -46,7 +46,7 @@ export const offlineUnleashClientNode = async ({
 describe('offline client', () => {
     it('considers enabled variants with a default strategy to be on', async () => {
         const name = 'toggle-name';
-        const client = await offlineUnleashClient({
+        const client = offlineUnleashClient({
             features: [
                 {
                     name,
@@ -68,7 +68,7 @@ describe('offline client', () => {
         const enabledFeature = 'toggle-name';
         const disabledFeature = 'other-toggle';
         const appName = 'app-name';
-        const client = await offlineUnleashClient({
+        const client = offlineUnleashClient({
             features: [
                 {
                     name: enabledFeature,
@@ -124,7 +124,7 @@ describe('offline client', () => {
         const matchIgnoreCaseFeature = 'match-ignore-case-toggle';
         const invertedRegexFeature = 'inverted-regex-toggle';
         const appName = 'test';
-        const client = await offlineUnleashClient({
+        const client = offlineUnleashClient({
             features: [
                 {
                     name: enabledFeature,
@@ -260,7 +260,7 @@ describe('offline client', () => {
             remoteAddress: '2001:db8:0:1::42',
         };
         const noAddressContext = { appName: 'client-test' };
-        const client = await offlineUnleashClient({
+        const client = offlineUnleashClient({
             features: [
                 cidrFeature(exactIpv4, ['160.33.0.33']),
                 cidrFeature(ipv4Range, ['160.33.0.0/16']),
@@ -295,7 +295,7 @@ describe('offline client', () => {
     it('considers disabled features with a default strategy to be enabled', async () => {
         const name = 'toggle-name';
         const context = { appName: 'client-test' };
-        const client = await offlineUnleashClient({
+        const client = offlineUnleashClient({
             features: [
                 {
                     strategies: [
@@ -321,7 +321,7 @@ describe('offline client', () => {
 
     it('considers disabled variants with a default strategy and variants to be on', async () => {
         const name = 'toggle-name';
-        const client = await offlineUnleashClient({
+        const client = offlineUnleashClient({
             features: [
                 {
                     strategies: [
@@ -360,7 +360,7 @@ describe('offline client', () => {
 
     it("returns variant {name: 'disabled', enabled: false } if the toggle isn't enabled", async () => {
         const name = 'toggle-name';
-        const client = await offlineUnleashClient({
+        const client = offlineUnleashClient({
             features: [
                 {
                     strategies: [],
@@ -397,7 +397,7 @@ describe('offline client', () => {
 
     it('returns the disabled variant if there are no variants', async () => {
         const name = 'toggle-name';
-        const client = await offlineUnleashClient({
+        const client = offlineUnleashClient({
             features: [
                 {
                     strategies: [
@@ -424,7 +424,7 @@ describe('offline client', () => {
 
     it('returns strategy variant over feature variant', async () => {
         const name = 'toggle-name';
-        const client = await offlineUnleashClient({
+        const client = offlineUnleashClient({
             features: [
                 {
                     strategies: [
@@ -496,7 +496,7 @@ describe('offline client', () => {
         const name = 'toggle-name';
         const context = { appName: 'client-test' };
 
-        const client = await offlineUnleashClient({
+        const client = offlineUnleashClient({
             features: [
                 {
                     strategies: [
@@ -532,7 +532,7 @@ describe('offline client', () => {
         const name = 'toggle-name';
         const context = { appName: 'client-test' };
 
-        const client = await offlineUnleashClient({
+        const client = offlineUnleashClient({
             features: [
                 {
                     strategies: [
@@ -578,7 +578,7 @@ describe('offline client', () => {
             ...overrides,
         });
 
-        const client = await offlineUnleashClient({
+        const client = offlineUnleashClient({
             features: [
                 feature({
                     name: 'parent-on-for-included-user',
@@ -705,7 +705,7 @@ describe('offline client', () => {
 
         const context = { appName: 'client-test' };
 
-        const client = await offlineUnleashClient({
+        const client = offlineUnleashClient({
             features: [
                 {
                     // @ts-expect-error: hostnames is incompatible with index signature | undefined is not assignable to type string

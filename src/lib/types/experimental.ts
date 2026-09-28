@@ -84,6 +84,7 @@ export type IFlagKey =
     | 'playgroundPerFlag'
     | 'ipConstraintOperator'
     | 'githubIntegration'
+    | 'tagManagementViaUi'
     | keyof IFlagKeyOverrides;
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -375,6 +376,10 @@ const flags: IFlags = {
     ),
     githubIntegration: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_GITHUB_INTEGRATION,
+        false,
+    ),
+    tagManagementViaUi: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_TAG_MANAGEMENT_VIA_UI,
         false,
     ),
 };

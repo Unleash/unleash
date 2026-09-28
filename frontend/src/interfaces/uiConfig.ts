@@ -112,6 +112,7 @@ export type UiFlags = {
     ipConstraintOperator?: boolean;
     playgroundPerFlag?: boolean;
     githubIntegration?: boolean;
+    tagManagementViaUi?: boolean;
 };
 
 export interface IVersionInfo {

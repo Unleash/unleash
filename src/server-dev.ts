@@ -66,6 +66,7 @@ process.nextTick(async () => {
                         playgroundPerFlag: true,
                         ipConstraintOperator: true,
                         githubIntegration: true,
+                        tagManagementViaUi: true,
                     },
                 },
                 authentication: {

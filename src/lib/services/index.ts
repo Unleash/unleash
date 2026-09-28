@@ -24,6 +24,8 @@ import { FeatureToggleService } from '../features/feature-toggle/feature-toggle-
 import EnvironmentService from '../features/project-environments/environment-service.js';
 import FeatureTagService from './feature-tag-service.js';
 import ProjectHealthService from './project-health-service.js';
+import { ProjectHealthFeaturesReadModel } from '../domain/project-health/features-read-model.js';
+import { FakeProjectHealthFeaturesReadModel } from '../domain/project-health/fake-features-read-model.js';
 import UserSplashService from './user-splash-service.js';
 import { SegmentService } from '../features/segment/segment-service.js';
 import { OpenApiService } from './openapi-service.js';
@@ -367,10 +369,14 @@ export const createServices = (
         ? createProjectStatusService(db, config)
         : createFakeProjectStatusService().projectStatusService;
 
+    const projectHealthFeatureReadModel = db
+        ? new ProjectHealthFeaturesReadModel(db)
+        : new FakeProjectHealthFeaturesReadModel();
     const projectHealthService = new ProjectHealthService(
         stores,
         config,
         projectService,
+        projectHealthFeatureReadModel,
     );
 
     const exportImportService = db

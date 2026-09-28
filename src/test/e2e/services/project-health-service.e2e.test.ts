@@ -9,6 +9,7 @@ import {
 import type { IUser } from '../../../lib/types/index.js';
 import { createProjectService } from '../../../lib/features/index.js';
 import type { ProjectService } from '../../../lib/services/index.js';
+import { ProjectHealthFeaturesReadModel } from '../../../lib/domain/project-health/features-read-model.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -29,6 +30,7 @@ beforeAll(async () => {
         stores,
         config,
         projectService,
+        new ProjectHealthFeaturesReadModel(db.rawDatabase),
     );
 });
 
@@ -134,6 +136,7 @@ test('Project with one non-stale, one potentially stale and one stale should hav
         stale: true,
         createdByUserId: 9999,
     });
+    await stores.featureToggleStore.updatePotentiallyStaleFeatures(); // the scheduler runs this every minute
     const rating =
         await projectHealthService.calculateHealthRating(savedProject);
     expect(rating).toBe(33);

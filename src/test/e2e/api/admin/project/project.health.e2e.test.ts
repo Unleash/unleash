@@ -171,6 +171,7 @@ test('Health rating endpoint does not include archived toggles when calculating 
         })
         .expect(201);
 
+    await app.services.featureToggleService.updatePotentiallyStaleFeatures(); // the scheduler runs this every minute
     await app.services.projectHealthService.setProjectHealthRating(project.id);
     await app.request
         .get(`/api/admin/projects/${project.id}/health-report`)
@@ -226,6 +227,7 @@ test('Health rating endpoint correctly handles potentially stale toggles', async
             createdAt: new Date(2019, 5, 1),
         })
         .expect(201);
+    await app.services.featureToggleService.updatePotentiallyStaleFeatures(); // the scheduler runs this every minute
     await app.services.projectHealthService.setProjectHealthRating(project.id);
     await app.request
         .get(`/api/admin/projects/${project.id}/health-report`)

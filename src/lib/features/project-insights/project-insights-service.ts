@@ -2,7 +2,6 @@ import type {
     IFeatureOverview,
     IFeatureStrategiesStore,
     IFeatureToggleStore,
-    IFeatureTypeStore,
     IProjectStore,
     IUnleashStores,
 } from '../../types/index.js';
@@ -12,39 +11,40 @@ import type {
     ProjectDoraMetricsSchema,
     ProjectInsightsSchema,
 } from '../../openapi/index.js';
-import { calculateProjectHealth } from '../../domain/project-health/project-health.js';
 import { subDays } from 'date-fns';
+import type { IProjectHealthFeaturesReadModel } from '../../domain/project-health/features-read-model.js';
 
 export class ProjectInsightsService {
     private projectStore: IProjectStore;
 
     private featureToggleStore: IFeatureToggleStore;
 
-    private featureTypeStore: IFeatureTypeStore;
-
     private featureStrategiesStore: IFeatureStrategiesStore;
 
     private projectStatsStore: IProjectStatsStore;
 
-    constructor({
-        projectStore,
-        featureToggleStore,
-        featureTypeStore,
-        projectStatsStore,
-        featureStrategiesStore,
-    }: Pick<
-        IUnleashStores,
-        | 'projectStore'
-        | 'featureToggleStore'
-        | 'projectStatsStore'
-        | 'featureTypeStore'
-        | 'featureStrategiesStore'
-    >) {
+    private featuresReadModel: IProjectHealthFeaturesReadModel;
+
+    constructor(
+        {
+            projectStore,
+            featureToggleStore,
+            projectStatsStore,
+            featureStrategiesStore,
+        }: Pick<
+            IUnleashStores,
+            | 'projectStore'
+            | 'featureToggleStore'
+            | 'projectStatsStore'
+            | 'featureStrategiesStore'
+        >,
+        featuresReadModel: IProjectHealthFeaturesReadModel,
+    ) {
         this.projectStore = projectStore;
         this.featureToggleStore = featureToggleStore;
-        this.featureTypeStore = featureTypeStore;
         this.featureStrategiesStore = featureStrategiesStore;
         this.projectStatsStore = projectStatsStore;
+        this.featuresReadModel = featuresReadModel;
     }
 
     async getDoraMetrics(projectId: string): Promise<ProjectDoraMetricsSchema> {
@@ -81,18 +81,19 @@ export class ProjectInsightsService {
     }
 
     private async getHealthInsights(projectId: string) {
-        const [overview, featureTypes] = await Promise.all([
-            this.getProjectHealth(projectId, false, undefined),
-            this.featureTypeStore.getAll(),
-        ]);
+        const overview = await this.getProjectHealth(
+            projectId,
+            false,
+            undefined,
+        );
 
-        const { activeCount, potentiallyStaleCount, staleCount } =
-            calculateProjectHealth(overview.features, featureTypes);
+        const potentiallyStaleCount =
+            await this.featuresReadModel.getPotentiallyStaleCount(projectId);
 
         return {
-            activeCount,
             potentiallyStaleCount,
-            staleCount,
+            activeCount: overview.features.filter((flag) => !flag.stale).length,
+            staleCount: overview.features.filter((flag) => flag.stale).length,
             technicalDebt: overview.technicalDebt,
             /**
              * @deprecated

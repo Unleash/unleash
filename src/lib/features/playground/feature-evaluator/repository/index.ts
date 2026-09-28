@@ -9,7 +9,6 @@ export interface RepositoryInterface {
     getToggle(name: string): FeatureInterface;
     getToggles(): FeatureInterface[];
     getSegment(id: number): Segment | undefined;
-    stop(): void;
     start(): Promise<void>;
 }
 export interface RepositoryOptions {
@@ -23,8 +22,6 @@ interface FeatureToggleData {
 }
 
 export default class Repository extends EventEmitter {
-    private timer: NodeJS.Timeout | undefined;
-
     private appName: string;
 
     private bootstrapProvider: BootstrapProvider;
@@ -96,12 +93,6 @@ export default class Repository extends EventEmitter {
         );
 
         return obj;
-    }
-
-    stop(): void {
-        if (this.timer) {
-            clearTimeout(this.timer);
-        }
     }
 
     getSegment(segmentId: number): Segment | undefined {

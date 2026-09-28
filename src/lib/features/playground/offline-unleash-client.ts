@@ -1,8 +1,5 @@
 import type { SdkContextSchema } from '../../openapi/spec/sdk-context-schema.js';
-import {
-    InMemStorageProvider,
-    FeatureEvaluator,
-} from './feature-evaluator/index.js';
+import { FeatureEvaluator } from './feature-evaluator/index.js';
 import type { FeatureConfigurationClient } from '../../features/feature-toggle/types/feature-toggle-strategies-store-type.js';
 import type { Segment } from './feature-evaluator/strategy/strategy.js';
 import type { ISegment } from '../../types/model.js';
@@ -65,7 +62,6 @@ export type ClientInitOptions = {
     features: NonEmptyList<FeatureConfigurationClient>;
     segments?: ISegment[];
     context: SdkContextSchema;
-    logError: (message: any, ...args: any[]) => void;
 };
 
 export const offlineUnleashClient = async ({
@@ -76,7 +72,6 @@ export const offlineUnleashClient = async ({
     const client = new FeatureEvaluator({
         ...context,
         appName: context.appName,
-        storageProvider: new InMemStorageProvider(),
         bootstrap: {
             // FIXME: mismatch between playground and proxy types
             data: mapFeaturesForClient(

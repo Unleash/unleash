@@ -3,7 +3,6 @@ import type { SdkContextSchema } from '../../openapi/spec/sdk-context-schema.js'
 import type { IUnleashServices } from '../../services/index.js';
 import { ALL } from '../../types/models/api-token.js';
 import type { PlaygroundFeatureSchema } from '../../openapi/spec/playground-feature-schema.js';
-import type { Logger } from '../../logger.js';
 import type {
     IFlagResolver,
     ISegment,
@@ -69,8 +68,6 @@ export type PlaygroundFeatureEvaluationResult = Omit<
 };
 
 export class PlaygroundService {
-    private readonly logger: Logger;
-
     private readonly featureToggleService: FeatureToggleService;
 
     private readonly flagResolver: IFlagResolver;
@@ -90,7 +87,6 @@ export class PlaygroundService {
         >,
         segmentReadModel: ISegmentReadModel,
     ) {
-        this.logger = config.getLogger('services/playground-service.ts');
         this.flagResolver = config.flagResolver;
         this.featureToggleService = featureToggleService;
         this.privateProjectChecker = privateProjectChecker;
@@ -197,7 +193,6 @@ export class PlaygroundService {
             const client = await offlineUnleashClient({
                 features: [head, ...rest],
                 context,
-                logError: this.logger.error,
                 segments,
             });
 

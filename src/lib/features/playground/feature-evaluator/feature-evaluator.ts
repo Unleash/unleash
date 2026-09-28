@@ -1,27 +1,20 @@
 import Client, { type FeatureStrategiesEvaluationResult } from './client.js';
-import Repository, { type RepositoryInterface } from './repository/index.js';
+import Repository from './repository/index.js';
 import type { Context } from './context.js';
-import { Strategy, defaultStrategies } from './strategy/index.js';
+import { defaultStrategies } from './strategy/index.js';
 
-import type { ClientFeaturesResponse, FeatureInterface } from './feature.js';
+import type { FeatureInterface } from './feature.js';
 import type { Variant } from './variant.js';
-import { type FallbackFunction, createFallbackFunction } from './helpers.js';
 import {
     type BootstrapOptions,
     resolveBootstrapProvider,
 } from './repository/bootstrap-provider.js';
-import type { StorageProvider } from './repository/storage-provider.js';
 import InMemStorageProvider from './repository/storage-provider-in-mem.js';
-
-export { Strategy };
 
 export interface FeatureEvaluatorConfig {
     appName: string;
     environment?: string;
-    strategies?: Strategy[];
-    repository?: RepositoryInterface;
     bootstrap?: BootstrapOptions;
-    storageProvider?: StorageProvider<ClientFeaturesResponse>;
 }
 
 export interface StaticContext {
@@ -30,7 +23,7 @@ export interface StaticContext {
 }
 
 export class FeatureEvaluator {
-    private repository: RepositoryInterface;
+    private repository: Repository;
 
     private client: Client;
 
@@ -39,59 +32,30 @@ export class FeatureEvaluator {
     constructor({
         appName,
         environment = 'default',
-        strategies = [],
-        repository,
         bootstrap = { data: [] },
-        storageProvider = new InMemStorageProvider(),
     }: FeatureEvaluatorConfig) {
         this.staticContext = { appName, environment };
-
-        const bootstrapProvider = resolveBootstrapProvider(bootstrap);
-
-        this.repository =
-            repository ||
-            new Repository({
-                appName,
-                bootstrapProvider,
-                storageProvider,
-            });
-
-        // setup client
-        const supportedStrategies = strategies.concat(defaultStrategies);
-        this.client = new Client(this.repository, supportedStrategies);
+        this.repository = new Repository({
+            appName,
+            bootstrapProvider: resolveBootstrapProvider(bootstrap),
+            storageProvider: new InMemStorageProvider(),
+        });
+        this.client = new Client(this.repository, defaultStrategies);
     }
 
     async start(): Promise<void> {
         return this.repository.start();
     }
 
-    destroy(): void {
-        this.repository.stop();
-    }
-
-    isEnabled(
-        name: string,
-        context?: Context,
-        fallbackFunction?: FallbackFunction,
-    ): FeatureStrategiesEvaluationResult;
-    isEnabled(
-        name: string,
-        context?: Context,
-        fallbackValue?: boolean,
-    ): FeatureStrategiesEvaluationResult;
     isEnabled(
         name: string,
         context: Context = {},
-        fallback?: FallbackFunction | boolean,
     ): FeatureStrategiesEvaluationResult {
         const enhancedContext = { ...this.staticContext, ...context };
-        const fallbackFunc = createFallbackFunction(
-            name,
-            enhancedContext,
-            fallback,
-        );
-
-        return this.client.isEnabled(name, enhancedContext, fallbackFunc);
+        return this.client.isEnabled(name, enhancedContext, () => ({
+            result: false,
+            strategies: [],
+        }));
     }
 
     getVariant(

@@ -18,7 +18,9 @@ export const offlineUnleashClientNode = async ({
     context,
     logError,
     segments,
-}: ClientInitOptions): Promise<UnleashClientNode> => {
+}: ClientInitOptions & {
+    logError: (message: any, ...args: any[]) => void;
+}): Promise<UnleashClientNode> => {
     const client = new UnleashClientNode({
         ...context,
         appName: context.appName,
@@ -57,7 +59,6 @@ describe('offline client', () => {
                 },
             ],
             context: { appName: 'other-app', environment: DEFAULT_ENV },
-            logError: console.log,
         });
 
         expect(client.isEnabled(name).result).toBeTruthy();
@@ -111,7 +112,6 @@ describe('offline client', () => {
                 },
             ],
             context: { appName, environment: DEFAULT_ENV },
-            logError: console.log,
         });
 
         expect(client.isEnabled(enabledFeature).result).toBeTruthy();
@@ -216,7 +216,6 @@ describe('offline client', () => {
                 },
             ],
             context: { appName, environment: DEFAULT_ENV },
-            logError: console.log,
         });
 
         expect(client.isEnabled(enabledFeature).result).toBeTruthy();
@@ -274,7 +273,6 @@ describe('offline client', () => {
                 cidrFeature(invalidEntriesOnly, ['127.invalid']),
             ],
             context: ipv4Context,
-            logError: console.log,
         });
 
         expect(client.isEnabled(exactIpv4, ipv4Context).result).toBe(true);
@@ -314,7 +312,6 @@ describe('offline client', () => {
                 },
             ],
             context,
-            logError: console.log,
         });
 
         const result = client.isEnabled(name, context);
@@ -356,7 +353,6 @@ describe('offline client', () => {
                 },
             ],
             context: { appName: 'client-test' },
-            logError: console.log,
         });
 
         expect(client.isEnabled(name).result).toBe(true);
@@ -392,7 +388,6 @@ describe('offline client', () => {
                 },
             ],
             context: { appName: 'client-test' },
-            logError: console.log,
         });
 
         expect(client.isEnabled(name).result).toBeFalsy();
@@ -420,7 +415,6 @@ describe('offline client', () => {
                 },
             ],
             context: { appName: 'client-test' },
-            logError: console.log,
         });
 
         expect(client.getVariant(name, {}).name).toEqual('disabled');
@@ -491,7 +485,6 @@ describe('offline client', () => {
                 },
             ],
             context: { appName: 'client-test' },
-            logError: console.log,
         });
 
         expect(client.getVariant(name, {}).name).toEqual('strategyVariant');
@@ -521,7 +514,6 @@ describe('offline client', () => {
                 },
             ],
             context,
-            logError: console.log,
         });
 
         const result = client.isEnabled(name, context);
@@ -558,7 +550,6 @@ describe('offline client', () => {
                 },
             ],
             context,
-            logError: console.log,
         });
 
         const result = client.isEnabled(name, context);
@@ -637,7 +628,6 @@ describe('offline client', () => {
                 }),
             ],
             context: { appName: 'test', environment: DEFAULT_ENV },
-            logError: console.log,
         });
 
         const parentOnForThisUser = client.isEnabled(
@@ -766,7 +756,6 @@ describe('offline client', () => {
                 },
             ],
             context,
-            logError: console.log,
         });
 
         const evaluatedStrategies = client

@@ -112,6 +112,7 @@ export type UiFlags = {
     helpMenuRelocationHint?: boolean;
     ipConstraintOperator?: boolean;
     playgroundPerFlag?: boolean;
+    githubIntegration?: boolean;
 };
 
 export interface IVersionInfo {

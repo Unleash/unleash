@@ -84,6 +84,7 @@ export type IFlagKey =
     | 'helpMenuRelocationHint'
     | 'playgroundPerFlag'
     | 'ipConstraintOperator'
+    | 'githubIntegration'
     | keyof IFlagKeyOverrides;
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -375,6 +376,10 @@ const flags: IFlags = {
     ),
     playgroundPerFlag: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PLAYGROUND_PER_FLAG,
+        false,
+    ),
+    githubIntegration: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_GITHUB_INTEGRATION,
         false,
     ),
 };

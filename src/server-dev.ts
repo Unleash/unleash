@@ -66,6 +66,7 @@ process.nextTick(async () => {
                         helpMenuRelocationHint: true,
                         playgroundPerFlag: true,
                         ipConstraintOperator: true,
+                        githubIntegration: true,
                     },
                 },
                 authentication: {

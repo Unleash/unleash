@@ -26,7 +26,7 @@ import type {
 import type { AdvancedPlaygroundEnvironmentFeatureSchema } from '../../openapi/spec/advanced-playground-environment-feature-schema.js';
 import { validateQueryComplexity } from './validateQueryComplexity.js';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
-import { getDefaultVariant } from 'unleash-client/lib/variant.js';
+import { defaultVariant } from 'unleash-client/lib/variant.js';
 import { cleanContext } from './clean-context.js';
 
 type EvaluationInput = {
@@ -228,7 +228,7 @@ export class PlaygroundService {
                                   strategyEvaluationResult,
                                   clientContext,
                               )
-                            : getDefaultVariant()),
+                            : defaultVariant),
                         feature_enabled: isEnabled,
                     };
 

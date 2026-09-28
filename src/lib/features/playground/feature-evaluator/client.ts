@@ -1,8 +1,5 @@
 import type { Context } from 'unleash-client';
-import {
-    getDefaultVariant,
-    selectVariant,
-} from 'unleash-client/lib/variant.js';
+import { defaultVariant, selectVariant } from 'unleash-client/lib/variant.js';
 import type { FeatureInterface } from './feature.js';
 import type { RepositoryInterface } from './repository/index.js';
 import type { StrategyExplainer } from './strategy/strategy.js';
@@ -79,11 +76,8 @@ export default class UnleashClient {
         );
     }
 
-    isParentDependencySatisfied(
-        feature: FeatureInterface | undefined,
-        context: Context,
-    ) {
-        if (!feature?.dependencies?.length) {
+    isParentDependencySatisfied(feature: FeatureInterface, context: Context) {
+        if (!feature.dependencies?.length) {
             return true;
         }
 
@@ -122,15 +116,17 @@ export default class UnleashClient {
     isEnabled(
         name: string,
         context: Context,
-        fallback: () => FeatureStrategiesEvaluationResult = notEnabled,
     ): FeatureStrategiesEvaluationResult {
         const feature = this.repository.getToggle(name);
+        if (!feature) {
+            return { ...notEnabled(), hasUnsatisfiedDependency: false };
+        }
 
         const parentDependencySatisfied = this.isParentDependencySatisfied(
             feature,
             context,
         );
-        const result = this.isFeatureEnabled(feature, context, fallback);
+        const result = this.isFeatureEnabled(feature, context);
 
         return {
             ...result,
@@ -139,14 +135,9 @@ export default class UnleashClient {
     }
 
     isFeatureEnabled(
-        feature: FeatureInterface | undefined,
+        feature: FeatureInterface,
         context: Context,
-        fallback: () => FeatureStrategiesEvaluationResult = notEnabled,
     ): FeatureStrategiesEvaluationResult {
-        if (!feature) {
-            return fallback();
-        }
-
         if (!Array.isArray(feature.strategies)) {
             return notEnabled();
         }
@@ -234,12 +225,8 @@ export default class UnleashClient {
         return evalResults;
     }
 
-    getVariant(
-        name: string,
-        context: Context,
-        fallbackVariant?: EvaluatedVariant,
-    ): EvaluatedVariant {
-        return this.resolveVariant(name, context, fallbackVariant);
+    getVariant(name: string, context: Context): EvaluatedVariant {
+        return this.resolveVariant(name, context);
     }
 
     // This function is intended to close an issue in the proxy where feature enabled
@@ -252,20 +239,13 @@ export default class UnleashClient {
             FeatureStrategiesEvaluationResult,
             'result' | 'variant'
         >,
-        fallbackVariant?: EvaluatedVariant,
     ): EvaluatedVariant {
-        return this.resolveVariant(
-            name,
-            context,
-            fallbackVariant,
-            forcedResult,
-        );
+        return this.resolveVariant(name, context, forcedResult);
     }
 
     private resolveVariant(
         name: string,
         context: Context,
-        fallbackVariant?: EvaluatedVariant,
         forcedResult?: Pick<
             FeatureStrategiesEvaluationResult,
             'result' | 'variant'
@@ -274,7 +254,7 @@ export default class UnleashClient {
         const fallback = {
             feature_enabled: false,
             featureEnabled: false,
-            ...(fallbackVariant || getDefaultVariant()),
+            ...defaultVariant,
         };
         const feature = this.repository.getToggle(name);
 
@@ -285,14 +265,10 @@ export default class UnleashClient {
             return fallback;
         }
 
-        const result =
-            forcedResult ??
-            this.isFeatureEnabled(feature, context, () =>
-                evaluatedAs(fallbackVariant?.enabled ?? false),
-            );
+        const result = forcedResult ?? this.isFeatureEnabled(feature, context);
         const enabled = result.result === true;
-        fallback.feature_enabled = fallbackVariant?.feature_enabled ?? enabled;
-        fallback.featureEnabled = fallback.feature_enabled;
+        fallback.feature_enabled = enabled;
+        fallback.featureEnabled = enabled;
         const strategyVariant = result.variant;
         if (enabled && strategyVariant) {
             return {

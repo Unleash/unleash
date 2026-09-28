@@ -52,13 +52,9 @@ export class FeatureEvaluator {
         return this.client.isEnabled(name, enhancedContext);
     }
 
-    getVariant(
-        name: string,
-        context: Context = {},
-        fallbackVariant?: EvaluatedVariant,
-    ): EvaluatedVariant {
+    getVariant(name: string, context: Context = {}): EvaluatedVariant {
         const enhancedContext = { ...this.staticContext, ...context };
-        return this.client.getVariant(name, enhancedContext, fallbackVariant);
+        return this.client.getVariant(name, enhancedContext);
     }
 
     forceGetVariant(
@@ -68,14 +64,12 @@ export class FeatureEvaluator {
             'result' | 'variant'
         >,
         context: Context = {},
-        fallbackVariant?: EvaluatedVariant,
     ): EvaluatedVariant {
         const enhancedContext = { ...this.staticContext, ...context };
         return this.client.forceGetVariant(
             name,
             enhancedContext,
             forcedResults,
-            fallbackVariant,
         );
     }
 

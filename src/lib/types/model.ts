@@ -80,6 +80,7 @@ export interface FeatureToggleDTO {
         name: string;
         imageUrl: string;
     };
+    lifetimeDays?: number;
 }
 
 export interface FeatureToggle extends FeatureToggleDTO {

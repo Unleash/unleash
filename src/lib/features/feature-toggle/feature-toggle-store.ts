@@ -39,6 +39,7 @@ const FEATURE_COLUMNS = [
     'created_at',
     'impression_data',
     'archived_at',
+    'lifetime_days',
 ];
 
 export interface FeaturesTable {
@@ -52,6 +53,7 @@ export interface FeaturesTable {
     archived?: boolean;
     archived_at?: Date | null;
     created_by_user_id?: number;
+    lifetime_days?: number | null;
 }
 
 export interface FeatureToggleInsert
@@ -71,6 +73,7 @@ const commonSelectColumns = [
     'features.stale as stale',
     'features.impression_data as impression_data',
     'features.created_at as created_at',
+    'features.lifetime_days as lifetime_days',
 ];
 
 const TABLE = 'features';
@@ -416,6 +419,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             impressionData: row.impression_data || false,
             archivedAt: row.archived_at || undefined,
             archived: row.archived_at != null,
+            lifetimeDays: row.lifetime_days ?? undefined,
         };
     }
 
@@ -441,6 +445,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             created_at: data.createdAt,
             impression_data: data.impressionData || false,
             created_by_user_id: data.createdByUserId,
+            lifetime_days: data.lifetimeDays,
         };
         if (!row.created_at) {
             delete row.created_at;
@@ -461,6 +466,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             archived_at: data.archived ? new Date() : null,
             stale: data.stale,
             impression_data: data.impressionData,
+            lifetime_days: data.lifetimeDays,
         };
 
         return row;

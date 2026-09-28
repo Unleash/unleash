@@ -21,7 +21,7 @@ import { safeguardTriggerConditionSchema } from './safeguard-trigger-condition-s
 export const featureSchema = {
     $id: '#/components/schemas/featureSchema',
     type: 'object',
-    additionalProperties: false,
+    additionalProperties: true, // todo: set back to false when perFlagLifetime is removed
     required: ['name'],
     description: 'A feature flag definition',
     properties: {

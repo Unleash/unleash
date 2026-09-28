@@ -363,3 +363,43 @@ describe('potentially_stale marking', () => {
         });
     });
 });
+
+describe('lifetime days override', () => {
+    afterEach(async () => {
+        await featureToggleStore.deleteAll();
+    });
+
+    const createFlagWithLifetime = ({ days }: { days?: number } = {}) =>
+        featureToggleStore.create('default', {
+            name: 'flag',
+            createdByUserId: 9999,
+            lifetimeDays: days,
+        });
+
+    test('stores zero as a value rather than treating it as absent', async () => {
+        await createFlagWithLifetime({ days: 5 });
+
+        await featureToggleStore.update('default', {
+            name: 'flag',
+            lifetimeDays: 0,
+        });
+
+        expect(await featureToggleStore.get('flag')).toMatchObject({
+            lifetimeDays: 0,
+        });
+    });
+
+    test('leaves the field alone when update omits it', async () => {
+        await createFlagWithLifetime({ days: 5 });
+
+        await featureToggleStore.update('default', {
+            name: 'flag',
+            description: 'updated',
+        });
+
+        expect(await featureToggleStore.get('flag')).toMatchObject({
+            description: 'updated',
+            lifetimeDays: 5,
+        });
+    });
+});

@@ -39,8 +39,9 @@ const renderPage = () =>
         { permissions: [{ permission: 'ADMIN' }] },
     );
 
-const findSwitch = () => screen.findByRole('switch');
-const getSwitch = () => screen.getByRole('switch');
+const switchName = 'Enable Remote MCP Server for this instance';
+const findSwitch = () => screen.findByRole('switch', { name: switchName });
+const getSwitch = () => screen.getByRole('switch', { name: switchName });
 const getSaveButton = () => screen.getByRole('button', { name: 'Save' });
 const getCancelButton = () => screen.getByRole('button', { name: 'Cancel' });
 

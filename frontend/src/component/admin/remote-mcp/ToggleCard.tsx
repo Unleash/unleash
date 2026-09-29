@@ -64,6 +64,7 @@ export const ToggleCard = ({
                 sx={{ margin: 0 }}
                 control={
                     <Switch
+                        slotProps={{ input: { 'aria-label': title } }}
                         onChange={(_, isChecked) => onChange(isChecked)}
                         checked={checked}
                         disabled={disabled}

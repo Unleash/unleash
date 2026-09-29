@@ -85,13 +85,12 @@ const StyledFieldColumn = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledInput = styled(Input)(({ theme }) => ({
+const StyledInput = styled(Input)({
     width: '100%',
     '& textarea': {
-        minHeight: theme.spacing(3),
         resize: 'vertical',
     },
-}));
+});
 
 const StyledPercentageContainer = styled('div')(({ theme }) => ({
     marginLeft: theme.spacing(3),
@@ -501,13 +500,14 @@ export const VariantForm = ({
                                 id='variant-payload-value'
                                 name='variant-payload-value'
                                 label='Value'
-                                multiline={payload.type !== 'string'}
-                                rows={
-                                    payload.type === 'string' ||
-                                    payload.type === 'number'
-                                        ? 1
-                                        : 4
-                                }
+                                multiline
+                                minRows={payload.type === 'csv' ? 4 : 1}
+                                maxRows={14}
+                                // Override the theme's multiline min-height on purpose, as these should look
+                                // like single line fields to begin with before turning into a multi-line input.
+                                slotProps={{
+                                    htmlInput: { style: { minHeight: 0 } },
+                                }}
                                 value={payload.value}
                                 onChange={(e) => {
                                     clearError(ErrorField.PAYLOAD);

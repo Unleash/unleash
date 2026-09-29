@@ -54,6 +54,7 @@ const StyledVariantPayload = styled('code')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(0.25, 1),
     fontSize: theme.fontSizes.smallerBody,
+    whiteSpace: 'pre-wrap',
 }));
 
 type SplitPreviewTooltipProps = {

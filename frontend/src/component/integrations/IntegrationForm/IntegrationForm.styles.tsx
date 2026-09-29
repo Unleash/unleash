@@ -1,6 +1,7 @@
-import { Paper, styled } from '@mui/material';
+import { Paper, styled, type Theme } from '@mui/material';
 import { Typography } from '@mui/material';
 import Input from 'component/common/Input/Input';
+import { Markdown } from 'component/common/Markdown/Markdown';
 import {
     forwardRef,
     type FC,
@@ -22,11 +23,15 @@ export const StyledAlerts = styled('section')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-export const StyledHelpText = styled('p')(({ theme }) => ({
+const helpTextStyles = ({ theme }: { theme: Theme }) => ({
     marginBottom: theme.spacing(1),
     color: theme.palette.text.secondary,
     fontSize: theme.typography.body2.fontSize,
-}));
+});
+
+export const StyledHelpText = styled('p')(helpTextStyles);
+
+export const MarkdownHelpText = styled(Markdown)(helpTextStyles);
 
 export const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',

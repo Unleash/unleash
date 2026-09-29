@@ -12,6 +12,14 @@ import produce from 'immer';
 import { trim } from 'component/common/util';
 import type { AddonSchema, AddonTypeSchema } from 'openapi';
 import { IntegrationParameters } from './IntegrationParameters/IntegrationParameters.tsx';
+import {
+    type KeyValuePair,
+    kvpsToEditableForm,
+    kvpsToStorageForm,
+    getKvpsForParam,
+    isKvpParam,
+    validateKeys,
+} from './IntegrationParameters/IntegrationParameter/KvpParameterUtils.ts';
 import { IntegrationInstall } from './IntegrationInstall/IntegrationInstall.tsx';
 import cloneDeep from 'lodash.clonedeep';
 import { useNavigate } from 'react-router';
@@ -76,6 +84,20 @@ type IntegrationFormProps = {
     modal?: boolean;
 };
 
+const toFormValues =
+    (providerParams: AddonTypeSchema['parameters']) =>
+    <T extends Pick<AddonSchema, 'parameters'>>(values: T): T => ({
+        ...values,
+        parameters: kvpsToEditableForm(providerParams)(values.parameters),
+    });
+
+const toApiValues =
+    (providerParams: AddonTypeSchema['parameters']) =>
+    <T extends Pick<AddonSchema, 'parameters'>>(values: T): T => ({
+        ...values,
+        parameters: kvpsToStorageForm(providerParams)(values.parameters),
+    });
+
 export const IntegrationForm: FC<IntegrationFormProps> = ({
     editMode,
     provider,
@@ -105,7 +127,9 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
         }))
         .sort((a, b) => a.label.localeCompare(b.label));
     const { uiConfig } = useUiConfig();
-    const [formValues, setFormValues] = useState(initialValues);
+    const [formValues, setFormValues] = useState(() =>
+        toFormValues(provider?.parameters)(initialValues),
+    );
     const [errors, setErrors] = useState<{
         containsErrors: boolean;
         parameters: Record<string, string>;
@@ -130,23 +154,27 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
         return `curl --location --request ${editMode ? 'PUT' : 'POST'} '${url}' \\
         --header 'Authorization: INSERT_API_KEY' \\
         --header 'Content-Type: application/json' \\
-        --data-raw '${JSON.stringify(formValues, undefined, 2)}'`;
+        --data-raw '${JSON.stringify(toApiValues(provider?.parameters)(formValues), undefined, 2)}'`;
     };
 
     useEffect(() => {
         if (!provider) {
             fetch();
         }
-    }, [fetch, provider]); // empty array => fetch only first time
+    }, [fetch, provider]);
 
     useEffect(() => {
-        setFormValues({ ...initialValues });
-        /* eslint-disable-next-line */
+        setFormValues(toFormValues(provider?.parameters)(initialValues));
     }, [initialValues.description, initialValues.provider]);
 
     useEffect(() => {
         if (provider && !formValues.provider) {
-            setFormValues({ ...initialValues, provider: provider.name });
+            setFormValues(
+                toFormValues(provider?.parameters)({
+                    ...initialValues,
+                    provider: provider.name,
+                }),
+            );
         }
     }, [provider, initialValues, formValues.provider]);
 
@@ -180,6 +208,14 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                 }),
             );
         };
+
+    const setParameterKvps = (param: string) => (kvps: KeyValuePair[]) => {
+        setFormValues(
+            produce((draft) => {
+                draft.parameters[param] = kvps;
+            }),
+        );
+    };
 
     const setEventValues = (events: string[]) => {
         setFormValues(
@@ -236,12 +272,26 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
         }
 
         provider.parameters?.forEach((parameterConfig) => {
+            const setError = (message: string) => {
+                updatedErrors.parameters[parameterConfig.name] = message;
+                updatedErrors.containsErrors = true;
+            };
+
+            if (isKvpParam(parameterConfig)) {
+                const kvps = getKvpsForParam(
+                    formValues.parameters,
+                    parameterConfig.name,
+                );
+                if (validateKeys(kvps).some(Boolean)) {
+                    setError('Some key-value pairs are invalid.');
+                }
+                return;
+            }
+
             let value = formValues.parameters[parameterConfig.name];
             value = typeof value === 'string' ? trim(value) : value;
             if (parameterConfig.required && !value) {
-                updatedErrors.parameters[parameterConfig.name] =
-                    'This field is required';
-                updatedErrors.containsErrors = true;
+                setError('This field is required');
             }
         });
 
@@ -252,9 +302,18 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
 
         try {
             if (editMode) {
-                await updateAddon(formValues as AddonSchema);
+                await updateAddon(
+                    toApiValues(provider?.parameters)(
+                        formValues,
+                    ) as AddonSchema,
+                );
             } else {
-                await createAddon(formValues as Omit<AddonSchema, 'id'>);
+                await createAddon(
+                    toApiValues(provider?.parameters)(formValues) as Omit<
+                        AddonSchema,
+                        'id'
+                    >,
+                );
             }
 
             fetch();
@@ -380,6 +439,7 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                             parametersErrors={errors.parameters}
                             editMode={editMode}
                             setParameterValue={setParameterValue}
+                            setParameterKvps={setParameterKvps}
                         />
                     </StyledRaisedSection>
                     <FormGroup title='Configuration'>

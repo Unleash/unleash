@@ -11,6 +11,7 @@ interface IIntegrationParametersProps {
     parametersErrors: IIntegrationParameterProps['parametersErrors'];
     editMode: boolean;
     setParameterValue: IIntegrationParameterProps['setParameterValue'];
+    setParameterKvps: IIntegrationParameterProps['setParameterKvps'];
     config: IIntegrationParameterProps['config'];
 }
 
@@ -23,6 +24,7 @@ export const IntegrationParameters = ({
     config,
     parametersErrors,
     setParameterValue,
+    setParameterKvps,
     editMode,
 }: IIntegrationParametersProps) => {
     if (!provider) return null;
@@ -42,6 +44,7 @@ export const IntegrationParameters = ({
                     parametersErrors={parametersErrors}
                     config={config}
                     setParameterValue={setParameterValue}
+                    setParameterKvps={setParameterKvps}
                 />
             ))}
         </React.Fragment>

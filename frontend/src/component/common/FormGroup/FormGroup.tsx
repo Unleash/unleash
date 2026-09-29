@@ -13,6 +13,10 @@ const StyledLegend = styled('legend')(({ theme }) => ({
     marginBottom: theme.spacing(1),
     fontWeight: theme.typography.fontWeightBold,
     color: theme.palette.text.primary,
+
+    '[data-variant=nested] > &': {
+        fontSize: theme.typography.body2.fontSize, // match other input labels
+    },
 }));
 
 const StyledDescription = styled('p')(({ theme }) => ({
@@ -25,26 +29,35 @@ const StyledContent = styled('div')(({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
     backgroundColor: theme.palette.background.elevation1,
-    '& > * + *': {
+    '&& > * + *': {
         marginTop: theme.spacing(2),
     },
-    '& > *:last-child': {
+    '&& > *:last-child': {
         marginBottom: 0,
+    },
+
+    '[data-variant=nested] > &': {
+        padding: 0,
+        border: 'none',
+        borderRadius: 0,
+        backgroundColor: 'inherit',
     },
 }));
 
 interface FormGroupProps extends Omit<ComponentProps<'fieldset'>, 'title'> {
     title?: ReactNode;
     description?: ReactNode;
+    variant?: 'top-level' | 'nested';
 }
 
 export const FormGroup = ({
     title,
     description,
     children,
+    variant,
     ...props
 }: FormGroupProps) => (
-    <StyledFieldset {...props}>
+    <StyledFieldset data-variant={variant} {...props}>
         {title ? <StyledLegend>{title}</StyledLegend> : null}
         {description ? (
             <StyledDescription>{description}</StyledDescription>

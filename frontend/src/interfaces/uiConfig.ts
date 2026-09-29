@@ -114,6 +114,7 @@ export type UiFlags = {
     githubIntegration?: boolean;
     tagManagementViaUi?: boolean;
     newUserInviteDialog?: boolean;
+    integrationParamKvpEditor?: boolean;
 };
 
 export interface IVersionInfo {

@@ -85,6 +85,7 @@ export type IFlagKey =
     | 'ipConstraintOperator'
     | 'githubIntegration'
     | 'tagManagementViaUi'
+    | 'integrationParamKvpEditor'
     | keyof IFlagKeyOverrides;
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -380,6 +381,10 @@ const flags: IFlags = {
     ),
     tagManagementViaUi: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_TAG_MANAGEMENT_VIA_UI,
+        false,
+    ),
+    integrationParamKvpEditor: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_INTEGRATION_PARAM_KVP_EDITOR,
         false,
     ),
 };

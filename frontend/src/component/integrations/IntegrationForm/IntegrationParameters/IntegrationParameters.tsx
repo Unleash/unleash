@@ -5,6 +5,8 @@ import {
 } from './IntegrationParameter/IntegrationParameter.tsx';
 import type { AddonTypeSchema } from 'openapi';
 import { styled } from '@mui/material';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { isKvpParam } from './IntegrationParameter/KvpParameterUtils.ts';
 
 interface IIntegrationParametersProps {
     provider?: AddonTypeSchema;
@@ -27,6 +29,7 @@ export const IntegrationParameters = ({
     setParameterKvps,
     editMode,
 }: IIntegrationParametersProps) => {
+    const kvpEditorEnabled = useUiFlag('integrationParamKvpEditor');
     if (!provider) return null;
     return (
         <React.Fragment>
@@ -37,16 +40,20 @@ export const IntegrationParameters = ({
                     when saving.
                 </StyledParagraph>
             ) : null}
-            {provider.parameters?.map((parameter) => (
-                <IntegrationParameter
-                    key={parameter.name}
-                    definition={parameter}
-                    parametersErrors={parametersErrors}
-                    config={config}
-                    setParameterValue={setParameterValue}
-                    setParameterKvps={setParameterKvps}
-                />
-            ))}
+            {provider.parameters
+                ?.filter(
+                    (parameter) => kvpEditorEnabled || !isKvpParam(parameter),
+                )
+                .map((parameter) => (
+                    <IntegrationParameter
+                        key={parameter.name}
+                        definition={parameter}
+                        parametersErrors={parametersErrors}
+                        config={config}
+                        setParameterValue={setParameterValue}
+                        setParameterKvps={setParameterKvps}
+                    />
+                ))}
         </React.Fragment>
     );
 };

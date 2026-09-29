@@ -67,6 +67,7 @@ process.nextTick(async () => {
                         ipConstraintOperator: true,
                         githubIntegration: true,
                         tagManagementViaUi: true,
+                        integrationParamKvpEditor: true,
                     },
                 },
                 authentication: {

@@ -68,8 +68,8 @@ minimumReleaseAgeExclude:
   - ip-address@10.2.1 || 10.3.1 || 10.5.1
   # Renovate security update: js-yaml@4.3.1
   - js-yaml@4.3.1
-  # Renovate security update: nodemailer@9.1.1
-  - nodemailer@9.1.1
+  # Renovate security update: nodemailer@10.0.2
+  - nodemailer@10.0.2
   # Client specification with the dependent-feature cases the playground
   # tests rely on, published 2026-09-29. Remove once the release is older
   # than 7 days (2026-10-06).

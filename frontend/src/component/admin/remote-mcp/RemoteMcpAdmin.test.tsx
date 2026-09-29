@@ -11,9 +11,11 @@ const server = testServerSetup();
 
 const setupApi = ({
     enabled,
+    feedbackOptIn,
     postStatus = 204,
 }: {
     enabled: boolean;
+    feedbackOptIn?: boolean;
     postStatus?: number;
 }) => {
     testServerRoute(server, '/api/admin/ui-config', {
@@ -21,7 +23,10 @@ const setupApi = ({
         versionInfo: { current: { enterprise: 'version' } },
         unleashUrl: 'https://unleash.example.com',
     });
-    testServerRoute(server, '/api/admin/remote-mcp/settings', { enabled });
+    testServerRoute(server, '/api/admin/remote-mcp/settings', {
+        enabled,
+        feedbackOptIn,
+    });
     return testServerRoute(
         server,
         '/api/admin/remote-mcp/settings',
@@ -81,12 +86,13 @@ describe('RemoteMcpAdmin', () => {
         expect(screen.queryByText('Remote MCP Server')).not.toBeInTheDocument();
     });
 
-    test('shows the toggle as enabled when the server has it enabled', async () => {
-        setupApi({ enabled: true });
+    test('shows both toggles as enabled when the server has them enabled', async () => {
+        setupApi({ enabled: true, feedbackOptIn: true });
 
-        renderPage();
+        renderPage({ feedbackOptInAvailable: true });
 
         expect(await findServerSwitch()).toBeChecked();
+        expect(getFeedbackSwitch()).toBeChecked();
     });
 
     test('changing only the feedback toggle marks the page dirty without saving', async () => {
@@ -135,6 +141,7 @@ describe('RemoteMcpAdmin', () => {
         await userEvent.click(getFeedbackSwitch());
         testServerRoute(server, '/api/admin/remote-mcp/settings', {
             enabled: true,
+            feedbackOptIn: true,
         });
 
         await userEvent.click(getSaveButton());
@@ -144,26 +151,43 @@ describe('RemoteMcpAdmin', () => {
                 'Remote MCP server has been successfully enabled',
             ),
         ).toBeInTheDocument();
-        expect(requests).toEqual([{ enabled: true }]);
+        expect(requests).toEqual([{ enabled: true, feedbackOptIn: true }]);
         expect(getServerSwitch()).toBeChecked();
         expect(getFeedbackSwitch()).toBeChecked();
         expect(getSaveButton()).toBeDisabled();
         expect(getCancelButton()).toBeDisabled();
     });
 
+    test('saving without the feedback feature sends only the server toggle', async () => {
+        const { requests } = setupApi({ enabled: false });
+
+        renderPage();
+
+        await findServerSwitch();
+        await userEvent.click(getServerSwitch());
+        await userEvent.click(getSaveButton());
+
+        expect(
+            await screen.findByText(
+                'Remote MCP server has been successfully enabled',
+            ),
+        ).toBeInTheDocument();
+        expect(requests).toEqual([{ enabled: true }]);
+    });
+
     test('cancel resets both toggles to the saved values', async () => {
-        setupApi({ enabled: false });
+        setupApi({ enabled: true, feedbackOptIn: true });
 
         renderPage({ feedbackOptInAvailable: true });
 
         await findServerSwitch();
-        await userEvent.click(getServerSwitch());
         await userEvent.click(getFeedbackSwitch());
+        await userEvent.click(getServerSwitch());
 
         await userEvent.click(getCancelButton());
 
-        expect(getServerSwitch()).not.toBeChecked();
-        expect(getFeedbackSwitch()).not.toBeChecked();
+        expect(getServerSwitch()).toBeChecked();
+        expect(getFeedbackSwitch()).toBeChecked();
         expect(getSaveButton()).toBeDisabled();
     });
 

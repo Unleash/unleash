@@ -82,13 +82,14 @@ const RemoteMcpPage = ({
     const { setToastData, setToastApiError } = useToast();
     const { trackEvent } = useEventTracker();
 
+    const savedFeedbackOptIn = settings.feedbackOptIn ?? false;
     const [enabled, setEnabled] = useState(settings.enabled);
-    const [savedFeedbackOptIn, setSavedFeedbackOptIn] = useState(false);
     const [feedbackOptIn, setFeedbackOptIn] = useState(savedFeedbackOptIn);
 
     useEffect(() => {
         setEnabled(settings.enabled);
-    }, [settings.enabled]);
+        setFeedbackOptIn(savedFeedbackOptIn);
+    }, [settings.enabled, savedFeedbackOptIn]);
 
     const isDirty =
         enabled !== settings.enabled || feedbackOptIn !== savedFeedbackOptIn;
@@ -100,8 +101,11 @@ const RemoteMcpPage = ({
 
     const handleSave = async () => {
         try {
-            await setRemoteMcpSettings(enabled);
-            setSavedFeedbackOptIn(feedbackOptIn);
+            await setRemoteMcpSettings(
+                feedbackOptInAvailable
+                    ? { enabled, feedbackOptIn }
+                    : { enabled },
+            );
             trackEvent('remote-mcp', {
                 props: { eventType: enabled ? 'enabled' : 'disabled' },
             });

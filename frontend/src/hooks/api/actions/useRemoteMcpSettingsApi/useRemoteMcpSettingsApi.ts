@@ -1,4 +1,5 @@
 import useAPI from '../useApi/useApi.js';
+import type { RemoteMcpSettings } from 'hooks/api/getters/useRemoteMcpSettings/useRemoteMcpSettings';
 
 const ENDPOINT = 'api/admin/remote-mcp/settings';
 
@@ -7,12 +8,14 @@ export const useRemoteMcpSettingsApi = () => {
         propagateErrors: true,
     });
 
-    const setRemoteMcpSettings = async (enabled: boolean): Promise<void> => {
+    const setRemoteMcpSettings = async (
+        settings: RemoteMcpSettings,
+    ): Promise<void> => {
         const req = createRequest(
             ENDPOINT,
             {
                 method: 'POST',
-                body: JSON.stringify({ enabled }),
+                body: JSON.stringify(settings),
             },
             'setRemoteMcpSettings',
         );

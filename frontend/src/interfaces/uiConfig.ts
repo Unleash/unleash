@@ -113,6 +113,7 @@ export type UiFlags = {
     playgroundPerFlag?: boolean;
     githubIntegration?: boolean;
     tagManagementViaUi?: boolean;
+    newUserInviteDialog?: boolean;
 };
 
 export interface IVersionInfo {

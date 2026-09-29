@@ -1,3 +1,4 @@
+import type { ComponentProps } from 'react';
 import { describe, expect, test } from 'vitest';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -30,18 +31,25 @@ const setupApi = ({
     );
 };
 
-const renderPage = () =>
+const renderPage = (props: ComponentProps<typeof RemoteMcpAdmin> = {}) =>
     render(
         <>
             <ToastRenderer />
-            <RemoteMcpAdmin />
+            <RemoteMcpAdmin {...props} />
         </>,
         { permissions: [{ permission: 'ADMIN' }] },
     );
 
-const switchName = 'Enable Remote MCP Server for this instance';
-const findSwitch = () => screen.findByRole('switch', { name: switchName });
-const getSwitch = () => screen.getByRole('switch', { name: switchName });
+const serverSwitchName = 'Enable Remote MCP Server for this instance';
+const feedbackSwitchName =
+    'Send feedback from the Remote MCP Server to Unleash';
+
+const findServerSwitch = () =>
+    screen.findByRole('switch', { name: serverSwitchName });
+const getServerSwitch = () =>
+    screen.getByRole('switch', { name: serverSwitchName });
+const getFeedbackSwitch = () =>
+    screen.getByRole('switch', { name: feedbackSwitchName });
 const getSaveButton = () => screen.getByRole('button', { name: 'Save' });
 const getCancelButton = () => screen.getByRole('button', { name: 'Cancel' });
 
@@ -78,21 +86,40 @@ describe('RemoteMcpAdmin', () => {
 
         renderPage();
 
-        expect(await findSwitch()).toBeChecked();
+        expect(await findServerSwitch()).toBeChecked();
+    });
+
+    test('changing only the feedback toggle marks the page dirty without saving', async () => {
+        const { requests } = setupApi({ enabled: true });
+
+        renderPage({ feedbackOptInAvailable: true });
+
+        expect(await findServerSwitch()).toBeChecked();
+        expect(getFeedbackSwitch()).toBeEnabled();
+        expect(getSaveButton()).toBeDisabled();
+
+        await userEvent.click(getFeedbackSwitch());
+
+        expect(getFeedbackSwitch()).toBeChecked();
+        expect(getSaveButton()).toBeEnabled();
+        expect(getCancelButton()).toBeEnabled();
+        expect(requests).toEqual([]);
     });
 
     test('a changed toggle is not saved until Save is clicked', async () => {
         const { requests } = setupApi({ enabled: false });
 
-        renderPage();
+        renderPage({ feedbackOptInAvailable: true });
 
-        await findSwitch();
+        await findServerSwitch();
+        expect(getFeedbackSwitch()).toBeDisabled();
         expect(getSaveButton()).toBeDisabled();
         expect(getCancelButton()).toBeDisabled();
 
-        await userEvent.click(getSwitch());
+        await userEvent.click(getServerSwitch());
 
-        expect(getSwitch()).toBeChecked();
+        expect(getServerSwitch()).toBeChecked();
+        expect(getFeedbackSwitch()).toBeEnabled();
         expect(getSaveButton()).toBeEnabled();
         expect(getCancelButton()).toBeEnabled();
         expect(requests).toEqual([]);
@@ -101,44 +128,59 @@ describe('RemoteMcpAdmin', () => {
     test('saving persists the new value', async () => {
         const { requests } = setupApi({ enabled: false });
 
-        renderPage();
+        renderPage({ feedbackOptInAvailable: true });
 
-        await findSwitch();
-        await userEvent.click(getSwitch());
+        await findServerSwitch();
+        await userEvent.click(getServerSwitch());
+        await userEvent.click(getFeedbackSwitch());
+        testServerRoute(server, '/api/admin/remote-mcp/settings', {
+            enabled: true,
+        });
+
         await userEvent.click(getSaveButton());
 
-        expect(requests).toEqual([{ enabled: true }]);
         expect(
             await screen.findByText(
                 'Remote MCP server has been successfully enabled',
             ),
         ).toBeInTheDocument();
+        expect(requests).toEqual([{ enabled: true }]);
+        expect(getServerSwitch()).toBeChecked();
+        expect(getFeedbackSwitch()).toBeChecked();
+        expect(getSaveButton()).toBeDisabled();
+        expect(getCancelButton()).toBeDisabled();
     });
 
-    test('cancel resets the toggle to the server value', async () => {
+    test('cancel resets both toggles to the saved values', async () => {
         setupApi({ enabled: false });
 
-        renderPage();
+        renderPage({ feedbackOptInAvailable: true });
 
-        await findSwitch();
-        await userEvent.click(getSwitch());
-        expect(getSwitch()).toBeChecked();
+        await findServerSwitch();
+        await userEvent.click(getServerSwitch());
+        await userEvent.click(getFeedbackSwitch());
 
         await userEvent.click(getCancelButton());
-        expect(getSwitch()).not.toBeChecked();
+
+        expect(getServerSwitch()).not.toBeChecked();
+        expect(getFeedbackSwitch()).not.toBeChecked();
+        expect(getSaveButton()).toBeDisabled();
     });
 
     test('shows error toast when save fails', async () => {
-        setupApi({ enabled: false, postStatus: 500 });
+        setupApi({ enabled: true, postStatus: 500 });
 
-        renderPage();
+        renderPage({ feedbackOptInAvailable: true });
 
-        await findSwitch();
-        await userEvent.click(getSwitch());
+        await findServerSwitch();
+        await userEvent.click(getFeedbackSwitch());
+
         await userEvent.click(getSaveButton());
 
         expect(
             await screen.findByText('Action could not be performed'),
         ).toBeInTheDocument();
+        expect(getFeedbackSwitch()).toBeChecked();
+        expect(getSaveButton()).toBeEnabled();
     });
 });

@@ -14,6 +14,7 @@ import { useRemoteMcpSettingsApi } from 'hooks/api/actions/useRemoteMcpSettingsA
 import { useEventTracker } from 'hooks/useEventTracker';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { RemoteMcpToggle } from './RemoteMcpToggle.tsx';
+import { RemoteMcpFeedbackToggle } from './RemoteMcpFeedbackToggle.tsx';
 
 const DOCS_URL = 'https://docs.getunleash.io/integrate/mcp#remote-mcp-server';
 
@@ -49,7 +50,13 @@ const Footer = styled('div')(({ theme }) => ({
     borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
-export const RemoteMcpAdmin = () => {
+interface IRemoteMcpAdminProps {
+    feedbackOptInAvailable?: boolean;
+}
+
+export const RemoteMcpAdmin = ({
+    feedbackOptInAvailable = false,
+}: IRemoteMcpAdminProps) => {
     const { isEnterprise } = useUiConfig();
 
     if (!isEnterprise()) {
@@ -59,33 +66,42 @@ export const RemoteMcpAdmin = () => {
     return (
         <div>
             <PermissionGuard permissions={[ADMIN]}>
-                <RemoteMcpPage />
+                <RemoteMcpPage
+                    feedbackOptInAvailable={feedbackOptInAvailable}
+                />
             </PermissionGuard>
         </div>
     );
 };
 
-const RemoteMcpPage = () => {
+const RemoteMcpPage = ({
+    feedbackOptInAvailable,
+}: Required<IRemoteMcpAdminProps>) => {
     const { settings, loading, refetch } = useRemoteMcpSettings();
     const { setRemoteMcpSettings, loading: saving } = useRemoteMcpSettingsApi();
     const { setToastData, setToastApiError } = useToast();
     const { trackEvent } = useEventTracker();
 
     const [enabled, setEnabled] = useState(settings.enabled);
+    const [savedFeedbackOptIn, setSavedFeedbackOptIn] = useState(false);
+    const [feedbackOptIn, setFeedbackOptIn] = useState(savedFeedbackOptIn);
 
     useEffect(() => {
         setEnabled(settings.enabled);
     }, [settings.enabled]);
 
-    const isDirty = enabled !== settings.enabled;
+    const isDirty =
+        enabled !== settings.enabled || feedbackOptIn !== savedFeedbackOptIn;
 
     const handleCancel = () => {
         setEnabled(settings.enabled);
+        setFeedbackOptIn(savedFeedbackOptIn);
     };
 
     const handleSave = async () => {
         try {
             await setRemoteMcpSettings(enabled);
+            setSavedFeedbackOptIn(feedbackOptIn);
             trackEvent('remote-mcp', {
                 props: { eventType: enabled ? 'enabled' : 'disabled' },
             });
@@ -132,6 +148,13 @@ const RemoteMcpPage = () => {
                     onChange={setEnabled}
                     disabled={loading || saving}
                 />
+                {feedbackOptInAvailable ? (
+                    <RemoteMcpFeedbackToggle
+                        feedbackOptIn={feedbackOptIn}
+                        onChange={setFeedbackOptIn}
+                        disabled={!enabled || loading || saving}
+                    />
+                ) : null}
                 <Footer>
                     <Button
                         onClick={handleCancel}

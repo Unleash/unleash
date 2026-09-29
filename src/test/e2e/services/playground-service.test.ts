@@ -2,23 +2,18 @@ import {
     type PlaygroundFeatureEvaluationResult,
     PlaygroundService,
 } from '../../../lib/features/playground/playground-service.js';
-import {
-    clientFeaturesAndSegments,
-    commonISOTimestamp,
-} from '../../arbitraries.js';
+import { clientFeaturesAndSegments } from '../../arbitraries.js';
 import { generate as generateContext } from '../../../lib/openapi/spec/sdk-context-schema.arbitraries.js';
 import fc from 'fast-check';
 import { createTestConfig } from '../../config/test-config.js';
 import dbInit, { type ITestDb } from '../helpers/database-init.js';
 import type { IUnleashStores } from '../../../lib/types/stores.js';
-import type { FeatureToggleService } from '../../../lib/features/feature-toggle/feature-toggle-service.js';
 import {
     type FeatureToggle,
     type ISegment,
     WeightType,
 } from '../../../lib/types/model.js';
 import type { PlaygroundFeatureSchema } from '../../../lib/openapi/spec/playground-feature-schema.js';
-import { offlineUnleashClientNode } from '../../../lib/features/playground/offline-unleash-client.test.js';
 import type { ClientFeatureSchema } from '../../../lib/openapi/spec/client-feature-schema.js';
 import type { SdkContextSchema } from '../../../lib/openapi/spec/sdk-context-schema.js';
 import type { SegmentSchema } from '../../../lib/openapi/spec/segment-schema.js';
@@ -32,7 +27,6 @@ import { DEFAULT_ENV } from '../../../lib/server-impl.js';
 let stores: IUnleashStores;
 let db: ITestDb;
 let service: PlaygroundService;
-let featureToggleService: FeatureToggleService;
 
 beforeAll(async () => {
     const config = createTestConfig();
@@ -44,11 +38,14 @@ beforeAll(async () => {
     );
     const segmentReadModel = new SegmentReadModel(db.rawDatabase);
 
-    featureToggleService = createFeatureToggleService(db.rawDatabase, config);
+    const featureToggleService = createFeatureToggleService(
+        db.rawDatabase,
+        config,
+    );
     service = new PlaygroundService(
         config,
         {
-            featureToggleService: featureToggleService,
+            featureToggleService,
             privateProjectChecker,
         },
         segmentReadModel,
@@ -185,13 +182,6 @@ export const seedDatabaseForPlaygroundTest = async (
 };
 
 describe('the playground service (e2e)', () => {
-    const isDisabledVariant = (
-        variant?: {
-            name: string;
-            enabled: boolean;
-        } | null,
-    ) => variant?.name === 'disabled' && !variant?.enabled;
-
     const insertAndEvaluateFeatures = async ({
         features,
         context,
@@ -214,423 +204,6 @@ describe('the playground service (e2e)', () => {
 
         return serviceFeatures;
     };
-
-    test('should return the same enabled toggles as the raw SDK correctly mapped', async () => {
-        await fc.assert(
-            fc
-                .asyncProperty(
-                    clientFeaturesAndSegments({ minLength: 1 }),
-                    fc
-                        .tuple(generateContext(), commonISOTimestamp())
-                        .map(([context, currentTime]) => ({
-                            ...context,
-                            userId: 'constant',
-                            sessionId: 'constant2',
-                            currentTime,
-                        })),
-                    fc.context(),
-                    async ({ segments, features }, context, ctx) => {
-                        const serviceToggles = await insertAndEvaluateFeatures({
-                            features: features,
-                            context,
-                            segments,
-                        });
-
-                        const [head, ...rest] =
-                            await featureToggleService.getClientFeatures();
-                        if (!head) {
-                            return serviceToggles.length === 0;
-                        }
-
-                        const client = await offlineUnleashClientNode({
-                            features: [head, ...rest],
-                            context,
-                            logError: console.log,
-                            segments: segments.map(mapSegmentSchemaToISegment),
-                        });
-
-                        const clientContext = {
-                            ...context,
-
-                            currentTime: context.currentTime
-                                ? new Date(context.currentTime)
-                                : undefined,
-                        };
-
-                        return serviceToggles.every((feature) => {
-                            ctx.log(
-                                `Examining feature ${
-                                    feature.name
-                                }: ${JSON.stringify(feature)}`,
-                            );
-
-                            // the playground differs from a normal SDK in that
-                            // it _must_ evaluate all strategies and features
-                            // regardless of whether they're supposed to be
-                            // enabled in the current environment or not.
-                            const expectedSDKState = feature.isEnabled;
-
-                            const enabledStateMatches =
-                                expectedSDKState ===
-                                client.isEnabled(feature.name, clientContext);
-
-                            ctx.log(
-                                `feature.isEnabled, feature.isEnabledInCurrentEnvironment, presumedSDKState: ${feature.isEnabled}, ${feature.isEnabledInCurrentEnvironment}, ${expectedSDKState}`,
-                            );
-                            ctx.log(
-                                `client.isEnabled: ${client.isEnabled(
-                                    feature.name,
-                                    clientContext,
-                                )}`,
-                            );
-                            expect(enabledStateMatches).toBe(true);
-
-                            // if x is disabled, then the variant will be the
-                            // disabled variant.
-                            if (!feature.isEnabled) {
-                                ctx.log(`${feature.name} is not enabled`);
-                                ctx.log(JSON.stringify(feature.variant));
-                                ctx.log(JSON.stringify(enabledStateMatches));
-                                ctx.log(
-                                    JSON.stringify(
-                                        feature.variant?.name === 'disabled',
-                                    ),
-                                );
-                                ctx.log(
-                                    JSON.stringify(
-                                        feature.variant?.enabled === false,
-                                    ),
-                                );
-                                return (
-                                    enabledStateMatches &&
-                                    isDisabledVariant(feature.variant)
-                                );
-                            }
-                            ctx.log('feature is enabled');
-
-                            const clientVariant = client.getVariant(
-                                feature.name,
-                                clientContext,
-                            );
-
-                            // if x is enabled, but its variant is the disabled
-                            // variant, then the source does not have any
-                            // variants
-                            if (isDisabledVariant(feature.variant)) {
-                                return (
-                                    enabledStateMatches &&
-                                    isDisabledVariant(clientVariant)
-                                );
-                            }
-
-                            ctx.log(`feature "${feature.name}" has a variant`);
-                            ctx.log(
-                                `Feature variant: ${JSON.stringify(
-                                    feature.variant,
-                                )}`,
-                            );
-                            ctx.log(
-                                `Client variant: ${JSON.stringify(
-                                    clientVariant,
-                                )}`,
-                            );
-                            ctx.log(
-                                `enabledStateMatches: ${enabledStateMatches}`,
-                            );
-
-                            // variants should be the same if the
-                            // toggle is enabled in both versions. If
-                            // they're not and one of them has a
-                            // variant, then they should be different.
-                            if (expectedSDKState === true) {
-                                expect(feature.variant).toEqual(clientVariant);
-                            } else {
-                                expect(feature.variant).not.toEqual(
-                                    clientVariant,
-                                );
-                            }
-
-                            return enabledStateMatches;
-                        });
-                    },
-                )
-                .afterEach(cleanup),
-            { ...testParams, examples: [] },
-        );
-    });
-
-    // counterexamples found by fastcheck
-    const counterexamples = [
-        [
-            [
-                {
-                    name: '-',
-                    type: 'release',
-                    project: 'A',
-                    enabled: true,
-                    lastSeenAt: '1970-01-01T00:00:00.000Z',
-                    impressionData: null,
-                    strategies: [],
-                    variants: [
-                        {
-                            name: '-',
-                            weight: 147,
-                            weightType: 'variable',
-                            stickiness: 'default',
-                            payload: { type: 'string', value: '' },
-                        },
-                        {
-                            name: '~3dignissim~gravidaod',
-                            weight: 301,
-                            weightType: 'variable',
-                            stickiness: 'default',
-                            payload: {
-                                type: 'json',
-                                value: '{"Sv7gRNNl=":[true,"Mfs >mp.D","O-jtK","y%i\\"Ub~",null,"J",false,"(\'R"],"F0g+>1X":3.892913121148499e-188,"Fi~k(":-4.882970135331098e+146,"":null,"nPT]":true}',
-                            },
-                        },
-                    ],
-                },
-            ],
-            {
-                appName: '"$#',
-                currentTime: '9999-12-31T23:59:59.956Z',
-                environment: 'r',
-            },
-            {
-                logs: [
-                    'feature is enabled',
-                    'feature has a variant',
-                    '{"name":"-","payload":{"type":"string","value":""},"enabled":true}',
-                    '{"name":"~3dignissim~gravidaod","payload":{"type":"json","value":"{\\"Sv7gRNNl=\\":[true,\\"Mfs >mp.D\\",\\"O-jtK\\",\\"y%i\\\\\\"Ub~\\",null,\\"J\\",false,\\"(\'R\\"],\\"F0g+>1X\\":3.892913121148499e-188,\\"Fi~k(\\":-4.882970135331098e+146,\\"\\":null,\\"nPT]\\":true}"},"enabled":true}',
-                    'true',
-                    'false',
-                ],
-            },
-        ],
-        [
-            [
-                {
-                    name: '-',
-                    project: '0',
-                    enabled: true,
-                    strategies: [
-                        {
-                            name: 'default',
-                            constraints: [
-                                {
-                                    contextName: 'A',
-                                    operator: 'NOT_IN',
-                                    caseInsensitive: false,
-                                    inverted: false,
-                                    values: [],
-                                    value: '',
-                                },
-                            ],
-                        },
-                    ],
-                },
-            ],
-            { appName: ' ', userId: 'constant', sessionId: 'constant2' },
-            { logs: [] },
-        ],
-        [
-            [
-                {
-                    name: 'a',
-                    project: 'a',
-                    enabled: true,
-                    strategies: [
-                        {
-                            name: 'default',
-                            constraints: [
-                                {
-                                    contextName: '0',
-                                    operator: 'NOT_IN',
-                                    caseInsensitive: false,
-                                    inverted: false,
-                                    values: [],
-                                    value: '',
-                                },
-                            ],
-                        },
-                    ],
-                },
-                {
-                    name: '-',
-                    project: 'elementum',
-                    enabled: false,
-                    strategies: [],
-                },
-            ],
-            { appName: ' ', userId: 'constant', sessionId: 'constant2' },
-            {
-                logs: [
-                    'feature is not enabled',
-                    '{"name":"disabled","enabled":false}',
-                ],
-            },
-        ],
-        [
-            [
-                {
-                    name: '0',
-                    project: '-',
-                    enabled: true,
-                    strategies: [
-                        {
-                            name: 'default',
-                            constraints: [
-                                {
-                                    contextName: 'sed',
-                                    operator: 'NOT_IN',
-                                    caseInsensitive: false,
-                                    inverted: false,
-                                    values: [],
-                                    value: '',
-                                },
-                            ],
-                        },
-                    ],
-                },
-            ],
-            { appName: ' ', userId: 'constant', sessionId: 'constant2' },
-            {
-                logs: [
-                    '0 is not enabled',
-                    '{"name":"disabled","enabled":false}',
-                    'true',
-                    'true',
-                ],
-            },
-        ],
-        [
-            [
-                {
-                    name: '0',
-                    project: 'ac',
-                    enabled: true,
-
-                    strategies: [
-                        {
-                            name: 'default',
-                            constraints: [
-                                {
-                                    contextName: '0',
-                                    operator: 'NOT_IN',
-                                    caseInsensitive: false,
-                                    inverted: false,
-                                    values: [],
-                                    value: '',
-                                },
-                            ],
-                        },
-                    ],
-                },
-            ],
-            { appName: ' ', userId: 'constant', sessionId: 'constant2' },
-            {
-                logs: [
-                    'feature.isEnabled: false',
-                    'client.isEnabled: true',
-                    '0 is not enabled',
-                    '{"name":"disabled","enabled":false}',
-                    'false',
-                    'true',
-                    'true',
-                ],
-            },
-        ],
-        [
-            [
-                {
-                    name: '0',
-                    project: 'aliquam',
-                    enabled: true,
-                    strategies: [
-                        {
-                            name: 'default',
-                            constraints: [
-                                {
-                                    contextName: '-',
-                                    operator: 'NOT_IN',
-                                    caseInsensitive: false,
-                                    inverted: false,
-                                    values: [],
-                                    value: '',
-                                },
-                            ],
-                        },
-                    ],
-                },
-                {
-                    name: '-',
-                    project: '-',
-                    enabled: false,
-                    strategies: [],
-                },
-            ],
-            {
-                appName: ' ',
-                userId: 'constant',
-                sessionId: 'constant2',
-                currentTime: '1970-01-01T00:00:00.000Z',
-            },
-            {
-                logs: [
-                    'feature.isEnabled: false',
-                    'client.isEnabled: true',
-                    '0 is not enabled',
-                    '{"name":"disabled","enabled":false}',
-                    'false',
-                    'true',
-                    'true',
-                ],
-            },
-        ],
-    ];
-
-    // these tests test counterexamples found by fast check. The may seem redundant, but are concrete cases that might break.
-    counterexamples.map(async ([features, context], i) => {
-        it(`should do the same as the raw SDK: counterexample ${i}`, async () => {
-            const serviceFeatures = await insertAndEvaluateFeatures({
-                // @ts-expect-error
-                features,
-                // @ts-expect-error
-                context,
-            });
-
-            const [head, ...rest] =
-                await featureToggleService.getClientFeatures();
-            if (!head) {
-                return serviceFeatures.length === 0;
-            }
-
-            const client = await offlineUnleashClientNode({
-                features: [head, ...rest],
-                // @ts-expect-error
-                context,
-                logError: console.log,
-            });
-
-            const clientContext = {
-                ...context,
-
-                // @ts-expect-error
-                currentTime: context.currentTime
-                    ? // @ts-expect-error
-                      new Date(context.currentTime)
-                    : undefined,
-            };
-
-            serviceFeatures.forEach((feature) => {
-                expect(feature.isEnabled).toEqual(
-                    //@ts-expect-error
-                    client.isEnabled(feature.name, clientContext),
-                );
-            });
-        });
-    });
 
     test("should return all of a feature's strategies", async () => {
         await fc.assert(

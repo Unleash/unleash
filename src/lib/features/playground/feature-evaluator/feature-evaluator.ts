@@ -52,11 +52,6 @@ export class FeatureEvaluator {
         return this.client.isEnabled(name, enhancedContext);
     }
 
-    getVariant(name: string, context: Context = {}): EvaluatedVariant {
-        const enhancedContext = { ...this.staticContext, ...context };
-        return this.client.getVariant(name, enhancedContext);
-    }
-
     forceGetVariant(
         name: string,
         forcedResults: Pick<

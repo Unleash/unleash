@@ -1,6 +1,5 @@
 import type { FeatureToggleService } from '../feature-toggle/feature-toggle-service.js';
 import type { SdkContextSchema } from '../../openapi/spec/sdk-context-schema.js';
-import type { IUnleashServices } from '../../services/index.js';
 import { ALL } from '../../types/models/api-token.js';
 import type { PlaygroundFeatureSchema } from '../../openapi/spec/playground-feature-schema.js';
 import type {
@@ -68,7 +67,10 @@ export type PlaygroundFeatureEvaluationResult = Omit<
 };
 
 export class PlaygroundService {
-    private readonly featureToggleService: FeatureToggleService;
+    private readonly featureToggleService: Pick<
+        FeatureToggleService,
+        'getPlaygroundFeatures'
+    >;
 
     private readonly flagResolver: IFlagResolver;
 
@@ -81,10 +83,13 @@ export class PlaygroundService {
         {
             featureToggleService,
             privateProjectChecker,
-        }: Pick<
-            IUnleashServices,
-            'featureToggleService' | 'privateProjectChecker'
-        >,
+        }: {
+            featureToggleService: Pick<
+                FeatureToggleService,
+                'getPlaygroundFeatures'
+            >;
+            privateProjectChecker: IPrivateProjectChecker;
+        },
         segmentReadModel: ISegmentReadModel,
     ) {
         this.flagResolver = config.flagResolver;

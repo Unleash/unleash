@@ -185,6 +185,7 @@ export default class AddonService {
                         addon.environments.includes(event.environment),
                 )
                 .filter((addon) => addonProviders[addon.provider])
+                .filter((addon) => this.isProviderEnabled(addon.provider))
                 .map((addon) =>
                     addonProviders[addon.provider].handleEvent(
                         event,
@@ -255,20 +256,21 @@ export default class AddonService {
     }
 
     async getAddonsOverview(projectId?: string): Promise<IAddonOverview> {
-        let addons = await this.getAddons(projectId);
-        let providers = this.getProviderDefinitions();
-
-        if (!this.flagResolver.isEnabled('serviceNowIntegration')) {
-            addons = addons.filter((addon) => addon.provider !== 'servicenow');
-            providers = providers.filter(
-                (provider) => provider.name !== 'servicenow',
-            );
-        }
+        const addons = await this.getAddons(projectId);
 
         return {
-            addons,
-            providers,
+            addons: addons.filter((addon) =>
+                this.isProviderEnabled(addon.provider),
+            ),
+            providers: this.getProviderDefinitions().filter((provider) =>
+                this.isProviderEnabled(provider.name),
+            ),
         };
+    }
+
+    private isProviderEnabled(provider: string): boolean {
+        const flag = this.addonProviders[provider]?.flag;
+        return !flag || this.flagResolver.isEnabled(flag);
     }
 
     async addTagTypes(providerName: string): Promise<void> {
@@ -417,12 +419,10 @@ export default class AddonService {
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     validateProviderEnabled({ provider }: Pick<IAddonDto, 'provider'>): void {
-        if (
-            provider === 'servicenow' &&
-            !this.flagResolver.isEnabled('serviceNowIntegration')
-        ) {
+        if (!this.isProviderEnabled(provider)) {
+            const { displayName } = this.addonProviders[provider].definition;
             throw new BadDataError(
-                'The ServiceNow integration is disabled because the controlling feature flag is turned off.',
+                `The ${displayName} integration is disabled because the controlling feature flag is turned off.`,
             );
         }
     }

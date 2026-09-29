@@ -90,6 +90,7 @@ export const featureMetadataSchema = joi
         stale: joi.boolean().default(false),
         archived: joi.boolean().default(false),
         type: joi.string().default('release'),
+        lifetimeDays: joi.number().integer().min(0).optional(),
         description: joi.string().allow('').allow(null).optional(),
         impressionData: joi
             .boolean()

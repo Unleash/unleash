@@ -728,12 +728,23 @@ test('Should update feature flag', async () => {
     const name = 'new.flag.update';
     await app.request
         .post(url)
-        .send({ name, description: 'some', type: 'release' })
-        .expect(201);
+        .send({ name, description: 'some', type: 'release', lifetimeDays: 30 })
+        .expect(201)
+        .expect((res) => {
+            expect(res.body.lifetimeDays).toBe(30);
+        });
     await app.request
         .put(`${url}/${name}`)
-        .send({ name, description: 'updated', type: 'kill-switch' })
-        .expect(200);
+        .send({
+            name,
+            description: 'updated',
+            type: 'kill-switch',
+            lifetimeDays: 0,
+        })
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.lifetimeDays).toBe(0);
+        });
 
     const { body: flag } = await app.request.get(`${url}/${name}`);
 

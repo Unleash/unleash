@@ -211,6 +211,7 @@ export * from './submit-signup-data-schema.js';
 export * from './tag-schema.js';
 export * from './tag-type-schema.js';
 export * from './tag-types-schema.js';
+export * from './tag-type-with-usage-schema.js';
 export * from './tag-with-version-schema.js';
 export * from './tags-bulk-add-schema.js';
 export * from './tags-schema.js';

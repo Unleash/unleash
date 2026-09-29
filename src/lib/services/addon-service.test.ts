@@ -1,5 +1,7 @@
 import getLogger from '../../test/fixtures/no-logger.js';
 import TagTypeService from '../features/tag-type/tag-type-service.js';
+import { FakeTagUsageReadModel } from '../features/tag-usage/fake-tag-usage-read-model.js';
+import { createFakePrivateProjectChecker } from '../features/private-project/createPrivateProjectChecker.js';
 import {
     ADDON_CONFIG_CREATED,
     ADDON_CONFIG_DELETED,
@@ -42,6 +44,8 @@ function getSetup(flagResolver = {} as IFlagResolver) {
         stores,
         { getLogger },
         eventService,
+        new FakeTagUsageReadModel(),
+        createFakePrivateProjectChecker(),
     );
     const integrationEventsService = new IntegrationEventsService(stores, {
         getLogger,

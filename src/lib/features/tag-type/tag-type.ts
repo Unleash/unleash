@@ -29,6 +29,7 @@ import {
     getStandardResponses,
 } from '../../openapi/util/standard-responses.js';
 import type { WithTransactional } from '../../db/transaction.js';
+import type { IFlagResolver } from '../../types/experimental.js';
 
 const version = 1;
 
@@ -36,6 +37,8 @@ class TagTypeController extends Controller {
     private tagTypeService: WithTransactional<TagTypeService>;
 
     private openApiService: OpenApiService;
+
+    private flagResolver: IFlagResolver;
 
     constructor(
         config: IUnleashConfig,
@@ -50,6 +53,7 @@ class TagTypeController extends Controller {
         super(config);
         this.tagTypeService = transactionalTagTypeService;
         this.openApiService = openApiService;
+        this.flagResolver = config.flagResolver;
         this.route({
             method: 'get',
             path: '',
@@ -174,10 +178,12 @@ class TagTypeController extends Controller {
     }
 
     async getTagTypes(
-        _req: Request,
+        req: IAuthRequest,
         res: Response<TagTypesSchema>,
     ): Promise<void> {
-        const tagTypes = await this.tagTypeService.getAll();
+        const tagTypes = this.flagResolver.isEnabled('tagManagementViaUi')
+            ? await this.tagTypeService.getAllWithUsage(req.user.id)
+            : await this.tagTypeService.getAll();
         res.json({ version, tagTypes });
     }
 

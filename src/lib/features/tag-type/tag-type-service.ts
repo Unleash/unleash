@@ -15,9 +15,18 @@ import type { IUnleashConfig } from '../../types/option.js';
 import type EventService from '../events/event-service.js';
 import type { IAuditUser } from '../../types/index.js';
 import { NotFoundError } from '../../error/index.js';
+import type {
+    ITagTypeWithUsage,
+    ITagUsageReadModel,
+} from '../tag-usage/tag-usage-read-model-type.js';
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
 
 export default class TagTypeService {
     private tagTypeStore: ITagTypeStore;
+
+    private tagUsageReadModel: ITagUsageReadModel;
+
+    private privateProjectChecker: IPrivateProjectChecker;
 
     private eventService: EventService;
 
@@ -27,14 +36,29 @@ export default class TagTypeService {
         { tagTypeStore }: Pick<IUnleashStores, 'tagTypeStore'>,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
         eventService: EventService,
+        tagUsageReadModel: ITagUsageReadModel,
+        privateProjectChecker: IPrivateProjectChecker,
     ) {
         this.tagTypeStore = tagTypeStore;
+        this.tagUsageReadModel = tagUsageReadModel;
+        this.privateProjectChecker = privateProjectChecker;
         this.eventService = eventService;
         this.logger = getLogger('services/tag-type-service.js');
     }
 
     async getAll(): Promise<ITagType[]> {
         return this.tagTypeStore.getAll();
+    }
+
+    async getAllWithUsage(userId: number): Promise<ITagTypeWithUsage[]> {
+        const accessibleProjects =
+            await this.privateProjectChecker.getUserAccessibleProjects(userId);
+
+        return this.tagUsageReadModel.getTagTypesWithUsage(
+            accessibleProjects.mode === 'limited'
+                ? accessibleProjects.projects
+                : undefined,
+        );
     }
 
     async getTagType(name: string): Promise<ITagType> {

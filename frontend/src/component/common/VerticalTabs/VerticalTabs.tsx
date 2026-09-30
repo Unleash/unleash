@@ -4,8 +4,8 @@ import type { HTMLAttributes } from 'react';
 
 const StyledTabPage = styled('div')(({ theme }) => ({
     display: 'flex',
-    gap: theme.spacing(3),
-    [theme.breakpoints.down('xl')]: {
+    gap: theme.spacing(2),
+    [theme.breakpoints.down('md')]: {
         flexDirection: 'column',
     },
 }));
@@ -14,6 +14,7 @@ const StyledTabPageContent = styled('div')(() => ({
     flexGrow: 1,
     display: 'flex',
     flexDirection: 'column',
+    minWidth: 0,
 }));
 
 const StyledTabs = styled('div', {
@@ -21,10 +22,10 @@ const StyledTabs = styled('div', {
 })<{ fullWidth?: boolean }>(({ theme, fullWidth }) => ({
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(1),
-    width: fullWidth ? '100%' : theme.spacing(30),
+    gap: theme.spacing(0.25),
+    width: fullWidth ? '100%' : theme.spacing(25),
     flexShrink: 0,
-    [theme.breakpoints.down('xl')]: {
+    [theme.breakpoints.down('md')]: {
         width: '100%',
     },
 }));

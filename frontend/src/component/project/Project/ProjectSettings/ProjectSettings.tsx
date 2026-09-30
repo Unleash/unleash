@@ -105,7 +105,7 @@ export const ProjectSettings = () => {
             : []),
         ...paidTabs({
             id: 'change-requests',
-            label: 'Change request configuration',
+            label: 'Change requests',
             endIcon: isPro() ? (
                 <StyledBadgeContainer>
                     <EnterpriseBadge />

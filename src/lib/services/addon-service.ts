@@ -295,11 +295,10 @@ export default class AddonService {
         return Promise.resolve();
     }
 
-    async createAddon(
+    private async prepareAddonConfig(
         data: IAddonDto,
-        auditUser: IAuditUser,
         project?: string,
-    ): Promise<IAddon> {
+    ): Promise<IAddonDto> {
         const addonConfig = await addonSchema.validateAsync(data);
         if (project) {
             addonConfig.projects = [project];
@@ -310,6 +309,15 @@ export default class AddonService {
         this.validateParameterTypes(addonConfig);
         addonConfig.parameters = this.trimKvpKeys(addonConfig);
         await this.validateUrlParameter(addonConfig);
+        return addonConfig;
+    }
+
+    async createAddon(
+        data: IAddonDto,
+        auditUser: IAuditUser,
+        project?: string,
+    ): Promise<IAddon> {
+        const addonConfig = await this.prepareAddonConfig(data, project);
         const addon = this.addonProviders[addonConfig.provider];
         if (addon.definition.deprecated) {
             throw new BadDataError(addon.definition.deprecated);
@@ -343,16 +351,7 @@ export default class AddonService {
             throw new NotFoundError();
         } // because getting an early 404 here makes more sense
         this.validateAddonBelongsToProject(existingConfig, project);
-        const addonConfig = await addonSchema.validateAsync(data);
-        if (project) {
-            addonConfig.projects = [project];
-        }
-        await this.validateKnownProvider(addonConfig);
-        this.validateProviderEnabled(addonConfig);
-        await this.validateRequiredParameters(addonConfig);
-        this.validateParameterTypes(addonConfig);
-        addonConfig.parameters = this.trimKvpKeys(addonConfig);
-        await this.validateUrlParameter(addonConfig);
+        const addonConfig = await this.prepareAddonConfig(data, project);
         if (this.sensitiveParams[addonConfig.provider].length > 0) {
             addonConfig.parameters = Object.keys(addonConfig.parameters).reduce(
                 (params, key) => {

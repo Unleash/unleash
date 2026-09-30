@@ -1,7 +1,9 @@
 import type { Db } from '../../db/db.js';
 import type {
+    IPageQuery,
     ITagTypeWithUsage,
     ITagUsageReadModel,
+    ITagValuesUsage,
 } from './tag-usage-read-model-type.js';
 
 export class TagUsageReadModel implements ITagUsageReadModel {
@@ -48,5 +50,44 @@ export class TagUsageReadModel implements ITagUsageReadModel {
             valueCount: Number(row.value_count),
             usedInProjects: Number(row.used_in_projects),
         }));
+    }
+
+    async getTagValueUsage(
+        type: string,
+        { limit, offset }: IPageQuery,
+        projects?: string[],
+    ): Promise<ITagValuesUsage> {
+        // Values are global (GET /api/admin/tags/:type lists them all), so only the
+        // flag counts are filtered by project; every value of the type is listed.
+        const projectFilter = projects ? 'AND features.project = ANY(?)' : '';
+        const [queryResult, countResult] = await Promise.all([
+            this.db.raw(
+                `WITH page AS (
+                    SELECT value FROM tags WHERE type = ?
+                    ORDER BY value LIMIT ? OFFSET ?
+                )
+                SELECT page.value,
+                    COUNT(features.name) FILTER (WHERE features.archived_at IS NULL) AS used_in_active_features,
+                    COUNT(features.name) FILTER (WHERE features.archived_at IS NOT NULL) AS used_in_archived_features
+                FROM page
+                LEFT JOIN feature_tag
+                    ON feature_tag.tag_type = ? AND feature_tag.tag_value = page.value
+                LEFT JOIN features
+                    ON features.name = feature_tag.feature_name ${projectFilter}
+                GROUP BY page.value
+                ORDER BY page.value`,
+                [type, limit, offset, type, ...(projects ? [projects] : [])],
+            ),
+            this.db('tags').where({ type }).count('* as count').first(),
+        ]);
+
+        return {
+            total: Number(countResult?.count ?? 0),
+            tagValues: queryResult.rows.map((row) => ({
+                value: row.value,
+                usedInActiveFeatures: Number(row.used_in_active_features),
+                usedInArchivedFeatures: Number(row.used_in_archived_features),
+            })),
+        };
     }
 }

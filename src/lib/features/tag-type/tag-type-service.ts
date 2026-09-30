@@ -16,8 +16,10 @@ import type EventService from '../events/event-service.js';
 import type { IAuditUser } from '../../types/index.js';
 import { NotFoundError } from '../../error/index.js';
 import type {
+    IPageQuery,
     ITagTypeWithUsage,
     ITagUsageReadModel,
+    ITagValuesUsage,
 } from '../tag-usage/tag-usage-read-model-type.js';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
 
@@ -55,6 +57,24 @@ export default class TagTypeService {
             await this.privateProjectChecker.getUserAccessibleProjects(userId);
 
         return this.tagUsageReadModel.getTagTypesWithUsage(
+            accessibleProjects.mode === 'limited'
+                ? accessibleProjects.projects
+                : undefined,
+        );
+    }
+
+    async getValuesWithUsage(
+        type: string,
+        page: IPageQuery,
+        userId: number,
+    ): Promise<ITagValuesUsage> {
+        await this.getTagType(type);
+        const accessibleProjects =
+            await this.privateProjectChecker.getUserAccessibleProjects(userId);
+
+        return this.tagUsageReadModel.getTagValueUsage(
+            type,
+            page,
             accessibleProjects.mode === 'limited'
                 ? accessibleProjects.projects
                 : undefined,

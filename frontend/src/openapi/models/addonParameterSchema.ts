@@ -20,6 +20,6 @@ export interface AddonParameterSchema {
     required: boolean;
     /** Indicates whether this parameter is **sensitive** or not. Unleash will not return sensitive parameters to API requests. It will instead use a number of asterisks to indicate that a value is set, e.g. "******". The number of asterisks does not correlate to the parameter's value. */
     sensitive: boolean;
-    /** The type of the parameter. Corresponds roughly to [HTML `input` field types](https://developer.mozilla.org/docs/Web/HTML/Element/Input#input_types). Multi-line inut fields are indicated as `textfield` (equivalent to the HTML `textarea` tag). */
+    /** The type of the parameter. Corresponds roughly to [HTML `input` field types](https://developer.mozilla.org/docs/Web/HTML/Element/Input#input_types). Multi-line input fields are indicated as `textfield` (equivalent to the HTML `textarea` tag). Collections of user-defined key-value pairs are indicated as `keyvaluepairs`.*/
     type: string;
 }

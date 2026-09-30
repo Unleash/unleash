@@ -307,6 +307,8 @@ export default class AddonService {
         await this.validateKnownProvider(addonConfig);
         this.validateProviderEnabled(addonConfig);
         await this.validateRequiredParameters(addonConfig);
+        this.validateParameterTypes(addonConfig);
+        addonConfig.parameters = this.trimKvpKeys(addonConfig);
         await this.validateUrlParameter(addonConfig);
         const addon = this.addonProviders[addonConfig.provider];
         if (addon.definition.deprecated) {
@@ -348,6 +350,8 @@ export default class AddonService {
         await this.validateKnownProvider(addonConfig);
         this.validateProviderEnabled(addonConfig);
         await this.validateRequiredParameters(addonConfig);
+        this.validateParameterTypes(addonConfig);
+        addonConfig.parameters = this.trimKvpKeys(addonConfig);
         await this.validateUrlParameter(addonConfig);
         if (this.sensitiveParams[addonConfig.provider].length > 0) {
             addonConfig.parameters = Object.keys(addonConfig.parameters).reduce(
@@ -452,6 +456,56 @@ export default class AddonService {
         }
         return true;
     }
+
+    private getProviderKvpParams = (provider) =>
+        this.addonProviders[provider].definition.parameters
+            ?.filter((p) => p.type === 'keyvaluepairs')
+            .map((p) => p.name);
+
+    validateParameterTypes({ provider, parameters }): void {
+        const kvpParams = new Set(this.getProviderKvpParams(provider));
+
+        for (const [name, value] of Object.entries(parameters)) {
+            const isObject = typeof value === 'object' && value !== null;
+            if (isObject !== kvpParams.has(name)) {
+                const error = kvpParams.has(name)
+                    ? `Parameter "${name}" must be an object of key-value pairs.`
+                    : `Parameter "${name}" does not accept key-value pairs.`;
+                throw new BadDataError(error);
+            }
+        }
+    }
+
+    trimKvpKeys({ provider, parameters }): Record<string, unknown> {
+        const kvpParamNames = this.getProviderKvpParams(provider);
+        if (!kvpParamNames) return parameters;
+
+        const cleaned = { ...parameters };
+        for (const name of kvpParamNames) {
+            const inputParam = parameters[name];
+            if (!inputParam) continue;
+
+            const trimmed = Object.fromEntries(
+                Object.entries(inputParam).map(([key, value]) => [
+                    key.trim(),
+                    value,
+                ]),
+            );
+
+            // If the key count after trimming is different, there must have been dupes.
+            if (
+                Object.keys(trimmed).length !== Object.keys(inputParam).length
+            ) {
+                throw new BadDataError(
+                    `Parameter "${name}" has keys that are duplicates once surrounding whitespace is removed.`,
+                );
+            }
+            cleaned[name] = trimmed;
+        }
+
+        return cleaned;
+    }
+
     async validateUrlParameter({ parameters }): Promise<void> {
         if (parameters?.url && parameters.url !== MASKED_VALUE) {
             await validateUrl(parameters.url, {

@@ -645,9 +645,10 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             `SELECT name,
                     project,
                     potentially_stale,
-                    (? > (features.created_at + ((SELECT feature_types.lifetime_days
-                                                  FROM feature_types
-                                                  WHERE feature_types.id = features.type) *
+                    (? > (features.created_at + (NULLIF(COALESCE(features.lifetime_days,
+                                                                (SELECT feature_types.lifetime_days
+                                                                 FROM feature_types
+                                                                 WHERE feature_types.id = features.type)), 0) *
                                                  INTERVAL '1 day'))) as current_staleness
              FROM features
              WHERE NOT stale = true

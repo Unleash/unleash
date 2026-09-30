@@ -145,6 +145,44 @@ describe('potentially_stale marking', () => {
             ).toBeTruthy();
         }
     });
+    test('a lifetime value on the flag takes precedence over the lifetime of its type', async () => {
+        await featureToggleStore.create('default', {
+            name: 'release-flag',
+            type: 'release',
+            lifetimeDays: 7,
+            createdByUserId: 9999,
+        });
+
+        const markedFlags =
+            await featureToggleStore.updatePotentiallyStaleFeatures(
+                getFutureTimestamp(8),
+            );
+
+        expect(markedFlags).toStrictEqual([
+            {
+                name: 'release-flag',
+                potentiallyStale: true,
+                project: 'default',
+            },
+        ]);
+    });
+
+    test('a lifetime of zero on the flag means it never becomes potentially stale', async () => {
+        await featureToggleStore.create('default', {
+            name: 'never-stale-type-with-own-lifetime',
+            type: 'kill-switch',
+            lifetimeDays: 0,
+            createdByUserId: 9999,
+        });
+
+        const markedFlags =
+            await featureToggleStore.updatePotentiallyStaleFeatures(
+                getFutureTimestamp(41),
+            );
+
+        expect(markedFlags).toStrictEqual([]);
+    });
+
     test('it does not mark toggles already flagged as stale', async () => {
         const features: FeatureToggleInsert[] = [
             {

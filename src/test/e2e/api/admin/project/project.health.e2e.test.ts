@@ -1,4 +1,5 @@
 import dbInit, { type ITestDb } from '../../../helpers/database-init.js';
+import { subDays } from 'date-fns';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
@@ -35,210 +36,174 @@ afterAll(async () => {
     await db.destroy();
 });
 
-test('Project with no stale toggles should have 100% health rating', async () => {
-    const project = {
-        id: 'fresh',
-        name: 'Health rating',
-        description: 'Fancy',
-    };
+const createProject = async (id: string) => {
+    const project = { id, name: 'Health rating', description: 'Fancy' };
     await app.services.projectService.createProject(
         project,
         user,
         extractAuditInfoFromUser(user),
     );
-    await app.request
-        .post('/api/admin/projects/fresh/features')
-        .send({
-            name: 'health-rating-not-stale',
-            description: 'new',
-            stale: false,
-        })
-        .expect(201);
-    await app.request
-        .post('/api/admin/projects/fresh/features')
-        .send({
+    return id;
+};
+
+const createFlags = async (projectId: string, flags: object[]) => {
+    for (const flag of flags) {
+        await app.request
+            .post(`/api/admin/projects/${projectId}/features`)
+            .send(flag)
+            .expect(201);
+    }
+};
+
+const getHealthReport = async (projectId: string) => {
+    const { body } = await app.request
+        .get(`/api/admin/projects/${projectId}/health-report`)
+        .expect(200)
+        .expect('Content-Type', /json/);
+    return body;
+};
+
+test('Project with no stale toggles should have 100% health rating', async () => {
+    const projectId = await createProject('fresh');
+    await createFlags(projectId, [
+        { name: 'health-rating-not-stale', description: 'new', stale: false },
+        {
             name: 'health-rating-not-stale-2',
             description: 'new too',
             stale: false,
-        })
-        .expect(201);
-    await app.request
-        .get('/api/admin/projects/fresh/health-report')
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .expect((res) => {
-            expect(res.body.health).toBe(100);
-        });
+        },
+    ]);
+
+    expect(await getHealthReport(projectId)).toMatchObject({ health: 100 });
 });
 
 test('Health rating endpoint yields stale, potentially stale and active count on top of health', async () => {
-    const project = {
-        id: 'test-health',
-        name: 'Health rating',
-        description: 'Fancy',
-    };
-    await app.services.projectService.createProject(
-        project,
-        user,
-        extractAuditInfoFromUser(user),
-    );
-    await app.request
-        .post(`/api/admin/projects/${project.id}/features`)
-        .send({
-            name: 'health-report-new',
-            description: 'new',
-            stale: false,
-        })
-        .expect(201);
-    await app.request
-        .post(`/api/admin/projects/${project.id}/features`)
-        .send({
-            name: 'health-report-new-2',
-            description: 'new too',
-            stale: false,
-        })
-        .expect(201);
-    await app.request
-        .post(`/api/admin/projects/${project.id}/features`)
-        .send({
-            name: 'health-report-stale',
-            description: 'new too',
-            stale: true,
-        })
-        .expect(201);
-    await app.services.projectHealthService.setProjectHealthRating(project.id);
-    await app.request
-        .get(`/api/admin/projects/${project.id}/health-report`)
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .expect((res) => {
-            expect(res.body.health).toBe(67);
-            expect(res.body.activeCount).toBe(2);
-            expect(res.body.staleCount).toBe(1);
-            expect(res.body.potentiallyStaleCount).toBe(0);
-        });
+    const projectId = await createProject('test-health');
+    const activeFlags = [
+        { name: 'health-report-new', description: 'new', stale: false },
+        { name: 'health-report-new-2', description: 'new too', stale: false },
+    ];
+    const staleFlags = [
+        { name: 'health-report-stale', description: 'new too', stale: true },
+    ];
+    await createFlags(projectId, [...activeFlags, ...staleFlags]);
+
+    await app.services.projectHealthService.setProjectHealthRating(projectId);
+
+    expect(await getHealthReport(projectId)).toMatchObject({
+        health: 67,
+        activeCount: activeFlags.length,
+        staleCount: staleFlags.length,
+        potentiallyStaleCount: 0,
+    });
 });
+
 test('Health rating endpoint does not include archived toggles when calculating potentially stale toggles', async () => {
-    const project = {
-        id: 'potentially-stale-archived',
-        name: 'Health rating',
-        description: 'Fancy',
-    };
-    await app.services.projectService.createProject(
-        project,
-        user,
-        extractAuditInfoFromUser(user),
-    );
-    await app.request
-        .post(`/api/admin/projects/${project.id}/features`)
-        .send({
+    const projectId = await createProject('potentially-stale-archived');
+    const flagsWithinTheirLifetime = [
+        {
             name: 'potentially-stale-archive-fresh',
             description: 'new',
             stale: false,
-        })
-        .expect(201);
-    await app.request
-        .post(`/api/admin/projects/${project.id}/features`)
-        .send({
+        },
+        {
             name: 'potentially-stale-archive-fresh-2',
             description: 'new too',
             stale: false,
-        })
-        .expect(201);
-    await app.request
-        .post(`/api/admin/projects/${project.id}/features`)
-        .send({
+        },
+    ];
+    const flagsMarkedStale = [
+        {
             name: 'potentially-stale-archive-stale',
             description: 'stale',
             stale: true,
-        })
-        .expect(201);
-    await app.request
-        .post(`/api/admin/projects/${project.id}/features`)
-        .send({
+        },
+    ];
+    const flagsPastTheirLifetime = [
+        {
             name: 'potentially-archive-stale',
             description: 'Really Old',
             createdAt: new Date(2019, 5, 1),
-        })
-        .expect(201);
-    await app.request
-        .post(`/api/admin/projects/${project.id}/features`)
-        .send({
+        },
+    ];
+    const archivedFlags = [
+        {
             name: 'potentially-archive-stale-archived',
             description: 'Really Old',
             createdAt: new Date(2019, 5, 1),
             archived: true,
-        })
-        .expect(201);
+        },
+    ];
+    await createFlags(projectId, [
+        ...flagsWithinTheirLifetime,
+        ...flagsMarkedStale,
+        ...flagsPastTheirLifetime,
+        ...archivedFlags,
+    ]);
 
     await app.services.featureToggleService.updatePotentiallyStaleFeatures(); // the scheduler runs this every minute
-    await app.services.projectHealthService.setProjectHealthRating(project.id);
-    await app.request
-        .get(`/api/admin/projects/${project.id}/health-report`)
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .expect((res) => {
-            expect(res.body.health).toBe(50);
-            expect(res.body.activeCount).toBe(3);
-            expect(res.body.staleCount).toBe(1);
-            expect(res.body.potentiallyStaleCount).toBe(1);
-        });
+    await app.services.projectHealthService.setProjectHealthRating(projectId);
+
+    expect(await getHealthReport(projectId)).toMatchObject({
+        health: 50,
+        activeCount:
+            flagsWithinTheirLifetime.length + flagsPastTheirLifetime.length,
+        staleCount: flagsMarkedStale.length,
+        potentiallyStaleCount: flagsPastTheirLifetime.length,
+    });
 });
+
 test('Health rating endpoint correctly handles potentially stale toggles', async () => {
-    const project = {
-        id: 'potentially-stale',
-        name: 'Health rating',
-        description: 'Fancy',
-    };
-    await app.services.projectService.createProject(
-        project,
-        user,
-        extractAuditInfoFromUser(user),
-    );
-    await app.request
-        .post(`/api/admin/projects/${project.id}/features`)
-        .send({
-            name: 'potentially-stale-fresh',
-            description: 'new',
-            stale: false,
-        })
-        .expect(201);
-    await app.request
-        .post(`/api/admin/projects/${project.id}/features`)
-        .send({
+    const projectId = await createProject('potentially-stale');
+    const flagsWithinTheirLifetime = [
+        { name: 'potentially-stale-fresh', description: 'new', stale: false },
+        {
             name: 'potentially-stale-fresh-2',
             description: 'new too',
             stale: false,
-        })
-        .expect(201);
-    await app.request
-        .post(`/api/admin/projects/${project.id}/features`)
-        .send({
-            name: 'potentially-stale-stale',
-            description: 'stale',
-            stale: true,
-        })
-        .expect(201);
-    await app.request
-        .post(`/api/admin/projects/${project.id}/features`)
-        .send({
+        },
+        {
+            name: 'never-stale-by-own-lifetime',
+            description:
+                'Past the lifetime of its type, but the flag never expires',
+            type: 'release',
+            lifetimeDays: 0,
+            createdAt: subDays(new Date(), 41),
+        },
+    ];
+    const flagsMarkedStale = [
+        { name: 'potentially-stale-stale', description: 'stale', stale: true },
+    ];
+    const flagsPastTheirLifetime = [
+        {
             name: 'potentially-stale',
             description: 'Really Old',
             createdAt: new Date(2019, 5, 1),
-        })
-        .expect(201);
+        },
+        {
+            name: 'potentially-stale-by-own-lifetime',
+            description: 'Past its own lifetime, but its type never expires',
+            type: 'kill-switch',
+            lifetimeDays: 7,
+            createdAt: subDays(new Date(), 8),
+        },
+    ];
+    await createFlags(projectId, [
+        ...flagsWithinTheirLifetime,
+        ...flagsMarkedStale,
+        ...flagsPastTheirLifetime,
+    ]);
+
     await app.services.featureToggleService.updatePotentiallyStaleFeatures(); // the scheduler runs this every minute
-    await app.services.projectHealthService.setProjectHealthRating(project.id);
-    await app.request
-        .get(`/api/admin/projects/${project.id}/health-report`)
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .expect((res) => {
-            expect(res.body.health).toBe(50);
-            expect(res.body.activeCount).toBe(3);
-            expect(res.body.staleCount).toBe(1);
-            expect(res.body.potentiallyStaleCount).toBe(1);
-        });
+    await app.services.projectHealthService.setProjectHealthRating(projectId);
+
+    expect(await getHealthReport(projectId)).toMatchObject({
+        health: 50,
+        activeCount:
+            flagsWithinTheirLifetime.length + flagsPastTheirLifetime.length,
+        staleCount: flagsMarkedStale.length,
+        potentiallyStaleCount: flagsPastTheirLifetime.length,
+    });
 });
 
 test('Health report for non-existing project yields 404', async () => {

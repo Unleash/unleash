@@ -1,4 +1,3 @@
-import type { ComponentProps } from 'react';
 import { describe, expect, test } from 'vitest';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -12,16 +11,19 @@ const server = testServerSetup();
 const setupApi = ({
     enabled,
     feedbackOptIn,
+    feedbackOptInAvailable = true,
     postStatus = 204,
 }: {
     enabled: boolean;
     feedbackOptIn?: boolean;
+    feedbackOptInAvailable?: boolean;
     postStatus?: number;
 }) => {
     testServerRoute(server, '/api/admin/ui-config', {
         environment: 'Enterprise',
         versionInfo: { current: { enterprise: 'version' } },
         unleashUrl: 'https://unleash.example.com',
+        flags: { remoteMcpFeedback: feedbackOptInAvailable },
     });
     testServerRoute(server, '/api/admin/remote-mcp/settings', {
         enabled,
@@ -36,11 +38,11 @@ const setupApi = ({
     );
 };
 
-const renderPage = (props: ComponentProps<typeof RemoteMcpAdmin> = {}) =>
+const renderPage = () =>
     render(
         <>
             <ToastRenderer />
-            <RemoteMcpAdmin {...props} />
+            <RemoteMcpAdmin />
         </>,
         { permissions: [{ permission: 'ADMIN' }] },
     );
@@ -89,7 +91,7 @@ describe('RemoteMcpAdmin', () => {
     test('shows both toggles as enabled when the server has them enabled', async () => {
         setupApi({ enabled: true, feedbackOptIn: true });
 
-        renderPage({ feedbackOptInAvailable: true });
+        renderPage();
 
         expect(await findServerSwitch()).toBeChecked();
         expect(getFeedbackSwitch()).toBeChecked();
@@ -98,7 +100,7 @@ describe('RemoteMcpAdmin', () => {
     test('changing only the feedback toggle marks the page dirty without saving', async () => {
         const { requests } = setupApi({ enabled: true });
 
-        renderPage({ feedbackOptInAvailable: true });
+        renderPage();
 
         expect(await findServerSwitch()).toBeChecked();
         expect(getFeedbackSwitch()).toBeEnabled();
@@ -115,7 +117,7 @@ describe('RemoteMcpAdmin', () => {
     test('a changed toggle is not saved until Save is clicked', async () => {
         const { requests } = setupApi({ enabled: false });
 
-        renderPage({ feedbackOptInAvailable: true });
+        renderPage();
 
         await findServerSwitch();
         expect(getFeedbackSwitch()).toBeDisabled();
@@ -134,7 +136,7 @@ describe('RemoteMcpAdmin', () => {
     test('saving persists the new value', async () => {
         const { requests } = setupApi({ enabled: false });
 
-        renderPage({ feedbackOptInAvailable: true });
+        renderPage();
 
         await findServerSwitch();
         await userEvent.click(getServerSwitch());
@@ -159,11 +161,18 @@ describe('RemoteMcpAdmin', () => {
     });
 
     test('saving without the feedback feature sends only the server toggle', async () => {
-        const { requests } = setupApi({ enabled: false });
+        const { requests } = setupApi({
+            enabled: false,
+            feedbackOptInAvailable: false,
+        });
 
         renderPage();
 
         await findServerSwitch();
+        expect(
+            screen.queryByRole('switch', { name: feedbackSwitchName }),
+        ).not.toBeInTheDocument();
+
         await userEvent.click(getServerSwitch());
         await userEvent.click(getSaveButton());
 
@@ -178,7 +187,7 @@ describe('RemoteMcpAdmin', () => {
     test('cancel resets both toggles to the saved values', async () => {
         setupApi({ enabled: true, feedbackOptIn: true });
 
-        renderPage({ feedbackOptInAvailable: true });
+        renderPage();
 
         await findServerSwitch();
         await userEvent.click(getFeedbackSwitch());
@@ -194,7 +203,7 @@ describe('RemoteMcpAdmin', () => {
     test('shows error toast when save fails', async () => {
         setupApi({ enabled: true, postStatus: 500 });
 
-        renderPage({ feedbackOptInAvailable: true });
+        renderPage();
 
         await findServerSwitch();
         await userEvent.click(getFeedbackSwitch());

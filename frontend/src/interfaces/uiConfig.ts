@@ -116,6 +116,7 @@ export type UiFlags = {
     newUserInviteDialog?: boolean;
     integrationParamKvpEditor?: boolean;
     perFlagLifetime?: boolean;
+    remoteMcpFeedback?: boolean;
 };
 
 export interface IVersionInfo {

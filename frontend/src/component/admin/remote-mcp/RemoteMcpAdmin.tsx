@@ -4,6 +4,7 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -50,13 +51,7 @@ const Footer = styled('div')(({ theme }) => ({
     borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
-interface IRemoteMcpAdminProps {
-    feedbackOptInAvailable?: boolean;
-}
-
-export const RemoteMcpAdmin = ({
-    feedbackOptInAvailable = false,
-}: IRemoteMcpAdminProps) => {
+export const RemoteMcpAdmin = () => {
     const { isEnterprise } = useUiConfig();
 
     if (!isEnterprise()) {
@@ -66,17 +61,14 @@ export const RemoteMcpAdmin = ({
     return (
         <div>
             <PermissionGuard permissions={[ADMIN]}>
-                <RemoteMcpPage
-                    feedbackOptInAvailable={feedbackOptInAvailable}
-                />
+                <RemoteMcpPage />
             </PermissionGuard>
         </div>
     );
 };
 
-const RemoteMcpPage = ({
-    feedbackOptInAvailable,
-}: Required<IRemoteMcpAdminProps>) => {
+const RemoteMcpPage = () => {
+    const feedbackOptInAvailable = useUiFlag('remoteMcpFeedback');
     const { settings, loading, refetch } = useRemoteMcpSettings();
     const { setRemoteMcpSettings, loading: saving } = useRemoteMcpSettingsApi();
     const { setToastData, setToastApiError } = useToast();

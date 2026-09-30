@@ -49,8 +49,6 @@ import {
     StyledContainer,
     StyledButtonContainer,
     StyledButtonSection,
-    StyledTitle,
-    StyledHelpText,
     StyledRaisedSection,
 } from './IntegrationForm.styles';
 import { GO_BACK } from 'constants/navigate';
@@ -444,10 +442,6 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                     </StyledRaisedSection>
                     <FormGroup title='Configuration'>
                         <div>
-                            <StyledTitle>Description</StyledTitle>
-                            <StyledHelpText>
-                                What is your integration description?
-                            </StyledHelpText>
                             <StyledInput
                                 size='large'
                                 minRows={1}

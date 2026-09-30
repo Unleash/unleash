@@ -334,7 +334,7 @@ export class FeatureToggleService {
     }
 
     validateUpdatedProperties(
-        { featureName, projectId }: IFeatureContext,
+        { featureName, projectId, environment }: IFeatureStrategyContext,
         existingStrategy: IFeatureStrategy,
     ): void {
         if (existingStrategy.projectId !== projectId) {
@@ -346,6 +346,12 @@ export class FeatureToggleService {
         if (existingStrategy.featureName !== featureName) {
             throw new InvalidOperationError(
                 'You can not change the featureName for an activation strategy.',
+            );
+        }
+
+        if (existingStrategy.environment !== environment) {
+            throw new InvalidOperationError(
+                'You can not change the environment for an activation strategy.',
             );
         }
     }

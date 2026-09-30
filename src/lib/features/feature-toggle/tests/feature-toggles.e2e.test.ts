@@ -1127,6 +1127,42 @@ test('update strategy on feature flag cannot use wrong projectId', async () => {
         .expect(403);
 });
 
+test('update strategy on feature flag cannot use wrong environment', async () => {
+    const envName = DEFAULT_ENV;
+    const featureName = 'feature.strategy.update.strat.wrong.environment';
+
+    const projectPath = '/api/admin/projects/default';
+    const featurePath = `${projectPath}/features/${featureName}`;
+
+    // create feature flag
+    await app.request
+        .post(`${projectPath}/features`)
+        .send({ name: featureName })
+        .expect(201);
+
+    // add strategy
+    const { body: strategy } = await app.request
+        .post(`${featurePath}/environments/${envName}/strategies`)
+        .send({
+            name: 'default',
+            parameters: {
+                userIds: '',
+            },
+        })
+        .expect(200);
+
+    // update strategy
+    await app.request
+        .put(`${featurePath}/environments/production/strategies/${strategy.id}`)
+        .send({
+            name: 'default',
+            parameters: {
+                userIds: '1234',
+            },
+        })
+        .expect(403);
+});
+
 test('Environments are returned in sortOrder', async () => {
     const sortedSecond = 'sortedSecond';
     const sortedLast = 'sortedLast';

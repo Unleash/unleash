@@ -13,6 +13,8 @@ import {
     createEventsService,
     createFakeEventsService,
 } from '../events/createEventsService.js';
+import { FeaturesReadModel } from '../feature-toggle/features-read-model.js';
+import { FakeFeaturesReadModel } from '../feature-toggle/fakes/fake-features-read-model.js';
 
 export const createFeatureLifecycleService =
     (config: IUnleashConfig) => (db: Db) => {
@@ -25,6 +27,7 @@ export const createFeatureLifecycleService =
             eventBus,
             config,
         );
+        const featuresReadModel = new FeaturesReadModel(db);
         const eventService = createEventsService(db, config);
         const featureLifecycleService = new FeatureLifecycleService(
             {
@@ -32,6 +35,7 @@ export const createFeatureLifecycleService =
                 featureLifecycleStore,
                 environmentStore,
                 featureEnvironmentStore,
+                featuresReadModel,
             },
             {
                 eventService,
@@ -47,6 +51,7 @@ export const createFakeFeatureLifecycleService = (config: IUnleashConfig) => {
     const featureLifecycleStore = new FakeFeatureLifecycleStore();
     const environmentStore = new FakeEnvironmentStore();
     const featureEnvironmentStore = new FakeFeatureEnvironmentStore();
+    const featuresReadModel = new FakeFeaturesReadModel();
     const eventService = createFakeEventsService(config);
     const featureLifecycleService = new FeatureLifecycleService(
         {
@@ -54,6 +59,7 @@ export const createFakeFeatureLifecycleService = (config: IUnleashConfig) => {
             featureLifecycleStore,
             environmentStore,
             featureEnvironmentStore,
+            featuresReadModel,
         },
         {
             eventService,
@@ -67,5 +73,6 @@ export const createFakeFeatureLifecycleService = (config: IUnleashConfig) => {
         eventStore,
         environmentStore,
         featureEnvironmentStore,
+        featuresReadModel,
     };
 };

@@ -30,6 +30,16 @@ import {
 } from '../../openapi/util/standard-responses.js';
 import type { WithTransactional } from '../../db/transaction.js';
 import type { IFlagResolver } from '../../types/experimental.js';
+import { requireFeatureEnabled } from '../../middleware/conditional-middleware.js';
+import {
+    basePaginationParameters,
+    type BasePaginationParameters,
+} from '../../openapi/spec/base-pagination-parameters.js';
+import {
+    tagValuesUsageSchema,
+    type TagValuesUsageSchema,
+} from '../../openapi/spec/tag-values-usage-schema.js';
+import { normalizeQueryParams } from '../feature-search/search-utils.js';
 
 const version = 1;
 
@@ -129,6 +139,31 @@ class TagTypeController extends Controller {
                     responses: {
                         200: createResponseSchema('tagTypeSchema'),
                         ...getStandardResponses(401, 403),
+                    },
+                }),
+            ],
+        });
+        this.route({
+            method: 'get',
+            path: '/:name/values',
+            handler: this.getTagValuesWithUsage,
+            permission: NONE,
+            middleware: [
+                requireFeatureEnabled(
+                    config.flagResolver,
+                    'tagManagementViaUi',
+                ),
+                openApiService.validPath({
+                    tags: ['Tags'],
+                    release: { alpha: true },
+                    operationId: 'getTagValuesWithUsage',
+                    summary: 'Get the values of a tag type with their usage',
+                    description:
+                        'Get a page of the values of a tag type, sorted by value, with how many active and archived flags use each value. Flags in projects the user cannot access are not counted.',
+                    parameters: [...basePaginationParameters],
+                    responses: {
+                        200: createResponseSchema('tagValuesUsageSchema'),
+                        ...getStandardResponses(401, 403, 404),
                     },
                 }),
             ],
@@ -242,6 +277,32 @@ class TagTypeController extends Controller {
 
         const tagType = await this.tagTypeService.getTagType(name);
         res.json({ version, tagType });
+    }
+
+    async getTagValuesWithUsage(
+        req: IAuthRequest<
+            { name: string },
+            unknown,
+            unknown,
+            BasePaginationParameters
+        >,
+        res: Response<TagValuesUsageSchema>,
+    ): Promise<void> {
+        const { normalizedLimit: limit, normalizedOffset: offset } =
+            normalizeQueryParams(req.query, { limitDefault: 50 });
+
+        const { total, tagValues } =
+            await this.tagTypeService.getValuesWithUsage(
+                req.params.name,
+                { limit, offset },
+                req.user.id,
+            );
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            tagValuesUsageSchema.$id,
+            { limit, offset, total, tagValues },
+        );
     }
 
     async deleteTagType(req: IAuthRequest, res: Response): Promise<void> {

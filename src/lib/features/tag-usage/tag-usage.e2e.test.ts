@@ -89,3 +89,55 @@ test('reports zero values and projects for an unused tag type', async () => {
         usedInProjects: 0,
     });
 });
+
+test('lists tag values with active and archived flag counts', async () => {
+    await seedTeamTags('squad');
+
+    const { body } = await app.request
+        .get('/api/admin/tag-types/squad/values')
+        .expect(200);
+
+    expect(body).toEqual({
+        limit: 50,
+        offset: 0,
+        total: 3,
+        tagValues: [
+            {
+                value: 'checkout',
+                usedInActiveFeatures: 0,
+                usedInArchivedFeatures: 1,
+            },
+            {
+                value: 'payments',
+                usedInActiveFeatures: 1,
+                usedInArchivedFeatures: 1,
+            },
+            {
+                value: 'unused',
+                usedInActiveFeatures: 0,
+                usedInArchivedFeatures: 0,
+            },
+        ],
+    });
+});
+
+test('pages through tag values', async () => {
+    await seedTeamTags('crew');
+
+    const { body } = await app.request
+        .get('/api/admin/tag-types/crew/values?limit=1&offset=1')
+        .expect(200);
+
+    expect(body).toMatchObject({
+        limit: 1,
+        offset: 1,
+        total: 3,
+        tagValues: [{ value: 'payments' }],
+    });
+});
+
+test('responds not found for values of an unknown tag type', async () => {
+    await app.request
+        .get('/api/admin/tag-types/does-not-exist/values')
+        .expect(404);
+});

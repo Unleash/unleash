@@ -115,6 +115,7 @@ export type UiFlags = {
     tagManagementViaUi?: boolean;
     newUserInviteDialog?: boolean;
     integrationParamKvpEditor?: boolean;
+    perFlagLifetime?: boolean;
 };
 
 export interface IVersionInfo {

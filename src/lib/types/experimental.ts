@@ -86,6 +86,7 @@ export type IFlagKey =
     | 'githubIntegration'
     | 'tagManagementViaUi'
     | 'integrationParamKvpEditor'
+    | 'perFlagLifetime'
     | keyof IFlagKeyOverrides;
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -385,6 +386,10 @@ const flags: IFlags = {
     ),
     integrationParamKvpEditor: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_INTEGRATION_PARAM_KVP_EDITOR,
+        false,
+    ),
+    perFlagLifetime: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PER_FLAG_LIFETIME,
         false,
     ),
 };

@@ -14,6 +14,7 @@ import slackIcon from 'assets/icons/slack.svg';
 import teamsIcon from 'assets/icons/teams.svg';
 import webhooksIcon from 'assets/icons/webhooks.svg';
 import serviceNowIcon from 'assets/icons/servicenow.svg';
+import githubIcon from 'assets/icons/github.svg';
 import unleashIcon from 'assets/icons/unleash-integration.svg';
 
 interface IIntegrationIconProps {
@@ -46,6 +47,7 @@ const integrations: Record<
     teamsworkflow: { title: 'Teams', icon: teamsIcon },
     webhook: { title: 'Webhook', icon: webhooksIcon },
     servicenow: { title: 'ServiceNow', icon: serviceNowIcon },
+    github: { title: 'GitHub', icon: githubIcon },
     unleash: { title: 'Unleash', icon: unleashIcon },
     ...SDK_ICONS,
 };

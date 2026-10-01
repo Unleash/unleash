@@ -74,6 +74,7 @@ export const EventSchemaType = {
     'drop-projects': 'drop-projects',
     'tag-created': 'tag-created',
     'tag-deleted': 'tag-deleted',
+    'tag-updated': 'tag-updated',
     'tag-import': 'tag-import',
     'drop-tags': 'drop-tags',
     'tag-type-created': 'tag-type-created',

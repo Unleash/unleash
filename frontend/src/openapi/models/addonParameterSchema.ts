@@ -16,10 +16,10 @@ export interface AddonParameterSchema {
     name: string;
     /** The default value for this parameter. This value is used if no other value is provided. */
     placeholder?: string;
-    /** Whether this parameter is required or not. If a parameter is required, you must give it a value when you create the addon. If it is not required it can be left out. It may receive a default value in those cases. */
+    /** Whether this parameter is required or not. If a parameter is required, you must give it a value when you create the addon. If it is not required it can be left out. It may receive a default value in those cases. Parameters of type `keyvaluepairs` ignore this attribute. */
     required: boolean;
-    /** Indicates whether this parameter is **sensitive** or not. Unleash will not return sensitive parameters to API requests. It will instead use a number of asterisks to indicate that a value is set, e.g. "******". The number of asterisks does not correlate to the parameter's value. */
+    /** Indicates whether this parameter is **sensitive** or not. Unleash will not return sensitive parameters to API requests. It will instead use a number of asterisks to indicate that a value is set, e.g. "******". The number of asterisks does not correlate to the parameter's value. Parameters of type `keyvaluepairs` ignore this attribute. */
     sensitive: boolean;
-    /** The type of the parameter. Corresponds roughly to [HTML `input` field types](https://developer.mozilla.org/docs/Web/HTML/Element/Input#input_types). Multi-line input fields are indicated as `textfield` (equivalent to the HTML `textarea` tag). Collections of user-defined key-value pairs are indicated as `keyvaluepairs`.*/
+    /** The type of the parameter. Corresponds roughly to [HTML `input` field types](https://developer.mozilla.org/docs/Web/HTML/Element/Input#input_types). Multi-line input fields are indicated as `textfield` (equivalent to the HTML `textarea` tag). Collections of user-defined key-value pairs are indicated as `keyvaluepairs`. */
     type: string;
 }

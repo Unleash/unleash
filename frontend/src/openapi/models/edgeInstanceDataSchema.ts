@@ -5,6 +5,7 @@
  */
 import type { ConnectionConsumptionSchema } from './connectionConsumptionSchema.ts';
 import type { EdgeApiKeyRevisionIdSchema } from './edgeApiKeyRevisionIdSchema.ts';
+import type { EdgeInstanceDataSchemaEnricherMetrics } from './edgeInstanceDataSchemaEnricherMetrics.ts';
 import type { EdgeInstanceDataSchemaHosting } from './edgeInstanceDataSchemaHosting.ts';
 import type { EdgeInstanceTrafficSchema } from './edgeInstanceTrafficSchema.ts';
 import type { EdgeProcessMetricsSchema } from './edgeProcessMetricsSchema.ts';
@@ -34,6 +35,11 @@ export interface EdgeInstanceDataSchema {
     connectionConsumptionSinceLastReport?: ConnectionConsumptionSchema;
     /** Which version (semver) of Edge is the Edge instance running. */
     edgeVersion: string;
+    /**
+     * Context enrichment request latency, errors, and timeouts.
+     * @nullable
+     */
+    enricherMetrics?: EdgeInstanceDataSchemaEnricherMetrics;
     /** A marker that tells Unleash whether this Edge instance is self-hosted, enterprise self-hosted, or hosted by Unleash. */
     hosting?: EdgeInstanceDataSchemaHosting;
     /** The ID of the Edge process, typically a ULID. Newly generated for each restart of the instance. */

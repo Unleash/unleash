@@ -99,7 +99,6 @@ export type UiFlags = {
     multiMetricChart?: boolean;
     logRocketEnabled?: boolean;
     hubspotChatEnabled?: boolean;
-    newModalDesign?: boolean;
     learningLab?: Variant;
     flightRecorderFrontend?: Variant;
     searchDocsWidget?: boolean;

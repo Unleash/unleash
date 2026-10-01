@@ -1,138 +1,392 @@
-import type { FormEventHandler } from 'react';
-import theme from 'themes/theme';
+import { type FormEventHandler, type ReactNode, useRef, useState } from 'react';
 import {
-    ConfigButtons,
-    DescriptionContainer,
-    NameContainer,
-    StyledForm,
-    StyledHeader,
-    StyledInput,
-    TopGrid,
-    LimitContainer,
-    FormActions,
-    IconWrapper,
-} from './DialogFormTemplate.styles';
-import { Button } from '@mui/material';
+    Box,
+    Button,
+    FormControlLabel,
+    Switch,
+    styled,
+    useTheme,
+    type Theme,
+} from '@mui/material';
+import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import type { IPermissionButtonProps } from 'component/common/PermissionButton/PermissionButton';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+import Input from 'component/common/Input/Input';
 import { NamingPatternInfo } from './NamingPatternInfo.tsx';
 import type { CreateFeatureNamingPatternSchema } from 'openapi';
+import { HeaderBreadcrumb } from './HeaderBreadcrumb.tsx';
+import { DropdownList } from './ConfigButtons/DropdownList.tsx';
+import { StyledPopover } from './ConfigButtons/shared.styles.tsx';
+import { capitalizeFirst } from 'utils/capitalizeFirst';
 
-type FormProps = {
+export type ProjectOption = { label: string; value: string };
+
+type Props = {
     createButtonProps: IPermissionButtonProps;
-    description: string;
-    errors: { [key: string]: string };
-    handleSubmit: FormEventHandler<HTMLFormElement>;
-    Icon: React.ReactNode;
-    Limit?: React.ReactNode;
+    title: string;
+    projects: ProjectOption[];
+    project: string;
+    currentProjectName?: string;
+    onProjectChange: (next: string) => void;
+    hideProjectSelector?: boolean;
     name: string;
-    onClose: () => void;
-    configButtons: React.ReactNode;
-    resource: string;
-    setDescription: (newDescription: string) => void;
-    setName: (newName: string) => void;
+    setName: (next: string) => void;
+    description: string;
+    setDescription: (next: string) => void;
+    errors: { [key: string]: string };
     validateName?: () => void;
     namingPattern?: CreateFeatureNamingPatternSchema;
+    configButtons: ReactNode;
+    impressionData: boolean;
+    setImpressionData: (next: boolean) => void;
+    impressionDataHelp?: ReactNode;
+    Limit?: ReactNode;
+    handleSubmit: FormEventHandler<HTMLFormElement>;
+    onClose: () => void;
+    resource: string;
 };
 
-export const DialogFormTemplate: React.FC<FormProps> = ({
-    Limit,
-    handleSubmit,
+const StyledForm = styled('form')(({ theme }) => ({
+    background: theme.palette.background.paper,
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1,
+}));
+
+const Section = styled('div')(({ theme }) => ({
+    padding: theme.spacing(0, 4),
+}));
+
+// Uses MUI's public `slotProps` API so we avoid reaching into internal MUI classes.
+const inlineFieldSlotProps = (htmlInputSx: Record<string, unknown>) => ({
+    inputLabel: { shrink: true, sx: { display: 'none' } },
+    input: { sx: { padding: 0 } },
+    htmlInput: { sx: { padding: 0, width: '100%', ...htmlInputSx } },
+});
+
+export const nameInputSlotProps = (theme: Theme) =>
+    inlineFieldSlotProps({
+        fontWeight: theme.typography.fontWeightRegular,
+        lineHeight: 1.4,
+        '&::placeholder': {
+            color: theme.palette.text.primary,
+            opacity: 0.55,
+            fontWeight: theme.typography.fontWeightRegular,
+        },
+    });
+
+export const descriptionInputSlotProps = (theme: Theme) =>
+    inlineFieldSlotProps({
+        color: theme.palette.text.secondary,
+        '&::placeholder': {
+            color: theme.palette.text.secondary,
+            opacity: 0.8,
+        },
+    });
+
+const ToggleWrapper = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.5),
+    marginLeft: theme.spacing(-1.5),
+}));
+
+export const PillButton = styled(Button)(({ theme }) => ({
+    borderColor: theme.palette.divider,
+    backgroundColor: theme.palette.background.paper,
+    color: theme.palette.text.primary,
+    textTransform: 'none',
+    fontWeight: theme.typography.body1.fontWeight,
+    borderRadius: '4px',
+    padding: theme.spacing(1, 2),
+    minWidth: theme.spacing(18),
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: theme.spacing(1),
+    '&:hover': {
+        borderColor: theme.palette.text.secondary,
+        backgroundColor: theme.palette.background.paper,
+    },
+}));
+
+type DropdownOption<T> = { label: string; value: T; description?: string };
+
+export type PillTooltip = { header: string; description?: string };
+type Tooltip = PillTooltip;
+
+export const PillTrigger = ({
+    label,
+    onClick,
+    buttonRef,
+}: {
+    label: string;
+    onClick: () => void;
+    buttonRef: React.RefObject<HTMLButtonElement | null>;
+}) => (
+    <PillButton
+        ref={buttonRef}
+        variant='outlined'
+        color='inherit'
+        onClick={onClick}
+    >
+        <span>{label}</span>
+        <KeyboardArrowDownOutlined />
+    </PillButton>
+);
+
+type SinglePillProps<T> = {
+    label: string;
+    tooltip: Tooltip;
+    options: DropdownOption<T>[];
+    onChange: (value: T) => void;
+    searchLabel: string;
+    searchPlaceholder: string;
+    selectedValue?: T;
+    hideSearch?: boolean;
+};
+
+export function SinglePillDropdown<T = string>({
+    label,
+    tooltip,
+    options,
+    onChange,
+    searchLabel,
+    searchPlaceholder,
+    selectedValue,
+    hideSearch,
+}: SinglePillProps<T>) {
+    const ref = useRef<HTMLButtonElement>(null);
+    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+    return (
+        <>
+            <PillTrigger
+                label={label}
+                buttonRef={ref}
+                onClick={() => setAnchorEl(ref.current)}
+            />
+            <StyledPopover
+                open={Boolean(anchorEl)}
+                anchorEl={anchorEl}
+                onClose={() => setAnchorEl(null)}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+            >
+                <DropdownList<T>
+                    header={tooltip}
+                    options={options}
+                    selectedValue={selectedValue}
+                    hideSearch={hideSearch}
+                    onChange={(value) => {
+                        onChange(value);
+                        setAnchorEl(null);
+                    }}
+                    search={{
+                        label: searchLabel,
+                        placeholder: searchPlaceholder,
+                    }}
+                />
+            </StyledPopover>
+        </>
+    );
+}
+
+type MultiPillProps<T> = {
+    label: string;
+    tooltip: Tooltip;
+    options: DropdownOption<T>[];
+    selectedOptions: Set<T>;
+    onChange: (values: Set<T>) => void;
+    searchLabel: string;
+    searchPlaceholder: string;
+};
+
+export function MultiPillDropdown<T = string>({
+    label,
+    tooltip,
+    options,
+    selectedOptions,
+    onChange,
+    searchLabel,
+    searchPlaceholder,
+}: MultiPillProps<T>) {
+    const ref = useRef<HTMLButtonElement>(null);
+    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+    const toggle = (value: T) => {
+        const next = new Set(selectedOptions);
+        if (next.has(value)) next.delete(value);
+        else next.add(value);
+        onChange(next);
+    };
+    return (
+        <>
+            <PillTrigger
+                label={label}
+                buttonRef={ref}
+                onClick={() => setAnchorEl(ref.current)}
+            />
+            <StyledPopover
+                open={Boolean(anchorEl)}
+                anchorEl={anchorEl}
+                onClose={() => setAnchorEl(null)}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+            >
+                <DropdownList<T>
+                    header={tooltip}
+                    options={options}
+                    multiselect={{ selectedOptions }}
+                    onChange={toggle}
+                    search={{
+                        label: searchLabel,
+                        placeholder: searchPlaceholder,
+                    }}
+                />
+            </StyledPopover>
+        </>
+    );
+}
+
+export const DialogFormTemplate: React.FC<Props> = ({
+    createButtonProps,
+    title,
+    projects,
+    project,
+    currentProjectName,
+    onProjectChange,
+    hideProjectSelector,
     name,
-    namingPattern,
     setName,
     description,
     setDescription,
     errors,
-    Icon,
-    resource,
-    onClose,
-    configButtons,
-    createButtonProps,
     validateName = () => {},
+    namingPattern,
+    configButtons,
+    impressionData,
+    setImpressionData,
+    impressionDataHelp,
+    Limit,
+    handleSubmit,
+    onClose,
+    resource,
 }) => {
+    const theme = useTheme();
+
     return (
         <StyledForm onSubmit={handleSubmit}>
-            <TopGrid>
-                <IconWrapper>{Icon}</IconWrapper>
-                <StyledHeader variant='h2'>Create {resource}</StyledHeader>
-                <NameContainer>
-                    <StyledInput
-                        label={`${resource} name`}
-                        aria-required
-                        aria-details={
-                            namingPattern?.pattern
-                                ? 'naming-pattern-info'
-                                : undefined
+            <HeaderBreadcrumb
+                options={hideProjectSelector ? [] : projects}
+                value={project}
+                valueLabel={currentProjectName}
+                onChange={onProjectChange}
+                title={title}
+            />
+
+            <Section sx={{ pt: 4, pb: 3, width: '100%' }}>
+                <Input
+                    label={`${capitalizeFirst(resource)} name`}
+                    placeholder='Feature-flag-name'
+                    aria-required
+                    aria-details={
+                        namingPattern?.pattern
+                            ? 'naming-pattern-info'
+                            : undefined
+                    }
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    error={Boolean(errors.name)}
+                    errorText={errors.name}
+                    onBlur={() => {
+                        if (name) validateName();
+                    }}
+                    onFocus={() => {
+                        delete errors.name;
+                    }}
+                    autoFocus
+                    slotProps={nameInputSlotProps(theme)}
+                    data-testid='FORM_NAME_INPUT'
+                    size='medium'
+                    fullWidth
+                />
+                {namingPattern?.pattern ? (
+                    <NamingPatternInfo naming={namingPattern} />
+                ) : null}
+            </Section>
+
+            <Section sx={{ pb: 4, width: '100%' }}>
+                <Input
+                    label='Description (optional)'
+                    placeholder='Description (optional)'
+                    multiline
+                    maxRows={3}
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    slotProps={descriptionInputSlotProps(theme)}
+                    data-testid='FORM_DESCRIPTION_INPUT'
+                    size='medium'
+                    fullWidth
+                />
+            </Section>
+
+            <Section
+                sx={{
+                    display: 'flex',
+                    gap: 2,
+                    flexFlow: 'row wrap',
+                    pt: 2,
+                    pb: 3,
+                }}
+            >
+                {configButtons}
+            </Section>
+
+            <Section sx={{ pb: 4 }}>
+                <ToggleWrapper>
+                    <FormControlLabel
+                        sx={{ m: 0 }}
+                        control={
+                            <Switch
+                                checked={impressionData}
+                                onChange={(e) =>
+                                    setImpressionData(e.target.checked)
+                                }
+                            />
                         }
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        error={Boolean(errors.name)}
-                        errorText={errors.name}
-                        onBlur={() => {
-                            if (name) validateName();
-                        }}
-                        onFocus={() => {
-                            delete errors.name;
-                        }}
-                        autoFocus
-                        slotProps={{
-                            input: {
-                                style: {
-                                    fontSize: theme.typography.h1.fontSize,
-                                },
-                            },
-                            inputLabel: {
-                                style: {
-                                    fontSize: theme.typography.h1.fontSize,
-                                },
-                            },
-                        }}
-                        data-testid='FORM_NAME_INPUT'
-                        size='medium'
+                        label={
+                            impressionData
+                                ? 'Impression data enabled'
+                                : 'Impression data not enabled'
+                        }
                     />
-
-                    {namingPattern?.pattern ? (
-                        <NamingPatternInfo naming={namingPattern!} />
+                    {impressionDataHelp ? (
+                        <HelpIcon tooltip={impressionDataHelp} htmlTooltip />
                     ) : null}
-                </NameContainer>
-                <DescriptionContainer>
-                    <StyledInput
-                        size='medium'
-                        className='description'
-                        label='Description (optional)'
-                        multiline
-                        maxRows={3}
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        slotProps={{
-                            input: {
-                                style: {
-                                    fontSize: theme.typography.h2.fontSize,
-                                },
-                            },
-                            inputLabel: {
-                                style: {
-                                    fontSize: theme.typography.h2.fontSize,
-                                },
-                            },
-                        }}
-                        data-testid='FORM_DESCRIPTION_INPUT'
-                    />
-                </DescriptionContainer>
-            </TopGrid>
+                </ToggleWrapper>
+            </Section>
 
-            <ConfigButtons>{configButtons}</ConfigButtons>
+            <Box sx={{ flex: 1 }} />
 
-            <LimitContainer>{Limit}</LimitContainer>
-            <FormActions>
+            {Limit ? <Section sx={{ pb: 2 }}>{Limit}</Section> : null}
+
+            <Section
+                sx={{
+                    display: 'flex',
+                    gap: 2,
+                    justifyContent: 'flex-end',
+                    alignItems: 'center',
+                    pt: 2,
+                    pb: 3,
+                }}
+            >
                 <Button onClick={onClose}>Cancel</Button>
                 <CreateButton
                     data-testid='FORM_CREATE_BUTTON'
-                    name={resource}
+                    name='flag'
                     {...createButtonProps}
                 />
-            </FormActions>
+            </Section>
         </StyledForm>
     );
 };

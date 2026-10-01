@@ -43,7 +43,7 @@ import {
     MultiPillDropdown,
     nameInputSlotProps,
     SinglePillDropdown,
-} from 'component/common/DialogFormTemplate/NewDialogFormTemplate';
+} from 'component/common/DialogFormTemplate/DialogFormTemplate.tsx';
 import useProjectForm, {
     DEFAULT_PROJECT_STICKINESS,
 } from '../../hooks/useProjectForm.ts';
@@ -72,7 +72,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     },
 }));
 
-const StyledNewSidebarHeader = styled(Box)(({ theme }) => ({
+const StyledSidebarHeader = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'center',
@@ -86,23 +86,23 @@ const StyledNewSidebarHeader = styled(Box)(({ theme }) => ({
     },
 }));
 
-const StyledNewSidebarCloseButton = styled(IconButton)(({ theme }) => ({
+const StyledSidebarCloseButton = styled(IconButton)(({ theme }) => ({
     color: theme.palette.common.white,
 }));
 
-const StyledNewSidebarLinkContainer = styled(Box)(({ theme }) => ({
+const StyledSidebarLinkContainer = styled(Box)(({ theme }) => ({
     margin: theme.spacing(3, 0),
     display: 'flex',
     alignItems: 'center',
     width: '100%',
 }));
 
-const StyledNewSidebarLinkIcon = styled(MenuBookIcon)(({ theme }) => ({
+const StyledSidebarLinkIcon = styled(MenuBookIcon)(({ theme }) => ({
     marginRight: theme.spacing(1),
     color: theme.palette.primary.contrastText,
 }));
 
-const StyledNewSidebarLink = styled(Link)(({ theme }) => ({
+const StyledSidebarLink = styled(Link)(({ theme }) => ({
     color: theme.palette.primary.contrastText,
     display: 'block',
     '&:hover': {
@@ -458,25 +458,25 @@ export const CreateProjectDialog: FC<Props> = ({ open, onClose }) => {
 
     const sidebar: ReactNode = (
         <>
-            <StyledNewSidebarHeader>
-                <StyledNewSidebarCloseButton
+            <StyledSidebarHeader>
+                <StyledSidebarCloseButton
                     onClick={onClose}
                     size='small'
                     aria-label='Close'
                 >
                     <CloseIcon />
-                </StyledNewSidebarCloseButton>
-            </StyledNewSidebarHeader>
-            <StyledNewSidebarLinkContainer>
-                <StyledNewSidebarLinkIcon />
-                <StyledNewSidebarLink
+                </StyledSidebarCloseButton>
+            </StyledSidebarHeader>
+            <StyledSidebarLinkContainer>
+                <StyledSidebarLinkIcon />
+                <StyledSidebarLink
                     href='https://docs.getunleash.io/reference/projects'
                     rel='noopener noreferrer'
                     target='_blank'
                 >
                     Projects documentation
-                </StyledNewSidebarLink>
-            </StyledNewSidebarLinkContainer>
+                </StyledSidebarLink>
+            </StyledSidebarLinkContainer>
             <ApiCommandBlock
                 command={formatApiCode()}
                 onCopy={copyApiCommand}

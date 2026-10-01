@@ -65,7 +65,6 @@ export type IFlagKey =
     | 'multiMetricChart'
     | 'logRocketEnabled'
     | 'hubspotChatEnabled'
-    | 'newModalDesign'
     | 'allowDeprecatedApiTokenMiddleware'
     | 'serviceNowIntegration'
     | 'learningLab'
@@ -311,10 +310,6 @@ const flags: IFlags = {
     ),
     hubspotChatEnabled: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_HUBSPOT_CHAT_ENABLED,
-        false,
-    ),
-    newModalDesign: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_MODAL_DESIGN,
         false,
     ),
     learningLab: {

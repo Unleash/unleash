@@ -82,6 +82,7 @@ export const PROJECT_GROUP_ADDED = 'project-group-added' as const;
 export const DROP_PROJECTS = 'drop-projects' as const;
 export const TAG_CREATED = 'tag-created' as const;
 export const TAG_DELETED = 'tag-deleted' as const;
+export const TAG_UPDATED = 'tag-updated' as const;
 export const TAG_IMPORT = 'tag-import' as const;
 export const DROP_TAGS = 'drop-tags' as const;
 export const TAG_TYPE_CREATED = 'tag-type-created' as const;
@@ -313,6 +314,7 @@ export const IEventTypes = [
     DROP_PROJECTS,
     TAG_CREATED,
     TAG_DELETED,
+    TAG_UPDATED,
     TAG_IMPORT,
     DROP_TAGS,
     TAG_TYPE_CREATED,

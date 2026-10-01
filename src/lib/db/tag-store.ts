@@ -78,6 +78,24 @@ export default class TagStore implements ITagStore {
         stopTimer();
     }
 
+    async renameTag(tag: ITag, newValue: string): Promise<void> {
+        const stopTimer = this.timer('renameTag');
+        // feature_tag's foreign key to tags has no ON UPDATE CASCADE, so the tag
+        // can't be updated in place. Create the new value, move the flags to it,
+        // then delete the old value, which no flag references any more.
+        // created_at is copied so the rename doesn't look like a new tag.
+        await this.db(TABLE).insert(
+            this.db(TABLE)
+                .select('type', this.db.raw('?', [newValue]), 'created_at')
+                .where({ type: tag.type, value: tag.value }),
+        );
+        await this.db('feature_tag')
+            .where({ tag_type: tag.type, tag_value: tag.value })
+            .update({ tag_value: newValue });
+        await this.db(TABLE).where({ type: tag.type, value: tag.value }).del();
+        stopTimer();
+    }
+
     async delete(tag: ITag): Promise<void> {
         const stopTimer = this.timer('deleteTag');
         await this.db(TABLE).where(tag).del();

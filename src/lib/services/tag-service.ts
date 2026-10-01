@@ -1,6 +1,10 @@
 import { tagSchema } from './tag-schema.js';
 import NameExistsError from '../error/name-exists-error.js';
-import { TagCreatedEvent, TagDeletedEvent } from '../types/index.js';
+import {
+    TagCreatedEvent,
+    TagDeletedEvent,
+    TagUpdatedEvent,
+} from '../types/index.js';
 import type { Logger } from '../logger.js';
 import type { IUnleashStores } from '../types/stores.js';
 import type { IUnleashConfig } from '../types/option.js';
@@ -41,7 +45,9 @@ export default class TagService {
     async validateUnique(tag: ITag): Promise<void> {
         const exists = await this.tagStore.exists(tag);
         if (exists) {
-            throw new NameExistsError(`A tag of ${tag} already exists`);
+            throw new NameExistsError(
+                `A tag with type [${tag.type}] and value [${tag.value}] already exists`,
+            );
         }
     }
 
@@ -66,6 +72,28 @@ export default class TagService {
         );
 
         return data;
+    }
+
+    async renameTag(
+        tag: ITag,
+        newValue: string,
+        auditUser: IAuditUser,
+    ): Promise<ITag> {
+        const existing = await this.tagStore.getTag(tag.type, tag.value);
+        const renamed = await this.validate({
+            type: existing.type,
+            value: newValue.trim(),
+        });
+        await this.tagStore.renameTag(existing, renamed.value);
+        await this.eventService.storeEvent(
+            new TagUpdatedEvent({
+                data: renamed,
+                preData: existing,
+                auditUser,
+            }),
+        );
+
+        return renamed;
     }
 
     async deleteTag(tag: ITag, auditUser: IAuditUser): Promise<void> {

@@ -25,12 +25,14 @@ import {
     getStandardResponses,
 } from '../../openapi/util/standard-responses.js';
 import type { IFlagResolver } from '../../types/index.js';
-import type { CreateTagSchema } from '../../openapi/index.js';
+import type { WithTransactional } from '../../db/transaction.js';
+import type { CreateTagSchema, RenameTagSchema } from '../../openapi/index.js';
+import { requireFeatureEnabled } from '../../middleware/conditional-middleware.js';
 
 const version = 1;
 
 class TagController extends Controller {
-    private tagService: TagService;
+    private tagService: WithTransactional<TagService>;
 
     private openApiService: OpenApiService;
 
@@ -39,12 +41,12 @@ class TagController extends Controller {
     constructor(
         config: IUnleashConfig,
         {
-            tagService,
+            transactionalTagService,
             openApiService,
-        }: Pick<IUnleashServices, 'tagService' | 'openApiService'>,
+        }: Pick<IUnleashServices, 'transactionalTagService' | 'openApiService'>,
     ) {
         super(config);
-        this.tagService = tagService;
+        this.tagService = transactionalTagService;
         this.openApiService = openApiService;
         this.flagResolver = config.flagResolver;
 
@@ -131,6 +133,31 @@ class TagController extends Controller {
             ],
         });
         this.route({
+            method: 'post',
+            path: '/:type/:value/rename',
+            handler: this.renameTag,
+            permission: UPDATE_FEATURE,
+            middleware: [
+                requireFeatureEnabled(
+                    config.flagResolver,
+                    'tagManagementViaUi',
+                ),
+                openApiService.validPath({
+                    tags: ['Tags'],
+                    release: { alpha: true },
+                    operationId: 'renameTag',
+                    summary: 'Rename a tag.',
+                    description:
+                        'Change the value of a tag. Every feature flag that has the tag gets the new value.',
+                    requestBody: createRequestSchema('renameTagSchema'),
+                    responses: {
+                        200: createResponseSchema('tagWithVersionSchema'),
+                        ...getStandardResponses(400, 401, 403, 404, 409, 415),
+                    },
+                }),
+            ],
+        });
+        this.route({
             method: 'delete',
             path: '/:type/:value',
             handler: this.deleteTag,
@@ -199,6 +226,17 @@ class TagController extends Controller {
             .header('location', `tags/${tag.type}/${tag.value}`)
             .json({ version, tag })
             .end();
+    }
+
+    async renameTag(
+        req: IAuthRequest<TagSchema, unknown, RenameTagSchema>,
+        res: Response<TagWithVersionSchema>,
+    ): Promise<void> {
+        const { type, value } = req.params;
+        const tag = await this.tagService.transactional((service) =>
+            service.renameTag({ type, value }, req.body.value, req.audit),
+        );
+        res.status(200).json({ version, tag }).end();
     }
 
     async deleteTag(

@@ -112,6 +112,7 @@ import {
     TAG_TYPE_DELETED,
     TAG_TYPE_IMPORT,
     TAG_TYPE_UPDATED,
+    TAG_UPDATED,
     USER_CREATED,
     USER_DELETED,
     USER_PREFERENCE_UPDATED,
@@ -1457,6 +1458,21 @@ export class TagDeletedEvent extends BaseEvent {
     }) {
         super(TAG_DELETED, eventData.auditUser);
         this.data = eventData.data;
+    }
+}
+
+export class TagUpdatedEvent extends BaseEvent {
+    readonly data: any;
+    readonly preData: any;
+
+    constructor(eventData: {
+        auditUser: IAuditUser;
+        data: any;
+        preData: any;
+    }) {
+        super(TAG_UPDATED, eventData.auditUser);
+        this.data = eventData.data;
+        this.preData = eventData.preData;
     }
 }
 

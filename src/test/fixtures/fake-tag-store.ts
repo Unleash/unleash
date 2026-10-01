@@ -16,6 +16,14 @@ export default class FakeTagStore implements ITagStore {
         this.tags.push(tag);
     }
 
+    async renameTag(tag: ITag, newValue: string): Promise<void> {
+        const existing = await this.getTag(tag.type, tag.value);
+        this.tags[this.tags.indexOf(existing)] = {
+            type: tag.type,
+            value: newValue,
+        };
+    }
+
     async delete(key: ITag): Promise<void> {
         this.tags.splice(this.tags.indexOf(key));
     }

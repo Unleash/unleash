@@ -117,6 +117,7 @@ import {
     createFakeTagTypeService,
     createTagTypeService,
 } from '../features/tag-type/createTagTypeService.js';
+import { createFakeTagService, createTagService } from './createTagService.js';
 import {
     createFakeInstanceStatsService,
     createInstanceStatsService,
@@ -266,7 +267,12 @@ export const createServices = (
     );
     const resetTokenService = new ResetTokenService(stores, config);
     const strategyService = new StrategyService(stores, config, eventService);
-    const tagService = new TagService(stores, config, eventService);
+    const transactionalTagService = db
+        ? withTransactional(createTagService(config), db)
+        : withFakeTransactional(
+              createFakeTagService(config, stores, eventService),
+          );
+    const tagService = transactionalTagService;
     const transactionalTagTypeService = db
         ? withTransactional(createTagTypeService(config), db)
         : withFakeTransactional(createFakeTagTypeService(config));
@@ -532,6 +538,7 @@ export const createServices = (
         tagTypeService,
         transactionalTagTypeService,
         tagService,
+        transactionalTagService,
         clientInstanceService,
         clientMetricsServiceV2,
         contextService,
@@ -694,6 +701,7 @@ export interface IUnleashServices {
     settingService: SettingService;
     strategyService: StrategyService;
     tagService: TagService;
+    transactionalTagService: WithTransactional<TagService>;
     tagTypeService: TagTypeService;
     transactionalTagTypeService: WithTransactional<TagTypeService>;
     userFeedbackService: UserFeedbackService;

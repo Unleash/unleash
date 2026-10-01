@@ -68,7 +68,6 @@ process.nextTick(async () => {
                         githubIntegration: true,
                         tagManagementViaUi: true,
                         integrationParamKvpEditor: true,
-                        perFlagLifetime: true,
                     },
                 },
                 authentication: {

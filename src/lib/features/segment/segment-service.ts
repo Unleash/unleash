@@ -19,7 +19,11 @@ import type {
     ISegmentService,
     StrategiesUsingSegment,
 } from './segment-service-interface.js';
-import { NotFoundError, PermissionError } from '../../error/index.js';
+import {
+    InvalidOperationError,
+    NotFoundError,
+    PermissionError,
+} from '../../error/index.js';
 import type { IChangeRequestAccessReadModel } from '../change-request-access-service/change-request-access-read-model.js';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
 import type EventService from '../events/event-service.js';
@@ -341,6 +345,26 @@ export class SegmentService implements ISegmentService {
                 this.addToStrategy(segmentId, strategyId),
             ),
         );
+    }
+
+    async validateStrategyBelongsToProjectAndEnvironment({
+        strategyId,
+        projectId,
+        environment,
+    }: {
+        strategyId: string;
+        projectId: string;
+        environment: string;
+    }): Promise<void> {
+        const strategy = await this.featureStrategiesStore.get(strategyId);
+        if (
+            strategy?.projectId !== projectId ||
+            strategy.environment !== environment
+        ) {
+            throw new InvalidOperationError(
+                `Strategy ${strategyId} does not belong to project ${projectId} and environment ${environment}`,
+            );
+        }
     }
 
     // Used by unleash-enterprise.

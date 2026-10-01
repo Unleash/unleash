@@ -19,6 +19,7 @@ interface ITagTypeForm {
     clearErrors: () => void;
     validateNameUniqueness?: () => void;
     children?: React.ReactNode;
+    tagValues?: React.ReactNode;
 }
 
 const StyledForm = styled('form')(({ theme }) => ({
@@ -52,6 +53,7 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
 
 const TagTypeForm: React.FC<ITagTypeForm> = ({
     children,
+    tagValues,
     handleSubmit,
     handleCancel,
     tagName,
@@ -102,6 +104,7 @@ const TagTypeForm: React.FC<ITagTypeForm> = ({
                     />
                 </Typography>
             </StyledContainer>
+            {tagValues}
             <StyledButtonContainer>
                 {children}
                 <StyledCancelButton onClick={handleCancel}>

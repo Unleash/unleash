@@ -11,6 +11,8 @@ import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { GO_BACK } from 'constants/navigate';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { TagValuesTable } from './TagValuesTable/TagValuesTable.tsx';
 
 const EditTagType = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -18,6 +20,7 @@ const EditTagType = () => {
     const navigate = useNavigate();
     const name = useRequiredPathParam('name');
     const { tagType } = useTagType(name);
+    const tagManagementViaUi = useUiFlag('tagManagementViaUi');
     const {
         tagName,
         tagDesc,
@@ -81,6 +84,11 @@ const EditTagType = () => {
                 setColor={setColor}
                 mode='Edit'
                 clearErrors={clearErrors}
+                tagValues={
+                    tagManagementViaUi ? (
+                        <TagValuesTable tagType={name} />
+                    ) : null
+                }
             >
                 <UpdateButton permission={UPDATE_TAG_TYPE} />
             </TagForm>

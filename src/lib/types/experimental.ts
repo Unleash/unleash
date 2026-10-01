@@ -20,6 +20,7 @@ export type IFlagKey =
     | 'messageBanner'
     | 'strictSchemaValidation'
     | 'personalAccessTokensKillSwitch'
+    | 'sessionTimeouts'
     | 'migrationLock'
     | 'demo'
     | 'interactiveDemoKillSwitch'
@@ -93,6 +94,10 @@ export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 const flags: IFlags = {
     anonymiseEventLog: false,
     enableLicense: false,
+    sessionTimeouts: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SESSION_TIMEOUTS,
+        false,
+    ),
     responseTimeWithAppNameKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_RESPONSE_TIME_WITH_APP_NAME_KILL_SWITCH,
         false,

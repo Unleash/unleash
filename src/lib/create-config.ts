@@ -1,6 +1,7 @@
 import pgs from 'pg-connection-string';
 const { parse } = pgs;
 import merge from 'deepmerge';
+import { DEFAULT_SESSION_TTL_HOURS } from './sessions/session-limits.js';
 import { readFileSync, existsSync } from 'fs';
 import {
     type IAuthOption,
@@ -291,7 +292,15 @@ const defaultDbOptions: WithOptional<IDBOption, 'user' | 'password' | 'host'> =
     };
 
 const defaultSessionOption = (isEnterprise: boolean): ISessionOption => ({
-    ttlHours: parseEnvVarNumber(process.env.SESSION_TTL_HOURS, 48),
+    ttlHours: parseEnvVarNumber(
+        process.env.SESSION_TTL_HOURS,
+        DEFAULT_SESSION_TTL_HOURS,
+    ),
+    // optional. number <=0 : "OFF"
+    idleTimeoutMinutes: Math.max(
+        parseEnvVarNumber(process.env.SESSION_IDLE_TIMEOUT_MINUTES, 0),
+        0,
+    ),
     clearSiteDataOnLogout: parseEnvVarBoolean(
         process.env.SESSION_CLEAR_SITE_DATA_ON_LOGOUT,
         true,

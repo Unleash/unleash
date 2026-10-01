@@ -41,7 +41,15 @@ export interface IDBOption {
 }
 
 export interface ISessionOption {
+    /**
+     * The ceiling, counted from login and never extended. Default: 48 hours.
+     */
     ttlHours: number;
+    /**
+     * default: `0`, OFF. Above `0`, a session ends this many minutes
+     * after the last thing the user actually did.
+     */
+    idleTimeoutMinutes: number;
     db: boolean;
     clearSiteDataOnLogout: boolean;
     cookieName: string;

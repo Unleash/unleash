@@ -37,6 +37,11 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { AddTagTypeButton } from './AddTagTypeButton/AddTagTypeButton.tsx';
 import { Search } from 'component/common/Search/Search';
+import { useTracking } from 'hooks/useTracking';
+import {
+    deleteTagTypeTracking,
+    searchTagTypesTracking,
+} from '../tagsTracking.ts';
 
 type TagTypeRow = {
     name: string;
@@ -69,6 +74,7 @@ export const TagTypeList = () => {
     const { deleteTagType } = useTagTypesApi();
     const { tagTypes, refetch, loading } = useTagTypes();
     const { setToastData, setToastApiError } = useToast();
+    const trackSearchTagTypes = useTracking(searchTagTypesTracking);
 
     const data = useMemo<TagTypeRow[]>(() => {
         if (loading) {
@@ -196,20 +202,17 @@ export const TagTypeList = () => {
     });
 
     const deleteTag = async () => {
-        try {
-            if (deletion.name) {
-                await deleteTagType(deletion.name);
-                refetch();
-                setDeletion({ open: false });
-                setToastData({
-                    type: 'success',
-                    show: true,
-                    text: 'Tag type deleted',
-                });
-            }
-        } catch (error) {
-            setToastApiError(formatUnknownError(error));
+        if (!deletion.name) {
+            return;
         }
+        await deleteTagType(deletion.name);
+        refetch();
+        setDeletion({ open: false });
+        setToastData({
+            type: 'success',
+            show: true,
+            text: 'Tag type deleted',
+        });
     };
 
     const rows = table.getRowModel().rows;
@@ -224,7 +227,12 @@ export const TagTypeList = () => {
                         <>
                             <Search
                                 initialValue={globalFilter}
-                                onChange={(value) => setGlobalFilter(value)}
+                                onChange={(value) => {
+                                    setGlobalFilter(value);
+                                    trackSearchTagTypes('succeeded', {
+                                        queryLength: value.length,
+                                    });
+                                }}
                             />
                             <PageHeader.Divider />
                             <AddTagTypeButton />
@@ -275,7 +283,9 @@ export const TagTypeList = () => {
             <Dialogue
                 title='Really delete Tag type?'
                 open={deletion.open}
-                onClick={deleteTag}
+                onSubmit={deleteTag}
+                onError={(error) => setToastApiError(formatUnknownError(error))}
+                tracking={deleteTagTypeTracking}
                 onClose={() => {
                     setDeletion({ open: false });
                 }}

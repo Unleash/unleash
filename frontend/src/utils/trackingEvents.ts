@@ -105,7 +105,8 @@ export type CustomEvents =
     | 'flags-list'
     | 'prod-guard'
     | 'list-filters'
-    | 'event-log';
+    | 'event-log'
+    | 'tags';
 
 /**
  * One verb per meaning. A new verb is only added when it is not a synonym of one already here:

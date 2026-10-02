@@ -13,6 +13,8 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { GO_BACK } from 'constants/navigate';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { TagValuesTable } from './TagValuesTable/TagValuesTable.tsx';
+import { useTracking } from 'hooks/useTracking';
+import { editTagTypeTracking } from '../tagsTracking.ts';
 
 const EditTagType = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -33,13 +35,16 @@ const EditTagType = () => {
         clearErrors,
     } = useTagTypeForm(tagType?.name, tagType?.description, tagType?.color);
     const { updateTagType, loading } = useTagTypesApi();
+    const trackEditTagType = useTracking(editTagTypeTracking);
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
         clearErrors();
         const payload = getTagPayload();
         try {
-            await updateTagType(tagName, payload);
+            await trackEditTagType.mutation(() =>
+                updateTagType(tagName, payload),
+            );
             navigate('/tag-types');
             setToastData({
                 text: 'Tag type updated',

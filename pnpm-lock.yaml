@@ -265,8 +265,8 @@ importers:
         specifier: ^10.5.0
         version: 10.6.0
       '@fast-check/vitest':
-        specifier: ^0.4.1
-        version: 0.4.1(vitest@4.1.11)
+        specifier: ^0.5.0
+        version: 0.5.0(vitest@4.1.11)
       '@types/cors':
         specifier: 2.8.19
         version: 2.8.19
@@ -1238,10 +1238,10 @@ packages:
     resolution: {integrity: sha512-3RQHgEtvL1Frl/d1cSreo7qhJ3Gk1OdNUai/CtZ8G+wYeRQnJih3s9xJ9/kgYekPQRdwgh0HXRPqMlzWGwivIQ==}
     engines: {node: ^20.19.0 || ^22.13.0 || ^23.5.0 || >=24.0.0, npm: '>=10'}
 
-  '@fast-check/vitest@0.4.1':
-    resolution: {integrity: sha512-OX6TecB+ZzRfPc49jcPChcV1cf5aDu77CdDU8liecWVam7eD7mPvJNP50b9bBSTxVoGN5wzxrX9PIcCnqgC8bg==}
+  '@fast-check/vitest@0.5.0':
+    resolution: {integrity: sha512-Kgbj2smuq1P4OhGKuPATs5i2fAxNmGbJ/zSmTrzWhQSLUrHREbKWgv9WGbNUOXcx77q6joLVMmTygyXuwP2Bog==}
     peerDependencies:
-      vitest: ^4.1.0
+      vitest: ^4.1.0 || ^5.0.0
 
   '@fern-api/search-widget@0.5.6':
     resolution: {integrity: sha512-wJp/+PEbWcuqUzMTQtaKvrURhZkKigyAf/udiWf3reCm58MBl0urYhH5oyF6RyECJMN2oeV70o4lQ+7+XFLu4w==}
@@ -6929,7 +6929,7 @@ snapshots:
 
   '@faker-js/faker@10.6.0': {}
 
-  '@fast-check/vitest@0.4.1(vitest@4.1.11)':
+  '@fast-check/vitest@0.5.0(vitest@4.1.11)':
     dependencies:
       fast-check: 4.9.0
       vitest: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@22.20.4)(@vitest/coverage-v8@4.1.11)(@vitest/ui@4.1.11)(jsdom@25.0.1(supports-color@10.2.2))(msw@2.15.0(@types/node@22.20.4)(typescript@7.0.2))(vite@8.3.1(@types/node@22.20.4)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.104.0)(yaml@2.9.0))

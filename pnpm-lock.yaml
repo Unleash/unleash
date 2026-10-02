@@ -542,14 +542,17 @@ importers:
         specifier: 5.1.0
         version: 5.1.0(unleash-proxy-client@3.8.2)
       '@unleash/sdk-flight-recorder':
-        specifier: ^0.9.0
-        version: 0.9.0
+        specifier: ^0.10.0
+        version: 0.10.0
       '@unleash/toolbar':
         specifier: 1.2.1
         version: 1.2.1(@unleash/proxy-client-react@5.1.0(unleash-proxy-client@3.8.2))(unleash-proxy-client@3.8.2)
       '@vitejs/plugin-react':
         specifier: 6.1.1
         version: 6.1.1(@rolldown/plugin-babel@0.2.4(@babel/core@7.29.7(supports-color@8.1.1))(@babel/runtime@7.29.7)(rolldown@1.2.11)(vite@8.3.1(@types/node@22.20.4)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.104.0)(yaml@2.9.0)))(vite@8.3.1(@types/node@22.20.4)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.104.0)(yaml@2.9.0))
+      bowser:
+        specifier: 2.14.1
+        version: 2.14.1
       cartesian:
         specifier: ^1.0.1
         version: 1.0.1
@@ -2525,8 +2528,8 @@ packages:
     peerDependencies:
       unleash-proxy-client: ^3.8.0
 
-  '@unleash/sdk-flight-recorder@0.9.0':
-    resolution: {integrity: sha512-hZkmXb+0NmO9CsfPGbWVKDTeizJNwbqECH3rRhYK/Entcnn1EJS8tOw5mFvl9PplQQ+9V4U4dRf4HxywcuP/iA==}
+  '@unleash/sdk-flight-recorder@0.10.0':
+    resolution: {integrity: sha512-NSPMthLYAco9IZj6guoOico37RtLcmAnko3TWMGH/PyUVrah4mZPS3ua8fxV8gJ7PIcrjR3CHoWZ1oJmgYa9Kw==}
     engines: {node: '>=20'}
 
   '@unleash/toolbar@1.2.1':
@@ -2788,6 +2791,9 @@ packages:
   body-parser@1.20.8:
     resolution: {integrity: sha512-JNcyFQ64OiijEkPzUBTCe+hyPXUD/3LEldGQ6iF5LR1w00mx9o7xtDWHXBY2iItjdCFGoilOLNQbH943ut7pHA==}
     engines: {node: '>= 0.8', npm: 1.2.8000 || >= 1.4.16}
+
+  bowser@2.14.1:
+    resolution: {integrity: sha512-tzPjzCxygAKWFOJP011oxFHs57HzIhOEracIgAePE4pqB3LikALKnSzUyU4MGs9/iCEUuHlAJTjTc5M+u7YEGg==}
 
   brace-expansion@2.1.7:
     resolution: {integrity: sha512-uZbew1NqdmPDTMJ8ah1y+b+9QEJrfkXFk3RcTQw3X0jW/xRUvFKsg1CfQdSYGdTbXZWExtU3J3ccxtnfw1Fi0g==}
@@ -8128,7 +8134,7 @@ snapshots:
     dependencies:
       unleash-proxy-client: 3.8.2
 
-  '@unleash/sdk-flight-recorder@0.9.0':
+  '@unleash/sdk-flight-recorder@0.10.0':
     dependencies:
       '@noble/hashes': 2.4.0
       ky: 2.0.2
@@ -8390,6 +8396,8 @@ snapshots:
       unpipe: 1.0.0
     transitivePeerDependencies:
       - supports-color
+
+  bowser@2.14.1: {}
 
   brace-expansion@2.1.7:
     dependencies:

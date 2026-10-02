@@ -24,6 +24,7 @@ import noAuthentication, {
 } from './middleware/no-authentication.js';
 import secureHeaders from './middleware/secure-headers.js';
 import { sessionContextMiddleware } from './middleware/session-context.js';
+import { sessionTimeoutMiddleware } from './middleware/session-timeout-middleware.js';
 
 import { loadIndexHTML, findPublicFolder } from './util/index.js';
 import patMiddleware from './middleware/pat-middleware.js';
@@ -110,6 +111,11 @@ export default async function getApp(
     );
     if (unleashSession) {
         app.use(unleashSession);
+
+        // mount on API where session can auth a request, and before auth,
+        // so a session past its limits (idle window or max-age) never becomes a logged-in request.
+        // The middleware checks the `sessionTimeouts` flag per request.
+        app.use(`${baseUriPath}/api`, sessionTimeoutMiddleware(config));
     }
     app.use(secureHeaders(config));
     app.use(express.urlencoded({ extended: true }));

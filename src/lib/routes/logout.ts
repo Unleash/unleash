@@ -1,6 +1,7 @@
 import type { Response } from 'express';
 import { promisify } from 'util';
 import { type IUnleashConfig, NONE } from '../types/index.js';
+import { sessionCookieOptions } from '../sessions/session-cookie.js';
 import Controller from './controller.js';
 import type { IAuthRequest } from './unleash-types.js';
 import type { IUnleashServices } from '../services/index.js';
@@ -10,6 +11,8 @@ class LogoutController extends Controller {
     private clearSiteDataOnLogout: boolean;
 
     private cookieName: string;
+
+    private cookiePath: string;
 
     private baseUri: string;
 
@@ -24,6 +27,9 @@ class LogoutController extends Controller {
         this.baseUri = config.server.baseUriPath;
         this.clearSiteDataOnLogout = config.session.clearSiteDataOnLogout;
         this.cookieName = config.session.cookieName;
+        // the path has to match the one the cookie was set with, or clearing it
+        // is a no-op wherever `BASE_URI_PATH` is set.
+        this.cookiePath = sessionCookieOptions(config).path as string;
 
         this.route({
             method: 'post',
@@ -63,7 +69,7 @@ class LogoutController extends Controller {
             }
             req.session.destroy();
         }
-        res.clearCookie(this.cookieName);
+        res.clearCookie(this.cookieName, { path: this.cookiePath });
 
         if (this.clearSiteDataOnLogout) {
             res.set('Clear-Site-Data', '"cookies", "storage"');

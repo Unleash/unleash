@@ -13,6 +13,7 @@ import { userSchema, type UserSchema } from '../../openapi/spec/user-schema.js';
 import type { LoginSchema } from '../../openapi/spec/login-schema.js';
 import { serializeDates } from '../../types/serialize-dates.js';
 import { getStandardResponses } from '../../openapi/index.js';
+import { startSession } from '../../sessions/session-lifecycle.js';
 
 export class SimplePasswordProvider extends Controller {
     private openApiService: OpenApiService;
@@ -68,7 +69,7 @@ export class SimplePasswordProvider extends Controller {
                 ip: extractClientIp(req),
             },
         );
-        req.session.user = user;
+        await startSession(req, user);
         this.openApiService.respondWithValidation(
             200,
             res,

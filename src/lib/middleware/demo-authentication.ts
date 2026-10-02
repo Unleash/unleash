@@ -7,6 +7,7 @@ import { ApiTokenType } from '../types/model.js';
 import type { IAuthRequest, IUser } from '../types/index.js';
 import type { IApiRequest } from '../routes/unleash-types.js';
 import { encrypt } from '../util/index.js';
+import { startSession } from '../sessions/session-lifecycle.js';
 
 function demoAuthentication(
     app: Application,
@@ -32,7 +33,7 @@ function demoAuthentication(
                 user = await userService.loginUserWithoutPassword(email, true);
             }
 
-            req.session.user = user;
+            await startSession(req, user);
             return res.status(200).json(user);
         } catch (_e) {
             res.status(400)

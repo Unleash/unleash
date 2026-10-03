@@ -19,6 +19,18 @@
       "internalChecksFilter": "strict"
     }
   ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Keep the Node.js base image in docker-bake.hcl in sync with the Dockerfile (bake overrides the Dockerfile ARG default)",
+      "managerFilePatterns": ["/(^|/)docker-bake\\.hcl$/"],
+      "matchStrings": [
+        "variable \"NODE_VERSION\" \\{\\s*default = \"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "node",
+      "datasourceTemplate": "docker"
+    }
+  ],
   "ignoreDeps": [
     "react-router-dom",
     "docusaurus-plugin-openapi-docs",

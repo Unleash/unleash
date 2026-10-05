@@ -235,7 +235,7 @@ exports[`renders an empty list correctly 1`] = `
                 </div>
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-fdtqkd-MuiTableCell-root"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeMedium mui-k16mq8-MuiTableCell-root"
               >
                 <div
                   class="MuiBox-root mui-1bvc4cc skeleton"
@@ -352,7 +352,7 @@ exports[`renders an empty list correctly 1`] = `
                 </div>
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-fdtqkd-MuiTableCell-root"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeMedium mui-k16mq8-MuiTableCell-root"
               >
                 <div
                   class="MuiBox-root mui-1bvc4cc skeleton"
@@ -469,7 +469,7 @@ exports[`renders an empty list correctly 1`] = `
                 </div>
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-fdtqkd-MuiTableCell-root"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeMedium mui-k16mq8-MuiTableCell-root"
               >
                 <div
                   class="MuiBox-root mui-1bvc4cc skeleton"
@@ -586,7 +586,7 @@ exports[`renders an empty list correctly 1`] = `
                 </div>
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-fdtqkd-MuiTableCell-root"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeMedium mui-k16mq8-MuiTableCell-root"
               >
                 <div
                   class="MuiBox-root mui-1bvc4cc skeleton"
@@ -703,7 +703,7 @@ exports[`renders an empty list correctly 1`] = `
                 </div>
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-fdtqkd-MuiTableCell-root"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeMedium mui-k16mq8-MuiTableCell-root"
               >
                 <div
                   class="MuiBox-root mui-1bvc4cc skeleton"

@@ -2,7 +2,11 @@ import useSWR, { mutate, type SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import type { ITagType } from 'interfaces/tags';
+import type { TagTypeWithUsageSchema } from 'openapi';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
+
+type TagTypeWithUsage = ITagType &
+    Pick<TagTypeWithUsageSchema, 'usedInProjects' | 'valueCount'>;
 
 const useTagTypes = (options: SWRConfiguration = {}) => {
     const fetcher = async () => {
@@ -27,7 +31,7 @@ const useTagTypes = (options: SWRConfiguration = {}) => {
     }, [data, error]);
 
     return {
-        tagTypes: (data?.tagTypes as ITagType[]) || [],
+        tagTypes: (data?.tagTypes as TagTypeWithUsage[]) || [],
         error,
         loading,
         refetch,

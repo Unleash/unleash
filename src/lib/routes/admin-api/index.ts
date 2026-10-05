@@ -23,6 +23,7 @@ import ProjectController from '../../features/project/project-controller.js';
 import { EnvironmentsController } from '../../features/environments/environments-controller.js';
 import ConstraintsController from '../../features/constraints/constraints-controller.js';
 import PatController from './user/pat.js';
+import SessionController from './session.js';
 import { PublicSignupController } from './public-signup.js';
 import InstanceAdminController from './instance-admin.js';
 import TelemetryController from './telemetry.js';
@@ -79,6 +80,10 @@ export class AdminApi extends Controller {
             new ClientMetricsController(config, services).router,
         );
         this.app.use('/user', new UserController(config, services).router);
+        this.app.use(
+            '/session',
+            new SessionController(config, services).router,
+        );
         this.app.use(
             '/user/tokens',
             new PatController(config, services).router,

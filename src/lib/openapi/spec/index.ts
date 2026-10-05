@@ -199,6 +199,7 @@ export * from './search-features-schema.js';
 export * from './segment-schema.js';
 export * from './segment-strategies-schema.js';
 export * from './segments-schema.js';
+export * from './session-keep-alive-schema.js';
 export * from './set-cors-schema.js';
 export * from './set-strategy-sort-order-schema.js';
 export * from './signup-data-schema.js';

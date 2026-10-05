@@ -68,6 +68,24 @@ const EditTagType = () => {
         navigate(GO_BACK);
     };
 
+    const form = (
+        <TagForm
+            errors={errors}
+            handleSubmit={handleSubmit}
+            handleCancel={handleCancel}
+            tagName={tagName}
+            tagDesc={tagDesc}
+            color={color}
+            setTagName={setTagName}
+            setTagDesc={setTagDesc}
+            setColor={setColor}
+            mode='Edit'
+            clearErrors={clearErrors}
+        >
+            <UpdateButton permission={UPDATE_TAG_TYPE} />
+        </TagForm>
+    );
+
     return (
         <FormTemplate
             loading={loading}
@@ -77,26 +95,14 @@ const EditTagType = () => {
             documentationLinkLabel='Tags documentation'
             formatApiCode={formatApiCode}
         >
-            <TagForm
-                errors={errors}
-                handleSubmit={handleSubmit}
-                handleCancel={handleCancel}
-                tagName={tagName}
-                tagDesc={tagDesc}
-                color={color}
-                setTagName={setTagName}
-                setTagDesc={setTagDesc}
-                setColor={setColor}
-                mode='Edit'
-                clearErrors={clearErrors}
-                tagValues={
-                    tagManagementViaUi ? (
-                        <TagValuesTable tagType={name} />
-                    ) : null
-                }
-            >
-                <UpdateButton permission={UPDATE_TAG_TYPE} />
-            </TagForm>
+            {tagManagementViaUi ? (
+                <>
+                    <div>{form}</div>
+                    <TagValuesTable tagType={name} />
+                </>
+            ) : (
+                form
+            )}
         </FormTemplate>
     );
 };

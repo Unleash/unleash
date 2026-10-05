@@ -60,7 +60,6 @@ process.nextTick(async () => {
                         recordSdkFlavorMetrics: true,
                         semverBuildMetadata: true,
                         slackIntegrationProjectLevel: true,
-                        simplerStrategySetup: true,
                         totalUsageMetrics: true,
                         helpMenuRelocationHint: true,
                         playgroundPerFlag: true,

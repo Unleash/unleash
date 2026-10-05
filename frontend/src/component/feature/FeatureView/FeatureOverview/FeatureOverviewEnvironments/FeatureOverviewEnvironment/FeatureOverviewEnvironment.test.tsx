@@ -255,7 +255,7 @@ describe('FeatureOverviewEnvironment', () => {
         ).not.toBeInTheDocument();
     });
 
-    test('opens strategy menu dialog with release templates filter when clicking release template suggestion', async () => {
+    test('opens the strategy dialog on the template screen when clicking release template suggestion', async () => {
         const user = userEvent.setup();
         setupEnterpriseEndpoints();
         renderRoute(
@@ -274,12 +274,10 @@ describe('FeatureOverviewEnvironment', () => {
             'Choose a release template',
         );
         await user.click(releaseTemplateButton);
-        const releaseTemplatesFilter = screen.queryByRole('button', {
-            name: /release templates/i,
-        });
 
-        expect(releaseTemplatesFilter).toBeInTheDocument();
-        expect(releaseTemplatesFilter).toHaveAttribute('aria-pressed', 'true');
+        expect(
+            await screen.findByRole('heading', { name: 'Select template' }),
+        ).toBeInTheDocument();
     });
 
     describe('Try configuration', () => {

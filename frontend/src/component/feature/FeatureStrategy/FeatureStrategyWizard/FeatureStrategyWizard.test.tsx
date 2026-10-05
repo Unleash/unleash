@@ -30,6 +30,11 @@ const ACTIVE_PLAN = {
 const setupApi = ({
     activeReleasePlan = false,
     templates = [TEMPLATE],
+}: {
+    activeReleasePlan?: boolean;
+    templates?: (Omit<typeof TEMPLATE, 'project'> & {
+        project: string | null;
+    })[];
 } = {}) => {
     testServerRoute(server, '/api/admin/ui-config', {
         versionInfo: { current: { enterprise: '1.0.0' } },
@@ -148,6 +153,25 @@ describe('the strategy wizard dialog', () => {
 
         expect(header()).toHaveTextContent('Select template');
         await screen.findByText(TEMPLATE.name);
+    });
+
+    it('marks each template as project or global', async () => {
+        setupApi({
+            templates: [
+                TEMPLATE,
+                {
+                    ...TEMPLATE,
+                    id: 'template-2',
+                    name: 'Team rollout',
+                    project: projectId,
+                },
+            ],
+        });
+        renderWizard({ initialScreen: 'templates' });
+
+        await screen.findByText(TEMPLATE.name);
+        expect(screen.getByText('Global')).toBeInTheDocument();
+        expect(screen.getByText('Project')).toBeInTheDocument();
     });
 
     it('marks each template as project or global', async () => {

@@ -77,7 +77,6 @@ export type IFlagKey =
     | 'searchDocsWidget'
     | 'semverBuildMetadata'
     | 'slackIntegrationProjectLevel'
-    | 'simplerStrategySetup'
     | 'totalUsageMetrics'
     | 'auditEventUserAgent'
     | 'helpMenuRelocationHint'
@@ -354,10 +353,6 @@ const flags: IFlags = {
     ),
     slackIntegrationProjectLevel: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SLACK_INTEGRATION_PROJECT_LEVEL,
-        false,
-    ),
-    simplerStrategySetup: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SIMPLER_STRATEGY_SETUP,
         false,
     ),
     totalUsageMetrics: parseEnvVarBoolean(

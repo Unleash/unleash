@@ -105,7 +105,6 @@ export type UiFlags = {
     exposureBasedAutomation?: boolean;
     semverBuildMetadata?: boolean;
     slackIntegrationProjectLevel?: boolean;
-    simplerStrategySetup?: boolean;
     editableInstanceName?: boolean;
     helpMenuRelocationHint?: boolean;
     ipConstraintOperator?: boolean;

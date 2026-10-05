@@ -18,6 +18,7 @@ export const createBrowserContextEnricher = (): ContextEnricher => {
             ...browserDetails,
             // Read per event so resizes show.
             viewportWidth: window.innerWidth,
+            viewportHeight: window.innerHeight,
         },
     });
 };

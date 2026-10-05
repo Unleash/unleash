@@ -150,6 +150,28 @@ describe('the strategy wizard dialog', () => {
         await screen.findByText(TEMPLATE.name);
     });
 
+    it('marks each template as project or global', async () => {
+        setupApi();
+        testServerRoute(
+            server,
+            `/api/admin/projects/${projectId}/release-templates`,
+            [
+                TEMPLATE,
+                {
+                    ...TEMPLATE,
+                    id: 'template-2',
+                    name: 'Team rollout',
+                    project: projectId,
+                },
+            ],
+        );
+        renderWizard({ initialScreen: 'templates' });
+
+        await screen.findByText(TEMPLATE.name);
+        expect(screen.getByText('Global')).toBeInTheDocument();
+        expect(screen.getByText('Project')).toBeInTheDocument();
+    });
+
     it('returns to the setup cards when reopened', async () => {
         setupApi();
         const { setOpen } = renderWizard();

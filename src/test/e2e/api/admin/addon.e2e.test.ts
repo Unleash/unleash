@@ -237,7 +237,10 @@ test('updating an addon returns the new addon configuration', async () => {
         .put(`/api/admin/addons/${body.id}`)
         .send(updatedConfig)
         .expect((res) => {
-            expect(res.body).toMatchObject(updatedConfig);
+            expect(res.body).toMatchObject({
+                ...updatedConfig,
+                parameters: { url: MASKED_VALUE },
+            });
         });
 });
 

@@ -337,7 +337,7 @@ export default class AddonService {
             }),
         );
 
-        return createdAddon;
+        return this.filterSensitiveFields(createdAddon);
     }
 
     async updateAddon(
@@ -375,7 +375,7 @@ export default class AddonService {
             }),
         );
         this.logger.info(`User ${auditUser} updated addon ${id}`);
-        return result;
+        return this.filterSensitiveFields(result);
     }
 
     async removeAddon(

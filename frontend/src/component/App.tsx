@@ -13,6 +13,7 @@ import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { SplashOverlay } from 'component/splash/SplashOverlay/SplashOverlay';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useSessionKeepAlive } from 'hooks/useSessionKeepAlive';
 
 import { MaintenanceBanner } from './maintenance/MaintenanceBanner.tsx';
 import { styled } from '@mui/material';
@@ -60,6 +61,7 @@ export const App = () => {
 
     const location = useLocation();
     useLastViewedPage(location);
+    useSessionKeepAlive(isLoggedIn);
 
     return (
         <SWRProvider>

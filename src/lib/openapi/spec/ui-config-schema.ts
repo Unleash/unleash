@@ -73,6 +73,13 @@ export const uiConfigSchema = {
                 'The URI path at which the feedback endpoint is listening.',
             example: '/feedback',
         },
+        sessionKeepAliveIntervalSeconds: {
+            type: 'integer',
+            minimum: 0,
+            description:
+                'How often the admin UI should report that the user is still active, in seconds. `0` means it should not: either the instance has no idle timeout or the feature is off.',
+            example: 60,
+        },
         disablePasswordAuth: {
             type: 'boolean',
             description:

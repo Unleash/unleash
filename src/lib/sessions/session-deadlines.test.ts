@@ -30,6 +30,7 @@ describe('session deadlines', () => {
         ).toEqual({
             action: 'continue',
             shouldRenew: false,
+            expiresInMs: minutesToMilliseconds(10),
         });
     });
 
@@ -53,7 +54,11 @@ describe('session deadlines', () => {
                 true,
                 NOW,
             ),
-        ).toEqual({ action: 'continue', shouldRenew: true });
+        ).toEqual({
+            action: 'continue',
+            shouldRenew: true,
+            expiresInMs: IDLE,
+        });
     });
 
     test('a session reaching its max age ends, however active the user is', () => {
@@ -75,6 +80,7 @@ describe('session deadlines', () => {
         ).toEqual({
             action: 'continue',
             shouldRenew: false,
+            expiresInMs: hoursToMilliseconds(28),
         });
     });
 
@@ -91,8 +97,8 @@ describe('session deadlines', () => {
     });
 
     test('a session with no recorded activity idles from the login time', () => {
-        // the `?? authenticatedAt` fallback. Without it, a session that has
-        // never posted a keep-alive either never idles or ends immediately.
+        // a session that has never reported activity has no stamp to measure
+        // from, so login stands in for it
         expect(
             evaluateSession(
                 { authenticatedAt: ago(minutesToMilliseconds(16)) },
@@ -112,10 +118,24 @@ describe('session deadlines', () => {
         ).toEqual({
             action: 'continue',
             shouldRenew: false,
+            expiresInMs: minutesToMilliseconds(1),
         });
     });
 
-    test('a last-interaction stamp in the future does not end the session', () => {
+    test('the deadline it reports is whichever window ends first', () => {
+        // activity would restart the idle window, but it cannot outlast the
+        // max age, and this is the deadline the keep-alive reports.
+        const almostMaxAged = MAX_AGE - minutesToMilliseconds(5);
+        expect(
+            evaluateSession(session(almostMaxAged, 0), limits(), true, NOW),
+        ).toEqual({
+            action: 'continue',
+            shouldRenew: true,
+            expiresInMs: minutesToMilliseconds(5),
+        });
+    });
+
+    test('a stamp from the future is read as now, not as extra time', () => {
         // clock skew between instances writing to the same session row
         expect(
             evaluateSession(
@@ -123,8 +143,27 @@ describe('session deadlines', () => {
                 limits(),
                 false,
                 NOW,
-            ).action,
-        ).toBe('continue');
+            ),
+        ).toEqual({
+            action: 'continue',
+            shouldRenew: false,
+            expiresInMs: IDLE,
+        });
+    });
+
+    test('a login stamp from the future does not buy extra max age', () => {
+        expect(
+            evaluateSession(
+                { authenticatedAt: ago(-minutesToMilliseconds(30)) },
+                limits({ idleTimeoutMs: 0 }),
+                false,
+                NOW,
+            ),
+        ).toEqual({
+            action: 'continue',
+            shouldRenew: false,
+            expiresInMs: MAX_AGE,
+        });
     });
 
     test('no request can renew a session already past its idle window', () => {

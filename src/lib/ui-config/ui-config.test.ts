@@ -9,7 +9,7 @@ import {
     DEFAULT_STRATEGY_SEGMENTS_LIMIT,
 } from '../util/segments.js';
 import type TestAgent from 'supertest/lib/agent.d.ts';
-import type { IUnleashStores, IUser } from '../types/index.js';
+import type { IUnleashOptions, IUnleashStores, IUser } from '../types/index.js';
 import { hashValue } from '../util/anonymise.js';
 import { ADMIN } from '../types/permissions.js';
 import type { IAuthRequest } from '../routes/unleash-types.js';
@@ -21,9 +21,13 @@ const uiConfig = {
 
 const TEST_SESSION_ID = 'test-session-id';
 
-async function getSetup(user?: Partial<IUser>) {
+async function getSetup(
+    user?: Partial<IUser>,
+    overrides: IUnleashOptions = {},
+) {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const config = createTestConfig({
+        ...overrides,
         server: {
             baseUriPath: base,
             edgeUrl: 'https://yourcompany.edge.getunleash.io',
@@ -90,6 +94,30 @@ test('should get ui config', async () => {
         hashedEmail: hashValue('someone@example.com'),
         sessionId: hashValue(TEST_SESSION_ID),
     });
+});
+
+test('asks the UI for keep-alive pings only while the feature is on', async () => {
+    // the `sessionTimeouts` check lives at this call site, not inside
+    // resolveKeepAliveIntervalSeconds, so this is where it has to be pinned
+    const session = { idleTimeoutMinutes: 15 };
+
+    const on = await getSetup(undefined, {
+        session,
+        experimental: { flags: { sessionTimeouts: true } },
+    });
+    const { body: enabled } = await on.request
+        .get(`${on.base}/api/admin/ui-config`)
+        .expect(200);
+    expect(enabled.sessionKeepAliveIntervalSeconds).toBe(60);
+
+    const off = await getSetup(undefined, {
+        session,
+        experimental: { flags: { sessionTimeouts: false } },
+    });
+    const { body: disabled } = await off.request
+        .get(`${off.base}/api/admin/ui-config`)
+        .expect(200);
+    expect(disabled.sessionKeepAliveIntervalSeconds).toBe(0);
 });
 
 test('should update CORS settings', async () => {

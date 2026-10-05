@@ -1,6 +1,9 @@
 import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 
-import { resolveSessionLimits } from './session-limits.js';
+import {
+    resolveKeepAliveIntervalSeconds,
+    resolveSessionLimits,
+} from './session-limits.js';
 
 const options = (overrides = {}) => ({
     ttlHours: 48,
@@ -33,5 +36,25 @@ describe('session limits', () => {
             resolveSessionLimits(options({ idleTimeoutMinutes: 15 }))
                 .idleTimeoutMs,
         ).toBe(minutesToMilliseconds(15));
+    });
+
+    test.each([
+        ['there is no idle window', { idleTimeoutMinutes: 0 }, 0],
+        [
+            'the shortest window the setting allows',
+            { idleTimeoutMinutes: 1 },
+            20,
+        ],
+        [
+            'a third that lands exactly on the cap',
+            { idleTimeoutMinutes: 3 },
+            60,
+        ],
+        ['a third past the cap is capped', { idleTimeoutMinutes: 15 }, 60],
+        ['however long the window gets', { idleTimeoutMinutes: 480 }, 60],
+    ])('asks for a third of the idle window, capped at a minute: %s', (_name, overrides, expected) => {
+        expect(resolveKeepAliveIntervalSeconds(options(overrides))).toBe(
+            expected,
+        );
     });
 });

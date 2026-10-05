@@ -2,7 +2,7 @@ import express from 'express';
 import session from 'express-session';
 import request from 'supertest';
 import { promisify } from 'util';
-import { hoursToMilliseconds } from 'date-fns';
+import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import { sessionTimeoutMiddleware } from './session-timeout-middleware.js';
 import {
     startSession,
@@ -17,6 +17,7 @@ const createApp = ({
     idleTimeoutMinutes = 15,
     ttlHours = 48,
     flagEnabled = true,
+    rejectWrites = false,
 } = {}) => {
     const store = new session.MemoryStore();
     const logged: string[] = [];
@@ -85,10 +86,24 @@ const createApp = ({
         } as never),
     );
 
+    if (rejectWrites) {
+        // stands in for anything mounted after this middleware that can refuse
+        // a write: the enterprise licence gate on /api/admin, or maintenance
+        // mode. Both sit later in app.ts than the middleware under test.
+        app.use('/api', (req, res, next) => {
+            if (req.method === 'GET') {
+                next();
+                return;
+            }
+            res.status(403).json({ message: 'refused by a later middleware' });
+        });
+    }
+
     app.use('/api', (req, res) => {
         res.status(200).json({
             userId: req.session?.user?.id ?? null,
             lastInteractionAt: req.session?.lastInteractionAt ?? null,
+            expiresInMs: res.locals.sessionExpiresInMs ?? null,
         });
     });
 
@@ -182,6 +197,50 @@ test('a write renews the idle window', async () => {
     expect(res.status).toBe(200);
     const after = (await agent.get('/api/admin/projects')).body
         .lastInteractionAt;
+    expect(Date.parse(after)).toBeGreaterThan(Date.parse(before));
+});
+
+test('leaves the cookie alone at the configured lifetime', async () => {
+    // shortening it to the deadline would mean the browser could drop the cookie
+    // first, and then there is no request left to answer 401 and Clear-Site-Data
+    const { agent } = await signedIn();
+    await agent.post('/rewind?idle=600000').expect(200);
+
+    const res = await agent.post('/api/admin/projects');
+
+    // express-session serialises the lifetime as `Expires`; its cookie data
+    // leaves `maxAge` out, so there is no Max-Age to read here.
+    const expiresAt = Date.parse(
+        /Expires=([^;]+)/.exec(String(res.headers['set-cookie']))?.[1] ?? '',
+    );
+    expect(expiresAt - Date.now()).toBeGreaterThan(hoursToMilliseconds(47));
+});
+
+test('hands the deadline to the request for the keep-alive to report', async () => {
+    // the endpoint answers with this, as a duration, so that a browser with a
+    // wrong clock still counts down to the right moment
+    const { agent } = await signedIn();
+    await agent.post('/rewind?idle=600000').expect(200);
+
+    const read = await agent.get('/api/admin/projects');
+    const renewed = await agent.post('/api/admin/projects');
+
+    // five minutes of the idle window left on a read; a write restarts it
+    expect(read.body.expiresInMs).toBeGreaterThan(minutesToMilliseconds(4));
+    expect(read.body.expiresInMs).toBeLessThanOrEqual(minutesToMilliseconds(5));
+    expect(renewed.body.expiresInMs).toBe(minutesToMilliseconds(15));
+});
+
+test('a request a later middleware rejects still renews the idle window', async () => {
+    const { agent } = await signedIn({ rejectWrites: true });
+    await agent.post('/rewind?idle=600000').expect(200);
+
+    const before = (await agent.get('/api/admin/projects')).body
+        .lastInteractionAt;
+    await agent.post('/api/admin/session/keep-alive').expect(403);
+    const after = (await agent.get('/api/admin/projects')).body
+        .lastInteractionAt;
+
     expect(Date.parse(after)).toBeGreaterThan(Date.parse(before));
 });
 

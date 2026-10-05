@@ -1,6 +1,5 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import type { IUnleashConfig } from '../types/option.js';
-import type { Logger } from '../logger.js';
 import UnauthorizedError from '../error/unauthorized-error.js';
 import { resolveSessionLimits } from '../sessions/session-limits.js';
 import { sessionCookieOptions } from '../sessions/session-cookie.js';
@@ -14,51 +13,10 @@ type TimeoutConfig = Pick<
     'session' | 'server' | 'secureHeaders' | 'getLogger' | 'flagResolver'
 >;
 
-const READ_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
+const NON_RENEWING_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
 
-const isUserActivity = (req: Request): boolean => !READ_METHODS.has(req.method);
-
-const endSession = (
-    session: Request['session'],
-    res: Response,
-    config: TimeoutConfig,
-    reason: SessionTimeoutReason,
-    logger: Logger,
-    next: NextFunction,
-): void => {
-    const userId = session.user?.id;
-
-    session.destroy((err) => {
-        if (err) {
-            // cookie still resolves to it, so nobody has been signed out -> fail the req
-            logger.error(
-                `Could not end the session past its ${reason} limit`,
-                err,
-            );
-            next(err);
-            return;
-        }
-
-        res.clearCookie(
-            config.session.cookieName,
-            sessionCookieOptions(config),
-        );
-
-        if (reason === 'idled' && config.session.clearSiteDataOnLogout) {
-            // idle-timeout: unattended screen, clear its data, not only session
-            res.set('Clear-Site-Data', '"cookies", "storage"');
-        }
-
-        logger.info(
-            `Ended the session of user ${userId} past its ${reason} limit.`,
-        );
-
-        const error = new UnauthorizedError(
-            'Your session has ended. Please log in again.',
-        );
-        res.status(error.statusCode).json(error);
-    });
-};
+const renewsIdleWindow = (req: Request): boolean =>
+    !NON_RENEWING_METHODS.has(req.method);
 
 export const sessionTimeoutMiddleware = (
     config: TimeoutConfig,
@@ -67,6 +25,46 @@ export const sessionTimeoutMiddleware = (
         'lib/middleware/session-timeout-middleware.ts',
     );
     const limits = resolveSessionLimits(config.session);
+
+    const endSession = (
+        session: Request['session'],
+        res: Response,
+        reason: SessionTimeoutReason,
+        next: NextFunction,
+    ): void => {
+        const userId = session.user?.id;
+
+        session.destroy((err) => {
+            if (err) {
+                // cookie still resolves to it, so nobody has been signed out -> fail the req
+                logger.error(
+                    `Could not end the session past its ${reason} limit`,
+                    err,
+                );
+                next(err);
+                return;
+            }
+
+            res.clearCookie(
+                config.session.cookieName,
+                sessionCookieOptions(config),
+            );
+
+            if (reason === 'idled' && config.session.clearSiteDataOnLogout) {
+                // idle-timeout: unattended screen, clear its data, not only session
+                res.set('Clear-Site-Data', '"cookies", "storage"');
+            }
+
+            logger.info(
+                `Ended the session of user ${userId} past its ${reason} limit.`,
+            );
+
+            const error = new UnauthorizedError(
+                'Your session has ended. Please log in again.',
+            );
+            res.status(error.statusCode).json(error);
+        });
+    };
 
     return (req, res, next) => {
         const { session } = req;
@@ -86,18 +84,20 @@ export const sessionTimeoutMiddleware = (
         const verdict = evaluateSession(
             session,
             limits,
-            isUserActivity(req),
+            renewsIdleWindow(req),
             stamp,
         );
 
         if (verdict.action === 'end') {
-            endSession(session, res, config, verdict.reason, logger, next);
+            endSession(session, res, verdict.reason, next);
             return;
         }
 
         if (verdict.shouldRenew) {
             session.lastInteractionAt = new Date(stamp).toISOString();
         }
+
+        res.locals.sessionExpiresInMs = verdict.expiresInMs;
 
         next();
     };

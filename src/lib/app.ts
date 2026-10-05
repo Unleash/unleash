@@ -109,15 +109,15 @@ export default async function getApp(
             express.json({ strict: false }),
         ),
     );
+
+    app.use(secureHeaders(config));
+
     if (unleashSession) {
         app.use(unleashSession);
 
-        // mount on API where session can auth a request, and before auth,
-        // so a session past its limits (idle window or max-age) never becomes a logged-in request.
-        // The middleware checks the `sessionTimeouts` flag per request.
         app.use(`${baseUriPath}/api`, sessionTimeoutMiddleware(config));
     }
-    app.use(secureHeaders(config));
+
     app.use(express.urlencoded({ extended: true }));
     app.use(favicon(path.join(publicFolder, 'favicon.ico')));
     app.use(baseUriPath, favicon(path.join(publicFolder, 'favicon.ico')));

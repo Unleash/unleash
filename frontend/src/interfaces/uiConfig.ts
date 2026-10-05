@@ -41,6 +41,7 @@ export interface IUiConfig {
     oidcConfiguredThroughEnv?: boolean;
     samlConfiguredThroughEnv?: boolean;
     maxSessionsCount?: number;
+    sessionKeepAliveIntervalSeconds?: number;
     unleashContext?: IMutableContext;
     storiesPageEnabled?: boolean;
 }
@@ -115,6 +116,7 @@ export type UiFlags = {
     integrationParamKvpEditor?: boolean;
     perFlagLifetime?: boolean;
     remoteMcpFeedback?: boolean;
+    sessionTimeouts?: boolean;
 };
 
 export interface IVersionInfo {

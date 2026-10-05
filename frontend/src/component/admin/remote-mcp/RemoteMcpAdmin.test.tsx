@@ -97,6 +97,16 @@ describe('RemoteMcpAdmin', () => {
         expect(getFeedbackSwitch()).toBeChecked();
     });
 
+    test('shows the feedback toggle as enabled when the server has no saved value', async () => {
+        setupApi({ enabled: true });
+
+        renderPage();
+
+        expect(await findServerSwitch()).toBeChecked();
+        expect(getFeedbackSwitch()).toBeChecked();
+        expect(getSaveButton()).toBeDisabled();
+    });
+
     test('changing only the feedback toggle marks the page dirty without saving', async () => {
         const { requests } = setupApi({ enabled: true });
 
@@ -108,7 +118,7 @@ describe('RemoteMcpAdmin', () => {
 
         await userEvent.click(getFeedbackSwitch());
 
-        expect(getFeedbackSwitch()).toBeChecked();
+        expect(getFeedbackSwitch()).not.toBeChecked();
         expect(getSaveButton()).toBeEnabled();
         expect(getCancelButton()).toBeEnabled();
         expect(requests).toEqual([]);
@@ -140,7 +150,6 @@ describe('RemoteMcpAdmin', () => {
 
         await findServerSwitch();
         await userEvent.click(getServerSwitch());
-        await userEvent.click(getFeedbackSwitch());
         testServerRoute(server, '/api/admin/remote-mcp/settings', {
             enabled: true,
             feedbackOptIn: true,
@@ -206,13 +215,14 @@ describe('RemoteMcpAdmin', () => {
         renderPage();
 
         await findServerSwitch();
-        await userEvent.click(getFeedbackSwitch());
+        await userEvent.click(getServerSwitch());
 
         await userEvent.click(getSaveButton());
 
         expect(
             await screen.findByText('Action could not be performed'),
         ).toBeInTheDocument();
+        expect(getServerSwitch()).not.toBeChecked();
         expect(getFeedbackSwitch()).toBeChecked();
         expect(getSaveButton()).toBeEnabled();
     });

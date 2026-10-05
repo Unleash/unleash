@@ -74,7 +74,7 @@ const RemoteMcpPage = () => {
     const { setToastData, setToastApiError } = useToast();
     const { trackEvent } = useEventTracker();
 
-    const savedFeedbackOptIn = settings.feedbackOptIn ?? false;
+    const savedFeedbackOptIn = settings.feedbackOptIn ?? true;
     const [enabled, setEnabled] = useState(settings.enabled);
     const [feedbackOptIn, setFeedbackOptIn] = useState(savedFeedbackOptIn);
 

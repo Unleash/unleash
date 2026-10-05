@@ -161,6 +161,7 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
         }
     }, [fetch, provider]);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: addon is a new object every render; reset only when a different addon loads
     useEffect(() => {
         setFormValues(toFormValues(provider?.parameters)(initialValues));
     }, [initialValues.description, initialValues.provider]);

@@ -196,7 +196,6 @@
         "frontend/src/component/insights/hooks/useInsightsData.ts",
         "frontend/src/component/insights/hooks/usePlaceholderData.ts",
         "frontend/src/component/insights/hooks/useProjectChartData.ts",
-        "frontend/src/component/integrations/IntegrationForm/IntegrationForm.tsx",
         "frontend/src/component/integrations/IntegrationList/IntegrationCard/IntegrationCardMenu/IntegrationCardMenu.tsx",
         "frontend/src/component/layout/Error/LayoutError.tsx",
         "frontend/src/component/layout/MainLayout/AdminMenu/AdminNavigationItems.tsx",

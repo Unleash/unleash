@@ -17,7 +17,7 @@ const menuId = 'environment-visibility-menu';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     paddingTop: theme.spacing(4),
 }));
 

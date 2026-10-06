@@ -1,4 +1,3 @@
-import copy from 'copy-to-clipboard';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
@@ -7,12 +6,10 @@ import { type ReactNode, type FormEvent, useMemo, useEffect } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useTracking } from 'hooks/useTracking';
 import { useNavigate } from 'react-router';
-import { Dialog, IconButton, styled } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
-import { ApiCommandBlock } from 'component/common/FormTemplate/ApiCommandBlock';
+import { Dialog, styled } from '@mui/material';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { Limit } from 'component/common/Limit/Limit';
+import { CreateFeatureDialogSidebar } from './CreateFeatureDialogSidebar.tsx';
 import useFeatureForm, {
     type FeatureFormInitialData,
 } from 'component/feature/hooks/useFeatureForm';
@@ -60,44 +57,6 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     padding: 0,
     '& .MuiPaper-root > section': {
         overflowX: 'hidden',
-    },
-}));
-
-const StyledSidebarHeader = styled('div')(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    height: theme.spacing(8),
-    margin: theme.spacing(-4, -4, 0, -4),
-    padding: theme.spacing(0, 2),
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    boxSizing: 'border-box',
-    [theme.breakpoints.down(500)]: {
-        margin: theme.spacing(-4, -2, 0, -2),
-    },
-}));
-
-const StyledSidebarCloseButton = styled(IconButton)(({ theme }) => ({
-    color: theme.palette.common.white,
-}));
-
-const StyledSidebarLinkContainer = styled('div')(({ theme }) => ({
-    margin: theme.spacing(3, 0),
-    display: 'flex',
-    alignItems: 'center',
-    width: '100%',
-}));
-
-const StyledSidebarLinkIcon = styled(MenuBookIcon)(({ theme }) => ({
-    marginRight: theme.spacing(1),
-    color: theme.palette.primary.contrastText,
-}));
-
-const StyledSidebarLink = styled('a')(({ theme }) => ({
-    color: theme.palette.primary.contrastText,
-    display: 'block',
-    '&:hover': {
-        textDecoration: 'none',
     },
 }));
 
@@ -287,43 +246,6 @@ export const LegacyCreateFeatureForm = ({
         />
     );
 
-    const copyApiCommand = () => {
-        if (copy(formatApiCode())) {
-            setToastData({ text: 'Command copied', type: 'success' });
-        } else {
-            setToastData({ text: 'Could not copy the command', type: 'error' });
-        }
-    };
-
-    const sidebar = (
-        <>
-            <StyledSidebarHeader>
-                <StyledSidebarCloseButton
-                    onClick={() => onDialogClose('close-icon')}
-                    size='small'
-                    aria-label='Close'
-                >
-                    <CloseIcon />
-                </StyledSidebarCloseButton>
-            </StyledSidebarHeader>
-            <StyledSidebarLinkContainer>
-                <StyledSidebarLinkIcon />
-                <StyledSidebarLink
-                    href='https://docs.getunleash.io/concepts/feature-flags'
-                    rel='noopener noreferrer'
-                    target='_blank'
-                >
-                    Feature flags documentation
-                </StyledSidebarLink>
-            </StyledSidebarLinkContainer>
-            <ApiCommandBlock
-                command={formatApiCode()}
-                onCopy={copyApiCommand}
-                hideDivider
-            />
-        </>
-    );
-
     return (
         <StyledDialog
             open={open}
@@ -340,7 +262,12 @@ export const LegacyCreateFeatureForm = ({
                 documentationLinkLabel={documentation.link?.label}
                 formatApiCode={formatApiCode}
                 useFixedSidebar
-                sidebar={sidebar}
+                sidebar={
+                    <CreateFeatureDialogSidebar
+                        apiCommand={formatApiCode()}
+                        onClose={() => onDialogClose('close-icon')}
+                    />
+                }
             >
                 <DialogFormTemplate
                     title='New feature flag'

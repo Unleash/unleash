@@ -10,9 +10,6 @@ on:
         required: false
       FRONTEND_TEST_LICENSE:
         required: false
-  pull_request:
-    # paths:
-    #   - 'frontend/**'
 # If two events are triggered within a short time in the same PR, cancel the run of the oldest event
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}

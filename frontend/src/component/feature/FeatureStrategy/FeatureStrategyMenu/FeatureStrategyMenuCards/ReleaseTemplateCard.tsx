@@ -2,7 +2,7 @@ import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { Badge } from 'component/common/Badge/Badge.tsx';
 import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard.tsx';
 import { FeatureStrategyMenuCardAction } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardAction.tsx';
-import { FeatureStrategyMenuCardIcon } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardIcon.tsx';
+import ReleaseTemplateIcon from 'assets/img/releaseTemplates.svg?react';
 
 interface IReleaseTemplateCardProps {
     template: IReleasePlanTemplate;
@@ -18,7 +18,7 @@ export const ReleaseTemplateCard = ({
     <FeatureStrategyMenuCard
         name={template.name}
         description={template.description}
-        icon={<FeatureStrategyMenuCardIcon name='releasePlanTemplate' />}
+        icon={<ReleaseTemplateIcon />}
         badge={
             <Badge color='disabled'>
                 {template.project ? 'Project' : 'Global'}

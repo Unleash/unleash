@@ -185,3 +185,128 @@ test('says when a tag value is not assigned to any flags the user can access', a
         "team:unused isn't added to any active flags that you have access to.",
     );
 });
+
+test('renames a tag value after confirming', async () => {
+    setupTagValues([tagValue({ value: 'old', usedInActiveFeatures: 1 })]);
+    renderWithPermission();
+
+    await clickInRow('old', 'Rename tag value');
+    const input = screen.getByRole('textbox', { name: 'New value for old' });
+    await userEvent.clear(input);
+    await userEvent.type(input, ' new {Enter}');
+
+    const dialog = await screen.findByRole('dialog');
+    expect(dialog).toHaveTextContent(
+        "team:old will be renamed to team:new on 1 active flag, plus any in private projects you can't see.",
+    );
+
+    const { requests } = testServerRoute(
+        server,
+        '/api/admin/tags/team/old/rename',
+        {},
+        'post',
+    );
+    setupTagValues([tagValue({ value: 'new', usedInActiveFeatures: 1 })]);
+    await userEvent.click(
+        within(dialog).getByRole('button', { name: 'Rename' }),
+    );
+
+    await screen.findByText('new');
+    expect(requests).toEqual([{ value: 'new' }]);
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+});
+
+test('closes the editor without confirming when the new value is blank', async () => {
+    setupTagValues([tagValue({ value: 'old' })]);
+    renderWithPermission();
+
+    await clickInRow('old', 'Rename tag value');
+    const input = screen.getByRole('textbox', { name: 'New value for old' });
+    await userEvent.clear(input);
+    await userEvent.type(input, '  {Enter}');
+
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    screen.getByText('old');
+});
+
+test('cancels renaming with Escape', async () => {
+    setupTagValues([tagValue({ value: 'old' })]);
+    renderWithPermission();
+
+    await clickInRow('old', 'Rename tag value');
+    await userEvent.type(
+        screen.getByRole('textbox', { name: 'New value for old' }),
+        '-changed{Escape}',
+    );
+
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    screen.getByText('old');
+});
+
+test('cancels renaming when clicking outside the field', async () => {
+    setupTagValues([tagValue({ value: 'old' })]);
+    renderWithPermission();
+
+    await clickInRow('old', 'Rename tag value');
+    await userEvent.type(
+        screen.getByRole('textbox', { name: 'New value for old' }),
+        '-changed',
+    );
+    await userEvent.click(screen.getByText('Tag values'));
+
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+    screen.getByText('old');
+});
+
+test('keeps the field open when the rename is cancelled in the dialog', async () => {
+    setupTagValues([tagValue({ value: 'old' })]);
+    renderWithPermission();
+
+    await clickInRow('old', 'Rename tag value');
+    await userEvent.type(
+        screen.getByRole('textbox', { name: 'New value for old' }),
+        '-changed{Enter}',
+    );
+    const dialog = await screen.findByRole('dialog');
+    await userEvent.click(
+        within(dialog).getByRole('button', { name: 'Cancel' }),
+    );
+
+    await waitFor(() =>
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument(),
+    );
+    expect(
+        screen.getByRole('textbox', { name: 'New value for old' }),
+    ).toHaveValue('old-changed');
+});
+
+test('keeps the rename open when the new value already exists', async () => {
+    setupTagValues([tagValue({ value: 'old' })]);
+    testServerRoute(
+        server,
+        '/api/admin/tags/team/old/rename',
+        { message: 'A tag with this value already exists' },
+        'post',
+        409,
+    );
+    renderWithPermission();
+
+    await clickInRow('old', 'Rename tag value');
+    const input = screen.getByRole('textbox', { name: 'New value for old' });
+    await userEvent.clear(input);
+    await userEvent.type(input, 'taken{Enter}');
+    const dialog = await screen.findByRole('dialog');
+    const confirm = within(dialog).getByRole('button', { name: 'Rename' });
+    await userEvent.click(confirm);
+
+    await screen.findByText('A tag with this value already exists');
+    expect(dialog).toBeInTheDocument();
+    expect(
+        screen.getByRole('textbox', {
+            name: 'New value for old',
+            hidden: true,
+        }),
+    ).toHaveValue('taken');
+});

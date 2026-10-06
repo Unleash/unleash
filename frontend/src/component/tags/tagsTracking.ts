@@ -24,3 +24,13 @@ export const deleteTagValueTracking: Tracking = {
     event: 'tags',
     type: 'delete-tag-value',
 };
+
+export const openTagValueEditorTracking: Tracking = {
+    event: 'tags',
+    type: 'open-tag-value-editor',
+};
+
+export const editTagValueTracking: Tracking = {
+    event: 'tags',
+    type: 'edit-tag-value',
+};

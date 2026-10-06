@@ -16,17 +16,19 @@ import {
     TableRow,
 } from 'component/common/Table';
 import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
-import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
 import { useTagValues } from 'hooks/api/getters/useTagValues/useTagValues';
 import { refetchTagTypes } from 'hooks/api/getters/useTagTypes/useTagTypes';
 import useToast from 'hooks/useToast';
+import { useTracking } from 'hooks/useTracking';
 import type { TagValuesUsageSchemaTagValuesItem } from 'openapi';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { TagValueCell } from './TagValueCell.tsx';
 import { DeleteTagValueDialog } from './TagValueDialogs.tsx';
 import { TagValueUsageCell } from './TagValueUsageCell.tsx';
+import { openTagValueEditorTracking } from '../../tagsTracking.ts';
 
 const StyledSection = styled('section')(({ theme }) => ({
     marginTop: theme.spacing(4),
@@ -60,12 +62,18 @@ const compareValues = (
     b: TagValuesUsageSchemaTagValuesItem,
 ) => a.value.localeCompare(b.value, undefined, { numeric: true });
 
+type RowAction =
+    | { status: 'editing'; value: string }
+    | { status: 'deleting'; tagValue: TagValuesUsageSchemaTagValuesItem };
+
 const TagValuesTableComponent = ({ tagType }: { tagType: string }) => {
     const { tagValues, total, error, loading, refetch } = useTagValues(tagType);
     const { deleteTag } = useTagApi();
     const { setToastData, setToastApiError } = useToast();
-    const [deleting, setDeleting] =
-        useState<TagValuesUsageSchemaTagValuesItem | null>(null);
+    const trackOpenTagValueEditor = useTracking(openTagValueEditorTracking);
+    const [action, setAction] = useState<RowAction | null>(null);
+    const editingValue = action?.status === 'editing' ? action.value : null;
+    const deleting = action?.status === 'deleting' ? action.tagValue : null;
     // Tanstack breaks ties by row index, in both directions, so presorting
     // by value keeps tied values in ascending order whichever way usage sorts.
     const data = useMemo(() => [...tagValues].sort(compareValues), [tagValues]);
@@ -75,13 +83,39 @@ const TagValuesTableComponent = ({ tagType }: { tagType: string }) => {
         refetchTagTypes();
     }, [refetch]);
 
+    const stopEditing = useCallback(
+        () =>
+            setAction((current) =>
+                current?.status === 'editing' ? null : current,
+            ),
+        [],
+    );
+
     const columns = useMemo<ColumnDef<TagValuesUsageSchemaTagValuesItem>[]>(
         () => [
             {
                 id: 'value',
                 header: 'Value',
                 accessorKey: 'value',
-                cell: ({ getValue }) => <TextCell getValue={getValue} />,
+                cell: ({ row: { original } }) => (
+                    <TagValueCell
+                        tagType={tagType}
+                        tagValue={original}
+                        editing={editingValue === original.value}
+                        onEdit={() => {
+                            trackOpenTagValueEditor('succeeded');
+                            setAction({
+                                status: 'editing',
+                                value: original.value,
+                            });
+                        }}
+                        onClose={stopEditing}
+                        onRenamed={() => {
+                            refetchUsage();
+                            stopEditing();
+                        }}
+                    />
+                ),
                 sortingFn: (a, b) => compareValues(a.original, b.original),
             },
             {
@@ -99,7 +133,12 @@ const TagValuesTableComponent = ({ tagType }: { tagType: string }) => {
                         <PermissionIconButton
                             permission={UPDATE_FEATURE}
                             tooltipProps={{ title: 'Delete tag value' }}
-                            onClick={() => setDeleting(original)}
+                            onClick={() =>
+                                setAction({
+                                    status: 'deleting',
+                                    tagValue: original,
+                                })
+                            }
                         >
                             <Delete />
                         </PermissionIconButton>
@@ -109,14 +148,20 @@ const TagValuesTableComponent = ({ tagType }: { tagType: string }) => {
                 meta: { width: 80, align: 'center' },
             },
         ],
-        [],
+        [
+            tagType,
+            editingValue,
+            trackOpenTagValueEditor,
+            stopEditing,
+            refetchUsage,
+        ],
     );
 
     const confirmDelete = async () => {
         if (!deleting) return;
         await deleteTag(tagType, deleting.value);
         refetchUsage();
-        setDeleting(null);
+        setAction(null);
         setToastData({ type: 'success', text: 'Tag value deleted' });
     };
 
@@ -175,7 +220,7 @@ const TagValuesTableComponent = ({ tagType }: { tagType: string }) => {
                 tagValue={deleting}
                 onSubmit={confirmDelete}
                 onError={(error) => setToastApiError(formatUnknownError(error))}
-                onClose={() => setDeleting(null)}
+                onClose={() => setAction(null)}
             />
         </StyledSection>
     );

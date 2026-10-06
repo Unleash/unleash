@@ -25,7 +25,7 @@ minimumReleaseAge: 10080
 minimumReleaseAgeIgnoreMissingTime: false
 minimumReleaseAgeExclude:
   - 'unleash-client'
-  - '@fern-api/search-widget@0.5.2'
+  - '@fern-api/search-widget@0.6.0'
   - '@unleash/proxy-client-react'
   - '@unleash/sdk-flight-recorder'
   # Renovate security update: esbuild@0.28.1

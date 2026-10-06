@@ -161,7 +161,7 @@
     ]
   },
   "dependencies": {
-    "@fern-api/search-widget": "0.5.6",
+    "@fern-api/search-widget": "0.6.0",
     "chartjs-plugin-datalabels": "^2.2.0",
     "highlight.js": "^11.11.1",
     "ip-address": "10.7.2",

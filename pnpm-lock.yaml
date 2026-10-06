@@ -44,7 +44,7 @@ overrides:
   set-value: ^4.0.1
   shell-quote: 1.10.0
   ssh2: ^1.4.0
-  systeminformation: 5.33.13
+  systeminformation: 5.33.14
   tough-cookie: 4.1.4
   vite: 8.3.1
   ws: 8.21.3
@@ -5744,8 +5744,8 @@ packages:
   symbol-tree@3.2.4:
     resolution: {integrity: sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==}
 
-  systeminformation@5.33.13:
-    resolution: {integrity: sha512-GtyakkchTQKymM1WeAB652zi3rM1q00RKdc+jZe9KGstuc/mWUwAnQGN/RE5gVYvHIR8xYOUIUD9irVKDtA0wA==}
+  systeminformation@5.33.14:
+    resolution: {integrity: sha512-9liS0hutibZOitbibm90AK3WZe/1rGhNGZSw+/4TbY5moax6KkWwv1TKJmk9uSOD4bvPPg57VAuuNN+4edIpBg==}
     engines: {node: '>=10.0.0'}
     os: [darwin, linux, win32, freebsd, openbsd, netbsd, sunos, android]
     hasBin: true
@@ -8760,7 +8760,7 @@ snapshots:
       proxy-from-env: 1.0.0
       request-progress: 3.0.0
       supports-color: 8.1.1
-      systeminformation: 5.33.13
+      systeminformation: 5.33.14
       tmp: 0.2.7
       tree-kill: 1.2.2
       untildify: 4.0.0
@@ -11644,7 +11644,7 @@ snapshots:
 
   symbol-tree@3.2.4: {}
 
-  systeminformation@5.33.13: {}
+  systeminformation@5.33.14: {}
 
   tagged-tag@1.0.0: {}
 

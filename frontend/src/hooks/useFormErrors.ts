@@ -23,27 +23,21 @@ export const useFormErrors = (): IFormErrors => {
         [errors],
     );
 
-    const setFormError = useCallback(
-        (field: string, message: string): void => {
-            setErrors(
-                produce((draft) => {
-                    draft[field] = message;
-                }),
-            );
-        },
-        [setErrors],
-    );
+    const setFormError = useCallback((field: string, message: string): void => {
+        setErrors(
+            produce((draft) => {
+                draft[field] = message;
+            }),
+        );
+    }, []);
 
-    const removeFormError = useCallback(
-        (field: string): void => {
-            setErrors(
-                produce((draft) => {
-                    delete draft[field];
-                }),
-            );
-        },
-        [setErrors],
-    );
+    const removeFormError = useCallback((field: string): void => {
+        setErrors(
+            produce((draft) => {
+                delete draft[field];
+            }),
+        );
+    }, []);
 
     const hasFormErrors = useCallback(
         (): boolean => Object.values(errors).some(Boolean),

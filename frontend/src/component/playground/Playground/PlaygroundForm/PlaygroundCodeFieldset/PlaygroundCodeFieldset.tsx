@@ -115,7 +115,7 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
 
                 return setError(undefined);
             }, 250),
-        [setError, contextField, setFieldExist],
+        [contextField],
     );
 
     useEffect(() => {

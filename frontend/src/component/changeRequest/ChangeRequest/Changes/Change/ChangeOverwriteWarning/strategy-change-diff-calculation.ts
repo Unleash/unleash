@@ -6,7 +6,7 @@ import type {
 import type { IFeatureVariant } from 'interfaces/featureToggle';
 import type { ISegment } from 'interfaces/segment';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-import isEqual from 'lodash.isequal';
+import { isDeepStrictEqual as isEqual } from 'node:util';
 import omit from 'lodash.omit';
 
 const stringifyWithFallback = (value: unknown, fallback: unknown) =>

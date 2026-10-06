@@ -90,6 +90,33 @@ describe('filterPrivateProjectsFromParams', () => {
         expect(result).toBe('IS_ANY_OF:project1,project2');
     });
 
+    it('should keep the operator prefix when the first requested project is not accessible', () => {
+        const projectAccess: ProjectAccess = {
+            mode: 'limited',
+            projects: ['project1', 'project2'],
+        };
+
+        // project3 is not accessible and is listed first, so it carries the operator prefix
+        const projectParam = 'IS_ANY_OF:project3,project1';
+
+        const result = filterAccessibleProjects(projectParam, projectAccess);
+
+        expect(result).toBe('IS_ANY_OF:project1');
+    });
+
+    it('should preserve the IS operator for a single accessible project', () => {
+        const projectAccess: ProjectAccess = {
+            mode: 'limited',
+            projects: ['project1', 'project2'],
+        };
+
+        const projectParam = 'IS:project1';
+
+        const result = filterAccessibleProjects(projectParam, projectAccess);
+
+        expect(result).toBe('IS:project1');
+    });
+
     it('should throw an error if no projects match', () => {
         const projectAccess: ProjectAccess = {
             mode: 'limited',

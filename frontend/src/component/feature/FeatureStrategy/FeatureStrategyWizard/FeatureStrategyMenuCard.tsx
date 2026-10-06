@@ -16,9 +16,7 @@ const StyledName = styled(Truncator)(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
 }));
 
-const StyledCard = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'isDefault',
-})<{ isDefault?: boolean }>(({ theme, isDefault }) => ({
+const StyledCard = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     height: theme.spacing(10),
@@ -44,10 +42,6 @@ const StyledCard = styled('div', {
     '&:hover .cardBadge, &:focus-within .cardBadge': {
         opacity: 0,
     },
-    ...(isDefault && {
-        backgroundColor: theme.palette.primary.container,
-        borderColor: theme.palette.primary.containerBorder,
-    }),
     userSelect: 'none',
 }));
 
@@ -87,7 +81,6 @@ interface IFeatureStrategyMenuCardProps {
     name: string;
     description: string;
     icon: ReactNode;
-    isDefault?: boolean;
     badge?: ReactNode;
     children: ReactNode;
 }
@@ -96,11 +89,10 @@ export const FeatureStrategyMenuCard = ({
     name,
     description,
     icon,
-    isDefault,
     badge,
     children,
 }: IFeatureStrategyMenuCardProps) => (
-    <StyledCard isDefault={isDefault}>
+    <StyledCard>
         {badge && (
             <StyledCardBadge className='cardBadge'>{badge}</StyledCardBadge>
         )}

@@ -14,9 +14,8 @@ interface IConfigureStrategyContext {
     onClose: () => void;
 }
 
-export interface IConfigureStrategyOptions {
+interface IConfigureStrategyOptions {
     strategyName: string;
-    isDefault?: boolean;
 }
 
 export const useConfigureStrategy = ({
@@ -32,7 +31,7 @@ export const useConfigureStrategy = ({
         environmentId,
     );
 
-    return ({ strategyName, isDefault }: IConfigureStrategyOptions) => {
+    return ({ strategyName }: IConfigureStrategyOptions) => {
         // this needs to happen before navigating, to capture correct path
         trackCreateStrategy(
             'opened',
@@ -48,7 +47,6 @@ export const useConfigureStrategy = ({
                 featureId,
                 environmentId,
                 strategyName,
-                isDefault,
             ),
         );
         onClose();

@@ -194,6 +194,25 @@ describe('the strategy wizard dialog', () => {
     });
 
     it('marks each template as project or global', async () => {
+        setupApi({
+            templates: [
+                TEMPLATE,
+                {
+                    ...TEMPLATE,
+                    id: 'template-2',
+                    name: 'Team rollout',
+                    project: projectId,
+                },
+            ],
+        });
+        renderWizard({ initialScreen: 'templates' });
+
+        await screen.findByText(TEMPLATE.name);
+        expect(screen.getByText('Global')).toBeInTheDocument();
+        expect(screen.getByText('Project')).toBeInTheDocument();
+    });
+
+    it('marks each template as project or global', async () => {
         setupApi();
         testServerRoute(
             server,

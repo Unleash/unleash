@@ -1,7 +1,7 @@
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { Badge } from 'component/common/Badge/Badge.tsx';
-import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard.tsx';
-import { FeatureStrategyMenuCardAction } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardAction.tsx';
+import { FeatureStrategyMenuCard } from './FeatureStrategyMenuCard.tsx';
+import { FeatureStrategyMenuCardAction } from './FeatureStrategyMenuCardAction.tsx';
 import ReleaseTemplateIcon from 'assets/img/releaseTemplates.svg?react';
 
 interface IReleaseTemplateCardProps {

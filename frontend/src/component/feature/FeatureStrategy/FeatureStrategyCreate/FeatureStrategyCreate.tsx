@@ -240,12 +240,10 @@ export const formatCreateStrategyPath = (
     featureId: string,
     environmentId: string,
     strategyName: string,
-    defaultStrategy: boolean = false,
 ): string => {
     const params = new URLSearchParams({
         environmentId,
         strategyName,
-        defaultStrategy: String(defaultStrategy),
     });
 
     return `/projects/${projectId}/features/${featureId}/strategies/create?${params}`;

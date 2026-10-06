@@ -107,6 +107,9 @@ jobs:
           config: baseUrl=http://localhost:3000
           spec: cypress/${{ matrix.test }}
           install: false
+      - name: Dump Unleash test instance logs
+        if: failure()
+        run: docker compose -f .github/docker-compose.test.yml logs --no-color --timestamps
       - name: Set artifact name
         if: always()
         id: artifact-name

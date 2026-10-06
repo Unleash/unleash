@@ -244,6 +244,92 @@ test('updating an addon returns the new addon configuration', async () => {
         });
 });
 
+describe('array and objectarray parameters', () => {
+    class ArrayAddon extends Addon {
+        async handleEvent(): Promise<void> {}
+    }
+
+    const param = (name: string, type: string) => ({
+        name,
+        displayName: name,
+        type,
+        required: false,
+        sensitive: false,
+    });
+
+    beforeAll(() => {
+        app.services.addonService.registerProvider(
+            new ArrayAddon(
+                {
+                    name: 'array-addon',
+                    displayName: 'ARRAY addon',
+                    description: '',
+                    documentationUrl: 'https://www.example.com',
+                    parameters: [
+                        param('text', 'text'),
+                        param('arritems', 'array'),
+                        param('objarritems', 'objectarray'),
+                    ],
+                },
+                {
+                    ...app.config,
+                    unleashUrl: app.config.server.unleashUrl,
+                    integrationEventsService:
+                        app.services.integrationEventsService,
+                },
+            ),
+        );
+    });
+
+    afterAll(() => {
+        delete app.services.addonService.addonProviders['array-addon']; // Prevent this addon from being present in other tests
+    });
+
+    const config = (parameters: object) => ({
+        provider: 'array-addon',
+        enabled: true,
+        parameters,
+        events: ['feature-created'],
+    });
+
+    test('a complex object array is stored and returned as is', async () => {
+        const objarritems = [
+            { thing: 'one thing', project: 'project1' },
+            { thing: 'other thing', project: 'project2' },
+        ];
+
+        const { body } = await app.request
+            .post('/api/admin/addons')
+            .send(config({ objarritems }))
+            .expect(201);
+
+        await app.request
+            .get(`/api/admin/addons/${body.id}`)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.parameters.objarritems).toStrictEqual(
+                    objarritems,
+                );
+            });
+    });
+
+    test('a string array is stored and returned as is', async () => {
+        const arritems = ['thing1', 'thing2'];
+
+        const { body } = await app.request
+            .post('/api/admin/addons')
+            .send(config({ arritems }))
+            .expect(201);
+
+        await app.request
+            .get(`/api/admin/addons/${body.id}`)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.parameters.arritems).toStrictEqual(arritems);
+            });
+    });
+});
+
 describe('key-value pair parameters', () => {
     class KvpAddon extends Addon {
         async handleEvent(): Promise<void> {}

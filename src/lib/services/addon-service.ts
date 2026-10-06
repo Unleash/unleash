@@ -37,6 +37,10 @@ const MASKED_VALUE = '*****';
 
 const WILDCARD_OPTION = '*';
 
+const KVP_TYPE = 'keyvaluepairs';
+const ARRAY_TYPE = 'array';
+const OBJECT_ARRAY_TYPE = 'objectarray';
+
 interface ISensitiveParams {
     [key: string]: string[];
 }
@@ -456,27 +460,72 @@ export default class AddonService {
         return true;
     }
 
-    private getProviderKvpParams = (provider) =>
+    private getProviderParamNamesOfType = (provider, type: string) =>
         this.addonProviders[provider].definition.parameters
-            ?.filter((p) => p.type === 'keyvaluepairs')
+            ?.filter((p) => p.type === type)
             .map((p) => p.name);
 
+    private getProviderParamTypes = (provider): Map<string, string> =>
+        new Map(
+            this.addonProviders[provider].definition.parameters?.map((p) => [
+                p.name,
+                p.type,
+            ]),
+        );
+
     validateParameterTypes({ provider, parameters }): void {
-        const kvpParams = new Set(this.getProviderKvpParams(provider));
+        const paramTypes = this.getProviderParamTypes(provider);
 
         for (const [name, value] of Object.entries(parameters)) {
-            const isObject = typeof value === 'object' && value !== null;
-            if (isObject !== kvpParams.has(name)) {
-                const error = kvpParams.has(name)
-                    ? `Parameter "${name}" must be an object of key-value pairs.`
-                    : `Parameter "${name}" does not accept key-value pairs.`;
-                throw new BadDataError(error);
+            const isArray = Array.isArray(value);
+            const isObject =
+                typeof value === 'object' && value !== null && !isArray;
+
+            switch (paramTypes.get(name)) {
+                case KVP_TYPE:
+                    if (!isObject) {
+                        throw new BadDataError(
+                            `Parameter "${name}" must be an object of key-value pairs.`,
+                        );
+                    }
+                    break;
+                case ARRAY_TYPE:
+                    if (!isArray || value.some((i) => typeof i !== 'string')) {
+                        throw new BadDataError(
+                            `Parameter "${name}" must be an array of strings.`,
+                        );
+                    }
+                    break;
+                case OBJECT_ARRAY_TYPE:
+                    if (
+                        !isArray ||
+                        value.some(
+                            (i) =>
+                                typeof i !== 'object' ||
+                                i === null ||
+                                Array.isArray(i),
+                        )
+                    ) {
+                        throw new BadDataError(
+                            `Parameter "${name}" must be an array of objects.`,
+                        );
+                    }
+                    break;
+                default:
+                    if (isObject || isArray) {
+                        throw new BadDataError(
+                            `Parameter "${name}" does not accept objects or arrays.`,
+                        );
+                    }
             }
         }
     }
 
     trimKvpKeys({ provider, parameters }): Record<string, unknown> {
-        const kvpParamNames = this.getProviderKvpParams(provider);
+        const kvpParamNames = this.getProviderParamNamesOfType(
+            provider,
+            KVP_TYPE,
+        );
         if (!kvpParamNames) return parameters;
 
         const cleaned = { ...parameters };

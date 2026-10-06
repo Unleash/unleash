@@ -16,6 +16,10 @@ export const addonSchema = joi
                 joi
                     .object()
                     .pattern(joi.string().trim(), joi.string().allow('')),
+                joi.array().items(joi.string()),
+                joi
+                    .array()
+                    .items(joi.object().pattern(joi.string(), joi.string())),
             ])
             .optional(),
         events: joi.array().optional().items(joi.string()),

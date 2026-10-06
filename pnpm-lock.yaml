@@ -634,9 +634,6 @@ importers:
       pkginfo:
         specifier: 0.4.1
         version: 0.4.1
-      plausible-tracker:
-        specifier: 0.3.9
-        version: 0.3.9
       prop-types:
         specifier: 15.8.1
         version: 15.8.1
@@ -5049,11 +5046,6 @@ packages:
   pkginfo@0.4.1:
     resolution: {integrity: sha512-8xCNE/aT/EXKenuMDZ+xTVwkT8gsoHN2z/Q29l80u0ppGEXVvsKRzNMbtKhg8LS8k1tJLAHHylf6p4VFmP6XUQ==}
     engines: {node: '>= 0.4.0'}
-
-  plausible-tracker@0.3.9:
-    resolution: {integrity: sha512-hMhneYm3GCPyQon88SZrVJx+LlqhM1kZFQbuAgXPoh/Az2YvO1B6bitT9qlhpiTdJlsT5lsr3gPmzoVjb5CDXA==}
-    engines: {node: '>=10'}
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   popper.js@1.16.1:
     resolution: {integrity: sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ==}
@@ -10864,8 +10856,6 @@ snapshots:
   pify@2.3.0: {}
 
   pkginfo@0.4.1: {}
-
-  plausible-tracker@0.3.9: {}
 
   popper.js@1.16.1: {}
 

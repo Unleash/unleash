@@ -156,7 +156,6 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
                         'p6vyurbgg0-2.algolianet.com',
                         'p6vyurbgg0-3.algolianet.com',
                         'fai.buildwithfern.com',
-                        'plausible.getunleash.io',
                         'gravatar.com',
                         'europe-west3-metrics-304612.cloudfunctions.net',
                         'app.unleash-hosted.com',

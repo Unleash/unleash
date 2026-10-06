@@ -1,11 +1,10 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useContext } from 'react';
-import { vi, expect, test } from 'vitest';
+import { expect, test } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { EventTrackerProvider } from './EventTrackerProvider';
-import { PlausibleContext } from 'contexts/PlausibleContext';
 import { FlightRecorderContext } from 'contexts/FlightRecorderContext';
 import { EventTrackerContext } from 'contexts/EventTrackerContext';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -33,35 +32,27 @@ const ConfigProbe = () => {
     return <span>ctx:{uiConfig?.unleashContext?.userId ?? 'none'}</span>;
 };
 
-test('trackEvent fans out to Plausible and the flight recorder', async () => {
+test('a tracked event is recorded with the user context and the current path', async () => {
     testServerRoute(server, '/api/admin/ui-config', {
         unleashContext: { userId: 'u-1', email: 'person@example.com' },
     });
 
-    const plausibleTrack = vi.fn();
     const recordedEvents: Array<{ payload: { eventId: string } }> = [];
     const record = (event: (typeof recordedEvents)[number]) =>
         recordedEvents.push(event);
 
     render(
-        <PlausibleContext.Provider
-            value={{ trackEvent: plausibleTrack } as any}
-        >
-            <FlightRecorderContext.Provider value={{ record } as any}>
-                <EventTrackerProvider>
-                    <ConfigProbe />
-                    <TrackButton />
-                </EventTrackerProvider>
-            </FlightRecorderContext.Provider>
-        </PlausibleContext.Provider>,
+        <FlightRecorderContext.Provider value={{ record } as any}>
+            <EventTrackerProvider>
+                <ConfigProbe />
+                <TrackButton />
+            </EventTrackerProvider>
+        </FlightRecorderContext.Provider>,
     );
 
     await screen.findByText('ctx:u-1');
     await userEvent.click(screen.getByRole('button', { name: 'track' }));
 
-    expect(plausibleTrack).toHaveBeenCalledWith('invite', {
-        props: { eventType: 'test' },
-    });
     expect(recordedEvents).toEqual([
         {
             eventType: 'custom',

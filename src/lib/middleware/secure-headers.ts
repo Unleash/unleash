@@ -83,14 +83,14 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
         const logRocketConnectSrc = logRocketEnabled
             ? LOGROCKET_CONNECT_SRC
             : [];
-        const hubspotChatEnabled =
+
+        const allowHubspotChat =
             Boolean(config.server.hubspotPortalId) &&
-            config.ui?.billing === 'pay-as-you-go' &&
-            config.flagResolver.isEnabled('hubspotChatEnabled');
-        const hubspotScriptSrc = hubspotChatEnabled ? HUBSPOT_SCRIPT_SRC : [];
-        const hubspotConnectSrc = hubspotChatEnabled ? HUBSPOT_CONNECT_SRC : [];
-        const hubspotFrameSrc = hubspotChatEnabled ? HUBSPOT_FRAME_SRC : [];
-        const hubspotImgSrc = hubspotChatEnabled ? HUBSPOT_IMG_SRC : [];
+            config.ui?.billing === 'pay-as-you-go';
+        const hubspotScriptSrc = allowHubspotChat ? HUBSPOT_SCRIPT_SRC : [];
+        const hubspotConnectSrc = allowHubspotChat ? HUBSPOT_CONNECT_SRC : [];
+        const hubspotFrameSrc = allowHubspotChat ? HUBSPOT_FRAME_SRC : [];
+        const hubspotImgSrc = allowHubspotChat ? HUBSPOT_IMG_SRC : [];
         const flightRecorderVariant = config.flagResolver.getVariant(
             'flightRecorderFrontend',
         );
@@ -191,7 +191,7 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
                     ],
                 },
             },
-            crossOriginEmbedderPolicy: hubspotChatEnabled
+            crossOriginEmbedderPolicy: allowHubspotChat
                 ? false
                 : { policy: 'credentialless' },
             originAgentCluster: false,

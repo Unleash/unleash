@@ -19,6 +19,10 @@ function randomJitter(
 export class SchedulerService {
     private intervalIds: NodeJS.Timeout[] = [];
 
+    private inFlight: Set<Promise<void>> = new Set();
+
+    private stopping = false;
+
     private logger: Logger;
 
     private maintenanceStatus: IMaintenanceStatus;
@@ -43,72 +47,86 @@ export class SchedulerService {
         id: string,
         jitter = randomJitter(2 * 1000, 30 * 1000, timeMs),
     ): Promise<void> {
-        const runScheduledFunctionWithEvent = async () => {
-            if (this.executingSchedulers.has(id)) {
-                // If the job is already executing, don't start another
-                return;
-            }
-            try {
-                this.executingSchedulers.add(id);
+        if (this.stopping) {
+            return;
+        }
 
-                const startTime = process.hrtime();
-                await scheduledFunction();
-                const endTime = process.hrtime(startTime);
-
-                // Process hrtime returns a list with two numbers representing high-resolution time.
-                // The first number is the number of seconds, the second is the number of nanoseconds.
-                // Since there are 1e9 (1,000,000,000) nanoseconds in a second, endTime[1] / 1e9 converts the nanoseconds to seconds.
-                const durationInSeconds = endTime[0] + endTime[1] / 1e9;
-                this.eventBus.emit(SCHEDULER_JOB_TIME, {
-                    jobId: id,
-                    time: durationInSeconds,
-                });
-            } finally {
-                this.executingSchedulers.delete(id);
+        const runScheduledFunctionWithEvent = (): Promise<void> => {
+            if (this.stopping) {
+                return Promise.resolve();
             }
+
+            const promise = this.executeJob(scheduledFunction, id).catch(
+                (error) => {
+                    this.logger.error(
+                        `Scheduled job failed | id: ${id}`,
+                        error,
+                    );
+                },
+            );
+
+            this.inFlight.add(promise);
+            void promise.then(
+                () => this.inFlight.delete(promise),
+                () => this.inFlight.delete(promise),
+            );
+            return promise;
         };
 
         // scheduled run
         this.intervalIds.push(
-            setInterval(async () => {
-                try {
-                    const maintenanceMode =
-                        await this.maintenanceStatus.isMaintenanceMode();
-                    if (!maintenanceMode) {
-                        await runScheduledFunctionWithEvent();
-                    }
-                } catch (e) {
-                    this.logger.error(
-                        `interval scheduled job failed | id: ${id}`,
-                        e,
-                    );
-                }
+            setInterval(() => {
+                void runScheduledFunctionWithEvent();
             }, timeMs).unref(),
         );
 
         // initial run with jitter
-        try {
-            const maintenanceMode =
-                await this.maintenanceStatus.isMaintenanceMode();
-
-            if (!maintenanceMode) {
-                if (jitter) {
-                    const id = setTimeout(
-                        () => runScheduledFunctionWithEvent(),
-                        jitter,
-                    );
-                    this.intervalIds.push(id);
-                } else {
-                    await runScheduledFunctionWithEvent();
-                }
-            }
-        } catch (e) {
-            this.logger.error(`initial scheduled job failed | id: ${id}`, e);
+        if (jitter) {
+            const timeoutId = setTimeout(() => {
+                void runScheduledFunctionWithEvent();
+            }, jitter);
+            this.intervalIds.push(timeoutId);
+        } else {
+            await runScheduledFunctionWithEvent();
         }
     }
 
-    stop(): void {
+    private async executeJob(
+        scheduledFunction: () => Promise<unknown>,
+        id: string,
+    ): Promise<void> {
+        const maintenanceMode =
+            await this.maintenanceStatus.isMaintenanceMode();
+        if (
+            this.stopping ||
+            maintenanceMode ||
+            this.executingSchedulers.has(id)
+        ) {
+            return;
+        }
+
+        this.executingSchedulers.add(id);
+        const startTime = process.hrtime();
+        try {
+            await scheduledFunction();
+        } finally {
+            this.executingSchedulers.delete(id);
+            const [seconds, nanoseconds] = process.hrtime(startTime);
+            this.eventBus.emit(SCHEDULER_JOB_TIME, {
+                jobId: id,
+                time: seconds + nanoseconds / 1e9,
+            });
+        }
+    }
+
+    async stop(): Promise<void> {
+        this.stopping = true;
         this.intervalIds.forEach(clearInterval);
+        this.intervalIds = [];
+
+        // Jobs cannot be safely canceled: callers must keep their dependencies
+        // (especially the database) alive until every execution has settled.
+        await Promise.allSettled([...this.inFlight]);
         this.executingSchedulers.clear();
     }
 }

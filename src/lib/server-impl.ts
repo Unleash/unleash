@@ -331,7 +331,7 @@ export async function createApp(
                 logger.error('Failure when executing shutdown hook', e);
             }
         }
-        services.schedulerService.stop();
+        await services.schedulerService.stop();
         services.addonService.destroy();
         await db.destroy();
     };

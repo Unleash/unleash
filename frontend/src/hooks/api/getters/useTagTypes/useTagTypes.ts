@@ -8,6 +8,10 @@ import handleErrorResponses from '../httpErrorResponseHandler.js';
 type TagTypeWithUsage = ITagType &
     Pick<TagTypeWithUsageSchema, 'usedInProjects' | 'valueCount'>;
 
+const KEY = `api/admin/tag-types`;
+
+export const refetchTagTypes = () => mutate(KEY);
+
 const useTagTypes = (options: SWRConfiguration = {}) => {
     const fetcher = async () => {
         const path = formatApiPath(`api/admin/tag-types`);
@@ -17,14 +21,8 @@ const useTagTypes = (options: SWRConfiguration = {}) => {
         return res.json();
     };
 
-    const KEY = `api/admin/tag-types`;
-
     const { data, error } = useSWR(KEY, fetcher, options);
     const [loading, setLoading] = useState(!error && !data);
-
-    const refetch = () => {
-        mutate(KEY);
-    };
 
     useEffect(() => {
         setLoading(!error && !data);
@@ -34,7 +32,7 @@ const useTagTypes = (options: SWRConfiguration = {}) => {
         tagTypes: (data?.tagTypes as TagTypeWithUsage[]) || [],
         error,
         loading,
-        refetch,
+        refetch: refetchTagTypes,
     };
 };
 

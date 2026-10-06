@@ -1,9 +1,11 @@
 import { expect, test } from 'vitest';
-import { screen, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import type { TagValuesUsageSchemaTagValuesItem } from 'openapi';
+import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import ToastRenderer from 'component/common/ToastRenderer/ToastRenderer';
 import { TagValuesTable } from './TagValuesTable.tsx';
 
 const server = testServerSetup();
@@ -125,4 +127,61 @@ test('shows an error instead of the empty state when values fail to load', async
     expect(
         screen.queryByText('No values for this tag type yet.'),
     ).not.toBeInTheDocument();
+});
+
+const renderWithPermission = () =>
+    render(
+        <>
+            <TagValuesTable tagType='team' />
+            <ToastRenderer />
+        </>,
+        { permissions: [{ permission: UPDATE_FEATURE }] },
+    );
+
+const clickInRow = async (value: string, button: string) => {
+    const row = (await screen.findByText(value)).closest('tr')!;
+    await userEvent.click(within(row).getByRole('button', { name: button }));
+};
+
+test('deletes a tag value after describing the impact', async () => {
+    const used = tagValue({
+        value: 'needs/review',
+        usedInActiveFeatures: 2,
+        usedInArchivedFeatures: 1,
+    });
+    setupTagValues([used, tagValue({ value: 'kept' })]);
+    renderWithPermission();
+
+    await clickInRow('needs/review', 'Delete tag value');
+
+    const dialog = await screen.findByRole('dialog');
+    expect(dialog).toHaveTextContent(
+        "team:needs/review will be removed from 2 active flags, plus any in private projects you can't see.",
+    );
+
+    testServerRoute(
+        server,
+        '/api/admin/tags/team/needs%2Freview',
+        {},
+        'delete',
+    );
+    setupTagValues([tagValue({ value: 'kept' })]);
+    await userEvent.click(
+        within(dialog).getByRole('button', { name: 'Delete' }),
+    );
+
+    await waitFor(() =>
+        expect(screen.queryByText('needs/review')).not.toBeInTheDocument(),
+    );
+});
+
+test('says when a tag value is not assigned to any flags the user can access', async () => {
+    setupTagValues([tagValue({ value: 'unused' })]);
+    renderWithPermission();
+
+    await clickInRow('unused', 'Delete tag value');
+
+    expect(await screen.findByRole('dialog')).toHaveTextContent(
+        "team:unused isn't added to any active flags that you have access to.",
+    );
 });

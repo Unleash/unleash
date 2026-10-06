@@ -19,3 +19,8 @@ export const searchTagTypesTracking: Tracking = {
     event: 'tags',
     type: 'search-tag-types',
 };
+
+export const deleteTagValueTracking: Tracking = {
+    event: 'tags',
+    type: 'delete-tag-value',
+};

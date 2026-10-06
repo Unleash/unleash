@@ -1,5 +1,6 @@
-import { memo, useMemo } from 'react';
-import { styled, TableContainer, Typography } from '@mui/material';
+import { memo, useCallback, useMemo, useState } from 'react';
+import { Box, styled, TableContainer, Typography } from '@mui/material';
+import Delete from '@mui/icons-material/Delete';
 import {
     type ColumnDef,
     flexRender,
@@ -16,8 +17,15 @@ import {
 } from 'component/common/Table';
 import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
+import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
+import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
 import { useTagValues } from 'hooks/api/getters/useTagValues/useTagValues';
+import { refetchTagTypes } from 'hooks/api/getters/useTagTypes/useTagTypes';
+import useToast from 'hooks/useToast';
 import type { TagValuesUsageSchemaTagValuesItem } from 'openapi';
+import { formatUnknownError } from 'utils/formatUnknownError';
+import { DeleteTagValueDialog } from './TagValueDialogs.tsx';
 import { TagValueUsageCell } from './TagValueUsageCell.tsx';
 
 const StyledSection = styled('section')(({ theme }) => ({
@@ -52,28 +60,65 @@ const compareValues = (
     b: TagValuesUsageSchemaTagValuesItem,
 ) => a.value.localeCompare(b.value, undefined, { numeric: true });
 
-const columns: ColumnDef<TagValuesUsageSchemaTagValuesItem>[] = [
-    {
-        id: 'value',
-        header: 'Value',
-        accessorKey: 'value',
-        cell: ({ getValue }) => <TextCell getValue={getValue} />,
-        sortingFn: (a, b) => compareValues(a.original, b.original),
-    },
-    {
-        id: 'usedIn',
-        header: 'Used in',
-        accessorKey: 'usedInActiveFeatures',
-        cell: ({ row }) => <TagValueUsageCell {...row.original} />,
-        meta: { width: 140 },
-    },
-];
-
 const TagValuesTableComponent = ({ tagType }: { tagType: string }) => {
-    const { tagValues, total, error, loading } = useTagValues(tagType);
+    const { tagValues, total, error, loading, refetch } = useTagValues(tagType);
+    const { deleteTag } = useTagApi();
+    const { setToastData, setToastApiError } = useToast();
+    const [deleting, setDeleting] =
+        useState<TagValuesUsageSchemaTagValuesItem | null>(null);
     // Tanstack breaks ties by row index, in both directions, so presorting
     // by value keeps tied values in ascending order whichever way usage sorts.
     const data = useMemo(() => [...tagValues].sort(compareValues), [tagValues]);
+
+    const refetchUsage = useCallback(() => {
+        refetch();
+        refetchTagTypes();
+    }, [refetch]);
+
+    const columns = useMemo<ColumnDef<TagValuesUsageSchemaTagValuesItem>[]>(
+        () => [
+            {
+                id: 'value',
+                header: 'Value',
+                accessorKey: 'value',
+                cell: ({ getValue }) => <TextCell getValue={getValue} />,
+                sortingFn: (a, b) => compareValues(a.original, b.original),
+            },
+            {
+                id: 'usedIn',
+                header: 'Used in',
+                accessorKey: 'usedInActiveFeatures',
+                cell: ({ row }) => <TagValueUsageCell {...row.original} />,
+                meta: { width: 140 },
+            },
+            {
+                id: 'actions',
+                header: 'Actions',
+                cell: ({ row: { original } }) => (
+                    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <PermissionIconButton
+                            permission={UPDATE_FEATURE}
+                            tooltipProps={{ title: 'Delete tag value' }}
+                            onClick={() => setDeleting(original)}
+                        >
+                            <Delete />
+                        </PermissionIconButton>
+                    </Box>
+                ),
+                enableSorting: false,
+                meta: { width: 80, align: 'center' },
+            },
+        ],
+        [],
+    );
+
+    const confirmDelete = async () => {
+        if (!deleting) return;
+        await deleteTag(tagType, deleting.value);
+        refetchUsage();
+        setDeleting(null);
+        setToastData({ type: 'success', text: 'Tag value deleted' });
+    };
 
     const table = useReactTable({
         columns,
@@ -125,6 +170,13 @@ const TagValuesTableComponent = ({ tagType }: { tagType: string }) => {
                     No values for this tag type yet.
                 </TablePlaceholder>
             ) : null}
+            <DeleteTagValueDialog
+                tagType={tagType}
+                tagValue={deleting}
+                onSubmit={confirmDelete}
+                onError={(error) => setToastApiError(formatUnknownError(error))}
+                onClose={() => setDeleting(null)}
+            />
         </StyledSection>
     );
 };

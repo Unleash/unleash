@@ -14,12 +14,13 @@ export const useTagValues = (tagType: string) => {
         return res.json();
     };
 
-    const { data, error, isLoading } = useSWR(key, fetcher);
+    const { data, error, isLoading, mutate } = useSWR(key, fetcher);
 
     return {
         tagValues: data?.tagValues ?? [],
         total: data?.total ?? 0,
         error,
         loading: isLoading,
+        refetch: mutate,
     };
 };

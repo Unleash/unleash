@@ -29,9 +29,19 @@ const useTagApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
+    const tagPath = (type: string, value: string) =>
+        `api/admin/tags/${encodeURIComponent(type)}/${encodeURIComponent(value)}`;
+
+    const deleteTag = async (type: string, value: string) => {
+        const req = createRequest(tagPath(type, value), { method: 'DELETE' });
+
+        return makeRequest(req.caller, req.id);
+    };
+
     return {
         createTag,
         bulkUpdateTags,
+        deleteTag,
         errors,
         loading,
     };

@@ -67,9 +67,6 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
         backgroundColor: 'transparent',
     },
     padding: 0,
-    '& .MuiPaper-root > section': {
-        overflowX: 'hidden',
-    },
 }));
 
 const StyledSidebarHeader = styled(Box)(({ theme }) => ({

@@ -13,8 +13,9 @@ interface IIntegrationParametersProps {
     parametersErrors: IIntegrationParameterProps['parametersErrors'];
     editMode: boolean;
     setParameterValue: IIntegrationParameterProps['setParameterValue'];
-    setParameterKvps: IIntegrationParameterProps['setParameterKvps'];
+    setStructuredParameter: IIntegrationParameterProps['setStructuredParameter'];
     config: IIntegrationParameterProps['config'];
+    projects: IIntegrationParameterProps['projects'];
 }
 
 const StyledParagraph = styled('p')(({ theme }) => ({
@@ -26,8 +27,9 @@ export const IntegrationParameters = ({
     config,
     parametersErrors,
     setParameterValue,
-    setParameterKvps,
+    setStructuredParameter,
     editMode,
+    projects,
 }: IIntegrationParametersProps) => {
     const kvpEditorEnabled = useUiFlag('integrationParamKvpEditor');
     if (!provider) return null;
@@ -51,7 +53,8 @@ export const IntegrationParameters = ({
                         parametersErrors={parametersErrors}
                         config={config}
                         setParameterValue={setParameterValue}
-                        setParameterKvps={setParameterKvps}
+                        setStructuredParameter={setStructuredParameter}
+                        projects={projects}
                     />
                 ))}
         </React.Fragment>

@@ -13,7 +13,6 @@ import { trim } from 'component/common/util';
 import type { AddonSchema, AddonTypeSchema } from 'openapi';
 import { IntegrationParameters } from './IntegrationParameters/IntegrationParameters.tsx';
 import {
-    type KeyValuePair,
     kvpsToEditableForm,
     kvpsToStorageForm,
     getKvpsForParam,
@@ -143,6 +142,10 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
     const [eventsModalOpen, setEventsModalOpen] = useState(false);
     const { isAdmin } = useContext(AccessContext);
 
+    const selectedProjects = projectId
+        ? [projectId]
+        : (formValues.projects ?? []);
+
     const submitText = editMode ? 'Update' : 'Create';
     const url = `${uiConfig.unleashUrl}/${formatIntegrationApiPath(projectId)}${
         editMode ? `/${(formValues as AddonSchema).id}` : ``
@@ -208,10 +211,14 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
             );
         };
 
-    const setParameterKvps = (param: string) => (kvps: KeyValuePair[]) => {
+    const setStructuredParameter = (param: string) => (value: unknown) => {
         setFormValues(
             produce((draft) => {
-                draft.parameters[param] = kvps;
+                if (value === undefined) {
+                    delete draft.parameters[param];
+                } else {
+                    draft.parameters[param] = value;
+                }
             }),
         );
     };
@@ -438,7 +445,8 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                             parametersErrors={errors.parameters}
                             editMode={editMode}
                             setParameterValue={setParameterValue}
-                            setParameterKvps={setParameterKvps}
+                            setStructuredParameter={setStructuredParameter}
+                            projects={selectedProjects}
                         />
                     </StyledRaisedSection>
                     <FormGroup title='Configuration'>

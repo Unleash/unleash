@@ -46,6 +46,7 @@ import {
 } from '../../openapi/spec/project-flag-creators-schema.js';
 import ProjectStatusController from '../project-status/project-status-controller.js';
 import FeatureLinkController from '../feature-links/feature-link-controller.js';
+import PayloadSchemaController from '../payload-schema/payload-schema-controller.js';
 import { ContextController } from '../context/context.js';
 import { ProjectAddonController } from '../../routes/admin-api/project/addon.js';
 
@@ -218,6 +219,7 @@ export default class ProjectController extends Controller {
         this.use('/', new ProjectStatusController(config, services).router);
         this.use('/', new FeatureLifecycleController(config, services).router);
         this.use('/', new FeatureLinkController(config, services).router);
+        this.use('/', new PayloadSchemaController(config, services).router);
         this.use(
             '/',
             new ContextController(config, services, 'project').router,

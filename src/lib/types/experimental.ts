@@ -86,6 +86,7 @@ export type IFlagKey =
     | 'tagManagementViaUi'
     | 'integrationParamKvpEditor'
     | 'perFlagLifetime'
+    | 'payloadSchemas'
     | keyof IFlagKeyOverrides;
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -385,6 +386,10 @@ const flags: IFlags = {
     ),
     perFlagLifetime: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PER_FLAG_LIFETIME,
+        false,
+    ),
+    payloadSchemas: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PAYLOAD_SCHEMAS,
         false,
     ),
 };

@@ -236,6 +236,7 @@ export * from './update-strategy-schema.js';
 export * from './update-tag-type-schema.js';
 export * from './update-tags-schema.js';
 export * from './update-user-schema.js';
+export * from './upsert-payload-schema-schema.js';
 export * from './upsert-segment-schema.js';
 export * from './user-access-overview-schema.js';
 export * from './user-schema.js';

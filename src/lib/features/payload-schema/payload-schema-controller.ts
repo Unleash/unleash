@@ -10,6 +10,8 @@ import {
 } from '../../openapi/util/standard-responses.js';
 import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
 import { NotFoundError } from '../../error/index.js';
+import type { UpsertPayloadSchemaSchema } from '../../openapi/index.js';
+import { validatePayloadSchema } from './payload-schema-validator.js';
 
 interface PayloadSchemaServices {
     openApiService: OpenApiService;
@@ -52,10 +54,15 @@ export default class PayloadSchemaController extends Controller {
         });
     }
 
-    async upsertPayloadSchema(_req: Request, res: Response): Promise<void> {
+    async upsertPayloadSchema(
+        req: Request<unknown, unknown, UpsertPayloadSchemaSchema>,
+        res: Response,
+    ): Promise<void> {
         if (!this.flagResolver.isEnabled('payloadSchemas')) {
             throw new NotFoundError();
         }
+
+        validatePayloadSchema(req.body.schema);
 
         res.status(204).end();
     }

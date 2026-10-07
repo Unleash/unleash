@@ -11,7 +11,7 @@ export const upsertPayloadSchemaSchema = {
             type: 'object',
             additionalProperties: {},
             description:
-                'A JSON Schema document. It replaces the schema the flag already has, if any.',
+                'A JSON Schema document, draft 2020-12. It replaces the schema the flag already has, if any.',
             example: {
                 type: 'object',
                 properties: { model: { type: 'string' } },

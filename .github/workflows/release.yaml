@@ -21,7 +21,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: v${{ inputs.version }} # tag that should be created by the caller workflow
       - uses: pnpm/action-setup@v5

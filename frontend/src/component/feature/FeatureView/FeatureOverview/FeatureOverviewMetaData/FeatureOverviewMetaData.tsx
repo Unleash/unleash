@@ -262,11 +262,14 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
                     <StyledTitle>Flag details</StyledTitle>
                     {description ? (
                         <StyledMetaDataItem data-loading>
-                            <StyledMetaDataItemText>
-                                <Truncator arrow lines={5} title={description}>
-                                    {description}
-                                </Truncator>
-                            </StyledMetaDataItemText>
+                            <Truncator
+                                arrow
+                                lines={2}
+                                title={description}
+                                expandable
+                            >
+                                {description}
+                            </Truncator>
                         </StyledMetaDataItem>
                     ) : null}
                 </div>

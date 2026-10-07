@@ -214,7 +214,7 @@ exports[`renders an empty list correctly 1`] = `
                     >
                       <span
                         aria-label=""
-                        class="MuiBox-root mui-gzore8 skeleton"
+                        class="MuiBox-root mui-1ixwf2p skeleton"
                         data-loading="true"
                         data-mui-internal-clone-element="true"
                       >
@@ -224,7 +224,7 @@ exports[`renders an empty list correctly 1`] = `
                       </span>
                       <span
                         aria-label=""
-                        class="MuiBox-root mui-gzore8 skeleton"
+                        class="MuiBox-root mui-1ixwf2p skeleton"
                         data-loading="true"
                         data-mui-internal-clone-element="true"
                       >
@@ -331,7 +331,7 @@ exports[`renders an empty list correctly 1`] = `
                     >
                       <span
                         aria-label=""
-                        class="MuiBox-root mui-gzore8 skeleton"
+                        class="MuiBox-root mui-1ixwf2p skeleton"
                         data-loading="true"
                         data-mui-internal-clone-element="true"
                       >
@@ -341,7 +341,7 @@ exports[`renders an empty list correctly 1`] = `
                       </span>
                       <span
                         aria-label=""
-                        class="MuiBox-root mui-gzore8 skeleton"
+                        class="MuiBox-root mui-1ixwf2p skeleton"
                         data-loading="true"
                         data-mui-internal-clone-element="true"
                       >
@@ -448,7 +448,7 @@ exports[`renders an empty list correctly 1`] = `
                     >
                       <span
                         aria-label=""
-                        class="MuiBox-root mui-gzore8 skeleton"
+                        class="MuiBox-root mui-1ixwf2p skeleton"
                         data-loading="true"
                         data-mui-internal-clone-element="true"
                       >
@@ -458,7 +458,7 @@ exports[`renders an empty list correctly 1`] = `
                       </span>
                       <span
                         aria-label=""
-                        class="MuiBox-root mui-gzore8 skeleton"
+                        class="MuiBox-root mui-1ixwf2p skeleton"
                         data-loading="true"
                         data-mui-internal-clone-element="true"
                       >
@@ -565,7 +565,7 @@ exports[`renders an empty list correctly 1`] = `
                     >
                       <span
                         aria-label=""
-                        class="MuiBox-root mui-gzore8 skeleton"
+                        class="MuiBox-root mui-1ixwf2p skeleton"
                         data-loading="true"
                         data-mui-internal-clone-element="true"
                       >
@@ -575,7 +575,7 @@ exports[`renders an empty list correctly 1`] = `
                       </span>
                       <span
                         aria-label=""
-                        class="MuiBox-root mui-gzore8 skeleton"
+                        class="MuiBox-root mui-1ixwf2p skeleton"
                         data-loading="true"
                         data-mui-internal-clone-element="true"
                       >
@@ -682,7 +682,7 @@ exports[`renders an empty list correctly 1`] = `
                     >
                       <span
                         aria-label=""
-                        class="MuiBox-root mui-gzore8 skeleton"
+                        class="MuiBox-root mui-1ixwf2p skeleton"
                         data-loading="true"
                         data-mui-internal-clone-element="true"
                       >
@@ -692,7 +692,7 @@ exports[`renders an empty list correctly 1`] = `
                       </span>
                       <span
                         aria-label=""
-                        class="MuiBox-root mui-gzore8 skeleton"
+                        class="MuiBox-root mui-1ixwf2p skeleton"
                         data-loading="true"
                         data-mui-internal-clone-element="true"
                       >

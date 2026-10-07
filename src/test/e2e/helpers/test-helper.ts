@@ -406,8 +406,8 @@ async function createApp(
     } as IUnleashOptions);
     const services = createServices(stores, config, db);
     await initialServiceSetup(config, services);
-    // @ts-expect-error We don't have a database for sessions here.
-    const unleashSession = sessionDb(config, undefined);
+    // @ts-expect-error db is optional, sessionDb only reads it when session.db is on
+    const unleashSession = sessionDb(config, db);
     const app = await getApp(config, stores, services, unleashSession, db);
     const request = supertest.agent(app);
 
@@ -508,6 +508,24 @@ export async function setupAppWithCustomAuth(
     db?: Db,
 ): Promise<IUnleashTest> {
     return createApp(stores, IAuthType.CUSTOM, preHook, customOptions, db);
+}
+
+/**
+ * An app whose sessions live in Postgres, like production. Use it for anything
+ * that asserts on session lifetime; the other helpers use the in-memory store.
+ */
+export async function setupAppWithSessionStore(
+    stores: IUnleashStores,
+    db: Db,
+    customOptions?: DeepPartial<IUnleashConfig>,
+): Promise<IUnleashTest> {
+    return createApp(
+        stores,
+        IAuthType.DEMO,
+        undefined,
+        { ...customOptions, session: { ...customOptions?.session, db: true } },
+        db,
+    );
 }
 
 export async function setupAppWithBaseUrl(

@@ -14,6 +14,7 @@ import type {
     IClientFeatureToggleDeltaReadModel,
 } from './client-feature-toggle-delta-read-model-type.js';
 import EventEmitter from 'events';
+import type { ReadDeltaHydrationSnapshot } from './createDeltaHydrationReader.js';
 import type { Logger } from '../../../logger.js';
 import type { ClientFeaturesDeltaSchema } from '../../../openapi/index.js';
 import {
@@ -180,6 +181,8 @@ export class ClientFeatureToggleDelta extends EventEmitter {
 
     private readonly logger: Logger;
 
+    private readonly readHydrationSnapshot: ReadDeltaHydrationSnapshot;
+
     constructor(
         clientFeatureToggleDeltaReadModel: IClientFeatureToggleDeltaReadModel,
         segmentReadModel: ISegmentReadModel,
@@ -187,8 +190,10 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         configurationRevisionService: ConfigurationRevisionService,
         flagResolver: IFlagResolver,
         config: IUnleashConfig,
+        readHydrationSnapshot: ReadDeltaHydrationSnapshot,
     ) {
         super();
+        this.readHydrationSnapshot = readHydrationSnapshot;
         this.eventStore = eventStore;
         this.clientFeatureToggleDeltaReadModel =
             clientFeatureToggleDeltaReadModel;
@@ -212,6 +217,7 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         configurationRevisionService: ConfigurationRevisionService,
         flagResolver: IFlagResolver,
         config: IUnleashConfig,
+        readHydrationSnapshot: ReadDeltaHydrationSnapshot,
     ) {
         if (!ClientFeatureToggleDelta.instance) {
             ClientFeatureToggleDelta.instance = new ClientFeatureToggleDelta(
@@ -221,6 +227,7 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                 configurationRevisionService,
                 flagResolver,
                 config,
+                readHydrationSnapshot,
             );
         }
         return ClientFeatureToggleDelta.instance;
@@ -552,28 +559,15 @@ export class ClientFeatureToggleDelta extends EventEmitter {
     }
 
     private async initEnvironmentDelta(environment: string) {
-        const baseFeatures = await this.getClientFeatures({
-            environment,
-        });
-        const referencedSegmentIds = getReferencedSegmentIds(baseFeatures);
-        // get the revision state at the time of hydration, so we can determine the visible revision
-        // for this environment and also determine which segment changes are visible based on the
-        // referenced segments in the hydration features
-        const revisionState = await this.eventStore.getDeltaRevisionState(
-            environment,
-            referencedSegmentIds,
-        );
-        // base segments still has to represent all the known state for segments,
-        // otherwise we might miss changes to segments that are not referenced by any feature
-        // in the hydration event but are updated/removed in the delta events.
-        const baseSegments = await this.segmentReadModel.getAllForClientIds();
+        const { features, segments, revisionState } =
+            await this.readHydrationSnapshot(environment);
 
         const maxRevision = getVisibleRevision(revisionState);
         this.delta[environment] = new DeltaCache({
             eventId: maxRevision,
             type: DELTA_EVENT_TYPES.HYDRATION,
-            features: baseFeatures,
-            segments: baseSegments,
+            features,
+            segments,
         });
         this.lastDeltaProcessedRevisionId = maxRevision;
         this.visibleRevisions[environment] = revisionState;

@@ -99,7 +99,14 @@
     },
     {
       "includes": ["frontend/src/**"],
-      "plugins": ["./tracking-shape.grit"]
+      "plugins": ["./tracking-shape.grit"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noNodejsModules": "error"
+          }
+        }
+      }
     },
     {
       "includes": [

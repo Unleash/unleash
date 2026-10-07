@@ -10,7 +10,9 @@ test('rejects a schema with a misspelled keyword', () => {
 test('rejects a schema written for an older draft', () => {
     const schema = { $schema: 'http://json-schema.org/draft-07/schema#' };
 
-    expect(() => validatePayloadSchema(schema)).toThrow(BadDataError);
+    expect(() => validatePayloadSchema(schema)).toThrow(
+        'Request validation failed: your request body or params contain invalid data: Invalid payload schema: only JSON Schema draft 2020-12 is supported (https://json-schema.org/draft/2020-12/schema).',
+    );
 });
 
 test('accepts a schema that uses a standard format', () => {

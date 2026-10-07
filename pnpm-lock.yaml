@@ -386,8 +386,8 @@ importers:
         specifier: ^2.5.1
         version: 2.5.1
       slug:
-        specifier: ^11.0.1
-        version: 11.0.1
+        specifier: ^12.0.1
+        version: 12.0.1
       stoppable:
         specifier: ^1.1.0
         version: 1.1.0
@@ -5700,8 +5700,8 @@ packages:
     resolution: {integrity: sha512-stxByr12oeeOyY2BlviTNQlYV5xOj47GirPr4yA1hE9JCtxfQN0+tVbkxwCtYDQWhEKWFHsEK48ORg5jrouCAg==}
     engines: {node: '>=20'}
 
-  slug@11.0.1:
-    resolution: {integrity: sha512-VrM060OM/E7rdLQSnp6JHrzFfJFmqQBp0+TMhZStnEB8PfNliaZ9UWYjTHGHLUFVJorZ8TjVd/aKvIxHWU2O7g==}
+  slug@12.0.1:
+    resolution: {integrity: sha512-p8lJZLw/5GDmxXO3FKjiOYjiBMFGDc+/8DgutoXKqjn8KX7buzbkX1unEavO7T+GHGLTOyeb7VjWTRWpb8wmuQ==}
     hasBin: true
 
   smart-buffer@4.2.0:
@@ -11578,7 +11578,7 @@ snapshots:
       ansi-styles: 6.2.3
       is-fullwidth-code-point: 5.1.0
 
-  slug@11.0.1: {}
+  slug@12.0.1: {}
 
   smart-buffer@4.2.0: {}
 

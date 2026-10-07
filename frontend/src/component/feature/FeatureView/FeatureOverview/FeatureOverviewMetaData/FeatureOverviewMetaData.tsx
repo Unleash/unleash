@@ -1,5 +1,6 @@
 import { type FC, useState } from 'react';
 import {
+    Divider,
     List,
     ListItem,
     ListItemButton,
@@ -64,6 +65,24 @@ const StyledBody = styled('div')({
     display: 'flex',
     flexDirection: 'column',
 });
+
+const StyledResourcesContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1),
+}));
+
+const StyledResourcesHeader = styled('div')({
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+});
+
+const StyledCaptionText = styled('p')(({ theme }) => ({
+    ...theme.typography.caption,
+    color: theme.palette.text.secondary,
+}));
 
 export const StyledMetaDataItem = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -193,29 +212,21 @@ const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
     );
 
     const emptyStateContent = (
-        <>
-            <StyledTitle>Add links</StyledTitle>
-            <StyledMetaDataItem>
-                Gather relevant links for external resources such as issue
-                trackers, code repositories or analytics tooling
-            </StyledMetaDataItem>
-            <div>{addLinkButton}</div>
-        </>
-    );
-
-    const linksContent = (
-        <>
-            <StyledTitle>Resources</StyledTitle>
-            {renderLinkItems()}
-            <div>{addLinkButton}</div>
-        </>
+        <StyledCaptionText>
+            Gather relevant links for external resources such as issue trackers,
+            code repositories or analytics tooling
+        </StyledCaptionText>
     );
 
     return (
         <>
-            <StyledMetaDataContainer>
-                {links.length === 0 ? emptyStateContent : linksContent}
-            </StyledMetaDataContainer>
+            <StyledResourcesContainer>
+                <StyledResourcesHeader>
+                    <StyledTitle>Resources</StyledTitle>
+                    {addLinkButton}
+                </StyledResourcesHeader>
+                {links.length === 0 ? emptyStateContent : renderLinkItems()}
+            </StyledResourcesContainer>
 
             <AddLinkDialogue
                 project={project}
@@ -252,11 +263,6 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
 
     return (
         <>
-            <FeatureLinks
-                links={feature.links || []}
-                project={feature.project}
-                feature={feature.name}
-            />
             <StyledMetaDataContainer>
                 <div>
                     <StyledTitle>Flag details</StyledTitle>
@@ -339,15 +345,25 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
                         <DependencyRow feature={feature} />
                     ) : null}
                     <TagRow feature={feature} />
-                    {onEnvironmentVisibilityChange ? (
+                </StyledBody>
+                <Divider />
+                <FeatureLinks
+                    links={feature.links || []}
+                    project={feature.project}
+                    feature={feature.name}
+                />
+                {onEnvironmentVisibilityChange ? (
+                    <>
+                        <Divider />
                         <EnvironmentVisibilityMenu
                             environments={feature.environments || []}
                             hiddenEnvironments={hiddenEnvironments || []}
                             onChange={onEnvironmentVisibilityChange}
                         />
-                    ) : null}
-                </StyledBody>
+                    </>
+                ) : null}
             </StyledMetaDataContainer>
+
             {feature.children.length > 0 ? (
                 <FeatureArchiveNotAllowedDialog
                     features={feature.children}

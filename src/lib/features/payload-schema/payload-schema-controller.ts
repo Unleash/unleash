@@ -11,23 +11,31 @@ import {
 import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
 import { NotFoundError } from '../../error/index.js';
 import type { UpsertPayloadSchemaSchema } from '../../openapi/index.js';
-import { validatePayloadSchema } from './payload-schema-validator.js';
+import type { PayloadSchemaService } from './payload-schema-service.js';
 
 interface PayloadSchemaServices {
     openApiService: OpenApiService;
+    payloadSchemaService: PayloadSchemaService;
+}
+
+interface PayloadSchemaParams {
+    projectId: string;
+    featureName: string;
 }
 
 const PATH = '/:projectId/features/:featureName/payload-schema';
 
 export default class PayloadSchemaController extends Controller {
     private flagResolver: IFlagResolver;
+    private payloadSchemaService: PayloadSchemaService;
 
     constructor(
         config: IUnleashConfig,
-        { openApiService }: PayloadSchemaServices,
+        { openApiService, payloadSchemaService }: PayloadSchemaServices,
     ) {
         super(config);
         this.flagResolver = config.flagResolver;
+        this.payloadSchemaService = payloadSchemaService;
 
         this.route({
             method: 'put',
@@ -55,14 +63,19 @@ export default class PayloadSchemaController extends Controller {
     }
 
     async upsertPayloadSchema(
-        req: Request<unknown, unknown, UpsertPayloadSchemaSchema>,
+        req: Request<PayloadSchemaParams, unknown, UpsertPayloadSchemaSchema>,
         res: Response,
     ): Promise<void> {
         if (!this.flagResolver.isEnabled('payloadSchemas')) {
             throw new NotFoundError();
         }
 
-        validatePayloadSchema(req.body.schema);
+        const { projectId, featureName } = req.params;
+        await this.payloadSchemaService.upsertPayloadSchema({
+            projectId,
+            featureName,
+            schema: req.body.schema,
+        });
 
         res.status(204).end();
     }

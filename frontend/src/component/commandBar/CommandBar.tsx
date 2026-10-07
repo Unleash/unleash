@@ -227,6 +227,7 @@ export const CommandBar = () => {
             modifiers: ['ctrl'],
             key: 'k',
             preventDefault: true,
+            anchorRefs: [compactIconRef, searchContainerRef],
         },
         () => {
             if (isCompact) {
@@ -242,16 +243,19 @@ export const CommandBar = () => {
             }
         },
     );
-    useKeyboardShortcut({ key: 'Escape' }, () => {
-        setShowSuggestions(false);
-        if (searchContainerRef.current?.contains(document.activeElement)) {
-            searchInputRef.current?.blur();
-        }
-        if (isCompact && compactExpanded) {
-            setCompactExpanded(false);
-            setValue('');
-        }
-    });
+    useKeyboardShortcut(
+        { key: 'Escape', anchorRefs: [searchContainerRef] },
+        () => {
+            setShowSuggestions(false);
+            if (searchContainerRef.current?.contains(document.activeElement)) {
+                searchInputRef.current?.blur();
+            }
+            if (isCompact && compactExpanded) {
+                setCompactExpanded(false);
+                setValue('');
+            }
+        },
+    );
     const placeholder = `Command menu (${hotkey})`;
 
     const findCommandBarLinksAndSelectedIndex = () => {
@@ -277,6 +281,7 @@ export const CommandBar = () => {
         {
             key: 'ArrowDown',
             preventDefault: true,
+            anchorRefs: [searchContainerRef],
         },
         () => {
             const itemsAndIndex = findCommandBarLinksAndSelectedIndex();
@@ -302,6 +307,7 @@ export const CommandBar = () => {
         {
             key: 'ArrowUp',
             preventDefault: true,
+            anchorRefs: [searchContainerRef],
         },
         () => {
             const itemsAndIndex = findCommandBarLinksAndSelectedIndex();

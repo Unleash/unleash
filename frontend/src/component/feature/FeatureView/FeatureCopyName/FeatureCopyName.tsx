@@ -1,4 +1,4 @@
-import { useState, type FC } from 'react';
+import { useRef, useState, type FC } from 'react';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
 import { useKeyboardCopy } from 'hooks/useKeyboardCopy';
@@ -9,6 +9,7 @@ import Check from '@mui/icons-material/Check';
 import FileCopyOutlined from '@mui/icons-material/FileCopyOutlined';
 
 export const FeatureCopyName: FC<{ name: string }> = ({ name }) => {
+    const buttonRef = useRef<HTMLButtonElement>(null);
     const [isFeatureNameCopied, setIsFeatureNameCopied] = useState(false);
     const { setToastData } = useToast();
     const trackCopyFlagName = useTracking(copyFlagNameTracking);
@@ -39,8 +40,9 @@ export const FeatureCopyName: FC<{ name: string }> = ({ name }) => {
         }
     };
 
-    const shortcutDescription = useKeyboardCopy(() =>
-        handleCopyToClipboard('keyboard-shortcut'),
+    const shortcutDescription = useKeyboardCopy(
+        () => handleCopyToClipboard('keyboard-shortcut'),
+        [buttonRef],
     );
 
     return (
@@ -53,6 +55,7 @@ export const FeatureCopyName: FC<{ name: string }> = ({ name }) => {
             arrow
         >
             <IconButton
+                ref={buttonRef}
                 size='medium'
                 onClick={() => handleCopyToClipboard('button')}
             >

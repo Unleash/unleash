@@ -1,3 +1,4 @@
+import type { TableTracking } from 'hooks/useTableState';
 import type { Tracking } from 'utils/trackingEvents';
 
 export const createTagTypeTracking: Tracking = {
@@ -33,4 +34,8 @@ export const openTagValueEditorTracking: Tracking = {
 export const editTagValueTracking: Tracking = {
     event: 'tags',
     type: 'edit-tag-value',
+};
+
+export const tagsTableTracking: TableTracking = {
+    event: 'tags',
 };

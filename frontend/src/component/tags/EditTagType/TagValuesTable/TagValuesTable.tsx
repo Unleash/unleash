@@ -28,7 +28,11 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { TagValueCell } from './TagValueCell.tsx';
 import { DeleteTagValueDialog } from './TagValueDialogs.tsx';
 import { TagValueUsageCell } from './TagValueUsageCell.tsx';
-import { openTagValueEditorTracking } from '../../tagsTracking.ts';
+import {
+    tagsTableTracking,
+    openTagValueEditorTracking,
+} from '../../tagsTracking.ts';
+import { useTrackedSorting } from 'hooks/useTrackedSorting';
 
 const StyledSection = styled('section')(({ theme }) => ({
     marginTop: theme.spacing(4),
@@ -77,6 +81,10 @@ const TagValuesTableComponent = ({ tagType }: { tagType: string }) => {
     // Tanstack breaks ties by row index, in both directions, so presorting
     // by value keeps tied values in ascending order whichever way usage sorts.
     const data = useMemo(() => [...tagValues].sort(compareValues), [tagValues]);
+    const { sorting, onSortingChange } = useTrackedSorting(
+        [{ id: 'value', desc: false }],
+        tagsTableTracking,
+    );
 
     const refetchUsage = useCallback(() => {
         refetch();
@@ -168,7 +176,8 @@ const TagValuesTableComponent = ({ tagType }: { tagType: string }) => {
     const table = useReactTable({
         columns,
         data,
-        initialState: { sorting: [{ id: 'value', desc: false }] },
+        state: { sorting },
+        onSortingChange,
         getRowId: ({ value }) => value,
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),

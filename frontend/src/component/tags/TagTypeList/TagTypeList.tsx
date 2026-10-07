@@ -41,7 +41,9 @@ import { useTracking } from 'hooks/useTracking';
 import {
     deleteTagTypeTracking,
     searchTagTypesTracking,
+    tagsTableTracking,
 } from '../tagsTracking.ts';
+import { useTrackedSorting } from 'hooks/useTrackedSorting';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 type TagTypeRow = {
@@ -246,11 +248,9 @@ export const TagTypeList = () => {
         [navigate],
     );
 
-    const initialState = useMemo(
-        () => ({
-            sorting: [{ id: 'name', desc: false }],
-        }),
-        [],
+    const { sorting, onSortingChange } = useTrackedSorting(
+        [{ id: 'name', desc: false }],
+        tagsTableTracking,
     );
 
     const columnVisibility = useMemo(
@@ -265,9 +265,9 @@ export const TagTypeList = () => {
     const table = useReactTable({
         columns,
         data,
-        initialState,
-        state: { globalFilter, columnVisibility },
+        state: { globalFilter, columnVisibility, sorting },
         onGlobalFilterChange: setGlobalFilter,
+        onSortingChange,
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),

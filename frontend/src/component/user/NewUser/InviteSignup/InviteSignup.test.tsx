@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest';
 import { screen } from '@testing-library/react';
 import { SSO_LOGIN_BUTTON } from 'utils/testIds';
-import { NewUser } from '../NewUser.tsx';
+import { InviteSignup } from './InviteSignup.tsx';
 import { INVALID_TOKEN_ERROR } from 'hooks/api/getters/useResetPassword/useResetPassword';
 import { testServerSetup, testServerRoute } from 'utils/testServer';
 import { render } from 'utils/testRenderer';
@@ -22,10 +22,7 @@ const ssoOptions = [
 ];
 
 const setup = ({ defaultHidden = false } = {}) => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        unleashUrl: 'https://sandbox.getunleash.io/enterprise',
-        flags: { newInviteFlow: true },
-    });
+    testServerRoute(server, '/api/admin/ui-config', {});
     testServerRoute(server, '/api/admin/user', {
         type: 'password',
         path: '/auth/simple/login',
@@ -42,11 +39,9 @@ test('shows who invited you, the instance and the invited email', async () => {
         createdBy: 'Vetle Tønnesen',
     });
 
-    render(<NewUser />, { route: '/new-user?token=valid-token' });
+    render(<InviteSignup />, { route: '/new-user?token=valid-token' });
 
-    await screen.findByText(
-        'Vetle Tønnesen has invited you to join enterprise',
-    );
+    await screen.findByText('Vetle Tønnesen has invited you to join Unleash');
     expect(
         screen.getByText('Continue with invitee@getunleash.io to join'),
     ).toBeInTheDocument();
@@ -74,7 +69,7 @@ test('hides the email option when password login is disabled', async () => {
         createdBy: 'Vetle Tønnesen',
     });
 
-    render(<NewUser />, { route: '/new-user?token=valid-token' });
+    render(<InviteSignup />, { route: '/new-user?token=valid-token' });
 
     await screen.findByTestId(`${SSO_LOGIN_BUTTON}-google`);
     expect(screen.queryByLabelText('Email')).not.toBeInTheDocument();
@@ -88,9 +83,9 @@ test('does not show SSO options for an invite link', async () => {
         name: INVALID_TOKEN_ERROR,
     });
 
-    render(<NewUser />, { route: '/new-user?invite=valid-secret' });
+    render(<InviteSignup />, { route: '/new-user?invite=valid-secret' });
 
-    await screen.findByText("You've been invited to join enterprise");
+    await screen.findByText("You've been invited to join Unleash");
     expect(
         screen.queryByTestId(`${SSO_LOGIN_BUTTON}-google`),
     ).not.toBeInTheDocument();

@@ -15,7 +15,7 @@ import useLoading from 'hooks/useLoading';
 import useResetPassword from 'hooks/api/getters/useResetPassword/useResetPassword';
 import { useUserInvite } from 'hooks/api/getters/useUserInvite/useUserInvite';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { basePath } from 'utils/formatPath';
 import type { IAuthOptions } from 'hooks/api/getters/useAuth/useAuthEndpoint';
 import { SSO_LOGIN_BUTTON } from 'utils/testIds';
 import InvalidToken from '../../common/InvalidToken/InvalidToken.tsx';
@@ -151,7 +151,6 @@ const renderAuthOptionIcon = ({ type }: IAuthOptions) => {
 
 export const InviteSignup = () => {
     const { authDetails } = useAuthDetails();
-    const { uiConfig } = useUiConfig();
     const {
         data: tokenData,
         loading: tokenLoading,
@@ -166,7 +165,7 @@ export const InviteSignup = () => {
     const showAuthOptions =
         authOptions.length > 0 && (!isValidInvite || passwordDisabled);
     const tokenEmail = isValidToken ? tokenData?.email : undefined;
-    const instanceName = getInstanceName(uiConfig.unleashUrl);
+    const instanceName = getInstanceName(basePath);
 
     if (!isValidToken && !isValidInvite) {
         return (

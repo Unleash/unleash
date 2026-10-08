@@ -17,7 +17,7 @@ import InvalidToken from '../common/InvalidToken/InvalidToken.tsx';
 import { NewUserWrapper } from './NewUserWrapper/NewUserWrapper.tsx';
 import ResetPasswordError from '../common/ResetPasswordError/ResetPasswordError.tsx';
 import Input from 'component/common/Input/Input.tsx';
-import { useUiFlag } from 'hooks/useUiFlag';
+import { useFlag } from '@unleash/proxy-client-react';
 import { InviteSignup } from './InviteSignup/InviteSignup.tsx';
 
 const LegacyNewUser = () => {
@@ -229,7 +229,7 @@ const LegacyNewUser = () => {
 };
 
 export const NewUser = () => {
-    const newInviteFlow = useUiFlag('newInviteFlow');
+    const newInviteFlow = useFlag('newInviteFlow');
 
     return newInviteFlow ? <InviteSignup /> : <LegacyNewUser />;
 };

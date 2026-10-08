@@ -183,7 +183,7 @@ export default class ProjectFeaturesController extends Controller {
                     release: { stable: '4.13.0' },
                     operationId: 'toggleFeatureEnvironmentOff',
                     responses: {
-                        200: createResponseSchema('featureSchema'),
+                        200: emptyResponse,
                         ...getStandardResponses(400, 401, 403, 404),
                     },
                 }),
@@ -205,7 +205,7 @@ export default class ProjectFeaturesController extends Controller {
                     release: { stable: '4.13.0' },
                     operationId: 'toggleFeatureEnvironmentOn',
                     responses: {
-                        200: createResponseSchema('featureSchema'),
+                        200: emptyResponse,
                         ...getStandardResponses(400, 401, 403, 404),
                     },
                 }),

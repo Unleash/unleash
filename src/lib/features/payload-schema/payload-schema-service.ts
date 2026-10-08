@@ -1,16 +1,24 @@
 import { NotFoundError } from '../../error/index.js';
 import type { IFeaturesReadModel } from '../feature-toggle/types/features-read-model-type.js';
+import type { IPayloadSchemaStore } from './payload-schema-store-type.js';
 import { validatePayloadSchema } from './payload-schema-validator.js';
 
 interface PayloadSchemaStores {
     featuresReadModel: IFeaturesReadModel;
+    payloadSchemaStore: IPayloadSchemaStore;
 }
 
 export class PayloadSchemaService {
     private featuresReadModel: IFeaturesReadModel;
 
-    constructor({ featuresReadModel }: PayloadSchemaStores) {
+    private payloadSchemaStore: IPayloadSchemaStore;
+
+    constructor({
+        featuresReadModel,
+        payloadSchemaStore,
+    }: PayloadSchemaStores) {
         this.featuresReadModel = featuresReadModel;
+        this.payloadSchemaStore = payloadSchemaStore;
     }
 
     async upsertPayloadSchema({
@@ -34,5 +42,13 @@ export class PayloadSchemaService {
         }
 
         validatePayloadSchema(schema);
+
+        await this.payloadSchemaStore.upsert(featureName, schema);
+    }
+
+    async getPayloadSchema(
+        featureName: string,
+    ): Promise<Record<string, unknown> | undefined> {
+        return this.payloadSchemaStore.get(featureName);
     }
 }

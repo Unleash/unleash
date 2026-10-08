@@ -274,6 +274,12 @@ export const featureSchema = {
             description:
                 'The list of links. This is an experimental field and may change.',
         },
+        payloadSchema: {
+            type: 'object',
+            additionalProperties: true,
+            description:
+                'The JSON Schema document, draft 2020-12, that describes the variant payloads of the flag. Absent when the flag has none. This is an experimental field and may change.',
+        },
     },
     components: {
         schemas: {

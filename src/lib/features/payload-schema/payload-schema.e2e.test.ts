@@ -43,3 +43,22 @@ test('a payload schema can only be set through the project the flag is in', asyn
     expect(throughOtherProject.status).toBe(404);
     expect(throughOwnProject.status).toBe(204);
 });
+
+test('a flag carries the payload schema that was last saved', async () => {
+    await app.createFeature('typed-flag', 'default');
+
+    await app.request
+        .put('/api/admin/projects/default/features/typed-flag/payload-schema')
+        .send({ schema: { type: 'string' } })
+        .expect(204);
+
+    await app.request
+        .put('/api/admin/projects/default/features/typed-flag/payload-schema')
+        .send({ schema: { type: 'number' } })
+        .expect(204);
+
+    const { body } = await app.request.get(
+        '/api/admin/projects/default/features/typed-flag',
+    );
+    expect(body.payloadSchema).toEqual({ type: 'number' });
+});

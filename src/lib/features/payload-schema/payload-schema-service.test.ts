@@ -11,4 +11,7 @@ test('refuses a payload schema that is not a valid JSON Schema', async () => {
     });
 
     await expect(upsert).rejects.toThrow(BadDataError);
+    expect(
+        await payloadSchemaService.getPayloadSchema('my-flag'),
+    ).toBeUndefined();
 });

@@ -84,11 +84,27 @@ export default class TagStore implements ITagStore {
         // can't be updated in place. Create the new value, move the flags to it,
         // then delete the old value, which no flag references any more.
         // created_at is copied so the rename doesn't look like a new tag.
-        await this.db(TABLE).insert(
-            this.db(TABLE)
-                .select('type', this.db.raw('?', [newValue]), 'created_at')
-                .where({ type: tag.type, value: tag.value }),
-        );
+        // If the new value already exists, the old one is merged into it and
+        // the existing row, with its created_at, is kept.
+        await this.db(TABLE)
+            .insert(
+                this.db(TABLE)
+                    .select('type', this.db.raw('?', [newValue]), 'created_at')
+                    .where({ type: tag.type, value: tag.value }),
+            )
+            .onConflict(['type', 'value'])
+            .ignore();
+        // feature_tag's primary key allows a tag only once per flag, so drop the old
+        // value where the flag already has the new one instead of moving it.
+        await this.db('feature_tag')
+            .where({ tag_type: tag.type, tag_value: tag.value })
+            .whereIn(
+                'feature_name',
+                this.db('feature_tag')
+                    .select('feature_name')
+                    .where({ tag_type: tag.type, tag_value: newValue }),
+            )
+            .del();
         await this.db('feature_tag')
             .where({ tag_type: tag.type, tag_value: tag.value })
             .update({ tag_value: newValue });

@@ -148,11 +148,11 @@ class TagController extends Controller {
                     operationId: 'renameTag',
                     summary: 'Rename a tag.',
                     description:
-                        'Change the value of a tag. Every feature flag that has the tag gets the new value.',
+                        'Change the value of a tag. Every feature flag that has the tag gets the new value. If a tag with the new value already exists, the two are merged.',
                     requestBody: createRequestSchema('renameTagSchema'),
                     responses: {
                         200: createResponseSchema('tagWithVersionSchema'),
-                        ...getStandardResponses(400, 401, 403, 404, 409, 415),
+                        ...getStandardResponses(400, 401, 403, 404, 415),
                     },
                 }),
             ],

@@ -342,14 +342,84 @@ test('keeps the creation date of a renamed tag', async () => {
     expect(renamed).toEqual({ created_at: createdAt });
 });
 
-test('cannot rename a tag to a value that already exists', async () => {
-    await db.stores.tagStore.createTag({ type: 'simple', value: 'first' });
-    await db.stores.tagStore.createTag({ type: 'simple', value: 'second' });
+test('merges a tag into an existing value when renamed to it', async () => {
+    const createdAt = new Date('2020-01-01T00:00:00Z');
+    const source = { type: 'simple', value: 'merge-from' };
+    const target = { type: 'simple', value: 'merge-into' };
+    await db.stores.tagStore.createTag(source);
+    await db.stores.tagStore.createTag(target);
+    await db
+        .rawDatabase('tags')
+        .where(target)
+        .update({ created_at: createdAt });
+    await app.createFeature('merge.only-source');
+    await app.createFeature('merge.both');
+    await app.createFeature('merge.only-target');
+    await db.stores.featureTagStore.tagFeature(
+        'merge.only-source',
+        source,
+        -1337,
+    );
+    await db.stores.featureTagStore.tagFeature('merge.both', source, -1337);
+    await db.stores.featureTagStore.tagFeature('merge.both', target, -1337);
+    await db.stores.featureTagStore.tagFeature(
+        'merge.only-target',
+        target,
+        -1337,
+    );
 
-    await app.request
-        .post('/api/admin/tags/simple/first/rename')
-        .send({ value: 'second' })
-        .expect(409);
+    const { body } = await app.request
+        .post('/api/admin/tags/simple/merge-from/rename')
+        .send({ value: 'merge-into' })
+        .expect(200);
+
+    expect(body.tag).toEqual(target);
+    await app.request.get('/api/admin/tags/simple/merge-from').expect(404);
+    for (const feature of [
+        'merge.only-source',
+        'merge.both',
+        'merge.only-target',
+    ]) {
+        const { body: featureTags } = await app.request
+            .get(`/api/admin/features/${feature}/tags`)
+            .expect(200);
+        expect(featureTags.tags).toMatchObject([target]);
+    }
+    const merged = await db
+        .rawDatabase('tags')
+        .where(target)
+        .first('created_at');
+    expect(merged).toEqual({ created_at: createdAt });
+
+    const events = await db
+        .rawDatabase('events')
+        .where({ type: 'tag-updated' })
+        .whereRaw(`pre_data->>'value' = ?`, [source.value])
+        .select('data', 'pre_data');
+    expect(events).toEqual([{ data: target, pre_data: source }]);
+});
+
+test('renaming a tag to its own value changes nothing', async () => {
+    const tag = { type: 'simple', value: 'unchanged' };
+    await db.stores.tagStore.createTag(tag);
+    await app.createFeature('unchanged.feature');
+    await db.stores.featureTagStore.tagFeature('unchanged.feature', tag, -1337);
+
+    const { body } = await app.request
+        .post('/api/admin/tags/simple/unchanged/rename')
+        .send({ value: ' unchanged ' })
+        .expect(200);
+
+    expect(body.tag).toEqual(tag);
+    const { body: featureTags } = await app.request
+        .get('/api/admin/features/unchanged.feature/tags')
+        .expect(200);
+    expect(featureTags.tags).toMatchObject([tag]);
+    const events = await db
+        .rawDatabase('events')
+        .where({ type: 'tag-updated' })
+        .whereRaw(`pre_data->>'value' = ?`, [tag.value]);
+    expect(events).toEqual([]);
 });
 
 test('cannot rename a tag that does not exist', async () => {

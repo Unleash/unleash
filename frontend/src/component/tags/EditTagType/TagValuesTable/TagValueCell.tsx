@@ -30,6 +30,7 @@ interface ITagValueCellProps {
     onEdit: () => void;
     onClose: () => void;
     onRenamed: () => void;
+    isExistingValue: (value: string) => boolean;
 }
 
 const TagValueEditor = ({
@@ -37,6 +38,7 @@ const TagValueEditor = ({
     tagValue,
     onClose,
     onRenamed,
+    isExistingValue,
 }: Omit<ITagValueCellProps, 'editing' | 'onEdit'>) => {
     const { renameTag } = useTagApi();
     const { setToastData, setToastApiError } = useToast();
@@ -56,7 +58,12 @@ const TagValueEditor = ({
         if (!newValue) return;
         await renameTag(tagType, tagValue.value, { value: newValue });
         onRenamed();
-        setToastData({ type: 'success', text: 'Tag value renamed' });
+        setToastData({
+            type: 'success',
+            text: isExistingValue(newValue)
+                ? 'Tag values merged'
+                : 'Tag value renamed',
+        });
     };
 
     // The dialog renders inside the listener's React tree, so clicks in it
@@ -92,7 +99,17 @@ const TagValueEditor = ({
                 </IconButton>
                 <RenameTagValueDialog
                     tagType={tagType}
-                    rename={newValue ? { tagValue, newValue } : null}
+                    rename={
+                        newValue
+                            ? {
+                                  tagValue,
+                                  newValue,
+                                  kind: isExistingValue(newValue)
+                                      ? 'merge'
+                                      : 'rename',
+                              }
+                            : null
+                    }
                     onSubmit={confirmRename}
                     onError={(error) =>
                         setToastApiError(formatUnknownError(error))

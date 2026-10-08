@@ -86,6 +86,12 @@ const TagValuesTableComponent = ({ tagType }: { tagType: string }) => {
         tagsTableTracking,
     );
 
+    const isExistingValue = useCallback(
+        (value: string) =>
+            tagValues.some((tagValue) => tagValue.value === value),
+        [tagValues],
+    );
+
     const refetchUsage = useCallback(() => {
         refetch();
         refetchTagTypes();
@@ -122,6 +128,7 @@ const TagValuesTableComponent = ({ tagType }: { tagType: string }) => {
                             refetchUsage();
                             stopEditing();
                         }}
+                        isExistingValue={isExistingValue}
                     />
                 ),
                 sortingFn: (a, b) => compareValues(a.original, b.original),
@@ -162,6 +169,7 @@ const TagValuesTableComponent = ({ tagType }: { tagType: string }) => {
             trackOpenTagValueEditor,
             stopEditing,
             refetchUsage,
+            isExistingValue,
         ],
     );
 

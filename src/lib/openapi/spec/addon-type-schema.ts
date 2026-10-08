@@ -152,6 +152,34 @@ export const addonTypeSchema = {
                 },
             },
         },
+        serverInstallation: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['path'],
+            description:
+                "This is an experimental property. It may change or be removed as we work on it. Please don't depend on it yet. An installation that Unleash handles itself: the install button opens `path` in the same tab, with the non-sensitive parameters filled in the form as `parameters[name]` query parameters.",
+            properties: {
+                path: {
+                    type: 'string',
+                    description:
+                        'The path of the installation, relative to the addons API of the integration, globally or in its project.',
+                    example: 'github/app-manifest',
+                },
+                title: {
+                    type: 'string',
+                    description:
+                        'The title of the installation. This will be displayed to the user when installing addons of this type.',
+                    example: 'Create a GitHub App',
+                },
+                helpText: {
+                    type: 'string',
+                    description:
+                        'The help text of the installation. This will be displayed to the user when installing addons of this type.',
+                    example:
+                        'Fill in the organization below, then click Install & connect.',
+                },
+            },
+        },
         alerts: {
             type: 'array',
             description:

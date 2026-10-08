@@ -58,6 +58,7 @@ export * from './addonTypeSchemaAlertsItem.ts';
 export * from './addonTypeSchemaAlertsItemLink.ts';
 export * from './addonTypeSchemaAlertsItemType.ts';
 export * from './addonTypeSchemaInstallation.ts';
+export * from './addonTypeSchemaServerInstallation.ts';
 export * from './addPublicSignupTokenUser400.ts';
 export * from './addPublicSignupTokenUser409.ts';
 export * from './addReleasePlan401.ts';

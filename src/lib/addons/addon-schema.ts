@@ -27,6 +27,14 @@ export const addonDefinitionSchema = joi.object().keys({
     events: joi.array().optional().items(joi.string()),
     tagTypes: joi.array().optional().items(tagTypeSchema),
     installation: installationDefinitionSchema.optional(),
+    serverInstallation: joi
+        .object()
+        .keys({
+            path: joi.string().uri({ relativeOnly: true }).required(),
+            title: joi.string().optional(),
+            helpText: joi.string().optional(),
+        })
+        .optional(),
     alerts: joi
         .array()
         .optional()

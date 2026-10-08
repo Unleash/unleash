@@ -453,6 +453,7 @@ export interface IAddonDefinition {
     events?: string[];
     tagTypes?: ITagType[];
     installation?: IAddonInstallation;
+    serverInstallation?: IAddonServerInstallation;
     alerts?: IAddonAlert[];
     howTo?: string;
 }
@@ -464,6 +465,14 @@ export interface IAddonOverview {
 
 export interface IAddonInstallation {
     url: string;
+    title?: string;
+    helpText?: string;
+}
+
+// Experimental: may change or be removed.
+export interface IAddonServerInstallation {
+    // Relative to the integration's addons API.
+    path: string;
     title?: string;
     helpText?: string;
 }

@@ -20,6 +20,7 @@ import {
     validateKeys,
 } from './IntegrationParameters/IntegrationParameter/KvpParameterUtils.ts';
 import { IntegrationInstall } from './IntegrationInstall/IntegrationInstall.tsx';
+import { IntegrationServerInstall } from './IntegrationServerInstall/IntegrationServerInstall.tsx';
 import cloneDeep from 'lodash.clonedeep';
 import { useNavigate } from 'react-router';
 import useAddonsApi from 'hooks/api/actions/useAddonsApi/useAddonsApi';
@@ -346,6 +347,7 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
         description,
         documentationUrl = 'https://docs.getunleash.io/integrate',
         installation,
+        serverInstallation,
         alerts,
     } = provider ? provider : ({} as Partial<AddonTypeSchema>);
 
@@ -439,6 +441,16 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                                 />
                             )}
                         />
+                        {serverInstallation ? (
+                            <IntegrationServerInstall
+                                path={serverInstallation.path}
+                                title={serverInstallation.title}
+                                helpText={serverInstallation.helpText}
+                                parameters={formValues.parameters}
+                                definitions={provider?.parameters}
+                                projectId={projectId}
+                            />
+                        ) : null}
                         <IntegrationParameters
                             provider={provider}
                             config={formValues as AddonSchema}

@@ -24,7 +24,7 @@ const templateOptions = payloadSchemaTemplateGroups.map((group) => ({
     })),
 }));
 
-export const EditPayloadSchema = () => {
+export const PayloadSchemaSidebar = () => {
     const [content, setContent] = useState<JSONContent>({ text: '' });
     const [templateKey, setTemplateKey] = useState('');
 

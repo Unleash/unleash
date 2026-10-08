@@ -23,7 +23,7 @@ import type { FeatureSchema, ProjectOverviewSchema } from 'openapi/index.ts';
 import { FeatureSetupBanner } from './FeatureSetupBanner.tsx';
 import { getFeatureSetupStage } from './getFeatureSetupStage.ts';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { EditPayloadSchema } from './PayloadSchema/EditPayloadSchema.tsx';
+import { PayloadSchemaSidebar } from './PayloadSchema/PayloadSchemaSidebar.tsx';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -175,7 +175,7 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
                                     onClose={onSidebarClose}
                                     open
                                 >
-                                    <EditPayloadSchema />
+                                    <PayloadSchemaSidebar />
                                 </SidebarModal>
                             }
                         />

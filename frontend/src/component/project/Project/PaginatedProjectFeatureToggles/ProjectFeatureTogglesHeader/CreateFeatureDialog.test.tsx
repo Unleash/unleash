@@ -112,3 +112,114 @@ test("the name field suggests the project's naming example", async () => {
 
     await screen.findByPlaceholderText('camelCase');
 });
+
+const setupNewFormApi = () => {
+    setupBaseApi();
+    testServerRoute(server, '/api/admin/ui-config', {
+        resourceLimits: { featureFlags: 999 },
+        versionInfo: { current: { oss: 'version' } },
+        flags: { perFlagLifetime: true },
+    });
+    testServerRoute(server, '/api/admin/feature-types', {
+        types: [
+            { id: 'release', name: 'Release', description: '' },
+            { id: 'experiment', name: 'Experiment', description: '' },
+        ],
+    });
+    testServerRoute(server, '/api/admin/features/validate', {}, 'post', 200);
+    return testServerRoute(
+        server,
+        '/api/admin/projects/default/features',
+        {},
+        'post',
+        201,
+    ).requests;
+};
+
+test('the new create flag form posts the default lifetime when the user leaves it untouched', async () => {
+    const requests = setupNewFormApi();
+
+    renderDialog();
+
+    const nameInput = await getNameInput();
+    fireEvent.change(nameInput, { target: { value: 'my-flag' } });
+
+    fireEvent.click(await screen.findByTestId('FORM_CREATE_BUTTON'));
+
+    await waitFor(() => expect(requests).toHaveLength(1));
+
+    expect(requests[0]).toMatchObject({ type: 'release', lifetimeDays: 30 });
+});
+
+test('the new create flag form keeps a chosen lifetime when the type changes', async () => {
+    const requests = setupNewFormApi();
+
+    renderDialog();
+
+    const nameInput = await getNameInput();
+    fireEvent.change(nameInput, { target: { value: 'my-flag' } });
+    fireEvent.click(await screen.findByRole('button', { name: '90 days' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Experiment' }));
+
+    fireEvent.click(await screen.findByTestId('FORM_CREATE_BUTTON'));
+
+    await waitFor(() => expect(requests).toHaveLength(1));
+
+    expect(requests[0]).toEqual({
+        type: 'experiment',
+        name: 'my-flag',
+        description: '',
+        impressionData: false,
+        lifetimeDays: 90,
+    });
+});
+
+test('the new create flag form applies the default lifetime of a newly chosen type', async () => {
+    const requests = setupNewFormApi();
+
+    renderDialog();
+
+    fireEvent.change(await getNameInput(), { target: { value: 'my-flag' } });
+    fireEvent.click(await screen.findByRole('button', { name: 'Kill switch' }));
+
+    fireEvent.click(await screen.findByTestId('FORM_CREATE_BUTTON'));
+
+    await waitFor(() => expect(requests).toHaveLength(1));
+
+    expect(requests[0]).toMatchObject({ type: 'kill-switch', lifetimeDays: 0 });
+});
+
+test('the new create flag form posts a zero lifetime for a permanent flag', async () => {
+    const requests = setupNewFormApi();
+
+    renderDialog();
+
+    fireEvent.change(await getNameInput(), { target: { value: 'my-flag' } });
+    fireEvent.click(await screen.findByRole('button', { name: 'Permanent' }));
+
+    fireEvent.click(await screen.findByTestId('FORM_CREATE_BUTTON'));
+
+    await waitFor(() => expect(requests).toHaveLength(1));
+
+    expect(requests[0]).toMatchObject({ type: 'release', lifetimeDays: 0 });
+});
+
+test('the new create flag form restores an unfinished draft when reopened', async () => {
+    const requests = setupNewFormApi();
+
+    const firstDialog = renderDialog();
+    fireEvent.change(await getNameInput(), { target: { value: 'my-flag' } });
+    fireEvent.click(await screen.findByRole('button', { name: '90 days' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Cancel' }));
+    firstDialog.unmount();
+
+    renderDialog();
+    expect(await getNameInput()).toHaveValue('my-flag');
+    const submit = await screen.findByTestId('FORM_CREATE_BUTTON');
+    await waitFor(() => expect(submit).toBeEnabled());
+    fireEvent.click(submit);
+
+    await waitFor(() => expect(requests).toHaveLength(1));
+
+    expect(requests[0]).toMatchObject({ name: 'my-flag', lifetimeDays: 90 });
+});

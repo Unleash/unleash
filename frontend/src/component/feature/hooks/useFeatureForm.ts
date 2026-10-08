@@ -6,6 +6,10 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import type { ITag } from 'interfaces/tags';
 import type { CreateFeatureSchema, CreateFeatureSchemaType } from 'openapi';
 
+export type CreateFeaturePayload = CreateFeatureSchema & {
+    lifetimeDays?: number;
+};
+
 export type FeatureFormInitialData = Partial<{
     name: string;
     type: CreateFeatureSchemaType;
@@ -13,6 +17,7 @@ export type FeatureFormInitialData = Partial<{
     description: string;
     impressionData: boolean;
     tags: Set<ITag>;
+    lifetimeDays: number;
 }>;
 
 const useFeatureForm = ({
@@ -22,6 +27,7 @@ const useFeatureForm = ({
     description: initialDescription = '',
     impressionData: initialImpressionData = false,
     tags: initialTags = new Set(),
+    lifetimeDays: initialLifetimeDays,
 }: FeatureFormInitialData) => {
     const projectId = useRequiredPathParam('projectId');
     const params = useQueryParams();
@@ -35,7 +41,10 @@ const useFeatureForm = ({
     const [impressionData, setImpressionData] = useState<boolean>(
         initialImpressionData,
     );
-    const [errors, setErrors] = useState({});
+    const [lifetimeDays, setLifetimeDays] = useState<number | undefined>(
+        initialLifetimeDays,
+    );
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
     useEffect(() => {
         setType(initialType);
@@ -54,13 +63,14 @@ const useFeatureForm = ({
         setImpressionData(initialImpressionData);
     }, [initialImpressionData]);
 
-    const getTogglePayload = (): CreateFeatureSchema => {
+    const getTogglePayload = (): CreateFeaturePayload => {
         const tagsPayload = tags.size > 0 ? { tags: Array.from(tags) } : {};
         return {
             type,
             name,
             description,
             impressionData,
+            lifetimeDays,
             ...tagsPayload,
         };
     };
@@ -96,6 +106,8 @@ const useFeatureForm = ({
         setDescription,
         impressionData,
         setImpressionData,
+        lifetimeDays,
+        setLifetimeDays,
         getTogglePayload,
         validateToggleName,
         clearErrors,

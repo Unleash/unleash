@@ -1,6 +1,8 @@
-import type { Request } from 'express';
+import type { Request, Response } from 'express';
 import {
+    endSession,
     startSession,
+    type EndSessionConfig,
     type SessionExtras,
     type SessionUser,
 } from './session-lifecycle.js';
@@ -139,4 +141,109 @@ test('refuses a session that cannot be saved', async () => {
     await expect(startSession(req, user)).rejects.toThrow(
         'without a usable session',
     );
+});
+
+const endConfig = ({
+    baseUriPath = '',
+    clearSiteDataOnLogout = true,
+    secureHeaders = false,
+} = {}) =>
+    ({
+        session: { cookieName: 'unleash-session', clearSiteDataOnLogout },
+        server: { baseUriPath },
+        secureHeaders,
+        getLogger: () => ({ warn: () => {} }),
+    }) as unknown as EndSessionConfig;
+
+// records what the response was told to do, and in which order
+const recordingResponse = (order: string[] = []) => {
+    const cleared: { name: string; options: unknown }[] = [];
+    const headers: Record<string, string> = {};
+
+    const res = {
+        clearCookie: (name: string, options: unknown) => {
+            order.push('clearCookie');
+            cleared.push({ name, options });
+        },
+        set: (key: string, value: string) => {
+            headers[key] = value;
+        },
+    } as unknown as Response;
+
+    return { res, order, cleared, headers };
+};
+
+const requestToEnd = (destroyError?: Error, order: string[] = []) => {
+    const req = {
+        session: {
+            destroy: (callback: (err?: unknown) => void) => {
+                order.push('destroy');
+                callback(destroyError);
+            },
+        },
+    } as unknown as Request;
+
+    return { req, order };
+};
+
+test('clears the cookie with the path it was set with', async () => {
+    // a clear without the path is a no-op wherever BASE_URI_PATH is set, which
+    // is how three SSO logout paths were leaving the cookie behind
+    const { req } = requestToEnd();
+    const { res, cleared } = recordingResponse();
+
+    await endSession(req, res, endConfig({ baseUriPath: '/unleash' }));
+
+    expect(cleared).toEqual([
+        {
+            name: 'unleash-session',
+            options: {
+                path: '/unleash',
+                secure: false,
+                sameSite: 'lax',
+                httpOnly: true,
+            },
+        },
+    ]);
+});
+
+test('tells the browser to drop its data when the instance asks for it', async () => {
+    const { req } = requestToEnd();
+    const { res, headers } = recordingResponse();
+
+    await endSession(req, res, endConfig({ clearSiteDataOnLogout: true }));
+
+    expect(headers['Clear-Site-Data']).toBe('"cookies", "storage"');
+});
+
+test('leaves the browser data alone when it does not', async () => {
+    const { req } = requestToEnd();
+    const { res, headers } = recordingResponse();
+
+    await endSession(req, res, endConfig({ clearSiteDataOnLogout: false }));
+
+    expect(headers['Clear-Site-Data']).toBeUndefined();
+});
+
+test('still signs the browser out when the session cannot be deleted', async () => {
+    // the stored session outlives us and expires on its own, but the browser
+    // must not be left holding a cookie that still works
+    const { req } = requestToEnd(new Error('store is down'));
+    const { res, cleared, headers } = recordingResponse();
+
+    await endSession(req, res, endConfig());
+
+    expect(cleared).toHaveLength(1);
+    expect(headers['Clear-Site-Data']).toBe('"cookies", "storage"');
+});
+
+test('still clears the cookie for a request carrying no session', async () => {
+    // an expired or forged cookie resolves to nothing; the browser should
+    // still be told to drop it
+    const req = {} as Request;
+    const { res, cleared } = recordingResponse();
+
+    await endSession(req, res, endConfig());
+
+    expect(cleared).toHaveLength(1);
 });

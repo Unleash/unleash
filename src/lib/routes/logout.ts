@@ -1,19 +1,13 @@
 import type { Response } from 'express';
 import { promisify } from 'util';
 import { type IUnleashConfig, NONE } from '../types/index.js';
-import { sessionCookieOptions } from '../sessions/session-cookie.js';
+import { endSession } from '../sessions/session-lifecycle.js';
 import Controller from './controller.js';
 import type { IAuthRequest } from './unleash-types.js';
 import type { IUnleashServices } from '../services/index.js';
 import type SessionService from '../services/session-service.js';
 
 class LogoutController extends Controller {
-    private clearSiteDataOnLogout: boolean;
-
-    private cookieName: string;
-
-    private cookiePath: string;
-
     private baseUri: string;
 
     private sessionService: SessionService;
@@ -25,11 +19,6 @@ class LogoutController extends Controller {
         super(config);
         this.sessionService = sessionService;
         this.baseUri = config.server.baseUriPath;
-        this.clearSiteDataOnLogout = config.session.clearSiteDataOnLogout;
-        this.cookieName = config.session.cookieName;
-        // the path has to match the one the cookie was set with, or clearing it
-        // is a no-op wherever `BASE_URI_PATH` is set.
-        this.cookiePath = sessionCookieOptions(config).path as string;
 
         this.route({
             method: 'post',
@@ -61,19 +50,15 @@ class LogoutController extends Controller {
             }
         }
 
-        if (req.session) {
-            if (req.session.user?.id) {
-                await this.sessionService.deleteSessionsForUser(
-                    req.session.user.id,
-                );
-            }
-            req.session.destroy();
+        // read the id off the session before it goes
+        if (req.session?.user?.id) {
+            await this.sessionService.deleteSessionsForUser(
+                req.session.user.id,
+            );
         }
-        res.clearCookie(this.cookieName, { path: this.cookiePath });
 
-        if (this.clearSiteDataOnLogout) {
-            res.set('Clear-Site-Data', '"cookies", "storage"');
-        }
+        await endSession(req, res, this.config);
+
         if (req.user?.id) {
             await this.sessionService.deleteSessionsForUser(req.user.id);
         }

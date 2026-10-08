@@ -22,6 +22,8 @@ import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectO
 import type { FeatureSchema, ProjectOverviewSchema } from 'openapi/index.ts';
 import { FeatureSetupBanner } from './FeatureSetupBanner.tsx';
 import { getFeatureSetupStage } from './getFeatureSetupStage.ts';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { EditPayloadSchema } from './PayloadSchema/EditPayloadSchema.tsx';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -55,6 +57,7 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
     const { hiddenEnvironments, onEnvironmentVisibilityChange } =
         useEnvironmentVisibility();
     const onSidebarClose = () => navigate(featurePath);
+    const payloadSchemasEnabled = useUiFlag('payloadSchemas');
     usePageTitle(featureId);
     const { setLastViewed } = useLastViewedFlags();
     useEffect(() => {
@@ -163,6 +166,20 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
                             </SidebarModal>
                         }
                     />
+                    {payloadSchemasEnabled ? (
+                        <Route
+                            path='payload-schema'
+                            element={
+                                <SidebarModal
+                                    label='Edit payload schema'
+                                    onClose={onSidebarClose}
+                                    open
+                                >
+                                    <EditPayloadSchema />
+                                </SidebarModal>
+                            }
+                        />
+                    ) : null}
                 </Routes>
             </StyledContainer>
             <StrategyDragTooltip show={showTooltip} onClose={onTooltipClose} />

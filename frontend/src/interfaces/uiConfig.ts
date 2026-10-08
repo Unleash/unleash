@@ -117,6 +117,7 @@ export type UiFlags = {
     perFlagLifetime?: boolean;
     remoteMcpFeedback?: boolean;
     sessionTimeouts?: boolean;
+    payloadSchemas?: boolean;
 };
 
 export interface IVersionInfo {

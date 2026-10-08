@@ -39,6 +39,8 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ExtraActions } from './ExtraActions.tsx';
 import { archiveFlagTracking } from 'component/feature/flagActionsTracking';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { PayloadSchemaRow } from '../PayloadSchema/PayloadSchemaRow.tsx';
 
 const StyledMetaDataContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -260,6 +262,7 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
     const { project, description, type } = feature;
 
     const showDependentFeatures = useShowDependentFeatures(project);
+    const payloadSchemasEnabled = useUiFlag('payloadSchemas');
 
     return (
         <>
@@ -343,6 +346,12 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
                     ) : null}
                     {showDependentFeatures ? (
                         <DependencyRow feature={feature} />
+                    ) : null}
+                    {payloadSchemasEnabled ? (
+                        <PayloadSchemaRow
+                            projectId={project}
+                            featureId={feature.name}
+                        />
                     ) : null}
                     <TagRow feature={feature} />
                 </StyledBody>

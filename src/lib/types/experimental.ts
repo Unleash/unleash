@@ -87,6 +87,7 @@ export type IFlagKey =
     | 'integrationParamKvpEditor'
     | 'perFlagLifetime'
     | 'payloadSchemas'
+    | 'singlePageStrategyForm'
     | keyof IFlagKeyOverrides;
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -390,6 +391,10 @@ const flags: IFlags = {
     ),
     payloadSchemas: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PAYLOAD_SCHEMAS,
+        false,
+    ),
+    singlePageStrategyForm: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SINGLE_PAGE_STRATEGY_FORM,
         false,
     ),
 };

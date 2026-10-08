@@ -118,6 +118,7 @@ export type UiFlags = {
     remoteMcpFeedback?: boolean;
     sessionTimeouts?: boolean;
     payloadSchemas?: boolean;
+    singlePageStrategyForm?: boolean;
 };
 
 export interface IVersionInfo {

@@ -11,7 +11,6 @@ import type { CreateFeatureNamingPatternSchema } from 'openapi';
 const StyledFlagNamingInfo = styled('article')(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
     borderRadius: theme.shape.borderRadius,
-    marginInlineStart: theme.spacing(1.5),
     backgroundColor: `${theme.palette.background.elevation2}`,
     dl: {
         display: 'grid',

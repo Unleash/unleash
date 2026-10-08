@@ -287,7 +287,7 @@ export const DialogFormTemplate: React.FC<Props> = ({
             <Section sx={{ pt: 4, pb: 3, width: '100%' }}>
                 <Input
                     label={`${capitalizeFirst(resource)} name`}
-                    placeholder='Feature-flag-name'
+                    placeholder={namingPattern?.example || 'Feature-flag-name'}
                     aria-required
                     aria-details={
                         namingPattern?.pattern

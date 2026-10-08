@@ -101,3 +101,14 @@ test('the modal surfaces backend validation errors', async () => {
 
     await screen.findByText('"name" must be URL friendly');
 });
+
+test("the name field suggests the project's naming example", async () => {
+    setupBaseApi();
+    testServerRoute(server, '/api/admin/projects/default/overview', {
+        featureNaming: { pattern: '[a-z][a-zA-Z0-9]*', example: 'camelCase' },
+    });
+
+    renderDialog();
+
+    await screen.findByPlaceholderText('camelCase');
+});

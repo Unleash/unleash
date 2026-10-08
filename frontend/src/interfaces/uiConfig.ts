@@ -88,7 +88,6 @@ export type UiFlags = {
     consumptionModelUI?: boolean;
     disableImpactMetrics?: boolean;
     impactViews?: boolean;
-    plausibleMetrics?: boolean;
     oidcPkceSupport?: boolean;
     extendedUsageMetrics?: boolean;
     regexConstraintOperator?: boolean;

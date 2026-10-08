@@ -56,7 +56,6 @@ export type IFlagKey =
     | 'disableImpactMetrics'
     | 'etagByEnv'
     | 'optimizeLifecycle'
-    | 'plausibleMetrics'
     | 'flightRecorderSdk'
     | 'flightRecorderAdminEvents'
     | 'flightRecorderFrontend'
@@ -262,10 +261,6 @@ const flags: IFlags = {
     ),
     disableImpactMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_IMPACT_METRICS,
-        false,
-    ),
-    plausibleMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PLAUSIBLE_METRICS,
         false,
     ),
     flightRecorderSdk: parseEnvVarBoolean(

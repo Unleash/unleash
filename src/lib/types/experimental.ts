@@ -66,6 +66,7 @@ export type IFlagKey =
     | 'logRocketEnabled'
     | 'hubspotChatEnabled'
     | 'newModalDesign'
+    | 'newInviteFlow'
     | 'allowDeprecatedApiTokenMiddleware'
     | 'serviceNowIntegration'
     | 'learningLab'
@@ -318,6 +319,10 @@ const flags: IFlags = {
     ),
     newModalDesign: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NEW_MODAL_DESIGN,
+        false,
+    ),
+    newInviteFlow: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_NEW_INVITE_FLOW,
         false,
     ),
     learningLab: {

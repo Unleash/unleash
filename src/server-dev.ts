@@ -68,6 +68,7 @@ process.nextTick(async () => {
                         helpMenuRelocationHint: true,
                         playgroundPerFlag: true,
                         ipConstraintOperator: true,
+                        newInviteFlow: true,
                     },
                 },
                 authentication: {

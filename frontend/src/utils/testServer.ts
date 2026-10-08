@@ -21,7 +21,7 @@ export const testServerSetup = (): SetupServer => {
 export const testServerRoute = (
     server: SetupServer,
     path: string,
-    json: object | boolean | string | number,
+    json: object | boolean | string | number | null,
     method: 'get' | 'post' | 'put' | 'delete' = 'get',
     status: number = 200,
     searchParams?: Record<string, string>,
@@ -44,7 +44,9 @@ export const testServerRoute = (
                     requests.push(body);
                 }
             }
-            return HttpResponse.json(json, { status });
+            return json === null
+                ? new HttpResponse(null, { status })
+                : HttpResponse.json(json, { status });
         }),
     );
     return { requests };

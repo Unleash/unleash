@@ -42,7 +42,6 @@ const StyledTitle = styled(Typography)(({ theme }) => ({
 }));
 
 const StyledSubtitle = styled(Typography)(({ theme }) => ({
-    fontSize: theme.typography.body2.fontSize,
     lineHeight: '20px',
     color: theme.palette.text.secondary,
 }));
@@ -59,16 +58,11 @@ const StyledAuthOptionButton = styled(Button)(({ theme }) => ({
         gap: theme.spacing(0.5),
         color: theme.palette.text.primary,
         borderColor: theme.palette.neutral.containerBorder,
-        borderRadius: theme.shape.borderRadius,
         fontWeight: theme.typography.fontWeightBold,
     },
     '&&&:hover': {
         borderColor: theme.palette.text.primary,
         backgroundColor: theme.palette.action.hover,
-    },
-    '& svg': {
-        width: 24,
-        height: 24,
     },
 }));
 
@@ -89,7 +83,6 @@ const StyledEmailField = styled('div')(({ theme }) => ({
 }));
 
 const StyledLabel = styled('label')(({ theme }) => ({
-    fontSize: theme.typography.body2.fontSize,
     fontWeight: theme.typography.fontWeightBold,
     lineHeight: '22px',
 }));
@@ -97,7 +90,6 @@ const StyledLabel = styled('label')(({ theme }) => ({
 const StyledEmailInput = styled(TextField)(({ theme }) => ({
     '&&& .MuiOutlinedInput-root': {
         height: 52,
-        fontSize: theme.typography.body2.fontSize,
         fontWeight: theme.typography.fontWeightMedium,
     },
     '& .MuiOutlinedInput-root.Mui-readOnly': {
@@ -114,21 +106,18 @@ const StyledPrimaryButton = styled(Button)(({ theme }) => ({
 }));
 
 const StyledFinePrint = styled(Typography)(({ theme }) => ({
-    fontSize: theme.typography.body2.fontSize,
     lineHeight: 1.34,
     color: theme.palette.text.secondary,
 }));
 
 const StyledFinePrintLink = styled(Link)(({ theme }) => ({
-    fontWeight: theme.typography.fontWeightMedium,
     color: theme.palette.text.primary,
     textDecorationColor: 'currentColor',
 }));
 
-const StyledSignIn = styled(Typography)(({ theme }) => ({
-    fontSize: theme.typography.body2.fontSize,
+const StyledSignIn = styled(Typography)({
     lineHeight: '20px',
-}));
+});
 
 const StyledSignInLink = styled(RouterLink)(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,

@@ -9,7 +9,6 @@ const StyledPage = styled('div')(({ theme }) => ({
     minHeight: '100vh',
     display: 'flex',
     flexDirection: 'column',
-    overflow: 'hidden',
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing(3),
     [theme.breakpoints.up('lg')]: {
@@ -21,7 +20,6 @@ const StyledPage = styled('div')(({ theme }) => ({
 const cornerMarkStyles = (theme: Theme) =>
     ({
         position: 'absolute',
-        pointerEvents: 'none',
         width: 320,
         height: 320,
         top: -168,

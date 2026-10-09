@@ -123,7 +123,6 @@ const StyledCompliance = styled('div')(({ theme }) => ({
     '& svg': {
         width: 24,
         height: 24,
-        flexShrink: 0,
     },
 }));
 
@@ -132,9 +131,6 @@ const StyledPrivacy = styled('p')(({ theme }) => ({
     padding: theme.spacing(1.5, 2),
     fontSize: theme.typography.body2.fontSize,
     lineHeight: '20px',
-    '& strong': {
-        fontWeight: theme.typography.fontWeightBold,
-    },
 }));
 
 export const GoodCompanyPanel = () => (

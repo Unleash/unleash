@@ -173,7 +173,11 @@ export const ManageBulkTagsDialog: FC<IManageBulkTagsDialogProps> = ({
             type,
         }).then(async () => {
             refetchTags();
-            setSelectedTags((prev) => [...prev, { title: value }]);
+            setSelectedTags((prev) =>
+                prev.some(({ title }) => title === value)
+                    ? prev
+                    : [...prev, { title: value }],
+            );
             dispatch({
                 type: 'add',
                 payload: { value, type },
@@ -186,30 +190,26 @@ export const ManageBulkTagsDialog: FC<IManageBulkTagsDialogProps> = ({
         false,
         false
     >['onChange'] = (_event, newValue, reason, selected) => {
-        if (reason === 'selectOption') {
-            newValue.forEach((value) => {
-                if (
-                    typeof value !== 'string' &&
-                    typeof value.inputValue === 'string' &&
-                    value.inputValue &&
-                    value.title.startsWith('Create new value')
-                ) {
-                    createNewTagOnTheFly(value.inputValue, tagType.name);
-                }
+        if (reason === 'selectOption' && selected?.option) {
+            const option = selected.option;
+            if (option.inputValue) {
+                // The "Create new value" option's title is its label, not the value.
+                // Drop it from the selection
+                setSelectedTags(newValue.filter((value) => value !== option));
+                createNewTagOnTheFly(option.inputValue, tagType.name);
+                return;
+            }
 
-                setSelectedTags(newValue as TagOption[]);
-                setIndeterminateTags((prev: TagOption[]) =>
-                    prev.filter(({ title }) => title !== value.title),
-                );
-                if (selected?.option) {
-                    dispatch({
-                        type: 'add',
-                        payload: {
-                            value: selected.option.title,
-                            type: tagType.name,
-                        },
-                    });
-                }
+            setSelectedTags(newValue);
+            setIndeterminateTags((prev) =>
+                prev.filter(({ title }) => title !== option.title),
+            );
+            dispatch({
+                type: 'add',
+                payload: {
+                    value: option.title,
+                    type: tagType.name,
+                },
             });
         } else if (reason === 'clear') {
             setSelectedTags([]);

@@ -1,5 +1,14 @@
-import { describe, expect, it } from 'vitest';
-import { payloadReducer } from './ManageBulkTagsDialog.tsx';
+import { describe, expect, it, vi } from 'vitest';
+import { screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { render } from 'utils/testRenderer';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
+import {
+    ManageBulkTagsDialog,
+    payloadReducer,
+} from './ManageBulkTagsDialog.tsx';
+
+const server = testServerSetup();
 
 describe('payloadReducer', () => {
     it('should add a tag to addedTags and remove it from removedTags', () => {
@@ -84,6 +93,87 @@ describe('payloadReducer', () => {
         const newState = payloadReducer(initialState, action);
         expect(newState).toMatchObject({
             addedTags: [],
+            removedTags: [],
+        });
+    });
+});
+
+describe('ManageBulkTagsDialog', () => {
+    it('adds only the new value when creating a value on the fly', async () => {
+        testServerRoute(server, '/api/admin/tag-types', {
+            tagTypes: [{ name: 'simple', description: '', icon: '' }],
+        });
+        testServerRoute(server, '/api/admin/tags/simple', { tags: [] });
+        testServerRoute(
+            server,
+            '/api/admin/tags',
+            { value: 'new-value', type: 'simple' },
+            'post',
+            201,
+        );
+        const onSubmit = vi.fn();
+
+        render(
+            <ManageBulkTagsDialog
+                open
+                initialValues={[]}
+                initialIndeterminateValues={[]}
+                onCancel={() => {}}
+                onSubmit={onSubmit}
+            />,
+        );
+
+        await screen.findByDisplayValue('simple');
+        await userEvent.type(
+            screen.getByLabelText('Select values'),
+            'new-value',
+        );
+        await userEvent.click(
+            await screen.findByText('Create new value "new-value"'),
+        );
+        const saveButton = screen.getByRole('button', { name: 'Save tags' });
+        await waitFor(() => expect(saveButton).toBeEnabled());
+        await userEvent.click(saveButton);
+
+        expect(onSubmit).toHaveBeenCalledWith({
+            addedTags: [{ value: 'new-value', type: 'simple' }],
+            removedTags: [],
+        });
+    });
+
+    it('assigns a partially assigned value to all flags when selected', async () => {
+        testServerRoute(server, '/api/admin/tag-types', {
+            tagTypes: [{ name: 'simple', description: '', icon: '' }],
+        });
+        testServerRoute(server, '/api/admin/tags/simple', {
+            tags: [{ value: 'partial', type: 'simple' }],
+        });
+        const partialTag = { value: 'partial', type: 'simple' };
+        const onSubmit = vi.fn();
+
+        render(
+            <ManageBulkTagsDialog
+                open
+                initialValues={[partialTag]}
+                initialIndeterminateValues={[partialTag]}
+                onCancel={() => {}}
+                onSubmit={onSubmit}
+            />,
+        );
+
+        await screen.findByDisplayValue('simple');
+        await userEvent.click(screen.getByLabelText('Select values'));
+        await userEvent.click(
+            await screen.findByRole('option', { name: 'partial' }),
+        );
+        const partialOption = screen.getByRole('option', { name: 'partial' });
+        expect(within(partialOption).getByRole('checkbox')).toBeChecked();
+        await userEvent.click(
+            screen.getByRole('button', { name: 'Save tags' }),
+        );
+
+        expect(onSubmit).toHaveBeenCalledWith({
+            addedTags: [partialTag],
             removedTags: [],
         });
     });

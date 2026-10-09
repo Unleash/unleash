@@ -160,7 +160,7 @@
         "frontend/src/component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate.tsx",
         "frontend/src/component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit.tsx",
         "frontend/src/component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm.tsx",
-        "frontend/src/component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormBody.tsx",
+        "frontend/src/component/feature/FeatureStrategy/FeatureStrategyForm/LegacyStrategyFormBody.tsx",
         "frontend/src/component/feature/FeatureToggleList/FeatureToggleListTable.tsx",
         "frontend/src/component/feature/FeatureToggleList/FeaturesOverviewLifecycleFilters/FeaturesOverviewToggleFilters.tsx",
         "frontend/src/component/feature/FeatureView/FeatureMetrics/FeatureExposureMetrics.tsx",

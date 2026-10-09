@@ -66,7 +66,6 @@ export type UiFlags = {
     strategyVariant?: boolean;
     doraMetrics?: boolean;
     dependentFeatures?: boolean;
-    newStrategyConfiguration?: boolean;
     signals?: boolean;
     automatedActions?: boolean;
     releaseTemplatesAutomations?: boolean;

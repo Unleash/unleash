@@ -19,7 +19,7 @@ import {
     PROJECT_DEFAULT_STRATEGY_WRITE,
     UPDATE_PROJECT,
 } from '@server/types/permissions';
-import { StrategyFormBody } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormBody.tsx';
+import { StrategyFormBodySelector } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormBodySelector.tsx';
 import { createStrategyPayload } from 'component/feature/FeatureStrategy/featureStrategy.utils';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
@@ -118,7 +118,7 @@ const EditDefaultStrategy = () => {
                 )
             }
         >
-            <StrategyFormBody
+            <StrategyFormBodySelector
                 strategy={strategy}
                 setStrategy={setStrategy}
                 strategyDefinition={strategyDefinition}
@@ -155,7 +155,7 @@ const EditDefaultStrategy = () => {
                 >
                     Cancel
                 </Button>
-            </StrategyFormBody>
+            </StrategyFormBodySelector>
         </FormTemplate>
     );
 };

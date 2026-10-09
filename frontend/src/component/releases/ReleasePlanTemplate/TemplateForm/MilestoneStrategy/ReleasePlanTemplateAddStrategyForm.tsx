@@ -10,7 +10,7 @@ import {
     featureStrategyHelp,
 } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
-import { StrategyFormBody } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormBody.tsx';
+import { StrategyFormBodySelector } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormBodySelector.tsx';
 
 export interface IReleasePlanTemplateAddStrategyFormProps {
     onCancel: () => void;
@@ -50,7 +50,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
             documentationLink={featureStrategyDocsLink}
             documentationLinkLabel={featureStrategyDocsLinkLabel}
         >
-            <StrategyFormBody
+            <StrategyFormBodySelector
                 strategy={currentStrategy}
                 setStrategy={setCurrentStrategy}
                 strategyDefinition={strategyDefinition}
@@ -76,7 +76,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                     {editMode ? 'Add changes' : 'Add strategy'}
                 </Button>
                 <Button onClick={onCancel}>Cancel</Button>
-            </StrategyFormBody>
+            </StrategyFormBodySelector>
         </FormTemplate>
     );
 };

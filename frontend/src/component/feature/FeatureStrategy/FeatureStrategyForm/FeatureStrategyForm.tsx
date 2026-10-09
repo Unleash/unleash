@@ -9,7 +9,6 @@ import type {
 import { FeatureStrategyEnabled } from './FeatureStrategyEnabled/FeatureStrategyEnabled.tsx';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-
 import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
@@ -24,12 +23,10 @@ import {
 import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit.tsx';
 import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import { FeatureStrategyEnabledDisabled } from './FeatureStrategyEnabledDisabled/FeatureStrategyEnabledDisabled.tsx';
 import { useTracking } from 'hooks/useTracking';
 import type { Tracking } from 'utils/trackingEvents';
 import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/UpgradeChangeRequests/UpgradeChangeRequests.tsx';
-
-import { StrategyFormBody } from './StrategyFormBody.tsx';
+import { StrategyFormBodySelector } from './StrategyFormBodySelector.tsx';
 import type { ParametersSchema } from 'openapi/index.ts';
 
 export interface IFeatureStrategyFormProps<T extends StrategyFormState> {
@@ -173,7 +170,7 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
     ) : null;
 
     return (
-        <StrategyFormBody
+        <StrategyFormBodySelector
             strategy={strategy}
             setStrategy={setStrategy}
             strategyDefinition={strategyDefinition}
@@ -185,26 +182,15 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
                     <StyledAlertBox>{changeRequestAlert}</StyledAlertBox>
                 ) : null
             }
-            generalTabExtras={
-                <>
-                    <FeatureStrategyEnabledDisabled
-                        enabled={!strategy?.disabled}
-                        onToggleEnabled={() =>
-                            setStrategy((strategyState) => ({
-                                ...strategyState,
-                                disabled: !strategyState.disabled,
-                            }))
-                        }
+            allowEnableDisable
+            statusContent={
+                changeRequestsEnabled ? null : (
+                    <FeatureStrategyEnabled
+                        projectId={feature.project}
+                        featureId={feature.name}
+                        environmentId={environmentId}
                     />
-
-                    {changeRequestsEnabled ? null : (
-                        <FeatureStrategyEnabled
-                            projectId={feature.project}
-                            featureId={feature.name}
-                            environmentId={environmentId}
-                        />
-                    )}
-                </>
+                )
             }
             onSubmit={onSubmitWithValidation}
             beforeFooter={
@@ -259,6 +245,6 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
                 loading={loading}
                 label='Save strategy'
             />
-        </StrategyFormBody>
+        </StrategyFormBodySelector>
     );
 };

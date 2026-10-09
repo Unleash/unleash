@@ -26,7 +26,7 @@ import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
 import type { ParametersSchema } from 'openapi/index.ts';
 
-export interface StrategyFormBodyProps<T extends StrategyFormState> {
+export interface LegacyStrategyFormBodyProps<T extends StrategyFormState> {
     strategy: T;
     setStrategy: React.Dispatch<React.SetStateAction<T>>;
     strategyDefinition: IStrategy;
@@ -122,7 +122,7 @@ const StyledButtons = styled('div')(({ theme }) => ({
     borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
-export const StrategyFormBody = <T extends StrategyFormState>({
+export const LegacyStrategyFormBody = <T extends StrategyFormState>({
     strategy,
     setStrategy,
     strategyDefinition,
@@ -136,7 +136,7 @@ export const StrategyFormBody = <T extends StrategyFormState>({
     groupIdTooltip,
     children,
     onSubmit,
-}: StrategyFormBodyProps<T>) => {
+}: LegacyStrategyFormBodyProps<T>) => {
     const [tab, setTab] = useState(0);
     const strategyName = strategy?.name || strategy?.strategyName;
     const { segments: assignableSegments = [] } = useAssignableSegments();
@@ -174,7 +174,6 @@ export const StrategyFormBody = <T extends StrategyFormState>({
             ? String(strategy.parameters.stickiness)
             : 'default';
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: moved over from legacy, to be removed
     useEffect(() => {
         setStrategy((prev) => ({
             ...prev,

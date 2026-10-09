@@ -354,3 +354,48 @@ describe('max metrics collection', () => {
         });
     });
 });
+
+test('reads the lifetime of a flag, falling back to its type', async () => {
+    await featureToggleStore.create('default', {
+        name: 'flag-with-own-lifetime',
+        type: 'release',
+        lifetimeDays: 30,
+        createdByUserId: 9999,
+    });
+    await featureToggleStore.create('default', {
+        name: 'flag-with-type-lifetime',
+        type: 'release',
+        createdByUserId: 9999,
+    });
+
+    expect(
+        await featureToggleStore.getLifetime('flag-with-own-lifetime'),
+    ).toEqual({ type: 'expiring', days: 30 });
+    expect(
+        await featureToggleStore.getLifetime('flag-with-type-lifetime'),
+    ).toEqual({ type: 'expiring', days: 40 });
+    expect(
+        await featureToggleStore.getLifetime('no-such-flag'),
+    ).toBeUndefined();
+});
+
+test('a flag is permanent when its lifetime is 0 or its type has none', async () => {
+    await featureToggleStore.create('default', {
+        name: 'flag-with-zero-lifetime',
+        type: 'release',
+        lifetimeDays: 0,
+        createdByUserId: 9999,
+    });
+    await featureToggleStore.create('default', {
+        name: 'flag-with-permanent-type',
+        type: 'kill-switch',
+        createdByUserId: 9999,
+    });
+
+    expect(
+        await featureToggleStore.getLifetime('flag-with-zero-lifetime'),
+    ).toEqual({ type: 'permanent' });
+    expect(
+        await featureToggleStore.getLifetime('flag-with-permanent-type'),
+    ).toEqual({ type: 'permanent' });
+});

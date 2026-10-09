@@ -93,6 +93,7 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
+                    perFlagLifetime: true,
                 },
             },
         },
@@ -752,6 +753,60 @@ test('Should update feature flag', async () => {
     expect(flag.description).toBe('updated');
     expect(flag.type).toBe('kill-switch');
     expect(flag.archived).toBeFalsy();
+});
+
+describe('expectedLifetimeEndsAt on the flag payload', () => {
+    const url = '/api/admin/projects/default/features';
+    const createdAt = new Date('2026-01-01T00:00:00.000Z');
+
+    const createAndFetch = async (
+        name: string,
+        flag: { type: string; lifetimeDays?: number },
+    ) => {
+        await app.request
+            .post(url)
+            .send({ name, ...flag })
+            .expect(201);
+        await db
+            .rawDatabase('features')
+            .where({ name })
+            .update({ created_at: createdAt });
+        const { body } = await app.request.get(`${url}/${name}`).expect(200);
+        return body;
+    };
+
+    test("is the creation date plus the flag's lifetime", async () => {
+        const flag = await createAndFetch('lifetime.own', {
+            type: 'release',
+            lifetimeDays: 30,
+        });
+
+        expect(flag).toMatchObject({
+            createdAt: '2026-01-01T00:00:00.000Z',
+            expectedLifetimeEndsAt: '2026-01-31T00:00:00.000Z',
+        });
+        expect(flag).not.toHaveProperty('lifetimeDays');
+    });
+
+    test("is the creation date plus the type's lifetime when the flag has none", async () => {
+        const flag = await createAndFetch('lifetime.from-type', {
+            type: 'release',
+        });
+
+        expect(flag).toMatchObject({
+            createdAt: '2026-01-01T00:00:00.000Z',
+            expectedLifetimeEndsAt: '2026-02-10T00:00:00.000Z', // default lifetime of a release type is 40 days
+        });
+    });
+
+    test('is null for a permanent flag', async () => {
+        const flag = await createAndFetch('lifetime.permanent', {
+            type: 'release',
+            lifetimeDays: 0,
+        });
+
+        expect(flag).toMatchObject({ expectedLifetimeEndsAt: null });
+    });
 });
 
 test('Should not change name of feature flag', async () => {

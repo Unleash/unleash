@@ -1,4 +1,5 @@
 import type {
+    FlagLifetime,
     IFeatureToggleStore,
     IFeatureToggleStoreQuery,
 } from '../types/feature-toggle-store-type.js';
@@ -246,6 +247,16 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
 
     isPotentiallyStale(): Promise<boolean> {
         throw new Error('Method not implemented.');
+    }
+
+    async getLifetime(featureName: string): Promise<FlagLifetime | undefined> {
+        const feature = this.features.find((f) => f.name === featureName);
+        if (!feature) {
+            return undefined;
+        }
+        return feature.lifetimeDays
+            ? { type: 'expiring', days: feature.lifetimeDays }
+            : { type: 'permanent' };
     }
 
     async getFeatureTypeCounts(

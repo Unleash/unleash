@@ -137,6 +137,7 @@ export interface FeatureToggleView extends FeatureToggleWithEnvironment {
     lifecycle: IFeatureLifecycleStage | undefined;
     collaborators?: { users: Collaborator[] };
     links: Omit<IFeatureLink, 'feature'>[];
+    expectedLifetimeEndsAt?: Date | null;
 }
 
 export interface IEnvironmentDetail extends IEnvironmentBase {

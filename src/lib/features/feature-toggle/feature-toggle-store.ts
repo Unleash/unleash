@@ -10,7 +10,10 @@ import type {
     IFeatureToggleQuery,
     IVariant,
 } from '../../types/model.js';
-import type { IFeatureToggleStore } from './types/feature-toggle-store-type.js';
+import type {
+    FlagLifetime,
+    IFeatureToggleStore,
+} from './types/feature-toggle-store-type.js';
 import type { Db } from '../../db/db.js';
 import type { LastSeenInput } from '../metrics/last-seen/last-seen-service.js';
 import { NameExistsError } from '../../error/index.js';
@@ -696,6 +699,23 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .where({ name: featureName });
 
         return result?.potentially_stale ?? false;
+    }
+
+    async getLifetime(featureName: string): Promise<FlagLifetime | undefined> {
+        const result = await this.db(TABLE)
+            .leftJoin('feature_types', 'feature_types.id', 'features.type')
+            .where('features.name', featureName)
+            .first(
+                this.db.raw(
+                    'COALESCE(features.lifetime_days, feature_types.lifetime_days) AS lifetime_days',
+                ),
+            );
+        if (!result) {
+            return undefined;
+        }
+        return result.lifetime_days
+            ? { type: 'expiring', days: result.lifetime_days }
+            : { type: 'permanent' };
     }
 
     async setCreatedByUserId(batchSize: number): Promise<number | undefined> {

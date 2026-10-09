@@ -50,6 +50,7 @@ import {
     UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
     WeightType,
 } from '../../types/index.js';
+import { addDays } from 'date-fns';
 import type { Logger } from '../../logger.js';
 import {
     ForbiddenError,
@@ -1089,9 +1090,11 @@ export class FeatureToggleService {
                     userId,
                     archived,
                 );
+            const expectedLifetimeEndsAt = await this.expectedLifetime(result);
 
             return {
                 ...result,
+                expectedLifetimeEndsAt,
                 dependencies,
                 children,
                 lifecycle,
@@ -1109,9 +1112,11 @@ export class FeatureToggleService {
                     userId,
                     archived,
                 );
+            const expectedLifetimeEndsAt = await this.expectedLifetime(result);
 
             return {
                 ...result,
+                expectedLifetimeEndsAt,
                 dependencies,
                 children,
                 lifecycle,
@@ -1119,6 +1124,22 @@ export class FeatureToggleService {
                 collaborators: { users: collaborators },
             };
         }
+    }
+
+    private async expectedLifetime(feature: FeatureToggleWithEnvironment) {
+        if (!this.flagResolver.isEnabled('perFlagLifetime')) {
+            return undefined;
+        }
+
+        const lifetime = await this.featureToggleStore.getLifetime(
+            feature.name,
+        );
+        if (!lifetime || !feature.createdAt) {
+            return undefined;
+        }
+        return lifetime.type === 'permanent'
+            ? null
+            : addDays(feature.createdAt, lifetime.days);
     }
 
     async getVariantsForEnv(

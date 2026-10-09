@@ -50,7 +50,7 @@ export const sessionTimeoutMiddleware = (
                 sessionCookieOptions(config),
             );
 
-            if (reason === 'idled' && config.session.clearSiteDataOnLogout) {
+            if (reason === 'idle' && config.session.clearSiteDataOnLogout) {
                 // idle-timeout: unattended screen, clear its data, not only session
                 res.set('Clear-Site-Data', '"cookies", "storage"');
             }
@@ -81,6 +81,13 @@ export const sessionTimeoutMiddleware = (
         }
 
         const stamp = Date.now();
+
+        // pods from before startSession() mint sessions with no start. drop this
+        // once none of them can still be running
+        if (session.authenticatedAt === undefined) {
+            session.authenticatedAt = new Date(stamp).toISOString();
+        }
+
         const verdict = evaluateSession(
             session,
             limits,

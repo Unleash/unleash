@@ -43,7 +43,7 @@ describe('session deadlines', () => {
                 false,
                 NOW,
             ),
-        ).toEqual({ action: 'end', reason: 'idled' });
+        ).toEqual({ action: 'end', reason: 'idle' });
     });
 
     test('user activity renews the idle window', () => {
@@ -66,7 +66,7 @@ describe('session deadlines', () => {
         // inclusive, and nothing else would notice if it stopped being.
         expect(
             evaluateSession(session(MAX_AGE, 0), limits(), true, NOW),
-        ).toEqual({ action: 'end', reason: 'max-aged' });
+        ).toEqual({ action: 'end', reason: 'max_age' });
     });
 
     test('with the idle timeout off, only the max age applies', () => {
@@ -85,14 +85,15 @@ describe('session deadlines', () => {
     });
 
     test.each([
-        ['a session that was already open before this shipped', {}],
-        ['a login time we cannot read', { authenticatedAt: 'not-a-date' }],
+        ['a start we were never given', {}],
+        ['a start we cannot read', { authenticatedAt: 'not-a-date' }],
+        ['a start left empty', { authenticatedAt: '' }],
     ])('%s ends rather than being trusted', (_name, unmeasurable) => {
-        // reported apart from `max-aged`: nothing was measured, so claiming a
+        // reported apart from `max_age`: nothing was measured, so claiming a
         // deadline was reached would make the reason useless.
         expect(evaluateSession(unmeasurable, limits(), false, NOW)).toEqual({
             action: 'end',
-            reason: 'unknown-start',
+            reason: 'unknown_start',
         });
     });
 
@@ -106,7 +107,7 @@ describe('session deadlines', () => {
                 false,
                 NOW,
             ),
-        ).toEqual({ action: 'end', reason: 'idled' });
+        ).toEqual({ action: 'end', reason: 'idle' });
 
         expect(
             evaluateSession(
@@ -174,6 +175,6 @@ describe('session deadlines', () => {
                 true,
                 NOW,
             ),
-        ).toEqual({ action: 'end', reason: 'idled' });
+        ).toEqual({ action: 'end', reason: 'idle' });
     });
 });

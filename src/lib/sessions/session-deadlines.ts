@@ -1,7 +1,7 @@
 import type { SessionData } from 'express-session';
 import type { ISessionLimits } from './session-limits.js';
 
-export type SessionTimeoutReason = 'idled' | 'max-aged' | 'unknown-start';
+export type SessionTimeoutReason = 'idle' | 'max_age' | 'unknown_start';
 
 export type SessionVerdict =
     | { action: 'end'; reason: SessionTimeoutReason }
@@ -23,15 +23,15 @@ export const evaluateSession = (
     const startedAt = parse(session.authenticatedAt);
 
     if (startedAt === undefined) {
-        // a session started before timeouts shipped or session broken -> end it
-        return { action: 'end', reason: 'unknown-start' };
+        // a start we cannot read is a session we cannot reason about -> end it
+        return { action: 'end', reason: 'unknown_start' };
     }
 
     // cap in case of fast clocks
     const authenticatedAt = Math.min(startedAt, now);
 
     if (now >= authenticatedAt + hardMaxAgeMs) {
-        return { action: 'end', reason: 'max-aged' };
+        return { action: 'end', reason: 'max_age' };
     }
 
     const absoluteExpiresInMs = authenticatedAt + hardMaxAgeMs - now;
@@ -50,7 +50,7 @@ export const evaluateSession = (
     );
 
     if (now >= idleSince + idleTimeoutMs) {
-        return { action: 'end', reason: 'idled' };
+        return { action: 'end', reason: 'idle' };
     }
 
     // renewing restarts the idle window, so the deadline moves with it

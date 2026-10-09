@@ -167,7 +167,8 @@ describe('the hard max-age', () => {
 });
 
 describe('sessions that predate this feature', () => {
-    test('are signed out on their first request', async () => {
+    test('get a start stamped on their first request', async () => {
+        // signing them out instead is a login loop lasting the whole deploy
         const email = 'legacy@getunleash.io';
         await appWith(IDLE_15);
         await login(email);
@@ -180,6 +181,9 @@ describe('sessions that predate this feature', () => {
             .where({ sid: row!.sid })
             .update({ sess: JSON.stringify(withoutTimestamps) });
 
-        await app.request.get('/api/admin/projects').expect(401);
+        await app.request.get('/api/admin/projects').expect(200);
+
+        const stamped = await sessionRowFor(email);
+        expect(Date.parse(stamped!.sess.authenticatedAt)).not.toBeNaN();
     });
 });

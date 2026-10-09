@@ -56,7 +56,12 @@ const createApp = ({
         const back = (raw: unknown) =>
             new Date(Date.now() - Number(raw)).toISOString();
 
-        if (req.query.login !== undefined) {
+        if (req.query.login === 'never') {
+            // a session from before the deadlines shipped
+            req.session.authenticatedAt = undefined;
+        } else if (req.query.login === 'broken') {
+            req.session.authenticatedAt = 'not a date';
+        } else if (req.query.login !== undefined) {
             req.session.authenticatedAt = back(req.query.login);
         }
         if (req.query.idle !== undefined) {
@@ -102,6 +107,7 @@ const createApp = ({
     app.use('/api', (req, res) => {
         res.status(200).json({
             userId: req.session?.user?.id ?? null,
+            authenticatedAt: req.session?.authenticatedAt ?? null,
             lastInteractionAt: req.session?.lastInteractionAt ?? null,
             expiresInMs: res.locals.sessionExpiresInMs ?? null,
         });
@@ -184,6 +190,29 @@ test('a session the store cannot delete is not reported as signed out', async ()
     expect(res.headers['clear-site-data']).toBeUndefined();
     expect(await storedSessions()).toHaveLength(1);
     expect(logged.some((line) => line.includes('Could not end'))).toBe(true);
+});
+
+test('stamps a start on a session that predates the deadlines', async () => {
+    // during a rolling deploy the old pods keep minting sessions without one.
+    // Ending those is a login loop that lasts as long as the deploy
+    const { agent } = await signedIn();
+    await agent.post('/rewind?login=never').expect(200);
+
+    const res = await agent.get('/api/admin/projects');
+
+    expect(res.status).toBe(200);
+    expect(Date.parse(res.body.authenticatedAt)).not.toBeNaN();
+});
+
+test('ends a session whose start cannot be read', async () => {
+    // a start we cannot parse is a session we cannot reason about, and it gets
+    // its own reason rather than being lumped in with the ones we stamped
+    const { agent } = await signedIn();
+    await agent.post('/rewind?login=broken').expect(200);
+
+    const res = await agent.get('/api/admin/projects');
+
+    expect(res.status).toBe(401);
 });
 
 test('a write renews the idle window', async () => {

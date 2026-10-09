@@ -32,7 +32,6 @@ export type IFlagKey =
     | 'extendedUsageMetrics'
     | 'feedbackComments'
     | 'usePromiseTokenCache'
-    | 'queryMissingTokens' // TODO: nowhere used - to be removed
     | 'disableUpdateMaxRevisionId'
     | 'disablePublishUnannouncedEvents'
     | 'outdatedSdksBanner'
@@ -187,11 +186,6 @@ const flags: IFlags = {
     ),
     disablePublishUnannouncedEvents: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_SCHEDULED_CACHES,
-        false,
-    ),
-    // TODO: nowhere used - to be removed
-    queryMissingTokens: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_QUERY_MISSING_TOKENS,
         false,
     ),
     responseTimeMetricsFix: parseEnvVarBoolean(

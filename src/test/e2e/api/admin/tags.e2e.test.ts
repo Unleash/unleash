@@ -322,6 +322,37 @@ test('renames a tag to a value with non-ASCII characters', async () => {
     expect(body.tag).toEqual({ type: 'simple', value: 'zażółć gęślą jaźń' });
 });
 
+test('counts an emoji as one character towards the maximum length', async () => {
+    await db.stores.tagStore.createTag({ type: 'simple', value: 'short' });
+
+    const { body } = await app.request
+        .post('/api/admin/tags/simple/short/rename')
+        .send({ value: '🛸'.repeat(50) })
+        .expect(200);
+
+    expect(body.tag.value).toBe('🛸'.repeat(50));
+});
+
+test.each([
+    ['blank', '   '],
+    ['too short', ' a '],
+    ['single emoji', '🚀'],
+    ['too long', 'a'.repeat(51)],
+    ['too long emoji', '🚀'.repeat(51)],
+])('rejects renaming a tag to a %s value', async (reason, value) => {
+    const tag = { type: 'simple', value: `invalid-${reason}` };
+    await db.stores.tagStore.createTag(tag);
+
+    await app.request
+        .post(`/api/admin/tags/simple/${encodeURIComponent(tag.value)}/rename`)
+        .send({ value })
+        .expect(400);
+
+    await app.request
+        .get(`/api/admin/tags/simple/${encodeURIComponent(tag.value)}`)
+        .expect(200);
+});
+
 test('keeps the creation date of a renamed tag', async () => {
     const createdAt = new Date('2020-01-01T00:00:00Z');
     await db.stores.tagStore.createTag({ type: 'simple', value: 'old-tag' });

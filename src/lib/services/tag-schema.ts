@@ -5,7 +5,7 @@ import { TAG_MIN_LENGTH, TAG_MAX_LENGTH } from '../tags/index.js';
 
 export const tagSchema = Joi.object()
     .keys({
-        value: Joi.string().min(TAG_MIN_LENGTH).max(TAG_MAX_LENGTH),
+        value: Joi.string(),
         type: customJoi
             .isUrlFriendly()
             .min(TAG_MIN_LENGTH)

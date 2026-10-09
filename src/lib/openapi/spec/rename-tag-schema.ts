@@ -14,7 +14,7 @@ export const renameTagSchema = {
             pattern: `^\\s*\\S.{${TAG_MIN_LENGTH - 2},${
                 TAG_MAX_LENGTH - 2
             }}\\S\\s*$`,
-            description: `The new value of the tag. The value must be between ${TAG_MIN_LENGTH} and ${TAG_MAX_LENGTH} characters long and must not already exist for the same tag type. Leading and trailing whitespace is ignored and will be trimmed before saving the tag value.`,
+            description: `The new value of the tag. The value must be between ${TAG_MIN_LENGTH} and ${TAG_MAX_LENGTH} characters long. If the value already exists for the same tag type, the two tags are merged. Leading and trailing whitespace is ignored and will be trimmed before saving the tag value.`,
             example: 'a-new-tag-value',
         },
     },

@@ -224,14 +224,44 @@ test('renames a tag value after confirming', async () => {
     expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
 });
 
-test('closes the editor without confirming when the new value is blank', async () => {
+test.each([
+    ['blank', '  ', 'Value cannot be empty or whitespace'],
+    ['too short', ' a ', 'Value must be between 2 and 50 characters'],
+    ['single emoji', '🚀', 'Value must be between 2 and 50 characters'],
+    ['too long', 'a'.repeat(51), 'Value must be between 2 and 50 characters'],
+    [
+        'too long emoji',
+        '🚀'.repeat(51),
+        'Value must be between 2 and 50 characters',
+    ],
+])('explains why a %s value cannot be saved until it is edited', async (_, value, message) => {
     setupTagValues([tagValue({ value: 'old' })]);
     renderWithPermission();
 
     await clickInRow('old', 'Rename tag value');
     const input = screen.getByRole('textbox', { name: 'New value for old' });
     await userEvent.clear(input);
-    await userEvent.type(input, '  {Enter}');
+    await userEvent.type(input, `${value}{Enter}`);
+
+    expect(input).toHaveAccessibleDescription(message);
+    expect(input).toBeInvalid();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+    await userEvent.type(input, 'x');
+
+    expect(input).toBeValid();
+    expect(screen.queryByText(message)).not.toBeInTheDocument();
+});
+
+test('closes the editor without confirming when the value is unchanged', async () => {
+    setupTagValues([tagValue({ value: 'old' })]);
+    renderWithPermission();
+
+    await clickInRow('old', 'Rename tag value');
+    await userEvent.type(
+        screen.getByRole('textbox', { name: 'New value for old' }),
+        ' {Enter}',
+    );
 
     expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();

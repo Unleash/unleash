@@ -9,7 +9,7 @@
  */
 export interface RenameTagSchema {
     /**
-     * The new value of the tag. The value must be between 2 and 50 characters long and must not already exist for the same tag type. Leading and trailing whitespace is ignored and will be trimmed before saving the tag value.
+     * The new value of the tag. The value must be between 2 and 50 characters long. If the value already exists for the same tag type, the two tags are merged. Leading and trailing whitespace is ignored and will be trimmed before saving the tag value.
      * @pattern ^\s*\S.{0,48}\S\s*$
      */
     value: string;

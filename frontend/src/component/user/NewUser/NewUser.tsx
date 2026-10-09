@@ -17,8 +17,10 @@ import InvalidToken from '../common/InvalidToken/InvalidToken.tsx';
 import { NewUserWrapper } from './NewUserWrapper/NewUserWrapper.tsx';
 import ResetPasswordError from '../common/ResetPasswordError/ResetPasswordError.tsx';
 import Input from 'component/common/Input/Input.tsx';
+import { useFlag } from '@unleash/proxy-client-react';
+import { InviteSignup } from './InviteSignup/InviteSignup.tsx';
 
-export const NewUser = () => {
+const LegacyNewUser = () => {
     const { authDetails } = useAuthDetails();
     const { setToastApiError } = useToast();
     const navigate = useNavigate();
@@ -224,4 +226,10 @@ export const NewUser = () => {
             />
         </NewUserWrapper>
     );
+};
+
+export const NewUser = () => {
+    const newInviteFlow = useFlag('newInviteFlow');
+
+    return newInviteFlow ? <InviteSignup /> : <LegacyNewUser />;
 };

@@ -67,6 +67,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                     onAddUpdateStrategy(currentStrategy);
                 }}
             >
+                <Button onClick={onCancel}>Cancel</Button>
                 <Button
                     variant='contained'
                     color='primary'
@@ -75,7 +76,6 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                 >
                     {editMode ? 'Add changes' : 'Add strategy'}
                 </Button>
-                <Button onClick={onCancel}>Cancel</Button>
             </StrategyFormBodySelector>
         </FormTemplate>
     );

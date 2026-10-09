@@ -126,6 +126,16 @@ const EditDefaultStrategy = () => {
                 groupIdTooltip='Defaults to the feature flag name if not set.'
                 onSubmit={onSubmit}
             >
+                <Button
+                    type='button'
+                    onClick={() =>
+                        navigate(
+                            `/projects/${projectId}/settings/default-strategy`,
+                        )
+                    }
+                >
+                    Cancel
+                </Button>
                 <PermissionButton
                     permission={[
                         PROJECT_DEFAULT_STRATEGY_WRITE,
@@ -145,16 +155,6 @@ const EditDefaultStrategy = () => {
                 >
                     Save strategy
                 </PermissionButton>
-                <Button
-                    type='button'
-                    onClick={() =>
-                        navigate(
-                            `/projects/${projectId}/settings/default-strategy`,
-                        )
-                    }
-                >
-                    Cancel
-                </Button>
             </StrategyFormBodySelector>
         </FormTemplate>
     );

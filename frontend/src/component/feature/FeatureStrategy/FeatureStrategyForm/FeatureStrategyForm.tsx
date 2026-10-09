@@ -211,6 +211,14 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
                 </>
             }
         >
+            <Button
+                type='button'
+                color='primary'
+                onClick={onCancelWithTracking}
+                disabled={loading}
+            >
+                Cancel
+            </Button>
             <PermissionButton
                 permission={permission}
                 projectId={feature.project}
@@ -230,14 +238,6 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
                     ? changeRequestButtonText
                     : 'Save strategy'}
             </PermissionButton>
-            <Button
-                type='button'
-                color='primary'
-                onClick={onCancelWithTracking}
-                disabled={loading}
-            >
-                Cancel
-            </Button>
             <FeatureStrategyProdGuard
                 open={showProdGuard}
                 onClose={() => setShowProdGuard(false)}

@@ -17,7 +17,10 @@ import {
 } from 'component/common/Table';
 import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import {
+    DELETE_TAG_TYPE,
+    UPDATE_FEATURE,
+} from 'component/providers/AccessProvider/permissions';
 import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
 import { useTagValues } from 'hooks/api/getters/useTagValues/useTagValues';
 import { refetchTagTypes } from 'hooks/api/getters/useTagTypes/useTagTypes';
@@ -146,7 +149,7 @@ const TagValuesTableComponent = ({ tagType }: { tagType: string }) => {
                 cell: ({ row: { original } }) => (
                     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                         <PermissionIconButton
-                            permission={UPDATE_FEATURE}
+                            permission={[UPDATE_FEATURE, DELETE_TAG_TYPE]}
                             tooltipProps={{ title: 'Delete tag value' }}
                             onClick={() =>
                                 setAction({

@@ -5,7 +5,12 @@ import type TagService from '../../services/tag-service.js';
 
 import Controller from '../controller.js';
 
-import { NONE, UPDATE_FEATURE } from '../../types/permissions.js';
+import {
+    DELETE_TAG_TYPE,
+    NONE,
+    UPDATE_FEATURE,
+    UPDATE_TAG_TYPE,
+} from '../../types/permissions.js';
 import { extractUsername } from '../../util/extract-user.js';
 import type { IAuthRequest } from '../unleash-types.js';
 import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
@@ -136,7 +141,10 @@ class TagController extends Controller {
             method: 'post',
             path: '/:type/:value/rename',
             handler: this.renameTag,
-            permission: UPDATE_FEATURE,
+            // Stricter than delete: renaming into an existing value merges the
+            // tags, which assigns a tag to flags the caller may not be allowed
+            // to edit. Deleting can only remove a tag from them.
+            permission: UPDATE_TAG_TYPE,
             middleware: [
                 requireFeatureEnabled(
                     config.flagResolver,
@@ -162,7 +170,7 @@ class TagController extends Controller {
             path: '/:type/:value',
             handler: this.deleteTag,
             acceptAnyContentType: true,
-            permission: UPDATE_FEATURE,
+            permission: [UPDATE_FEATURE, DELETE_TAG_TYPE],
             middleware: [
                 openApiService.validPath({
                     tags: ['Tags'],

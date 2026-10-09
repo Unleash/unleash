@@ -4,7 +4,10 @@ import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import type { TagValuesUsageSchemaTagValuesItem } from 'openapi';
-import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import {
+    DELETE_TAG_TYPE,
+    UPDATE_TAG_TYPE,
+} from 'component/providers/AccessProvider/permissions';
 import ToastRenderer from 'component/common/ToastRenderer/ToastRenderer';
 import { TagValuesTable } from './TagValuesTable.tsx';
 
@@ -135,7 +138,12 @@ const renderWithPermission = () =>
             <TagValuesTable tagType='team' />
             <ToastRenderer />
         </>,
-        { permissions: [{ permission: UPDATE_FEATURE }] },
+        {
+            permissions: [
+                { permission: UPDATE_TAG_TYPE },
+                { permission: DELETE_TAG_TYPE },
+            ],
+        },
     );
 
 const clickInRow = async (value: string, button: string) => {

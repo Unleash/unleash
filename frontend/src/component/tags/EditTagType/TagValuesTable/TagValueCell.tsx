@@ -9,7 +9,7 @@ import Check from '@mui/icons-material/Check';
 import Close from '@mui/icons-material/Close';
 import Edit from '@mui/icons-material/Edit';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import { UPDATE_TAG_TYPE } from 'component/providers/AccessProvider/permissions';
 import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
 import useToast from 'hooks/useToast';
 import type { TagValuesUsageSchemaTagValuesItem } from 'openapi';
@@ -133,7 +133,7 @@ export const TagValueCell = ({
             {props.tagValue.value}
             <PermissionIconButton
                 size='small'
-                permission={UPDATE_FEATURE}
+                permission={UPDATE_TAG_TYPE}
                 tooltipProps={{ title: 'Rename tag value' }}
                 onClick={onEdit}
             >

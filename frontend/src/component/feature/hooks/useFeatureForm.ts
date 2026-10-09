@@ -5,9 +5,31 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import type { ITag } from 'interfaces/tags';
 import type { CreateFeatureSchema, CreateFeatureSchemaType } from 'openapi';
+import { differenceInCalendarDays, parseISO } from 'date-fns';
 
 export type CreateFeaturePayload = CreateFeatureSchema & {
     lifetimeDays?: number;
+};
+
+export type Lifetime =
+    | { type: 'preset'; days: number }
+    | { type: 'custom'; endsAt: string }
+    | { type: 'permanent' };
+
+const lifetimeDaysOf = (lifetime: Lifetime | undefined) => {
+    switch (lifetime?.type) {
+        case 'preset':
+            return lifetime.days;
+        case 'custom':
+            return differenceInCalendarDays(
+                parseISO(lifetime.endsAt),
+                new Date(),
+            );
+        case 'permanent':
+            return 0;
+        default:
+            return undefined;
+    }
 };
 
 export type FeatureFormInitialData = Partial<{
@@ -17,7 +39,7 @@ export type FeatureFormInitialData = Partial<{
     description: string;
     impressionData: boolean;
     tags: Set<ITag>;
-    lifetimeDays: number;
+    lifetime: Lifetime;
 }>;
 
 const useFeatureForm = ({
@@ -27,7 +49,7 @@ const useFeatureForm = ({
     description: initialDescription = '',
     impressionData: initialImpressionData = false,
     tags: initialTags = new Set(),
-    lifetimeDays: initialLifetimeDays,
+    lifetime: initialLifetime,
 }: FeatureFormInitialData) => {
     const projectId = useRequiredPathParam('projectId');
     const params = useQueryParams();
@@ -41,8 +63,8 @@ const useFeatureForm = ({
     const [impressionData, setImpressionData] = useState<boolean>(
         initialImpressionData,
     );
-    const [lifetimeDays, setLifetimeDays] = useState<number | undefined>(
-        initialLifetimeDays,
+    const [lifetime, setLifetime] = useState<Lifetime | undefined>(
+        initialLifetime,
     );
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
@@ -70,7 +92,7 @@ const useFeatureForm = ({
             name,
             description,
             impressionData,
-            lifetimeDays,
+            lifetimeDays: lifetimeDaysOf(lifetime),
             ...tagsPayload,
         };
     };
@@ -106,8 +128,8 @@ const useFeatureForm = ({
         setDescription,
         impressionData,
         setImpressionData,
-        lifetimeDays,
-        setLifetimeDays,
+        lifetime,
+        setLifetime,
         getTogglePayload,
         validateToggleName,
         clearErrors,

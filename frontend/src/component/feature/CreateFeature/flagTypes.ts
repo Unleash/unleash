@@ -10,6 +10,7 @@ import {
     SUNSET,
 } from 'constants/featureToggleTypes';
 import type { CreateFeatureSchemaType } from 'openapi';
+import type { Lifetime } from 'component/feature/hooks/useFeatureForm';
 
 export type FlagTypeGroup = 'standard' | 'experiment' | 'kill-switch';
 
@@ -48,16 +49,14 @@ export const lifetimePresets = [
     { label: '90 days', days: 90 },
 ];
 
-export const permanentLifetime = 0;
-
-const defaultLifetimeByType: Record<CreateFeatureSchemaType, number> = {
-    [RELEASE]: 30,
-    [EXPERIMENT]: 30,
-    [SUNSET]: 90,
-    [OPERATIONAL]: 7,
-    [PERMISSION]: permanentLifetime,
-    [KILLSWITCH]: permanentLifetime,
+const defaultLifetimeByType: Record<CreateFeatureSchemaType, Lifetime> = {
+    [RELEASE]: { type: 'preset', days: 30 },
+    [EXPERIMENT]: { type: 'preset', days: 30 },
+    [SUNSET]: { type: 'preset', days: 90 },
+    [OPERATIONAL]: { type: 'preset', days: 7 },
+    [PERMISSION]: { type: 'permanent' },
+    [KILLSWITCH]: { type: 'permanent' },
 };
 
-export const defaultLifetimeFor = (type: CreateFeatureSchemaType) =>
-    defaultLifetimeByType[type] ?? 30;
+export const defaultLifetimeFor = (type: CreateFeatureSchemaType): Lifetime =>
+    defaultLifetimeByType[type] ?? { type: 'preset', days: 30 };

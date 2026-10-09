@@ -1,4 +1,4 @@
-import { beforeEach, expect, test } from 'vitest';
+import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
@@ -52,6 +52,10 @@ beforeEach(() => {
     // useLocalStorageState persists across tests in jsdom; clear so each
     // scenario starts from a clean form.
     localStorage.clear();
+});
+
+afterEach(() => {
+    vi.useRealTimers();
 });
 
 test('the modal posts the correct payload shape', async () => {
@@ -222,4 +226,50 @@ test('the new create flag form restores an unfinished draft when reopened', asyn
     await waitFor(() => expect(requests).toHaveLength(1));
 
     expect(requests[0]).toMatchObject({ name: 'my-flag', lifetimeDays: 90 });
+});
+
+test('the new create flag form posts the days until a picked date, also after reopening', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    vi.setSystemTime(new Date('2026-01-01T12:00:00Z'));
+    const requests = setupNewFormApi();
+
+    const firstDialog = renderDialog();
+    fireEvent.change(await getNameInput(), { target: { value: 'my-flag' } });
+    fireEvent.click(await screen.findByRole('button', { name: 'Pick a date' }));
+    fireEvent.change(
+        await screen.findByLabelText('Expected lifetime end date'),
+        { target: { value: '2026-01-11' } },
+    );
+    fireEvent.click(await screen.findByRole('button', { name: 'Cancel' }));
+    firstDialog.unmount();
+
+    renderDialog();
+    expect(
+        await screen.findByRole('button', { name: 'Pick a date' }),
+    ).toHaveAttribute('aria-pressed', 'true');
+    const submit = await screen.findByTestId('FORM_CREATE_BUTTON');
+    await waitFor(() => expect(submit).toBeEnabled());
+    fireEvent.click(submit);
+
+    await waitFor(() => expect(requests).toMatchObject([{ lifetimeDays: 10 }]));
+});
+
+test('the new create flag form rejects a picked date that is not after today', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    vi.setSystemTime(new Date('2026-01-01T12:00:00Z'));
+    setupNewFormApi();
+
+    renderDialog();
+
+    await getNameInput();
+    fireEvent.click(await screen.findByRole('button', { name: 'Pick a date' }));
+    fireEvent.change(
+        await screen.findByLabelText('Expected lifetime end date'),
+        { target: { value: '2026-01-01' } },
+    );
+
+    await screen.findByText('Pick a date after today');
+    screen.getByText(
+        "You'll get a reminder on 01/02/2026 to clean up this flag.",
+    );
 });

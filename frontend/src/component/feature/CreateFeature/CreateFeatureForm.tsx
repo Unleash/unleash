@@ -25,6 +25,7 @@ import { defaultLifetimeFor } from './flagTypes.ts';
 import { Section } from './CreateFeatureForm.styles.ts';
 import useFeatureForm, {
     type FeatureFormInitialData,
+    type Lifetime,
 } from 'component/feature/hooks/useFeatureForm';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { useGlobalFeatureSearch } from 'component/feature/FeatureToggleList/useGlobalFeatureSearch';
@@ -132,15 +133,15 @@ export const CreateFeatureForm = ({
         setDescription,
         validateToggleName,
         impressionData,
-        lifetimeDays,
-        setLifetimeDays,
+        lifetime,
+        setLifetime,
         getTogglePayload,
         clearErrors,
         errors,
     } = useFeatureForm({
         ...storedFlagConfig,
-        lifetimeDays:
-            storedFlagConfig.lifetimeDays ??
+        lifetime:
+            storedFlagConfig.lifetime ??
             defaultLifetimeFor(storedFlagConfig.type ?? RELEASE),
     });
     const { createFeatureToggle, loading } = useFeatureApi();
@@ -150,12 +151,12 @@ export const CreateFeatureForm = ({
     const selectType = (nextType: CreateFeatureSchemaType) => {
         setType(nextType);
         if (!lifetimeChosenByUser) {
-            setLifetimeDays(defaultLifetimeFor(nextType));
+            setLifetime(defaultLifetimeFor(nextType));
         }
     };
 
-    const selectLifetime = (days: number) => {
-        setLifetimeDays(days);
+    const selectLifetime = (nextLifetime: Lifetime) => {
+        setLifetime(nextLifetime);
         setLifetimeChosenByUser(true);
     };
 
@@ -227,7 +228,7 @@ export const CreateFeatureForm = ({
             impressionData,
             type,
             description,
-            lifetimeDays,
+            lifetime,
         });
         onClose();
     };
@@ -337,7 +338,7 @@ export const CreateFeatureForm = ({
                     <FlagTypeFieldset type={type} onChange={selectType} />
 
                     <LifetimeFieldset
-                        lifetimeDays={lifetimeDays}
+                        lifetime={lifetime}
                         onChange={selectLifetime}
                     />
 

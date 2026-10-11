@@ -25,6 +25,7 @@ import {
 } from '../../metric-events.js';
 import metricsHelper from '../../util/metrics-helper.js';
 import type { IUnleashServices } from '../../services/index.js';
+import { enhanceFeaturesWithSegments } from './enhance-features-with-segments.js';
 
 type Config = Pick<IUnleashConfig, 'getLogger' | 'frontendApi' | 'eventBus'>;
 
@@ -89,8 +90,7 @@ export class ProxyRepository
     }
 
     getTogglesWithSegmentData(): EnhancedFeatureInterface[] {
-        // TODO: add real implementation
-        return [];
+        return enhanceFeaturesWithSegments(this.features, this.segments);
     }
 
     getSegment(id: number): Segment | undefined {

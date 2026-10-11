@@ -9,6 +9,7 @@ import type { IApiUser } from '../../types/api-user.js';
 import type { IUnleashConfig } from '../../types/index.js';
 import { UnleashEvents } from 'unleash-client';
 import type { GlobalFrontendApiCache } from './global-frontend-api-cache.js';
+import { enhanceFeaturesWithSegments } from './enhance-features-with-segments.js';
 
 type Config = Pick<IUnleashConfig, 'getLogger'>;
 
@@ -33,8 +34,10 @@ export class FrontendApiRepository
     }
 
     getTogglesWithSegmentData(): EnhancedFeatureInterface[] {
-        // TODO: add real implementation
-        return [];
+        return enhanceFeaturesWithSegments(
+            this.globalFrontendApiCache.getToggles(this.token),
+            this.globalFrontendApiCache.getSegments(),
+        );
     }
 
     getSegment(id: number): Segment | undefined {

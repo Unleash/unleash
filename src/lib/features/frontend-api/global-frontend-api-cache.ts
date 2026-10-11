@@ -70,6 +70,10 @@ export class GlobalFrontendApiCache extends EventEmitter {
         return this.segments.find((segment) => segment.id === id);
     }
 
+    getSegments(): Segment[] {
+        return [...this.segments];
+    }
+
     getToggle(name: string, token: IApiUser): FeatureInterface {
         const features = this.getTogglesByEnvironment(
             this.environmentNameForToken(token),

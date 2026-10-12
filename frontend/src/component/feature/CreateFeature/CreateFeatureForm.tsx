@@ -10,7 +10,6 @@ import {
     Dialog,
     styled,
     type SxProps,
-    TextField,
     type Theme,
 } from '@mui/material';
 import FlagIcon from '@mui/icons-material/Flag';
@@ -41,6 +40,7 @@ import { useFlagLimits } from 'component/project/Project/PaginatedProjectFeature
 import { useFeatureCreatedFeedback } from 'component/project/Project/PaginatedProjectFeatureToggles/ProjectFeatureTogglesHeader/hooks/useFeatureCreatedFeedback.ts';
 import { useLocalStorageState } from 'hooks/useLocalStorageState.ts';
 import { INPUT_ERROR_TEXT } from 'utils/testIds';
+import { BorderlessInput } from 'component/common/Input/BorderlessInput';
 
 const draftExpiry = hoursToMilliseconds(1);
 
@@ -83,22 +83,7 @@ const FormActions = styled(Section)(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-const underlineOnlyWhenFocused = {
-    '&::before, &:hover:not(.Mui-disabled)::before': { borderBottom: 'none' },
-    '&::after': { borderBottomWidth: 1 },
-};
-
-const nameInputStyles: SxProps<Theme> = {
-    p: 0,
-    pb: 0.5,
-    fontSize: 'h1.fontSize',
-    lineHeight: 1.4,
-    '&::placeholder': { color: 'text.primary', opacity: 0.55 },
-};
-
 const descriptionInputStyles: SxProps<Theme> = {
-    p: 0,
-    pb: 0.5,
     fontSize: (theme) => theme.typography.pxToRem(16),
     color: 'text.secondary',
     '&::placeholder': { color: 'text.secondary', opacity: 0.8 },
@@ -279,7 +264,7 @@ export const CreateFeatureForm = ({
                     />
 
                     <Fields>
-                        <TextField
+                        <BorderlessInput
                             variant='standard'
                             placeholder='Enter-flag-name'
                             aria-required
@@ -298,10 +283,9 @@ export const CreateFeatureForm = ({
                             onFocus={clearErrors}
                             autoFocus
                             slotProps={{
-                                input: { sx: underlineOnlyWhenFocused },
                                 htmlInput: {
                                     'aria-label': 'Feature flag name',
-                                    sx: nameInputStyles,
+                                    sx: (theme) => theme.typography.h1,
                                 },
                                 formHelperText: {
                                     'data-testid': INPUT_ERROR_TEXT,
@@ -316,7 +300,7 @@ export const CreateFeatureForm = ({
                                 naming={projectInfo.featureNaming}
                             />
                         ) : null}
-                        <TextField
+                        <BorderlessInput
                             variant='standard'
                             placeholder='Add a line about what it does (optional)'
                             multiline
@@ -324,7 +308,6 @@ export const CreateFeatureForm = ({
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                             slotProps={{
-                                input: { sx: underlineOnlyWhenFocused },
                                 htmlInput: {
                                     'aria-label': 'Description',
                                     sx: descriptionInputStyles,

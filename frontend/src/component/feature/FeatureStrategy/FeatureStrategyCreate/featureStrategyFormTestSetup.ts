@@ -160,7 +160,9 @@ export const setupFeaturesEndpointWithDefaultStrategy = (
     );
 };
 
-export const setupUiConfigEndpoint = () => {
+export const setupUiConfigEndpoint = (
+    flagOverrides: Record<string, boolean> = {},
+) => {
     testServerRoute(server, '/api/admin/ui-config', {
         versionInfo: {
             current: {
@@ -168,9 +170,7 @@ export const setupUiConfigEndpoint = () => {
             },
         },
         environment: 'enterprise',
-        flags: {
-            newStrategyConfiguration: true,
-        },
+        flags: flagOverrides,
         resourceLimits: {
             featureEnvironmentStrategies: 2,
         },

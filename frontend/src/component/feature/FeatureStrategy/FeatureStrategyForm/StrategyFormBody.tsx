@@ -1,13 +1,15 @@
 import type React from 'react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import {
     Alert,
-    Tab,
     Box,
     Divider,
-    Tabs,
-    Typography,
     styled,
+    useTheme,
+    Accordion,
+    AccordionSummary,
+    AccordionDetails,
+    type Theme,
 } from '@mui/material';
 import type { IStrategy, StrategyFormState } from 'interfaces/strategy';
 import produce from 'immer';
@@ -19,12 +21,13 @@ import type { IFormErrors } from 'hooks/useFormErrors';
 import { FeatureStrategyTitle } from './FeatureStrategyTitle/FeatureStrategyTitle.tsx';
 import { FeatureStrategyEnabledDisabled } from './FeatureStrategyEnabledDisabled/FeatureStrategyEnabledDisabled.tsx';
 import { formatStrategyName } from 'utils/strategyNames';
-import { Badge } from 'component/common/Badge/Badge';
 import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
 import { useAssignableSegments } from 'hooks/api/getters/useSegments/useAssignableSegments.ts';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
 import type { ParametersSchema } from 'openapi/index.ts';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import { parseParameterNumber } from 'utils/parseParameter.ts';
 
 export interface StrategyFormBodyProps<T extends StrategyFormState> {
     strategy: T;
@@ -62,20 +65,42 @@ const StyledTitle = styled('h1')(({ theme }) => ({
     paddingBottom: theme.spacing(2),
 }));
 
-const StyledTabs = styled(Tabs)(({ theme }) => ({
-    borderTop: `1px solid ${theme.palette.divider}`,
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    paddingLeft: theme.spacing(6),
-    paddingRight: theme.spacing(6),
-    minHeight: '60px',
+const StyledAccordion = styled(Accordion)(({ theme }) => ({
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadiusMedium,
+    overflow: 'hidden',
+    boxShadow: theme.boxShadows.elevated,
 }));
 
-const StyledTab = styled(Tab)({
-    width: '100px',
+const accordionSummarySlotProps = (theme: Theme) => ({
+    root: {
+        sx: {
+            minHeight: '48px',
+            '&.Mui-expanded': {
+                minHeight: '48px',
+            },
+        },
+    },
+    content: {
+        sx: {
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginRight: theme.spacing(1.5),
+        },
+    },
 });
 
-const StyledBadge = styled(Badge)(({ theme }) => ({
-    marginLeft: theme.spacing(1),
+const StyledAccordionHeading = styled('span')(({ theme }) => ({
+    fontSize: theme.typography.body2.fontSize,
+    fontWeight: theme.typography.fontWeightBold,
+}));
+
+const StyledAccordionHint = styled('span')(({ theme }) => ({
+    fontSize: theme.typography.caption.fontSize,
+    color: theme.palette.text.secondary,
+    '.Mui-expanded &': {
+        display: 'none',
+    },
 }));
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -137,7 +162,7 @@ export const StrategyFormBody = <T extends StrategyFormState>({
     children,
     onSubmit,
 }: StrategyFormBodyProps<T>) => {
-    const [tab, setTab] = useState(0);
+    const theme = useTheme();
     const strategyName = strategy?.name || strategy?.strategyName;
     const { segments: assignableSegments = [] } = useAssignableSegments();
 
@@ -174,37 +199,36 @@ export const StrategyFormBody = <T extends StrategyFormState>({
             ? String(strategy.parameters.stickiness)
             : 'default';
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: moved over from legacy, to be removed
     useEffect(() => {
-        setStrategy((prev) => ({
-            ...prev,
-            variants: (strategy.variants || []).map((variant) => ({
-                stickiness,
-                name: variant.name,
-                weight: variant.weight,
-                payload: variant.payload,
-                weightType: variant.weightType,
-            })),
+        const nextVariants = (strategy.variants || []).map((variant) => ({
+            stickiness,
+            name: variant.name,
+            weight: variant.weight,
+            payload: variant.payload,
+            weightType: variant.weightType,
         }));
-    }, [stickiness, JSON.stringify(strategy.variants)]);
+
+        const changed = nextVariants.some(
+            (variant, index) =>
+                variant.stickiness !== strategy.variants?.[index]?.stickiness,
+        );
+        if (!changed) return;
+
+        setStrategy((prev) => ({ ...prev, variants: nextVariants }));
+    }, [stickiness, strategy.variants, setStrategy]);
 
     const showVariants = Boolean(
         strategy.parameters && 'stickiness' in strategy.parameters,
     );
 
-    const handleTabChange = (
-        _event: React.ChangeEvent<{}>,
-        newValue: number,
-    ) => {
-        setTab(newValue);
-    };
+    const hasTargeting = Boolean(
+        strategy.constraints?.length || strategy.segments?.length,
+    );
 
-    const getTargetingCount = () => {
-        const constraintCount = strategy.constraints?.length || 0;
-        const segmentCount = strategy.segments?.length || 0;
-
-        return constraintCount + segmentCount;
-    };
+    const rolloutHint =
+        strategy.name === 'flexibleRollout'
+            ? `${Math.round(parseParameterNumber(strategy.parameters?.rollout || '100'))}%`
+            : '';
 
     const updateParameter = (name: string, value: string) => {
         setStrategy(
@@ -233,32 +257,6 @@ export const StrategyFormBody = <T extends StrategyFormState>({
 
             {alertContent}
 
-            <StyledTabs value={tab} onChange={handleTabChange}>
-                <StyledTab label='General' />
-                <Tab
-                    data-testid='STRATEGY_TARGETING_TAB'
-                    label={
-                        <Typography>
-                            Targeting
-                            <StyledBadge>{getTargetingCount()}</StyledBadge>
-                        </Typography>
-                    }
-                />
-                {showVariants && (
-                    <Tab
-                        data-testid='STRATEGY_VARIANTS_TAB'
-                        label={
-                            <Typography>
-                                Variants
-                                <StyledBadge>
-                                    {strategy.variants?.length || 0}
-                                </StyledBadge>
-                            </Typography>
-                        }
-                    />
-                )}
-            </StyledTabs>
-
             <StyledForm
                 onSubmit={(e) => {
                     e.preventDefault();
@@ -266,39 +264,26 @@ export const StrategyFormBody = <T extends StrategyFormState>({
                     onSubmit(e);
                 }}
             >
-                {tab === 0 && (
-                    <>
-                        <FeatureStrategyTitle
-                            title={strategy.title || ''}
-                            setTitle={handleTitleChange}
-                        />
+                <FeatureStrategyTitle
+                    title={strategy.title || ''}
+                    setTitle={handleTitleChange}
+                />
 
-                        <FeatureStrategyType
-                            strategy={strategy}
-                            strategyDefinition={strategyDefinition}
-                            updateParameter={updateParameter}
-                            errors={errors}
-                            groupIdTooltip={groupIdTooltip}
-                        />
-
-                        {allowEnableDisable ? (
-                            <FeatureStrategyEnabledDisabled
-                                enabled={!strategy?.disabled}
-                                onToggleEnabled={() =>
-                                    setStrategy((strategyState) => ({
-                                        ...strategyState,
-                                        disabled: !strategyState.disabled,
-                                    }))
-                                }
-                            />
-                        ) : null}
-
-                        {statusContent}
-                    </>
-                )}
-
-                {tab === 1 && (
-                    <>
+                <StyledAccordion defaultExpanded>
+                    <AccordionSummary
+                        expandIcon={<ExpandMore />}
+                        slotProps={accordionSummarySlotProps(theme)}
+                    >
+                        <StyledAccordionHeading>
+                            Target audience
+                        </StyledAccordionHeading>
+                        <StyledAccordionHint>
+                            {hasTargeting
+                                ? 'A subset of users'
+                                : 'Everyone in production'}
+                        </StyledAccordionHint>
+                    </AccordionSummary>
+                    <AccordionDetails>
                         <Alert severity='info' sx={{ mb: 2 }} icon={false}>
                             Segmentation and constraints allow you to set
                             filters on your strategies, so that they will only
@@ -324,19 +309,74 @@ export const StrategyFormBody = <T extends StrategyFormState>({
                             strategy={strategy}
                             setStrategy={setStrategy}
                         />
-                    </>
+                    </AccordionDetails>
+                </StyledAccordion>
+
+                <StyledAccordion defaultExpanded>
+                    <AccordionSummary
+                        expandIcon={<ExpandMore />}
+                        slotProps={accordionSummarySlotProps(theme)}
+                    >
+                        <StyledAccordionHeading>
+                            {strategy.name === 'flexibleRollout'
+                                ? 'Rollout percentage'
+                                : strategyDefinition.displayName}
+                        </StyledAccordionHeading>
+                        <StyledAccordionHint>{rolloutHint}</StyledAccordionHint>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <FeatureStrategyType
+                            strategy={strategy}
+                            strategyDefinition={strategyDefinition}
+                            updateParameter={updateParameter}
+                            errors={errors}
+                            groupIdTooltip={groupIdTooltip}
+                        />
+                    </AccordionDetails>
+                </StyledAccordion>
+
+                {showVariants && (
+                    <StyledAccordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMore />}
+                            slotProps={accordionSummarySlotProps(theme)}
+                        >
+                            <StyledAccordionHeading>
+                                Variants
+                            </StyledAccordionHeading>
+                            <StyledAccordionHint>
+                                {strategy.variants?.length ? (
+                                    <>{strategy.variants.length} variants</>
+                                ) : (
+                                    'Same for everyone'
+                                )}
+                            </StyledAccordionHint>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <NewStrategyVariants
+                                strategy={strategy}
+                                setStrategy={setStrategy}
+                                canRenamePreexistingVariants={
+                                    canRenamePreexistingVariants
+                                }
+                            />
+                        </AccordionDetails>
+                    </StyledAccordion>
                 )}
 
-                {tab === 2 && showVariants && (
-                    <NewStrategyVariants
-                        strategy={strategy}
-                        setStrategy={setStrategy}
-                        canRenamePreexistingVariants={
-                            canRenamePreexistingVariants
+                {allowEnableDisable ? (
+                    <FeatureStrategyEnabledDisabled
+                        enabled={!strategy?.disabled}
+                        onToggleEnabled={() =>
+                            setStrategy((strategyState) => ({
+                                ...strategyState,
+                                disabled: !strategyState.disabled,
+                            }))
                         }
                     />
-                )}
+                ) : null}
 
+                {statusContent}
                 {beforeFooter}
 
                 <StyledButtons>{children}</StyledButtons>

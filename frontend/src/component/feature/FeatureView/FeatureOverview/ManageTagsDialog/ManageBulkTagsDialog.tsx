@@ -15,6 +15,8 @@ import type { ITagType } from 'interfaces/tags';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
 import type { TagSchema } from 'openapi';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 type Payload = {
     addedTags: TagSchema[];
@@ -107,6 +109,7 @@ export const ManageBulkTagsDialog: FC<IManageBulkTagsDialogProps> = ({
     const [indeterminateTags, setIndeterminateTags] = useState<TagOption[]>([]);
     const { tags, refetch: refetchTags } = useTags(tagType.name);
     const { createTag } = useTagApi();
+    const { setToastApiError } = useToast();
     const tagsOptions = tags.map(({ value }) => ({ title: value }));
     const [payload, dispatch] = useReducer(payloadReducer, {
         addedTags: [],
@@ -171,18 +174,22 @@ export const ManageBulkTagsDialog: FC<IManageBulkTagsDialogProps> = ({
         createTag({
             value,
             type,
-        }).then(async () => {
-            refetchTags();
-            setSelectedTags((prev) =>
-                prev.some(({ title }) => title === value)
-                    ? prev
-                    : [...prev, { title: value }],
-            );
-            dispatch({
-                type: 'add',
-                payload: { value, type },
+        })
+            .then(async () => {
+                refetchTags();
+                setSelectedTags((prev) =>
+                    prev.some(({ title }) => title === value)
+                        ? prev
+                        : [...prev, { title: value }],
+                );
+                dispatch({
+                    type: 'add',
+                    payload: { value, type },
+                });
+            })
+            .catch((error: unknown) => {
+                setToastApiError(formatUnknownError(error));
             });
-        });
 
     const handleInputChange: AutocompleteProps<
         TagOption,

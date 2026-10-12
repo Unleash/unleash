@@ -83,6 +83,20 @@ test('Can create a tag', async () =>
             expect(res.status).toBe(201);
         }));
 
+test('creates a tag with a non-ASCII value', async () => {
+    const { headers } = await app.request
+        .post('/api/admin/tags')
+        .send({ type: 'simple', value: 'zażółć 🚀' })
+        .expect(201);
+
+    expect(headers.location).toBe(
+        `tags/simple/${encodeURIComponent('zażółć 🚀')}`,
+    );
+    await app.request
+        .get(`/api/admin/tags/simple/${encodeURIComponent('zażółć 🚀')}`)
+        .expect(200);
+});
+
 test('Can validate a tag', async () =>
     app.request
         .post('/api/admin/tags')

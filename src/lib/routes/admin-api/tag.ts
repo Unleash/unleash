@@ -231,7 +231,10 @@ class TagController extends Controller {
         const _userName = extractUsername(req);
         const tag = await this.tagService.createTag(req.body, req.audit);
         res.status(201)
-            .header('location', `tags/${tag.type}/${tag.value}`)
+            .header(
+                'location',
+                `tags/${encodeURIComponent(tag.type)}/${encodeURIComponent(tag.value)}`,
+            )
             .json({ version, tag })
             .end();
     }

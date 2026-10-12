@@ -2,7 +2,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
-import { testServerRoute, testServerSetup } from 'utils/testServer';
+import { badRequest, testServerRoute, testServerSetup } from 'utils/testServer';
+import ToastRenderer from 'component/common/ToastRenderer/ToastRenderer';
 import {
     ManageBulkTagsDialog,
     payloadReducer,
@@ -129,7 +130,9 @@ describe('ManageBulkTagsDialog', () => {
             'new-value',
         );
         await userEvent.click(
-            await screen.findByText('Create new value "new-value"'),
+            await screen.findByRole('option', {
+                name: 'Create new value "new-value"',
+            }),
         );
         const saveButton = screen.getByRole('button', { name: 'Save tags' });
         await waitFor(() => expect(saveButton).toBeEnabled());
@@ -139,6 +142,49 @@ describe('ManageBulkTagsDialog', () => {
             addedTags: [{ value: 'new-value', type: 'simple' }],
             removedTags: [],
         });
+    });
+
+    it('explains why a new value could not be created and leaves it out', async () => {
+        testServerRoute(server, '/api/admin/tag-types', {
+            tagTypes: [{ name: 'simple', description: '', icon: '' }],
+        });
+        testServerRoute(server, '/api/admin/tags/simple', { tags: [] });
+        testServerRoute(
+            server,
+            '/api/admin/tags',
+            badRequest('The tag value is not allowed'),
+            'post',
+            400,
+        );
+
+        render(
+            <>
+                <ManageBulkTagsDialog
+                    open
+                    initialValues={[]}
+                    initialIndeterminateValues={[]}
+                    onCancel={() => {}}
+                    onSubmit={() => {}}
+                />
+                <ToastRenderer />
+            </>,
+        );
+
+        await screen.findByDisplayValue('simple');
+        await userEvent.type(
+            screen.getByLabelText('Select values'),
+            'new-value',
+        );
+        await userEvent.click(
+            await screen.findByRole('option', {
+                name: 'Create new value "new-value"',
+            }),
+        );
+
+        await screen.findByText('The tag value is not allowed');
+        expect(
+            screen.getByRole('button', { name: 'Save tags' }),
+        ).toBeDisabled();
     });
 
     it('assigns a partially assigned value to all flags when selected', async () => {

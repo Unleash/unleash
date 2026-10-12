@@ -17,6 +17,11 @@ import type { TagValuesUsageSchemaTagValuesItem } from 'openapi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { RenameTagValueDialog } from './TagValueDialogs.tsx';
 import { editTagValueTracking } from '../../tagsTracking.ts';
+import {
+    hasValidTagValueLength,
+    TAG_VALUE_MAX_LENGTH,
+    TAG_VALUE_MIN_LENGTH,
+} from '../../tagValueLength.ts';
 
 const StyledValue = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -34,9 +39,6 @@ const StyledTextField = styled(TextField)({
     maxWidth: '300px',
 });
 
-const TAG_VALUE_MIN_LENGTH = 2;
-const TAG_VALUE_MAX_LENGTH = 50;
-
 type ValidationError = {
     reason: 'empty' | 'length';
     message: string;
@@ -49,8 +51,7 @@ const validateTagValue = (value: string): ValidationError | null => {
             message: 'Value cannot be empty or whitespace',
         };
     }
-    const length = [...value].length;
-    if (length < TAG_VALUE_MIN_LENGTH || length > TAG_VALUE_MAX_LENGTH) {
+    if (!hasValidTagValueLength(value)) {
         return {
             reason: 'length',
             message: `Value must be between ${TAG_VALUE_MIN_LENGTH} and ${TAG_VALUE_MAX_LENGTH} characters`,

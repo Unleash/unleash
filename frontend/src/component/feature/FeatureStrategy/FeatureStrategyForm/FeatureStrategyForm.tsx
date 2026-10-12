@@ -200,6 +200,7 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
                             flex: 1,
                             display: 'flex',
                             alignItems: 'flex-end',
+                            ':empty': { display: 'none' },
                         }}
                     >
                         {Limit}

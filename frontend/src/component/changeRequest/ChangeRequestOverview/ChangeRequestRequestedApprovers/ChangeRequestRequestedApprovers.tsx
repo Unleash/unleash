@@ -3,7 +3,6 @@ import {
     Paper,
     styled,
     IconButton,
-    useTheme,
     type AutocompleteChangeReason,
     type FilterOptionsState,
     Checkbox,
@@ -48,7 +47,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
     flexDirection: 'row',
     width: '100%',
     alignItems: 'flex-start',
-    '& > :first-child': { width: '100%' },
+    '& > :first-child': { flex: 1, minWidth: 0 },
     justifyContent: 'space-between',
     marginBottom: theme.spacing(2),
     marginRight: theme.spacing(-2),
@@ -161,7 +160,6 @@ export const ChangeRequestAddRequestedApprovers: FC<{
     saveClicked: (reviewers: AvailableReviewerSchema[]) => void;
     existingReviewers: Pick<ReviewerSchema, 'id'>[];
 }> = ({ changeRequest, saveClicked, existingReviewers }) => {
-    const theme = useTheme();
     const [reviewers, setReviewers] = useState<AvailableReviewerSchema[]>([]);
     const allReviewers = [...existingReviewers, ...reviewers];
     const { reviewers: fetchedReviewers, loading: isLoading } =
@@ -203,7 +201,6 @@ export const ChangeRequestAddRequestedApprovers: FC<{
         <StyledBox sx={{ mb: 4 }}>
             <AutocompleteVirtual
                 label={`Reviewers (${reviewers.length})`}
-                sx={{ ml: 'auto', width: theme.spacing(40) }}
                 size='large'
                 limitTags={3}
                 openOnFocus

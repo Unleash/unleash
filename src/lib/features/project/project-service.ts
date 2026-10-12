@@ -86,7 +86,7 @@ import type {
 import { throwExceedsLimitError } from '../../error/exceeds-limit-error.js';
 import type EventEmitter from 'events';
 import type { ApiTokenService } from '../../services/index.js';
-import type { ProjectForUi } from './project-read-model-type.js';
+import type { ProjectCore, ProjectForUi } from './project-read-model-type.js';
 import { canGrantProjectRole } from './can-grant-project-role.js';
 import { batchExecute } from '../../util/index.js';
 import metricsHelper from '../../util/metrics-helper.js';
@@ -248,19 +248,10 @@ export default class ProjectService {
             userId,
         );
 
-        let projects = allProjects;
-        if (userId) {
-            const projectAccess =
-                await this.privateProjectChecker.getUserAccessibleProjects(
-                    userId,
-                );
-
-            if (projectAccess.mode !== 'all') {
-                projects = allProjects.filter((project) =>
-                    projectAccess.projects.includes(project.id),
-                );
-            }
-        }
+        const projects = await this.filterAccessibleProjects(
+            allProjects,
+            userId,
+        );
 
         const projectIds = projects.map((p) => p.id);
         const [onboardingStatuses, cleanupByProject] = await Promise.all([
@@ -287,6 +278,31 @@ export default class ProjectService {
         }
 
         return projects;
+    }
+
+    async getProjectsCore(
+        query?: IProjectQuery,
+        userId?: number,
+    ): Promise<ProjectCore[]> {
+        const allProjects = await this.projectReadModel.getProjectsCore(query);
+        return this.filterAccessibleProjects(allProjects, userId);
+    }
+
+    private async filterAccessibleProjects<T extends { id: string }>(
+        projects: T[],
+        userId?: number,
+    ): Promise<T[]> {
+        if (!userId) {
+            return projects;
+        }
+        const projectAccess =
+            await this.privateProjectChecker.getUserAccessibleProjects(userId);
+        if (projectAccess.mode === 'all') {
+            return projects;
+        }
+        return projects.filter((project) =>
+            projectAccess.projects.includes(project.id),
+        );
     }
 
     async addOwnersToProjects(

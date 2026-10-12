@@ -58,6 +58,16 @@ test('Should ONLY return default project', async () => {
     expect(body.projects[0].id).toBe('default');
 });
 
+test('core view omits derived project fields', async () => {
+    const { body } = await app.request
+        .get('/api/admin/projects?view=core')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body.projects).toMatchObject([{ id: 'default' }]);
+    expect(body.projects[0]).not.toHaveProperty('featureCount');
+});
+
 test('response should include created_at', async () => {
     const { body } = await app.request
         .get('/api/admin/projects')

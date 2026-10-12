@@ -1,11 +1,4 @@
-import {
-    Box,
-    Button,
-    Dialog,
-    styled,
-    TextField,
-    Typography,
-} from '@mui/material';
+import { Box, Button, styled, TextField } from '@mui/material';
 import { type ComponentType, useContext, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { SignupDialogSetPassword } from './SignupDialogSetPassword/SignupDialogSetPassword.tsx';
@@ -16,137 +9,14 @@ import { type SignupData, useSignup } from '../hooks/useSignup.ts';
 import { type SubmitSignupData, useSignupApi } from '../hooks/useSignupApi.ts';
 import useToast from 'hooks/useToast.tsx';
 import { formatUnknownError } from 'utils/formatUnknownError.ts';
-import textureImage from 'assets/img/texture-signup.png';
-import Heart from 'assets/icons/heart.svg?react';
-import { formatAssetPath } from 'utils/formatPath.ts';
 import { SignupDialogComplete } from './SignupDialogComplete.tsx';
+import { SignupDialogLayout } from './SignupDialogLayout.tsx';
 import { useEventTracker } from 'hooks/useEventTracker.ts';
 import {
     DEFAULT_PROJECT_ID,
     useDefaultProjectId,
 } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId.ts';
 import AccessContext from 'contexts/AccessContext.ts';
-
-const StyledDialog = styled(Dialog)(({ theme }) => ({
-    '& .MuiDialog-paper': {
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        [theme.breakpoints.down('md')]: {
-            gridTemplateColumns: '1fr',
-        },
-    },
-    padding: theme.spacing(8),
-    [theme.breakpoints.down('md')]: {
-        padding: 0,
-    },
-    '& .MuiPaper-root > section': {
-        overflowX: 'hidden',
-    },
-}));
-
-const StyledAside = styled(Box)(({ theme }) => ({
-    position: 'relative',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflowY: 'hidden',
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.primary.contrastText,
-    [theme.breakpoints.down('md')]: {
-        display: 'none',
-    },
-}));
-
-const StyledHearts = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-    gap: theme.spacing(2),
-    paddingInline: theme.spacing(4),
-}));
-
-const StyledBackgroundTexture = styled('img')({
-    objectFit: 'cover',
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    pointerEvents: 'none',
-    filter: 'brightness(1.3)',
-    opacity: 0.6,
-    imageRendering: 'pixelated',
-});
-
-const StyledHeartWrapper = styled(Box)({
-    animation: 'heartEnter 300ms ease-out',
-    '@keyframes heartEnter': {
-        '0%': {
-            opacity: 0,
-            transform: 'scale(0.7)',
-        },
-        '100%': {
-            opacity: 1,
-            transform: 'scale(1)',
-        },
-    },
-});
-
-const StyledHeart = styled(Heart)(({ theme }) => ({
-    width: theme.spacing(10),
-    height: theme.spacing(10),
-    color: theme.palette.primary.contrastText,
-    animation: 'float 6s ease-in-out infinite',
-    '@keyframes float': {
-        '0%': {
-            transform: 'translateY(0) scale(1)',
-        },
-        '50%': {
-            transform: 'translateY(-16px) scale(1.1)',
-        },
-        '100%': {
-            transform: 'translateY(0) scale(1)',
-        },
-    },
-}));
-
-const StyledBody = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'wide',
-})<{ wide?: boolean }>(({ theme, wide }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    padding: wide ? theme.spacing(4, 5) : theme.spacing(4, 10),
-    [theme.breakpoints.down('sm')]: {
-        padding: theme.spacing(2),
-    },
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: theme.palette.background.paper,
-    width: '100%',
-    maxWidth: wide ? theme.spacing(92) : theme.spacing(70),
-    boxSizing: wide ? 'border-box' : undefined,
-    margin: 'auto',
-}));
-
-const StyledHeader = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    marginBottom: theme.spacing(3),
-    width: '100%',
-}));
-
-const StyledTitle = styled('h1')(({ theme }) => ({
-    marginBottom: theme.spacing(1.5),
-    fontSize: theme.typography.h1.fontSize,
-}));
-
-const StyledContent = styled(Box)(({ theme }) => ({
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'start',
-    justifyContent: 'start',
-    gap: theme.spacing(3),
-}));
 
 export const StyledSignupDialogField = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -171,12 +41,7 @@ export const StyledSignupDialogButton = styled(Button)({
     width: '100%',
 });
 
-const getHeartAnimationDelay = (i: number) => {
-    const delays = ['0s', '-1.5s', '-3s', '-4.5s'];
-    return delays[i % 4];
-};
-
-export type SignupStepContent = ComponentType<{
+export type SignupStepProps = {
     data: SubmitSignupData;
     setData: React.Dispatch<React.SetStateAction<SubmitSignupData>>;
     onBack?: () => void;
@@ -184,7 +49,19 @@ export type SignupStepContent = ComponentType<{
     signupData?: SignupData;
     isSubmitting?: boolean;
     error?: string;
-}>;
+};
+
+export type SignupStepContent = ComponentType<SignupStepProps>;
+
+export const initialSignupData: SubmitSignupData = {
+    password: '',
+    name: '',
+    companyRole: '',
+    companyName: '',
+    companyIsNA: false,
+    productUpdatesEmailConsent: false,
+    inviteEmails: [],
+};
 
 type SignupStep = {
     title:
@@ -252,15 +129,7 @@ export const SignupDialog = () => {
     const { open: openIntro } = useIntro();
     const { isAdmin } = useContext(AccessContext);
 
-    const [data, setData] = useState<SubmitSignupData>({
-        password: '',
-        name: '',
-        companyRole: '',
-        companyName: '',
-        companyIsNA: false,
-        productUpdatesEmailConsent: false,
-        inviteEmails: [],
-    });
+    const [data, setData] = useState<SubmitSignupData>(initialSignupData);
     const [step, setStep] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState('');
@@ -327,53 +196,21 @@ export const SignupDialog = () => {
     };
 
     return (
-        <StyledDialog open fullScreen>
-            <StyledAside>
-                <StyledBackgroundTexture
-                    src={formatAssetPath(textureImage)}
-                    alt=''
-                />
-                <StyledHearts>
-                    {Array.from({
-                        length: safeStep + 1 + data.inviteEmails.length,
-                    }).map((_, i) => (
-                        <StyledHeartWrapper key={i}>
-                            <StyledHeart
-                                sx={{
-                                    animationDelay: getHeartAnimationDelay(i),
-                                }}
-                            />
-                        </StyledHeartWrapper>
-                    ))}
-                </StyledHearts>
-            </StyledAside>
-            <StyledBody wide={currentStep.isCustom}>
-                {!currentStep.isCustom && (
-                    <StyledHeader data-public>
-                        <StyledTitle>{currentStep.title}</StyledTitle>
-                        <Typography
-                            variant='body2'
-                            sx={{
-                                color: 'text.secondary',
-                                whiteSpace: 'pre-line',
-                            }}
-                        >
-                            {currentStep.description}
-                        </Typography>
-                    </StyledHeader>
-                )}
-                <StyledContent>
-                    <StepContent
-                        data={data}
-                        setData={setData}
-                        onBack={onBack}
-                        onNext={onNext}
-                        signupData={signupData}
-                        isSubmitting={isSubmitting}
-                        error={error}
-                    />
-                </StyledContent>
-            </StyledBody>
-        </StyledDialog>
+        <SignupDialogLayout
+            hearts={safeStep + 1 + data.inviteEmails.length}
+            title={currentStep.title}
+            description={currentStep.description}
+            isCustom={currentStep.isCustom}
+        >
+            <StepContent
+                data={data}
+                setData={setData}
+                onBack={onBack}
+                onNext={onNext}
+                signupData={signupData}
+                isSubmitting={isSubmitting}
+                error={error}
+            />
+        </SignupDialogLayout>
     );
 };

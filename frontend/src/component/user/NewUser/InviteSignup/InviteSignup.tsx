@@ -21,6 +21,7 @@ import { SSO_LOGIN_BUTTON } from 'utils/testIds';
 import InvalidToken from '../../common/InvalidToken/InvalidToken.tsx';
 import { AuthSplitLayout } from '../../common/AuthSplitLayout/AuthSplitLayout.tsx';
 import { getInstanceName } from './getInstanceName.ts';
+import { InviteSetPassword } from './InviteSetPassword.tsx';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -148,12 +149,14 @@ export const InviteSignup = () => {
     const { loading: inviteLoading, isValid: isValidInvite } = useUserInvite();
     const ref = useLoading(tokenLoading || inviteLoading);
     const [inviteEmail, setInviteEmail] = useState('');
+    const [isSettingPassword, setIsSettingPassword] = useState(false);
 
     const passwordDisabled = authDetails?.defaultHidden === true;
     const authOptions = authDetails?.options ?? [];
     const showAuthOptions =
         authOptions.length > 0 && (!isValidInvite || passwordDisabled);
     const tokenEmail = isValidToken ? tokenData?.email : undefined;
+    const email = tokenEmail ?? inviteEmail;
     const instanceName = getInstanceName(basePath);
 
     if (!isValidToken && !isValidInvite) {
@@ -164,6 +167,10 @@ export const InviteSignup = () => {
                 </div>
             </AuthSplitLayout>
         );
+    }
+
+    if (isSettingPassword) {
+        return <InviteSetPassword email={email} />;
     }
 
     return (
@@ -215,7 +222,7 @@ export const InviteSignup = () => {
                                 placeholder='name@company.com'
                                 autoComplete='email'
                                 fullWidth
-                                value={tokenEmail ?? inviteEmail}
+                                value={email}
                                 onChange={(e) => setInviteEmail(e.target.value)}
                                 slotProps={{
                                     input: { readOnly: Boolean(tokenEmail) },
@@ -226,6 +233,8 @@ export const InviteSignup = () => {
                         <StyledPrimaryButton
                             variant='contained'
                             fullWidth
+                            disabled={!email}
+                            onClick={() => setIsSettingPassword(true)}
                             data-loading
                         >
                             Continue with email

@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { SSO_LOGIN_BUTTON } from 'utils/testIds';
 import { InviteSignup } from './InviteSignup.tsx';
 import { INVALID_TOKEN_ERROR } from 'hooks/api/getters/useResetPassword/useResetPassword';
@@ -12,6 +13,7 @@ const setup = () => {
     testServerRoute(server, '/api/admin/ui-config', {});
     testServerRoute(server, '/api/admin/user', {
         type: 'password',
+        path: '/auth/simple/login',
         defaultHidden: false,
         options: [
             {
@@ -52,4 +54,48 @@ test('does not show SSO options for an invite link', async () => {
     expect(
         screen.queryByTestId(`${SSO_LOGIN_BUTTON}-google`),
     ).not.toBeInTheDocument();
+});
+
+test('sets the password and signs the invited user in', async () => {
+    setup();
+    testServerRoute(server, '/auth/reset/validate', {
+        email: 'invitee@getunleash.io',
+        createdBy: 'Vetle Tønnesen',
+    });
+    testServerRoute(server, '/auth/reset/validate-password', {}, 'post');
+    const { requests: passwordRequests } = testServerRoute(
+        server,
+        '/auth/reset/password',
+        {},
+        'post',
+    );
+    const { requests: loginRequests } = testServerRoute(
+        server,
+        '/auth/simple/login',
+        {},
+        'post',
+    );
+
+    render(<InviteSignup />, { route: '/new-user?token=valid-token' });
+
+    await userEvent.click(
+        await screen.findByRole('button', { name: 'Continue with email' }),
+    );
+    await screen.findByText('Set password');
+    await userEvent.type(
+        screen.getByPlaceholderText('Your password'),
+        'Ab1!xyzQWE',
+    );
+    const submit = screen.getByRole('button', { name: 'Customize Unleash' });
+    await waitFor(() => expect(submit).toBeEnabled());
+    await userEvent.click(submit);
+
+    await waitFor(() =>
+        expect(loginRequests).toEqual([
+            { username: 'invitee@getunleash.io', password: 'Ab1!xyzQWE' },
+        ]),
+    );
+    expect(passwordRequests).toEqual([
+        { token: 'valid-token', password: 'Ab1!xyzQWE' },
+    ]);
 });

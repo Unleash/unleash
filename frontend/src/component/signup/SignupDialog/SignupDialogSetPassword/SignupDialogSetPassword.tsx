@@ -4,7 +4,7 @@ import {
     StyledSignupDialogButton,
     StyledSignupDialogField,
     StyledSignupDialogLabel,
-    type SignupStepContent,
+    type SignupStepProps,
 } from '../SignupDialog.tsx';
 import { Badge } from 'component/common/Badge/Badge.tsx';
 import CheckCircle from '@mui/icons-material/CheckCircle';
@@ -31,28 +31,37 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     },
 }));
 
-export const SignupDialogSetPassword: SignupStepContent = ({
+interface ISignupDialogSetPasswordProps extends SignupStepProps {
+    email?: string;
+    submitLabel?: string;
+}
+
+export const SignupDialogSetPassword = ({
     data,
     setData,
     onNext,
-}) => {
+    isSubmitting,
+    email,
+    submitLabel = 'Next',
+}: ISignupDialogSetPasswordProps) => {
     const { user } = useAuthUser();
     const [isValidPassword, setIsValidPassword] = useState(false);
-    const emailOrUsername = user?.email || user?.username;
+    const verifiedEmail = email || user?.email;
+    const emailOrUsername = verifiedEmail || user?.username;
 
     return (
         <>
             {emailOrUsername && (
                 <StyledSignupDialogField>
                     <StyledSignupDialogLabel>
-                        {user.email ? 'Verified email' : 'Username'}
+                        {verifiedEmail ? 'Verified email' : 'Username'}
                     </StyledSignupDialogLabel>
                     <StyledBadge color='success' icon={<CheckCircle />}>
                         <input
-                            type={user.email ? 'email' : 'text'}
-                            id={user.email ? 'email' : 'username'}
-                            name={user.email ? 'email' : 'username'}
-                            autoComplete={user.email ? 'email' : 'username'}
+                            type={verifiedEmail ? 'email' : 'text'}
+                            id={verifiedEmail ? 'email' : 'username'}
+                            name={verifiedEmail ? 'email' : 'username'}
+                            autoComplete={verifiedEmail ? 'email' : 'username'}
                             value={emailOrUsername}
                             readOnly
                             tabIndex={-1}
@@ -83,9 +92,9 @@ export const SignupDialogSetPassword: SignupStepContent = ({
             <StyledSignupDialogButton
                 variant='contained'
                 onClick={() => onNext()}
-                disabled={!isValidPassword}
+                disabled={!isValidPassword || isSubmitting}
             >
-                Next
+                {submitLabel}
             </StyledSignupDialogButton>
         </>
     );

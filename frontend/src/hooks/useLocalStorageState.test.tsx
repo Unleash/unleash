@@ -3,7 +3,7 @@ import { useLocalStorageState } from './useLocalStorageState.ts';
 import { createLocalStorage } from '../utils/createLocalStorage.ts';
 import { render } from 'utils/testRenderer';
 import { screen, waitFor } from '@testing-library/react';
-import type { FC } from 'react';
+import { type FC, useState } from 'react';
 
 const TestComponent: FC<{
     keyName: string;
@@ -20,6 +20,21 @@ const TestComponent: FC<{
                 data-testid='updateButton'
             />
         </div>
+    );
+};
+
+const DifferentComponentOnSameKey = ({ keyName }: { keyName: string }) => {
+    useLocalStorageState(keyName, 'initialValue');
+    const [renders, setRenders] = useState(1);
+
+    return (
+        <button
+            type='button'
+            onClick={() => setRenders((count) => count + 1)}
+            data-testid='rerenderButton'
+        >
+            rendered {renders} times
+        </button>
     );
 };
 
@@ -58,5 +73,26 @@ describe('useLocalStorageState', () => {
         expect(screen.getByTestId('storedValue').textContent).toBe(
             'storedValue',
         );
+    });
+
+    it('keeps a stored value when another component on the same key re-renders for its own reasons', async () => {
+        render(
+            <>
+                <TestComponent keyName='testKey' initialValue='initialValue' />
+                <DifferentComponentOnSameKey keyName='testKey' />
+            </>,
+        );
+
+        screen.getByTestId('updateButton').click();
+        await waitFor(() => {
+            expect(createLocalStorage('testKey', {}).value).toBe(
+                'updatedValue',
+            );
+        });
+
+        screen.getByTestId('rerenderButton').click();
+        await screen.findByText('rendered 2 times');
+
+        expect(createLocalStorage('testKey', {}).value).toBe('updatedValue');
     });
 });

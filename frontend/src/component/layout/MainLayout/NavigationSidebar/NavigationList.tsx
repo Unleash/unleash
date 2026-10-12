@@ -1,4 +1,9 @@
-import type { ComponentProps, FC, ReactNode } from 'react';
+import {
+    useContext,
+    type ComponentProps,
+    type FC,
+    type ReactNode,
+} from 'react';
 import type { INavigationMenuItem } from 'interfaces/route';
 import type { NavigationMode } from './NavigationMode.tsx';
 import {
@@ -15,6 +20,7 @@ import { ConfigurationAccordion } from './ConfigurationAccordion.tsx';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
 import { Badge } from 'component/common/Badge/Badge.tsx';
 import { PendingAccessRequestsIndicator } from 'component/admin/users/AccessRequestsNotifications/PendingAccessRequestsIndicator.tsx';
+import AccessContext from 'contexts/AccessContext';
 
 const StyledNavigationList = styled(List)(({ theme }) => ({
     display: 'flex',
@@ -133,8 +139,13 @@ export const AdminSettingsNavigation: FC<{
     mode,
 }) => {
     const { showOnlyAdminMenu } = useNewAdminMenu();
+    const { isAdmin } = useContext(AccessContext);
     if (showOnlyAdminMenu) {
         return <AdminMenuNavigation onClick={() => onClick('/admin')} />;
+    }
+
+    if (!isAdmin) {
+        return null;
     }
 
     const setFullModeOnClick = (activeItem: string) => {

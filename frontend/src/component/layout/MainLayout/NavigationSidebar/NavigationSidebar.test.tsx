@@ -6,6 +6,7 @@ import { createLocalStorage } from 'utils/createLocalStorage';
 import { Route, Routes } from 'react-router';
 import { listItemButtonClasses as classes } from '@mui/material/ListItemButton';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
+import { ADMIN } from 'component/providers/AccessProvider/permissions';
 
 const server = testServerSetup();
 
@@ -69,6 +70,24 @@ test('select active item', async () => {
     expect(searchLink).toHaveClass(classes.selected);
 });
 
+describe('admin settings link', () => {
+    test('is visible to root admins', () => {
+        render(<NavigationSidebar />, { permissions: [{ permission: ADMIN }] });
+
+        expect(
+            screen.getByRole('link', { name: 'Admin settings' }),
+        ).toBeInTheDocument();
+    });
+
+    test('is hidden from non-admins', () => {
+        render(<NavigationSidebar />);
+
+        expect(
+            screen.queryByRole('link', { name: 'Admin settings' }),
+        ).not.toBeInTheDocument();
+    });
+});
+
 describe('order of items in navigation', () => {
     const getLinks = async () => {
         const configureButton = await screen.findByRole('button', {
@@ -87,7 +106,9 @@ describe('order of items in navigation', () => {
     };
 
     test('menu for open-source', async () => {
-        render(<NavigationSidebar />);
+        render(<NavigationSidebar />, {
+            permissions: [{ permission: ADMIN }],
+        });
 
         expect(await getLinks()).toMatchSnapshot();
     });
@@ -101,7 +122,9 @@ describe('order of items in navigation', () => {
             flags: { disableImpactMetrics: true },
         });
 
-        render(<NavigationSidebar />);
+        render(<NavigationSidebar />, {
+            permissions: [{ permission: ADMIN }],
+        });
 
         expect(await getLinks()).toMatchSnapshot();
     });
@@ -114,7 +137,9 @@ describe('order of items in navigation', () => {
             environment: 'Enterprise',
             flags: { disableImpactMetrics: true },
         });
-        render(<NavigationSidebar />);
+        render(<NavigationSidebar />, {
+            permissions: [{ permission: ADMIN }],
+        });
 
         expect(await getLinks()).toMatchSnapshot();
     });

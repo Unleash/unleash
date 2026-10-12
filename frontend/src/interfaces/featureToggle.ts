@@ -73,6 +73,7 @@ export interface IFeatureToggle {
     strategies?: IFeatureStrategy[];
     dependencies: Array<IDependency>;
     lifecycle?: Lifecycle;
+    expectedLifetimeEndsAt?: string | null;
     children: Array<string>;
     createdBy?: {
         id: number;

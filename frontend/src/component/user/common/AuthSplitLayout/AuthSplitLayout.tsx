@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { styled, type Theme } from '@mui/material';
 import UnleashMark from 'assets/img/inviteSignup/Unleash.svg?react';
 import UnleashSquare from 'assets/img/inviteSignup/UnleashSquare.svg?react';
-import { GoodCompanyPanel } from './GoodCompanyPanel.tsx';
+import { BrandPanel } from './BrandPanel.tsx';
 
 const StyledPage = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -70,6 +70,6 @@ export const AuthSplitLayout = ({ children }: AuthSplitLayoutProps) => (
         <StyledMain>
             <StyledContent>{children}</StyledContent>
         </StyledMain>
-        <GoodCompanyPanel />
+        <BrandPanel />
     </StyledPage>
 );

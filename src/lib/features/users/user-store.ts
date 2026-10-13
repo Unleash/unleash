@@ -1,5 +1,5 @@
 import type { LogProvider } from '../../logger.js';
-import User from '../../types/user.js';
+import User, { type IUser } from '../../types/user.js';
 
 import NotFoundError from '../../error/notfound-error.js';
 import type {
@@ -357,5 +357,73 @@ export class UserStore implements IUserStore {
             .first();
 
         return firstInstanceUser ? firstInstanceUser.created_at : null;
+    }
+
+    private inactiveUsersQuery(
+        numberOfDaysToBeInactive: number,
+        excludedUserId: number,
+    ) {
+        const inactivityThreshold = () =>
+            this.inactivityThreshold(numberOfDaysToBeInactive);
+        return this.db(TABLE)
+            .whereNull('users.deleted_at')
+            .andWhere('users.is_service', false)
+            .andWhere('users.is_system', false)
+            .andWhereNot('users.id', excludedUserId)
+            .andWhere((query) => {
+                query
+                    .whereNull('users.seen_at')
+                    .orWhere('users.seen_at', '<', inactivityThreshold());
+            })
+            .andWhere((query) => {
+                query
+                    .whereNull('users.created_at')
+                    .orWhere('users.created_at', '<', inactivityThreshold());
+            })
+            .whereNotExists((query) =>
+                query
+                    .select(1)
+                    .from('personal_access_tokens AS pat')
+                    .whereRaw('?? = ??', ['pat.user_id', 'users.id'])
+                    .whereNotNull('pat.seen_at')
+                    .where('pat.seen_at', '>=', inactivityThreshold()),
+            );
+    }
+
+    async deleteInactiveUsers(
+        numberOfDaysToBeInactive: number,
+        excludedUserId: number,
+    ): Promise<IUser[]> {
+        // Materialized here is used because we want the values before we run the update
+        // using a normal view would give us the values after we run the update.
+        const users = await this.db
+            .withMaterialized(
+                'users_to_delete',
+                this.inactiveUsersQuery(
+                    numberOfDaysToBeInactive,
+                    excludedUserId,
+                ).select(USER_COLUMNS_PUBLIC),
+            )
+            .with('updated', (qb) => {
+                qb.from('users')
+                    .whereIn('id', this.db('users_to_delete').select('id'))
+                    .update({
+                        deleted_at: this.db.fn.now(),
+                        email: null,
+                        username: null,
+                        scim_id: null,
+                        scim_external_id: null,
+                        name: this.db.raw("name || '(Deleted)'"),
+                    })
+                    .returning('id');
+            })
+            .from('users_to_delete')
+            .join('updated', 'users_to_delete.id', 'updated.id')
+            .select('users_to_delete.*');
+        return users.map(rowToUser);
+    }
+
+    private inactivityThreshold(daysInactive: number) {
+        return this.db.raw("now() - (? * INTERVAL '1 day')", [daysInactive]);
     }
 }

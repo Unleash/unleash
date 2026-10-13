@@ -18,12 +18,19 @@ import {
 } from '../../openapi/index.js';
 import type { IAuthRequest } from '../../routes/unleash-types.js';
 import type { Response } from 'express';
-import type { IUnleashServices, OpenApiService } from '../../services/index.js';
+import type {
+    IUnleashServices,
+    OpenApiService,
+    UserService,
+} from '../../services/index.js';
 import { anonymise } from '../../util/index.js';
+import type { WithTransactional } from '../../db/transaction.js';
 export class InactiveUsersController extends Controller {
     private readonly logger: Logger;
 
     private inactiveUsersService: InactiveUsersService;
+
+    private userService: WithTransactional<UserService>;
 
     private openApiService: OpenApiService;
 
@@ -34,8 +41,12 @@ export class InactiveUsersController extends Controller {
         config: IUnleashConfig,
         {
             inactiveUsersService,
+            userService,
             openApiService,
-        }: Pick<IUnleashServices, 'inactiveUsersService' | 'openApiService'>,
+        }: Pick<
+            IUnleashServices,
+            'inactiveUsersService' | 'userService' | 'openApiService'
+        >,
     ) {
         super(config);
         this.logger = config.getLogger(
@@ -43,6 +54,7 @@ export class InactiveUsersController extends Controller {
         );
         this.inactiveUsersService = inactiveUsersService;
         this.openApiService = openApiService;
+        this.userService = userService;
         this.flagResolver = config.flagResolver;
         this.userInactivityThresholdInDays =
             config.userInactivityThresholdInDays;
@@ -75,9 +87,28 @@ export class InactiveUsersController extends Controller {
                     release: { stable: '5.10.0' },
                     operationId: 'deleteInactiveUsers',
                     summary: 'Deletes inactive users',
-                    description: `Deletes all inactive users. An inactive user is a user that has not logged in in the last ${this.userInactivityThresholdInDays} days`,
+                    description: `Deletes inactive users present in the id list passed in. An inactive user is a user that has not logged in in the last ${this.userInactivityThresholdInDays} days`,
                     tags: ['Users'],
                     requestBody: createRequestSchema('idsSchema'),
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(400, 401, 403),
+                    },
+                }),
+            ],
+        });
+        this.route({
+            method: 'delete',
+            path: '/delete',
+            handler: this.bulkDeleteInactiveUsers,
+            permission: ADMIN,
+            middleware: [
+                openApiService.validPath({
+                    release: { beta: '8.3.0' },
+                    operationId: 'bulkDeleteInactiveUsers',
+                    summary: 'Deletes inactive users',
+                    description: `Deletes all inactive users. An inactive user is a user that has not logged in in the last ${this.userInactivityThresholdInDays} days`,
+                    tags: ['Users'],
                     responses: {
                         200: emptyResponse,
                         ...getStandardResponses(400, 401, 403),
@@ -120,6 +151,18 @@ export class InactiveUsersController extends Controller {
         await this.inactiveUsersService.deleteInactiveUsers(
             req.audit,
             req.body.ids.filter((inactiveUser) => inactiveUser !== req.user.id),
+        );
+        res.status(200).send();
+    }
+    async bulkDeleteInactiveUsers(
+        req: IAuthRequest,
+        res: Response<void>,
+    ): Promise<void> {
+        await this.userService.transactional((tx) =>
+            tx.deleteInactiveUsers(
+                this.userInactivityThresholdInDays,
+                req.audit,
+            ),
         );
         res.status(200).send();
     }

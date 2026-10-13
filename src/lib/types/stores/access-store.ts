@@ -69,11 +69,19 @@ export interface IAccessStore extends Store<IRole, number> {
 
     unlinkUserRoles(userId: number): Promise<void>;
 
+    bulkUnlinkUserRoles(userIds: number[]): Promise<void>;
+
     unlinkUserGroups(userId: number): Promise<void>;
+
+    bulkUnlinkUserGroups(userIds: number[]): Promise<void>;
 
     clearUserPersonalAccessTokens(userId: number): Promise<void>;
 
+    bulkClearUserPersonalAccessTokens(userIds: number[]): Promise<void>;
+
     clearPublicSignupUserTokens(userId: number): Promise<void>;
+
+    bulkClearPublicSignupUserTokens(userIds: number[]);
 
     getRolesForUserId(userId: number): Promise<IRoleWithProject[]>;
 

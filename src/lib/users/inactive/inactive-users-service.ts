@@ -7,7 +7,7 @@ import {
 import type { IInactiveUsersStore } from './types/inactive-users-store-type.js';
 import type { Logger } from '../../logger.js';
 import type { InactiveUserSchema } from '../../openapi/index.js';
-import type { UserService } from '../../services/index.js';
+import type { IUnleashServices, UserService } from '../../services/index.js';
 
 export class InactiveUsersService {
     private inactiveUsersStore: IInactiveUsersStore;
@@ -20,13 +20,11 @@ export class InactiveUsersService {
             getLogger,
             userInactivityThresholdInDays,
         }: Pick<IUnleashConfig, 'getLogger' | 'userInactivityThresholdInDays'>,
-        services: {
-            userService: UserService;
-        },
+        { userService }: Pick<IUnleashServices, 'userService'>,
     ) {
         this.logger = getLogger('services/client-feature-toggle-service.ts');
         this.inactiveUsersStore = inactiveUsersStore;
-        this.userService = services.userService;
+        this.userService = userService;
         this.userInactivityThresholdInDays = userInactivityThresholdInDays;
     }
 

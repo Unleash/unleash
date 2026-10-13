@@ -562,6 +562,15 @@ export class AccessService {
         ]);
     }
 
+    async bulkWipeUserPermissions(userIds: number[]): Promise<Array<void>> {
+        return Promise.all([
+            this.store.bulkUnlinkUserRoles(userIds),
+            this.store.bulkUnlinkUserGroups(userIds),
+            this.store.bulkClearUserPersonalAccessTokens(userIds),
+            this.store.bulkClearPublicSignupUserTokens(userIds),
+        ]);
+    }
+
     async getUsersForRole(roleId: number): Promise<IUser[]> {
         const userIdList = await this.store.getUserIdsForRole(roleId);
         if (userIdList.length > 0) {

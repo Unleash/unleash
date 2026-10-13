@@ -321,11 +321,26 @@ export class AccessStore implements IAccessStore {
             .delete();
     }
 
+    async bulkUnlinkUserRoles(userIds: number[]): Promise<void> {
+        if (userIds.length === 0) {
+            return Promise.resolve();
+        }
+        await this.db(T.ROLE_USER)
+            .whereRaw(`"user_id" = ANY(?::int[])`, [userIds])
+            .delete();
+    }
+
     async unlinkUserGroups(userId: number): Promise<void> {
         return this.db(T.GROUP_USER)
             .where({
                 user_id: userId,
             })
+            .delete();
+    }
+
+    bulkUnlinkUserGroups(userIds: number[]): Promise<void> {
+        return this.db(T.GROUP_USER)
+            .whereRaw(`"user_id" = ANY(?::int[])`, [userIds])
             .delete();
     }
 
@@ -337,11 +352,24 @@ export class AccessStore implements IAccessStore {
             .delete();
     }
 
+    bulkClearUserPersonalAccessTokens(userIds: number[]): Promise<void> {
+        return this.db(T.PERSONAL_ACCESS_TOKENS)
+            .whereRaw(`"user_id" = ANY(?::int[])`, [userIds])
+
+            .delete();
+    }
+
     async clearPublicSignupUserTokens(userId: number): Promise<void> {
         return this.db(T.PUBLIC_SIGNUP_TOKENS_USER)
             .where({
                 user_id: userId,
             })
+            .delete();
+    }
+
+    bulkClearPublicSignupUserTokens(userIds: number[]) {
+        return this.db(T.PUBLIC_SIGNUP_TOKENS_USER)
+            .whereRaw(`"user_id" = ANY(?::int[])`, [userIds])
             .delete();
     }
 

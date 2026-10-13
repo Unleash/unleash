@@ -209,10 +209,11 @@ export class EventStore implements IEventStore {
      */
     async batchStoreOrThrow(events: IBaseEvent[]): Promise<void> {
         const stopTimer = this.metricTimer('batchStore');
+        const rows = events.map((event) => this.eventToDbRow(event));
         try {
-            await this.db(TABLE).insert(
-                events.map((event) => this.eventToDbRow(event)),
-            );
+            for (let i = 0; i < rows.length; i += 1000) {
+                await this.db(TABLE).insert(rows.slice(i, i + 1000));
+            }
         } finally {
             stopTimer();
         }

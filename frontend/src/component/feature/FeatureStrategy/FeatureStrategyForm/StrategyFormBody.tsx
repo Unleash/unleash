@@ -1,9 +1,7 @@
 import type React from 'react';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
-    Alert,
     Box,
-    Divider,
     styled,
     useTheme,
     Accordion,
@@ -14,16 +12,14 @@ import {
 import type { IStrategy, StrategyFormState } from 'interfaces/strategy';
 import produce from 'immer';
 import { FeatureStrategyType } from '../FeatureStrategyType/FeatureStrategyType.tsx';
-import { FeatureStrategyConstraints } from '../FeatureStrategyConstraints/FeatureStrategyConstraints.tsx';
-import { FeatureStrategySegment } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment';
-import type { ISegment } from 'interfaces/segment';
 import type { IFormErrors } from 'hooks/useFormErrors';
 import { FeatureStrategyTitle } from './FeatureStrategyTitle/FeatureStrategyTitle.tsx';
 import { FeatureStrategyEnabledDisabled } from './FeatureStrategyEnabledDisabled/FeatureStrategyEnabledDisabled.tsx';
+import {
+    FeatureStrategyTargetAudience,
+    type TargetAudience,
+} from './FeatureStrategyTargetAudience/FeatureStrategyTargetAudience.tsx';
 import { formatStrategyName } from 'utils/strategyNames';
-import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
-import { useAssignableSegments } from 'hooks/api/getters/useSegments/useAssignableSegments.ts';
-import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
 import type { ParametersSchema } from 'openapi/index.ts';
 import ExpandMore from '@mui/icons-material/ExpandMore';
@@ -103,22 +99,6 @@ const StyledAccordionHint = styled('span')(({ theme }) => ({
     },
 }));
 
-const StyledBox = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    position: 'relative',
-    marginTop: theme.spacing(3.5),
-}));
-
-const StyledDivider = styled(Divider)({
-    width: '100%',
-});
-
-const StyledConstraintSeparator = styled(ConstraintSeparator)({
-    top: '-10px',
-    left: '0',
-    transform: 'translateY(0)',
-});
-
 const StyledForm = styled('form')(({ theme }) => ({
     position: 'relative',
     display: 'flex',
@@ -164,35 +144,6 @@ export const StrategyFormBody = <T extends StrategyFormState>({
 }: StrategyFormBodyProps<T>) => {
     const theme = useTheme();
     const strategyName = strategy?.name || strategy?.strategyName;
-    const { segments: assignableSegments = [] } = useAssignableSegments();
-
-    const { segments: allSegments = [] } = useSegments();
-
-    const segmentMap = useMemo(
-        () => new Map(allSegments.map((s) => [s.id, s])),
-        [allSegments],
-    );
-
-    const resolveSegments = (ids: number[]) =>
-        ids
-            .map((id) => segmentMap.get(id))
-            .filter((s): s is ISegment => Boolean(s));
-
-    const segments = resolveSegments(strategy.segments || []);
-
-    const setSegments: React.Dispatch<React.SetStateAction<ISegment[]>> = (
-        action,
-    ) => {
-        setStrategy((prev) => {
-            const prevSegments = resolveSegments(prev.segments || []);
-            const next =
-                typeof action === 'function' ? action(prevSegments) : action;
-            return { ...prev, segments: next.map((s) => s.id) };
-        });
-    };
-
-    const showSegmentSelector =
-        assignableSegments.length > 0 || (strategy.segments?.length ?? 0) > 0;
 
     const stickiness =
         strategy?.parameters && 'stickiness' in strategy?.parameters
@@ -221,9 +172,44 @@ export const StrategyFormBody = <T extends StrategyFormState>({
         strategy.parameters && 'stickiness' in strategy.parameters,
     );
 
-    const hasTargeting = Boolean(
-        strategy.constraints?.length || strategy.segments?.length,
-    );
+    const [explicitTargetAudience, setExplicitTargetAudience] =
+        useState<TargetAudience>();
+    const targetAudience: TargetAudience =
+        explicitTargetAudience ??
+        (!strategy.constraints?.length && !strategy.segments?.length
+            ? 'everyone'
+            : 'subset');
+
+    const targetingBackupRef = useRef<
+        | {
+              constraints?: T['constraints'];
+              segments?: T['segments'];
+          }
+        | undefined
+    >(undefined);
+
+    const handleTargetAudienceChange = (nextTargetAudience: TargetAudience) => {
+        setExplicitTargetAudience(nextTargetAudience);
+
+        if (nextTargetAudience === 'everyone') {
+            targetingBackupRef.current = {
+                constraints: strategy.constraints,
+                segments: strategy.segments,
+            };
+            setStrategy((prev) => ({
+                ...prev,
+                constraints: [],
+                segments: [],
+            }));
+        } else {
+            const backup = targetingBackupRef.current;
+            setStrategy((prev) => ({
+                ...prev,
+                constraints: backup?.constraints ?? prev.constraints,
+                segments: backup?.segments ?? prev.segments,
+            }));
+        }
+    };
 
     const rolloutHint =
         strategy.name === 'flexibleRollout'
@@ -278,36 +264,17 @@ export const StrategyFormBody = <T extends StrategyFormState>({
                             Target audience
                         </StyledAccordionHeading>
                         <StyledAccordionHint>
-                            {hasTargeting
-                                ? 'A subset of users'
-                                : 'Everyone in production'}
+                            {targetAudience === 'everyone'
+                                ? 'Everyone in production'
+                                : 'A subset of users'}
                         </StyledAccordionHint>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <Alert severity='info' sx={{ mb: 2 }} icon={false}>
-                            Segmentation and constraints allow you to set
-                            filters on your strategies, so that they will only
-                            be evaluated for users and applications that match
-                            the specified preconditions.
-                        </Alert>
-
-                        {showSegmentSelector ? (
-                            <>
-                                <FeatureStrategySegment
-                                    segments={segments}
-                                    setSegments={setSegments}
-                                    availableSegments={assignableSegments}
-                                />
-
-                                <StyledBox>
-                                    <StyledDivider />
-                                    <StyledConstraintSeparator />
-                                </StyledBox>
-                            </>
-                        ) : null}
-                        <FeatureStrategyConstraints
+                        <FeatureStrategyTargetAudience
                             strategy={strategy}
                             setStrategy={setStrategy}
+                            targetAudience={targetAudience}
+                            onTargetAudienceChange={handleTargetAudienceChange}
                         />
                     </AccordionDetails>
                 </StyledAccordion>

@@ -21,6 +21,7 @@ import { CreateFeatureDialogSidebar } from './CreateFeatureDialogSidebar.tsx';
 import { FlagTypeFieldset } from './FlagTypeFieldset.tsx';
 import { LifetimeFieldset } from './LifetimeFieldset.tsx';
 import { NamingPatternHint } from './NamingPatternHint.tsx';
+import { OptionalSettingsFieldset } from './OptionalSettingsFieldset.tsx';
 import { defaultLifetimeFor } from './flagTypes.ts';
 import { Section } from './CreateFeatureForm.styles.ts';
 import useFeatureForm, {
@@ -118,6 +119,7 @@ export const CreateFeatureForm = ({
         setDescription,
         validateToggleName,
         impressionData,
+        setImpressionData,
         lifetime,
         setLifetime,
         getTogglePayload,
@@ -337,6 +339,11 @@ export const CreateFeatureForm = ({
                     <LifetimeFieldset
                         lifetime={lifetime}
                         onChange={selectLifetime}
+                    />
+
+                    <OptionalSettingsFieldset
+                        impressionData={impressionData}
+                        onImpressionDataChange={setImpressionData}
                     />
 
                     <BottomSection>

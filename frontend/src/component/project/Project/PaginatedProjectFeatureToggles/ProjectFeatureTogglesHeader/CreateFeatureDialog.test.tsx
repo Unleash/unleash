@@ -165,6 +165,30 @@ test("the new create flag form shows the project's naming pattern under the name
     await screen.findByPlaceholderText('checkout.banner');
 });
 
+test('the new create flag form attaches impression data to the flag', async () => {
+    const requests = setupNewFormApi();
+    testServerRoute(server, '/api/admin/tags', {
+        tags: [{ type: 'simple', value: 'checkout' }],
+    });
+
+    renderDialog();
+
+    const nameInput = await getNameInput();
+    fireEvent.change(nameInput, { target: { value: 'my-flag' } });
+    fireEvent.click(
+        await screen.findByRole('button', { name: /Other optional settings/ }),
+    );
+    fireEvent.click(await screen.findByLabelText('Impression data'));
+
+    fireEvent.click(await screen.findByTestId('FORM_CREATE_BUTTON'));
+
+    await waitFor(() => expect(requests).toHaveLength(1));
+
+    expect(requests[0]).toMatchObject({
+        impressionData: true,
+    });
+});
+
 test('the new create flag form posts the default lifetime when the user leaves it untouched', async () => {
     const requests = setupNewFormApi();
 

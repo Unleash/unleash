@@ -34,6 +34,10 @@ const toResponse = (row: Row<UpdatedUser>): UpdatedUser => {
         productUpdatesEmailConsent: row.product_updates_email_consent,
     };
 };
+// JS Dates only hold milliseconds, so a microsecond updated_at would never equal the
+// timestamp callers hand back and the last user would be returned on every sync.
+const UPDATED_AT_MS = "date_trunc('milliseconds', updated_at)";
+
 export class UserUpdatesReadModel {
     private db: Db;
 
@@ -46,14 +50,13 @@ export class UserUpdatesReadModel {
         userId: number;
     } | null> {
         const result = await this.db(USERS_TABLE)
-            .select('id', 'updated_at')
+            .select('id', this.db.raw(`${UPDATED_AT_MS} as updated_at`))
             .where({
                 // also consider deleted users (different than activeUsers query)
                 is_system: false,
                 is_service: false,
             })
-            .orderBy('updated_at', 'desc')
-            .orderBy('id', 'desc')
+            .orderByRaw(`${UPDATED_AT_MS} desc, id desc`)
             .first();
         return result
             ? {
@@ -83,18 +86,19 @@ export class UserUpdatesReadModel {
                 is_service: false,
             })
             .where((builder) => {
-                builder.where('updated_at', '>', date).orWhere((subBuilder) => {
-                    subBuilder
-                        .where('updated_at', '=', date)
-                        .where('id', '>', afterId);
-                });
+                builder
+                    .whereRaw(`${UPDATED_AT_MS} > ?`, [date])
+                    .orWhere((subBuilder) => {
+                        subBuilder
+                            .whereRaw(`${UPDATED_AT_MS} = ?`, [date])
+                            .where('id', '>', afterId);
+                    });
             })
-            .orderBy('updated_at', 'asc')
-            .orderBy('id', 'asc')
+            .orderByRaw(`${UPDATED_AT_MS} asc, id asc`)
             .select([
                 ...USER_COLUMNS_PUBLIC,
                 'created_at',
-                'updated_at',
+                this.db.raw(`${UPDATED_AT_MS} as updated_at`),
                 'deleted_at',
             ])
             .limit(limit);

@@ -86,7 +86,7 @@ const accordionSummarySlotProps = (theme: Theme) => ({
     },
 });
 
-const StyledAccordionHeading = styled('span')(({ theme }) => ({
+const StyledAccordionHeading = styled('h2')(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
     fontWeight: theme.typography.fontWeightBold,
 }));

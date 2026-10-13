@@ -1,4 +1,5 @@
 import type React from 'react';
+import { useId } from 'react';
 import type { ISegment } from 'interfaces/segment';
 import {
     AutocompleteBox,
@@ -18,6 +19,24 @@ interface IFeatureStrategySegmentProps {
     availableSegments: ISegment[];
 }
 
+const StyledBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1),
+}));
+
+const StyledRow = styled(Box)({
+    display: 'flex',
+    justifyContent: 'space-between',
+});
+
+const StyledTitle = styled('h3')(({ theme }) => ({
+    margin: 0,
+    fontSize: 'inherit',
+    fontWeight: theme.typography.fontWeightMedium,
+    color: theme.palette.text.secondary,
+}));
+
 const StyledHelpIconBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -30,6 +49,7 @@ export const FeatureStrategySegment = ({
     setSegments: setSelectedSegments,
     availableSegments,
 }: IFeatureStrategySegmentProps) => {
+    const titleId = useId();
     const { strategySegmentsLimit } = useSegmentLimits();
     const { items: recentlyUsedSegmentIds } = useRecentlyUsedSegments();
     const availableRecentlyUsedSegments = availableSegments.filter(
@@ -62,41 +82,42 @@ export const FeatureStrategySegment = ({
     };
 
     return (
-        <>
-            <StyledHelpIconBox>
-                <Typography>Segments</Typography>
-                <HelpIcon
-                    htmlTooltip
-                    tooltip={
-                        <Box>
-                            <Typography variant='body2'>
-                                Segments are reusable sets of constraints that
-                                can be defined once and reused across feature
-                                toggle configurations. You can create a segment
-                                on the global or the project level. Read more
-                                about segments{' '}
-                                <a
-                                    href='https://docs.getunleash.io/concepts/segments'
-                                    target='_blank'
-                                    rel='noopener noreferrer'
-                                >
-                                    here
-                                </a>
-                            </Typography>
-                        </Box>
-                    }
+        <StyledBox role='group' aria-labelledby={titleId}>
+            <StyledRow>
+                <StyledHelpIconBox>
+                    <StyledTitle id={titleId}>Segments</StyledTitle>
+                    <HelpIcon
+                        htmlTooltip
+                        tooltip={
+                            <Box>
+                                <Typography variant='body2'>
+                                    Segments are reusable sets of constraints
+                                    that can be defined once and reused across
+                                    feature toggle configurations. You can
+                                    create a segment on the global or the
+                                    project level. Read more about segments{' '}
+                                    <a
+                                        href='https://docs.getunleash.io/concepts/segments'
+                                        target='_blank'
+                                        rel='noopener noreferrer'
+                                    >
+                                        here
+                                    </a>
+                                </Typography>
+                            </Box>
+                        }
+                    />
+                </StyledHelpIconBox>
+                <AutocompleteBox
+                    label='Add segments'
+                    options={autocompleteOptions}
+                    onChange={onChange}
+                    disabled={atStrategySegmentsLimit}
+                    icon={null}
+                    width={'175px'}
                 />
-            </StyledHelpIconBox>
-
+            </StyledRow>
             {atStrategySegmentsLimit && <SegmentDocsStrategyWarning />}
-            <AutocompleteBox
-                label='Select segments'
-                options={autocompleteOptions}
-                onChange={onChange}
-                disabled={atStrategySegmentsLimit}
-                icon={null}
-                width={'175px'}
-            />
             <FeatureStrategySegmentList
                 segments={selectedSegments}
                 setSegments={setSelectedSegments}
@@ -107,6 +128,6 @@ export const FeatureStrategySegment = ({
                     segments={availableRecentlyUsedSegments}
                 />
             ) : null}
-        </>
+        </StyledBox>
     );
 };

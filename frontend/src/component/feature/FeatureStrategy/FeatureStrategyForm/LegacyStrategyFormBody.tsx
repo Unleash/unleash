@@ -13,7 +13,7 @@ import type { IStrategy, StrategyFormState } from 'interfaces/strategy';
 import produce from 'immer';
 import { FeatureStrategyType } from '../FeatureStrategyType/FeatureStrategyType.tsx';
 import { FeatureStrategyConstraints } from '../FeatureStrategyConstraints/FeatureStrategyConstraints.tsx';
-import { FeatureStrategySegment } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment';
+import { FeatureStrategySegment } from 'component/feature/FeatureStrategy/FeatureStrategySegment/LegacyFeatureStrategySegment.tsx';
 import type { ISegment } from 'interfaces/segment';
 import type { IFormErrors } from 'hooks/useFormErrors';
 import { FeatureStrategyTitle } from './FeatureStrategyTitle/LegacyFeatureStrategyTitle.tsx';

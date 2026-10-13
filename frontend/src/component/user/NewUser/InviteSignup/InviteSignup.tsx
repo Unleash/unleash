@@ -1,13 +1,6 @@
-import { useState } from 'react';
-import { Link as RouterLink } from 'react-router';
-import {
-    Button,
-    Divider,
-    Link,
-    styled,
-    TextField,
-    Typography,
-} from '@mui/material';
+import { type FormEvent, useState } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router';
+import { Button, Divider, Link, styled, Typography } from '@mui/material';
 import LockRounded from '@mui/icons-material/LockRounded';
 import GoogleIcon from 'assets/img/inviteSignup/google.svg?react';
 import GitHubIcon from 'assets/img/inviteSignup/github.svg?react';
@@ -15,36 +8,29 @@ import useLoading from 'hooks/useLoading';
 import useResetPassword from 'hooks/api/getters/useResetPassword/useResetPassword';
 import { useUserInvite } from 'hooks/api/getters/useUserInvite/useUserInvite';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
+import { useInviteTokenApi } from 'hooks/api/actions/useInviteTokenApi/useInviteTokenApi';
+import { useAuthResetPasswordApi } from 'hooks/api/actions/useAuthResetPasswordApi/useAuthResetPasswordApi';
+import useToast from 'hooks/useToast';
+import { CREATED, OK } from 'constants/statusCodes';
+import { formatUnknownError } from 'utils/formatUnknownError';
 import { basePath } from 'utils/formatPath';
 import type { IAuthOptions } from 'hooks/api/getters/useAuth/useAuthEndpoint';
 import { SSO_LOGIN_BUTTON } from 'utils/testIds';
 import InvalidToken from '../../common/InvalidToken/InvalidToken.tsx';
 import { AuthSplitLayout } from '../../common/AuthSplitLayout/AuthSplitLayout.tsx';
 import { getInstanceName } from './getInstanceName.ts';
-
-const StyledContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(3),
-}));
-
-const StyledHeader = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(1.5),
-    wordBreak: 'break-word',
-}));
-
-const StyledTitle = styled(Typography)(({ theme }) => ({
-    fontSize: theme.typography.h2.fontSize,
-    fontWeight: theme.typography.fontWeightBold,
-    lineHeight: '28px',
-}));
-
-const StyledSubtitle = styled(Typography)(({ theme }) => ({
-    lineHeight: '20px',
-    color: theme.palette.text.secondary,
-}));
+import { SetPassword } from './SetPassword.tsx';
+import {
+    StyledContainer,
+    StyledField,
+    StyledForm,
+    StyledHeader,
+    StyledInput,
+    StyledLabel,
+    StyledPrimaryButton,
+    StyledSubtitle,
+    StyledTitle,
+} from './inviteSignupStyles.ts';
 
 const StyledAuthOptions = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -74,35 +60,6 @@ const StyledOrDivider = styled(Divider)(({ theme }) => ({
     '&::before, &::after': {
         borderColor: theme.palette.neutral.containerBorder,
     },
-}));
-
-const StyledEmailField = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(1),
-}));
-
-const StyledLabel = styled('label')(({ theme }) => ({
-    fontWeight: theme.typography.fontWeightBold,
-    lineHeight: '22px',
-}));
-
-const StyledEmailInput = styled(TextField)(({ theme }) => ({
-    '&&& .MuiOutlinedInput-root': {
-        height: 52,
-        fontWeight: theme.typography.fontWeightMedium,
-    },
-    '& .MuiOutlinedInput-root.Mui-readOnly': {
-        backgroundColor: theme.palette.background.elevation1,
-    },
-    '& .MuiOutlinedInput-notchedOutline': {
-        borderColor: theme.palette.neutral.containerBorder,
-    },
-}));
-
-const StyledPrimaryButton = styled(Button)(({ theme }) => ({
-    height: 40,
-    fontWeight: theme.typography.fontWeightBold,
 }));
 
 const StyledFinePrint = styled(Typography)(({ theme }) => ({
@@ -140,14 +97,25 @@ const renderAuthOptionIcon = ({ type }: IAuthOptions) => {
 
 export const InviteSignup = () => {
     const { authDetails } = useAuthDetails();
+    const navigate = useNavigate();
+    const { setToastApiError } = useToast();
     const {
+        token,
         data: tokenData,
         loading: tokenLoading,
         isValidToken,
     } = useResetPassword();
-    const { loading: inviteLoading, isValid: isValidInvite } = useUserInvite();
+    const {
+        secret,
+        loading: inviteLoading,
+        isValid: isValidInvite,
+    } = useUserInvite();
+    const { addUser, loading: isUserSubmitting } = useInviteTokenApi();
+    const { resetPassword, loading: isPasswordSubmitting } =
+        useAuthResetPasswordApi();
     const ref = useLoading(tokenLoading || inviteLoading);
     const [inviteEmail, setInviteEmail] = useState('');
+    const [step, setStep] = useState<'email' | 'password'>('email');
 
     const passwordDisabled = authDetails?.defaultHidden === true;
     const authOptions = authDetails?.options ?? [];
@@ -155,6 +123,44 @@ export const InviteSignup = () => {
         authOptions.length > 0 && (!isValidInvite || passwordDisabled);
     const tokenEmail = isValidToken ? tokenData?.email : undefined;
     const instanceName = getInstanceName(basePath);
+    const email = tokenEmail ?? inviteEmail;
+
+    const onContinueWithEmail = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setStep('password');
+    };
+
+    const onSetPassword = async ({
+        name,
+        password,
+    }: {
+        name: string;
+        password: string;
+    }) => {
+        try {
+            if (isValidInvite) {
+                const res = await addUser(secret, { name, email, password });
+                if (res.status === CREATED) {
+                    navigate('/login?invited=true');
+                } else {
+                    setToastApiError(
+                        "Couldn't create user. Check if your invite link is valid.",
+                    );
+                }
+            } else {
+                const res = await resetPassword({ token, password });
+                if (res.status === OK) {
+                    navigate('/login?reset=true');
+                } else {
+                    setToastApiError(
+                        'Something went wrong when attempting to set your password. Please try again later.',
+                    );
+                }
+            }
+        } catch (error) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
 
     if (!isValidToken && !isValidInvite) {
         return (
@@ -162,6 +168,19 @@ export const InviteSignup = () => {
                 <div ref={ref}>
                     <InvalidToken />
                 </div>
+            </AuthSplitLayout>
+        );
+    }
+
+    if (step === 'password') {
+        return (
+            <AuthSplitLayout>
+                <SetPassword
+                    email={email}
+                    requireName={Boolean(isValidInvite)}
+                    loading={isUserSubmitting || isPasswordSubmitting}
+                    onSubmit={onSetPassword}
+                />
             </AuthSplitLayout>
         );
     }
@@ -204,33 +223,35 @@ export const InviteSignup = () => {
                 ) : null}
 
                 {passwordDisabled ? null : (
-                    <>
-                        <StyledEmailField>
+                    <StyledForm onSubmit={onContinueWithEmail}>
+                        <StyledField>
                             <StyledLabel htmlFor='invite-email'>
                                 Email
                             </StyledLabel>
-                            <StyledEmailInput
+                            <StyledInput
                                 id='invite-email'
                                 type='email'
+                                required
                                 placeholder='name@company.com'
                                 autoComplete='email'
                                 fullWidth
-                                value={tokenEmail ?? inviteEmail}
+                                value={email}
                                 onChange={(e) => setInviteEmail(e.target.value)}
                                 slotProps={{
                                     input: { readOnly: Boolean(tokenEmail) },
                                 }}
                                 data-loading
                             />
-                        </StyledEmailField>
+                        </StyledField>
                         <StyledPrimaryButton
+                            type='submit'
                             variant='contained'
                             fullWidth
                             data-loading
                         >
                             Continue with email
                         </StyledPrimaryButton>
-                    </>
+                    </StyledForm>
                 )}
 
                 <StyledFinePrint>

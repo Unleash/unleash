@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { SSO_LOGIN_BUTTON } from 'utils/testIds';
 import { InviteSignup } from './InviteSignup.tsx';
 import { INVALID_TOKEN_ERROR } from 'hooks/api/getters/useResetPassword/useResetPassword';
@@ -52,4 +53,82 @@ test('does not show SSO options for an invite link', async () => {
     expect(
         screen.queryByTestId(`${SSO_LOGIN_BUTTON}-google`),
     ).not.toBeInTheDocument();
+});
+
+test('sets a password for an invite link once the requirements are met', async () => {
+    setup();
+    testServerRoute(server, '/invite/valid-secret/validate', {});
+    testServerRoute(server, '/auth/reset/validate', {
+        name: INVALID_TOKEN_ERROR,
+    });
+    const { requests } = testServerRoute(
+        server,
+        '/invite/valid-secret/signup',
+        {},
+        'post',
+        201,
+    );
+
+    render(<InviteSignup />, { route: '/new-user?invite=valid-secret' });
+
+    await userEvent.type(
+        await screen.findByLabelText('Email'),
+        'invitee@getunleash.io',
+    );
+    await userEvent.click(screen.getByText('Continue with email'));
+
+    await screen.findByText('Set password');
+    expect(screen.getByLabelText('Email')).toHaveValue('invitee@getunleash.io');
+    const submit = screen.getByRole('button', { name: 'Customize Unleash' });
+
+    await userEvent.type(screen.getByLabelText('Full name'), 'Invitee');
+    await userEvent.type(screen.getByLabelText('Password'), 'weakpass');
+    expect(submit).toBeDisabled();
+
+    await userEvent.type(screen.getByLabelText('Password'), 'W0rd!');
+    expect(submit).toBeEnabled();
+
+    await userEvent.click(submit);
+
+    await waitFor(() =>
+        expect(requests).toEqual([
+            {
+                name: 'Invitee',
+                email: 'invitee@getunleash.io',
+                password: 'weakpassW0rd!',
+            },
+        ]),
+    );
+});
+
+test('sets a password for a reset token without asking for a name', async () => {
+    setup();
+    testServerRoute(server, '/auth/reset/validate', {
+        email: 'invitee@getunleash.io',
+    });
+    const { requests } = testServerRoute(
+        server,
+        '/auth/reset/password',
+        {},
+        'post',
+    );
+
+    render(<InviteSignup />, { route: '/new-user?token=valid-token' });
+
+    await screen.findByText("You've been invited to join Unleash");
+    await userEvent.click(screen.getByText('Continue with email'));
+
+    await screen.findByText('Set password');
+    expect(screen.queryByLabelText('Full name')).not.toBeInTheDocument();
+
+    await userEvent.type(screen.getByLabelText('Password'), 'Sup3r-secret');
+    await userEvent.click(
+        screen.getByRole('button', { name: 'Customize Unleash' }),
+    );
+
+    await waitFor(() =>
+        expect(requests).toEqual([
+            { token: 'valid-token', password: 'Sup3r-secret' },
+        ]),
+    );
 });

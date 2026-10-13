@@ -102,7 +102,9 @@ To self-host Unleash in a production environment, you need to deploy it to a per
 
 We provide guides for deploying to services like Heroku and DigitalOcean:
 
-[![Deploy to Heroku](./.github/deploy-heroku-20.png)](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash) [![Deploy to DigitalOcean](./.github/deploy-digital.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/Unleash/unleash/tree/main&refcode=0e1d75187044)
+[![Deploy to Heroku](./.github/deploy-heroku-20.png)](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash) [![Deploy to DigitalOcean](./.github/deploy-digital.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/Unleash/unleash/tree/main&refcode=0e1d75187044) [![Deploy to ZopDay](https://zop.dev/deploytozopday-inkhard.svg)](https://zop.dev/zopday/app/deploy?image=unleashorg/unleash-server:latest&port=4242&name=unleash&utm_source=github&utm_medium=one_click&utm_content=unleash)
+
+The ZopDay button opens a deploy screen with the `unleashorg/unleash-server` image and port 4242 already set, on managed ZopCloud or in an AWS or GCP account you already own. Set `DATABASE_URL` to a PostgreSQL database before launch.
 
 For more advanced configurations options, check out our documentation on:
 - [Getting started with self-hosting](https://docs.getunleash.io/deploy/getting-started)

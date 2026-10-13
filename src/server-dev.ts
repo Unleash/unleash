@@ -68,6 +68,7 @@ process.nextTick(async () => {
                         tagManagementViaUi: true,
                         integrationParamKvpEditor: true,
                         singlePageStrategyForm: true,
+                        feedbackModule: true,
                     },
                 },
                 authentication: {

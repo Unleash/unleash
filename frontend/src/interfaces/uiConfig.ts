@@ -117,6 +117,7 @@ export type UiFlags = {
     sessionTimeouts?: boolean;
     payloadSchemas?: boolean;
     singlePageStrategyForm?: boolean;
+    feedbackModule?: boolean;
 };
 
 export interface IVersionInfo {

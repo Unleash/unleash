@@ -230,7 +230,12 @@ test('Should delete all stored events', async () => {
 });
 
 test('Should get all events of type', async () => {
-    const data = { name: 'someName', project: 'test-project' };
+    const data = {
+        name: 'someName',
+        project: 'test-project',
+        type: 'release',
+        createdAt: new Date(),
+    };
     await Promise.all(
         [0, 1, 2, 3, 4, 5].map(async (id) => {
             const event =

@@ -50,7 +50,6 @@ import type {
 } from '../../services/index.js';
 import { querySchema } from '../../schema/feature-schema.js';
 import type { BatchStaleSchema } from '../../openapi/spec/batch-stale-schema.js';
-import { projectFeaturesQueryParameters } from '../../openapi/spec/project-features-query-parameters.js';
 import type { WithTransactional } from '../../db/transaction.js';
 import type { PayloadSchemaService } from '../payload-schema/payload-schema-service.js';
 import { BadDataError } from '../../error/index.js';
@@ -432,7 +431,17 @@ export default class ProjectFeaturesController extends Controller {
                     tags: ['Features'],
                     release: { stable: '4.12.0' },
                     operationId: 'getFeatures',
-                    parameters: [...projectFeaturesQueryParameters],
+                    parameters: [
+                        {
+                            name: 'view',
+                            in: 'query',
+                            required: false,
+                            description:
+                                'Experimental: `core` returns a lightweight version of each feature with `environments` empty and `favorite` set to `false`; it cannot be combined with the `tag` or `namePrefix` filters. Omit it to get the full feature overview. This parameter may change or be removed in a future release.',
+                            schema: { type: 'string', enum: ['core'] },
+                            example: 'core',
+                        },
+                    ],
                     responses: {
                         200: createResponseSchema('projectFeaturesSchema'),
                         ...getStandardResponses(400, 401, 403),

@@ -48,16 +48,19 @@ const FEATURE_COLUMNS = [
 export interface FeaturesTable {
     name: string;
     description: string | null;
-    type?: string;
+    type: string;
     stale?: boolean | null;
     project: string;
-    created_at?: Date;
+    created_at: Date;
     impression_data?: boolean | null;
     archived?: boolean;
     archived_at?: Date | null;
     created_by_user_id?: number;
     lifetime_days?: number | null;
 }
+
+type FeaturesInsertRow = Omit<FeaturesTable, 'type' | 'created_at'> &
+    Partial<Pick<FeaturesTable, 'type' | 'created_at'>>;
 
 export interface FeatureToggleInsert
     extends Omit<FeatureToggleDTO, 'createdByUserId'> {
@@ -437,7 +440,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return sortedVariants;
     }
 
-    insertToRow(project: string, data: FeatureToggleInsert): FeaturesTable {
+    insertToRow(project: string, data: FeatureToggleInsert): FeaturesInsertRow {
         const row = {
             name: data.name,
             description: data.description || null,
@@ -460,7 +463,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     dtoToUpdateRow(
         project: string,
         data: FeatureToggleDTO,
-    ): Omit<FeaturesTable, 'created_by_user_id'> {
+    ): Omit<FeaturesInsertRow, 'created_by_user_id' | 'created_at'> {
         const row = {
             name: data.name,
             description: data.description || null,

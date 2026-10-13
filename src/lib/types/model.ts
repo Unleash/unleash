@@ -85,7 +85,8 @@ export interface FeatureToggleDTO {
 
 export interface FeatureToggle extends FeatureToggleDTO {
     project: string;
-    createdAt?: Date;
+    type: string;
+    createdAt: Date;
 }
 
 export interface IFeatureToggleListItem extends FeatureToggle {
@@ -283,6 +284,17 @@ export interface IEnvironmentOverview extends IEnvironmentBase {
     hasEnabledStrategies?: boolean;
     yes?: number;
     no?: number;
+}
+
+export interface IFeatureOverviewCore {
+    name: string;
+    type: string;
+    description: string | null;
+    stale: boolean;
+    favorite: false;
+    impressionData: boolean;
+    createdAt: Date;
+    environments: [];
 }
 
 export interface IFeatureOverview {

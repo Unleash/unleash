@@ -31,6 +31,7 @@ export const UnleashApiErrorTypes = [
     'ExceedsLimitError',
     'PasswordPreviouslyUsedError',
     'RateLimitError',
+    'SessionEndedError',
     // server errors; not the end user's fault
     'InternalError',
     'BadGatewayError',

@@ -161,6 +161,10 @@ test('ends an idle session: one cookie, cleared, and the row is gone', async () 
     expect(res.headers['set-cookie']).toHaveLength(1);
     expect(String(res.headers['set-cookie'])).toContain(`${COOKIE_NAME}=;`);
     expect(res.headers['clear-site-data']).toBe('"cookies", "storage"');
+    expect(res.body).toMatchObject({
+        name: 'SessionEndedError',
+        reason: 'idle',
+    });
     expect(await storedSessions()).toHaveLength(0);
 });
 
@@ -174,6 +178,7 @@ test('ending a session at its max age leaves the site data alone', async () => {
 
     expect(res.status).toBe(401);
     expect(res.headers['clear-site-data']).toBeUndefined();
+    expect(res.body.reason).toBe('max_age');
 });
 
 test('a session the store cannot delete is not reported as signed out', async () => {
@@ -213,6 +218,7 @@ test('ends a session whose start cannot be read', async () => {
     const res = await agent.get('/api/admin/projects');
 
     expect(res.status).toBe(401);
+    expect(res.body.reason).toBe('unknown_start');
 });
 
 test('a write renews the idle window', async () => {

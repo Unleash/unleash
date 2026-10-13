@@ -1,7 +1,6 @@
 import type { SessionData } from 'express-session';
 import type { ISessionLimits } from './session-limits.js';
-
-export type SessionTimeoutReason = 'idle' | 'max_age' | 'unknown_start';
+import type { SessionTimeoutReason } from '../types/session-timeout-reason.js';
 
 export type SessionVerdict =
     | { action: 'end'; reason: SessionTimeoutReason }

@@ -1,12 +1,10 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import type { IUnleashConfig } from '../types/option.js';
-import UnauthorizedError from '../error/unauthorized-error.js';
+import { SessionEndedError } from '../error/session-ended-error.js';
 import { resolveSessionLimits } from '../sessions/session-limits.js';
 import { sessionCookieOptions } from '../sessions/session-cookie.js';
-import {
-    evaluateSession,
-    type SessionTimeoutReason,
-} from '../sessions/session-deadlines.js';
+import { evaluateSession } from '../sessions/session-deadlines.js';
+import type { SessionTimeoutReason } from '../types/session-timeout-reason.js';
 
 type TimeoutConfig = Pick<
     IUnleashConfig,
@@ -59,9 +57,7 @@ export const sessionTimeoutMiddleware = (
                 `Ended the session of user ${userId} past its ${reason} limit.`,
             );
 
-            const error = new UnauthorizedError(
-                'Your session has ended. Please log in again.',
-            );
+            const error = new SessionEndedError(reason);
             res.status(error.statusCode).json(error);
         });
     };

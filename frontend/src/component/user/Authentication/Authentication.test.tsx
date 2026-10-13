@@ -109,3 +109,58 @@ const testSSOAuthOption = async (authOption: string) => {
     expect(screen.queryByTestId(LOGIN_PASSWORD_ID)).not.toBeInTheDocument();
     expect(screen.queryByTestId(LOGIN_BUTTON)).not.toBeInTheDocument();
 };
+
+test('maps a code from the server to our own wording', async () => {
+    testServerRoute(server, '*', {
+        defaultHidden: false,
+        message: 'You must sign in in order to use Unleash',
+        path: '/auth/simple/login',
+        type: 'password',
+        options: [],
+    });
+
+    render(<Authentication redirect='/' />, {
+        route: '/login?errorMsg=oidc_not_enabled',
+    });
+
+    expect(
+        await screen.findByText('OpenID Connect is not enabled'),
+    ).toBeInTheDocument();
+});
+
+test('shows a message it has no code for as it came', async () => {
+    testServerRoute(server, '*', {
+        defaultHidden: false,
+        message: 'You must sign in in order to use Unleash',
+        path: '/auth/simple/login',
+        type: 'password',
+        options: [],
+    });
+
+    // what oidc-provider sends on main and feat/step-up-auth
+    render(<Authentication redirect='/' />, {
+        route: '/login?errorMsg=OpenID%20Connect%20is%20not%20enabled',
+    });
+
+    expect(
+        await screen.findByText('OpenID Connect is not enabled'),
+    ).toBeInTheDocument();
+});
+
+test('an inherited key is text, not a lookup that breaks the page', async () => {
+    testServerRoute(server, '*', {
+        defaultHidden: false,
+        message: 'You must sign in in order to use Unleash',
+        path: '/auth/simple/login',
+        type: 'password',
+        options: [],
+    });
+
+    render(<Authentication redirect='/' />, {
+        route: '/login?errorMsg=__proto__',
+    });
+
+    expect(await screen.findByTestId(AUTH_PAGE_ID)).toBeInTheDocument();
+    expect(screen.getByText('__proto__')).toBeInTheDocument();
+    expect(screen.getByTestId(LOGIN_EMAIL_ID)).toBeInTheDocument();
+});

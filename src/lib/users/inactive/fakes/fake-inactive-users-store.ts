@@ -31,6 +31,7 @@ export class FakeInactiveUsersStore implements IInactiveUsersStore {
                         email: user.email!,
                         seen_at: user.seenAt,
                         created_at: user.createdAt || new Date(),
+                        total_inactive_users: this.users.length,
                     };
                 }),
         );

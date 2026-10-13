@@ -3,7 +3,6 @@ import useLoading from '../../../../../hooks/useLoading.ts';
 import { Alert, Typography } from '@mui/material';
 import { DEL_INACTIVE_USERS_ERROR } from '../../../../../hooks/api/actions/useInactiveUsersApi/useInactiveUsersApi.ts';
 import { ConditionallyRender } from '../../../../common/ConditionallyRender/ConditionallyRender.tsx';
-import type { IInactiveUser } from '../../../../../hooks/api/getters/useInactiveUsers/useInactiveUsers.ts';
 import { flexRow } from '../../../../../themes/themeStyles.ts';
 
 interface IDeleteInactiveUsersProps {
@@ -12,7 +11,7 @@ interface IDeleteInactiveUsersProps {
     inactiveUsersLoading: boolean;
     removeInactiveUsers: () => void;
     inactiveUserApiErrors: Record<string, string>;
-    inactiveUsers: IInactiveUser[];
+    totalInactiveUsers: number;
 }
 export const DeleteInactiveUsers = ({
     showDialog,
@@ -20,7 +19,7 @@ export const DeleteInactiveUsers = ({
     inactiveUsersLoading,
     removeInactiveUsers,
     inactiveUserApiErrors,
-    inactiveUsers,
+    totalInactiveUsers,
 }: IDeleteInactiveUsersProps) => {
     const ref = useLoading(inactiveUsersLoading);
     return (
@@ -50,9 +49,9 @@ export const DeleteInactiveUsers = ({
                 <div style={flexRow}>
                     <Typography variant='subtitle1'>
                         You will be deleting{' '}
-                        {inactiveUsers.length === 1
+                        {totalInactiveUsers === 1
                             ? `1 inactive user`
-                            : `${inactiveUsers.length} inactive users`}
+                            : `${totalInactiveUsers} inactive users`}
                     </Typography>
                 </div>
             </div>

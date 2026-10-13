@@ -62,7 +62,7 @@ describe('Inactive users service', () => {
                                               now() - INTERVAL '7 MONTHS')`);
             const users = await inactiveUserService.getInactiveUsers();
             expect(users).toBeTruthy();
-            expect(users).toHaveLength(1);
+            expect(users.totalInactiveUsers).toBe(1);
         });
         test('Finds users that was last logged in before our deadline', async () => {
             await db.rawDatabase.raw(`INSERT INTO users(id, name, username, email, created_at, seen_at)
@@ -70,7 +70,7 @@ describe('Inactive users service', () => {
                                               now() - INTERVAL '7 MONTHS', now() - INTERVAL '182 DAYS')`);
             const users = await inactiveUserService.getInactiveUsers();
             expect(users).toBeTruthy();
-            expect(users).toHaveLength(1);
+            expect(users.totalInactiveUsers).toBe(1);
         });
         test('Does not find users that was last logged in after our deadline', async () => {
             await db.rawDatabase.raw(`INSERT INTO users(id, name, username, email, created_at, seen_at)
@@ -78,7 +78,7 @@ describe('Inactive users service', () => {
                                               now() - INTERVAL '7 MONTHS', now() - INTERVAL '1 MONTH')`);
             const users = await inactiveUserService.getInactiveUsers();
             expect(users).toBeTruthy();
-            expect(users).toHaveLength(0);
+            expect(users.totalInactiveUsers).toBe(0);
         });
         test('Does not find users that has never logged in, but was created after our deadline', async () => {
             await db.rawDatabase.raw(`INSERT INTO users(id, name, username, email, created_at)
@@ -86,7 +86,7 @@ describe('Inactive users service', () => {
                                               now() - INTERVAL '3 MONTHS')`);
             const users = await inactiveUserService.getInactiveUsers();
             expect(users).toBeTruthy();
-            expect(users).toHaveLength(0);
+            expect(users.totalInactiveUsers).toBe(0);
         });
         test('A user with a pat that was last seen last week is not inactive', async () => {
             await db.rawDatabase.raw(`INSERT INTO users(id, name, username, email, created_at)
@@ -98,7 +98,7 @@ describe('Inactive users service', () => {
             );
             const users = await inactiveUserService.getInactiveUsers();
             expect(users).toBeTruthy();
-            expect(users).toHaveLength(0);
+            expect(users.totalInactiveUsers).toBe(0);
         });
         test('A user with a pat that was last seen 7 months ago is inactive', async () => {
             await db.rawDatabase.raw(`INSERT INTO users(id, name, username, email, created_at)
@@ -109,7 +109,7 @@ describe('Inactive users service', () => {
             );
             const users = await inactiveUserService.getInactiveUsers();
             expect(users).toBeTruthy();
-            expect(users).toHaveLength(1);
+            expect(users.totalInactiveUsers).toBe(1);
         });
         test('A user with a pat that was seen 7 months ago, but logged in yesterday should not be inactive', async () => {
             await db.rawDatabase.raw(
@@ -120,7 +120,7 @@ describe('Inactive users service', () => {
             );
             const users = await inactiveUserService.getInactiveUsers();
             expect(users).toBeTruthy();
-            expect(users).toHaveLength(0);
+            expect(users.totalInactiveUsers).toBe(0);
         });
         test('System users and service users are not returned, even if not seen', async () => {
             await db.rawDatabase.raw(
@@ -131,7 +131,7 @@ describe('Inactive users service', () => {
             );
             const users = await inactiveUserService.getInactiveUsers();
             expect(users).toBeTruthy();
-            expect(users).toHaveLength(0);
+            expect(users.totalInactiveUsers).toBe(0);
         });
     });
     describe('Deleting inactive users', () => {

@@ -7,15 +7,16 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { DeleteInactiveUsers } from './DeleteInactiveUsers/DeleteInactiveUsers.tsx';
 
 export const InactiveUsersHeaderActions = () => {
-    const { inactiveUsers, refetchInactiveUsers, loading } = useInactiveUsers();
-    const { deleteInactiveUsers, errors: inactiveUsersApiErrors } =
+    const { inactiveUsers, refetchInactiveUsers, loading, totalInactiveUsers } =
+        useInactiveUsers();
+    const { bulkDeleteInactiveUsers, errors: inactiveUsersApiErrors } =
         useInactiveUsersApi();
     const { setToastData, setToastApiError } = useToast();
     const [showDelInactiveDialog, setShowDelInactiveDialog] = useState(false);
 
     const onDelInactive = async () => {
         try {
-            await deleteInactiveUsers(inactiveUsers.map((i) => i.id));
+            await bulkDeleteInactiveUsers();
             setToastData({
                 text: `Inactive users has been deleted`,
                 type: 'success',
@@ -42,7 +43,7 @@ export const InactiveUsersHeaderActions = () => {
                 closeDialog={() => setShowDelInactiveDialog(false)}
                 inactiveUsersLoading={loading}
                 inactiveUserApiErrors={inactiveUsersApiErrors}
-                inactiveUsers={inactiveUsers}
+                totalInactiveUsers={totalInactiveUsers}
                 removeInactiveUsers={onDelInactive}
             />
         </>

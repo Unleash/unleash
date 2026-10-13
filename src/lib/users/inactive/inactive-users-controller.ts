@@ -24,6 +24,7 @@ import type {
     UserService,
 } from '../../services/index.js';
 import { anonymise } from '../../util/index.js';
+import type { BasePaginationParameters } from '../../openapi/spec/base-pagination-parameters.js';
 import type { WithTransactional } from '../../db/transaction.js';
 export class InactiveUsersController extends Controller {
     private readonly logger: Logger;
@@ -87,7 +88,7 @@ export class InactiveUsersController extends Controller {
                     release: { stable: '5.10.0' },
                     operationId: 'deleteInactiveUsers',
                     summary: 'Deletes inactive users',
-                    description: `Deletes inactive users present in the id list passed in. An inactive user is a user that has not logged in in the last ${this.userInactivityThresholdInDays} days`,
+                    description: `Deletes users present in the id list passed in`,
                     tags: ['Users'],
                     requestBody: createRequestSchema('idsSchema'),
                     responses: {
@@ -119,11 +120,20 @@ export class InactiveUsersController extends Controller {
     }
 
     async getInactiveUsers(
-        _req: IAuthRequest,
+        req: IAuthRequest<unknown, unknown, unknown, BasePaginationParameters>,
         res: Response<InactiveUsersSchema>,
     ): Promise<void> {
         this.logger.info('Hitting inactive users');
-        let inactiveUsers = await this.inactiveUsersService.getInactiveUsers();
+        const { offset, limit } = req.query;
+        const normalizedLimit =
+            Number(limit) > 0 && Number(limit) <= 100 ? Number(limit) : 50;
+        const normalizedOffset = Number(offset) > 0 ? Number(offset) : 0;
+
+        let { inactiveUsers, totalInactiveUsers } =
+            await this.inactiveUsersService.getInactiveUsers(
+                normalizedOffset,
+                normalizedLimit,
+            );
         if (this.flagResolver.isEnabled('anonymiseEventLog')) {
             inactiveUsers = this.anonymiseUsers(inactiveUsers);
         }
@@ -131,7 +141,7 @@ export class InactiveUsersController extends Controller {
             200,
             res,
             inactiveUsersSchema.$id,
-            { version: 1, inactiveUsers },
+            { version: 1, inactiveUsers: inactiveUsers, totalInactiveUsers },
         );
     }
     anonymiseUsers(users: InactiveUserSchema[]): InactiveUserSchema[] {

@@ -14,6 +14,7 @@ import { RoleCell } from 'component/common/Table/cells/RoleCell/RoleCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import {
     type ColumnDef,
+    type PaginationState,
     getCoreRowModel,
     getSortedRowModel,
     useReactTable,
@@ -25,13 +26,22 @@ import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { InactiveUsersActionCell } from './InactiveUsersActionCell/InactiveUsersActionCell.tsx';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import DeleteUser from './DeleteUser/DeleteUser.tsx';
+import { PaginationBar } from 'component/common/Table/PaginationBar/PaginationBar.tsx';
 
 type InactiveUserRow = IInactiveUser & { rootRole?: number };
 
 export const InactiveUsersListBody = () => {
     const { removeUser, userApiErrors } = useAdminUsersApi();
     const { setToastData, setToastApiError } = useToast();
-    const { inactiveUsers, refetchInactiveUsers } = useInactiveUsers();
+    const [pagination, setPagination] = useState<PaginationState>({
+        pageIndex: 0,
+        pageSize: 50,
+    });
+    const { inactiveUsers, refetchInactiveUsers, totalInactiveUsers } =
+        useInactiveUsers(
+            pagination.pageSize,
+            pagination.pageIndex * pagination.pageSize,
+        );
     const { users, roles, loading: usersLoading } = useUsers();
     const [delDialog, setDelDialog] = useState(false);
     const [delUser, setDelUser] = useState<IInactiveUser>();
@@ -152,18 +162,44 @@ export const InactiveUsersListBody = () => {
                 <TextCell value={String(getValue() ?? '')} />
             ),
         },
+        state: {
+            pagination,
+        },
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
         autoResetAll: false,
         enableSortingRemoval: false,
         enableMultiSort: false,
+        rowCount: totalInactiveUsers,
+        manualPagination: true,
+        onPaginationChange: setPagination,
     });
 
     const rowCount = table.getRowModel().rows.length;
 
     return (
         <>
+            <PaginationBar
+                totalItems={totalInactiveUsers}
+                pageIndex={pagination.pageIndex}
+                pageSize={pagination.pageSize}
+                fetchPrevPage={table.previousPage}
+                fetchNextPage={table.nextPage}
+                setPageLimit={(limit) =>
+                    setPagination({ pageIndex: 0, pageSize: limit })
+                }
+            />
             <VirtualizedTable tableInstance={table} />
+            <PaginationBar
+                pageIndex={pagination.pageIndex}
+                pageSize={pagination.pageSize}
+                fetchPrevPage={table.previousPage}
+                fetchNextPage={table.nextPage}
+                setPageLimit={(limit) =>
+                    setPagination({ pageIndex: 0, pageSize: limit })
+                }
+                totalItems={totalInactiveUsers}
+            />
             <ConditionallyRender
                 condition={rowCount === 0}
                 show={

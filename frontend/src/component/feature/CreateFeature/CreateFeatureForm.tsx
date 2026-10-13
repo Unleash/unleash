@@ -2,7 +2,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
-import { type FormEvent, useMemo, useState } from 'react';
+import { type FormEvent, useId, useMemo, useState } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNavigate } from 'react-router';
 import {
@@ -20,6 +20,7 @@ import { Limit } from 'component/common/Limit/Limit';
 import { CreateFeatureDialogSidebar } from './CreateFeatureDialogSidebar.tsx';
 import { FlagTypeFieldset } from './FlagTypeFieldset.tsx';
 import { LifetimeFieldset } from './LifetimeFieldset.tsx';
+import { NamingPatternHint } from './NamingPatternHint.tsx';
 import { defaultLifetimeFor } from './flagTypes.ts';
 import { Section } from './CreateFeatureForm.styles.ts';
 import useFeatureForm, {
@@ -33,7 +34,6 @@ import useProjectOverview, {
 } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import type { CreateFeatureSchemaType } from 'openapi';
 import { HeaderBreadcrumb } from 'component/common/DialogFormTemplate/HeaderBreadcrumb.tsx';
-import { NamingPatternInfo } from 'component/common/DialogFormTemplate/NamingPatternInfo.tsx';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import type { CreateFeatureDialogProps } from 'component/project/Project/PaginatedProjectFeatureToggles/ProjectFeatureTogglesHeader/CreateFeatureDialog.tsx';
 import { useFlagLimits } from 'component/project/Project/PaginatedProjectFeatureToggles/ProjectFeatureTogglesHeader/useFlagLimits.tsx';
@@ -184,6 +184,10 @@ export const CreateFeatureForm = ({
         useGlobalFeatureSearch(1);
 
     const { project: projectInfo } = useProjectOverview(project);
+    const projectFlagNaming = projectInfo.featureNaming?.pattern
+        ? projectInfo.featureNaming
+        : undefined;
+    const namingPatternHintId = useId();
 
     const { globalFlagLimitReached, projectFlagLimitReached, limitMessage } =
         useFlagLimits({
@@ -266,13 +270,17 @@ export const CreateFeatureForm = ({
                     <Fields>
                         <BorderlessInput
                             variant='standard'
-                            placeholder='Enter-flag-name'
-                            aria-required
-                            aria-details={
-                                projectInfo.featureNaming?.pattern
-                                    ? 'naming-pattern-info'
-                                    : undefined
+                            placeholder={
+                                projectInfo.featureNaming?.example ||
+                                'Enter-flag-name'
                             }
+                            required
+                            onInvalid={(event) => {
+                                event.preventDefault();
+                                if (!errors.name) {
+                                    validateToggleName();
+                                }
+                            }}
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             error={Boolean(errors.name)}
@@ -285,6 +293,11 @@ export const CreateFeatureForm = ({
                             slotProps={{
                                 htmlInput: {
                                     'aria-label': 'Feature flag name',
+                                    ...(projectFlagNaming &&
+                                        !errors.name && {
+                                            'aria-describedby':
+                                                namingPatternHintId,
+                                        }),
                                     sx: (theme) => theme.typography.h1,
                                 },
                                 formHelperText: {
@@ -295,9 +308,10 @@ export const CreateFeatureForm = ({
                             data-testid='FORM_NAME_INPUT'
                             fullWidth
                         />
-                        {projectInfo.featureNaming?.pattern ? (
-                            <NamingPatternInfo
-                                naming={projectInfo.featureNaming}
+                        {projectFlagNaming ? (
+                            <NamingPatternHint
+                                id={namingPatternHintId}
+                                naming={projectFlagNaming}
                             />
                         ) : null}
                         <BorderlessInput

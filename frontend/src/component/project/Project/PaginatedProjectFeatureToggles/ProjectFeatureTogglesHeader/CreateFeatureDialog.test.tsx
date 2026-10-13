@@ -140,6 +140,31 @@ const setupNewFormApi = () => {
     ).requests;
 };
 
+test("the new create flag form shows the project's naming pattern under the name field", async () => {
+    setupNewFormApi();
+    testServerRoute(server, '/api/admin/projects/default/overview', {
+        featureNaming: {
+            pattern: '[a-z]+\\.[a-z]+',
+            example: 'checkout.banner',
+            description: 'dot separated',
+        },
+    });
+
+    renderDialog();
+
+    const pattern = await screen.findByText('^[a-z]+\\.[a-z]+$');
+    expect(pattern.closest('p')).toHaveTextContent(
+        'Naming pattern: dot separated, e.g. checkout.banner ^[a-z]+\\.[a-z]+$',
+    );
+    const nameInput = await getNameInput();
+    fireEvent.change(nameInput, { target: { value: 'checkout.banner' } });
+    fireEvent.focus(nameInput);
+    expect(nameInput).toHaveAccessibleDescription(
+        'Naming pattern: dot separated, e.g. checkout.banner ^[a-z]+\\.[a-z]+$',
+    );
+    await screen.findByPlaceholderText('checkout.banner');
+});
+
 test('the new create flag form posts the default lifetime when the user leaves it untouched', async () => {
     const requests = setupNewFormApi();
 

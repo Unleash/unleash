@@ -363,6 +363,34 @@ test('Can get features for project', async () => {
         });
 });
 
+test('core view omits environments and other derived flag fields', async () => {
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({ name: 'core-view-flag' })
+        .expect(201);
+
+    const { body } = await app.request
+        .get('/api/admin/projects/default/features?view=core')
+        .expect(200);
+    await app.request
+        .get('/api/admin/projects/default/features?view=core&namePrefix=core')
+        .expect(400);
+
+    const flag = body.features.find(
+        (feature) => feature.name === 'core-view-flag',
+    );
+    expect(flag).toEqual({
+        name: 'core-view-flag',
+        type: 'release',
+        description: null,
+        stale: false,
+        favorite: false,
+        impressionData: false,
+        createdAt: expect.any(String),
+        environments: [],
+    });
+});
+
 test('Can enable/disable environment for feature with strategies', async () => {
     const envName = 'enable-feature-environment';
     const featureName = 'com.test.enable.environment';

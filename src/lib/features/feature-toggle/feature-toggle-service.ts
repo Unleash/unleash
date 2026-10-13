@@ -73,6 +73,7 @@ import type {
     IFeatureStrategiesStore,
     StrategyBelongsToFeatureAndProjectParams,
 } from './types/feature-toggle-strategies-store-type.js';
+import type { ProjectFeatureCore } from './types/project-feature-core-type.js';
 import { DEFAULT_ENV } from '../../util/index.js';
 import type { Operation } from 'fast-json-patch';
 import fastJsonPatch from 'fast-json-patch';
@@ -1209,6 +1210,25 @@ export class FeatureToggleService {
         params: IFeatureProjectUserParams,
     ): Promise<IFeatureOverview[]> {
         return this.featureStrategiesStore.getFeatureOverview(params);
+    }
+
+    async getProjectFeaturesCore(
+        projectId: string,
+    ): Promise<ProjectFeatureCore[]> {
+        const features = await this.featureToggleStore.getAll({
+            project: projectId,
+            archived: false,
+        });
+        return features.map((feature) => ({
+            name: feature.name,
+            type: feature.type!,
+            description: feature.description ?? null,
+            stale: feature.stale ?? false,
+            favorite: false,
+            impressionData: feature.impressionData ?? false,
+            createdAt: feature.createdAt!,
+            environments: [],
+        }));
     }
 
     async getFeatureTypeCounts(

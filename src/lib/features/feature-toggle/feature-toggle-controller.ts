@@ -50,6 +50,7 @@ import type {
 } from '../../services/index.js';
 import { querySchema } from '../../schema/feature-schema.js';
 import type { BatchStaleSchema } from '../../openapi/spec/batch-stale-schema.js';
+import { projectFeaturesQueryParameters } from '../../openapi/spec/project-features-query-parameters.js';
 import type { WithTransactional } from '../../db/transaction.js';
 import type { PayloadSchemaService } from '../payload-schema/payload-schema-service.js';
 import { BadDataError } from '../../error/index.js';
@@ -431,6 +432,7 @@ export default class ProjectFeaturesController extends Controller {
                     tags: ['Features'],
                     release: { stable: '4.12.0' },
                     operationId: 'getFeatures',
+                    parameters: [...projectFeaturesQueryParameters],
                     responses: {
                         200: createResponseSchema('projectFeaturesSchema'),
                         ...getStandardResponses(400, 401, 403),
@@ -624,10 +626,33 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async getFeatures(
-        req: IAuthRequest<ProjectParam, any, any, AdminFeaturesQuerySchema>,
+        req: IAuthRequest<
+            ProjectParam,
+            any,
+            any,
+            AdminFeaturesQuerySchema & { view?: 'core' }
+        >,
         res: Response<ProjectFeaturesSchema>,
     ): Promise<void> {
         const { projectId } = req.params;
+
+        if (req.query.view === 'core') {
+            if (req.query.tag || req.query.namePrefix) {
+                throw new BadDataError(
+                    'The core view cannot be combined with the tag or namePrefix filters',
+                );
+            }
+            const features =
+                await this.featureService.getProjectFeaturesCore(projectId);
+            this.openApiService.respondWithValidation(
+                200,
+                res,
+                projectFeaturesSchema.$id,
+                { version: 2, features: serializeDates(features) },
+            );
+            return;
+        }
+
         const query = await this.prepQuery(req.query, projectId);
         const features = await this.featureService.getFeatureOverview({
             ...query,

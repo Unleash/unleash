@@ -118,6 +118,7 @@ export type UiFlags = {
     payloadSchemas?: boolean;
     singlePageStrategyForm?: boolean;
     feedbackModule?: boolean;
+    playgroundFeatureEvaluation?: boolean;
 };
 
 export interface IVersionInfo {

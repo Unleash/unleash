@@ -24,6 +24,7 @@ import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategy
 import type { ParametersSchema } from 'openapi/index.ts';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { parseParameterNumber } from 'utils/parseParameter.ts';
+import { PlainTextDescription } from './PlainTextDescription.tsx';
 
 export interface StrategyFormBodyProps<T extends StrategyFormState> {
     strategy: T;
@@ -100,28 +101,33 @@ const StyledAccordionHint = styled('span')(({ theme }) => ({
 }));
 
 const StyledForm = styled('form')(({ theme }) => ({
+    '--form-inset': theme.spacing(3),
     position: 'relative',
+    paddingTop: theme.spacing(4),
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+}));
+
+const FormMainContent = styled('div')(({ theme }) => ({
+    flex: 'auto',
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(2),
-    padding: theme.spacing(6),
-    paddingBottom: theme.spacing(16),
-    paddingTop: theme.spacing(4),
-    overflow: 'auto',
-    height: '100%',
+    paddingInline: 'var(--form-inset)',
 }));
 
-const StyledButtons = styled('div')(({ theme }) => ({
+const FormFooter = styled('div')({
+    position: 'sticky',
     bottom: 0,
-    right: 0,
-    left: 0,
-    position: 'absolute',
+});
+
+const StyledButtons = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
     paddingTop: theme.spacing(3),
-    paddingRight: theme.spacing(6),
-    paddingLeft: theme.spacing(6),
-    paddingBottom: theme.spacing(6),
+    paddingBottom: theme.spacing(3),
+    paddingInline: 'var(--form-inset)',
     backgroundColor: theme.palette.background.paper,
     justifyContent: 'end',
     borderTop: `1px solid ${theme.palette.divider}`,
@@ -250,103 +256,113 @@ export const StrategyFormBody = <T extends StrategyFormState>({
                     onSubmit(e);
                 }}
             >
-                <FeatureStrategyTitle
-                    title={strategy.title || ''}
-                    setTitle={handleTitleChange}
-                />
+                <FormMainContent>
+                    <FeatureStrategyTitle
+                        title={strategy.title || ''}
+                        setTitle={handleTitleChange}
+                    />
 
-                <StyledAccordion defaultExpanded>
-                    <AccordionSummary
-                        expandIcon={<ExpandMore />}
-                        slotProps={accordionSummarySlotProps(theme)}
-                    >
-                        <StyledAccordionHeading>
-                            Target audience
-                        </StyledAccordionHeading>
-                        <StyledAccordionHint>
-                            {targetAudience === 'everyone'
-                                ? 'Everyone in production'
-                                : 'A subset of users'}
-                        </StyledAccordionHint>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <FeatureStrategyTargetAudience
-                            strategy={strategy}
-                            setStrategy={setStrategy}
-                            targetAudience={targetAudience}
-                            onTargetAudienceChange={handleTargetAudienceChange}
-                        />
-                    </AccordionDetails>
-                </StyledAccordion>
-
-                <StyledAccordion defaultExpanded>
-                    <AccordionSummary
-                        expandIcon={<ExpandMore />}
-                        slotProps={accordionSummarySlotProps(theme)}
-                    >
-                        <StyledAccordionHeading>
-                            {strategy.name === 'flexibleRollout'
-                                ? 'Rollout percentage'
-                                : strategyDefinition.displayName}
-                        </StyledAccordionHeading>
-                        <StyledAccordionHint>{rolloutHint}</StyledAccordionHint>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <FeatureStrategyType
-                            strategy={strategy}
-                            strategyDefinition={strategyDefinition}
-                            updateParameter={updateParameter}
-                            errors={errors}
-                            groupIdTooltip={groupIdTooltip}
-                        />
-                    </AccordionDetails>
-                </StyledAccordion>
-
-                {showVariants && (
-                    <StyledAccordion>
+                    <StyledAccordion defaultExpanded>
                         <AccordionSummary
                             expandIcon={<ExpandMore />}
                             slotProps={accordionSummarySlotProps(theme)}
                         >
                             <StyledAccordionHeading>
-                                Variants
+                                Target audience
                             </StyledAccordionHeading>
                             <StyledAccordionHint>
-                                {strategy.variants?.length ? (
-                                    <>{strategy.variants.length} variants</>
-                                ) : (
-                                    'Same for everyone'
-                                )}
+                                {targetAudience === 'everyone'
+                                    ? 'Everyone in production'
+                                    : 'A subset of users'}
                             </StyledAccordionHint>
                         </AccordionSummary>
                         <AccordionDetails>
-                            <NewStrategyVariants
+                            <FeatureStrategyTargetAudience
                                 strategy={strategy}
                                 setStrategy={setStrategy}
-                                canRenamePreexistingVariants={
-                                    canRenamePreexistingVariants
+                                targetAudience={targetAudience}
+                                onTargetAudienceChange={
+                                    handleTargetAudienceChange
                                 }
                             />
                         </AccordionDetails>
                     </StyledAccordion>
-                )}
 
-                {allowEnableDisable ? (
-                    <FeatureStrategyEnabledDisabled
-                        enabled={!strategy?.disabled}
-                        onToggleEnabled={() =>
-                            setStrategy((strategyState) => ({
-                                ...strategyState,
-                                disabled: !strategyState.disabled,
-                            }))
-                        }
-                    />
-                ) : null}
+                    <StyledAccordion defaultExpanded>
+                        <AccordionSummary
+                            expandIcon={<ExpandMore />}
+                            slotProps={accordionSummarySlotProps(theme)}
+                        >
+                            <StyledAccordionHeading>
+                                {strategy.name === 'flexibleRollout'
+                                    ? 'Rollout percentage'
+                                    : strategyDefinition.displayName}
+                            </StyledAccordionHeading>
+                            <StyledAccordionHint>
+                                {rolloutHint}
+                            </StyledAccordionHint>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <FeatureStrategyType
+                                strategy={strategy}
+                                strategyDefinition={strategyDefinition}
+                                updateParameter={updateParameter}
+                                errors={errors}
+                                groupIdTooltip={groupIdTooltip}
+                            />
+                        </AccordionDetails>
+                    </StyledAccordion>
 
-                {statusContent}
-                {beforeFooter}
+                    {showVariants && (
+                        <StyledAccordion>
+                            <AccordionSummary
+                                expandIcon={<ExpandMore />}
+                                slotProps={accordionSummarySlotProps(theme)}
+                            >
+                                <StyledAccordionHeading>
+                                    Variants
+                                </StyledAccordionHeading>
+                                <StyledAccordionHint>
+                                    {strategy.variants?.length ? (
+                                        <>{strategy.variants.length} variants</>
+                                    ) : (
+                                        'Same for everyone'
+                                    )}
+                                </StyledAccordionHint>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <NewStrategyVariants
+                                    strategy={strategy}
+                                    setStrategy={setStrategy}
+                                    canRenamePreexistingVariants={
+                                        canRenamePreexistingVariants
+                                    }
+                                />
+                            </AccordionDetails>
+                        </StyledAccordion>
+                    )}
 
-                <StyledButtons>{children}</StyledButtons>
+                    {allowEnableDisable ? (
+                        <FeatureStrategyEnabledDisabled
+                            enabled={!strategy?.disabled}
+                            onToggleEnabled={() =>
+                                setStrategy((strategyState) => ({
+                                    ...strategyState,
+                                    disabled: !strategyState.disabled,
+                                }))
+                            }
+                        />
+                    ) : null}
+
+                    {statusContent}
+                    {beforeFooter}
+                </FormMainContent>
+
+                <FormFooter>
+                    <PlainTextDescription strategy={strategy} />
+
+                    <StyledButtons>{children}</StyledButtons>
+                </FormFooter>
             </StyledForm>
         </>
     );

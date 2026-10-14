@@ -1,5 +1,5 @@
 import type { Components, Theme } from '@mui/material/styles';
-import { focusOutline } from './themeStyles';
+import { focusOutline, switchBaseIconFocusOutlineOffset } from './themeStyles';
 
 /**
  * Design system v2 — shared sizing and behavior for controls
@@ -250,6 +250,24 @@ export const controlOverrides: Components<Theme> = {
         styleOverrides: {
             root: ({ theme }) => ({
                 '&.Mui-focusVisible': focusOutline(theme),
+            }),
+        },
+    },
+
+    MuiRadio: {
+        styleOverrides: {
+            root: {
+                '&.Mui-focusVisible': switchBaseIconFocusOutlineOffset,
+            },
+        },
+    },
+    MuiCheckbox: {
+        styleOverrides: {
+            root: ({ theme }) => ({
+                '&.Mui-focusVisible': {
+                    ...switchBaseIconFocusOutlineOffset,
+                    borderRadius: theme.spacing(2),
+                },
             }),
         },
     },

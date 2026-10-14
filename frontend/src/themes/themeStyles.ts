@@ -2,17 +2,35 @@ import { makeStyles } from 'tss-react/mui';
 import type { Theme } from '@mui/material';
 import type { CSSProperties } from 'react';
 
+const FOCUS_OUTLINE_OFFSET = 2;
+const SWITCH_BASE_PADDING = 9;
+const MATERIAL_ICON_INSET = 2;
+
 export const focusOutline = (theme: Theme) => ({
     outline: 0,
     outlineStyle: 'solid',
     outlineWidth: 2,
-    outlineOffset: 2,
+    outlineOffset: FOCUS_OUTLINE_OFFSET,
     outlineColor: theme.palette.primary.main,
 });
 
 export const focusable = (theme: Theme) => ({
     '&:focus-visible': { ...focusOutline(theme), borderRadius: '2px' },
 });
+
+// Switch is padded 9px around the visible control for comfortable click/touch target,
+// so the outline is rendered at 9px + 2px offset.
+// Pulling it back to match 2px from the padded box's edge, without shrinking the hit target.
+export const switchFocusOutlineOffset = {
+    outlineOffset: FOCUS_OUTLINE_OFFSET - SWITCH_BASE_PADDING,
+};
+
+// Radio and Checkbox, on top of same 9px padding as Switch, render an internally-padded icon inside that padded box.
+// Pulling the outline in by that extra ~2px too, on top of the SwitchBase padding above.
+export const switchBaseIconFocusOutlineOffset = {
+    outlineOffset:
+        FOCUS_OUTLINE_OFFSET - SWITCH_BASE_PADDING - MATERIAL_ICON_INSET,
+};
 
 export const contentSpacingY = (theme: Theme) => ({
     '& > *': {

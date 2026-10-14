@@ -189,7 +189,7 @@ export class ApiTokenV2Store implements IApiTokenV2Store {
                 this.db(TABLE)
                     .select('selector')
                     .where('user_created', false)
-                    .andWhere('seen_at', '<', cutoff)
+                    .andWhereRaw('COALESCE(seen_at, created_at) < ?', [cutoff])
                     .limit(CLEANUP_BATCH_SIZE),
             )
             .delete()

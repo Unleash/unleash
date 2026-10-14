@@ -57,6 +57,67 @@ const runCleanup = () =>
     );
 
 describe('API TOKENS V2 cleanup', () => {
+    test('cleans up old never-seen system tokens while preserving recent and user-created tokens', async () => {
+        const oldDate = subDays(new Date(), 30);
+        const recentDate = subDays(new Date(), 1);
+        const tokens = [
+            {
+                selector: 'old-unseen',
+                created_at: oldDate,
+                seen_at: null,
+                user_created: false,
+            },
+            {
+                selector: 'recent-unseen',
+                created_at: recentDate,
+                seen_at: null,
+                user_created: false,
+            },
+            {
+                selector: 'recently-seen',
+                created_at: oldDate,
+                seen_at: recentDate,
+                user_created: false,
+            },
+            {
+                selector: 'old-user-created',
+                created_at: oldDate,
+                seen_at: null,
+                user_created: true,
+            },
+        ];
+        await db.rawDatabase('api_tokens_v2').insert(
+            tokens.map((token) => ({
+                verifier: `verifier-for-${token.selector}`,
+                token_name: `token-${token.selector}`,
+                type: ApiTokenType.BACKEND,
+                environment: DEFAULT_ENV,
+                ...token,
+            })),
+        );
+
+        await runCleanup();
+
+        expect((await remainingSelectors()).sort()).toEqual([
+            'old-user-created',
+            'recent-unseen',
+            'recently-seen',
+        ]);
+        const events = await deletionEvents();
+        expect(events).toHaveLength(1);
+        expect(events[0].pre_data).toMatchObject({
+            tokenName: 'token-old-unseen',
+        });
+        const remainingUnseenTokens = await db
+            .rawDatabase('api_tokens_v2')
+            .whereIn('selector', ['recent-unseen', 'old-user-created'])
+            .select('seen_at');
+        expect(remainingUnseenTokens).toEqual([
+            { seen_at: null },
+            { seen_at: null },
+        ]);
+    });
+
     test('writes one audit event per deleted token', async () => {
         await insertStaleSystemToken('stale-system');
 

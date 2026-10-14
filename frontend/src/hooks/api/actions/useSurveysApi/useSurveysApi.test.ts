@@ -64,7 +64,7 @@ describe('useSurveysApi', () => {
 
         expect(result).toEqual({
             tag: 'added',
-            strategies: { status: 'added' },
+            strategies: 'added',
         });
         expect(api.createFlag.requests).toEqual([
             { name: 'survey-onboarding', type: 'experiment' },
@@ -80,7 +80,10 @@ describe('useSurveysApi', () => {
             expect(strategy.requests).toMatchObject([
                 {
                     name: 'flexibleRollout',
-                    parameters: { rollout: '100' },
+                    parameters: {
+                        rollout: '100',
+                        groupId: 'survey-onboarding',
+                    },
                     variants: [
                         {
                             name: 'survey',
@@ -115,27 +118,21 @@ describe('useSurveysApi', () => {
         expect(api.createTagType.requests).toHaveLength(0);
     });
 
-    it('reports the environments it could not add the survey to', async () => {
+    it('reports the strategies as failed when an environment rejects the survey', async () => {
         setupApi({ failingEnvironment: 'development' });
 
         const result = await createSurvey();
 
-        expect(result.strategies).toEqual({
-            status: 'failed',
-            environments: ['development'],
-        });
+        expect(result.strategies).toBe('failed');
     });
 
-    it('reports every strategy as missing when the flag cannot be read back', async () => {
+    it('reports the strategies as failed when the flag cannot be read back', async () => {
         setupApi({});
         testServerRoute(server, flagPath, {}, 'get', 500);
 
         const result = await createSurvey();
 
-        expect(result.strategies).toEqual({
-            status: 'failed',
-            environments: 'all',
-        });
+        expect(result.strategies).toBe('failed');
     });
 
     it('throws when the flag cannot be created', async () => {

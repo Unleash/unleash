@@ -7,13 +7,11 @@ import useTagTypesApi from '../useTagTypesApi/useTagTypesApi.js';
 
 const SURVEY_TAG = { type: 'role', value: 'survey' };
 
-export type SurveyStrategiesResult =
-    | { status: 'added' }
-    | { status: 'failed'; environments: string[] | 'all' };
+type StepResult = 'added' | 'failed';
 
 export type CreateSurveyResult = {
-    tag: 'added' | 'failed';
-    strategies: SurveyStrategiesResult;
+    tag: StepResult;
+    strategies: StepResult;
 };
 
 const surveyStrategy = (
@@ -78,7 +76,7 @@ export const useSurveysApi = () => {
         projectId: string,
         name: string,
         surveyJson: string,
-    ): Promise<SurveyStrategiesResult> => {
+    ): Promise<StepResult> => {
         let environments: string[];
         try {
             const flag: FeatureSchema = await (
@@ -88,7 +86,7 @@ export const useSurveysApi = () => {
                 (environment) => environment.name,
             );
         } catch {
-            return { status: 'failed', environments: 'all' };
+            return 'failed';
         }
 
         const results = await Promise.allSettled(
@@ -101,12 +99,9 @@ export const useSurveysApi = () => {
                 ),
             ),
         );
-        const failed = environments.filter(
-            (_, index) => results[index].status === 'rejected',
-        );
-        return failed.length === 0
-            ? { status: 'added' }
-            : { status: 'failed', environments: failed };
+        return results.some((result) => result.status === 'rejected')
+            ? 'failed'
+            : 'added';
     };
 
     const createSurvey = async (

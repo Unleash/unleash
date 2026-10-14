@@ -1,0 +1,199 @@
+import { beforeAll, describe, expect, it } from 'vitest';
+import { screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { Route, Routes, useParams } from 'react-router';
+import ToastRenderer from 'component/common/ToastRenderer/ToastRenderer';
+import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import type { IPermission } from 'interfaces/user';
+import { render } from 'utils/testRenderer';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
+import { CreateSurvey } from './CreateSurvey.tsx';
+
+const server = testServerSetup();
+
+// workaround: jsdom has no layout,
+// but the survey editor (CodeMirror) measures text ranges.
+beforeAll(() => {
+    Range.prototype.getClientRects = () =>
+        ({
+            length: 0,
+            item: () => null,
+            [Symbol.iterator]: [][Symbol.iterator],
+        }) as unknown as DOMRectList;
+    Range.prototype.getBoundingClientRect = () => new DOMRect();
+});
+
+const flagName = 'survey-onboarding';
+const featuresPath = (projectId: string) =>
+    `/api/admin/projects/${projectId}/features`;
+const flagPath = (projectId: string) =>
+    `${featuresPath(projectId)}/${flagName}`;
+
+const setupApi = ({
+    projectId = 'default',
+    tagStatus = 200,
+    strategyStatus = 200,
+} = {}) => {
+    testServerRoute(server, '/api/admin/ui-config', {
+        flags: { feedbackModule: true },
+    });
+    testServerRoute(server, '/api/admin/projects', {
+        projects: [
+            { id: 'default', name: 'Default' },
+            { id: 'marketing', name: 'Marketing' },
+        ],
+    });
+    const createFlag = testServerRoute(
+        server,
+        featuresPath(projectId),
+        {},
+        'post',
+    );
+    testServerRoute(
+        server,
+        '/api/admin/tag-types/role',
+        { name: 'role' },
+        'get',
+        tagStatus,
+    );
+    testServerRoute(server, `/api/admin/features/${flagName}/tags`, {}, 'put');
+    testServerRoute(server, flagPath(projectId), {
+        environments: [{ name: 'development' }],
+    });
+    testServerRoute(
+        server,
+        `${flagPath(projectId)}/environments/development/strategies`,
+        {},
+        'post',
+        strategyStatus,
+    );
+    return { createFlag };
+};
+
+const FlagPage = () => {
+    const { projectId, featureId } = useParams();
+    return <p>{`Flag page for ${projectId}/${featureId}`}</p>;
+};
+
+const renderPage = (
+    permissions: IPermission[] = [{ permission: CREATE_FEATURE }],
+) =>
+    render(
+        <>
+            <ToastRenderer />
+            <Routes>
+                <Route path='/surveys/create' element={<CreateSurvey />} />
+                <Route
+                    path='/projects/:projectId/features/:featureId'
+                    element={<FlagPage />}
+                />
+            </Routes>
+        </>,
+        { route: '/surveys/create', permissions },
+    );
+
+const submitSurvey = async () => {
+    await userEvent.type(
+        await screen.findByLabelText('Flag name'),
+        'onboarding',
+    );
+    await userEvent.click(
+        screen.getByRole('button', { name: 'Create survey' }),
+    );
+};
+
+describe('CreateSurvey', () => {
+    it('creates the survey in the chosen project and opens its flag', async () => {
+        const { createFlag } = setupApi({ projectId: 'marketing' });
+        renderPage();
+
+        await userEvent.click(
+            await screen.findByRole('combobox', { name: 'Project' }),
+        );
+        await userEvent.click(
+            await screen.findByRole('option', { name: 'Marketing' }),
+        );
+        await submitSurvey();
+
+        await screen.findByText('Flag page for marketing/survey-onboarding');
+        await screen.findByText('Survey created');
+        expect(createFlag.requests).toMatchObject([{ name: flagName }]);
+    });
+
+    it.each([
+        ['the tag', { tagStatus: 500 }],
+        ['the strategy', { strategyStatus: 500 }],
+    ])('opens the flag with a warning when %s cannot be added', async (_, failure) => {
+        setupApi(failure);
+        renderPage();
+
+        await submitSurvey();
+
+        await screen.findByText('Flag page for default/survey-onboarding');
+        await screen.findByText(
+            'Survey created, but some steps failed. Make sure the strategy is set up and the role:survey tag is applied.',
+        );
+    });
+
+    it('rejects a flag name that is only the survey prefix', async () => {
+        const { createFlag } = setupApi();
+        renderPage();
+
+        await userEvent.click(
+            await screen.findByRole('button', { name: 'Create survey' }),
+        );
+
+        await screen.findByText('Must start with "survey-" followed by a name');
+        expect(createFlag.requests).toHaveLength(0);
+    });
+
+    it('rejects a payload that is not a valid survey', async () => {
+        const { createFlag } = setupApi();
+        renderPage();
+
+        const editor = await waitFor(() => {
+            const element = document.querySelector('.cm-content');
+            if (!element) throw new Error('editor not rendered');
+            return element as HTMLElement;
+        });
+        editor.textContent = JSON.stringify({ title: 'No questions' });
+        await submitSurvey();
+
+        await screen.findByText(
+            'Not a valid survey. Check the kind, version, title and questions.',
+        );
+        expect(createFlag.requests).toHaveLength(0);
+    });
+
+    it('does not create the survey in a project the user cannot create flags in', async () => {
+        const { createFlag } = setupApi();
+        renderPage([{ permission: CREATE_FEATURE, project: 'marketing' }]);
+
+        await userEvent.type(
+            await screen.findByLabelText('Flag name'),
+            'onboarding',
+        );
+        const submit = screen.getByRole('button', { name: 'Access denied' });
+        await userEvent.click(submit);
+
+        expect(submit).toHaveAttribute('aria-disabled', 'true');
+        expect(createFlag.requests).toHaveLength(0);
+    });
+
+    it('stays on the form and shows the error when the flag cannot be created', async () => {
+        setupApi();
+        testServerRoute(
+            server,
+            featuresPath('default'),
+            { message: 'A flag with that name already exists' },
+            'post',
+            409,
+        );
+        renderPage();
+
+        await submitSurvey();
+
+        await screen.findByText(/A flag with that name already exists/);
+        expect(screen.queryByText(/Flag page/)).not.toBeInTheDocument();
+    });
+});

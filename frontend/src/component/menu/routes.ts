@@ -59,6 +59,7 @@ import { EditReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/
 import { UnknownFlagsTable } from 'component/unknownFlags/UnknownFlagsTable';
 import { ChangeRequests } from 'component/changeRequest/ChangeRequests/ChangeRequests';
 import { LazyStoriesPage } from 'component/stories/LazyStoriesPage.tsx';
+import { CreateSurvey } from 'component/feedbackModule/CreateSurvey/CreateSurvey';
 
 export const routes: IRoute[] = [
     // Splash
@@ -320,6 +321,15 @@ export const routes: IRoute[] = [
         type: 'protected',
         menu: { main: true },
         enterprise: true,
+    },
+    {
+        path: '/surveys/create',
+        title: 'Create survey',
+        component: CreateSurvey,
+        type: 'protected',
+        flag: 'feedbackModule',
+        enterprise: true,
+        menu: {},
     },
     {
         path: '/feedback',

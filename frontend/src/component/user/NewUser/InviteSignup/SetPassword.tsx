@@ -192,7 +192,7 @@ export const SetPassword = ({
                 fullWidth
                 disabled={!submittable}
             >
-                Customize Unleash
+                Get started
             </StyledPrimaryButton>
         </StyledForm>
     );

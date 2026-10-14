@@ -88,7 +88,7 @@ test('sets a password for an invite link once the requirements are met', async (
 
     await screen.findByText('Set password');
     expect(screen.getByLabelText('Email')).toHaveValue('invitee@getunleash.io');
-    const submit = screen.getByRole('button', { name: 'Customize Unleash' });
+    const submit = screen.getByRole('button', { name: 'Get started' });
 
     await userEvent.type(screen.getByLabelText('Full name'), 'Invitee');
     await userEvent.type(screen.getByLabelText('Password'), 'weakpass');
@@ -143,7 +143,7 @@ test('sets a password for a reset token without asking for a name', async () => 
     expect(screen.queryByLabelText('Full name')).not.toBeInTheDocument();
 
     await userEvent.type(screen.getByLabelText('Password'), 'Sup3r-secret');
-    const submit = screen.getByRole('button', { name: 'Customize Unleash' });
+    const submit = screen.getByRole('button', { name: 'Get started' });
     await waitFor(() => expect(submit).toBeEnabled());
     await userEvent.click(submit);
 
@@ -179,7 +179,7 @@ test('falls back to the login page when automatic login fails', async () => {
     await userEvent.click(screen.getByText('Continue with email'));
     await userEvent.type(await screen.findByLabelText('Full name'), 'Invitee');
     await userEvent.type(screen.getByLabelText('Password'), 'Sup3r-secret');
-    const submit = screen.getByRole('button', { name: 'Customize Unleash' });
+    const submit = screen.getByRole('button', { name: 'Get started' });
     await waitFor(() => expect(submit).toBeEnabled());
     await userEvent.click(submit);
 

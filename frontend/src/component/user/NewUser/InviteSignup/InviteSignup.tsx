@@ -197,7 +197,7 @@ export const InviteSignup = () => {
                 throw new Error('Password login is not available');
             }
             await passwordAuth(authDetails.path, email, password);
-            refetchUser();
+            await refetchUser();
             navigate('/', { replace: true });
         } catch {
             navigate('/login?invited=true');

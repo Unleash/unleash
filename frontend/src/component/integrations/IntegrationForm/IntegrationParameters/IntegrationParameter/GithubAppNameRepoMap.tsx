@@ -63,21 +63,20 @@ const useProjectAppNames = (projectId: string) => {
     };
 };
 
-const repositoriesFromParameters = (
-    parameters: AddonSchema['parameters'],
-): string[] => {
-    const defaultRepository = parameters?.defaultRepository;
-    if (typeof defaultRepository !== 'string') return [];
-
-    return [
+export const knownRepositories = (map: AppNameRepoMap): string[] =>
+    [
         ...new Set(
-            defaultRepository
-                .split(',')
-                .map((repository) => repository.trim())
-                .filter(Boolean),
+            Object.values(map).flatMap((appNames) =>
+                Object.values(appNames).flat(),
+            ),
         ),
-    ];
-};
+    ].sort((a, b) => a.localeCompare(b));
+
+export const normalizeRepositories = (repositories: string[]): string[] => [
+    ...new Set(
+        repositories.map((repository) => repository.trim()).filter(Boolean),
+    ),
+];
 
 const ProjectCard = styled('section')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -156,16 +155,19 @@ const AppNameRow = ({
             <Autocomplete
                 id={inputId}
                 multiple
+                freeSolo
+                autoSelect
                 size='small'
                 options={repositories}
-                disableCloseOnSelect
                 value={selected}
-                onChange={(_, value) => onChange(value)}
+                onChange={(_, value) => onChange(normalizeRepositories(value))}
                 renderInput={(params) => (
                     <TextField
                         {...params}
                         placeholder={
-                            selected.length ? undefined : 'Select repositories'
+                            selected.length
+                                ? undefined
+                                : 'Type a repository and press Enter'
                         }
                     />
                 )}
@@ -236,7 +238,6 @@ const ProjectAppNames = ({
 export interface IAppNameRepoMapEditorProps {
     definition: AddonParameterSchema;
     projects: string[];
-    repositories: string[];
     value: AppNameRepoMap;
     onChange: (value: AppNameRepoMap) => void;
 }
@@ -244,10 +245,14 @@ export interface IAppNameRepoMapEditorProps {
 export const AppNameRepoMapEditor = ({
     definition,
     projects,
-    repositories,
     value: appNameRepoMap,
     onChange,
 }: IAppNameRepoMapEditorProps) => {
+    const repositories = useMemo(
+        () => knownRepositories(appNameRepoMap),
+        [appNameRepoMap],
+    );
+
     const setRepositories =
         (projectId: string) => (appName: string, selected: string[]) => {
             onChange({
@@ -312,7 +317,6 @@ export const GithubAppNameRepoMap = ({
         <AppNameRepoMapEditor
             definition={definition}
             projects={projects}
-            repositories={repositoriesFromParameters(config.parameters)}
             value={value}
             onChange={onChange}
         />

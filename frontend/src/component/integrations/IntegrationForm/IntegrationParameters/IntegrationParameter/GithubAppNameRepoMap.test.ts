@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { toAppNameRepoMap, toMappings } from './GithubAppNameRepoMap';
+import {
+    knownRepositories,
+    normalizeRepositories,
+    toAppNameRepoMap,
+    toMappings,
+} from './GithubAppNameRepoMap';
 
 describe('reading the stored mappings', () => {
     it('groups rows by project and app name', () => {
@@ -74,5 +79,23 @@ describe('writing the mappings back', () => {
         ];
 
         expect(toMappings(toAppNameRepoMap(stored))).toEqual(stored);
+    });
+});
+
+describe('entering repositories', () => {
+    it('trims, drops empty entries and removes duplicates', () => {
+        expect(normalizeRepositories([' a ', 'b', '', 'a', '  '])).toEqual([
+            'a',
+            'b',
+        ]);
+    });
+
+    it('suggests every repository already mapped, sorted and deduplicated', () => {
+        expect(
+            knownRepositories({
+                default: { web: ['web', 'shared'] },
+                other: { api: ['shared', 'api'] },
+            }),
+        ).toEqual(['api', 'shared', 'web']);
     });
 });

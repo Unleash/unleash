@@ -72,11 +72,10 @@ const createSchedulerTestService = ({
 
 test('Schedules job immediately', async () => {
     const { schedulerService } = createSchedulerTestService();
-    const NO_JITTER = 0;
 
     const job = vi.fn() as () => Promise<void>;
 
-    await schedulerService.schedule(job, 10, 'test-id', NO_JITTER);
+    await schedulerService.schedule(job, 10, 'test-id', { initialDelayMs: 0 });
 
     expect(job).toHaveBeenCalledTimes(1);
     schedulerService.stop();
@@ -176,7 +175,9 @@ test('Can handle crash of a async job', async () => {
         await Promise.reject('async reason');
     };
 
-    await schedulerService.schedule(job, 50, 'test-id-10', 0);
+    await schedulerService.schedule(job, 50, 'test-id-10', {
+        initialDelayMs: 0,
+    });
     await ms(75);
 
     schedulerService.stop();
@@ -234,13 +235,13 @@ it('should emit scheduler job time event when scheduled function is run', async 
     schedulerService.stop();
 });
 
-test('Delays initial job execution by jitter duration', async () => {
+test('Delays initial job execution by the initial delay', async () => {
     const { schedulerService } = createSchedulerTestService();
 
     const job = vi.fn() as () => Promise<void>;
-    const jitterMs = 10;
-
-    await schedulerService.schedule(job, 10000, 'test-id', jitterMs);
+    await schedulerService.schedule(job, 10000, 'test-id', {
+        initialDelayMs: 10,
+    });
     expect(job).toHaveBeenCalledTimes(0);
 
     await ms(50);
@@ -248,12 +249,14 @@ test('Delays initial job execution by jitter duration', async () => {
     schedulerService.stop();
 });
 
-test('Offsets every run by the jitter duration', async () => {
+test('Offsets every run by the initial delay', async () => {
     vi.useFakeTimers();
     const { schedulerService } = createSchedulerTestService();
     const job = vi.fn() as () => Promise<void>;
 
-    await schedulerService.schedule(job, 100, 'test-id', 25);
+    await schedulerService.schedule(job, 100, 'test-id', {
+        initialDelayMs: 25,
+    });
 
     await vi.advanceTimersByTimeAsync(120);
     expect(job).toHaveBeenCalledTimes(1);
@@ -276,7 +279,6 @@ test('Does not apply jitter if schedule interval is smaller than max jitter', as
 
 test('Does not allow to run scheduled job when it is already pending', async () => {
     const { schedulerService } = createSchedulerTestService();
-    const NO_JITTER = 0;
 
     const job = vi.fn() as () => Promise<void>;
     const slowJob = async () => {
@@ -284,7 +286,9 @@ test('Does not allow to run scheduled job when it is already pending', async () 
         await ms(25);
     };
 
-    void schedulerService.schedule(slowJob, 10, 'test-id', NO_JITTER);
+    void schedulerService.schedule(slowJob, 10, 'test-id', {
+        initialDelayMs: 0,
+    });
 
     // scheduler had 2 chances to run but the initial slowJob was pending
     await ms(25);

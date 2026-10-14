@@ -62,7 +62,7 @@ export const scheduleServices = (
         },
         minutesToMilliseconds(1),
         'fetchActiveTokens',
-        0, // no jitter, we need tokens at startup
+        { initialDelayMs: 0 }, // we need tokens at startup
     );
 
     schedulerService.schedule(
@@ -75,7 +75,7 @@ export const scheduleServices = (
         apiTokenV2Service.pollTokenChanges.bind(apiTokenV2Service),
         secondsToMilliseconds(10),
         'pollApiTokenV2Changes',
-        0,
+        { initialDelayMs: 0 },
     );
 
     // TODO this works fine for keeping labeledAppCounts up to date, but
@@ -163,7 +163,7 @@ export const scheduleServices = (
         frontendApiService.fetchFrontendSettings.bind(frontendApiService),
         minutesToMilliseconds(2),
         'fetchFrontendSettings',
-        0,
+        { initialDelayMs: 0 },
     );
 
     schedulerService.schedule(

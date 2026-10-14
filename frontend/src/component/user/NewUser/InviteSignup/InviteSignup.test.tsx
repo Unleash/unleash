@@ -13,6 +13,7 @@ const setup = () => {
     testServerRoute(server, '/api/admin/ui-config', {});
     testServerRoute(server, '/api/admin/user', {
         type: 'password',
+        path: '/auth/simple/login',
         defaultHidden: false,
         options: [
             {
@@ -70,6 +71,12 @@ test('sets a password for an invite link once the requirements are met', async (
     );
 
     testServerRoute(server, '/auth/reset/validate-password', {}, 'post');
+    const { requests: loginRequests } = testServerRoute(
+        server,
+        '/auth/simple/login',
+        {},
+        'post',
+    );
 
     render(<InviteSignup />, { route: '/new-user?invite=valid-secret' });
 
@@ -101,6 +108,10 @@ test('sets a password for an invite link once the requirements are met', async (
             },
         ]),
     );
+    await waitFor(() => expect(window.location.pathname).toBe('/'));
+    expect(loginRequests).toEqual([
+        { username: 'invitee@getunleash.io', password: 'weakpassW0rd!' },
+    ]);
 });
 
 test('sets a password for a reset token without asking for a name', async () => {
@@ -116,6 +127,12 @@ test('sets a password for a reset token without asking for a name', async () => 
     );
 
     testServerRoute(server, '/auth/reset/validate-password', {}, 'post');
+    const { requests: loginRequests } = testServerRoute(
+        server,
+        '/auth/simple/login',
+        {},
+        'post',
+    );
 
     render(<InviteSignup />, { route: '/new-user?token=valid-token' });
 
@@ -134,5 +151,37 @@ test('sets a password for a reset token without asking for a name', async () => 
         expect(requests).toEqual([
             { token: 'valid-token', password: 'Sup3r-secret' },
         ]),
+    );
+    await waitFor(() => expect(window.location.pathname).toBe('/'));
+    expect(loginRequests).toEqual([
+        { username: 'invitee@getunleash.io', password: 'Sup3r-secret' },
+    ]);
+});
+
+test('falls back to the login page when automatic login fails', async () => {
+    setup();
+    testServerRoute(server, '/auth/reset/validate', {
+        email: 'invitee@getunleash.io',
+    });
+    testServerRoute(server, '/auth/reset/password', {}, 'post');
+    testServerRoute(server, '/auth/reset/validate-password', {}, 'post');
+    testServerRoute(server, '/auth/simple/login', {}, 'post', 401);
+
+    render(<InviteSignup />, { route: '/new-user?token=valid-token' });
+
+    await screen.findByText("You've been invited to join Unleash");
+    await userEvent.click(screen.getByText('Continue with email'));
+    await userEvent.type(
+        await screen.findByLabelText('Password'),
+        'Sup3r-secret',
+    );
+    const submit = screen.getByRole('button', { name: 'Customize Unleash' });
+    await waitFor(() => expect(submit).toBeEnabled());
+    await userEvent.click(submit);
+
+    await waitFor(() =>
+        expect(`${window.location.pathname}${window.location.search}`).toBe(
+            '/login?reset=true',
+        ),
     );
 });

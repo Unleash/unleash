@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import VisibilityOffOutlined from '@mui/icons-material/VisibilityOffOutlined';
 import VisibilityOutlined from '@mui/icons-material/VisibilityOutlined';
+import ResetPasswordError from '../../common/ResetPasswordError/ResetPasswordError.tsx';
 import { PasswordRequirementsChecker } from '../../common/PasswordRequirementsChecker/PasswordRequirementsChecker.tsx';
 
 const StyledForm = styled('form')(({ theme }) => ({
@@ -72,6 +73,7 @@ interface ISetPasswordProps {
     email: string;
     requireName: boolean;
     loading: boolean;
+    apiError: string;
     onSubmit: (details: { name: string; password: string }) => void;
 }
 
@@ -79,6 +81,7 @@ export const SetPassword = ({
     email,
     requireName,
     loading,
+    apiError,
     onSubmit,
 }: ISetPasswordProps) => {
     const [name, setName] = useState('');
@@ -104,6 +107,8 @@ export const SetPassword = ({
                     Create a secure password, and you’re good to go!
                 </StyledSubtitle>
             </StyledHeader>
+
+            <ResetPasswordError>{apiError}</ResetPasswordError>
 
             <StyledField>
                 <StyledLabel htmlFor='set-password-email'>Email</StyledLabel>

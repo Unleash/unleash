@@ -1,5 +1,5 @@
 import { type FormEvent, useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router';
+import { Link as RouterLink } from 'react-router';
 import {
     Button,
     Divider,
@@ -15,11 +15,6 @@ import useLoading from 'hooks/useLoading';
 import useResetPassword from 'hooks/api/getters/useResetPassword/useResetPassword';
 import { useUserInvite } from 'hooks/api/getters/useUserInvite/useUserInvite';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
-import { useInviteTokenApi } from 'hooks/api/actions/useInviteTokenApi/useInviteTokenApi';
-import { useAuthResetPasswordApi } from 'hooks/api/actions/useAuthResetPasswordApi/useAuthResetPasswordApi';
-import useToast from 'hooks/useToast';
-import { CREATED, OK } from 'constants/statusCodes';
-import { formatUnknownError } from 'utils/formatUnknownError';
 import { basePath } from 'utils/formatPath';
 import type { IAuthOptions } from 'hooks/api/getters/useAuth/useAuthEndpoint';
 import { SSO_LOGIN_BUTTON } from 'utils/testIds';
@@ -27,6 +22,7 @@ import InvalidToken from '../../common/InvalidToken/InvalidToken.tsx';
 import { AuthSplitLayout } from '../../common/AuthSplitLayout/AuthSplitLayout.tsx';
 import { getInstanceName } from './getInstanceName.ts';
 import { SetPassword } from './SetPassword.tsx';
+import { useNewUserSubmit } from '../useNewUserSubmit.ts';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -152,22 +148,13 @@ const renderAuthOptionIcon = ({ type }: IAuthOptions) => {
 
 export const InviteSignup = () => {
     const { authDetails } = useAuthDetails();
-    const navigate = useNavigate();
-    const { setToastApiError } = useToast();
     const {
-        token,
         data: tokenData,
         loading: tokenLoading,
         isValidToken,
     } = useResetPassword();
-    const {
-        secret,
-        loading: inviteLoading,
-        isValid: isValidInvite,
-    } = useUserInvite();
-    const { addUser, loading: isUserSubmitting } = useInviteTokenApi();
-    const { resetPassword, loading: isPasswordSubmitting } =
-        useAuthResetPasswordApi();
+    const { loading: inviteLoading, isValid: isValidInvite } = useUserInvite();
+    const { onSubmit, apiError, loading: isSubmitting } = useNewUserSubmit();
     const ref = useLoading(tokenLoading || inviteLoading);
     const [inviteEmail, setInviteEmail] = useState('');
     const [step, setStep] = useState<'email' | 'password'>('email');
@@ -183,38 +170,6 @@ export const InviteSignup = () => {
     const onContinueWithEmail = (e: FormEvent) => {
         e.preventDefault();
         setStep('password');
-    };
-
-    const onSetPassword = async ({
-        name,
-        password,
-    }: {
-        name: string;
-        password: string;
-    }) => {
-        try {
-            if (isValidInvite) {
-                const res = await addUser(secret, { name, email, password });
-                if (res.status === CREATED) {
-                    navigate('/login?invited=true');
-                } else {
-                    setToastApiError(
-                        "Couldn't create user. Check if your invite link is valid.",
-                    );
-                }
-            } else {
-                const res = await resetPassword({ token, password });
-                if (res.status === OK) {
-                    navigate('/login?reset=true');
-                } else {
-                    setToastApiError(
-                        'Something went wrong when attempting to set your password. Please try again later.',
-                    );
-                }
-            }
-        } catch (error) {
-            setToastApiError(formatUnknownError(error));
-        }
     };
 
     if (!isValidToken && !isValidInvite) {
@@ -233,8 +188,11 @@ export const InviteSignup = () => {
                 <SetPassword
                     email={email}
                     requireName={Boolean(isValidInvite)}
-                    loading={isUserSubmitting || isPasswordSubmitting}
-                    onSubmit={onSetPassword}
+                    loading={isSubmitting}
+                    apiError={apiError}
+                    onSubmit={({ name, password }) =>
+                        onSubmit({ name, email, password })
+                    }
                 />
             </AuthSplitLayout>
         );

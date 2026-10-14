@@ -1,14 +1,8 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
 import { Box, Typography } from '@mui/material';
-import { CREATED, OK } from 'constants/statusCodes';
-import useToast from 'hooks/useToast';
 import useResetPassword from 'hooks/api/getters/useResetPassword/useResetPassword';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUserInvite } from 'hooks/api/getters/useUserInvite/useUserInvite';
-import { useInviteTokenApi } from 'hooks/api/actions/useInviteTokenApi/useInviteTokenApi';
-import { formatUnknownError } from 'utils/formatUnknownError';
-import { useAuthResetPasswordApi } from 'hooks/api/actions/useAuthResetPasswordApi/useAuthResetPasswordApi';
 import AuthOptions from '../common/AuthOptions/AuthOptions.tsx';
 import DividerText from 'component/common/DividerText/DividerText';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
@@ -19,71 +13,23 @@ import ResetPasswordError from '../common/ResetPasswordError/ResetPasswordError.
 import Input from 'component/common/Input/Input.tsx';
 import { useFlag } from '@unleash/proxy-client-react';
 import { InviteSignup } from './InviteSignup/InviteSignup.tsx';
+import { useNewUserSubmit } from './useNewUserSubmit.ts';
 
 const LegacyNewUser = () => {
     const { authDetails } = useAuthDetails();
-    const { setToastApiError } = useToast();
-    const navigate = useNavigate();
-    const [apiError, setApiError] = useState('');
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const {
-        token,
         data: passwordResetData,
         loading: resetLoading,
         isValidToken,
     } = useResetPassword();
-    const {
-        secret,
-        loading: inviteLoading,
-        isValid: isValidInvite,
-    } = useUserInvite();
-    const { addUser, loading: isUserSubmitting } = useInviteTokenApi();
-    const { resetPassword, loading: isPasswordSubmitting } =
-        useAuthResetPasswordApi();
+    const { loading: inviteLoading, isValid: isValidInvite } = useUserInvite();
+    const { onSubmit, apiError, loading: isSubmitting } = useNewUserSubmit();
     const passwordDisabled = authDetails?.defaultHidden === true;
     const showAuthOptions =
         Boolean(authDetails?.options?.length) &&
         (!isValidInvite || passwordDisabled);
-
-    const onSubmitInvitedUser = async (password: string) => {
-        try {
-            const res = await addUser(secret, { name, email, password });
-            if (res.status === CREATED) {
-                navigate('/login?invited=true');
-            } else {
-                setToastApiError(
-                    "Couldn't create user. Check if your invite link is valid.",
-                );
-            }
-        } catch (error) {
-            setToastApiError(formatUnknownError(error));
-        }
-    };
-
-    const onSubmitPasswordReset = async (password: string) => {
-        try {
-            const res = await resetPassword({ token, password });
-            if (res.status === OK) {
-                navigate('/login?reset=true');
-            } else {
-                setApiError(
-                    'Something went wrong when attempting to update your password. This could be due to unstable internet connectivity. If retrying the request does not work, please try again later.',
-                );
-            }
-        } catch (e) {
-            const error = formatUnknownError(e);
-            setApiError(error);
-        }
-    };
-
-    const onSubmit = (password: string) => {
-        if (isValidInvite) {
-            onSubmitInvitedUser(password);
-        } else {
-            onSubmitPasswordReset(password);
-        }
-    };
 
     if (!isValidToken && !isValidInvite) {
         return (
@@ -95,12 +41,7 @@ const LegacyNewUser = () => {
 
     return (
         <NewUserWrapper
-            loading={
-                resetLoading ||
-                inviteLoading ||
-                isUserSubmitting ||
-                isPasswordSubmitting
-            }
+            loading={resetLoading || inviteLoading || isSubmitting}
             title={
                 passwordDisabled
                     ? 'Connect your account and start your journey'
@@ -220,7 +161,11 @@ const LegacyNewUser = () => {
                                 </ResetPasswordError>
                             }
                         />
-                        <ResetPasswordForm onSubmit={onSubmit} />
+                        <ResetPasswordForm
+                            onSubmit={(password) =>
+                                onSubmit({ name, email, password })
+                            }
+                        />
                     </>
                 }
             />

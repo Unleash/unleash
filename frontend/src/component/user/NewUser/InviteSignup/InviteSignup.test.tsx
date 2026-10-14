@@ -152,36 +152,40 @@ test('sets a password for a reset token without asking for a name', async () => 
             { token: 'valid-token', password: 'Sup3r-secret' },
         ]),
     );
-    await waitFor(() => expect(window.location.pathname).toBe('/'));
-    expect(loginRequests).toEqual([
-        { username: 'invitee@getunleash.io', password: 'Sup3r-secret' },
-    ]);
+    await waitFor(() =>
+        expect(`${window.location.pathname}${window.location.search}`).toBe(
+            '/login?reset=true',
+        ),
+    );
+    expect(loginRequests).toEqual([]);
 });
 
 test('falls back to the login page when automatic login fails', async () => {
     setup();
+    testServerRoute(server, '/invite/valid-secret/validate', {});
     testServerRoute(server, '/auth/reset/validate', {
-        email: 'invitee@getunleash.io',
+        name: INVALID_TOKEN_ERROR,
     });
-    testServerRoute(server, '/auth/reset/password', {}, 'post');
+    testServerRoute(server, '/invite/valid-secret/signup', {}, 'post', 201);
     testServerRoute(server, '/auth/reset/validate-password', {}, 'post');
     testServerRoute(server, '/auth/simple/login', {}, 'post', 401);
 
-    render(<InviteSignup />, { route: '/new-user?token=valid-token' });
+    render(<InviteSignup />, { route: '/new-user?invite=valid-secret' });
 
-    await screen.findByText("You've been invited to join Unleash");
-    await userEvent.click(screen.getByText('Continue with email'));
     await userEvent.type(
-        await screen.findByLabelText('Password'),
-        'Sup3r-secret',
+        await screen.findByLabelText('Email'),
+        'invitee@getunleash.io',
     );
+    await userEvent.click(screen.getByText('Continue with email'));
+    await userEvent.type(await screen.findByLabelText('Full name'), 'Invitee');
+    await userEvent.type(screen.getByLabelText('Password'), 'Sup3r-secret');
     const submit = screen.getByRole('button', { name: 'Customize Unleash' });
     await waitFor(() => expect(submit).toBeEnabled());
     await userEvent.click(submit);
 
     await waitFor(() =>
         expect(`${window.location.pathname}${window.location.search}`).toBe(
-            '/login?reset=true',
+            '/login?invited=true',
         ),
     );
 });

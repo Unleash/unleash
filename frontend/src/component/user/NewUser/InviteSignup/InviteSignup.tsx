@@ -191,7 +191,7 @@ export const InviteSignup = () => {
         setStep('password');
     };
 
-    const logIn = async (password: string, fallbackPath: string) => {
+    const logIn = async (password: string) => {
         try {
             if (!authDetails?.path) {
                 throw new Error('Password login is not available');
@@ -200,7 +200,7 @@ export const InviteSignup = () => {
             refetchUser();
             navigate('/', { replace: true });
         } catch {
-            navigate(fallbackPath);
+            navigate('/login?invited=true');
         }
     };
 
@@ -208,7 +208,7 @@ export const InviteSignup = () => {
         try {
             const res = await addUser(secret, { name, email, password });
             if (res.status === CREATED) {
-                await logIn(password, '/login?invited=true');
+                await logIn(password);
             } else {
                 setToastApiError(
                     "Couldn't create user. Check if your invite link is valid.",
@@ -223,7 +223,7 @@ export const InviteSignup = () => {
         try {
             const res = await resetPassword({ token, password });
             if (res.status === OK) {
-                await logIn(password, '/login?reset=true');
+                navigate('/login?reset=true');
             } else {
                 setApiError(
                     'Something went wrong when attempting to update your password. This could be due to unstable internet connectivity. If retrying the request does not work, please try again later.',

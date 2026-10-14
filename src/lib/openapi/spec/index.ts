@@ -148,6 +148,8 @@ export * from './personal-dashboard-project-details-schema.js';
 export * from './personal-dashboard-schema.js';
 export * from './playground-constraint-schema.js';
 export * from './playground-feature-schema.js';
+export * from './playground-feature-request-schema.js';
+export * from './playground-feature-response-schema.js';
 export * from './playground-request-schema.js';
 export * from './playground-response-schema.js';
 export * from './playground-segment-schema.js';

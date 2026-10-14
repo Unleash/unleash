@@ -17,7 +17,10 @@ export class FakePrivateProjectChecker implements IPrivateProjectChecker {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    hasAccessToProject(_userId: number, _projectId: string): Promise<boolean> {
-        throw new Error('Method not implemented.');
+    async hasAccessToProject(
+        _userId: number,
+        _projectId: string,
+    ): Promise<boolean> {
+        return true;
     }
 }

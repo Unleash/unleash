@@ -73,6 +73,7 @@ specificationFiles
                     featureToggleService: {
                         getPlaygroundFeatures: async () =>
                             specification.state.features,
+                        getProjectId: async () => 'default',
                     },
                     privateProjectChecker: createFakePrivateProjectChecker(),
                 },

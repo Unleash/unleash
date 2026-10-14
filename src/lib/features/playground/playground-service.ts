@@ -27,6 +27,7 @@ import { validateQueryComplexity } from './validateQueryComplexity.js';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
 import { defaultVariant } from 'unleash-client/lib/variant.js';
 import { cleanContext } from './clean-context.js';
+import { NotFoundError } from '../../error/index.js';
 
 type EvaluationInput = {
     features: FeatureConfigurationClient[];
@@ -69,7 +70,7 @@ export type PlaygroundFeatureEvaluationResult = Omit<
 export class PlaygroundService {
     private readonly featureToggleService: Pick<
         FeatureToggleService,
-        'getPlaygroundFeatures'
+        'getPlaygroundFeatures' | 'getProjectId'
     >;
 
     private readonly flagResolver: IFlagResolver;
@@ -86,7 +87,7 @@ export class PlaygroundService {
         }: {
             featureToggleService: Pick<
                 FeatureToggleService,
-                'getPlaygroundFeatures'
+                'getPlaygroundFeatures' | 'getProjectId'
             >;
             privateProjectChecker: IPrivateProjectChecker;
         },
@@ -280,6 +281,62 @@ export class PlaygroundService {
             {},
         );
         return { features, featureProject, environment };
+    }
+
+    async evaluateFeature(
+        featureName: string,
+        environment: string,
+        context: SdkContextSchema,
+        userId: number,
+    ): Promise<PlaygroundFeatureEvaluationResult> {
+        const notFound = new NotFoundError(
+            `Could not find feature flag ${featureName}`,
+        );
+
+        const projectId =
+            await this.featureToggleService.getProjectId(featureName);
+        if (
+            !projectId ||
+            !(await this.privateProjectChecker.hasAccessToProject(
+                userId,
+                projectId,
+            ))
+        ) {
+            throw notFound;
+        }
+
+        const [{ features, featureProject }, segments] = await Promise.all([
+            this.resolveFeatures([projectId], environment),
+            this.segmentReadModel.getActive(),
+        ]);
+
+        // archived flags are not returned by resolveFeatures
+        const target = features.find(({ name }) => name === featureName);
+        if (!target) {
+            throw notFound;
+        }
+
+        // parents must be part of the evaluation for dependencies to resolve
+        const parentNames =
+            target.dependencies?.map((dependency) => dependency.feature) ?? [];
+        const relevantFeatures = features.filter(
+            ({ name }) => name === featureName || parentNames.includes(name),
+        );
+
+        const result = await this.evaluate({
+            features: relevantFeatures,
+            featureProject,
+            segments,
+            context,
+            environment,
+        });
+
+        const evaluated = result.find(({ name }) => name === featureName);
+        if (!evaluated) {
+            throw notFound;
+        }
+
+        return omitKeys(evaluated, 'environment', 'context');
     }
 
     async evaluateQuery(

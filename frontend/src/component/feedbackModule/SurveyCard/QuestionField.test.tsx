@@ -125,4 +125,36 @@ describe('QuestionField', () => {
             screen.getByRole('textbox', { name: 'Anything else?' }),
         ).not.toBeRequired();
     });
+
+    it('marks a required rating as required for assistive tech', () => {
+        renderQuestion(ratingQuestion({ required: true }));
+
+        expect(
+            screen.getByRole('radiogroup', { name: 'Rate this page' }),
+        ).toBeRequired();
+    });
+
+    it('does not mark an optional rating as required', () => {
+        renderQuestion(ratingQuestion());
+
+        expect(
+            screen.getByRole('radiogroup', { name: 'Rate this page' }),
+        ).not.toBeRequired();
+    });
+
+    it('marks a required free-text answer as required for assistive tech', () => {
+        renderQuestion(freeTextQuestion({ required: true }));
+
+        expect(
+            screen.getByRole('textbox', { name: 'Anything else?' }),
+        ).toBeRequired();
+    });
+
+    it('does not mark an optional free-text answer as required', () => {
+        renderQuestion(freeTextQuestion());
+
+        expect(
+            screen.getByRole('textbox', { name: 'Anything else?' }),
+        ).not.toBeRequired();
+    });
 });

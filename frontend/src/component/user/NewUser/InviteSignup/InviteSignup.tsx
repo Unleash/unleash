@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link as RouterLink } from 'react-router';
+import { type FormEvent, useState } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router';
 import {
     Button,
     Divider,
@@ -12,6 +12,11 @@ import LockRounded from '@mui/icons-material/LockRounded';
 import GoogleIcon from 'assets/img/inviteSignup/google.svg?react';
 import GitHubIcon from 'assets/img/inviteSignup/github.svg?react';
 import useLoading from 'hooks/useLoading';
+import useToast from 'hooks/useToast';
+import { CREATED, OK } from 'constants/statusCodes';
+import { formatUnknownError } from 'utils/formatUnknownError';
+import { useInviteTokenApi } from 'hooks/api/actions/useInviteTokenApi/useInviteTokenApi';
+import { useAuthResetPasswordApi } from 'hooks/api/actions/useAuthResetPasswordApi/useAuthResetPasswordApi';
 import useResetPassword from 'hooks/api/getters/useResetPassword/useResetPassword';
 import { useUserInvite } from 'hooks/api/getters/useUserInvite/useUserInvite';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
@@ -21,6 +26,7 @@ import { SSO_LOGIN_BUTTON } from 'utils/testIds';
 import InvalidToken from '../../common/InvalidToken/InvalidToken.tsx';
 import { AuthSplitLayout } from '../../common/AuthSplitLayout/AuthSplitLayout.tsx';
 import { getInstanceName } from './getInstanceName.ts';
+import { SetPassword } from './SetPassword.tsx';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -74,6 +80,12 @@ const StyledOrDivider = styled(Divider)(({ theme }) => ({
     '&::before, &::after': {
         borderColor: theme.palette.neutral.containerBorder,
     },
+}));
+
+const StyledEmailForm = styled('form')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(3),
 }));
 
 const StyledEmailField = styled('div')(({ theme }) => ({
@@ -140,14 +152,27 @@ const renderAuthOptionIcon = ({ type }: IAuthOptions) => {
 
 export const InviteSignup = () => {
     const { authDetails } = useAuthDetails();
+    const { setToastApiError } = useToast();
+    const navigate = useNavigate();
+    const [apiError, setApiError] = useState('');
+    const [inviteEmail, setInviteEmail] = useState('');
+    const [name, setName] = useState('');
     const {
+        token,
         data: tokenData,
         loading: tokenLoading,
         isValidToken,
     } = useResetPassword();
-    const { loading: inviteLoading, isValid: isValidInvite } = useUserInvite();
+    const {
+        secret,
+        loading: inviteLoading,
+        isValid: isValidInvite,
+    } = useUserInvite();
+    const { addUser, loading: isUserSubmitting } = useInviteTokenApi();
+    const { resetPassword, loading: isPasswordSubmitting } =
+        useAuthResetPasswordApi();
     const ref = useLoading(tokenLoading || inviteLoading);
-    const [inviteEmail, setInviteEmail] = useState('');
+    const [step, setStep] = useState<'email' | 'password'>('email');
 
     const passwordDisabled = authDetails?.defaultHidden === true;
     const authOptions = authDetails?.options ?? [];
@@ -155,6 +180,51 @@ export const InviteSignup = () => {
         authOptions.length > 0 && (!isValidInvite || passwordDisabled);
     const tokenEmail = isValidToken ? tokenData?.email : undefined;
     const instanceName = getInstanceName(basePath);
+    const email = tokenEmail ?? inviteEmail;
+
+    const onContinueWithEmail = (e: FormEvent) => {
+        e.preventDefault();
+        setStep('password');
+    };
+
+    const onSubmitInvitedUser = async (password: string) => {
+        try {
+            const res = await addUser(secret, { name, email, password });
+            if (res.status === CREATED) {
+                navigate('/login?invited=true');
+            } else {
+                setToastApiError(
+                    "Couldn't create user. Check if your invite link is valid.",
+                );
+            }
+        } catch (error) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
+    const onSubmitPasswordReset = async (password: string) => {
+        try {
+            const res = await resetPassword({ token, password });
+            if (res.status === OK) {
+                navigate('/login?reset=true');
+            } else {
+                setApiError(
+                    'Something went wrong when attempting to update your password. This could be due to unstable internet connectivity. If retrying the request does not work, please try again later.',
+                );
+            }
+        } catch (e) {
+            const error = formatUnknownError(e);
+            setApiError(error);
+        }
+    };
+
+    const onSubmit = (password: string) => {
+        if (isValidInvite) {
+            onSubmitInvitedUser(password);
+        } else {
+            onSubmitPasswordReset(password);
+        }
+    };
 
     if (!isValidToken && !isValidInvite) {
         return (
@@ -162,6 +232,22 @@ export const InviteSignup = () => {
                 <div ref={ref}>
                     <InvalidToken />
                 </div>
+            </AuthSplitLayout>
+        );
+    }
+
+    if (step === 'password') {
+        return (
+            <AuthSplitLayout>
+                <SetPassword
+                    email={email}
+                    name={name}
+                    onNameChange={setName}
+                    requireName={Boolean(isValidInvite)}
+                    loading={isUserSubmitting || isPasswordSubmitting}
+                    apiError={isValidToken ? apiError : ''}
+                    onSubmit={onSubmit}
+                />
             </AuthSplitLayout>
         );
     }
@@ -204,7 +290,7 @@ export const InviteSignup = () => {
                 ) : null}
 
                 {passwordDisabled ? null : (
-                    <>
+                    <StyledEmailForm onSubmit={onContinueWithEmail}>
                         <StyledEmailField>
                             <StyledLabel htmlFor='invite-email'>
                                 Email
@@ -212,10 +298,11 @@ export const InviteSignup = () => {
                             <StyledEmailInput
                                 id='invite-email'
                                 type='email'
+                                required
                                 placeholder='name@company.com'
                                 autoComplete='email'
                                 fullWidth
-                                value={tokenEmail ?? inviteEmail}
+                                value={email}
                                 onChange={(e) => setInviteEmail(e.target.value)}
                                 slotProps={{
                                     input: { readOnly: Boolean(tokenEmail) },
@@ -224,13 +311,14 @@ export const InviteSignup = () => {
                             />
                         </StyledEmailField>
                         <StyledPrimaryButton
+                            type='submit'
                             variant='contained'
                             fullWidth
                             data-loading
                         >
                             Continue with email
                         </StyledPrimaryButton>
-                    </>
+                    </StyledEmailForm>
                 )}
 
                 <StyledFinePrint>

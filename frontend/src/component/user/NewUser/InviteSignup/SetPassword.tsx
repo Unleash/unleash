@@ -71,20 +71,23 @@ const StyledPrimaryButton = styled(Button)(({ theme }) => ({
 
 interface ISetPasswordProps {
     email: string;
+    name: string;
+    onNameChange: (name: string) => void;
     requireName: boolean;
     loading: boolean;
     apiError: string;
-    onSubmit: (details: { name: string; password: string }) => void;
+    onSubmit: (password: string) => void;
 }
 
 export const SetPassword = ({
     email,
+    name,
+    onNameChange,
     requireName,
     loading,
     apiError,
     onSubmit,
 }: ISetPasswordProps) => {
-    const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [isValidPassword, setIsValidPassword] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -95,7 +98,7 @@ export const SetPassword = ({
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         if (submittable) {
-            onSubmit({ name: name.trim(), password });
+            onSubmit(password);
         }
     };
 
@@ -133,7 +136,7 @@ export const SetPassword = ({
                         autoComplete='name'
                         fullWidth
                         value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        onChange={(e) => onNameChange(e.target.value)}
                     />
                 </StyledField>
             ) : null}

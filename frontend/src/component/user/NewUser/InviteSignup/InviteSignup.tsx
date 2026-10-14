@@ -1,5 +1,5 @@
 import { type FormEvent, useState } from 'react';
-import { Link as RouterLink } from 'react-router';
+import { Link as RouterLink, useNavigate } from 'react-router';
 import {
     Button,
     Divider,
@@ -12,6 +12,11 @@ import LockRounded from '@mui/icons-material/LockRounded';
 import GoogleIcon from 'assets/img/inviteSignup/google.svg?react';
 import GitHubIcon from 'assets/img/inviteSignup/github.svg?react';
 import useLoading from 'hooks/useLoading';
+import useToast from 'hooks/useToast';
+import { CREATED, OK } from 'constants/statusCodes';
+import { formatUnknownError } from 'utils/formatUnknownError';
+import { useInviteTokenApi } from 'hooks/api/actions/useInviteTokenApi/useInviteTokenApi';
+import { useAuthResetPasswordApi } from 'hooks/api/actions/useAuthResetPasswordApi/useAuthResetPasswordApi';
 import useResetPassword from 'hooks/api/getters/useResetPassword/useResetPassword';
 import { useUserInvite } from 'hooks/api/getters/useUserInvite/useUserInvite';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
@@ -22,7 +27,6 @@ import InvalidToken from '../../common/InvalidToken/InvalidToken.tsx';
 import { AuthSplitLayout } from '../../common/AuthSplitLayout/AuthSplitLayout.tsx';
 import { getInstanceName } from './getInstanceName.ts';
 import { SetPassword } from './SetPassword.tsx';
-import { useNewUserSubmit } from '../useNewUserSubmit.ts';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -148,15 +152,26 @@ const renderAuthOptionIcon = ({ type }: IAuthOptions) => {
 
 export const InviteSignup = () => {
     const { authDetails } = useAuthDetails();
+    const { setToastApiError } = useToast();
+    const navigate = useNavigate();
+    const [apiError, setApiError] = useState('');
+    const [inviteEmail, setInviteEmail] = useState('');
+    const [name, setName] = useState('');
     const {
+        token,
         data: tokenData,
         loading: tokenLoading,
         isValidToken,
     } = useResetPassword();
-    const { loading: inviteLoading, isValid: isValidInvite } = useUserInvite();
-    const { onSubmit, apiError, loading: isSubmitting } = useNewUserSubmit();
+    const {
+        secret,
+        loading: inviteLoading,
+        isValid: isValidInvite,
+    } = useUserInvite();
+    const { addUser, loading: isUserSubmitting } = useInviteTokenApi();
+    const { resetPassword, loading: isPasswordSubmitting } =
+        useAuthResetPasswordApi();
     const ref = useLoading(tokenLoading || inviteLoading);
-    const [inviteEmail, setInviteEmail] = useState('');
     const [step, setStep] = useState<'email' | 'password'>('email');
 
     const passwordDisabled = authDetails?.defaultHidden === true;
@@ -170,6 +185,45 @@ export const InviteSignup = () => {
     const onContinueWithEmail = (e: FormEvent) => {
         e.preventDefault();
         setStep('password');
+    };
+
+    const onSubmitInvitedUser = async (password: string) => {
+        try {
+            const res = await addUser(secret, { name, email, password });
+            if (res.status === CREATED) {
+                navigate('/login?invited=true');
+            } else {
+                setToastApiError(
+                    "Couldn't create user. Check if your invite link is valid.",
+                );
+            }
+        } catch (error) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
+    const onSubmitPasswordReset = async (password: string) => {
+        try {
+            const res = await resetPassword({ token, password });
+            if (res.status === OK) {
+                navigate('/login?reset=true');
+            } else {
+                setApiError(
+                    'Something went wrong when attempting to update your password. This could be due to unstable internet connectivity. If retrying the request does not work, please try again later.',
+                );
+            }
+        } catch (e) {
+            const error = formatUnknownError(e);
+            setApiError(error);
+        }
+    };
+
+    const onSubmit = (password: string) => {
+        if (isValidInvite) {
+            onSubmitInvitedUser(password);
+        } else {
+            onSubmitPasswordReset(password);
+        }
     };
 
     if (!isValidToken && !isValidInvite) {
@@ -187,12 +241,12 @@ export const InviteSignup = () => {
             <AuthSplitLayout>
                 <SetPassword
                     email={email}
+                    name={name}
+                    onNameChange={setName}
                     requireName={Boolean(isValidInvite)}
-                    loading={isSubmitting}
-                    apiError={apiError}
-                    onSubmit={({ name, password }) =>
-                        onSubmit({ name, email, password })
-                    }
+                    loading={isUserSubmitting || isPasswordSubmitting}
+                    apiError={isValidToken ? apiError : ''}
+                    onSubmit={onSubmit}
                 />
             </AuthSplitLayout>
         );

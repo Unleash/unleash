@@ -13,6 +13,7 @@ import {
 } from '../playground/offline-unleash-client.js';
 import { ALL_ENVS, DEFAULT_ENV } from '../../util/constants.js';
 import type { Logger } from '../../logger.js';
+import type ConfigurationRevisionService from '../feature-toggle/configuration-revision-service.js';
 import { UPDATE_REVISION } from '../feature-toggle/configuration-revision-service.js';
 import type { IClientFeatureToggleReadModel } from './client-feature-toggle-read-model-type.js';
 import {
@@ -33,7 +34,7 @@ export class GlobalFrontendApiCache extends EventEmitter {
 
     private readonly segmentReadModel: ISegmentReadModel;
 
-    private readonly configurationRevisionService: EventEmitter;
+    private readonly configurationRevisionService: ConfigurationRevisionService;
 
     private featuresByEnvironment: FrontendApiFeatureCache = {};
 
@@ -47,7 +48,7 @@ export class GlobalFrontendApiCache extends EventEmitter {
         config: Config,
         segmentReadModel: ISegmentReadModel,
         clientFeatureToggleReadModel: IClientFeatureToggleReadModel,
-        configurationRevisionService: EventEmitter,
+        configurationRevisionService: ConfigurationRevisionService,
     ) {
         super();
         this.logger = config.getLogger('global-frontend-api-cache.ts');
@@ -109,6 +110,7 @@ export class GlobalFrontendApiCache extends EventEmitter {
     // TODO: fetch only relevant projects/environments based on tokens
     public async refreshData() {
         try {
+            await this.configurationRevisionService.initialize();
             const canonicalizer = createClientPayloadCanonicalizer();
             this.featuresByEnvironment =
                 await this.getAllFeatures(canonicalizer);

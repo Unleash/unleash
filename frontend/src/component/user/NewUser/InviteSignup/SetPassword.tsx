@@ -1,63 +1,71 @@
 import { type FormEvent, useState } from 'react';
-import { IconButton, InputAdornment, styled } from '@mui/material';
+import {
+    Button,
+    IconButton,
+    InputAdornment,
+    styled,
+    TextField,
+    Typography,
+} from '@mui/material';
 import VisibilityOffOutlined from '@mui/icons-material/VisibilityOffOutlined';
 import VisibilityOutlined from '@mui/icons-material/VisibilityOutlined';
-import RadioButtonUnchecked from '@mui/icons-material/RadioButtonUnchecked';
-import CheckCircle from '@mui/icons-material/CheckCircle';
-import {
-    StyledField,
-    StyledForm,
-    StyledHeader,
-    StyledInput,
-    StyledLabel,
-    StyledPrimaryButton,
-    StyledSubtitle,
-    StyledTitle,
-} from './inviteSignupStyles.ts';
+import { PasswordRequirementsChecker } from '../../common/PasswordRequirementsChecker/PasswordRequirementsChecker.tsx';
 
-export const passwordRules = [
-    {
-        label: 'Minimum 10 characters',
-        test: (password: string) => password.length >= 10,
-    },
-    {
-        label: 'Contains a number',
-        test: (password: string) => /\d/.test(password),
-    },
-    {
-        label: 'Contains special characters',
-        test: (password: string) => /[^A-Za-z0-9]/.test(password),
-    },
-    {
-        label: 'Contains different cases',
-        test: (password: string) =>
-            /[a-z]/.test(password) && /[A-Z]/.test(password),
-    },
-];
+const StyledForm = styled('form')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(3),
+}));
 
-const StyledRules = styled('ul')(({ theme }) => ({
-    listStyle: 'none',
-    margin: 0,
-    padding: 0,
+const StyledHeader = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1.5),
+    wordBreak: 'break-word',
+}));
+
+const StyledTitle = styled(Typography)(({ theme }) => ({
+    fontSize: theme.typography.h2.fontSize,
+    fontWeight: theme.typography.fontWeightBold,
+    lineHeight: '28px',
+}));
+
+const StyledSubtitle = styled(Typography)(({ theme }) => ({
+    lineHeight: '20px',
+    color: theme.palette.text.secondary,
+}));
+
+const StyledField = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1),
 }));
 
-const StyledRule = styled('li')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-    lineHeight: '20px',
-    fontSize: theme.typography.body2.fontSize,
-    color: theme.palette.text.secondary,
-    '& svg': {
-        fontSize: 20,
+const StyledLabel = styled('label')(({ theme }) => ({
+    fontWeight: theme.typography.fontWeightBold,
+    lineHeight: '22px',
+}));
+
+const StyledInput = styled(TextField)(({ theme }) => ({
+    '&&& .MuiOutlinedInput-root': {
+        height: 52,
+        fontWeight: theme.typography.fontWeightMedium,
+    },
+    '& .MuiOutlinedInput-root.Mui-readOnly': {
+        backgroundColor: theme.palette.background.elevation1,
+    },
+    '& .MuiOutlinedInput-notchedOutline': {
+        borderColor: theme.palette.neutral.containerBorder,
     },
 }));
 
 const StyledVisibilityButton = styled(IconButton)(({ theme }) => ({
     color: theme.palette.text.secondary,
+}));
+
+const StyledPrimaryButton = styled(Button)(({ theme }) => ({
+    height: 40,
+    fontWeight: theme.typography.fontWeightBold,
 }));
 
 interface ISetPasswordProps {
@@ -75,11 +83,11 @@ export const SetPassword = ({
 }: ISetPasswordProps) => {
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
+    const [isValidPassword, setIsValidPassword] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
-    const passwordValid = passwordRules.every(({ test }) => test(password));
     const submittable =
-        passwordValid && (!requireName || name.trim().length > 0) && !loading;
+        isValidPassword && (!requireName || name.trim().length > 0) && !loading;
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
@@ -165,21 +173,10 @@ export const SetPassword = ({
                 />
             </StyledField>
 
-            <StyledRules aria-label='Password requirements'>
-                {passwordRules.map(({ label, test }) => {
-                    const met = test(password);
-                    return (
-                        <StyledRule key={label} data-met={met}>
-                            {met ? (
-                                <CheckCircle color='success' aria-hidden />
-                            ) : (
-                                <RadioButtonUnchecked aria-hidden />
-                            )}
-                            {label}
-                        </StyledRule>
-                    );
-                })}
-            </StyledRules>
+            <PasswordRequirementsChecker
+                password={password}
+                setIsValidPassword={setIsValidPassword}
+            />
 
             <StyledPrimaryButton
                 type='submit'

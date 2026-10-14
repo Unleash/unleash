@@ -1,6 +1,13 @@
 import { type FormEvent, useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router';
-import { Button, Divider, Link, styled, Typography } from '@mui/material';
+import {
+    Button,
+    Divider,
+    Link,
+    styled,
+    TextField,
+    Typography,
+} from '@mui/material';
 import LockRounded from '@mui/icons-material/LockRounded';
 import GoogleIcon from 'assets/img/inviteSignup/google.svg?react';
 import GitHubIcon from 'assets/img/inviteSignup/github.svg?react';
@@ -20,17 +27,30 @@ import InvalidToken from '../../common/InvalidToken/InvalidToken.tsx';
 import { AuthSplitLayout } from '../../common/AuthSplitLayout/AuthSplitLayout.tsx';
 import { getInstanceName } from './getInstanceName.ts';
 import { SetPassword } from './SetPassword.tsx';
-import {
-    StyledContainer,
-    StyledField,
-    StyledForm,
-    StyledHeader,
-    StyledInput,
-    StyledLabel,
-    StyledPrimaryButton,
-    StyledSubtitle,
-    StyledTitle,
-} from './inviteSignupStyles.ts';
+
+const StyledContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(3),
+}));
+
+const StyledHeader = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1.5),
+    wordBreak: 'break-word',
+}));
+
+const StyledTitle = styled(Typography)(({ theme }) => ({
+    fontSize: theme.typography.h2.fontSize,
+    fontWeight: theme.typography.fontWeightBold,
+    lineHeight: '28px',
+}));
+
+const StyledSubtitle = styled(Typography)(({ theme }) => ({
+    lineHeight: '20px',
+    color: theme.palette.text.secondary,
+}));
 
 const StyledAuthOptions = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -60,6 +80,41 @@ const StyledOrDivider = styled(Divider)(({ theme }) => ({
     '&::before, &::after': {
         borderColor: theme.palette.neutral.containerBorder,
     },
+}));
+
+const StyledEmailForm = styled('form')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(3),
+}));
+
+const StyledEmailField = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1),
+}));
+
+const StyledLabel = styled('label')(({ theme }) => ({
+    fontWeight: theme.typography.fontWeightBold,
+    lineHeight: '22px',
+}));
+
+const StyledEmailInput = styled(TextField)(({ theme }) => ({
+    '&&& .MuiOutlinedInput-root': {
+        height: 52,
+        fontWeight: theme.typography.fontWeightMedium,
+    },
+    '& .MuiOutlinedInput-root.Mui-readOnly': {
+        backgroundColor: theme.palette.background.elevation1,
+    },
+    '& .MuiOutlinedInput-notchedOutline': {
+        borderColor: theme.palette.neutral.containerBorder,
+    },
+}));
+
+const StyledPrimaryButton = styled(Button)(({ theme }) => ({
+    height: 40,
+    fontWeight: theme.typography.fontWeightBold,
 }));
 
 const StyledFinePrint = styled(Typography)(({ theme }) => ({
@@ -125,7 +180,7 @@ export const InviteSignup = () => {
     const instanceName = getInstanceName(basePath);
     const email = tokenEmail ?? inviteEmail;
 
-    const onContinueWithEmail = (e: FormEvent<HTMLFormElement>) => {
+    const onContinueWithEmail = (e: FormEvent) => {
         e.preventDefault();
         setStep('password');
     };
@@ -223,12 +278,12 @@ export const InviteSignup = () => {
                 ) : null}
 
                 {passwordDisabled ? null : (
-                    <StyledForm onSubmit={onContinueWithEmail}>
-                        <StyledField>
+                    <StyledEmailForm onSubmit={onContinueWithEmail}>
+                        <StyledEmailField>
                             <StyledLabel htmlFor='invite-email'>
                                 Email
                             </StyledLabel>
-                            <StyledInput
+                            <StyledEmailInput
                                 id='invite-email'
                                 type='email'
                                 required
@@ -242,7 +297,7 @@ export const InviteSignup = () => {
                                 }}
                                 data-loading
                             />
-                        </StyledField>
+                        </StyledEmailField>
                         <StyledPrimaryButton
                             type='submit'
                             variant='contained'
@@ -251,7 +306,7 @@ export const InviteSignup = () => {
                         >
                             Continue with email
                         </StyledPrimaryButton>
-                    </StyledForm>
+                    </StyledEmailForm>
                 )}
 
                 <StyledFinePrint>

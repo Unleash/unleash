@@ -69,6 +69,8 @@ test('sets a password for an invite link once the requirements are met', async (
         201,
     );
 
+    testServerRoute(server, '/auth/reset/validate-password', {}, 'post');
+
     render(<InviteSignup />, { route: '/new-user?invite=valid-secret' });
 
     await userEvent.type(
@@ -86,7 +88,7 @@ test('sets a password for an invite link once the requirements are met', async (
     expect(submit).toBeDisabled();
 
     await userEvent.type(screen.getByLabelText('Password'), 'W0rd!');
-    expect(submit).toBeEnabled();
+    await waitFor(() => expect(submit).toBeEnabled());
 
     await userEvent.click(submit);
 
@@ -113,6 +115,8 @@ test('sets a password for a reset token without asking for a name', async () => 
         'post',
     );
 
+    testServerRoute(server, '/auth/reset/validate-password', {}, 'post');
+
     render(<InviteSignup />, { route: '/new-user?token=valid-token' });
 
     await screen.findByText("You've been invited to join Unleash");
@@ -122,9 +126,9 @@ test('sets a password for a reset token without asking for a name', async () => 
     expect(screen.queryByLabelText('Full name')).not.toBeInTheDocument();
 
     await userEvent.type(screen.getByLabelText('Password'), 'Sup3r-secret');
-    await userEvent.click(
-        screen.getByRole('button', { name: 'Customize Unleash' }),
-    );
+    const submit = screen.getByRole('button', { name: 'Customize Unleash' });
+    await waitFor(() => expect(submit).toBeEnabled());
+    await userEvent.click(submit);
 
     await waitFor(() =>
         expect(requests).toEqual([

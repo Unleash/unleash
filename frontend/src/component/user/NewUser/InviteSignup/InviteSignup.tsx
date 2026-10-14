@@ -20,6 +20,8 @@ import { useAuthResetPasswordApi } from 'hooks/api/actions/useAuthResetPasswordA
 import useResetPassword from 'hooks/api/getters/useResetPassword/useResetPassword';
 import { useUserInvite } from 'hooks/api/getters/useUserInvite/useUserInvite';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
+import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
+import { useAuthApi } from 'hooks/api/actions/useAuthApi/useAuthApi';
 import { basePath } from 'utils/formatPath';
 import type { IAuthOptions } from 'hooks/api/getters/useAuth/useAuthEndpoint';
 import { SSO_LOGIN_BUTTON } from 'utils/testIds';
@@ -154,6 +156,8 @@ export const InviteSignup = () => {
     const { authDetails } = useAuthDetails();
     const { setToastApiError } = useToast();
     const navigate = useNavigate();
+    const { refetchUser } = useAuthUser();
+    const { passwordAuth } = useAuthApi();
     const [apiError, setApiError] = useState('');
     const [inviteEmail, setInviteEmail] = useState('');
     const [name, setName] = useState('');
@@ -187,11 +191,24 @@ export const InviteSignup = () => {
         setStep('password');
     };
 
+    const logIn = async (password: string) => {
+        try {
+            if (!authDetails?.path) {
+                throw new Error('Password login is not available');
+            }
+            await passwordAuth(authDetails.path, email, password);
+            await refetchUser();
+            navigate('/', { replace: true });
+        } catch {
+            navigate('/login?invited=true');
+        }
+    };
+
     const onSubmitInvitedUser = async (password: string) => {
         try {
             const res = await addUser(secret, { name, email, password });
             if (res.status === CREATED) {
-                navigate('/login?invited=true');
+                await logIn(password);
             } else {
                 setToastApiError(
                     "Couldn't create user. Check if your invite link is valid.",

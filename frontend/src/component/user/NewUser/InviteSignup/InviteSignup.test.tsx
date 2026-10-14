@@ -13,6 +13,7 @@ const setup = () => {
     testServerRoute(server, '/api/admin/ui-config', {});
     testServerRoute(server, '/api/admin/user', {
         type: 'password',
+        path: '/auth/simple/login',
         defaultHidden: false,
         options: [
             {
@@ -70,6 +71,12 @@ test('sets a password for an invite link once the requirements are met', async (
     );
 
     testServerRoute(server, '/auth/reset/validate-password', {}, 'post');
+    const { requests: loginRequests } = testServerRoute(
+        server,
+        '/auth/simple/login',
+        {},
+        'post',
+    );
 
     render(<InviteSignup />, { route: '/new-user?invite=valid-secret' });
 
@@ -81,7 +88,7 @@ test('sets a password for an invite link once the requirements are met', async (
 
     await screen.findByText('Set password');
     expect(screen.getByLabelText('Email')).toHaveValue('invitee@getunleash.io');
-    const submit = screen.getByRole('button', { name: 'Customize Unleash' });
+    const submit = screen.getByRole('button', { name: 'Get started' });
 
     await userEvent.type(screen.getByLabelText('Full name'), 'Invitee');
     await userEvent.type(screen.getByLabelText('Password'), 'weakpass');
@@ -101,6 +108,10 @@ test('sets a password for an invite link once the requirements are met', async (
             },
         ]),
     );
+    await waitFor(() => expect(window.location.pathname).toBe('/'));
+    expect(loginRequests).toEqual([
+        { username: 'invitee@getunleash.io', password: 'weakpassW0rd!' },
+    ]);
 });
 
 test('sets a password for a reset token without asking for a name', async () => {
@@ -116,6 +127,12 @@ test('sets a password for a reset token without asking for a name', async () => 
     );
 
     testServerRoute(server, '/auth/reset/validate-password', {}, 'post');
+    const { requests: loginRequests } = testServerRoute(
+        server,
+        '/auth/simple/login',
+        {},
+        'post',
+    );
 
     render(<InviteSignup />, { route: '/new-user?token=valid-token' });
 
@@ -126,7 +143,7 @@ test('sets a password for a reset token without asking for a name', async () => 
     expect(screen.queryByLabelText('Full name')).not.toBeInTheDocument();
 
     await userEvent.type(screen.getByLabelText('Password'), 'Sup3r-secret');
-    const submit = screen.getByRole('button', { name: 'Customize Unleash' });
+    const submit = screen.getByRole('button', { name: 'Get started' });
     await waitFor(() => expect(submit).toBeEnabled());
     await userEvent.click(submit);
 
@@ -134,5 +151,41 @@ test('sets a password for a reset token without asking for a name', async () => 
         expect(requests).toEqual([
             { token: 'valid-token', password: 'Sup3r-secret' },
         ]),
+    );
+    await waitFor(() =>
+        expect(`${window.location.pathname}${window.location.search}`).toBe(
+            '/login?reset=true',
+        ),
+    );
+    expect(loginRequests).toEqual([]);
+});
+
+test('falls back to the login page when automatic login fails', async () => {
+    setup();
+    testServerRoute(server, '/invite/valid-secret/validate', {});
+    testServerRoute(server, '/auth/reset/validate', {
+        name: INVALID_TOKEN_ERROR,
+    });
+    testServerRoute(server, '/invite/valid-secret/signup', {}, 'post', 201);
+    testServerRoute(server, '/auth/reset/validate-password', {}, 'post');
+    testServerRoute(server, '/auth/simple/login', {}, 'post', 401);
+
+    render(<InviteSignup />, { route: '/new-user?invite=valid-secret' });
+
+    await userEvent.type(
+        await screen.findByLabelText('Email'),
+        'invitee@getunleash.io',
+    );
+    await userEvent.click(screen.getByText('Continue with email'));
+    await userEvent.type(await screen.findByLabelText('Full name'), 'Invitee');
+    await userEvent.type(screen.getByLabelText('Password'), 'Sup3r-secret');
+    const submit = screen.getByRole('button', { name: 'Get started' });
+    await waitFor(() => expect(submit).toBeEnabled());
+    await userEvent.click(submit);
+
+    await waitFor(() =>
+        expect(`${window.location.pathname}${window.location.search}`).toBe(
+            '/login?invited=true',
+        ),
     );
 });

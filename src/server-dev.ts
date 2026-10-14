@@ -70,6 +70,7 @@ process.nextTick(async () => {
                         singlePageStrategyForm: true,
                         feedbackModule: true,
                         playgroundFeatureEvaluation: true,
+                        perFlagLifetime: true,
                     },
                 },
                 authentication: {

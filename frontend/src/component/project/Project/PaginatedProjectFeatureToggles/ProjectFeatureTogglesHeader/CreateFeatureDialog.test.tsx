@@ -74,7 +74,7 @@ test('the modal posts the correct payload shape', async () => {
     const nameInput = await getNameInput();
     fireEvent.change(nameInput, { target: { value: 'my-flag' } });
 
-    const submit = await screen.findByTestId('FORM_CREATE_BUTTON');
+    const submit = await screen.findByRole('button', { name: 'Create flag' });
     fireEvent.click(submit);
 
     await waitFor(() => expect(requests).toHaveLength(1));
@@ -165,10 +165,10 @@ test("the new create flag form shows the project's naming pattern under the name
     await screen.findByPlaceholderText('checkout.banner');
 });
 
-test('the new create flag form attaches impression data to the flag', async () => {
+test('the new create flag form attaches selected tags and impression data to the flag', async () => {
     const requests = setupNewFormApi();
     testServerRoute(server, '/api/admin/tags', {
-        tags: [{ type: 'simple', value: 'checkout' }],
+        tags: [{ type: 'simple', value: 'v1:beta' }],
     });
 
     renderDialog();
@@ -178,14 +178,70 @@ test('the new create flag form attaches impression data to the flag', async () =
     fireEvent.click(
         await screen.findByRole('button', { name: /Other optional settings/ }),
     );
+    fireEvent.click(await screen.findByRole('button', { name: 'Add tag' }));
+    fireEvent.click(
+        await screen.findByRole('option', { name: 'simple:v1:beta' }),
+    );
+    fireEvent.click(await screen.findByRole('button', { name: 'Done' }));
     fireEvent.click(await screen.findByLabelText('Impression data'));
 
-    fireEvent.click(await screen.findByTestId('FORM_CREATE_BUTTON'));
+    fireEvent.click(await screen.findByRole('button', { name: 'Create flag' }));
 
     await waitFor(() => expect(requests).toHaveLength(1));
 
     expect(requests[0]).toMatchObject({
+        tags: [{ type: 'simple', value: 'v1:beta' }],
         impressionData: true,
+    });
+});
+
+test('the new create flag form offers to create a tag that does not exist yet, and attaches it', async () => {
+    const requests = setupNewFormApi();
+    testServerRoute(server, '/api/admin/tags', {
+        tags: [{ type: 'simple', value: 'billing' }],
+    });
+    const { requests: tagRequests } = testServerRoute(
+        server,
+        '/api/admin/tags',
+        {},
+        'post',
+        201,
+    );
+
+    renderDialog();
+
+    const nameInput = await getNameInput();
+    fireEvent.change(nameInput, { target: { value: 'my-flag' } });
+    fireEvent.click(
+        await screen.findByRole('button', { name: /Other optional settings/ }),
+    );
+    fireEvent.click(await screen.findByRole('button', { name: 'Add tag' }));
+    const search = await screen.findByPlaceholderText('Find or create a tag');
+
+    fireEvent.change(search, { target: { value: 'billing' } });
+    await screen.findByRole('option', { name: 'simple:billing' });
+    expect(
+        screen.queryByRole('button', { name: 'Create simple:billing' }),
+    ).not.toBeInTheDocument();
+
+    fireEvent.change(search, { target: { value: 'checkout' } });
+    const createTag = await screen.findByRole('button', {
+        name: 'Create simple:checkout',
+    });
+    fireEvent.blur(search);
+    fireEvent.click(createTag);
+
+    await waitFor(() =>
+        expect(tagRequests).toEqual([{ type: 'simple', value: 'checkout' }]),
+    );
+    fireEvent.click(await screen.findByRole('button', { name: 'Done' }));
+
+    fireEvent.click(await screen.findByRole('button', { name: 'Create flag' }));
+
+    await waitFor(() => expect(requests).toHaveLength(1));
+
+    expect(requests[0]).toMatchObject({
+        tags: [{ type: 'simple', value: 'checkout' }],
     });
 });
 
@@ -197,7 +253,7 @@ test('the new create flag form posts the default lifetime when the user leaves i
     const nameInput = await getNameInput();
     fireEvent.change(nameInput, { target: { value: 'my-flag' } });
 
-    fireEvent.click(await screen.findByTestId('FORM_CREATE_BUTTON'));
+    fireEvent.click(await screen.findByRole('button', { name: 'Create flag' }));
 
     await waitFor(() => expect(requests).toHaveLength(1));
 
@@ -214,7 +270,7 @@ test('the new create flag form keeps a chosen lifetime when the type changes', a
     fireEvent.click(await screen.findByRole('button', { name: '90 days' }));
     fireEvent.click(await screen.findByRole('button', { name: 'Experiment' }));
 
-    fireEvent.click(await screen.findByTestId('FORM_CREATE_BUTTON'));
+    fireEvent.click(await screen.findByRole('button', { name: 'Create flag' }));
 
     await waitFor(() => expect(requests).toHaveLength(1));
 
@@ -235,7 +291,7 @@ test('the new create flag form applies the default lifetime of a newly chosen ty
     fireEvent.change(await getNameInput(), { target: { value: 'my-flag' } });
     fireEvent.click(await screen.findByRole('button', { name: 'Kill switch' }));
 
-    fireEvent.click(await screen.findByTestId('FORM_CREATE_BUTTON'));
+    fireEvent.click(await screen.findByRole('button', { name: 'Create flag' }));
 
     await waitFor(() => expect(requests).toHaveLength(1));
 
@@ -250,7 +306,7 @@ test('the new create flag form posts a zero lifetime for a permanent flag', asyn
     fireEvent.change(await getNameInput(), { target: { value: 'my-flag' } });
     fireEvent.click(await screen.findByRole('button', { name: 'Permanent' }));
 
-    fireEvent.click(await screen.findByTestId('FORM_CREATE_BUTTON'));
+    fireEvent.click(await screen.findByRole('button', { name: 'Create flag' }));
 
     await waitFor(() => expect(requests).toHaveLength(1));
 
@@ -268,7 +324,7 @@ test('the new create flag form restores an unfinished draft when reopened', asyn
 
     renderDialog();
     expect(await getNameInput()).toHaveValue('my-flag');
-    const submit = await screen.findByTestId('FORM_CREATE_BUTTON');
+    const submit = await screen.findByRole('button', { name: 'Create flag' });
     await waitFor(() => expect(submit).toBeEnabled());
     fireEvent.click(submit);
 
@@ -296,7 +352,7 @@ test('the new create flag form posts the days until a picked date, also after re
     expect(
         await screen.findByRole('button', { name: 'Pick a date' }),
     ).toHaveAttribute('aria-pressed', 'true');
-    const submit = await screen.findByTestId('FORM_CREATE_BUTTON');
+    const submit = await screen.findByRole('button', { name: 'Create flag' });
     await waitFor(() => expect(submit).toBeEnabled());
     fireEvent.click(submit);
 

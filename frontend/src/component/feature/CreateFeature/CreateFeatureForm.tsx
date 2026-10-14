@@ -111,6 +111,7 @@ export const CreateFeatureForm = ({
         type,
         setType,
         tags,
+        setTags,
         name,
         setName,
         project,
@@ -342,6 +343,8 @@ export const CreateFeatureForm = ({
                     />
 
                     <OptionalSettingsFieldset
+                        tags={tags}
+                        onTagsChange={setTags}
                         impressionData={impressionData}
                         onImpressionDataChange={setImpressionData}
                     />

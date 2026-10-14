@@ -1,12 +1,10 @@
 import { createRequire } from 'node:module';
 import { createTestConfig } from '../../../test/config/test-config.js';
 import type { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
-import { createFakePrivateProjectChecker } from '../private-project/createPrivateProjectChecker.js';
-import { FakeSegmentReadModel } from '../segment/fake-segment-read-model.js';
-import type { ISegment } from '../../types/model.js';
+import type { FeatureToggle, ISegment } from '../../types/model.js';
 import type { SdkContextSchema } from '../../openapi/spec/sdk-context-schema.js';
 import { omitKeys } from '../../util/index.js';
-import { PlaygroundService } from './playground-service.js';
+import { createFakePlaygroundService } from './createPlaygroundService.js';
 
 const require = createRequire(import.meta.url);
 
@@ -67,18 +65,14 @@ specificationFiles
     .map(loadSpecification)
     .forEach((specification) => {
         describe(`client specification ${specification.name}`, () => {
-            const service = new PlaygroundService(
-                createTestConfig(),
-                {
-                    featureToggleService: {
-                        getPlaygroundFeatures: async () =>
-                            specification.state.features,
-                        getProjectId: async () => 'default',
-                    },
-                    privateProjectChecker: createFakePrivateProjectChecker(),
-                },
-                new FakeSegmentReadModel(specification.state.segments ?? []),
-            );
+            const {
+                playgroundService: service,
+                featureToggleStore,
+                segmentReadModel,
+            } = createFakePlaygroundService(createTestConfig());
+            featureToggleStore.features = specification.state
+                .features as unknown as FeatureToggle[];
+            segmentReadModel.segments = specification.state.segments ?? [];
 
             const evaluate = async ({
                 toggleName,

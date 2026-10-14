@@ -51,11 +51,11 @@ export class PlaygroundReadModel implements IPlaygroundReadModel {
             });
     }
 
-    async getFeatureByName(
+    async getFeatureWithParents(
         featureName: string,
         environment: string,
     ): Promise<FeatureConfigurationClient[]> {
-        const stopTimer = this.timer('getFeatureByName');
+        const stopTimer = this.timer('getFeatureWithParents');
 
         const builder = new FeatureToggleListBuilder(this.db, [
             ...SELECT_COLUMNS,

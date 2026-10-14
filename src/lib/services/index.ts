@@ -434,7 +434,7 @@ export const createServices = (
     const clientSpecService = new ClientSpecService(config);
     const playgroundService = db
         ? createPlaygroundService(db, config)
-        : createFakePlaygroundService(config);
+        : createFakePlaygroundService(config).playgroundService;
 
     const configurationRevisionService =
         ConfigurationRevisionService.getInstance(stores, config);

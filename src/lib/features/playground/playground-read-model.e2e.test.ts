@@ -20,7 +20,7 @@ afterAll(async () => {
     await db.destroy();
 });
 
-describe('getFeatureByName', () => {
+describe('getFeatureWithParents', () => {
     afterEach(async () => {
         await stores.dependentFeaturesStore.deleteAll();
         await stores.featureToggleStore.deleteAll();
@@ -44,7 +44,7 @@ describe('getFeatureByName', () => {
 
     test('is empty for an unknown flag', async () => {
         expect(
-            await readModel.getFeatureByName('missing', 'development'),
+            await readModel.getFeatureWithParents('missing', 'development'),
         ).toStrictEqual([]);
     });
 
@@ -52,7 +52,7 @@ describe('getFeatureByName', () => {
         await createFlag('flag');
         await createFlag('other');
 
-        const features = await readModel.getFeatureByName(
+        const features = await readModel.getFeatureWithParents(
             'flag',
             'development',
         );
@@ -80,7 +80,10 @@ describe('getFeatureByName', () => {
             enabled: true,
         });
 
-        const features = await readModel.getFeatureByName(child, 'development');
+        const features = await readModel.getFeatureWithParents(
+            child,
+            'development',
+        );
 
         expect(features).toMatchObject([
             { name: parent },
@@ -104,11 +107,11 @@ describe('getFeatureByName', () => {
             false,
         );
 
-        const [inDevelopment] = await readModel.getFeatureByName(
+        const [inDevelopment] = await readModel.getFeatureWithParents(
             'flag',
             'development',
         );
-        const [inProduction] = await readModel.getFeatureByName(
+        const [inProduction] = await readModel.getFeatureWithParents(
             'flag',
             'production',
         );
@@ -128,7 +131,7 @@ describe('getFeatureByName', () => {
         await stores.featureToggleStore.archive('child');
 
         expect(
-            await readModel.getFeatureByName('child', 'development'),
+            await readModel.getFeatureWithParents('child', 'development'),
         ).toStrictEqual([]);
     });
 });

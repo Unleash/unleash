@@ -28,6 +28,7 @@ import type { IPrivateProjectChecker } from '../private-project/privateProjectCh
 import { defaultVariant } from 'unleash-client/lib/variant.js';
 import { cleanContext } from './clean-context.js';
 import { NotFoundError } from '../../error/index.js';
+import type { IPlaygroundReadModel } from './playground-read-model-type.js';
 
 type EvaluationInput = {
     features: FeatureConfigurationClient[];
@@ -70,7 +71,7 @@ export type PlaygroundFeatureEvaluationResult = Omit<
 export class PlaygroundService {
     private readonly featureToggleService: Pick<
         FeatureToggleService,
-        'getPlaygroundFeatures' | 'getProjectId'
+        'getPlaygroundFeatures'
     >;
 
     private readonly flagResolver: IFlagResolver;
@@ -79,17 +80,21 @@ export class PlaygroundService {
 
     private readonly segmentReadModel: ISegmentReadModel;
 
+    private readonly playgroundReadModel: IPlaygroundReadModel;
+
     constructor(
         config: IUnleashConfig,
         {
             featureToggleService,
             privateProjectChecker,
+            playgroundReadModel,
         }: {
             featureToggleService: Pick<
                 FeatureToggleService,
-                'getPlaygroundFeatures' | 'getProjectId'
+                'getPlaygroundFeatures'
             >;
             privateProjectChecker: IPrivateProjectChecker;
+            playgroundReadModel: IPlaygroundReadModel;
         },
         segmentReadModel: ISegmentReadModel,
     ) {
@@ -97,6 +102,7 @@ export class PlaygroundService {
         this.featureToggleService = featureToggleService;
         this.privateProjectChecker = privateProjectChecker;
         this.segmentReadModel = segmentReadModel;
+        this.playgroundReadModel = playgroundReadModel;
     }
 
     async evaluateAdvancedQuery(
@@ -293,38 +299,31 @@ export class PlaygroundService {
             `Could not find feature flag ${featureName}`,
         );
 
-        const projectId =
-            await this.featureToggleService.getProjectId(featureName);
+        const [features, segments] = await Promise.all([
+            this.playgroundReadModel.getFeatureWithParents(
+                featureName,
+                environment,
+            ),
+            this.segmentReadModel.getActive(),
+        ]);
+
+        const target = features.find(({ name }) => name === featureName);
         if (
-            !projectId ||
+            !target ||
             !(await this.privateProjectChecker.hasAccessToProject(
                 userId,
-                projectId,
+                target.project,
             ))
         ) {
             throw notFound;
         }
 
-        const [{ features, featureProject }, segments] = await Promise.all([
-            this.resolveFeatures([projectId], environment),
-            this.segmentReadModel.getActive(),
-        ]);
-
-        // archived flags are not returned by resolveFeatures
-        const target = features.find(({ name }) => name === featureName);
-        if (!target) {
-            throw notFound;
-        }
-
-        // parents must be part of the evaluation for dependencies to resolve
-        const parentNames =
-            target.dependencies?.map((dependency) => dependency.feature) ?? [];
-        const relevantFeatures = features.filter(
-            ({ name }) => name === featureName || parentNames.includes(name),
+        const featureProject = Object.fromEntries(
+            features.map(({ name, project }) => [name, project]),
         );
 
         const result = await this.evaluate({
-            features: relevantFeatures,
+            features,
             featureProject,
             segments,
             context,

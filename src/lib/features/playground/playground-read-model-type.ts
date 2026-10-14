@@ -2,10 +2,10 @@ import type { FeatureConfigurationClient } from '../feature-toggle/types/feature
 
 export interface IPlaygroundReadModel {
     /**
-     * Returns the flag together with its parents, parents first.
+     * Parents come first.
      * Returns an empty array if the flag does not exist or is archived.
      */
-    getFeatureByName(
+    getFeatureWithParents(
         featureName: string,
         environment: string,
     ): Promise<FeatureConfigurationClient[]>;

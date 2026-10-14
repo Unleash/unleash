@@ -35,7 +35,7 @@ describe('parseSurveyPayload', () => {
         expect(survey).toEqual({
             flagName: 'survey-onboarding',
             title: 'How was creating your flag?',
-            description: 'Three quick questions.',
+            description: 'Two quick questions.',
             questions: [
                 {
                     id: 'ease',
@@ -43,13 +43,6 @@ describe('parseSurveyPayload', () => {
                     prompt: 'How easy was it?',
                     required: true,
                     scale: 5,
-                },
-                {
-                    id: 'role',
-                    type: 'multi-choice',
-                    prompt: 'What is your role?',
-                    required: false,
-                    options: ['Developer', 'PM', 'Other'],
                 },
                 {
                     id: 'comment',
@@ -136,34 +129,6 @@ describe('parseSurveyPayload', () => {
             withQuestions([
                 { id: 'why', type: 'free-text', prompt: 'Why?' },
                 { id: 'why', type: 'free-text', prompt: 'Why not?' },
-            ]),
-        ],
-        [
-            'has a multi-choice question without options',
-            withQuestions([
-                { id: 'pick', type: 'multi-choice', prompt: 'Pick' },
-            ]),
-        ],
-        [
-            'has a multi-choice question with no options to pick',
-            withQuestions([
-                {
-                    id: 'pick',
-                    type: 'multi-choice',
-                    prompt: 'Pick',
-                    options: [],
-                },
-            ]),
-        ],
-        [
-            'has a multi-choice option that is blank or not text',
-            withQuestions([
-                {
-                    id: 'pick',
-                    type: 'multi-choice',
-                    prompt: 'Pick',
-                    options: ['Yes', '', 1],
-                },
             ]),
         ],
     ])('rejects a survey that %s', (_, survey) => {

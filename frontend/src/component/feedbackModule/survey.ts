@@ -15,10 +15,9 @@ interface QuestionBase {
 
 export type SurveyQuestion =
     | (QuestionBase & { type: 'free-text' })
-    | (QuestionBase & { type: 'rating'; scale: number })
-    | (QuestionBase & { type: 'multi-choice'; options: string[] });
+    | (QuestionBase & { type: 'rating'; scale: number });
 
-export type SurveyAnswer = number | string[] | string;
+export type SurveyAnswer = number | string;
 
 export type SurveyAnswers = Record<string, SurveyAnswer>;
 
@@ -33,7 +32,7 @@ export const SURVEY_TEMPLATE = {
     kind: SURVEY_KIND,
     version: 1,
     title: 'How was creating your flag?',
-    description: 'Three quick questions.',
+    description: 'Two quick questions.',
     questions: [
         {
             id: 'ease',
@@ -41,12 +40,6 @@ export const SURVEY_TEMPLATE = {
             prompt: 'How easy was it?',
             required: true,
             scale: DEFAULT_RATING_SCALE,
-        },
-        {
-            id: 'role',
-            type: 'multi-choice',
-            prompt: 'What is your role?',
-            options: ['Developer', 'PM', 'Other'],
         },
         { id: 'comment', type: 'free-text', prompt: 'Anything else?' },
     ],
@@ -87,17 +80,6 @@ const parseQuestion = (raw: unknown): SurveyQuestion | null => {
         case 'rating': {
             const scale = parseRatingScale(raw.scale);
             return scale === null ? null : { ...base, type: 'rating', scale };
-        }
-        case 'multi-choice': {
-            const options = raw.options;
-            if (
-                !Array.isArray(options) ||
-                options.length === 0 ||
-                !options.every(isNonEmptyString)
-            ) {
-                return null;
-            }
-            return { ...base, type: 'multi-choice', options };
         }
         default:
             return null;

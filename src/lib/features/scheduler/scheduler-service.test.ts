@@ -8,7 +8,9 @@ import type EventService from '../events/event-service.js';
 import { SCHEDULER_JOB_TIME } from '../../metric-events.js';
 import EventEmitter from 'events';
 import { TEST_AUDIT_USER } from '../../types/index.js';
-import { vi } from 'vitest';
+import { afterEach, vi } from 'vitest';
+
+afterEach(() => vi.useRealTimers());
 
 function ms(timeMs) {
     return new Promise((resolve) => setTimeout(resolve, timeMs));
@@ -243,6 +245,20 @@ test('Delays initial job execution by jitter duration', async () => {
 
     await ms(50);
     expect(job).toHaveBeenCalledTimes(1);
+    schedulerService.stop();
+});
+
+test('Offsets every run by the jitter duration', async () => {
+    vi.useFakeTimers();
+    const { schedulerService } = createSchedulerTestService();
+    const job = vi.fn() as () => Promise<void>;
+
+    await schedulerService.schedule(job, 100, 'test-id', 25);
+
+    await vi.advanceTimersByTimeAsync(120);
+    expect(job).toHaveBeenCalledTimes(1);
+    await vi.advanceTimersByTimeAsync(10);
+    expect(job).toHaveBeenCalledTimes(2);
     schedulerService.stop();
 });
 

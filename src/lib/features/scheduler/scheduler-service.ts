@@ -73,20 +73,23 @@ export class SchedulerService {
             return promise;
         };
 
-        // scheduled run
-        this.intervalIds.push(
-            setInterval(() => {
-                void runScheduledFunctionWithEvent();
-            }, timeMs).unref(),
-        );
+        const startInterval = () => {
+            this.intervalIds.push(
+                setInterval(() => {
+                    void runScheduledFunctionWithEvent();
+                }, timeMs).unref(),
+            );
+        };
 
         // initial run with jitter
         if (jitter) {
             const timeoutId = setTimeout(() => {
+                startInterval();
                 void runScheduledFunctionWithEvent();
             }, jitter);
             this.intervalIds.push(timeoutId);
         } else {
+            startInterval();
             await runScheduledFunctionWithEvent();
         }
     }

@@ -27,18 +27,32 @@ const survey: Survey = {
 };
 
 const renderCard = ({
+    survey: shownSurvey = survey,
     onSubmit = vi.fn(),
     onDismiss = vi.fn(),
     scheduleLeave = () => () => {},
 }: Partial<Parameters<typeof SurveyCard>[0]> = {}) =>
     render(
         <SurveyCard
-            survey={survey}
+            survey={shownSurvey}
             onSubmit={onSubmit}
             onDismiss={onDismiss}
             scheduleLeave={scheduleLeave}
         />,
     );
+
+const multiChoiceSurvey: Survey = {
+    ...survey,
+    questions: [
+        {
+            id: 'role',
+            type: 'multi-choice',
+            prompt: 'What is your role?',
+            required: true,
+            options: ['Developer', 'PM', 'Other'],
+        },
+    ],
+};
 
 describe('SurveyCard', () => {
     it('renders the survey and its questions', () => {
@@ -147,5 +161,32 @@ describe('SurveyCard', () => {
         );
 
         expect(onDismiss).toHaveBeenCalledOnce();
+    });
+
+    it('submits the picked options in the order they are offered', async () => {
+        const onSubmit = vi.fn();
+        renderCard({ survey: multiChoiceSurvey, onSubmit });
+
+        await userEvent.click(screen.getByRole('checkbox', { name: 'Other' }));
+        await userEvent.click(
+            screen.getByRole('checkbox', { name: 'Developer' }),
+        );
+        await userEvent.click(screen.getByRole('button', { name: 'Submit' }));
+
+        expect(onSubmit).toHaveBeenCalledWith({
+            role: ['Developer', 'Other'],
+        });
+    });
+
+    it('holds back Submit again when every picked option is unpicked', async () => {
+        renderCard({ survey: multiChoiceSurvey });
+
+        await userEvent.click(screen.getByRole('checkbox', { name: 'PM' }));
+        await userEvent.click(screen.getByRole('checkbox', { name: 'PM' }));
+
+        expect(screen.getByRole('button', { name: 'Submit' })).toHaveAttribute(
+            'aria-disabled',
+            'true',
+        );
     });
 });

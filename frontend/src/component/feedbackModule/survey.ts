@@ -15,9 +15,10 @@ interface QuestionBase {
 
 export type SurveyQuestion =
     | (QuestionBase & { type: 'free-text' })
-    | (QuestionBase & { type: 'rating'; scale: number });
+    | (QuestionBase & { type: 'rating'; scale: number })
+    | (QuestionBase & { type: 'multi-choice'; options: string[] });
 
-export type SurveyAnswer = number | string;
+export type SurveyAnswer = number | string | string[];
 
 export type SurveyAnswers = Record<string, SurveyAnswer>;
 
@@ -32,7 +33,7 @@ export const SURVEY_TEMPLATE = {
     kind: SURVEY_KIND,
     version: 1,
     title: 'How was creating your flag?',
-    description: 'Two quick questions.',
+    description: 'Three quick questions.',
     questions: [
         {
             id: 'ease',
@@ -40,6 +41,12 @@ export const SURVEY_TEMPLATE = {
             prompt: 'How easy was it?',
             required: true,
             scale: DEFAULT_RATING_SCALE,
+        },
+        {
+            id: 'role',
+            type: 'multi-choice',
+            prompt: 'What is your role?',
+            options: ['Developer', 'PM', 'Other'],
         },
         { id: 'comment', type: 'free-text', prompt: 'Anything else?' },
     ],
@@ -62,6 +69,19 @@ const parseRatingScale = (scale: unknown): number | null => {
         : null;
 };
 
+const parseOptions = (options: unknown): string[] | null => {
+    if (
+        !Array.isArray(options) ||
+        options.length === 0 ||
+        !options.every(isNonEmptyString)
+    ) {
+        return null;
+    }
+    // Options are both the checkbox keys and the answer values, so duplicates
+    // couldn't be told apart.
+    return new Set(options).size === options.length ? options : null;
+};
+
 const parseQuestion = (raw: unknown): SurveyQuestion | null => {
     if (!isObject(raw)) {
         return null;
@@ -80,6 +100,12 @@ const parseQuestion = (raw: unknown): SurveyQuestion | null => {
         case 'rating': {
             const scale = parseRatingScale(raw.scale);
             return scale === null ? null : { ...base, type: 'rating', scale };
+        }
+        case 'multi-choice': {
+            const options = parseOptions(raw.options);
+            return options === null
+                ? null
+                : { ...base, type: 'multi-choice', options };
         }
         default:
             return null;

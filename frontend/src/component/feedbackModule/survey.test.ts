@@ -35,7 +35,7 @@ describe('parseSurveyPayload', () => {
         expect(survey).toEqual({
             flagName: 'survey-onboarding',
             title: 'How was creating your flag?',
-            description: 'Two quick questions.',
+            description: 'Three quick questions.',
             questions: [
                 {
                     id: 'ease',
@@ -43,6 +43,13 @@ describe('parseSurveyPayload', () => {
                     prompt: 'How easy was it?',
                     required: true,
                     scale: 5,
+                },
+                {
+                    id: 'role',
+                    type: 'multi-choice',
+                    prompt: 'What is your role?',
+                    required: false,
+                    options: ['Developer', 'PM', 'Other'],
                 },
                 {
                     id: 'comment',
@@ -123,6 +130,45 @@ describe('parseSurveyPayload', () => {
         [
             'has a question of unknown type',
             withQuestions([{ id: 'why', type: 'essay', prompt: 'Why?' }]),
+        ],
+        [
+            'has a multi-choice question with no options field',
+            withQuestions([
+                { id: 'pick', type: 'multi-choice', prompt: 'Pick' },
+            ]),
+        ],
+        [
+            'has a multi-choice question with an empty options list',
+            withQuestions([
+                {
+                    id: 'pick',
+                    type: 'multi-choice',
+                    prompt: 'Pick',
+                    options: [],
+                },
+            ]),
+        ],
+        [
+            'has a multi-choice question with an empty option',
+            withQuestions([
+                {
+                    id: 'pick',
+                    type: 'multi-choice',
+                    prompt: 'Pick',
+                    options: ['A', ''],
+                },
+            ]),
+        ],
+        [
+            'has a multi-choice question with duplicate options',
+            withQuestions([
+                {
+                    id: 'pick',
+                    type: 'multi-choice',
+                    prompt: 'Pick',
+                    options: ['A', 'A'],
+                },
+            ]),
         ],
         [
             'has duplicate question ids',

@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { describe, expect, it } from 'vitest';
-import { fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen, within } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import type { SurveyAnswer, SurveyQuestion } from '../survey.ts';
 import { QuestionField } from './QuestionField.tsx';
 
 type RatingQuestion = Extract<SurveyQuestion, { type: 'rating' }>;
 type FreeTextQuestion = Extract<SurveyQuestion, { type: 'free-text' }>;
+type MultiChoiceQuestion = Extract<SurveyQuestion, { type: 'multi-choice' }>;
 
 const ratingQuestion = (
     overrides: Partial<RatingQuestion> = {},
@@ -26,6 +27,17 @@ const freeTextQuestion = (
     type: 'free-text',
     prompt: 'Anything else?',
     required: false,
+    ...overrides,
+});
+
+const multiChoiceQuestion = (
+    overrides: Partial<MultiChoiceQuestion> = {},
+): MultiChoiceQuestion => ({
+    id: 'role',
+    type: 'multi-choice',
+    prompt: 'What is your role?',
+    required: false,
+    options: ['Developer', 'PM', 'Other'],
     ...overrides,
 });
 
@@ -82,6 +94,27 @@ describe('QuestionField', () => {
         ).not.toBeInTheDocument();
     });
 
+    it('offers a checkbox per option under the prompt', () => {
+        renderQuestion(multiChoiceQuestion());
+
+        const group = screen.getByRole('group', { name: 'What is your role?' });
+        expect(
+            within(group)
+                .getAllByRole('checkbox')
+                .map((checkbox) => checkbox.closest('label')?.textContent),
+        ).toEqual(['Developer', 'PM', 'Other']);
+    });
+
+    it('unpicks an option when it is clicked again', () => {
+        renderQuestion(multiChoiceQuestion());
+        fireEvent.click(screen.getByRole('checkbox', { name: 'PM' }));
+        expect(screen.getByRole('checkbox', { name: 'PM' })).toBeChecked();
+
+        fireEvent.click(screen.getByRole('checkbox', { name: 'PM' }));
+
+        expect(screen.getByRole('checkbox', { name: 'PM' })).not.toBeChecked();
+    });
+
     it('records the typed answer', () => {
         renderQuestion(freeTextQuestion());
 
@@ -124,6 +157,22 @@ describe('QuestionField', () => {
         expect(
             screen.getByRole('textbox', { name: 'Anything else?' }),
         ).not.toBeRequired();
+    });
+
+    it('tells assistive tech that a required multi-choice needs an answer', () => {
+        renderQuestion(multiChoiceQuestion({ required: true }));
+
+        expect(
+            screen.getByRole('group', { name: 'What is your role?' }),
+        ).toHaveAccessibleDescription('Pick at least one option');
+    });
+
+    it('does not describe an optional multi-choice as required', () => {
+        renderQuestion(multiChoiceQuestion());
+
+        expect(
+            screen.getByRole('group', { name: 'What is your role?' }),
+        ).not.toHaveAccessibleDescription();
     });
 
     it('marks a required rating as required for assistive tech', () => {

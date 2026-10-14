@@ -2,7 +2,7 @@ import type React from 'react';
 import { Fragment, useId, useState } from 'react';
 import type { ISegment } from 'interfaces/segment';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { FeatureStrategySegmentChip } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegmentChip';
+import { FeatureStrategySegmentChip } from 'component/feature/FeatureStrategy/FeatureStrategySegment/LegacyFeatureStrategySegmentChip.tsx';
 import { Alert, styled } from '@mui/material';
 import { SegmentItem } from 'component/common/SegmentItem/SegmentItem';
 

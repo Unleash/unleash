@@ -19,6 +19,21 @@ const createFeature = (
 });
 
 describe('evaluateFeature', () => {
+    it('reports a flag that does not exist as not found', async () => {
+        const { playgroundService } = createFakePlaygroundService(
+            createTestConfig(),
+        );
+
+        await expect(
+            playgroundService.evaluateFeature(
+                'missing-flag',
+                'development',
+                { appName: 'test' },
+                defaultUserId,
+            ),
+        ).rejects.toThrow(NotFoundError);
+    });
+
     it('hides flags in projects the user can not access', async () => {
         const {
             playgroundService,

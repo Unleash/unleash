@@ -1,6 +1,8 @@
 import { useState, useRef } from 'react';
 import { styled, Button } from '@mui/material';
 import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
+import { Truncator } from 'component/common/Truncator/Truncator';
+import { dialogHeaderHeight } from 'themes/themeStyles';
 import { DropdownList } from './ConfigButtons/DropdownList.tsx';
 import { StyledPopover } from './ConfigButtons/shared.styles';
 
@@ -20,7 +22,7 @@ const Bar = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 3),
     borderBottom: `1px solid ${theme.palette.divider}`,
     gap: theme.spacing(0),
-    height: theme.spacing(8),
+    height: dialogHeaderHeight(theme),
 }));
 
 const ProjectButton = styled(Button)(({ theme }) => ({
@@ -41,6 +43,8 @@ const Title = styled('span')(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
     fontSize: theme.typography.body2.fontSize,
     paddingLeft: theme.spacing(0.5),
+    whiteSpace: 'nowrap',
+    flexShrink: 0,
 }));
 
 export const HeaderBreadcrumb: React.FC<Props> = ({
@@ -64,7 +68,13 @@ export const HeaderBreadcrumb: React.FC<Props> = ({
                             onClick={() => setAnchorEl(ref.current)}
                             aria-label='Select project'
                         >
-                            {valueLabel ?? value}
+                            <Truncator
+                                title={valueLabel ?? value}
+                                arrow
+                                sx={{ maxWidth: (theme) => theme.spacing(40) }}
+                            >
+                                {valueLabel ?? value}
+                            </Truncator>
                         </ProjectButton>
                     </div>
                     <Separator />

@@ -44,6 +44,7 @@ import {
     nameInputSlotProps,
     SinglePillDropdown,
 } from 'component/common/DialogFormTemplate/DialogFormTemplate.tsx';
+import { dialogHeaderHeight } from 'themes/themeStyles';
 import useProjectForm, {
     DEFAULT_PROJECT_STICKINESS,
 } from '../../hooks/useProjectForm.ts';
@@ -73,7 +74,7 @@ const StyledSidebarHeader = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    height: theme.spacing(8),
+    height: dialogHeaderHeight(theme),
     margin: theme.spacing(-4, -4, 0, -4),
     padding: theme.spacing(0, 2),
     borderBottom: `1px solid ${theme.palette.divider}`,
@@ -119,7 +120,7 @@ const TitleBar = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     padding: theme.spacing(0, 4),
     borderBottom: `1px solid ${theme.palette.divider}`,
-    height: theme.spacing(8),
+    height: dialogHeaderHeight(theme),
     fontWeight: theme.fontWeight.bold,
 }));
 

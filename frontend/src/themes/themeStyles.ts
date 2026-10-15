@@ -74,6 +74,7 @@ export const relative = {
 } as const;
 
 export const formTemplateSidebarWidth = '27.5rem';
+export const dialogHeaderHeight = (theme: Theme) => theme.spacing(6);
 export const defaultBorderRadius = (theme: Theme) => ({
     borderRadius: `${theme.shape.borderRadius}px`,
 });

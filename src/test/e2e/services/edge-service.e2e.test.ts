@@ -23,7 +23,6 @@ import {
 } from '../../../lib/features/apitokensv2/api-token-v2-service.js';
 import type { ApiTokenV2WithSecret } from '../../../lib/features/apitokensv2/index.js';
 import { AuthorizationTokenKind } from '../../../lib/authentication/authorization-token.js';
-import { withFakeTransactional } from '../../../lib/server-impl.js';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -61,9 +60,9 @@ beforeAll(async () => {
         { edgeTokenStore: db.stores.edgeTokenStore },
         {
             apiTokenService,
+            apiTokenCreationService: apiTokenService,
             apiTokenV2Service,
-            transactionalApiTokenV2Service:
-                withFakeTransactional(apiTokenV2Service),
+            apiTokenV2CreationService: apiTokenV2Service,
         },
         config,
     );

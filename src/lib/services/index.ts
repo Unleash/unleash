@@ -460,10 +460,20 @@ export const createServices = (
 
     const edgeService = db
         ? withTransactional(
-              (db) => createTransactionalEdgeService(db, config),
+              (db) =>
+                  createTransactionalEdgeService(db, config, {
+                      apiTokenService,
+                      apiTokenV2Service,
+                  }),
               db,
           )
-        : withFakeTransactional(createFakeEdgeService(config));
+        : withFakeTransactional(
+              createFakeEdgeService(config, {
+                  apiTokenService,
+                  apiTokenV2Service,
+                  transactionalApiTokenV2Service,
+              }),
+          );
 
     const patService = db
         ? createPatService(db, config)

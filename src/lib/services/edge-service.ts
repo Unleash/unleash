@@ -23,10 +23,7 @@ import {
     encryptSecret,
 } from '../features/edgetokens/edge-verification.js';
 import { EdgeTokenStore } from '../features/edgetokens/edge-token-store.js';
-import {
-    createApiTokenService,
-    createFakeApiTokenService,
-} from '../features/api-tokens/createApiTokenService.js';
+import { createApiTokenService } from '../features/api-tokens/createApiTokenService.js';
 import type { IUnleashServices } from './index.js';
 import { FakeEdgeTokenStore } from '../features/edgetokens/fake-edge-token-store.js';
 import {
@@ -36,14 +33,8 @@ import {
 import {
     type AdminApiTokenV2Service,
     createApiTokenV2Service,
-    createFakeApiTokenV2Service,
     type ReadOnlyApiTokenV2Service,
 } from '../features/apitokensv2/api-token-v2-service.js';
-import {
-    withFakeTransactional,
-    withTransactional,
-    type WithTransactional,
-} from '../server-impl.js';
 
 type ReplayProtectionArgs = {
     clientId: string;
@@ -54,36 +45,47 @@ type ReplayProtectionArgs = {
 export const createTransactionalEdgeService = (
     db: Db,
     config: IUnleashConfig,
+    {
+        apiTokenService,
+        apiTokenV2Service,
+    }: Pick<IUnleashServices, 'apiTokenService' | 'apiTokenV2Service'>,
 ) => {
     const edgeTokenStore = new EdgeTokenStore(db, config.eventBus, config);
     const transactionalApiTokenService = createApiTokenService(db, config);
-    const transactionalApiTokenV2Service = withTransactional(
-        createApiTokenV2Service(config),
-        db,
-    );
+    const apiTokenV2CreationService = createApiTokenV2Service(config)(db);
     return new EdgeService(
         { edgeTokenStore },
         {
-            apiTokenService: transactionalApiTokenService,
-            apiTokenV2Service: transactionalApiTokenV2Service,
-            transactionalApiTokenV2Service: transactionalApiTokenV2Service,
+            apiTokenService,
+            apiTokenV2Service,
+            // Writes must use the Edge transaction, while validation shares
+            // the caches warmed and invalidated by the main token services.
+            apiTokenCreationService: transactionalApiTokenService,
+            apiTokenV2CreationService,
         },
         config,
     );
 };
 
-export const createFakeEdgeService = (config: IUnleashConfig) => {
+export const createFakeEdgeService = (
+    config: IUnleashConfig,
+    tokenServices: Pick<
+        IUnleashServices,
+        | 'apiTokenService'
+        | 'apiTokenV2Service'
+        | 'transactionalApiTokenV2Service'
+    >,
+) => {
     const fakeEdgeTokenStore = new FakeEdgeTokenStore();
-    const { apiTokenService } = createFakeApiTokenService(config);
-    const fakeApiTokenService2 = createFakeApiTokenV2Service(config);
 
     return new EdgeService(
         { edgeTokenStore: fakeEdgeTokenStore },
         {
-            apiTokenService,
-            apiTokenV2Service: fakeApiTokenService2,
-            transactionalApiTokenV2Service:
-                withFakeTransactional(fakeApiTokenService2),
+            apiTokenService: tokenServices.apiTokenService,
+            apiTokenV2Service: tokenServices.apiTokenV2Service,
+            apiTokenCreationService: tokenServices.apiTokenService,
+            apiTokenV2CreationService:
+                tokenServices.transactionalApiTokenV2Service,
         },
         config,
     );
@@ -94,9 +96,14 @@ export default class EdgeService {
 
     private apiTokenService: ApiTokenService;
 
+    private apiTokenCreationService: Pick<
+        ApiTokenService,
+        'createApiTokenWithProjects'
+    >;
+
     private apiTokenV2Service: ReadOnlyApiTokenV2Service;
 
-    private transactionalApiTokenV2Service: WithTransactional<AdminApiTokenV2Service>;
+    private apiTokenV2CreationService: AdminApiTokenV2Service;
 
     private edgeTokenStore: IEdgeTokenStore;
 
@@ -108,14 +115,16 @@ export default class EdgeService {
         { edgeTokenStore }: Pick<IUnleashStores, 'edgeTokenStore'>,
         {
             apiTokenService,
+            apiTokenCreationService,
             apiTokenV2Service,
-            transactionalApiTokenV2Service,
-        }: Pick<
-            IUnleashServices,
-            | 'apiTokenService'
-            | 'apiTokenV2Service'
-            | 'transactionalApiTokenV2Service'
-        >,
+            apiTokenV2CreationService,
+        }: Pick<IUnleashServices, 'apiTokenService' | 'apiTokenV2Service'> & {
+            apiTokenV2CreationService: AdminApiTokenV2Service;
+            apiTokenCreationService: Pick<
+                ApiTokenService,
+                'createApiTokenWithProjects'
+            >;
+        },
         {
             getLogger,
             edgeMasterKey,
@@ -124,8 +133,9 @@ export default class EdgeService {
     ) {
         this.logger = getLogger('lib/services/edge-service.ts');
         this.apiTokenService = apiTokenService;
+        this.apiTokenCreationService = apiTokenCreationService;
         this.apiTokenV2Service = apiTokenV2Service;
-        this.transactionalApiTokenV2Service = transactionalApiTokenV2Service;
+        this.apiTokenV2CreationService = apiTokenV2CreationService;
         this.edgeTokenStore = edgeTokenStore;
         this.edgeMasterKey = edgeMasterKey;
         this.flagResolver = flagResolver;
@@ -213,9 +223,8 @@ export default class EdgeService {
         const tokens: EdgeTokenSchema[] = [];
         if (this.flagResolver.isEnabled('secureTokenStorage')) {
             const newTokens =
-                await this.transactionalApiTokenV2Service.transactional(
-                    (service) =>
-                        service.createTokensFromEdgeIssue(tokenRequest),
+                await this.apiTokenV2CreationService.createTokensFromEdgeIssue(
+                    tokenRequest,
                 );
             for (const newToken of newTokens) {
                 tokens.push(newToken);
@@ -236,7 +245,7 @@ export default class EdgeService {
                     });
                 } else if (tokenReq.environment && tokenReq.projects) {
                     const newToken =
-                        await this.apiTokenService.createApiTokenWithProjects(
+                        await this.apiTokenCreationService.createApiTokenWithProjects(
                             {
                                 tokenName: `enterprise_edge_${tokenReq.environment}_${truncate(tokenReq.projects, 3)}`,
                                 type: ApiTokenType.BACKEND,

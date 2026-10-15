@@ -3,7 +3,11 @@ import type { Response } from 'express';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import hashSum from 'hash-sum';
 import Controller from '../../routes/controller.js';
-import type { IClientSegment, IUnleashConfig } from '../../types/index.js';
+import type {
+    IClientSegment,
+    IFlagResolver,
+    IUnleashConfig,
+} from '../../types/index.js';
 import type { FeatureToggleService } from '../feature-toggle/feature-toggle-service.js';
 import type { Logger } from '../../logger.js';
 import { querySchema } from '../../schema/feature-schema.js';
@@ -65,6 +69,8 @@ export default class FeatureController extends Controller {
 
     private eventBus: EventEmitter;
 
+    private flagResolver: IFlagResolver;
+
     private featuresAndSegments: (
         query: IFeatureToggleQuery,
         etag: string,
@@ -100,6 +106,7 @@ export default class FeatureController extends Controller {
         this.configurationRevisionService = configurationRevisionService;
         this.featureToggleService = featureToggleService;
         this.eventBus = config.eventBus;
+        this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('client-api/feature.js');
 
         this.route({
@@ -330,14 +337,23 @@ export default class FeatureController extends Controller {
               }
             : { version, features, query, meta };
 
-        const serialized = this.serializeClientFeatures(
-            `${etag}:segments=${supportsSegments}`,
-            payload,
-        );
+        if (this.flagResolver.isEnabled('cacheFeatureSerialization')) {
+            const serialized = this.serializeClientFeatures(
+                `${etag}:segments=${supportsSegments}`,
+                payload,
+            );
 
-        res.setHeader('Content-Type', 'application/json; charset=utf-8');
-        res.statusCode = 200;
-        res.end(serialized);
+            res.setHeader('Content-Type', 'application/json; charset=utf-8');
+            res.statusCode = 200;
+            res.end(serialized);
+        } else {
+            this.openApiService.respondWithValidation(
+                200,
+                res,
+                clientFeaturesSchema.$id,
+                payload,
+            );
+        }
     }
 
     async calculateMeta(query: IFeatureToggleQuery): Promise<IMeta> {

@@ -49,6 +49,7 @@ export type IFlagKey =
     | 'showUserDeviceCount'
     | 'memorizeStats'
     | 'deltaApi'
+    | 'cacheFeatureSerialization'
     | 'uniqueSdkTracking'
     | 'consumptionModel'
     | 'impactViews'
@@ -240,6 +241,10 @@ const flags: IFlags = {
     ),
     deltaApi: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DELTA_API,
+        false,
+    ),
+    cacheFeatureSerialization: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_CACHE_FEATURE_SERIALIZATION,
         false,
     ),
     uniqueSdkTracking: parseEnvVarBoolean(

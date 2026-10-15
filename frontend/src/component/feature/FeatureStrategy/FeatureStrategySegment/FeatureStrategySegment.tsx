@@ -8,8 +8,6 @@ import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentL
 import { Box, Button, styled, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import { RecentlyUsedSegments } from './RecentlyUsedSegments/RecentlyUsedSegments.tsx';
-import { useRecentlyUsedSegments } from './RecentlyUsedSegments/useRecentlyUsedSegments.ts';
 
 const pluralize = (count: number, noun: string) =>
     `${count} ${noun}${count === 1 ? '' : 's'}`;
@@ -55,12 +53,6 @@ export const FeatureStrategySegment = ({
     const [addSegmentAnchor, setAddSegmentAnchor] =
         useState<HTMLButtonElement | null>(null);
     const { strategySegmentsLimit } = useSegmentLimits();
-    const { items: recentlyUsedSegmentIds } = useRecentlyUsedSegments();
-    const availableRecentlyUsedSegments = availableSegments.filter(
-        (segment) =>
-            recentlyUsedSegmentIds.includes(segment.id) &&
-            !selectedSegments.find((selected) => selected.id === segment.id),
-    );
 
     const atStrategySegmentsLimit: boolean = Boolean(
         strategySegmentsLimit &&
@@ -148,12 +140,6 @@ export const FeatureStrategySegment = ({
                 segments={selectedSegments}
                 setSegments={setSelectedSegments}
             />
-            {availableRecentlyUsedSegments.length > 0 ? (
-                <RecentlyUsedSegments
-                    setSegments={setSelectedSegments}
-                    segments={availableRecentlyUsedSegments}
-                />
-            ) : null}
         </StyledBox>
     );
 };

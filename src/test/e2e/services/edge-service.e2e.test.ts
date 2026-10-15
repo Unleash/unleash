@@ -60,7 +60,6 @@ beforeAll(async () => {
         { edgeTokenStore: db.stores.edgeTokenStore },
         {
             apiTokenService,
-            apiTokenCreationService: apiTokenService,
             apiTokenV2Service,
             apiTokenV2CreationService: apiTokenV2Service,
         },
@@ -120,7 +119,7 @@ test('should only return valid tokens', async () => {
     expect(activeToken.secret).toBe(response.tokens[0].token);
 });
 
-test('validates previously issued v2 tokens when secure token storage is disabled', async () => {
+test('validates previously issued v2 tokens', async () => {
     const token: ApiTokenV2WithSecret = await apiTokenV2Service.create(
         {
             tokenName: 'v2 edge token',
@@ -189,7 +188,7 @@ describe('Enterprise Edge - Generated tokens', () => {
         };
         await projectService.createProject(zProject, user, SYSTEM_USER_AUDIT);
     });
-    test('saving a token should make it fetchable from clientId, environment and projects', async () => {
+    test('each issuance creates a fresh secure credential for the requested scope', async () => {
         const tokens = await edgeService.getOrCreateTokens(clientId, {
             tokens: [
                 {
@@ -212,9 +211,11 @@ describe('Enterprise Edge - Generated tokens', () => {
         );
         const first = tokens.tokens[0];
         const second = refetched.tokens[0];
-        expect(first.token).toStrictEqual(second.token);
+        expect(first.token).not.toEqual(second.token);
+        expect(first.token).toMatch(/^\[\]:development\.v2_/);
+        expect(second.projects).toEqual(first.projects);
     });
-    test(`order of projects doesn't matter for uniqueness comparison`, async () => {
+    test('preserves project scope regardless of request order', async () => {
         const tokens = await edgeService.getOrCreateTokens(clientId, {
             tokens: [
                 {
@@ -244,7 +245,8 @@ describe('Enterprise Edge - Generated tokens', () => {
         });
         const first = tokens.tokens[0];
         const second = refetched.tokens[0];
-        expect(first.token).toStrictEqual(second.token);
+        expect(first.token).not.toEqual(second.token);
+        expect([...first.projects].sort()).toEqual([...second.projects].sort());
     });
     test(`Deletes nonces that have expired`, async () => {
         const nonce = randomBytes(16).toString('hex');

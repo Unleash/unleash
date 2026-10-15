@@ -37,6 +37,7 @@ afterAll(async () => {
 
 afterEach(async () => {
     await db.stores.apiTokenStore.deleteAll();
+    await db.rawDatabase('api_tokens_v2').delete();
 });
 
 test('returns empty list of tokens', async () => {
@@ -124,7 +125,7 @@ test.each([
         .expect(200)
         .expect((res) => {
             expect(res.body.tokens.length).toBe(10);
-            expect(res.body.tokens[2].type).toBe(ApiTokenType.CLIENT);
+            expect(res.body.tokens[2].type).toBe(type);
         });
     await app.request
         .get('/api/admin/api-tokens/default-client')
@@ -132,7 +133,7 @@ test.each([
         .expect(200)
         .expect((res) => {
             expect(res.body.tokens.length).toBe(10);
-            expect(res.body.tokens[2].type).toBe(ApiTokenType.CLIENT);
+            expect(res.body.tokens[2].type).toBe(type);
         });
 });
 

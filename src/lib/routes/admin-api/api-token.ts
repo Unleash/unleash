@@ -21,7 +21,6 @@ import type { IUnleashConfig } from '../../types/option.js';
 import { ApiTokenType, type IApiToken } from '../../types/model.js';
 import { createApiToken } from '../../schema/api-token-schema.js';
 import type { OpenApiService, IUnleashServices } from '../../services/index.js';
-import type { IFlagResolver } from '../../types/index.js';
 import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
 import {
     createResponseSchema,
@@ -138,8 +137,6 @@ export class ApiTokenController extends Controller {
 
     private logger: Logger;
 
-    private flagResolver: IFlagResolver;
-
     constructor(
         config: IUnleashConfig,
         {
@@ -164,7 +161,6 @@ export class ApiTokenController extends Controller {
         this.accessService = accessService;
         this.frontendApiService = frontendApiService;
         this.openApiService = openApiService;
-        this.flagResolver = config.flagResolver;
         this.apiTokenV2Service = apiTokenV2Service;
         this.transactionalApiTokenV2Service = transactionalApiTokenV2Service;
         this.logger = config.getLogger('api-token-controller.js');
@@ -334,27 +330,19 @@ export class ApiTokenController extends Controller {
             permissionRequired,
         );
         if (hasPermission) {
-            let token: IApiToken;
-            if (this.flagResolver.isEnabled('secureTokenStorage')) {
-                const tokenV2 =
-                    await this.transactionalApiTokenV2Service.transactional(
-                        (service) =>
-                            service.create(
-                                { userCreated: true, ...createToken },
-                                req.audit,
-                            ),
-                    );
-                const { selector: _selector, ...tokenWithSecret } = tokenV2;
-                token = {
-                    ...tokenWithSecret,
-                    project: tokenV2.projects.join(','),
-                };
-            } else {
-                token = await this.apiTokenService.createApiTokenWithProjects(
-                    createToken,
-                    req.audit,
+            const tokenV2 =
+                await this.transactionalApiTokenV2Service.transactional(
+                    (service) =>
+                        service.create(
+                            { userCreated: true, ...createToken },
+                            req.audit,
+                        ),
                 );
-            }
+            const { selector: _selector, ...tokenWithSecret } = tokenV2;
+            const token: IApiToken = {
+                ...tokenWithSecret,
+                project: tokenV2.projects.join(','),
+            };
             this.openApiService.respondWithValidation(
                 201,
                 res,

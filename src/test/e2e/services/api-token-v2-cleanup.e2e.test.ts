@@ -13,11 +13,7 @@ let app: IUnleashTest;
 
 beforeAll(async () => {
     db = await dbInit('api_token_v2_cleanup_serial', getLogger);
-    app = await setupAppWithCustomConfig(
-        db.stores,
-        { experimental: { flags: { secureTokenStorage: true } } },
-        db.rawDatabase,
-    );
+    app = await setupAppWithCustomConfig(db.stores, {}, db.rawDatabase);
 });
 
 afterAll(async () => {

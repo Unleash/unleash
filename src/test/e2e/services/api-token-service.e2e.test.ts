@@ -215,8 +215,8 @@ test('Enterprise edge tokens should be filtered', async () => {
             },
         ],
     });
-    const unfilteredList = await apiTokenService.getAllTokens();
-    const filteredList = await apiTokenService.getUserDefinedTokens();
+    const unfilteredList = await stores.apiTokenV2Store.getAllActive();
+    const filteredList = await stores.apiTokenV2Store.getUserDefinedTokens();
     expect(unfilteredList.length).toBe(filteredList.length + 1);
     await edgeService.deleteAllTokens();
 });

@@ -219,11 +219,6 @@ describe('api-token v2 (secure storage)', () => {
             {
                 edgeMasterKey,
                 edgeClientSecret,
-                experimental: {
-                    flags: {
-                        secureTokenStorage: true,
-                    },
-                },
             },
             db.rawDatabase,
         );

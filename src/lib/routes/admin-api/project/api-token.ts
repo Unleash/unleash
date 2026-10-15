@@ -197,27 +197,15 @@ export class ProjectApiTokenController extends Controller {
             );
         }
         const tokenData = { ...createToken, projects: [projectId] };
-        let token: IApiToken;
-        if (this.config.flagResolver.isEnabled('secureTokenStorage')) {
-            const tokenV2 =
-                await this.transactionalApiTokenV2Service.transactional(
-                    (service) =>
-                        service.create(
-                            { ...tokenData, userCreated: true },
-                            req.audit,
-                        ),
-                );
-            const { selector: _selector, ...tokenWithSecret } = tokenV2;
-            token = {
-                ...tokenWithSecret,
-                project: tokenV2.projects.join(','),
-            };
-        } else {
-            token = await this.apiTokenService.createApiTokenWithProjects(
-                tokenData,
-                req.audit,
-            );
-        }
+        const tokenV2 = await this.transactionalApiTokenV2Service.transactional(
+            (service) =>
+                service.create({ ...tokenData, userCreated: true }, req.audit),
+        );
+        const { selector: _selector, ...tokenWithSecret } = tokenV2;
+        const token: IApiToken = {
+            ...tokenWithSecret,
+            project: tokenV2.projects.join(','),
+        };
         this.openApiService.respondWithValidation(
             201,
             res,

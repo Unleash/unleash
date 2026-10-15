@@ -146,57 +146,34 @@ test('Edge validation reuses the secure-token cache and observes revision invali
         .expect(200, { tokens: [] });
 });
 
-test.each([
-    false,
-    true,
-])('rolled-back Edge issuance does not populate the shared validation cache (secure=%s)', async (secureTokenStorage) => {
-    const original = app.config.flagResolver.isEnabled.bind(
-        app.config.flagResolver,
+test('rolled-back Edge issuance does not populate the shared validation cache', async () => {
+    await app.services.edgeService.saveClient(
+        'rollback-edge',
+        'rollback-secret',
     );
-    const flag = vi.spyOn(app.config.flagResolver, 'isEnabled');
-    flag.mockImplementation((name, ...args) =>
-        name === 'secureTokenStorage'
-            ? secureTokenStorage
-            : original(name, ...args),
-    );
-    try {
-        await app.services.edgeService.saveClient(
-            'rollback-edge',
-            'rollback-secret',
-        );
-        let secret = '';
-        await expect(
-            app.services.edgeService.transactional(async (service) => {
-                const issued = await service.getOrCreateTokens(
-                    'rollback-edge',
-                    {
-                        tokens: [
-                            { environment: 'development', projects: ['*'] },
-                        ],
-                    },
-                );
-                secret = issued.tokens[0].token;
-                throw new Error('Roll back issuance');
-            }),
-        ).rejects.toThrow('Roll back issuance');
-        expect(secret).not.toBe('');
-        expect(await db.stores.apiTokenStore.get(secret)).toBeUndefined();
-        const credential = parseAuthorizationToken(secret);
-        if (
-            credential?.kind === AuthorizationTokenKind.API_TOKEN &&
-            credential.version === 'v2'
-        ) {
-            expect(
-                await db.stores.apiTokenV2Store.getBySelector(
-                    credential.selector,
-                ),
-            ).toBeUndefined();
-        }
-        await app.request
-            .post('/edge/validate')
-            .send({ tokens: [secret] })
-            .expect(200, { tokens: [] });
-    } finally {
-        flag.mockRestore();
+    let secret = '';
+    await expect(
+        app.services.edgeService.transactional(async (service) => {
+            const issued = await service.getOrCreateTokens('rollback-edge', {
+                tokens: [{ environment: 'development', projects: ['*'] }],
+            });
+            secret = issued.tokens[0].token;
+            throw new Error('Roll back issuance');
+        }),
+    ).rejects.toThrow('Roll back issuance');
+    expect(secret).not.toBe('');
+    expect(await db.stores.apiTokenStore.get(secret)).toBeUndefined();
+    const credential = parseAuthorizationToken(secret);
+    if (
+        credential?.kind === AuthorizationTokenKind.API_TOKEN &&
+        credential.version === 'v2'
+    ) {
+        expect(
+            await db.stores.apiTokenV2Store.getBySelector(credential.selector),
+        ).toBeUndefined();
     }
+    await app.request
+        .post('/edge/validate')
+        .send({ tokens: [secret] })
+        .expect(200, { tokens: [] });
 });

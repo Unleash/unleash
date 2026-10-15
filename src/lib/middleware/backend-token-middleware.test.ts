@@ -110,7 +110,7 @@ test.each([
     expect(req.user).toBeFalsy();
 });
 
-test('uses the V2 verifier for V2 token format when secure token storage is disabled', async () => {
+test('uses the V2 verifier for V2 token format', async () => {
     const localConfig = createTestConfig({
         getLogger,
         authentication: {
@@ -120,7 +120,6 @@ test('uses the V2 verifier for V2 token format when secure token storage is disa
         experimental: {
             flags: {
                 allowDeprecatedApiTokenMiddleware: false,
-                secureTokenStorage: false,
             },
         },
     });

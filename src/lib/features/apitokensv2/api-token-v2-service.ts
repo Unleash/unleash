@@ -18,6 +18,7 @@ import type {
 import type EventService from '../events/event-service.js';
 import { omitKeys } from '../../util/index.js';
 import { BadDataError, throwExceedsLimitError } from '../../error/index.js';
+import { FOREIGN_KEY_VIOLATION } from '../../error/db-error.js';
 import {
     type IEnvironmentStore,
     type IUnleashConfig,
@@ -333,11 +334,22 @@ class ApiTokenV2Service
                     : AuthorizationTokenKind.API_TOKEN,
             tokenPrefix: `${toProjectPart(token.projects)}:${token.environment}`,
         });
-        const created = await this.apiTokenV2Store.create(
-            token,
-            credential.selector,
-            credential.verifier,
-        );
+        const created = await this.apiTokenV2Store
+            .create(token, credential.selector, credential.verifier)
+            .catch((error) => {
+                if (
+                    error.code === FOREIGN_KEY_VIOLATION &&
+                    error.constraint === 'api_tokens_v2_project_project_fkey'
+                ) {
+                    const project = token.projects.find((project) =>
+                        error.detail?.includes(`=(${project})`),
+                    );
+                    throw new BadDataError(
+                        `Project=${project ?? 'invalid'} does not exist`,
+                    );
+                }
+                throw error;
+            });
         await this.eventService.storeEventsOrThrow([
             new ApiTokenCreatedEvent({
                 auditUser,

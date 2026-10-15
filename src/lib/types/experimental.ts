@@ -69,7 +69,7 @@ export type IFlagKey =
     | 'learningLab'
     | 'onboardingIntroTour'
     | 'onboardingIntroTourAdvancedTopics'
-    | 'secureTokenStorage'
+    | 'secureAccountTokenStorage'
     | 'recordSdkFlavorMetrics'
     | 'searchDocsWidget'
     | 'semverBuildMetadata'
@@ -327,8 +327,8 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_RECORD_SDK_FLAVOR_METRICS,
         false,
     ),
-    secureTokenStorage: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SECURE_TOKEN,
+    secureAccountTokenStorage: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SECURE_ACCOUNT_TOKEN,
         false,
     ),
     searchDocsWidget: parseEnvVarBoolean(

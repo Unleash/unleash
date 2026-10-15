@@ -18,17 +18,7 @@ let app: IUnleashTest;
 
 beforeAll(async () => {
     db = await dbInit('token_api_v2_serial', getLogger);
-    app = await setupAppWithCustomConfig(
-        db.stores,
-        {
-            experimental: {
-                flags: {
-                    secureTokenStorage: true,
-                },
-            },
-        },
-        db.rawDatabase,
-    );
+    app = await setupAppWithCustomConfig(db.stores, {}, db.rawDatabase);
 });
 
 afterAll(async () => {
@@ -122,7 +112,7 @@ test('lists, updates, and deletes tokens across both token stores', async () => 
     expect(emptyResponse.body.tokens).toEqual([]);
 });
 
-test('lists, updates, and deletes secure tokens when secure token storage is disabled', async () => {
+test('lists, updates, and deletes secure tokens by selector', async () => {
     const created = await app.services.transactionalApiTokenV2Service.create(
         {
             projects: ['default'],
@@ -134,58 +124,46 @@ test('lists, updates, and deletes secure tokens when secure token storage is dis
         SYSTEM_USER_AUDIT,
     );
 
-    const experiments = (
-        app.config.flagResolver as unknown as {
-            experiments: { secureTokenStorage: boolean };
-        }
-    ).experiments;
-    const previousSecureTokenStorage = experiments.secureTokenStorage;
-    experiments.secureTokenStorage = false;
+    const listResponse = await app.request
+        .get('/api/admin/api-tokens')
+        .expect(200);
 
-    try {
-        const listResponse = await app.request
-            .get('/api/admin/api-tokens')
-            .expect(200);
+    expect(listResponse.body.tokens).toEqual(
+        expect.arrayContaining([
+            expect.objectContaining({
+                tokenName: 'secure-token-after-rollback',
+                secret: created.selector,
+                secure: true,
+            }),
+        ]),
+    );
 
-        expect(listResponse.body.tokens).toEqual(
-            expect.arrayContaining([
-                expect.objectContaining({
-                    tokenName: 'secure-token-after-rollback',
-                    secret: created.selector,
-                    secure: true,
-                }),
-            ]),
-        );
+    const expiresAt = new Date(Date.now() + 60_000).toISOString();
+    await app.request
+        .put(`/api/admin/api-tokens/${created.selector}`)
+        .send({ expiresAt })
+        .expect(200);
 
-        const expiresAt = new Date(Date.now() + 60_000).toISOString();
-        await app.request
-            .put(`/api/admin/api-tokens/${created.selector}`)
-            .send({ expiresAt })
-            .expect(200);
+    const updatedResponse = await app.request
+        .get('/api/admin/api-tokens')
+        .expect(200);
+    expect(updatedResponse.body.tokens).toEqual(
+        expect.arrayContaining([
+            expect.objectContaining({
+                tokenName: 'secure-token-after-rollback',
+                expiresAt,
+            }),
+        ]),
+    );
 
-        const updatedResponse = await app.request
-            .get('/api/admin/api-tokens')
-            .expect(200);
-        expect(updatedResponse.body.tokens).toEqual(
-            expect.arrayContaining([
-                expect.objectContaining({
-                    tokenName: 'secure-token-after-rollback',
-                    expiresAt,
-                }),
-            ]),
-        );
+    await app.request
+        .delete(`/api/admin/api-tokens/${created.selector}`)
+        .expect(200);
 
-        await app.request
-            .delete(`/api/admin/api-tokens/${created.selector}`)
-            .expect(200);
-
-        const emptyResponse = await app.request
-            .get('/api/admin/api-tokens')
-            .expect(200);
-        expect(emptyResponse.body.tokens).toEqual([]);
-    } finally {
-        experiments.secureTokenStorage = previousSecureTokenStorage;
-    }
+    const emptyResponse = await app.request
+        .get('/api/admin/api-tokens')
+        .expect(200);
+    expect(emptyResponse.body.tokens).toEqual([]);
 });
 
 test('only warms the cache with recently seen non-expired secure tokens', async () => {

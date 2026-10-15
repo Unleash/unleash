@@ -70,6 +70,11 @@ export default class FeatureController extends Controller {
         etag: string,
     ) => Promise<[FeatureConfigurationClient[], IClientSegment[]]>;
 
+    private serializeClientFeatures: (
+        etag: string,
+        payload: ClientFeaturesSchema,
+    ) => Buffer;
+
     constructor(
         {
             clientFeatureToggleService,
@@ -165,6 +170,31 @@ export default class FeatureController extends Controller {
             );
         } else {
             this.featuresAndSegments = this.resolveFeaturesAndSegments;
+        }
+
+        if (clientFeatureCaching.enabled) {
+            this.serializeClientFeatures = memoizee(
+                (_etag: string, payload: ClientFeaturesSchema): Buffer =>
+                    this.openApiService.serializeWithValidation(
+                        clientFeaturesSchema.$id,
+                        payload,
+                    ),
+                {
+                    maxAge: clientFeatureCaching.maxAge,
+                    normalizer([etag]) {
+                        return etag;
+                    },
+                },
+            );
+        } else {
+            this.serializeClientFeatures = (
+                _etag: string,
+                payload: ClientFeaturesSchema,
+            ): Buffer =>
+                this.openApiService.serializeWithValidation(
+                    clientFeaturesSchema.$id,
+                    payload,
+                );
         }
     }
 
@@ -285,27 +315,23 @@ export default class FeatureController extends Controller {
             query,
             etag,
         );
-        if (this.clientSpecService.requestSupportsSpec(req, 'segments')) {
-            this.openApiService.respondWithValidation(
-                200,
-                res,
-                clientFeaturesSchema.$id,
-                {
-                    version,
-                    features,
-                    query: { ...query },
-                    segments,
-                    meta,
-                },
-            );
-        } else {
-            this.openApiService.respondWithValidation(
-                200,
-                res,
-                clientFeaturesSchema.$id,
-                { version, features, query, meta },
-            );
-        }
+
+        const payload: ClientFeaturesSchema =
+            this.clientSpecService.requestSupportsSpec(req, 'segments')
+                ? {
+                      version,
+                      features,
+                      query: { ...query },
+                      segments,
+                      meta,
+                  }
+                : { version, features, query, meta };
+
+        const serialized = this.serializeClientFeatures(etag, payload);
+
+        res.setHeader('Content-Type', 'application/json; charset=utf-8');
+        res.statusCode = 200;
+        res.end(serialized);
     }
 
     async calculateMeta(query: IFeatureToggleQuery): Promise<IMeta> {

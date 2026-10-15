@@ -2,6 +2,7 @@ import { PayloadType } from 'utils/variants';
 
 export const SURVEY_FLAG_PREFIX = 'survey-';
 export const SURVEY_KIND = 'unleash-survey';
+export const SURVEY_VERSION = 1;
 const DEFAULT_RATING_SCALE = 5;
 const MIN_RATING_SCALE = 2;
 const MAX_RATING_SCALE = 10;
@@ -31,7 +32,7 @@ export interface Survey {
 
 export const SURVEY_TEMPLATE = {
     kind: SURVEY_KIND,
-    version: 1,
+    version: SURVEY_VERSION,
     title: 'How was creating your flag?',
     description: 'Three quick questions.',
     questions: [
@@ -132,7 +133,7 @@ export const parseSurveyPayload = (
     if (!isObject(raw)) {
         return null;
     }
-    if (raw.kind !== SURVEY_KIND || raw.version !== 1) {
+    if (raw.kind !== SURVEY_KIND || raw.version !== SURVEY_VERSION) {
         return null;
     }
     if (!isNonEmptyString(raw.title)) {

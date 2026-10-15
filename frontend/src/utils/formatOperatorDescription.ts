@@ -48,8 +48,8 @@ const invertedConstraintOperatorDescriptions: Record<Operator, string> = {
     SEMVER_EQ: 'is a SemVer not equal to',
     SEMVER_GT: 'is a SemVer not greater than',
     SEMVER_LT: 'is a SemVer not less than',
-    SEMVER_GTE: 'is a SemVer not greater than or equal to',
-    SEMVER_LTE: 'is a SemVer not less than or equal to',
+    SEMVER_GTE: 'is a SemVer less than',
+    SEMVER_LTE: 'is a SemVer greater than',
     REGEX: 'does not match regex',
     IN_CIDR: 'is an IP not in',
 };

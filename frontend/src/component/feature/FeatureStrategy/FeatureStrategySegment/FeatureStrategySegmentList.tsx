@@ -1,10 +1,8 @@
 import type React from 'react';
-import { Fragment, useId, useState } from 'react';
+import { Fragment } from 'react';
 import type { ISegment } from 'interfaces/segment';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStrategySegmentChip } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegmentChip';
 import { Alert, styled } from '@mui/material';
-import { SegmentItem } from 'component/common/SegmentItem/SegmentItem';
 
 interface IFeatureStrategySegmentListProps {
     segments: ISegment[];
@@ -17,17 +15,10 @@ const StyledList = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-const StyledPreviewContainer = styled('div')({
-    display: 'contents',
-});
-
 export const FeatureStrategySegmentList = ({
     segments,
     setSegments,
 }: IFeatureStrategySegmentListProps) => {
-    const [preview, setPreview] = useState<ISegment>();
-    const segmentDetailsId = useId();
-
     if (segments.length === 0) {
         return null;
     }
@@ -54,19 +45,10 @@ export const FeatureStrategySegmentList = ({
                         <FeatureStrategySegmentChip
                             segment={segment}
                             setSegments={setSegments}
-                            preview={preview}
-                            setPreview={setPreview}
-                            aria-controls={segmentDetailsId}
                         />
                     </Fragment>
                 ))}
             </StyledList>
-            <StyledPreviewContainer id={segmentDetailsId}>
-                <ConditionallyRender
-                    condition={Boolean(preview)}
-                    show={<SegmentItem segment={preview!} isExpanded />}
-                />
-            </StyledPreviewContainer>
         </>
     );
 };

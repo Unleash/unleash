@@ -162,7 +162,7 @@ export const addonTypeSchema = {
                 path: {
                     type: 'string',
                     description:
-                        'The path of the installation, relative to the addons API of the integration, globally or in its project.',
+                        "The path of the installation, relative to `/api/admin/integrations`. On a project's integrations page the button adds the project as a `project` query parameter.",
                     example: 'github/app-manifest',
                 },
                 title: {

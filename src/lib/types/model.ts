@@ -484,7 +484,6 @@ export interface IAddonInstallation {
 
 // Experimental: may change or be removed.
 export interface IAddonServerInstallation {
-    // Relative to the integration's addons API.
     path: string;
     title?: string;
     helpText?: string;

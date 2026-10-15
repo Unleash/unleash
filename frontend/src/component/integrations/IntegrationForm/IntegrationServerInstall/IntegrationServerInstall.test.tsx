@@ -37,7 +37,9 @@ test('should send the non-sensitive parameters to the path in the addons API, in
         />,
     );
 
-    expect(installUrl().pathname).toBe('/api/admin/addons/github/app-manifest');
+    expect(installUrl().pathname).toBe(
+        '/api/admin/integrations/github/app-manifest',
+    );
     expect(installUrl().searchParams.get('parameters[organization]')).toBe(
         'acme',
     );
@@ -45,7 +47,7 @@ test('should send the non-sensitive parameters to the path in the addons API, in
     expect(installLink()).not.toHaveAttribute('target');
 });
 
-test("should send a project's parameters to that project's addons API", () => {
+test("should send the project along for a project's integration", () => {
     render(
         <IntegrationServerInstall
             path='github/app-manifest'
@@ -56,8 +58,9 @@ test("should send a project's parameters to that project's addons API", () => {
     );
 
     expect(installUrl().pathname).toBe(
-        '/api/admin/projects/my-project/addons/github/app-manifest',
+        '/api/admin/integrations/github/app-manifest',
     );
+    expect(installUrl().searchParams.get('project')).toBe('my-project');
 });
 
 test('should show the error the install returned', () => {

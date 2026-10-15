@@ -1,4 +1,4 @@
-import { type ReactNode, useId, useState } from 'react';
+import { type CSSProperties, type ReactNode, useId, useState } from 'react';
 import {
     autocompleteClasses,
     Button,
@@ -78,6 +78,7 @@ type MultiSelectPopoverProps<T> = Pick<PopoverProps, 'open' | 'anchorEl'> & {
     selected: T[];
     onChange: (selected: T[]) => void;
     searchPlaceholderText: string;
+    listMaxHeight?: CSSProperties['maxHeight'];
     renderBelowOptions?: (searchText: string) => ReactNode;
     horizontalAlign?: 'left' | 'right';
 };
@@ -95,6 +96,7 @@ const MultiSelectPanel = <T extends string | number>({
     selected,
     onChange,
     searchPlaceholderText,
+    listMaxHeight,
     renderBelowOptions,
     closeHintId,
 }: PanelProps<T>) => {
@@ -166,7 +168,11 @@ const MultiSelectPanel = <T extends string | number>({
                         }}
                     />
                 </StyledSearch>
-                <StyledList {...getListboxProps()} aria-multiselectable>
+                <StyledList
+                    {...getListboxProps()}
+                    aria-multiselectable
+                    sx={{ maxHeight: listMaxHeight }}
+                >
                     {(groupedOptions as MultiSelectOption<T>[]).map(
                         (option, index) => {
                             const { key, ...optionProps } = getOptionProps({

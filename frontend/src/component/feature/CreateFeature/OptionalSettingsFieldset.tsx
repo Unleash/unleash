@@ -31,7 +31,6 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
     overflow: 'hidden',
-    boxShadow: theme.boxShadows.elevated,
 }));
 
 const accordionSummarySlotProps = (theme: Theme) => ({
@@ -54,7 +53,7 @@ const accordionSummarySlotProps = (theme: Theme) => ({
 
 const AccordionHeading = styled('h2')(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
-    fontWeight: theme.typography.fontWeightBold,
+    fontWeight: theme.typography.fontWeightRegular,
 }));
 
 const AccordionHint = styled('span')(({ theme }) => ({
@@ -181,6 +180,7 @@ export const OptionalSettingsFieldset = ({
     return (
         <Section>
             <StyledAccordion
+                elevation={0}
                 defaultExpanded={selectedTags.length > 0 || impressionData}
             >
                 <AccordionSummary
@@ -232,6 +232,7 @@ export const OptionalSettingsFieldset = ({
                                 selected={selectedTags.map(formatTag)}
                                 onChange={selectTags}
                                 searchPlaceholderText='Find or create a tag'
+                                listMaxHeight={theme.spacing(40)}
                                 renderBelowOptions={(value) =>
                                     value && !tagExists(value) ? (
                                         <CreateTagButton

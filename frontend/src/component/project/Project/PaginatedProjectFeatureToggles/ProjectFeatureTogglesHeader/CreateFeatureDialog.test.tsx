@@ -140,6 +140,9 @@ const setupNewFormApi = () => {
     ).requests;
 };
 
+const chooseStandardType = async () =>
+    fireEvent.click(await screen.findByRole('button', { name: 'Standard' }));
+
 test("the new create flag form shows the project's naming pattern under the name field", async () => {
     setupNewFormApi();
     testServerRoute(server, '/api/admin/projects/default/overview', {
@@ -175,6 +178,7 @@ test('the new create flag form attaches selected tags and impression data to the
 
     const nameInput = await getNameInput();
     fireEvent.change(nameInput, { target: { value: 'my-flag' } });
+    await chooseStandardType();
     fireEvent.click(
         await screen.findByRole('button', { name: /Other optional settings/ }),
     );
@@ -212,6 +216,7 @@ test('the new create flag form offers to create a tag that does not exist yet, a
 
     const nameInput = await getNameInput();
     fireEvent.change(nameInput, { target: { value: 'my-flag' } });
+    await chooseStandardType();
     fireEvent.click(
         await screen.findByRole('button', { name: /Other optional settings/ }),
     );
@@ -245,14 +250,22 @@ test('the new create flag form offers to create a tag that does not exist yet, a
     });
 });
 
-test('the new create flag form posts the default lifetime when the user leaves it untouched', async () => {
+test('the new create flag form requires a flag type and applies its default lifetime', async () => {
     const requests = setupNewFormApi();
 
     renderDialog();
 
-    const nameInput = await getNameInput();
-    fireEvent.change(nameInput, { target: { value: 'my-flag' } });
+    await getNameInput();
+    fireEvent.click(await screen.findByRole('button', { name: 'Create flag' }));
 
+    await screen.findByText('Name can not be empty.');
+    await screen.findByText('Choose a flag type');
+    expect(requests).toHaveLength(0);
+
+    fireEvent.change(await getNameInput(), { target: { value: 'my-flag' } });
+
+    await chooseStandardType();
+    expect(screen.queryByText('Choose a flag type')).not.toBeInTheDocument();
     fireEvent.click(await screen.findByRole('button', { name: 'Create flag' }));
 
     await waitFor(() => expect(requests).toHaveLength(1));
@@ -260,7 +273,7 @@ test('the new create flag form posts the default lifetime when the user leaves i
     expect(requests[0]).toMatchObject({ type: 'release', lifetimeDays: 30 });
 });
 
-test('the new create flag form keeps a chosen lifetime when the type changes', async () => {
+test('the new create flag form keeps a lifetime chosen before the type', async () => {
     const requests = setupNewFormApi();
 
     renderDialog();
@@ -304,6 +317,7 @@ test('the new create flag form posts a zero lifetime for a permanent flag', asyn
     renderDialog();
 
     fireEvent.change(await getNameInput(), { target: { value: 'my-flag' } });
+    await chooseStandardType();
     fireEvent.click(await screen.findByRole('button', { name: 'Permanent' }));
 
     fireEvent.click(await screen.findByRole('button', { name: 'Create flag' }));
@@ -318,6 +332,7 @@ test('the new create flag form restores an unfinished draft when reopened', asyn
 
     const firstDialog = renderDialog();
     fireEvent.change(await getNameInput(), { target: { value: 'my-flag' } });
+    await chooseStandardType();
     fireEvent.click(await screen.findByRole('button', { name: '90 days' }));
     fireEvent.click(await screen.findByRole('button', { name: 'Cancel' }));
     firstDialog.unmount();
@@ -330,7 +345,11 @@ test('the new create flag form restores an unfinished draft when reopened', asyn
 
     await waitFor(() => expect(requests).toHaveLength(1));
 
-    expect(requests[0]).toMatchObject({ name: 'my-flag', lifetimeDays: 90 });
+    expect(requests[0]).toMatchObject({
+        name: 'my-flag',
+        type: 'release',
+        lifetimeDays: 90,
+    });
 });
 
 test('the new create flag form posts the days until a picked date, also after reopening', async () => {
@@ -340,6 +359,7 @@ test('the new create flag form posts the days until a picked date, also after re
 
     const firstDialog = renderDialog();
     fireEvent.change(await getNameInput(), { target: { value: 'my-flag' } });
+    await chooseStandardType();
     fireEvent.click(await screen.findByRole('button', { name: 'Pick a date' }));
     fireEvent.change(
         await screen.findByLabelText('Expected lifetime end date'),

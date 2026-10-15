@@ -1,8 +1,14 @@
 import { useId, useRef, useState } from 'react';
-import { Button, styled } from '@mui/material';
+import { Button, FormHelperText, styled } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import type { CreateFeatureSchemaType } from 'openapi';
+import {
+    OPERATIONAL,
+    PERMISSION,
+    RELEASE,
+    SUNSET,
+} from 'constants/featureToggleTypes';
 import { DropdownList } from 'component/common/DialogFormTemplate/ConfigButtons/DropdownList.tsx';
 import { StyledPopover } from 'component/common/DialogFormTemplate/ConfigButtons/shared.styles.tsx';
 import { flagTypeGroups, groupOfType } from './flagTypes.ts';
@@ -12,6 +18,16 @@ import {
     FieldGroup,
     Legend,
 } from './CreateFeatureForm.styles.ts';
+
+const standardTypeDescriptions: Partial<
+    Record<CreateFeatureSchemaType, string>
+> = {
+    [RELEASE]: 'Roll out new or incomplete features.',
+    [SUNSET]: 'Coordinate the planned removal of an existing feature.',
+    [PERMISSION]: 'Control feature access based on user roles or entitlements.',
+    [OPERATIONAL]:
+        'Transition between technical implementations with minimal risk.',
+};
 
 const UsedForRow = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -34,21 +50,29 @@ const UsedForButton = styled(Button)(({ theme }) => ({
 }));
 
 type FlagTypeFieldsetProps = {
-    type: CreateFeatureSchemaType;
+    type: CreateFeatureSchemaType | undefined;
+    error: string | undefined;
     onChange: (type: CreateFeatureSchemaType) => void;
 };
 
-export const FlagTypeFieldset = ({ type, onChange }: FlagTypeFieldsetProps) => {
+export const FlagTypeFieldset = ({
+    type,
+    error,
+    onChange,
+}: FlagTypeFieldsetProps) => {
     const { featureTypes } = useFeatureTypes();
     const legendId = useId();
 
-    const selectedGroup = groupOfType(type);
+    const selectedGroup = type ? groupOfType(type) : null;
     const standardTypeOptions = featureTypes
         .filter((featureType) => groupOfType(featureType.id) === 'standard')
         .map((featureType) => ({
             label: featureType.name,
             value: featureType.id,
-            description: featureType.description,
+            description:
+                standardTypeDescriptions[
+                    featureType.id as CreateFeatureSchemaType
+                ],
         }));
     const selectedTypeName = featureTypes.find(
         (featureType) => featureType.id === type,
@@ -68,7 +92,7 @@ export const FlagTypeFieldset = ({ type, onChange }: FlagTypeFieldsetProps) => {
         useState<HTMLButtonElement | null>(null);
 
     return (
-        <FieldGroup component='fieldset'>
+        <FieldGroup component='fieldset' error={Boolean(error)}>
             <Legend component='legend' id={legendId}>
                 Flag type
             </Legend>
@@ -85,6 +109,7 @@ export const FlagTypeFieldset = ({ type, onChange }: FlagTypeFieldsetProps) => {
                     </ChoiceChip>
                 ))}
             </ChoiceGroup>
+            {error ? <FormHelperText>{error}</FormHelperText> : null}
             {selectedGroup === 'standard' ? (
                 <UsedForRow>
                     <span>Used for</span>

@@ -14,7 +14,6 @@ import {
 } from '@mui/material';
 import FlagIcon from '@mui/icons-material/Flag';
 import { hoursToMilliseconds } from 'date-fns';
-import { RELEASE } from 'constants/featureToggleTypes';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { Limit } from 'component/common/Limit/Limit';
 import { CreateFeatureDialogSidebar } from './CreateFeatureDialogSidebar.tsx';
@@ -108,8 +107,6 @@ export const CreateFeatureForm = ({
         );
 
     const {
-        type,
-        setType,
         tags,
         setTags,
         name,
@@ -126,18 +123,16 @@ export const CreateFeatureForm = ({
         getTogglePayload,
         clearErrors,
         errors,
-    } = useFeatureForm({
-        ...storedFlagConfig,
-        lifetime:
-            storedFlagConfig.lifetime ??
-            defaultLifetimeFor(storedFlagConfig.type ?? RELEASE),
-    });
+    } = useFeatureForm(storedFlagConfig);
     const { createFeatureToggle, loading } = useFeatureApi();
 
+    const [type, setType] = useState(storedFlagConfig.type);
+    const [typeError, setTypeError] = useState<string>();
     const [lifetimeChosenByUser, setLifetimeChosenByUser] = useState(false);
 
     const selectType = (nextType: CreateFeatureSchemaType) => {
         setType(nextType);
+        setTypeError(undefined);
         if (!lifetimeChosenByUser) {
             setLifetime(defaultLifetimeFor(nextType));
         }
@@ -148,7 +143,7 @@ export const CreateFeatureForm = ({
         setLifetimeChosenByUser(true);
     };
 
-    const flagPayload = getTogglePayload();
+    const flagPayload = { ...getTogglePayload(), type };
 
     const formatApiCode = () => {
         return `curl --location --request POST '${
@@ -162,12 +157,12 @@ export const CreateFeatureForm = ({
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         clearErrors();
+        setTypeError(type ? undefined : 'Choose a flag type');
         const validToggleName = await validateToggleName();
 
-        if (validToggleName) {
-            const payload = getTogglePayload();
+        if (validToggleName && type) {
             try {
-                await createFeatureToggle(project, payload);
+                await createFeatureToggle(project, flagPayload);
                 navigate(`/projects/${project}/features/${name}`);
                 setToastData({
                     text: 'Flag created successfully',
@@ -277,13 +272,6 @@ export const CreateFeatureForm = ({
                                 projectInfo.featureNaming?.example ||
                                 'Enter-flag-name'
                             }
-                            required
-                            onInvalid={(event) => {
-                                event.preventDefault();
-                                if (!errors.name) {
-                                    validateToggleName();
-                                }
-                            }}
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             error={Boolean(errors.name)}
@@ -296,6 +284,7 @@ export const CreateFeatureForm = ({
                             slotProps={{
                                 htmlInput: {
                                     'aria-label': 'Feature flag name',
+                                    'aria-required': true,
                                     ...(projectFlagNaming &&
                                         !errors.name && {
                                             'aria-describedby':
@@ -335,7 +324,11 @@ export const CreateFeatureForm = ({
                         />
                     </Fields>
 
-                    <FlagTypeFieldset type={type} onChange={selectType} />
+                    <FlagTypeFieldset
+                        type={type}
+                        error={typeError}
+                        onChange={selectType}
+                    />
 
                     <LifetimeFieldset
                         lifetime={lifetime}

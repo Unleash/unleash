@@ -1,12 +1,6 @@
 import type { IConstraint, StrategyFormState } from 'interfaces/strategy';
 import type React from 'react';
 import { useEffect } from 'react';
-import { FeatureStrategyConstraintAccordionList } from './FeatureStrategyConstraintAccordionList/FeatureStrategyConstraintAccordionList.tsx';
-
-interface IFeatureStrategyConstraintsProps<T extends StrategyFormState> {
-    strategy: T;
-    setStrategy: React.Dispatch<React.SetStateAction<T>>;
-}
 
 const filterConstraints = (constraint: any) => {
     if (
@@ -21,10 +15,10 @@ const filterConstraints = (constraint: any) => {
     }
 };
 
-export const FeatureStrategyConstraints = <T extends StrategyFormState>({
-    strategy,
-    setStrategy,
-}: IFeatureStrategyConstraintsProps<T>) => {
+export const useFeatureStrategyConstraints = <T extends StrategyFormState>(
+    strategy: T,
+    setStrategy: React.Dispatch<React.SetStateAction<T>>,
+): [IConstraint[], React.Dispatch<React.SetStateAction<IConstraint[]>>] => {
     useEffect(() => {
         return () => {
             // If the component is unmounting we want to remove all constraints that do not have valid single value or
@@ -39,8 +33,6 @@ export const FeatureStrategyConstraints = <T extends StrategyFormState>({
         };
     }, [setStrategy]);
 
-    const constraints = strategy.constraints || [];
-
     const setConstraints = (value: React.SetStateAction<IConstraint[]>) => {
         setStrategy((prev: T) => ({
             ...prev,
@@ -51,10 +43,5 @@ export const FeatureStrategyConstraints = <T extends StrategyFormState>({
         }));
     };
 
-    return (
-        <FeatureStrategyConstraintAccordionList
-            constraints={constraints}
-            setConstraints={setConstraints}
-        />
-    );
+    return [strategy.constraints || [], setConstraints];
 };

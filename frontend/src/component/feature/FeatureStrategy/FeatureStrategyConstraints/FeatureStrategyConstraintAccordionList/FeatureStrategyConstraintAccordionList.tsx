@@ -4,7 +4,7 @@ import { Box, Button, styled, Typography } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import type { IConstraint } from 'interfaces/strategy';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import { EditableConstraintsList } from 'component/common/NewConstraintAccordion/ConstraintsList/EditableConstraintsList';
+import { EditableConstraintsList } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/EditableConstraintsList.tsx';
 import { Limit } from 'component/common/Limit/Limit';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { RecentlyUsedConstraints } from '../RecentlyUsedConstraints/RecentlyUsedConstraints.tsx';

@@ -11,7 +11,8 @@ import {
 import type { StrategyFormState } from 'interfaces/strategy';
 import type { ISegment } from 'interfaces/segment';
 import { FeatureStrategySegment } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment';
-import { FeatureStrategyConstraints } from '../../FeatureStrategyConstraints/FeatureStrategyConstraints.tsx';
+import { FeatureStrategyConstraintAccordionList } from '../../FeatureStrategyConstraints/FeatureStrategyConstraintAccordionList/FeatureStrategyConstraintAccordionList.tsx';
+import { useFeatureStrategyConstraints } from '../../FeatureStrategyConstraints/useFeatureStrategyConstraints.ts';
 import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
 import { useAssignableSegments } from 'hooks/api/getters/useSegments/useAssignableSegments.ts';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
@@ -136,6 +137,11 @@ export const FeatureStrategyTargetAudience = <T extends StrategyFormState>({
     const everyoneDescriptionId = useId();
     const subsetDescriptionId = useId();
 
+    const [constraints, setConstraints] = useFeatureStrategyConstraints(
+        strategy,
+        setStrategy,
+    );
+
     return (
         <>
             <StyledOptions
@@ -210,9 +216,9 @@ export const FeatureStrategyTargetAudience = <T extends StrategyFormState>({
                         </>
                     ) : null}
                     <StyledRow>
-                        <FeatureStrategyConstraints
-                            strategy={strategy}
-                            setStrategy={setStrategy}
+                        <FeatureStrategyConstraintAccordionList
+                            constraints={constraints}
+                            setConstraints={setConstraints}
                         />
                     </StyledRow>
                 </StyledBox>

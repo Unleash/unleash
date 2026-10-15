@@ -12,7 +12,8 @@ import {
 import type { IStrategy, StrategyFormState } from 'interfaces/strategy';
 import produce from 'immer';
 import { FeatureStrategyType } from '../FeatureStrategyType/FeatureStrategyType.tsx';
-import { FeatureStrategyConstraints } from '../FeatureStrategyConstraints/FeatureStrategyConstraints.tsx';
+import { FeatureStrategyConstraintAccordionList } from '../FeatureStrategyConstraints/FeatureStrategyConstraintAccordionList/LegacyFeatureStrategyConstraintAccordionList.tsx';
+import { useFeatureStrategyConstraints } from '../FeatureStrategyConstraints/useFeatureStrategyConstraints.ts';
 import { FeatureStrategySegment } from 'component/feature/FeatureStrategy/FeatureStrategySegment/LegacyFeatureStrategySegment.tsx';
 import type { ISegment } from 'interfaces/segment';
 import type { IFormErrors } from 'hooks/useFormErrors';
@@ -169,6 +170,11 @@ export const LegacyStrategyFormBody = <T extends StrategyFormState>({
     const showSegmentSelector =
         assignableSegments.length > 0 || (strategy.segments?.length ?? 0) > 0;
 
+    const [constraints, setConstraints] = useFeatureStrategyConstraints(
+        strategy,
+        setStrategy,
+    );
+
     const stickiness =
         strategy?.parameters && 'stickiness' in strategy?.parameters
             ? String(strategy.parameters.stickiness)
@@ -319,9 +325,9 @@ export const LegacyStrategyFormBody = <T extends StrategyFormState>({
                                 </StyledBox>
                             </>
                         ) : null}
-                        <FeatureStrategyConstraints
-                            strategy={strategy}
-                            setStrategy={setStrategy}
+                        <FeatureStrategyConstraintAccordionList
+                            constraints={constraints}
+                            setConstraints={setConstraints}
                         />
                     </>
                 )}

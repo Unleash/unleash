@@ -6,10 +6,9 @@ import { styled } from '@mui/material';
 import type { IConstraint } from 'interfaces/strategy';
 import produce from 'immer';
 import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
-import { EditableConstraint } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/EditableConstraint';
-import { createEmptyConstraint } from '../../../../utils/createEmptyConstraint.ts';
+import { EditableConstraint } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/LegacyEditableConstraint.tsx';
+import { createEmptyConstraint } from 'utils/createEmptyConstraint.ts';
 import { constraintId } from 'constants/constraintId.ts';
-
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
 
 export interface IEditableConstraintsListRef {

@@ -3,7 +3,11 @@ import type { Response } from 'express';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import hashSum from 'hash-sum';
 import Controller from '../../routes/controller.js';
-import type { IClientSegment, IUnleashConfig } from '../../types/index.js';
+import type {
+    IClientSegment,
+    IFlagResolver,
+    IUnleashConfig,
+} from '../../types/index.js';
 import type { FeatureToggleService } from '../feature-toggle/feature-toggle-service.js';
 import type { Logger } from '../../logger.js';
 import { querySchema } from '../../schema/feature-schema.js';
@@ -65,10 +69,17 @@ export default class FeatureController extends Controller {
 
     private eventBus: EventEmitter;
 
+    private flagResolver: IFlagResolver;
+
     private featuresAndSegments: (
         query: IFeatureToggleQuery,
         etag: string,
     ) => Promise<[FeatureConfigurationClient[], IClientSegment[]]>;
+
+    private serializeClientFeatures: (
+        etag: string,
+        payload: ClientFeaturesSchema,
+    ) => Buffer;
 
     constructor(
         {
@@ -95,6 +106,7 @@ export default class FeatureController extends Controller {
         this.configurationRevisionService = configurationRevisionService;
         this.featureToggleService = featureToggleService;
         this.eventBus = config.eventBus;
+        this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('client-api/feature.js');
 
         this.route({
@@ -165,6 +177,31 @@ export default class FeatureController extends Controller {
             );
         } else {
             this.featuresAndSegments = this.resolveFeaturesAndSegments;
+        }
+
+        if (clientFeatureCaching.enabled) {
+            this.serializeClientFeatures = memoizee(
+                (_etag: string, payload: ClientFeaturesSchema): Buffer =>
+                    this.openApiService.serializeWithValidation(
+                        clientFeaturesSchema.$id,
+                        payload,
+                    ),
+                {
+                    maxAge: clientFeatureCaching.maxAge,
+                    normalizer([etag]) {
+                        return etag;
+                    },
+                },
+            );
+        } else {
+            this.serializeClientFeatures = (
+                _etag: string,
+                payload: ClientFeaturesSchema,
+            ): Buffer =>
+                this.openApiService.serializeWithValidation(
+                    clientFeaturesSchema.$id,
+                    payload,
+                );
         }
     }
 
@@ -285,25 +322,35 @@ export default class FeatureController extends Controller {
             query,
             etag,
         );
-        if (this.clientSpecService.requestSupportsSpec(req, 'segments')) {
-            this.openApiService.respondWithValidation(
-                200,
-                res,
-                clientFeaturesSchema.$id,
-                {
-                    version,
-                    features,
-                    query: { ...query },
-                    segments,
-                    meta,
-                },
+
+        const supportsSegments = this.clientSpecService.requestSupportsSpec(
+            req,
+            'segments',
+        );
+        const payload: ClientFeaturesSchema = supportsSegments
+            ? {
+                  version,
+                  features,
+                  query: { ...query },
+                  segments,
+                  meta,
+              }
+            : { version, features, query, meta };
+
+        if (this.flagResolver.isEnabled('cacheFeatureSerialization')) {
+            const serialized = this.serializeClientFeatures(
+                `${etag}:segments=${supportsSegments}`,
+                payload,
             );
+
+            res.setHeader('Content-Type', 'application/json; charset=utf-8');
+            (res as Response).status(200).send(serialized);
         } else {
             this.openApiService.respondWithValidation(
                 200,
                 res,
                 clientFeaturesSchema.$id,
-                { version, features, query, meta },
+                payload,
             );
         }
     }

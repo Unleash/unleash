@@ -44,6 +44,7 @@ const callGetAll = async (controller: FeatureController) => {
         {
             json: () => {},
             setHeader: () => undefined,
+            end: () => {},
         },
     );
 };
@@ -88,7 +89,11 @@ test('if caching is enabled should memoize', async () => {
     const respondWithValidation = vi.fn().mockReturnValue({});
     const validPath = vi.fn().mockReturnValue(vi.fn());
     const clientSpecService = new ClientSpecService({ getLogger });
-    const openApiService = { respondWithValidation, validPath };
+    const openApiService = {
+        respondWithValidation,
+        validPath,
+        serializeWithValidation: vi.fn(() => Buffer.from('[]')),
+    };
     const clientFeatureToggleService = {
         getClientFeatures,
         getActiveSegmentsForClient,
@@ -134,7 +139,11 @@ test('if caching is not enabled all calls goes to service', async () => {
         getActiveSegmentsForClient,
     };
     const featureToggleService = { getClientFeatures };
-    const openApiService = { respondWithValidation, validPath };
+    const openApiService = {
+        respondWithValidation,
+        validPath,
+        serializeWithValidation: vi.fn(() => Buffer.from('[]')),
+    };
     const configurationRevisionService = { getMaxRevisionId: () => 1 };
 
     const controller = new FeatureController(

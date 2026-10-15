@@ -5,7 +5,6 @@ import { forwardRef } from 'react';
 import { styled } from '@mui/material';
 import type { IConstraint } from 'interfaces/strategy';
 import produce from 'immer';
-import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
 import { EditableConstraint } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/EditableConstraint';
 import { createEmptyConstraint } from 'utils/createEmptyConstraint.ts';
 import { constraintId } from 'constants/constraintId.ts';
@@ -20,11 +19,21 @@ export interface IEditableConstraintsListProps {
     setConstraints: React.Dispatch<React.SetStateAction<IConstraint[]>>;
 }
 
-const StyledContainer = styled('div')({
+const StyledContainer = styled('ul')({
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
+    listStyle: 'none',
+    padding: 0,
+    margin: 0,
 });
+
+const StyledItem = styled('li')(({ theme }) => ({
+    position: 'relative',
+    '&:not(:last-child)': {
+        borderBottom: `1px solid ${theme.palette.divider}`,
+    },
+}));
 
 type ConstraintItemProps = {
     constraint: IConstraint;
@@ -94,16 +103,15 @@ export const EditableConstraintsList = forwardRef<
 
     return (
         <StyledContainer>
-            <ConstraintsList>
-                {constraints.map((constraint, index) => (
+            {constraints.map((constraint, index) => (
+                <StyledItem key={constraint[constraintId]}>
                     <ConstraintItem
-                        key={constraint[constraintId]}
                         constraint={constraint}
                         setConstraints={setConstraints}
                         index={index}
                     />
-                ))}
-            </ConstraintsList>
+                </StyledItem>
+            ))}
         </StyledContainer>
     );
 });

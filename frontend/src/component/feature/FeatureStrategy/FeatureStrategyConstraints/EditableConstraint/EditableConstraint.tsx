@@ -62,10 +62,8 @@ const getInvertedDisabledText = (
 };
 
 const Container = styled('article')(({ theme }) => ({
-    '--padding': theme.spacing(2),
+    '--padding': theme.spacing(2, 0),
     backgroundColor: theme.palette.background.paper,
-    borderRadius: theme.shape.borderRadiusLarge,
-    border: `1px solid ${theme.palette.divider}`,
 }));
 
 const TopRow = styled('div')(({ theme }) => ({

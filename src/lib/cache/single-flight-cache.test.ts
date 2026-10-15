@@ -109,15 +109,16 @@ test('backs off further on each repeated miss', async () => {
     expect(load).toHaveBeenCalledTimes(3);
 });
 
-test('a key created moments after being probed is retried quickly', async () => {
-    const cache = makeCache();
+test('retries a missing key after its configured negative backoff', async () => {
+    const cache = makeCache({ negativeBackoffMs: [10_000] });
     const missing = vi.fn(notFound);
 
     await cache.get('new-key', missing);
 
-    // The value now exists. A flat five-minute negative TTL would continue to
-    // hide it even though short initial retries are inexpensive.
-    advance(1_001);
+    advance(9_999);
+    await expect(cache.get('new-key', found('a'))).resolves.toBeUndefined();
+
+    advance(1);
     await expect(cache.get('new-key', found('a'))).resolves.toEqual({
         name: 'a',
     });

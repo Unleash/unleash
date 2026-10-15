@@ -188,7 +188,7 @@ test('lists, updates, and deletes secure tokens when secure token storage is dis
     }
 });
 
-test('only warms the cache with non-expired secure tokens', async () => {
+test('only warms the cache with recently seen non-expired secure tokens', async () => {
     const active = await app.services.transactionalApiTokenV2Service.create(
         {
             projects: ['default'],
@@ -212,7 +212,11 @@ test('only warms the cache with non-expired secure tokens', async () => {
     );
     const getBySelector = vi.spyOn(ApiTokenV2Store.prototype, 'getBySelector');
 
-    await app.services.apiTokenV2Service.fetchActiveTokens();
+    await db
+        .rawDatabase('api_tokens_v2')
+        .whereIn('selector', [active.selector, expired.selector])
+        .update({ seen_at: new Date() });
+    await app.services.apiTokenV2Service.initialize();
 
     await expect(
         app.services.apiTokenV2Service.getTokenWithCache({

@@ -53,13 +53,10 @@ export const scheduleServices = (
         'storeLastSeen',
     );
 
+    // Plain-text tokens and aliases still rely on full refreshes for revocation.
+    // Secure tokens are invalidated by pollApiTokenV2Changes below.
     schedulerService.schedule(
-        async () => {
-            await Promise.all([
-                apiTokenService.fetchActiveTokens(),
-                apiTokenV2Service.fetchActiveTokens(),
-            ]);
-        },
+        apiTokenService.fetchActiveTokens.bind(apiTokenService),
         minutesToMilliseconds(1),
         'fetchActiveTokens',
         { initialDelayMs: 0 }, // we need tokens at startup

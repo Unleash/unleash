@@ -147,10 +147,7 @@ test('getUserForToken should get a user with admin token user id and token name'
     expect(user!.internalAdminTokenUserId).toBe(ADMIN_TOKEN_USER.id);
 });
 
-describe.each([
-    false,
-    true,
-])('API token getTokenWithCache (usePromiseTokenCache=%s)', (usePromiseTokenCache) => {
+describe('API token getTokenWithCache', () => {
     const token: IApiTokenCreate = {
         environment: DEFAULT_ENV,
         projects: ['*'],
@@ -161,9 +158,7 @@ describe.each([
     };
 
     const setup = () => {
-        const config: IUnleashConfig = createTestConfig({
-            experimental: { flags: { usePromiseTokenCache } },
-        });
+        const config: IUnleashConfig = createTestConfig();
         const { apiTokenService, apiTokenStore } =
             createFakeApiTokenService(config);
         return {

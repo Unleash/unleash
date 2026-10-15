@@ -141,7 +141,6 @@ export interface ReadOnlyApiTokenV2Service {
     }: ApiTokenV2Credential): Promise<IApiUser | undefined>;
     getUserDefinedTokens(): Promise<IApiToken[]>;
 
-    fetchActiveTokens(): Promise<void>;
     initialize(): Promise<void>;
     invalidateCache(selectors: string[]): void;
     pollTokenChanges(): Promise<void>;
@@ -196,11 +195,7 @@ class ApiTokenV2Service
             IUnleashStores,
             'apiTokenV2Store' | 'environmentStore' | 'eventStore'
         >,
-        {
-            eventBus,
-            getLogger,
-            flagResolver,
-        }: Pick<IUnleashConfig, 'eventBus' | 'getLogger' | 'flagResolver'>,
+        { eventBus, getLogger }: Pick<IUnleashConfig, 'eventBus' | 'getLogger'>,
         {
             eventService,
             resourceLimitsService,
@@ -215,7 +210,7 @@ class ApiTokenV2Service
         this.logger = getLogger('features/apitokensv2/api-token-v2-service.ts');
         this.cache = createTokenCache<ApiTokenV2WithVerifier>(
             TOKEN_CACHE_NAME,
-            { flagResolver, eventBus: this.eventBus, logger: this.logger },
+            { eventBus: this.eventBus },
         );
         this.timer = (functionName: string) =>
             metricsHelper.wrapTimer(eventBus, FUNCTION_TIME, {
@@ -230,9 +225,6 @@ class ApiTokenV2Service
         // to query changes that happened after the last seen token revision, so we can invalidate the cache for those tokens
         this.tokenRevision = await this.eventStore.getMaxTokenRevisionId();
 
-        if (!this.cache.usesReadThroughCache()) {
-            return; // only read-through cache needs to be initialized, since it is not pre-loaded with all tokens
-        }
         const recentTime = subHours(
             new Date(),
             TOKEN_CACHE_WARMUP_SEEN_WITHIN_HOURS,
@@ -248,11 +240,6 @@ class ApiTokenV2Service
     }
 
     async pollTokenChanges(): Promise<void> {
-        if (!this.cache.usesReadThroughCache()) {
-            // old cache implementation could reload everything on changes but because
-            // it refreshes every minute, I decided to keep that behavior for now.
-            return;
-        }
         try {
             const revision = await this.eventStore.getMaxTokenRevisionId(
                 this.tokenRevision,
@@ -288,35 +275,6 @@ class ApiTokenV2Service
                 `Failed to poll token changes; the cache ${this.cache.name} may be stale until the next successful refresh`,
                 e,
             );
-        }
-    }
-
-    /**
-     * Bulk-load only the legacy cache. The single-flight cache is intentionally
-     * read-through: a selector is loaded on demand and its sliding TTL keeps hot
-     * tokens resident without re-reading every active token on a fixed schedule.
-     * Successful legacy lookups also seed it so a runtime cache switch is warm.
-     */
-    async fetchActiveTokens(): Promise<void> {
-        if (this.cache.usesReadThroughCache()) {
-            return; // skip for read through cache
-        }
-        try {
-            const tokens = await this.apiTokenV2Store.getAllActive();
-            this.cache.setEntries(
-                tokens.map((token) => [token.selector, token]),
-            );
-        } catch (e) {
-            // a refresh is what bounds how long a revoked token keeps working
-            // if a pod stops refreshing -> security-relevant condition
-            // log it here - the scheduler's job log cannot say if v1 or v2 cache failed
-            this.logger.error(
-                `Failed to refresh cache ${this.cache.name}; it is now serving stale tokens until the next successful refresh`,
-                e,
-            );
-            // rethrow: unlike v1 this method does not swallow, so the scheduler
-            // still sees the failure
-            throw e;
         }
     }
 

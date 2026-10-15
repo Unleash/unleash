@@ -104,6 +104,10 @@ We provide guides for deploying to services like Heroku and DigitalOcean:
 
 [![Deploy to Heroku](./.github/deploy-heroku-20.png)](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash) [![Deploy to DigitalOcean](./.github/deploy-digital.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/Unleash/unleash/tree/main&refcode=0e1d75187044)
 
+Or skip the server entirely with one-click fully managed hosting:
+
+[![Deploy with Zenith](https://cdn.zenith.hosting/buttons/deploy-with-zenith.svg)](https://zenith.hosting/host/unleash)
+
 For more advanced configurations options, check out our documentation on:
 - [Getting started with self-hosting](https://docs.getunleash.io/deploy/getting-started)
 - [Unleash configuration options](https://docs.getunleash.io/deploy/configuring-unleash)

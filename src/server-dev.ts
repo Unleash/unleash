@@ -69,6 +69,7 @@ process.nextTick(async () => {
                         integrationParamKvpEditor: true,
                         singlePageStrategyForm: true,
                         feedbackModule: true,
+                        feedbackModuleDisplaySurvey: true,
                         playgroundFeatureEvaluation: true,
                         perFlagLifetime: true,
                     },

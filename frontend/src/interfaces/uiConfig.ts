@@ -117,6 +117,7 @@ export type UiFlags = {
     payloadSchemas?: boolean;
     singlePageStrategyForm?: boolean;
     feedbackModule?: boolean;
+    feedbackModuleDisplaySurvey?: boolean;
     playgroundFeatureEvaluation?: boolean;
 };
 

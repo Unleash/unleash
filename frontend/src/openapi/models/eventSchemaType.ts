@@ -35,7 +35,6 @@ export const EventSchemaType = {
     'feature-link-removed': 'feature-link-removed',
     'feature-link-updated': 'feature-link-updated',
     'strategy-order-changed': 'strategy-order-changed',
-    'drop-feature-tags': 'drop-feature-tags',
     'feature-untagged': 'feature-untagged',
     'feature-stale-on': 'feature-stale-on',
     'feature-stale-off': 'feature-stale-off',

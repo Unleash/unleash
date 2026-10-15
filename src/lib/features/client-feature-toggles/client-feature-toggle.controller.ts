@@ -344,8 +344,7 @@ export default class FeatureController extends Controller {
             );
 
             res.setHeader('Content-Type', 'application/json; charset=utf-8');
-            res.statusCode = 200;
-            res.end(serialized);
+            (res as Response).status(200).send(serialized);
         } else {
             this.openApiService.respondWithValidation(
                 200,

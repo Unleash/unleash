@@ -1,17 +1,18 @@
 import type React from 'react';
-import { useId } from 'react';
+import { useId, useMemo, useRef, useState } from 'react';
 import type { ISegment } from 'interfaces/segment';
-import {
-    AutocompleteBox,
-    type IAutocompleteBoxOption,
-} from 'component/common/AutocompleteBox/AutocompleteBox';
+import { MultiSelectPopover } from 'component/common/MultiSelectPopover/MultiSelectPopover.tsx';
 import { FeatureStrategySegmentList } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegmentList';
 import { SegmentDocsStrategyWarning } from 'component/segments/SegmentDocs';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
-import { Box, styled, Typography } from '@mui/material';
+import { Box, Button, styled, Typography } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { RecentlyUsedSegments } from './RecentlyUsedSegments/RecentlyUsedSegments.tsx';
 import { useRecentlyUsedSegments } from './RecentlyUsedSegments/useRecentlyUsedSegments.ts';
+
+const pluralize = (count: number, noun: string) =>
+    `${count} ${noun}${count === 1 ? '' : 's'}`;
 
 interface IFeatureStrategySegmentProps {
     segments: ISegment[];
@@ -50,6 +51,9 @@ export const FeatureStrategySegment = ({
     availableSegments,
 }: IFeatureStrategySegmentProps) => {
     const titleId = useId();
+    const addSegmentButtonRef = useRef<HTMLButtonElement>(null);
+    const [addSegmentAnchor, setAddSegmentAnchor] =
+        useState<HTMLButtonElement | null>(null);
     const { strategySegmentsLimit } = useSegmentLimits();
     const { items: recentlyUsedSegmentIds } = useRecentlyUsedSegments();
     const availableRecentlyUsedSegments = availableSegments.filter(
@@ -63,22 +67,28 @@ export const FeatureStrategySegment = ({
             selectedSegments.length >= strategySegmentsLimit,
     );
 
-    const unusedSegments = availableSegments.filter((segment) => {
-        return !selectedSegments.find((selected) => selected.id === segment.id);
-    });
+    const availableSegmentsById = useMemo(
+        () =>
+            new Map(
+                availableSegments.map((segment) => [
+                    String(segment.id),
+                    segment,
+                ]),
+            ),
+        [availableSegments],
+    );
 
-    const autocompleteOptions = unusedSegments.map((segment) => ({
+    const segmentOptions = availableSegments.map((segment) => ({
         value: String(segment.id),
         label: segment.name,
+        detail: pluralize(segment.constraints?.length ?? 0, 'rule'),
     }));
 
-    const onChange = ([option]: IAutocompleteBoxOption[]) => {
-        const selectedSegment = availableSegments.find((segment) => {
-            return String(segment.id) === option.value;
-        });
-        if (selectedSegment) {
-            setSelectedSegments((prev) => [...prev, selectedSegment]);
-        }
+    const onSegmentsChange = (keys: string[]) => {
+        const newSegments = keys
+            .map((key) => availableSegmentsById.get(key))
+            .filter((segment): segment is ISegment => Boolean(segment));
+        setSelectedSegments(newSegments);
     };
 
     return (
@@ -108,13 +118,29 @@ export const FeatureStrategySegment = ({
                         }
                     />
                 </StyledHelpIconBox>
-                <AutocompleteBox
-                    label='Add segments'
-                    options={autocompleteOptions}
-                    onChange={onChange}
+                <Button
+                    ref={addSegmentButtonRef}
+                    variant='outlined'
+                    size='medium'
+                    startIcon={<AddIcon />}
                     disabled={atStrategySegmentsLimit}
-                    icon={null}
-                    width={'175px'}
+                    onClick={() =>
+                        setAddSegmentAnchor(addSegmentButtonRef.current)
+                    }
+                >
+                    Add segment
+                </Button>
+                <MultiSelectPopover
+                    open={Boolean(addSegmentAnchor)}
+                    anchorEl={addSegmentAnchor}
+                    onClose={() => setAddSegmentAnchor(null)}
+                    options={segmentOptions}
+                    selected={selectedSegments.map((segment) =>
+                        String(segment.id),
+                    )}
+                    onChange={onSegmentsChange}
+                    searchPlaceholderText='Search segments'
+                    horizontalAlign='right'
                 />
             </StyledRow>
             {atStrategySegmentsLimit && <SegmentDocsStrategyWarning />}

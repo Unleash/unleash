@@ -22,6 +22,9 @@ const StyledList = styled('ul')(({ theme }) => ({
     margin: 0,
     overflowY: 'auto',
     padding: theme.spacing(1, 0),
+    '&:empty': {
+        padding: 0,
+    },
 }));
 
 const StyledRow = styled('li')(({ theme }) => ({
@@ -76,9 +79,13 @@ type MultiSelectPopoverProps<T> = Pick<PopoverProps, 'open' | 'anchorEl'> & {
     onChange: (selected: T[]) => void;
     searchPlaceholderText: string;
     renderBelowOptions?: (searchText: string) => ReactNode;
+    horizontalAlign?: 'left' | 'right';
 };
 
-type PanelProps<T> = Omit<MultiSelectPopoverProps<T>, 'open' | 'anchorEl'> & {
+type PanelProps<T> = Omit<
+    MultiSelectPopoverProps<T>,
+    'open' | 'anchorEl' | 'horizontalAlign'
+> & {
     closeHintId: string;
 };
 
@@ -202,6 +209,7 @@ const MultiSelectPanel = <T extends string | number>({
 export const MultiSelectPopover = <T extends string | number>({
     open,
     anchorEl,
+    horizontalAlign = 'left',
     ...panelProps
 }: MultiSelectPopoverProps<T>) => {
     const closeHintId = useId();
@@ -211,8 +219,8 @@ export const MultiSelectPopover = <T extends string | number>({
             open={open}
             anchorEl={anchorEl}
             onClose={panelProps.onClose}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-            transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+            anchorOrigin={{ vertical: 'bottom', horizontal: horizontalAlign }}
+            transformOrigin={{ vertical: 'top', horizontal: horizontalAlign }}
             slotProps={{
                 paper: {
                     role: 'dialog',
@@ -221,6 +229,7 @@ export const MultiSelectPopover = <T extends string | number>({
                         display: 'flex',
                         flexDirection: 'column',
                         width: (theme) => theme.spacing(50),
+                        marginTop: (theme) => theme.spacing(1),
                         borderRadius: (theme) =>
                             `${theme.shape.borderRadiusMedium}px`,
                     },

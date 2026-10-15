@@ -110,7 +110,6 @@ export type UiFlags = {
     playgroundPerFlag?: boolean;
     githubIntegration?: boolean;
     tagManagementViaUi?: boolean;
-    newUserInviteFlow?: boolean;
     integrationParamKvpEditor?: boolean;
     perFlagLifetime?: boolean;
     remoteMcpFeedback?: boolean;

@@ -119,6 +119,7 @@ export type UiFlags = {
     feedbackModule?: boolean;
     feedbackModuleDisplaySurvey?: boolean;
     playgroundFeatureEvaluation?: boolean;
+    dashboardV2?: boolean;
 };
 
 export interface IVersionInfo {

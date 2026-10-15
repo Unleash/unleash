@@ -316,18 +316,24 @@ export default class FeatureController extends Controller {
             etag,
         );
 
-        const payload: ClientFeaturesSchema =
-            this.clientSpecService.requestSupportsSpec(req, 'segments')
-                ? {
-                      version,
-                      features,
-                      query: { ...query },
-                      segments,
-                      meta,
-                  }
-                : { version, features, query, meta };
+        const supportsSegments = this.clientSpecService.requestSupportsSpec(
+            req,
+            'segments',
+        );
+        const payload: ClientFeaturesSchema = supportsSegments
+            ? {
+                  version,
+                  features,
+                  query: { ...query },
+                  segments,
+                  meta,
+              }
+            : { version, features, query, meta };
 
-        const serialized = this.serializeClientFeatures(etag, payload);
+        const serialized = this.serializeClientFeatures(
+            `${etag}:segments=${supportsSegments}`,
+            payload,
+        );
 
         res.setHeader('Content-Type', 'application/json; charset=utf-8');
         res.statusCode = 200;

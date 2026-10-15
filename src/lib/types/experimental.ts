@@ -70,7 +70,6 @@ export type IFlagKey =
     | 'onboardingIntroTour'
     | 'onboardingIntroTourAdvancedTopics'
     | 'secureTokenStorage'
-    | 'secureAccountTokenStorage'
     | 'recordSdkFlavorMetrics'
     | 'searchDocsWidget'
     | 'semverBuildMetadata'
@@ -330,10 +329,6 @@ const flags: IFlags = {
     ),
     secureTokenStorage: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SECURE_TOKEN,
-        false,
-    ),
-    secureAccountTokenStorage: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SECURE_ACCOUNT_TOKEN,
         false,
     ),
     searchDocsWidget: parseEnvVarBoolean(

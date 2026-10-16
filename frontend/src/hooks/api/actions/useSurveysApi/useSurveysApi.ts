@@ -14,9 +14,22 @@ export type CreateSurveyResult = {
     strategies: StepResult;
 };
 
+const withTransport = (
+    surveyJson: string,
+    environment: string,
+    submitBase: string,
+): string =>
+    JSON.stringify(
+        { ...JSON.parse(surveyJson), environmentId: environment, submitBase },
+        null,
+        2,
+    );
+
 const surveyStrategy = (
     name: string,
     surveyJson: string,
+    environment: string,
+    submitBase: string,
 ): CreateFeatureStrategySchema => ({
     name: 'flexibleRollout',
     parameters: { rollout: '100', stickiness: 'default', groupId: name },
@@ -26,7 +39,10 @@ const surveyStrategy = (
             weight: 1000,
             weightType: 'variable',
             stickiness: 'default',
-            payload: { type: 'json', value: surveyJson },
+            payload: {
+                type: 'json',
+                value: withTransport(surveyJson, environment, submitBase),
+            },
         },
     ],
 });
@@ -76,6 +92,7 @@ export const useSurveysApi = () => {
         projectId: string,
         name: string,
         surveyJson: string,
+        submitBase: string,
     ): Promise<StepResult> => {
         let environments: string[];
         try {
@@ -95,7 +112,7 @@ export const useSurveysApi = () => {
                     projectId,
                     name,
                     environment,
-                    surveyStrategy(name, surveyJson),
+                    surveyStrategy(name, surveyJson, environment, submitBase),
                 ),
             ),
         );
@@ -108,6 +125,7 @@ export const useSurveysApi = () => {
         projectId: string,
         name: string,
         surveyJson: string,
+        submitBase: string,
     ): Promise<CreateSurveyResult> => {
         await createFeatureToggle(projectId, { name, type: 'experiment' });
 
@@ -119,6 +137,7 @@ export const useSurveysApi = () => {
             projectId,
             name,
             surveyJson,
+            submitBase,
         );
         return { tag, strategies };
     };

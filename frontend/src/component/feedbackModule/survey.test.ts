@@ -1,16 +1,26 @@
 import { describe, expect, it } from 'vitest';
-import { parseSurveyPayload, surveyTemplate } from './survey.ts';
+import {
+    parseSurveyDefinition,
+    parseSurveyPayload,
+    SURVEY_TEMPLATE,
+} from './survey.ts';
 
 const SUBMIT_BASE = 'https://app.unleash-hosted.com/hosted';
-const SURVEY = surveyTemplate(SUBMIT_BASE);
 
 const payload = (survey: object) => ({
     type: 'json',
-    value: JSON.stringify(survey),
+    value: JSON.stringify({
+        environmentId: 'development',
+        submitBase: SUBMIT_BASE,
+        ...survey,
+    }),
 });
 
+const definition = (survey: unknown) =>
+    parseSurveyDefinition(JSON.stringify(survey));
+
 const withQuestions = (questions: unknown[]) => ({
-    ...SURVEY,
+    ...SURVEY_TEMPLATE,
     questions,
 });
 
@@ -28,15 +38,11 @@ const ratingQuestion = (scale: number) => ({
     scale,
 });
 
-describe('parseSurveyPayload', () => {
+describe('parseSurveyDefinition', () => {
     it('parses a survey with every question type', () => {
-        const survey = parseSurveyPayload('survey-onboarding', payload(SURVEY));
-
-        expect(survey).toEqual({
-            flagName: 'survey-onboarding',
+        expect(definition(SURVEY_TEMPLATE)).toEqual({
             title: 'How was creating your flag?',
             description: 'Three quick questions.',
-            submitBase: SUBMIT_BASE,
             questions: [
                 {
                     id: 'ease',
@@ -63,22 +69,16 @@ describe('parseSurveyPayload', () => {
     });
 
     it('fills in defaults for optional fields', () => {
-        const survey = parseSurveyPayload(
-            'survey-onboarding',
-            payload({
-                kind: 'unleash-survey',
-                version: 1,
-                title: 'Title',
-                questions: [{ id: 'rate', type: 'rating', prompt: 'Rate it' }],
-                submitBase: SUBMIT_BASE,
-            }),
-        );
+        const survey = definition({
+            kind: 'unleash-survey',
+            version: 1,
+            title: 'Title',
+            questions: [{ id: 'rate', type: 'rating', prompt: 'Rate it' }],
+        });
 
         expect(survey).toEqual({
-            flagName: 'survey-onboarding',
             title: 'Title',
             description: '',
-            submitBase: SUBMIT_BASE,
             questions: [
                 {
                     id: 'rate',
@@ -91,46 +91,22 @@ describe('parseSurveyPayload', () => {
         });
     });
 
-    it('strips trailing slashes from the submit base', () => {
-        const survey = parseSurveyPayload(
-            'survey-x',
-            payload({
-                ...SURVEY,
-                submitBase: 'https://app.unleash-hosted.com/hosted/',
-            }),
-        );
-
-        expect(survey?.submitBase).toBe(
-            'https://app.unleash-hosted.com/hosted',
-        );
-    });
-
     it.each([2, 7, 10])('accepts a rating scale of %s', (scale) => {
-        const survey = parseSurveyPayload(
-            'survey-x',
-            payload(withQuestions([ratingQuestion(scale)])),
-        );
+        const survey = definition(withQuestions([ratingQuestion(scale)]));
 
         expect(survey).toMatchObject({ questions: [{ scale }] });
     });
 
     it('accepts a survey with 10 questions', () => {
-        const survey = parseSurveyPayload(
-            'survey-x',
-            payload(withQuestions(freeTextQuestions(10))),
-        );
+        const survey = definition(withQuestions(freeTextQuestions(10)));
 
         expect(survey?.questions).toHaveLength(10);
     });
 
-    it('rejects a flag name without the survey- prefix', () => {
-        expect(parseSurveyPayload('onboarding', payload(SURVEY))).toBeNull();
-    });
-
     it.each([
-        ['is not marked as a survey', { ...SURVEY, kind: 'other' }],
-        ['has an unknown version', { ...SURVEY, version: 2 }],
-        ['has no title', { ...SURVEY, title: '' }],
+        ['is not marked as a survey', { ...SURVEY_TEMPLATE, kind: 'other' }],
+        ['has an unknown version', { ...SURVEY_TEMPLATE, version: 2 }],
+        ['has no title', { ...SURVEY_TEMPLATE, title: '' }],
         ['has no questions', withQuestions([])],
         ['has more than 10 questions', withQuestions(freeTextQuestions(11))],
         ['has a question that is not an object', withQuestions([null])],
@@ -192,30 +168,91 @@ describe('parseSurveyPayload', () => {
                 { id: 'why', type: 'free-text', prompt: 'Why not?' },
             ]),
         ],
-        ['has no submit base', { ...SURVEY, submitBase: undefined }],
-        [
-            'has a submit base that is not a URL',
-            { ...SURVEY, submitBase: 'hosted' },
-        ],
-        [
-            'has a submit base that is not http or https',
-            { ...SURVEY, submitBase: 'javascript:alert(1)' },
-        ],
     ])('rejects a survey that %s', (_, survey) => {
-        expect(parseSurveyPayload('survey-x', payload(survey))).toBeNull();
+        expect(definition(survey)).toBeNull();
     });
 
     it.each([1, 11, 2.5])('rejects a rating scale of %s', (scale) => {
-        const survey = withQuestions([ratingQuestion(scale)]);
+        expect(definition(withQuestions([ratingQuestion(scale)]))).toBeNull();
+    });
 
-        expect(parseSurveyPayload('survey-x', payload(survey))).toBeNull();
+    it.each([
+        ['invalid JSON', '{'],
+        ['JSON null', 'null'],
+        ['a JSON array', '[]'],
+    ])('rejects %s', (_, json) => {
+        expect(parseSurveyDefinition(json)).toBeNull();
+    });
+});
+
+describe('parseSurveyPayload', () => {
+    it('reads the survey with the flag and environment it was created for', () => {
+        const survey = parseSurveyPayload(
+            'survey-onboarding',
+            payload({ ...SURVEY_TEMPLATE, environmentId: 'production' }),
+        );
+
+        expect(survey).toMatchObject({
+            flagName: 'survey-onboarding',
+            environmentId: 'production',
+            submitBase: SUBMIT_BASE,
+            title: 'How was creating your flag?',
+        });
+    });
+
+    it('strips trailing slashes from the submit base', () => {
+        const survey = parseSurveyPayload(
+            'survey-x',
+            payload({
+                ...SURVEY_TEMPLATE,
+                submitBase: 'https://app.unleash-hosted.com/hosted/',
+            }),
+        );
+
+        expect(survey?.submitBase).toBe(SUBMIT_BASE);
+    });
+
+    it('rejects a flag name without the survey- prefix', () => {
+        expect(
+            parseSurveyPayload('onboarding', payload(SURVEY_TEMPLATE)),
+        ).toBeNull();
+    });
+
+    it('rejects an invalid survey', () => {
+        expect(
+            parseSurveyPayload('survey-x', payload(withQuestions([]))),
+        ).toBeNull();
+    });
+
+    it.each([
+        ['no environment', undefined],
+        ['an empty environment', ''],
+        ['a non-string environment', 42],
+    ])('rejects a survey with %s', (_, environmentId) => {
+        expect(
+            parseSurveyPayload(
+                'survey-x',
+                payload({ ...SURVEY_TEMPLATE, environmentId }),
+            ),
+        ).toBeNull();
+    });
+
+    it.each([
+        ['no submit base', undefined],
+        ['a submit base that is not a URL', 'hosted'],
+        ['a submit base that is not http or https', 'javascript:alert(1)'],
+    ])('rejects a survey with %s', (_, submitBase) => {
+        expect(
+            parseSurveyPayload(
+                'survey-x',
+                payload({ ...SURVEY_TEMPLATE, submitBase }),
+            ),
+        ).toBeNull();
     });
 
     it.each([
         ['a non-JSON payload type', { type: 'string', value: '{}' }],
         ['invalid JSON', { type: 'json', value: '{' }],
-        ['JSON null', { type: 'json', value: 'null' }],
-        ['a JSON array', { type: 'json', value: '[]' }],
         ['no payload', undefined],
     ])('rejects %s', (_, surveyPayload) => {
         expect(parseSurveyPayload('survey-x', surveyPayload)).toBeNull();

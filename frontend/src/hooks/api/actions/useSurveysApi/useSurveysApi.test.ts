@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import type { CreateFeatureStrategySchema } from 'openapi';
 import { renderHook } from '@testing-library/react';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { useSurveysApi } from './useSurveysApi.ts';
@@ -7,6 +8,7 @@ const server = testServerSetup();
 
 const flagPath = '/api/admin/projects/default/features/survey-onboarding';
 const surveyJson = '{"kind":"unleash-survey"}';
+const submitBase = 'https://hosted.example.com/hosted';
 
 const setupApi = ({
     failingEnvironment,
@@ -53,11 +55,12 @@ const createSurvey = () => {
         'default',
         'survey-onboarding',
         surveyJson,
+        submitBase,
     );
 };
 
 describe('useSurveysApi', () => {
-    it('creates a tagged flag with the survey variant in every environment', async () => {
+    it('creates a tagged flag with the survey variant, marked with its environment and submit base, in every environment', async () => {
         const api = setupApi({});
 
         const result = await createSurvey();
@@ -76,7 +79,10 @@ describe('useSurveysApi', () => {
                 removedTags: [],
             },
         ]);
-        for (const strategy of api.strategies) {
+        for (const [environment, strategy] of [
+            ['development', api.strategies[0]],
+            ['production', api.strategies[1]],
+        ] as const) {
             expect(strategy.requests).toMatchObject([
                 {
                     name: 'flexibleRollout',
@@ -88,11 +94,20 @@ describe('useSurveysApi', () => {
                         {
                             name: 'survey',
                             weight: 1000,
-                            payload: { type: 'json', value: surveyJson },
+                            payload: { type: 'json' },
                         },
                     ],
                 },
             ]);
+            const [request] =
+                strategy.requests as CreateFeatureStrategySchema[];
+            expect(
+                JSON.parse(request.variants?.[0].payload?.value ?? ''),
+            ).toEqual({
+                kind: 'unleash-survey',
+                environmentId: environment,
+                submitBase,
+            });
         }
     });
 

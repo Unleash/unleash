@@ -23,18 +23,23 @@ export type SurveyAnswer = number | string | string[];
 
 export type SurveyAnswers = Record<string, SurveyAnswer>;
 
-export interface Survey {
-    flagName: string;
+export interface SurveyDefinition {
     title: string;
     description: string;
     questions: SurveyQuestion[];
+}
+
+export interface SurveyTransport {
+    flagName: string;
+    environmentId: string;
     submitBase: string;
 }
 
-export const surveyTemplate = (submitBase: string) => ({
+export type Survey = SurveyDefinition & SurveyTransport;
+
+export const SURVEY_TEMPLATE = {
     kind: SURVEY_KIND,
     version: SURVEY_VERSION,
-    submitBase,
     title: 'How was creating your flag?',
     description: 'Three quick questions.',
     questions: [
@@ -53,7 +58,7 @@ export const surveyTemplate = (submitBase: string) => ({
         },
         { id: 'comment', type: 'free-text', prompt: 'Anything else?' },
     ],
-});
+};
 
 const isNonEmptyString = (value: unknown): value is string =>
     typeof value === 'string' && value.length > 0;
@@ -131,26 +136,19 @@ const parseQuestion = (raw: unknown): SurveyQuestion | null => {
     }
 };
 
-export const parseSurveyPayload = (
-    flagName: string,
-    payload: { type: string; value: string } | undefined,
-): Survey | null => {
-    if (
-        !flagName.startsWith(SURVEY_FLAG_PREFIX) ||
-        payload?.type !== PayloadType.JSON
-    ) {
-        return null;
-    }
-
+const parseJsonObject = (json: string): Record<string, unknown> | null => {
     let raw: unknown;
     try {
-        raw = JSON.parse(payload.value);
+        raw = JSON.parse(json);
     } catch {
         return null;
     }
-    if (!isObject(raw)) {
-        return null;
-    }
+    return isObject(raw) ? raw : null;
+};
+
+const parseDefinition = (
+    raw: Record<string, unknown>,
+): SurveyDefinition | null => {
     if (raw.kind !== SURVEY_KIND || raw.version !== SURVEY_VERSION) {
         return null;
     }
@@ -177,16 +175,49 @@ export const parseSurveyPayload = (
     if (new Set(questions.map(({ id }) => id)).size !== questions.length) {
         return null;
     }
+
+    return {
+        title: raw.title,
+        description: typeof raw.description === 'string' ? raw.description : '',
+        questions,
+    };
+};
+
+export const parseSurveyDefinition = (
+    json: string,
+): SurveyDefinition | null => {
+    const raw = parseJsonObject(json);
+    return raw === null ? null : parseDefinition(raw);
+};
+
+export const parseSurveyPayload = (
+    flagName: string,
+    payload: { type: string; value: string } | undefined,
+): Survey | null => {
+    if (
+        !flagName.startsWith(SURVEY_FLAG_PREFIX) ||
+        payload?.type !== PayloadType.JSON
+    ) {
+        return null;
+    }
+
+    const raw = parseJsonObject(payload.value);
+    if (raw === null || !isNonEmptyString(raw.environmentId)) {
+        return null;
+    }
     const submitBase = parseSubmitBase(raw.submitBase);
     if (submitBase === null) {
+        return null;
+    }
+    const definition = parseDefinition(raw);
+    if (definition === null) {
         return null;
     }
 
     return {
         flagName,
-        title: raw.title,
-        description: typeof raw.description === 'string' ? raw.description : '',
-        questions,
+        environmentId: raw.environmentId,
         submitBase,
+        ...definition,
     };
 };

@@ -65,6 +65,7 @@ export const FeedbackProvider = ({ children }: { children: ReactNode }) => {
         submitSurveyResponse({
             flagName: survey.flagName,
             submitBase: survey.submitBase,
+            environmentId: survey.environmentId,
             respondentId: sessionId ? String(sessionId) : undefined,
             answers,
         }).catch(() => {});

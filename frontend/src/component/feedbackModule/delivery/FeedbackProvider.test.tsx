@@ -28,6 +28,7 @@ const surveyFlag = (name: string, title: string): IToggle => ({
             value: JSON.stringify({
                 kind: SURVEY_KIND,
                 version: SURVEY_VERSION,
+                environmentId: 'production',
                 title,
                 questions: [
                     { id: 'comment', type: 'free-text', prompt: 'Comment' },
@@ -137,6 +138,7 @@ describe('FeedbackProvider', () => {
             expect(requests).toEqual([
                 {
                     surveyVersion: SURVEY_VERSION,
+                    environmentId: 'production',
                     respondentId: 'test-session',
                     answers: { comment: 'Nice' },
                 },
@@ -154,7 +156,11 @@ describe('FeedbackProvider', () => {
 
         await waitFor(() =>
             expect(requests).toEqual([
-                { surveyVersion: SURVEY_VERSION, answers: { comment: 'Nice' } },
+                {
+                    surveyVersion: SURVEY_VERSION,
+                    environmentId: 'production',
+                    answers: { comment: 'Nice' },
+                },
             ]),
         );
     });

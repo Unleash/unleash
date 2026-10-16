@@ -16,7 +16,11 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import CheckCircleOutlined from '@mui/icons-material/CheckCircleOutlined';
-import type { Survey, SurveyAnswer, SurveyAnswers } from '../survey.ts';
+import type {
+    SurveyAnswer,
+    SurveyAnswers,
+    SurveyDefinition,
+} from '../survey.ts';
 import { QuestionField } from './QuestionField.tsx';
 
 const THANKS_VISIBLE_MS = 3000;
@@ -112,7 +116,7 @@ const ThanksMessage = ({ scheduleLeave, onLeave }: ThanksMessageProps) => {
 };
 
 interface SurveyFormProps {
-    survey: Survey;
+    survey: SurveyDefinition;
     onSubmit: (answers: SurveyAnswers) => void;
 }
 
@@ -189,7 +193,7 @@ const SurveyForm = ({ survey, onSubmit }: SurveyFormProps) => {
 };
 
 interface SurveyCardProps {
-    survey: Survey;
+    survey: SurveyDefinition;
     onSubmit: (answers: SurveyAnswers) => void;
     onDismiss: () => void;
     scheduleLeave?: ScheduleLeave;

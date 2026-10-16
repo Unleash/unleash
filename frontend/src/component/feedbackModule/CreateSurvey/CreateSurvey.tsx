@@ -18,9 +18,9 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
 import {
-    parseSurveyPayload,
+    parseSurveyDefinition,
     SURVEY_FLAG_PREFIX,
-    surveyTemplate,
+    SURVEY_TEMPLATE,
 } from '../survey.ts';
 
 const LazyReactJSONEditor = lazy(
@@ -47,13 +47,9 @@ const validate = (name: string, surveyJson: string): Errors => {
             name: `Must start with "${SURVEY_FLAG_PREFIX}" followed by a name`,
         };
     }
-    const survey = parseSurveyPayload(name, {
-        type: 'json',
-        value: surveyJson,
-    });
-    if (!survey) {
+    if (!parseSurveyDefinition(surveyJson)) {
         return {
-            survey: 'Not a valid survey. Check the kind, version, submitBase, title and questions.',
+            survey: 'Not a valid survey. Check the kind, version, title and questions.',
         };
     }
     return {};
@@ -69,13 +65,9 @@ export const CreateSurvey = () => {
 
     const [projectId, setProjectId] = useState('default');
     const [name, setName] = useState(SURVEY_FLAG_PREFIX);
-    const [editedSurveyJson, setSurveyJson] = useState<string>();
-    const defaultSurveyJson = JSON.stringify(
-        surveyTemplate(uiConfig.unleashUrl ?? ''),
-        null,
-        2,
+    const [surveyJson, setSurveyJson] = useState(
+        JSON.stringify(SURVEY_TEMPLATE, null, 2),
     );
-    const surveyJson = editedSurveyJson ?? defaultSurveyJson;
     const [errors, setErrors] = useState<Errors>({});
 
     if (!feedbackModuleEnabled) {
@@ -89,9 +81,22 @@ export const CreateSurvey = () => {
         if (Object.keys(validationErrors).length > 0) {
             return;
         }
+        const { unleashUrl } = uiConfig;
+        if (!unleashUrl) {
+            setToastData({
+                type: 'error',
+                text: 'This instance has no Unleash URL configured, so survey responses would have nowhere to go.',
+            });
+            return;
+        }
         let result: CreateSurveyResult;
         try {
-            result = await createSurvey(projectId, name, surveyJson);
+            result = await createSurvey(
+                projectId,
+                name,
+                surveyJson,
+                unleashUrl,
+            );
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
             return;

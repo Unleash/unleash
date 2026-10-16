@@ -93,13 +93,6 @@ const renderPage = (
         { route: '/surveys/create', permissions },
     );
 
-const findEditor = () =>
-    waitFor(() => {
-        const element = document.querySelector('.cm-content');
-        if (!element) throw new Error('editor not rendered');
-        return element as HTMLElement;
-    });
-
 const submitSurvey = async () => {
     await userEvent.type(
         await screen.findByLabelText('Flag name'),
@@ -143,16 +136,10 @@ describe('CreateSurvey', () => {
         );
     });
 
-    it('pre-fills the survey to send responses to this instance', async () => {
+    it('sends survey responses to this instance', async () => {
         const { addStrategy } = setupApi();
         renderPage();
 
-        const editor = await findEditor();
-        await waitFor(() =>
-            expect(editor).toHaveTextContent(
-                '"submitBase": "https://hosted.example.com/hosted"',
-            ),
-        );
         await submitSurvey();
 
         await screen.findByText('Survey created');
@@ -162,6 +149,21 @@ describe('CreateSurvey', () => {
         expect(JSON.parse(strategy.variants[0].payload.value)).toMatchObject({
             submitBase: 'https://hosted.example.com/hosted',
         });
+    });
+
+    it('does not create a survey when this instance has no URL to send responses to', async () => {
+        const { createFlag } = setupApi();
+        testServerRoute(server, '/api/admin/ui-config', {
+            flags: { feedbackModule: true },
+        });
+        renderPage();
+
+        await submitSurvey();
+
+        await screen.findByText(
+            'This instance has no Unleash URL configured, so survey responses would have nowhere to go.',
+        );
+        expect(createFlag.requests).toHaveLength(0);
     });
 
     it('rejects a flag name that is only the survey prefix', async () => {
@@ -180,12 +182,16 @@ describe('CreateSurvey', () => {
         const { createFlag } = setupApi();
         renderPage();
 
-        const editor = await findEditor();
+        const editor = await waitFor(() => {
+            const element = document.querySelector('.cm-content');
+            if (!element) throw new Error('editor not rendered');
+            return element as HTMLElement;
+        });
         editor.textContent = JSON.stringify({ title: 'No questions' });
         await submitSurvey();
 
         await screen.findByText(
-            'Not a valid survey. Check the kind, version, submitBase, title and questions.',
+            'Not a valid survey. Check the kind, version, title and questions.',
         );
         expect(createFlag.requests).toHaveLength(0);
     });

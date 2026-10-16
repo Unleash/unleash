@@ -2,11 +2,10 @@ import { describe, expect, it, vi } from 'vitest';
 import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
-import type { Survey } from '../survey.ts';
+import type { SurveyDefinition } from '../survey.ts';
 import { SurveyCard } from './SurveyCard.tsx';
 
-const survey: Survey = {
-    flagName: 'survey-onboarding',
+const survey: SurveyDefinition = {
     title: 'Quick feedback',
     description: 'Two quick questions.',
     questions: [
@@ -24,7 +23,6 @@ const survey: Survey = {
             required: false,
         },
     ],
-    submitBase: 'https://hosted.example.com/hosted',
 };
 
 const renderCard = ({
@@ -42,7 +40,7 @@ const renderCard = ({
         />,
     );
 
-const multiChoiceSurvey: Survey = {
+const multiChoiceSurvey: SurveyDefinition = {
     ...survey,
     questions: [
         {

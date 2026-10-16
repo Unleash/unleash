@@ -1,14 +1,17 @@
 import { headers } from 'utils/apiUtils';
-import { SURVEY_VERSION, type SurveyAnswers } from '../survey.ts';
+import {
+    SURVEY_VERSION,
+    type SurveyAnswers,
+    type SurveyTransport,
+} from '../survey.ts';
 
 export const submitSurveyResponse = async ({
     flagName,
     submitBase,
+    environmentId,
     respondentId,
     answers,
-}: {
-    flagName: string;
-    submitBase: string;
+}: SurveyTransport & {
     respondentId?: string;
     answers: SurveyAnswers;
 }): Promise<void> => {
@@ -23,6 +26,7 @@ export const submitSurveyResponse = async ({
             headers,
             body: JSON.stringify({
                 surveyVersion: SURVEY_VERSION,
+                environmentId,
                 respondentId,
                 answers,
             }),

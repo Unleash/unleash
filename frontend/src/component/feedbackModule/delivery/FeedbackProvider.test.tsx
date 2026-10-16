@@ -13,6 +13,8 @@ const server = testServerSetup();
 
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 
+const SUBMIT_BASE = 'https://hosted.example.com/hosted';
+
 const surveyFlag = (name: string, title: string): IToggle => ({
     name,
     enabled: true,
@@ -30,6 +32,7 @@ const surveyFlag = (name: string, title: string): IToggle => ({
                 questions: [
                     { id: 'comment', type: 'free-text', prompt: 'Comment' },
                 ],
+                submitBase: SUBMIT_BASE,
             }),
         },
     },
@@ -61,7 +64,7 @@ const submitComment = async (comment: string) => {
 const surveyResponsesRoute = () =>
     testServerRoute(
         server,
-        '/feedback/features/survey-a/survey-responses',
+        `${SUBMIT_BASE}/feedback/features/survey-a/survey-responses`,
         null,
         'post',
         201,
@@ -156,6 +159,24 @@ describe('FeedbackProvider', () => {
         );
     });
 
+    it('sends the answers without the session of the current instance', async () => {
+        const credentials: RequestCredentials[] = [];
+        server.use(
+            http.post(
+                `${SUBMIT_BASE}/feedback/features/survey-a/survey-responses`,
+                ({ request }) => {
+                    credentials.push(request.credentials);
+                    return new HttpResponse(null, { status: 201 });
+                },
+            ),
+        );
+        renderSurvey(testUnleashClient([surveyFlag('survey-a', 'Survey A')]));
+
+        await submitComment('Nice');
+
+        await waitFor(() => expect(credentials).toEqual(['omit']));
+    });
+
     it('does not show the survey again once submitted', async () => {
         surveyResponsesRoute();
         const client = testUnleashClient([surveyFlag('survey-a', 'Survey A')]);
@@ -170,8 +191,9 @@ describe('FeedbackProvider', () => {
 
     it('thanks the user even when the answers cannot be sent', async () => {
         server.use(
-            http.post('/feedback/features/survey-a/survey-responses', () =>
-                HttpResponse.error(),
+            http.post(
+                `${SUBMIT_BASE}/feedback/features/survey-a/survey-responses`,
+                () => HttpResponse.error(),
             ),
         );
         renderSurvey(testUnleashClient([surveyFlag('survey-a', 'Survey A')]));

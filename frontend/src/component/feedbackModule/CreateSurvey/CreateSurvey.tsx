@@ -12,6 +12,7 @@ import {
     type CreateSurveyResult,
     useSurveysApi,
 } from 'hooks/api/actions/useSurveysApi/useSurveysApi';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -19,7 +20,7 @@ import { GO_BACK } from 'constants/navigate';
 import {
     parseSurveyPayload,
     SURVEY_FLAG_PREFIX,
-    SURVEY_TEMPLATE,
+    surveyTemplate,
 } from '../survey.ts';
 
 const LazyReactJSONEditor = lazy(
@@ -52,7 +53,7 @@ const validate = (name: string, surveyJson: string): Errors => {
     });
     if (!survey) {
         return {
-            survey: 'Not a valid survey. Check the kind, version, title and questions.',
+            survey: 'Not a valid survey. Check the kind, version, submitBase, title and questions.',
         };
     }
     return {};
@@ -63,13 +64,18 @@ export const CreateSurvey = () => {
     const navigate = useNavigate();
     const { setToastData, setToastApiError } = useToast();
     const { projects } = useProjects();
+    const { uiConfig } = useUiConfig();
     const { createSurvey, loading } = useSurveysApi();
 
     const [projectId, setProjectId] = useState('default');
     const [name, setName] = useState(SURVEY_FLAG_PREFIX);
-    const [surveyJson, setSurveyJson] = useState(
-        JSON.stringify(SURVEY_TEMPLATE, null, 2),
+    const [editedSurveyJson, setSurveyJson] = useState<string>();
+    const defaultSurveyJson = JSON.stringify(
+        surveyTemplate(uiConfig.unleashUrl ?? ''),
+        null,
+        2,
     );
+    const surveyJson = editedSurveyJson ?? defaultSurveyJson;
     const [errors, setErrors] = useState<Errors>({});
 
     if (!feedbackModuleEnabled) {
@@ -80,7 +86,7 @@ export const CreateSurvey = () => {
         event.preventDefault();
         const validationErrors = validate(name, surveyJson);
         setErrors(validationErrors);
-        if (validationErrors.name || validationErrors.survey) {
+        if (Object.keys(validationErrors).length > 0) {
             return;
         }
         let result: CreateSurveyResult;

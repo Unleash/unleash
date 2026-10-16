@@ -28,11 +28,13 @@ export interface Survey {
     title: string;
     description: string;
     questions: SurveyQuestion[];
+    submitBase: string;
 }
 
-export const SURVEY_TEMPLATE = {
+export const surveyTemplate = (submitBase: string) => ({
     kind: SURVEY_KIND,
     version: SURVEY_VERSION,
+    submitBase,
     title: 'How was creating your flag?',
     description: 'Three quick questions.',
     questions: [
@@ -51,13 +53,29 @@ export const SURVEY_TEMPLATE = {
         },
         { id: 'comment', type: 'free-text', prompt: 'Anything else?' },
     ],
-};
+});
 
 const isNonEmptyString = (value: unknown): value is string =>
     typeof value === 'string' && value.length > 0;
 
 const isObject = (value: unknown): value is Record<string, unknown> =>
     typeof value === 'object' && value !== null && !Array.isArray(value);
+
+const parseSubmitBase = (value: unknown): string | null => {
+    if (typeof value !== 'string') {
+        return null;
+    }
+    let url: URL;
+    try {
+        url = new URL(value);
+    } catch {
+        return null;
+    }
+    if (url.protocol !== 'https:' && url.protocol !== 'http:') {
+        return null;
+    }
+    return value.replace(/\/+$/, '');
+};
 
 const parseRatingScale = (scale: unknown): number | null => {
     if (scale === undefined) {
@@ -159,11 +177,16 @@ export const parseSurveyPayload = (
     if (new Set(questions.map(({ id }) => id)).size !== questions.length) {
         return null;
     }
+    const submitBase = parseSubmitBase(raw.submitBase);
+    if (submitBase === null) {
+        return null;
+    }
 
     return {
         flagName,
         title: raw.title,
         description: typeof raw.description === 'string' ? raw.description : '',
         questions,
+        submitBase,
     };
 };

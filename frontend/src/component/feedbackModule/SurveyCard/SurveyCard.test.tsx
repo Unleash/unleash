@@ -24,6 +24,7 @@ const survey: Survey = {
             required: false,
         },
     ],
+    submitBase: 'https://hosted.example.com/hosted',
 };
 
 const renderCard = ({

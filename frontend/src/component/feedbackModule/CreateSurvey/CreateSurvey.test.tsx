@@ -36,6 +36,7 @@ const setupApi = ({
 } = {}) => {
     testServerRoute(server, '/api/admin/ui-config', {
         flags: { feedbackModule: true },
+        unleashUrl: 'https://hosted.example.com/hosted',
     });
     testServerRoute(server, '/api/admin/projects', {
         projects: [
@@ -60,14 +61,14 @@ const setupApi = ({
     testServerRoute(server, flagPath(projectId), {
         environments: [{ name: 'development' }],
     });
-    testServerRoute(
+    const addStrategy = testServerRoute(
         server,
         `${flagPath(projectId)}/environments/development/strategies`,
         {},
         'post',
         strategyStatus,
     );
-    return { createFlag };
+    return { createFlag, addStrategy };
 };
 
 const FlagPage = () => {
@@ -91,6 +92,13 @@ const renderPage = (
         </>,
         { route: '/surveys/create', permissions },
     );
+
+const findEditor = () =>
+    waitFor(() => {
+        const element = document.querySelector('.cm-content');
+        if (!element) throw new Error('editor not rendered');
+        return element as HTMLElement;
+    });
 
 const submitSurvey = async () => {
     await userEvent.type(
@@ -135,6 +143,27 @@ describe('CreateSurvey', () => {
         );
     });
 
+    it('pre-fills the survey to send responses to this instance', async () => {
+        const { addStrategy } = setupApi();
+        renderPage();
+
+        const editor = await findEditor();
+        await waitFor(() =>
+            expect(editor).toHaveTextContent(
+                '"submitBase": "https://hosted.example.com/hosted"',
+            ),
+        );
+        await submitSurvey();
+
+        await screen.findByText('Survey created');
+        const [strategy] = addStrategy.requests as {
+            variants: { payload: { value: string } }[];
+        }[];
+        expect(JSON.parse(strategy.variants[0].payload.value)).toMatchObject({
+            submitBase: 'https://hosted.example.com/hosted',
+        });
+    });
+
     it('rejects a flag name that is only the survey prefix', async () => {
         const { createFlag } = setupApi();
         renderPage();
@@ -151,16 +180,12 @@ describe('CreateSurvey', () => {
         const { createFlag } = setupApi();
         renderPage();
 
-        const editor = await waitFor(() => {
-            const element = document.querySelector('.cm-content');
-            if (!element) throw new Error('editor not rendered');
-            return element as HTMLElement;
-        });
+        const editor = await findEditor();
         editor.textContent = JSON.stringify({ title: 'No questions' });
         await submitSurvey();
 
         await screen.findByText(
-            'Not a valid survey. Check the kind, version, title and questions.',
+            'Not a valid survey. Check the kind, version, submitBase, title and questions.',
         );
         expect(createFlag.requests).toHaveLength(0);
     });

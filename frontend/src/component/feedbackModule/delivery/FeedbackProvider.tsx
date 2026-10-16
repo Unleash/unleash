@@ -44,7 +44,6 @@ export const FeedbackProvider = ({ children }: { children: ReactNode }) => {
     const flags = useFlags();
     const client = useUnleashClient();
     const [shownSurvey, setShownSurvey] = useState<Survey | null>(null);
-
     const survey = shownSurvey ?? findEligibleSurvey(flags);
     if (survey !== shownSurvey) {
         setShownSurvey(survey);
@@ -65,6 +64,7 @@ export const FeedbackProvider = ({ children }: { children: ReactNode }) => {
         const { sessionId } = client.getContext();
         submitSurveyResponse({
             flagName: survey.flagName,
+            submitBase: survey.submitBase,
             respondentId: sessionId ? String(sessionId) : undefined,
             answers,
         }).catch(() => {});

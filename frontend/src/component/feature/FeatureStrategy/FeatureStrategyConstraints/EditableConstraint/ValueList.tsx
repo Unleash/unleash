@@ -98,6 +98,7 @@ export const ValueList: FC<PropsWithChildren<Props>> = ({
                                 '& .MuiChip-label': {
                                     display: 'block',
                                     whiteSpace: 'normal',
+                                    userSelect: 'text',
                                 },
                             }}
                             label={value}

@@ -32,7 +32,7 @@ export default class SessionController extends Controller {
                     operationId: 'keepSessionAlive',
                     summary: 'Report that the user is still active',
                     description:
-                        "Renews the calling session's idle window. Only has an effect on instances with `SESSION_IDLE_TIMEOUT_MINUTES` set and the `sessionTimeouts` flag on.",
+                        "Renews the calling session's idle window, on instances with `SESSION_IDLE_TIMEOUT_MINUTES` set and the `sessionTimeouts` flag on. Reports the session's deadline either way: the idle window when that is the nearer one, otherwise what is left of the maximum age.",
                     responses: {
                         200: createResponseSchema(sessionKeepAliveSchema.$id),
                         ...getStandardResponses(401),

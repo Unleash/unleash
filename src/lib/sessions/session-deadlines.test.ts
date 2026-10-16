@@ -31,6 +31,7 @@ describe('session deadlines', () => {
             action: 'continue',
             shouldRenew: false,
             expiresInMs: minutesToMilliseconds(10),
+            hardExpiresInMs: MAX_AGE - minutesToMilliseconds(5),
         });
     });
 
@@ -58,6 +59,7 @@ describe('session deadlines', () => {
             action: 'continue',
             shouldRenew: true,
             expiresInMs: IDLE,
+            hardExpiresInMs: MAX_AGE - minutesToMilliseconds(30),
         });
     });
 
@@ -81,6 +83,7 @@ describe('session deadlines', () => {
             action: 'continue',
             shouldRenew: false,
             expiresInMs: hoursToMilliseconds(28),
+            hardExpiresInMs: hoursToMilliseconds(28),
         });
     });
 
@@ -120,6 +123,7 @@ describe('session deadlines', () => {
             action: 'continue',
             shouldRenew: false,
             expiresInMs: minutesToMilliseconds(1),
+            hardExpiresInMs: MAX_AGE - minutesToMilliseconds(14),
         });
     });
 
@@ -133,6 +137,7 @@ describe('session deadlines', () => {
             action: 'continue',
             shouldRenew: true,
             expiresInMs: minutesToMilliseconds(5),
+            hardExpiresInMs: minutesToMilliseconds(5),
         });
     });
 
@@ -149,6 +154,7 @@ describe('session deadlines', () => {
             action: 'continue',
             shouldRenew: false,
             expiresInMs: IDLE,
+            hardExpiresInMs: MAX_AGE - minutesToMilliseconds(30),
         });
     });
 
@@ -164,6 +170,21 @@ describe('session deadlines', () => {
             action: 'continue',
             shouldRenew: false,
             expiresInMs: MAX_AGE,
+            hardExpiresInMs: MAX_AGE,
+        });
+    });
+
+    test('activity moves the nearer deadline but never the ceiling', () => {
+        expect(
+            evaluateSession(
+                session(hoursToMilliseconds(10), 0),
+                limits(),
+                true,
+                NOW,
+            ),
+        ).toMatchObject({
+            expiresInMs: IDLE,
+            hardExpiresInMs: hoursToMilliseconds(38),
         });
     });
 

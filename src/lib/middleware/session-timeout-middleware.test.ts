@@ -13,6 +13,9 @@ const COOKIE_NAME = 'unleash-session';
 
 const user = { id: 7, email: 'timeout-as-test@getunleash.io' } as SessionUser;
 
+const hoursFromNow = (iso: string) =>
+    (new Date(iso).getTime() - Date.now()) / hoursToMilliseconds(1);
+
 const createApp = ({
     idleTimeoutMinutes = 15,
     ttlHours = 48,
@@ -61,6 +64,8 @@ const createApp = ({
             req.session.authenticatedAt = undefined;
         } else if (req.query.login === 'broken') {
             req.session.authenticatedAt = 'not a date';
+        } else if (req.query.login === 'empty') {
+            req.session.authenticatedAt = '';
         } else if (req.query.login !== undefined) {
             req.session.authenticatedAt = back(req.query.login);
         }
@@ -110,6 +115,7 @@ const createApp = ({
             authenticatedAt: req.session?.authenticatedAt ?? null,
             lastInteractionAt: req.session?.lastInteractionAt ?? null,
             expiresInMs: res.locals.sessionExpiresInMs ?? null,
+            cookieExpires: req.session?.cookie?.expires ?? null,
         });
     });
 
@@ -197,11 +203,14 @@ test('a session the store cannot delete is not reported as signed out', async ()
     expect(logged.some((line) => line.includes('Could not end'))).toBe(true);
 });
 
-test('stamps a start on a session that predates the deadlines', async () => {
+test.each([
+    ['one it was never given', 'never'],
+    ['one left empty', 'empty'],
+])('stamps a start on a session carrying %s', async (_case, login) => {
     // during a rolling deploy the old pods keep minting sessions without one.
     // Ending those is a login loop that lasts as long as the deploy
     const { agent } = await signedIn();
-    await agent.post('/rewind?login=never').expect(200);
+    await agent.post(`/rewind?login=${login}`).expect(200);
 
     const res = await agent.get('/api/admin/projects');
 
@@ -293,4 +302,97 @@ test('a read leaves the session signed in without renewing it', async () => {
     expect(res.body.userId).toBe(7);
     expect(res.headers['set-cookie']).toBeUndefined();
     expect(after).toBe(before);
+});
+
+describe('the hard max age applies whether the flag is on or off', () => {
+    test.each([
+        true,
+        false,
+    ])('the ceiling counts from sign-in rather than sliding forward on every request (flag on: %s)', async (flagEnabled) => {
+        const { agent } = await signedIn({ flagEnabled });
+        // signed in an hour ago, so 47 of the 48 hours are left
+        await agent.post('/rewind?login=3600000').expect(200);
+
+        const first = await agent.get('/api/admin/projects').expect(200);
+        await agent.get('/api/admin/projects').expect(200);
+        const second = await agent.get('/api/admin/projects').expect(200);
+
+        expect(hoursFromNow(first.body.cookieExpires)).toBeCloseTo(47, 1);
+        expect(
+            Math.abs(
+                new Date(second.body.cookieExpires).getTime() -
+                    new Date(first.body.cookieExpires).getTime(),
+            ),
+        ).toBeLessThan(1000);
+    });
+
+    test('a session past its max age ends with the flag off, like any other', async () => {
+        const { agent, storedSessions } = await signedIn({
+            flagEnabled: false,
+        });
+        await agent
+            .post(`/rewind?login=${hoursToMilliseconds(49)}`)
+            .expect(200);
+
+        const res = await agent.get('/api/admin/projects');
+
+        expect(res.status).toBe(401);
+        expect(res.body.reason).toBe('max_age');
+        expect(await storedSessions()).toHaveLength(0);
+    });
+
+    test('a start that cannot be read ends with the flag off too', async () => {
+        const { agent } = await signedIn({ flagEnabled: false });
+        await agent.post('/rewind?login=broken').expect(200);
+
+        const res = await agent.get('/api/admin/projects');
+
+        expect(res.status).toBe(401);
+        expect(res.body.reason).toBe('unknown_start');
+    });
+
+    test('the idle window is still ignored with the flag off', async () => {
+        const { agent, storedSessions } = await signedIn({
+            flagEnabled: false,
+        });
+        await agent.post('/rewind?login=3600000&idle=3600000').expect(200);
+
+        const res = await agent.get('/api/admin/projects').expect(200);
+
+        expect(res.body.userId).toBe(7);
+        // what is left of the max age, not of the idle window
+        expect(res.body.expiresInMs).toBeGreaterThan(hoursToMilliseconds(46));
+        expect(await storedSessions()).toHaveLength(1);
+    });
+});
+
+describe('the cookie deadline with the flag on', () => {
+    test('is the max age, not the nearer idle deadline', async () => {
+        const { agent } = await signedIn({ idleTimeoutMinutes: 15 });
+
+        const res = await agent.get('/api/admin/projects').expect(200);
+
+        expect(
+            new Date(res.body.cookieExpires).getTime() - Date.now(),
+        ).toBeGreaterThan(hoursToMilliseconds(47));
+        expect(res.body.expiresInMs).toBeLessThanOrEqual(
+            minutesToMilliseconds(15),
+        );
+    });
+
+    test('the max age caps the idle window rather than the other way round', async () => {
+        const { agent } = await signedIn({
+            ttlHours: 2,
+            idleTimeoutMinutes: 90,
+        });
+        await agent.post('/rewind?login=3600000').expect(200);
+
+        const res = await agent.get('/api/admin/projects').expect(200);
+
+        // an hour of max age left, so the 90-minute idle window cannot apply
+        expect(hoursFromNow(res.body.cookieExpires)).toBeCloseTo(1, 1);
+        expect(res.body.expiresInMs).toBeLessThanOrEqual(
+            hoursToMilliseconds(1),
+        );
+    });
 });

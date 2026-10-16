@@ -4,7 +4,12 @@ import type { SessionTimeoutReason } from '../types/session-timeout-reason.js';
 
 export type SessionVerdict =
     | { action: 'end'; reason: SessionTimeoutReason }
-    | { action: 'continue'; shouldRenew: boolean; expiresInMs: number };
+    | {
+          action: 'continue';
+          shouldRenew: boolean;
+          expiresInMs: number;
+          hardExpiresInMs: number;
+      };
 
 const parse = (value: string | undefined): number | undefined => {
     if (!value) return undefined;
@@ -40,6 +45,7 @@ export const evaluateSession = (
             action: 'continue',
             shouldRenew: false,
             expiresInMs: absoluteExpiresInMs,
+            hardExpiresInMs: absoluteExpiresInMs,
         };
     }
 
@@ -61,5 +67,6 @@ export const evaluateSession = (
         action: 'continue',
         shouldRenew: isUserActivity,
         expiresInMs: Math.min(absoluteExpiresInMs, idleExpiresInMs),
+        hardExpiresInMs: absoluteExpiresInMs,
     };
 };

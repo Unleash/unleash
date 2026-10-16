@@ -50,7 +50,7 @@ const login = (email: string) =>
 const sessionRowFor = (email: string) =>
     db
         .rawDatabase('unleash_session')
-        .select('sid', 'sess')
+        .select('sid', 'sess', 'expired')
         .whereRaw("sess->'user'->>'email' = ?", [email])
         .first();
 
@@ -166,20 +166,65 @@ describe('the hard max-age', () => {
     });
 });
 
+describe('the stored expiry, which is what the max age used to lose to', () => {
+    const storedDeadlineFor = async (email: string) => {
+        const row = await sessionRowFor(email);
+        expect(row).toBeDefined();
+
+        return {
+            expiresAt: new Date(row!.expired).getTime(),
+            authenticatedAt: Date.parse(row!.sess.authenticatedAt),
+        };
+    };
+
+    test.each([
+        true,
+        false,
+    ])('counts from sign-in instead of from the last request (flag on: %s)', async (sessionTimeouts) => {
+        const email = `stored-expiry-${sessionTimeouts}@getunleash.io`;
+        await appWith(IDLE_15, sessionTimeouts);
+        await login(email);
+
+        await ageSession(email, { sinceLoginMs: hoursToMilliseconds(40) });
+
+        await app.request.get('/api/admin/projects').expect(200);
+        const first = await storedDeadlineFor(email);
+        await app.request.get('/api/admin/projects').expect(200);
+        const second = await storedDeadlineFor(email);
+
+        const ceiling = second.authenticatedAt + hoursToMilliseconds(48);
+        expect(second.expiresAt).toBeGreaterThanOrEqual(ceiling);
+        expect(second.expiresAt - ceiling).toBeLessThan(1000);
+        expect(second.expiresAt - first.expiresAt).toBeLessThan(1000);
+
+        expect(second.expiresAt - Date.now()).toBeGreaterThan(
+            hoursToMilliseconds(7),
+        );
+    });
+});
+
 describe('sessions that predate this feature', () => {
-    test('get a start stamped on their first request', async () => {
+    test.each([
+        ['one they were never given', 'legacy-missing', undefined],
+        ['one left empty', 'legacy-empty', ''],
+    ])('get a start stamped on their first request, from %s', async (_case, slug, storedStart) => {
         // signing them out instead is a login loop lasting the whole deploy
-        const email = 'legacy@getunleash.io';
+        const email = `${slug}@getunleash.io`;
         await appWith(IDLE_15);
         await login(email);
 
         const row = await sessionRowFor(email);
-        const { authenticatedAt, lastInteractionAt, ...withoutTimestamps } =
-            row!.sess;
+        // `undefined` drops the key, which is the shape an old pod left
+        const { lastInteractionAt, ...sess } = row!.sess;
         await db
             .rawDatabase('unleash_session')
             .where({ sid: row!.sid })
-            .update({ sess: JSON.stringify(withoutTimestamps) });
+            .update({
+                sess: JSON.stringify({
+                    ...sess,
+                    authenticatedAt: storedStart,
+                }),
+            });
 
         await app.request.get('/api/admin/projects').expect(200);
 

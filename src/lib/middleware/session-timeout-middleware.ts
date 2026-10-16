@@ -23,6 +23,9 @@ export const sessionTimeoutMiddleware = (
         'lib/middleware/session-timeout-middleware.ts',
     );
     const limits = resolveSessionLimits(config.session);
+    // the flag gates the idle window only. The max age is enforced either way:
+    // with the flag off it is the one deadline, with it on it is the ceiling.
+    const maxAgeOnly = { ...limits, idleTimeoutMs: 0 };
 
     const endSession = (
         session: Request['session'],
@@ -65,28 +68,26 @@ export const sessionTimeoutMiddleware = (
     return (req, res, next) => {
         const { session } = req;
 
-        // check before the flag: SDK endpoints never carry a session - cheap check
+        // SDK endpoints never carry a session - cheapest check first
         if (!session?.user) {
-            next();
-            return;
-        }
-
-        if (!config.flagResolver.isEnabled('sessionTimeouts')) {
             next();
             return;
         }
 
         const stamp = Date.now();
 
-        // pods from before startSession() mint sessions with no start. drop this
-        // once none of them can still be running
-        if (session.authenticatedAt === undefined) {
+        // pods from before startSession() mint sessions with no start, and an
+        // empty one is no start either. A start we cannot read is different: it
+        // ends the session below. Drop this once those pods cannot be running
+        if (!session.authenticatedAt) {
             session.authenticatedAt = new Date(stamp).toISOString();
         }
 
         const verdict = evaluateSession(
             session,
-            limits,
+            config.flagResolver.isEnabled('sessionTimeouts')
+                ? limits
+                : maxAgeOnly,
             renewsIdleWindow(req),
             stamp,
         );
@@ -99,6 +100,8 @@ export const sessionTimeoutMiddleware = (
         if (verdict.shouldRenew) {
             session.lastInteractionAt = new Date(stamp).toISOString();
         }
+
+        session.cookie.maxAge = verdict.hardExpiresInMs;
 
         res.locals.sessionExpiresInMs = verdict.expiresInMs;
 

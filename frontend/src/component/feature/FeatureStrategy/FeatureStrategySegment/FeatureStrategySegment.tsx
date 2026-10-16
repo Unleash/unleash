@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useId, useMemo, useRef, useState } from 'react';
 import type { ISegment } from 'interfaces/segment';
-import { MultiSelectPopover } from 'component/common/MultiSelectPopover/MultiSelectPopover.tsx';
+import { SelectPopover } from 'component/common/SelectPopover/SelectPopover.tsx';
 import { FeatureStrategySegmentList } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegmentList';
 import { SegmentDocsStrategyWarning } from 'component/segments/SegmentDocs';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
@@ -122,11 +122,12 @@ export const FeatureStrategySegment = ({
                 >
                     Add segment
                 </Button>
-                <MultiSelectPopover
+                <SelectPopover
                     open={Boolean(addSegmentAnchor)}
                     anchorEl={addSegmentAnchor}
                     onClose={() => setAddSegmentAnchor(null)}
                     options={segmentOptions}
+                    multiple
                     selected={selectedSegments.map((segment) =>
                         String(segment.id),
                     )}

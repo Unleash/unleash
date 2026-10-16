@@ -14,7 +14,7 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import { MultiSelectPopover } from 'component/common/MultiSelectPopover/MultiSelectPopover.tsx';
+import { SelectPopover } from 'component/common/SelectPopover/SelectPopover.tsx';
 import useAllTags from 'hooks/api/getters/useAllTags/useAllTags';
 import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
 import useToast from 'hooks/useToast';
@@ -221,7 +221,7 @@ export const OptionalSettingsFieldset = ({
                                     }}
                                 />
                             ))}
-                            <MultiSelectPopover
+                            <SelectPopover
                                 open={Boolean(addTagAnchor)}
                                 anchorEl={addTagAnchor}
                                 onClose={() => setAddTagAnchor(null)}
@@ -229,6 +229,7 @@ export const OptionalSettingsFieldset = ({
                                     label: formatTag(tag),
                                     value: formatTag(tag),
                                 }))}
+                                multiple
                                 selected={selectedTags.map(formatTag)}
                                 onChange={selectTags}
                                 searchPlaceholderText='Find or create a tag'

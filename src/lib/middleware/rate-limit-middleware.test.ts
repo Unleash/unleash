@@ -21,6 +21,7 @@ describe('rate limit policies', () => {
                 callSignalEndpointMaxPerSecond: 3,
                 tokenAuthenticationMaxPerMinute: 105,
                 sdkApiMaxPerMinute: 106,
+                feedbackMaxPerMinute: 61,
             },
             metricsRateLimiting: {
                 clientMetricsMaxPerMinute: 101,
@@ -56,6 +57,20 @@ describe('rate limit policies', () => {
                 'beforeAuthentication',
             ),
         ).toEqual([{ windowMs: 60_000, limit: 2 }]);
+        expect(
+            matchingOptions(
+                config,
+                request('/feedback'),
+                'beforeAuthentication',
+            ),
+        ).toEqual([{ windowMs: 60_000, limit: 61 }]);
+        expect(
+            matchingOptions(
+                config,
+                request('/feedback/features/my-survey/survey-responses'),
+                'beforeAuthentication',
+            ),
+        ).toEqual([{ windowMs: 60_000, limit: 61 }]);
         expect(
             matchingOptions(
                 config,

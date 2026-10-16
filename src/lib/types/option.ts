@@ -282,6 +282,7 @@ export interface IRateLimiting {
     tokenAuthenticationMaxPerMinute: number;
     sdkApiMaxPerMinute: number;
     adminApiMaxPerMinute: number;
+    feedbackMaxPerMinute: number;
 }
 
 export interface IUnleashConfig {

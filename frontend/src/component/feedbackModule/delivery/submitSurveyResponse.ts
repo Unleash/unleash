@@ -13,14 +13,13 @@ export const submitSurveyResponse = async ({
 }): Promise<void> => {
     await fetch(
         formatApiPath(
-            `api/admin/features/${encodeURIComponent(flagName)}/survey-responses`,
+            `feedback/features/${encodeURIComponent(flagName)}/survey-responses`,
         ),
         {
             method: 'POST',
             // The card fades out right after submit and the user may navigate
             // away; keepalive lets the request outlive the page.
             keepalive: true,
-            credentials: 'include',
             headers,
             body: JSON.stringify({
                 surveyVersion: SURVEY_VERSION,

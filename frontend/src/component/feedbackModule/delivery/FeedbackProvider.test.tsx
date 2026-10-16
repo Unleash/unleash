@@ -61,7 +61,7 @@ const submitComment = async (comment: string) => {
 const surveyResponsesRoute = () =>
     testServerRoute(
         server,
-        '/api/admin/features/survey-a/survey-responses',
+        '/feedback/features/survey-a/survey-responses',
         null,
         'post',
         201,
@@ -170,7 +170,7 @@ describe('FeedbackProvider', () => {
 
     it('thanks the user even when the answers cannot be sent', async () => {
         server.use(
-            http.post('/api/admin/features/survey-a/survey-responses', () =>
+            http.post('/feedback/features/survey-a/survey-responses', () =>
                 HttpResponse.error(),
             ),
         );

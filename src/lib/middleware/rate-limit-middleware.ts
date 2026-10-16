@@ -144,6 +144,14 @@ const createRateLimitRules = (config: IUnleashConfig): RateLimitRule[] => {
             },
         },
         {
+            pathPrefixes: ['/feedback'],
+            methods: ['POST'],
+            beforeAuthentication: {
+                ...perMinute,
+                limit: config.rateLimiting.feedbackMaxPerMinute,
+            },
+        },
+        {
             pathPrefixes: ['/api/admin/user-admin'],
             methods: ['POST'],
             afterAuthentication: {

@@ -35,6 +35,10 @@ export interface AddonTypeSchema {
     parameters?: AddonParameterSchema[];
     /** This is an experimental property. It may change or be removed as we work on it. Please don't depend on it yet. An installation that Unleash handles itself: the install button opens `path` in the same tab, with the non-sensitive parameters filled in the form as `parameters[name]` query parameters. */
     serverInstallation?: AddonTypeSchemaServerInstallation;
+    /** This is an experimental property. It may change or be removed as we work on it. Please don't depend on it yet. Whether every addon of this type listens to all of its `events`. Hidden in the form. */
+    fixedEvents?: boolean;
+    /** This is an experimental property. It may change or be removed as we work on it. Please don't depend on it yet. Whether the events of this addon type are independent of environments, so that no environment filter is offered. */
+    environmentIndependent?: boolean;
     /** A list of [Unleash tag types](https://docs.getunleash.io/concepts/feature-flags#tags) that this addon uses. These tags will be added to the Unleash instance when an addon of this type is created. */
     tagTypes?: TagTypeSchema[];
 }

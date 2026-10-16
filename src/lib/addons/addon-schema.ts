@@ -35,6 +35,8 @@ export const addonDefinitionSchema = joi.object().keys({
             helpText: joi.string().optional(),
         })
         .optional(),
+    fixedEvents: joi.boolean().optional(),
+    environmentIndependent: joi.boolean().optional(),
     alerts: joi
         .array()
         .optional()

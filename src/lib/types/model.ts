@@ -467,6 +467,8 @@ export interface IAddonDefinition {
     tagTypes?: ITagType[];
     installation?: IAddonInstallation;
     serverInstallation?: IAddonServerInstallation;
+    fixedEvents?: boolean;
+    environmentIndependent?: boolean;
     alerts?: IAddonAlert[];
     howTo?: string;
 }

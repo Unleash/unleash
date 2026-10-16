@@ -180,6 +180,18 @@ export const addonTypeSchema = {
                 },
             },
         },
+        fixedEvents: {
+            type: 'boolean',
+            description:
+                "This is an experimental property. It may change or be removed as we work on it. Please don't depend on it yet. Whether every addon of this type listens to all of its `events`. Hides filter from the form.",
+            example: true,
+        },
+        environmentIndependent: {
+            type: 'boolean',
+            description:
+                "This is an experimental property. It may change or be removed as we work on it. Please don't depend on it yet. Whether the events of this addon type are independent of environments, so that no environment filter is offered.",
+            example: true,
+        },
         alerts: {
             type: 'array',
             description:

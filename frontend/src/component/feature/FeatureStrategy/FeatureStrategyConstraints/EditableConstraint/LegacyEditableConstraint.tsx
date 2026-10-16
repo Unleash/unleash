@@ -38,6 +38,8 @@ import {
 } from './useEditableConstraint/editable-constraint-type.ts';
 import type { ConstraintValidationResult } from './useEditableConstraint/constraint-validator.ts';
 import { createContextFieldOptions } from './createContextFieldOptions.ts';
+import type { SelectOptionGroup as GeneralSelectOptionGroup } from 'component/common/GeneralSelect/GeneralSelect';
+import type { SelectOptionGroup } from 'component/common/SelectPopover/SelectPopover.tsx';
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
 import { AddRegexValueChip } from './AddRegexValueChip.tsx';
 import { ToggleConstraintInverted } from './ToggleConstraintInverted.tsx';
@@ -60,6 +62,14 @@ const getInvertedDisabledText = (
         'This operator does not support inversion'
     );
 };
+
+const toGeneralSelectOptions = (
+    groups: SelectOptionGroup<string>[],
+): GeneralSelectOptionGroup[] =>
+    groups.map(({ groupHeader, options }) => ({
+        groupHeader,
+        options: options.map(({ value, label }) => ({ key: value, label })),
+    }));
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
@@ -398,7 +408,9 @@ export const EditableConstraint: FC<Props> = ({
                             id='context-field-select'
                             name='contextName'
                             label='Context Field'
-                            options={contextFieldOptions}
+                            options={toGeneralSelectOptions(
+                                contextFieldOptions,
+                            )}
                             value={contextName || ''}
                             onChange={(contextField) =>
                                 updateConstraint({

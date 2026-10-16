@@ -1,6 +1,5 @@
 import { IconButton, Link, styled } from '@mui/material';
 import OpenInNew from '@mui/icons-material/OpenInNew';
-import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import {
     isRegexOperator,
     isStringOperator,
@@ -38,6 +37,7 @@ import {
 } from './useEditableConstraint/editable-constraint-type.ts';
 import type { ConstraintValidationResult } from './useEditableConstraint/constraint-validator.ts';
 import { createContextFieldOptions } from './createContextFieldOptions.ts';
+import { ContextFieldSelect } from './ContextFieldSelect.tsx';
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
 import { AddRegexValueChip } from './AddRegexValueChip.tsx';
 import { ToggleConstraintInverted } from './ToggleConstraintInverted.tsx';
@@ -98,26 +98,6 @@ const ConstraintDetails = styled('div')(({ theme }) => ({
 const LegalValuesContainer = styled('div')(({ theme }) => ({
     padding: 'var(--padding)',
     borderTop: `1px dashed ${theme.palette.divider}`,
-}));
-
-const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
-    fieldset: { border: 'none', borderRadius: 0 },
-    maxWidth: '25ch',
-    minWidth: '7ch',
-    ':focus-within .MuiSelect-select': {
-        background: 'none',
-    },
-    ':focus-within fieldset': { borderBottomStyle: 'solid' },
-    '.MuiInputLabel-root + &': {
-        // mui adds a margin top to 'standard' selects with labels
-        margin: 0,
-    },
-    '&::before': {
-        borderColor: theme.palette.divider,
-    },
-    '&&:hover::before': {
-        borderColor: theme.palette.primary.main,
-    },
 }));
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
@@ -391,20 +371,15 @@ export const EditableConstraint: FC<Props> = ({
             <TopRow>
                 <ConstraintDetails>
                     <ConstraintOptions>
-                        <StyledSelect
-                            visuallyHideLabel
-                            id='context-field-select'
-                            name='contextName'
-                            label='Context Field'
-                            options={contextFieldOptions}
+                        <ContextFieldSelect
                             value={contextName || ''}
+                            options={contextFieldOptions}
                             onChange={(contextField) =>
                                 updateConstraint({
                                     type: 'set context field',
                                     payload: contextField,
                                 })
                             }
-                            variant='standard'
                         />
 
                         <OperatorOptions>

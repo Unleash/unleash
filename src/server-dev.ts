@@ -59,7 +59,6 @@ process.nextTick(async () => {
                         serviceNowIntegration: true,
                         recordSdkFlavorMetrics: true,
                         semverBuildMetadata: true,
-                        slackIntegrationProjectLevel: true,
                         totalUsageMetrics: true,
                         helpMenuRelocationHint: true,
                         playgroundPerFlag: true,

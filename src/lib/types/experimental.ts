@@ -74,7 +74,6 @@ export type IFlagKey =
     | 'recordSdkFlavorMetrics'
     | 'searchDocsWidget'
     | 'semverBuildMetadata'
-    | 'slackIntegrationProjectLevel'
     | 'totalUsageMetrics'
     | 'auditEventUserAgent'
     | 'helpMenuRelocationHint'
@@ -343,10 +342,6 @@ const flags: IFlags = {
     ),
     semverBuildMetadata: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SEMVER_BUILD_METADATA,
-        false,
-    ),
-    slackIntegrationProjectLevel: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SLACK_INTEGRATION_PROJECT_LEVEL,
         false,
     ),
     totalUsageMetrics: parseEnvVarBoolean(

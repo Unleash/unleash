@@ -8,12 +8,12 @@ import {
 } from 'constants/operators';
 import { useCallback, useEffect, useRef, useState, type FC } from 'react';
 import { operatorsForContext } from 'utils/operatorsForContext';
-import { ConstraintOperatorSelect } from './ConstraintOperatorSelect.tsx';
+import { ConstraintOperatorSelect } from './LegacyConstraintOperatorSelect.tsx';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import Delete from '@mui/icons-material/Delete';
 import { ValueList } from './ValueList.tsx';
 import { AddValuesChip } from './AddValuesChip.tsx';
-import { ToggleConstraintCaseSensitivity } from './ToggleConstraintCaseSensitivity.tsx';
+import { ToggleConstraintCaseSensitivity } from './LegacyToggleConstraintCaseSensitivity.tsx';
 
 import { AddSingleValueChip } from './AddSingleValueChip.tsx';
 import { ConstraintDateInput } from './ConstraintDateInput.tsx';

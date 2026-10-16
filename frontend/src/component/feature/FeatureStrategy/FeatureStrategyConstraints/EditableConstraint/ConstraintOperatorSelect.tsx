@@ -125,6 +125,7 @@ export const ConstraintOperatorSelect = ({
     return (
         <FormControl variant='standard' size='large' hiddenLabel>
             <ScreenReaderOnly>
+                {/* biome-ignore lint: raw-copied from legacy, will be addressed with the design update */}
                 <InputLabel id={labelId} htmlFor={selectId}>
                     Operator
                 </InputLabel>

@@ -93,7 +93,7 @@
       "includes": [
         "frontend/src/**",
         "!frontend/src/component/common/GeneralSelect/**",
-        "!frontend/src/component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/ConstraintOperatorSelect.tsx"
+        "!frontend/src/component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/LegacyConstraintOperatorSelect.tsx"
       ],
       "plugins": ["./floating-label.grit"]
     },

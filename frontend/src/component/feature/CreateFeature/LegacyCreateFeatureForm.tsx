@@ -38,14 +38,9 @@ import { useLocalStorageState } from 'hooks/useLocalStorageState.ts';
 import {
     type DialogDismissMethod,
     dismissMethodFromCloseReason,
-    type Tracking,
     type TrackingProps,
 } from 'utils/trackingEvents';
-
-const createFlagTracking = {
-    event: 'flag-creation',
-    type: 'create-flag',
-} satisfies Tracking;
+import { createFlagTracking } from './flagCreationTracking.ts';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -200,10 +195,10 @@ export const LegacyCreateFeatureForm = ({
     });
 
     useEffect(() => {
-        if (open) {
+        if (open && !loadingTotalFlagCount) {
             trackCreateFlag('opened');
         }
-    }, [open, trackCreateFlag]);
+    }, [open, loadingTotalFlagCount, trackCreateFlag]);
 
     const { projects } = useProjects();
     const { featureTypes } = useFeatureTypes();

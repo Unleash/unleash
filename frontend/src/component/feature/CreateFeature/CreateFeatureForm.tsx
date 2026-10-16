@@ -2,7 +2,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
-import { type FormEvent, useId, useMemo, useState } from 'react';
+import { type FormEvent, useEffect, useId, useMemo, useState } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNavigate } from 'react-router';
 import {
@@ -39,10 +39,22 @@ import type { CreateFeatureDialogProps } from 'component/project/Project/Paginat
 import { useFlagLimits } from 'component/project/Project/PaginatedProjectFeatureToggles/ProjectFeatureTogglesHeader/useFlagLimits.tsx';
 import { useFeatureCreatedFeedback } from 'component/project/Project/PaginatedProjectFeatureToggles/ProjectFeatureTogglesHeader/hooks/useFeatureCreatedFeedback.ts';
 import { useLocalStorageState } from 'hooks/useLocalStorageState.ts';
+import { useTracking } from 'hooks/useTracking';
+import {
+    type DialogDismissMethod,
+    dismissMethodFromCloseReason,
+    type TrackingProps,
+} from 'utils/trackingEvents';
+import {
+    createFlagSubmitProps,
+    createFlagTracking,
+} from './flagCreationTracking.ts';
 import { INPUT_ERROR_TEXT } from 'utils/testIds';
 import { BorderlessInput } from 'component/common/Input/BorderlessInput';
 
 const draftExpiry = hoursToMilliseconds(1);
+
+type FlagDraft = FeatureFormInitialData & { lifetimeChosenByUser?: boolean };
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -100,7 +112,7 @@ export const CreateFeatureForm = ({
     const openFeatureCreatedFeedback = useFeatureCreatedFeedback();
 
     const [storedFlagConfig, setStoredFlagConfig] =
-        useLocalStorageState<FeatureFormInitialData>(
+        useLocalStorageState<FlagDraft>(
             'flag-creation-dialog',
             {},
             draftExpiry,
@@ -128,7 +140,9 @@ export const CreateFeatureForm = ({
 
     const [type, setType] = useState(storedFlagConfig.type);
     const [typeError, setTypeError] = useState<string>();
-    const [lifetimeChosenByUser, setLifetimeChosenByUser] = useState(false);
+    const [lifetimeChosenByUser, setLifetimeChosenByUser] = useState(
+        storedFlagConfig.lifetimeChosenByUser ?? false,
+    );
 
     const selectType = (nextType: CreateFeatureSchemaType) => {
         setType(nextType);
@@ -162,7 +176,15 @@ export const CreateFeatureForm = ({
 
         if (validToggleName && type) {
             try {
-                await createFeatureToggle(project, flagPayload);
+                await trackCreateFlag.mutation(
+                    () => createFeatureToggle(project, flagPayload),
+                    createFlagSubmitProps({
+                        type,
+                        lifetime,
+                        lifetimeDays: flagPayload.lifetimeDays,
+                        lifetimeChosenByUser,
+                    }),
+                );
                 navigate(`/projects/${project}/features/${name}`);
                 setToastData({
                     text: 'Flag created successfully',
@@ -175,6 +197,8 @@ export const CreateFeatureForm = ({
             } catch (error) {
                 setToastApiError(formatUnknownError(error));
             }
+        } else {
+            trackCreateFlag.validationFailed();
         }
     };
 
@@ -199,6 +223,22 @@ export const CreateFeatureForm = ({
             },
         });
 
+    const blockedProps: TrackingProps = globalFlagLimitReached
+        ? { blockedBy: 'limit', scope: 'global' }
+        : projectFlagLimitReached
+          ? { blockedBy: 'limit', scope: 'project' }
+          : {};
+    const trackCreateFlag = useTracking({
+        ...createFlagTracking,
+        props: { variant: 'per-flag-lifetime', ...blockedProps },
+    });
+
+    useEffect(() => {
+        if (open && !loadingTotalFlagCount) {
+            trackCreateFlag('opened');
+        }
+    }, [open, loadingTotalFlagCount, trackCreateFlag]);
+
     const { projects } = useProjects();
 
     const currentProjectName = useMemo(() => {
@@ -208,7 +248,8 @@ export const CreateFeatureForm = ({
         return projectObject?.name;
     }, [project, projects]);
 
-    const onDialogClose = () => {
+    const onDialogClose = (method: DialogDismissMethod) => {
+        trackCreateFlag('dismissed', { method });
         setStoredFlagConfig({
             name,
             tags,
@@ -216,6 +257,7 @@ export const CreateFeatureForm = ({
             type,
             description,
             lifetime,
+            lifetimeChosenByUser,
         });
         onClose();
     };
@@ -232,7 +274,12 @@ export const CreateFeatureForm = ({
     };
 
     return (
-        <StyledDialog open={open} onClose={onDialogClose}>
+        <StyledDialog
+            open={open}
+            onClose={(_, reason) =>
+                onDialogClose(dismissMethodFromCloseReason(reason))
+            }
+        >
             <FormTemplate
                 compact
                 disablePadding
@@ -245,7 +292,7 @@ export const CreateFeatureForm = ({
                 sidebar={
                     <CreateFeatureDialogSidebar
                         apiCommand={formatApiCode()}
-                        onClose={onDialogClose}
+                        onClose={() => onDialogClose('close-icon')}
                     />
                 }
             >
@@ -351,7 +398,9 @@ export const CreateFeatureForm = ({
                     </BottomSection>
 
                     <FormActions>
-                        <Button onClick={onDialogClose}>Cancel</Button>
+                        <Button onClick={() => onDialogClose('cancel-button')}>
+                            Cancel
+                        </Button>
                         <CreateButton
                             data-testid='FORM_CREATE_BUTTON'
                             name='flag'
